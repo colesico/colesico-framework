@@ -1,6 +1,6 @@
 # Colesico-framework
 
-Colesico-framework is a micro framework for creating server side applications in Java 9+
+`Colesico-framework` is a micro framework for creating server side applications in `Java 9+`
 
 It consists of highly specialized subprojects:
 
