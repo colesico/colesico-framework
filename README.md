@@ -4,7 +4,7 @@
 
 It consists of highly specialized subprojects.
 
-##1) Colesico-IoC 
+## Colesico-IoC 
 
 Colesico-IoC is a simple, lightweight dependency injection framework for Java 9 and above.
 
