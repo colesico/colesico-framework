@@ -1,0 +1,174 @@
+---------------
+
+  Вариант 1
+
+  @Produce(ServiceImpl.class) 
+  @Produce(ConfImpl.class)
+
+  // Default conf
+  Service getService(ServiceImpl impl){
+   impl.onConfigure(defautl config here);
+   return impl;
+  }
+  
+  // Service factory
+  @Classed(Service.class)
+  Configurable getConfigurable(ServiceImpl impl){
+    return impl;
+  }
+  
+   
+  // autogen:
+  
+  @Clased(ConfImpl.class)
+  @Singleton
+  Service getService(ConfImpl conf, @Classed(Service.class) Configurable target){
+		target.onConfigure(conf));
+		return (Service)target;
+  }
+  
+  
+  ---
+
+Вариант 2  
+  
+       Пример объявления класса
+	   
+       public class ServiceImpl {
+	           Service service(@Contextual Config config){
+		           this.config = config
+		        }
+	   }
+		
+		@Produce(ServiceImpl.class) 
+		
+		Supplier<ServiceImpl>() {
+            @Override
+            public final void setup(final Ioc ioc) {
+                
+            }
+
+            @Override
+            public final Service create(final InjectionContext ctx)  {
+				return new ServiceImpl(ctx.getSupplier().get(...));   
+            }
+			
+        };
+		
+		
+		Service getService(@PassContext ServiceImpl impl){
+			return impl;
+		}
+  
+		
+		Supplier<Service>() {
+			private Suppier<ServiceImpl>  implFac;
+
+            @Override
+            public final void setup(final Ioc ioc) {
+			     this.implFac==ioc.supplier(new TypeKey(ServiceImpl.class));
+            }
+
+            @Override
+            public final Service create(final InjectionContext ctx) {
+				return implFac.get(ctx);
+            }
+			
+			public Service get(InjectionContext injectionContext){
+					
+			}
+        };
+		
+	
+		
+		
+	
+  @Produce(ServiceImpl.class) 
+  @Produce(ConfImpl.class)  
+    
+  @Classed(Configurable.class)
+  Service getService(@OuterContext ServiceImpl impl){
+        return impl;
+  }
+  
+  @Classed(ConfImpl.class)
+  @Singleton
+  Service getService0(Supplier<Service> target, Supplier<Conf> conf, @OuterContext IocContext ctx){
+    return ConfiUtils.suply(target,conf,ctx);
+  }
+  
+  
+  -----------
+  
+  
+  
+  Conf getConf(@OuterContext IocContext context){
+    return impl.;
+  }
+  
+  
+  @Classed(ConfImpl.class)
+  Service getService0(Service fac, Supplier<Conf> conf){
+		fac.configure(conf)
+		return
+  }
+   
+   
+ 
+  ----------------
+     
+	   class Client{
+	   
+	       Client (@Attach(ConfigImpl.class) Service service){...}
+	   }
+	   
+	  
+	 
+		Supplier<Client>() {
+            private Provider<Service> serviceFac;
+			
+
+            @Override
+            public final void setup(final Ioc ioc) {
+			     
+				 Provider<ConfigImpl> serviceAtt = ioc.provider(new TypeKey(ConfigImpl.class), new InjectionContext(Service.class));
+				 
+                 this.serviceFac=ioc.provider(new TypeKey(Service.class), new InjectionContext(Service.class,attFac));
+            }
+
+            @Override
+            public final Service create(final InjectionContext ctx) {
+				return serviceFac.get(); 
+            }
+			
+        };
+		
+		
+	   class Service(){
+	      Service (@Contextual Supplier<Config> conf){...}
+	      Service (@Contextual Config conf){...}
+		  Service (@Contextual Producer<Config> conf){...}
+	   }
+	   
+		
+		Supplier<Service>() {
+		    InjectionContext context;
+
+            @Override
+            public final void setup(final Ioc ioc) {
+			   this.context = new InjectionContext(Service.class);
+            }
+
+            @Override
+            public final Service create(final InjectionContext context) {
+				return new Service( ctx.getSupplier()) ); 
+				return new Service( ctx.getSupplier().get(this.context)) ); 
+				return new Service( new IocProducer(ctx.getSupplier(),this.context)  ) ; 
+            }
+			
+        };
+		
+	
+  
+  
+  

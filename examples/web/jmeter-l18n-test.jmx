@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="4.0" jmeter="4.0 r1823414">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
+      <stringProp id="TestPlan.comments"></stringProp>
+      <boolProp id="TestPlan.functional_mode">false</boolProp>
+      <boolProp id="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp id="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp id="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp id="Arguments.arguments"/>
+      </elementProp>
+      <stringProp id="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Users" enabled="true">
+        <stringProp id="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp id="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp id="LoopController.continue_forever">false</boolProp>
+          <intProp id="LoopController.loops">-1</intProp>
+        </elementProp>
+        <stringProp id="ThreadGroup.num_threads">16</stringProp>
+        <stringProp id="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp id="ThreadGroup.scheduler">false</boolProp>
+        <stringProp id="ThreadGroup.duration"></stringProp>
+        <stringProp id="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Default" enabled="true">
+          <elementProp id="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp id="Arguments.arguments"/>
+          </elementProp>
+          <stringProp id="HTTPSampler.domain">localhost</stringProp>
+          <stringProp id="HTTPSampler.port">8080</stringProp>
+          <stringProp id="HTTPSampler.protocol">http</stringProp>
+          <stringProp id="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp id="HTTPSampler.path">/</stringProp>
+          <stringProp id="HTTPSampler.concurrentPool">6</stringProp>
+          <stringProp id="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp id="HTTPSampler.response_timeout"></stringProp>
+        </ConfigTestElement>
+        <hashTree/>
+        <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
+          <collectionProp id="CookieManager.cookies"/>
+          <boolProp id="CookieManager.clearEachIteration">false</boolProp>
+        </CookieManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/my-localization/message?msg=hello1" enabled="true">
+          <elementProp id="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp id="Arguments.arguments">
+              <elementProp id="msg" elementType="HTTPArgument">
+                <boolProp id="HTTPArgument.always_encode">false</boolProp>
+                <stringProp id="Argument.value">hello1</stringProp>
+                <stringProp id="Argument.metadata">=</stringProp>
+                <boolProp id="HTTPArgument.use_equals">true</boolProp>
+                <stringProp id="Argument.id">msg</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp id="HTTPSampler.domain"></stringProp>
+          <stringProp id="HTTPSampler.port"></stringProp>
+          <stringProp id="HTTPSampler.protocol"></stringProp>
+          <stringProp id="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp id="HTTPSampler.path">/my-localization/message</stringProp>
+          <stringProp id="HTTPSampler.method">GET</stringProp>
+          <boolProp id="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp id="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp id="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp id="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp id="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp id="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp id="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+        <ResultCollector guiclass="StatGraphVisualizer" testclass="ResultCollector" testname="Aggregate Graph" enabled="true">
+          <boolProp id="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <id>saveConfig</id>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp id="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

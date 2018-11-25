@@ -1,0 +1,29 @@
+[[intro]]
+
+== Colesico-Profile
+
+This module is used as centralized access point to user profile.
+Profile is a sets of data associated with a specific user to customize the representation of information for user.
+Any profile contains current locale. It is mainly used for localization purposes.
+
+Initially, the profile is read from a remote "caller", then is checked for validity,
+is enriched with additional data with ProfileController.
+Remote "caller" in particular case may be a http browser,
+and the profile can be initially read for example from http cookie.
+
+To get current user profile use ProfileKit service:
+
+----
+  Profile profile = profileKit.getProfile();
+----
+
+The concept of localization is based on the concept of qualifiers.
+Each profile contains a set of qualifiers that can be associated with "localization subject".
+Localization subject is an any entity (for example - translation strings bundle file)
+that can be qualified according to the current profile.
+
+
+
+
+
+

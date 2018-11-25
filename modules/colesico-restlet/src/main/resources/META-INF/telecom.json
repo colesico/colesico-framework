@@ -1,0 +1,51 @@
+[
+  {
+    "tele-type": "Restlet",
+    "receiver": "colesico.framework.restlet.tele.receiver.RestletReceiver",
+    "value": "java.lang.Object",
+    "ligaturizer": "colesico.framework.restlet.codegen.ReceiverLigaturizer"
+  },
+  {
+    "tele-type": "Restlet",
+    "receiver": "colesico.framework.weblet.tele.receiver.StringReceiver",
+    "value": "java.lang.String",
+    "ligaturizer": "colesico.framework.weblet.codegen.ReceiverLigaturizer"
+  },
+  {
+    "tele-type": "Restlet",
+    "receiver": "colesico.framework.weblet.tele.receiver.LongReceiver",
+    "value": "java.lang.Long",
+    "ligaturizer": "colesico.framework.weblet.codegen.ReceiverLigaturizer"
+  },
+  {
+    "tele-type": "Restlet",
+    "receiver": "colesico.framework.weblet.tele.receiver.IntegerReceiver",
+    "value": "java.lang.Integer",
+    "ligaturizer": "colesico.framework.weblet.codegen.ReceiverLigaturizer"
+  },
+  {
+    "tele-type": "Restlet",
+    "receiver": "colesico.framework.weblet.tele.receiver.DoubleReceiver",
+    "value": "java.lang.Double",
+    "ligaturizer": "colesico.framework.weblet.codegen.ReceiverLigaturizer"
+  },
+  {
+    "tele-type": "Restlet",
+    "receiver": "colesico.framework.weblet.tele.receiver.FloatReceiver",
+    "value": "java.lang.Float",
+    "ligaturizer": "colesico.framework.weblet.codegen.ReceiverLigaturizer"
+  },
+  {
+    "tele-type": "Restlet",
+    "receiver": "colesico.framework.weblet.tele.receiver.BooleanReceiver",
+    "value": "java.lang.Boolean",
+    "ligaturizer": "colesico.framework.weblet.codegen.ReceiverLigaturizer"
+  },
+  {
+    "tele-type": "Restlet",
+    "sender": "colesico.framework.restlet.tele.sender.RestletSender",
+    "value": "java.lang.Object",
+    "ligaturizer": "colesico.framework.weblet.codegen.SenderLigaturizer"
+  }
+
+]

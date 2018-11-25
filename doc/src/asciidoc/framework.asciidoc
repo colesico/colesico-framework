@@ -1,0 +1,22 @@
+= Colesico Framework Documentation - {version}
+:toc:
+:toclevels: 5
+:numbered:
+
+[[intro]]
+
+== What is Colesico-Framework?
+
+Colesico-framework is a java web microframework.
+
+It is designed as a lightweight framework for creating server side applications in Java 9+.
+
+== Framework modules
+
+Colesico-framework consists of highly specialized modules:
+
+* <<ioc.asciidoc#,Colesico-ioc:  lightweight dependency injection container.>>
+* <<config.asciidoc#,Colesico-config: configuration assistant service>>
+* <<profile.asciidoc#,Colesico-profile: profile assistant service>>
+
+

@@ -1,0 +1,16 @@
+[[intro]]
+
+== Colesico-Config
+
+Automates the use of configuration beans and integrate its with the IoC container.
+
+The general principle of using configuration beans:
+
+* Define an abstract class of the configuration bean with abstract methods that supply configuration values.
+* Add @ConfigPrototype annotation on that bean.
+* Specify the configuration model in the annotation (see ConfigModel class).
+* To obtain an instance of the configuration bean in the service use the dependency injection (depend on the configuration model)
+* To define the concrete configuration values for the configuration bean extend the abstract configuration bean  (configuration prototype)
+* Add @Configuration annotation to this implementation
+
+

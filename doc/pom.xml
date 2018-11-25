@@ -1,0 +1,48 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+   
+    <parent>
+        <groupId>colesico.framework</groupId>
+        <artifactId>colesico-framework</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+	<groupId>colesico.framework.doc</groupId>
+    <artifactId>colesico-doc</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+	
+    <name>Colesico Framework Documentation</name>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>${asciidoctor-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>render-asciidoc</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sourceDirectory>src/asciidoc</sourceDirectory>
+                    <!--<sourceDocumentName>framework.asciidoc</sourceDocumentName>-->
+                    <outputDirectory>target/html</outputDirectory>
+                    <backend>html5</backend>
+                    <attributes>
+                        <version>${project.version}</version>
+                    </attributes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

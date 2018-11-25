@@ -1,0 +1,260 @@
+<!--
+  ~ Copyright 20014-2018 Vladlen Larionov
+  ~             and others as noted
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>colesico.framework</groupId>
+    <artifactId>colesico-framework</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0</version>
+    <name>Colesico Framework</name>
+    <description>
+        Lightweight application framework for the Java 9+
+    </description>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <url>https://github.com/colesico/colesico-framework</url>
+
+    <developers>
+        <developer>
+            <name>Vladlen Larionov</name>
+        </developer>
+    </developers>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss.SSSZ</maven.build.timestamp.format>
+        <build.timestamp>${maven.build.timestamp}</build.timestamp>
+
+        <!-- Maven plugins -->
+        <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+        <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
+        <asciidoctor-maven-plugin.version>1.5.6</asciidoctor-maven-plugin.version>
+        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
+        <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
+
+        <!-- Common modules -->
+        <commons-lang3.version>3.7</commons-lang3.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <logback.verion>1.2.3</logback.verion>
+        <google.auto-service.version>1.0-rc4</google.auto-service.version>
+
+        <trimou.version>2.5.0.Final</trimou.version>
+        <rocker.version>1.1.0</rocker.version>
+        <pebble.version>3.0.3</pebble.version>
+
+        <hikaricp.version>3.2.0</hikaricp.version>
+        <fluentjdbc.version>1.8.3</fluentjdbc.version>
+
+        <cache2k.version>1.0.2.Final</cache2k.version>
+
+        <org-testng.version>6.14.3</org-testng.version>
+
+        <!-- Colesico modules -->
+
+        <!-- Doc -->
+        <colesico-doc.version>1.0.0</colesico-doc.version>
+
+        <!-- Ioc -->
+        <colesico-ioc.version>1.0.0</colesico-ioc.version>
+
+        <!-- Service -->
+        <colesico-config.version>1.0.0</colesico-config.version>
+        <colesico-resource.version>1.0.0</colesico-resource.version>
+        <colesico-teleapi.version>1.0.0</colesico-teleapi.version>
+        <colesico-service.version>1.0.0</colesico-service.version>
+        <colesico-security.version>1.0.0</colesico-security.version>
+        <colesico-profile.version>1.0.0</colesico-profile.version>
+        <colesico-translation.version>1.0.0</colesico-translation.version>
+
+        <colesico-validation.version>1.0.0</colesico-validation.version>
+
+        <!-- DB -->
+        <colesico-dbcpool.version>1.0.0</colesico-dbcpool.version>
+        <colesico-fluentjdbc.version>1.0.0</colesico-fluentjdbc.version>
+
+        <!-- Web -->
+        <colesico-http.version>1.0.0</colesico-http.version>
+        <colesico-router.version>1.0.0</colesico-router.version>
+        <colesico-weblet.version>1.0.0</colesico-weblet.version>
+        <colesico-webstatic.version>1.0.0</colesico-webstatic.version>
+        <colesico-htmlrenderer.version>1.0.0</colesico-htmlrenderer.version>
+        <colesico-rocker.version>1.0.0</colesico-rocker.version>
+        <colesico-pebble.version>1.0.0</colesico-pebble.version>
+        <!--<colesico-trimou.version>1.0.0</colesico-trimou.version>-->
+        <pebble.version>3.0.4</pebble.version>
+        <colesico-restlet.version>1.0.0</colesico-restlet.version>
+        <colesico-undertow.version>1.0.0</colesico-undertow.version>
+
+        <colesico-web.version>1.0.0</colesico-web.version>
+    </properties>
+
+    <modules>
+    </modules>
+
+    <profiles>
+        <profile>
+            <id>modules</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <!-- Ioc -->
+                <module>modules/colesico-ioc</module>
+
+                <!-- Service -->
+                <module>modules/colesico-config</module>
+                <module>modules/colesico-resource</module>
+                <module>modules/colesico-teleapi</module>
+                <module>modules/colesico-service</module>
+                <module>modules/colesico-profile</module>
+                <module>modules/colesico-translation</module>
+                <module>modules/colesico-security</module>
+                <module>modules/colesico-validation</module>
+
+                <!-- DB -->
+                <module>modules/colesico-dbcpool</module>
+                <module>modules/colesico-fluentjdbc</module>
+
+                <!-- Web -->
+                <module>modules/colesico-http</module>
+                <module>modules/colesico-router</module>
+                <module>modules/colesico-weblet</module>
+                <module>modules/colesico-webstatic</module>
+                <module>modules/colesico-htmlrenderer</module>
+
+                <!--<module>modules/colesico-trimou</module>-->
+                <module>modules/colesico-pebble</module>
+
+                <module>modules/colesico-restlet</module>
+                <module>modules/colesico-widget</module>
+                <module>modules/colesico-undertow</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>bundles</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <!-- Bundles -->
+                <module>bundles/colesico-web</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>examples</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>examples/ioc</module>
+                <module>examples/web</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>doc</id>
+            <modules>
+                <module>doc</module>
+            </modules>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>${versions-maven-plugin.version}</version>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms>
+                    <!-- <rulesUri>file://${project.basedir}/maven-version-rules.xml</rulesUri> -->
+                </configuration>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <showWarnings>true</showWarnings>
+                        <showDeprecation>true</showDeprecation>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven-dependency-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>copy-dependencies</goal>
+                            </goals>
+                            <configuration>
+                                <excludeScope>provided</excludeScope>
+                                <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven-resources-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>copy-resources</id>
+                            <phase>process-classes</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>${basedir}/target/generated-sources/annotations</directory>
+                                        <includes>
+                                            <include>**/*.properties</include>
+                                        </includes>
+                                    </resource>
+                                </resources>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

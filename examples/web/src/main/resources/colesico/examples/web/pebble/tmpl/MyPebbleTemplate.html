@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Pebble example</title>
+</head>
+<body>
+
+</body>
+<h1>Localization/Translation example for pebble template</h1>
+
+<!-- Load translation bundle -->
+{% t9nDictionary "colesico/examples/web/localization/t9n/Strings" "msg" %}
+
+<!-- Out text with translation from msg -->
+<h2>{{ "Hello1" | t9n(msg) }}</h2>
+
+{% t9nDictionary "colesico/examples/web/localization/t9n/Strings" %}
+<!-- Localization with parameter. tm - is a template model -->
+{{ "hello2" | t9n([tm]) }}
+
+</body>
+</html>
