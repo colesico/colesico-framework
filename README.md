@@ -4,6 +4,23 @@
 
 It consists of highly specialized subprojects.
 
+Colesico-ioc is a simple, lightweight dependency injection framework for Java 9 and above.
+
+Key features:
+
+* Reflection is not used at all (code generation at compile time with AnnotationProcessor).
+* Dependency injection is constructor-based only.
+* No support for cyclic dependency resolving.
+* Can be used as plugin-framework;
+* Producers based instance creation definition.
+* Dependency injection configuration discovery at container start time (SPI based).
+* Multiple dependency injection configurations support (e.g. for testing purpose).
+* Out-of-the-box Singleton scope(single instance per container), Thread scope (instance per thread) support.
+* Named injections support (@Named annotation).
+* Injection point support (e.g. for Logger injection).
+* Java 9+
+
+
 ## Ioc container
 
 The Ioc container is used to obtain instances with the dependencies injection.
@@ -22,12 +39,16 @@ Builder allows to create an Ioc containers configured for using in:
 
 Default Ioc container creation will create the container configured for the production:
 
-Ioc ioc = iocBuilder.build();
-
+```java
+ Ioc ioc = iocBuilder.build();
+```
 Testing purpose container creation example:
 
+
+```java
 iocBuilder.mode(IocBuilder.BuildMode.TESTING);
 Ioc ioc = iocBuilder.build();
+```
 
 Obtaining instances with injected dependencies is done using methods:
 * instance - returns class instance
@@ -57,7 +78,7 @@ All public methods of the producer are considered as provider-methods of instanc
 
 Producer example:
 
-
+```java
 @Producer
 @Produce(MyImplementation.class)
 @Produce(MyClass.class)
@@ -80,7 +101,7 @@ public class MyProducer {
         return new MyBean( dependency1, dependency2);
     }
 }
-
+```
 
 ### Scopes
 
@@ -94,6 +115,7 @@ To define the instance scope you must specify an scope annotation(@Singleton и 
 
 Example:
 
+```java
 @Singleton
 public class MyBean1 {}
 
@@ -108,6 +130,7 @@ public class MyProducer{
       return new MyBean2();
    }
 }
+```
 
 In this example the Instances of both classes MyBean1 and MyBean2 are singletones.
 
@@ -185,5 +208,4 @@ When run by a command like:
  java -jar  myapp-1.0.jar 
  
 producers in external jar files in the folder lib/* will not be discovered.
-
 
