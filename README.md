@@ -4,7 +4,9 @@
 
 It consists of highly specialized subprojects.
 
-Colesico-ioc is a simple, lightweight dependency injection framework for Java 9 and above.
+##1) Colesico-IoC 
+
+Colesico-IoC is a simple, lightweight dependency injection framework for Java 9 and above.
 
 Key features:
 
@@ -21,7 +23,7 @@ Key features:
 * Java 9+
 
 
-## Ioc container
+### Ioc container
 
 The Ioc container is used to obtain instances with the dependencies injection.
 
