@@ -240,10 +240,10 @@ The priority of rank  is set by the IoC container builder.
 
 By default, the builder uses the following ranks:
 
-    * "minor" for low-priority producers
-    * "default" for producers without an explicit specified rank
-    * "extension" for extension producers that overrides minor/default producers (plugins, etc)
-    * "test" for testing purposes when using stubs, etc.
+* "minor" for low-priority producers
+* "default" for producers without an explicit specified rank
+* "extension" for extension producers that overrides minor/default producers (plugins, etc)
+* "test" for testing purposes when using stubs, etc.
     
 "minor" - rank with the lowest priority, "test" - the highest priority.
 
