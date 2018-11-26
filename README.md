@@ -187,11 +187,11 @@ Specify annotation processor:
                     <target>${maven.compiler.target}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <annotationProcessorPaths>
-                        <dependency>
+                        <path>
                             <groupId>colesico.framework</groupId>
                             <artifactId>colesico-ioc</artifactId>
                             <version>${colesico.version}</version>
-                        </dependency>
+                        </path>
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>        
