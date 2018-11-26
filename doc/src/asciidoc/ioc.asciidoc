@@ -68,7 +68,7 @@ or with "shortcut" method:
 
 [source,java]
 ----
-Ioc ioc = IocBuilder.forTesting();
+Ioc ioc = iocBuilder.forTests();
 ----
 
 Obtaining instances with injected dependencies is done using this methods:
