@@ -29,6 +29,7 @@ The Ioc container is used to obtain instances with injected dependencies.
 
 Ioc container can be created with the builder:
 
+[source,java]
 ----
 IocBuilder iocBuilder = IocBuilder.get();
 ----
@@ -43,18 +44,21 @@ Builder allows to create an Ioc containers configured for using in:
 
 Default Ioc container creation will create the container configured for the production:
 
+[source,java]
 ----
 Ioc ioc = iocBuilder.build();
 ----
 
 or with "shortcut" method:
 
+[source,java]
 ----
 Ioc ioc = IocBuilder.forProduction();
 ----
 
 Testing purpose container creation example:
 
+[source,java]
 ----
 iocBuilder.mode(useContainer(ContainerType.LAZY).useRank(Rank.RANK_TEST));
 Ioc ioc = iocBuilder.build();
@@ -62,6 +66,7 @@ Ioc ioc = iocBuilder.build();
 
 or with "shortcut" method:
 
+[source,java]
 ----
 Ioc ioc = IocBuilder.forTesting();
 ----
@@ -91,6 +96,7 @@ When injecting dependencies as a constructor parameters, each key corresponds to
 * NamedKey - @Named
 * ClassKey - @Classed
 
+[source,java]
 ----
 public class MyBeanHolder {
 
@@ -113,6 +119,7 @@ public class MyBeanHolder {
 In the particular case to obtaining an instance from the Ioc container,
 you can specify just an instance class. (it will be implicitly converted to TypeKey)
 
+[source,java]
 ----
   MyBean defaultBean = ioc.instance(new TypeKey(MyBean.class),null);
   // OR:
@@ -169,6 +176,7 @@ public class MyProducer {
 If this annotation is not applied  to the producer method an attempt to define more than one instance producers (for
 the same class) will fails with ambiguous dependency error.
 
+[source,java]
 ----
 @Producer
 public class MyProducer {
@@ -210,7 +218,9 @@ To define the instance scope you must specify an scope annotation(@Singleton и 
 
 Example:
 
+[source,java]
 ----
+
 @Singleton
 public class MyBean1 {}
 
@@ -268,7 +278,9 @@ For example this may be used for Logger creation with passing an InjectionPoint 
 
 To obtain message in producing method use @Message annotation:
 
+[source,java]
 ----
+
 @Producer
 public class MyProducer{
 
@@ -281,11 +293,14 @@ public class MyProducer{
 
 To pass message for instance creation use the Supplier<T>
 
+[source,java]
 ----
+
   public constructor(Supplier<MyBean> myBeanSup){
         MyMessage message = new MyMessage(...);
         MyBean myBean = myBeanSup.get(message);
   }
+  
 ----
 
 Or with IoC directly:
