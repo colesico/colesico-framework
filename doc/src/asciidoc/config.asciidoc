@@ -6,11 +6,9 @@ Automates the use of configuration beans and integrate its with the IoC containe
 
 The general principle of using configuration beans:
 
-* Define an abstract class of the configuration bean with abstract methods that supply configuration values.
-* Add @ConfigPrototype annotation on that bean.
-* Specify the configuration model in the annotation (see ConfigModel class).
+* Define an abstract class of the configuration bean with abstract methods that supply configuration values or applies some options to input parameters (in case with builders).
+* Add @ConfigPrototype annotation on that bean. This is indicates that the bean is a configuration prototype bean (base bean for configuration that must be extended)
+* Specify the configuration model in the @ConfigPrototype annotation (see ConfigModel class).
 * To obtain an instance of the configuration bean in the service use the dependency injection (depend on the configuration model)
 * To define the concrete configuration values for the configuration bean extend the abstract configuration bean  (configuration prototype)
 * Add @Configuration annotation to this implementation
-
-
