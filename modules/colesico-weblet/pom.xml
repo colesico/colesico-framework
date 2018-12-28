@@ -23,19 +23,16 @@
     <parent>
         <groupId>colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>colesico-weblet</artifactId>
-    <version>1.0.0</version>
-
     <packaging>jar</packaging>
 
     <name>Colesico Weblet Module</name>
-
     <description>
-        Colesico Framework Weblet Service
+        Colesico framework http requests handling service
     </description>
 
     <properties>
@@ -49,25 +46,25 @@
         <dependency>
             <groupId>colesico.framework</groupId>
             <artifactId>colesico-security</artifactId>
-            <version>${colesico-security.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>colesico.framework</groupId>
             <artifactId>colesico-profile</artifactId>
-            <version>${colesico-profile.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>colesico.framework</groupId>
             <artifactId>colesico-translation</artifactId>
-            <version>${colesico-translation.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>colesico.framework</groupId>
             <artifactId>colesico-router</artifactId>
-            <version>${colesico-router.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- Fast serialization -->
@@ -86,7 +83,7 @@
         <dependency>
             <groupId>colesico.framework</groupId>
             <artifactId>colesico-translation</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -102,12 +99,12 @@
                         <path>
                             <groupId>colesico.framework</groupId>
                             <artifactId>colesico-ioc</artifactId>
-                            <version>${colesico-ioc.version}</version>
+                            <version>${project.version}</version>
                         </path>
                         <path>
                             <groupId>colesico.framework</groupId>
                             <artifactId>colesico-translation</artifactId>
-                            <version>${colesico-translation.version}</version>
+                            <version>${project.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

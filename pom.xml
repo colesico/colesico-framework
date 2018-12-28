@@ -25,7 +25,7 @@
     <groupId>colesico.framework</groupId>
     <artifactId>colesico-framework</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <name>Colesico Framework</name>
     <description>
         Lightweight application framework for the Java 9+
@@ -33,9 +33,10 @@
 
     <licenses>
         <license>
-            <name>The Apache Software License, Version 2.0</name>
+            <name>Apache License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
         </license>
     </licenses>
 
@@ -44,8 +45,11 @@
     <developers>
         <developer>
             <name>Vladlen Larionov</name>
+            <url>https://github.com/colesico</url>
+            <id>colesico</id>
         </developer>
     </developers>
+    <contributors></contributors>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -63,60 +67,24 @@
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
         <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
 
-        <!-- Common modules -->
+        <!-- Other -->
         <commons-lang3.version>3.7</commons-lang3.version>
+        <commons-io.version>2.6</commons-io.version>
         <slf4j.version>1.7.25</slf4j.version>
         <logback.verion>1.2.3</logback.verion>
-        <google.auto-service.version>1.0-rc4</google.auto-service.version>
+        <org-testng.version>6.14.3</org-testng.version>
+        <javax.inject.version>1</javax.inject.version>
 
+        <auto-service.version>1.0-rc4</auto-service.version>
         <trimou.version>2.5.0.Final</trimou.version>
         <rocker.version>1.1.0</rocker.version>
         <pebble.version>3.0.3</pebble.version>
-
         <hikaricp.version>3.2.0</hikaricp.version>
         <fluentjdbc.version>1.8.3</fluentjdbc.version>
-
         <cache2k.version>1.0.2.Final</cache2k.version>
-
-        <org-testng.version>6.14.3</org-testng.version>
-
-        <!-- Colesico modules -->
-
-        <!-- Doc -->
-        <colesico-doc.version>1.0.0</colesico-doc.version>
-
-        <!-- Ioc -->
-        <colesico-ioc.version>1.0.0</colesico-ioc.version>
-
-        <!-- Service -->
-        <colesico-config.version>1.0.0</colesico-config.version>
-        <colesico-resource.version>1.0.0</colesico-resource.version>
-        <colesico-teleapi.version>1.0.0</colesico-teleapi.version>
-        <colesico-service.version>1.0.0</colesico-service.version>
-        <colesico-security.version>1.0.0</colesico-security.version>
-        <colesico-profile.version>1.0.0</colesico-profile.version>
-        <colesico-translation.version>1.0.0</colesico-translation.version>
-
-        <colesico-validation.version>1.0.0</colesico-validation.version>
-
-        <!-- DB -->
-        <colesico-dbcpool.version>1.0.0</colesico-dbcpool.version>
-        <colesico-fluentjdbc.version>1.0.0</colesico-fluentjdbc.version>
-
-        <!-- Web -->
-        <colesico-http.version>1.0.0</colesico-http.version>
-        <colesico-router.version>1.0.0</colesico-router.version>
-        <colesico-weblet.version>1.0.0</colesico-weblet.version>
-        <colesico-webstatic.version>1.0.0</colesico-webstatic.version>
-        <colesico-htmlrenderer.version>1.0.0</colesico-htmlrenderer.version>
-        <colesico-rocker.version>1.0.0</colesico-rocker.version>
-        <colesico-pebble.version>1.0.0</colesico-pebble.version>
-        <!--<colesico-trimou.version>1.0.0</colesico-trimou.version>-->
-        <pebble.version>3.0.4</pebble.version>
-        <colesico-restlet.version>1.0.0</colesico-restlet.version>
-        <colesico-undertow.version>1.0.0</colesico-undertow.version>
-
-        <colesico-web.version>1.0.0</colesico-web.version>
+        <javapoet.version>1.11.1</javapoet.version>
+        <jackson.version>2.9.6</jackson.version>
+        <undertow.version>2.0.13.Final</undertow.version>
     </properties>
 
     <modules>
@@ -141,9 +109,10 @@
                 <module>modules/colesico-translation</module>
                 <module>modules/colesico-security</module>
                 <module>modules/colesico-validation</module>
+				<module>modules/colesico-eventbus</module>
 
                 <!-- DB -->
-                <module>modules/colesico-dbcpool</module>
+                <module>modules/colesico-dba</module>
                 <module>modules/colesico-fluentjdbc</module>
 
                 <!-- Web -->
@@ -179,6 +148,7 @@
             <modules>
                 <module>examples/ioc</module>
                 <module>examples/web</module>
+				<module>examples/eventbus</module>
             </modules>
         </profile>
         <profile>

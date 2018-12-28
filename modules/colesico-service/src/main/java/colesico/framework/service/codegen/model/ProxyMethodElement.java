@@ -49,8 +49,8 @@ public final class ProxyMethodElement {
         this.properties = new HashMap();
     }
 
-    public Object getProperty(Class propertyClass) {
-        return properties.get(propertyClass);
+    public <P> P getProperty(Class<P> propertyClass) {
+        return (P) properties.get(propertyClass);
     }
 
     public void setProperty(Object property) {

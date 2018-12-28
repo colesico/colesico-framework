@@ -25,18 +25,16 @@
     <parent>
         <groupId>colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>colesico-security</artifactId>
-    <version>1.0.0</version>
-
     <packaging>jar</packaging>
-    <name>Colesico Security Module</name>
 
+    <name>Colesico Security Module</name>
     <description>
-        Colesico Framework Security Service
+        Colesico framework security service
     </description>
 
     <properties>
@@ -47,7 +45,7 @@
         <dependency>
             <groupId>colesico.framework</groupId>
             <artifactId>colesico-service</artifactId>
-            <version>${colesico-service.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
     </dependencies>
@@ -63,7 +61,7 @@
                         <path>
                             <groupId>colesico.framework</groupId>
                             <artifactId>colesico-ioc</artifactId>
-                            <version>${colesico-ioc.version}</version>
+                            <version>${project.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

@@ -25,18 +25,16 @@
     <parent>
         <groupId>colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>colesico-service</artifactId>
-    <version>1.0.0</version>
-    
     <packaging>jar</packaging>
-    <name>Colesico Service Module</name>
 
+    <name>Colesico Service Module</name>
     <description>
-        Colesico Framework Service Beans Support
+        Colesico framework service beans support
     </description>
 
     <properties>
@@ -47,7 +45,7 @@
         <dependency>
             <groupId>colesico.framework</groupId>
             <artifactId>colesico-teleapi</artifactId>
-            <version>${colesico-teleapi.version}</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
@@ -62,7 +60,7 @@
                         <path>
                             <groupId>colesico.framework</groupId>
                             <artifactId>colesico-ioc</artifactId>
-                            <version>${colesico-ioc.version}</version>
+                            <version>${project.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

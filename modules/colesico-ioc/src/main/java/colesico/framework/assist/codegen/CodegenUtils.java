@@ -25,7 +25,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.processing.Generated;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
 import javax.lang.model.type.MirroredTypeException;
@@ -53,6 +52,11 @@ import java.util.function.Consumer;
 public class CodegenUtils {
 
     protected static final Logger log = LoggerFactory.getLogger(CodegenUtils.class);
+
+    public static final String OPTION_CODEGEN="colesico.framework.codegen";
+    public static final String OPTION_CODEGEN_DEV="dev";
+    public static final String OPTION_CODEGEN_PROD="prod";
+
 
     public static String getModuleName(TypeElement typeElement, Elements elementUtils) {
         ModuleElement module = elementUtils.getModuleOf(typeElement);
@@ -197,7 +201,7 @@ public class CodegenUtils {
         if (accessModifiers == null) {
             String errMsg = MessageFormat.format("Access modifiers is null; Class element: {0}", classElement.toString());
             log.error(errMsg);
-            throw CodegenException.of().message(errMsg).element(classElement).create();
+            throw CodegenException.of().message(errMsg).element(classElement).build();
         }
         List<ExecutableElement> result = new ArrayList<>();
         Elements utils = processingEnv.getElementUtils();
@@ -282,7 +286,7 @@ public class CodegenUtils {
         if (baseMetod == null) {
             String errMsg = MessageFormat.format("Base method is null for method '{0}'", methodName);
             log.error(errMsg);
-            throw CodegenException.of().message(errMsg).create();
+            throw CodegenException.of().message(errMsg).build();
         }
         if ((methodName == null) || isConstructor) {
             methodName = getMethodName(baseMetod);
@@ -354,7 +358,7 @@ public class CodegenUtils {
         } catch (IOException ex) {
             String errMsg = MessageFormat.format("Error creating java file: {0}; Cause message: {1}", fullName, ExceptionUtils.getRootCauseMessage(ex));
             log.error(errMsg);
-            throw CodegenException.of().message(errMsg).create();
+            throw CodegenException.of().message(errMsg).build();
         }
     }
 
@@ -367,7 +371,7 @@ public class CodegenUtils {
         } catch (IOException ex) {
             String errMsg = MessageFormat.format("Error creating text resource file: {0}; Cause message: {1}", filePath, ExceptionUtils.getRootCauseMessage(ex));
             log.error(errMsg);
-            throw CodegenException.of().message(errMsg).create();
+            throw CodegenException.of().message(errMsg).build();
         }
     }
 
@@ -392,7 +396,7 @@ public class CodegenUtils {
             throw CodegenException.of()
                     .message("Inconsistent package name: '" + packageName + "'. Package name should start with partition name: '" + moduleName + "'")
                     .element(typeElement)
-                    .create();
+                    .build();
         }
     }
 
@@ -483,5 +487,9 @@ public class CodegenUtils {
             result.add(annBuilder.build());
         }
         return result;
+    }
+
+    public static String getOption(ProcessingEnvironment processingEnv,String optionKey){
+        return processingEnv.getOptions().get(optionKey);
     }
 }

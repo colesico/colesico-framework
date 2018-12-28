@@ -1,29 +1,24 @@
 package colesico.framework.fluentjdbc.internal;
 
-import colesico.framework.dbcpool.DBCPool;
+import colesico.framework.dba.ConnectionSource;
 import colesico.framework.fluentjdbc.FjdbcConfig;
 import org.codejargon.fluentjdbc.api.FluentJdbcBuilder;
-import org.codejargon.fluentjdbc.api.integration.ConnectionProvider;
 
 import javax.inject.Singleton;
-import java.sql.Connection;
 
 @Singleton
 public class FjdbcConfigImpl extends FjdbcConfig {
 
-    private final DBCPool dbcPool;
+    private final ConnectionSource connProv;
 
-    public FjdbcConfigImpl(DBCPool dbcPool) {
-        this.dbcPool = dbcPool;
+    public FjdbcConfigImpl(ConnectionSource connProv) {
+        this.connProv = connProv;
     }
 
     @Override
     public void applyOptions(FluentJdbcBuilder builder) {
-        ConnectionProvider cp = query -> {
-            Connection connection = dbcPool.getConnection();
-            query.receive(connection);
-            connection.close();
-        };
-        builder.connectionProvider(cp);
+        org.codejargon.fluentjdbc.api.integration.ConnectionProvider connProv = new SimpleConnectionProvider(this.connProv);
+        builder.connectionProvider(connProv);
     }
+
 }

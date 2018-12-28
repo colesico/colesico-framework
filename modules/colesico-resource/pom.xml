@@ -25,18 +25,16 @@
     <parent>
         <groupId>colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>colesico-resource</artifactId>
-    <version>1.0.0</version>
-
     <packaging>jar</packaging>
-    <name>Colesico Resource Module</name>
 
+    <name>Colesico Resource Module</name>
     <description>
-        Colesico Framework Resource Services
+        Colesico framework resource services
     </description>
 
     <properties>
@@ -47,12 +45,12 @@
         <dependency>
             <groupId>colesico.framework</groupId>
             <artifactId>colesico-config</artifactId>
-            <version>${colesico-config.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>colesico.framework</groupId>
             <artifactId>colesico-profile</artifactId>
-            <version>${colesico-profile.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- Tests -->
@@ -81,7 +79,7 @@
                         <path>
                             <groupId>colesico.framework</groupId>
                             <artifactId>colesico-ioc</artifactId>
-                            <version>${colesico-ioc.version}</version>
+                            <version>${project.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

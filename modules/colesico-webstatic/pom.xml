@@ -23,23 +23,20 @@
     <parent>
         <groupId>colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>colesico-webstatic</artifactId>
-    <version>1.0.0</version>
-
     <packaging>jar</packaging>
 
     <name>Colesico WebStatic Module</name>
-
     <description>
-        Colesico Framework Static Resource Assistant
+        Colesico framework web static resource assistant.
+        Is used to publicate static resources.
     </description>
 
     <properties>
-        <commons-io.version>2.6</commons-io.version>
     </properties>
 
     <dependencies>
@@ -47,13 +44,13 @@
         <dependency>
             <groupId>colesico.framework</groupId>
             <artifactId>colesico-http</artifactId>
-            <version>${colesico-http.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>colesico.framework</groupId>
             <artifactId>colesico-resource</artifactId>
-            <version>${colesico-resource.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- Commons IO -->
@@ -75,7 +72,7 @@
                         <path>
                             <groupId>colesico.framework</groupId>
                             <artifactId>colesico-config</artifactId>
-                            <version>${colesico-config.version}</version>
+                            <version>${project.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

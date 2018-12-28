@@ -44,7 +44,7 @@ public class CustomFactoryElement extends FactoryElement {
         } catch (Exception e){
             throw CodegenException.of().message("Unable to determine producer method return type for "+producerMethod)
                     .element(producerMethod)
-                    .create();
+                    .build();
         }
         this.factoryMethodBaseName = this.producerMethod.getSimpleName().toString();
 
@@ -77,7 +77,7 @@ public class CustomFactoryElement extends FactoryElement {
         }
 
         if (StringUtils.isNotEmpty(this.named) && this.classed!=null){
-            CodegenException.of().message("Ambiguous injection qualifiers").element(producerMethod).create();
+            CodegenException.of().message("Ambiguous injection qualifiers").element(producerMethod).build();
         }
     }
 

@@ -43,6 +43,7 @@ public class InjectableElement {
     private final DeclaredType injectedType;
     private final InjectionKind injectionKind;
     private final MessageKind messageKind;
+    private final LinkagePhase linkagePhase;
 
     //  @Named value
     private final String named;
@@ -67,7 +68,7 @@ public class InjectableElement {
                     || parameterClassName.equals(Polysupplier.class.getName())) {
                 List<? extends TypeMirror> generics = declaredType.getTypeArguments();
                 if (generics.isEmpty()) {
-                    throw CodegenException.of().message("Unable to determine injecting type").element(parameter).create();
+                    throw CodegenException.of().message("Unable to determine injecting type").element(parameter).build();
                 }
                 this.injectedType = ((DeclaredType) generics.get(0));
                 if (parameterClassName.equals(Provider.class.getName())) {
@@ -86,6 +87,10 @@ public class InjectableElement {
         // Messaging
         Contextual inherentAnn = parameter.getAnnotation(Contextual.class);
         this.messageKind = inherentAnn != null ? MessageKind.INJECTION_POINT : MessageKind.OUTER_MESSAGE;
+
+        // Binding
+        InlineInject dynamicInjectAnn = parameter.getAnnotation(InlineInject.class);
+        this.linkagePhase = dynamicInjectAnn==null? LinkagePhase.ACTIVATION : LinkagePhase.PRODUCTION;
 
         // Extra key types
         Named namedAnn = parameter.getAnnotation(Named.class);
@@ -135,6 +140,10 @@ public class InjectableElement {
         return classed;
     }
 
+    public LinkagePhase getLinkagePhase() {
+        return linkagePhase;
+    }
+
     public enum InjectionKind {
         MESSAGE,
         INSTANCE,
@@ -146,6 +155,20 @@ public class InjectableElement {
     public enum MessageKind {
         OUTER_MESSAGE,
         INJECTION_POINT,
+    }
+
+    /**
+     * Dependency linkage phases
+     */
+    public enum LinkagePhase {
+        /**
+         * On activation phase  (in 'setup' factory method)
+         */
+        ACTIVATION,
+        /**
+         * On production  (in 'get' factory method or in the methods that it calls)
+         */
+        PRODUCTION
     }
 
 }

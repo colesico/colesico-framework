@@ -28,6 +28,8 @@ import org.codejargon.fluentjdbc.api.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.Connection;
+
 /**
  * @author Vladlen Larionov
  */
@@ -58,4 +60,10 @@ public class FjdbcImpl implements Fjdbc {
     public Query getQuery() {
         return fluentJdbc.query();
     }
+
+    @Override
+    public Query getQuery(Connection conn) {
+        return fluentJdbc.queryOn(conn);
+    }
+
 }

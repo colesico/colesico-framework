@@ -22,13 +22,16 @@ package colesico.framework.fluentjdbc;
 import org.codejargon.fluentjdbc.api.FluentJdbc;
 import org.codejargon.fluentjdbc.api.query.Query;
 
+import java.sql.Connection;
+
 /**
-* @author Vladlen Larionov
-*/
+ * @author Vladlen Larionov
+ */
 public interface Fjdbc {
-    String DEFAULT_FJDBC_NAME ="default";
 
     FluentJdbc getFluentJdbc();
 
     Query getQuery();
+
+    Query getQuery(Connection conn);
 }

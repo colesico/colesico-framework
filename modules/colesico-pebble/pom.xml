@@ -25,21 +25,19 @@
     <parent>
         <groupId>colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>colesico-pebble</artifactId>
-    <version>1.0.0</version>
-
     <packaging>jar</packaging>
+
     <name>Colesico Pebble Module</name>
     <description>
-        Colesico Framework Pebble Templating Engine Integration
+        Colesico framework Pebble templating engine integration
     </description>
 
     <properties>
-        
     </properties>
 
     <dependencies>
@@ -47,7 +45,7 @@
         <dependency>
             <groupId>colesico.framework</groupId>
             <artifactId>colesico-htmlrenderer</artifactId>
-            <version>${colesico-htmlrenderer.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- Pebble-->
@@ -85,7 +83,7 @@
                         <path>
                             <groupId>colesico.framework</groupId>
                             <artifactId>colesico-ioc</artifactId>
-                            <version>${colesico-ioc.version}</version>
+                            <version>${project.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

@@ -4,10 +4,7 @@ import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.ioc.Produce;
 import colesico.framework.ioc.Producer;
 import colesico.framework.ioc.Rank;
-import com.squareup.javapoet.AnnotationSpec;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +23,7 @@ import java.util.List;
 
 public class ProducerGenerator {
 
-    private Logger logger = LoggerFactory.getLogger(ProducerGenerator.class);
+    private final Logger logger = LoggerFactory.getLogger(ProducerGenerator.class);
 
     protected final Class<?> masterGeneratorClass;
 
@@ -43,10 +40,12 @@ public class ProducerGenerator {
 
     protected String producerRank = Rank.RANK_MINOR;
 
-    protected final List<AnnotationSpec.Builder> produceAnnotations = new ArrayList<>();
-    protected final List<MethodSpec.Builder> produceMethods = new ArrayList<>();
+    protected final List<AnnotationSpec.Builder> producerAnnotations = new ArrayList<>();
+    protected final List<MethodSpec.Builder> producerMethods = new ArrayList<>();
+    protected final List<FieldSpec.Builder> producerFields = new ArrayList<>();
 
     public ProducerGenerator(String packageName, String classSimpleName, Class<?> masterGeneratorClass, ProcessingEnvironment processingEnv) {
+        logger.debug("Creating IoC producer generator: "+packageName+"."+classSimpleName);
         this.masterGeneratorClass = masterGeneratorClass;
         this.processingEnv = processingEnv;
         elementUtils = processingEnv.getElementUtils();
@@ -83,10 +82,30 @@ public class ProducerGenerator {
         }
     }
 
+    public AnnotationSpec.Builder addAnnotation(Class<?> type) {
+        AnnotationSpec.Builder ab = AnnotationSpec.builder(type);
+        producerAnnotations.add(ab);
+        return ab;
+    }
+
+    public FieldSpec.Builder addField(String fieldName, TypeName fieldType, Modifier... modifiers) {
+        FieldSpec.Builder fb = FieldSpec.builder(fieldType, fieldName, modifiers);
+        producerFields.add(fb);
+        return fb;
+    }
+
+    public MethodSpec.Builder addMethod(String methodName, Modifier... modifiers) {
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(methodName);
+        mb.addModifiers(modifiers);
+        producerMethods.add(mb);
+        return mb;
+    }
+
+
     public AnnotationSpec.Builder addProduceAnnotation(TypeName value) {
         AnnotationSpec.Builder produceAnn = AnnotationSpec.builder(Produce.class);
         produceAnn.addMember("value", "$T.class", value);
-        produceAnnotations.add(produceAnn);
+        producerAnnotations.add(produceAnn);
         return produceAnn;
     }
 
@@ -94,11 +113,11 @@ public class ProducerGenerator {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(methodName);
         mb.addModifiers(Modifier.PUBLIC);
         mb.returns(returnType);
-        produceMethods.add(mb);
+        producerMethods.add(mb);
         return mb;
     }
 
-    public MethodSpec.Builder addImplementationMethod(String methodName, TypeName returnType, TypeName implType) {
+    public MethodSpec.Builder addImplementMethod(String methodName, TypeName returnType, TypeName implType) {
         MethodSpec.Builder mb = addProduceMethod(methodName, returnType);
         mb.addParameter(implType, "impl", Modifier.FINAL);
         mb.addStatement("return impl");
@@ -108,17 +127,21 @@ public class ProducerGenerator {
     public TypeSpec.Builder typeBuilder() {
         TypeSpec.Builder producerBuilder = TypeSpec.classBuilder(producerClassSimpleName);
         producerBuilder.addModifiers(Modifier.PUBLIC);
-        producerBuilder.addAnnotation(CodegenUtils.buildGenstampAnnotation(masterGeneratorClass.getName(), null,null));
+        producerBuilder.addAnnotation(CodegenUtils.buildGenstampAnnotation(masterGeneratorClass.getName(), null, null));
 
         AnnotationSpec.Builder b = AnnotationSpec.builder(Producer.class);
         b.addMember("value", "$S", producerRank);
         producerBuilder.addAnnotation(b.build());
 
-        for (AnnotationSpec.Builder annSpec : produceAnnotations) {
+        for (AnnotationSpec.Builder annSpec : producerAnnotations) {
             producerBuilder.addAnnotation(annSpec.build());
         }
 
-        for (MethodSpec.Builder mb : produceMethods) {
+        for (FieldSpec.Builder fb : producerFields) {
+            producerBuilder.addField(fb.build());
+        }
+
+        for (MethodSpec.Builder mb : producerMethods) {
             producerBuilder.addMethod(mb.build());
         }
 

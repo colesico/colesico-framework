@@ -1,7 +1,6 @@
 module colesico.framework.fluentjdbc {
 
-    requires transitive colesico.framework.dbcpool;
-
+    requires transitive colesico.framework.dba;
     requires slf4j.api;
     requires org.apache.commons.lang3;
 

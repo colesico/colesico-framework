@@ -6,13 +6,12 @@
     <parent>
         <groupId>colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
 	<groupId>colesico.framework.doc</groupId>
     <artifactId>colesico-doc</artifactId>
-    <version>1.0.0</version>
     <packaging>pom</packaging>
 	
     <name>Colesico Framework Documentation</name>

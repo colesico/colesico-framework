@@ -37,7 +37,7 @@ public final class CustomMethodElement {
     private final Map<Class, Object> properties;
 
     public CustomMethodElement(MethodSpec spec) {
-        this.parentService = parentService;
+        this.parentService = null;
         this.spec = spec;
         this.properties = new HashMap();
     }
@@ -54,8 +54,8 @@ public final class CustomMethodElement {
         return parentService;
     }
 
-    public Object getProperty(Class propertyClass) {
-        return properties.get(propertyClass);
+    public <P> P getProperty(Class<P> propertyClass) {
+        return (P) properties.get(propertyClass);
     }
 
     public void setProperty(Object property) {

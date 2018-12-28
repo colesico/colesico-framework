@@ -95,7 +95,7 @@ public class CodegenException extends RuntimeException {
             return this;
         }
 
-        public CodegenException create() {
+        public CodegenException build() {
             return new CodegenException(message, cause, element, annotation);
         }
     }

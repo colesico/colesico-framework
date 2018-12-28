@@ -56,7 +56,7 @@ abstract public class RoutegenContext {
         if (null != rtme) {
             throw CodegenException.of()
                     .message("Duplicate router path: " + route + "->" + teleMethodName + "(...). Route already binded to " + rtme.getTeleMethod().getProxyMethod().getName() + "(...)")
-                    .element(teleMethod.getProxyMethod().getOriginMethod()).create();
+                    .element(teleMethod.getProxyMethod().getOriginMethod()).build();
         }
         RoutedTeleMethodElement routedTeleMethodElement = new RoutedTeleMethodElement(teleMethod, route);
         teleMethods.add(routedTeleMethodElement);
@@ -104,14 +104,14 @@ abstract public class RoutegenContext {
                     throw CodegenException.of()
                             .message("Package " + pkg.getSimpleName() + " must be annotated with @" + Route.class.getName())
                             .element(framlet.getOriginClass())
-                            .create();
+                            .build();
                 }
                 String pkgRouteValue = pkgRoute.value();
                 if (!pkgRouteValue.startsWith(RouteTrie.SEGMENT_DELEMITER)) {
                     throw CodegenException.of()
                             .message("Wrong package route: " + pkgRouteValue + ". Must starts with '" + RouteTrie.SEGMENT_DELEMITER + "'")
                             .element(framlet.getOriginClass())
-                            .create();
+                            .build();
                 }
                 String beanRouteValue = routeAnnotation.value().substring(1);
                 if (StringUtils.isBlank(beanRouteValue)){
@@ -123,7 +123,7 @@ abstract public class RoutegenContext {
                 throw CodegenException.of()
                         .message("Unclear route: " + routeAnnotation.value() + ". Must starts with '.' or '" + RouteTrie.SEGMENT_DELEMITER + "'")
                         .element(framlet.getOriginClass())
-                        .create();
+                        .build();
             }
         } else {
             // Root suffix

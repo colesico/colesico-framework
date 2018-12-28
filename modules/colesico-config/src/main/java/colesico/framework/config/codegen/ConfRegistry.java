@@ -74,7 +74,7 @@ public class ConfRegistry {
             }
         } while (!superClass.toString().equals(Object.class.getName()));
 
-        throw  CodegenException.of().message("Unable to determine configuration prototype for: " + classElement.asType().toString()).element(classElement).create();
+        throw  CodegenException.of().message("Unable to determine configuration prototype for: " + classElement.asType().toString()).element(classElement).build();
     }
 
     public ConfigElement register(TypeElement classElement) {

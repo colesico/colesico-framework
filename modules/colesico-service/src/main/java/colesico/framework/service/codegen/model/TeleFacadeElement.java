@@ -65,7 +65,7 @@ public final class TeleFacadeElement {
 
     private String checkTeleType(String teleType) {
         if (!teleType.matches("^[a-zA-Z]+$")) {
-            throw CodegenException.of().message("Tele-scope must contain only letters: " + teleType).create();
+            throw CodegenException.of().message("Tele-scope must contain only letters: " + teleType).build();
         }
         return teleType;
     }
@@ -86,7 +86,7 @@ public final class TeleFacadeElement {
 
     public void addTeleMethod(TeleMethodElement teleMethod) {
         if (teleMethods.find((tm) -> tm.getName().equals(teleMethod.getName())) != null) {
-            throw CodegenException.of().message("Duplicate tele-method name: " + teleMethod.getName()).element(teleMethod.getProxyMethod().getOriginMethod()).create();
+            throw CodegenException.of().message("Duplicate tele-method name: " + teleMethod.getName()).element(teleMethod.getProxyMethod().getOriginMethod()).build();
         }
         teleMethods.add(teleMethod);
         teleMethod.parentTeleFacade = this;

@@ -18,6 +18,8 @@
 
 package colesico.framework.service.codegen.parser;
 
+import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.service.codegen.model.InterceptionPhases;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.modulator.ModulatorKit;
@@ -48,6 +50,11 @@ public final class ProcessorContext {
 
     private final Map<Class, Object> properties;
 
+    /**
+     * Flag indicates to generate code for production
+     */
+    private final boolean productionCodegen;
+
     public ProcessorContext(ModulatorKit modulatorKit, ProcessingEnvironment processingEnv) {
 
         this.processingEnv = processingEnv;
@@ -58,6 +65,27 @@ public final class ProcessorContext {
         this.properties = new HashMap<>();
         this.modulatorKit = modulatorKit;
         this.interceptionPhases = new InterceptionPhases();
+
+        // Detect production code generation mode
+        String codegenMode = CodegenUtils.getOption(processingEnv, CodegenUtils.OPTION_CODEGEN);
+        if (codegenMode == null) {
+            codegenMode = CodegenUtils.OPTION_CODEGEN_PROD;
+        }
+        switch (codegenMode) {
+            case CodegenUtils.OPTION_CODEGEN_PROD:
+                productionCodegen = true;
+                break;
+            case CodegenUtils.OPTION_CODEGEN_DEV:
+                productionCodegen = false;
+                break;
+            default:
+                throw CodegenException.of().message("Unsupported code generation mode: " + codegenMode +
+                        ". Valid values: " + CodegenUtils.OPTION_CODEGEN_PROD + "; " + CodegenUtils.OPTION_CODEGEN_DEV).build();
+        }
+    }
+
+    public boolean isProductionCodegen() {
+        return productionCodegen;
     }
 
     public Object getProperty(Class propertyClass) {

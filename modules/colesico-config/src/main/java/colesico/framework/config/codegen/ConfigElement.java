@@ -72,7 +72,7 @@ public class ConfigElement {
         if (classedDefaultAnn != null) {
             if (!ConfigModel.MESSAGE.equals(model)) {
                 throw CodegenException.of().message("@" + Default.class.getSimpleName() +
-                        " annotation can be applied only to " + ConfigModel.MESSAGE.name() + " configuration model").create();
+                        " annotation can be applied only to " + ConfigModel.MESSAGE.name() + " configuration model").build();
             }
             defaultMessage = true;
         } else {

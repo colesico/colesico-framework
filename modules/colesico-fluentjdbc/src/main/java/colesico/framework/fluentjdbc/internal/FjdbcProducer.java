@@ -20,6 +20,7 @@ package colesico.framework.fluentjdbc.internal;
 import colesico.framework.fluentjdbc.Fjdbc;
 import colesico.framework.fluentjdbc.FjdbcConfig;
 import colesico.framework.ioc.*;
+import org.codejargon.fluentjdbc.api.query.Query;
 
 import javax.inject.Singleton;
 
@@ -48,7 +49,6 @@ public class FjdbcProducer {
         return impl;
     }
 
-
     /**
      * Default Fjdbc
      *
@@ -57,5 +57,15 @@ public class FjdbcProducer {
     @Singleton
     public Fjdbc getDefaultFjdbc(@Classed(FjdbcConfig.class) Supplier<Fjdbc> factory, FjdbcConfigImpl config) {
         return factory.get(config);
+    }
+
+
+    /**
+     * Query provider for default Fjdbc
+     * @param fjdbc
+     * @return
+     */
+    public Query getQuery(Fjdbc fjdbc) {
+        return fjdbc.getQuery();
     }
 }

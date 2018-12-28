@@ -61,7 +61,7 @@ public class BundleGenerator {
         } catch (IOException ex) {
             String errMsg = MessageFormat.format("Error creating properties file: {0}; Cause message: {1}", fullPath, ExceptionUtils.getRootCauseMessage(ex));
             logger.error(errMsg);
-            throw CodegenException.of().message(errMsg).create();
+            throw CodegenException.of().message(errMsg).build();
         }
     }
 

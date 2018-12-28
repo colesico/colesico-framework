@@ -139,7 +139,7 @@ public class ServiceProxyGenerator {
             if (!pme.getOriginMethod().getParameters().isEmpty()) {
                 throw CodegenException.of().message("Post construct method '"
                         + CodegenUtils.getClassName((TypeElement) pme.getOriginMethod().getEnclosingElement())
-                        + "." + pme.getName() + "(...)'  should not have arguments").element(pme.getOriginMethod()).create();
+                        + "." + pme.getName() + "(...)'  should not have arguments").element(pme.getOriginMethod()).build();
             }
             constructorBuilder.addStatement("$N()", pme.getName());
         }

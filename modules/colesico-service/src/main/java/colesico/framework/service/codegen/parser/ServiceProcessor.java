@@ -19,6 +19,7 @@
 package colesico.framework.service.codegen.parser;
 
 import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.service.codegen.generator.IocGenerator;
 import colesico.framework.service.codegen.generator.ServiceProxyGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
@@ -54,14 +55,6 @@ import static colesico.framework.service.ServicePrototype.PROXY_CLASS_SUFFIX;
 @AutoService(Processor.class)
 public class ServiceProcessor extends AbstractProcessor {
 
-    public static final String PRODUCER_MODE_OPTION = "colesico.framework.service.producerMode";
-
-    // for production
-    public static final String PRODUCER_MODE_PER_PACKAGE = "per-package";
-    // for development
-    public static final String PRODUCER_MODE_PER_SERVICE = "per-service";
-
-
     protected final Logger logger;
     protected final ModulatorKit modulatorKit;
     protected ProcessorContext context;
@@ -95,7 +88,7 @@ public class ServiceProcessor extends AbstractProcessor {
     @Override
     public Set<String> getSupportedOptions() {
         Set<String> options = new HashSet<>();
-        options.add(PRODUCER_MODE_OPTION);
+        options.add(CodegenUtils.OPTION_CODEGEN);
         return options;
     }
 
@@ -179,23 +172,12 @@ public class ServiceProcessor extends AbstractProcessor {
         }
 
         if (!context.getProcessedServices().isEmpty()) {
-            String producerMode = processingEnv.getOptions().get(PRODUCER_MODE_OPTION);
-            if (producerMode == null) {
-                producerMode = PRODUCER_MODE_PER_PACKAGE;
-            }
             IocGenerator iocGenerator = new IocGenerator(context);
-            switch (producerMode) {
-                case PRODUCER_MODE_PER_PACKAGE:
-                    iocGenerator.generatePerPackage(context.getProcessedServices());
-                    break;
-                case PRODUCER_MODE_PER_SERVICE:
-                    iocGenerator.generatePerService(context.getProcessedServices());
-                    break;
-                default:
-                    throw CodegenException.of().message("Unsupported producer generation mode: " + producerMode +
-                            ". Valid values: " + PRODUCER_MODE_PER_PACKAGE + "; " + PRODUCER_MODE_PER_SERVICE).create();
+            if (context.isProductionCodegen()) {
+                iocGenerator.generatePerPackage(context.getProcessedServices());
+            } else {
+                iocGenerator.generatePerService(context.getProcessedServices());
             }
-
         }
     }
 

@@ -85,7 +85,7 @@ public final class ServiceElement {
             if (mfe.getTypeName().equals(field.getTypeName())) {
                 return;
             }
-            throw CodegenException.of().message("Duplicate field name:" + field.getName()).element(getOriginClass()).create();
+            throw CodegenException.of().message("Duplicate field name:" + field.getName()).element(getOriginClass()).build();
         }
         fields.add(field);
         field.parentService = this;
@@ -107,7 +107,7 @@ public final class ServiceElement {
     public void addCustomMethod(final CustomMethodElement customMethod) {
         CustomMethodElement cme = customMethods.find(m -> m.getName().equals(customMethod.getName()));
         if (cme != null) {
-            throw CodegenException.of().message("Duplicate method name:" + customMethod.getName()).element(getOriginClass()).create();
+            throw CodegenException.of().message("Duplicate method name:" + customMethod.getName()).element(getOriginClass()).build();
         }
         customMethods.add(customMethod);
         customMethod.parentService = this;
@@ -116,7 +116,7 @@ public final class ServiceElement {
     public void addTeleFacade(TeleFacadeElement teleFacade) {
         TeleFacadeElement ta = teleFacades.find(t -> t.getTeleType().equals(teleFacade.getTeleType()));
         if (ta != null) {
-            throw CodegenException.of().message("Duplicate teleDriver-facade: " + teleFacade.getTeleType()).element(getOriginClass()).create();
+            throw CodegenException.of().message("Duplicate teleDriver-facade: " + teleFacade.getTeleType()).element(getOriginClass()).build();
         }
         teleFacade.parentService = this;
         teleFacades.add(teleFacade);
@@ -142,8 +142,8 @@ public final class ServiceElement {
         return proxyMethods;
     }
 
-    public Object getProperty(Class propertyClass) {
-        return properties.get(propertyClass);
+    public <T> T getProperty(Class<T> propertyClass) {
+        return (T) properties.get(propertyClass);
     }
 
     public void setProperty(Object property) {

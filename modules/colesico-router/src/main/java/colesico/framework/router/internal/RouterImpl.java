@@ -45,22 +45,23 @@ public class RouterImpl implements Router {
 
     protected final Logger log = LoggerFactory.getLogger(Router.class);
 
-    protected final Ioc ioc;
     protected final ThreadScope threadScope;
 
     protected RouteTrie<TeleMethod> routeTrie;
     protected RoutesIndex routesIndex;
 
     @Inject
-    public RouterImpl(Ioc ioc, ThreadScope threadScope) {
-        this.ioc = ioc;
+    public RouterImpl(
+            @InlineInject
+            @Classed(Router.class)
+                    Polysupplier<TeleFacade> teleFacadesSupp,
+            ThreadScope threadScope) {
         this.threadScope = threadScope;
-        loadRoutes();
+        loadRoutes(teleFacadesSupp);
     }
 
-    protected void loadRoutes() {
+    protected void loadRoutes(Polysupplier<TeleFacade> teleFacadeSupp) {
         log.debug("Lookup routing tele-facades... ");
-        Polysupplier<TeleFacade> teleFacadeSupp = ioc.polysupplier(new ClassedKey<>(TeleFacade.class, Router.class));
 
         routeTrie = new RouteTrie<>(null);
         routesIndex = new RoutesIndex();

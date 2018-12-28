@@ -38,6 +38,8 @@ import static colesico.framework.ioc.codegen.generator.IocletGenerator.PRODUCER_
  */
 public class FactoryGenerator {
 
+    public static final String IOC_FIELD = "ioc";
+
     protected final KeyGenerator keyGenerator = new KeyGenerator();
 
     public TypeSpec generateFactory(FactoryElement factoryElement) {
@@ -49,7 +51,7 @@ public class FactoryGenerator {
             case UNSCOPED:
                 return generateUnscopedFactory(factoryElement);
             default:
-                throw CodegenException.of().message("Unsupported scope kind: " + factoryElement.getScope().getKind()).create();
+                throw CodegenException.of().message("Unsupported scope kind: " + factoryElement.getScope().getKind()).build();
         }
 
     }
@@ -63,20 +65,19 @@ public class FactoryGenerator {
 
         // Param factories fields
 
+        boolean addIocField = false;
         for (InjectableElement parameter : factoryElement.getParameters()) {
 
-            String getFactoryMethod = null;
-            switch (parameter.getInjectionKind()) {
-                case MESSAGE:
-                    continue;
-                case POLYSUPPLIER:
-                    getFactoryMethod = AdvancedIoc.FACTORY_OR_NULL_METHOD;
-                    break;
-                case SUPPLIER:
-                case PROVIDER:
-                case INSTANCE:
-                    getFactoryMethod = AdvancedIoc.FACTORY_METHOD;
-                    break;
+            // Dynamic binding
+            if (parameter.getLinkagePhase() == InjectableElement.LinkagePhase.PRODUCTION) {
+                addIocField = true;
+                continue;
+            }
+
+            String factoryMethodName = getFactoryMethodName(parameter);
+            if (factoryMethodName == null) {
+                // Ignore message injection
+                continue;
             }
 
             String factoryFieldName = getFactoryVarName(parameter);
@@ -84,7 +85,7 @@ public class FactoryGenerator {
             methodBuilder.addStatement("this.$N=$N.$N($L)",
                     factoryFieldName,
                     Factory.IOC_PARAM,
-                    getFactoryMethod,
+                    factoryMethodName,
                     keyGenerator.forInjection(parameter));
         }
 
@@ -96,6 +97,13 @@ public class FactoryGenerator {
                     AdvancedIoc.FACTORY_METHOD,
                     keyGenerator.forScope(factoryElement.getScope().getScopeClass().toString()));
         }
+
+        // Dynamic binding
+        if (addIocField) {
+            generateIocField(factoryBuilder);
+            methodBuilder.addStatement("this.$N=$N", IOC_FIELD, Factory.IOC_PARAM);
+        }
+
         factoryBuilder.addMethod(methodBuilder.build());
     }
 
@@ -132,22 +140,42 @@ public class FactoryGenerator {
                     messageSource = null;
             }
 
-            String factoriesource = "this." + getFactoryVarName(param);
+            String factorySource;
+            // Is static binding?
+            if (param.getLinkagePhase() == InjectableElement.LinkagePhase.ACTIVATION) {
+                // Use factory from field
+                factorySource = "this." + getFactoryVarName(param);
+            } else {
+                // Use factory from local variable
+                String factoryMethodName = getFactoryMethodName(param);
+                if (factoryMethodName != null) {
+                    factorySource = param.getOriginParameter().getSimpleName() + "Var";
+                    methodBuilder.addStatement("final $T $N=$N.$N($L)",
+                            getFactoryTypeName(param),
+                            factorySource,
+                            Factory.IOC_PARAM,
+                            factoryMethodName,
+                            keyGenerator.forInjection(param));
+                } else {
+                    factorySource = null;
+                }
+            }
+
             switch (param.getInjectionKind()) {
                 case MESSAGE:
                     arrayCodegen.add("($T)$N", TypeName.get(param.getInjectedType()), messageSource);
                     break;
                 case INSTANCE:
-                    arrayCodegen.add("$N.$N($N)", factoriesource, Factory.GET_METHOD, messageSource);
+                    arrayCodegen.add("$N.$N($N)", factorySource, Factory.GET_METHOD, messageSource);
                     break;
                 case SUPPLIER:
-                    arrayCodegen.add("new $T($N)", ClassName.get(DefaultSupplier.class),factoriesource);
+                    arrayCodegen.add("new $T($N)", ClassName.get(DefaultSupplier.class), factorySource);
                     break;
                 case PROVIDER:
-                    arrayCodegen.add("new $T($N,$N)", ClassName.get(DefaultProvider.class), factoriesource, messageSource);
+                    arrayCodegen.add("new $T($N,$N)", ClassName.get(DefaultProvider.class), factorySource, messageSource);
                     break;
                 case POLYSUPPLIER:
-                    arrayCodegen.add("new $T($N)", ClassName.get(DefaultPolysupplier.class), factoriesource);
+                    arrayCodegen.add("new $T($N)", ClassName.get(DefaultPolysupplier.class), factorySource);
                     break;
             }
         }
@@ -215,6 +243,27 @@ public class FactoryGenerator {
 
     protected void generateField(TypeSpec.Builder factoryBuilder, TypeName typeName, String fieldName) {
         FieldSpec.Builder fb = FieldSpec.builder(typeName, fieldName);
+        fb.addModifiers(Modifier.PRIVATE);
+        factoryBuilder.addField(fb.build());
+    }
+
+    protected String getFactoryMethodName(InjectableElement injectableElement) {
+        switch (injectableElement.getInjectionKind()) {
+            case MESSAGE:
+                return null;
+            case POLYSUPPLIER:
+                return AdvancedIoc.FACTORY_OR_NULL_METHOD;
+            case SUPPLIER:
+            case PROVIDER:
+            case INSTANCE:
+                return AdvancedIoc.FACTORY_METHOD;
+            default:
+                throw CodegenException.of().message("Unsupported injection kind: " + injectableElement.getInjectionKind()).element(injectableElement.getOriginParameter()).build();
+        }
+    }
+
+    protected void generateIocField(TypeSpec.Builder factoryBuilder) {
+        FieldSpec.Builder fb = FieldSpec.builder(ClassName.get(AdvancedIoc.class), IOC_FIELD);
         fb.addModifiers(Modifier.PRIVATE);
         factoryBuilder.addField(fb.build());
     }

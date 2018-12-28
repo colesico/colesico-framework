@@ -52,7 +52,7 @@ public class ServiceParser {
             CustomScope customScope = annType.getAnnotation(CustomScope.class);
             if (customScope != null) {
                 if (scopeAnnotation != null) {
-                    throw CodegenException.of().message("Ambiguous scope declaration").element(serviceType).create();
+                    throw CodegenException.of().message("Ambiguous scope declaration").element(serviceType).build();
                 } else {
                     scopeAnnotation = annType;
                 }
@@ -101,7 +101,7 @@ public class ServiceParser {
         } catch (CodegenException ce) {
             throw ce;
         } catch (Exception ex) {
-            throw CodegenException.of().cause(ex).element(serviceType).create();
+            throw CodegenException.of().cause(ex).element(serviceType).build();
         }
     }
 

@@ -228,7 +228,7 @@ public class ProducersProcessor extends AbstractProcessor {
 
             ExecutableElement injConstructor = getInjectableConstructor(typeElm);
             if (injConstructor == null) {
-                throw CodegenException.of().message("Unable to find injectable constructor for class: " + typeMirr.toString()).create();
+                throw CodegenException.of().message("Unable to find injectable constructor for class: " + typeMirr.toString()).build();
             }
             iocletElement.addFactory(new DefaultFactoryElement(producerElement, produce, injConstructor));
         }

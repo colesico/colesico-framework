@@ -24,15 +24,17 @@
     <parent>
         <groupId>colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>colesico-widget</artifactId>
-    <version>1.0.0</version>
-
     <packaging>jar</packaging>
+
     <name>Colesico Widget Module</name>
+    <description>
+        Colesico framework widgets support for html pages rendering
+    </description>
 
     <properties>
     </properties>
@@ -42,7 +44,7 @@
         <dependency>
             <groupId>colesico.framework</groupId>
             <artifactId>colesico-ioc</artifactId>
-            <version>${colesico-ioc.version}</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

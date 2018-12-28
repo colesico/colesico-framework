@@ -19,6 +19,7 @@
 package colesico.framework.service.codegen.modulator;
 
 import colesico.framework.assist.ServiceLocator;
+import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.Service;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.parser.ProcessorContext;
@@ -43,7 +44,6 @@ public class ModulatorKit {
         modulators = new ArrayList<>();
         serviceAnnotations = new HashSet<>();
     }
-
 
     public void lookup() {
         modulators.clear();
@@ -127,6 +127,12 @@ public class ModulatorKit {
     public void notifyServiceGenerated(ServiceElement service) {
         for (Modulator modulator : modulators) {
             modulator.onServiceGenerated(service);
+        }
+    }
+
+    public void notifyGenerateIocProducer(ProducerGenerator generator,  Set<ServiceElement> services){
+        for (Modulator modulator : modulators) {
+            modulator.onGenerateIocProducer(generator, services);
         }
     }
 }

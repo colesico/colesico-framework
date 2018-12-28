@@ -25,7 +25,7 @@
     <parent>
         <groupId>colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -33,13 +33,11 @@
     <packaging>jar</packaging>
 
     <name>Colesico Restlet Module</name>
-
     <description>
-        Colesico Framework Simple REST Service Library
+        Colesico framework simple REST support
     </description>
 
     <properties>
-        <jackson.version>2.9.6</jackson.version>
     </properties>
 
     <dependencies>
@@ -47,13 +45,13 @@
         <dependency>
             <groupId>colesico.framework</groupId>
             <artifactId>colesico-weblet</artifactId>
-            <version>${colesico-weblet.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>colesico.framework</groupId>
             <artifactId>colesico-validation</artifactId>
-            <version>${colesico-validation.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- Json parser for rest -->
@@ -76,7 +74,7 @@
                         <path>
                             <groupId>colesico.framework</groupId>
                             <artifactId>colesico-ioc</artifactId>
-                            <version>${colesico-ioc.version}</version>
+                            <version>${project.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

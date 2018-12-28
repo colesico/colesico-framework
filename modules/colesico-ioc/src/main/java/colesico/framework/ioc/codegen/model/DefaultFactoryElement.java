@@ -76,7 +76,7 @@ public class DefaultFactoryElement extends FactoryElement {
         if (StringUtils.isNotEmpty(this.named) && this.classed != null) {
             CodegenException.of().message("Ambiguous injection qualifiers for " +
                     constructorElement.getReturnType().toString()
-            ).element(producerElement).create();
+            ).element(producerElement).build();
         }
     }
 

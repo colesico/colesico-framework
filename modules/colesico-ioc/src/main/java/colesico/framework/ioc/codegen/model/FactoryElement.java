@@ -107,7 +107,7 @@ abstract public class FactoryElement {
                 if (result == null) {
                     result = scopeElm;
                 } else {
-                    throw CodegenException.of().message("Ambiguous scope definition").element(element).create();
+                    throw CodegenException.of().message("Ambiguous scope definition").element(element).build();
                 }
             }
         }

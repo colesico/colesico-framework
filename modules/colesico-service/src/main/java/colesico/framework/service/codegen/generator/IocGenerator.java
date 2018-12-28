@@ -21,6 +21,7 @@ package colesico.framework.service.codegen.generator;
 
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.ioc.*;
+import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.ServicePrototype;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleFacadeElement;
@@ -60,26 +61,17 @@ public class IocGenerator {
         this.context = context;
     }
 
-    private void generateProducerAnnotation(TypeSpec.Builder producerBuilder) {
-        AnnotationSpec.Builder b = AnnotationSpec.builder(Producer.class);
-        b.addMember("value", "$S", Rank.RANK_MINOR);
-        producerBuilder.addAnnotation(b.build());
-    }
-
-    private void generateProduceService(TypeSpec.Builder producerBuilder, ServiceElement serviceElement, String methodUID) {
-
+    private void generateProduceService(ProducerGenerator producerGenerator, ServiceElement serviceElement, String methodUID) {
         TypeName serviceProxyTypeName = ClassName.bestGuess(
                 ServicePrototype.getProxyClassName(serviceElement.getOriginClass().asType().toString()));
 
         // Add  @Produce annotation
-        AnnotationSpec.Builder produceAnn = AnnotationSpec.builder(Produce.class);
-        produceAnn.addMember("value", "$T.class", serviceProxyTypeName);
-        producerBuilder.addAnnotation(produceAnn.build());
+        producerGenerator.addProduceAnnotation(serviceProxyTypeName);
 
         // Add produce method
-        MethodSpec.Builder mb = MethodSpec.methodBuilder("get" + serviceElement.getOriginClass().getSimpleName() + methodUID);
-        mb.addModifiers(Modifier.PUBLIC);
-        mb.returns(TypeName.get(serviceElement.getOriginClass().asType()));
+        MethodSpec.Builder mb = producerGenerator.addProduceMethod("get" + serviceElement.getOriginClass().getSimpleName() + methodUID,
+                TypeName.get(serviceElement.getOriginClass().asType()));
+
 
         String scopeAnnClassName = serviceElement.getScopeAnnotation() != null ? serviceElement.getScopeAnnotation().toString() : Singleton.class.getName();
         AnnotationSpec.Builder scopeAnnBuilder = AnnotationSpec.builder(ClassName.bestGuess(scopeAnnClassName));
@@ -88,21 +80,16 @@ public class IocGenerator {
         mb.addParameter(serviceProxyTypeName, IMPLEMENTATION_PARAM);
 
         mb.addStatement("return $N", IMPLEMENTATION_PARAM);
-        producerBuilder.addMethod(mb.build());
     }
 
-    private void generateProduceTeleFacade(TypeSpec.Builder producerBuilder, TeleFacadeElement teleFacadeElement, String methodUID) {
+    private void generateProduceTeleFacade(ProducerGenerator producerGenerator, TeleFacadeElement teleFacadeElement, String methodUID) {
 
-        // Generate produce annotation
-        AnnotationSpec.Builder produceAnn = AnnotationSpec.builder(Produce.class);
-        produceAnn.addMember("value", "$T.class", ClassName.bestGuess(teleFacadeElement.getClassName()));
-        producerBuilder.addAnnotation(produceAnn.build());
-
+        // Generate @Produce annotation
+        producerGenerator.addProduceAnnotation(ClassName.bestGuess(teleFacadeElement.getClassName()));
 
         // Generate produce method
-        MethodSpec.Builder mb = MethodSpec.methodBuilder("get" + TeleFacade.class.getSimpleName() + methodUID);
-        mb.addModifiers(Modifier.PUBLIC);
-        mb.returns(TypeName.get(TeleFacade.class));
+        MethodSpec.Builder mb = producerGenerator.addProduceMethod("get" + TeleFacade.class.getSimpleName() + methodUID,
+                TypeName.get(TeleFacade.class));
         mb.addParameter(ClassName.bestGuess(teleFacadeElement.getClassName()), IMPLEMENTATION_PARAM, Modifier.FINAL);
 
         mb.addAnnotation(Polyproduce.class);
@@ -119,53 +106,46 @@ public class IocGenerator {
         }
 
         mb.addStatement("return $N", IMPLEMENTATION_PARAM);
-
-        producerBuilder.addMethod(mb.build());
     }
 
     private void generateProducerClass(String packageName, String classSimpleName, Set<ServiceElement> serviceElements) {
         String producerClassName = packageName + '.' + classSimpleName;
-        logger.debug("Generate services internal producer: " + producerClassName);
-        String producerPath = packageName.replace('.', '/') + "/" + classSimpleName + ".java";
+        logger.debug("Generate services producer: " + producerClassName);
 
-        try {
-            FileObject producerFile = context.getFiler().getResource(StandardLocation.SOURCE_OUTPUT, packageName, classSimpleName + ".java");
-            producerFile.openInputStream();
-            logger.info("Services IOC producer file exists: " + producerPath + ". Producer file will not be generated");
-            context.getMessager().printMessage(Diagnostic.Kind.NOTE, "Services IOC producers class already exists: " + producerClassName + ". Clean the project to rebuild this class.");
-            return;
-        } catch (Exception e) {
-            logger.info("IOC producer file is not exists, will be created: " + producerPath);
+        ProducerGenerator producerGenerator = new ProducerGenerator(packageName, classSimpleName, this.getClass(), context.getProcessingEnv());
+        producerGenerator.setProducerRank(Rank.RANK_MINOR);
+
+        if (producerGenerator.isProducerExists()) {
+            if (context.isProductionCodegen()) {
+                String producerPath = producerGenerator.getProducerClassFilePath();
+                context.getMessager().printMessage(Diagnostic.Kind.NOTE, "Services IOC producers class already exists: " + producerPath + ". Clean the project to rebuild this class correctly.");
+            }
         }
-
-        TypeSpec.Builder producerBuilder = TypeSpec.classBuilder(classSimpleName);
-        producerBuilder.addModifiers(Modifier.PUBLIC);
-        producerBuilder.addAnnotation(CodegenUtils.buildGenstampAnnotation(this.getClass().getName(), null, null));
-
-        generateProducerAnnotation(producerBuilder);
 
         int i = 0;
         Element[] linkedElements = new Element[serviceElements.size()];
         for (ServiceElement service : serviceElements) {
             logger.debug("Generate service producing: " + service.getOriginClass().asType().toString());
             linkedElements[i] = service.getOriginClass();
-            generateProduceService(producerBuilder, service, "F" + Integer.toString(i));
+            generateProduceService(producerGenerator, service, "F" + Integer.toString(i));
 
             // Telefacades producing
             for (TeleFacadeElement teleFacade : service.getTeleFacades()) {
                 logger.debug("Generate tele-facade producing: " + teleFacade.getClassName());
-                generateProduceTeleFacade(producerBuilder, teleFacade, "T" + Integer.toString(i));
+                generateProduceTeleFacade(producerGenerator, teleFacade, "T" + Integer.toString(i));
             }
 
             i++;
         }
 
-        final TypeSpec typeSpec = producerBuilder.build();
+        context.getModulatorKit().notifyGenerateIocProducer(producerGenerator, serviceElements);
+
+        final TypeSpec typeSpec = producerGenerator.typeBuilder().build();
         CodegenUtils.createJavaFile(context.getProcessingEnv(), typeSpec, packageName, linkedElements);
     }
 
     public void generatePerPackage(Set<ServiceElement> services) {
-        logger.debug("Generate services internal producers...");
+        logger.debug("Generate services producers. One producer per package. Total services: " + services.size());
         Map<String, Set<ServiceElement>> perPackageMap = new HashMap<>();
         for (ServiceElement srv : services) {
             String pkgName = CodegenUtils.getPackageName(srv.getOriginClass());
@@ -180,7 +160,7 @@ public class IocGenerator {
     }
 
     public void generatePerService(Set<ServiceElement> services) {
-        logger.debug("Generate services internal producers...");
+        logger.debug("Generate services producers. One producer per service. Total services: " + services.size());
         for (ServiceElement srv : services) {
             String pkgName = CodegenUtils.getPackageName(srv.getOriginClass());
             String producerName = srv.getOriginClass().getSimpleName().toString() + "Producer";

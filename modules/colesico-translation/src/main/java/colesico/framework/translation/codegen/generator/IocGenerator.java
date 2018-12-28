@@ -43,7 +43,7 @@ public class IocGenerator {
 
             String methodName = "get" + dbe.getOriginBean().getSimpleName().toString() + i;
             TypeName retTypeName = TypeName.get(dbe.getOriginBean().asType());
-            producerGenerator.addImplementationMethod(methodName, retTypeName,implTypeName);
+            producerGenerator.addImplementMethod(methodName, retTypeName,implTypeName);
             i++;
         }
 

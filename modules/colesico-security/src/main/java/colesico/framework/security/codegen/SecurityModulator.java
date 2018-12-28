@@ -54,7 +54,7 @@ public class SecurityModulator extends Modulator {
         if (requirePrincipal != null || requireAuthority != null) {
             if (proxyMethod.isPlain()) {
                 throw CodegenException.of().message("To use @" + RequirePrincipal.class.getSimpleName() + " or @"
-                        + RequireAuthority.class.getSimpleName() + " method should not be plain method").element(proxyMethod.getOriginMethod()).create();
+                        + RequireAuthority.class.getSimpleName() + " method should not be plain method").element(proxyMethod.getOriginMethod()).build();
             }
         } else {
             return;
@@ -84,7 +84,7 @@ public class SecurityModulator extends Modulator {
             codeBlock.add("(($T)$N)::$N", ClassName.get(SecurityInterceptor.class) , SEQURITY_KIT_FIELD, SecurityInterceptor.INTERCEPT_REQUIRE_PRINCIPAL_METHOD);
             proxyMethod.addInterception(InterceptionPhases.AUTHORIZATION,new InterceptionElement(codeBlock.build()));
         } else {
-            throw CodegenException.of().message("Security modulator has confused :)").element(proxyMethod.getOriginMethod()).create();
+            throw CodegenException.of().message("Security modulator has confused :)").element(proxyMethod.getOriginMethod()).build();
         }
 
     }

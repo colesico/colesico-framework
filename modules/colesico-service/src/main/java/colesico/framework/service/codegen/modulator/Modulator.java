@@ -18,6 +18,7 @@
 package colesico.framework.service.codegen.modulator;
 
 
+import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.parser.ProcessorContext;
 import colesico.framework.service.codegen.parser.RoundContext;
@@ -87,6 +88,10 @@ abstract public class Modulator {
     }
 
     public void onServiceGenerated(ServiceElement service) {
+
+    }
+
+    public void onGenerateIocProducer(ProducerGenerator generator, Set<ServiceElement> services) {
 
     }
 
