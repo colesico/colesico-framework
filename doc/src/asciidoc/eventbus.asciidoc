@@ -2,7 +2,7 @@
 
 == Colesico-EventBus
 
-Simple event bus support for bigness logic beans (services).
+Simple event bus support for business logic beans (services).
 
 Provide declarative event subscription and EventBus component for sending events.
 
