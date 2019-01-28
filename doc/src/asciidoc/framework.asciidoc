@@ -18,12 +18,12 @@ Colesico-framework consists of highly specialized modules:
 
 * <<config.asciidoc#,Colesico-config - Configuration assistant>>
 * <<eventbus.asciidoc#,Colesico-eventbus - Simple even bus for services>>
-* Colesico-fluentjdbc - FluentJdbc integration
 * Colesico-hikaricp - HikariCP integration
 * Colesico-htmlrenderer - Unified html rendering API
 * Colesico-http - Unified HTTP API
 * <<ioc.asciidoc#,Colesico-ioc - Lightweight dependency injection container>>
 * Colesico-jdbc - Jdbc integration  (transactions support, etc.)
+* Colesico-jdbi - Jdbi integration  (transactions support, etc.)
 * Colesico-pebble - Pebble templating engine  integration
 * <<profile.asciidoc#,Colesico-profile - localization profile assistant service>>
 * Colesico-resource
