@@ -18,16 +18,14 @@
 
 package colesico.framework.config.codegen;
 
-import colesico.framework.config.Configuration;
 import colesico.framework.assist.codegen.CodegenException;
-import com.google.auto.service.AutoService;
+import colesico.framework.config.Configuration;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
@@ -45,7 +43,6 @@ import java.util.Set;
 /**
  * @author Vladlen Larionov
  */
-@AutoService(Processor.class)
 public class ConfigProcessor extends AbstractProcessor {
 
     private Logger logger;

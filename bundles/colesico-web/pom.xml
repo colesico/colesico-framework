@@ -23,7 +23,7 @@
     <parent>
         <groupId>colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.1.0</version>
+        <version>1.2.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -58,6 +58,12 @@
         <dependency>
             <groupId>colesico.framework</groupId>
             <artifactId>colesico-webstatic</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>colesico.framework</groupId>
+            <artifactId>colesico-pebble</artifactId>
             <version>${project.version}</version>
         </dependency>
 

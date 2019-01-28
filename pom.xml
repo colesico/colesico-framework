@@ -25,7 +25,7 @@
     <groupId>colesico.framework</groupId>
     <artifactId>colesico-framework</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <name>Colesico Framework</name>
     <description>
         Lightweight application framework for the Java 9+
@@ -70,20 +70,28 @@
         <!-- Other -->
         <commons-lang3.version>3.7</commons-lang3.version>
         <commons-io.version>2.6</commons-io.version>
+
+        <!-- Logging -->
         <slf4j.version>1.7.25</slf4j.version>
         <logback.verion>1.2.3</logback.verion>
-        <org-testng.version>6.14.3</org-testng.version>
-        <javax.inject.version>1</javax.inject.version>
 
+        <!-- Tests -->
+        <org-testng.version>6.14.3</org-testng.version>
+
+        <javax.inject.version>1</javax.inject.version>
         <auto-service.version>1.0-rc4</auto-service.version>
-        <trimou.version>2.5.0.Final</trimou.version>
-        <rocker.version>1.1.0</rocker.version>
-        <pebble.version>3.0.3</pebble.version>
+
+        <!-- DB -->
         <hikaricp.version>3.2.0</hikaricp.version>
+        <jdbi.version>3.6.0</jdbi.version>
         <fluentjdbc.version>1.8.3</fluentjdbc.version>
+        <h2database.version>1.4.197</h2database.version>
+
+        <pebble.version>3.0.7</pebble.version>
+        <jsoniter.version>0.9.23</jsoniter.version>
+
         <cache2k.version>1.0.2.Final</cache2k.version>
         <javapoet.version>1.11.1</javapoet.version>
-        <jackson.version>2.9.6</jackson.version>
         <undertow.version>2.0.13.Final</undertow.version>
     </properties>
 
@@ -111,9 +119,13 @@
                 <module>modules/colesico-validation</module>
 				<module>modules/colesico-eventbus</module>
 
+				<!-- Transactions -->
+				<module>modules/colesico-transaction</module>				
+				
                 <!-- DB -->
-                <module>modules/colesico-dba</module>
-                <module>modules/colesico-fluentjdbc</module>
+				<module>modules/colesico-hikaricp</module>
+				<module>modules/colesico-jdbc</module>
+				<module>modules/colesico-jdbi</module>
 
                 <!-- Web -->
                 <module>modules/colesico-http</module>
@@ -137,6 +149,7 @@
             </activation>
             <modules>
                 <!-- Bundles -->
+				<module>bundles/colesico-db</module>
                 <module>bundles/colesico-web</module>
             </modules>
         </profile>
@@ -149,6 +162,8 @@
                 <module>examples/ioc</module>
                 <module>examples/web</module>
 				<module>examples/eventbus</module>
+				<module>examples/transaction</module>
+				<module>examples/jdbi</module>
             </modules>
         </profile>
         <profile>

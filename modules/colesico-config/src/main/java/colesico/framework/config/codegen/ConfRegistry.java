@@ -18,17 +18,16 @@
 
 package colesico.framework.config.codegen;
 
-import colesico.framework.config.ConfigPrototype;
-import colesico.framework.config.Configuration;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
+import colesico.framework.config.ConfigPrototype;
+import colesico.framework.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,16 +64,16 @@ public class ConfRegistry {
     }
 
     protected TypeElement getConfigBaseClass(TypeElement classElement) {
-        TypeMirror superClass = null;
+        TypeElement superClass = classElement;
         do {
-            superClass = classElement.getSuperclass();
-            ConfigPrototype cpAnn = ((DeclaredType) superClass).asElement().getAnnotation(ConfigPrototype.class);
+            superClass = (TypeElement) ((DeclaredType)superClass.getSuperclass()).asElement();
+            ConfigPrototype cpAnn = superClass.getAnnotation(ConfigPrototype.class);
             if (cpAnn != null) {
-                return (TypeElement) ((DeclaredType) superClass).asElement();
+                return superClass;
             }
-        } while (!superClass.toString().equals(Object.class.getName()));
+        } while (!superClass.getSimpleName().toString().equals("Object"));
 
-        throw  CodegenException.of().message("Unable to determine configuration prototype for: " + classElement.asType().toString()).element(classElement).build();
+        throw CodegenException.of().message("Unable to determine configuration prototype for: " + classElement.asType().toString()).element(classElement).build();
     }
 
     public ConfigElement register(TypeElement classElement) {

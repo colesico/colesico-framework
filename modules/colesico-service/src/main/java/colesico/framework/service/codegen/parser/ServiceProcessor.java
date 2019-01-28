@@ -24,7 +24,6 @@ import colesico.framework.service.codegen.generator.IocGenerator;
 import colesico.framework.service.codegen.generator.ServiceProxyGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.modulator.ModulatorKit;
-import com.google.auto.service.AutoService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -52,7 +51,6 @@ import static colesico.framework.service.ServicePrototype.PROXY_CLASS_SUFFIX;
  *
  * @author Vladlen Larionov
  */
-@AutoService(Processor.class)
 public class ServiceProcessor extends AbstractProcessor {
 
     protected final Logger logger;

@@ -4,11 +4,14 @@ import colesico.framework.eventbus.EventBus;
 import colesico.framework.eventbus.OnEvent;
 import colesico.framework.service.Service;
 
+import javax.inject.Inject;
+
 @Service
 public class Sender {
 
     final EventBus eventBus;
 
+    @Inject
     public Sender(EventBus eventBus) {
         this.eventBus = eventBus;
     }

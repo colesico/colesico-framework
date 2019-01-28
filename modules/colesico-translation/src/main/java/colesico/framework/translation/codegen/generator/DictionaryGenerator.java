@@ -42,8 +42,7 @@ public class DictionaryGenerator {
     }
 
     protected MethodSpec generateProxyMethod(ExecutableElement keyMethod) {
-        MethodSpec.Builder mb = CodegenUtils.createBuilderProxyMethod(false, keyMethod,
-                null, null, null, true, true);
+        MethodSpec.Builder mb = CodegenUtils.createProxyMethodBuilder(keyMethod, null, null, true);
 
         mb.addModifiers(Modifier.PUBLIC);
         CodeBlock.Builder cb = CodeBlock.builder();

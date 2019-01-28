@@ -22,7 +22,6 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.ThreadScope;
 import colesico.framework.ioc.TypeKey;
 import colesico.framework.ioc.ioclet.*;
-import com.google.auto.service.AutoService;
 
 import static colesico.framework.ioc.Rank.RANK_MINOR;
 
@@ -30,7 +29,6 @@ import static colesico.framework.ioc.Rank.RANK_MINOR;
  * @author Vladlen Larionov
  */
 
-@AutoService(Ioclet.class)
 public final class IocIoclet implements Ioclet {
 
     private Factory<Ioc> getIOCContainerFactory() {
@@ -60,7 +58,7 @@ public final class IocIoclet implements Ioclet {
     }
 
     @Override
-    public String getProducerName() {
+    public String getProducerId() {
         return IocIoclet.class.getName();
     }
 

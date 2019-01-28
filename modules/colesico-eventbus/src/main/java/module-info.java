@@ -6,7 +6,6 @@ module colesico.framework.eventbus {
     requires transitive colesico.framework.service;
 
     //requires org.slf4j;
-    requires auto.service;
     requires slf4j.api;
     requires org.apache.commons.lang3;
     requires java.compiler;

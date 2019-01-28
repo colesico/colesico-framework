@@ -90,7 +90,7 @@ To specify what instance to return, use the "keys":
   MyBean defaultBean = ioc.instance(new ClassedKey(MyBean.class, AnyClass.class), null);
 ----
 
-When injecting dependencies as a constructor parameters, each key corresponds to a specific annotation:
+When injecting dependencies to a constructor  each key corresponds to a specific annotation:
 
 * TypeKey - no annotation.
 * NamedKey - @Named

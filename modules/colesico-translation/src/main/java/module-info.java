@@ -22,7 +22,6 @@ module colesico.framework.translation {
     // Compile time req.
     requires static java.compiler;
     requires static com.squareup.javapoet;
-    requires static auto.service;
 
     // requires org.slf4j;
     requires slf4j.api;

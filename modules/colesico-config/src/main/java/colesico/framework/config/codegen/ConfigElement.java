@@ -23,7 +23,9 @@ import colesico.framework.config.Default;
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
 import colesico.framework.assist.codegen.CodegenUtils;
+import colesico.framework.ioc.Classed;
 
+import javax.inject.Named;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
@@ -58,6 +60,12 @@ public class ConfigElement {
 
     private final boolean defaultMessage;
 
+    /**
+     * If classed annotation is defined on configuration instance
+     */
+    private final TypeMirror classedQualifier;
+    private final String namedQualifier;
+
     public ConfigElement(TypeElement implementation, TypeElement prototype, String rank) {
         this.implementation = implementation;
         this.prototype = prototype;
@@ -78,6 +86,16 @@ public class ConfigElement {
         } else {
             defaultMessage = false;
         }
+
+        Classed classedAnn = implementation.getAnnotation(Classed.class);
+        if (classedAnn != null) {
+            classedQualifier = CodegenUtils.getAnnotationValueTypeMirror(classedAnn, c -> c.value());
+        } else {
+            classedQualifier = null;
+        }
+
+        Named namedAnn = implementation.getAnnotation(Named.class);
+        namedQualifier = namedAnn!=null?namedAnn.value():null;
     }
 
     public TypeElement getImplementation() {
@@ -102,6 +120,14 @@ public class ConfigElement {
 
     public boolean getDefaultMessage() {
         return defaultMessage;
+    }
+
+    public TypeMirror getClassedQualifier() {
+        return classedQualifier;
+    }
+
+    public String getNamedQualifier() {
+        return namedQualifier;
     }
 
     @Override

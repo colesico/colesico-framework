@@ -110,7 +110,15 @@ public class IocGenerator {
 
     private void generateProducerClass(String packageName, String classSimpleName, Set<ServiceElement> serviceElements) {
         String producerClassName = packageName + '.' + classSimpleName;
-        logger.debug("Generate services producer: " + producerClassName);
+        if (logger.isDebugEnabled()){
+            StringBuilder mb = new StringBuilder("Generate services producer: " + producerClassName).append("\n");
+            for (ServiceElement se:serviceElements){
+                mb.append("  for service: ").append(se.getOriginClass().getQualifiedName().toString());
+            }
+            logger.debug(mb.toString());
+        }
+
+
 
         ProducerGenerator producerGenerator = new ProducerGenerator(packageName, classSimpleName, this.getClass(), context.getProcessingEnv());
         producerGenerator.setProducerRank(Rank.RANK_MINOR);
@@ -118,7 +126,7 @@ public class IocGenerator {
         if (producerGenerator.isProducerExists()) {
             if (context.isProductionCodegen()) {
                 String producerPath = producerGenerator.getProducerClassFilePath();
-                context.getMessager().printMessage(Diagnostic.Kind.NOTE, "Services IOC producers class already exists: " + producerPath + ". Clean the project to rebuild this class correctly.");
+                context.getMessager().printMessage(Diagnostic.Kind.WARNING, "Services IOC producers class already exists: " + producerPath + ". Clean the project to rebuild this class correctly.");
             }
         }
 

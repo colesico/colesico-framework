@@ -1,0 +1,23 @@
+[[intro]]
+
+== Colesico-Transaction
+
+Unified support for transactions management.
+
+Two styles of control are supported - declarative and programmatic.
+These two types can be mixed.
+
+The key component of transaction management is the TransactionalShell interface that  directly
+used in programmatic management and  in the declarative under the hood.
+
+This module does not provide a specific implementation of TransactionalShell
+and does not implement any specific transaction management mechanism.
+Such an implementation should be provided additionally by "vendors".
+
+
+
+
+
+
+
+

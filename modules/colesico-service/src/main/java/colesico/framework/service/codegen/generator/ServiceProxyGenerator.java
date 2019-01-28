@@ -19,6 +19,7 @@
 package colesico.framework.service.codegen.generator;
 
 
+import colesico.framework.ioc.Classed;
 import colesico.framework.ioc.Unscoped;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
@@ -32,15 +33,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.lang.model.element.*;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static colesico.framework.service.ServicePrototype.GET_SUPER_CLASS_METHOD;
 
@@ -64,8 +64,12 @@ public class ServiceProxyGenerator {
         teleFacadesGenerator = new TeleFacadesGenerator(context);
     }
 
-    protected void generateProxyConstructor(ServiceElement serviceElement, TypeSpec.Builder proxyBuilder) {
-        // Find effective constructor
+    /**
+     * Finds the constructor that be used for injection
+     *
+     * @return
+     */
+    protected ExecutableElement findInjectableConstructor(ServiceElement serviceElement) {
         Elements utils = context.getProcessingEnv().getElementUtils();
         List<? extends Element> members = utils.getAllMembers(serviceElement.getOriginClass());
         List<ExecutableElement> methods = ElementFilter.constructorsIn(members);
@@ -88,34 +92,83 @@ public class ServiceProxyGenerator {
         if (constructor == null) {
             constructor = firstConstructor;
         }
+        return constructor;
+    }
+
+    /**
+     * Find appropriate similar parameter to avoid duplicate injections
+     *
+     * @param fieldElm
+     * @param constructorParams
+     * @return
+     */
+    protected VariableElement findSimilarParam(FieldElement fieldElm, List<? extends VariableElement> constructorParams) {
+
+        VariableElement similarParam = null;
+        String fieldNamedVal = fieldElm.getNamed() != null ? fieldElm.getNamed() : "";
+        TypeName fieldClassedVal = fieldElm.getClassed() != null ? fieldElm.getClassed() : ClassName.get(Object.class);
+
+        for (VariableElement paramElm : constructorParams) {
+            TypeName paramType = TypeName.get(paramElm.asType());
+            Named namedAnn = paramElm.getAnnotation(Named.class);
+            Classed classedAnn = paramElm.getAnnotation(Classed.class);
+
+            if (paramType.equals(fieldElm.getInjectAs())) {
+
+                String annNamedVal = namedAnn != null ? namedAnn.value() : "";
+                TypeName annClassedVal = classedAnn != null ? TypeName.get(CodegenUtils.getAnnotationValueTypeMirror(classedAnn, a -> a.value()))
+                        : ClassName.get(Object.class);
+
+                if (annNamedVal.equals(fieldNamedVal) && annClassedVal.equals(fieldClassedVal)) {
+                    similarParam = paramElm;
+                    break;
+                }
+            }
+        }
+        return similarParam;
+    }
+
+    protected void generateProxyConstructor(ServiceElement serviceElement, TypeSpec.Builder proxyBuilder) {
+        // Find effective constructor
+        ExecutableElement constructor = findInjectableConstructor(serviceElement);
 
         // Generate constructor body
+
         // Generate super constructor call
-        MethodSpec.Builder constructorBuilder = CodegenUtils.createBuilderProxyMethod(true, constructor, null, null, METHOD_PARAM_PREFIX, false,false);
+        MethodSpec.Builder constructorBuilder = CodegenUtils.createProxyConstructorBuilder(constructor, METHOD_PARAM_PREFIX, false);
 
         constructorBuilder.addAnnotation(Inject.class);
         CodegenUtils.addSuperMethodCall(constructorBuilder, true, constructor, null, METHOD_PARAM_PREFIX);
 
         // Generate extra fields initialization
-
-        // Generate reader types map which used to avoid dublicate injections
         List<? extends VariableElement> constructorParams = constructor.getParameters();
-        Map<TypeName, String> paramTypesMap = new HashMap<>();
-        for (VariableElement paramElm : constructorParams) {
-            String paramName = StrUtils.addPrefix(METHOD_PARAM_PREFIX, paramElm.getSimpleName().toString());
-            TypeName paramType = TypeName.get(paramElm.asType());
-            paramTypesMap.put(paramType, paramName);
-        }
+        for (FieldElement fieldElm : serviceElement.getFields()) {
+            if (fieldElm.getInjectAs() == null) {
+                continue;
+            }
 
-        for (FieldElement fh : serviceElement.getFields()) {
-            logger.debug("Generate field initialization:" + fh);
-            if (fh.isInject()) {
-                if (!paramTypesMap.containsKey(fh.getInjectionClass())) {
-                    constructorBuilder.addParameter(fh.getInjectionClass(), fh.getSpec().name);
-                    constructorBuilder.addStatement("this.$N=$N", fh.getSpec().name, fh.getSpec().name);
-                } else {
-                    constructorBuilder.addStatement("this.$N=$N", fh.getSpec().name, paramTypesMap.get(fh.getInjectionClass()));
+            logger.debug("Generate field initialization:" + fieldElm);
+
+            // Find appropriate existing parameter for field initialization
+            VariableElement similarParam = findSimilarParam(fieldElm, constructorParams);
+
+            if (similarParam == null) {
+                ParameterSpec.Builder pb = ParameterSpec.builder(fieldElm.getInjectAs(), fieldElm.getSpec().name);
+                if (StringUtils.isNotEmpty(fieldElm.getNamed())) {
+                    AnnotationSpec.Builder named = AnnotationSpec.builder(Named.class);
+                    named.addMember("value", "$S", fieldElm.getNamed());
+                    pb.addAnnotation(named.build());
+                } else if (fieldElm.getClassed() != null) {
+                    AnnotationSpec.Builder named = AnnotationSpec.builder(Classed.class);
+                    named.addMember("value", "$T", fieldElm.getClassed());
+                    pb.addAnnotation(named.build());
                 }
+
+                constructorBuilder.addParameter(pb.build());
+                constructorBuilder.addStatement("this.$N=$N", fieldElm.getSpec().name, fieldElm.getSpec().name);
+            } else {
+                String paramName = StrUtils.addPrefix(METHOD_PARAM_PREFIX, similarParam.getSimpleName().toString());
+                constructorBuilder.addStatement("this.$N=$N", fieldElm.getSpec().name, paramName);
             }
         }
 
@@ -228,8 +281,8 @@ public class ServiceProxyGenerator {
                 continue;
             }
 
-            MethodSpec.Builder proxyMethodBuilder = CodegenUtils.createBuilderProxyMethod(
-                    false, method.getOriginMethod(), null, null, METHOD_PARAM_PREFIX, true,true);
+            MethodSpec.Builder proxyMethodBuilder = CodegenUtils.createProxyMethodBuilder(
+                    method.getOriginMethod(), null, METHOD_PARAM_PREFIX, true);
 
             proxyMethodBuilder.addStatement("final $T " + INTERCEPTORS_CHAIN_VARIABLE + "= new $T()",
                     ClassName.get(InterceptorsChain.class),
@@ -278,7 +331,7 @@ public class ServiceProxyGenerator {
         proxyBuilder.addModifiers(Modifier.PUBLIC);
         proxyBuilder.addModifiers(Modifier.FINAL);
 
-        AnnotationSpec genstamp = CodegenUtils.buildGenstampAnnotation(this.getClass().getName(),null, "Origin: " + serviceElement.getOriginClass().getQualifiedName().toString());
+        AnnotationSpec genstamp = CodegenUtils.buildGenstampAnnotation(this.getClass().getName(), null, "Origin: " + serviceElement.getOriginClass().getQualifiedName().toString());
         proxyBuilder.addAnnotation(genstamp);
 
         AnnotationSpec.Builder scopeAnnBuilder = AnnotationSpec.builder(ClassName.get(Unscoped.class));

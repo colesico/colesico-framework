@@ -7,16 +7,36 @@
 
 == What is Colesico-Framework?
 
-Colesico-framework is a java web microframework.
+`Colesico-framework` is a full stack microframework for Java. It is inspired by Spring and EJB frameworks.
+The purpose of this framework is to provide simpler and lightweight alternative.
 
-It is designed as a lightweight framework for creating server side applications in Java 9+.
+Colesico-framework is designed as a lightweight framework for creating server side / web applications in Java 11+.
 
 == Framework modules
 
 Colesico-framework consists of highly specialized modules:
 
-* <<ioc.asciidoc#,Colesico-ioc:  lightweight dependency injection container.>>
-* <<config.asciidoc#,Colesico-config: configuration assistant service>>
-* <<profile.asciidoc#,Colesico-profile: profile assistant service>>
-
+* <<config.asciidoc#,Colesico-config - Configuration assistant>>
+* <<eventbus.asciidoc#,Colesico-eventbus - Simple even bus for services>>
+* Colesico-fluentjdbc - FluentJdbc integration
+* Colesico-hikaricp - HikariCP integration
+* Colesico-htmlrenderer - Unified html rendering API
+* Colesico-http - Unified HTTP API
+* <<ioc.asciidoc#,Colesico-ioc - Lightweight dependency injection container>>
+* Colesico-jdbc - Jdbc integration  (transactions support, etc.)
+* Colesico-pebble - Pebble templating engine  integration
+* <<profile.asciidoc#,Colesico-profile - localization profile assistant service>>
+* Colesico-resource
+* Colesico-restlet - Simplified RESTful Web services support
+* Colesico-router - HTTP requests dispatcher
+* Colesico-security - Security service
+* Colesico-service - Business logic beans automation
+* Colesico-teleapi - Services remote invocation unified API
+* <<transaction.asciidoc#,Colesico-transaction - Unified transaction control for services>>
+* Colesico-translation - Simple text translation support for services
+* Colesico-undertow - Undertow web server integration
+* Colesico-validation - DSL style extendable data validator
+* Colesico-weblet - HTTP requests handling support
+* Colesico-webstatic
+* Colesico-widget
 

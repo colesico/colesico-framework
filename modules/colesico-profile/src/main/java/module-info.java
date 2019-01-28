@@ -21,7 +21,6 @@ module colesico.framework.profile {
 
     // Compile time req.
     requires static java.compiler;
-    requires static auto.service;
     requires static com.squareup.javapoet;
 
     // Runtime req.

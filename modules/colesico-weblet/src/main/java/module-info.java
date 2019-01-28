@@ -3,7 +3,6 @@ import colesico.framework.service.codegen.modulator.Modulator;
 module colesico.framework.weblet {
 
     requires static java.compiler;
-    requires static auto.service;
     requires static com.squareup.javapoet;
 
     requires transitive colesico.framework.security;

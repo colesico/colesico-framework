@@ -25,7 +25,6 @@ import colesico.framework.ioc.ioclet.Catalog;
 import colesico.framework.ioc.ioclet.Ioclet;
 import colesico.framework.assist.LazySingleton;
 import colesico.framework.assist.codegen.CodegenUtils;
-import com.google.auto.service.AutoService;
 import com.squareup.javapoet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,13 +87,13 @@ public class IocletGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    protected void generateGetProducerNameMethod() {
+    protected void generateGetProducerIdMethod() {
         //log.info("Generate  method: "+Ioclet.GET_PRODUCER_NAME_METHOD);
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(Ioclet.GET_PRODUCER_NAME_METHOD);
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(Ioclet.GET_PRODUCER_ID_METHOD);
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         mb.returns(ClassName.get(String.class));
         mb.addAnnotation(Override.class);
-        mb.addStatement("return $S", iocletElement.getProducerName());
+        mb.addStatement("return $S", iocletElement.getProducerId());
         classBuilder.addMethod(mb.build());
     }
 
@@ -134,7 +133,7 @@ public class IocletGenerator {
     }
 
     public TypeSpec generate(IocletElement iocletElement) {
-        log.debug("Generate ioclet: " + iocletElement);
+        log.debug("Generate Ioclet based on: " + iocletElement);
         this.iocletElement = iocletElement;
 
         classBuilder = TypeSpec.classBuilder(iocletElement.getClassSimpleName());
@@ -145,12 +144,8 @@ public class IocletGenerator {
         AnnotationSpec genstamp = CodegenUtils.buildGenstampAnnotation(this.getClass().getName(),null, "Producer: " + iocletElement.getOriginProducer().toString());
         classBuilder.addAnnotation(genstamp);
 
-        AnnotationSpec.Builder ab = AnnotationSpec.builder(AutoService.class);
-        ab.addMember("value", "$T.class", ClassName.get(Ioclet.class));
-        classBuilder.addAnnotation(ab.build());
-
         generateProducerField();
-        generateGetProducerNameMethod();
+        generateGetProducerIdMethod();
         generateGetRankMethod();
         generateSuplierFactoryMethods();
         generateAddFactoriesMethod();

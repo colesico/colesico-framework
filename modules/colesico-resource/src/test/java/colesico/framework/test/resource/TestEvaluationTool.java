@@ -3,6 +3,8 @@ package colesico.framework.test.resource;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.resource.internal.EvaluationTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -13,9 +15,12 @@ public class TestEvaluationTool {
     private Ioc ioc;
     private EvaluationTool evaluationTool;
 
+    Logger logger = LoggerFactory.getLogger(TestEvaluationTool.class);
+
 
     @BeforeClass
     public void init() {
+        logger.info("Init test");
         ioc = IocBuilder.forTests();
         evaluationTool = ioc.instance(EvaluationTool.class);
         evaluationTool.addProperty("$alias", "foo/dummy");

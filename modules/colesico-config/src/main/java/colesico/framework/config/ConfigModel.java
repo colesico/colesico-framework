@@ -31,6 +31,8 @@ public enum ConfigModel {
     /**
      * Single configuration instance per application (per IoC container).
      * The configuration in this model may be obtained from injector by configuration prototype class name.
+     * <p>
+     * Named or Classed IoC qualifiers can be additionally used on config implementation to differentiate configs singletons
      *
      * @see ConfigPrototype
      */
@@ -39,9 +41,13 @@ public enum ConfigModel {
     /**
      * Multiple configurations instances per application .
      * The configuration in this model may be obtained from injector by Polyprovider of configuration prototype class name
+     * <p>
+     * Named or Classed IoC qualifiers can be additionally used on config implementation to differentiate polyvariant sets
      *
      * @see ConfigPrototype
      * @see Polysupplier
+     * @see javax.inject.Named
+     * @see Classed
      */
     POLYVARIANT,
 

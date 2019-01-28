@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -142,6 +143,17 @@ public class IocGenerator {
         pmb.addAnnotation(singletonAnn.build());
         AnnotationSpec.Builder polyAnn = AnnotationSpec.builder(Polyproduce.class);
         pmb.addAnnotation(polyAnn.build());
+
+        if (confElement.getClassedQualifier() != null) {
+            AnnotationSpec.Builder ann = AnnotationSpec.builder(Classed.class);
+            ann.addMember("value", "$T", TypeName.get(confElement.getClassedQualifier()));
+            pmb.addAnnotation(ann.build());
+        } else if (confElement.getNamedQualifier() != null) {
+            AnnotationSpec.Builder ann = AnnotationSpec.builder(Named.class);
+            ann.addMember("value", "$S", confElement.getNamedQualifier());
+            pmb.addAnnotation(ann.build());
+        }
+
         producerBuilder.addMethod(pmb.build());
     }
 
@@ -149,6 +161,17 @@ public class IocGenerator {
         MethodSpec.Builder pmb = createProducingMethodBuilder(confElement, null);
         AnnotationSpec.Builder singletonAnn = AnnotationSpec.builder(Singleton.class);
         pmb.addAnnotation(singletonAnn.build());
+
+        if (confElement.getClassedQualifier() != null) {
+            AnnotationSpec.Builder ann = AnnotationSpec.builder(Classed.class);
+            ann.addMember("value", "$T", TypeName.get(confElement.getClassedQualifier()));
+            pmb.addAnnotation(ann.build());
+        } else if (confElement.getNamedQualifier() != null) {
+            AnnotationSpec.Builder ann = AnnotationSpec.builder(Named.class);
+            ann.addMember("value", "$S", confElement.getNamedQualifier());
+            pmb.addAnnotation(ann.build());
+        }
+
         producerBuilder.addMethod(pmb.build());
     }
 
@@ -200,7 +223,7 @@ public class IocGenerator {
 
         TypeSpec.Builder producerBuilder = TypeSpec.classBuilder(producerClassSimpleName);
         producerBuilder.addModifiers(Modifier.PUBLIC);
-        producerBuilder.addAnnotation(CodegenUtils.buildGenstampAnnotation(this.getClass().getName(), null,null));
+        producerBuilder.addAnnotation(CodegenUtils.buildGenstampAnnotation(this.getClass().getName(), null, null));
 
         AnnotationSpec.Builder b = AnnotationSpec.builder(Producer.class);
         b.addMember("value", "$S", rank);

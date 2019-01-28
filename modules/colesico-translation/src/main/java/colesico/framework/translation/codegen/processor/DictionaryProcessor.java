@@ -5,19 +5,17 @@ import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.ioc.codegen.parser.ProducersProcessor;
 import colesico.framework.translation.Dictionary;
 import colesico.framework.translation.Translation;
-import colesico.framework.translation.codegen.generator.DictionaryGenerator;
 import colesico.framework.translation.codegen.generator.BundleGenerator;
+import colesico.framework.translation.codegen.generator.DictionaryGenerator;
 import colesico.framework.translation.codegen.generator.IocGenerator;
 import colesico.framework.translation.codegen.model.DictionaryElement;
 import colesico.framework.translation.codegen.model.DictionaryRegistry;
-import com.google.auto.service.AutoService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
@@ -31,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@AutoService(Processor.class)
 public class DictionaryProcessor extends AbstractProcessor {
 
     protected Logger logger;

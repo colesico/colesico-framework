@@ -23,7 +23,6 @@ open module colesico.framework.ioc {
 
     // Compile time
     requires static java.compiler;
-    requires static auto.service;
     requires static com.squareup.javapoet;
 
     // Inherited in client projects

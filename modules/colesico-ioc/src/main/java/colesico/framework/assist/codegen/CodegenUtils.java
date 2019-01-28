@@ -53,9 +53,9 @@ public class CodegenUtils {
 
     protected static final Logger log = LoggerFactory.getLogger(CodegenUtils.class);
 
-    public static final String OPTION_CODEGEN="colesico.framework.codegen";
-    public static final String OPTION_CODEGEN_DEV="dev";
-    public static final String OPTION_CODEGEN_PROD="prod";
+    public static final String OPTION_CODEGEN = "colesico.framework.codegen";
+    public static final String OPTION_CODEGEN_DEV = "dev";
+    public static final String OPTION_CODEGEN_PROD = "prod";
 
 
     public static String getModuleName(TypeElement typeElement, Elements elementUtils) {
@@ -276,53 +276,60 @@ public class CodegenUtils {
         }
     }
 
-    public static MethodSpec.Builder createBuilderProxyMethod(boolean isConstructor,
-                                                              ExecutableElement baseMetod,
-                                                              Modifier accessModifier,
-                                                              String methodName,
+    public static MethodSpec.Builder createProxyMethodBuilder(ExecutableElement baseMetod,
+                                                              String methodPrefix,
                                                               String paramPrefix,
-                                                              boolean paramFinalize,
                                                               boolean skipAnnotations) {
-        if (baseMetod == null) {
-            String errMsg = MessageFormat.format("Base method is null for method '{0}'", methodName);
-            log.error(errMsg);
-            throw CodegenException.of().message(errMsg).build();
+
+        String proxyMethodName = getMethodName(baseMetod);
+        if (StringUtils.isNoneBlank(methodPrefix)) {
+            proxyMethodName = methodPrefix + proxyMethodName;
         }
-        if ((methodName == null) || isConstructor) {
-            methodName = getMethodName(baseMetod);
-        }
-        MethodSpec.Builder mb;
-        if (isConstructor) {
-            mb = MethodSpec.constructorBuilder();
-        } else {
-            mb = MethodSpec.methodBuilder(methodName);
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(proxyMethodName);
+        MethodSpec.Builder proxyMethodBuilder = createProxyMethodDummy(mb, baseMetod, paramPrefix, skipAnnotations);
+        proxyMethodBuilder.addAnnotation(Override.class);
+
+        List<? extends TypeParameterElement> generics = baseMetod.getTypeParameters();
+        for (TypeParameterElement tpe : generics) {
+            proxyMethodBuilder.addTypeVariable(TypeVariableName.get(tpe));
         }
 
-        if (accessModifier == null) {
-            if (baseMetod.getModifiers().contains(Modifier.PUBLIC)) {
-                mb.addModifiers(Modifier.PUBLIC);
-            } else if (baseMetod.getModifiers().contains(Modifier.PROTECTED)) {
-                mb.addModifiers(Modifier.PROTECTED);
-            } else if (baseMetod.getModifiers().contains(Modifier.PRIVATE)) {
-                mb.addModifiers(Modifier.PRIVATE);
-            }
-        } else {
-            mb.addModifiers(accessModifier);
-        }
+        proxyMethodBuilder.returns(TypeName.get(baseMetod.getReturnType()));
 
-        if (!isConstructor) {
-            mb.addAnnotation(Override.class);
-            mb.returns(TypeName.get(baseMetod.getReturnType()));
+        return proxyMethodBuilder;
+    }
+
+
+    public static MethodSpec.Builder createProxyConstructorBuilder(ExecutableElement baseMetod,
+                                                                   String paramPrefix,
+                                                                   boolean skipAnnotations) {
+
+        MethodSpec.Builder mb = MethodSpec.constructorBuilder();
+        MethodSpec.Builder proxyMethodBuilder = createProxyMethodDummy(mb, baseMetod, paramPrefix, skipAnnotations);
+        return proxyMethodBuilder;
+    }
+
+
+    public static MethodSpec.Builder createProxyMethodDummy(MethodSpec.Builder methodBuilder,
+                                                            ExecutableElement baseMetod,
+                                                            String paramPrefix,
+                                                            boolean skipAnnotations) {
+
+        if (baseMetod.getModifiers().contains(Modifier.PUBLIC)) {
+            methodBuilder.addModifiers(Modifier.PUBLIC);
+        } else if (baseMetod.getModifiers().contains(Modifier.PROTECTED)) {
+            methodBuilder.addModifiers(Modifier.PROTECTED);
+        } else if (baseMetod.getModifiers().contains(Modifier.PRIVATE)) {
+            methodBuilder.addModifiers(Modifier.PRIVATE);
         }
 
         List<? extends VariableElement> methodParams = baseMetod.getParameters();
         for (VariableElement paramElm : methodParams) {
             Set<Modifier> modifiersSet = new HashSet<>();
             modifiersSet.addAll(paramElm.getModifiers());
-            if (paramFinalize) {
-                modifiersSet.add(Modifier.FINAL);
-            }
-            Modifier[] modifiers = (Modifier[]) modifiersSet.toArray(new Modifier[modifiersSet.size()]);
+            modifiersSet.add(Modifier.FINAL);
+
+            Modifier[] modifiers = modifiersSet.toArray(new Modifier[modifiersSet.size()]);
             String paramName = StrUtils.addPrefix(paramPrefix, paramElm.getSimpleName().toString());
 
             ParameterSpec.Builder paramBilder = ParameterSpec.builder(TypeName.get(paramElm.asType()), paramName, modifiers);
@@ -335,10 +342,10 @@ public class CodegenUtils {
                 }
             }
 
-            mb.addParameter(paramBilder.build());
+            methodBuilder.addParameter(paramBilder.build());
         }
 
-        return mb;
+        return methodBuilder;
     }
 
     public static void createJavaFile(ProcessingEnvironment processingEnv, TypeSpec typeSpec, String packageName, Element... linkedElements) {
@@ -456,7 +463,7 @@ public class CodegenUtils {
         AnnotationSpec.Builder generatedAnn = AnnotationSpec.builder(Genstamp.class);
         generatedAnn.addMember("generator", "$S", generatorName);
         generatedAnn.addMember("timestamp", "$S", sdf.format(new Date()));
-        if (hashId==null){
+        if (hashId == null) {
             hashId = UUID.randomUUID().toString();
         }
         generatedAnn.addMember("hashId", "$S", hashId);
@@ -489,7 +496,7 @@ public class CodegenUtils {
         return result;
     }
 
-    public static String getOption(ProcessingEnvironment processingEnv,String optionKey){
+    public static String getOption(ProcessingEnvironment processingEnv, String optionKey) {
         return processingEnv.getOptions().get(optionKey);
     }
 }

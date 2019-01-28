@@ -42,6 +42,7 @@ public interface IocBuilder {
 
     /**
      * Disable using default ranks
+     *
      * @return
      */
     IocBuilder disableDefaultRanks();
@@ -82,7 +83,15 @@ public interface IocBuilder {
      * @return
      * @see ContainerType
      */
-    IocBuilder useContainer(ContainerType val);
+    IocBuilder useContainerType(ContainerType val);
+
+    /**
+     * Do not use ioclet for specified producer
+     *
+     * @param producerId
+     * @return
+     */
+    IocBuilder ignoreProducer(String producerId);
 
     /**
      * Builds an IoC container instance based on builder configuration
@@ -97,7 +106,8 @@ public interface IocBuilder {
 
     /**
      * Creates default production ready IoC container
-      * @return
+     *
+     * @return
      */
     static Ioc forProduction() {
         return get().build();
@@ -105,19 +115,21 @@ public interface IocBuilder {
 
     /**
      * Creates default development ready IoC container
+     *
      * @return
      */
     static Ioc forDevelopment() {
-        return get().useContainer(ContainerType.LAZY).disablePreactivation().build();
+        return get().useContainerType(ContainerType.LAZY).disablePreactivation().build();
     }
 
     /**
      * Creates default testing ready IoC container
+     *
      * @return
      */
 
     static Ioc forTests() {
-        return get().useContainer(ContainerType.LAZY).useRank(Rank.RANK_TEST).build();
+        return get().useContainerType(ContainerType.LAZY).useRank(Rank.RANK_TEST).build();
     }
 
     /**

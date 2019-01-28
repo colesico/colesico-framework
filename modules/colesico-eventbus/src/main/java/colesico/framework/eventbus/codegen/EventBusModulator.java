@@ -10,7 +10,6 @@ import colesico.framework.service.codegen.model.ProxyMethodElement;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.modulator.Modulator;
 import colesico.framework.service.codegen.parser.ProcessorContext;
-import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@AutoService(Modulator.class)
+
 public class EventBusModulator extends Modulator {
 
     private ListnersFacadeGenerator facadeGenerator;

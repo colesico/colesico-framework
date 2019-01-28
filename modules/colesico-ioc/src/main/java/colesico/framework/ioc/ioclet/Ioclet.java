@@ -21,30 +21,35 @@ package colesico.framework.ioc.ioclet;
 /**
  * IoC container module that provides the factories to the IoC container.
  * <p>
+ *
  * @author Vladlen Larionov
  */
 public interface Ioclet {
-    String GET_PRODUCER_NAME_METHOD = "getProducerName";
+    String GET_PRODUCER_ID_METHOD = "getProducerId";
     String GET_RANK_METHOD = "getRank";
     String ADD_FACTORIES_METHOD = "addFactories";
     String CATALOG_PARAM = "catalog";
 
     /**
-     * The Name of Producer on which the ioclet is based on
-     * @see colesico.framework.ioc.Producer
+     * Unique producer ID on which the ioclet is based on.
+     * Typically it is a full name of producer class
+     *
      * @return
+     * @see colesico.framework.ioc.Producer
      */
-    String getProducerName();
+    String getProducerId();
 
     /**
      * Rank of Ioclet. Obtained from producer definition
-     * @see colesico.framework.ioc.Rank
+     *
      * @return
+     * @see colesico.framework.ioc.Rank
      */
     String getRank();
 
     /**
      * This method implementation should register the factories
+     *
      * @param catalog
      */
     void addFactories(final Catalog catalog);

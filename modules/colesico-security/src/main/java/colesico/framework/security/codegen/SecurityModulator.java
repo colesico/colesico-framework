@@ -30,7 +30,6 @@ import colesico.framework.service.codegen.model.InterceptionElement;
 import colesico.framework.service.codegen.model.InterceptionPhases;
 import colesico.framework.service.codegen.model.ProxyMethodElement;
 import colesico.framework.service.codegen.modulator.Modulator;
-import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
@@ -40,7 +39,6 @@ import javax.lang.model.element.Modifier;
 /**
  * @author Vladlen Larionov
  */
-@AutoService(Modulator.class)
 public class SecurityModulator extends Modulator {
 
     public static final String SEQURITY_KIT_FIELD = "securityKit";
@@ -61,7 +59,7 @@ public class SecurityModulator extends Modulator {
         }
 
         FieldSpec fieldSpec = FieldSpec.builder(ClassName.get(SecurityKit.class), SEQURITY_KIT_FIELD).addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
-        FieldElement fieldElement = new FieldElement(fieldSpec, true, null);
+        FieldElement fieldElement = new FieldElement(fieldSpec).inject();
         service.addField(fieldElement);
 
         if (requireAuthority != null) {

@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentMap;
 public final class BundleCacheSoft implements BundleCache {
 
     private final ConcurrentMap<Key, SoftReference<Bundle>> dictionaryMap = new ConcurrentHashMap<>();
-    private final ReferenceQueue<? super Bundle> referenceQueue = new ReferenceQueue<>();
+    private final ReferenceQueue referenceQueue = new ReferenceQueue<>();
     private final double cleanUpFrequency;
 
     public BundleCacheSoft(double cleanUpFrequency) {

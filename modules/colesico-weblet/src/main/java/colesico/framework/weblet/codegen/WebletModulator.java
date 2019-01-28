@@ -34,7 +34,6 @@ import colesico.framework.weblet.teleapi.OriginFacade;
 import colesico.framework.weblet.teleapi.ReaderContext;
 import colesico.framework.weblet.teleapi.WebletDataPort;
 import colesico.framework.weblet.teleapi.WebletTeleDriver;
-import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import org.apache.commons.lang3.StringUtils;
@@ -48,7 +47,6 @@ import java.util.Set;
 /**
  * @author Vladlen Larionov
  */
-@AutoService(Modulator.class)
 public class WebletModulator extends RoutesModulator {
 
     @Override

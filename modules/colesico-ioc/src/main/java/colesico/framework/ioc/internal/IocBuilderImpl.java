@@ -26,9 +26,7 @@ import colesico.framework.assist.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Vladlen Larionov
@@ -39,14 +37,16 @@ public class IocBuilderImpl implements IocBuilder {
     private static final Logger log = LoggerFactory.getLogger(IocBuilder.class);
 
     /**
-     * Custom ioclets
+     * Manually added ioclets
      */
-    protected List<Ioclet> ioclets = new ArrayList<>();
+    protected List<Ioclet> extraIoclets = new ArrayList<>();
 
     /**
-     * Custom ranks;
+     * Manually added ranks;
      */
-    protected List<String> ranks = new ArrayList<>();
+    protected List<String> extraRanks = new ArrayList<>();
+
+    protected Set<String> ignoredProducers = new HashSet<>();
 
     protected boolean useDefaultRanks;
 
@@ -65,7 +65,7 @@ public class IocBuilderImpl implements IocBuilder {
 
     @Override
     public IocBuilder useRank(String name) {
-        ranks.add(name);
+        extraRanks.add(name);
         return this;
     }
 
@@ -83,7 +83,7 @@ public class IocBuilderImpl implements IocBuilder {
 
     @Override
     public IocBuilder useIoclet(Ioclet ioclet) {
-        ioclets.add(ioclet);
+        extraIoclets.add(ioclet);
         return this;
     }
 
@@ -94,8 +94,14 @@ public class IocBuilderImpl implements IocBuilder {
     }
 
     @Override
-    public IocBuilder useContainer(ContainerType val) {
+    public IocBuilder useContainerType(ContainerType val) {
         this.iocType = val;
+        return this;
+    }
+
+    @Override
+    public IocBuilder ignoreProducer(String producerId) {
+        ignoredProducers.add(producerId);
         return this;
     }
 
@@ -109,7 +115,7 @@ public class IocBuilderImpl implements IocBuilder {
             ranker.pushRank(Rank.RANK_EXTENSION);
         }
 
-        for (String rank : ranks) {
+        for (String rank : extraRanks) {
             ranker.pushRank(rank);
         }
 
@@ -122,16 +128,34 @@ public class IocBuilderImpl implements IocBuilder {
             log.debug(rsb.toString());
         }
 
-        if (iocletsDiscovery) {
-            List<Ioclet> foundList = lookupIoclets();
-            for (Ioclet ioclet : foundList) {
+
+        if (ignoredProducers.isEmpty()) {
+            if (iocletsDiscovery) {
+                List<Ioclet> foundList = lookupIoclets();
+                for (Ioclet ioclet : foundList) {
+                    ranker.addIoclet(ioclet);
+                }
+            }
+            for (Ioclet ioclet : extraIoclets) {
                 ranker.addIoclet(ioclet);
+
+            }
+        } else {
+            if (iocletsDiscovery) {
+                List<Ioclet> foundList = lookupIoclets();
+                for (Ioclet ioclet : foundList) {
+                    if (!ignoredProducers.contains(ioclet.getProducerId())) {
+                        ranker.addIoclet(ioclet);
+                    }
+                }
+            }
+            for (Ioclet ioclet : extraIoclets) {
+                if (!ignoredProducers.contains(ioclet.getProducerId())) {
+                    ranker.addIoclet(ioclet);
+                }
             }
         }
 
-        for (Ioclet contr : ioclets) {
-            ranker.addIoclet(contr);
-        }
 
         Map<Key<?>, Factory<?>> factories = ranker.toFactories();
 
@@ -176,7 +200,7 @@ public class IocBuilderImpl implements IocBuilder {
         log.debug("Lookup ioclets...");
         ServiceLocator<Ioclet> locator = ServiceLocator.of(this.getClass(), Ioclet.class);
         for (Ioclet ioclet : locator.getProviders()) {
-            log.debug("Found ioclet '" + ioclet.getClass().getName() + "' for producer '" + ioclet.getProducerName() + "' with rank '" + ioclet.getRank() + "'");
+            log.debug("Found ioclet '" + ioclet.getClass().getName() + "' for producer '" + ioclet.getProducerId() + "' with rank '" + ioclet.getRank() + "'");
             result.add(ioclet);
         }
         return result;

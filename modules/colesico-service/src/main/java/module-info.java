@@ -22,10 +22,9 @@ module colesico.framework.service {
 
     // Compile time
     requires static java.compiler;
-    requires static auto.service;
     requires static com.squareup.javapoet;
 
-    // Inherited in client projects
+    // Inherited in child projects
     requires transitive colesico.framework.teleapi;
 
     requires slf4j.api;

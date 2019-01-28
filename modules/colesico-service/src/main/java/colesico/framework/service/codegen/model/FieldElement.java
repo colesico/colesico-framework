@@ -21,6 +21,8 @@ package colesico.framework.service.codegen.model;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
 
+import javax.lang.model.element.VariableElement;
+
 /**
  * @author Vladlen Larionov
  */
@@ -29,17 +31,41 @@ public final class FieldElement {
     protected ServiceElement parentService;
 
     private final FieldSpec spec;
-    private final boolean inject;
-    private final TypeName injectionClass;
 
-    public FieldElement(FieldSpec spec, boolean inject, TypeName injectionClass) {
+    private TypeName injectAs;
+    private String named;
+    private TypeName classed;
+
+    public FieldElement(FieldSpec spec) {
         this.spec = spec;
-        this.inject = inject;
-        if (injectionClass!=null) {
-            this.injectionClass = injectionClass;
-        } else {
-            this.injectionClass = spec.type;
-        }
+    }
+
+    public FieldElement inject() {
+        this.injectAs = spec.type;
+        return this;
+    }
+
+    public FieldElement setInjectAs(TypeName injectingTypenName) {
+        this.injectAs = injectingTypenName;
+        return this;
+    }
+
+    public String getNamed() {
+        return named;
+    }
+
+    public FieldElement setNamed(String named) {
+        this.named = named;
+        return this;
+    }
+
+    public TypeName getClassed() {
+        return classed;
+    }
+
+    public FieldElement setClassed(TypeName classed) {
+        this.classed = classed;
+        return this;
     }
 
     public String getName() {
@@ -54,12 +80,8 @@ public final class FieldElement {
         return spec;
     }
 
-    public boolean isInject() {
-        return inject;
-    }
-
-    public TypeName getInjectionClass() {
-        return injectionClass;
+    public TypeName getInjectAs() {
+        return injectAs;
     }
 
     public ServiceElement getParentService() {
@@ -70,8 +92,9 @@ public final class FieldElement {
     public String toString() {
         return "FieldElement{" +
                 "spec=" + spec +
-                ", inject=" + inject +
-                ", injectionClass=" + injectionClass +
+                ", injectionClass=" + injectAs +
+                ", named='" + named + '\'' +
+                ", classed=" + classed +
                 '}';
     }
 }

@@ -22,13 +22,13 @@ import colesico.framework.ioc.Produce;
 import colesico.framework.ioc.Producer;
 import colesico.framework.ioc.Produces;
 import colesico.framework.ioc.codegen.generator.IocletGenerator;
+import colesico.framework.ioc.codegen.generator.SPIGenerator;
 import colesico.framework.ioc.codegen.model.CustomFactoryElement;
 import colesico.framework.ioc.codegen.model.DefaultFactoryElement;
 import colesico.framework.ioc.codegen.model.IocletElement;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.Genstamp;
-import com.google.auto.service.AutoService;
 import com.squareup.javapoet.TypeSpec;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -46,18 +46,14 @@ import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Vladlen Larionov
  */
-@AutoService(Processor.class)
 public class ProducersProcessor extends AbstractProcessor {
 
-    public static final String IOC_MODULE_NAME="colesico.framework.ioc";
+    public static final String IOC_MODULE_NAME = "colesico.framework.ioc";
 
     private Logger logger;
 
@@ -68,7 +64,8 @@ public class ProducersProcessor extends AbstractProcessor {
     protected Filer filer;
 
     protected IocletGenerator iocletGenerator;
-    protected final List<Element> iocletLinkedElements = new ArrayList<>();
+    protected SPIGenerator spiGenerator;
+    protected final Map<TypeElement, IocletElement> createdIoclets = new HashMap<>();
 
     public ProducersProcessor() {
         try {
@@ -103,6 +100,8 @@ public class ProducersProcessor extends AbstractProcessor {
             messager = processingEnv.getMessager();
             filer = processingEnv.getFiler();
             iocletGenerator = new IocletGenerator();
+            spiGenerator = new SPIGenerator(processingEnv);
+            createdIoclets.clear();
         } catch (Throwable e) {
             System.out.print("Error initializing " + ProducersProcessor.class.getName() + " ");
             System.out.println(e);
@@ -112,6 +111,8 @@ public class ProducersProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         logger.debug("Start IOC producers processing...");
+        boolean result = false;
+
         for (Element elm : roundEnv.getElementsAnnotatedWith(Producer.class)) {
             if (elm.getKind() != ElementKind.CLASS) {
                 continue;
@@ -120,7 +121,8 @@ public class ProducersProcessor extends AbstractProcessor {
             try {
                 producerElement = (TypeElement) elm;
                 IocletElement iocletElement = parseProducer(producerElement);
-                generateIoclet(iocletElement);
+                createdIoclets.put(producerElement, iocletElement);
+                result = true;
             } catch (CodegenException ce) {
                 String message = "Error processing class '" + elm.toString() + "': " + ce.getMessage();
                 logger.debug(message);
@@ -133,14 +135,21 @@ public class ProducersProcessor extends AbstractProcessor {
                 if (logger.isDebugEnabled()) {
                     e.printStackTrace();
                 }
-                return true;
+                return false;
             }
         }
 
-        if (roundEnv.processingOver()) {
+        // Write Ioclets java files only at last round
 
+        if (roundEnv.processingOver()) {
+            logger.debug("Ioclets generation is starting: " + createdIoclets.size());
+            for (IocletElement ie : createdIoclets.values()) {
+                generateIoclet(ie);
+            }
+            spiGenerator.generateSPIFile(createdIoclets.values());
         }
-        return true;
+
+        return result;
     }
 
     protected ExecutableElement getInjectableConstructor(TypeElement producerElement) {
@@ -184,13 +193,10 @@ public class ProducersProcessor extends AbstractProcessor {
         ModuleElement producerModule = elementUtils.getModuleOf(producerElement);
 
         if (!CodegenUtils.checkPackageAccessibility(producerModule, packageName, IOC_MODULE_NAME)) {
-            String errMsg = String.format("Package %s must be exported from module %s to %s", packageName, producerModule.toString(),IOC_MODULE_NAME);
+            String errMsg = String.format("Package %s must be exported from module %s to %s", packageName, producerModule.toString(), IOC_MODULE_NAME);
             logger.info(errMsg);
             //throw CodegenException.of().message(errMsg).element(producerModule).create();
         }
-
-        iocletLinkedElements.clear();
-        iocletLinkedElements.add(producerElement);
 
         IocletElement iocletElement = new IocletElement(producerElement);
 
@@ -201,7 +207,6 @@ public class ProducersProcessor extends AbstractProcessor {
             logger.debug("Found custom factory method: " + method.getSimpleName().toString());
             iocletElement.addFactory(new CustomFactoryElement(method));
             Element te = ((DeclaredType) method.getReturnType()).asElement();
-            iocletLinkedElements.add(te);
         }
 
         // Scan @Produce annotation
@@ -221,7 +226,6 @@ public class ProducersProcessor extends AbstractProcessor {
         for (Produce produce : produceList) {
             TypeMirror typeMirr = CodegenUtils.getAnnotationValueTypeMirror(produce, (p) -> p.value());
             TypeElement typeElm = elementUtils.getTypeElement(typeMirr.toString());
-            iocletLinkedElements.add(typeElm);
             logger.debug("Found default factory for : " + typeMirr.toString());
 
             //moduleMetamodel.addExports(CodegenUtils.getPackageName(typeElm));
@@ -241,11 +245,10 @@ public class ProducersProcessor extends AbstractProcessor {
         try {
             final TypeSpec typeSpec = iocletGenerator.generate(iocletElement);
             // Create class source file
-            Element[] linkedElm = iocletLinkedElements.toArray(new Element[iocletLinkedElements.size()]);
             String packageName = CodegenUtils.getPackageName(iocletElement.getOriginProducer());
-            CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, linkedElm);
+            CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, iocletElement.getOriginProducer());
         } catch (Exception e) {
-            logger.debug("Error generating ioclet:" + ExceptionUtils.getRootCauseMessage(e));
+            logger.debug("Error generating ioclet: " + ExceptionUtils.getRootCauseMessage(e));
             throw e;
         }
     }

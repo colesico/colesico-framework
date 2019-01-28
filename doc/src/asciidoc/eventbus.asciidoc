@@ -1,0 +1,72 @@
+[[intro]]
+
+== Colesico-EventBus
+
+Simple event bus support for bigness logic beans (services).
+
+Provide declarative event subscription and EventBus component for sending events.
+
+== Usage
+
+1. Define event class. For example
+
+[source,java]
+----
+ public class MyEvent { String message }
+----
+
+2. Inject EventBus to sender bean:
+
+[source,java]
+----
+
+@Service
+public class MySender {
+
+    final EventBus eventBus;
+
+    @Inject
+    public Sender(EventBus eventBus) {
+        this.eventBus = eventBus;
+    }
+
+}
+
+----
+
+3. Send event with EventBus
+
+[source,java]
+----
+
+@Service
+public class MySender {
+
+    final EventBus eventBus;
+    ...
+
+     public void sendEvent() {
+            eventBus.send(new MyEvent(...));
+     }
+
+}
+----
+
+4. Receive an event in receiver with @OnEvent annotation
+
+[source,java]
+----
+
+@Service
+public class Receiver {
+
+    @OnEvent
+    public void onEvent1(MyEvent event) {
+        System.out.println("Receive event: " + event.message);
+    }
+
+}
+
+----
+
+Event receiver should be a public, void, single argument method annotated with @OnEvent.

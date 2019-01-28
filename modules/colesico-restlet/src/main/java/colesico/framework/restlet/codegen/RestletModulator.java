@@ -23,11 +23,9 @@ import colesico.framework.assist.CollectionUtils;
 import colesico.framework.restlet.Restlet;
 import colesico.framework.restlet.teleapi.RestletDataPort;
 import colesico.framework.restlet.teleapi.RestletTeleDriver;
-import colesico.framework.service.codegen.modulator.Modulator;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleDriver;
 import colesico.framework.weblet.codegen.WebletModulator;
-import com.google.auto.service.AutoService;
 
 import java.lang.annotation.Annotation;
 import java.util.Set;
@@ -35,7 +33,6 @@ import java.util.Set;
 /**
  * @author Vladlen Larionov
  */
-@AutoService(Modulator.class)
 public class RestletModulator extends WebletModulator {
 
     @Override

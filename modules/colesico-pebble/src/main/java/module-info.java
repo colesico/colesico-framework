@@ -6,7 +6,7 @@ module colesico.framework.pebble {
 
     requires transitive colesico.framework.htmlrenderer;
 
-    requires transitive pebble;
+    requires transitive io.pebbletemplates;
 
     // classes
     exports colesico.framework.pebble;

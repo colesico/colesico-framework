@@ -22,7 +22,6 @@ module colesico.framework.config {
 
     // Compile time
     requires static java.compiler;
-    requires static auto.service;
     requires static com.squareup.javapoet;
 
     // Inherited in client projects

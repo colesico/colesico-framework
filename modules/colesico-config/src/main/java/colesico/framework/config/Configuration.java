@@ -42,6 +42,7 @@ public @interface Configuration {
     /**
      * Defines configuration rank.
      * RANK_DEFAULT is used to have ability to override the define default configuration with MINOR rank.
+     *
      * @return
      */
     String rank() default Rank.RANK_DEFAULT;

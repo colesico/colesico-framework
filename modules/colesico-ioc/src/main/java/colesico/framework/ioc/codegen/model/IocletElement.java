@@ -37,7 +37,7 @@ public class IocletElement {
 
     private final String classSimpleName;
     private final String packageName;
-    private final String producerName;
+    private final String producerId;
     private final String rank;
 
     private final List<FactoryElement> factories;
@@ -56,7 +56,7 @@ public class IocletElement {
         this.packageName = CodegenUtils.getPackageName(originProducer);
 
 
-        this.producerName = originProducer.asType().toString();
+        this.producerId = originProducer.asType().toString();
 
         this.factories = new ArrayList<>();
     }
@@ -86,8 +86,8 @@ public class IocletElement {
         return factories;
     }
 
-    public String getProducerName() {
-        return producerName;
+    public String getProducerId() {
+        return producerId;
     }
 
     public TypeElement getOriginProducer() {
@@ -101,7 +101,7 @@ public class IocletElement {
                 "originProducer=" + originProducer +
                 ", classSimpleName='" + classSimpleName + '\'' +
                 ", packageName='" + packageName + '\'' +
-                ", producerName='" + producerName + '\'' +
+                ", producerName='" + producerId + '\'' +
                 ", rank='" + rank + '\'' +
                 ", factories=" + factories +
                 '}';

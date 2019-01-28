@@ -4,6 +4,8 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.resource.ResourceKit;
 import colesico.framework.resource.internal.LocalizingTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -11,6 +13,7 @@ public class TestLocalizationTool {
 
     private Ioc ioc;
     private LocalizingTool localizingTool;
+    Logger logger = LoggerFactory.getLogger(TestLocalizationTool.class);
 
     public static final String PATH1 = "root/dir/file.txt";
     public static final String PATH2 = "root/foo/file.txt";
@@ -19,6 +22,7 @@ public class TestLocalizationTool {
 
     @BeforeClass
     public void init() {
+        logger.info("Init test");
         ioc = IocBuilder.forTests();
         localizingTool = ioc.instance(LocalizingTool.class);
     }
