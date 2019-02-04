@@ -316,7 +316,7 @@ Specify dependence:
 
 ----
         <dependency>
-            <groupId>colesico.framework</groupId>
+            <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-ioc</artifactId>
             <version>${colesico.version}</version>
         </dependency>
@@ -335,7 +335,7 @@ Specify annotation processor:
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <annotationProcessorPaths>
                         <path>
-                            <groupId>colesico.framework</groupId>
+                            <groupId>net.colesico.framework</groupId>
                             <artifactId>colesico-ioc</artifactId>
                             <version>${colesico.version}</version>
                         </path>

@@ -1,6 +1,9 @@
 module colesico.examples.web {
-    requires colesico.framework.web;
+
     requires colesico.framework.undertow;
+    requires colesico.framework.weblet;
+    requires colesico.framework.restlet;
+    requires colesico.framework.webstatic;
     requires colesico.framework.pebble;
 
     requires logback.classic;

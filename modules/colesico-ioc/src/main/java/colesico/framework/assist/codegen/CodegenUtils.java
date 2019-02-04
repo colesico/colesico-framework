@@ -27,9 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
-import javax.lang.model.type.MirroredTypeException;
-import javax.lang.model.type.NoType;
-import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.*;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.tools.FileObject;
@@ -94,6 +92,32 @@ public class CodegenUtils {
         return packageElement;
     }
 
+    public static TypeMirror typeMirrorFromClass(Class clazz, ProcessingEnvironment processingEnv) {
+        return processingEnv.getElementUtils().getTypeElement(clazz.getCanonicalName()).asType();
+    }
+
+    /**
+     * Returns class member type considering generic type
+     *
+     * @param classType
+     * @param classMember
+     * @param processingEnv
+     * @return
+     */
+    public static TypeElement classMemberType(DeclaredType classType, Element classMember, ProcessingEnvironment processingEnv) {
+        TypeMirror typeMirr = classMember.asType();
+        if (typeMirr.getKind() == TypeKind.DECLARED) {
+            //Field type is simple declared type
+            return (TypeElement) ((DeclaredType) typeMirr).asElement();
+        } else if (typeMirr.getKind() == TypeKind.TYPEVAR) {
+            //Field type is generic. Extract actual type from table class
+            TypeMirror actualTypeMirr = processingEnv.getTypeUtils().asMemberOf(classType, classMember);
+            return (TypeElement) ((DeclaredType) actualTypeMirr).asElement();
+        } else {
+            // TODO: check additional type kinds
+            throw CodegenException.of().message("Unsupported type kind: " + typeMirr.getKind()).element(classMember).build();
+        }
+    }
 
     public static boolean methodIsGetter(ExecutableElement methodElement) {
         return StringUtils.startsWith(methodElement.getSimpleName().toString(), "get") && methodElement.getParameters().isEmpty()
@@ -175,16 +199,17 @@ public class CodegenUtils {
         List<VariableElement> fields = ElementFilter.fieldsIn(members);
 
         for (VariableElement field : fields) {
-            boolean acceptable = false;
-            for (Modifier mod : accessModifiers) {
-                if (field.getModifiers().contains(mod)) {
-                    acceptable = true;
-                    break;
+            if (accessModifiers != null) {
+                boolean acceptable = false;
+                for (Modifier mod : accessModifiers) {
+                    if (field.getModifiers().contains(mod)) {
+                        acceptable = true;
+                        break;
+                    }
                 }
-            }
-
-            if (!acceptable) {
-                continue;
+                if (!acceptable) {
+                    continue;
+                }
             }
 
             if ((annotationType != null) && (field.getAnnotation(annotationType) == null)) {
@@ -440,10 +465,6 @@ public class CodegenUtils {
 
         return false;
 
-    }
-
-    public static TypeMirror typeMirrorFromClass(Class clazz, ProcessingEnvironment processingEnv) {
-        return processingEnv.getElementUtils().getTypeElement(clazz.getCanonicalName()).asType();
     }
 
     public static final String ISO_DT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";

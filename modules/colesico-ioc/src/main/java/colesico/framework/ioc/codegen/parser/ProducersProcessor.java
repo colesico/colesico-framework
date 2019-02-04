@@ -18,6 +18,7 @@
 
 package colesico.framework.ioc.codegen.parser;
 
+import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.ioc.Produce;
 import colesico.framework.ioc.Producer;
 import colesico.framework.ioc.Produces;
@@ -46,66 +47,34 @@ import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.annotation.Annotation;
 import java.util.*;
 
 /**
  * @author Vladlen Larionov
  */
-public class ProducersProcessor extends AbstractProcessor {
+public class ProducersProcessor extends FrameworkAbstractProcessor {
 
     public static final String IOC_MODULE_NAME = "colesico.framework.ioc";
-
-    private Logger logger;
-
-    protected ProcessingEnvironment processingEnv;
-    protected Elements elementUtils;
-    protected Types typeUtils;
-    protected Messager messager;
-    protected Filer filer;
 
     protected IocletGenerator iocletGenerator;
     protected SPIGenerator spiGenerator;
     protected final Map<TypeElement, IocletElement> createdIoclets = new HashMap<>();
 
     public ProducersProcessor() {
-        try {
-            System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "debug");
-            System.setProperty("org.slf4j.simpleLogger.log.colesico.framework", "debug");
-            logger = LoggerFactory.getLogger(ProducersProcessor.class);
-        } catch (Throwable e) {
-            System.out.print("Logger creation error: ");
-            System.out.println(e);
-        }
+        super();
     }
 
     @Override
-    public SourceVersion getSupportedSourceVersion() {
-        return SourceVersion.latestSupported();
+    protected Class<? extends Annotation>[] getSupportedAnnotations() {
+        return new Class[]{Producer.class};
     }
 
     @Override
-    public Set<String> getSupportedAnnotationTypes() {
-        Set<String> result = new HashSet<>();
-        result.add(Producer.class.getName());
-        return result;
-    }
-
-    @Override
-    public synchronized void init(ProcessingEnvironment processingEnv) {
-        try {
-            logger.debug("Initialize IOC annotation processor...");
-            this.processingEnv = processingEnv;
-            elementUtils = processingEnv.getElementUtils();
-            typeUtils = processingEnv.getTypeUtils();
-            messager = processingEnv.getMessager();
-            filer = processingEnv.getFiler();
-            iocletGenerator = new IocletGenerator();
-            spiGenerator = new SPIGenerator(processingEnv);
-            createdIoclets.clear();
-        } catch (Throwable e) {
-            System.out.print("Error initializing " + ProducersProcessor.class.getName() + " ");
-            System.out.println(e);
-        }
+    protected void onInit() {
+        iocletGenerator = new IocletGenerator();
+        spiGenerator = new SPIGenerator(processingEnv);
+        createdIoclets.clear();
     }
 
     @Override
@@ -153,7 +122,7 @@ public class ProducersProcessor extends AbstractProcessor {
     }
 
     protected ExecutableElement getInjectableConstructor(TypeElement producerElement) {
-        List<? extends Element> members = elementUtils.getAllMembers(producerElement);
+        List<? extends Element> members = getElementUtils().getAllMembers(producerElement);
         List<ExecutableElement> methods = ElementFilter.constructorsIn(members);
         ExecutableElement constructor = null;
         ExecutableElement firstConstructor = null;
@@ -190,7 +159,7 @@ public class ProducersProcessor extends AbstractProcessor {
         }
 
         String packageName = CodegenUtils.getPackageName(producerElement);
-        ModuleElement producerModule = elementUtils.getModuleOf(producerElement);
+        ModuleElement producerModule = getElementUtils().getModuleOf(producerElement);
 
         if (!CodegenUtils.checkPackageAccessibility(producerModule, packageName, IOC_MODULE_NAME)) {
             String errMsg = String.format("Package %s must be exported from module %s to %s", packageName, producerModule.toString(), IOC_MODULE_NAME);
@@ -225,7 +194,7 @@ public class ProducersProcessor extends AbstractProcessor {
 
         for (Produce produce : produceList) {
             TypeMirror typeMirr = CodegenUtils.getAnnotationValueTypeMirror(produce, (p) -> p.value());
-            TypeElement typeElm = elementUtils.getTypeElement(typeMirr.toString());
+            TypeElement typeElm = getElementUtils().getTypeElement(typeMirr.toString());
             logger.debug("Found default factory for : " + typeMirr.toString());
 
             //moduleMetamodel.addExports(CodegenUtils.getPackageName(typeElm));

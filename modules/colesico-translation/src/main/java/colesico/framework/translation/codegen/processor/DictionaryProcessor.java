@@ -2,7 +2,7 @@ package colesico.framework.translation.codegen.processor;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
-import colesico.framework.ioc.codegen.parser.ProducersProcessor;
+import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.translation.Dictionary;
 import colesico.framework.translation.Translation;
 import colesico.framework.translation.codegen.generator.BundleGenerator;
@@ -11,30 +11,21 @@ import colesico.framework.translation.codegen.generator.IocGenerator;
 import colesico.framework.translation.codegen.model.DictionaryElement;
 import colesico.framework.translation.codegen.model.DictionaryRegistry;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.HashSet;
+import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class DictionaryProcessor extends AbstractProcessor {
+public class DictionaryProcessor extends FrameworkAbstractProcessor {
 
-    protected Logger logger;
-
-    protected ProcessingEnvironment processingEnv;
-    protected Elements elementUtils;
 
     protected DictionaryGenerator beanGenerator;
 
@@ -43,41 +34,20 @@ public class DictionaryProcessor extends AbstractProcessor {
     protected BundleGenerator dictionaryGenerator;
 
     public DictionaryProcessor() {
-        try {
-            System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "debug");
-            System.setProperty("org.slf4j.simpleLogger.log.colesico.framework", "debug");
-            logger = LoggerFactory.getLogger(ProducersProcessor.class);
-        } catch (Throwable e) {
-            System.out.print("Logger creation error: ");
-            System.out.println(e);
-        }
+        super();
     }
 
     @Override
-    public SourceVersion getSupportedSourceVersion() {
-        return SourceVersion.latestSupported();
+    protected Class<? extends Annotation>[] getSupportedAnnotations() {
+        return new Class[]{Dictionary.class};
     }
 
     @Override
-    public Set<String> getSupportedAnnotationTypes() {
-        Set<String> result = new HashSet<>();
-        result.add(Dictionary.class.getName());
-        return result;
-    }
-
-    @Override
-    public synchronized void init(ProcessingEnvironment processingEnv) {
-        try {
-            this.processingEnv = processingEnv;
-            this.elementUtils = processingEnv.getElementUtils();
-            this.beanGenerator = new DictionaryGenerator(processingEnv);
-            this.iocGenerator = new IocGenerator(processingEnv);
-            this.dictionaryGenerator = new BundleGenerator(processingEnv);
-            this.dictionaryRegistry = new DictionaryRegistry(processingEnv);
-        } catch (Throwable e) {
-            System.out.print("Error initializing " + DictionaryProcessor.class.getName() + " ");
-            System.out.println(e);
-        }
+    protected void onInit() {
+        this.beanGenerator = new DictionaryGenerator(processingEnv);
+        this.iocGenerator = new IocGenerator(processingEnv);
+        this.dictionaryGenerator = new BundleGenerator(processingEnv);
+        this.dictionaryRegistry = new DictionaryRegistry(processingEnv);
     }
 
     @Override

@@ -19,23 +19,22 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
-        <groupId>colesico.framework</groupId>
+        <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.2.0</version>
+        <version>1.3.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <groupId>colesico.framework</groupId>
-    <artifactId>colesico-db</artifactId>
-
+    <artifactId>colesico-dao</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico Database Bundle</name>
-
+    <name>Colesico DAO Assistant</name>
     <description>
-        Colesico framework database bundle
+        Colesico framework databse access object utilites
     </description>
 
     <properties>
@@ -44,23 +43,10 @@
     <dependencies>
         <!-- Colesico -->
         <dependency>
-            <groupId>colesico.framework</groupId>
-            <artifactId>colesico-hikaricp</artifactId>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-transaction</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>colesico.framework</groupId>
-            <artifactId>colesico-jdbc</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>colesico.framework</groupId>
-            <artifactId>colesico-jdbi</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -72,10 +58,17 @@
                 <configuration combine.children="append">
                     <annotationProcessorPaths>
                         <path>
-                            <groupId>colesico.framework</groupId>
-                            <artifactId>colesico-service</artifactId>
+                            <groupId>net.colesico.framework</groupId>
+                            <artifactId>colesico-ioc</artifactId>
                             <version>${project.version}</version>
                         </path>
+
+                        <!-- Enable compile debug log -->
+                        <dependency>
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>slf4j-simple</artifactId>
+                            <version>${slf4j.version}</version>
+                        </dependency>
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>

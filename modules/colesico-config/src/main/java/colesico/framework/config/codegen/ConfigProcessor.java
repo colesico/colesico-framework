@@ -19,23 +19,18 @@
 package colesico.framework.config.codegen;
 
 import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.config.Configuration;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.HashSet;
+import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,49 +38,24 @@ import java.util.Set;
 /**
  * @author Vladlen Larionov
  */
-public class ConfigProcessor extends AbstractProcessor {
-
-    private Logger logger;
-
-    protected ProcessingEnvironment processingEnv;
-    protected Elements elementUtils;
+public class ConfigProcessor extends FrameworkAbstractProcessor {
 
     protected IocGenerator iocGenerator;
-
     protected ConfRegistry confRegistry;
 
     public ConfigProcessor() {
-        try {
-            logger = LoggerFactory.getLogger(ConfigProcessor.class);
-        } catch (Throwable e) {
-            System.out.print("Logger creation error: ");
-            System.out.println(e);
-        }
+        super();
     }
 
     @Override
-    public SourceVersion getSupportedSourceVersion() {
-        return SourceVersion.latestSupported();
+    protected Class<? extends Annotation>[] getSupportedAnnotations() {
+        return new Class[]{Configuration.class};
     }
 
     @Override
-    public Set<String> getSupportedAnnotationTypes() {
-        Set<String> result = new HashSet<>();
-        result.add(Configuration.class.getName());
-        return result;
-    }
-
-    @Override
-    public synchronized void init(ProcessingEnvironment processingEnv) {
-        try {
-            this.processingEnv = processingEnv;
-            this.elementUtils = processingEnv.getElementUtils();
-            this.iocGenerator = new IocGenerator(processingEnv);
-            this.confRegistry = new ConfRegistry(processingEnv);
-        } catch (Throwable e) {
-            System.out.print("Error initializing " + ConfigProcessor.class.getName() + " ");
-            System.out.println(e);
-        }
+    protected void onInit() {
+        this.iocGenerator = new IocGenerator(processingEnv);
+        this.confRegistry = new ConfRegistry(processingEnv);
     }
 
     @Override

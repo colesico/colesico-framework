@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>colesico.framework</groupId>
+        <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.2.0</version>
+        <version>1.3.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <groupId>colesico.framework.examples</groupId>
+    <groupId>net.colesico.framework.examples</groupId>
     <artifactId>ioc</artifactId>
     <packaging>jar</packaging>
     <name>Colesico example - IoC</name>
@@ -20,7 +20,7 @@
     <dependencies>
         <!-- Colesico -->
         <dependency>
-            <groupId>colesico.framework</groupId>
+            <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-ioc</artifactId>
             <version>${project.version}</version>
             <exclusions>
@@ -28,18 +28,7 @@
                     <groupId>com.squareup</groupId>
                     <artifactId>javapoet</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>com.google.auto.service</groupId>
-                    <artifactId>auto-service</artifactId>
-                </exclusion>
             </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.auto.service</groupId>
-            <artifactId>auto-service</artifactId>
-            <version>${auto-service.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- Logger -->
@@ -65,10 +54,16 @@
                     <showDeprecation>true</showDeprecation>
                     <annotationProcessorPaths>
                         <path>
-                            <groupId>colesico.framework</groupId>
+                            <groupId>net.colesico.framework</groupId>
                             <artifactId>colesico-ioc</artifactId>
                             <version>${project.version}</version>
                         </path>
+                        <!-- Enable compile time log -->
+                        <dependency>
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>slf4j-simple</artifactId>
+                            <version>${slf4j.version}</version>
+                        </dependency>
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>

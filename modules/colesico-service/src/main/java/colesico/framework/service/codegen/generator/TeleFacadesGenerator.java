@@ -36,6 +36,8 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
 
@@ -73,14 +75,20 @@ public class TeleFacadesGenerator {
 
     protected CodeBlock generateVarValue(TeleVarElement var, CodeBlock.Builder binderBuilder) {
 
+        // detect param type considering generics
+        TypeElement paramTypeElm = CodegenUtils.classMemberType(
+                (DeclaredType) var.getParentTeleMethod().getParentTeleFacade().getParentService().getOriginClass().asType(),
+                var.getOriginVariable(),
+                context.getProcessingEnv());
+
+        TypeName paramTypeName = TypeName.get(paramTypeElm.asType());
+
         if (var instanceof TeleParamElement) {
             CodeBlock ctx = ((TeleParamElement) var).getReadingContext();
-            TypeName paramType = TypeName.get(var.getOriginVariable().asType());
-
             // Generates code like this: dataPot.read(ParamType.class, new Context(...));
             CodeBlock.Builder cb = CodeBlock.builder();
             cb.add("$N.$N(", TeleDriver.Binder.DATAPORT_PARAM, DataPort.READ_METHOD);
-            cb.add("$T.class,", paramType);
+            cb.add("$T.class,", paramTypeName);
             cb.add(ctx);
             cb.add(")");
             return cb.build();
@@ -92,7 +100,7 @@ public class TeleFacadesGenerator {
 
         String valueVar = varNames.getNextTempVariable();
         binderBuilder.addStatement("$T $N=new $T()",
-                TypeName.get(var.getOriginVariable().asType()),
+                paramTypeName,
                 valueVar, TypeName.get(var.getOriginVariable().asType()));
 
         // Generate composition fields
@@ -216,7 +224,7 @@ public class TeleFacadesGenerator {
             classBuilder.addModifiers(Modifier.PUBLIC);
             classBuilder.addModifiers(Modifier.FINAL);
 
-            AnnotationSpec genstamp = CodegenUtils.buildGenstampAnnotation(this.getClass().getName(),null, "Service: " + service.getOriginClass().getQualifiedName().toString());
+            AnnotationSpec genstamp = CodegenUtils.buildGenstampAnnotation(this.getClass().getName(), null, "Service: " + service.getOriginClass().getQualifiedName().toString());
             classBuilder.addAnnotation(genstamp);
 
             classBuilder.addAnnotation(ClassName.get(Singleton.class));
