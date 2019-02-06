@@ -42,7 +42,7 @@ public interface Ioclet {
     /**
      * Rank of Ioclet. Obtained from producer definition
      *
-     * @return
+     * @return ioclet rank
      * @see colesico.framework.ioc.Rank
      */
     String getRank();
@@ -50,7 +50,7 @@ public interface Ioclet {
     /**
      * This method implementation should register the factories
      *
-     * @param catalog
+     * @param catalog catalog instance
      */
     void addFactories(final Catalog catalog);
 

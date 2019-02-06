@@ -38,7 +38,6 @@ public interface Ioc {
      * Returns instance of T by its class.
      * <p>
      *
-     * @param <T>
      * @param message the message that can be used by factory that creates the instance
      * @return the instance if the appropriate factory is found, exception otherwise
      * @see TypeKey
@@ -47,19 +46,12 @@ public interface Ioc {
 
     /**
      * Returns instance of T by its class or null if the appropriate factory is not found.
-     *
-     * @param key
-     * @param message
-     * @param <T>
-     * @return
      */
     <T> T instanceOrNull(Key<T> key, Object message);
 
     /**
      * Returns provider for instance of T by key
      *
-     * @param key
-     * @param <T>
      * @return the provider if the appropriate factory is found, exception otherwise
      */
     <T> Provider<T> provider(Key<T> key, Object message) throws UnsatisfiedInjectionException;

@@ -26,7 +26,7 @@ import java.util.function.Consumer;
  * Ioc container supports multiple factories for a given key.
  * Polysupplier represents a chain of factories for the given key.
  *
- * @param <T>
+ * @param <T> instance type
  * @see Key< T >
  * @see Polyproduce
  */
@@ -34,15 +34,15 @@ public interface Polysupplier<T> {
     /**
      * True if this polysupplier can supply instances
      *
-     * @return
+     * @return true is polysupplier is empty
      */
     boolean isNotEmpty();
 
     /**
      * Returns iterator to get the instances from the factories chain
      *
-     * @param message
-     * @return
+     * @param message message to be passed
+     * @return iterator
      */
     Iterator<T> iterator(Object message);
 

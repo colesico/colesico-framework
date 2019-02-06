@@ -3,11 +3,10 @@ package colesico.framework.dao.codegen.parser;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.dao.Table;
+import colesico.framework.dao.codegen.generator.DtoAssistantGenerator;
 import colesico.framework.dao.codegen.generator.PostgresTabeGenerator;
 import colesico.framework.dao.codegen.generator.TableGenerator;
 import colesico.framework.dao.codegen.model.TableElement;
-import colesico.framework.ioc.Producer;
-import colesico.framework.ioc.codegen.model.IocletElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -24,6 +23,7 @@ public class TableProcessor extends FrameworkAbstractProcessor {
 
     private TableParser tableParser;
     private TableGenerator tableGenerator;
+    private DtoAssistantGenerator dtoAssistantGenerator;
 
     public TableProcessor() {
         super();
@@ -37,6 +37,7 @@ public class TableProcessor extends FrameworkAbstractProcessor {
     @Override
     protected void onInit() {
         tableParser = new TableParser(processingEnv);
+        dtoAssistantGenerator = new DtoAssistantGenerator(processingEnv);
         //TODO: should be configurable
         tableGenerator = new PostgresTabeGenerator(processingEnv);
     }
@@ -52,6 +53,7 @@ public class TableProcessor extends FrameworkAbstractProcessor {
                 typeElement = (TypeElement) elm;
                 TableElement tableElement = tableParser.parse(typeElement);
                 tableGenerator.generate(tableElement);
+                dtoAssistantGenerator.generate(tableElement);
             } catch (CodegenException ce) {
                 String message = "Error processing class '" + elm.toString() + "': " + ce.getMessage();
                 logger.debug(message);

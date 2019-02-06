@@ -20,7 +20,7 @@ package colesico.framework.ioc;
 
 /**
  * The key by which the IoC container will find the factory to instantiate the class T annotated with @Classed
- * @param <T>
+ * @param <T> instance type
  * @see Key
  */
 public final class ClassedKey<T> implements Key<T> {

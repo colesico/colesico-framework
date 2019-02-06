@@ -25,7 +25,7 @@
     <groupId>net.colesico.framework</groupId>
     <artifactId>colesico-framework</artifactId>
     <packaging>pom</packaging>
-    <version>1.3.0</version>
+    <version>1.3.1</version>
     <name>Colesico Framework</name>
     <description>
         Lightweight application framework for the Java 9+
@@ -36,7 +36,6 @@
             <name>Apache License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
-            <comments>A business-friendly OSS license</comments>
         </license>
     </licenses>
 
@@ -45,11 +44,23 @@
     <developers>
         <developer>
             <name>Vladlen Larionov</name>
-            <url>https://github.com/colesico</url>
-            <id>colesico</id>
         </developer>
     </developers>
-    <contributors></contributors>
+
+    <scm>
+        <url>https://github.com/colesico/colesico-framework</url>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -66,6 +77,10 @@
         <asciidoctor-maven-plugin.version>1.5.6</asciidoctor-maven-plugin.version>
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
         <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
+        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.0.1</maven-javadoc-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
 
         <!-- Other -->
         <commons-lang3.version>3.7</commons-lang3.version>
@@ -117,16 +132,16 @@
                 <module>modules/colesico-translation</module>
                 <module>modules/colesico-security</module>
                 <module>modules/colesico-validation</module>
-				<module>modules/colesico-eventbus</module>
+                <module>modules/colesico-eventbus</module>
 
-				<!-- Transactions -->
-				<module>modules/colesico-transaction</module>				
-				
+                <!-- Transactions -->
+                <module>modules/colesico-transaction</module>
+
                 <!-- DB -->
-				<module>modules/colesico-hikaricp</module>
-				<module>modules/colesico-jdbc</module>
-				<module>modules/colesico-jdbi</module>
-				<module>modules/colesico-dao</module>
+                <module>modules/colesico-hikaricp</module>
+                <module>modules/colesico-jdbc</module>
+                <module>modules/colesico-jdbi</module>
+                <module>modules/colesico-dao</module>
 
                 <!-- Web -->
                 <module>modules/colesico-http</module>
@@ -146,11 +161,11 @@
         <profile>
             <id>bundles</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
                 <!-- Bundles -->
-				<module>bundles/colesico-all</module>
+                <module>bundles/colesico-appbundle</module>
             </modules>
         </profile>
         <profile>
@@ -159,11 +174,11 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <modules>
-                <module>examples/ioc</module>
-                <module>examples/web</module>
-				<module>examples/eventbus</module>
-				<module>examples/transaction</module>
-				<module>examples/jdbi</module>
+                <module>examples/ioc-example</module>
+                <module>examples/web-example</module>
+                <module>examples/eventbus-example</module>
+                <module>examples/transaction-example</module>
+                <module>examples/jdbi-example</module>
             </modules>
         </profile>
         <profile>
@@ -171,6 +186,78 @@
             <modules>
                 <module>doc</module>
             </modules>
+        </profile>
+        <profile>
+            <id>release</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${maven-source-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven-javadoc-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <additionalOptions>-Xdoclint:none</additionalOptions>
+                                    <additionalJOption>-Xdoclint:none</additionalJOption>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.ow2.asm</groupId>
+                                <artifactId>asm</artifactId>
+                                <version>7.0</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>${nexus-staging-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 

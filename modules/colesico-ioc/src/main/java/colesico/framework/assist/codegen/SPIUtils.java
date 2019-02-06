@@ -56,23 +56,31 @@ public class SPIUtils {
     }
 
     public static void addService(String srvInterface, Set<String> srvClasses, ProcessingEnvironment processingEnv) {
+        logger.debug("Generate SPI file for: "+srvInterface);
         try {
-            Set allClasses = new HashSet();
+            Set allServices = new HashSet();
             Filer filer = processingEnv.getFiler();
             String spiFile = SPI_FILES_PATH + srvInterface;
             try {
                 FileObject fileObj = filer.getResource(StandardLocation.CLASS_OUTPUT, "", spiFile);
                 Set<String> oldServices = readSPIFile(fileObj.openInputStream());
-                allClasses.addAll(oldServices);
+                allServices.addAll(oldServices);
+                if (logger.isDebugEnabled()) {
+                    StringBuilder sb = new StringBuilder("SPI file content: \n");
+                    for (String s : oldServices) {
+                        sb.append(" >").append(s).append("\n");
+                    }
+                    logger.debug(sb.toString());
+                }
             } catch (IOException e) {
                 logger.debug("SPI file is not exists");
             }
 
-            allClasses.addAll(srvClasses);
+            allServices.addAll(srvClasses);
 
             FileObject fileObject = filer.createResource(StandardLocation.CLASS_OUTPUT, "", spiFile);
             try (OutputStream out = fileObject.openOutputStream()) {
-                writeSPIFile(out, allClasses);
+                writeSPIFile(out, allServices);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

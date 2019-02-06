@@ -4,6 +4,8 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.dao.codegen.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.FileObject;
@@ -13,11 +15,13 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class PostgresTabeGenerator implements TableGenerator {
 
-
+    private static final Logger logger = LoggerFactory.getLogger(PostgresTabeGenerator.class);
     private final ProcessingEnvironment processingEnv;
 
     public PostgresTabeGenerator(ProcessingEnvironment processingEnv) {
@@ -93,6 +97,50 @@ public class PostgresTabeGenerator implements TableGenerator {
         }
     }
 
+    public void generateInsertSQL(TableElement tableElement, Writer w) throws Exception {
+        List<String> columns = new ArrayList<>();
+        List<String> vars = new ArrayList<>();
+        for (ColumnElement column : tableElement.getColumns()) {
+            columns.add(column.getName());
+            vars.add(":" + column.getName());
+        }
+
+        String columnsStr = StringUtils.join(columns, ", ");
+        w.write("INSERT INTO " + tableElement.getName() + " (" + columnsStr + ")\n");
+        String varsStr = StringUtils.join(vars, ", ");
+        w.write("       VALUES (" + varsStr + ")\n");
+    }
+
+    public void generateUpdateSQL(TableElement tableElement, Writer w) throws Exception {
+        List<String> assigns = new ArrayList<>();
+
+        Set<String> pkColumns;
+        if (tableElement.getPrimaryKey() != null) {
+            logger.debug("Table "+tableElement.getName()+" has primary key");
+            pkColumns = tableElement.getPrimaryKey().getColumns();
+        } else {
+            pkColumns = new HashSet<>();
+        }
+
+        for (ColumnElement column : tableElement.getColumns()) {
+            if (!pkColumns.contains(column.getName())) {
+                assigns.add(column.getName() + " = :" + column.getName());
+            }
+        }
+
+        String assignsStr = StringUtils.join(assigns, ", ");
+        w.write("UPDATE " + tableElement.getName() + " SET " + assignsStr + "\n");
+
+        if (tableElement.getPrimaryKey() != null) {
+            List<String> where = new ArrayList<>();
+            for (String columnName : tableElement.getPrimaryKey().getColumns()) {
+                where.add(columnName + " = :" + columnName);
+            }
+            String whereStr = StringUtils.join(where, " AND ");
+            w.write("        WHERE " + whereStr + "\n");
+        }
+    }
+
     @Override
     public void generate(TableElement tableElement) {
         try {
@@ -104,6 +152,8 @@ public class PostgresTabeGenerator implements TableGenerator {
                 generateCreateTableSQL(tableElement, writer);
                 generateColumnComments(tableElement, writer);
                 generateFKIndexes(tableElement, writer);
+                generateInsertSQL(tableElement, writer);
+                generateUpdateSQL(tableElement, writer);
                 writer.flush();
             }
         } catch (Exception e) {

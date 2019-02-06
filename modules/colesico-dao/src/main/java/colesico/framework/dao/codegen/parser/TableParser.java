@@ -9,10 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 public class TableParser {
@@ -41,15 +44,26 @@ public class TableParser {
         return columnElement;
     }
 
-    protected void parseField(VariableElement field, TableElement tableElement, String fieldNamePrefix) {
-        if (fieldNamePrefix == null) {
-            fieldNamePrefix = "";
+    protected void parseField(TableElement tableElement, Deque<VariableElement> fieldPath, String namePrefix) {
+        if (namePrefix == null) {
+            namePrefix = "";
         }
+
+        VariableElement field = fieldPath.peek();
+        if (field.getModifiers().contains(Modifier.STATIC)){
+            return;
+        }
+
+        TypeElement fieldType = CodegenUtils.classMemberType((DeclaredType) tableElement.getOriginClass().asType(), field, processingEnv);
+
         Composition compositionAnn = field.getAnnotation(Composition.class);
         if (compositionAnn != null) {
-            parseFields(CodegenUtils.classMemberType((DeclaredType) tableElement.getOriginClass().asType(), field, processingEnv),
-                    tableElement,
-                    fieldNamePrefix + compositionAnn.fieldPrefix());
+            List<VariableElement> subfields = CodegenUtils.getFields(processingEnv, fieldType, null, null);
+            for (VariableElement subfield : subfields) {
+                fieldPath.push(subfield);
+                parseField(tableElement, fieldPath, namePrefix + compositionAnn.fieldPrefix());
+                fieldPath.pop();
+            }
             return;
         }
 
@@ -58,15 +72,17 @@ public class TableParser {
             return;
         }
 
-        FieldColumnElement columnElement = new FieldColumnElement(field);
-        columnElement = fillColumn(columnElement, columnAnn, fieldNamePrefix);
+        FieldColumnElement columnElement = new FieldColumnElement(fieldPath);
+        columnElement = fillColumn(columnElement, columnAnn, namePrefix);
         tableElement.addColumn(columnElement);
     }
 
-    protected void parseFields(TypeElement typeElement, TableElement tableElement, String fieldNamePrefix) {
-        List<VariableElement> fields = CodegenUtils.getFields(processingEnv, typeElement, null, null);
+    protected void parseFields(TableElement tableElement) {
+        List<VariableElement> fields = CodegenUtils.getFields(processingEnv, tableElement.getOriginClass(), null, null);
         for (VariableElement field : fields) {
-            parseField(field, tableElement, fieldNamePrefix);
+            Deque<VariableElement> fieldPath = new ArrayDeque<>();
+            fieldPath.push(field);
+            parseField(tableElement, fieldPath, null);
         }
     }
 
@@ -146,7 +162,7 @@ public class TableParser {
         if (StringUtils.isNotEmpty(tableAnn.comment())) {
             tableElement.setComment(tableAnn.comment());
         }
-        parseFields(typeElement, tableElement, null);
+        parseFields(tableElement);
         parseExtraColumns(tableElement);
         parseColumnsOverridings(tableElement);
         parseForeignKeys(tableElement);

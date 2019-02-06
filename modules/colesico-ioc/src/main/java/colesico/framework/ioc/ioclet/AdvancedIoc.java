@@ -16,8 +16,6 @@ public interface AdvancedIoc extends Ioc {
     /**
      * Returns factory by key.
      *
-     * @param key
-     * @param <T>
      * @return the factory if the appropriate is found, exception otherwise
      * @throws UnsatisfiedInjectionException
      */
@@ -26,8 +24,6 @@ public interface AdvancedIoc extends Ioc {
     /**
      * Returns factory by key.
      *
-     * @param key
-     * @param <T>
      * @return the factory if the appropriate is found, null otherwise
      */
     <T> Factory<T> factoryOrNull(Key<T> key);

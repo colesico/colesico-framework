@@ -43,9 +43,6 @@ abstract public class Factory<T> {
 
     /**
      * Returns instance to be injected
-     *
-     * @param message
-     * @return
      */
     abstract public T get(Object message);
 
@@ -62,7 +59,6 @@ abstract public class Factory<T> {
     /**
      * Called by Ioc container to initialize factory
      *
-     * @param ioc
      */
     public void setup(final AdvancedIoc ioc) {
     }

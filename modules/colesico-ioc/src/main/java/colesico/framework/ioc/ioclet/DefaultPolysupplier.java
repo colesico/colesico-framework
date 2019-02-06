@@ -7,7 +7,6 @@ import java.util.Iterator;
 
 /**
  * Polysupplier default implementation
- * @param <T>
  */
 public final class DefaultPolysupplier<T> implements Polysupplier<T> {
 

@@ -34,8 +34,8 @@ public interface IocBuilder {
      * By default builder use this ranks: 'minor', 'default', 'extension'.
      * With tis method 'test' rank can be added.
      *
-     * @param name
-     * @return
+     * @param name rank name
+     * @return builder instance
      * @see Rank
      */
     IocBuilder useRank(String name);

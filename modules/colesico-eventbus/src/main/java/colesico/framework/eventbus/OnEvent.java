@@ -20,10 +20,7 @@ package colesico.framework.eventbus;
 import java.lang.annotation.*;
 
 /**
- * Indicates that the method is not a service method.
- * <p>
- * The method will be used in the service as is, without generating
- * a proxy method that provides an auxiliary code for the automation of the original method
+ * Indicates a service method as event listener
  *
  * @author Vladlen Larionov
  */

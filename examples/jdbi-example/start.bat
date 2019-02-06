@@ -1,0 +1,1 @@
+c:\Java\jdk11\bin\java -cp target/lib/*;target/jdbi-1.2.0.jar colesico.framework.example.jdbi.Main

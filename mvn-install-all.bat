@@ -1,0 +1,1 @@
+mvn clean install -P modules,bundles,examples,doc,release -Dgpg.passphrase=%1

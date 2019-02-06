@@ -191,7 +191,7 @@ public class CodegenUtils {
     }
 
 
-    public static List<VariableElement> getFields(ProcessingEnvironment processingEnv, TypeElement classElement, Modifier[] accessModifiers, Class<? extends Annotation> annotationType) {
+    public static List<VariableElement> getFields(ProcessingEnvironment processingEnv, TypeElement classElement, Modifier[] modifiers, Class<? extends Annotation> annotationType) {
         List<VariableElement> result = new ArrayList<>();
 
         Elements utils = processingEnv.getElementUtils();
@@ -199,9 +199,9 @@ public class CodegenUtils {
         List<VariableElement> fields = ElementFilter.fieldsIn(members);
 
         for (VariableElement field : fields) {
-            if (accessModifiers != null) {
+            if (modifiers != null) {
                 boolean acceptable = false;
-                for (Modifier mod : accessModifiers) {
+                for (Modifier mod : modifiers) {
                     if (field.getModifiers().contains(mod)) {
                         acceptable = true;
                         break;
