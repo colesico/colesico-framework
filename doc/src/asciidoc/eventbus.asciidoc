@@ -8,18 +8,17 @@ Provide declarative event subscription and EventBus component for sending events
 
 == Usage
 
-1. Define event class. For example
-
+. Define event class. For example:
++
 [source,java]
 ----
  public class MyEvent { String message }
 ----
 
-2. Inject EventBus to sender bean:
-
+. Inject EventBus to sender bean:
++
 [source,java]
 ----
-
 @Service
 public class MySender {
 
@@ -31,14 +30,12 @@ public class MySender {
     }
 
 }
-
 ----
 
-3. Send event with EventBus
-
+. Send event with EventBus:
++
 [source,java]
 ----
-
 @Service
 public class MySender {
 
@@ -52,11 +49,10 @@ public class MySender {
 }
 ----
 
-4. Receive an event in receiver with @OnEvent annotation
-
+. Receive an event in receiver with @OnEvent annotation:
++
 [source,java]
 ----
-
 @Service
 public class Receiver {
 
@@ -66,7 +62,6 @@ public class Receiver {
     }
 
 }
-
 ----
 
 Event receiver should be a public, void, single argument method annotated with @OnEvent.

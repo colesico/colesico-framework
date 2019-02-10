@@ -2,11 +2,9 @@ package colesico.framework.dao.codegen.parser;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
-import colesico.framework.dao.Table;
-import colesico.framework.dao.codegen.generator.DtoAssistantGenerator;
-import colesico.framework.dao.codegen.generator.PostgresTabeGenerator;
-import colesico.framework.dao.codegen.generator.TableGenerator;
-import colesico.framework.dao.codegen.model.TableElement;
+import colesico.framework.dao.DTO;
+import colesico.framework.dao.codegen.generator.DTOHelperGenerator;
+import colesico.framework.dao.codegen.model.DTOElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -19,41 +17,37 @@ import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-public class TableProcessor extends FrameworkAbstractProcessor {
+public class DTOProcessor extends FrameworkAbstractProcessor {
 
-    private TableParser tableParser;
-    private TableGenerator tableGenerator;
-    private DtoAssistantGenerator dtoAssistantGenerator;
+    private DTOParser dtoParser;
+    private DTOHelperGenerator dtoHelperGenerator;
 
-    public TableProcessor() {
+    public DTOProcessor() {
         super();
     }
 
     @Override
     protected Class<? extends Annotation>[] getSupportedAnnotations() {
-        return new Class[]{Table.class};
+        return new Class[]{DTO.class};
     }
 
     @Override
     protected void onInit() {
-        tableParser = new TableParser(processingEnv);
-        dtoAssistantGenerator = new DtoAssistantGenerator(processingEnv);
-        //TODO: should be configurable
-        tableGenerator = new PostgresTabeGenerator(processingEnv);
+        dtoParser = new DTOParser(processingEnv);
+        dtoHelperGenerator = new DTOHelperGenerator(processingEnv);
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        for (Element elm : roundEnv.getElementsAnnotatedWith(Table.class)) {
+        for (Element elm : roundEnv.getElementsAnnotatedWith(DTO.class)) {
             if (elm.getKind() != ElementKind.CLASS) {
                 continue;
             }
             TypeElement typeElement = null;
             try {
                 typeElement = (TypeElement) elm;
-                TableElement tableElement = tableParser.parse(typeElement);
-                tableGenerator.generate(tableElement);
-                dtoAssistantGenerator.generate(tableElement);
+                DTOElement dtoElement = dtoParser.parse(typeElement);
+                dtoHelperGenerator.generate(dtoElement);
             } catch (CodegenException ce) {
                 String message = "Error processing class '" + elm.toString() + "': " + ce.getMessage();
                 logger.debug(message);

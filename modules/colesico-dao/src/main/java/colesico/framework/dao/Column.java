@@ -21,41 +21,22 @@ package colesico.framework.dao;
 import java.lang.annotation.*;
 
 /**
- * Defines table column
+ * Defines column name
  */
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Column {
-
     /**
-     * Table column name
+     * Column name
      *
      * @return
      */
     String name();
 
     /**
-     * Sql type of column
+     * Value converter
      * @return
      */
-    String type() default "";
-
-    /**
-     * Column is nullable or not
-     * @return
-     */
-    boolean required() default false;
-
-    /**
-     * Column default value
-     * @return
-     */
-    String defaultVal() default "";
-
-    /**
-     * Column description/comment
-     * @return
-     */
-    String comment() default "";
+    Class<? extends DTOConverter> converter() default DTOConverter.class;
 }

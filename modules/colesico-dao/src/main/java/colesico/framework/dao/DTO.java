@@ -21,19 +21,12 @@ package colesico.framework.dao;
 import java.lang.annotation.*;
 
 
+/**
+ * Field composition marker.  (analogue of JPA @Embeded)
+ */
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Table {
-    /**
-     * Database table name
-     * @return
-     */
-    String name();
+public @interface DTO {
 
-    /**
-     * Table comment/description
-      * @return
-     */
-    String comment() default "";
 }

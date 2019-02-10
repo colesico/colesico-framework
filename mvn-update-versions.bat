@@ -1,2 +1,4 @@
 mvn -N versions:update-child-modules
-mvn versions:display-dependency-updates
+
+rem to display dependency updates run:
+rem mvn versions:display-dependency-updates

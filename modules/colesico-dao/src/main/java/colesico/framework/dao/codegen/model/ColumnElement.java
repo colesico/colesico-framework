@@ -1,119 +1,59 @@
 package colesico.framework.dao.codegen.model;
 
-import org.apache.commons.lang3.StringUtils;
+import com.squareup.javapoet.TypeName;
+
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 
 public class ColumnElement {
 
-    protected TableElement parentTable;
+    protected final VariableElement originField;
+    protected CompositionElement parentComposition;
+    protected final String name;
+    protected TypeMirror converter;
 
-    /**
-     * Predefined name
-     */
-    protected String name;
-
-    /**
-     * Predefined sql type
-     */
-    protected String type;
-
-    /**
-     * Is column value required or not
-     */
-    protected boolean required;
-
-    /**
-     * Column comment/description
-     */
-    protected String comment;
-
-    /**
-     * Column default value
-     */
-    protected String defaultVal;
-
-    protected String uid;
-
-    public String getDefaultVal() {
-        return defaultVal;
-    }
-
-    public void setDefaultVal(String defaultVal) {
-        this.defaultVal = defaultVal;
-    }
-
-    public TableElement getParentTable() {
-        return parentTable;
+    public ColumnElement(VariableElement originField, String name) {
+        this.originField = originField;
+        this.name = name;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getType() {
-        return type;
+    public CompositionElement getParentComposition() {
+        return parentComposition;
     }
 
-    public boolean isRequired() {
-        return required;
+    public void setParentComposition(CompositionElement parentComposition) {
+        this.parentComposition = parentComposition;
     }
 
-    public String getComment() {
-        return comment;
+    public TypeMirror getConverter() {
+        return converter;
     }
 
-
-    public void setName(String name) {
-        this.name = name;
-        this.uid = name;
+    public void setConverter(TypeMirror converter) {
+        this.converter = converter;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public VariableElement getOriginField() {
+        return originField;
     }
 
-    public void setRequired(boolean required) {
-        this.required = required;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public void setParentTable(TableElement parentTable) {
-        this.parentTable = parentTable;
-    }
-
-    public <C extends ColumnElement> void updateWith(C column) {
-        if (StringUtils.isNotEmpty(column.getType())) {
-            type = column.getType();
-        }
-
-        if (StringUtils.isNotEmpty(column.getComment())) {
-            comment = column.getComment();
-        }
-
-        if (StringUtils.isNotEmpty(column.getDefaultVal())) {
-            defaultVal = column.getDefaultVal();
-        }
-
-        if (!required && column.isRequired()) {
-            required = column.isRequired();
-        }
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        FieldColumnElement that = (FieldColumnElement) o;
+        ColumnElement that = (ColumnElement) o;
 
-        return uid.equals(that.uid);
+        return name.equals(that.name);
     }
 
     @Override
     public int hashCode() {
-        return uid.hashCode();
+        return name.hashCode();
     }
-
 }

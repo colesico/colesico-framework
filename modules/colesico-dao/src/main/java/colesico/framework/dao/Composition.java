@@ -30,7 +30,24 @@ import java.lang.annotation.*;
 public @interface Composition {
 
     /**
-     * Composition fileds name preffix
+     * Composition columns name preffix
      */
-    String fieldPrefix() default "";
+    String columnsPrefix() default "";
+
+    /**
+     * Accepts only enlisted columns.
+     *
+     *
+     * @return
+     */
+    String[] acceptFields() default {};
+
+    /**
+     * Rename columns in format:
+     *
+     * original_name->new_name
+     *
+     * @return
+     */
+    String[] renameColumns() default {};
 }
