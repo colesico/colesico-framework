@@ -21,6 +21,21 @@ To build colesico framework with maven:
 $ mvn clean install
 ```
 
+## Maven pom.xml
+
+
+<dependency>
+  <groupId>net.colesico.framework</groupId>
+  <artifactId>colesico-appbundle</artifactId>
+  <version>1.3.3</version>
+</dependency>
+
+<dependency>
+  <groupId>net.colesico.framework</groupId>
+  <artifactId>colesico-[extra module]</artifactId>
+  <version>1.3.3</version>
+</dependency>
+
 ## License
 
 This project is licensed under the
