@@ -21,8 +21,6 @@ To build colesico framework with maven:
 $ mvn clean install
 ```
 
-## Maven pom.xml
-
 ## Maven dependency
 
 ```xml
