@@ -23,18 +23,26 @@ $ mvn clean install
 
 ## Maven pom.xml
 
+## Maven dependency
 
+```xml
 <dependency>
   <groupId>net.colesico.framework</groupId>
   <artifactId>colesico-appbundle</artifactId>
   <version>1.3.3</version>
 </dependency>
+```
 
+And for extra framework modules:
+
+```xml
 <dependency>
   <groupId>net.colesico.framework</groupId>
   <artifactId>colesico-[extra module]</artifactId>
   <version>1.3.3</version>
 </dependency>
+```
+
 
 ## License
 
