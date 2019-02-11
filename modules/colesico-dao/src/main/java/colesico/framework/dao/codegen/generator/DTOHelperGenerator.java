@@ -170,7 +170,10 @@ public class DTOHelperGenerator {
                 cb.add("$N.getBigDecimal($S)", DTOHelper.RESULT_SET_PARAM, column.getName());
                 break;
             case "java.time.LocalDateTime":
-                cb.add("$N.getTimestamp($S).toLocalDateTime()", DTOHelper.RESULT_SET_PARAM, column.getName());
+                cb.add("$N.getTimestamp($S) == null ? null : $N.getTimestamp($S).toLocalDateTime()",
+                        DTOHelper.RESULT_SET_PARAM, column.getName(),
+                        DTOHelper.RESULT_SET_PARAM, column.getName()
+                );
                 break;
             default:
                 cb.add("$N.getObject($S)", DTOHelper.RESULT_SET_PARAM, column.getName());
@@ -254,39 +257,39 @@ public class DTOHelperGenerator {
     }
 
 
-    protected String generateInsertSQL(){
+    protected String generateInsertSQL() {
         List<ColumnElement> allColumns = dtoElement.getAllColumns();
         StringBuilder sb = new StringBuilder("INSERT INTO [TABLE](");
         List<String> columnNames = new ArrayList<>();
         List<String> columnValues = new ArrayList<>();
-        for (ColumnElement column:allColumns){
+        for (ColumnElement column : allColumns) {
             columnNames.add(column.getName());
-            columnValues.add(":"+column.getName());
+            columnValues.add(":" + column.getName());
         }
-        sb.append(StringUtils.join(columnNames,", ")).append(')');
-        sb.append(" VALUES (").append(StringUtils.join(columnValues,',')).append(")\n");
+        sb.append(StringUtils.join(columnNames, ", ")).append(')');
+        sb.append(" VALUES (").append(StringUtils.join(columnValues, ',')).append(")\n");
         return sb.toString();
     }
 
-    protected String generateUpdateSQL(){
+    protected String generateUpdateSQL() {
         List<ColumnElement> allColumns = dtoElement.getAllColumns();
         StringBuilder sb = new StringBuilder("UPDATE [TABLE] SET ");
         List<String> assigns = new ArrayList<>();
-        for (ColumnElement column:allColumns){
-            assigns.add(column.getName()+" = :"+column.getName());
+        for (ColumnElement column : allColumns) {
+            assigns.add(column.getName() + " = :" + column.getName());
         }
-        sb.append(StringUtils.join(assigns,", ")).append("\n");
+        sb.append(StringUtils.join(assigns, ", ")).append("\n");
         return sb.toString();
     }
 
-    protected String generateSelectSQL(){
+    protected String generateSelectSQL() {
         List<ColumnElement> allColumns = dtoElement.getAllColumns();
         StringBuilder sb = new StringBuilder("SELECT ");
         List<String> columnNames = new ArrayList<>();
-        for (ColumnElement column:allColumns){
+        for (ColumnElement column : allColumns) {
             columnNames.add(column.getName());
         }
-        sb.append(StringUtils.join(columnNames,", "));
+        sb.append(StringUtils.join(columnNames, ", "));
         sb.append(" FROM [TABLE] WHERE [CONDITION]\n");
         return sb.toString();
     }
@@ -304,7 +307,7 @@ public class DTOHelperGenerator {
         generatFromResultSetMethod();
         generateInsertSQL();
 
-        classBuilder.addJavadoc( generateInsertSQL()+generateUpdateSQL()+generateSelectSQL());
+        classBuilder.addJavadoc(generateInsertSQL() + generateUpdateSQL() + generateSelectSQL());
 
         String packageName = CodegenUtils.getPackageName(dtoElement.getOriginClass());
         CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), packageName, dtoElement.getOriginClass());

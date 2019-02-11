@@ -2,22 +2,185 @@
 
 == Colesico-Transaction
 
-Unified support for transactions management.
+This module is intent to unified transactions management support.
 
-Two styles of control are supported - declarative and programmatic.
-These two types can be mixed.
+Two styles of control are supported - declarative and programmatic. These two types can be mixed:
+inside declarative transaction it is possible to use the programmatic.
 
-The key component of transaction management is the TransactionalShell interface that  directly
+The key component of transaction management is the *TransactionalShell* interface that  directly
 used in programmatic management and  in the declarative under the hood.
 
-This module does not provide a specific implementation of TransactionalShell
-and does not implement any specific transaction management mechanism.
-Such an implementation should be provided additionally by "vendors".
+Colesico-transaction module does not provide a specific implementation of *TransactionalShell* and does not implement any specific transaction management mechanism.
+
+Such an implementation should be provided additionally by "vendors". For example colesico-jdbc module implements *TransactionalShell* for local transactions control with jdbc Connection.
+
+== Transaction propagation
+
+*TransactionalShell* supports this transaction propogation models  (see TransactionPropagation enum):
+
+* REQUIRED - Support a current transaction, create a new one if none exists.
+* REQUIRES_NEW - Create a new transaction, and suspend the current transaction if one exists.
+* MANDATORY - Support a current transaction, throw an exception if none exists.
+* NOT_SUPPORTED - Execute non-transactionally, suspend the current transaction if one exists.
+* SUPPORTS - Support a current transaction, execute non-transactionally if none exists.
+* NEVER - Execute non-transactionally, throw an exception if a transaction exists.
+* NESTED -  Execute within a nested transaction if a current transaction exists, behave like PROPAGATION_REQUIRED else.
 
 
+== Declarative transaction management
+
+Specify the @Transactional annotation on a  method that should be executed within the transaction:
+
+[source,java]
+----
+@Service
+public class MyService {
+
+	//  Default transaction propagation REQUIRED	
+    @Transactional
+    public Boolean save(String value) {
+        ...
+    }
+	
+	// For REQUIRES_NEW propagation
+    @Transactional(propagation = TransactionPropagation.REQUIRES_NEW)
+    public Boolean save(String value) {
+        ...
+    }
+
+}
+----
+
+To use multiple transactional shells within single project:
+
+. Define TransactionalShells producing in IoC producer and annotate them with @Named
++
+[source,java]
+----
+@Producer
+public class MyProducer {
+
+    @Singleton
+    @Named("txShell-A")
+    public TransactionalShell getTxShellA(){
+        return ...
+    }
+	
+    @Singleton
+    @Named("txShell-B")
+    public TransactionalShell getTxShellB(){
+        return ...
+    }
+
+}
+----
+
+. Use the "shell" attribute of *@Transactional* annotation to specify appropriate shell name
++
+[source,java]
+----
+@Service
+public class MyService {
+
+    @Transactional(shell = "txShell-A")
+    public Boolean save(String value) {
+        ...
+    }
+	
+	
+    @Transactional(shell = "txShell-B")
+    public Boolean save(String value) {
+        ...
+    }
+
+}
+---- 
 
 
+== Programmatic transaction control
 
+Programmatic transaction control is performed with the TransactionalShell instance.
 
+. Inject TransactionalShell to your service
++
+[source,java]
+----
+@Service
+public class MyService {
 
+   TransactionalShell txShell;
+
+   @Inject
+   public MyService(TransactionalShell txShell){
+      this.txShell=txShell
+   }	
+
+}
+---- 
+
+. Use TransactionalShell inside your method:
++
+[source,java]
+----
+@Service
+public class MyService {
+
+   TransactionalShell txShell;
+   
+   ...
+   
+   public String  myMethod(){
+        ...
+		return txShell.requiresNew(() -> {
+			...
+			return "hello";	
+		});
+   }
+----
+ 
+== Mixed transaction control 
+
+It is possible to use the programmatic transaction control inside  the declarative:
+
+[source,java]
+----
+@Service
+public class MyService {
+
+   TransactionalShell txShell;
+   
+   ...
+   
+   // Declarative transaction 
+   @Transactionl
+   public void  myMethod(){
+        ...
+		// Programmatical
+		txShell.requiresNew(() -> {
+			...
+		});
+   }
+----
+
+ 
+== Transaction tuning
+
+Some TransactionalShells implementations may support transaction tuning.
+
+In this case,  with the programmatic transaction control, as the second argument can be passed  the TransactionalShell-specific "tuning" for "configure/tune" the transaction:
+
+[source,java]
+----
+@Service
+public class MyService {
+
+   TransactionalShell txShell;
+  
+   public String  myMethod(){
+        ...
+		return txShell.requiresNew(() -> {
+			...
+		}, new ATuning(options));
+   }
+----
 
