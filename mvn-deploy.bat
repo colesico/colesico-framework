@@ -33,4 +33,4 @@ rem </settings>
 rem
 rem and run:
 
-mvn clean deploy -P modules,bundles
+mvn clean deploy -P modules,bundles,release
