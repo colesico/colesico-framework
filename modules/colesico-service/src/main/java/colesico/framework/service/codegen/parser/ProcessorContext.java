@@ -67,7 +67,7 @@ public final class ProcessorContext {
         this.interceptionPhases = new InterceptionPhases();
 
         // Detect production code generation mode
-        String codegenMode = CodegenUtils.getOption(processingEnv, CodegenUtils.OPTION_CODEGEN);
+        String codegenMode = processingEnv.getOptions().get(CodegenUtils.OPTION_CODEGEN);
         if (codegenMode == null) {
             codegenMode = CodegenUtils.OPTION_CODEGEN_PROD;
         }

@@ -18,73 +18,34 @@
 
 package colesico.framework.ioc.codegen.model;
 
-import colesico.framework.ioc.Classed;
-import colesico.framework.ioc.Polyproduce;
-import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.assist.codegen.CodegenUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import javax.inject.Named;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeMirror;
+import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.assist.codegen.model.MethodElement;
 
 /**
  * @author Vladlen Larionov
  */
 public class CustomFactoryElement extends FactoryElement {
 
-    private final ExecutableElement producerMethod;
+    private final MethodElement producerMethod;
 
-    public CustomFactoryElement(ExecutableElement producerMethod) {
+    public CustomFactoryElement(ClassType suppliedType, String factoryMethodBaseName, ScopeElement scope, Boolean polyproduce, String named, String classed, MethodElement producerMethod) {
+        super(suppliedType, factoryMethodBaseName, scope, polyproduce, named, classed);
         this.producerMethod = producerMethod;
-        try {
-            this.suppliedType = (DeclaredType) producerMethod.getReturnType();
-        } catch (Exception e){
-            throw CodegenException.of().message("Unable to determine producer method return type for "+producerMethod)
-                    .element(producerMethod)
-                    .build();
-        }
-        this.factoryMethodBaseName = this.producerMethod.getSimpleName().toString();
-
-        // get scope
-        ScopeElement scopeElm = extractScope(producerMethod);
-        if (scopeElm == null) {
-            scopeElm = extractScope(suppliedType.asElement());
-            if (scopeElm == null) {
-                scopeElm = new ScopeElement(null, ScopeElement.ScopeKind.UNSCOPED);
-            }
-        }
-        this.scope = scopeElm;
-
-        for (VariableElement param : producerMethod.getParameters()) {
-            this.parameters.add(new InjectableElement(this,param));
-        }
-
-        this.polyproduce = producerMethod.getAnnotation(Polyproduce.class)!=null;
-
-        Named namedAnn = producerMethod.getAnnotation(Named.class);
-        if (namedAnn != null) {
-            this.named = namedAnn.value();
-        }
-
-
-        Classed classedAnn = producerMethod.getAnnotation(Classed.class);
-        if (classedAnn != null) {
-            TypeMirror classifier = CodegenUtils.getAnnotationValueTypeMirror(classedAnn, a -> a.value());
-            this.classed = classifier.toString();
-        }
-
-        if (StringUtils.isNotEmpty(this.named) && this.classed!=null){
-            CodegenException.of().message("Ambiguous injection qualifiers").element(producerMethod).build();
-        }
     }
 
-    public ExecutableElement getProducerMethod() {
+    public MethodElement getProducerMethod() {
         return producerMethod;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "CustomFactoryElement{" +
+                "producerMethod=" + producerMethod +
+                ", suppliedType=" + suppliedType +
+                ", scope=" + scope +
+                ", polyproduce=" + polyproduce +
+                ", named='" + named + '\'' +
+                ", classed='" + classed + '\'' +
+                '}';
+    }
 }

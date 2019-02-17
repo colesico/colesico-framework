@@ -2,6 +2,9 @@ package colesico.framework.eventbus.codegen;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
+import colesico.framework.assist.codegen.model.AnnotationElement;
+import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.assist.codegen.model.ParameterElement;
 import colesico.framework.eventbus.EventsListener;
 import colesico.framework.eventbus.OnEvent;
 import colesico.framework.ioc.Polyproduce;
@@ -41,12 +44,12 @@ public class EventBusModulator extends Modulator {
     public void onProxyMethod(ProxyMethodElement proxyMethod) {
         super.onProxyMethod(proxyMethod);
 
-        OnEvent handlerAnn = proxyMethod.getOriginMethod().getAnnotation(OnEvent.class);
+        AnnotationElement<OnEvent> handlerAnn = proxyMethod.getOriginMethod().getAnnotation(OnEvent.class);
         if (handlerAnn == null) {
             return;
         }
 
-        List<? extends VariableElement> params = proxyMethod.getOriginMethod().getParameters();
+        List<ParameterElement> params = proxyMethod.getOriginMethod().getParameters();
 
         if (params.size() != 1) {
             throw CodegenException.of().
@@ -55,7 +58,10 @@ public class EventBusModulator extends Modulator {
                     .build();
         }
 
-        TypeMirror eventType = params.get(0).asType();
+        ClassType eventType = params.get(0).asClassType();
+        if (eventType == null) {
+            throw CodegenException.of().message("Unsupported event type kind").element(params.get(0).unwrap()).build();
+        }
         EventHandlerElement evlElement = new EventHandlerElement(proxyMethod.getOriginMethod(), eventType);
         proxyMethod.setProperty(evlElement);
     }
@@ -83,7 +89,7 @@ public class EventBusModulator extends Modulator {
                 continue;
             }
 
-            String listnerFacadeClassName = CodegenUtils.getPackageName(service.getOriginClass()) + '.' +
+            String listnerFacadeClassName = service.getOriginClass().getPackageName() + '.' +
                     facadeGenerator.getListnersFacadeClassName(service);
 
             TypeName facadeType = ClassName.bestGuess(listnerFacadeClassName);

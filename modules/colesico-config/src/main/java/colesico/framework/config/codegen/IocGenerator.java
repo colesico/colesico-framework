@@ -96,14 +96,14 @@ public class IocGenerator {
     }
 
     private void generateProduceClassifiedConfigurable(TypeSpec.Builder producerBuilder, ConfigElement confElement) {
-        TypeElement targetElm = (TypeElement) typeUtils.asElement(confElement.getTarget());
+        TypeElement targetElm = confElement.getTarget().unwrap();
         MethodSpec.Builder pmb = MethodSpec.methodBuilder("get" + targetElm.getSimpleName().toString() + "With" + confElement.getImplementation().getSimpleName());
         pmb.addModifiers(Modifier.PUBLIC);
         pmb.returns(ClassName.bestGuess(targetElm.getQualifiedName().toString()));
 
         if (!confElement.getDefaultMessage()) {
             AnnotationSpec.Builder classedAnn = AnnotationSpec.builder(Classed.class);
-            classedAnn.addMember("value", "$T.class", ClassName.get(confElement.getImplementation()));
+            classedAnn.addMember("value", "$T.class", TypeName.get(confElement.getImplementation().asType()));
             pmb.addAnnotation(classedAnn.build());
         }
 
@@ -111,12 +111,12 @@ public class IocGenerator {
 
         //Parameter @Classed(AConfig.class) Supplier<Service> target
         ParameterSpec.Builder targetBuilder = ParameterSpec.builder(
-                ParameterizedTypeName.get(ClassName.get(Supplier.class), TypeName.get(confElement.getTarget())),
+                ParameterizedTypeName.get(ClassName.get(Supplier.class), TypeName.get(confElement.getTarget().asType())),
                 FACTORY_PARAM,
                 Modifier.FINAL
         );
         AnnotationSpec.Builder targetAnnBuilder = AnnotationSpec.builder(Classed.class);
-        targetAnnBuilder.addMember("value", "$T.class", ClassName.get(confElement.getPrototype()));
+        targetAnnBuilder.addMember("value", "$T.class", TypeName.get(confElement.getPrototype().asType()));
         targetBuilder.addAnnotation(targetAnnBuilder.build());
         pmb.addParameter(targetBuilder.build());
 
@@ -223,7 +223,7 @@ public class IocGenerator {
 
         TypeSpec.Builder producerBuilder = TypeSpec.classBuilder(producerClassSimpleName);
         producerBuilder.addModifiers(Modifier.PUBLIC);
-        producerBuilder.addAnnotation(CodegenUtils.buildGenstampAnnotation(this.getClass().getName(), null, null));
+        producerBuilder.addAnnotation(CodegenUtils.generateGenstamp(this.getClass().getName(), null, null));
 
         AnnotationSpec.Builder b = AnnotationSpec.builder(Producer.class);
         b.addMember("value", "$S", rank);
@@ -232,7 +232,7 @@ public class IocGenerator {
         List<TypeElement> typeElements = new ArrayList<>();
         for (ConfigElement celm : configurationElements) {
             logger.debug("Generate config producing for: " + celm.toString());
-            typeElements.add(celm.getImplementation());
+            typeElements.add(celm.getImplementation().unwrap());
             generateProduceConfigurations(producerBuilder, celm);
             generateProduceExtraMethods(producerBuilder, celm);
         }

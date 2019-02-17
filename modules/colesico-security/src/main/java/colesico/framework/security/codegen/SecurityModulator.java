@@ -21,11 +21,12 @@ package colesico.framework.security.codegen;
 
 import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.model.AnnotationElement;
 import colesico.framework.security.RequireAuthority;
 import colesico.framework.security.RequirePrincipal;
 import colesico.framework.security.SecurityInterceptor;
 import colesico.framework.security.SecurityKit;
-import colesico.framework.service.codegen.model.FieldElement;
+import colesico.framework.service.codegen.model.ProxyFieldElement;
 import colesico.framework.service.codegen.model.InterceptionElement;
 import colesico.framework.service.codegen.model.InterceptionPhases;
 import colesico.framework.service.codegen.model.ProxyMethodElement;
@@ -46,8 +47,8 @@ public class SecurityModulator extends Modulator {
     @Override
     public void onProxyMethod(ProxyMethodElement proxyMethod) {
         super.onProxyMethod(proxyMethod);
-        final RequirePrincipal requirePrincipal = proxyMethod.getOriginMethod().getAnnotation(RequirePrincipal.class);
-        final RequireAuthority requireAuthority = proxyMethod.getOriginMethod().getAnnotation(RequireAuthority.class);
+        final AnnotationElement<RequirePrincipal> requirePrincipal = proxyMethod.getOriginMethod().getAnnotation(RequirePrincipal.class);
+        final AnnotationElement<RequireAuthority> requireAuthority = proxyMethod.getOriginMethod().getAnnotation(RequireAuthority.class);
 
         if (requirePrincipal != null || requireAuthority != null) {
             if (proxyMethod.isPlain()) {
@@ -59,14 +60,14 @@ public class SecurityModulator extends Modulator {
         }
 
         FieldSpec fieldSpec = FieldSpec.builder(ClassName.get(SecurityKit.class), SEQURITY_KIT_FIELD).addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
-        FieldElement fieldElement = new FieldElement(fieldSpec).inject();
+        ProxyFieldElement fieldElement = new ProxyFieldElement(fieldSpec).inject();
         service.addField(fieldElement);
 
         if (requireAuthority != null) {
 
             CodeBlock.Builder paramCode = CodeBlock.builder();
             paramCode.add("new $T[]{", ClassName.get(String.class));
-            String[] authorityIds = requireAuthority.value();
+            String[] authorityIds = requireAuthority.unwrap().value();
             ArrayCodegen ac = new ArrayCodegen();
             for (String authorityId : authorityIds) {
                 ac.add("$S", authorityId);

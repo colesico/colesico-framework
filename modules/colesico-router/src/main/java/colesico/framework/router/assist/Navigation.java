@@ -21,7 +21,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.router.Router;
-import colesico.framework.service.ServicePrototype;
+import colesico.framework.service.ServiceProxy;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -68,7 +68,7 @@ public class Navigation<N extends Navigation>{
     }
 
     public N framlet(Object framletInstance) {
-        this.framletClass = ((ServicePrototype) framletInstance).getSuperClass();
+        this.framletClass = ((ServiceProxy) framletInstance).getSuperClass();
         return (N)this;
     }
 

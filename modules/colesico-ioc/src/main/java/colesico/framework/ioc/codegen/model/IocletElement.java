@@ -18,10 +18,8 @@
 
 package colesico.framework.ioc.codegen.model;
 
-import colesico.framework.ioc.Producer;
-import colesico.framework.assist.codegen.CodegenUtils;
+import colesico.framework.assist.codegen.model.ClassElement;
 
-import javax.lang.model.element.TypeElement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,32 +31,22 @@ public class IocletElement {
     public static final String PRODUCER_SUFFIX = "Producer";
     public static final String IOCLET_SUFFIX = "Ioclet";
 
-    private final TypeElement originProducer;
-
-    private final String classSimpleName;
-    private final String packageName;
+    private final ClassElement originProducer;
     private final String producerId;
     private final String rank;
 
-    private final List<FactoryElement> factories;
+    private final String iocletClassSimpleName;
+    private final String iocletPackageName;
 
-    public IocletElement(TypeElement originProducer) {
+
+    private final List<FactoryElement> factories = new ArrayList<>();
+
+    public IocletElement(ClassElement originProducer, String producerId, String rank, String iocletClassSimpleName, String iocletPackageName) {
         this.originProducer = originProducer;
-
-        Producer producerAnn = originProducer.getAnnotation(Producer.class);
-        this.rank = producerAnn.value();
-
-        String producerClassSimpleName = originProducer.getSimpleName().toString();
-        if (producerClassSimpleName.endsWith(PRODUCER_SUFFIX)) {
-            producerClassSimpleName = producerClassSimpleName.substring(0, producerClassSimpleName.length() - PRODUCER_SUFFIX.length());
-        }
-        this.classSimpleName = producerClassSimpleName + IOCLET_SUFFIX;
-        this.packageName = CodegenUtils.getPackageName(originProducer);
-
-
-        this.producerId = originProducer.asType().toString();
-
-        this.factories = new ArrayList<>();
+        this.producerId = producerId;
+        this.rank = rank;
+        this.iocletClassSimpleName = iocletClassSimpleName;
+        this.iocletPackageName = iocletPackageName;
     }
 
     public void addFactory(FactoryElement factoryElement) {
@@ -70,18 +58,6 @@ public class IocletElement {
         return rank;
     }
 
-    public String getClassSimpleName() {
-        return classSimpleName;
-    }
-
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public String getClassName() {
-        return packageName + '.' + classSimpleName;
-    }
-
     public List<FactoryElement> getFactories() {
         return factories;
     }
@@ -90,20 +66,27 @@ public class IocletElement {
         return producerId;
     }
 
-    public TypeElement getOriginProducer() {
+    public ClassElement getOriginProducer() {
         return originProducer;
     }
 
+    public String getIocletClassName() {
+        return iocletPackageName + '.' + iocletClassSimpleName;
+    }
+
+    public String getIocletClassSimpleName() {
+        return iocletClassSimpleName;
+    }
+
+    public String getIocletPackageName() {
+        return iocletPackageName;
+    }
 
     @Override
     public String toString() {
         return "IocletElement{" +
-                "originProducer=" + originProducer +
-                ", classSimpleName='" + classSimpleName + '\'' +
-                ", packageName='" + packageName + '\'' +
-                ", producerName='" + producerId + '\'' +
+                "producerId='" + producerId + '\'' +
                 ", rank='" + rank + '\'' +
-                ", factories=" + factories +
                 '}';
     }
 }

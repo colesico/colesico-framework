@@ -18,6 +18,7 @@
 package colesico.framework.service.codegen.modulator;
 
 
+import colesico.framework.assist.codegen.model.VarElement;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.parser.ProcessorContext;
@@ -77,7 +78,7 @@ abstract public class Modulator {
 
     }
 
-    public void onLinkTeleParam(TeleParamElement teleParam, Deque<VariableElement> varStack) {
+    public void onLinkTeleParam(TeleParamElement teleParam, Deque<VarElement> varStack) {
 
     }
 

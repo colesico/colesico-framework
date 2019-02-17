@@ -19,31 +19,34 @@
 package colesico.framework.service.codegen.parser;
 
 import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.assist.codegen.CodegenUtils;
+import colesico.framework.assist.codegen.FrameworkAbstractParser;
+import colesico.framework.assist.codegen.model.*;
 import colesico.framework.service.Compound;
 import colesico.framework.service.TeleMethodName;
 import colesico.framework.service.TeleView;
 import colesico.framework.service.codegen.model.*;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.util.*;
 
-public final class TeleFacadesParser {
+public final class TeleFacadesParser extends FrameworkAbstractParser {
 
     private final ProcessorContext context;
 
     public TeleFacadesParser(ProcessorContext context) {
+        super(context.getProcessingEnv());
         this.context = context;
     }
 
-    protected TeleVarElement createTeleVarElement(TeleMethodElement teleMethod, TeleVarElement parentTeleVar, Deque<VariableElement> varStack) {
+    protected TeleVarElement createTeleVarElement(TeleMethodElement teleMethod, TeleVarElement parentTeleVar, Deque<VarElement> varStack) {
 
-        VariableElement var = varStack.peek(); // get stack head element (first element of dequeq)
+        VarElement var = varStack.peek(); // get stack head element (first element of dequeq)
 
         //================= Check composition or parameter
-        Compound compounddAnn = var.getAnnotation(Compound.class);
+        AnnotationElement<Compound> compounddAnn = var.getAnnotation(Compound.class);
         if (compounddAnn == null) {
             TeleParamElement teleParam = new TeleParamElement(var);
             teleMethod.linkVariable(teleParam);
@@ -56,13 +59,13 @@ public final class TeleFacadesParser {
 
 
         // Check recursive objects
-        VariableElement methodParam = varStack.peekLast(); // get element from stack tail  (last element of deque)
+        VarElement methodParam = varStack.peekLast(); // get element from stack tail  (last element of deque)
         varStack.pop();     // temporaty remove var from stack head   (first element of deque)
-        for (VariableElement ve : varStack) {
+        for (VarElement ve : varStack) {
             if (ve.asType().toString().equals(var.asType().toString())) {
                 TeleFacadeElement teleFacade = teleMethod.getParentTeleFacade();
                 throw CodegenException.of().message("Recursive composition for: " +
-                        var.asType().toString() + "->" + var.getSimpleName().toString() +
+                        var.asType().toString() + "->" + var.getName() +
                         " in: " +
                         teleFacade.getParentService().getOriginClass().asType().toString() +
                         "->" + teleMethod.getProxyMethod().getName() + "(..." +
@@ -77,39 +80,32 @@ public final class TeleFacadesParser {
         TeleCompElement teleComp = new TeleCompElement(var);
         teleMethod.linkVariable(teleComp);
 
-        // Check that scope of composition is acceptable for composition
-        TypeElement paramTypeElm = context.getElementUtils().getTypeElement(var.asType().toString());
-        if (paramTypeElm == null) {
-            throw CodegenException.of().message("Tele-reader does not support variable/parameter scope:"
-                    + var.getSimpleName().toString()
-                    + " of scope "
-                    + var.asType().toString())
-                    .element(var)
-                    .build();
-        }
-
         // ============ Process fields
 
         // Retrieve class fields for composition
-        List<? extends Element> members = context.getElementUtils().getAllMembers(paramTypeElm);
-
         // Filter fields to get only acceptable
-        List<VariableElement> fields = new ArrayList<>();
-        for (Element e : members) {
-            if (ElementKind.FIELD.equals(e.getKind()) &&
-                    !(e.getModifiers().contains(Modifier.FINAL) || e.getModifiers().contains(Modifier.STATIC))
-                    && e.asType().getKind().equals(TypeKind.DECLARED)) {
-                fields.add(VariableElement.class.cast(e));
-            }
-        }
+        List<FieldElement> fields = var.asClassType().asClassElement().getFieldsFiltered(
+                f -> !f.unwrap().getModifiers().contains(Modifier.FINAL)
+                        && !f.unwrap().getModifiers().contains(Modifier.STATIC)
+                        && f.unwrap().asType().getKind().equals(TypeKind.DECLARED)
+        );
+
 
         // Process fields
-        Set<String> masterViews = getTeleViewKeys(varStack.getFirst().getAnnotation(TeleView.class));
-        for (VariableElement field : fields) {
+        AnnotationElement<TeleView> teleViewAnn = varStack.getFirst().getAnnotation(TeleView.class);
+        Set<String> masterViews = getTeleViewKeys(teleViewAnn);
+        for (FieldElement field : fields) {
             // Check field by "TeleView"
-            Set<String> fieldViews = getTeleViewKeys(field.getAnnotation(TeleView.class));
+            teleViewAnn = field.getAnnotation(TeleView.class);
+            Set<String> fieldViews = getTeleViewKeys(teleViewAnn);
             if (!inTeleView(masterViews, fieldViews)) {
                 continue;
+            }
+
+            if (field.asClassType() == null) {
+                throw CodegenException.of().message("Unsupported field type kind for tele-view " + var.asClassType().asClassElement().getName() + "->" + field.getName())
+                        .element(field.unwrap())
+                        .build();
             }
 
             varStack.push(field);
@@ -122,9 +118,14 @@ public final class TeleFacadesParser {
     }
 
     protected void addTeleMethodParams(TeleMethodElement teleMethod) {
-        ExecutableElement method = teleMethod.getProxyMethod().getOriginMethod();
-        for (VariableElement param : method.getParameters()) {
-            Deque<VariableElement> varStack = new ArrayDeque<>();
+        MethodElement method = teleMethod.getProxyMethod().getOriginMethod();
+        for (ParameterElement param : method.getParameters()) {
+            Deque<VarElement> varStack = new ArrayDeque<>();
+            if (param.asClassType() == null) {
+                throw CodegenException.of().message("Unsupported parameter type kind for tele-method " + teleMethod.getName() + "(..." + param.getName() + "...)")
+                        .element(param.unwrap())
+                        .build();
+            }
             varStack.push(param);
             TeleVarElement teleParam = createTeleVarElement(teleMethod, null, varStack);
             teleMethod.addParameter(teleParam);
@@ -137,10 +138,10 @@ public final class TeleFacadesParser {
             if (proxyMethod.isLocal()) {
                 continue;
             }
-            TeleMethodName teleMethodNameAnn = proxyMethod.getOriginMethod().getAnnotation(TeleMethodName.class);
+            AnnotationElement<TeleMethodName> teleMethodNameAnn = proxyMethod.getOriginMethod().getAnnotation(TeleMethodName.class);
             final String teleMethodName;
             if (teleMethodNameAnn != null) {
-                teleMethodName = teleMethodNameAnn.value();
+                teleMethodName = teleMethodNameAnn.unwrap().value();
             } else {
                 teleMethodName = proxyMethod.getName();
             }
@@ -158,12 +159,12 @@ public final class TeleFacadesParser {
         }
     }
 
-    private Set<String> getTeleViewKeys(TeleView teleViewAnnotation) {
+    private Set<String> getTeleViewKeys(AnnotationElement<TeleView> teleViewAnnotation) {
         Set<String> result = new HashSet<>();
         if (teleViewAnnotation == null) {
             return result;
         }
-        TypeMirror[] keys = CodegenUtils.getAnnotationValueTypeMirrors(teleViewAnnotation, a -> a.value());
+        TypeMirror[] keys = teleViewAnnotation.getValueTypeMirrors(a -> a.value());
         for (TypeMirror k : keys) {
             result.add(k.toString());
         }

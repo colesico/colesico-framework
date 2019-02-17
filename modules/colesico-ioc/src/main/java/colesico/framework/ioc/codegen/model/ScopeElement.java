@@ -18,21 +18,21 @@
 
 package colesico.framework.ioc.codegen.model;
 
-import javax.lang.model.type.TypeMirror;
+import colesico.framework.assist.codegen.model.ClassType;
 
 /**
  * @author Vladlen Larionov
  */
 public class ScopeElement {
-    private final TypeMirror scopeClass;
+    private final ClassType scopeClass;
     private final ScopeKind kind;
 
-    public ScopeElement(TypeMirror scopeClass, ScopeKind kind) {
+    public ScopeElement(ClassType scopeClass, ScopeKind kind) {
         this.scopeClass = scopeClass;
         this.kind = kind;
     }
 
-    public TypeMirror getScopeClass() {
+    public ClassType getScopeClass() {
         return scopeClass;
     }
 

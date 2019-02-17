@@ -18,29 +18,25 @@
 package colesico.framework.assist.codegen;
 
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.codegen.model.MethodElement;
+import colesico.framework.assist.codegen.model.ParameterElement;
 import com.squareup.javapoet.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
-import javax.lang.model.type.*;
-import javax.lang.model.util.ElementFilter;
-import javax.lang.model.util.Elements;
+import javax.lang.model.type.NoType;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.annotation.Annotation;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * Code generation helper
@@ -49,331 +45,13 @@ import java.util.function.Consumer;
  */
 public class CodegenUtils {
 
-    protected static final Logger log = LoggerFactory.getLogger(CodegenUtils.class);
-
     public static final String OPTION_CODEGEN = "colesico.framework.codegen";
     public static final String OPTION_CODEGEN_DEV = "dev";
     public static final String OPTION_CODEGEN_PROD = "prod";
 
+    public static final String ISO_DT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
-    public static String getModuleName(TypeElement typeElement, Elements elementUtils) {
-        ModuleElement module = elementUtils.getModuleOf(typeElement);
-        return module.getSimpleName().toString();
-    }
-
-    public static String getPackageName(TypeElement typeElement) {
-        Element enclosingElement = typeElement.getEnclosingElement();
-        while (!(enclosingElement instanceof PackageElement)) {
-            enclosingElement = enclosingElement.getEnclosingElement();
-        }
-
-        PackageElement packageElement = (PackageElement) enclosingElement;
-
-        return packageElement.toString();
-    }
-
-    public static String getClassName(TypeElement typeElement) {
-        Element enclosingElement = typeElement.getEnclosingElement();
-        while (!(enclosingElement instanceof PackageElement)) {
-            enclosingElement = enclosingElement.getEnclosingElement();
-        }
-
-        PackageElement packageElement = (PackageElement) enclosingElement;
-        String className = packageElement.toString() + "." + typeElement.getSimpleName();
-        return className;
-    }
-
-    public static String getMethodName(ExecutableElement methodElement) {
-        return methodElement.getSimpleName().toString();
-    }
-
-    public static PackageElement getPackage(TypeElement typeElement) {
-        PackageElement packageElement = (PackageElement) typeElement.getEnclosingElement();
-        return packageElement;
-    }
-
-    public static TypeMirror typeMirrorFromClass(Class clazz, ProcessingEnvironment processingEnv) {
-        return processingEnv.getElementUtils().getTypeElement(clazz.getCanonicalName()).asType();
-    }
-
-    /**
-     * Returns class member type considering generic type
-     *
-     * @param classType
-     * @param classMember
-     * @param processingEnv
-     * @return
-     */
-    public static TypeElement classMemberType(DeclaredType classType, Element classMember, ProcessingEnvironment processingEnv) {
-        TypeMirror typeMirr = classMember.asType();
-        if (typeMirr.getKind() == TypeKind.DECLARED) {
-            //Field type is simple declared type
-            return (TypeElement) ((DeclaredType) typeMirr).asElement();
-        } else if (typeMirr.getKind() == TypeKind.TYPEVAR) {
-            //Field type is generic. Extract actual type from table class
-            TypeMirror actualTypeMirr = processingEnv.getTypeUtils().asMemberOf(classType, classMember);
-            return (TypeElement) ((DeclaredType) actualTypeMirr).asElement();
-        } else {
-            // TODO: check additional type kinds
-            throw CodegenException.of().message("Unsupported type kind: " + typeMirr.getKind()).element(classMember).build();
-        }
-    }
-
-    public static boolean methodIsGetter(ExecutableElement methodElement) {
-        return StringUtils.startsWith(methodElement.getSimpleName().toString(), "get") && methodElement.getParameters().isEmpty()
-                && !(methodElement.getReturnType() instanceof NoType);
-    }
-
-    public static boolean methodIsSetter(ExecutableElement methodElement) {
-        return StringUtils.startsWith(methodElement.getSimpleName().toString(), "set") && (methodElement.getParameters().size() == 1)
-                && (methodElement.getReturnType() instanceof NoType);
-    }
-
-    public static AnnotationValue getAnnotationValue(Class<?> annotation, String fieldName, List<? extends AnnotationMirror> elementAnnotations) {
-        final String annotationClassName = annotation.getName();
-        for (AnnotationMirror am : elementAnnotations) {
-            if (annotationClassName.equals(am.getAnnotationType().toString())) {
-                for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : am.getElementValues().entrySet()) {
-                    if (fieldName.equals(entry.getKey().getSimpleName().toString())) {
-                        return entry.getValue();
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    public static AnnotationValue getAnnotationValue(AnnotationMirror annotation, String fieldName) {
-        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotation.getElementValues().entrySet()) {
-            if (fieldName.equals(entry.getKey().getSimpleName().toString())) {
-                return entry.getValue();
-            }
-        }
-        return null;
-    }
-
-    public static Map<? extends ExecutableElement, ? extends AnnotationValue> getAnnotationValuesWithDefaults(AnnotationMirror ad) {
-        Map<ExecutableElement, AnnotationValue> valMap = new HashMap<>();
-        if (ad.getElementValues() != null) {
-            valMap.putAll(ad.getElementValues());
-        }
-        for (ExecutableElement meth : ElementFilter.methodsIn(ad.getAnnotationType().asElement().getEnclosedElements())) {
-            AnnotationValue defaultValue = meth.getDefaultValue();
-            if (defaultValue != null && !valMap.containsKey(meth)) {
-                valMap.put(meth, defaultValue);
-            }
-        }
-        return valMap;
-    }
-
-    public static <A extends Annotation> TypeMirror getAnnotationValueTypeMirror(A annotation, Consumer<A> fieldAccessor) {
-        TypeMirror typeMirror = null;
-        try {
-            fieldAccessor.accept(annotation);
-        } catch (MirroredTypeException mte) {
-            typeMirror = mte.getTypeMirror();
-        }
-        return typeMirror;
-    }
-
-    public static <A extends Annotation> TypeMirror[] getAnnotationValueTypeMirrors(A annotation, Consumer<A> fieldAccessor) {
-        try {
-            fieldAccessor.accept(annotation);
-        } catch (javax.lang.model.type.MirroredTypesException mte) {
-            List<? extends TypeMirror> typeMirrors = mte.getTypeMirrors();
-            TypeMirror[] result = new TypeMirror[typeMirrors.size()];
-            for (int i = 0; i < typeMirrors.size(); i++) {
-                result[i] = typeMirrors.get(i);
-            }
-            return result;
-        }
-        return null;
-    }
-
-
-    public static List<VariableElement> getFields(ProcessingEnvironment processingEnv, TypeElement classElement, Modifier[] modifiers, Class<? extends Annotation> annotationType) {
-        List<VariableElement> result = new ArrayList<>();
-
-        Elements utils = processingEnv.getElementUtils();
-        List<? extends Element> members = utils.getAllMembers(classElement);
-        List<VariableElement> fields = ElementFilter.fieldsIn(members);
-
-        for (VariableElement field : fields) {
-            if (modifiers != null) {
-                boolean acceptable = false;
-                for (Modifier mod : modifiers) {
-                    if (field.getModifiers().contains(mod)) {
-                        acceptable = true;
-                        break;
-                    }
-                }
-                if (!acceptable) {
-                    continue;
-                }
-            }
-
-            if ((annotationType != null) && (field.getAnnotation(annotationType) == null)) {
-                continue;
-            }
-
-            result.add(field);
-
-        }
-        return result;
-    }
-
-    public static List<ExecutableElement> getProxiableMethods(ProcessingEnvironment processingEnv, TypeElement classElement, Modifier[] accessModifiers) {
-        if (accessModifiers == null) {
-            String errMsg = MessageFormat.format("Access modifiers is null; Class element: {0}", classElement.toString());
-            log.error(errMsg);
-            throw CodegenException.of().message(errMsg).element(classElement).build();
-        }
-        List<ExecutableElement> result = new ArrayList<>();
-        Elements utils = processingEnv.getElementUtils();
-        List<? extends Element> members = utils.getAllMembers(classElement);
-        List<ExecutableElement> methods = ElementFilter.methodsIn(members);
-        for (ExecutableElement method : methods) {
-            TypeElement methodClass = (TypeElement) method.getEnclosingElement();
-            String methodClassName = methodClass.asType().toString();
-
-            if (method.getModifiers().contains(Modifier.FINAL)
-                    || method.getModifiers().contains(Modifier.PRIVATE)
-                    || methodClass.getKind().isInterface()
-                    || methodClassName.equals(Object.class.getName())) {
-                continue;
-            }
-
-            boolean acceptable = false;
-            for (Modifier mod : accessModifiers) {
-                if (method.getModifiers().contains(mod)) {
-                    acceptable = true;
-                    break;
-                }
-            }
-
-            if (!acceptable) {
-                continue;
-            }
-
-            result.add(method);
-        }
-        return result;
-    }
-
-
-    public static void addSuperMethodCall(MethodSpec.Builder mb, boolean isConstructor, ExecutableElement method,
-                                          String resultVarName, String paramPrefix) {
-
-        // Process method parameters
-        List<? extends VariableElement> methodParams = method.getParameters();
-        List paramItems = new ArrayList();
-        List<String> paramFormats = new ArrayList<>();
-
-        for (VariableElement paramElm : methodParams) {
-            String paramName = StrUtils.addPrefix(paramPrefix, paramElm.getSimpleName().toString());
-            paramItems.add(paramName);
-            paramFormats.add("$N");
-        }
-
-        if (resultVarName == null) {
-            resultVarName = "writer";
-        }
-
-        if (isConstructor) {
-            Object[] statementArgs = paramItems.toArray(new Object[paramItems.size()]);
-            mb.addStatement("super(" + StringUtils.join(paramFormats, ",") + ")", statementArgs);
-            return;
-        } else {
-            String methodName = getMethodName(method);
-            TypeMirror retType = method.getReturnType();
-            if (retType instanceof NoType) {
-                paramItems.add(0, methodName);
-                Object[] statementArgs = paramItems.toArray(new Object[paramItems.size()]);
-                mb.addStatement("super.$N(" + StringUtils.join(paramFormats, ",") + ")", statementArgs);
-                return;
-            } else {
-                paramItems.add(0, resultVarName);
-                paramItems.add(1, methodName);
-                Object[] statementArgs = paramItems.toArray();
-                mb.addStatement("$N = super.$N(" + StringUtils.join(paramFormats, ",") + ")", statementArgs);
-                return;
-            }
-        }
-    }
-
-    public static MethodSpec.Builder createProxyMethodBuilder(ExecutableElement baseMetod,
-                                                              String methodPrefix,
-                                                              String paramPrefix,
-                                                              boolean skipAnnotations) {
-
-        String proxyMethodName = getMethodName(baseMetod);
-        if (StringUtils.isNoneBlank(methodPrefix)) {
-            proxyMethodName = methodPrefix + proxyMethodName;
-        }
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(proxyMethodName);
-        MethodSpec.Builder proxyMethodBuilder = createProxyMethodDummy(mb, baseMetod, paramPrefix, skipAnnotations);
-        proxyMethodBuilder.addAnnotation(Override.class);
-
-        List<? extends TypeParameterElement> generics = baseMetod.getTypeParameters();
-        for (TypeParameterElement tpe : generics) {
-            proxyMethodBuilder.addTypeVariable(TypeVariableName.get(tpe));
-        }
-
-        proxyMethodBuilder.returns(TypeName.get(baseMetod.getReturnType()));
-
-        return proxyMethodBuilder;
-    }
-
-
-    public static MethodSpec.Builder createProxyConstructorBuilder(ExecutableElement baseMetod,
-                                                                   String paramPrefix,
-                                                                   boolean skipAnnotations) {
-
-        MethodSpec.Builder mb = MethodSpec.constructorBuilder();
-        MethodSpec.Builder proxyMethodBuilder = createProxyMethodDummy(mb, baseMetod, paramPrefix, skipAnnotations);
-        return proxyMethodBuilder;
-    }
-
-
-    public static MethodSpec.Builder createProxyMethodDummy(MethodSpec.Builder methodBuilder,
-                                                            ExecutableElement baseMetod,
-                                                            String paramPrefix,
-                                                            boolean skipAnnotations) {
-
-        if (baseMetod.getModifiers().contains(Modifier.PUBLIC)) {
-            methodBuilder.addModifiers(Modifier.PUBLIC);
-        } else if (baseMetod.getModifiers().contains(Modifier.PROTECTED)) {
-            methodBuilder.addModifiers(Modifier.PROTECTED);
-        } else if (baseMetod.getModifiers().contains(Modifier.PRIVATE)) {
-            methodBuilder.addModifiers(Modifier.PRIVATE);
-        }
-
-        List<? extends VariableElement> methodParams = baseMetod.getParameters();
-        for (VariableElement paramElm : methodParams) {
-            Set<Modifier> modifiersSet = new HashSet<>();
-            modifiersSet.addAll(paramElm.getModifiers());
-            modifiersSet.add(Modifier.FINAL);
-
-            Modifier[] modifiers = modifiersSet.toArray(new Modifier[modifiersSet.size()]);
-            String paramName = StrUtils.addPrefix(paramPrefix, paramElm.getSimpleName().toString());
-
-            ParameterSpec.Builder paramBilder = ParameterSpec.builder(TypeName.get(paramElm.asType()), paramName, modifiers);
-
-            // Add param annotations
-            if (!skipAnnotations) {
-                List<AnnotationSpec> annotations = getElementAnnotationsSpec(paramElm);
-                for (AnnotationSpec ann : annotations) {
-                    paramBilder.addAnnotation(ann);
-                }
-            }
-
-            methodBuilder.addParameter(paramBilder.build());
-        }
-
-        return methodBuilder;
-    }
-
-    public static void createJavaFile(ProcessingEnvironment processingEnv, TypeSpec typeSpec, String packageName, Element... linkedElements) {
+    public static void createJavaFile(ProcessingEnvironment procEnv, TypeSpec typeSpec, String packageName, Element... linkedElements) {
         final JavaFile javaFile = JavaFile.builder(packageName, typeSpec)
                 .addFileComment("This is automatically generated file. Do not modify!")
                 .skipJavaLangImports(true)
@@ -382,94 +60,30 @@ public class CodegenUtils {
 
         String fullName = javaFile.packageName + "." + typeSpec.name;
         try {
-            final JavaFileObject sourceFile = processingEnv.getFiler().createSourceFile(fullName, linkedElements);
+            final JavaFileObject sourceFile = procEnv.getFiler().createSourceFile(fullName, linkedElements);
 
             try (final Writer writer = new BufferedWriter(sourceFile.openWriter())) {
                 javaFile.writeTo(writer);
             }
         } catch (IOException ex) {
             String errMsg = MessageFormat.format("Error creating java file: {0}; Cause message: {1}", fullName, ExceptionUtils.getRootCauseMessage(ex));
-            log.error(errMsg);
             throw CodegenException.of().message(errMsg).build();
         }
     }
 
-    public static void createTextResourceFile(ProcessingEnvironment processingEnv, String filePath, String fileText, Element... linkedElements) {
+    public static void createTextResourceFile(ProcessingEnvironment procEnv, String filePath, String text, Element... linkedElements) {
         try {
-            final FileObject sourceFile = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", filePath, linkedElements);
+            final FileObject sourceFile = procEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", filePath, linkedElements);
             try (final Writer writer = new BufferedWriter(sourceFile.openWriter())) {
-                writer.write(fileText);
+                writer.write(text);
             }
         } catch (IOException ex) {
             String errMsg = MessageFormat.format("Error creating text resource file: {0}; Cause message: {1}", filePath, ExceptionUtils.getRootCauseMessage(ex));
-            log.error(errMsg);
             throw CodegenException.of().message(errMsg).build();
         }
     }
 
-    public static String[] typeMirrorsToString(TypeMirror[] typeMirrors) {
-        String[] result = new String[typeMirrors.length];
-        for (int i = 0; i < result.length; i++) {
-            result[i] = typeMirrors[i].toString();
-        }
-        return result;
-    }
-
-    public static boolean checkPackageNameСonsistency(TypeElement typeElement, Elements elementUtils) {
-        String moduleName = getModuleName(typeElement, elementUtils);
-        String packageName = getPackageName(typeElement);
-        return StringUtils.startsWith(packageName, moduleName);
-    }
-
-    public static void errorIfInconsistentPackageName(TypeElement typeElement, Elements elementUtils) {
-        String moduleName = getModuleName(typeElement, elementUtils);
-        String packageName = getPackageName(typeElement);
-        if (!StringUtils.startsWith(packageName, moduleName)) {
-            throw CodegenException.of()
-                    .message("Inconsistent package name: '" + packageName + "'. Package name should start with partition name: '" + moduleName + "'")
-                    .element(typeElement)
-                    .build();
-        }
-    }
-
-    public static boolean checkPackageAccessibility(ModuleElement module, String packageName, String targetModule) {
-        if (module.isOpen()) {
-            return true;
-        }
-
-        if (module.isUnnamed()) {
-            return true;
-        }
-
-        List<? extends ModuleElement.Directive> directives = module.getDirectives();
-
-        for (ModuleElement.Directive d : directives) {
-            if (d.getKind() != ModuleElement.DirectiveKind.EXPORTS) {
-                continue;
-            }
-            ModuleElement.ExportsDirective ed = (ModuleElement.ExportsDirective) d;
-            String pkgName = ed.getPackage().toString();
-            if (!packageName.equals(pkgName)) {
-                continue;
-            }
-            List<? extends ModuleElement> targetModules = ed.getTargetModules();
-            if (targetModules == null) {
-                return true;
-            }
-            for (ModuleElement m : targetModules) {
-                if (m.toString().equals(targetModule)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-
-    }
-
-    public static final String ISO_DT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-
-    public static AnnotationSpec buildGenstampAnnotation(String generatorName, String hashId, String comments) {
+    public static AnnotationSpec generateGenstamp(String generatorName, String hashId, String comments) {
         SimpleDateFormat sdf = new SimpleDateFormat(ISO_DT);
 
         /*
@@ -494,7 +108,103 @@ public class CodegenUtils {
         return generatedAnn.build();
     }
 
-    public static List<AnnotationSpec> getElementAnnotationsSpec(Element element) {
+    public static CodeBlock generateSuperMethodCall(MethodElement method, String resultVarName, String paramPrefix) {
+        if (StringUtils.isBlank(paramPrefix)) {
+            paramPrefix = "";
+        }
+        if (resultVarName == null) {
+            resultVarName = "writer";
+        }
+
+        // Process method parameters
+        List<ParameterElement> methodParams = method.getParameters();
+        ArrayCodegen paramsGen = new ArrayCodegen();
+
+        for (ParameterElement param : methodParams) {
+            String paramName = param.getNameWithPrefix(paramPrefix);
+            paramsGen.add("$N", paramName);
+        }
+
+        CodeBlock.Builder cb = CodeBlock.builder();
+        if (method.isConstractor()) {
+            cb.addStatement("super(" + paramsGen.toFormat() + ")", paramsGen.toValues());
+            return cb.build();
+        } else {
+            TypeMirror retType = method.getReturnType();
+            if (retType instanceof NoType) {
+                cb.add("super.$N(", method.getName());
+                cb.add(paramsGen.toFormat(), paramsGen.toValues());
+                cb.add(");\n");
+                return cb.build();
+            } else {
+                cb.add("$N = super.$N(", resultVarName, method.getName());
+                cb.add(paramsGen.toFormat(), paramsGen.toValues());
+                cb.add(");\n");
+                return cb.build();
+            }
+        }
+    }
+
+    public static MethodSpec.Builder createProxyMethodBuilder(MethodElement method, String methodPrefix, String paramPrefix, boolean skipAnnotations) {
+        MethodSpec.Builder mb = null;
+        if (method.isConstractor()) {
+            mb = MethodSpec.constructorBuilder();
+        } else {
+            String proxyMethodName = method.getNameWithPrefix(methodPrefix);
+            mb = MethodSpec.methodBuilder(proxyMethodName);
+            mb.addAnnotation(Override.class);
+
+            List<? extends TypeParameterElement> generics = method.unwrap().getTypeParameters();
+            for (TypeParameterElement tpe : generics) {
+                mb.addTypeVariable(TypeVariableName.get(tpe));
+            }
+
+            TypeMirror returnType = method.getReturnType();
+            mb.returns(TypeName.get(returnType));
+
+        }
+
+        if (method.unwrap().getModifiers().contains(Modifier.PUBLIC)) {
+            mb.addModifiers(Modifier.PUBLIC);
+        } else if (method.unwrap().getModifiers().contains(Modifier.PROTECTED)) {
+            mb.addModifiers(Modifier.PROTECTED);
+        }
+
+        List<ParameterSpec> params = generateProxyMethodParams(method, paramPrefix, skipAnnotations);
+        for (ParameterSpec ps : params) {
+            mb.addParameter(ps);
+        }
+        return mb;
+    }
+
+    public static List<ParameterSpec> generateProxyMethodParams(MethodElement method, String paramPrefix, boolean skipAnnotations) {
+        List<ParameterSpec> result = new ArrayList<>();
+
+        List<ParameterElement> methodParams = method.getParameters();
+        for (ParameterElement param : methodParams) {
+            Set<Modifier> modifiersSet = new HashSet<>();
+            modifiersSet.addAll(param.unwrap().getModifiers());
+            modifiersSet.add(Modifier.FINAL);
+
+            Modifier[] modifiers = modifiersSet.toArray(new Modifier[modifiersSet.size()]);
+            String paramName = param.getNameWithPrefix(paramPrefix);
+            TypeMirror paramType = param.asType();
+
+            ParameterSpec.Builder paramBilder = ParameterSpec.builder(TypeName.get(paramType), paramName, modifiers);
+
+            // Add param annotations
+            if (!skipAnnotations) {
+                List<AnnotationSpec> annotations = generateAnnotations(param.unwrap());
+                for (AnnotationSpec ann : annotations) {
+                    paramBilder.addAnnotation(ann);
+                }
+            }
+            result.add(paramBilder.build());
+        }
+        return result;
+    }
+
+    public static List<AnnotationSpec> generateAnnotations(Element element) {
         List<AnnotationSpec> result = new ArrayList<>();
         List<? extends AnnotationMirror> annotations = element.getAnnotationMirrors();
         for (AnnotationMirror ann : annotations) {
@@ -517,7 +227,4 @@ public class CodegenUtils {
         return result;
     }
 
-    public static String getOption(ProcessingEnvironment processingEnv, String optionKey) {
-        return processingEnv.getOptions().get(optionKey);
-    }
 }

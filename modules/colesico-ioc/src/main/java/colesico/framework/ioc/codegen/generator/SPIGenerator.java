@@ -17,11 +17,11 @@ public class SPIGenerator {
         this.processingEnv = processingEnv;
     }
 
-    public void generateSPIFile(Collection<IocletElement> ioclets){
+    public void generateSPIFile(Collection<IocletElement> ioclets) {
         Set<String> iocletClassNames = new HashSet<>();
-        for (IocletElement ie:ioclets){
-            iocletClassNames.add(ie.getClassName());
+        for (IocletElement ie : ioclets) {
+            iocletClassNames.add(ie.getIocletClassName());
         }
-        SPIUtils.addService(Ioclet.class.getCanonicalName(),iocletClassNames,processingEnv);
+        SPIUtils.addService(Ioclet.class.getCanonicalName(), iocletClassNames, processingEnv);
     }
 }

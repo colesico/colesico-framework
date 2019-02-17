@@ -18,17 +18,9 @@
 
 package colesico.framework.ioc.codegen.model;
 
-import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.assist.codegen.CodegenUtils;
-import colesico.framework.ioc.*;
-
-import javax.inject.Named;
-import javax.inject.Provider;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeMirror;
-import java.util.List;
+import colesico.framework.assist.codegen.model.ClassElement;
+import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.assist.codegen.model.ParameterElement;
 
 /**
  * The parameter to be injected
@@ -36,91 +28,43 @@ import java.util.List;
  * @author Vladlen Larionov
  */
 public class InjectableElement {
-    private final FactoryElement parentFactory;
-    private final VariableElement originParameter;
 
-    // type  to be injected
-    private final DeclaredType injectedType;
+    private final FactoryElement parentFactory;
+    private final ParameterElement originParameter;
+
+    // type to be injected
+    private final ClassType injectedType;
+
     private final InjectionKind injectionKind;
     private final MessageKind messageKind;
     private final LinkagePhase linkagePhase;
 
     //  @Named value
     private final String named;
+
     //  @Classed value as class names
     private final String classed;
 
-
-    public InjectableElement(FactoryElement parentFactory, VariableElement parameter) {
+    public InjectableElement(FactoryElement parentFactory, ParameterElement originParameter, ClassType injectedType, InjectionKind injectionKind, MessageKind messageKind, LinkagePhase linkagePhase, String named, String classed) {
         this.parentFactory = parentFactory;
-        this.originParameter = parameter;
-        DeclaredType declaredType = (DeclaredType) parameter.asType();
-        String parameterClassName = CodegenUtils.getClassName((TypeElement) declaredType.asElement());
-
-        // Injection kind detection
-        Message messageAnn = parameter.getAnnotation(Message.class);
-        if (messageAnn != null) {
-            this.injectedType = declaredType;
-            this.injectionKind = InjectionKind.MESSAGE;
-        } else {
-            if (parameterClassName.equals(Supplier.class.getName())
-                    || parameterClassName.equals(Provider.class.getName())
-                    || parameterClassName.equals(Polysupplier.class.getName())) {
-                List<? extends TypeMirror> generics = declaredType.getTypeArguments();
-                if (generics.isEmpty()) {
-                    throw CodegenException.of().message("Unable to determine injecting type").element(parameter).build();
-                }
-                this.injectedType = ((DeclaredType) generics.get(0));
-                if (parameterClassName.equals(Provider.class.getName())) {
-                    this.injectionKind = InjectionKind.PROVIDER;
-                } else if (parameterClassName.equals(Polysupplier.class.getName())) {
-                    this.injectionKind = InjectionKind.POLYSUPPLIER;
-                } else {
-                    this.injectionKind = InjectionKind.SUPPLIER;
-                }
-            } else {
-                this.injectedType = declaredType;
-                this.injectionKind = InjectionKind.INSTANCE;
-            }
-        }
-
-        // Messaging
-        Contextual inherentAnn = parameter.getAnnotation(Contextual.class);
-        this.messageKind = inherentAnn != null ? MessageKind.INJECTION_POINT : MessageKind.OUTER_MESSAGE;
-
-        // Binding
-        InlineInject dynamicInjectAnn = parameter.getAnnotation(InlineInject.class);
-        this.linkagePhase = dynamicInjectAnn==null? LinkagePhase.ACTIVATION : LinkagePhase.PRODUCTION;
-
-        // Extra key types
-        Named namedAnn = parameter.getAnnotation(Named.class);
-        if (namedAnn != null) {
-            this.named = namedAnn.value();
-            // TODO: check  injectionKind
-        } else {
-            this.named = null;
-        }
-
-        Classed classedAnn = parameter.getAnnotation(Classed.class);
-        if (classedAnn != null) {
-            TypeMirror classifier = CodegenUtils.getAnnotationValueTypeMirror(classedAnn, a -> a.value());
-            this.classed = classifier.toString();
-            // TODO: check  injectionKind
-        } else {
-            this.classed = null;
-        }
-
+        this.originParameter = originParameter;
+        this.injectedType = injectedType;
+        this.injectionKind = injectionKind;
+        this.messageKind = messageKind;
+        this.linkagePhase = linkagePhase;
+        this.named = named;
+        this.classed = classed;
     }
 
     public FactoryElement getParentFactory() {
         return parentFactory;
     }
 
-    public VariableElement getOriginParameter() {
+    public ParameterElement getOriginParameter() {
         return originParameter;
     }
 
-    public DeclaredType getInjectedType() {
+    public ClassType getInjectedType() {
         return injectedType;
     }
 

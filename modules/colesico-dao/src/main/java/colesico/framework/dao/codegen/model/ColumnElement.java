@@ -1,5 +1,7 @@
 package colesico.framework.dao.codegen.model;
 
+import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.assist.codegen.model.FieldElement;
 import com.squareup.javapoet.TypeName;
 
 import javax.lang.model.element.VariableElement;
@@ -7,12 +9,12 @@ import javax.lang.model.type.TypeMirror;
 
 public class ColumnElement {
 
-    protected final VariableElement originField;
+    protected final FieldElement originField;
     protected CompositionElement parentComposition;
     protected final String name;
-    protected TypeMirror converter;
+    protected ClassType converter;
 
-    public ColumnElement(VariableElement originField, String name) {
+    public ColumnElement(FieldElement originField, String name) {
         this.originField = originField;
         this.name = name;
     }
@@ -29,15 +31,15 @@ public class ColumnElement {
         this.parentComposition = parentComposition;
     }
 
-    public TypeMirror getConverter() {
+    public ClassType getConverter() {
         return converter;
     }
 
-    public void setConverter(TypeMirror converter) {
+    public void setConverter(ClassType converter) {
         this.converter = converter;
     }
 
-    public VariableElement getOriginField() {
+    public FieldElement getOriginField() {
         return originField;
     }
 

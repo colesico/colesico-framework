@@ -18,7 +18,8 @@
 
 package colesico.framework.service.codegen.model;
 
-import javax.lang.model.element.VariableElement;
+import colesico.framework.assist.codegen.model.VarElement;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class TeleCompElement extends TeleVarElement {
 
     private final List<TeleVarElement> variables;
 
-    public TeleCompElement(VariableElement originVariable) {
+    public TeleCompElement(VarElement originVariable) {
         super(originVariable);
         variables = new ArrayList<>();
     }

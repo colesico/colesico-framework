@@ -1,16 +1,17 @@
 package colesico.framework.translation.codegen.model;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.codegen.model.AnnotationElement;
+import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.translation.TranslationKey;
 
 import javax.lang.model.element.ExecutableElement;
 
 public class TranslationElement {
     private final BundleElement parentDictionary;
-    private final ExecutableElement keyMethod;
+    private final MethodElement keyMethod;
     private final String translation;
 
-    public TranslationElement(BundleElement parentDictionary, ExecutableElement keyMethod, String translation) {
+    public TranslationElement(BundleElement parentDictionary, MethodElement keyMethod, String translation) {
         this.parentDictionary = parentDictionary;
         this.keyMethod = keyMethod;
         this.translation = translation;
@@ -20,7 +21,7 @@ public class TranslationElement {
         return parentDictionary;
     }
 
-    public ExecutableElement getKeyMethod() {
+    public MethodElement getKeyMethod() {
         return keyMethod;
     }
 
@@ -28,19 +29,19 @@ public class TranslationElement {
         return translation;
     }
 
-    public String getTranslationKey(){
-        TranslationKey tk = keyMethod.getAnnotation(TranslationKey.class);
-        if (tk!=null){
-            return tk.value();
+    public String getTranslationKey() {
+        AnnotationElement<TranslationKey> tk = keyMethod.getAnnotation(TranslationKey.class);
+        if (tk != null) {
+            return tk.unwrap().value();
         } else {
             //return StrUtils.firstCharToUpperCase(keyMethod.getSimpleName().toString());
-            return keyMethod.getSimpleName().toString();
+            return keyMethod.getName();
         }
     }
 
     @Override
     public String toString() {
-        return "TranslationElement{ method=" + keyMethod.getSimpleName() + ", translation='" + translation + "' }";
+        return "TranslationElement{ method=" + keyMethod.getName() + ", translation='" + translation + "' }";
     }
 
     @Override

@@ -1,6 +1,7 @@
 package colesico.framework.transaction.codegen;
 
 import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.model.AnnotationElement;
 import colesico.framework.service.Interceptor;
 import colesico.framework.service.InvocationContext;
 import colesico.framework.service.codegen.model.*;
@@ -55,7 +56,7 @@ public class TxModulator extends Modulator {
     public void onProxyMethod(ProxyMethodElement proxyMethod) {
         super.onProxyMethod(proxyMethod);
 
-        Transactional txAnnotation = proxyMethod.getOriginMethod().getAnnotation(Transactional.class);
+        AnnotationElement<Transactional> txAnnotation = proxyMethod.getOriginMethod().getAnnotation(Transactional.class);
         if (txAnnotation == null) {
             txAnnotation = proxyMethod.getParentService().getOriginClass().getAnnotation(Transactional.class);
             if (txAnnotation == null) {
@@ -66,19 +67,19 @@ public class TxModulator extends Modulator {
         // Add shell field
 
         TxModulatorContext ctx = getModulatorContext();
-        Integer exIdx = ctx.getShellIndex(txAnnotation.shell());
+        Integer exIdx = ctx.getShellIndex(txAnnotation.unwrap().shell());
         String shellFieldName = TX_SHELL_FIELD_PREFIX + exIdx;
 
         FieldSpec txShellFs = FieldSpec.builder(ClassName.get(TransactionalShell.class), shellFieldName).addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
-        FieldElement txShellFe = new FieldElement(txShellFs).inject();
-        if (StringUtils.isNotEmpty(txAnnotation.shell())) {
-            txShellFe.setNamed(txAnnotation.shell());
+        ProxyFieldElement txShellFe = new ProxyFieldElement(txShellFs).inject();
+        if (StringUtils.isNotEmpty(txAnnotation.unwrap().shell())) {
+            txShellFe.setNamed(txAnnotation.unwrap().shell());
         }
         proxyMethod.getParentService().addField(txShellFe);
 
         // Add interceptor
 
-        String propogationMethodName = getPropogationMethodName(txAnnotation.propagation());
+        String propogationMethodName = getPropogationMethodName(txAnnotation.unwrap().propagation());
 
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("$N->", Interceptor.INVOCATION_CONTEXT_PARAM);

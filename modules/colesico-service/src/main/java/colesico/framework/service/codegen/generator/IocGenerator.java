@@ -22,7 +22,7 @@ package colesico.framework.service.codegen.generator;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.ioc.*;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
-import colesico.framework.service.ServicePrototype;
+import colesico.framework.service.ServiceProxy;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleFacadeElement;
 import colesico.framework.service.codegen.parser.ProcessorContext;
@@ -37,8 +37,6 @@ import javax.inject.Singleton;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.tools.Diagnostic;
-import javax.tools.FileObject;
-import javax.tools.StandardLocation;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -63,7 +61,7 @@ public class IocGenerator {
 
     private void generateProduceService(ProducerGenerator producerGenerator, ServiceElement serviceElement, String methodUID) {
         TypeName serviceProxyTypeName = ClassName.bestGuess(
-                ServicePrototype.getProxyClassName(serviceElement.getOriginClass().asType().toString()));
+                ServiceProxy.getProxyClassName(serviceElement.getOriginClass().asType().toString()));
 
         // Add  @Produce annotation
         producerGenerator.addProduceAnnotation(serviceProxyTypeName);
@@ -73,7 +71,8 @@ public class IocGenerator {
                 TypeName.get(serviceElement.getOriginClass().asType()));
 
 
-        String scopeAnnClassName = serviceElement.getScopeAnnotation() != null ? serviceElement.getScopeAnnotation().toString() : Singleton.class.getName();
+        String scopeAnnClassName = serviceElement.getCustomScopeType() == null ? Singleton.class.getName()
+                : serviceElement.getCustomScopeType().asClassElement().getName();
         AnnotationSpec.Builder scopeAnnBuilder = AnnotationSpec.builder(ClassName.bestGuess(scopeAnnClassName));
         mb.addAnnotation(scopeAnnBuilder.build());
 
@@ -110,14 +109,13 @@ public class IocGenerator {
 
     private void generateProducerClass(String packageName, String classSimpleName, Set<ServiceElement> serviceElements) {
         String producerClassName = packageName + '.' + classSimpleName;
-        if (logger.isDebugEnabled()){
+        if (logger.isDebugEnabled()) {
             StringBuilder mb = new StringBuilder("Generate services producer: " + producerClassName).append("\n");
-            for (ServiceElement se:serviceElements){
-                mb.append("  for service: ").append(se.getOriginClass().getQualifiedName().toString());
+            for (ServiceElement se : serviceElements) {
+                mb.append("  for service: ").append(se.getOriginClass().getName());
             }
             logger.debug(mb.toString());
         }
-
 
 
         ProducerGenerator producerGenerator = new ProducerGenerator(packageName, classSimpleName, this.getClass(), context.getProcessingEnv());
@@ -134,7 +132,7 @@ public class IocGenerator {
         Element[] linkedElements = new Element[serviceElements.size()];
         for (ServiceElement service : serviceElements) {
             logger.debug("Generate service producing: " + service.getOriginClass().asType().toString());
-            linkedElements[i] = service.getOriginClass();
+            linkedElements[i] = service.getOriginClass().unwrap();
             generateProduceService(producerGenerator, service, "F" + Integer.toString(i));
 
             // Telefacades producing
@@ -156,7 +154,7 @@ public class IocGenerator {
         logger.debug("Generate services producers. One producer per package. Total services: " + services.size());
         Map<String, Set<ServiceElement>> perPackageMap = new HashMap<>();
         for (ServiceElement srv : services) {
-            String pkgName = CodegenUtils.getPackageName(srv.getOriginClass());
+            String pkgName = srv.getOriginClass().getPackageName();
             Set<ServiceElement> pkgServices = perPackageMap.computeIfAbsent(pkgName, k -> new HashSet<>());
             pkgServices.add(srv);
         }
@@ -170,7 +168,7 @@ public class IocGenerator {
     public void generatePerService(Set<ServiceElement> services) {
         logger.debug("Generate services producers. One producer per service. Total services: " + services.size());
         for (ServiceElement srv : services) {
-            String pkgName = CodegenUtils.getPackageName(srv.getOriginClass());
+            String pkgName = srv.getOriginClass().getPackageName();
             String producerName = srv.getOriginClass().getSimpleName().toString() + "Producer";
             Set<ServiceElement> srvSet = new HashSet<>();
             srvSet.add(srv);

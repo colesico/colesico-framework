@@ -19,6 +19,7 @@
 package colesico.framework.router.codegen;
 
 
+import colesico.framework.assist.codegen.model.AnnotationElement;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.assist.Elements;
 import colesico.framework.assist.StrUtils;
@@ -64,12 +65,12 @@ abstract public class RoutegenContext {
 
     protected String buildMethodRoute(TeleMethodElement teleMethod) {
 
-        Route routeAnnotation = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(Route.class);
+        AnnotationElement<Route> routeAnnotation = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(Route.class);
         String methodRoute;
         if (routeAnnotation == null) {
             methodRoute = RouteTrie.SEGMENT_DELEMITER + StrUtils.toLowerCaseNotation(teleMethod.getName());
         } else {
-            methodRoute = routeAnnotation.value();
+            methodRoute = routeAnnotation.unwrap().value();
         }
 
         if (methodRoute.equals(RouteTrie.SEGMENT_DELEMITER)) {
@@ -77,9 +78,9 @@ abstract public class RoutegenContext {
         }
 
         HttpMethod httpMethod = HttpMethod.GET;
-        RequestMethod methodAnnotation = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(RequestMethod.class);
+        AnnotationElement<RequestMethod> methodAnnotation = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(RequestMethod.class);
         if (methodAnnotation != null) {
-            httpMethod = methodAnnotation.value();
+            httpMethod = methodAnnotation.unwrap().value();
         }
 
         String result = StrUtils.concatPath(httpMethod.name(), framletRoute, RouteTrie.SEGMENT_DELEMITER);
@@ -89,16 +90,16 @@ abstract public class RoutegenContext {
     }
 
     protected String buildFramletRoute(ServiceElement framlet) {
-        Route routeAnnotation = framlet.getOriginClass().getAnnotation(Route.class);
+        AnnotationElement<Route> routeAnnotation = framlet.getOriginClass().getAnnotation(Route.class);
         String route = null;
         if (routeAnnotation != null) {
             // If absolute route
-            if (routeAnnotation.value().startsWith(RouteTrie.SEGMENT_DELEMITER)) {
-                return routeAnnotation.value();
+            if (routeAnnotation.unwrap().value().startsWith(RouteTrie.SEGMENT_DELEMITER)) {
+                return routeAnnotation.unwrap().value();
             }
             // Relative route -> get suffix from package
-            if (routeAnnotation.value().startsWith(".")) {
-                PackageElement pkg = CodegenUtils.getPackage(framlet.getOriginClass());
+            if (routeAnnotation.unwrap().value().startsWith(".")) {
+                PackageElement pkg = framlet.getOriginClass().getPackage();
                 Route pkgRoute = pkg.getAnnotation(Route.class);
                 if (pkgRoute == null) {
                     throw CodegenException.of()
@@ -113,7 +114,7 @@ abstract public class RoutegenContext {
                             .element(framlet.getOriginClass())
                             .build();
                 }
-                String beanRouteValue = routeAnnotation.value().substring(1);
+                String beanRouteValue = routeAnnotation.unwrap().value().substring(1);
                 if (StringUtils.isBlank(beanRouteValue)){
                     String classSimpleName = framlet.getOriginClass().getSimpleName().toString();
                     beanRouteValue = "/"+ StrUtils.toLowerCaseNotation(classSimpleName);
@@ -121,7 +122,7 @@ abstract public class RoutegenContext {
                 return StrUtils.concatPath(pkgRouteValue, beanRouteValue, RouteTrie.SEGMENT_DELEMITER);
             } else {
                 throw CodegenException.of()
-                        .message("Unclear route: " + routeAnnotation.value() + ". Must starts with '.' or '" + RouteTrie.SEGMENT_DELEMITER + "'")
+                        .message("Unclear route: " + routeAnnotation.unwrap().value() + ". Must starts with '.' or '" + RouteTrie.SEGMENT_DELEMITER + "'")
                         .element(framlet.getOriginClass())
                         .build();
             }

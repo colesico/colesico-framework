@@ -19,6 +19,7 @@
 package colesico.framework.service.codegen.modulator;
 
 import colesico.framework.assist.ServiceLocator;
+import colesico.framework.assist.codegen.model.VarElement;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.Service;
 import colesico.framework.service.codegen.model.*;
@@ -106,7 +107,7 @@ public class ModulatorKit {
         }
     }
 
-    public void notifyLinkTeleParam(TeleParamElement teleParam, Deque<VariableElement> varStack) {
+    public void notifyLinkTeleParam(TeleParamElement teleParam, Deque<VarElement> varStack) {
         for (Modulator modulator : modulators) {
             modulator.onLinkTeleParam(teleParam, varStack);
         }

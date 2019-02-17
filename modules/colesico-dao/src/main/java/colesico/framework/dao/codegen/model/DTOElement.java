@@ -1,15 +1,17 @@
 package colesico.framework.dao.codegen.model;
 
+import colesico.framework.assist.codegen.model.ClassElement;
+
 import javax.lang.model.element.TypeElement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DTOElement {
 
-    private final TypeElement originClass;
+    private final ClassElement originClass;
     private final CompositionElement rootComposition;
 
-    public DTOElement(TypeElement originClass) {
+    public DTOElement(ClassElement originClass) {
         this.originClass = originClass;
         this.rootComposition = new CompositionElement(this, originClass, null);
     }
@@ -18,7 +20,7 @@ public class DTOElement {
         return rootComposition;
     }
 
-    public TypeElement getOriginClass() {
+    public ClassElement getOriginClass() {
         return originClass;
     }
 

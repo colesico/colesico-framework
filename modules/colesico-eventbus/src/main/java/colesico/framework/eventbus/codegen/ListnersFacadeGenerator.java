@@ -42,10 +42,10 @@ public class ListnersFacadeGenerator {
     }
 
     protected void generateHandlerProxy(ServiceElement service, EventHandlerElement handler, TypeSpec.Builder classBuilder) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(handler.getOriginMethod().getSimpleName().toString());
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(handler.getOriginMethod().getName());
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
-        ParameterSpec.Builder pb = ParameterSpec.builder(TypeName.get(handler.getEventType()), EVENT_PARAM, Modifier.FINAL);
+        ParameterSpec.Builder pb = ParameterSpec.builder(TypeName.get(handler.getEventType().unwrap()), EVENT_PARAM, Modifier.FINAL);
         mb.addParameter(pb.build());
 
         mb.addStatement("$T $N=this.$N.get()",
@@ -54,7 +54,7 @@ public class ListnersFacadeGenerator {
                 EventsListener.TARGET_PROV_FIELD);
         mb.addStatement("$N.$N($N)",
                 TARGET_VAR,
-                handler.getOriginMethod().getSimpleName().toString(),
+                handler.getOriginMethod().getName(),
                 EVENT_PARAM
         );
 
@@ -83,8 +83,8 @@ public class ListnersFacadeGenerator {
             i++;
             cb.add("new $T<>($T.class, this::$L)",
                     ClassName.get(EventBinding.class),
-                    TypeName.get(ele.getEventType()),
-                    ele.getOriginMethod().getSimpleName().toString()
+                    TypeName.get(ele.getEventType().unwrap()),
+                    ele.getOriginMethod().getName()
             );
             if (i < handlers.size()) {
                 cb.add(",\n");
@@ -108,13 +108,13 @@ public class ListnersFacadeGenerator {
 
     public void generateListnersFacade(ServiceElement service, List<EventHandlerElement> handlers) {
         String facadeClassSimpleName = getListnersFacadeClassName(service);
-        logger.debug("Generate Events listener facade '"+facadeClassSimpleName+"' for service: " + service.getOriginClass().getQualifiedName().toString());
+        logger.debug("Generate Events listener facade '"+facadeClassSimpleName+"' for service: " + service.getOriginClass().getName());
 
         TypeSpec.Builder classBuilder = TypeSpec.classBuilder(facadeClassSimpleName);
         classBuilder.addModifiers(Modifier.PUBLIC);
         classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(EventsListener.class), TypeName.get(service.getOriginClass().asType())));
 
-        classBuilder.addAnnotation(CodegenUtils.buildGenstampAnnotation(this.getClass().getSimpleName(), null, null));
+        classBuilder.addAnnotation(CodegenUtils.generateGenstamp(this.getClass().getSimpleName(), null, null));
         classBuilder.addAnnotation(Singleton.class);
 
         generateConstructor(service, classBuilder);
@@ -122,7 +122,7 @@ public class ListnersFacadeGenerator {
         generateGetBindingsMethod(service, handlers, classBuilder);
 
         final TypeSpec typeSpec = classBuilder.build();
-        String packageName = CodegenUtils.getPackageName(service.getOriginClass());
-        CodegenUtils.createJavaFile(context.getProcessingEnv(), typeSpec, packageName, service.getOriginClass());
+        String packageName = service.getOriginClass().getPackageName();
+        CodegenUtils.createJavaFile(context.getProcessingEnv(), typeSpec, packageName, service.getOriginClass().unwrap());
     }
 }

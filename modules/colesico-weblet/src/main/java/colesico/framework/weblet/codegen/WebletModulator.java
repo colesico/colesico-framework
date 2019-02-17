@@ -19,6 +19,7 @@
 package colesico.framework.weblet.codegen;
 
 import colesico.framework.assist.CollectionUtils;
+import colesico.framework.assist.codegen.model.AnnotationElement;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.model.TeleMethodElement;
 import colesico.framework.service.codegen.model.TeleParamElement;
@@ -85,11 +86,11 @@ public class WebletModulator extends RoutesModulator {
         TeleVarElement rootVar = teleParam;
         while (curVar != null) {
             String name;
-            ParamName nameAnn = curVar.getOriginVariable().getAnnotation(ParamName.class);
+            AnnotationElement<ParamName> nameAnn = curVar.getOriginVariable().getAnnotation(ParamName.class);
             if (nameAnn != null) {
-                name = nameAnn.value();
+                name = nameAnn.unwrap().value();
             } else {
-                name = curVar.getOriginVariable().getSimpleName().toString();
+                name = curVar.getOriginVariable().getName();
             }
 
             if (StringUtils.isNoneBlank(name)) {
@@ -103,7 +104,7 @@ public class WebletModulator extends RoutesModulator {
         String paramName = StringUtils.join(paramsChain, ".");
         String paramOrigin = Origin.DEFAULT.name();
 
-        ParamOrigin originAnn = teleParam.getOriginVariable().getAnnotation(ParamOrigin.class);
+        AnnotationElement<ParamOrigin> originAnn = teleParam.getOriginVariable().getAnnotation(ParamOrigin.class);
         if (originAnn == null) {
             originAnn = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(ParamOrigin.class);
             if (originAnn == null) {
@@ -112,12 +113,12 @@ public class WebletModulator extends RoutesModulator {
         }
 
         if (originAnn != null) {
-            paramOrigin = originAnn.value().name();
+            paramOrigin = originAnn.unwrap().value().name();
         }
 
-        ParamName nameAnn = teleParam.getOriginVariable().getAnnotation(ParamName.class);
-        if (nameAnn != null && nameAnn.value() != "") {
-            paramName = nameAnn.value();
+        AnnotationElement<ParamName> nameAnn = teleParam.getOriginVariable().getAnnotation(ParamName.class);
+        if (nameAnn != null && nameAnn.unwrap().value() != "") {
+            paramName = nameAnn.unwrap().value();
         }
         cb.add("new $T(", ClassName.get(ReaderContext.class));
         cb.add("$S,$T.$N", paramName, ClassName.get(OriginFacade.class), paramOrigin);

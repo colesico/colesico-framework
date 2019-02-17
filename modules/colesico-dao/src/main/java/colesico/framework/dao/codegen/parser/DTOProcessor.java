@@ -2,6 +2,7 @@ package colesico.framework.dao.codegen.parser;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
+import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.dao.DTO;
 import colesico.framework.dao.codegen.generator.DTOHelperGenerator;
 import colesico.framework.dao.codegen.model.DTOElement;
@@ -46,7 +47,7 @@ public class DTOProcessor extends FrameworkAbstractProcessor {
             TypeElement typeElement = null;
             try {
                 typeElement = (TypeElement) elm;
-                DTOElement dtoElement = dtoParser.parse(typeElement);
+                DTOElement dtoElement = dtoParser.parse(new ClassElement(processingEnv,typeElement));
                 dtoHelperGenerator.generate(dtoElement);
             } catch (CodegenException ce) {
                 String message = "Error processing class '" + elm.toString() + "': " + ce.getMessage();

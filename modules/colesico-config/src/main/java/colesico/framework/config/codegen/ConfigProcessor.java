@@ -20,6 +20,7 @@ package colesico.framework.config.codegen;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
+import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.config.Configuration;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -67,10 +68,11 @@ public class ConfigProcessor extends FrameworkAbstractProcessor {
             if (elm.getKind() != ElementKind.CLASS) {
                 continue;
             }
-            TypeElement classElement = null;
+            TypeElement typeElement = null;
             try {
-                classElement = (TypeElement) elm;
-                logger.debug("Processing configuration: " + classElement.asType().toString());
+                typeElement = (TypeElement) elm;
+                ClassElement classElement = new ClassElement(processingEnv, typeElement);
+                logger.debug("Processing configuration: " + classElement.getName());
                 confRegistry.register(classElement);
             } catch (CodegenException ce) {
                 String message = "Error processing configuration class '" + elm.toString() + "': " + ce.getMessage();

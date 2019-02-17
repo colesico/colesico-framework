@@ -3,6 +3,10 @@ package colesico.framework.translation.codegen.processor;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
+import colesico.framework.assist.codegen.model.AnnotationElement;
+import colesico.framework.assist.codegen.model.AnnotationMirrorElement;
+import colesico.framework.assist.codegen.model.ClassElement;
+import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.translation.Dictionary;
 import colesico.framework.translation.Translation;
 import colesico.framework.translation.codegen.generator.BundleGenerator;
@@ -62,7 +66,7 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
             try {
                 beanDefinitionElement = (TypeElement) elm;
                 logger.debug("Processing dictionary bean: " + beanDefinitionElement.asType().toString());
-                DictionaryElement dictionaryBeanElement = parseDictionaryFacade(beanDefinitionElement);
+                DictionaryElement dictionaryBeanElement = parseDictionaryFacade(new ClassElement(processingEnv, beanDefinitionElement));
                 dictionaryRegistry.register(dictionaryBeanElement);
                 beanGenerator.generate(dictionaryBeanElement);
             } catch (CodegenException ce) {
@@ -93,39 +97,28 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
         return true;
     }
 
-    protected DictionaryElement parseDictionaryFacade(TypeElement dictionaryBeanInterface) {
+    protected DictionaryElement parseDictionaryFacade(ClassElement dictionaryBeanInterface) {
         DictionaryElement dictionaryBeanElement = new DictionaryElement(dictionaryBeanInterface);
 
-        Elements utils = processingEnv.getElementUtils();
-        List<? extends Element> members = utils.getAllMembers(dictionaryBeanInterface);
-        List<ExecutableElement> methods = ElementFilter.methodsIn(members);
+
+        List<MethodElement> methods = dictionaryBeanInterface.getMethodsFiltered(
+                m -> !m.unwrap().getModifiers().contains(Modifier.DEFAULT) &&
+                        m.unwrap().getReturnType().toString().equals(String.class.getName())
+        );
 
 
-        for (ExecutableElement method : methods) {
-
-            TypeElement methodClass = (TypeElement) method.getEnclosingElement();
-            String methodClassName = methodClass.asType().toString();
-
-            if (method.getModifiers().contains(Modifier.DEFAULT) || methodClassName.equals(Object.class.getName())) {
-                continue;
-            }
-
-            if (!method.getReturnType().toString().equals(String.class.getName())) {
-                continue;
-            }
-
+        for (MethodElement method : methods) {
             dictionaryBeanElement.addTranslationMethod(method);
 
             // Find translations
-            List<? extends AnnotationMirror> annList = method.getAnnotationMirrors();
-            for (AnnotationMirror ann : annList) {
-                TypeElement annTypeElm = (TypeElement) ann.getAnnotationType().asElement();
-                Translation translationAnn = annTypeElm.getAnnotation(Translation.class);
+            List<AnnotationMirrorElement> annList = method.getAnnotationMirrors();
+            for (AnnotationMirrorElement ann : annList) {
+                AnnotationElement<Translation> translationAnn = ann.getAnnotation(Translation.class);
                 if (translationAnn == null) {
                     continue;
                 }
-                String localeKey = translationAnn.value();
-                AnnotationValue value = CodegenUtils.getAnnotationValue(ann, "value");
+                String localeKey = translationAnn.unwrap().value();
+                AnnotationValue value = ann.getValue("value");
                 dictionaryBeanElement.addTranslation(method, localeKey, value.getValue().toString());
             }
 

@@ -1,6 +1,5 @@
 package colesico.framework.translation.codegen.model;
 
-import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.config.codegen.ConfRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +38,7 @@ public class DictionaryRegistry {
 
     public DictionaryElement register(DictionaryElement dictionaryElement) {
 
-        String packageName = CodegenUtils.getPackageName(dictionaryElement.getOriginBean());
+        String packageName = dictionaryElement.getOriginBean().getPackageName();
 
         List<DictionaryElement> packageDictBeans = byPackageMap.computeIfAbsent(packageName, k -> new ArrayList<>());
         packageDictBeans.add(dictionaryElement);

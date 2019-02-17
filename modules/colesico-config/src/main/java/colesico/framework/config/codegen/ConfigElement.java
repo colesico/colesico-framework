@@ -18,15 +18,9 @@
 
 package colesico.framework.config.codegen;
 
-import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.config.Default;
+import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.config.ConfigModel;
-import colesico.framework.config.ConfigPrototype;
-import colesico.framework.assist.codegen.CodegenUtils;
-import colesico.framework.ioc.Classed;
 
-import javax.inject.Named;
-import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
 /**
@@ -36,12 +30,12 @@ public class ConfigElement {
     /**
      * Configuration implementation class
      */
-    private final TypeElement implementation;
+    private final ClassElement implementation;
 
     /**
      * Configuration prototype class
      */
-    private final TypeElement prototype;
+    private final ClassElement prototype;
 
     /**
      * Configuration rank
@@ -56,7 +50,7 @@ public class ConfigElement {
     /**
      * Configurable target for this configuration
      */
-    private final TypeMirror target;
+    private final ClassElement target;
 
     private final boolean defaultMessage;
 
@@ -66,47 +60,22 @@ public class ConfigElement {
     private final TypeMirror classedQualifier;
     private final String namedQualifier;
 
-    public ConfigElement(TypeElement implementation, TypeElement prototype, String rank) {
+    public ConfigElement(ClassElement implementation, ClassElement prototype, String rank, ConfigModel model, ClassElement target, boolean defaultMessage, TypeMirror classedQualifier, String namedQualifier) {
         this.implementation = implementation;
         this.prototype = prototype;
         this.rank = rank;
-
-        ConfigPrototype prototypeAnn = prototype.getAnnotation(ConfigPrototype.class);
-        this.model = prototypeAnn.model();
-        this.target = CodegenUtils.getAnnotationValueTypeMirror(prototypeAnn, a -> a.target());
-
-        Default classedDefaultAnn = implementation.getAnnotation(Default.class);
-
-        if (classedDefaultAnn != null) {
-            if (!ConfigModel.MESSAGE.equals(model)) {
-                throw CodegenException.of().message("@" + Default.class.getSimpleName() +
-                        " annotation can be applied only to " + ConfigModel.MESSAGE.name() + " configuration model").build();
-            }
-            defaultMessage = true;
-        } else {
-            defaultMessage = false;
-        }
-
-        Classed classedAnn = implementation.getAnnotation(Classed.class);
-        if (classedAnn != null) {
-            classedQualifier = CodegenUtils.getAnnotationValueTypeMirror(classedAnn, c -> c.value());
-        } else {
-            classedQualifier = null;
-        }
-
-        Named namedAnn = implementation.getAnnotation(Named.class);
-        namedQualifier = namedAnn!=null?namedAnn.value():null;
+        this.model = model;
+        this.target = target;
+        this.defaultMessage = defaultMessage;
+        this.classedQualifier = classedQualifier;
+        this.namedQualifier = namedQualifier;
     }
 
-    public TypeElement getImplementation() {
+    public ClassElement getImplementation() {
         return implementation;
     }
 
-    public ConfigModel getModel() {
-        return model;
-    }
-
-    public TypeElement getPrototype() {
+    public ClassElement getPrototype() {
         return prototype;
     }
 
@@ -114,7 +83,11 @@ public class ConfigElement {
         return rank;
     }
 
-    public TypeMirror getTarget() {
+    public ConfigModel getModel() {
+        return model;
+    }
+
+    public ClassElement getTarget() {
         return target;
     }
 

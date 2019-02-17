@@ -53,7 +53,7 @@ public class IocletGenerator {
 
     protected void generateProducerField() {
         //log.info("Generate field: "+PRODUCER_FIELD);
-        TypeName producerTypeName = TypeName.get(iocletElement.getOriginProducer().asType());
+        TypeName producerTypeName = TypeName.get(iocletElement.getOriginProducer().asClassType().unwrap());
 
         TypeName fieldType = ParameterizedTypeName.get(ClassName.get(LazySingleton.class), producerTypeName);
 
@@ -100,8 +100,11 @@ public class IocletGenerator {
     protected void generateSuplierFactoryMethods() {
         for (FactoryElement sme : iocletElement.getFactories()) {
             MethodSpec.Builder mb = MethodSpec.methodBuilder(sme.getFactoryMethodName());
-            String resClassName = sme.getSuppliedType().asElement().toString();
-            mb.returns(ParameterizedTypeName.get(ClassName.get(Factory.class), ClassName.bestGuess(resClassName)));
+            mb.returns(ParameterizedTypeName.get(
+                    ClassName.get(Factory.class),
+                    TypeName.get(sme.getSuppliedType().getErasure())
+                    )
+            );
             mb.addModifiers(Modifier.PUBLIC);
             mb.addStatement("return $L", factoryGenerator.generateFactory(sme));
             classBuilder.addMethod(mb.build());
@@ -136,12 +139,12 @@ public class IocletGenerator {
         log.debug("Generate Ioclet based on: " + iocletElement);
         this.iocletElement = iocletElement;
 
-        classBuilder = TypeSpec.classBuilder(iocletElement.getClassSimpleName());
+        classBuilder = TypeSpec.classBuilder(iocletElement.getIocletClassSimpleName());
         classBuilder.addSuperinterface(ClassName.get(Ioclet.class));
         classBuilder.addModifiers(Modifier.PUBLIC);
         classBuilder.addModifiers(Modifier.FINAL);
 
-        AnnotationSpec genstamp = CodegenUtils.buildGenstampAnnotation(this.getClass().getName(),null, "Producer: " + iocletElement.getOriginProducer().toString());
+        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "Producer: " + iocletElement.getOriginProducer().toString());
         classBuilder.addAnnotation(genstamp);
 
         generateProducerField();

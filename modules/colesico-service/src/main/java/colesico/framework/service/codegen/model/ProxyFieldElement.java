@@ -21,12 +21,10 @@ package colesico.framework.service.codegen.model;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
 
-import javax.lang.model.element.VariableElement;
-
 /**
  * @author Vladlen Larionov
  */
-public final class FieldElement {
+public final class ProxyFieldElement {
 
     protected ServiceElement parentService;
 
@@ -36,16 +34,16 @@ public final class FieldElement {
     private String named;
     private TypeName classed;
 
-    public FieldElement(FieldSpec spec) {
+    public ProxyFieldElement(FieldSpec spec) {
         this.spec = spec;
     }
 
-    public FieldElement inject() {
+    public ProxyFieldElement inject() {
         this.injectAs = spec.type;
         return this;
     }
 
-    public FieldElement setInjectAs(TypeName injectingTypenName) {
+    public ProxyFieldElement setInjectAs(TypeName injectingTypenName) {
         this.injectAs = injectingTypenName;
         return this;
     }
@@ -54,7 +52,7 @@ public final class FieldElement {
         return named;
     }
 
-    public FieldElement setNamed(String named) {
+    public ProxyFieldElement setNamed(String named) {
         this.named = named;
         return this;
     }
@@ -63,7 +61,7 @@ public final class FieldElement {
         return classed;
     }
 
-    public FieldElement setClassed(TypeName classed) {
+    public ProxyFieldElement setClassed(TypeName classed) {
         this.classed = classed;
         return this;
     }

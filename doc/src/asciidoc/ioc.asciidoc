@@ -172,7 +172,7 @@ public class MyProducer {
 
 == Polyproducing
 
-@Polyproduce annotation allows to specify that the IoC container my supply multiple instances for the dependency.
+@Polyproduce annotation allows to specify that the IoC container may supply multiple instances for the dependency.
 If this annotation is not applied  to the producer method an attempt to define more than one instance producers (for
 the same class) will fails with ambiguous dependency error.
 

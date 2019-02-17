@@ -18,6 +18,7 @@
 
 package colesico.framework.service.codegen.parser;
 
+import colesico.framework.assist.codegen.model.*;
 import colesico.framework.ioc.CustomScope;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
@@ -44,39 +45,37 @@ public class ServiceParser {
         this.teleFacadesParser = new TeleFacadesParser(context);
     }
 
-    protected DeclaredType getServiceScope(TypeElement serviceType) {
-        List<? extends AnnotationMirror> annMirors = serviceType.getAnnotationMirrors();
-        DeclaredType scopeAnnotation = null;
-        for (AnnotationMirror annMirr : annMirors) {
-            DeclaredType annType = annMirr.getAnnotationType();
+    protected ClassType getServiceScope(ClassElement serviceElement) {
+        List<AnnotationMirrorElement> annMirors = serviceElement.getAnnotationMirrors();
+        DeclaredType scopeType = null;
+        for (AnnotationMirrorElement annMirr : annMirors) {
+            DeclaredType annType = annMirr.getType();
             CustomScope customScope = annType.getAnnotation(CustomScope.class);
             if (customScope != null) {
-                if (scopeAnnotation != null) {
-                    throw CodegenException.of().message("Ambiguous scope declaration").element(serviceType).build();
+                if (scopeType != null) {
+                    throw CodegenException.of().message("Ambiguous scope declaration").element(serviceElement).build();
                 } else {
-                    scopeAnnotation = annType;
+                    scopeType = annType;
                 }
             }
         }
-
-        return scopeAnnotation;
+        return scopeType==null? null: new ClassType(context.getProcessingEnv(), scopeType);
     }
 
     protected void addProxyMethods(ServiceElement serviceElement) {
-        TypeElement classElement = serviceElement.getOriginClass();
-        List<ExecutableElement> methods = CodegenUtils.getProxiableMethods(
-                context.getProcessingEnv(),
-                classElement,
-                new Modifier[]{Modifier.PUBLIC});
+        ClassElement classElement = serviceElement.getOriginClass();
+        List<MethodElement> methods = classElement.getMethodsFiltered(
+                m -> m.unwrap().getModifiers().contains(Modifier.PUBLIC) & !m.unwrap().getModifiers().contains(Modifier.FINAL)
+        );
 
-        PlainMethod classPlain = classElement.getAnnotation(PlainMethod.class);
-        LocalMethod classLocal = classElement.getAnnotation(LocalMethod.class);
-        for (ExecutableElement method : methods) {
+        AnnotationElement<PlainMethod> classPlain = classElement.getAnnotation(PlainMethod.class);
+        AnnotationElement<LocalMethod> classLocal = classElement.getAnnotation(LocalMethod.class);
+        for (MethodElement method : methods) {
 
-            PlainMethod methodPlain = method.getAnnotation(PlainMethod.class);
+            AnnotationElement<PlainMethod> methodPlain = method.getAnnotation(PlainMethod.class);
             final boolean isPlain = classPlain != null || methodPlain != null;
 
-            LocalMethod methodLocal = method.getAnnotation(LocalMethod.class);
+            AnnotationElement<LocalMethod> methodLocal = method.getAnnotation(LocalMethod.class);
             boolean isLocal = methodLocal != null || classLocal != null;
 
             ProxyMethodElement proxyMethod = new ProxyMethodElement(method, isPlain, isLocal);
@@ -86,9 +85,10 @@ public class ServiceParser {
         }
     }
 
-    public ServiceElement parse(TypeElement serviceType) {
+    public ServiceElement parse(TypeElement serviceTypeElement) {
         try {
-            ServiceElement service = new ServiceElement(serviceType, getServiceScope(serviceType));
+            ClassElement serviceClassElement = new ClassElement(context.getProcessingEnv(), serviceTypeElement);
+            ServiceElement service = new ServiceElement(serviceClassElement, getServiceScope(serviceClassElement));
             context.getModulatorKit().notifyService(service);
 
             addProxyMethods(service);
@@ -101,7 +101,7 @@ public class ServiceParser {
         } catch (CodegenException ce) {
             throw ce;
         } catch (Exception ex) {
-            throw CodegenException.of().cause(ex).element(serviceType).build();
+            throw CodegenException.of().cause(ex).element(serviceTypeElement).build();
         }
     }
 

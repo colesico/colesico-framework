@@ -127,7 +127,7 @@ public class ProducerGenerator {
     public TypeSpec.Builder typeBuilder() {
         TypeSpec.Builder producerBuilder = TypeSpec.classBuilder(producerClassSimpleName);
         producerBuilder.addModifiers(Modifier.PUBLIC);
-        producerBuilder.addAnnotation(CodegenUtils.buildGenstampAnnotation(masterGeneratorClass.getName(), null, null));
+        producerBuilder.addAnnotation(CodegenUtils.generateGenstamp(masterGeneratorClass.getName(), null, null));
 
         AnnotationSpec.Builder b = AnnotationSpec.builder(Producer.class);
         b.addMember("value", "$S", producerRank);

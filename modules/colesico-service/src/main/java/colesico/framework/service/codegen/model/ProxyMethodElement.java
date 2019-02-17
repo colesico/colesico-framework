@@ -18,6 +18,8 @@
 
 package colesico.framework.service.codegen.model;
 
+import colesico.framework.assist.codegen.model.MethodElement;
+
 import javax.lang.model.element.ExecutableElement;
 import java.util.*;
 
@@ -28,7 +30,7 @@ public final class ProxyMethodElement {
 
     protected ServiceElement parentService;
 
-    private final ExecutableElement originMethod;
+    private final MethodElement originMethod;
     private final boolean isPlain;
     private final boolean isLocal;
 
@@ -41,7 +43,7 @@ public final class ProxyMethodElement {
      */
     private final Map<Class, Object> properties;
 
-    public ProxyMethodElement(ExecutableElement originMethod, boolean isPlain, boolean isLocal) {
+    public ProxyMethodElement(MethodElement originMethod, boolean isPlain, boolean isLocal) {
         this.originMethod = originMethod;
         this.isPlain = isPlain;
         this.isLocal = isLocal;
@@ -71,10 +73,10 @@ public final class ProxyMethodElement {
     }
 
     public final String getName() {
-        return originMethod.getSimpleName().toString();
+        return originMethod.getName();
     }
 
-    public final ExecutableElement getOriginMethod() {
+    public final MethodElement getOriginMethod() {
         return originMethod;
     }
 

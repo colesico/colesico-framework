@@ -18,45 +18,36 @@
 
 package colesico.framework.ioc.codegen.parser;
 
-import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
-import colesico.framework.ioc.Produce;
-import colesico.framework.ioc.Producer;
-import colesico.framework.ioc.Produces;
-import colesico.framework.ioc.codegen.generator.IocletGenerator;
-import colesico.framework.ioc.codegen.generator.SPIGenerator;
-import colesico.framework.ioc.codegen.model.CustomFactoryElement;
-import colesico.framework.ioc.codegen.model.DefaultFactoryElement;
-import colesico.framework.ioc.codegen.model.IocletElement;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
-import colesico.framework.assist.codegen.Genstamp;
+import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
+import colesico.framework.assist.codegen.model.ClassElement;
+import colesico.framework.ioc.Producer;
+import colesico.framework.ioc.codegen.generator.IocletGenerator;
+import colesico.framework.ioc.codegen.generator.SPIGenerator;
+import colesico.framework.ioc.codegen.model.IocletElement;
 import com.squareup.javapoet.TypeSpec;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.annotation.processing.*;
-import javax.inject.Inject;
-import javax.lang.model.SourceVersion;
-import javax.lang.model.element.*;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
+import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Vladlen Larionov
  */
 public class ProducersProcessor extends FrameworkAbstractProcessor {
 
-    public static final String IOC_MODULE_NAME = "colesico.framework.ioc";
 
+    protected ProducerParser parseProducer;
     protected IocletGenerator iocletGenerator;
     protected SPIGenerator spiGenerator;
     protected final Map<TypeElement, IocletElement> createdIoclets = new HashMap<>();
@@ -75,6 +66,7 @@ public class ProducersProcessor extends FrameworkAbstractProcessor {
         iocletGenerator = new IocletGenerator();
         spiGenerator = new SPIGenerator(processingEnv);
         createdIoclets.clear();
+        parseProducer = new ProducerParser(processingEnv);
     }
 
     @Override
@@ -89,7 +81,7 @@ public class ProducersProcessor extends FrameworkAbstractProcessor {
             TypeElement producerElement = null;
             try {
                 producerElement = (TypeElement) elm;
-                IocletElement iocletElement = parseProducer(producerElement);
+                IocletElement iocletElement = parseProducer.parse(new ClassElement(processingEnv, producerElement));
                 createdIoclets.put(producerElement, iocletElement);
                 result = true;
             } catch (CodegenException ce) {
@@ -121,101 +113,13 @@ public class ProducersProcessor extends FrameworkAbstractProcessor {
         return result;
     }
 
-    protected ExecutableElement getInjectableConstructor(TypeElement producerElement) {
-        List<? extends Element> members = getElementUtils().getAllMembers(producerElement);
-        List<ExecutableElement> methods = ElementFilter.constructorsIn(members);
-        ExecutableElement constructor = null;
-        ExecutableElement firstConstructor = null;
-        for (ExecutableElement method : methods) {
-            if (!method.getModifiers().contains(Modifier.PUBLIC)) {
-                continue;
-            }
-            if (firstConstructor == null) {
-                firstConstructor = method;
-            }
-            Inject constructorMarker = method.getAnnotation(Inject.class);
-            if (constructorMarker == null) {
-                continue;
-            }
-            constructor = method;
-            break;
-        }
-        if (constructor == null) {
-            constructor = firstConstructor;
-        }
-        return constructor;
-    }
-
-    protected IocletElement parseProducer(TypeElement producerElement) {
-
-        Genstamp genstampAnn = producerElement.getAnnotation(Genstamp.class);
-        if (genstampAnn != null) {
-            logger.debug("Parse producer: " + producerElement.asType().toString() +
-                    "; Generator=" + genstampAnn.generator() +
-                    "; Timestamp=" + genstampAnn.timestamp() +
-                    "; HashId=" + genstampAnn.hashId());
-        } else {
-            logger.debug("Parse producer: " + producerElement.asType().toString());
-        }
-
-        String packageName = CodegenUtils.getPackageName(producerElement);
-        ModuleElement producerModule = getElementUtils().getModuleOf(producerElement);
-
-        if (!CodegenUtils.checkPackageAccessibility(producerModule, packageName, IOC_MODULE_NAME)) {
-            String errMsg = String.format("Package %s must be exported from module %s to %s", packageName, producerModule.toString(), IOC_MODULE_NAME);
-            logger.info(errMsg);
-            //throw CodegenException.of().message(errMsg).element(producerModule).create();
-        }
-
-        IocletElement iocletElement = new IocletElement(producerElement);
-
-        // Scan producer methods
-        List<ExecutableElement> methods = CodegenUtils.getProxiableMethods(processingEnv, producerElement,
-                new Modifier[]{Modifier.PUBLIC});
-        for (ExecutableElement method : methods) {
-            logger.debug("Found custom factory method: " + method.getSimpleName().toString());
-            iocletElement.addFactory(new CustomFactoryElement(method));
-            Element te = ((DeclaredType) method.getReturnType()).asElement();
-        }
-
-        // Scan @Produce annotation
-        List<Produce> produceList = new ArrayList<>();
-        Produces produces = producerElement.getAnnotation(Produces.class);
-        if (produces != null) {
-            for (Produce produce : produces.value()) {
-                produceList.add(produce);
-            }
-        } else {
-            Produce produce = producerElement.getAnnotation(Produce.class);
-            if (produce != null) {
-                produceList.add(produce);
-            }
-        }
-
-        for (Produce produce : produceList) {
-            TypeMirror typeMirr = CodegenUtils.getAnnotationValueTypeMirror(produce, (p) -> p.value());
-            TypeElement typeElm = getElementUtils().getTypeElement(typeMirr.toString());
-            logger.debug("Found default factory for : " + typeMirr.toString());
-
-            //moduleMetamodel.addExports(CodegenUtils.getPackageName(typeElm));
-
-            ExecutableElement injConstructor = getInjectableConstructor(typeElm);
-            if (injConstructor == null) {
-                throw CodegenException.of().message("Unable to find injectable constructor for class: " + typeMirr.toString()).build();
-            }
-            iocletElement.addFactory(new DefaultFactoryElement(producerElement, produce, injConstructor));
-        }
-
-        return iocletElement;
-
-    }
 
     protected void generateIoclet(IocletElement iocletElement) {
         try {
             final TypeSpec typeSpec = iocletGenerator.generate(iocletElement);
             // Create class source file
-            String packageName = CodegenUtils.getPackageName(iocletElement.getOriginProducer());
-            CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, iocletElement.getOriginProducer());
+            String packageName = iocletElement.getOriginProducer().getPackageName();
+            CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, iocletElement.getOriginProducer().unwrap());
         } catch (Exception e) {
             logger.debug("Error generating ioclet: " + ExceptionUtils.getRootCauseMessage(e));
             throw e;

@@ -22,6 +22,7 @@ package colesico.framework.service.codegen.generator;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenUtils;
+import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.parser.ProcessorContext;
 import colesico.framework.teleapi.DataPort;
@@ -37,7 +38,6 @@ import javax.inject.Singleton;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
 
@@ -76,11 +76,7 @@ public class TeleFacadesGenerator {
     protected CodeBlock generateVarValue(TeleVarElement var, CodeBlock.Builder binderBuilder) {
 
         // detect param type considering generics
-        TypeElement paramTypeElm = CodegenUtils.classMemberType(
-                (DeclaredType) var.getParentTeleMethod().getParentTeleFacade().getParentService().getOriginClass().asType(),
-                var.getOriginVariable(),
-                context.getProcessingEnv());
-
+        TypeElement paramTypeElm = var.getOriginVariable().asClassType().asClassElement().unwrap();
         TypeName paramTypeName = TypeName.get(paramTypeElm.asType());
 
         if (var instanceof TeleParamElement) {
@@ -106,7 +102,7 @@ public class TeleFacadesGenerator {
         // Generate composition fields
         for (TeleVarElement subvar : ((TeleCompElement) var).getVariables()) {
             CodeBlock value = generateVarValue(subvar, binderBuilder);
-            String setterName = "set" + StrUtils.firstCharToUpperCase(subvar.getOriginVariable().getSimpleName().toString());
+            String setterName = "set" + StrUtils.firstCharToUpperCase(subvar.getOriginVariable().getName());
             binderBuilder.add("$N.$N(", valueVar, setterName);
             binderBuilder.add(value);
             binderBuilder.add(");\n");
@@ -119,14 +115,14 @@ public class TeleFacadesGenerator {
     }
 
     protected CodeBlock generateSubroutineBody(TeleMethodElement teleMethod) {
-        ExecutableElement originMethod = teleMethod.getProxyMethod().getOriginMethod();
+        MethodElement originMethod = teleMethod.getProxyMethod().getOriginMethod();
         CodeBlock.Builder binderBuilder = CodeBlock.builder();
 
         // ============= Generate params model retrieving
         ArrayCodegen serviceMethodArgs = new ArrayCodegen();
         for (TeleVarElement param : teleMethod.getParameters()) {
             CodeBlock value = generateVarValue(param, binderBuilder);
-            String paramName = param.getOriginVariable().getSimpleName().toString() + PARAM_SUFFIX;
+            String paramName = param.getOriginVariable().getName() + PARAM_SUFFIX;
             serviceMethodArgs.add("$N", paramName);
             binderBuilder.add("$T $N=", TypeName.get(param.getOriginVariable().asType()), paramName);
             binderBuilder.add(value);
@@ -214,8 +210,8 @@ public class TeleFacadesGenerator {
 
     protected void createTeleFacade(ServiceElement service, TeleFacadeElement teleFacade, TypeSpec.Builder classBuilder) {
         final TypeSpec typeSpec = classBuilder.build();
-        String packageName = CodegenUtils.getPackageName(service.getOriginClass());
-        CodegenUtils.createJavaFile(context.getProcessingEnv(), typeSpec, packageName, service.getOriginClass());
+        String packageName = service.getOriginClass().getPackageName();
+        CodegenUtils.createJavaFile(context.getProcessingEnv(), typeSpec, packageName, service.getOriginClass().unwrap());
     }
 
     public void generateTeleFacades(ServiceElement service) {
@@ -224,7 +220,7 @@ public class TeleFacadesGenerator {
             classBuilder.addModifiers(Modifier.PUBLIC);
             classBuilder.addModifiers(Modifier.FINAL);
 
-            AnnotationSpec genstamp = CodegenUtils.buildGenstampAnnotation(this.getClass().getName(), null, "Service: " + service.getOriginClass().getQualifiedName().toString());
+            AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "Service: " + service.getOriginClass().unwrap().getQualifiedName().toString());
             classBuilder.addAnnotation(genstamp);
 
             classBuilder.addAnnotation(ClassName.get(Singleton.class));

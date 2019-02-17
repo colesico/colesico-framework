@@ -31,7 +31,7 @@ $ mvn clean install
 </dependency>
 ```
 
-And for extra framework modules:
+For extra framework modules:
 
 ```xml
 <dependency>

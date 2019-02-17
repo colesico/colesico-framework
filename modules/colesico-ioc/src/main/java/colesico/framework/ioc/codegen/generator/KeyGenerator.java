@@ -60,22 +60,22 @@ public class KeyGenerator {
     private CodeBlock generateClassedKeyClassBased(String className, String classifierClassName) {
         CodeBlock.Builder codeBlock = CodeBlock.builder();
         codeBlock.add("new $T($T.class,$T.class)",
-                ClassName.get(ClassedKey.class), ClassName.bestGuess(className),ClassName.bestGuess(classifierClassName));
+                ClassName.get(ClassedKey.class), ClassName.bestGuess(className), ClassName.bestGuess(classifierClassName));
         return codeBlock.build();
     }
 
     public CodeBlock forFactory(FactoryElement factory) {
         if (factory.getClassed() != null) {
-            return generateClassedKeyStringBased(factory.getSuppliedType().toString(), factory.getClassed());
+            return generateClassedKeyStringBased(factory.getSuppliedType().asClassElement().getName(), factory.getClassed());
         } else if (factory.getNamed() != null) {
-            return generateNamedKeyStringBased(factory.getSuppliedType().toString(), factory.getNamed());
+            return generateNamedKeyStringBased(factory.getSuppliedType().asClassElement().getName(), factory.getNamed());
         } else {
-            return generateTypeKeyStringBased(factory.getSuppliedType().toString());
+            return generateTypeKeyStringBased(factory.getSuppliedType().asClassElement().getName());
         }
     }
 
     public CodeBlock forInjection(InjectableElement param) {
-        DeclaredType paramType = param.getInjectedType();
+        DeclaredType paramType = param.getInjectedType().unwrap();
         String className = paramType.asElement().toString();
 
         if (param.getClassed() != null) {

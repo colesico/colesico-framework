@@ -43,6 +43,7 @@ open module colesico.framework.ioc {
     exports colesico.framework.ioc.codegen.model;
     exports colesico.framework.ioc.codegen.parser;
     exports colesico.framework.ioc.codegen.generator;
+    exports colesico.framework.assist.codegen.model;
 
     provides javax.annotation.processing.Processor with ProducersProcessor;
 

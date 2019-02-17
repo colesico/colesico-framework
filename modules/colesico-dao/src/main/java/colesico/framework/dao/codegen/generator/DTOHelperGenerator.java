@@ -2,6 +2,7 @@ package colesico.framework.dao.codegen.generator;
 
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenUtils;
+import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.dao.DTOConverter;
 import colesico.framework.dao.DTOHelper;
 import colesico.framework.dao.DTOHelperFactory;
@@ -17,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -38,18 +38,18 @@ public class DTOHelperGenerator {
         return dtoElement.getOriginClass().getSimpleName().toString() + DTOHelperFactory.HELPER_CLASS_SUFFIX;
     }
 
-    protected String toGetterName(VariableElement field) {
-        String fieldName = field.getSimpleName().toString();
+    protected String toGetterName(FieldElement field) {
+        String fieldName = field.getName();
         return "get" + StrUtils.firstCharToUpperCase(fieldName) + "()";
     }
 
-    protected String toSetterName(VariableElement field) {
-        String fieldName = field.getSimpleName().toString();
+    protected String toSetterName(FieldElement field) {
+        String fieldName = field.getName();
         return "set" + StrUtils.firstCharToUpperCase(fieldName);
     }
 
     public String generateGettersChain(String rootVarName, CompositionElement composition, ColumnElement column) {
-        Deque<VariableElement> fieldsStack = new ArrayDeque<>();
+        Deque<FieldElement> fieldsStack = new ArrayDeque<>();
         if (column != null) {
             fieldsStack.push(column.getOriginField());
         }
@@ -58,7 +58,7 @@ public class DTOHelperGenerator {
             fieldsStack.push(current.getOriginalField());
             current = current.getParentComposition();
         }
-        List<VariableElement> fieldsChain = new ArrayList<>();
+        List<FieldElement> fieldsChain = new ArrayList<>();
         fieldsChain.addAll(fieldsStack);
 
         List<String> gettersChain = new ArrayList<>();
@@ -73,14 +73,14 @@ public class DTOHelperGenerator {
     }
 
     public String generateChackedGettersChain(String rootVarName, CompositionElement composition, ColumnElement column) {
-        Deque<VariableElement> fieldsStack = new ArrayDeque<>();
+        Deque<FieldElement> fieldsStack = new ArrayDeque<>();
         fieldsStack.push(column.getOriginField());
         CompositionElement current = composition;
         while (current.getOriginalField() != null) {
             fieldsStack.push(current.getOriginalField());
             current = current.getParentComposition();
         }
-        List<VariableElement> fieldsChain = new ArrayList<>();
+        List<FieldElement> fieldsChain = new ArrayList<>();
         fieldsChain.addAll(fieldsStack);
 
         String result = "";
@@ -105,7 +105,7 @@ public class DTOHelperGenerator {
             String gettersPath = generateGettersChain(DTOHelper.DTO_PARAM, composition, column);
             if (column.getConverter() != null) {
                 cb.add("new $T().$N(",
-                        TypeName.get(column.getConverter()),
+                        TypeName.get(column.getConverter().unwrap()),
                         DTOConverter.FROM_FIELD_MATHOD);
                 cb.add(gettersPath);
                 cb.add(")");
@@ -124,7 +124,7 @@ public class DTOHelperGenerator {
 
         if (column.getConverter() != null) {
             cb.add("new $T().$N($N.getObject($S))",
-                    TypeName.get(column.getConverter()),
+                    TypeName.get(column.getConverter().unwrap()),
                     DTOConverter.TO_FIELD_MATHOD,
                     DTOHelper.RESULT_SET_PARAM, column.getName());
             return;
@@ -309,7 +309,7 @@ public class DTOHelperGenerator {
 
         classBuilder.addJavadoc(generateInsertSQL() + generateUpdateSQL() + generateSelectSQL());
 
-        String packageName = CodegenUtils.getPackageName(dtoElement.getOriginClass());
-        CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), packageName, dtoElement.getOriginClass());
+        String packageName = dtoElement.getOriginClass().getPackageName();
+        CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), packageName, dtoElement.getOriginClass().unwrap());
     }
 }

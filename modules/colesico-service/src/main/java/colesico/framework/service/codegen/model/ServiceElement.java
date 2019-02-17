@@ -20,11 +20,12 @@ package colesico.framework.service.codegen.model;
 
 import colesico.framework.assist.Elements;
 import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.service.ServicePrototype;
+import colesico.framework.assist.codegen.model.ClassElement;
+import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.service.ServiceProxy;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.TypeName;
 
-import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +41,7 @@ public final class ServiceElement {
     /**
      * Service origin class element
      */
-    private final TypeElement originClass;
+    private final ClassElement originClass;
 
     /**
      * Service proxy interfaces
@@ -50,7 +51,7 @@ public final class ServiceElement {
     /**
      * Service proxy extra fields
      */
-    private final Elements<FieldElement> fields;
+    private final Elements<ProxyFieldElement> fields;
 
     private final Elements<ProxyMethodElement> proxyMethods;
 
@@ -65,11 +66,11 @@ public final class ServiceElement {
      */
     private final Map<Class, Object> properties;
 
-    private final DeclaredType scopeAnnotation;
+    private final ClassType customScopeType;
 
-    public ServiceElement(TypeElement originClass, DeclaredType scopeAnnotation) {
+    public ServiceElement(ClassElement originClass, ClassType customScopeType) {
         this.originClass = originClass;
-        this.scopeAnnotation = scopeAnnotation;
+        this.customScopeType = customScopeType;
         this.interfaces = new Elements<>();
         this.proxyMethods = new Elements<>();
         this.fields = new Elements<>();
@@ -79,8 +80,8 @@ public final class ServiceElement {
         this.properties = new HashMap();
     }
 
-    public void addField(final FieldElement field) {
-        FieldElement mfe = fields.find(f -> f.getName().equals(field.getName()));
+    public void addField(final ProxyFieldElement field) {
+        ProxyFieldElement mfe = fields.find(f -> f.getName().equals(field.getName()));
         if (mfe != null) {
             if (mfe.getTypeName().equals(field.getTypeName())) {
                 return;
@@ -130,7 +131,7 @@ public final class ServiceElement {
         return interfaces;
     }
 
-    public Elements<FieldElement> getFields() {
+    public Elements<ProxyFieldElement> getFields() {
         return fields;
     }
 
@@ -159,16 +160,17 @@ public final class ServiceElement {
     }
 
 
-    public DeclaredType getScopeAnnotation() {
-        return scopeAnnotation;
+    public ClassType getCustomScopeType() {
+        return customScopeType;
     }
 
-    public TypeElement getOriginClass() {
+    public ClassElement getOriginClass() {
         return originClass;
     }
 
+
     public String getProxyClassSimpleName() {
-        return originClass.getSimpleName().toString() + ServicePrototype.PROXY_CLASS_SUFFIX;
+        return originClass.getSimpleName() + ServiceProxy.PROXY_CLASS_SUFFIX;
     }
 
     @Override

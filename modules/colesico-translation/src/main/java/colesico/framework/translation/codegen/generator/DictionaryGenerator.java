@@ -1,6 +1,10 @@
 package colesico.framework.translation.codegen.generator;
 
 import colesico.framework.assist.codegen.CodegenUtils;
+import colesico.framework.assist.codegen.model.AnnotationElement;
+import colesico.framework.assist.codegen.model.MethodElement;
+import colesico.framework.assist.codegen.model.ParameterElement;
+import colesico.framework.assist.codegen.model.ParserElement;
 import colesico.framework.translation.AbstractDictionary;
 import colesico.framework.translation.TranslationKey;
 import colesico.framework.translation.TranslationKit;
@@ -23,7 +27,6 @@ public class DictionaryGenerator {
 
     public static final String BASE_PATH_FIELD = "BASE_PATH";
 
-
     protected Logger logger = LoggerFactory.getLogger(DictionaryGenerator.class);
 
     protected ProcessingEnvironment processingEnv;
@@ -41,28 +44,30 @@ public class DictionaryGenerator {
         dictionaryBuilder.addMethod(cob.build());
     }
 
-    protected MethodSpec generateProxyMethod(ExecutableElement keyMethod) {
-        MethodSpec.Builder mb = CodegenUtils.createProxyMethodBuilder(keyMethod, null, null, true);
+    protected MethodSpec generateProxyMethod(DictionaryElement dictionaryElement, MethodElement keyMethod) {
+        logger.debug("Generate dictionary " + dictionaryElement + " proxy method: " + keyMethod);
+        MethodSpec.Builder mb = CodegenUtils.createProxyMethodBuilder(keyMethod,null,null,true);
+
 
         mb.addModifiers(Modifier.PUBLIC);
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("return $N(", AbstractDictionary.TRANSLATE_OR_KEY_METHOD);
 
         String t9nKey;
-        TranslationKey t9nKeyAnn = keyMethod.getAnnotation(TranslationKey.class);
+        AnnotationElement<TranslationKey> t9nKeyAnn = keyMethod.getAnnotation(TranslationKey.class);
         if (t9nKeyAnn != null) {
-            t9nKey = t9nKeyAnn.value();
+            t9nKey = t9nKeyAnn.unwrap().value();
         } else {
             //t9nKey = StrUtils.firstCharToUpperCase(keyMethod.getSimpleName().toString());
-            t9nKey = keyMethod.getSimpleName().toString();
+            t9nKey = keyMethod.getName();
         }
 
         cb.add("$S", t9nKey);
         // translation params
-        List<? extends VariableElement> params = keyMethod.getParameters();
+        List<ParameterElement> params = keyMethod.getParameters();
         if (!params.isEmpty()) {
-            for (VariableElement param : params) {
-                cb.add(",$N", param.getSimpleName().toString());
+            for (ParameterElement param : params) {
+                cb.add(",$N", param.getName());
             }
         }
         cb.add(")");
@@ -78,7 +83,7 @@ public class DictionaryGenerator {
         dictionaryBuilder.addSuperinterface(TypeName.get(dictionaryElement.getOriginBean().asType()));
         dictionaryBuilder.superclass(ClassName.get(AbstractDictionary.class));
 
-        AnnotationSpec genstamp = CodegenUtils.buildGenstampAnnotation(this.getClass().getName(), null, "Origin: " + dictionaryElement.getOriginBean().asType().toString());
+        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "Origin: " + dictionaryElement.getOriginBean().asType().toString());
         dictionaryBuilder.addAnnotation(genstamp);
 
         dictionaryBuilder.addAnnotation(Singleton.class);
@@ -87,16 +92,16 @@ public class DictionaryGenerator {
 
         generateConstructor(dictionaryBuilder, dictionaryElement);
 
-        for (ExecutableElement keyMethod : dictionaryElement.getKeyMethods()) {
-            MethodSpec ms = generateProxyMethod(keyMethod);
+        for (MethodElement keyMethod : dictionaryElement.getKeyMethods()) {
+            MethodSpec ms = generateProxyMethod(dictionaryElement, keyMethod);
             dictionaryBuilder.addMethod(ms);
         }
 
         try {
             final TypeSpec typeSpec = dictionaryBuilder.build();
             // Create class source file
-            Element[] linkedElm = new Element[]{dictionaryElement.getOriginBean()};
-            String packageName = CodegenUtils.getPackageName(dictionaryElement.getOriginBean());
+            Element[] linkedElm = new Element[]{dictionaryElement.getOriginBean().unwrap()};
+            String packageName = dictionaryElement.getOriginBean().getPackageName();
             CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, linkedElm);
         } catch (Exception e) {
             logger.debug("Error generating dictionary bean:" + ExceptionUtils.getRootCauseMessage(e));

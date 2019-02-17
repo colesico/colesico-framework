@@ -18,16 +18,15 @@
 
 package colesico.framework.service.codegen.model;
 
+import colesico.framework.assist.codegen.model.VarElement;
 import com.squareup.javapoet.CodeBlock;
-
-import javax.lang.model.element.VariableElement;
 
 public final class TeleParamElement extends TeleVarElement {
 
     // read model context
     private CodeBlock readingContext;
 
-    public TeleParamElement(VariableElement originVariable) {
+    public TeleParamElement(VarElement originVariable) {
         super(originVariable);
     }
 

@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
@@ -44,7 +43,7 @@ import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
 
-import static colesico.framework.service.ServicePrototype.PROXY_CLASS_SUFFIX;
+import static colesico.framework.service.ServiceProxy.PROXY_CLASS_SUFFIX;
 
 /**
  * Процессор аннотации осуществляющий обработку классов помеченных аннотацией @Service

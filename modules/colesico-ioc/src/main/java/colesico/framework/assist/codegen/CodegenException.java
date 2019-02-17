@@ -18,6 +18,7 @@
 
 package colesico.framework.assist.codegen;
 
+import colesico.framework.assist.codegen.model.ParserElement;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -87,6 +88,11 @@ public class CodegenException extends RuntimeException {
 
         public Builder element(Element element) {
             this.element = element;
+            return this;
+        }
+
+        public Builder element(ParserElement element) {
+            this.element = element.unwrap();
             return this;
         }
 

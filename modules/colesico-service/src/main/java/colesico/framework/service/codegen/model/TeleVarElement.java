@@ -18,15 +18,15 @@
 
 package colesico.framework.service.codegen.model;
 
-import javax.lang.model.element.VariableElement;
+import colesico.framework.assist.codegen.model.VarElement;
 
 abstract public class TeleVarElement {
 
     protected TeleMethodElement parentTeleMethod;
     protected TeleVarElement parentVariable;
-    protected final VariableElement originVariable;
+    protected final VarElement originVariable;
 
-    public TeleVarElement(VariableElement originVariable) {
+    public TeleVarElement(VarElement originVariable) {
         this.originVariable = originVariable;
     }
 
@@ -34,7 +34,7 @@ abstract public class TeleVarElement {
         return parentTeleMethod;
     }
 
-    public VariableElement getOriginVariable() {
+    public VarElement getOriginVariable() {
         return originVariable;
     }
 

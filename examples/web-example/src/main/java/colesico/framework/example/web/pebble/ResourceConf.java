@@ -7,6 +7,6 @@ import colesico.framework.resource.ResourceConfig;
 public class ResourceConf extends ResourceConfig {
     @Override
     public void bindProperties(PropertiesBinder binder) {
-        binder.bind("$tmplRoot","colesico/examples/web/pebble/tmpl");
+        binder.bind("$tmplRoot","colesico/framework/example/web/pebble/tmpl");
     }
 }

@@ -23,9 +23,9 @@ package colesico.framework.service;
  *
  * @author Vladlen Larionov
  */
-public interface ServicePrototype {
+public interface ServiceProxy {
 
-    String PROXY_CLASS_SUFFIX = "Proxy";
+    String PROXY_CLASS_SUFFIX = "SProxy";
     String GET_SUPER_CLASS_METHOD = "getSuperClass";
     String GET_MODULE_NAME_METHOD = "getModuleName";
     String POST_CONSTRUCT_METHOD = "postConstruct";

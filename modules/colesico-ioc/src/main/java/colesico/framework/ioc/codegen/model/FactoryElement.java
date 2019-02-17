@@ -18,15 +18,8 @@
 
 package colesico.framework.ioc.codegen.model;
 
-import colesico.framework.ioc.CustomScope;
-import colesico.framework.ioc.Unscoped;
-import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.model.ClassType;
 
-import javax.inject.Singleton;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.MirroredTypeException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,16 +28,26 @@ import java.util.List;
  */
 abstract public class FactoryElement {
 
-    protected DeclaredType suppliedType;
-    protected ScopeElement scope;
+    protected final ClassType suppliedType;
+    protected final String factoryMethodBaseName;
+    protected final ScopeElement scope;
 
-    protected Boolean polyproduce;
-    protected String named;
-    protected String classed;
+    protected final Boolean polyproduce;
+    protected final String named;
+    protected final String classed;
 
-    protected String factoryMethodBaseName;
-    protected int factoryIndex = -1;
     protected final List<InjectableElement> parameters = new ArrayList<>();
+
+    protected int factoryIndex = -1;
+
+    public FactoryElement(ClassType suppliedType, String factoryMethodBaseName, ScopeElement scope, Boolean polyproduce, String named, String classed) {
+        this.suppliedType = suppliedType;
+        this.factoryMethodBaseName = factoryMethodBaseName;
+        this.scope = scope;
+        this.polyproduce = polyproduce;
+        this.named = named;
+        this.classed = classed;
+    }
 
     public final String getFactoryMethodName() {
         return factoryMethodBaseName + "Factory" + Integer.toString(factoryIndex);
@@ -54,7 +57,7 @@ abstract public class FactoryElement {
         this.factoryIndex = factoryIndex;
     }
 
-    public final DeclaredType getSuppliedType() {
+    public final ClassType getSuppliedType() {
         return suppliedType;
     }
 
@@ -78,39 +81,8 @@ abstract public class FactoryElement {
         return classed;
     }
 
-    protected ScopeElement extractScope(Element element) {
-
-        Singleton singleton = element.getAnnotation(Singleton.class);
-        if (singleton != null) {
-            return new ScopeElement(null, ScopeElement.ScopeKind.SINGLETON);
-        }
-
-        Unscoped unscoped = element.getAnnotation(Unscoped.class);
-        if (unscoped != null) {
-            return new ScopeElement(null, ScopeElement.ScopeKind.UNSCOPED);
-        }
-
-        ScopeElement result = null;
-        for (AnnotationMirror am : element.getAnnotationMirrors()) {
-            ScopeElement scopeElm = null;
-
-            CustomScope customScope = am.getAnnotationType().asElement().getAnnotation(CustomScope.class);
-            if (customScope != null) {
-                try {
-                    customScope.value();
-                } catch (MirroredTypeException mte) {
-                    scopeElm = new ScopeElement(mte.getTypeMirror(), ScopeElement.ScopeKind.CUSTOM);
-                }
-            }
-
-            if (scopeElm != null) {
-                if (result == null) {
-                    result = scopeElm;
-                } else {
-                    throw CodegenException.of().message("Ambiguous scope definition").element(element).build();
-                }
-            }
-        }
-        return result;
+    public void addParameter(InjectableElement parameter) {
+        parameters.add(parameter);
     }
+
 }

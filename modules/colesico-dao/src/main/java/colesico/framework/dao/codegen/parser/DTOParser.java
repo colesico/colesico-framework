@@ -1,6 +1,10 @@
 package colesico.framework.dao.codegen.parser;
 
 import colesico.framework.assist.codegen.CodegenUtils;
+import colesico.framework.assist.codegen.model.AnnotationElement;
+import colesico.framework.assist.codegen.model.ClassElement;
+import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.dao.*;
 import colesico.framework.dao.codegen.model.*;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +17,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
-import java.lang.reflect.Field;
 import java.util.*;
 
 public class DTOParser {
@@ -34,18 +37,18 @@ public class DTOParser {
         }
         CompositionElement current = comp;
         while (current.getOriginalField() != null) {
-            fieldsStack.push(current.getOriginalField().getSimpleName().toString());
+            fieldsStack.push(current.getOriginalField().getName());
             current = current.getParentComposition();
         }
         return StringUtils.join(fieldsStack, ".");
     }
 
-    protected boolean acceptField(CompositionElement composition, VariableElement field) {
-        String fieldChain = getFieldsChain(composition, field.getSimpleName().toString());
+    protected boolean acceptField(CompositionElement composition, FieldElement field) {
+        String fieldChain = getFieldsChain(composition, field.getName());
 
         CompositionElement acceptedFieldsComposition = null;
         while (composition != null) {
-            if (composition.getAcceptFields()!= null) {
+            if (composition.getAcceptFields() != null) {
                 acceptedFieldsComposition = composition;
                 break;
             }
@@ -56,9 +59,9 @@ public class DTOParser {
             return true;
         }
 
-        for (String acceptedField:acceptedFieldsComposition.getAcceptFields()){
-            String acceptedFiledChain = getFieldsChain(acceptedFieldsComposition,acceptedField);
-            if (StringUtils.equals(acceptedFiledChain,fieldChain)){
+        for (String acceptedField : acceptedFieldsComposition.getAcceptFields()) {
+            String acceptedFiledChain = getFieldsChain(acceptedFieldsComposition, acceptedField);
+            if (StringUtils.equals(acceptedFiledChain, fieldChain)) {
                 return true;
             }
         }
@@ -68,7 +71,7 @@ public class DTOParser {
     protected String renameColumn(CompositionElement composition, String origName) {
         String[] renamings = null;
         while (composition != null) {
-            if (composition.getRenameColumns()!=null) {
+            if (composition.getRenameColumns() != null) {
                 renamings = composition.getRenameColumns();
                 break;
             }
@@ -95,49 +98,45 @@ public class DTOParser {
             namePrefix = "";
         }
 
-        List<VariableElement> fields = CodegenUtils.getFields(processingEnv, composition.getOriginType(), null, null);
-        for (VariableElement field : fields) {
-            if (field.getModifiers().contains(Modifier.STATIC)) {
-                continue;
-            }
+        List<FieldElement> fields = composition.getOriginType().getFieldsFiltered(
+                f -> !f.unwrap().getModifiers().contains(Modifier.STATIC) & acceptField(composition, f)
+        );
+        for (FieldElement field : fields) {
 
-            if (!acceptField(composition, field)) {
-                continue;
-            }
-
-            Composition compositionAnn = field.getAnnotation(Composition.class);
+            AnnotationElement<Composition> compositionAnn = field.getAnnotation(Composition.class);
             if (compositionAnn != null) {
-                TypeElement fieldType = CodegenUtils.classMemberType((DeclaredType) composition.getOriginType().asType(), field, processingEnv);
+                ClassElement fieldType = field.asClassType().asClassElement();
+
                 CompositionElement subComposition = new CompositionElement(dtoElement, fieldType, field);
-                if (compositionAnn.acceptFields().length > 0) {
-                    subComposition.setAcceptFields(compositionAnn.acceptFields());
+                if (compositionAnn.unwrap().acceptFields().length > 0) {
+                    subComposition.setAcceptFields(compositionAnn.unwrap().acceptFields());
                 }
-                if (compositionAnn.renameColumns().length > 0) {
-                    subComposition.setRenameColumns(compositionAnn.renameColumns());
+                if (compositionAnn.unwrap().renameColumns().length > 0) {
+                    subComposition.setRenameColumns(compositionAnn.unwrap().renameColumns());
                 }
                 composition.addSubComposition(subComposition);
-                parseComposition(subComposition, namePrefix + compositionAnn.columnsPrefix());
+                parseComposition(subComposition, namePrefix + compositionAnn.unwrap().columnsPrefix());
                 continue;
             }
 
-            Column columnAnn = field.getAnnotation(Column.class);
+            AnnotationElement<Column> columnAnn = field.getAnnotation(Column.class);
             if (columnAnn == null) {
                 continue;
             }
 
-            String columnName = namePrefix + columnAnn.name();
+            String columnName = namePrefix + columnAnn.unwrap().name();
             ColumnElement columnElement = new ColumnElement(field, renameColumn(composition, columnName));
             composition.addColumn(columnElement);
 
-            TypeMirror converterType  = CodegenUtils.getAnnotationValueTypeMirror(columnAnn,c->c.converter());
-            if (!converterType.toString().equals(DTOConverter.class.getName())){
-                columnElement.setConverter(converterType);
+            TypeMirror converterType = columnAnn.getValueTypeMirror(a -> a.converter());
+            if (!converterType.toString().equals(DTOConverter.class.getName())) {
+                columnElement.setConverter(new ClassType(processingEnv, (DeclaredType) converterType));
             }
         }
     }
 
-    public DTOElement parse(TypeElement typeElement) {
-        DTO dtoAnn = typeElement.getAnnotation(DTO.class);
+    public DTOElement parse(ClassElement typeElement) {
+        //AnnotationElement<DTO> dtoAnn = typeElement.getAnnotation(DTO.class);
         dtoElement = new DTOElement(typeElement);
         parseComposition(dtoElement.getRootComposition(), null);
         return dtoElement;

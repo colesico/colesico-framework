@@ -20,14 +20,21 @@ package colesico.framework.config.codegen;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
+import colesico.framework.assist.codegen.model.AnnotationElement;
+import colesico.framework.assist.codegen.model.ClassElement;
+import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
 import colesico.framework.config.Configuration;
+import colesico.framework.config.Default;
+import colesico.framework.ioc.Classed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.inject.Named;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,33 +70,76 @@ public class ConfRegistry {
         return byPackageMap;
     }
 
-    protected TypeElement getConfigBaseClass(TypeElement classElement) {
-        TypeElement superClass = classElement;
+    protected ClassElement getConfigBaseClass(ClassElement configImplementation) {
+        TypeElement superClass = configImplementation.unwrap();
         do {
-            superClass = (TypeElement) ((DeclaredType)superClass.getSuperclass()).asElement();
+            superClass = (TypeElement) ((DeclaredType) superClass.getSuperclass()).asElement();
             ConfigPrototype cpAnn = superClass.getAnnotation(ConfigPrototype.class);
             if (cpAnn != null) {
-                return superClass;
+                return new ClassElement(processingEnv, superClass);
             }
         } while (!superClass.getSimpleName().toString().equals("Object"));
 
-        throw CodegenException.of().message("Unable to determine configuration prototype for: " + classElement.asType().toString()).element(classElement).build();
+        throw CodegenException.of().message("Unable to determine configuration prototype for: " + configImplementation.getName()).element(configImplementation).build();
     }
 
-    public ConfigElement register(TypeElement classElement) {
+    protected ConfigElement createConfigElement(ClassElement configImplementation) {
 
-        String packageName = CodegenUtils.getPackageName(classElement);
+        ClassElement configPrototype = getConfigBaseClass(configImplementation);
+
+        AnnotationElement<Configuration> configurationAnn = configImplementation.getAnnotation(Configuration.class);
+        String rank = configurationAnn.unwrap().rank();
+
+        AnnotationElement<ConfigPrototype> prototypeAnn = configPrototype.getAnnotation(ConfigPrototype.class);
+        ConfigModel model = prototypeAnn.unwrap().model();
+        TypeMirror targetMirror = prototypeAnn.getValueTypeMirror(a -> a.target());
+        ClassElement target;
+        if (targetMirror.toString().equals(Object.class.getName())) {
+            target = null;
+        } else {
+            target = new ClassElement(processingEnv, (DeclaredType) targetMirror);
+        }
+
+        AnnotationElement<Default> defaultAnn = configImplementation.getAnnotation(Default.class);
+        boolean defaultMessage;
+        if (defaultAnn != null) {
+            if (!ConfigModel.MESSAGE.equals(model)) {
+                throw CodegenException.of().message("@" + Default.class.getSimpleName() +
+                        " annotation can be applied only to " + ConfigModel.MESSAGE.name() + " configuration model").build();
+            }
+            defaultMessage = true;
+        } else {
+            defaultMessage = false;
+        }
+
+        AnnotationElement<Classed> classedAnn = configImplementation.getAnnotation(Classed.class);
+        TypeMirror classed;
+        if (classedAnn != null) {
+            classed = classedAnn.getValueTypeMirror(a -> a.value());
+        } else {
+            classed = null;
+        }
+
+        AnnotationElement<Named> namedAnn = configImplementation.getAnnotation(Named.class);
+        String named = namedAnn == null ? null : namedAnn.unwrap().value();
+
+        return new ConfigElement(configImplementation, configPrototype, rank, model, target, defaultMessage, classed, named);
+    }
+
+    public ConfigElement register(ClassElement configImplementation) {
+
+        String packageName = configImplementation.getPackageName();
         ByRankMap byRankMap = byPackageMap.computeIfAbsent(packageName, k -> new ByRankMap());
 
-        Configuration configurationAnn = classElement.getAnnotation(Configuration.class);
-        String rank = configurationAnn.rank();
+        AnnotationElement<Configuration> configurationAnn = configImplementation.getAnnotation(Configuration.class);
+        String rank = configurationAnn.unwrap().rank();
         List<ConfigElement> rankConfigs = byRankMap.computeIfAbsent(rank, k -> new ArrayList<>());
 
-        TypeElement prototypeClassElement = getConfigBaseClass(classElement);
-        ConfigElement configurationElement = new ConfigElement(classElement, prototypeClassElement, rank);
+
+        ConfigElement configurationElement = createConfigElement(configImplementation);
         rankConfigs.add(configurationElement);
 
-        logger.debug("Configuration " + configurationElement.getImplementation().asType().toString() + " has been registered");
+        logger.debug("Configuration " + configurationElement.getImplementation().getName() + " has been registered");
         return configurationElement;
     }
 

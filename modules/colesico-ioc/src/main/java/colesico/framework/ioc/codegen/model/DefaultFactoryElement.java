@@ -18,73 +18,30 @@
 
 package colesico.framework.ioc.codegen.model;
 
+import colesico.framework.assist.codegen.model.AnnotationElement;
+import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.ioc.Produce;
-import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.assist.codegen.CodegenUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeMirror;
 
 /**
  * @author Vladlen Larionov
  */
 public class DefaultFactoryElement extends FactoryElement {
 
-    private final Produce produce;
-    private final ExecutableElement constructor;
+    private final MethodElement constructor;
+    private final AnnotationElement<Produce> produce;
 
-    public DefaultFactoryElement(TypeElement producerElement, Produce produceAnn, ExecutableElement constructorElement) {
-        this.constructor = constructorElement;
-        this.suppliedType = (DeclaredType) constructorElement.getEnclosingElement().asType();
-        this.factoryMethodBaseName = "get" + suppliedType.asElement().getSimpleName();
-
-        this.produce = produceAnn;
-
-        this.polyproduce = produceAnn.polyproduce();
-        if (!polyproduce) {
-            //TODO: check suppliedType annotation @Polyproduce
-        }
-
-
-        ScopeElement sce = extractScope(this.suppliedType.asElement());
-        if (sce == null) {
-            sce = new ScopeElement(null, ScopeElement.ScopeKind.UNSCOPED);
-        }
-        scope = sce;
-
-        for (VariableElement param : constructorElement.getParameters()) {
-            this.parameters.add(new InjectableElement(this,param));
-        }
-
-        if (StringUtils.isNotEmpty(produceAnn.named())) {
-            this.named = produceAnn.named();
-        } else {
-            //TODO: check suppliedType annotation @Named
-        }
-
-        TypeMirror classifier = CodegenUtils.getAnnotationValueTypeMirror(produceAnn, a -> a.classed());
-        if (!Class.class.getName().equals(classifier.toString())) {
-            this.classed = classifier.toString();
-        } else {
-            //TODO: check suppliedType annotation @Classed
-        }
-
-        if (StringUtils.isNotEmpty(this.named) && this.classed != null) {
-            CodegenException.of().message("Ambiguous injection qualifiers for " +
-                    constructorElement.getReturnType().toString()
-            ).element(producerElement).build();
-        }
+    public DefaultFactoryElement(ClassType suppliedType, String factoryMethodBaseName, ScopeElement scope, Boolean polyproduce, String named, String classed, MethodElement constructor, AnnotationElement<Produce> produce) {
+        super(suppliedType, factoryMethodBaseName, scope, polyproduce, named, classed);
+        this.constructor = constructor;
+        this.produce = produce;
     }
 
-    public ExecutableElement getConstructor() {
+    public MethodElement getConstructor() {
         return constructor;
     }
 
-    public Produce getProduce() {
+    public AnnotationElement<Produce> getProduce() {
         return produce;
     }
 }

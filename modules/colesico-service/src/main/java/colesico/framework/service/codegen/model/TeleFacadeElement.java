@@ -80,7 +80,7 @@ public final class TeleFacadeElement {
     }
 
     public String getClassName() {
-        PackageElement packageElement = (PackageElement) parentService.getOriginClass().getEnclosingElement();
+        PackageElement packageElement = (PackageElement) parentService.getOriginClass().unwrap().getEnclosingElement();
         return packageElement.toString() + "." + getClassSimpleName();
     }
 

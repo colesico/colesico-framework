@@ -113,9 +113,9 @@ public class FactoryGenerator {
         if (factoryElement instanceof CustomFactoryElement) {
             CustomFactoryElement cse = (CustomFactoryElement) factoryElement;
             cb.add("$N.$N().$N(", PRODUCER_FIELD, LazySingleton.GET_METHOD,
-                    cse.getProducerMethod().getSimpleName());
+                    cse.getProducerMethod().getName());
         } else {
-            cb.add("new $T(", TypeName.get(factoryElement.getSuppliedType()));
+            cb.add("new $T(", TypeName.get(factoryElement.getSuppliedType().getErasure()));
         }
 
         ArrayCodegen arrayCodegen = new ArrayCodegen();
@@ -125,12 +125,12 @@ public class FactoryGenerator {
             String messageSource;
             switch (param.getMessageKind()) {
                 case INJECTION_POINT:
-                    messageSource = param.getOriginParameter().getSimpleName() + "Msg";
+                    messageSource = param.getOriginParameter().getName() + "Msg";
                     methodBuilder.addStatement("final $T $N = new $T($T.class)",
                             ClassName.get(InjectionPoint.class),
                             messageSource,
                             ClassName.get(InjectionPoint.class),
-                            TypeName.get(param.getParentFactory().getSuppliedType()));
+                            TypeName.get(param.getParentFactory().getSuppliedType().getErasure()));
 
                     break;
                 case OUTER_MESSAGE:
@@ -149,7 +149,7 @@ public class FactoryGenerator {
                 // Use factory from local variable
                 String factoryMethodName = getFactoryMethodName(param);
                 if (factoryMethodName != null) {
-                    factorySource = param.getOriginParameter().getSimpleName() + "Var";
+                    factorySource = param.getOriginParameter().getName() + "Var";
                     methodBuilder.addStatement("final $T $N=$N.$N($L)",
                             getFactoryTypeName(param),
                             factorySource,
@@ -163,7 +163,7 @@ public class FactoryGenerator {
 
             switch (param.getInjectionKind()) {
                 case MESSAGE:
-                    arrayCodegen.add("($T)$N", TypeName.get(param.getInjectedType()), messageSource);
+                    arrayCodegen.add("($T)$N", TypeName.get(param.getInjectedType().unwrap()), messageSource);
                     break;
                 case INSTANCE:
                     arrayCodegen.add("$N.$N($N)", factorySource, Factory.GET_METHOD, messageSource);
@@ -187,7 +187,7 @@ public class FactoryGenerator {
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(Factory.GET_METHOD);
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         methodBuilder.addAnnotation(Override.class);
-        methodBuilder.returns(TypeName.get(factoryElement.getSuppliedType()));
+        methodBuilder.returns(TypeName.get(factoryElement.getSuppliedType().getErasure()));
         methodBuilder.addParameter(ClassName.get(Object.class), Factory.MESSAGE_PARAM, Modifier.FINAL);
         CodeBlock instanceBlock = generateInstanceCreation(methodBuilder, factoryElement);
         methodBuilder.addStatement("return $L", instanceBlock);
@@ -198,7 +198,7 @@ public class FactoryGenerator {
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(methodName);
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         methodBuilder.addAnnotation(Override.class);
-        methodBuilder.returns(TypeName.get(factoryElement.getSuppliedType()));
+        methodBuilder.returns(TypeName.get(factoryElement.getSuppliedType().getErasure()));
         methodBuilder.addParameter(ClassName.get(Object.class), Factory.MESSAGE_PARAM, Modifier.FINAL);
         CodeBlock instanceBlock = generateInstanceCreation(methodBuilder, factoryElement);
         methodBuilder.addStatement("return $L", instanceBlock);
@@ -207,7 +207,8 @@ public class FactoryGenerator {
 
     protected TypeSpec generateSingletonFactory(FactoryElement factoryElement) {
         TypeSpec.Builder factoryBuilder = TypeSpec.anonymousClassBuilder("");
-        factoryBuilder.superclass(ParameterizedTypeName.get(ClassName.get(SingletonFactory.class), TypeName.get(factoryElement.getSuppliedType())));
+        factoryBuilder.superclass(ParameterizedTypeName.get(ClassName.get(SingletonFactory.class),
+                TypeName.get(factoryElement.getSuppliedType().getErasure())));
         generateSetupMethod(factoryBuilder, factoryElement);
         generateCreatorMethod(factoryBuilder, factoryElement, SingletonFactory.CREATE_METHOD);
         return factoryBuilder.build();
@@ -216,8 +217,8 @@ public class FactoryGenerator {
     protected TypeSpec generateScopedFactory(FactoryElement factoryElement) {
         TypeSpec.Builder classBuilder = TypeSpec.anonymousClassBuilder("$L", keyGenerator.forFactory(factoryElement));
         classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(ScopedFactory.class),
-                TypeName.get(factoryElement.getSuppliedType()),
-                TypeName.get(factoryElement.getScope().getScopeClass())));
+                TypeName.get(factoryElement.getSuppliedType().getErasure()),
+                TypeName.get(factoryElement.getScope().getScopeClass().unwrap())));
         generateSetupMethod(classBuilder, factoryElement);
         generateCreatorMethod(classBuilder, factoryElement, ScopedFactory.FABRICATE_METHOD);
         return classBuilder.build();
@@ -226,19 +227,19 @@ public class FactoryGenerator {
     protected TypeSpec generateUnscopedFactory(FactoryElement factoryElement) {
         TypeSpec.Builder factoryBuilder = TypeSpec.anonymousClassBuilder("");
         factoryBuilder.superclass(ParameterizedTypeName.get(ClassName.get(Factory.class),
-                TypeName.get(factoryElement.getSuppliedType())));
+                TypeName.get(factoryElement.getSuppliedType().getErasure())));
         generateSetupMethod(factoryBuilder, factoryElement);
         generateGetMethod(factoryBuilder, factoryElement);
         return factoryBuilder.build();
     }
 
     public TypeName getFactoryTypeName(InjectableElement injectionElement) {
-        String className = injectionElement.getInjectedType().asElement().toString();
+        String className = injectionElement.getInjectedType().asClassElement().getName();
         return ParameterizedTypeName.get(ClassName.get(Factory.class), ClassName.bestGuess(className));
     }
 
     protected String getFactoryVarName(InjectableElement injectionElement) {
-        return injectionElement.getOriginParameter().getSimpleName() + "Fac";
+        return injectionElement.getOriginParameter().getName() + "Fac";
     }
 
     protected void generateField(TypeSpec.Builder factoryBuilder, TypeName typeName, String fieldName) {

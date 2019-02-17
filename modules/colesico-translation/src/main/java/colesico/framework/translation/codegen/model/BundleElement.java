@@ -1,10 +1,13 @@
 package colesico.framework.translation.codegen.model;
 
+import colesico.framework.assist.codegen.model.MethodElement;
+
 import javax.lang.model.element.ExecutableElement;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class BundleElement {
+
     private final DictionaryElement parentDictionary;
     private final String localeKey;
 
@@ -15,7 +18,7 @@ public class BundleElement {
         this.localeKey = localeKey;
     }
 
-    public void addTranslation(ExecutableElement keyMethod, String translation) {
+    public void addTranslation(MethodElement keyMethod, String translation) {
         TranslationElement translationElement = new TranslationElement(this, keyMethod, translation);
         translations.add(translationElement);
     }

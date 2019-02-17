@@ -1,9 +1,13 @@
 package colesico.framework.dao.codegen.model;
 
 import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.model.ClassElement;
+import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.assist.codegen.model.FieldElement;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,8 +15,8 @@ import java.util.Set;
 public class CompositionElement {
 
     private final DTOElement parentDTO;
-    private final TypeElement originType;
-    private final VariableElement originalField;
+    private final ClassElement originType;
+    private final FieldElement originalField;
     private CompositionElement parentComposition;
     private String[] acceptFields;
     private String[] renameColumns;
@@ -20,7 +24,7 @@ public class CompositionElement {
     private final Set<ColumnElement> columns = new LinkedHashSet<>();
     private final Set<CompositionElement> subCompositions = new LinkedHashSet<>();
 
-    public CompositionElement(DTOElement parentDTO, TypeElement originType, VariableElement originalField) {
+    public CompositionElement(DTOElement parentDTO, ClassElement originType, FieldElement originalField) {
         this.parentDTO = parentDTO;
         this.originType = originType;
         this.originalField = originalField;
@@ -70,7 +74,7 @@ public class CompositionElement {
         this.parentComposition = parentComposition;
     }
 
-    public TypeElement getOriginType() {
+    public ClassElement getOriginType() {
         return originType;
     }
 
@@ -78,7 +82,7 @@ public class CompositionElement {
         return subCompositions;
     }
 
-    public VariableElement getOriginalField() {
+    public FieldElement getOriginalField() {
         return originalField;
     }
 
