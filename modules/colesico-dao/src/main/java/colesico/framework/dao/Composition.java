@@ -30,24 +30,17 @@ import java.lang.annotation.*;
 public @interface Composition {
 
     /**
-     * Composition columns name preffix
+     * Composition columns name prefix
      */
     String columnsPrefix() default "";
 
     /**
-     * Accepts only enlisted columns.
-     *
+     * Accepts only enlisted columns (optional or not)
+     * For empty value all not optional columns will be accepted
+     * ex: foo.dummy.my_column
      *
      * @return
      */
-    String[] acceptFields() default {};
+    String[] columns() default {};
 
-    /**
-     * Rename columns in format:
-     *
-     * original_name->new_name
-     *
-     * @return
-     */
-    String[] renameColumns() default {};
 }

@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.VariableElement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -54,8 +53,8 @@ public class DTOHelperGenerator {
             fieldsStack.push(column.getOriginField());
         }
         CompositionElement current = composition;
-        while (current.getOriginalField() != null) {
-            fieldsStack.push(current.getOriginalField());
+        while (current.getOriginField() != null) {
+            fieldsStack.push(current.getOriginField());
             current = current.getParentComposition();
         }
         List<FieldElement> fieldsChain = new ArrayList<>();
@@ -76,8 +75,8 @@ public class DTOHelperGenerator {
         Deque<FieldElement> fieldsStack = new ArrayDeque<>();
         fieldsStack.push(column.getOriginField());
         CompositionElement current = composition;
-        while (current.getOriginalField() != null) {
-            fieldsStack.push(current.getOriginalField());
+        while (current.getOriginField() != null) {
+            fieldsStack.push(current.getOriginField());
             current = current.getParentComposition();
         }
         List<FieldElement> fieldsChain = new ArrayList<>();
@@ -201,7 +200,7 @@ public class DTOHelperGenerator {
             cb.add("){\n");
             cb.indent();
             cb.add(generateGettersChain(DTOHelper.DTO_PARAM, composition, null));
-            cb.add("." + toSetterName(subComposition.getOriginalField()) + "(new $T());\n", TypeName.get(subComposition.getOriginType().asType()));
+            cb.add("." + toSetterName(subComposition.getOriginField()) + "(new $T());\n", TypeName.get(subComposition.getOriginClass().asType()));
             cb.unindent();
             cb.add("}\n");
             generateInitCompositions(subComposition, cb);
@@ -259,12 +258,16 @@ public class DTOHelperGenerator {
 
     protected String generateInsertSQL() {
         List<ColumnElement> allColumns = dtoElement.getAllColumns();
-        StringBuilder sb = new StringBuilder("INSERT INTO [TABLE](");
+        StringBuilder sb = new StringBuilder("INSERT INTO " + getTableName() + " (");
         List<String> columnNames = new ArrayList<>();
         List<String> columnValues = new ArrayList<>();
         for (ColumnElement column : allColumns) {
             columnNames.add(column.getName());
-            columnValues.add(":" + column.getName());
+            if (column.getFormula() == null) {
+                columnValues.add(":" + column.getName());
+            } else {
+                columnValues.add(column.getFormula());
+            }
         }
         sb.append(StringUtils.join(columnNames, ", ")).append(')');
         sb.append(" VALUES (").append(StringUtils.join(columnValues, ',')).append(")\n");
@@ -273,10 +276,16 @@ public class DTOHelperGenerator {
 
     protected String generateUpdateSQL() {
         List<ColumnElement> allColumns = dtoElement.getAllColumns();
-        StringBuilder sb = new StringBuilder("UPDATE [TABLE] SET ");
+
+        StringBuilder sb = new StringBuilder("UPDATE " + getTableName() + " SET ");
         List<String> assigns = new ArrayList<>();
         for (ColumnElement column : allColumns) {
-            assigns.add(column.getName() + " = :" + column.getName());
+            if (column.getFormula() == null) {
+                assigns.add(column.getName() + " = :" + column.getName());
+            } else {
+                assigns.add(column.getName() + " = " + column.getFormula());
+            }
+
         }
         sb.append(StringUtils.join(assigns, ", ")).append("\n");
         return sb.toString();
@@ -290,8 +299,35 @@ public class DTOHelperGenerator {
             columnNames.add(column.getName());
         }
         sb.append(StringUtils.join(columnNames, ", "));
-        sb.append(" FROM [TABLE] WHERE [CONDITION]\n");
+        sb.append(" FROM " + getTableName() + " WHERE [CONDITION]\n");
         return sb.toString();
+    }
+
+
+    protected String generateCreateTableSQL() {
+        List<ColumnElement> allColumns = dtoElement.getAllColumns();
+        StringBuilder sb = new StringBuilder("CREATE TABLE ");
+        sb.append(getTableName()).append("(");
+
+        List<String> columnNames = new ArrayList<>();
+        for (ColumnElement column : allColumns) {
+            String definition = column.getDefinition();
+            if (definition == null) {
+                definition = "[DEFINITION]";
+            }
+            columnNames.add(column.getName() + " " + definition);
+        }
+        sb.append(StringUtils.join(columnNames, ", "));
+        sb.append(")\n");
+        return sb.toString();
+    }
+
+    protected String getTableName() {
+        if (StringUtils.isEmpty(dtoElement.getTableName())) {
+            return "[TABLE]";
+        } else {
+            return dtoElement.getTableName();
+        }
     }
 
     public void generate(DTOElement dtoElement) {
@@ -305,9 +341,8 @@ public class DTOHelperGenerator {
         generateInitCompositionsMethod();
         generateToMapMethod();
         generatFromResultSetMethod();
-        generateInsertSQL();
 
-        classBuilder.addJavadoc(generateInsertSQL() + generateUpdateSQL() + generateSelectSQL());
+        classBuilder.addJavadoc(generateCreateTableSQL() + generateInsertSQL() + generateUpdateSQL() + generateSelectSQL());
 
         String packageName = dtoElement.getOriginClass().getPackageName();
         CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), packageName, dtoElement.getOriginClass().unwrap());

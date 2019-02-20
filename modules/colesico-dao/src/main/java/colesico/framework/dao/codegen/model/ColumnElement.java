@@ -2,10 +2,6 @@ package colesico.framework.dao.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
-import com.squareup.javapoet.TypeName;
-
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
 
 public class ColumnElement {
 
@@ -13,14 +9,20 @@ public class ColumnElement {
     protected CompositionElement parentComposition;
     protected final String name;
     protected ClassType converter;
+    protected String formula;
+    protected String definition;
+    protected boolean option;
 
     public ColumnElement(FieldElement originField, String name) {
-        this.originField = originField;
+        if (name == null) {
+            throw new RuntimeException("Name is null");
+        }
         this.name = name;
+        this.originField = originField;
     }
 
-    public String getName() {
-        return name;
+    public FieldElement getOriginField() {
+        return originField;
     }
 
     public CompositionElement getParentComposition() {
@@ -31,6 +33,10 @@ public class ColumnElement {
         this.parentComposition = parentComposition;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public ClassType getConverter() {
         return converter;
     }
@@ -39,23 +45,43 @@ public class ColumnElement {
         this.converter = converter;
     }
 
-    public FieldElement getOriginField() {
-        return originField;
+    public String getFormula() {
+        return formula;
     }
 
+    public void setFormula(String formula) {
+        this.formula = formula;
+    }
 
-    @Override
+    public String getDefinition() {
+        return definition;
+    }
+
+    public void setDefinition(String definition) {
+        this.definition = definition;
+    }
+
+    public boolean isOption() {
+        return option;
+    }
+
+    public void setOption(boolean option) {
+        this.option = option;
+    }
+
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         ColumnElement that = (ColumnElement) o;
 
         return name.equals(that.name);
     }
 
-    @Override
     public int hashCode() {
-        return name.hashCode();
+        int result = super.hashCode();
+        result = 31 * result + name.hashCode();
+        return result;
     }
 }

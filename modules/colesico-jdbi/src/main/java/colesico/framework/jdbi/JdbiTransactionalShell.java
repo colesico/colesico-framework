@@ -24,6 +24,12 @@ public class JdbiTransactionalShell extends AbstractTransactionalShell<JdbiTrans
     }
 
     @Override
+    public void setRollbackOnly() {
+        JdbiTransaction tx = getTransaction();
+        tx.setRollbackOnly(true);
+    }
+
+    @Override
     protected <R> R createNew(UnitOfWork<R> unitOfWork, Tuning<Handle> tuning) {
         logger.debug("NEW JDBI TX BEGIN");
         if (transactions.get() != null) {
@@ -37,7 +43,11 @@ public class JdbiTransactionalShell extends AbstractTransactionalShell<JdbiTrans
             R result = unitOfWork.execute();
             handle = tx.getHandle();
             if (handle != null) {
-                handle.commit();
+                if (tx.getRollbackOnly()) {
+                    handle.rollback();
+                } else {
+                    handle.commit();
+                }
             }
             return result;
         } catch (Exception e) {

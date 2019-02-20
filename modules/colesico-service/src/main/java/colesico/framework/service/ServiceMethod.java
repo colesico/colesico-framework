@@ -15,15 +15,20 @@
  * limitations under the License.
  *
  */
+package colesico.framework.service;
 
-package colesico.framework.restlet.teleapi.converter;
+import java.lang.annotation.*;
 
-import java.io.InputStream;
-
-public interface JsonConverter {
-    <T> String toJson(T obj);
-
-    <T> T fromJson(String json, Class<T> type);
-
-    <T> T fromJson(InputStream is, Class<T> type);
+/**
+ * Indicates that the method is a service method.
+ *
+ * This annotation (for example) can marks a protected methods that must be acts as public service methods
+ *
+ * @author Vladlen Larionov
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD,ElementType.TYPE}) //TYPE - for future releases
+@Inherited
+@Documented
+public @interface ServiceMethod {
 }

@@ -23,7 +23,7 @@ import colesico.framework.ioc.Producer;
 import colesico.framework.restlet.teleapi.RestletDataPort;
 import colesico.framework.restlet.teleapi.RestletTeleDriver;
 import colesico.framework.restlet.teleapi.converter.JsonConverter;
-import colesico.framework.restlet.teleapi.converter.JsonIterConverter;
+import colesico.framework.restlet.teleapi.converter.MoshiConverter;
 
 import javax.inject.Singleton;
 
@@ -35,7 +35,7 @@ import static colesico.framework.ioc.Rank.RANK_MINOR;
 @Producer(RANK_MINOR)
 @Produce(RestletDataPortImpl.class)
 @Produce(RestletTeleDriverImpl.class)
-@Produce(JsonIterConverter.class)
+@Produce(MoshiConverter.class)
 public class RestletProducer {
 
     @Singleton
@@ -49,7 +49,7 @@ public class RestletProducer {
     }
 
     @Singleton
-    public JsonConverter getJsonConverter(JsonIterConverter impl) {
+    public JsonConverter getJsonConverter(MoshiConverter impl) {
         return impl;
     }
 

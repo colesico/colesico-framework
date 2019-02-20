@@ -2,7 +2,6 @@ package colesico.framework.dao.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassElement;
 
-import javax.lang.model.element.TypeElement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +9,7 @@ public class DTOElement {
 
     private final ClassElement originClass;
     private final CompositionElement rootComposition;
+    private String tableName;
 
     public DTOElement(ClassElement originClass) {
         this.originClass = originClass;
@@ -28,10 +28,17 @@ public class DTOElement {
         return rootComposition.hasColumn(columnElement);
     }
 
-    public List<ColumnElement> getAllColumns(){
+    public List<ColumnElement> getAllColumns() {
         List<ColumnElement> result = new ArrayList<>();
         rootComposition.collectSubColumns(result);
         return result;
     }
 
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
 }

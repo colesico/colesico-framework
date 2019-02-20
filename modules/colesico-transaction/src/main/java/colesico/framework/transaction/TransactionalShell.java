@@ -110,4 +110,6 @@ public interface TransactionalShell<U> {
     default <R> R nested(UnitOfWork<R> unitOfWork) {
         return nested(unitOfWork, null);
     }
+
+    void setRollbackOnly();
 }

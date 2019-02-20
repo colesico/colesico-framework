@@ -31,7 +31,16 @@ public final class ProxyMethodElement {
     protected ServiceElement parentService;
 
     private final MethodElement originMethod;
+
+    /**
+     * This flag can be used to verify that  the annotations that  regarding the
+     * service are used appropriately on the methods that will be proxied.
+     */
     private final boolean isPlain;
+
+    /**
+     * Indicates that the method is not tele-method
+     */
     private final boolean isLocal;
 
     private final Map<String, List<InterceptionElement>> interceptionsByPhase;

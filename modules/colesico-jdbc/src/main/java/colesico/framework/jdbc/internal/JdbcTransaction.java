@@ -8,6 +8,7 @@ public class JdbcTransaction {
 
     private Connection connection;
     private Tuning<Connection> tuning;
+    private boolean rollbackOnly = false;
 
     public Connection getConnection() {
         return connection;
@@ -25,5 +26,13 @@ public class JdbcTransaction {
     public JdbcTransaction setTuning(Tuning<Connection> tuning) {
         this.tuning = tuning;
         return this;
+    }
+
+    public boolean getRollbackOnly() {
+        return rollbackOnly;
+    }
+
+    public void setRollbackOnly(Boolean rollbackOnly) {
+        this.rollbackOnly = rollbackOnly;
     }
 }

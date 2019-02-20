@@ -2,12 +2,8 @@ package colesico.framework.dao.codegen.model;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.DeclaredType;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,19 +11,28 @@ import java.util.Set;
 public class CompositionElement {
 
     private final DTOElement parentDTO;
-    private final ClassElement originType;
-    private final FieldElement originalField;
+
+    /**
+     * Composition class
+     */
+    private final ClassElement originClass;
+
+    /**
+     * Composition field in the parent composition
+     */
+    private final FieldElement originField;
+
     private CompositionElement parentComposition;
-    private String[] acceptFields;
-    private String[] renameColumns;
+
+    private String[] columnsFilter;
 
     private final Set<ColumnElement> columns = new LinkedHashSet<>();
     private final Set<CompositionElement> subCompositions = new LinkedHashSet<>();
 
-    public CompositionElement(DTOElement parentDTO, ClassElement originType, FieldElement originalField) {
+    public CompositionElement(DTOElement parentDTO, ClassElement originClass, FieldElement originField) {
         this.parentDTO = parentDTO;
-        this.originType = originType;
-        this.originalField = originalField;
+        this.originClass = originClass;
+        this.originField = originField;
     }
 
     public boolean hasColumn(ColumnElement columnElement) {
@@ -42,9 +47,9 @@ public class CompositionElement {
         return false;
     }
 
-    public void collectSubColumns(List<ColumnElement>allSubColumns){
+    public void collectSubColumns(List<ColumnElement> allSubColumns) {
         allSubColumns.addAll(columns);
-        for (CompositionElement comp:subCompositions){
+        for (CompositionElement comp : subCompositions) {
             comp.collectSubColumns(allSubColumns);
         }
     }
@@ -62,52 +67,47 @@ public class CompositionElement {
         columnElm.setParentComposition(this);
     }
 
-    public CompositionElement getParentComposition() {
-        return parentComposition;
+    public DTOElement getParentDTO() {
+        return parentDTO;
     }
 
-    public Set<ColumnElement> getColumns() {
-        return columns;
+    public ClassElement getOriginClass() {
+        return originClass;
+    }
+
+    public FieldElement getOriginField() {
+        return originField;
+    }
+
+    public CompositionElement getParentComposition() {
+        return parentComposition;
     }
 
     public void setParentComposition(CompositionElement parentComposition) {
         this.parentComposition = parentComposition;
     }
 
-    public ClassElement getOriginType() {
-        return originType;
+    public String[] getColumnsFilter() {
+        return columnsFilter;
+    }
+
+    public void setColumnsFilter(String[] columnsFilter) {
+        this.columnsFilter = columnsFilter;
+    }
+
+    public Set<ColumnElement> getColumns() {
+        return columns;
     }
 
     public Set<CompositionElement> getSubCompositions() {
         return subCompositions;
     }
 
-    public FieldElement getOriginalField() {
-        return originalField;
-    }
-
-    public String[] getAcceptFields() {
-        return acceptFields;
-    }
-
-    public void setAcceptFields(String[] acceptFields) {
-        this.acceptFields = acceptFields;
-    }
-
-    public String[] getRenameColumns() {
-        return renameColumns;
-    }
-
-    public void setRenameColumns(String[] renameColumns) {
-        this.renameColumns = renameColumns;
-    }
-
     @Override
     public String toString() {
         return "CompositionElement{" +
-                "originType=" + originType +
-                ", originalField=" + originalField +
-                ", parentComposition=" + parentComposition +
+                "originClass=" + originClass +
+                ", originField=" + originField +
                 '}';
     }
 }

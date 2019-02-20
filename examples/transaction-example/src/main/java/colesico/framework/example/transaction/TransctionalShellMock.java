@@ -70,4 +70,9 @@ public class TransctionalShellMock implements TransactionalShell<Object> {
         log.info("Nested end");
         return result;
     }
+
+    @Override
+    public void setRollbackOnly() {
+        throw new UnsupportedOperationException("Not supported");
+    }
 }

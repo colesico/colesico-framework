@@ -7,6 +7,7 @@ public class JdbiTransaction {
 
     private Handle handle;
     private Tuning<Handle> tuning;
+    private boolean rollbackOnly = false;
 
     public Handle getHandle() {
         return handle;
@@ -24,5 +25,13 @@ public class JdbiTransaction {
     public JdbiTransaction setTuning(Tuning<Handle> tuning) {
         this.tuning = tuning;
         return this;
+    }
+
+    public boolean getRollbackOnly() {
+        return rollbackOnly;
+    }
+
+    public void setRollbackOnly(boolean rollbackOnly) {
+        this.rollbackOnly = rollbackOnly;
     }
 }

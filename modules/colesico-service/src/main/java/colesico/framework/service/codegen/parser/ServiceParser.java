@@ -24,6 +24,7 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.service.LocalMethod;
 import colesico.framework.service.PlainMethod;
+import colesico.framework.service.ServiceMethod;
 import colesico.framework.service.codegen.model.ProxyMethodElement;
 import colesico.framework.service.codegen.model.ServiceElement;
 
@@ -59,24 +60,58 @@ public class ServiceParser {
                 }
             }
         }
-        return scopeType==null? null: new ClassType(context.getProcessingEnv(), scopeType);
+        return scopeType == null ? null : new ClassType(context.getProcessingEnv(), scopeType);
+    }
+
+
+    protected boolean isPlainMethod(MethodElement m, ClassElement classElement) {
+        AnnotationElement<PlainMethod> classPlainAnn = classElement.getAnnotation(PlainMethod.class);
+        AnnotationElement<ServiceMethod> classServAnn = classElement.getAnnotation(ServiceMethod.class);
+        AnnotationElement<PlainMethod> plainMethodAnn = m.getAnnotation(PlainMethod.class);
+        AnnotationElement<ServiceMethod> serviceMethodAnn = m.getAnnotation(ServiceMethod.class);
+
+        final boolean isFinal = m.unwrap().getModifiers().contains(Modifier.FINAL);
+        final boolean isPublic = m.unwrap().getModifiers().contains(Modifier.PUBLIC);
+        final boolean isProtected = m.unwrap().getModifiers().contains(Modifier.PROTECTED);
+        final boolean isPrivate = m.unwrap().getModifiers().contains(Modifier.PRIVATE);
+        final boolean isPlain = plainMethodAnn != null;
+        final boolean isServ = serviceMethodAnn != null;
+
+        if (isPlain || isFinal || isPrivate) {
+            return true;
+        }
+
+        if (isServ) {
+            return false;
+        }
+
+        if (classPlainAnn != null) {
+            return true;
+        }
+
+        if (classServAnn != null) {
+            return false;
+        }
+
+        if (isPublic) {
+            return false;
+        }
+
+        return true;
     }
 
     protected void addProxyMethods(ServiceElement serviceElement) {
         ClassElement classElement = serviceElement.getOriginClass();
-        List<MethodElement> methods = classElement.getMethodsFiltered(
-                m -> m.unwrap().getModifiers().contains(Modifier.PUBLIC) & !m.unwrap().getModifiers().contains(Modifier.FINAL)
-        );
+        AnnotationElement<LocalMethod> classLocalAnn = classElement.getAnnotation(LocalMethod.class);
 
-        AnnotationElement<PlainMethod> classPlain = classElement.getAnnotation(PlainMethod.class);
-        AnnotationElement<LocalMethod> classLocal = classElement.getAnnotation(LocalMethod.class);
+        List<MethodElement> methods = classElement.getMethods();
+
         for (MethodElement method : methods) {
-
-            AnnotationElement<PlainMethod> methodPlain = method.getAnnotation(PlainMethod.class);
-            final boolean isPlain = classPlain != null || methodPlain != null;
+            boolean isPlain = isPlainMethod(method, classElement);
 
             AnnotationElement<LocalMethod> methodLocal = method.getAnnotation(LocalMethod.class);
-            boolean isLocal = methodLocal != null || classLocal != null;
+            boolean isLocal = methodLocal != null || classLocalAnn != null
+                    || !method.unwrap().getModifiers().contains(Modifier.PUBLIC);
 
             ProxyMethodElement proxyMethod = new ProxyMethodElement(method, isPlain, isLocal);
             serviceElement.addProxyMethod(proxyMethod);

@@ -54,4 +54,11 @@ public class FieldElement extends VarElement {
     public int hashCode() {
         return originVariableElement != null ? originVariableElement.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return "FieldElement{" +
+                "originVariableElement=" + originVariableElement +
+                '}';
+    }
 }

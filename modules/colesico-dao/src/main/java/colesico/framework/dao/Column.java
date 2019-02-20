@@ -26,7 +26,9 @@ import java.lang.annotation.*;
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
+@Repeatable(Columns.class)
 public @interface Column {
+
     /**
      * Column name
      *
@@ -36,7 +38,32 @@ public @interface Column {
 
     /**
      * Value converter
+     *
      * @return
      */
     Class<? extends DTOConverter> converter() default DTOConverter.class;
+
+    /**
+     * Column value for insert and update sql.
+     * <p>
+     * Default value ':'+name()
+     *
+     * @return
+     */
+    String formula() default "";
+
+    /**
+     * Column definition for create table sql
+     *
+     * @return
+     */
+    String definition() default "";
+
+    /**
+     * Indicates that the column definition is an alternative
+     *
+     * @return
+     */
+    boolean option() default false;
+
 }

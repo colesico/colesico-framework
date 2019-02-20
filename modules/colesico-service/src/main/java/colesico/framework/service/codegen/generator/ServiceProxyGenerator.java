@@ -140,7 +140,7 @@ public class ServiceProxyGenerator {
         );
 
         constructorBuilder.addAnnotation(Inject.class);
-        CodeBlock sucall= CodegenUtils.generateSuperMethodCall(constructor, null, METHOD_PARAM_PREFIX);
+        CodeBlock sucall = CodegenUtils.generateSuperMethodCall(constructor, null, METHOD_PARAM_PREFIX);
         constructorBuilder.addCode(sucall);
 
         // Generate extra fields initialization
@@ -278,7 +278,7 @@ public class ServiceProxyGenerator {
 
     protected void generateProxyMethods(ServiceElement serviceElement, TypeSpec.Builder proxyBuilder) {
         for (ProxyMethodElement method : serviceElement.getProxyMethods()) {
-            logger.debug("Generate proxy method:" + method.getName() + "; isPlain=" + method.isPlain());
+            logger.debug("Generate proxy method:" + method.getName() + "; isPlain=" + method.isPlain() + "; isLocal=" + method.isLocal());
 
             if (method.isPlain()) {
                 continue;

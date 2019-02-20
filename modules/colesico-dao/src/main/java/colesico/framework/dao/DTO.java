@@ -28,5 +28,6 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DTO {
-
+    String tableName() default "";
+    String option() default "default";
 }

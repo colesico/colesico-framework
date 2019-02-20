@@ -21,6 +21,7 @@ public class JdbcTransactionalShell extends AbstractTransactionalShell<JdbcTrans
 
     /**
      * Data source will be used to obtain connections to database to bind them with transaction.
+     *
      * @param dataSource
      */
     public JdbcTransactionalShell(DataSource dataSource) {
@@ -50,7 +51,11 @@ public class JdbcTransactionalShell extends AbstractTransactionalShell<JdbcTrans
             R result = unitOfWork.execute();
             connection = tx.getConnection();
             if (connection != null) {
-                connection.commit();
+                if (tx.getRollbackOnly()) {
+                    connection.rollback();
+                } else {
+                    connection.commit();
+                }
             }
             return result;
         } catch (Exception e) {
@@ -72,6 +77,12 @@ public class JdbcTransactionalShell extends AbstractTransactionalShell<JdbcTrans
             }
             transactions.remove();
         }
+    }
+
+    @Override
+    public void setRollbackOnly() {
+        JdbcTransaction tx = getTransaction();
+        tx.setRollbackOnly(true);
     }
 
     /**
@@ -113,5 +124,6 @@ public class JdbcTransactionalShell extends AbstractTransactionalShell<JdbcTrans
 
         return connection;
     }
+
 
 }
