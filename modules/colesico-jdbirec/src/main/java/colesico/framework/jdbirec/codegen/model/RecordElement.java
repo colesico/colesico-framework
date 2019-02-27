@@ -1,17 +1,19 @@
-package colesico.framework.dao.codegen.model;
+package colesico.framework.jdbirec.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassElement;
+import colesico.framework.assist.codegen.model.ClassType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DTOElement {
+public class RecordElement {
 
     private final ClassElement originClass;
     private final CompositionElement rootComposition;
+    private ClassType extend;
     private String tableName;
 
-    public DTOElement(ClassElement originClass) {
+    public RecordElement(ClassElement originClass) {
         this.originClass = originClass;
         this.rootComposition = new CompositionElement(this, originClass, null);
     }
@@ -40,5 +42,13 @@ public class DTOElement {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+
+    public ClassType getExtend() {
+        return extend;
+    }
+
+    public void setExtend(ClassType extend) {
+        this.extend = extend;
     }
 }

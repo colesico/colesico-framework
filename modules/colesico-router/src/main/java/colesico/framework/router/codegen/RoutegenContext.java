@@ -68,7 +68,7 @@ abstract public class RoutegenContext {
         AnnotationElement<Route> routeAnnotation = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(Route.class);
         String methodRoute;
         if (routeAnnotation == null) {
-            methodRoute = RouteTrie.SEGMENT_DELEMITER + StrUtils.toLowerCaseNotation(teleMethod.getName());
+            methodRoute = RouteTrie.SEGMENT_DELEMITER + StrUtils.toLowerCaseNotation(teleMethod.getName(),'-');
         } else {
             methodRoute = routeAnnotation.unwrap().value();
         }
@@ -117,7 +117,7 @@ abstract public class RoutegenContext {
                 String beanRouteValue = routeAnnotation.unwrap().value().substring(1);
                 if (StringUtils.isBlank(beanRouteValue)){
                     String classSimpleName = framlet.getOriginClass().getSimpleName().toString();
-                    beanRouteValue = "/"+ StrUtils.toLowerCaseNotation(classSimpleName);
+                    beanRouteValue = "/"+ StrUtils.toLowerCaseNotation(classSimpleName,'-');
                 }
                 return StrUtils.concatPath(pkgRouteValue, beanRouteValue, RouteTrie.SEGMENT_DELEMITER);
             } else {
@@ -132,7 +132,7 @@ abstract public class RoutegenContext {
                 return "/";
             } else {
                 String classSimpleName = framlet.getOriginClass().getSimpleName().toString();
-                return "/" + StrUtils.toLowerCaseNotation(classSimpleName);
+                return "/" + StrUtils.toLowerCaseNotation(classSimpleName,'-');
             }
         }
     }

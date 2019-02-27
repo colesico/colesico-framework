@@ -51,13 +51,13 @@ public class StrUtils {
         return new String(chars);
     }
 
-    public static String toLowerCaseNotation(String str) {
+    public static String toLowerCaseNotation(String str, char separator) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
             if (Character.isUpperCase(c)) {
                 if (i > 0) {
-                    result.append('-');
+                    result.append(separator);
                 }
                 c = Character.toLowerCase(c);
             }
@@ -66,7 +66,7 @@ public class StrUtils {
         return result.toString();
     }
 
-    public static String fromLowerCaseNotation(String str) {
+    public static String fromLowerCaseNotation(String str, char separator) {
         if (StringUtils.isEmpty(str)) {
             return "";
         }
@@ -74,7 +74,7 @@ public class StrUtils {
         boolean toUpper = false;
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
-            if (c == '-') {
+            if (c == separator) {
                 toUpper = true;
                 continue;
             }

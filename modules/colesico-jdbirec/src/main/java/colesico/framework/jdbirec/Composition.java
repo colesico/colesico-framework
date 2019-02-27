@@ -16,7 +16,7 @@
  *
  */
 
-package colesico.framework.dao;
+package colesico.framework.jdbirec;
 
 import java.lang.annotation.*;
 
@@ -25,9 +25,22 @@ import java.lang.annotation.*;
  * Field composition marker.  (analogue of JPA @Embeded)
  */
 @Documented
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DTO {
-    String tableName() default "";
-    String option() default "default";
+public @interface Composition {
+
+    /**
+     * Composition columns name prefix
+     */
+    String columnsPrefix() default "";
+
+    /**
+     * Accepts only enlisted columns (optional or not)
+     * For empty value all not optional columns will be accepted
+     * ex: foo.dummy.my_column
+     *
+     * @return
+     */
+    String[] columns() default {};
+
 }

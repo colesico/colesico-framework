@@ -1,4 +1,4 @@
-package colesico.framework.dao.codegen.model;
+package colesico.framework.jdbirec.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
@@ -9,8 +9,16 @@ public class ColumnElement {
     protected CompositionElement parentComposition;
     protected final String name;
     protected ClassType converter;
-    protected String formula;
+
+    protected boolean importable;
+    protected boolean exportable;
+
+    protected String insertAs;
+    protected String updateAs;
+    protected String selectAs;
+
     protected String definition;
+
     protected boolean option;
 
     public ColumnElement(FieldElement originField, String name) {
@@ -45,12 +53,12 @@ public class ColumnElement {
         this.converter = converter;
     }
 
-    public String getFormula() {
-        return formula;
+    public String getInsertAs() {
+        return insertAs;
     }
 
-    public void setFormula(String formula) {
-        this.formula = formula;
+    public void setInsertAs(String insertAs) {
+        this.insertAs = insertAs;
     }
 
     public String getDefinition() {
@@ -67,6 +75,38 @@ public class ColumnElement {
 
     public void setOption(boolean option) {
         this.option = option;
+    }
+
+    public boolean isImportable() {
+        return importable;
+    }
+
+    public void setImportable(boolean importable) {
+        this.importable = importable;
+    }
+
+    public boolean isExportable() {
+        return exportable;
+    }
+
+    public void setExportable(boolean exportable) {
+        this.exportable = exportable;
+    }
+
+    public String getSelectAs() {
+        return selectAs;
+    }
+
+    public void setSelectAs(String selectAs) {
+        this.selectAs = selectAs;
+    }
+
+    public String getUpdateAs() {
+        return updateAs;
+    }
+
+    public void setUpdateAs(String updateAs) {
+        this.updateAs = updateAs;
     }
 
     public boolean equals(Object o) {

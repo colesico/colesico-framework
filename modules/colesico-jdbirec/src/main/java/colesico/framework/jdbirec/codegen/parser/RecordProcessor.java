@@ -1,11 +1,11 @@
-package colesico.framework.dao.codegen.parser;
+package colesico.framework.jdbirec.codegen.parser;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.dao.DTO;
-import colesico.framework.dao.codegen.generator.DTOHelperGenerator;
-import colesico.framework.dao.codegen.model.DTOElement;
+import colesico.framework.jdbirec.Record;
+import colesico.framework.jdbirec.codegen.generator.RecordKitGenerator;
+import colesico.framework.jdbirec.codegen.model.RecordElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -18,37 +18,37 @@ import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-public class DTOProcessor extends FrameworkAbstractProcessor {
+public class RecordProcessor extends FrameworkAbstractProcessor {
 
-    private DTOParser dtoParser;
-    private DTOHelperGenerator dtoHelperGenerator;
+    private RecordParser recordParser;
+    private RecordKitGenerator recordHelperGenerator;
 
-    public DTOProcessor() {
+    public RecordProcessor() {
         super();
     }
 
     @Override
     protected Class<? extends Annotation>[] getSupportedAnnotations() {
-        return new Class[]{DTO.class};
+        return new Class[]{Record.class};
     }
 
     @Override
     protected void onInit() {
-        dtoParser = new DTOParser(processingEnv);
-        dtoHelperGenerator = new DTOHelperGenerator(processingEnv);
+        recordParser = new RecordParser(processingEnv);
+        recordHelperGenerator = new RecordKitGenerator(processingEnv);
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        for (Element elm : roundEnv.getElementsAnnotatedWith(DTO.class)) {
+        for (Element elm : roundEnv.getElementsAnnotatedWith(Record.class)) {
             if (elm.getKind() != ElementKind.CLASS) {
                 continue;
             }
             TypeElement typeElement = null;
             try {
                 typeElement = (TypeElement) elm;
-                DTOElement dtoElement = dtoParser.parse(new ClassElement(processingEnv,typeElement));
-                dtoHelperGenerator.generate(dtoElement);
+                RecordElement recordElement = recordParser.parse(new ClassElement(processingEnv, typeElement));
+                recordHelperGenerator.generate(recordElement);
             } catch (CodegenException ce) {
                 String message = "Error processing class '" + elm.toString() + "': " + ce.getMessage();
                 logger.debug(message);

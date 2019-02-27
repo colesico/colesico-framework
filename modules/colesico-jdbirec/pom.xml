@@ -25,16 +25,16 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.4.1</version>
+        <version>1.4.2</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>colesico-dao</artifactId>
+    <artifactId>colesico-jdbirec</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico DAO Assistant</name>
+    <name>Colesico JDBI Rec</name>
     <description>
-        Colesico framework database access object utilities
+        Colesico framework JDBI Record helper to mapping/binding pojos, generate insert/update sql and table creation form java class
     </description>
 
     <properties>
@@ -46,6 +46,12 @@
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-ioc</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <!-- JDBI-->
+        <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-core</artifactId>
+            <version>${jdbi.version}</version>
         </dependency>
     </dependencies>
 

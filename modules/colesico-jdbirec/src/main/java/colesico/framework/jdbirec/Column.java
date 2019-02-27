@@ -16,9 +16,10 @@
  *
  */
 
-package colesico.framework.dao;
+package colesico.framework.jdbirec;
 
 import java.lang.annotation.*;
+import java.sql.ResultSet;
 
 /**
  * Defines column name
@@ -34,14 +35,14 @@ public @interface Column {
      *
      * @return
      */
-    String name();
+    String name() default "";
 
     /**
      * Value converter
      *
      * @return
      */
-    Class<? extends DTOConverter> converter() default DTOConverter.class;
+    Class<? extends FieldConverter> converter() default FieldConverter.class;
 
     /**
      * Column value for insert and update sql.
@@ -50,7 +51,18 @@ public @interface Column {
      *
      * @return
      */
-    String formula() default "";
+    String insertAs() default "";
+
+    String updateAs() default "";
+
+    /**
+     * Column value for selecting.
+     * <p>
+     * Default value name()
+     *
+     * @return
+     */
+    String selectAs() default "";
 
     /**
      * Column definition for create table sql
@@ -58,6 +70,20 @@ public @interface Column {
      * @return
      */
     String definition() default "";
+
+    /**
+     * Use this field value in {@link RecordKit#exportTo(Object, RecordKit.ValueReceiver)} method
+     *
+     * @return
+     */
+    boolean exportable() default true;
+
+    /**
+     * Use this field value in {@link RecordKit#importFrom(Object, ResultSet)} method
+     *
+     * @return
+     */
+    boolean importable() default true;
 
     /**
      * Indicates that the column definition is an alternative

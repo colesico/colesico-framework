@@ -1,4 +1,4 @@
-package colesico.framework.dao;
+package colesico.framework.jdbirec;
 
 import java.lang.annotation.*;
 

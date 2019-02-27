@@ -25,7 +25,7 @@
     <groupId>net.colesico.framework</groupId>
     <artifactId>colesico-framework</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.1</version>
+    <version>1.4.2</version>
     <name>Colesico Framework</name>
     <description>
         Lightweight application framework for the Java 9+
@@ -142,7 +142,7 @@
                 <module>modules/colesico-hikaricp</module>
                 <module>modules/colesico-jdbc</module>
                 <module>modules/colesico-jdbi</module>
-                <module>modules/colesico-dao</module>
+                <module>modules/colesico-jdbirec</module>
 
                 <!-- Web -->
                 <module>modules/colesico-http</module>
