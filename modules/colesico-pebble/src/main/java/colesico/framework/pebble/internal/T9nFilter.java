@@ -45,10 +45,7 @@ public final class T9nFilter implements Filter {
 
     public static final String FILTER_NAME = "t9n";
 
-    protected final TranslationKit t9n;
-
-    public T9nFilter(TranslationKit t9n) {
-        this.t9n = t9n;
+    public T9nFilter() {
     }
 
     @Override
@@ -81,7 +78,11 @@ public final class T9nFilter implements Filter {
         }
 
         if (dictionary == null) {
-            throw new PebbleException(null, "Translation dictionary not found", lineNumber, pebbleTemplate.getName());
+            StringBuilder sb = new StringBuilder("args: ");
+            for (Map.Entry<String, Object> me : args.entrySet()) {
+                sb.append(me.getKey()).append("=").append(me.getValue()).append("; ");
+            }
+            throw new PebbleException(null, "Translation dictionary not found. (" + sb.toString() + ")", lineNumber, pebbleTemplate.getName());
         }
 
         if (textParams == null || textParams.isEmpty()) {

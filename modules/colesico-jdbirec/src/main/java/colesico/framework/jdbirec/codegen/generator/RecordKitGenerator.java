@@ -275,6 +275,9 @@ public class RecordKitGenerator {
         List<String> columnNames = new ArrayList<>();
         List<String> columnValues = new ArrayList<>();
         for (ColumnElement column : allColumns) {
+            if (!column.isExportable()){
+                continue;
+            }
             columnNames.add(column.getName());
             if (column.getInsertAs() == null) {
                 String paramName = generateChain(null, column.getParentComposition(), column, f -> f.getName());
@@ -301,6 +304,9 @@ public class RecordKitGenerator {
         StringBuilder sb = new StringBuilder("UPDATE " + getTableName() + " SET ");
         List<String> assigns = new ArrayList<>();
         for (ColumnElement column : allColumns) {
+            if (!column.isExportable()){
+                continue;
+            }
             if (column.getUpdateAs() == null) {
                 String paramName = generateChain(null, column.getParentComposition(), column, f -> f.getName());
                 assigns.add(column.getName() + " = :" + paramName);
@@ -328,6 +334,9 @@ public class RecordKitGenerator {
         StringBuilder sb = new StringBuilder("SELECT ");
         List<String> columnNames = new ArrayList<>();
         for (ColumnElement column : allColumns) {
+            if (!column.isImportable()){
+                continue;
+            }
             if (column.getSelectAs() == null) {
                 columnNames.add(column.getName());
             } else {

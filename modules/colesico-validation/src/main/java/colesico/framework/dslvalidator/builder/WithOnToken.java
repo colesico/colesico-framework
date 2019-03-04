@@ -34,6 +34,13 @@ public final class WithOnToken<T> implements CommandToken {
         this.commands = commands;
     }
 
+    /**
+     * Commands executed until error is not occurred
+     * @param subject
+     * @param valueExtractor
+     * @param commands
+     * @return
+     */
     public WithOnToken<T> on(final String subject,
                              final Function<T, Object> valueExtractor,
                              final CommandToken... commands) {

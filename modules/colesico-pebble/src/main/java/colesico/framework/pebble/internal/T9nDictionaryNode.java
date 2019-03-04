@@ -23,6 +23,7 @@ import colesico.framework.translation.TranslationKit;
 import com.mitchellbosecke.pebble.extension.NodeVisitor;
 import com.mitchellbosecke.pebble.node.AbstractRenderableNode;
 import com.mitchellbosecke.pebble.template.EvaluationContextImpl;
+import com.mitchellbosecke.pebble.template.GlobalContext;
 import com.mitchellbosecke.pebble.template.PebbleTemplateImpl;
 
 import java.io.IOException;
@@ -45,13 +46,20 @@ public final class T9nDictionaryNode extends AbstractRenderableNode {
     }
 
     @Override
-    public void render(PebbleTemplateImpl pebbleTemplate, Writer writer, EvaluationContextImpl evaluationContext) throws IOException {
+    public void render(PebbleTemplateImpl pebbleTemplate, Writer writer, EvaluationContextImpl context) throws IOException {
         Bundle dictionary = translationKit.getBundle(basePath);
-        evaluationContext.getScopeChain().put(dictName, dictionary);
+
+        // local variable
+        context.getScopeChain().put(dictName, dictionary);
+
+        // global variable
+        //GlobalContext globalContext = (GlobalContext) context.getVariable("_context");
+        //globalContext.put(dictName, dictionary);
     }
 
     @Override
     public void accept(NodeVisitor visitor) {
         visitor.visit(this);
     }
+
 }

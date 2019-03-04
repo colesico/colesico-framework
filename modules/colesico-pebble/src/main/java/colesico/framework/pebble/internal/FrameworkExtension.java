@@ -21,8 +21,10 @@ package colesico.framework.pebble.internal;
 import colesico.framework.translation.TranslationKit;
 import com.mitchellbosecke.pebble.extension.AbstractExtension;
 import com.mitchellbosecke.pebble.extension.Filter;
+import com.mitchellbosecke.pebble.extension.Function;
 import com.mitchellbosecke.pebble.tokenParser.TokenParser;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 
@@ -34,6 +36,7 @@ public class FrameworkExtension extends AbstractExtension {
 
     private final TranslationKit t9n;
 
+    @Inject
     public FrameworkExtension(TranslationKit t9n) {
         this.t9n = t9n;
     }
@@ -41,8 +44,15 @@ public class FrameworkExtension extends AbstractExtension {
     @Override
     public Map<String, Filter> getFilters() {
         Map<String, Filter> filters = new HashMap<>();
-        filters.put(T9nFilter.FILTER_NAME, new T9nFilter(t9n));
+        filters.put(T9nFilter.FILTER_NAME, new T9nFilter());
         return filters;
+    }
+
+    @Override
+    public Map<String, Function> getFunctions() {
+        Map<String, Function> functions = new HashMap<>();
+        functions.put(T9nFunction.FUNCTION_NAME, new T9nFunction());
+        return functions;
     }
 
     @Override

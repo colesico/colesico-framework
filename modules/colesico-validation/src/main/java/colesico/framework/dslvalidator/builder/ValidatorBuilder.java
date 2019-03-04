@@ -1,6 +1,7 @@
 package colesico.framework.dslvalidator.builder;
 
 
+import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.dslvalidator.commands.*;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
@@ -15,6 +16,17 @@ abstract public class ValidatorBuilder extends FlowControlBuilder {
     public ValidatorBuilder(ValidatorMessages vrMessages) {
         this.vrMessages = vrMessages;
     }
+
+    /**
+     * Adds any command to local chain
+     *
+     * @param command
+     * @return
+     */
+    protected CommandToken call(Command command) {
+        return () -> add(command);
+    }
+
 
     /**
      * Adds required verifier to local chain

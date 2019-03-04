@@ -42,7 +42,7 @@ public class ValidationProgramBuilder {
     }
 
     /**
-     * Adds comman to current chain
+     * Adds command to current chain
      *
      * @return
      */
