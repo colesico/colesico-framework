@@ -61,6 +61,7 @@ public class RecordKitGenerator {
 
     public void generateConstructor() {
         MethodSpec.Builder mb = MethodSpec.constructorBuilder();
+        mb.addModifiers(Modifier.PUBLIC);
         for (Map.Entry<TypeMirror, String> f : converterFields.getFieldsMap().entrySet()) {
             mb.addStatement("this.$N= new $T()", f.getValue(), TypeName.get(f.getKey()));
         }
