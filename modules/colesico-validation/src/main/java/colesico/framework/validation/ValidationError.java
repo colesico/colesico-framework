@@ -21,8 +21,12 @@ package colesico.framework.validation;
 import java.io.Serializable;
 
 public class ValidationError implements Serializable {
-    private final String code;
-    private final String message;
+
+    private String code;
+    private String message;
+
+    public ValidationError() {
+    }
 
     public ValidationError(String code, String message) {
         this.code = code;
@@ -35,6 +39,14 @@ public class ValidationError implements Serializable {
 
     public String getMessage() {
         return message;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     @Override

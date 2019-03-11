@@ -21,12 +21,14 @@ package colesico.framework.restlet.internal;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpException;
 import colesico.framework.http.HttpRequest;
+import colesico.framework.ioc.ThreadScope;
 import colesico.framework.restlet.RestletErrorResponse;
 import colesico.framework.restlet.teleapi.RestletDataPort;
 import colesico.framework.restlet.teleapi.RestletTeleDriver;
 import colesico.framework.security.AuthorityRequiredException;
 import colesico.framework.security.PrincipalRequiredException;
 import colesico.framework.service.ApplicationException;
+import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleDriver;
 import colesico.framework.validation.ValidationException;
 import colesico.framework.weblet.teleapi.InvokeContext;
@@ -53,17 +55,22 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
 
     protected final Logger log = LoggerFactory.getLogger(TeleDriver.class);
 
+    protected final ThreadScope threadScope;
     protected final Provider<HttpContext> httpContextProv;
     protected final RestletDataPort restletDataPort;
 
     @Inject
-    public RestletTeleDriverImpl(Provider<HttpContext> httpContextProv, RestletDataPort restletDataPort) {
+    public RestletTeleDriverImpl(ThreadScope threadScope, Provider<HttpContext> httpContextProv, RestletDataPort restletDataPort) {
+        this.threadScope = threadScope;
         this.httpContextProv = httpContextProv;
         this.restletDataPort = restletDataPort;
     }
 
     @Override
     public <F> void invoke(F framlet, Binder<F, RestletDataPort> binder, InvokeContext invCtx) {
+        // Set data port to be accessible
+        threadScope.put(DataPort.SCOPE_KEY, restletDataPort);
+        // Retrieve http context
         HttpContext httpCtx = httpContextProv.get();
         try {
             invokeImpl(framlet, binder, invCtx, httpCtx);

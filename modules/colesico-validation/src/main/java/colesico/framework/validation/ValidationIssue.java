@@ -22,18 +22,30 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- *
+ * Describes a validation issue
  */
 public class ValidationIssue implements Serializable {
 
-    private final String subject;
-    private final List<ValidationError> errors;
-    private final Map<String, ValidationIssue> subissues;
+    /**
+     * Validation subject name
+     */
+    private String subject;
+
+    /**
+     * Validation errors list
+     */
+    private List<ValidationError> errors = new ArrayList<>();
+
+    /**
+     * Nested issues if the subject is complex object
+     */
+    private Map<String, ValidationIssue> subissues = new HashMap<>();
+
+    public ValidationIssue() {
+    }
 
     public ValidationIssue(String subject) {
         this.subject = subject;
-        this.errors = new ArrayList<>();
-        this.subissues = new HashMap<>();
     }
 
     public boolean hasErrors() {
@@ -66,6 +78,18 @@ public class ValidationIssue implements Serializable {
 
     public Map<String, ValidationIssue> getSubissues() {
         return Collections.unmodifiableMap(subissues);
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public void setErrors(List<ValidationError> errors) {
+        this.errors = errors;
+    }
+
+    public void setSubissues(Map<String, ValidationIssue> subissues) {
+        this.subissues = subissues;
     }
 
     @Override

@@ -12,11 +12,11 @@ module colesico.framework.restlet {
     requires slf4j.api;
     requires org.apache.commons.lang3;
 
-    requires com.squareup.moshi;
-    requires okio;
+    requires gson;
 
     // API
     exports colesico.framework.restlet;
+    opens colesico.framework.restlet;
     exports colesico.framework.restlet.teleapi;
     exports colesico.framework.restlet.teleapi.converter;
 
@@ -25,6 +25,8 @@ module colesico.framework.restlet {
 
     // Codegen
     exports colesico.framework.restlet.codegen;
+
+
 
     // Resources
     opens colesico.framework.restlet.t9n to colesico.framework.localization;

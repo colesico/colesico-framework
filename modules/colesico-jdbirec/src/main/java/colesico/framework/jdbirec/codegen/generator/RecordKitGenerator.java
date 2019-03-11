@@ -276,11 +276,12 @@ public class RecordKitGenerator {
         List<String> columnNames = new ArrayList<>();
         List<String> columnValues = new ArrayList<>();
         for (ColumnElement column : allColumns) {
-            if (!column.isExportable()){
+            if (column.getInsertAs()==null){
                 continue;
             }
+
             columnNames.add(column.getName());
-            if (column.getInsertAs() == null) {
+            if (column.getInsertAs().equals("@field")){
                 String paramName = generateChain(null, column.getParentComposition(), column, f -> f.getName());
                 columnValues.add(":" + paramName);
             } else {
@@ -305,16 +306,16 @@ public class RecordKitGenerator {
         StringBuilder sb = new StringBuilder("UPDATE " + getTableName() + " SET ");
         List<String> assigns = new ArrayList<>();
         for (ColumnElement column : allColumns) {
-            if (!column.isExportable()){
+            if (column.getUpdateAs() == null) {
                 continue;
             }
-            if (column.getUpdateAs() == null) {
+
+            if (column.getUpdateAs().equals("@field")){
                 String paramName = generateChain(null, column.getParentComposition(), column, f -> f.getName());
                 assigns.add(column.getName() + " = :" + paramName);
             } else {
                 assigns.add(column.getName() + " = " + column.getUpdateAs());
             }
-
         }
         sb.append(StringUtils.join(assigns, ", "));
 
@@ -335,10 +336,10 @@ public class RecordKitGenerator {
         StringBuilder sb = new StringBuilder("SELECT ");
         List<String> columnNames = new ArrayList<>();
         for (ColumnElement column : allColumns) {
-            if (!column.isImportable()){
+            if (column.getSelectAs() == null){
                 continue;
             }
-            if (column.getSelectAs() == null) {
+            if (column.getSelectAs().equals("@column")) {
                 columnNames.add(column.getName());
             } else {
                 columnNames.add(column.getSelectAs());

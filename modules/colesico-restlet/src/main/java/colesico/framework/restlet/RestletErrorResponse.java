@@ -24,29 +24,16 @@ import colesico.framework.validation.ValidationIssue;
 import java.io.Serializable;
 
 /**
-* @author Vladlen Larionov
-*/
-public class RestletErrorResponse implements Serializable{
+ * @author Vladlen Larionov
+ */
+public class RestletErrorResponse implements Serializable {
 
-    protected final String uri;
-    protected final Integer status;
-    protected final String message;
-    protected final ValidationIssue issue;
+    protected String uri;
+    protected Integer status;
+    protected String message;
+    protected ValidationIssue issue;
 
-    public String getUri() {
-        return uri;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public ValidationIssue getIssue() {
-        return issue;
+    public RestletErrorResponse() {
     }
 
     public RestletErrorResponse(String uri, Integer status, String message) {
@@ -60,6 +47,38 @@ public class RestletErrorResponse implements Serializable{
         this.uri = uri;
         this.status = status;
         this.issue = issue;
-        this.message="Validation error occurred. See 'issue' field for details.";
+        this.message = "Validation error occurred. See 'issue' field for details.";
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public ValidationIssue getIssue() {
+        return issue;
+    }
+
+    public void setIssue(ValidationIssue issue) {
+        this.issue = issue;
     }
 }

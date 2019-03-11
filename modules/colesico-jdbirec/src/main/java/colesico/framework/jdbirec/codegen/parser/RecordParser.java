@@ -103,10 +103,10 @@ public class RecordParser {
 
             columnAnn = new AnnotationElement<>(processingEnv, column);
             String name;
-            if (!StringUtils.isEmpty(columnAnn.unwrap().name())) {
-                name = columnAnn.unwrap().name();
-            } else {
+            if (columnAnn.unwrap().name().equals("@field")) {
                 name = StrUtils.toLowerCaseNotation(field.getName(),'_');
+            } else {
+                name = columnAnn.unwrap().name();
             }
 
             if (!acceptChain(composition, name, columnAnn.unwrap().option())) {
@@ -126,14 +126,14 @@ public class RecordParser {
             }
 
             if (StringUtils.isNotEmpty(columnAnn.unwrap().insertAs())) {
-                if (columnAnn.unwrap().insertAs().equals("*")) {
+                if (columnAnn.unwrap().insertAs().equals("@update")) {
                     columnElement.setInsertAs(columnAnn.unwrap().updateAs());
                 } else {
                     columnElement.setInsertAs(columnAnn.unwrap().insertAs());
                 }
             }
             if (StringUtils.isNotEmpty(columnAnn.unwrap().updateAs())) {
-                if (columnAnn.unwrap().updateAs().equals("*")) {
+                if (columnAnn.unwrap().updateAs().equals("@insert")) {
                     columnElement.setUpdateAs(columnAnn.unwrap().insertAs());
                 } else {
                     columnElement.setUpdateAs(columnAnn.unwrap().updateAs());

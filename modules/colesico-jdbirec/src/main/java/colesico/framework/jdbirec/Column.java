@@ -35,7 +35,7 @@ public @interface Column {
      *
      * @return
      */
-    String name() default "";
+    String name() default "@field";
 
     /**
      * Value converter
@@ -46,23 +46,31 @@ public @interface Column {
 
     /**
      * Column value for insert and update sql.
-     * <p>
-     * Default value ':'+name()
+     * \@field  - insert field value
+     * \@update - the same as insertAs
+     * '' - empty means no insertion
      *
      * @return
      */
-    String insertAs() default "";
+    String insertAs() default "@field";
 
-    String updateAs() default "";
+    /**
+     * Possible values:
+     * \@field  - insert field value
+     * \@insert - the same as insertAs
+     * '' - empty means no insertion
+     *
+     * @return
+     */
+    String updateAs() default "@field";
 
     /**
      * Column value for selecting.
+     * '' - empty means no selection
      * <p>
-     * Default value name()
-     *
      * @return
      */
-    String selectAs() default "";
+    String selectAs() default "@column";
 
     /**
      * Column definition for create table sql

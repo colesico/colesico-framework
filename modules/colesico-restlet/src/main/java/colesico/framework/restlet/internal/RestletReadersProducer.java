@@ -3,6 +3,7 @@ package colesico.framework.restlet.internal;
 import colesico.framework.http.HttpFile;
 import colesico.framework.ioc.Classed;
 import colesico.framework.ioc.Producer;
+import colesico.framework.ioc.Rank;
 import colesico.framework.profile.Profile;
 import colesico.framework.restlet.teleapi.RestletReaderProxy;
 import colesico.framework.restlet.teleapi.RestletTeleReader;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 
-@Producer
+@Producer(Rank.RANK_MINOR)
 public class RestletReadersProducer {
 
     @Singleton
