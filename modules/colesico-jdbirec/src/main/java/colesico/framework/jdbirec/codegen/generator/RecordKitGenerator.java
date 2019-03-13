@@ -103,6 +103,9 @@ public class RecordKitGenerator {
 
     protected void generateCompositionToMap(CompositionElement composition, CodeBlock.Builder cb) {
         for (ColumnElement column : composition.getColumns()) {
+            if (!column.isExportable()){
+                continue;
+            }
             String paramName = generateChain(null, column.getParentComposition(), column, f -> f.getName());
             // receiver.receive("column"
             cb.add("$N.$N($S, ", RecordKit.RECEIVER_PARAM, RecordKit.ValueReceiver.RECEIVE_METHOD, paramName);
@@ -190,6 +193,9 @@ public class RecordKitGenerator {
 
     protected void generateCompositionFromResultSet(CompositionElement composition, CodeBlock.Builder cb) {
         for (ColumnElement column : composition.getColumns()) {
+            if (!column.isImportable()){
+                continue;
+            }
             cb.add(generateChain(RecordKit.RECORD_PARAM, composition, null, this::toGetterName));
             cb.add('.' + toSetterName(column.getOriginField()));
             cb.add("(");

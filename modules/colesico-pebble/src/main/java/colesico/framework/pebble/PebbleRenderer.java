@@ -41,7 +41,7 @@ import java.util.Map;
 @Singleton
 public class PebbleRenderer implements HtmlRenderer<String> {
 
-    public static final String TM_VAR = "tm";
+    public static final String MODEL_VAR = "vm";
 
     private final PebbleEngine pebbleEngine;
 
@@ -68,10 +68,10 @@ public class PebbleRenderer implements HtmlRenderer<String> {
         return new HtmlResponse(writer.toString());
     }
 
-    public <M> Writer evaluate(String templatePath, M templateModel) {
+    public <M> Writer evaluate(String templatePath, M viewModel) {
         Writer writer = new StringWriter();
         Map<String, Object> context = new HashMap<>();
-        context.put(TM_VAR, templateModel);
+        context.put(MODEL_VAR, viewModel);
         try {
             PebbleTemplate compiledTemplate = pebbleEngine.getTemplate(templatePath);
             compiledTemplate.evaluate(writer, context);

@@ -6,15 +6,11 @@ import colesico.framework.ioc.Producer;
 import colesico.framework.ioc.Rank;
 import colesico.framework.profile.Profile;
 import colesico.framework.security.Principal;
-import colesico.framework.weblet.HtmlResponse;
-import colesico.framework.weblet.NavigationResponse;
-import colesico.framework.weblet.TextResponse;
-import colesico.framework.weblet.VariousResponse;
+import colesico.framework.weblet.*;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.writer.*;
 
 import javax.inject.Singleton;
-
 
 @Producer(Rank.RANK_MINOR)
 @Produce(StringWriter.class)
@@ -24,6 +20,12 @@ import javax.inject.Singleton;
 @Produce(PrincipalWriter.class)
 @Produce(ProfileWriter.class)
 public class WebletWritersProducer {
+
+    @Singleton
+    @Classed(BinaryResponse.class)
+    public WebletTeleWriter getBinaryWriter(BinaryWriter impl) {
+        return impl;
+    }
 
     @Singleton
     @Classed(TextResponse.class)

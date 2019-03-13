@@ -20,6 +20,7 @@ package colesico.framework.webstatic.internal;
 import colesico.framework.http.HttpContext;
 import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.ResourceKit;
+import colesico.framework.webstatic.MimeAssist;
 import colesico.framework.webstatic.MimeType;
 import colesico.framework.webstatic.StaticContent;
 import org.apache.commons.io.FilenameUtils;
@@ -37,8 +38,6 @@ import java.io.OutputStream;
 
 public class StaticContentImpl implements StaticContent {
     protected static final int SEND_BUFFER_SIZE = 8192;
-    protected static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
-
 
     protected final Logger log = LoggerFactory.getLogger(StaticContent.class);
 
@@ -62,7 +61,7 @@ public class StaticContentImpl implements StaticContent {
         resourcePath = resourceKit.localize(resourcePath, mode);
         resourcePath = resourceKit.rewrite(resourcePath);
 
-        httpContext.getResponse().setContenType(getContentType(resourcePath));
+        httpContext.getResponse().setContenType(MimeAssist.getContentType(resourcePath));
 
         try (InputStream is = resourceKit.getStream(resourcePath);
              OutputStream os = httpContext.getResponse().getOutputStream()) {
@@ -77,15 +76,6 @@ public class StaticContentImpl implements StaticContent {
         }
     }
 
-    protected String getContentType(String resourcePath) {
-        try {
-            String resourceExt = StringUtils.lowerCase(FilenameUtils.getExtension(resourcePath));
-            MimeType mimeType = MimeType.valueOf(resourceExt);
-            return mimeType.getContentType();
-        } catch (IllegalArgumentException ex) {
-            return DEFAULT_CONTENT_TYPE;
-        }
-    }
 
 
 }
