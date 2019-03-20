@@ -53,7 +53,7 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
     public static final String X_REQUESTED_WITH_HEADER = "X-Requested-With";
     public static final String X_REQUESTED_WITH_HEADER_VAL = "XMLHttpRequest";
 
-    protected final Logger log = LoggerFactory.getLogger(TeleDriver.class);
+    protected final Logger log = LoggerFactory.getLogger(RestletTeleDriver.class);
 
     protected final ThreadScope threadScope;
     protected final Provider<HttpContext> httpContextProv;
@@ -137,14 +137,18 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
 
     protected void handleCommonError(Throwable ex, int httpCode, HttpContext context) {
         String errMsg = MessageFormat.format("Restlet error: {0}", ExceptionUtils.getRootCauseMessage(ex));
-        log.error(errMsg);
+        if (ex instanceof ApplicationException) {
+            log.warn(errMsg, ex);
+        } else {
+            log.error(errMsg, ex);
+        }
         RestletErrorResponse response = new RestletErrorResponse(context.getRequest().getRequestURI(), httpCode, getMessage(ex));
         restletDataPort.sendError(response, httpCode);
     }
 
     protected void handleValidationError(ValidationException ex, int httpCode, HttpContext context) {
         String errMsg = MessageFormat.format("Restlet validation error: {0}", ExceptionUtils.getRootCauseMessage(ex));
-        log.error(errMsg);
+        log.warn(errMsg);
         RestletErrorResponse response = new RestletErrorResponse(context.getRequest().getRequestURI(), httpCode, ex.getIssue());
         restletDataPort.sendError(response, httpCode);
     }

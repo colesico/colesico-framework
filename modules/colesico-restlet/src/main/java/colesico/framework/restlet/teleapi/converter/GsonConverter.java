@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 
 import java.io.*;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 
 public class GsonConverter implements JsonConverter {
 
@@ -23,17 +24,7 @@ public class GsonConverter implements JsonConverter {
     }
 
     @Override
-    public <T> T fromJson(String json, Class<T> type) {
-        return gson.fromJson(json, type);
-    }
-
-    @Override
-    public <T> T fromJson(InputStream is, Class<T> type) {
-        try (Reader reader = new InputStreamReader(is, "UTF-8")){
-            T result = gson.fromJson(reader, type);
-            return result;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public <T> T fromJson(Reader reader, Type valueType) {
+        return gson.fromJson(reader, valueType);
     }
 }

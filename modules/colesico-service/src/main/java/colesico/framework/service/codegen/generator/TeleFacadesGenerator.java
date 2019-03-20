@@ -22,12 +22,14 @@ package colesico.framework.service.codegen.generator;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenUtils;
+import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.parser.ProcessorContext;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleDriver;
 import colesico.framework.teleapi.TeleFacade;
+import colesico.framework.teleapi.TypeWrapper;
 import com.squareup.javapoet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +37,9 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
 
@@ -83,7 +85,7 @@ public class TeleFacadesGenerator {
             CodeBlock ctx = ((TeleParamElement) var).getReadingContext();
             // Generates code like this: dataPot.read(ParamType.class, new Context(...));
             CodeBlock.Builder cb = CodeBlock.builder();
-            cb.add("$N.$N(", TeleDriver.Binder.DATAPORT_PARAM, DataPort.READ_METHOD);
+            cb.add("$N.$N(", TeleDriver.Binder.DATAPORT_PARAM, DataPort.READ_FOR_CLASS_METHOD);
             cb.add("$T.class,", paramTypeName);
             cb.add(ctx);
             cb.add(")");
@@ -149,10 +151,20 @@ public class TeleFacadesGenerator {
         callMethodCb.add(TeleDriver.Binder.TARGET_PARAM + "." + teleMethod.getProxyMethod().getName() + "(" + serviceMethodArgs.toFormat() + ");\n", serviceMethodArgs.toValues());
         binderBuilder.add(callMethodCb.build());
 
-        // Send result to vlient via data port
-        //    dataPort.write(MyResp.class,result,new Ctx());
+        // Send result to client via data port
+        //    dataPort.writeForClass(MyResp.class,result,new Ctx());
+        // or  dataPort.writeForType(new TypeWrapper<MyResp>(){}.unwrap(),result,new Ctx());
         if (!voidResult) {
-            binderBuilder.add("$N.$N($T.class, ", TeleDriver.Binder.DATAPORT_PARAM, DataPort.WRITE_METHOD, TypeName.get(returnType));
+            ClassType returnClassType = new ClassType(context.getProcessingEnv(), (DeclaredType) returnType);
+            boolean genericReturnType = !returnClassType.asElement().getTypeParameters().isEmpty();
+            if (genericReturnType) {
+                binderBuilder.add("$N.$N(", TeleDriver.Binder.DATAPORT_PARAM, DataPort.WRITE_FOR_TYPE_METHOD);
+                TypeName wrapperType = ParameterizedTypeName.get(ClassName.get(TypeWrapper.class), TypeName.get(returnType));
+                binderBuilder.add("new $T(){}.$N(), ", wrapperType, TypeWrapper.UNWRAP_METHOD);
+            } else {
+                binderBuilder.add("$N.$N(", TeleDriver.Binder.DATAPORT_PARAM, DataPort.WRITE_FOR_CLASS_METHOD);
+                binderBuilder.add("$T.class, ", TypeName.get(returnType));
+            }
             binderBuilder.add("$N, ", TeleDriver.RESULT_PARAM);
             CodeBlock writeCtx = teleMethod.getWritingContext();
             binderBuilder.add(writeCtx);

@@ -48,7 +48,7 @@ public @interface Column {
      * Column value for insert and update sql.
      * \@field  - insert field value
      * \@update - the same as insertAs
-     * '' - empty means no insertion
+     * \@nop -  no insertion
      *
      * @return
      */
@@ -58,15 +58,16 @@ public @interface Column {
      * Possible values:
      * \@field  - insert field value
      * \@insert - the same as insertAs
-     * '' - empty means no insertion
+     * \@nop -  don't update
      *
      * @return
      */
-    String updateAs() default "@field";
+    String updateAs() default "@insert";
 
     /**
      * Column value for selecting.
-     * '' - empty means no selection
+     * \@column - select column value
+     * \@nop -  don't select
      * <p>
      * @return
      */

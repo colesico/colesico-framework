@@ -41,11 +41,11 @@ public class DefaultProfileKit implements ProfileKit {
     }
 
     protected Profile profileReadControl(DataPort<Object, Object> port) {
-        return port.read(Profile.class, null);
+        return port.readForClass(Profile.class, null);
     }
 
     protected void profileWriteControl(DataPort port, Profile profile) {
-        port.write(Profile.class, profile, null);
+        port.writeForClass(Profile.class, profile, null);
     }
 
     @Override

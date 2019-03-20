@@ -45,11 +45,11 @@ public class DefaultSecurityKit implements SecurityInterceptor {
     }
 
     protected Principal principalReadControl(DataPort<Object, Object> port) {
-        return port.read(Principal.class, null);
+        return port.readForClass(Principal.class, null);
     }
 
     protected void principalWriteControl(DataPort<Object, Object> port, Principal principal) {
-        port.write(Principal.class, principal, null);
+        port.writeForClass(Principal.class, principal, null);
     }
 
     protected boolean hasAuthorityControl(Principal principal, String... authorityId) {

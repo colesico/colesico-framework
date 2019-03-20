@@ -23,6 +23,7 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.weblet.teleapi.*;
 
 import javax.inject.Singleton;
+import java.lang.reflect.Type;
 
 @Singleton
 public class WebletDataPortImpl implements WebletDataPort {
@@ -33,16 +34,27 @@ public class WebletDataPortImpl implements WebletDataPort {
         this.ioc = ioc;
     }
 
+    protected String typeToClassName(Type valueType) {
+        if (valueType instanceof Class) {
+            return ((Class) valueType).getCanonicalName();
+        } else {
+            return valueType.getTypeName();
+        }
+    }
+
     @Override
-    public <V> V read(Class<V> type, ReaderContext context) {
-        final WebletTeleReader<V> reader = ioc.instance(new ClassedKey<>(WebletTeleReader.class, type), null);
+    @SuppressWarnings("unchecked")
+    public <V> V readForType(Type valueType, ReaderContext context) {
+        final WebletTeleReader<V> reader
+                = ioc.instance(new ClassedKey<>(WebletTeleReader.class.getCanonicalName(), typeToClassName(valueType)), null);
         return reader.read(context);
     }
 
     @Override
-    public <V> void write(Class<V> type, V value, WriterContext context) {
-        final WebletTeleWriter<V> writer = ioc.instance(new ClassedKey<>(WebletTeleWriter.class, type), null);
+    public <V> void writeForType(Type valueType, V value, WriterContext context) {
+        final WebletTeleWriter<V> writer
+                = ioc.instance(new ClassedKey<>(WebletTeleWriter.class.getCanonicalName(), typeToClassName(valueType)), null);
+
         writer.write(value, context);
     }
-
 }

@@ -84,8 +84,8 @@ public class ServiceProxyGenerator {
             if (firstConstructor == null) {
                 firstConstructor = method;
             }
-            AnnotationElement<Construct> constructorMarker = method.getAnnotation(Construct.class);
-            if (constructorMarker == null) {
+            AnnotationElement<Inject> constructMarker = method.getAnnotation(Inject.class);
+            if (constructMarker == null) {
                 continue;
             }
             constructor = method;

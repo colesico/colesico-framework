@@ -125,21 +125,21 @@ public class RecordParser {
                 columnElement.setConverter(new ClassType(processingEnv, (DeclaredType) converterType));
             }
 
-            if (StringUtils.isNotEmpty(columnAnn.unwrap().insertAs())) {
+            if (!"@nop".equals(columnAnn.unwrap().insertAs())) {
                 if (columnAnn.unwrap().insertAs().equals("@update")) {
                     columnElement.setInsertAs(columnAnn.unwrap().updateAs());
                 } else {
                     columnElement.setInsertAs(columnAnn.unwrap().insertAs());
                 }
             }
-            if (StringUtils.isNotEmpty(columnAnn.unwrap().updateAs())) {
+            if (!"@nop".equals(columnAnn.unwrap().updateAs())) {
                 if (columnAnn.unwrap().updateAs().equals("@insert")) {
                     columnElement.setUpdateAs(columnAnn.unwrap().insertAs());
                 } else {
                     columnElement.setUpdateAs(columnAnn.unwrap().updateAs());
                 }
             }
-            if (StringUtils.isNotEmpty(columnAnn.unwrap().selectAs())) {
+            if (!"@nop".equals(columnAnn.unwrap().selectAs())) {
                 columnElement.setSelectAs(columnAnn.unwrap().selectAs());
             }
 

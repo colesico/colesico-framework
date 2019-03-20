@@ -36,6 +36,7 @@ import colesico.framework.weblet.teleapi.WriterContext;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 
 @Singleton
@@ -51,10 +52,20 @@ public class RestletDataPortImpl implements RestletDataPort {
         this.jsonConverter = jsonConverter;
     }
 
+    protected String typeToClassName(Type valueType) {
+        if (valueType instanceof Class) {
+            return ((Class) valueType).getCanonicalName();
+        } else {
+            return valueType.getTypeName();
+        }
+    }
+
     @Override
-    public <V> V read(Class<V> type, ReaderContext context) {
+    @SuppressWarnings("unchecked")
+    public <V> V readForType(Type valueType, ReaderContext context) {
         // try get accurate reader
-        final Supplier<RestletTeleReader> supplier = ioc.supplierOrNull(new ClassedKey<>(RestletTeleReader.class, type));
+        final Supplier<RestletTeleReader> supplier
+                = ioc.supplierOrNull(new ClassedKey<>(RestletTeleReader.class.getCanonicalName(), typeToClassName(valueType)));
         if (supplier != null) {
             final TeleReader<V, ReaderContext> reader = supplier.get(null);
             return reader.read(context);
@@ -63,15 +74,16 @@ public class RestletDataPortImpl implements RestletDataPort {
         // no accurate reader. read as json
         HttpContext httpContext = httpContextProv.get();
         try (InputStream is = httpContext.getRequest().getInputStream()) {
-            return jsonConverter.fromJson(is, type);
+            return jsonConverter.fromJson(is, valueType);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public <V> void write(Class<V> type, V value, WriterContext context) {
-        final Supplier<RestletTeleWriter> supplier = ioc.supplierOrNull(new ClassedKey<>(RestletTeleWriter.class, type));
+    public <V> void writeForType(Type valueType, V value, WriterContext context) {
+        final Supplier<RestletTeleWriter> supplier
+                = ioc.supplierOrNull(new ClassedKey<>(RestletTeleReader.class.getCanonicalName(), typeToClassName(valueType)));
         if (supplier != null) {
             final TeleWriter<V, WriterContext> writer = supplier.get(null);
             writer.write(value, context);

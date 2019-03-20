@@ -22,6 +22,8 @@ package colesico.framework.teleapi;
 import colesico.framework.ioc.Key;
 import colesico.framework.ioc.TypeKey;
 
+import java.lang.reflect.Type;
+
 /**
  * Data exchange port for communication with remote client.
  * This port is destined for retrieving parameters values from remote client and sending back a results.
@@ -32,8 +34,11 @@ import colesico.framework.ioc.TypeKey;
  * @param <W>
  */
 public interface DataPort<R, W> {
-    String READ_METHOD = "read";
-    String WRITE_METHOD = "write";
+
+    String READ_FOR_CLASS_METHOD = "readForClass";
+    String READ_FOR_TYPE_METHOD = "readForType";
+    String WRITE_FOR_CLASS_METHOD = "writeForClass";
+    String WRITE_FOR_TYPE_METHOD = "writeForType";
 
     /**
      * Key for storing instance of TeleDataPort in process scope
@@ -41,21 +46,47 @@ public interface DataPort<R, W> {
     Key<DataPort> SCOPE_KEY = new TypeKey<>(DataPort.class);
 
     /**
-     * Read data from client request
+     * Read value from client request.
+     * This method should be used with generic types.
      *
-     * @param type
-     * @param context model reading context. Is used for model read customization
+     * @param valueType
+     * @param context
      * @param <V>
      * @return
      */
-    <V> V read(Class<V> type, R context);
+    <V> V readForType(Type valueType, R context);
 
     /**
-     * Writes data to the client response
+     * Read value from client request
      *
+     * @param valueClass
+     * @param context    value reading context. Is used for value reading customization
+     * @param <V>
+     * @return
+     */
+    default <V> V readForClass(Class<V> valueClass, R context) {
+        return readForType(valueClass, context);
+    }
+
+    /**
+     * Writes data to the client response.
+     * This method should be used with generic types.
+     *
+     * @param valueType
      * @param value
-     * @param context model writing context. Is used for model writing customization
+     * @param context
      * @param <V>
      */
-    <V> void write(Class<V> type, V value, W context);
+    <V> void writeForType(Type valueType, V value, W context);
+
+    /**
+     * Writes value to the client response
+     *
+     * @param value
+     * @param context value writing context. Is used for value writing customization
+     * @param <V>
+     */
+    default <V> void writeForClass(Class<V> valueClass, V value, W context) {
+        writeForType(valueClass, value, context);
+    }
 }
