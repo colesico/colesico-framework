@@ -25,11 +25,6 @@ import colesico.framework.weblet.assist.CSRFProtector;
 import colesico.framework.weblet.internal.AuthenticatorImpl;
 import colesico.framework.weblet.internal.WebletDataPortImpl;
 import colesico.framework.weblet.internal.WebletTeleDriverImpl;
-import colesico.framework.weblet.teleapi.Authenticator;
-import colesico.framework.weblet.teleapi.WebletDataPort;
-import colesico.framework.weblet.teleapi.WebletTeleDriver;
-import colesico.framework.weblet.teleapi.writer.PrincipalWriterConfig;
-import colesico.framework.weblet.teleapi.writer.ProfileWriterConfig;
 
 import javax.inject.Singleton;
 import java.io.UnsupportedEncodingException;
@@ -58,8 +53,8 @@ public class WebletProducer {
 
     // Default config
     @Singleton
-    public PrincipalWriterConfig getPrincipalWriterConfig() {
-        return new PrincipalWriterConfig() {
+    public PrincipalWebletConfig getPrincipalWriterConfig() {
+        return new PrincipalWebletConfig() {
             @Override
             public byte[] getSignatureKey() {
                 try {
@@ -73,8 +68,8 @@ public class WebletProducer {
 
     // Default config
     @Singleton
-    public ProfileWriterConfig getProfileWriterConfig() {
-        return new ProfileWriterConfig() {
+    public ProfileWebletConfig getProfileWriterConfig() {
+        return new ProfileWebletConfig() {
             @Override
             public int getCookieValidityDays() {
                 return 365;

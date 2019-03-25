@@ -26,4 +26,11 @@ import java.io.Serializable;
  * @author Vladlen Larionov
  */
 public interface Principal extends Cloneable, Serializable {
+
+    /**
+     * Returns principal unique identifier
+     *
+     * @return
+     */
+    String getUID();
 }

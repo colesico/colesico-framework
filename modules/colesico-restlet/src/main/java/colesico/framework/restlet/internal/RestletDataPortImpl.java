@@ -27,7 +27,7 @@ import colesico.framework.restlet.RestletErrorResponse;
 import colesico.framework.restlet.teleapi.RestletDataPort;
 import colesico.framework.restlet.teleapi.RestletTeleReader;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
-import colesico.framework.restlet.teleapi.converter.JsonConverter;
+import colesico.framework.restlet.teleapi.JsonConverter;
 import colesico.framework.teleapi.TeleReader;
 import colesico.framework.teleapi.TeleWriter;
 import colesico.framework.weblet.teleapi.ReaderContext;

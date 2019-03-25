@@ -22,13 +22,15 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.profile.Profile;
+import colesico.framework.profile.ProfileConfig;
+import colesico.framework.profile.teleapi.ProfileTeleAssist;
+import colesico.framework.weblet.teleapi.ProfileWebletConfig;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WriterContext;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.util.Base64;
 import java.util.Calendar;
 
 @Singleton
@@ -37,22 +39,14 @@ public class ProfileWriter implements WebletTeleWriter<Profile> {
     public static final String COOKIE_NAME = "profile";
     public static final String HEADER_NAME = "Localization";
 
+    protected final ProfileWebletConfig config;
+    protected final ProfileTeleAssist profileTeleAssist;
     protected final Provider<HttpContext> httpContextProv;
-    protected final ProfileWriterConfig config;
 
-    public ProfileWriter(Provider<HttpContext> httpContextProv, ProfileWriterConfig config) {
-        this.httpContextProv = httpContextProv;
+    public ProfileWriter(ProfileWebletConfig config, ProfileTeleAssist profileTeleAssist, Provider<HttpContext> httpContextProv) {
         this.config = config;
-    }
-
-    /**
-     * ShoudReturn
-     * @param profile
-     * @return
-     */
-    protected String serializeProfile(Profile profile) {
-        String profileStr = profile.getLocale().getLanguage() + '-' + profile.getLocale().getCountry();
-        return profileStr;
+        this.profileTeleAssist = profileTeleAssist;
+        this.httpContextProv = httpContextProv;
     }
 
     @Override
@@ -61,11 +55,9 @@ public class ProfileWriter implements WebletTeleWriter<Profile> {
         Calendar expires = Calendar.getInstance();
         String profileValue;
         if (profile != null) {
-            try {
-                profileValue = URLEncoder.encode(serializeProfile(profile), "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            }
+            byte[] profileBytes = profileTeleAssist.serialize(profile);
+            Base64.Encoder encoder = Base64.getEncoder();
+            profileValue = encoder.encodeToString(profileBytes);
             expires.add(Calendar.DAY_OF_MONTH, config.getCookieValidityDays());
         } else {
             profileValue = null;

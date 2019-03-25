@@ -1,5 +1,6 @@
-package colesico.framework.restlet.teleapi.converter;
+package colesico.framework.restlet.teleapi.gson;
 
+import colesico.framework.restlet.teleapi.JsonConverter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

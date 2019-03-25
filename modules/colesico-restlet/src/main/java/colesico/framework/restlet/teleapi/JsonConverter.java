@@ -16,7 +16,7 @@
  *
  */
 
-package colesico.framework.restlet.teleapi.converter;
+package colesico.framework.restlet.teleapi;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

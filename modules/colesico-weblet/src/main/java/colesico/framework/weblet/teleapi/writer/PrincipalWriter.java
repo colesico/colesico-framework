@@ -22,14 +22,14 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.security.Principal;
-import colesico.framework.security.DefaultPrincipal;
-import colesico.framework.security.assist.HMACSignature;
+import colesico.framework.security.assist.MACUtils;
+import colesico.framework.security.teleapi.PrincipalTeleAssist;
+import colesico.framework.weblet.teleapi.PrincipalWebletConfig;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WriterContext;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.Calendar;
 
@@ -41,20 +41,15 @@ public class PrincipalWriter implements WebletTeleWriter<Principal> {
     public static final String HEADER_NAME = "Principal";
     public static final String ITEM_DELIMITER = ":";
 
-    protected final PrincipalWriterConfig config;
-    protected final Provider<HttpContext> httpContextProv;
 
-    public PrincipalWriter(PrincipalWriterConfig config, Provider<HttpContext> httpContextProv) {
+    protected final PrincipalWebletConfig config;
+    protected final Provider<HttpContext> httpContextProv;
+    protected final PrincipalTeleAssist principalTeleAssist;
+
+    public PrincipalWriter(PrincipalWebletConfig config, Provider<HttpContext> httpContextProv, PrincipalTeleAssist principalTeleAssist) {
         this.config = config;
         this.httpContextProv = httpContextProv;
-    }
-
-    protected byte[] serializePrincipal(Principal principal) {
-        try {
-            return ((DefaultPrincipal) principal).getId().getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        this.principalTeleAssist = principalTeleAssist;
     }
 
     @Override
@@ -66,8 +61,8 @@ public class PrincipalWriter implements WebletTeleWriter<Principal> {
 
         if (principal != null) {
 
-            byte[] principalBytes = serializePrincipal(principal);
-            byte[] signatureBytes = HMACSignature.sign(config.getSignatureAlgorithm(), principalBytes, config.getSignatureKey());
+            byte[] principalBytes = principalTeleAssist.serialize(principal);
+            byte[] signatureBytes = MACUtils.sign(config.getSignatureAlgorithm(), principalBytes, config.getSignatureKey());
 
             Base64.Encoder encoder = Base64.getEncoder();
             String principalBas64 = encoder.encodeToString(principalBytes);

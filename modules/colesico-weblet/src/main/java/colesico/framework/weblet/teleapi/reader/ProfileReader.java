@@ -22,17 +22,17 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.DefaultProfile;
+import colesico.framework.profile.teleapi.ProfileTeleAssist;
 import colesico.framework.weblet.assist.WebUtils;
 import colesico.framework.weblet.teleapi.ReaderContext;
 import colesico.framework.weblet.teleapi.WebletTeleReader;
 import colesico.framework.weblet.teleapi.writer.ProfileWriter;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.util.Base64;
 import java.util.Locale;
 
 /**
@@ -44,21 +44,22 @@ public class ProfileReader implements WebletTeleReader<Profile> {
 
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
 
+    protected final ProfileTeleAssist profileTeleAssist;
     protected final Provider<HttpContext> httpContextProv;
 
-    public ProfileReader(Provider<HttpContext> httpContextProv) {
+    @Inject
+    public ProfileReader(ProfileTeleAssist profileTeleAssist, Provider<HttpContext> httpContextProv) {
+        this.profileTeleAssist = profileTeleAssist;
         this.httpContextProv = httpContextProv;
     }
 
-    protected Profile deserializeProfile(String profileValue) {
-        return new DefaultProfile(Locale.forLanguageTag(profileValue));
-    }
 
     protected Profile getCustomProfile(HttpRequest request) {
-        // Retrieve model from http header
+
+        // Retrieve profile from http header
         String profileValue = request.getHeaders().get(ProfileWriter.HEADER_NAME);
         if (StringUtils.isBlank(profileValue)) {
-            // Retrieve model from http cookie
+            // Retrieve profile from http cookie
             HttpCookie cookie = request.getCookies().get(ProfileWriter.COOKIE_NAME);
             profileValue = cookie != null ? cookie.getValue() : null;
             if (StringUtils.isBlank(profileValue)) {
@@ -66,14 +67,11 @@ public class ProfileReader implements WebletTeleReader<Profile> {
             }
         }
 
-        // Decode str model
-        try {
-            profileValue = URLDecoder.decode(profileValue, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        Base64.Decoder decoder = Base64.getDecoder();
+        byte[] profileBytes = decoder.decode(profileValue);
 
-        return deserializeProfile(profileValue);
+        Profile profile = profileTeleAssist.deserialize(profileBytes);
+        return profile;
     }
 
     protected Profile getDefaultProfile(HttpRequest request) {
@@ -83,7 +81,7 @@ public class ProfileReader implements WebletTeleReader<Profile> {
             locale = Locale.getDefault();
         }
 
-        return new DefaultProfile(locale);
+        return profileTeleAssist.buildDefault(locale);
     }
 
     @Override

@@ -23,7 +23,7 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.6.0</version>
+        <version>1.7.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -36,8 +36,6 @@
     </description>
 
     <properties>
-        <kryo.version>5.0.0-RC1</kryo.version>
-        <commons-io.version>2.6</commons-io.version>
     </properties>
 
     <dependencies>
@@ -65,13 +63,6 @@
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-router</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <!-- Fast serialization -->
-        <dependency>
-            <groupId>com.esotericsoftware</groupId>
-            <artifactId>kryo</artifactId>
-            <version>${kryo.version}</version>
         </dependency>
 
         <!-- Utils -->

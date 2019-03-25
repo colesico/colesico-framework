@@ -44,14 +44,33 @@ public class DefaultSecurityKit implements SecurityInterceptor {
         this.dataPortProv = dataPortProv;
     }
 
+    /**
+     * Override this method to get more specific principal read control
+     *
+     * @param port
+     * @return
+     */
     protected Principal principalReadControl(DataPort<Object, Object> port) {
         return port.readForClass(Principal.class, null);
     }
 
+    /**
+     * Override this method to get more specific principal write control
+     *
+     * @param port
+     * @param principal
+     */
     protected void principalWriteControl(DataPort<Object, Object> port, Principal principal) {
         port.writeForClass(Principal.class, principal, null);
     }
 
+    /**
+     * Override this method to get more specific authority control
+     *
+     * @param principal
+     * @param authorityId
+     * @return
+     */
     protected boolean hasAuthorityControl(Principal principal, String... authorityId) {
         return principal != null;
     }

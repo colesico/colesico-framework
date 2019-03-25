@@ -22,7 +22,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.MessageDigest;
 
-public class HMACSignature {
+public class MACUtils {
 
     public static final String HmacMD5 = "HmacMD5";
     public static final String HmacSHA1 = "HmacSHA1";
@@ -38,6 +38,8 @@ public class HMACSignature {
     public static final String HmacSHA3_512 = "HmacSHA3-512";
 
     /**
+     * Returns MAC of value
+     *
      * @param value
      * @param key
      * @return
@@ -47,13 +49,23 @@ public class HMACSignature {
             final Mac hashAlg = Mac.getInstance(algorithm);
             final SecretKeySpec keySpec = new SecretKeySpec(key, algorithm);
             hashAlg.init(keySpec);
-            final byte[] result = hashAlg.doFinal(value);
+            hashAlg.update(value);
+            final byte[] result = hashAlg.doFinal();
             return result;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Verifies MAC of value
+     *
+     * @param algorithm
+     * @param value
+     * @param key
+     * @param signature
+     * @return
+     */
     public static boolean verify(String algorithm, byte[] value, byte[] key, byte[] signature) {
         byte[] nsignature = sign(algorithm, value, key);
         return MessageDigest.isEqual(nsignature, signature);

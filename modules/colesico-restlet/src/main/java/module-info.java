@@ -18,15 +18,13 @@ module colesico.framework.restlet {
     exports colesico.framework.restlet;
     opens colesico.framework.restlet;
     exports colesico.framework.restlet.teleapi;
-    exports colesico.framework.restlet.teleapi.converter;
+    exports colesico.framework.restlet.teleapi.gson;
 
     // Internal
     exports colesico.framework.restlet.internal to colesico.framework.ioc;
 
     // Codegen
     exports colesico.framework.restlet.codegen;
-
-
 
     // Resources
     opens colesico.framework.restlet.t9n to colesico.framework.localization;

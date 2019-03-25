@@ -23,6 +23,7 @@ import colesico.framework.profile.DefaultProfileKit;
 import colesico.framework.profile.Profile;
 import colesico.framework.profile.ProfileConfig;
 import colesico.framework.profile.ProfileKit;
+import colesico.framework.profile.teleapi.ProfileTeleAssist;
 
 import javax.inject.Singleton;
 import java.util.Locale;
@@ -32,6 +33,7 @@ import static colesico.framework.ioc.Rank.RANK_MINOR;
 @Producer(RANK_MINOR)
 @Produce(DefaultProfileKit.class)
 @Produce(ProfileConfigImpl.class)
+@Produce(ProfileTeleAssistImpl.class)
 public class ProfileProducer {
 
     @Singleton
@@ -49,7 +51,14 @@ public class ProfileProducer {
         return profile != null ? profile.getLocale() : Locale.getDefault();
     }
 
-    // Default config
+    @Singleton
+    public ProfileTeleAssist getProfileTeleAssist(ProfileTeleAssistImpl impl){
+        return impl;
+    }
+
+    /**
+     * Default profile config
+     */
     @Singleton
     public ProfileConfig getProfileConfig(ProfileConfigImpl impl) {
         return impl;

@@ -16,19 +16,19 @@
  *
  */
 
-package colesico.framework.weblet.teleapi.writer;
+package colesico.framework.weblet.teleapi;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
-import colesico.framework.security.assist.HMACSignature;
+import colesico.framework.security.assist.MACUtils;
 
 @ConfigPrototype(model = ConfigModel.SINGLE)
-abstract public class PrincipalWriterConfig {
+abstract public class PrincipalWebletConfig {
 
     abstract public byte[] getSignatureKey();
 
     public String getSignatureAlgorithm() {
-        return HMACSignature.HmacSHA256;
+        return MACUtils.HmacSHA256;
     }
 
     public int getCookieValidityDays() {

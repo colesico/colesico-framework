@@ -15,8 +15,6 @@ module colesico.framework.weblet {
     requires org.apache.commons.lang3;
     requires org.apache.commons.io;
 
-    requires kryo;
-
     exports colesico.framework.weblet;
     exports colesico.framework.weblet.assist;
     exports colesico.framework.weblet.teleapi;

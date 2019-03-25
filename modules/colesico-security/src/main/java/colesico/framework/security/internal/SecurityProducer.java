@@ -21,6 +21,7 @@ package colesico.framework.security.internal;
 import colesico.framework.ioc.Produce;
 import colesico.framework.ioc.Producer;
 import colesico.framework.security.*;
+import colesico.framework.security.teleapi.PrincipalTeleAssist;
 
 import javax.inject.Singleton;
 
@@ -28,6 +29,7 @@ import static colesico.framework.ioc.Rank.RANK_MINOR;
 
 @Producer(RANK_MINOR)
 @Produce(DefaultSecurityKit.class)
+@Produce(PrincipalTeleAssistImpl.class)
 public class SecurityProducer {
 
     @Singleton
@@ -42,6 +44,11 @@ public class SecurityProducer {
 
     public Principal getPrincipal(SecurityKit kit) {
         return kit.getPrincipal();
+    }
+
+    @Singleton
+    public PrincipalTeleAssist getPrincipalTeleAssist(PrincipalTeleAssistImpl impl) {
+        return impl;
     }
 
 }

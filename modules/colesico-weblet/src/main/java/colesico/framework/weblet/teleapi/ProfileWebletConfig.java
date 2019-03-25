@@ -16,13 +16,13 @@
  *
  */
 
-package colesico.framework.weblet.teleapi.writer;
+package colesico.framework.weblet.teleapi;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
 
 @ConfigPrototype(model = ConfigModel.SINGLE)
-abstract public class ProfileWriterConfig {
+abstract public class ProfileWebletConfig {
 
     abstract public int getCookieValidityDays();
 
