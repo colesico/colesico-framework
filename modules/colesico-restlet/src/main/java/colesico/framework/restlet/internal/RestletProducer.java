@@ -23,7 +23,7 @@ import colesico.framework.ioc.Producer;
 import colesico.framework.restlet.teleapi.RestletDataPort;
 import colesico.framework.restlet.teleapi.RestletTeleDriver;
 import colesico.framework.restlet.teleapi.gson.GsonConverter;
-import colesico.framework.restlet.teleapi.JsonConverter;
+import colesico.framework.restlet.teleapi.RestletJsonConverter;
 
 import javax.inject.Singleton;
 
@@ -49,7 +49,7 @@ public class RestletProducer {
     }
 
     @Singleton
-    public JsonConverter getJsonConverter(GsonConverter impl) {
+    public RestletJsonConverter getJsonConverter(GsonConverter impl) {
         return impl;
     }
 

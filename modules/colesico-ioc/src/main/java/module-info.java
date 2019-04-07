@@ -29,7 +29,10 @@ open module colesico.framework.ioc {
     requires transitive javax.inject;
 
     requires jdk.compiler;
+
     requires slf4j.api;
+    //requires org.slf4j;
+
     requires org.apache.commons.lang3;
 
     // API

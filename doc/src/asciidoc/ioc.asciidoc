@@ -10,7 +10,7 @@ Colesico-IoC is a simple, lightweight dependency injection container for Java 9 
 
 * Reflection is not used (code generation at compile time with AnnotationProcessor).
 * Dependency injection is constructor-based only.
-* No support for cyclic dependency resolving.
+* No support for cyclic dependency automatic resolving (manually only).
 * Can be used as plugin-framework.
 * Producers based instance creation configuration.
 * Dependency injection configuration discovery at container start time (SPI based).

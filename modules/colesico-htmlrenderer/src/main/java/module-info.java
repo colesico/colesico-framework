@@ -5,6 +5,7 @@ module colesico.framework.htmlrenderer {
 
     //requires org.slf4j;
     requires slf4j.api;
+
     requires org.apache.commons.lang3;
 
     // API

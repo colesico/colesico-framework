@@ -53,21 +53,21 @@ public interface HttpRequest {
     String getQueryString();
 
     /**
-     * Returns read-only http headers model
+     * Returns read-only http headers
      *
      * @return
      */
     Map<String, String> getHeaders();
 
     /**
-     * Returns read-only cookies model
+     * Returns read-only cookies
      *
      * @return
      */
     Map<String, HttpCookie> getCookies();
 
     /**
-     * Returns read-only query string parameters values
+     * Returns read-only query string parameters
      *
      * @return
      */

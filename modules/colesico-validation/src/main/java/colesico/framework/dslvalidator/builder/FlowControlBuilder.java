@@ -137,6 +137,16 @@ abstract public class FlowControlBuilder extends ValidationProgramBuilder {
         };
     }
 
+    protected final CommandToken ifExists(final CommandToken... commands) {
+        return () -> {
+            begin(new IfExistsChain());
+            for (CommandToken cmd : commands) {
+                cmd.build();
+            }
+            end();
+        };
+    }
+
     /**
      * Executes commands within the current context.
      *

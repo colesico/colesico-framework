@@ -3,8 +3,9 @@ module colesico.framework.validation {
     requires transitive colesico.framework.service;
     requires transitive colesico.framework.translation;
 
-    //requires org.slf4j;
     requires slf4j.api;
+    //requires org.slf4j;
+
     requires org.apache.commons.lang3;
 
     // Api

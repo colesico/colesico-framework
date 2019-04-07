@@ -8,8 +8,10 @@ module colesico.framework.restlet {
     requires transitive colesico.framework.weblet;
     requires transitive colesico.framework.validation;
 
-    //requires org.slf4j;
+
     requires slf4j.api;
+    //requires org.slf4j;
+
     requires org.apache.commons.lang3;
 
     requires gson;

@@ -6,7 +6,7 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.7.0</version>
+        <version>1.7.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -33,6 +33,7 @@
                 </executions>
                 <configuration>
                     <sourceDirectory>src/asciidoc</sourceDirectory>
+                    <preserveDirectories>true</preserveDirectories>
                     <!--<sourceDocumentName>framework.asciidoc</sourceDocumentName>-->
                     <outputDirectory>target/html</outputDirectory>
                     <backend>html5</backend>

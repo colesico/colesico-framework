@@ -3,40 +3,56 @@
 :toclevels: 5
 :numbered:
 
-[[intro]]
+== What is Colesico Framework?
 
-== What is Colesico-Framework?
+*Colesico Framework* ia a lightweight microframework for creating server side backend and web applications in Java.
+It is inspired by Spring and EJB frameworks but uses more simplified approach to construct the applications.
 
-`Colesico-framework` is a full stack microframework for Java. It is inspired by Spring and EJB frameworks.
 The purpose of this framework is to provide simpler and lightweight alternative.
 
-Colesico-framework is designed as a lightweight framework for creating server side / web applications in Java 11+.
+== Getting started
+
+The best way to start learning something is to study by examples :)
+
+* <<examples/helloworld.asciidoc#,Hello world example>>
 
 == Framework modules
 
-Colesico-framework consists of highly specialized modules:
+Colesico-framework consists of highly specialized micromodules.
 
-* <<config.asciidoc#,Colesico-config - Configuration assistant>>
-* <<eventbus.asciidoc#,Colesico-eventbus - Simple even bus for services>>
-* Colesico-hikaricp - HikariCP integration
-* Colesico-htmlrenderer - Unified html rendering API
-* Colesico-http - Unified HTTP API
+=== Core modules
+
 * <<ioc.asciidoc#,Colesico-ioc - Lightweight dependency injection container>>
-* Colesico-jdbc - Jdbc integration  (transactions support, etc.)
-* Colesico-jdbi - Jdbi integration  (transactions support, etc.)
-* Colesico-pebble - Pebble templating engine  integration
-* <<profile.asciidoc#,Colesico-profile - localization profile assistant service>>
-* Colesico-resource
-* Colesico-restlet - Simplified RESTful Web services support
-* Colesico-router - HTTP requests dispatcher
-* Colesico-security - Security service
-* Colesico-service - Business logic beans automation
+* <<config.asciidoc#,Colesico-config - Configuration assistant>>
 * Colesico-teleapi - Services remote invocation unified API
+* Colesico-service - Business logic beans automation
+
+=== Service modules
+
 * <<transaction.asciidoc#,Colesico-transaction - Unified transaction control for services>>
+* Colesico-security - Security service
+* <<profile.asciidoc#,Colesico-profile - localization profile assistant service>>
 * Colesico-translation - Simple text translation support for services
-* Colesico-undertow - Undertow web server integration
+* Colesico-resource
 * Colesico-validation - DSL style extendable data validator
+* <<eventbus.asciidoc#,Colesico-eventbus - Simple even bus for services>>
+
+=== Database interaction modules
+
+* Colesico-jdbc - Jdbc integration  (transactions support, etc.)
+* Colesico-hikaricp - HikariCP integration  (database connection pool)
+* Colesico-jdbi - Jdbi integration  (transactions support, etc.)
+* Colesico-jdbirec - Jdbi data mapping/binding assistant
+
+=== Web modules
+
+* Colesico-http - Unified HTTP API
+* Colesico-router - HTTP requests dispatcher
 * Colesico-weblet - HTTP requests handling support
-* Colesico-webstatic
+* Colesico-webstatic - Static files (*.js, *.css etc) sharing helper
+* Colesico-restlet - Simplified RESTful Web services support
+* Colesico-htmlrenderer - Unified html rendering API
+* Colesico-pebble - Pebble templating engine  integration
+* Colesico-undertow - Undertow web server integration
 * Colesico-widget
 

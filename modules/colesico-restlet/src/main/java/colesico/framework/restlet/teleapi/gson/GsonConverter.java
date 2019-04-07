@@ -1,22 +1,32 @@
 package colesico.framework.restlet.teleapi.gson;
 
-import colesico.framework.restlet.teleapi.JsonConverter;
+import colesico.framework.ioc.Polysupplier;
+import colesico.framework.restlet.teleapi.RestletJsonConverter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import javax.inject.Singleton;
 import java.io.*;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.time.LocalDateTime;
 
-public class GsonConverter implements JsonConverter {
+/**
+ * Default json converter for restlet
+ */
+@Singleton
+public class GsonConverter implements RestletJsonConverter {
 
-    private final Gson gson;
+    protected final Gson gson;
 
-    public GsonConverter() {
-        this.gson = new GsonBuilder()
-                .excludeFieldsWithModifiers(Modifier.STATIC, Modifier.TRANSIENT, Modifier.VOLATILE)
+    public GsonConverter(Polysupplier<RestletGsonOptions> options) {
+        final GsonBuilder builder = new GsonBuilder();
+        builder.excludeFieldsWithModifiers(Modifier.STATIC, Modifier.TRANSIENT, Modifier.VOLATILE)
                 .registerTypeHierarchyAdapter(byte[].class, new GsonByteArrayToBase64())
-                .create();
+                .registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTime())
+        ;
+        options.forEach(o -> o.applyOptions(builder), null);
+        this.gson = builder.create();
     }
 
     @Override

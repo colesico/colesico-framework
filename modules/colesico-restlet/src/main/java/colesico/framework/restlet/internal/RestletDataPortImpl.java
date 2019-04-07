@@ -27,7 +27,7 @@ import colesico.framework.restlet.RestletErrorResponse;
 import colesico.framework.restlet.teleapi.RestletDataPort;
 import colesico.framework.restlet.teleapi.RestletTeleReader;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
-import colesico.framework.restlet.teleapi.JsonConverter;
+import colesico.framework.restlet.teleapi.RestletJsonConverter;
 import colesico.framework.teleapi.TeleReader;
 import colesico.framework.teleapi.TeleWriter;
 import colesico.framework.weblet.teleapi.ReaderContext;
@@ -44,9 +44,9 @@ public class RestletDataPortImpl implements RestletDataPort {
 
     protected final Ioc ioc;
     protected final Provider<HttpContext> httpContextProv;
-    protected final JsonConverter jsonConverter;
+    protected final RestletJsonConverter jsonConverter;
 
-    public RestletDataPortImpl(Ioc ioc, Provider<HttpContext> httpContextProv, JsonConverter jsonConverter) {
+    public RestletDataPortImpl(Ioc ioc, Provider<HttpContext> httpContextProv, RestletJsonConverter jsonConverter) {
         this.ioc = ioc;
         this.httpContextProv = httpContextProv;
         this.jsonConverter = jsonConverter;

@@ -103,7 +103,7 @@ public class RecordKitGenerator {
 
     protected void generateCompositionToMap(CompositionElement composition, CodeBlock.Builder cb) {
         for (ColumnElement column : composition.getColumns()) {
-            if (!column.isExportable()){
+            if (!column.isExportable()) {
                 continue;
             }
             String paramName = generateChain(null, column.getParentComposition(), column, f -> f.getName());
@@ -193,7 +193,7 @@ public class RecordKitGenerator {
 
     protected void generateCompositionFromResultSet(CompositionElement composition, CodeBlock.Builder cb) {
         for (ColumnElement column : composition.getColumns()) {
-            if (!column.isImportable()){
+            if (!column.isImportable()) {
                 continue;
             }
             cb.add(generateChain(RecordKit.RECORD_PARAM, composition, null, this::toGetterName));
@@ -282,12 +282,12 @@ public class RecordKitGenerator {
         List<String> columnNames = new ArrayList<>();
         List<String> columnValues = new ArrayList<>();
         for (ColumnElement column : allColumns) {
-            if (column.getInsertAs()==null){
+            if (column.getInsertAs() == null) {
                 continue;
             }
 
             columnNames.add(column.getName());
-            if (column.getInsertAs().equals("@field")){
+            if (column.getInsertAs().equals("@field")) {
                 String paramName = generateChain(null, column.getParentComposition(), column, f -> f.getName());
                 columnValues.add(":" + paramName);
             } else {
@@ -306,7 +306,7 @@ public class RecordKitGenerator {
         mb.addModifiers(Modifier.PUBLIC);
         mb.addAnnotation(Override.class);
         mb.returns(ClassName.get(String.class));
-        mb.addParameter(ClassName.get(String.class), RecordKit.CONDITIONS_PARAM, Modifier.FINAL);
+        mb.addParameter(ClassName.get(String.class), RecordKit.QUALIFICATION_PARAM, Modifier.FINAL);
 
         List<ColumnElement> allColumns = recordElement.getAllColumns();
         StringBuilder sb = new StringBuilder("UPDATE " + getTableName() + " SET ");
@@ -316,7 +316,7 @@ public class RecordKitGenerator {
                 continue;
             }
 
-            if (column.getUpdateAs().equals("@field")){
+            if (column.getUpdateAs().equals("@field")) {
                 String paramName = generateChain(null, column.getParentComposition(), column, f -> f.getName());
                 assigns.add(column.getName() + " = :" + paramName);
             } else {
@@ -326,7 +326,7 @@ public class RecordKitGenerator {
         sb.append(StringUtils.join(assigns, ", "));
 
         mb.addStatement("return $S + ($T.isBlank($N)?\"\" : \" \"+$N)", sb.toString(),
-                ClassName.get(StringUtils.class), RecordKit.CONDITIONS_PARAM, RecordKit.CONDITIONS_PARAM);
+                ClassName.get(StringUtils.class), RecordKit.QUALIFICATION_PARAM, RecordKit.QUALIFICATION_PARAM);
         classBuilder.addMethod(mb.build());
     }
 
@@ -335,14 +335,14 @@ public class RecordKitGenerator {
         mb.addModifiers(Modifier.PUBLIC);
         mb.addAnnotation(Override.class);
         mb.returns(ClassName.get(String.class));
-        mb.addParameter(ClassName.get(String.class), RecordKit.CONDITIONS_PARAM, Modifier.FINAL);
+        mb.addParameter(ClassName.get(String.class), RecordKit.QUALIFICATION_PARAM, Modifier.FINAL);
 
 
         List<ColumnElement> allColumns = recordElement.getAllColumns();
         StringBuilder sb = new StringBuilder("SELECT ");
         List<String> columnNames = new ArrayList<>();
         for (ColumnElement column : allColumns) {
-            if (column.getSelectAs() == null){
+            if (column.getSelectAs() == null) {
                 continue;
             }
             if (column.getSelectAs().equals("@column")) {
@@ -352,10 +352,8 @@ public class RecordKitGenerator {
             }
         }
         sb.append(StringUtils.join(columnNames, ", "));
-        sb.append(" FROM " + getTableName());
-
-        mb.addStatement("return $S + ($T.isBlank($N)?\"\" : \" \"+$N)", sb.toString(),
-                ClassName.get(StringUtils.class), RecordKit.CONDITIONS_PARAM, RecordKit.CONDITIONS_PARAM);
+        sb.append(' ');
+        mb.addStatement("return $S + $N.replaceAll(\"@table\",\""+getTableName()+"\")", sb.toString(), RecordKit.QUALIFICATION_PARAM );
         classBuilder.addMethod(mb.build());
         return sb.toString();
     }

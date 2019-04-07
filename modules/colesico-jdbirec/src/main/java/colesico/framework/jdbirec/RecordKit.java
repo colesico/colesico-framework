@@ -20,7 +20,7 @@ abstract public class RecordKit<R> {
     public static final String RECORD_PARAM = "record";
     public static final String RECEIVER_PARAM = "receiver";
     public static final String RESULT_SET_PARAM = "rs";
-    public static final String CONDITIONS_PARAM = "conditions";
+    public static final String QUALIFICATION_PARAM = "qualification";
 
     abstract public void initCompositions(R record);
 
@@ -30,9 +30,9 @@ abstract public class RecordKit<R> {
 
     abstract public String sqlInsert();
 
-    abstract public String sqlUpdate(String conditions);
+    abstract public String sqlUpdate(String qualification);
 
-    abstract public String sqlSelect(String conditions);
+    abstract public String sqlSelect(String qualification);
 
     abstract public R newRecord();
 

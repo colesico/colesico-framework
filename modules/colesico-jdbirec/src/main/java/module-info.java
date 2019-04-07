@@ -8,6 +8,8 @@ module colesico.framework.jdbirec {
     requires static com.squareup.javapoet;
 
     requires slf4j.api;
+    //requires org.slf4j;
+
     requires org.apache.commons.lang3;
     requires java.compiler;
 

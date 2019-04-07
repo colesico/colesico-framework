@@ -24,7 +24,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Type;
 
-public interface JsonConverter {
+public interface RestletJsonConverter {
     <T> String toJson(T obj);
 
     <T> T fromJson(Reader reader, Type valueType);

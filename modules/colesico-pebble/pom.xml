@@ -25,7 +25,7 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.7.0</version>
+        <version>1.7.1</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -53,6 +53,12 @@
             <groupId>io.pebbletemplates</groupId>
             <artifactId>pebble</artifactId>
             <version>${pebble.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
 

@@ -19,6 +19,8 @@
 module colesico.framework.resource {
 
     requires slf4j.api;
+    //requires org.slf4j;
+
     requires org.apache.commons.lang3;
 
     // Inherited in client projects

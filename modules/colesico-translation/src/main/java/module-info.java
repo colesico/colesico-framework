@@ -23,13 +23,13 @@ module colesico.framework.translation {
     requires static java.compiler;
     requires static com.squareup.javapoet;
 
-    // requires org.slf4j;
     requires slf4j.api;
+    //requires org.slf4j;
+
     requires org.apache.commons.lang3;
 
     requires transitive colesico.framework.resource;
     //  requires transitive cache2k.api;
-
 
     // Exports
 
