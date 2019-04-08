@@ -1,36 +1,27 @@
 package colesico.framework.dslvalidator.builder;
 
+import colesico.framework.dslvalidator.Command;
+import colesico.framework.dslvalidator.DSLValidator;
 import colesico.framework.dslvalidator.commands.*;
 
-import java.util.ArrayDeque;
 import java.util.function.Function;
 
-abstract public class FlowControlBuilder extends ValidationProgramBuilder {
-
+abstract public class FlowControlBuilder {
     /**
      * Defines validation algorithm
      *
      * @param commands
      * @return
      */
-    protected final ProgramCompileToken program(final CommandToken... commands) {
-        setStack(new ArrayDeque<>());
-        begin(new GroupChain());
-        for (CommandToken cmd : commands) {
-            cmd.build();
-        }
-        return new ProgramCompileToken(this, null);
+    protected final <V> DSLValidator<V> program(final Command... commands) {
+        Command program = new GroupChain().addCommands(commands);
+        return new DSLValidator<>(program, null);
     }
 
-    protected final ProgramCompileToken program(final String subject, final CommandToken... commands) {
-        setStack(new ArrayDeque<>());
-        begin(new SerialChain());
-        for (CommandToken cmd : commands) {
-            cmd.build();
-        }
-        return new ProgramCompileToken(this, subject);
+    protected final <V> DSLValidator<V> program(final String subject, final Command... commands) {
+        Command program = new SerialChain();
+        return new DSLValidator<>(program, subject);
     }
-
 
     /**
      * Executes commands within the local context.
@@ -40,14 +31,18 @@ abstract public class FlowControlBuilder extends ValidationProgramBuilder {
      * @return
      * @see GroupChain
      */
-    protected final CommandToken group(final CommandToken... commands) {
-        return () -> {
-            begin(new GroupChain());
-            for (CommandToken cmd : commands) {
-                cmd.build();
-            }
-            end();
-        };
+    protected final Command group(final Command... commands) {
+        return new GroupChain().addCommands(commands);
+    }
+
+    /**
+     * Executes commands within the local context.
+     * In case of local validation errors occur, command execution is interrupted.
+     * @param commands
+     * @return
+     */
+    protected final Command serial(final Command... commands) {
+        return new SerialChain().addCommands(commands);
     }
 
     /**
@@ -59,14 +54,8 @@ abstract public class FlowControlBuilder extends ValidationProgramBuilder {
      * @return
      * @see SubjectChain
      */
-    protected final CommandToken on(final String subject, final CommandToken... commands) {
-        return () -> {
-            begin(new SubjectChain(subject));
-            for (CommandToken cmd : commands) {
-                cmd.build();
-            }
-            end();
-        };
+    protected final Command on(final String subject, final Command... commands) {
+        return new SubjectChain(subject).addCommands(commands);
     }
 
     /**
@@ -81,14 +70,8 @@ abstract public class FlowControlBuilder extends ValidationProgramBuilder {
      * @return
      * @see ValueChain
      */
-    protected final <T> CommandToken on(final String subject, final Function<T, Object> valueExtractor, final CommandToken... commands) {
-        return () -> {
-            begin(new ValueChain(subject, valueExtractor));
-            for (CommandToken cmd : commands) {
-                cmd.build();
-            }
-            end();
-        };
+    protected final <T> Command on(final String subject, final Function<T, Object> valueExtractor, final Command... commands) {
+        return new ValueChain(subject, valueExtractor).addCommands(commands);
     }
 
     /**
@@ -99,14 +82,8 @@ abstract public class FlowControlBuilder extends ValidationProgramBuilder {
      * @param commands
      * @return
      */
-    protected final CommandToken on(final String subject, final int index, final CommandToken... commands) {
-        return () -> {
-            begin(new ElementChain(subject, index));
-            for (CommandToken cmd : commands) {
-                cmd.build();
-            }
-            end();
-        };
+    protected final Command on(final String subject, final int index, final Command... commands) {
+        return new ElementChain(subject, index).addCommands(commands);
     }
 
     /**
@@ -117,52 +94,20 @@ abstract public class FlowControlBuilder extends ValidationProgramBuilder {
      * @return
      * @see ForEachChain
      */
-    protected final CommandToken forEach(final CommandToken... commands) {
-        return () -> {
-            begin(new ForEachChain());
-            for (CommandToken cmd : commands) {
-                cmd.build();
-            }
-            end();
-        };
+    protected final Command forEach(final Command... commands) {
+        return new ForEachChain().addCommands(commands);
     }
 
-    protected final CommandToken ifOk(final CommandToken... commands) {
-        return () -> {
-            begin(new IfOkChain());
-            for (CommandToken cmd : commands) {
-                cmd.build();
-            }
-            end();
-        };
+    protected final Command ifOk(final Command... commands) {
+        return new IfOkChain().addCommands(commands);
     }
 
-    protected final CommandToken ifExists(final CommandToken... commands) {
-        return () -> {
-            begin(new IfExistsChain());
-            for (CommandToken cmd : commands) {
-                cmd.build();
-            }
-            end();
-        };
+    protected final Command ifNotNull(final Command... commands) {
+        return new IfNotNullChain().addCommands(commands);
     }
 
-    /**
-     * Executes commands within the current context.
-     *
-     * @param commands
-     * @return
-     */
-    protected final CommandToken inline(final CommandToken... commands) {
-        return () -> {
-            for (CommandToken cmd : commands) {
-                cmd.build();
-            }
-        };
-    }
-
-    protected final <T> WithOnToken<T> with(Class<T> clazz) {
-        return new WithOnToken<>(this);
+    protected final <T> WithOnToken<T> with(Class<T> classis) {
+        return new WithOnToken<>(null, new GroupChain());
     }
 
 }

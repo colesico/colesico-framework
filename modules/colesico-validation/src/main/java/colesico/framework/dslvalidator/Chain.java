@@ -27,4 +27,11 @@ import java.util.List;
  */
 public interface Chain<V> extends Command<V> {
     List<Command<?>> getCommands();
+
+    default Chain addCommands(Command... commands) {
+        for (Command cmd : commands) {
+            getCommands().add(cmd);
+        }
+        return this;
+    }
 }

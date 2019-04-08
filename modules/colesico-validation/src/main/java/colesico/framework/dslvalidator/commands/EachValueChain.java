@@ -41,6 +41,9 @@ public final class EachValueChain<V, C extends Iterable> extends AbstractChain<V
     @Override
     public void execute(ValidationContext<V> context) {
         C childValues = valueExtractor.apply(context.getValue());
+        if (childValues == null) {
+            return;
+        }
         int index = 0;
         for (Object val : childValues) {
             ValidationContext childContext = ValidationContext.ofChild(context, subject + '[' + (index++) + ']', val);

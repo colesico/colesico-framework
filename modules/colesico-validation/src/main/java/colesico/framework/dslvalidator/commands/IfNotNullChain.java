@@ -26,7 +26,7 @@ import colesico.framework.dslvalidator.ValidationContext;
  *
  * @author Vladlen Larionov
  */
-public final class IfExistsChain<V> extends AbstractChain<V> {
+public final class IfNotNullChain<V> extends AbstractChain<V> {
     @Override
     public void execute(ValidationContext<V> context) {
         if (context.getValue() != null) {

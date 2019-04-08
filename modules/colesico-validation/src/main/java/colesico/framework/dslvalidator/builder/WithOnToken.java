@@ -1,41 +1,25 @@
 package colesico.framework.dslvalidator.builder;
 
+import colesico.framework.dslvalidator.Chain;
+import colesico.framework.dslvalidator.Command;
+import colesico.framework.dslvalidator.commands.GroupChain;
 import colesico.framework.dslvalidator.commands.ValueChain;
 
 import java.util.function.Function;
 
-public final class WithOnToken<T> implements CommandToken {
+public final class WithOnToken<T> {
 
-    private final ValidationProgramBuilder programBuilder;
-    private final WithOnToken<T> parent;
+    protected final WithOnToken<T> parent;
+    private final Chain chain;
 
-    private final String subject;
-    private final Function<T, Object> valueExtractor;
-    private final CommandToken[] commands;
-
-    public WithOnToken(ValidationProgramBuilder programBuilder) {
-        this.programBuilder = programBuilder;
-        this.parent = null;
-        this.subject = null;
-        this.valueExtractor = null;
-        this.commands = null;
-    }
-
-    public WithOnToken(ValidationProgramBuilder programBuilder,
-                       WithOnToken<T> parent,
-                       String subject,
-                       Function<T, Object> valueExtractor,
-                       CommandToken... commands) {
-
-        this.programBuilder = programBuilder;
+    public WithOnToken(WithOnToken<T> parent, Chain chain) {
         this.parent = parent;
-        this.subject = subject;
-        this.valueExtractor = valueExtractor;
-        this.commands = commands;
+        this.chain = chain;
     }
 
     /**
      * Commands executed until error is not occurred
+     *
      * @param subject
      * @param valueExtractor
      * @param commands
@@ -43,20 +27,18 @@ public final class WithOnToken<T> implements CommandToken {
      */
     public WithOnToken<T> on(final String subject,
                              final Function<T, Object> valueExtractor,
-                             final CommandToken... commands) {
+                             final Command... commands) {
 
-        return new WithOnToken<>(programBuilder, this, subject, valueExtractor, commands);
+        return new WithOnToken<>(this, new ValueChain(subject, valueExtractor).addCommands(commands));
     }
 
-    @Override
-    public void build() {
-        if (parent != null) {
-            parent.build();
-            programBuilder.begin(new ValueChain(subject, valueExtractor));
-            for (CommandToken cmd : commands) {
-                cmd.build();
-            }
-            programBuilder.end();
+    public Chain end() {
+        if (parent == null) {
+            return chain;
+        } else {
+            Chain parentChain = parent.end();
+            parentChain.addCommands(chain);
+            return parentChain;
         }
     }
 }

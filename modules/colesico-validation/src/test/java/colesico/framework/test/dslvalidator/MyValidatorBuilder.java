@@ -29,8 +29,8 @@ public class MyValidatorBuilder extends ValidatorBuilder {
                         .on("VALUE", v -> v.getValue(),
                                 required(),
                                 length(1, 5)
-                        )
-        ).compile();
+                        ).end()
+        );
     }
 
     public Validator<MyDataBean> buildSubject() {
@@ -53,7 +53,7 @@ public class MyValidatorBuilder extends ValidatorBuilder {
                         .on("VALUE", v -> v.getValue(),
                                 required(),
                                 length(1, 5)
-                        )
-        ).compile();
+                        ).end()
+        );
     }
 }

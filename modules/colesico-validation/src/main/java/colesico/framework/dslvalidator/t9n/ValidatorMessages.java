@@ -47,4 +47,21 @@ public interface ValidatorMessages {
     @Ru(value = "Значение должно быть меньше {0}")
     String valueShouldBeLessThan(Number val);
 
+    //
+    // SizeVerifier
+    //
+
+    @Text("Number of elements should be between {0} and {1}")
+    @Ru(value = "Количество элементов должно быть между {0} и {1}")
+    String sizeShouldBeBetween(Number min, Number max);
+
+    @Text("Number of elements should be greater than {0}")
+    @Ru(value = "Количество элементов должно быть больше {0}")
+    String sizeShouldBeGreaterThan(Number val);
+
+    @Text(value = "Number of elements should be less than {0}")
+    @Ru(value = "Количество элементов должно быть меньше {0}")
+    String sizeShouldBeLessThan(Number val);
+
+
 }

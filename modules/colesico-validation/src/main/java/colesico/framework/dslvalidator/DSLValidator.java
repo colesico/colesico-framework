@@ -29,12 +29,12 @@ import colesico.framework.validation.Validator;
  */
 public final class DSLValidator<V> implements Validator<V> {
 
-    private final String rootSubject;
-    private final Command rootCommand;
+    private final String subject;
+    private final Command program;
 
-    public DSLValidator(String rootSubject, Command rootCommand) {
-        this.rootSubject = rootSubject;
-        this.rootCommand = rootCommand;
+    public DSLValidator(Command program, String subject) {
+        this.subject = subject;
+        this.program = program;
     }
 
     /**
@@ -45,8 +45,8 @@ public final class DSLValidator<V> implements Validator<V> {
      */
     @Override
     public ValidationIssue validate(V value) {
-        ValidationContext<V> context = ValidationContext.ofRoot(rootSubject, value);
-        rootCommand.execute(context);
+        ValidationContext<V> context = ValidationContext.ofRoot(subject, value);
+        program.execute(context);
         return context.toIssue();
     }
 
@@ -58,8 +58,8 @@ public final class DSLValidator<V> implements Validator<V> {
      */
     @Override
     public void accept(V value) throws ValidationException {
-        ValidationContext<V> context = ValidationContext.ofRoot(rootSubject, value);
-        rootCommand.execute(context);
+        ValidationContext<V> context = ValidationContext.ofRoot(subject, value);
+        program.execute(context);
         ValidationIssue issue = context.toIssue();
         if (issue != null) {
             throw new ValidationException(issue);

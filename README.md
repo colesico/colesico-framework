@@ -25,7 +25,7 @@ $ mvn clean install
 <dependency>
   <groupId>net.colesico.framework</groupId>
   <artifactId>colesico-appbundle</artifactId>
-  <version>1.6.0</version>
+  <version>1.7.1</version>
 </dependency>
 ```
 
@@ -35,7 +35,7 @@ For extra framework modules:
 <dependency>
   <groupId>net.colesico.framework</groupId>
   <artifactId>colesico-[extra module]</artifactId>
-  <version>1.6.0</version>
+  <version>1.7.1</version>
 </dependency>
 ```
 

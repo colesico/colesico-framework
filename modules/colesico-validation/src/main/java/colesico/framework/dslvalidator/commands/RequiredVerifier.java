@@ -32,7 +32,7 @@ import java.util.Map;
  *
  * @author Vladlen Larionov
  */
-public final class RequiredVerifier<V> implements Command<V> {
+public final class RequiredVerifier implements Command<Object> {
 
     private final ValidatorMessages msg;
 
@@ -40,12 +40,12 @@ public final class RequiredVerifier<V> implements Command<V> {
         this.msg = msg;
     }
 
-    private void addError(ValidationContext<V> context) {
+    private void addError(ValidationContext<Object> context) {
         context.addError(RequiredVerifier.class.getSimpleName(), msg.valueRequired());
     }
 
     @Override
-    public void execute(ValidationContext<V> context) {
+    public void execute(ValidationContext<Object> context) {
         if (context.getValue() == null) {
             addError(context);
             return;

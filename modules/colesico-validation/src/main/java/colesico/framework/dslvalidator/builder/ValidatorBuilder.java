@@ -17,22 +17,12 @@ abstract public class ValidatorBuilder extends FlowControlBuilder {
         this.vrMessages = vrMessages;
     }
 
-    /**
-     * Adds any command to local chain
-     *
-     * @param command
-     * @return
-     */
-    protected CommandToken call(Command command) {
-        return () -> add(command);
-    }
-
 
     /**
-     * Adds required verifier to local chain
+     * Verify value exists (string is not blank, collection is not empty, etc)
      */
-    protected CommandToken required() {
-        return () -> add(new RequiredVerifier(vrMessages));
+    protected Command required() {
+        return new RequiredVerifier(vrMessages);
     }
 
     /**
@@ -44,50 +34,76 @@ abstract public class ValidatorBuilder extends FlowControlBuilder {
      * @param messageParam
      * @param <T>
      */
-    protected <T> CommandToken predicate(final Predicate<ValidationContext<T>> predicate,
-                                         final String errorCode,
-                                         final Translatable errorMessage,
-                                         final Object... messageParam) {
-        return () -> add(new PredicateVerifier(predicate, errorCode, errorMessage, messageParam));
+    protected <T> Command predicate(final Predicate<ValidationContext<T>> predicate,
+                                    final String errorCode,
+                                    final Translatable errorMessage,
+                                    final Object... messageParam) {
+        return new PredicateVerifier(predicate, errorCode, errorMessage, messageParam);
     }
 
     /**
-     * Adds regexp verifier
+     * Verify by regexp match
      *
      * @param pattern
      * @param errorCode
      * @param errorMessage
      * @param messageParam
      */
-    protected final CommandToken regexp(final String pattern,
-                                        final String errorCode,
-                                        final Translatable errorMessage,
-                                        final Object... messageParam) {
+    protected final Command regexp(final String pattern,
+                                   final String errorCode,
+                                   final Translatable errorMessage,
+                                   final Object... messageParam) {
 
-        return () -> add(new RegexpVerifier(pattern, errorCode, errorMessage, messageParam));
+        return new RegexpVerifier(pattern, errorCode, errorMessage, messageParam);
     }
 
     /**
-     * Adds string length verifier
+     * Verify string length
      *
      * @param min
      * @param max
      */
-    protected final CommandToken length(final Integer min,
-                                        final Integer max) {
+    protected final Command length(final Integer min,
+                                   final Integer max) {
 
-        return () -> add(new LengthVerifier(min, max, vrMessages));
+        return new LengthVerifier(min, max, vrMessages);
     }
 
-    protected final CommandToken interval(final Number min,
-                                          final Number max,
-                                          final boolean includeEndpoints) {
+    /**
+     * Verify number range
+     * @param min
+     * @param max
+     * @param includeEndpoints
+     * @return
+     */
+    protected final Command interval(final Number min,
+                                     final Number max,
+                                     final boolean includeEndpoints) {
 
-        return () -> add(new IntervalVerifier(min, max, includeEndpoints, vrMessages));
+        return new IntervalVerifier(min, max, includeEndpoints, vrMessages);
     }
 
-    protected final CommandToken dateFormat(final String format) {
-        return () -> add(new DateFormatVerifier(format, vrMessages));
+    /**
+     * Verify collection size range
+     * @param min
+     * @param max
+     * @param includeEndpoints
+     * @return
+     */
+    protected final Command size(final Number min,
+                                 final Number max,
+                                 final boolean includeEndpoints) {
+
+        return new SizeVerifier(min, max, includeEndpoints, vrMessages);
+    }
+
+    /**
+     * Verify date format
+     * @param format
+     * @return
+     */
+    protected final Command dateFormat(final String format) {
+        return new DateFormatVerifier(format, vrMessages);
     }
 
 }
