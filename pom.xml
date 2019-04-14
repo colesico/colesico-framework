@@ -25,7 +25,7 @@
     <groupId>net.colesico.framework</groupId>
     <artifactId>colesico-framework</artifactId>
     <packaging>pom</packaging>
-    <version>1.7.1</version>
+    <version>1.7.2</version>
     <name>Colesico Framework</name>
     <description>
         Lightweight application framework for the Java 9+
@@ -65,7 +65,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>10</java.version>
+        <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss.SSSZ</maven.build.timestamp.format>
@@ -108,7 +108,7 @@
 
         <cache2k.version>1.0.2.Final</cache2k.version>
         <javapoet.version>1.11.1</javapoet.version>
-        <undertow.version>2.0.19.Final</undertow.version>
+        <undertow.version>2.0.20.Final</undertow.version>
     </properties>
 
     <modules>
@@ -175,12 +175,13 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <modules>
+                <module>examples/helloworld-example</module>
+                <module>examples/restlet-example</module>
                 <module>examples/ioc-example</module>
                 <module>examples/web-example</module>
                 <module>examples/eventbus-example</module>
                 <module>examples/transaction-example</module>
                 <module>examples/jdbi-example</module>
-                <module>examples/helloworld-example</module>
             </modules>
         </profile>
         <profile>

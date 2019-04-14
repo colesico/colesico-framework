@@ -5,7 +5,7 @@ import colesico.framework.weblet.HtmlResponse;
 import colesico.framework.weblet.Weblet;
 
 @Weblet
-@Route("/my-non-relative_path")
+@Route("/my-non-relative-path")
 public class NonRelative {
 
     // http://localhost:8080/my-non-relative_path/printParams.html

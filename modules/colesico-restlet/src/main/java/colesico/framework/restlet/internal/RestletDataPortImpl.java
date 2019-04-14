@@ -83,7 +83,7 @@ public class RestletDataPortImpl implements RestletDataPort {
     @Override
     public <V> void writeForType(Type valueType, V value, WriterContext context) {
         final Supplier<RestletTeleWriter> supplier
-                = ioc.supplierOrNull(new ClassedKey<>(RestletTeleReader.class.getCanonicalName(), typeToClassName(valueType)));
+                = ioc.supplierOrNull(new ClassedKey<>(RestletTeleWriter.class.getCanonicalName(), typeToClassName(valueType)));
         if (supplier != null) {
             final TeleWriter<V, WriterContext> writer = supplier.get(null);
             writer.write(value, context);

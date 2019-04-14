@@ -15,6 +15,7 @@ The purpose of this framework is to provide simpler and lightweight alternative.
 The best way to start learning something is to study by examples :)
 
 * <<examples/helloworld.asciidoc#,Hello world example>>
+* <<examples/restlet.asciidoc#,RESTful service example >>
 
 == Framework modules
 

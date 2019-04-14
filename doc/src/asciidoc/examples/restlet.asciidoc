@@ -1,0 +1,111 @@
+= Simple RESTfull Service
+
+== Maven
+
+To build simple REST JSON service you must first to setup your maven project.
+Pom file is identical to the  <<helloworld.asciidoc#,hello world example>>
+
+[source,java]
+----
+public static void main(String[] args) {
+
+        // Obtain http server instance from IoC container
+        HttpServer httpServer = IocBuilder.forProduction().instance(HttpServer.class);
+
+        // Init and start
+        httpServer.init();
+        httpServer.start();
+    }
+----
+
+== Data transfer object
+
+Define a DTO class. For example - "User". This class will be used to get or send user data with rest-json controller.
+[source,java]
+----
+public class User {
+    private Long id;
+    private String name;
+
+    public User() {
+    }
+
+    public User(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+----
+
+== Restlet
+
+*Restlet* is a http requests controller that receives a json request and produces json responses.
+
+* Define a restlet class that contains a  method that would be responsive for request handling.
+* Annotate weblet class with @Restlet annnotation.
+
+[source,java]
+----
+@Restlet
+public class RestApi {
+
+       // GET http://localhost:8080/rest-api/list
+       public List<User> list() {
+           return Arrays.asList(new User(1L, "Ivan"), new User(2L, "John"));
+       }
+
+       // Customize route construction default rule
+       @Route("find")
+       // GET http://localhost:8080/rest-api/find?id=1
+       public User get(Long id) {
+           return new User(id,"Katherine");
+       }
+
+       // POST  http://localhost:8080/rest-api/save +  data {"id":1,"name":"Anne"}
+       @RequestMethod(HttpMethod.POST)
+       public Long save(User user){
+           return user.getId();
+       }
+}
+
+----
+
+Like weblet, every public method within restlet class considered to be a request handler and uses the same routing rules.
+To customize effective request uri use @Route annotation on package/restlet class/handler method
+
+== Run the Application
+
+Compile and run the application: 
+[source]
+---- 
+java -Xmx25m -cp target/lib/*:target/restlet.jar colesico.framework.example.restlet.Main
+----
+
+Define Http header *X-Requested-With:XMLHttpRequest* for REST client.
+
+Use the following REST "endpoints":
+
+* http://localhost:8080/rest-api/list
+* http://localhost:8080/rest-api/find?id=1
+* http://localhost:8080/rest-api/save
+
+== Application source code
+
+See full source code in the framework source code section #examples/restlet-example#
+

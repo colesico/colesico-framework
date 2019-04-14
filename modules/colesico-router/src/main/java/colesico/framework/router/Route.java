@@ -21,6 +21,25 @@ package colesico.framework.router;
 import java.lang.annotation.*;
 
 /**
+ * Route customization annotation.
+ *
+ * This annotation can be used on:
+ *  - package (package-info)
+ *  - controller class  (implemented by weblet,restlet, etc)
+ *  - request handler method
+ *
+ *  Package based rout should always be an absolute path ans starts with "/".
+ *
+ *  Controller based route can be absolute or relative.
+ *  Controller  absolute route starts with "/".
+ *  Relative route  starts with dot (.)
+ *
+ *  Handler method route considered always to be a relative path.
+ *  The slash symbol at the beginning of the route is ignored.
+ *
+ *  The relative path is added to the parent path.
+ *  The local relative path for the handler method  is added to the path specified for the
+ *  controller class. And further, respectively, to the path for the package.
  *
  * @author Vladlen Larionov
  */

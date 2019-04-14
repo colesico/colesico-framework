@@ -18,7 +18,5 @@ module colesico.framework.validation {
 
     exports colesico.framework.dslvalidator.t9n;
 
-
-
     opens colesico.framework.dslvalidator.t9n;
 }

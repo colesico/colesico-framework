@@ -24,7 +24,6 @@ import colesico.framework.http.HttpMethod;
 import colesico.framework.assist.Elements;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.router.RequestMethod;
 import colesico.framework.router.Route;
 import colesico.framework.service.codegen.model.ServiceElement;
@@ -46,7 +45,7 @@ abstract public class RoutegenContext {
     protected final String framletRoute;
 
     public RoutegenContext(ServiceElement framlet) {
-        this.framletRoute = buildFramletRoute(framlet);
+        this.framletRoute = buildServiceRoute(framlet);
     }
 
     public final void registTeleMethod(TeleMethodElement teleMethod) {
@@ -89,8 +88,8 @@ abstract public class RoutegenContext {
         return result;
     }
 
-    protected String buildFramletRoute(ServiceElement framlet) {
-        AnnotationElement<Route> routeAnnotation = framlet.getOriginClass().getAnnotation(Route.class);
+    protected String buildServiceRoute(ServiceElement service) {
+        AnnotationElement<Route> routeAnnotation = service.getOriginClass().getAnnotation(Route.class);
         String route = null;
         if (routeAnnotation != null) {
             // If absolute route
@@ -99,39 +98,39 @@ abstract public class RoutegenContext {
             }
             // Relative route -> get suffix from package
             if (routeAnnotation.unwrap().value().startsWith(".")) {
-                PackageElement pkg = framlet.getOriginClass().getPackage();
+                PackageElement pkg = service.getOriginClass().getPackage();
                 Route pkgRoute = pkg.getAnnotation(Route.class);
                 if (pkgRoute == null) {
                     throw CodegenException.of()
                             .message("Package " + pkg.getSimpleName() + " must be annotated with @" + Route.class.getName())
-                            .element(framlet.getOriginClass())
+                            .element(service.getOriginClass())
                             .build();
                 }
                 String pkgRouteValue = pkgRoute.value();
                 if (!pkgRouteValue.startsWith(RouteTrie.SEGMENT_DELEMITER)) {
                     throw CodegenException.of()
                             .message("Wrong package route: " + pkgRouteValue + ". Must starts with '" + RouteTrie.SEGMENT_DELEMITER + "'")
-                            .element(framlet.getOriginClass())
+                            .element(service.getOriginClass())
                             .build();
                 }
                 String beanRouteValue = routeAnnotation.unwrap().value().substring(1);
                 if (StringUtils.isBlank(beanRouteValue)){
-                    String classSimpleName = framlet.getOriginClass().getSimpleName().toString();
+                    String classSimpleName = service.getOriginClass().getSimpleName().toString();
                     beanRouteValue = "/"+ StrUtils.toLowerCaseNotation(classSimpleName,'-');
                 }
                 return StrUtils.concatPath(pkgRouteValue, beanRouteValue, RouteTrie.SEGMENT_DELEMITER);
             } else {
                 throw CodegenException.of()
                         .message("Unclear route: " + routeAnnotation.unwrap().value() + ". Must starts with '.' or '" + RouteTrie.SEGMENT_DELEMITER + "'")
-                        .element(framlet.getOriginClass())
+                        .element(service.getOriginClass())
                         .build();
             }
         } else {
             // Root suffix
-            if (framlet.getOriginClass().getSimpleName().toString().equals(INDEX_FRAMLET_NAME)) {
+            if (service.getOriginClass().getSimpleName().toString().equals(INDEX_FRAMLET_NAME)) {
                 return "/";
             } else {
-                String classSimpleName = framlet.getOriginClass().getSimpleName().toString();
+                String classSimpleName = service.getOriginClass().getSimpleName().toString();
                 return "/" + StrUtils.toLowerCaseNotation(classSimpleName,'-');
             }
         }

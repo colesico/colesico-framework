@@ -2,7 +2,7 @@
 
 == Maven
 
-To build simple application you need first to setup your maven project.
+To build simple application you must first to setup your maven project.
 This should be a regular jar application with the framework dependencies.
 
 Although the framework consists of many modules, to specify dependencies you can use an bundle module
@@ -12,25 +12,25 @@ Because the framework can support different http servers, you must specify which
 
 [source,xml]
 ----
- <dependencies>
-        <!-- Colesico common services bundle -->
+<dependencies>
+        <!-- Colesico common modules bundle -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-appbundle</artifactId>
-            <version>${project.version}</version>
+            <version>${colesico.version}</version>
         </dependency>
 
         <!-- Colesico undertow integration -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-undertow</artifactId>
-            <version>${project.version}</version>
+            <version>${colesico.version}</version>
         </dependency>
 
-    </dependencies>
+</dependencies>
 ----
 
-Since colesico framework generates extra java code you also need to attach annotation processor to you compilation process:
+Since colesico framework generates extra java code you also must to attach annotation processor to you compilation process:
 
 [source,xml]
 ----
@@ -47,12 +47,37 @@ Since colesico framework generates extra java code you also need to attach annot
             <path>
                 <groupId>net.colesico.framework</groupId>
                 <artifactId>colesico-appbundle</artifactId>
-                <version>${project.version}</version>
+                <version>${colesico.version}</version>
             </path>
         </annotationProcessorPaths>
     </configuration>
 </plugin>
 ----
+
+Also, all dependencies should be collected to the target/lib folder. For this purpose, you can use maven dependency plugin:
+
+[source,xml]
+----
+ <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-dependency-plugin</artifactId>
+	<version>${maven-dependency-plugin.version}</version>
+	<executions>
+		<execution>
+			<phase>package</phase>
+			<goals>
+				<goal>copy-dependencies</goal>
+			</goals>
+			<configuration>
+				<excludeScope>provided</excludeScope>
+				<outputDirectory>${project.build.directory}/lib</outputDirectory>
+				<excludeArtifactIds>javapoet</excludeArtifactIds>
+			</configuration>
+		</execution>
+	</executions>
+</plugin>
+----
+
 
 == Main
 
@@ -64,8 +89,11 @@ then  obtain a http server instance and start it.
 ----
 public static void main(String[] args) {
 
-        // Build DI container instance.
+        // Build DI container instance optimized for production.
         final Ioc ioc = IocBuilder.forProduction();
+
+        // Or for development/tests purposes:
+        // final Ioc ioc = IocBuilder.forDevelopment();
 
         // Obtain http server
         HttpServer httpServer = ioc.instance(HttpServer.class);
@@ -79,8 +107,9 @@ public static void main(String[] args) {
 == Weblet
 
 *Weblet* is a http requests controller.  It acts like a regular Servlet but can handle multiple request urls.
-Define a weblet class that contains a  method that would be responsive for request handling.
-Annotate weblet class with @Weblet annnotation.
+
+* Define a weblet class that contains a  method that would be responsive for request handling.
+* Annotate weblet class with @Weblet annnotation.
 
 [source,java]
 ----
@@ -99,7 +128,13 @@ Every public method within weblet class considered to be a request handler.
 By default request url constructed based on weblet class simple name and handler method name.
 Java camel case notation transformed to kebab-case notation.
 
-== Run application
+It is possible to customize request uri with @Route annotation applied on :
+
+* package (inside package-info.java)
+* weblet class
+* weblet handler method
+
+== Run the Application
 
 Compile and run the application. Then browse the url  http://localhost:8080/hello-weblet/say-hello to see result.
 

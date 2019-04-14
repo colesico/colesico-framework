@@ -12,6 +12,7 @@ import colesico.framework.ioc.Rank;
 @Produce(MyHostBean.class)
 public class MyProducer {
 
+    // @Polyproduce indicates multiple MyPluginInterface implementations
     @Polyproduce
     public MyPluginInterface getMyPluginInterface1(MyPlugin1 impl) {
         return impl;

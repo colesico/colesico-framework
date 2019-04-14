@@ -15,8 +15,8 @@ public class Main {
         final Ioc ioc = iocBuilder.build();
 
         // Create our service holder instance.
-        MyServiceHolder msh = ioc.instance(MyServiceHolder.class);
-        msh.run();
+        MyServiceHolder srvHolder = ioc.instance(MyServiceHolder.class);
+        srvHolder.run();
 
     }
 }

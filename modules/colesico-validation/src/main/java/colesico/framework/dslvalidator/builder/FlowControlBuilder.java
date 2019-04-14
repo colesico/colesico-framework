@@ -3,6 +3,7 @@ package colesico.framework.dslvalidator.builder;
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.DSLValidator;
 import colesico.framework.dslvalidator.commands.*;
+import colesico.framework.translation.Translatable;
 
 import java.util.function.Function;
 
@@ -104,6 +105,10 @@ abstract public class FlowControlBuilder {
 
     protected final Command ifNotNull(final Command... commands) {
         return new IfNotNullChain().addCommands(commands);
+    }
+
+    protected final Command hookError(String errorCode, Translatable errorMsg, final Command... commands){
+        return new HookErrorChain(errorCode,errorMsg).addCommands(commands);
     }
 
     protected final <T> WithOnToken<T> with(Class<T> classis) {
