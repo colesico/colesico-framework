@@ -60,8 +60,7 @@ public class IocGenerator {
     }
 
     private void generateProduceService(ProducerGenerator producerGenerator, ServiceElement serviceElement, String methodUID) {
-        TypeName serviceProxyTypeName = ClassName.bestGuess(
-                ServiceProxy.getProxyClassName(serviceElement.getOriginClass().asType().toString()));
+        TypeName serviceProxyTypeName = ClassName.bestGuess(serviceElement.getProxyClassName());
 
         // Add  @Produce annotation
         producerGenerator.addProduceAnnotation(serviceProxyTypeName);
@@ -84,12 +83,12 @@ public class IocGenerator {
     private void generateProduceTeleFacade(ProducerGenerator producerGenerator, TeleFacadeElement teleFacadeElement, String methodUID) {
 
         // Generate @Produce annotation
-        producerGenerator.addProduceAnnotation(ClassName.bestGuess(teleFacadeElement.getClassName()));
+        producerGenerator.addProduceAnnotation(ClassName.bestGuess(teleFacadeElement.getFacadeClassName()));
 
         // Generate produce method
         MethodSpec.Builder mb = producerGenerator.addProduceMethod("get" + TeleFacade.class.getSimpleName() + methodUID,
                 TypeName.get(TeleFacade.class));
-        mb.addParameter(ClassName.bestGuess(teleFacadeElement.getClassName()), IMPLEMENTATION_PARAM, Modifier.FINAL);
+        mb.addParameter(ClassName.bestGuess(teleFacadeElement.getFacadeClassName()), IMPLEMENTATION_PARAM, Modifier.FINAL);
 
         mb.addAnnotation(Polyproduce.class);
 
@@ -137,7 +136,7 @@ public class IocGenerator {
 
             // Telefacades producing
             for (TeleFacadeElement teleFacade : service.getTeleFacades()) {
-                logger.debug("Generate tele-facade producing: " + teleFacade.getClassName());
+                logger.debug("Generate tele-facade producing: " + teleFacade.getFacadeClassName());
                 generateProduceTeleFacade(producerGenerator, teleFacade, "T" + Integer.toString(i));
             }
 

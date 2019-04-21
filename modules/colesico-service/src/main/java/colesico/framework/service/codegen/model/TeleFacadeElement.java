@@ -24,7 +24,9 @@ import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleDriver;
+import colesico.framework.teleapi.TeleFacade;
 import com.squareup.javapoet.CodeBlock;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.element.PackageElement;
 import java.util.HashMap;
@@ -75,13 +77,29 @@ public final class TeleFacadeElement {
         return parentService;
     }
 
-    public String getClassSimpleName() {
-        return parentService.getOriginClass().getSimpleName().toString() + StrUtils.firstCharToUpperCase(teleType);
+    /**
+     * Returns telefacade class simple name
+     *
+     * @return
+     */
+    public String getFacadeClassSimpleName() {
+        String originClassName = parentService.getOriginClass().getSimpleName();
+        String teleTypeSuffix = StrUtils.firstCharToUpperCase(teleType);
+
+        if (StringUtils.endsWith(originClassName, teleTypeSuffix)) {
+            return originClassName + TeleFacade.TELE_FACADE_SUFFIX;
+        } else {
+            return originClassName + teleTypeSuffix + TeleFacade.TELE_FACADE_SUFFIX;
+        }
     }
 
-    public String getClassName() {
-        PackageElement packageElement = (PackageElement) parentService.getOriginClass().unwrap().getEnclosingElement();
-        return packageElement.toString() + "." + getClassSimpleName();
+    /**
+     * Returns telefacade class full name
+     *
+     * @return
+     */
+    public String getFacadeClassName() {
+        return parentService.getOriginClass().getPackageName() + '.' + getFacadeClassSimpleName();
     }
 
     public void addTeleMethod(TeleMethodElement teleMethod) {

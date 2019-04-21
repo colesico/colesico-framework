@@ -25,7 +25,7 @@ Colesico-framework consists of highly specialized micromodules.
 
 * <<ioc.asciidoc#,Colesico-ioc - Lightweight dependency injection container>>
 * <<config.asciidoc#,Colesico-config - Configuration assistant>>
-* Colesico-teleapi - Services remote invocation unified API
+* Colesico-teleapi - Unified API for remote  services invocation
 * Colesico-service - Business logic beans automation
 
 === Service modules

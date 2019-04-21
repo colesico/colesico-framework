@@ -27,6 +27,7 @@ import javax.inject.Provider;
  */
 abstract public class TeleFacade<T, D extends TeleDriver,B> {
 
+    public static final String TELE_FACADE_SUFFIX = "Facade";
     public static final String TELEDRIVER_FIELD = "teleDriver";
     public static final String TARGET_PROV_FIELD = "targetProv";
     public static final String GET_LIGATURE_METHOD = "getLigature";

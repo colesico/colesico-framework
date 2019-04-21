@@ -44,6 +44,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static colesico.framework.service.ServiceProxy.PROXY_CLASS_SUFFIX;
+import static colesico.framework.service.ServiceProxy.SERVICE_CLASS_SUFFIX;
 
 /**
  * Процессор аннотации осуществляющий обработку классов помеченных аннотацией @Service
@@ -139,7 +140,9 @@ public class ServiceProcessor extends AbstractProcessor {
                 TypeElement serviceType = null;
                 try {
                     serviceType = (TypeElement) e;
-                    if (StringUtils.endsWith(serviceType.getSimpleName(), PROXY_CLASS_SUFFIX)) {
+                    // @Service annotation are inherited from superclass so need to filter generated proxies by name.
+                    // But this is not correct in general, so  need to change in perspective.
+                    if (StringUtils.endsWith(serviceType.getSimpleName(), SERVICE_CLASS_SUFFIX+PROXY_CLASS_SUFFIX)) {
                         continue;
                     }
                     if (serviceTypsNames.contains(serviceType.toString())) {

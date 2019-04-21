@@ -228,7 +228,7 @@ public class TeleFacadesGenerator {
 
     public void generateTeleFacades(ServiceElement service) {
         for (TeleFacadeElement teleFacade : service.getTeleFacades()) {
-            TypeSpec.Builder classBuilder = TypeSpec.classBuilder(teleFacade.getClassSimpleName());
+            TypeSpec.Builder classBuilder = TypeSpec.classBuilder(teleFacade.getFacadeClassSimpleName());
             classBuilder.addModifiers(Modifier.PUBLIC);
             classBuilder.addModifiers(Modifier.FINAL);
 

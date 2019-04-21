@@ -25,10 +25,9 @@ package colesico.framework.service;
  */
 public interface ServiceProxy {
 
-    String PROXY_CLASS_SUFFIX = "Serlet";
+    String SERVICE_CLASS_SUFFIX = "Service";
+    String PROXY_CLASS_SUFFIX = "Proxy";
     String GET_SUPER_CLASS_METHOD = "getSuperClass";
-    String GET_MODULE_NAME_METHOD = "getModuleName";
-    String POST_CONSTRUCT_METHOD = "postConstruct";
 
     /**
      * Returns base service class (i.e. class on which this adapter is based)
@@ -36,9 +35,5 @@ public interface ServiceProxy {
      * @return
      */
     Class<?> getSuperClass();
-
-    static String getProxyClassName(String className) {
-        return className + PROXY_CLASS_SUFFIX;
-    }
 
 }

@@ -25,6 +25,7 @@ import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.service.ServiceProxy;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.TypeName;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.type.DeclaredType;
 import java.util.HashMap;
@@ -170,7 +171,17 @@ public final class ServiceElement {
 
 
     public String getProxyClassSimpleName() {
-        return originClass.getSimpleName() + ServiceProxy.PROXY_CLASS_SUFFIX;
+        String originClassName = originClass.getSimpleName();
+
+        if (StringUtils.endsWith(originClassName, ServiceProxy.SERVICE_CLASS_SUFFIX)) {
+            return originClassName + ServiceProxy.PROXY_CLASS_SUFFIX;
+        } else {
+            return originClassName + ServiceProxy.SERVICE_CLASS_SUFFIX + ServiceProxy.PROXY_CLASS_SUFFIX;
+        }
+    }
+
+    public String getProxyClassName() {
+        return originClass.getPackageName()+'.'+getProxyClassSimpleName();
     }
 
     @Override
