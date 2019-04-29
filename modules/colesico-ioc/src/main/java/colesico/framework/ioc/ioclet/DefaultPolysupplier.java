@@ -19,7 +19,7 @@ public final class DefaultPolysupplier<T> implements Polysupplier<T> {
 
     @Override
     public Iterator<T> iterator(Object message) {
-        return new SupplierIterator(factory, message);
+        return new PolysupplierIterator(factory, message);
     }
 
     @Override
@@ -27,13 +27,13 @@ public final class DefaultPolysupplier<T> implements Polysupplier<T> {
         return factory != null;
     }
 
-    static final class SupplierIterator<T> implements Iterator<T> {
+    static final class PolysupplierIterator<T> implements Iterator<T> {
 
         private Factory<T> factory;
         private final Object message;
 
 
-        public SupplierIterator(Factory<T> factory, Object message) {
+        public PolysupplierIterator(Factory<T> factory, Object message) {
             this.factory = factory;
             this.message = message;
         }

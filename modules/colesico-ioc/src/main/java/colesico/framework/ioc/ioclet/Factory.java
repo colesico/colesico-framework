@@ -20,6 +20,9 @@ package colesico.framework.ioc.ioclet;
 
 import colesico.framework.ioc.Polyproduce;
 import colesico.framework.ioc.Polysupplier;
+import colesico.framework.ioc.Supplier;
+
+import javax.inject.Provider;
 
 /**
  * Factory superclass. Should be expanded by all the factories.
@@ -30,7 +33,7 @@ import colesico.framework.ioc.Polysupplier;
  * @author Vladlen Larionov
  * @see Ioclet
  */
-abstract public class Factory<T> {
+abstract public class Factory<T> implements Provider<T>, Supplier<T> {
 
     public static final String GET_METHOD = "get";
     public static final String SETUP_METHOD = "setup";
@@ -46,6 +49,11 @@ abstract public class Factory<T> {
      */
     abstract public T get(Object message);
 
+    @Override
+    public T get() {
+        return get(null);
+    }
+
     /**
      * Returns next factory in the chain
      *
@@ -58,7 +66,6 @@ abstract public class Factory<T> {
 
     /**
      * Called by Ioc container to initialize factory
-     *
      */
     public void setup(final AdvancedIoc ioc) {
     }

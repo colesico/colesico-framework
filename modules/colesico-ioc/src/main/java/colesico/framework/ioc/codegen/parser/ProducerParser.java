@@ -165,7 +165,11 @@ public class ProducerParser extends FrameworkAbstractParser {
             classed = null;
         }
 
-        return new InjectableElement(parentFactory, parameter, injectedType, injectionKind, messageKind, linkagePhase, named, classed);
+        // Optional injection
+        AnnotationElement<OptionalInject> optionalAnn = parameter.getAnnotation(OptionalInject.class);
+        boolean optional = optionalAnn!=null;
+
+        return new InjectableElement(parentFactory, parameter, injectedType, injectionKind, messageKind, linkagePhase, optional, named, classed);
     }
 
     protected CustomFactoryElement createCustomFactoryElement(MethodElement method) {

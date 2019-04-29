@@ -83,16 +83,12 @@ public final class EagerIocContainer implements AdvancedIoc {
         if (factory == null) {
             throw new UnsatisfiedInjectionException(key);
         }
-        return new DefaultSupplier<>(factory);
+        return factory;
     }
 
     @Override
     public <T> Supplier<T> supplierOrNull(Key<T> key) {
-        Factory<T> factory = (Factory<T>) factories.get(key);
-        if (factory == null) {
-            return null;
-        }
-        return new DefaultSupplier<>(factory);
+        return (Factory<T>) factories.get(key);
     }
 
     @Override

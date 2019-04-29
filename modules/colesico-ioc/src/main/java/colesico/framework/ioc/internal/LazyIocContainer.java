@@ -87,7 +87,7 @@ public final class LazyIocContainer implements AdvancedIoc {
             throw new UnsatisfiedInjectionException(key);
         }
         activate(factory, key);
-        return new DefaultSupplier<>(factory);
+        return factory;
     }
 
     @Override
@@ -97,7 +97,7 @@ public final class LazyIocContainer implements AdvancedIoc {
             return null;
         }
         activate(factory, key);
-        return new DefaultSupplier<>(factory);
+        return factory;
     }
 
     @Override

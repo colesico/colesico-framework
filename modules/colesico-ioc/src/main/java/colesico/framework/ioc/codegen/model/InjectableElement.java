@@ -39,19 +39,23 @@ public class InjectableElement {
     private final MessageKind messageKind;
     private final LinkagePhase linkagePhase;
 
+    // Optional injection
+    private final boolean optional;
+
     //  @Named value
     private final String named;
 
     //  @Classed value as class names
     private final String classed;
 
-    public InjectableElement(FactoryElement parentFactory, ParameterElement originParameter, ClassType injectedType, InjectionKind injectionKind, MessageKind messageKind, LinkagePhase linkagePhase, String named, String classed) {
+    public InjectableElement(FactoryElement parentFactory, ParameterElement originParameter, ClassType injectedType, InjectionKind injectionKind, MessageKind messageKind, LinkagePhase linkagePhase, Boolean optional, String named, String classed) {
         this.parentFactory = parentFactory;
         this.originParameter = originParameter;
         this.injectedType = injectedType;
         this.injectionKind = injectionKind;
         this.messageKind = messageKind;
         this.linkagePhase = linkagePhase;
+        this.optional = optional;
         this.named = named;
         this.classed = classed;
     }
@@ -74,6 +78,10 @@ public class InjectableElement {
 
     public MessageKind getMessageKind() {
         return messageKind;
+    }
+
+    public boolean isOptional() {
+        return optional;
     }
 
     public String getNamed() {
