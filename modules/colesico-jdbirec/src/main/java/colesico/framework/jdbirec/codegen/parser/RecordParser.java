@@ -27,6 +27,15 @@ public class RecordParser {
         this.processingEnv = processingEnv;
     }
 
+    protected String rewriteName(String acceptedChain, String defaultName) {
+        int pos = StringUtils.indexOf(acceptedChain, '=');
+        if (pos < 0) {
+            return defaultName;
+        } else {
+            return StringUtils.trim(StringUtils.substring(acceptedChain, pos+1));
+        }
+    }
+
     protected String buildAccessChain(CompositionElement comp, String localName) {
         Deque<String> namesStack = new ArrayDeque<>();
 
@@ -43,9 +52,11 @@ public class RecordParser {
         return StringUtils.join(namesStack, ".");
     }
 
-    protected boolean acceptChain(final CompositionElement composition, String localName, boolean isOption) {
+    protected String acceptChain(final CompositionElement composition, String localName, boolean isOption) {
         String accessChain = buildAccessChain(composition, localName);
         logger.debug("Check access chain: " + accessChain);
+
+        // Build all access chains set
         Set<String> acceptedChains = new HashSet<>();
         CompositionElement current = composition;
         while (current != null) {
@@ -68,18 +79,21 @@ public class RecordParser {
         }
 
         if (acceptedChains.isEmpty()) {
-            return !isOption;
+            if (isOption) {
+                return null;
+            } else {
+                return accessChain;
+            }
         }
 
         for (String acceptedChain : acceptedChains) {
             if (StringUtils.startsWith(acceptedChain, accessChain)) {
-                return true;
+                return acceptedChain;
             }
         }
 
-        return false;
+        return null;
     }
-
 
     protected void parseColumn(final CompositionElement composition, FieldElement field, String namePrefix) {
 
@@ -104,16 +118,17 @@ public class RecordParser {
             columnAnn = new AnnotationElement<>(processingEnv, column);
             String name;
             if (columnAnn.unwrap().name().equals("@field")) {
-                name = StrUtils.toLowerCaseNotation(field.getName(),'_');
+                name = StrUtils.toLowerCaseNotation(field.getName(), '_');
             } else {
                 name = columnAnn.unwrap().name();
             }
 
-            if (!acceptChain(composition, name, columnAnn.unwrap().option())) {
+            String acceptedChain = acceptChain(composition, name, columnAnn.unwrap().option());
+            if (acceptedChain == null) {
                 continue;
             }
 
-            String columnName = namePrefix + name;
+            String columnName = StringUtils.trim(namePrefix + rewriteName(acceptedChain, name));
             ColumnElement columnElement = new ColumnElement(field, columnName);
             composition.addColumn(columnElement);
 
@@ -158,12 +173,13 @@ public class RecordParser {
         }
 
         List<FieldElement> fields = composition.getOriginClass().getFieldsFiltered(
-                f -> !f.unwrap().getModifiers().contains(Modifier.STATIC)
+            f -> !f.unwrap().getModifiers().contains(Modifier.STATIC)
         );
         for (FieldElement field : fields) {
             AnnotationElement<Composition> compositionAnn = field.getAnnotation(Composition.class);
             if (compositionAnn != null) {
-                if (!acceptChain(composition, field.getName(), false)) {
+                // Filter compositions that contains only not acceptable fields
+                if (acceptChain(composition, field.getName(), false) == null) {
                     continue;
                 }
                 ClassElement compositionClass = field.asClassType().asClassElement();

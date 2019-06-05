@@ -31,7 +31,7 @@ public class JdbiTransactionalShell extends AbstractTransactionalShell<JdbiTrans
 
     @Override
     protected <R> R createNew(UnitOfWork<R> unitOfWork, Tuning<Handle> tuning) {
-        logger.debug("NEW JDBI TX BEGIN");
+        logger.debug("TX-New (JDBI) begin");
         if (transactions.get() != null) {
             throw new IllegalStateException("Active Jdbi transaction exists");
         }
@@ -68,7 +68,7 @@ public class JdbiTransactionalShell extends AbstractTransactionalShell<JdbiTrans
                 }
             }
             transactions.remove();
-            logger.debug("NEW JDBI TX END");
+            logger.debug("TX-New (JDBI) end");
         }
     }
 

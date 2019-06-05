@@ -2,7 +2,11 @@
 
 == Colesico-Config
 
-Automates the use of configuration beans and integrate its with the IoC container.
+This module automates the usage of configuration beans and integrates its with the IoC container.
+
+Colesico configuration bean is simple instance of class that extends a config "template" class. 
+Each method of this class is provides some configuration information or other objects.
+Configuration beans can be obtained from IoC container.
 
 The general principle of using configuration beans:
 

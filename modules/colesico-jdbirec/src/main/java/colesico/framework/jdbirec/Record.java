@@ -22,12 +22,13 @@ import java.lang.annotation.*;
 
 
 /**
- * Field composition marker.  (analogue of JPA @Embeded)
+ * Record marker  (analogue of JPA @Entity)
  */
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Record {
     String tableName() default "";
+
     Class<?> extend() default RecordKit.class;
 }

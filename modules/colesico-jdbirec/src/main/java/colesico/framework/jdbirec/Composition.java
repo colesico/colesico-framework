@@ -35,9 +35,12 @@ public @interface Composition {
     String columnsPrefix() default "";
 
     /**
-     * Accepts only enlisted columns (optional or not)
-     * For empty value all not optional columns will be accepted
-     * ex: foo.dummy.my_column
+     * Recursive filter columns contained in the current composition and subcompositions.
+     * Accept only listed columns.
+     * If not specified accept all not optional columns.
+     * Column names are relative to the current composition chain.
+     * It is possible to specify non direct columns i.e.: subCompField.column_1
+     * Also possible to rename target column with = operator:  column_1=column_2
      *
      * @return
      */

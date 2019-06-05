@@ -12,6 +12,7 @@ abstract public class RecordKit<R> {
     public static final String INIT_COMPOSITION_METHOD = "initCompositions";
     public static final String EXPORT_METOD = "exportTo";
     public static final String IMPORT_METHOD = "importFrom";
+    public static final String TABLE_NAME_METHOD = "tableName";
     public static final String SQL_INSERT_METHOD = "sqlInsert";
     public static final String SQL_UPDATE_METHOD = "sqlUpdate";
     public static final String SQL_SELECT_METHOD = "sqlSelect";
@@ -28,6 +29,18 @@ abstract public class RecordKit<R> {
 
     abstract public R importFrom(R record, ResultSet rs) throws SQLException;
 
+    /**
+     * Return table name
+     *
+     * @return
+     */
+    abstract public String tableName();
+
+    /**
+     * Return insert sql query text
+     *
+     * @return
+     */
     abstract public String sqlInsert();
 
     abstract public String sqlUpdate(String qualification);

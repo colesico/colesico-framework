@@ -3,7 +3,7 @@ module colesico.framework.jdbirec {
     requires transitive colesico.framework.ioc;
     requires transitive javax.inject;
     requires transitive java.sql;
-    requires transitive jdbi3.core;
+    requires transitive org.jdbi.v3.core;
 
     requires static com.squareup.javapoet;
 

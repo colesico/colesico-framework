@@ -23,7 +23,7 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.7.2</version>
+        <version>1.8.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -137,6 +137,11 @@
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-eventbus</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-asyncjob</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

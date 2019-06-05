@@ -271,6 +271,15 @@ public class RecordKitGenerator {
     }
 
 
+    protected void generateTableName() {
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(RecordKit.TABLE_NAME_METHOD);
+        mb.addModifiers(Modifier.PUBLIC);
+        mb.addAnnotation(Override.class);
+        mb.returns(ClassName.get(String.class));
+        mb.addStatement("return $S", getTableName());
+        classBuilder.addMethod(mb.build());
+    }
+
     protected void generateInsertSQL() {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(RecordKit.SQL_INSERT_METHOD);
         mb.addModifiers(Modifier.PUBLIC);
@@ -400,6 +409,7 @@ public class RecordKitGenerator {
         generateInitCompositionsMethod();
         generateExportMethod();
         generatImportMethod();
+        generateTableName();
         generateInsertSQL();
         generateUpdateSQL();
         generateSelectSQL();

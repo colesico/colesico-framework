@@ -25,14 +25,14 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.7.2</version>
+        <version>1.8.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>colesico-jdbi</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico jDBI Integration</name>
+    <name>Colesico JDBI Integration</name>
     <description>
         Colesico framework jDBI integration
     </description>
@@ -48,7 +48,7 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- jDBI -->
+        <!-- JDBI -->
         <dependency>
             <groupId>org.jdbi</groupId>
             <artifactId>jdbi3-core</artifactId>

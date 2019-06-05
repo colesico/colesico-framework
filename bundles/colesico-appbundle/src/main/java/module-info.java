@@ -27,6 +27,7 @@ module colesico.framework.appbundle {
     //mix
     requires transitive colesico.framework.security;
     requires transitive colesico.framework.eventbus;
+    requires transitive colesico.framework.asyncjob;
     requires transitive colesico.framework.validation;
 
 }

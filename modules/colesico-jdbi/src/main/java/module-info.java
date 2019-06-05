@@ -3,7 +3,7 @@ module colesico.framework.jdbi {
     requires transitive colesico.framework.config;
     requires transitive colesico.framework.transaction;
     requires transitive java.sql;
-    requires transitive jdbi3.core;
+    requires transitive org.jdbi.v3.core;
 
     requires slf4j.api;
     //requires org.slf4j;

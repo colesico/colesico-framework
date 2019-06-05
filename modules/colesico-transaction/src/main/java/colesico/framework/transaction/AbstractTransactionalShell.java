@@ -22,67 +22,82 @@ abstract public class AbstractTransactionalShell<T, U> implements TransactionalS
 
     @Override
     public <R> R required(UnitOfWork<R> unitOfWork, U tuning) {
-        logger.debug("REQUIRED TX BEGIN");
+        logger.debug("TX-Required begin");
         T tx = transactions.get();
+        R result;
         if (tx == null) {
-            return createNew(unitOfWork, tuning);
+            result = createNew(unitOfWork, tuning);
         } else {
-            return unitOfWork.execute();
+            result = unitOfWork.execute();
         }
+        logger.debug("TX-Required end");
+        return result;
     }
 
     @Override
     public <R> R requiresNew(UnitOfWork<R> unitOfWork, U tuning) {
-        logger.debug("REQUIRES_NEW TX BEGIN");
+        logger.debug("TX-RequiresNew begin");
         T tx = transactions.get();
         if (tx == null) {
-            return createNew(unitOfWork, tuning);
+            R result = createNew(unitOfWork, tuning);
+            logger.debug("TX-RequiresNew end");
+            return result;
         } else {
             try {
                 transactions.remove();
                 return createNew(unitOfWork, tuning);
             } finally {
                 transactions.set(tx);
+                logger.debug("TX-RequiresNew end");
             }
         }
     }
 
     @Override
     public <R> R mandatory(UnitOfWork<R> unitOfWork, U tuning) {
-        logger.debug("MANDATORY TX BEGIN");
+        logger.debug("TX-Mandatory begin");
         getTransaction();
-        return unitOfWork.execute();
+        R result = unitOfWork.execute();
+        logger.debug("TX-Mandatory end");
+        return result;
     }
 
     @Override
     public <R> R notSupported(UnitOfWork<R> unitOfWork, U tuning) {
-        logger.debug("NOT_SUPPORTED TX BEGIN");
+        logger.debug("TX-NotSupported begin");
         T tx = transactions.get();
         if (tx == null) {
-            return unitOfWork.execute();
+            R result = unitOfWork.execute();
+            logger.debug("TX-NotSupported end");
+            return result;
         } else {
             try {
                 transactions.remove();
                 return unitOfWork.execute();
             } finally {
                 transactions.set(tx);
+                logger.debug("TX-NotSupported end");
             }
         }
     }
 
     @Override
     public <R> R supports(UnitOfWork<R> unitOfWork, U tuning) {
-        logger.debug("SUPPORTS TX BEGIN");
-        return unitOfWork.execute();
+        logger.debug("TX-Supports begin");
+        R result = unitOfWork.execute();
+        logger.debug("TX-Supports end");
+        return result;
     }
 
     @Override
     public <R> R never(UnitOfWork<R> unitOfWork, U tuning) {
-        logger.debug("NEVER TX BEGIN");
+        logger.debug("TX-Never begin");
         T tx = transactions.get();
         if (tx != null) {
+            logger.debug("TX-Never ned");
             throw new IllegalStateException("Active transaction exists");
         }
+        logger.debug("TX-Never ned");
         return unitOfWork.execute();
     }
 
