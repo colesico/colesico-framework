@@ -1,5 +1,6 @@
 package colesico.framework.jdbirec;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jdbi.v3.core.mapper.RowMapper;
 
 import java.sql.ResultSet;
@@ -22,6 +23,8 @@ abstract public class RecordKit<R> {
     public static final String RECEIVER_PARAM = "receiver";
     public static final String RESULT_SET_PARAM = "rs";
     public static final String QUALIFICATION_PARAM = "qualification";
+
+    public static final String TABLE_NAME_REF = "@table";
 
     abstract public void initCompositions(R record);
 
@@ -48,6 +51,22 @@ abstract public class RecordKit<R> {
     abstract public String sqlSelect(String qualification);
 
     abstract public R newRecord();
+
+    public final String sql(String sqlText) {
+        return sqlText.replace(TABLE_NAME_REF, tableName());
+    }
+
+    public final String sqlInsert(String qualification) {
+        if (qualification != null) {
+            return sqlInsert() + " " + qualification;
+        } else {
+            return sqlInsert();
+        }
+    }
+
+    public final String sqlDelete(String qualification) {
+        return "delete from " + tableName() + (StringUtils.isNotBlank(qualification) ? ' ' + qualification : "");
+    }
 
     public final Map<String, Object> map(R record) {
         final Map<String, Object> result = new HashMap<>();

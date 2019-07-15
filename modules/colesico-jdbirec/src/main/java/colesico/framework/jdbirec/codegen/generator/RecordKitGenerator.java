@@ -23,6 +23,8 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Function;
 
+import static colesico.framework.jdbirec.RecordKit.TABLE_NAME_REF;
+
 public class RecordKitGenerator {
 
     private static final Logger logger = LoggerFactory.getLogger(RecordKitGenerator.class);
@@ -39,7 +41,7 @@ public class RecordKitGenerator {
     }
 
     protected String getHelperClassName() {
-        return recordElement.getOriginClass().getSimpleName().toString() + RecordKitFactory.KIT_CLASS_SUFFIX;
+        return recordElement.getOriginClass().getSimpleName() + RecordKitFactory.KIT_CLASS_SUFFIX;
     }
 
     protected String toGetterName(FieldElement field) {
@@ -114,8 +116,8 @@ public class RecordKitGenerator {
             if (column.getConverter() != null) {
                 String convField = converterFields.addField(column.getConverter().unwrap());
                 cb.add("$N.$N(",
-                        convField,
-                        FieldConverter.FROM_FIELD_METHOD);
+                    convField,
+                    FieldConverter.FROM_FIELD_METHOD);
                 cb.add(gettersPath);
                 cb.add(")");
             } else {
@@ -134,10 +136,10 @@ public class RecordKitGenerator {
         if (column.getConverter() != null) {
             String convField = converterFields.addField(column.getConverter().unwrap());
             cb.add("$N.$N($S,$N)",
-                    convField,
-                    FieldConverter.TO_FIELD_METHOD,
-                    column.getName(),
-                    RecordKit.RESULT_SET_PARAM);
+                convField,
+                FieldConverter.TO_FIELD_METHOD,
+                column.getName(),
+                RecordKit.RESULT_SET_PARAM);
             return;
         }
 
@@ -182,8 +184,8 @@ public class RecordKitGenerator {
                 break;
             case "java.time.LocalDateTime":
                 cb.add("$N.getTimestamp($S) == null ? null : $N.getTimestamp($S).toLocalDateTime()",
-                        RecordKit.RESULT_SET_PARAM, column.getName(),
-                        RecordKit.RESULT_SET_PARAM, column.getName()
+                    RecordKit.RESULT_SET_PARAM, column.getName(),
+                    RecordKit.RESULT_SET_PARAM, column.getName()
                 );
                 break;
             default:
@@ -242,7 +244,7 @@ public class RecordKitGenerator {
         mb.addAnnotation(Override.class);
         mb.addParameter(TypeName.get(recordElement.getOriginClass().asType()), RecordKit.RECORD_PARAM, Modifier.FINAL);
         mb.addParameter(TypeName.get(RecordKit.ValueReceiver.class),
-                RecordKit.RECEIVER_PARAM, Modifier.FINAL);
+            RecordKit.RECEIVER_PARAM, Modifier.FINAL);
 
         mb.addStatement("$N($N)", RecordKit.INIT_COMPOSITION_METHOD, RecordKit.RECORD_PARAM);
         CodeBlock.Builder cb = CodeBlock.builder();
@@ -335,7 +337,7 @@ public class RecordKitGenerator {
         sb.append(StringUtils.join(assigns, ", "));
 
         mb.addStatement("return $S + ($T.isBlank($N)?\"\" : \" \"+$N)", sb.toString(),
-                ClassName.get(StringUtils.class), RecordKit.QUALIFICATION_PARAM, RecordKit.QUALIFICATION_PARAM);
+            ClassName.get(StringUtils.class), RecordKit.QUALIFICATION_PARAM, RecordKit.QUALIFICATION_PARAM);
         classBuilder.addMethod(mb.build());
     }
 
@@ -362,7 +364,8 @@ public class RecordKitGenerator {
         }
         sb.append(StringUtils.join(columnNames, ", "));
         sb.append(' ');
-        mb.addStatement("return $S + $N.replaceAll(\"@table\",\""+getTableName()+"\")", sb.toString(), RecordKit.QUALIFICATION_PARAM );
+        mb.addStatement("return $S + $N.replace($S,$S)", sb.toString(), RecordKit.QUALIFICATION_PARAM,
+            TABLE_NAME_REF, getTableName());
         classBuilder.addMethod(mb.build());
         return sb.toString();
     }
@@ -401,8 +404,8 @@ public class RecordKitGenerator {
         classBuilder.addModifiers(Modifier.PUBLIC);
 
         TypeName baseTypeName = ParameterizedTypeName.get(
-                ClassName.bestGuess(recordElement.getExtend().asClassElement().getName()),
-                TypeName.get(recordElement.getOriginClass().asType()));
+            ClassName.bestGuess(recordElement.getExtend().asClassElement().getName()),
+            TypeName.get(recordElement.getOriginClass().asType()));
 
         classBuilder.superclass(baseTypeName);
 

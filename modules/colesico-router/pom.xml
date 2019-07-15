@@ -23,7 +23,7 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.8.0</version>
+        <version>1.8.1</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -34,6 +34,7 @@
     <description>
         Colesico framework web router - core service for binding http URIs to service methods
     </description>
+    <url>https://github.com/colesico/colesico-framework</url>
 
     <properties>
     </properties>

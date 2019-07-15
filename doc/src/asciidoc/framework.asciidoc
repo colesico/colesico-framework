@@ -34,7 +34,7 @@ Colesico-framework consists of highly specialized micromodules.
 * Colesico-security - Security service
 * <<profile.asciidoc#,Colesico-profile - localization profile assistant service>>
 * Colesico-translation - Simple text translation support for services
-* Colesico-resource
+* Colesico-resource - Provides an ability of resource rewriting and localization
 * Colesico-validation - DSL style extendable data validator
 * <<eventbus.asciidoc#,Colesico-eventbus - Simple even bus for services>>
 * Colesico-asyncjob - Async job background execution
@@ -50,11 +50,11 @@ Colesico-framework consists of highly specialized micromodules.
 
 * Colesico-http - Unified HTTP API
 * Colesico-router - HTTP requests dispatcher
-* Colesico-weblet - HTTP requests handling support
+* Colesico-weblet - HTTP requests handling support (servlets analogue)
 * Colesico-webstatic - Static files (*.js, *.css etc) sharing helper
 * Colesico-restlet - Simplified RESTful Web services support
 * Colesico-htmlrenderer - Unified html rendering API
 * Colesico-pebble - Pebble templating engine  integration
 * Colesico-undertow - Undertow web server integration
-* Colesico-widget
+* Colesico-widget - Http page widgets support (Under development)
 
