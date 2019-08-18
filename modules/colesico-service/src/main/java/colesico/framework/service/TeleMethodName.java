@@ -20,7 +20,7 @@ package colesico.framework.service;
 import java.lang.annotation.*;
 
 /**
- * Overrides teleDriver-method default name
+ * Overrides tele-method default name
  *
  * @author Vladlen Larionov
  */

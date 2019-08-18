@@ -29,7 +29,7 @@ import colesico.framework.service.codegen.parser.ProcessorContext;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleDriver;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.TypeWrapper;
+import colesico.framework.assist.TypeWrapper;
 import com.squareup.javapoet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,9 +66,9 @@ public class TeleFacadesGenerator {
         mb.addAnnotation(ClassName.get(Inject.class));
         mb.addModifiers(Modifier.PUBLIC);
         mb.addParameter(
-                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(teleFacade.getParentService().getOriginClass().asType())),
-                TARGET_PROV_FIELD,
-                Modifier.FINAL);
+            ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(teleFacade.getParentService().getOriginClass().asType())),
+            TARGET_PROV_FIELD,
+            Modifier.FINAL);
 
         mb.addParameter(ClassName.get(teleFacade.getTeleDriverClass()), TELEDRIVER_FIELD, Modifier.FINAL);
         mb.addStatement("super($N,$N)", TARGET_PROV_FIELD, TELEDRIVER_FIELD);
@@ -98,8 +98,8 @@ public class TeleFacadesGenerator {
 
         String valueVar = varNames.getNextTempVariable();
         binderBuilder.addStatement("$T $N=new $T()",
-                paramTypeName,
-                valueVar, TypeName.get(var.getOriginVariable().asType()));
+            paramTypeName,
+            valueVar, TypeName.get(var.getOriginVariable().asType()));
 
         // Generate composition fields
         for (TeleVarElement subvar : ((TeleCompElement) var).getVariables()) {
@@ -152,19 +152,12 @@ public class TeleFacadesGenerator {
         binderBuilder.add(callMethodCb.build());
 
         // Send result to client via data port
-        //    dataPort.writeForClass(MyResp.class,result,new Ctx());
-        // or  dataPort.writeForType(new TypeWrapper<MyResp>(){}.unwrap(),result,new Ctx());
+        //    dataPort.write(MyResp.class,result,new Ctx());
+        // or  for generics: dataPort.write(new TypeWrapper<MyResp>(){}.unwrap(),result,new Ctx());
         if (!voidResult) {
-            ClassType returnClassType = new ClassType(context.getProcessingEnv(), (DeclaredType) returnType);
-            boolean genericReturnType = !returnClassType.asElement().getTypeParameters().isEmpty();
-            if (genericReturnType) {
-                binderBuilder.add("$N.$N(", TeleDriver.Binder.DATAPORT_PARAM, DataPort.WRITE_FOR_TYPE_METHOD);
-                TypeName wrapperType = ParameterizedTypeName.get(ClassName.get(TypeWrapper.class), TypeName.get(returnType));
-                binderBuilder.add("new $T(){}.$N(), ", wrapperType, TypeWrapper.UNWRAP_METHOD);
-            } else {
-                binderBuilder.add("$N.$N(", TeleDriver.Binder.DATAPORT_PARAM, DataPort.WRITE_FOR_CLASS_METHOD);
-                binderBuilder.add("$T.class, ", TypeName.get(returnType));
-            }
+            binderBuilder.add("$N.$N(", TeleDriver.Binder.DATAPORT_PARAM, DataPort.WRITE_FOR_TYPE_METHOD);
+            CodegenUtils.generateTypePick(returnType, binderBuilder);
+            binderBuilder.add(", ");
             binderBuilder.add("$N, ", TeleDriver.RESULT_PARAM);
             CodeBlock writeCtx = teleMethod.getWritingContext();
             binderBuilder.add(writeCtx);
@@ -184,13 +177,13 @@ public class TeleFacadesGenerator {
             // Subroutine definition
             CodeBlock.Builder cb = CodeBlock.builder();
             cb.add("final $T $N=($N,$N)->{\n",
-                    ParameterizedTypeName.get(
-                            ClassName.get(TeleDriver.Binder.class),
-                            TypeName.get(service.getOriginClass().asType()),
-                            ClassName.get(teleFacade.getDataPortClass())),
-                    TeleDriver.BINDER_PARAM,
-                    TeleDriver.Binder.TARGET_PARAM,
-                    TeleDriver.Binder.DATAPORT_PARAM);
+                ParameterizedTypeName.get(
+                    ClassName.get(TeleDriver.Binder.class),
+                    TypeName.get(service.getOriginClass().asType()),
+                    ClassName.get(teleFacade.getDataPortClass())),
+                TeleDriver.BINDER_PARAM,
+                TeleDriver.Binder.TARGET_PARAM,
+                TeleDriver.Binder.DATAPORT_PARAM);
             cb.indent();
             cb.add(generateSubroutineBody(teleMethod));
             cb.unindent();
@@ -202,8 +195,8 @@ public class TeleFacadesGenerator {
 
             // Call teleDriver
             cb.add("$N.$N($N,$N,", TeleFacade.TELEDRIVER_FIELD, TeleDriver.INVOKE_METHOD,
-                    TeleDriver.TARGET_PARAM,
-                    TeleDriver.BINDER_PARAM);
+                TeleDriver.TARGET_PARAM,
+                TeleDriver.BINDER_PARAM);
             CodeBlock invCtx = teleMethod.getInvokingContext();
             cb.add(invCtx);
             cb.add(");\n");
@@ -239,9 +232,9 @@ public class TeleFacadesGenerator {
 
 
             classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(TeleFacade.class),
-                    TypeName.get(service.getOriginClass().asType()),
-                    ClassName.get(teleFacade.getTeleDriverClass()),
-                    ClassName.get(teleFacade.getLigatureClass())));
+                TypeName.get(service.getOriginClass().asType()),
+                ClassName.get(teleFacade.getTeleDriverClass()),
+                ClassName.get(teleFacade.getLigatureClass())));
 
             generateCounstructor(teleFacade, classBuilder);
             generateTeleMethods(teleFacade, classBuilder);

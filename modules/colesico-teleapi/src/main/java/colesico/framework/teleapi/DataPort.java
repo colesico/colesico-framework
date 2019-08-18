@@ -35,10 +35,8 @@ import java.lang.reflect.Type;
  */
 public interface DataPort<R, W> {
 
-    String READ_FOR_CLASS_METHOD = "readForClass";
-    String READ_FOR_TYPE_METHOD = "readForType";
-    String WRITE_FOR_CLASS_METHOD = "writeForClass";
-    String WRITE_FOR_TYPE_METHOD = "writeForType";
+    String READ_FOR_CLASS_METHOD = "read";
+    String WRITE_FOR_TYPE_METHOD = "write";
 
     /**
      * Key for storing instance of TeleDataPort in process scope
@@ -47,46 +45,22 @@ public interface DataPort<R, W> {
 
     /**
      * Read value from client request.
-     * This method should be used with generic types.
      *
      * @param valueType
      * @param context
      * @param <V>
      * @return
      */
-    <V> V readForType(Type valueType, R context);
-
-    /**
-     * Read value from client request
-     *
-     * @param valueClass
-     * @param context    value reading context. Is used for value reading customization
-     * @param <V>
-     * @return
-     */
-    default <V> V readForClass(Class<V> valueClass, R context) {
-        return readForType(valueClass, context);
-    }
+    <V> V read(Type valueType, R context);
 
     /**
      * Writes data to the client response.
-     * This method should be used with generic types.
      *
      * @param valueType
      * @param value
      * @param context
      * @param <V>
      */
-    <V> void writeForType(Type valueType, V value, W context);
+    <V> void write(Type valueType, V value, W context);
 
-    /**
-     * Writes value to the client response
-     *
-     * @param value
-     * @param context value writing context. Is used for value writing customization
-     * @param <V>
-     */
-    default <V> void writeForClass(Class<V> valueClass, V value, W context) {
-        writeForType(valueClass, value, context);
-    }
 }

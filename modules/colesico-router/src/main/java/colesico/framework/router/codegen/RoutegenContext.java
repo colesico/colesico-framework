@@ -38,14 +38,15 @@ import javax.lang.model.element.PackageElement;
  */
 abstract public class RoutegenContext {
 
-    protected static final String INDEX_FRAMLET_NAME = "Index";
+    protected static final String INDEX_SERVICE_PREFIX = "Index";
+    protected static final String INDEX_METHOD_PREFIX = "index";
 
     protected final Elements<RoutedTeleMethodElement> teleMethods = new Elements<>();
 
-    protected final String framletRoute;
+    protected final String serviceRoute;
 
     public RoutegenContext(ServiceElement framlet) {
-        this.framletRoute = buildServiceRoute(framlet);
+        this.serviceRoute = buildServiceRoute(framlet);
     }
 
     public final void registTeleMethod(TeleMethodElement teleMethod) {
@@ -55,8 +56,8 @@ abstract public class RoutegenContext {
         RoutedTeleMethodElement rtme = teleMethods.find(rte -> rte.getRoute().equals(route));
         if (null != rtme) {
             throw CodegenException.of()
-                    .message("Duplicate router path: " + route + "->" + teleMethodName + "(...). Route already binded to " + rtme.getTeleMethod().getProxyMethod().getName() + "(...)")
-                    .element(teleMethod.getProxyMethod().getOriginMethod()).build();
+                .message("Duplicate router path: " + route + "->" + teleMethodName + "(...). Route already binded to " + rtme.getTeleMethod().getProxyMethod().getName() + "(...)")
+                .element(teleMethod.getProxyMethod().getOriginMethod()).build();
         }
         RoutedTeleMethodElement routedTeleMethodElement = new RoutedTeleMethodElement(teleMethod, route);
         teleMethods.add(routedTeleMethodElement);
@@ -64,16 +65,27 @@ abstract public class RoutegenContext {
 
     protected String buildMethodRoute(TeleMethodElement teleMethod) {
 
-        AnnotationElement<Route> routeAnnotation = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(Route.class);
+        AnnotationElement<Route> routeAnn = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(Route.class);
         String methodRoute;
-        if (routeAnnotation == null) {
-            methodRoute = RouteTrie.SEGMENT_DELEMITER + StrUtils.toLowerCaseNotation(teleMethod.getName(),'-');
+        if (routeAnn != null) {
+            methodRoute = StringUtils.trim(routeAnn.unwrap().value());
+            // If NOT absolute route
+            if (!methodRoute.startsWith(RouteTrie.SEGMENT_DELEMITER)) {
+                // Local route optional marker
+                if (methodRoute.startsWith(".")) {
+                    methodRoute = methodRoute.substring(1);
+                }
+                methodRoute = StrUtils.concatPath(serviceRoute, methodRoute, RouteTrie.SEGMENT_DELEMITER);
+            }
         } else {
-            methodRoute = routeAnnotation.unwrap().value();
-        }
-
-        if (methodRoute.equals(RouteTrie.SEGMENT_DELEMITER)) {
-            methodRoute = "";
+            String methodName = teleMethod.getName();
+            // Local root route
+            if (methodName.startsWith(INDEX_METHOD_PREFIX)) {
+                methodRoute = "";
+            } else {
+                methodRoute = StrUtils.toSeparatorNotation(methodName, '-');
+            }
+            methodRoute = StrUtils.concatPath(serviceRoute, methodRoute, RouteTrie.SEGMENT_DELEMITER);
         }
 
         HttpMethod httpMethod = HttpMethod.GET;
@@ -82,58 +94,54 @@ abstract public class RoutegenContext {
             httpMethod = methodAnnotation.unwrap().value();
         }
 
-        String result = StrUtils.concatPath(httpMethod.name(), framletRoute, RouteTrie.SEGMENT_DELEMITER);
-        result = StrUtils.concatPath(result, methodRoute, RouteTrie.SEGMENT_DELEMITER);
-
-        return result;
+        return StrUtils.concatPath(httpMethod.name(), methodRoute, RouteTrie.SEGMENT_DELEMITER);
     }
 
     protected String buildServiceRoute(ServiceElement service) {
-        AnnotationElement<Route> routeAnnotation = service.getOriginClass().getAnnotation(Route.class);
-        String route = null;
-        if (routeAnnotation != null) {
+        AnnotationElement<Route> routeAnn = service.getOriginClass().getAnnotation(Route.class);
+        String srvRoute = null;
+        if (routeAnn != null) {
+            srvRoute = StringUtils.trim(routeAnn.unwrap().value());
+
             // If absolute route
-            if (routeAnnotation.unwrap().value().startsWith(RouteTrie.SEGMENT_DELEMITER)) {
-                return routeAnnotation.unwrap().value();
+            if (srvRoute.startsWith(RouteTrie.SEGMENT_DELEMITER)) {
+                return srvRoute;
             }
-            // Relative route -> get suffix from package
-            if (routeAnnotation.unwrap().value().startsWith(".")) {
-                PackageElement pkg = service.getOriginClass().getPackage();
-                Route pkgRoute = pkg.getAnnotation(Route.class);
-                if (pkgRoute == null) {
-                    throw CodegenException.of()
-                            .message("Package " + pkg.getSimpleName() + " must be annotated with @" + Route.class.getName())
-                            .element(service.getOriginClass())
-                            .build();
-                }
-                String pkgRouteValue = pkgRoute.value();
-                if (!pkgRouteValue.startsWith(RouteTrie.SEGMENT_DELEMITER)) {
-                    throw CodegenException.of()
-                            .message("Wrong package route: " + pkgRouteValue + ". Must starts with '" + RouteTrie.SEGMENT_DELEMITER + "'")
-                            .element(service.getOriginClass())
-                            .build();
-                }
-                String beanRouteValue = routeAnnotation.unwrap().value().substring(1);
-                if (StringUtils.isBlank(beanRouteValue)){
-                    String classSimpleName = service.getOriginClass().getSimpleName().toString();
-                    beanRouteValue = "/"+ StrUtils.toLowerCaseNotation(classSimpleName,'-');
-                }
-                return StrUtils.concatPath(pkgRouteValue, beanRouteValue, RouteTrie.SEGMENT_DELEMITER);
-            } else {
-                throw CodegenException.of()
-                        .message("Unclear route: " + routeAnnotation.unwrap().value() + ". Must starts with '.' or '" + RouteTrie.SEGMENT_DELEMITER + "'")
-                        .element(service.getOriginClass())
-                        .build();
+
+            // Local route optional marker
+            if (srvRoute.startsWith(".")) {
+                return srvRoute = srvRoute.substring(1);
             }
+
+            String pkgRoute = buildPackageRoute(service.getOriginClass().getPackage());
+            return StrUtils.concatPath(pkgRoute, srvRoute, RouteTrie.SEGMENT_DELEMITER);
         } else {
-            // Root suffix
-            if (service.getOriginClass().getSimpleName().toString().equals(INDEX_FRAMLET_NAME)) {
-                return "/";
+            String serviceBeanName = service.getOriginClass().getSimpleName();
+            // Local root route
+            if (serviceBeanName.startsWith(INDEX_SERVICE_PREFIX)) {
+                srvRoute = "";
             } else {
-                String classSimpleName = service.getOriginClass().getSimpleName().toString();
-                return "/" + StrUtils.toLowerCaseNotation(classSimpleName,'-');
+                // Bean route from bean simple class name
+                srvRoute = StrUtils.toSeparatorNotation(serviceBeanName, '-');
             }
+            String pkgRoute = buildPackageRoute(service.getOriginClass().getPackage());
+            return StrUtils.concatPath(pkgRoute, srvRoute, RouteTrie.SEGMENT_DELEMITER);
         }
+    }
+
+    protected String buildPackageRoute(PackageElement pkg) {
+        Route routeAnn = pkg.getAnnotation(Route.class);
+        if (routeAnn == null) {
+            return "/";
+        }
+        String route = StringUtils.trim(routeAnn.value());
+        if (!route.startsWith(RouteTrie.SEGMENT_DELEMITER)) {
+            throw CodegenException.of()
+                .message("Wrong package route: " + route + ". Must starts with '" + RouteTrie.SEGMENT_DELEMITER + "'")
+                .element(pkg)
+                .build();
+        }
+        return route;
     }
 
     public final Elements<RoutedTeleMethodElement> getTeleMethods() {

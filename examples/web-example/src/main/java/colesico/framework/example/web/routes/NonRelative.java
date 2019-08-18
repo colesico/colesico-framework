@@ -8,9 +8,9 @@ import colesico.framework.weblet.Weblet;
 @Route("/my-non-relative-path")
 public class NonRelative {
 
-    // http://localhost:8080/my-non-relative_path/printParams.html
+    // http://localhost:8080/my-non-relative_path/print-params.html
 
-    @Route("/printParams.html")
+    @Route("print-params.html")
     public HtmlResponse test(){
         return new HtmlResponse("Test!");
     }

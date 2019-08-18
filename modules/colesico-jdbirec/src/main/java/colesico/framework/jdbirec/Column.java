@@ -22,7 +22,9 @@ import java.lang.annotation.*;
 import java.sql.ResultSet;
 
 /**
- * Defines column name
+ * Defines record column. Analogue of JPA @Column annotation
+ *
+ * @see Record
  */
 @Documented
 @Target(ElementType.FIELD)
@@ -38,11 +40,11 @@ public @interface Column {
     String name() default "@field";
 
     /**
-     * Value converter
+     * Value mediator to transmit field value to sql format and back
      *
      * @return
      */
-    Class<? extends FieldConverter> converter() default FieldConverter.class;
+    Class<? extends FieldMediator> mediator() default FieldMediator.class;
 
     /**
      * Column value for insert and update sql.
@@ -69,6 +71,7 @@ public @interface Column {
      * \@column - select column value
      * \@nop -  don't select
      * <p>
+     *
      * @return
      */
     String selectAs() default "@column";
@@ -81,24 +84,30 @@ public @interface Column {
     String definition() default "";
 
     /**
-     * Use this field value in {@link RecordKit#exportTo(Object, RecordKit.ValueReceiver)} method
+     * Use this field value in {@link RecordKit#exportRecord(Object, RecordKit.ColumnAssigner)} method
      *
      * @return
      */
     boolean exportable() default true;
 
     /**
-     * Use this field value in {@link RecordKit#importFrom(Object, ResultSet)} method
+     * Use this field value in {@link RecordKit#importRecord(Object, ResultSet)} method
      *
      * @return
      */
     boolean importable() default true;
 
     /**
-     * Indicates that the column definition is an alternative
+     * Indicates that the column is not belongs to the record in it is declared and can be linked
+     * to another records with @Composition
      *
      * @return
      */
-    boolean option() default false;
+    boolean virtual() default false;
 
+    /**
+     * @see Record#profiles()
+     * @return
+     */
+    String[] profiles() default {};
 }

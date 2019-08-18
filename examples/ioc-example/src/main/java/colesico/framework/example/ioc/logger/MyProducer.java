@@ -8,7 +8,6 @@ import colesico.framework.ioc.Producer;
 
 @Producer
 @Produce(MyBean.class)
-@Produce(Main.class)
 public class MyProducer {
 
     public Logger getLogger(@Message InjectionPoint ip) {

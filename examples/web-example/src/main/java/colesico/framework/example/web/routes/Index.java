@@ -11,8 +11,7 @@ import colesico.framework.weblet.Weblet;
 public class Index {
 
     // Full URI: /
-    @Route("/")
-    public HtmlResponse hello(){
+    public HtmlResponse index(){
         return new HtmlResponse("Hello from Index");
     }
 

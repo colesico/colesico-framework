@@ -241,6 +241,8 @@ In this example the Instances of both classes MyBean1 and MyBean2 are singletone
 
 == Ranks
 
+Ranks acts like a Spring framework DI profile conception.
+
 To be able to override the creation of instances the mechanism of ranks of producers is used.  
 For example, for testing, using stubs, etc., or for plugins that override any functionality.
 

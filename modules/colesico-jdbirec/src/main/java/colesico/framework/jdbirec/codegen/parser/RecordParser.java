@@ -1,6 +1,8 @@
 package colesico.framework.jdbirec.codegen.parser;
 
 import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.AnnotationElement;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
@@ -8,23 +10,23 @@ import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.*;
 import colesico.framework.jdbirec.codegen.model.*;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import java.util.*;
 
-public class RecordParser {
-    protected static final Logger logger = LoggerFactory.getLogger(RecordParser.class);
+public class RecordParser extends FrameworkAbstractParser {
 
-    protected final ProcessingEnvironment processingEnv;
+    /**
+     * Parsing record
+     */
     protected RecordElement recordElement;
 
     public RecordParser(ProcessingEnvironment processingEnv) {
-        this.processingEnv = processingEnv;
+        super(processingEnv);
     }
 
     protected String rewriteName(String acceptedChain, String defaultName) {
@@ -32,8 +34,28 @@ public class RecordParser {
         if (pos < 0) {
             return defaultName;
         } else {
-            return StringUtils.trim(StringUtils.substring(acceptedChain, pos+1));
+            return StringUtils.trim(StringUtils.substring(acceptedChain, pos + 1));
         }
+    }
+
+    protected void checkProfileNames(final String[] profiles, Element parentElement) {
+        for (String p : profiles) {
+            if (!p.matches("[A-Za-z0-9]+")) {
+                throw CodegenException.of().message("Invalid record profile name. Alphanumeric chars expected: " + p).element(parentElement).build();
+            }
+        }
+    }
+
+    protected boolean isInProfile(String currentProfile, String[] profiles) {
+        if (RecordKitProfile.DEFAULT.equals(currentProfile)) {
+            return true;
+        }
+        for (String p : profiles) {
+            if (currentProfile.equals(p)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected String buildAccessChain(CompositionElement comp, String localName) {
@@ -115,15 +137,20 @@ public class RecordParser {
 
         for (Column column : columns) {
 
+            // Check profile
+            if (!isInProfile(composition.getParentRecord().getProfile(), column.profiles())) {
+                continue;
+            }
+
             columnAnn = new AnnotationElement<>(processingEnv, column);
             String name;
             if (columnAnn.unwrap().name().equals("@field")) {
-                name = StrUtils.toLowerCaseNotation(field.getName(), '_');
+                name = StrUtils.toSeparatorNotation(field.getName(), '_');
             } else {
                 name = columnAnn.unwrap().name();
             }
 
-            String acceptedChain = acceptChain(composition, name, columnAnn.unwrap().option());
+            String acceptedChain = acceptChain(composition, name, columnAnn.unwrap().virtual());
             if (acceptedChain == null) {
                 continue;
             }
@@ -135,9 +162,9 @@ public class RecordParser {
             columnElement.setImportable(columnAnn.unwrap().importable());
             columnElement.setExportable(columnAnn.unwrap().exportable());
 
-            TypeMirror converterType = columnAnn.getValueTypeMirror(a -> a.converter());
-            if (!converterType.toString().equals(FieldConverter.class.getName())) {
-                columnElement.setConverter(new ClassType(processingEnv, (DeclaredType) converterType));
+            TypeMirror mediatorType = columnAnn.getValueTypeMirror(a -> a.mediator());
+            if (!mediatorType.toString().equals(FieldMediator.class.getName())) {
+                columnElement.setMediator(new ClassType(processingEnv, (DeclaredType) mediatorType));
             }
 
             if (!"@nop".equals(columnAnn.unwrap().insertAs())) {
@@ -178,10 +205,16 @@ public class RecordParser {
         for (FieldElement field : fields) {
             AnnotationElement<Composition> compositionAnn = field.getAnnotation(Composition.class);
             if (compositionAnn != null) {
+                // Check profile
+                if (!isInProfile(composition.getParentRecord().getProfile(), compositionAnn.unwrap().profiles())) {
+                    continue;
+                }
+
                 // Filter compositions that contains only not acceptable fields
                 if (acceptChain(composition, field.getName(), false) == null) {
                     continue;
                 }
+
                 ClassElement compositionClass = field.asClassType().asClassElement();
                 CompositionElement subComposition = new CompositionElement(recordElement, compositionClass, field);
 
@@ -197,16 +230,34 @@ public class RecordParser {
         }
     }
 
-    public RecordElement parse(ClassElement typeElement) {
-        logger.debug("Parse DB Record: " + typeElement);
-        AnnotationElement<Record> recordAnn = typeElement.getAnnotation(Record.class);
-        recordElement = new RecordElement(typeElement);
+    protected RecordElement parseRecord(ClassElement typeElement, String profile) {
+        recordElement = new RecordElement(typeElement, profile);
 
-        recordElement.setTableName(recordAnn.unwrap().tableName());
-        TypeMirror extend = recordAnn.getValueTypeMirror(a -> a.extend());
+        AnnotationElement<Record> annElm = typeElement.getAnnotation(Record.class);
+        recordElement.setTableName(annElm.unwrap().table());
+        TypeMirror extend = annElm.getValueTypeMirror(a -> a.extend());
         recordElement.setExtend(new ClassType(processingEnv, (DeclaredType) extend));
 
         parseComposition(recordElement.getRootComposition(), null);
         return recordElement;
+    }
+
+    public ProfileSetElement parse(ClassElement typeElement) {
+        logger.debug("Parse DB record: " + typeElement);
+        AnnotationElement<Record> annElm = typeElement.getAnnotation(Record.class);
+        String[] profiles = annElm.unwrap().profiles();
+        checkProfileNames(profiles, typeElement.unwrap());
+
+        List<String> profilesList = new ArrayList<>();
+        profilesList.add(RecordKitProfile.DEFAULT);
+        profilesList.addAll(Arrays.asList(profiles));
+
+        ProfileSetElement profSetElm = new ProfileSetElement();
+        for (String profile : profilesList) {
+            RecordElement recordElm = parseRecord(typeElement, profile);
+            profSetElm.addRecord(profile, recordElm);
+        }
+
+        return profSetElm;
     }
 }

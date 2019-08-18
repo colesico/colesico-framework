@@ -22,7 +22,7 @@ import java.lang.annotation.*;
 
 
 /**
- * Field composition marker.  (analogue of JPA @Embeded)
+ * Fields composition marker.  (analogue of JPA @Embedded)
  */
 @Documented
 @Target(ElementType.FIELD)
@@ -46,4 +46,9 @@ public @interface Composition {
      */
     String[] columns() default {};
 
+    /**
+     * @return
+     * @see Record#profiles()
+     */
+    String[] profiles() default {};
 }

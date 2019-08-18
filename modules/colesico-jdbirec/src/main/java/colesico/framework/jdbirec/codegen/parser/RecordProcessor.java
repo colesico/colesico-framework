@@ -5,6 +5,7 @@ import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.jdbirec.Record;
 import colesico.framework.jdbirec.codegen.generator.RecordKitGenerator;
+import colesico.framework.jdbirec.codegen.model.ProfileSetElement;
 import colesico.framework.jdbirec.codegen.model.RecordElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -47,8 +48,9 @@ public class RecordProcessor extends FrameworkAbstractProcessor {
             TypeElement typeElement = null;
             try {
                 typeElement = (TypeElement) elm;
-                RecordElement recordElement = recordParser.parse(new ClassElement(processingEnv, typeElement));
-                recordHelperGenerator.generate(recordElement);
+                logger.debug("Process DB record class: "+typeElement.getSimpleName());
+                ProfileSetElement profiles = recordParser.parse(new ClassElement(processingEnv, typeElement));
+                recordHelperGenerator.generate(profiles);
             } catch (CodegenException ce) {
                 String message = "Error processing class '" + elm.toString() + "': " + ce.getMessage();
                 logger.debug(message);

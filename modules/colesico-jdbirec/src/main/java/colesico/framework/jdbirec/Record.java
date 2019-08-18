@@ -28,7 +28,27 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Record {
-    String tableName() default "";
 
+    /**
+     * Table name to bind this record
+     *
+     * @return
+     */
+    String table() default "";
+
+    /**
+     * To be able to work within the same record with different sets of fields of this record,
+     * the system of profile is used. Each profile includes a specific set of record fields.
+     * Profile name must consist of letters and numbers only.
+     *
+     * @return
+     */
+    String[] profiles() default {};
+
+    /**
+     * Base class to be extended with generated record kit
+     *
+     * @return
+     */
     Class<?> extend() default RecordKit.class;
 }

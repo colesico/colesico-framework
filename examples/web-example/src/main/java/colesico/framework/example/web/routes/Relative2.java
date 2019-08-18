@@ -9,13 +9,25 @@ import colesico.framework.weblet.Weblet;
  * see package-info.java  @Route annotation
  */
 @Weblet
-@Route("./relative")
+@Route("relative")
 public class Relative2 {
 
     // http://localhost:8080/my-service/v1.0/relative/say-hi
-    // /my-service/v1.0/ + /relative + /say-hi
-    @Route("/say-hi")
-    public HtmlResponse hi(){
-        return new HtmlResponse("Hi!");
+    // /my-service/v1.0 + /relative + /say-hi
+    @Route("say-hi")
+    public HtmlResponse hi() {
+        return new HtmlResponse("Hi from 1");
+    }
+
+    // http://localhost:8080/my-service/v1.0/relative/say-hi-2
+    @Route("./say-hi-2")
+    public HtmlResponse hi2() {
+        return new HtmlResponse("Hi from 2");
+    }
+
+    // http://localhost:8080/my-service/v1.0/relative
+    @Route(".")
+    public HtmlResponse hi3() {
+        return new HtmlResponse("Hi from weblet index!");
     }
 }

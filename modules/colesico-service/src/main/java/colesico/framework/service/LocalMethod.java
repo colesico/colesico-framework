@@ -20,9 +20,9 @@ package colesico.framework.service;
 import java.lang.annotation.*;
 
 /**
- * Indicates that the method is not teleDriver-method.
+ * Indicates that the method is not tele-method.
  *
- * Local method will not present in any service teleDriver-facades
+ * Local method will not present in any service tele-facades
  *
  * @author Vladlen Larionov
  */

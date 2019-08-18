@@ -30,15 +30,12 @@ import java.lang.annotation.*;
  *
  *  Package based rout should always be an absolute path ans starts with "/".
  *
- *  Controller based route can be absolute or relative.
- *  Controller  absolute route starts with "/".
- *  Relative route  starts with dot (.)
- *
- *  Handler method route considered always to be a relative path.
- *  The slash symbol at the beginning of the route is ignored.
+ *  Controller and method based routes can be absolute or relative.
+ *  Absolute route starts with "/"
+ *  The route relative to the package route is specified without a leading '/' or begins with a dot ( . )
  *
  *  The relative path is added to the parent path.
- *  The local relative path for the handler method  is added to the path specified for the
+ *  The relative path for the handler method  is added to the path specified for the
  *  controller class. And further, respectively, to the path for the package.
  *
  * @author Vladlen Larionov

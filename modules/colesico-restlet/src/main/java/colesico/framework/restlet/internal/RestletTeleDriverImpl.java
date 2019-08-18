@@ -89,7 +89,7 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
                 throw new ApplicationException("Http header '" + X_REQUESTED_WITH_HEADER + "=" + X_REQUESTED_WITH_HEADER_VAL + "' required");
             }
 
-            // Invoke teleDriver-method
+            // Invoke tele-method
             binder.invoke(framlet, restletDataPort);
 
         } catch (HttpException hex) {

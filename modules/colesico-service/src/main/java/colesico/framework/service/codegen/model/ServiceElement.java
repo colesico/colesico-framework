@@ -118,7 +118,7 @@ public final class ServiceElement {
     public void addTeleFacade(TeleFacadeElement teleFacade) {
         TeleFacadeElement ta = teleFacades.find(t -> t.getTeleType().equals(teleFacade.getTeleType()));
         if (ta != null) {
-            throw CodegenException.of().message("Duplicate teleDriver-facade: " + teleFacade.getTeleType()).element(getOriginClass()).build();
+            throw CodegenException.of().message("Duplicate tele-facade: " + teleFacade.getTeleType()).element(getOriginClass()).build();
         }
         teleFacade.parentService = this;
         teleFacades.add(teleFacade);

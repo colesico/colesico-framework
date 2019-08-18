@@ -62,7 +62,7 @@ public class RestletDataPortImpl implements RestletDataPort {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <V> V readForType(Type valueType, ReaderContext context) {
+    public <V> V read(Type valueType, ReaderContext context) {
         // try get accurate reader
         final Supplier<RestletTeleReader> supplier
                 = ioc.supplierOrNull(new ClassedKey<>(RestletTeleReader.class.getCanonicalName(), typeToClassName(valueType)));
@@ -81,7 +81,7 @@ public class RestletDataPortImpl implements RestletDataPort {
     }
 
     @Override
-    public <V> void writeForType(Type valueType, V value, WriterContext context) {
+    public <V> void write(Type valueType, V value, WriterContext context) {
         final Supplier<RestletTeleWriter> supplier
                 = ioc.supplierOrNull(new ClassedKey<>(RestletTeleWriter.class.getCanonicalName(), typeToClassName(valueType)));
         if (supplier != null) {

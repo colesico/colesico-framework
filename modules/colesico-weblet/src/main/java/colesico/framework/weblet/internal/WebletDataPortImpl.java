@@ -44,14 +44,14 @@ public class WebletDataPortImpl implements WebletDataPort {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <V> V readForType(Type valueType, ReaderContext context) {
+    public <V> V read(Type valueType, ReaderContext context) {
         final WebletTeleReader<V> reader
                 = ioc.instance(new ClassedKey<>(WebletTeleReader.class.getCanonicalName(), typeToClassName(valueType)), null);
         return reader.read(context);
     }
 
     @Override
-    public <V> void writeForType(Type valueType, V value, WriterContext context) {
+    public <V> void write(Type valueType, V value, WriterContext context) {
         final WebletTeleWriter<V> writer
                 = ioc.instance(new ClassedKey<>(WebletTeleWriter.class.getCanonicalName(), typeToClassName(valueType)), null);
 

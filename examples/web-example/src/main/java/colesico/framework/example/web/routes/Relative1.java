@@ -9,7 +9,6 @@ import colesico.framework.weblet.Weblet;
  * see package-info.java  @Route annotation
  */
 @Weblet
-@Route(".")
 public class Relative1 {
 
     // http://localhost:8080/my-service/v1.0/relative1/hi

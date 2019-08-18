@@ -1,4 +1,4 @@
-package colesico.framework.teleapi;
+package colesico.framework.assist;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

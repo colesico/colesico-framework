@@ -51,7 +51,7 @@ public class DefaultSecurityKit implements SecurityInterceptor {
      * @return
      */
     protected Principal principalReadControl(DataPort<Object, Object> port) {
-        return port.readForClass(Principal.class, null);
+        return port.read(Principal.class, null);
     }
 
     /**
@@ -61,7 +61,7 @@ public class DefaultSecurityKit implements SecurityInterceptor {
      * @param principal
      */
     protected void principalWriteControl(DataPort<Object, Object> port, Principal principal) {
-        port.writeForClass(Principal.class, principal, null);
+        port.write(Principal.class, principal, null);
     }
 
     /**

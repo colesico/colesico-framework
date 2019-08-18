@@ -11,26 +11,26 @@ import java.util.Map;
 abstract public class RecordKit<R> {
 
     public static final String INIT_COMPOSITION_METHOD = "initCompositions";
-    public static final String EXPORT_METOD = "exportTo";
-    public static final String IMPORT_METHOD = "importFrom";
+    public static final String EXPORT_METOD = "exportRecord";
+    public static final String IMPORT_METHOD = "importRecord";
     public static final String TABLE_NAME_METHOD = "tableName";
     public static final String SQL_INSERT_METHOD = "sqlInsert";
     public static final String SQL_UPDATE_METHOD = "sqlUpdate";
     public static final String SQL_SELECT_METHOD = "sqlSelect";
     public static final String NEW_RECORD_METHOD = "newRecord";
 
-    public static final String RECORD_PARAM = "record";
-    public static final String RECEIVER_PARAM = "receiver";
+    public static final String RECORD_PARAM = "rec";
+    public static final String COLUMN_ASSIGNER_PARAM = "ca";
     public static final String RESULT_SET_PARAM = "rs";
     public static final String QUALIFICATION_PARAM = "qualification";
 
     public static final String TABLE_NAME_REF = "@table";
 
-    abstract public void initCompositions(R record);
+    abstract public void initCompositions(R rec);
 
-    abstract public void exportTo(R record, ValueReceiver receiver);
+    abstract public void exportRecord(R rec, ColumnAssigner ca);
 
-    abstract public R importFrom(R record, ResultSet rs) throws SQLException;
+    abstract public R importRecord(R rec, ResultSet rs) throws SQLException;
 
     /**
      * Return table name
@@ -70,22 +70,22 @@ abstract public class RecordKit<R> {
 
     public final Map<String, Object> map(R record) {
         final Map<String, Object> result = new HashMap<>();
-        exportTo(record, (c, v) -> result.put(c, v));
+        exportRecord(record, (c, v) -> result.put(c, v));
         return result;
     }
 
     public final RowMapper<R> mapper() {
-        return (rs, ctx) -> importFrom(newRecord(), rs);
+        return (rs, ctx) -> importRecord(newRecord(), rs);
     }
 
     @FunctionalInterface
-    public interface ValueReceiver {
+    public interface ColumnAssigner {
 
-        String RECEIVE_METHOD = "receive";
+        String SET_METHOD = "set";
         String COLUMN_PARAM = "column";
         String VALUE_PARAM = "value";
 
-        void receive(String column, Object value);
+        void set(String column, Object value);
     }
 
 }

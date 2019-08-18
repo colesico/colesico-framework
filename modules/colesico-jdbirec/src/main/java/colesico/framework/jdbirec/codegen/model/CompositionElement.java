@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class CompositionElement {
 
-    private final RecordElement parentRECORD;
+    private final RecordElement parentRecord;
 
     /**
      * Composition class
@@ -29,8 +29,8 @@ public class CompositionElement {
     private final Set<ColumnElement> columns = new LinkedHashSet<>();
     private final Set<CompositionElement> subCompositions = new LinkedHashSet<>();
 
-    public CompositionElement(RecordElement parentRECORD, ClassElement originClass, FieldElement originField) {
-        this.parentRECORD = parentRECORD;
+    public CompositionElement(RecordElement parentRecord, ClassElement originClass, FieldElement originField) {
+        this.parentRecord = parentRecord;
         this.originClass = originClass;
         this.originField = originField;
     }
@@ -60,15 +60,15 @@ public class CompositionElement {
     }
 
     public void addColumn(ColumnElement columnElm) {
-        if (parentRECORD.hasColumn(columnElm)) {
+        if (parentRecord.hasColumn(columnElm)) {
             throw CodegenException.of().message("Duplicate column: " + columnElm.getName()).element(columnElm.getOriginField()).build();
         }
         columns.add(columnElm);
         columnElm.setParentComposition(this);
     }
 
-    public RecordElement getParentRECORD() {
-        return parentRECORD;
+    public RecordElement getParentRecord() {
+        return parentRecord;
     }
 
     public ClassElement getOriginClass() {

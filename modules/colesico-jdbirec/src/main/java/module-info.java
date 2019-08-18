@@ -15,6 +15,7 @@ module colesico.framework.jdbirec {
 
     // API
     exports colesico.framework.jdbirec;
+    exports colesico.framework.jdbirec.mediators;
 
     // Internals
     //exports colesico.framework.dao.internal to colesico.framework.ioc;

@@ -3,11 +3,13 @@ package colesico.framework.jdbirec.codegen.generator;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.FieldElement;
-import colesico.framework.jdbirec.FieldConverter;
+import colesico.framework.jdbirec.FieldMediator;
 import colesico.framework.jdbirec.RecordKit;
 import colesico.framework.jdbirec.RecordKitFactory;
+import colesico.framework.jdbirec.RecordKitProfile;
 import colesico.framework.jdbirec.codegen.model.ColumnElement;
 import colesico.framework.jdbirec.codegen.model.CompositionElement;
+import colesico.framework.jdbirec.codegen.model.ProfileSetElement;
 import colesico.framework.jdbirec.codegen.model.RecordElement;
 
 import com.squareup.javapoet.*;
@@ -23,8 +25,6 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Function;
 
-import static colesico.framework.jdbirec.RecordKit.TABLE_NAME_REF;
-
 public class RecordKitGenerator {
 
     private static final Logger logger = LoggerFactory.getLogger(RecordKitGenerator.class);
@@ -33,15 +33,20 @@ public class RecordKitGenerator {
     protected RecordElement recordElement;
     protected TypeSpec.Builder classBuilder;
 
-    // Converter fields
-    protected KitFields converterFields;
+    // Mediator fields
+    protected KitFields mediatorFields;
 
     public RecordKitGenerator(ProcessingEnvironment processingEnv) {
         this.processingEnv = processingEnv;
     }
 
     protected String getHelperClassName() {
-        return recordElement.getOriginClass().getSimpleName() + RecordKitFactory.KIT_CLASS_SUFFIX;
+        if (RecordKitProfile.DEFAULT.equals(recordElement.getProfile())) {
+            return recordElement.getOriginClass().getSimpleName() + RecordKitFactory.KIT_CLASS_SUFFIX;
+        } else {
+            String profilePart = StrUtils.firstCharToUpperCase(recordElement.getProfile());
+            return recordElement.getOriginClass().getSimpleName() + profilePart + RecordKitFactory.KIT_CLASS_SUFFIX;
+        }
     }
 
     protected String toGetterName(FieldElement field) {
@@ -54,8 +59,8 @@ public class RecordKitGenerator {
         return "set" + StrUtils.firstCharToUpperCase(fieldName);
     }
 
-    public void generateConverterFields() {
-        for (Map.Entry<TypeMirror, String> f : converterFields.getFieldsMap().entrySet()) {
+    public void generateMediatorFields() {
+        for (Map.Entry<TypeMirror, String> f : mediatorFields.getFieldsMap().entrySet()) {
             FieldSpec.Builder fb = FieldSpec.builder(TypeName.get(f.getKey()), f.getValue(), Modifier.FINAL);
             classBuilder.addField(fb.build());
         }
@@ -64,8 +69,8 @@ public class RecordKitGenerator {
     public void generateConstructor() {
         MethodSpec.Builder mb = MethodSpec.constructorBuilder();
         mb.addModifiers(Modifier.PUBLIC);
-        for (Map.Entry<TypeMirror, String> f : converterFields.getFieldsMap().entrySet()) {
-            mb.addStatement("this.$N= new $T()", f.getValue(), TypeName.get(f.getKey()));
+        for (Map.Entry<TypeMirror, String> f : mediatorFields.getFieldsMap().entrySet()) {
+            mb.addStatement("this.$N = new $T()", f.getValue(), TypeName.get(f.getKey()));
         }
         classBuilder.addMethod(mb.build());
     }
@@ -109,21 +114,18 @@ public class RecordKitGenerator {
                 continue;
             }
             String paramName = generateChain(null, column.getParentComposition(), column, f -> f.getName());
-            // receiver.receive("column"
-            cb.add("$N.$N($S, ", RecordKit.RECEIVER_PARAM, RecordKit.ValueReceiver.RECEIVE_METHOD, paramName);
-
             String gettersPath = generateChain(RecordKit.RECORD_PARAM, composition, column, this::toGetterName);
-            if (column.getConverter() != null) {
-                String convField = converterFields.addField(column.getConverter().unwrap());
-                cb.add("$N.$N(",
-                    convField,
-                    FieldConverter.FROM_FIELD_METHOD);
+            if (column.getMediator() == null) {
+                // receiver.receive("column",record.getField1().getField2()..)
+                cb.add("$N.$N($S, ", RecordKit.COLUMN_ASSIGNER_PARAM, RecordKit.ColumnAssigner.SET_METHOD, paramName);
                 cb.add(gettersPath);
-                cb.add(")");
+                cb.add(");\n");
             } else {
+                String convField = mediatorFields.addField(column.getMediator().unwrap());
+                cb.add("$N.$N(", convField, FieldMediator.EXPORT_METHOD);
                 cb.add(gettersPath);
+                cb.add(",$S,$N);\n", paramName, RecordKit.COLUMN_ASSIGNER_PARAM);
             }
-            cb.add(");\n");
         }
 
         for (CompositionElement subComposition : composition.getSubCompositions()) {
@@ -133,11 +135,11 @@ public class RecordKitGenerator {
 
     protected void generateGetValue(ColumnElement column, CodeBlock.Builder cb) {
 
-        if (column.getConverter() != null) {
-            String convField = converterFields.addField(column.getConverter().unwrap());
+        if (column.getMediator() != null) {
+            String mediatorField = mediatorFields.addField(column.getMediator().unwrap());
             cb.add("$N.$N($S,$N)",
-                convField,
-                FieldConverter.TO_FIELD_METHOD,
+                mediatorField,
+                FieldMediator.IMPORT_METHOD,
                 column.getName(),
                 RecordKit.RESULT_SET_PARAM);
             return;
@@ -210,7 +212,8 @@ public class RecordKitGenerator {
         }
     }
 
-    protected void generateInitCompositions(CompositionElement composition, CodeBlock.Builder cb) {
+    protected boolean generateInitCompositions(CompositionElement composition, CodeBlock.Builder cb) {
+        boolean hasCompositions = !composition.getSubCompositions().isEmpty();
         for (CompositionElement subComposition : composition.getSubCompositions()) {
             cb.add("if (null == ");
             cb.add(generateChain(RecordKit.RECORD_PARAM, subComposition, null, this::toGetterName));
@@ -220,33 +223,39 @@ public class RecordKitGenerator {
             cb.add("." + toSetterName(subComposition.getOriginField()) + "(new $T());\n", TypeName.get(subComposition.getOriginClass().asType()));
             cb.unindent();
             cb.add("}\n");
-            generateInitCompositions(subComposition, cb);
+            hasCompositions = hasCompositions || generateInitCompositions(subComposition, cb);
         }
+        return hasCompositions;
     }
 
-    protected void generateInitCompositionsMethod() {
+    protected boolean generateInitCompositionsMethod() {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(RecordKit.INIT_COMPOSITION_METHOD);
         mb.addModifiers(Modifier.PUBLIC);
         mb.addAnnotation(Override.class);
         mb.addParameter(TypeName.get(recordElement.getOriginClass().asType()), RecordKit.RECORD_PARAM, Modifier.FINAL);
 
         CodeBlock.Builder cb = CodeBlock.builder();
-        generateInitCompositions(recordElement.getRootComposition(), cb);
+        boolean hasCompositions = generateInitCompositions(recordElement.getRootComposition(), cb);
         mb.addCode(cb.build());
 
         classBuilder.addMethod(mb.build());
+
+        return hasCompositions;
     }
 
 
-    protected void generateExportMethod() {
+    protected void generateExportMethod(boolean hasCompositions) {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(RecordKit.EXPORT_METOD);
         mb.addModifiers(Modifier.PUBLIC);
         mb.addAnnotation(Override.class);
         mb.addParameter(TypeName.get(recordElement.getOriginClass().asType()), RecordKit.RECORD_PARAM, Modifier.FINAL);
-        mb.addParameter(TypeName.get(RecordKit.ValueReceiver.class),
-            RecordKit.RECEIVER_PARAM, Modifier.FINAL);
+        mb.addParameter(TypeName.get(RecordKit.ColumnAssigner.class),
+            RecordKit.COLUMN_ASSIGNER_PARAM, Modifier.FINAL);
 
-        mb.addStatement("$N($N)", RecordKit.INIT_COMPOSITION_METHOD, RecordKit.RECORD_PARAM);
+        if (hasCompositions) {
+            mb.addStatement("$N($N)", RecordKit.INIT_COMPOSITION_METHOD, RecordKit.RECORD_PARAM);
+        }
+
         CodeBlock.Builder cb = CodeBlock.builder();
         generateCompositionToMap(recordElement.getRootComposition(), cb);
         mb.addCode(cb.build());
@@ -255,7 +264,7 @@ public class RecordKitGenerator {
     }
 
 
-    protected void generatImportMethod() {
+    protected void generatImportMethod(boolean hasCompositions) {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(RecordKit.IMPORT_METHOD);
         mb.addModifiers(Modifier.PUBLIC);
         mb.addAnnotation(Override.class);
@@ -263,7 +272,11 @@ public class RecordKitGenerator {
         mb.addParameter(TypeName.get(recordElement.getOriginClass().asType()), RecordKit.RECORD_PARAM, Modifier.FINAL);
         mb.addParameter(ClassName.get(ResultSet.class), RecordKit.RESULT_SET_PARAM, Modifier.FINAL);
         mb.addException(ClassName.get(SQLException.class));
-        mb.addStatement("$N($N)", RecordKit.INIT_COMPOSITION_METHOD, RecordKit.RECORD_PARAM);
+
+        if (hasCompositions) {
+            mb.addStatement("$N($N)", RecordKit.INIT_COMPOSITION_METHOD, RecordKit.RECORD_PARAM);
+        }
+
         CodeBlock.Builder cb = CodeBlock.builder();
         generateCompositionFromResultSet(recordElement.getRootComposition(), cb);
         mb.addCode(cb.build());
@@ -364,8 +377,10 @@ public class RecordKitGenerator {
         }
         sb.append(StringUtils.join(columnNames, ", "));
         sb.append(' ');
-        mb.addStatement("return $S + $N.replace($S,$S)", sb.toString(), RecordKit.QUALIFICATION_PARAM,
-            TABLE_NAME_REF, getTableName());
+        mb.addStatement("return $S + $N.replace($S,$S)",
+            sb.toString(),
+            RecordKit.QUALIFICATION_PARAM,
+            RecordKit.TABLE_NAME_REF, getTableName());
         classBuilder.addMethod(mb.build());
         return sb.toString();
     }
@@ -396,8 +411,8 @@ public class RecordKitGenerator {
         }
     }
 
-    public void generate(RecordElement recordElement) {
-        this.converterFields = new KitFields("conv");
+    protected void generateRecord(RecordElement recordElement) {
+        this.mediatorFields = new KitFields("md");
         this.recordElement = recordElement;
         this.classBuilder = TypeSpec.classBuilder(getHelperClassName());
 
@@ -409,9 +424,9 @@ public class RecordKitGenerator {
 
         classBuilder.superclass(baseTypeName);
 
-        generateInitCompositionsMethod();
-        generateExportMethod();
-        generatImportMethod();
+        boolean hasCompositions = generateInitCompositionsMethod();
+        generateExportMethod(hasCompositions);
+        generatImportMethod(hasCompositions);
         generateTableName();
         generateInsertSQL();
         generateUpdateSQL();
@@ -420,10 +435,16 @@ public class RecordKitGenerator {
         classBuilder.addJavadoc(generateCreateTableSQL());
 
         generateNewRecord();
-        generateConverterFields();
+        generateMediatorFields();
         generateConstructor();
 
         String packageName = recordElement.getOriginClass().getPackageName();
         CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), packageName, recordElement.getOriginClass().unwrap());
+    }
+
+    public void generate(ProfileSetElement profiles) {
+        for (Map.Entry<String, RecordElement> pr : profiles.getRecords().entrySet()) {
+            generateRecord(pr.getValue());
+        }
     }
 }

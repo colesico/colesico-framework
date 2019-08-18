@@ -18,6 +18,7 @@
 package colesico.framework.assist.codegen;
 
 
+import colesico.framework.assist.TypeWrapper;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.assist.codegen.model.ParameterElement;
 import com.squareup.javapoet.*;
@@ -26,6 +27,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.FileObject;
@@ -53,10 +55,10 @@ public class CodegenUtils {
 
     public static void createJavaFile(ProcessingEnvironment procEnv, TypeSpec typeSpec, String packageName, Element... linkedElements) {
         final JavaFile javaFile = JavaFile.builder(packageName, typeSpec)
-                .addFileComment("This is automatically generated file. Do not modify!")
-                .skipJavaLangImports(true)
-                .indent("    ")
-                .build();
+            .addFileComment("This is automatically generated file. Do not modify!")
+            .skipJavaLangImports(true)
+            .indent("    ")
+            .build();
 
         String fullName = javaFile.packageName + "." + typeSpec.name;
         try {
@@ -227,4 +229,32 @@ public class CodegenUtils {
         return result;
     }
 
+    /**
+     * Generates type picking from type mirror with generics support.
+     *
+     * @param typeMirror
+     * @param cb
+     * @return true if the code is generated for generics type with TypeWrapper usage
+     */
+    public static boolean generateTypePick(TypeMirror typeMirror, CodeBlock.Builder cb) {
+
+        boolean isGenericType;
+
+        if (!(typeMirror instanceof DeclaredType)) {
+            isGenericType = false;
+        } else {
+            DeclaredType declaredType = (DeclaredType) typeMirror;
+            isGenericType = !declaredType.getTypeArguments().isEmpty(); // Actual types  e.g. <String,Long>
+            //TypeElement typeElement = (TypeElement) declaredType.asElement();
+            //isGenericType = !typeElement.getTypeParameters().isEmpty(); // Generic parameters e.g. "<T,V>"
+        }
+
+        if (isGenericType) {
+            TypeName wrapperType = ParameterizedTypeName.get(ClassName.get(TypeWrapper.class), TypeName.get(typeMirror));
+            cb.add("new $T(){}.$N()", wrapperType, TypeWrapper.UNWRAP_METHOD);
+        } else {
+            cb.add("$T.class", TypeName.get(typeMirror));
+        }
+        return isGenericType;
+    }
 }

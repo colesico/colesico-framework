@@ -8,7 +8,7 @@ public class ColumnElement {
     protected final FieldElement originField;
     protected CompositionElement parentComposition;
     protected final String name;
-    protected ClassType converter;
+    protected ClassType mediator;
 
     protected boolean importable;
     protected boolean exportable;
@@ -45,12 +45,12 @@ public class ColumnElement {
         return name;
     }
 
-    public ClassType getConverter() {
-        return converter;
+    public ClassType getMediator() {
+        return mediator;
     }
 
-    public void setConverter(ClassType converter) {
-        this.converter = converter;
+    public void setMediator(ClassType mediator) {
+        this.mediator = mediator;
     }
 
     public String getInsertAs() {
