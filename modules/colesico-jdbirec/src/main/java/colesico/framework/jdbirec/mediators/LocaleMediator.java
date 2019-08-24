@@ -20,8 +20,8 @@ public class LocaleMediator implements FieldMediator<Locale> {
     }
 
     @Override
-    public void exportField(Locale locale, String column, RecordKit.ColumnAssigner ca) {
-        ca.set(column, locale == null ? null : locale.toLanguageTag());
+    public void exportField(Locale locale, String fieldName, RecordKit.ColumnAssigner ca) {
+        ca.set(fieldName, locale == null ? null : locale.toLanguageTag());
     }
 
 }

@@ -24,13 +24,13 @@ public interface FieldMediator<F> {
     F importField(String columnName, ResultSet rs) throws SQLException;
 
     /**
-     * Export field value to the column  assigner.
-     * Sending process may hit one or more database columns
+     * Export field value to the column assigner.
+     * Sending process may hit one or more database columns, and fieldValue nested fields
      *
      * @param fieldValue
-     * @param columnName column name from @Column.name() annotation
+     * @param fieldName  field name to be bind to sql query param
      * @param vr         value receiver
      */
-    void exportField(F fieldValue, String columnName, RecordKit.ColumnAssigner vr);
+    void exportField(F fieldValue, String fieldName, RecordKit.ColumnAssigner vr);
 
 }

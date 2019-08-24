@@ -82,10 +82,10 @@ abstract public class RecordKit<R> {
     public interface ColumnAssigner {
 
         String SET_METHOD = "set";
-        String COLUMN_PARAM = "column";
+        String FIELD_PARAM = "field";
         String VALUE_PARAM = "value";
 
-        void set(String column, Object value);
+        void set(String field, Object value);
     }
 
 }

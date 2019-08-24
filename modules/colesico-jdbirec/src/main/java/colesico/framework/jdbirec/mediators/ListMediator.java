@@ -25,8 +25,8 @@ abstract public class ListMediator<T> implements FieldMediator<List<T>> {
     }
 
     @Override
-    public void exportField(List<T> value, String column, RecordKit.ColumnAssigner ca) {
-        ca.set(column, value == null ? null : value.toArray(newArray(value.size())));
+    public void exportField(List<T> value, String fieldName, RecordKit.ColumnAssigner ca) {
+        ca.set(fieldName, value == null ? null : value.toArray(newArray(value.size())));
     }
 
 }
