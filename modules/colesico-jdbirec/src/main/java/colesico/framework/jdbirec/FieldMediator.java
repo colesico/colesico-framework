@@ -29,8 +29,8 @@ public interface FieldMediator<F> {
      *
      * @param fieldValue
      * @param fieldName  field name to be bind to sql query param
-     * @param vr         value receiver
+     * @param fr         field receiver
      */
-    void exportField(F fieldValue, String fieldName, RecordKit.ColumnAssigner vr);
+    void exportField(F fieldValue, String fieldName, RecordKit.FieldReceiver fr);
 
 }

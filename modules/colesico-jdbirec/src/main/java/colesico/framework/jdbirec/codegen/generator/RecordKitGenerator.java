@@ -117,14 +117,14 @@ public class RecordKitGenerator {
             String gettersPath = generateChain(RecordKit.RECORD_PARAM, composition, column, this::toGetterName);
             if (column.getMediator() == null) {
                 // receiver.receive("column",record.getField1().getField2()..)
-                cb.add("$N.$N($S, ", RecordKit.COLUMN_ASSIGNER_PARAM, RecordKit.ColumnAssigner.SET_METHOD, paramName);
+                cb.add("$N.$N($S, ", RecordKit.FIELD_RECEIVER_PARAM, RecordKit.FieldReceiver.SET_METHOD, paramName);
                 cb.add(gettersPath);
                 cb.add(");\n");
             } else {
                 String convField = mediatorFields.addField(column.getMediator().unwrap());
                 cb.add("$N.$N(", convField, FieldMediator.EXPORT_METHOD);
                 cb.add(gettersPath);
-                cb.add(",$S,$N);\n", paramName, RecordKit.COLUMN_ASSIGNER_PARAM);
+                cb.add(",$S,$N);\n", paramName, RecordKit.FIELD_RECEIVER_PARAM);
             }
         }
 
@@ -249,8 +249,8 @@ public class RecordKitGenerator {
         mb.addModifiers(Modifier.PUBLIC);
         mb.addAnnotation(Override.class);
         mb.addParameter(TypeName.get(recordElement.getOriginClass().asType()), RecordKit.RECORD_PARAM, Modifier.FINAL);
-        mb.addParameter(TypeName.get(RecordKit.ColumnAssigner.class),
-            RecordKit.COLUMN_ASSIGNER_PARAM, Modifier.FINAL);
+        mb.addParameter(TypeName.get(RecordKit.FieldReceiver.class),
+            RecordKit.FIELD_RECEIVER_PARAM, Modifier.FINAL);
 
         if (hasCompositions) {
             mb.addStatement("$N($N)", RecordKit.INIT_COMPOSITION_METHOD, RecordKit.RECORD_PARAM);
@@ -394,7 +394,7 @@ public class RecordKitGenerator {
         for (ColumnElement column : allColumns) {
             String definition = column.getDefinition();
             if (definition == null) {
-                definition = "[DEFINITION]";
+                continue;
             }
             columnNames.add(column.getName() + " " + definition);
         }

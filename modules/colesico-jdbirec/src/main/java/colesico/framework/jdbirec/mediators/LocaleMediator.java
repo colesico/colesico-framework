@@ -11,8 +11,8 @@ import java.util.Locale;
 public class LocaleMediator implements FieldMediator<Locale> {
 
     @Override
-    public Locale importField(String column, ResultSet rs) throws SQLException {
-        String localeStr = rs.getString(column);
+    public Locale importField(String columnName, ResultSet rs) throws SQLException {
+        String localeStr = rs.getString(columnName);
         if (StringUtils.isBlank(localeStr)) {
             return null;
         }
@@ -20,8 +20,8 @@ public class LocaleMediator implements FieldMediator<Locale> {
     }
 
     @Override
-    public void exportField(Locale locale, String fieldName, RecordKit.ColumnAssigner ca) {
-        ca.set(fieldName, locale == null ? null : locale.toLanguageTag());
+    public void exportField(Locale locale, String fieldName, RecordKit.FieldReceiver fr) {
+        fr.set(fieldName, locale == null ? null : locale.toLanguageTag());
     }
 
 }

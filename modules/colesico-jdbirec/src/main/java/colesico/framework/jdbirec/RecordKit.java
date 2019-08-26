@@ -20,7 +20,7 @@ abstract public class RecordKit<R> {
     public static final String NEW_RECORD_METHOD = "newRecord";
 
     public static final String RECORD_PARAM = "rec";
-    public static final String COLUMN_ASSIGNER_PARAM = "ca";
+    public static final String FIELD_RECEIVER_PARAM = "fr";
     public static final String RESULT_SET_PARAM = "rs";
     public static final String QUALIFICATION_PARAM = "qualification";
 
@@ -28,7 +28,7 @@ abstract public class RecordKit<R> {
 
     abstract public void initCompositions(R rec);
 
-    abstract public void exportRecord(R rec, ColumnAssigner ca);
+    abstract public void exportRecord(R rec, FieldReceiver fr);
 
     abstract public R importRecord(R rec, ResultSet rs) throws SQLException;
 
@@ -79,7 +79,7 @@ abstract public class RecordKit<R> {
     }
 
     @FunctionalInterface
-    public interface ColumnAssigner {
+    public interface FieldReceiver {
 
         String SET_METHOD = "set";
         String FIELD_PARAM = "field";

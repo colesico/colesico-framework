@@ -14,8 +14,8 @@ abstract public class ListMediator<T> implements FieldMediator<List<T>> {
     abstract protected T[] newArray(int size);
 
     @Override
-    public List<T> importField(String column, ResultSet rs) throws SQLException {
-        Array array = rs.getArray(column);
+    public List<T> importField(String columnName, ResultSet rs) throws SQLException {
+        Array array = rs.getArray(columnName);
         if (array == null) {
             return null;
         }
@@ -25,8 +25,8 @@ abstract public class ListMediator<T> implements FieldMediator<List<T>> {
     }
 
     @Override
-    public void exportField(List<T> value, String fieldName, RecordKit.ColumnAssigner ca) {
-        ca.set(fieldName, value == null ? null : value.toArray(newArray(value.size())));
+    public void exportField(List<T> value, String fieldName, RecordKit.FieldReceiver fr) {
+        fr.set(fieldName, value == null ? null : value.toArray(newArray(value.size())));
     }
 
 }

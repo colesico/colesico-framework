@@ -185,10 +185,13 @@ public class RecordParser extends FrameworkAbstractParser {
                 columnElement.setSelectAs(columnAnn.unwrap().selectAs());
             }
 
-            if (StringUtils.isNotEmpty(columnAnn.unwrap().definition())) {
-                columnElement.setDefinition(columnAnn.unwrap().definition());
+            if (!"@nop".equals(columnAnn.unwrap().definition())) {
+                if (StringUtils.isEmpty(columnAnn.unwrap().definition())) {
+                    columnElement.setDefinition("[COLUMN DEFINITION]");
+                } else {
+                    columnElement.setDefinition(columnAnn.unwrap().definition());
+                }
             }
-
 
         }
     }

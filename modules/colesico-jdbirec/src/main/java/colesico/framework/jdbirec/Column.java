@@ -77,21 +77,23 @@ public @interface Column {
     String selectAs() default "@column";
 
     /**
-     * Column definition for create table sql
-     *
+     * Column definition for create table sql.
+     * If \@nop is specified column will not be included to the create table definition.
      * @return
      */
     String definition() default "";
 
     /**
-     * Use this field value in {@link RecordKit#exportRecord(Object, RecordKit.ColumnAssigner)} method
+     * Use this field value in {@link RecordKit#exportRecord(Object, RecordKit.FieldReceiver)} method
      *
      * @return
      */
     boolean exportable() default true;
 
     /**
-     * Use this field value in {@link RecordKit#importRecord(Object, ResultSet)} method
+     * Use this field value in {@link RecordKit#importRecord(Object, ResultSet)} method,
+     * so field value will not be obtained from sql query result set.
+     *
      *
      * @return
      */
