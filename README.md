@@ -42,7 +42,7 @@ For extra framework modules:
 
 ## License
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 This project is licensed under the
 [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).
