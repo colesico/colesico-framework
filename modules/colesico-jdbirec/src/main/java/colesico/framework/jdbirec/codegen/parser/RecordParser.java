@@ -38,20 +38,19 @@ public class RecordParser extends FrameworkAbstractParser {
         }
     }
 
-    protected void checkProfileNames(final String[] profiles, Element parentElement) {
-        for (String p : profiles) {
+    protected void checkViewNames(final String[] views, Element parentElement) {
+        for (String p : views) {
             if (!p.matches("[A-Za-z0-9]+")) {
-                throw CodegenException.of().message("Invalid record profile name. Alphanumeric chars expected: " + p).element(parentElement).build();
+                throw CodegenException.of().message("Invalid record view name. Alphanumeric chars expected: " + p).element(parentElement).build();
             }
         }
     }
 
-    protected boolean isInProfile(String currentProfile, String[] profiles) {
-        if (RecordKitProfile.DEFAULT.equals(currentProfile)) {
-            return true;
-        }
-        for (String p : profiles) {
-            if (currentProfile.equals(p)) {
+    protected boolean isInView(String currentView, String[] views) {
+        for (String p : views) {
+            if (currentView.equals(p)) {
+                return true;
+            } else if (RecordView.ALL_VIEWS.equals(p)) {
                 return true;
             }
         }
@@ -82,8 +81,8 @@ public class RecordParser extends FrameworkAbstractParser {
         Set<String> acceptedChains = new HashSet<>();
         CompositionElement current = composition;
         while (current != null) {
-            if (composition.getColumnsFilter() != null) {
-                for (String lcName : composition.getColumnsFilter()) {
+            if (composition.getImportedColumns() != null) {
+                for (String lcName : composition.getImportedColumns()) {
                     //logger.debug("Add accepted chain: "+lcName);
                     String chain = buildAccessChain(composition, lcName);
                     acceptedChains.add(chain);
@@ -117,40 +116,40 @@ public class RecordParser extends FrameworkAbstractParser {
         return null;
     }
 
-    protected void parseColumn(final CompositionElement composition, FieldElement field, String namePrefix) {
-
+    private final List<Column> getColumns(FieldElement field) {
         final List<Column> columns = new ArrayList<>();
 
-        AnnotationElement<Column> columnAnn = field.getAnnotation(Column.class);
-        if (columnAnn != null) {
-            columns.add(columnAnn.unwrap());
+        AnnotationElement<Column> columnAnnElm = field.getAnnotation(Column.class);
+        if (columnAnnElm != null) {
+            columns.add(columnAnnElm.unwrap());
         } else {
-            AnnotationElement<Columns> columnsAnn = field.getAnnotation(Columns.class);
-            if (columnsAnn != null) {
-                columns.addAll(Arrays.asList(columnsAnn.unwrap().value()));
+            AnnotationElement<Columns> columnsAnnElm = field.getAnnotation(Columns.class);
+            if (columnsAnnElm != null) {
+                columns.addAll(Arrays.asList(columnsAnnElm.unwrap().value()));
             }
         }
+        return columns;
+    }
 
-        if (columns.isEmpty()) {
-            return;
-        }
+    protected void parseColumn(final CompositionElement composition, FieldElement field, String namePrefix) {
+        final List<Column> columns = getColumns(field);
+        for (Column columnAnn : columns) {
 
-        for (Column column : columns) {
-
-            // Check profile
-            if (!isInProfile(composition.getParentRecord().getProfile(), column.profiles())) {
+            // Check view
+            if (!isInView(composition.getParentRecord().getView(), columnAnn.views())) {
                 continue;
             }
 
-            columnAnn = new AnnotationElement<>(processingEnv, column);
+            AnnotationElement<Column> columnAnnElm = new AnnotationElement<>(processingEnv, columnAnn);
+
             String name;
-            if (columnAnn.unwrap().name().equals("@field")) {
+            if (columnAnnElm.unwrap().name().equals("@field")) {
                 name = StrUtils.toSeparatorNotation(field.getName(), '_');
             } else {
-                name = columnAnn.unwrap().name();
+                name = columnAnnElm.unwrap().name();
             }
 
-            String acceptedChain = acceptChain(composition, name, columnAnn.unwrap().virtual());
+            String acceptedChain = acceptChain(composition, name, columnAnnElm.unwrap().virtual());
             if (acceptedChain == null) {
                 continue;
             }
@@ -159,82 +158,105 @@ public class RecordParser extends FrameworkAbstractParser {
             ColumnElement columnElement = new ColumnElement(field, columnName);
             composition.addColumn(columnElement);
 
-            columnElement.setImportable(columnAnn.unwrap().importable());
-            columnElement.setExportable(columnAnn.unwrap().exportable());
+            columnElement.setImportable(columnAnnElm.unwrap().importable());
+            columnElement.setExportable(columnAnnElm.unwrap().exportable());
 
-            TypeMirror mediatorType = columnAnn.getValueTypeMirror(a -> a.mediator());
+            TypeMirror mediatorType = columnAnnElm.getValueTypeMirror(a -> a.mediator());
             if (!mediatorType.toString().equals(FieldMediator.class.getName())) {
                 columnElement.setMediator(new ClassType(processingEnv, (DeclaredType) mediatorType));
             }
 
-            if (!"@nop".equals(columnAnn.unwrap().insertAs())) {
-                if (columnAnn.unwrap().insertAs().equals("@update")) {
-                    columnElement.setInsertAs(columnAnn.unwrap().updateAs());
+            if (!"@nop".equals(columnAnnElm.unwrap().insertAs())) {
+                if (columnAnnElm.unwrap().insertAs().equals("@update")) {
+                    columnElement.setInsertAs(columnAnnElm.unwrap().updateAs());
                 } else {
-                    columnElement.setInsertAs(columnAnn.unwrap().insertAs());
+                    columnElement.setInsertAs(columnAnnElm.unwrap().insertAs());
                 }
             }
-            if (!"@nop".equals(columnAnn.unwrap().updateAs())) {
-                if (columnAnn.unwrap().updateAs().equals("@insert")) {
-                    columnElement.setUpdateAs(columnAnn.unwrap().insertAs());
+            if (!"@nop".equals(columnAnnElm.unwrap().updateAs())) {
+                if (columnAnnElm.unwrap().updateAs().equals("@insert")) {
+                    columnElement.setUpdateAs(columnAnnElm.unwrap().insertAs());
                 } else {
-                    columnElement.setUpdateAs(columnAnn.unwrap().updateAs());
+                    columnElement.setUpdateAs(columnAnnElm.unwrap().updateAs());
                 }
             }
-            if (!"@nop".equals(columnAnn.unwrap().selectAs())) {
-                columnElement.setSelectAs(columnAnn.unwrap().selectAs());
+            if (!"@nop".equals(columnAnnElm.unwrap().selectAs())) {
+                columnElement.setSelectAs(columnAnnElm.unwrap().selectAs());
             }
 
-            if (!"@nop".equals(columnAnn.unwrap().definition())) {
-                if (StringUtils.isEmpty(columnAnn.unwrap().definition())) {
+            if (!"@nop".equals(columnAnnElm.unwrap().definition())) {
+                if (StringUtils.isEmpty(columnAnnElm.unwrap().definition())) {
                     columnElement.setDefinition("[COLUMN DEFINITION]");
                 } else {
-                    columnElement.setDefinition(columnAnn.unwrap().definition());
+                    columnElement.setDefinition(columnAnnElm.unwrap().definition());
                 }
             }
 
         }
     }
 
-    protected void parseComposition(final CompositionElement composition, String namePrefix) {
-        logger.debug("Parse RECORD composition: " + composition);
+    private final List<Composition> getCompositions(FieldElement field) {
+        final List<Composition> compositions = new ArrayList<>();
+
+        AnnotationElement<Composition> compositionAnnElm = field.getAnnotation(Composition.class);
+        if (compositionAnnElm != null) {
+            compositions.add(compositionAnnElm.unwrap());
+        } else {
+            AnnotationElement<Compositions> compositionsAnnElm = field.getAnnotation(Compositions.class);
+            if (compositionsAnnElm != null) {
+                compositions.addAll(Arrays.asList(compositionsAnnElm.unwrap().value()));
+            }
+        }
+        return compositions;
+    }
+
+    protected void parseComposition(final CompositionElement compositionElm, String namePrefix) {
+        logger.debug("Parse RECORD composition: " + compositionElm);
         if (namePrefix == null) {
             namePrefix = "";
         }
 
-        List<FieldElement> fields = composition.getOriginClass().getFieldsFiltered(
+        List<FieldElement> fields = compositionElm.getOriginClass().getFieldsFiltered(
             f -> !f.unwrap().getModifiers().contains(Modifier.STATIC)
         );
+
         for (FieldElement field : fields) {
-            AnnotationElement<Composition> compositionAnn = field.getAnnotation(Composition.class);
-            if (compositionAnn != null) {
-                // Check profile
-                if (!isInProfile(composition.getParentRecord().getProfile(), compositionAnn.unwrap().profiles())) {
+            final List<Composition> compositions = getCompositions(field);
+            for (Composition compositionAnn : compositions) {
+
+                AnnotationElement<Composition> compositionAnnElm = new AnnotationElement<>(processingEnv, compositionAnn);
+
+                // Check view
+                if (!isInView(compositionElm.getParentRecord().getView(), compositionAnnElm.unwrap().views())) {
                     continue;
                 }
 
                 // Filter compositions that contains only not acceptable fields
-                if (acceptChain(composition, field.getName(), false) == null) {
+                if (acceptChain(compositionElm, field.getName(), false) == null) {
                     continue;
                 }
 
                 ClassElement compositionClass = field.asClassType().asClassElement();
                 CompositionElement subComposition = new CompositionElement(recordElement, compositionClass, field);
 
-                if (compositionAnn.unwrap().columns().length > 0) {
-                    subComposition.setColumnsFilter(compositionAnn.unwrap().columns());
+                if (compositionAnnElm.unwrap().columns().length > 0) {
+                    subComposition.setImportedColumns(compositionAnnElm.unwrap().columns());
                 }
 
-                composition.addSubComposition(subComposition);
-                parseComposition(subComposition, namePrefix + compositionAnn.unwrap().columnsPrefix());
-                continue;
+                if (StringUtils.isNoneBlank(compositionAnnElm.unwrap().keyColumn())) {
+                    subComposition.setKeyColumn(compositionAnnElm.unwrap().keyColumn());
+                }
+
+                compositionElm.addSubComposition(subComposition);
+                parseComposition(subComposition, namePrefix + compositionAnnElm.unwrap().columnsPrefix());
+                break;
             }
-            parseColumn(composition, field, namePrefix);
+            parseColumn(compositionElm, field, namePrefix);
         }
     }
 
-    protected RecordElement parseRecord(ClassElement typeElement, String profile) {
-        recordElement = new RecordElement(typeElement, profile);
+    protected RecordElement parseRecord(ClassElement typeElement, String view) {
+        recordElement = new RecordElement(typeElement, view);
 
         AnnotationElement<Record> annElm = typeElement.getAnnotation(Record.class);
         recordElement.setTableName(annElm.unwrap().table());
@@ -245,20 +267,23 @@ public class RecordParser extends FrameworkAbstractParser {
         return recordElement;
     }
 
-    public ProfileSetElement parse(ClassElement typeElement) {
-        logger.debug("Parse DB record: " + typeElement);
+    public ViewSetElement parse(ClassElement typeElement) {
+        logger.debug("Parse JDBI record: " + typeElement);
         AnnotationElement<Record> annElm = typeElement.getAnnotation(Record.class);
-        String[] profiles = annElm.unwrap().profiles();
-        checkProfileNames(profiles, typeElement.unwrap());
+        String[] views = annElm.unwrap().views();
+        checkViewNames(views, typeElement.unwrap());
 
-        List<String> profilesList = new ArrayList<>();
-        profilesList.add(RecordKitProfile.DEFAULT);
-        profilesList.addAll(Arrays.asList(profiles));
+        List<String> viewsList = new ArrayList<>();
+        for (String prof : views) {
+            if (!RecordView.ALL_VIEWS.equals(prof)) {
+                viewsList.add(prof);
+            }
+        }
 
-        ProfileSetElement profSetElm = new ProfileSetElement();
-        for (String profile : profilesList) {
-            RecordElement recordElm = parseRecord(typeElement, profile);
-            profSetElm.addRecord(profile, recordElm);
+        ViewSetElement profSetElm = new ViewSetElement();
+        for (String view : viewsList) {
+            RecordElement recordElm = parseRecord(typeElement, view);
+            profSetElm.addRecord(view, recordElm);
         }
 
         return profSetElm;

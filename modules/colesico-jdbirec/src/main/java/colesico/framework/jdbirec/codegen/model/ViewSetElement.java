@@ -3,7 +3,7 @@ package colesico.framework.jdbirec.codegen.model;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProfileSetElement {
+public class ViewSetElement {
 
     protected final Map<String, RecordElement> records = new HashMap<>();
 
@@ -11,7 +11,7 @@ public class ProfileSetElement {
         return records;
     }
 
-    public void addRecord(String profile, RecordElement record) {
-        records.put(profile, record);
+    public void addRecord(String view, RecordElement record) {
+        records.put(view, record);
     }
 }

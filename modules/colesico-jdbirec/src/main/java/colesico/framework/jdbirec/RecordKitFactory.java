@@ -9,30 +9,30 @@ public class RecordKitFactory {
 
     public static String KIT_CLASS_SUFFIX = "RecordKit";
 
-    private static <R, K extends RecordKit<R>> K getKit(String kitClassName, Class<R> recordClass, String profile) {
+    private static <R, K extends RecordKit<R>> K getKit(String kitClassName, Class<R> recordClass, String view) {
         try {
             Class<K> kitClass = (Class<K>) Class.forName(kitClassName);
             Constructor<K> constructor = kitClass.getConstructor();
             return constructor.newInstance();
         } catch (Exception e) {
             throw new RuntimeException("Record kit '" + kitClassName + "' for record class '" + recordClass.getName()
-                + "' (profile=" + profile + ')'
+                + "' (view=" + view + ')'
                 + " instantiation error: " + ExceptionUtils.getRootCauseMessage(e));
         }
     }
 
     public static <R, K extends RecordKit<R>> K getKit(Class<R> recordClass) {
         String kitClassName = recordClass.getName() + KIT_CLASS_SUFFIX;
-        return getKit(kitClassName, recordClass, RecordKitProfile.DEFAULT);
+        return getKit(kitClassName, recordClass, RecordView.DEFAULT_VIEW);
     }
 
-    public static <R, K extends RecordKit<R>> K getKit(Class<R> recordClass, String profile) {
+    public static <R, K extends RecordKit<R>> K getKit(Class<R> recordClass, String view) {
 
-        if (profile == null || RecordKitProfile.DEFAULT.equals(profile)) {
+        if (view == null || RecordView.DEFAULT_VIEW.equals(view)) {
             return getKit(recordClass);
         }
         
-        String kitClassName = recordClass.getName() + StrUtils.firstCharToUpperCase(profile) + KIT_CLASS_SUFFIX;
-        return getKit(kitClassName, recordClass, profile);
+        String kitClassName = recordClass.getName() + StrUtils.firstCharToUpperCase(view) + KIT_CLASS_SUFFIX;
+        return getKit(kitClassName, recordClass, view);
     }
 }

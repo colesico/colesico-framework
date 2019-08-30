@@ -10,15 +10,15 @@ public class RecordElement {
 
     private final ClassElement originClass;
     private final CompositionElement rootComposition;
-    private final String profile;
+    private final String view;
     private ClassType extend;
     private String tableName;
 
 
-    public RecordElement(ClassElement originClass, String profile) {
+    public RecordElement(ClassElement originClass, String view) {
         this.originClass = originClass;
         this.rootComposition = new CompositionElement(this, originClass, null);
-        this.profile = profile;
+        this.view = view;
     }
 
     public CompositionElement getRootComposition() {
@@ -55,7 +55,7 @@ public class RecordElement {
         this.extend = extend;
     }
 
-    public String getProfile() {
-        return profile;
+    public String getView() {
+        return view;
     }
 }

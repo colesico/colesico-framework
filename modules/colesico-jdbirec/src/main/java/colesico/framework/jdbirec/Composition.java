@@ -27,6 +27,7 @@ import java.lang.annotation.*;
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
+@Repeatable(Compositions.class)
 public @interface Composition {
 
     /**
@@ -35,9 +36,9 @@ public @interface Composition {
     String columnsPrefix() default "";
 
     /**
-     * Recursive filter columns contained in the current composition and subcompositions.
-     * Accept only listed columns.
-     * If not specified accept all not optional columns.
+     * Columns to be imported from composition class  and subcomposition classes.
+     * Imports only listed columns.
+     * If not specified imports all not optional columns.
      * Column names are relative to the current composition chain.
      * It is possible to specify non direct columns i.e.: subCompField.column_1
      * Also possible to rename target column with = operator:  column_1=column_2
@@ -47,8 +48,16 @@ public @interface Composition {
     String[] columns() default {};
 
     /**
+     * If specified creates composition object only if key column value is not null
+     *
      * @return
-     * @see Record#profiles()
      */
-    String[] profiles() default {};
+    String keyColumn() default "";
+
+    /**
+     * @return
+     * @see Record#views()
+     */
+    String[] views() default {RecordView.ALL_VIEWS};
+
 }

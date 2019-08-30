@@ -10,7 +10,6 @@ import java.util.Map;
 
 abstract public class RecordKit<R> {
 
-    public static final String INIT_COMPOSITION_METHOD = "initCompositions";
     public static final String EXPORT_METOD = "exportRecord";
     public static final String IMPORT_METHOD = "importRecord";
     public static final String TABLE_NAME_METHOD = "tableName";
@@ -25,8 +24,6 @@ abstract public class RecordKit<R> {
     public static final String QUALIFICATION_PARAM = "qualification";
 
     public static final String TABLE_NAME_REF = "@table";
-
-    abstract public void initCompositions(R rec);
 
     abstract public void exportRecord(R rec, FieldReceiver fr);
 

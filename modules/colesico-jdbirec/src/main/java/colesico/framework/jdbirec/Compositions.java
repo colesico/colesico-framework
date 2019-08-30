@@ -22,33 +22,12 @@ import java.lang.annotation.*;
 
 
 /**
- * Record marker  (analogue of JPA @Entity)
+ * Fields compositions container
  */
 @Documented
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Record {
-
-    /**
-     * Table name to bind this record
-     *
-     * @return
-     */
-    String table() default "";
-
-    /**
-     * To be able to work within the same record with different sets of fields of this record,
-     * the system of views is used. Each view includes a specific set of record fields.
-     * View name must consist of letters and numbers only.
-     *
-     * @return
-     */
-    String[] views() default {RecordView.DEFAULT_VIEW};
-
-    /**
-     * Base class to be extended with generated record kit
-     *
-     * @return
-     */
-    Class<?> extend() default RecordKit.class;
+@Inherited
+public @interface Compositions {
+    Composition[] value();
 }

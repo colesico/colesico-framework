@@ -3,6 +3,7 @@ package colesico.framework.jdbirec.codegen.model;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.FieldElement;
+import colesico.framework.jdbirec.Composition;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -24,9 +25,20 @@ public class CompositionElement {
 
     private CompositionElement parentComposition;
 
-    private String[] columnsFilter;
+    /**
+     * Columns list imported from composition class
+     *
+     * @see Composition#columns()
+     */
+    private String[] importedColumns;
+
+    /**
+     * @see Composition#keyColumn()
+     */
+    private String keyColumn;
 
     private final Set<ColumnElement> columns = new LinkedHashSet<>();
+
     private final Set<CompositionElement> subCompositions = new LinkedHashSet<>();
 
     public CompositionElement(RecordElement parentRecord, ClassElement originClass, FieldElement originField) {
@@ -87,12 +99,20 @@ public class CompositionElement {
         this.parentComposition = parentComposition;
     }
 
-    public String[] getColumnsFilter() {
-        return columnsFilter;
+    public String[] getImportedColumns() {
+        return importedColumns;
     }
 
-    public void setColumnsFilter(String[] columnsFilter) {
-        this.columnsFilter = columnsFilter;
+    public void setImportedColumns(String[] importedColumns) {
+        this.importedColumns = importedColumns;
+    }
+
+    public String getKeyColumn() {
+        return keyColumn;
+    }
+
+    public void setKeyColumn(String keyColumn) {
+        this.keyColumn = keyColumn;
     }
 
     public Set<ColumnElement> getColumns() {
@@ -106,8 +126,8 @@ public class CompositionElement {
     @Override
     public String toString() {
         return "CompositionElement{" +
-                "originClass=" + originClass +
-                ", originField=" + originField +
-                '}';
+            "originClass=" + originClass +
+            ", originField=" + originField +
+            '}';
     }
 }

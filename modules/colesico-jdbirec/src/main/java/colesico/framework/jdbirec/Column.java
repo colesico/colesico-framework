@@ -108,8 +108,8 @@ public @interface Column {
     boolean virtual() default false;
 
     /**
-     * @see Record#profiles()
+     * @see Record#views()
      * @return
      */
-    String[] profiles() default {};
+    String[] views() default {RecordView.ALL_VIEWS};
 }
