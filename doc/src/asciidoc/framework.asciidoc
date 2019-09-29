@@ -10,6 +10,8 @@ It is inspired by Spring and EJB frameworks but uses more simplified approach to
 
 The purpose of this framework is to provide simpler and lightweight alternative.
 
+Colesico Framework does not almost use the reflection at runtime. The approach used is the generation of extra auxiliary code at compile time stage using the annotation processors.
+
 == Getting started
 
 The best way to start learning something is to study by examples :)
