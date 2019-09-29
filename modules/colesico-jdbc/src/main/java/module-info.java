@@ -3,8 +3,7 @@ module colesico.framework.jdbc {
     requires transitive colesico.framework.transaction;
     requires transitive java.sql;
 
-    requires slf4j.api;
-    //requires org.slf4j;
+    requires org.slf4j;
 
     requires org.apache.commons.lang3;
 

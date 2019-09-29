@@ -27,11 +27,9 @@ module colesico.framework.security {
     requires transitive colesico.framework.service;
     requires transitive colesico.framework.config;
 
-    requires slf4j.api;
-    //requires org.slf4j;
+    requires org.slf4j;
 
     requires org.apache.commons.lang3;
-
 
     // Exports
     exports colesico.framework.security;

@@ -7,8 +7,7 @@ module colesico.framework.asyncjob {
     requires transitive java.sql;
     requires gson;
 
-    requires slf4j.api;
-    //requires org.slf4j;
+    requires org.slf4j;
 
     requires org.apache.commons.lang3;
 

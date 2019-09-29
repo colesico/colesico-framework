@@ -5,8 +5,7 @@ module colesico.framework.jdbi {
     requires transitive java.sql;
     requires transitive org.jdbi.v3.core;
 
-    requires slf4j.api;
-    //requires org.slf4j;
+    requires org.slf4j;
 
     requires org.apache.commons.lang3;
 

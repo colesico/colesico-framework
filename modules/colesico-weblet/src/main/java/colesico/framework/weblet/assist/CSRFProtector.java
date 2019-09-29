@@ -77,7 +77,7 @@ public class CSRFProtector {
     public static void check(HttpRequest request) {
 
         // Skip GET requests for referer check
-        if (request.getRequestMethod().equals(HttpMethod.GET)) {
+        if (HttpMethod.HTTP_METHOD_GET.equals(request.getRequestMethod())) {
             return;
         }
 

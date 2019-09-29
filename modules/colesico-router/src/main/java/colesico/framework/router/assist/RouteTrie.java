@@ -115,6 +115,7 @@ public class RouteTrie<V> {
         private final String route;
 
         public DuplicateRouteException(String route) {
+            super("Duplicate route: "+route);
             this.route = route;
         }
 

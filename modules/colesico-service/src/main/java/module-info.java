@@ -27,8 +27,7 @@ module colesico.framework.service {
     // Inherited in child projects
     requires transitive colesico.framework.teleapi;
 
-    requires slf4j.api;
-    //requires org.slf4j;
+    requires org.slf4j;
 
     requires org.apache.commons.lang3;
 
@@ -41,5 +40,5 @@ module colesico.framework.service {
     exports colesico.framework.service.codegen.modulator;
     exports colesico.framework.service.codegen.generator;
 
-    provides javax.annotation.processing.Processor with  ServiceProcessor;
+    provides javax.annotation.processing.Processor with ServiceProcessor;
 }

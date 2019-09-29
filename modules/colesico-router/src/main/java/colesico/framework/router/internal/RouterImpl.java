@@ -52,10 +52,10 @@ public class RouterImpl implements Router {
 
     @Inject
     public RouterImpl(
-            @InlineInject
-            @Classed(Router.class)
-                    Polysupplier<TeleFacade> teleFacadesSupp,
-            ThreadScope threadScope) {
+        @InlineInject
+        @Classed(Router.class)
+            Polysupplier<TeleFacade> teleFacadesSupp,
+        ThreadScope threadScope) {
         this.threadScope = threadScope;
         loadRoutes(teleFacadesSupp);
     }
@@ -75,23 +75,22 @@ public class RouterImpl implements Router {
             for (RoutingLigature.RouteInfo routeInfo : ligature.getRoutesIno()) {
                 if (log.isDebugEnabled()) {
                     log.debug("Route '" + routeInfo.getRoute() + "' mapped to tele-method '" +
-                            ligature.getFramletClass().getName() + "->" + routeInfo.getTeleMethodName());
+                        ligature.getFramletClass().getName() + "->" + routeInfo.getTeleMethodName());
 
                 }
                 RouteTrie.Node<TeleMethod> node = routeTrie.addRoute(
-                        routeInfo.getRoute(),
-                        routeInfo.getTeleMethod()
+                    routeInfo.getRoute(),
+                    routeInfo.getTeleMethod()
                 );
 
-
-                HttpMethod httpMethod = HttpMethod.valueOf(node.getRoot().getName());
+                HttpMethod httpMethod = HttpMethod.of(node.getRoot().getName());
                 routesIndex.addNode(toRouteId(ligature.getFramletClass(), routeInfo.getTeleMethodName(), httpMethod), node);
             }
         }
     }
 
     protected String toRouteId(Class<?> framletClass, String teleMethodName, HttpMethod httpMethod) {
-        return framletClass.getName() + ':' + teleMethodName + ':' + httpMethod.name();
+        return framletClass.getName() + ':' + teleMethodName + ':' + httpMethod.getName();
     }
 
     @Override
@@ -99,10 +98,9 @@ public class RouterImpl implements Router {
         return routesIndex.getSlicedRoute(toRouteId(framletClass, teleMethodName, httpMethod), parameters);
     }
 
-
     @Override
     public void perform(HttpMethod httpMethod, String uri) {
-        RouteTrie.RouteResolution<TeleMethod> routeResolution = routeTrie.resolveRoute(StrUtils.concatPath(httpMethod.name(), uri, RouteTrie.SEGMENT_DELEMITER));
+        RouteTrie.RouteResolution<TeleMethod> routeResolution = routeTrie.resolveRoute(StrUtils.concatPath(httpMethod.getName(), uri, RouteTrie.SEGMENT_DELEMITER));
         if (routeResolution == null) {
             throw new UnknownRouteException(uri, httpMethod);
         }

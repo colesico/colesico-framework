@@ -20,6 +20,9 @@ import java.util.*;
 
 public class RecordParser extends FrameworkAbstractParser {
 
+    public static final String OP_NOP = "@nop";
+    public static final String OU_UPDATE = "@update";
+    public static final String OP_INSERT = "@insert";
     /**
      * Parsing record
      */
@@ -166,25 +169,32 @@ public class RecordParser extends FrameworkAbstractParser {
                 columnElement.setMediator(new ClassType(processingEnv, (DeclaredType) mediatorType));
             }
 
-            if (!"@nop".equals(columnAnnElm.unwrap().insertAs())) {
-                if (columnAnnElm.unwrap().insertAs().equals("@update")) {
-                    columnElement.setInsertAs(columnAnnElm.unwrap().updateAs());
+            // insertUs
+            if (!OP_NOP.equals(columnAnnElm.unwrap().insertAs())) {
+                if (columnAnnElm.unwrap().insertAs().equals(OU_UPDATE)) {
+                    if (!OP_NOP.equals(columnAnnElm.unwrap().updateAs())) {
+                        columnElement.setInsertAs(columnAnnElm.unwrap().updateAs());
+                    }
                 } else {
                     columnElement.setInsertAs(columnAnnElm.unwrap().insertAs());
                 }
             }
-            if (!"@nop".equals(columnAnnElm.unwrap().updateAs())) {
-                if (columnAnnElm.unwrap().updateAs().equals("@insert")) {
-                    columnElement.setUpdateAs(columnAnnElm.unwrap().insertAs());
+
+            // updateUs
+            if (!OP_NOP.equals(columnAnnElm.unwrap().updateAs())) {
+                if (columnAnnElm.unwrap().updateAs().equals(OP_INSERT)) {
+                    if (!OP_NOP.equals(columnAnnElm.unwrap().insertAs())) {
+                        columnElement.setUpdateAs(columnAnnElm.unwrap().insertAs());
+                    }
                 } else {
                     columnElement.setUpdateAs(columnAnnElm.unwrap().updateAs());
                 }
             }
-            if (!"@nop".equals(columnAnnElm.unwrap().selectAs())) {
+            if (!OP_NOP.equals(columnAnnElm.unwrap().selectAs())) {
                 columnElement.setSelectAs(columnAnnElm.unwrap().selectAs());
             }
 
-            if (!"@nop".equals(columnAnnElm.unwrap().definition())) {
+            if (!OP_NOP.equals(columnAnnElm.unwrap().definition())) {
                 if (StringUtils.isEmpty(columnAnnElm.unwrap().definition())) {
                     columnElement.setDefinition("[COLUMN DEFINITION]");
                 } else {

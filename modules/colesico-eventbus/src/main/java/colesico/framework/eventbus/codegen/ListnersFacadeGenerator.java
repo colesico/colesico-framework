@@ -114,7 +114,7 @@ public class ListnersFacadeGenerator {
         classBuilder.addModifiers(Modifier.PUBLIC);
         classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(EventsListener.class), TypeName.get(service.getOriginClass().asType())));
 
-        classBuilder.addAnnotation(CodegenUtils.generateGenstamp(this.getClass().getSimpleName(), null, null));
+        classBuilder.addAnnotation(CodegenUtils.generateGenstamp(this.getClass().getName(), null, null));
         classBuilder.addAnnotation(Singleton.class);
 
         generateConstructor(service, classBuilder);

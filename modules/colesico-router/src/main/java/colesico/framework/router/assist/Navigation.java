@@ -35,12 +35,12 @@ import java.util.Map;
  *
  * @author Vladlen Larionov
  */
-public class Navigation<N extends Navigation>{
+public class Navigation<N extends Navigation> {
 
     protected String uri;
-    protected Class<?> framletClass;
+    protected Class<?> serviceClass;
     protected String methodName;
-    protected HttpMethod httpMethod = HttpMethod.GET;
+    protected HttpMethod httpMethod = HttpMethod.HTTP_METHOD_GET;
     protected int httpCode = 302;
     protected final Map<String, String> parameters = new HashMap<>();
     protected final Map<String, String> uriParameters = new HashMap<>();
@@ -48,8 +48,8 @@ public class Navigation<N extends Navigation>{
     public Navigation() {
     }
 
-    public Navigation(Class<?> framletClass, String methodName) {
-        this.framletClass = framletClass;
+    public Navigation(Class<?> serviceClass, String methodName) {
+        this.serviceClass = serviceClass;
         this.methodName = methodName;
     }
 
@@ -62,49 +62,49 @@ public class Navigation<N extends Navigation>{
         return (N) this;
     }
 
-    public N framlet(Class<?> framletClass) {
-        this.framletClass = framletClass;
-        return (N)this;
+    public N service(Class<?> serviceClass) {
+        this.serviceClass = serviceClass;
+        return (N) this;
     }
 
-    public N framlet(Object framletInstance) {
-        this.framletClass = ((ServiceProxy) framletInstance).getSuperClass();
-        return (N)this;
+    public N service(Object serviceInstance) {
+        this.serviceClass = ((ServiceProxy) serviceInstance).getSuperClass();
+        return (N) this;
     }
 
     public N method(String methodName) {
         this.methodName = methodName;
-        return (N)this;
+        return (N) this;
     }
 
     public N httpMethod(HttpMethod httpMethod) {
         this.httpMethod = httpMethod;
-        return (N)this;
+        return (N) this;
     }
 
     public N param(String name, String value) {
         parameters.put(name, value);
-        return (N)this;
+        return (N) this;
     }
 
     public N uriParam(String name, String value) {
         uriParameters.put(name, value);
-        return (N)this;
+        return (N) this;
     }
 
     public N httpCode(int httpCode) {
         this.httpCode = httpCode;
-        return (N)this;
+        return (N) this;
     }
 
     public String toLocation(Router router, HttpContext context) {
         String targetURI;
         if (StringUtils.isNotBlank(this.uri)) {
             targetURI = uri;
-        } else if (this.framletClass != null && this.methodName != null) {
-            List<String> slicedRoute = router.getSlicedRoute(this.framletClass, this.methodName, this.httpMethod, this.uriParameters);
+        } else if (this.serviceClass != null && this.methodName != null) {
+            List<String> slicedRoute = router.getSlicedRoute(this.serviceClass, this.methodName, this.httpMethod, this.uriParameters);
             if (slicedRoute == null) {
-                throw new NavigationException("Unknown uri for framelet '" + framletClass.getName() + "' and method name '" + methodName+"'");
+                throw new NavigationException("Unknown uri for service '" + serviceClass.getName() + "' and method name '" + methodName + "'");
             }
             slicedRoute.remove(0);
             targetURI = RouteTrie.SEGMENT_DELEMITER + StringUtils.join(slicedRoute, RouteTrie.SEGMENT_DELEMITER);
@@ -132,9 +132,9 @@ public class Navigation<N extends Navigation>{
         return requestScheme + "://" + host + (port == 80 ? "" : ":" + port);
     }
 
-    public void redirect(Router router, HttpContext context){
-        String location = toLocation(router,context);
-        context.getResponse().sendRedirect(location,httpCode);
+    public void redirect(Router router, HttpContext context) {
+        String location = toLocation(router, context);
+        context.getResponse().sendRedirect(location, httpCode);
     }
 
 
@@ -156,7 +156,7 @@ public class Navigation<N extends Navigation>{
         return paramsStrBuilder;
     }
 
-    public static class NavigationException extends RuntimeException{
+    public static class NavigationException extends RuntimeException {
         public NavigationException(String message) {
             super(message);
         }

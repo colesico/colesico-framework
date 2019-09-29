@@ -21,8 +21,7 @@ module colesico.framework.teleapi {
    // Inherited in client projects
     requires transitive colesico.framework.ioc;
 
-    requires slf4j.api;
-    //requires org.slf4j;
+    requires org.slf4j;
 
     requires org.apache.commons.lang3;
 

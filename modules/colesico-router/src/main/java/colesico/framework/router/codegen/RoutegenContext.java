@@ -39,7 +39,8 @@ import javax.lang.model.element.PackageElement;
 abstract public class RoutegenContext {
 
     protected static final String INDEX_SERVICE_PREFIX = "Index";
-    protected static final String INDEX_METHOD_PREFIX = "index";
+    protected static final String INDEX_METHOD_NAME = "index";
+    protected static final String OTHER_METHOD_NAME = "other";
 
     protected final Elements<RoutedTeleMethodElement> teleMethods = new Elements<>();
 
@@ -72,29 +73,32 @@ abstract public class RoutegenContext {
             // If NOT absolute route
             if (!methodRoute.startsWith(RouteTrie.SEGMENT_DELEMITER)) {
                 // Local route optional marker
-                if (methodRoute.startsWith(".")) {
-                    methodRoute = methodRoute.substring(1);
+                if (methodRoute.startsWith("./")) {
+                    methodRoute = methodRoute.substring(2);
                 }
                 methodRoute = StrUtils.concatPath(serviceRoute, methodRoute, RouteTrie.SEGMENT_DELEMITER);
             }
         } else {
             String methodName = teleMethod.getName();
-            // Local root route
-            if (methodName.startsWith(INDEX_METHOD_PREFIX)) {
+            if (methodName.equals(INDEX_METHOD_NAME)) {
+                // Local root route
                 methodRoute = "";
+            } else if (methodName.equals(OTHER_METHOD_NAME)) {
+                // any route
+                methodRoute = "*";
             } else {
                 methodRoute = StrUtils.toSeparatorNotation(methodName, '-');
             }
             methodRoute = StrUtils.concatPath(serviceRoute, methodRoute, RouteTrie.SEGMENT_DELEMITER);
         }
 
-        HttpMethod httpMethod = HttpMethod.GET;
+        HttpMethod httpMethod = HttpMethod.HTTP_METHOD_GET;
         AnnotationElement<RequestMethod> methodAnnotation = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(RequestMethod.class);
         if (methodAnnotation != null) {
-            httpMethod = methodAnnotation.unwrap().value();
+            httpMethod = HttpMethod.of(methodAnnotation.unwrap().value());
         }
 
-        return StrUtils.concatPath(httpMethod.name(), methodRoute, RouteTrie.SEGMENT_DELEMITER);
+        return StrUtils.concatPath(httpMethod.getName(), methodRoute, RouteTrie.SEGMENT_DELEMITER);
     }
 
     protected String buildServiceRoute(ServiceElement service) {
@@ -109,8 +113,8 @@ abstract public class RoutegenContext {
             }
 
             // Local route optional marker
-            if (srvRoute.startsWith(".")) {
-                return srvRoute = srvRoute.substring(1);
+            if (srvRoute.startsWith("./")) {
+                srvRoute = srvRoute.substring(2);
             }
 
             String pkgRoute = buildPackageRoute(service.getOriginClass().getPackage());

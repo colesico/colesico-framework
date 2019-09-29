@@ -25,7 +25,7 @@ $ mvn clean install
 <dependency>
   <groupId>net.colesico.framework</groupId>
   <artifactId>colesico-appbundle</artifactId>
-  <version>1.8.0</version>
+  <version>1.9.0</version>
 </dependency>
 ```
 
@@ -34,15 +34,12 @@ For extra framework modules:
 ```xml
 <dependency>
   <groupId>net.colesico.framework</groupId>
-  <artifactId>colesico-[extra module]</artifactId>
-  <version>1.8.0</version>
+  <artifactId>colesico-[module]</artifactId>
+  <version>1.9.0</version>
 </dependency>
 ```
 
-
 ## License
-
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 This project is licensed under the
 [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).

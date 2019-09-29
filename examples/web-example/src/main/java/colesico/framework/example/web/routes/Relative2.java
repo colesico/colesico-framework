@@ -9,7 +9,7 @@ import colesico.framework.weblet.Weblet;
  * see package-info.java  @Route annotation
  */
 @Weblet
-@Route("relative")
+@Route("./relative")
 public class Relative2 {
 
     // http://localhost:8080/my-service/v1.0/relative/say-hi
@@ -26,7 +26,7 @@ public class Relative2 {
     }
 
     // http://localhost:8080/my-service/v1.0/relative
-    @Route(".")
+    @Route("./")
     public HtmlResponse hi3() {
         return new HtmlResponse("Hi from weblet index!");
     }

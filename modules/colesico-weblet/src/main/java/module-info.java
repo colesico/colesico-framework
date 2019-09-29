@@ -10,8 +10,7 @@ module colesico.framework.weblet {
     requires transitive colesico.framework.translation;
     requires transitive colesico.framework.router;
 
-    requires slf4j.api;
-    //requires org.slf4j;
+    requires org.slf4j;
 
     requires org.apache.commons.lang3;
     requires org.apache.commons.io;

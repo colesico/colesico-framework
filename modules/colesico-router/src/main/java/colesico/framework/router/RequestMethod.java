@@ -32,5 +32,5 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 public @interface RequestMethod {
-    HttpMethod value();
+    String value();
 }

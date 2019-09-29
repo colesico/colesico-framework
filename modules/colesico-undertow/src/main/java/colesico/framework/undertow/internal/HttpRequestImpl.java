@@ -41,8 +41,8 @@ public final class HttpRequestImpl implements HttpRequest {
 
     private Map<String, String> headers = null;
     private Map<String, HttpCookie> cookies = null;
-    private HttpValues<String,String> queryParams = null;
-    private HttpValues<String,String> postParams = null;
+    private HttpValues<String, String> queryParams = null;
+    private HttpValues<String, String> postParams = null;
     private HttpValues<String, HttpFile> postFiles = null;
 
     public HttpRequestImpl(HttpServerExchange exchange) {
@@ -71,19 +71,19 @@ public final class HttpRequestImpl implements HttpRequest {
         for (Map.Entry<String, Cookie> e : exchange.getRequestCookies().entrySet()) {
             Cookie cookie = e.getValue();
             HttpCookie httpCookie = new HttpCookie()
-                    .setName(cookie.getName())
-                    .setValue(cookie.getValue())
-                    .setDomain(cookie.getDomain())
-                    .setPath(cookie.getPath())
-                    .setExpires(cookie.getExpires())
-                    .setSecure(cookie.isSecure())
-                    .setHttpOnly(cookie.isHttpOnly());
+                .setName(cookie.getName())
+                .setValue(cookie.getValue())
+                .setDomain(cookie.getDomain())
+                .setPath(cookie.getPath())
+                .setExpires(cookie.getExpires())
+                .setSecure(cookie.isSecure())
+                .setHttpOnly(cookie.isHttpOnly());
             cookiesMap.put(e.getKey(), httpCookie);
         }
         return Collections.unmodifiableMap(cookiesMap);
     }
 
-    private HttpValues<String,String> createQueryParams() {
+    private HttpValues<String, String> createQueryParams() {
         Map<String, MultiValue<String>> params = new HashMap<>();
 
         for (Map.Entry<String, Deque<String>> e : exchange.getQueryParameters().entrySet()) {
@@ -96,7 +96,7 @@ public final class HttpRequestImpl implements HttpRequest {
         Map<String, MultiValue<String>> params = new HashMap<>();
         postParams = new HttpValues<>(params);
 
-        Map<String, MultiValue<HttpFile>>  files = new HashMap<>();
+        Map<String, MultiValue<HttpFile>> files = new HashMap<>();
         postFiles = new HttpValues<>(files);
 
         if (formData == null) {
@@ -137,7 +137,7 @@ public final class HttpRequestImpl implements HttpRequest {
 
     @Override
     public HttpMethod getRequestMethod() {
-        return HttpMethod.valueOf(exchange.getRequestMethod().toString());
+        return HttpMethod.of(exchange.getRequestMethod().toString());
     }
 
     @Override
@@ -167,7 +167,7 @@ public final class HttpRequestImpl implements HttpRequest {
     }
 
     @Override
-    public HttpValues<String,String> getQueryParameters() {
+    public HttpValues<String, String> getQueryParameters() {
         if (queryParams == null) {
             queryParams = createQueryParams();
         }
@@ -175,7 +175,7 @@ public final class HttpRequestImpl implements HttpRequest {
     }
 
     @Override
-    public HttpValues<String,String> getPostParameters() {
+    public HttpValues<String, String> getPostParameters() {
         if (postParams == null) {
             createPostValues();
         }
