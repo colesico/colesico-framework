@@ -350,8 +350,7 @@ Specify annotation processor:
 == Run an application with plugins discovering at startup.
 
 Ioc container discovers producers with  ServiceLoader.
-If the application consists of several files (in lib/* dir.)  and the another files (e.g. plugins, modules etc) will be added later 
-without rebuilding the main project, in order the Ioc container can discover the all providers in these separate jar files run the application with a command:
+If the application consists of several files (in lib/* dir.)  and the another files (e.g. plugins, modules etc) will be added later without rebuilding the main project, in order the Ioc container can discover the all providers in these separate jar files run the application with a command:
 
 ----
 java -cp lib/*;myapp-1.0.jar my.app.Main
@@ -363,5 +362,5 @@ When run by a command like:
  java -jar  myapp-1.0.jar
 ----
  
-producers in external jar files in the folder lib/* will not be discovered.
+IoC producers in external jar files in the folder lib/* that added without rebuilding project will not be discovered.
 
