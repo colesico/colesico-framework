@@ -20,7 +20,7 @@ Colesico-IoC is a simple, lightweight dependency injection container for Java 11
 * Classed injections support (@Classed annotation).
 * Support for multiple dependency implementations (@Polyproduce).
 * Injection point support (e.g. for Logger injection).
-* Java 9+
+* Java 11+
 
 
 == Ioc container
