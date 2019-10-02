@@ -86,6 +86,7 @@
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
+			 <phase/>
                     </execution>
                 </executions>
             </plugin>
