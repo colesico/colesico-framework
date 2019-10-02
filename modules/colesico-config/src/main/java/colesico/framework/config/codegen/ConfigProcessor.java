@@ -91,11 +91,7 @@ public class ConfigProcessor extends FrameworkAbstractProcessor {
         }
 
         if (!confRegistry.isEmpty()) {
-            for (Map.Entry<String, ConfRegistry.ByRankMap> packageToRank : confRegistry.getByPackageMap().entrySet()) {
-                for (Map.Entry<String, List<ConfigElement>> rankToConfig : packageToRank.getValue().entrySet()) {
-                    iocGenerator.generateProducerClass(/* pakage name */ packageToRank.getKey(), /* rank  */ rankToConfig.getKey(), rankToConfig.getValue());
-                }
-            }
+            iocGenerator.generate(confRegistry);
         }
 
         return true;

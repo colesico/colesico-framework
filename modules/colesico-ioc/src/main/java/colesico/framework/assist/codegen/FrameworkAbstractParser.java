@@ -42,4 +42,10 @@ abstract public class FrameworkAbstractParser {
     protected Map<String, String> getOptions() {
         return processingEnv.getOptions();
     }
+
+    protected CodegenMode getCodegenMode() {
+        String codegenModeKey = processingEnv.getOptions().get(CodegenUtils.OPTION_CODEGEN);
+        return CodegenMode.fromKey(codegenModeKey);
+    }
 }
+

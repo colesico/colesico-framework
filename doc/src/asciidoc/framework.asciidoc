@@ -10,7 +10,7 @@ It is inspired by Spring and EJB frameworks but uses more simplified approach to
 
 The purpose of this framework is to provide simpler and lightweight alternative.
 
-Colesico Framework does not almost use the reflection at runtime. The approach used is the generation of extra auxiliary code at compile time stage using the annotation processors.
+Colesico Framework does not almost use the reflection at runtime. The approach used is the generation of extra auxiliary code at compile time  using the annotation processors.
 
 == Getting started
 
@@ -51,7 +51,7 @@ Colesico-framework consists of highly specialized micromodules.
 === Web modules
 
 * Colesico-http - Unified HTTP API
-* Colesico-router - HTTP requests dispatcher
+* <<router.asciidoc#,Colesico-router - HTTP requests dispatcher>>
 * Colesico-weblet - HTTP requests handling support (servlets analogue)
 * Colesico-webstatic - Static files (*.js, *.css etc) sharing helper
 * Colesico-restlet - Simplified RESTful Web services support

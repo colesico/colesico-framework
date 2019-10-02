@@ -18,7 +18,9 @@
 
 package colesico.framework.ioc.codegen.generator;
 
+import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.ioc.InjectionPoint;
+import colesico.framework.ioc.IocException;
 import colesico.framework.ioc.codegen.model.CustomFactoryElement;
 import colesico.framework.ioc.codegen.model.FactoryElement;
 import colesico.framework.ioc.codegen.model.InjectableElement;
@@ -28,19 +30,27 @@ import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.ioc.ioclet.*;
 import com.squareup.javapoet.*;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.DeclaredType;
 
 import static colesico.framework.ioc.codegen.generator.IocletGenerator.PRODUCER_FIELD;
 
 /**
  * @author Vladlen Larionov
  */
-public class FactoryGenerator {
+public class FactoryGenerator extends FrameworkAbstractGenerator {
 
     public static final String IOC_FIELD = "ioc";
 
-    protected final KeyGenerator keyGenerator = new KeyGenerator();
+    protected final KeyGenerator keyGenerator;
+
+    public FactoryGenerator(ProcessingEnvironment processingEnv) {
+        super(processingEnv);
+        keyGenerator = new KeyGenerator(processingEnv);
+    }
 
     public TypeSpec generateFactory(FactoryElement factoryElement) {
         switch (factoryElement.getScope().getKind()) {
@@ -62,6 +72,14 @@ public class FactoryGenerator {
         methodBuilder.addAnnotation(Override.class);
         methodBuilder.addParameter(TypeName.get(AdvancedIoc.class), Factory.IOC_PARAM, Modifier.FINAL);
         methodBuilder.returns(TypeName.VOID);
+        DeclaredType suppliedType = factoryElement.getSuppliedType().getErasure();
+        methodBuilder.addComment("Initialize dependencies for: " + suppliedType.asElement().toString());
+        methodBuilder.addCode(generateSetupMethodBody(factoryBuilder, factoryElement));
+        factoryBuilder.addMethod(methodBuilder.build());
+    }
+
+    protected CodeBlock generateSetupMethodBody(TypeSpec.Builder factoryBuilder, FactoryElement factoryElement) {
+        CodeBlock.Builder methodBody = CodeBlock.builder();
 
         // Param factories fields
 
@@ -82,7 +100,7 @@ public class FactoryGenerator {
 
             String factoryFieldName = getFactoryVarName(parameter);
             generateField(factoryBuilder, getFactoryTypeName(parameter), factoryFieldName);
-            methodBuilder.addStatement("this.$N=$N.$N($L)",
+            methodBody.addStatement("this.$N=$N.$N($L)",
                 factoryFieldName,
                 Factory.IOC_PARAM,
                 factoryMethodName,
@@ -91,7 +109,7 @@ public class FactoryGenerator {
 
         // Scope prov field
         if (factoryElement.getScope().getKind() == ScopeElement.ScopeKind.CUSTOM) {
-            methodBuilder.addStatement("this.$N=$N.$N($L,null)",
+            methodBody.addStatement("this.$N=$N.$N($L,null)",
                 ScopedFactory.SCOPE_FACTORY_FIELD,
                 Factory.IOC_PARAM,
                 AdvancedIoc.FACTORY_METHOD,
@@ -101,12 +119,12 @@ public class FactoryGenerator {
         // Dynamic binding
         if (addIocField) {
             generateIocField(factoryBuilder);
-            methodBuilder.addStatement("this.$N=$N", IOC_FIELD, Factory.IOC_PARAM);
+            methodBody.addStatement("this.$N=$N", IOC_FIELD, Factory.IOC_PARAM);
         }
 
-        factoryBuilder.addMethod(methodBuilder.build());
-    }
 
+        return methodBody.build();
+    }
 
     protected CodeBlock generateInstanceCreation(MethodSpec.Builder methodBuilder, FactoryElement factoryElement) {
         CodeBlock.Builder cb = CodeBlock.builder();

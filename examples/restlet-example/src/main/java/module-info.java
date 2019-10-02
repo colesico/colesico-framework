@@ -1,6 +1,6 @@
 module colesico.framework.example.restlet {
 
-    requires colesico.framework.appbundle;
+    requires colesico.framework.bundle.web;
     requires colesico.framework.undertow;
 
     exports colesico.framework.example.restlet;

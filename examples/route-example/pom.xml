@@ -1,0 +1,80 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.colesico.framework</groupId>
+        <artifactId>colesico-framework</artifactId>
+        <version>2.0.0</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <groupId>net.colesico.framework.example</groupId>
+    <artifactId>route-example</artifactId>
+
+    <packaging>jar</packaging>
+    <name>Colesico example - HTTP routes</name>
+
+    <properties>
+    </properties>
+
+    <dependencies>
+        <!-- Colesico web bundle -->
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-bundle-web</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Colesico undertow integration -->
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-undertow</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+   <build>
+        <finalName>routes</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <showWarnings>false</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                    <annotationProcessorPaths>
+                        <!-- Framework annotation processors -->
+                        <path>
+                            <groupId>net.colesico.framework</groupId>
+                            <artifactId>colesico-bundle-web</artifactId>
+                            <version>${project.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven-dependency-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <excludeScope>provided</excludeScope>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <excludeArtifactIds>javapoet</excludeArtifactIds>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

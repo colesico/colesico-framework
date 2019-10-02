@@ -24,17 +24,7 @@ $ mvn clean install
 ```xml
 <dependency>
   <groupId>net.colesico.framework</groupId>
-  <artifactId>colesico-appbundle</artifactId>
-  <version>1.9.0</version>
-</dependency>
-```
-
-For extra framework modules:
-
-```xml
-<dependency>
-  <groupId>net.colesico.framework</groupId>
-  <artifactId>colesico-[module]</artifactId>
+  <artifactId>colesico-[module or bundle]</artifactId>
   <version>1.9.0</version>
 </dependency>
 ```

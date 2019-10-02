@@ -63,13 +63,14 @@ public class HttpServer {
         return efp.setNext(nextHandler);
     }
 
-    public void init() {
+    public HttpServer init() {
         try {
             builder = Undertow.builder();
             config.applyOptions(builder);
             HttpHandler formHandler = makeFormHandler(routerHandler);
             builder.setHandler(config.getRootHandler(formHandler));
             server = builder.build();
+            return this;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -79,7 +80,6 @@ public class HttpServer {
     public synchronized void start() {
         server.start();
     }
-
 
     public synchronized void stop() {
         server.stop();

@@ -20,9 +20,9 @@ package colesico.framework.service.codegen.generator;
 
 
 import colesico.framework.assist.codegen.CodegenUtils;
+import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.ioc.*;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
-import colesico.framework.service.ServiceProxy;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleFacadeElement;
 import colesico.framework.service.codegen.parser.ProcessorContext;
@@ -46,7 +46,7 @@ import java.util.Set;
 /**
  * @author Vladlen Larionov
  */
-public class IocGenerator {
+public class IocGenerator extends FrameworkAbstractGenerator {
 
     private static final Logger logger = LoggerFactory.getLogger(IocGenerator.class);
 
@@ -56,6 +56,7 @@ public class IocGenerator {
     protected final ProcessorContext context;
 
     public IocGenerator(ProcessorContext context) {
+        super(context.getProcessingEnv());
         this.context = context;
     }
 
@@ -67,11 +68,11 @@ public class IocGenerator {
 
         // Add produce method
         MethodSpec.Builder mb = producerGenerator.addProduceMethod("get" + serviceElement.getOriginClass().getSimpleName() + methodUID,
-                TypeName.get(serviceElement.getOriginClass().asType()));
+            TypeName.get(serviceElement.getOriginClass().asType()));
 
 
         String scopeAnnClassName = serviceElement.getCustomScopeType() == null ? Singleton.class.getName()
-                : serviceElement.getCustomScopeType().asClassElement().getName();
+            : serviceElement.getCustomScopeType().asClassElement().getName();
         AnnotationSpec.Builder scopeAnnBuilder = AnnotationSpec.builder(ClassName.bestGuess(scopeAnnClassName));
         mb.addAnnotation(scopeAnnBuilder.build());
 
@@ -87,7 +88,7 @@ public class IocGenerator {
 
         // Generate produce method
         MethodSpec.Builder mb = producerGenerator.addProduceMethod("get" + TeleFacade.class.getSimpleName() + methodUID,
-                TypeName.get(TeleFacade.class));
+            TypeName.get(TeleFacade.class));
         mb.addParameter(ClassName.bestGuess(teleFacadeElement.getFacadeClassName()), IMPLEMENTATION_PARAM, Modifier.FINAL);
 
         mb.addAnnotation(Polyproduce.class);
@@ -106,72 +107,31 @@ public class IocGenerator {
         mb.addStatement("return $N", IMPLEMENTATION_PARAM);
     }
 
-    private void generateProducerClass(String packageName, String classSimpleName, Set<ServiceElement> serviceElements) {
-        String producerClassName = packageName + '.' + classSimpleName;
-        if (logger.isDebugEnabled()) {
-            StringBuilder mb = new StringBuilder("Generate services producer: " + producerClassName).append("\n");
-            for (ServiceElement se : serviceElements) {
-                mb.append("  for service: ").append(se.getOriginClass().getName());
-            }
-            logger.debug(mb.toString());
+    private void generateProducerClass(ServiceElement serviceElement) {
+        String packageName = serviceElement.getOriginClass().getPackageName();
+        String producerClassSimpleName = serviceElement.getOriginClass().getSimpleName();
+
+        ProducerGenerator producerGenerator = new ProducerGenerator(packageName, producerClassSimpleName, this.getClass(), context.getProcessingEnv());
+
+        // Service producing
+        generateProduceService(producerGenerator, serviceElement, "Srv");
+
+        // Telefacades producing
+        for (TeleFacadeElement teleFacade : serviceElement.getTeleFacades()) {
+            logger.debug("Generate tele-facade producing: " + teleFacade.getFacadeClassName());
+            generateProduceTeleFacade(producerGenerator, teleFacade, "Tel");
         }
 
-
-        ProducerGenerator producerGenerator = new ProducerGenerator(packageName, classSimpleName, this.getClass(), context.getProcessingEnv());
-        producerGenerator.setProducerRank(Rank.RANK_MINOR);
-
-        if (producerGenerator.isProducerExists()) {
-            if (context.isProductionCodegen()) {
-                String producerPath = producerGenerator.getProducerClassFilePath();
-                context.getMessager().printMessage(Diagnostic.Kind.WARNING, "Services IOC producers class already exists: " + producerPath + ". Clean the project to rebuild this class correctly.");
-            }
-        }
-
-        int i = 0;
-        Element[] linkedElements = new Element[serviceElements.size()];
-        for (ServiceElement service : serviceElements) {
-            logger.debug("Generate service producing: " + service.getOriginClass().asType().toString());
-            linkedElements[i] = service.getOriginClass().unwrap();
-            generateProduceService(producerGenerator, service, "F" + Integer.toString(i));
-
-            // Telefacades producing
-            for (TeleFacadeElement teleFacade : service.getTeleFacades()) {
-                logger.debug("Generate tele-facade producing: " + teleFacade.getFacadeClassName());
-                generateProduceTeleFacade(producerGenerator, teleFacade, "T" + Integer.toString(i));
-            }
-
-            i++;
-        }
-
-        context.getModulatorKit().notifyGenerateIocProducer(producerGenerator, serviceElements);
+        context.getModulatorKit().notifyGenerateIocProducer(producerGenerator, Set.of(serviceElement));
 
         final TypeSpec typeSpec = producerGenerator.typeBuilder().build();
-        CodegenUtils.createJavaFile(context.getProcessingEnv(), typeSpec, packageName, linkedElements);
+        CodegenUtils.createJavaFile(context.getProcessingEnv(), typeSpec, packageName, serviceElement.getOriginClass().unwrap());
     }
 
-    public void generatePerPackage(Set<ServiceElement> services) {
-        logger.debug("Generate services producers. One producer per package. Total services: " + services.size());
-        Map<String, Set<ServiceElement>> perPackageMap = new HashMap<>();
-        for (ServiceElement srv : services) {
-            String pkgName = srv.getOriginClass().getPackageName();
-            Set<ServiceElement> pkgServices = perPackageMap.computeIfAbsent(pkgName, k -> new HashSet<>());
-            pkgServices.add(srv);
-        }
-
-        for (Map.Entry<String, Set<ServiceElement>> e : perPackageMap.entrySet()) {
-            String packageName = e.getKey();
-            generateProducerClass(packageName, IOC_PRODUCER_CLASS_NAME, e.getValue());
-        }
-    }
-
-    public void generatePerService(Set<ServiceElement> services) {
-        logger.debug("Generate services producers. One producer per service. Total services: " + services.size());
-        for (ServiceElement srv : services) {
-            String pkgName = srv.getOriginClass().getPackageName();
-            String producerName = srv.getOriginClass().getSimpleName().toString() + "Producer";
-            Set<ServiceElement> srvSet = new HashSet<>();
-            srvSet.add(srv);
-            generateProducerClass(pkgName, producerName, srvSet);
+    public void generate() {
+        for (ServiceElement srv : context.getProcessedServices()) {
+            logger.debug("Generate IoC producer for service: " + srv.getOriginClass().getName());
+            generateProducerClass(srv);
         }
     }
 

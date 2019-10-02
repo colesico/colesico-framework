@@ -18,6 +18,7 @@
 
 package colesico.framework.ioc.codegen.generator;
 
+import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.ioc.ClassedKey;
 import colesico.framework.ioc.NamedKey;
 import colesico.framework.ioc.TypeKey;
@@ -26,12 +27,17 @@ import colesico.framework.ioc.codegen.model.InjectableElement;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.type.DeclaredType;
 
 /**
  * @author Vladlen Larionov
  */
-public class KeyGenerator {
+public class KeyGenerator extends FrameworkAbstractGenerator {
+
+    public KeyGenerator(ProcessingEnvironment processingEnv) {
+        super(processingEnv);
+    }
 
     private CodeBlock generateTypeKeyStringBased(String className) {
         CodeBlock.Builder codeBlock = CodeBlock.builder();

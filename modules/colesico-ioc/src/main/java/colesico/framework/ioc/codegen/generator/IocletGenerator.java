@@ -18,6 +18,7 @@
 
 package colesico.framework.ioc.codegen.generator;
 
+import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.ioc.codegen.model.FactoryElement;
 import colesico.framework.ioc.codegen.model.IocletElement;
 import colesico.framework.ioc.ioclet.Factory;
@@ -29,12 +30,13 @@ import com.squareup.javapoet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
 
 /**
  * @author Vladlen Larionov
  */
-public class IocletGenerator {
+public class IocletGenerator extends FrameworkAbstractGenerator {
     public static final String PRODUCER_FIELD = "producer";
 
     private static final Logger log = LoggerFactory.getLogger(IocletGenerator.class);
@@ -46,9 +48,10 @@ public class IocletGenerator {
     protected IocletElement iocletElement;
     protected TypeSpec.Builder classBuilder;
 
-    public IocletGenerator() {
-        this.factoryGenerator = new FactoryGenerator();
-        this.keyGenerator = new KeyGenerator();
+    public IocletGenerator(ProcessingEnvironment processingEnv) {
+        super(processingEnv);
+        this.factoryGenerator = new FactoryGenerator(processingEnv);
+        this.keyGenerator = new KeyGenerator(processingEnv);
     }
 
     protected void generateProducerField() {
@@ -101,9 +104,9 @@ public class IocletGenerator {
         for (FactoryElement sme : iocletElement.getFactories()) {
             MethodSpec.Builder mb = MethodSpec.methodBuilder(sme.getFactoryMethodName());
             mb.returns(ParameterizedTypeName.get(
-                    ClassName.get(Factory.class),
-                    TypeName.get(sme.getSuppliedType().getErasure())
-                    )
+                ClassName.get(Factory.class),
+                TypeName.get(sme.getSuppliedType().getErasure())
+                )
             );
             mb.addModifiers(Modifier.PUBLIC);
             mb.addStatement("return $L", factoryGenerator.generateFactory(sme));

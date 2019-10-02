@@ -28,6 +28,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+import static colesico.framework.ioc.internal.LazyIocContainer.CIRCULAR_DEP_ERR_MSG;
+
 /**
  * @author Vladlen Larionov
  */
@@ -191,7 +193,7 @@ public class IocBuilderImpl implements IocBuilder {
                 }
             }
         } catch (StackOverflowError soe) {
-            throw new IocException("Circular dependence for key: " + currentKey);
+            throw new IocException(String.format(CIRCULAR_DEP_ERR_MSG, currentKey.toString()));
         }
     }
 

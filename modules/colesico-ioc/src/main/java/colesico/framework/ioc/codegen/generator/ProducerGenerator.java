@@ -23,6 +23,8 @@ import java.util.List;
 
 public class ProducerGenerator {
 
+    public static final String PRODUCER_CLASS_NAME_SUFFIX = "Producer";
+
     private final Logger logger = LoggerFactory.getLogger(ProducerGenerator.class);
 
     protected final Class<?> masterGeneratorClass;
@@ -44,8 +46,8 @@ public class ProducerGenerator {
     protected final List<MethodSpec.Builder> producerMethods = new ArrayList<>();
     protected final List<FieldSpec.Builder> producerFields = new ArrayList<>();
 
-    public ProducerGenerator(String packageName, String classSimpleName, Class<?> masterGeneratorClass, ProcessingEnvironment processingEnv) {
-        logger.debug("Creating IoC producer generator: "+packageName+"."+classSimpleName);
+    public ProducerGenerator(String producerPackageName, String producerClassSimpleName, Class<?> masterGeneratorClass, ProcessingEnvironment processingEnv) {
+        logger.debug("Creating IoC producer generator: " + producerPackageName + "." + producerClassSimpleName);
         this.masterGeneratorClass = masterGeneratorClass;
         this.processingEnv = processingEnv;
         elementUtils = processingEnv.getElementUtils();
@@ -53,9 +55,12 @@ public class ProducerGenerator {
         messager = processingEnv.getMessager();
         filer = processingEnv.getFiler();
 
-        this.producerPackageName = packageName;
-        this.producerClassSimpleName = classSimpleName;
-        this.producerClassName = producerPackageName + '.' + producerClassSimpleName;
+        this.producerPackageName = producerPackageName;
+        if (!producerClassSimpleName.endsWith(PRODUCER_CLASS_NAME_SUFFIX)) {
+            producerClassSimpleName = producerClassSimpleName + "Producer";
+        }
+        this.producerClassSimpleName = producerClassSimpleName;
+        this.producerClassName = this.producerPackageName + '.' + this.producerClassSimpleName;
         this.producerClassFilePath = "/" + StringUtils.replace(producerClassName, ".", "/") + ".java";
 
     }

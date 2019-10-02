@@ -129,7 +129,6 @@ public final class LazyIocContainer implements AdvancedIoc {
 
     protected void activate(Factory factory, Key key) {
         try {
-
             Factory s = factory;
             while (s != null) {
                 s.activate(this);
@@ -137,6 +136,8 @@ public final class LazyIocContainer implements AdvancedIoc {
             }
         } catch (StackOverflowError soe) {
             throw new IocException(String.format(CIRCULAR_DEP_ERR_MSG, key.toString()));
+        } catch (Exception e){
+
         }
     }
 }

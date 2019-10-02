@@ -48,8 +48,6 @@ import java.util.*;
 public class CodegenUtils {
 
     public static final String OPTION_CODEGEN = "colesico.framework.codegen";
-    public static final String OPTION_CODEGEN_DEV = "dev";
-    public static final String OPTION_CODEGEN_PROD = "prod";
 
     public static final String ISO_DT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 

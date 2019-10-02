@@ -20,6 +20,7 @@ package colesico.framework.ioc;
 
 import colesico.framework.ioc.internal.IocBuilderImpl;
 import colesico.framework.ioc.ioclet.Ioclet;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * IoC container builder interface
@@ -28,6 +29,8 @@ import colesico.framework.ioc.ioclet.Ioclet;
  * @author Vladlen Larionov
  */
 public interface IocBuilder {
+
+    String IOC_PROFILE_PROPERTY = "colesico.framework.ioc.profile";
 
     /**
      * Add  rank to ranks stack.
@@ -93,16 +96,16 @@ public interface IocBuilder {
      */
     IocBuilder ignoreProducer(String producerId);
 
+    static IocBuilder get() {
+        return new IocBuilderImpl();
+    }
+
     /**
      * Builds an IoC container instance based on builder configuration
      *
      * @return
      */
     Ioc build();
-
-    static IocBuilder get() {
-        return new IocBuilderImpl();
-    }
 
     /**
      * Creates default production ready IoC container

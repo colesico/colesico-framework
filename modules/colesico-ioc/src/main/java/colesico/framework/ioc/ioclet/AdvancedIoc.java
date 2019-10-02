@@ -3,6 +3,7 @@ package colesico.framework.ioc.ioclet;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.Key;
 import colesico.framework.ioc.UnsatisfiedInjectionException;
+import org.slf4j.Logger;
 
 /**
  * IoC container "instrumental" interface.
@@ -27,6 +28,5 @@ public interface AdvancedIoc extends Ioc {
      * @return the factory if the appropriate is found, null otherwise
      */
     <T> Factory<T> factoryOrNull(Key<T> key);
-
 
 }

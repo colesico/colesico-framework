@@ -63,7 +63,7 @@ public class ProducersProcessor extends FrameworkAbstractProcessor {
 
     @Override
     protected void onInit() {
-        iocletGenerator = new IocletGenerator();
+        iocletGenerator = new IocletGenerator(processingEnv);
         spiGenerator = new SPIGenerator(processingEnv);
         createdIoclets.clear();
         parseProducer = new ProducerParser(processingEnv);

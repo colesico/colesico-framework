@@ -18,7 +18,7 @@
 
 package colesico.framework.service.codegen.parser;
 
-import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.CodegenMode;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.service.codegen.model.InterceptionPhases;
 import colesico.framework.service.codegen.model.ServiceElement;
@@ -37,10 +37,6 @@ import java.util.Set;
 public final class ProcessorContext {
 
     private final ProcessingEnvironment processingEnv;
-    private final Elements elementUtils;
-    private final Types typeUtils;
-    private final Messager messager;
-    private final Filer filer;
 
     private final ModulatorKit modulatorKit;
 
@@ -53,39 +49,18 @@ public final class ProcessorContext {
     /**
      * Flag indicates to generate code for production
      */
-    private final boolean productionCodegen;
+    private final CodegenMode codegenMode;
 
     public ProcessorContext(ModulatorKit modulatorKit, ProcessingEnvironment processingEnv) {
-
         this.processingEnv = processingEnv;
-        elementUtils = processingEnv.getElementUtils();
-        typeUtils = processingEnv.getTypeUtils();
-        messager = processingEnv.getMessager();
-        filer = processingEnv.getFiler();
         this.properties = new HashMap<>();
         this.modulatorKit = modulatorKit;
         this.interceptionPhases = new InterceptionPhases();
-
-        // Detect production code generation mode
-        String codegenMode = processingEnv.getOptions().get(CodegenUtils.OPTION_CODEGEN);
-        if (codegenMode == null) {
-            codegenMode = CodegenUtils.OPTION_CODEGEN_PROD;
-        }
-        switch (codegenMode) {
-            case CodegenUtils.OPTION_CODEGEN_PROD:
-                productionCodegen = true;
-                break;
-            case CodegenUtils.OPTION_CODEGEN_DEV:
-                productionCodegen = false;
-                break;
-            default:
-                throw CodegenException.of().message("Unsupported code generation mode: " + codegenMode +
-                        ". Valid values: " + CodegenUtils.OPTION_CODEGEN_PROD + "; " + CodegenUtils.OPTION_CODEGEN_DEV).build();
-        }
+        this.codegenMode = CodegenMode.fromKey(processingEnv.getOptions().get(CodegenUtils.OPTION_CODEGEN));
     }
 
-    public boolean isProductionCodegen() {
-        return productionCodegen;
+    public CodegenMode getCodegenMode() {
+        return codegenMode;
     }
 
     public Object getProperty(Class propertyClass) {
@@ -101,19 +76,19 @@ public final class ProcessorContext {
     }
 
     public Elements getElementUtils() {
-        return elementUtils;
+        return processingEnv.getElementUtils();
     }
 
     public Types getTypeUtils() {
-        return typeUtils;
+        return processingEnv.getTypeUtils();
     }
 
     public Messager getMessager() {
-        return messager;
+        return processingEnv.getMessager();
     }
 
     public Filer getFiler() {
-        return filer;
+        return processingEnv.getFiler();
     }
 
     public Set<ServiceElement> getProcessedServices() {

@@ -23,17 +23,17 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>1.9.0</version>
+        <version>2.0.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>colesico-appbundle</artifactId>
+    <artifactId>colesico-bundle-web</artifactId>
 
     <packaging>jar</packaging>
 
-    <name>Colesico Application Bundle</name>
+    <name>Colesico Web Bundle</name>
     <description>
-        Colesico framework application bundle joins common framework modules for application development
+        Colesico framework bundle joins framework modules for web application development
     </description>
 
     <properties>
@@ -43,39 +43,7 @@
         <!-- Colesico basic -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-ioc</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-config</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-teleapi</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-service</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-transaction</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <!-- Colesico database  -->
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-hikaricp</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-jdbc</artifactId>
+            <artifactId>colesico-bundle-base</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -110,43 +78,9 @@
             <artifactId>colesico-webstatic</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <!-- Colesico localization -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-profile</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-resource</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-translation</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <!-- Colesico mix -->
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-security</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-eventbus</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-asyncjob</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-validation</artifactId>
+            <artifactId>colesico-pebble</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -166,7 +100,6 @@
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
-                        <phase/>
                     </execution>
                 </executions>
             </plugin>

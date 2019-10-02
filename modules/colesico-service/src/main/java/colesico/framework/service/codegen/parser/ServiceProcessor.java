@@ -20,6 +20,7 @@ package colesico.framework.service.codegen.parser;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
+import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.service.codegen.generator.IocGenerator;
 import colesico.framework.service.codegen.generator.ServiceProxyGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
@@ -51,7 +52,7 @@ import static colesico.framework.service.ServiceProxy.SERVICE_CLASS_SUFFIX;
  *
  * @author Vladlen Larionov
  */
-public class ServiceProcessor extends AbstractProcessor {
+public class ServiceProcessor extends FrameworkAbstractProcessor {
 
     protected final Logger logger;
     protected final ModulatorKit modulatorKit;
@@ -73,21 +74,13 @@ public class ServiceProcessor extends AbstractProcessor {
     }
 
     @Override
-    public Set<String> getSupportedAnnotationTypes() {
-        Set<String> result = new HashSet<>();
-        //result.add()
+    protected Class<? extends Annotation>[] getSupportedAnnotations() {
+        Set<Class<? extends Annotation>> result = new HashSet<>();
         for (Class<? extends Annotation> ac : modulatorKit.getServiceAnnotations()) {
             logger.debug("Use service annotation: " + ac.getName());
-            result.add(ac.getName());
+            result.add(ac);
         }
-        return result;
-    }
-
-    @Override
-    public Set<String> getSupportedOptions() {
-        Set<String> options = new HashSet<>();
-        options.add(CodegenUtils.OPTION_CODEGEN);
-        return options;
+        return result.toArray(new Class[result.size()]);
     }
 
     @Override
@@ -142,7 +135,7 @@ public class ServiceProcessor extends AbstractProcessor {
                     serviceType = (TypeElement) e;
                     // @Service annotation are inherited from superclass so need to filter generated proxies by name.
                     // But this is not correct in general, so  need to change in perspective.
-                    if (StringUtils.endsWith(serviceType.getSimpleName(), SERVICE_CLASS_SUFFIX+PROXY_CLASS_SUFFIX)) {
+                    if (StringUtils.endsWith(serviceType.getSimpleName(), SERVICE_CLASS_SUFFIX + PROXY_CLASS_SUFFIX)) {
                         continue;
                     }
                     if (serviceTypsNames.contains(serviceType.toString())) {
@@ -172,12 +165,7 @@ public class ServiceProcessor extends AbstractProcessor {
         }
 
         if (!context.getProcessedServices().isEmpty()) {
-            IocGenerator iocGenerator = new IocGenerator(context);
-            if (context.isProductionCodegen()) {
-                iocGenerator.generatePerPackage(context.getProcessedServices());
-            } else {
-                iocGenerator.generatePerService(context.getProcessedServices());
-            }
+            new IocGenerator(context).generate();
         }
     }
 

@@ -48,29 +48,26 @@ public class ConfRegistry {
 
     private Logger logger = LoggerFactory.getLogger(ConfRegistry.class);
 
-    protected final ProcessingEnvironment processingEnv;
-    protected final Elements elementUtils;
-
-    protected final Map<String, ByRankMap> byPackageMap = new HashMap<>();
+    private final ProcessingEnvironment processingEnv;
+    private final List<ConfigElement> configElements = new ArrayList<>();
 
     public ConfRegistry(ProcessingEnvironment processingEnv) {
         this.processingEnv = processingEnv;
-        elementUtils = processingEnv.getElementUtils();
     }
 
     public boolean isEmpty() {
-        return byPackageMap.isEmpty();
+        return configElements.isEmpty();
     }
 
     public void clear() {
-        byPackageMap.clear();
+        configElements.clear();
     }
 
-    public Map<String, ByRankMap> getByPackageMap() {
-        return byPackageMap;
+    public List<ConfigElement> getConfigElements() {
+        return configElements;
     }
 
-    protected ClassElement getConfigBaseClass(ClassElement configImplementation) {
+    private ClassElement getConfigBaseClass(ClassElement configImplementation) {
         TypeElement superClass = configImplementation.unwrap();
         do {
             superClass = (TypeElement) ((DeclaredType) superClass.getSuperclass()).asElement();
@@ -83,7 +80,7 @@ public class ConfRegistry {
         throw CodegenException.of().message("Unable to determine configuration prototype for: " + configImplementation.getName()).element(configImplementation).build();
     }
 
-    protected ConfigElement createConfigElement(ClassElement configImplementation) {
+    private ConfigElement createConfigElement(ClassElement configImplementation) {
 
         ClassElement configPrototype = getConfigBaseClass(configImplementation);
 
@@ -105,7 +102,7 @@ public class ConfRegistry {
         if (defaultAnn != null) {
             if (!ConfigModel.MESSAGE.equals(model)) {
                 throw CodegenException.of().message("@" + Default.class.getSimpleName() +
-                        " annotation can be applied only to " + ConfigModel.MESSAGE.name() + " configuration model").build();
+                    " annotation can be applied only to " + ConfigModel.MESSAGE.name() + " configuration model").build();
             }
             defaultMessage = true;
         } else {
@@ -126,23 +123,11 @@ public class ConfRegistry {
         return new ConfigElement(configImplementation, configPrototype, rank, model, target, defaultMessage, classed, named);
     }
 
-    public ConfigElement register(ClassElement configImplementation) {
-
-        String packageName = configImplementation.getPackageName();
-        ByRankMap byRankMap = byPackageMap.computeIfAbsent(packageName, k -> new ByRankMap());
-
-        AnnotationElement<Configuration> configurationAnn = configImplementation.getAnnotation(Configuration.class);
-        String rank = configurationAnn.unwrap().rank();
-        List<ConfigElement> rankConfigs = byRankMap.computeIfAbsent(rank, k -> new ArrayList<>());
-
-
-        ConfigElement configurationElement = createConfigElement(configImplementation);
-        rankConfigs.add(configurationElement);
-
-        logger.debug("Configuration " + configurationElement.getImplementation().getName() + " has been registered");
-        return configurationElement;
+    public ConfigElement register(ClassElement configImplElement) {
+        ConfigElement configElement = createConfigElement(configImplElement);
+        configElements.add(configElement);
+        logger.debug("Configuration " + configElement.getImplementation().getName() + " has been registered");
+        return configElement;
     }
 
-    public static class ByRankMap extends HashMap<String, List<ConfigElement>> {
-    }
 }

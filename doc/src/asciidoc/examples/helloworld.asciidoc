@@ -6,7 +6,7 @@ To build simple application you must first to setup your maven project.
 This should be a regular jar application with the framework dependencies.
 
 Although the framework consists of many modules, to specify dependencies you can use an bundle module
-that includes the most frequently used modules - colesico-appbundle.
+that includes the most frequently used specific modules - colesico-bundle-web  (or colesico-bundle-sql, etc.).
 
 Because the framework can support different http servers, you must specify which one  server you want to use.
 
@@ -16,7 +16,7 @@ Because the framework can support different http servers, you must specify which
         <!-- Colesico common modules bundle -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-appbundle</artifactId>
+            <artifactId>colesico-bundle-web</artifactId>
             <version>${colesico.version}</version>
         </dependency>
 
@@ -46,7 +46,7 @@ Since colesico framework generates extra java code you also must to attach annot
             <!-- Framework annotation processors -->
             <path>
                 <groupId>net.colesico.framework</groupId>
-                <artifactId>colesico-appbundle</artifactId>
+                <artifactId>colesico-bundle-web</artifactId>
                 <version>${colesico.version}</version>
             </path>
         </annotationProcessorPaths>
@@ -95,7 +95,7 @@ public static void main(String[] args) {
         // Or for development/tests purposes:
         // final Ioc ioc = IocBuilder.forDevelopment();
 
-        // Obtain http server
+        // Obtain http server from DI container
         HttpServer httpServer = ioc.instance(HttpServer.class);
 
         // Init and start http server
@@ -134,9 +134,18 @@ It is possible to customize request uri with @Route annotation applied on :
 * weblet class
 * weblet handler method
 
+<<../router.asciidoc#, See Router module details>>
+
 == Run the Application
 
-Compile and run the application. Then browse the url  http://localhost:8080/hello-weblet/say-hello to see result.
+Compile and run the application:
+
+[source]
+----
+java -jar helloworld.jar
+----
+
+Then browse the url  http://localhost:8080/hello-weblet/say-hello to see result.
 
 == Hello World application source code
 
