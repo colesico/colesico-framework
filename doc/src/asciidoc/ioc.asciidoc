@@ -362,5 +362,5 @@ When run by a command like:
  java -jar  myapp-1.0.jar
 ----
  
-IoC producers in external jar files in the folder lib/* that added without rebuilding project will not be discovered.
+IoC producers in external jar files in the folder lib/* that added without rebuilding the project will not be discovered.
 
