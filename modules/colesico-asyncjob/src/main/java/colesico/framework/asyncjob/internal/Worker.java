@@ -14,7 +14,7 @@ public final class Worker implements Runnable {
 
     private final Logger logger = LoggerFactory.getLogger(Worker.class);
 
-    private final JobServiceConfig srvConfig;
+    private final JobServiceConfigPrototype srvConfig;
     private final JobDao jobsDao;
     private final PayloadConverter payloadTransformer;
     private final QueuePool queuePool;
@@ -23,7 +23,7 @@ public final class Worker implements Runnable {
 
     private String workerThreadName;
 
-    public Worker(JobServiceConfig srvConfig, JobDao jobsDao, PayloadConverter payloadTransformer, QueuePool queuePool, ThreadScope threadScope, Object workersMonitor) {
+    public Worker(JobServiceConfigPrototype srvConfig, JobDao jobsDao, PayloadConverter payloadTransformer, QueuePool queuePool, ThreadScope threadScope, Object workersMonitor) {
         this.srvConfig = srvConfig;
         this.jobsDao = jobsDao;
         this.payloadTransformer = payloadTransformer;
@@ -42,7 +42,7 @@ public final class Worker implements Runnable {
         }
     }
 
-    private Object transformPayload(JobQueueConfig queueConfig, JobRecord jobRecord) {
+    private Object transformPayload(JobQueueConfigPrototype queueConfig, JobRecord jobRecord) {
         return payloadTransformer.toObject(queueConfig.getPayloadType(), jobRecord.getPayload());
     }
 
@@ -60,7 +60,7 @@ public final class Worker implements Runnable {
         try {
             final TransactionalShell txShell = srvConfig.getTransactionalShell();
             txShell.requiresNew(() -> {
-                final JobQueueConfig queueConfig = queueRef.getConfig();
+                final JobQueueConfigPrototype queueConfig = queueRef.getConfig();
 
                 // Get job info from DB
                 final JobRecord jobRec = jobsDao.pick(queueConfig);

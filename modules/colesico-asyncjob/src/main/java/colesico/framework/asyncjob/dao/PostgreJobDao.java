@@ -1,7 +1,7 @@
 package colesico.framework.asyncjob.dao;
 
-import colesico.framework.asyncjob.JobServiceConfig;
-import colesico.framework.asyncjob.JobQueueConfig;
+import colesico.framework.asyncjob.JobQueueConfigPrototype;
+import colesico.framework.asyncjob.JobServiceConfigPrototype;
 import colesico.framework.asyncjob.JobDao;
 import colesico.framework.asyncjob.JobRecord;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -34,15 +34,15 @@ public class PostgreJobDao implements JobDao {
         " VALUES(now(), now() + CAST(? AS INTERVAL), ?)" +
         " RETURNING id";
 
-    private final JobServiceConfig srvConfig;
+    private final JobServiceConfigPrototype srvConfig;
 
     @Inject
-    public PostgreJobDao(JobServiceConfig srvConfig) {
+    public PostgreJobDao(JobServiceConfigPrototype srvConfig) {
         this.srvConfig = srvConfig;
     }
 
     @Override
-    public Long enqueue(JobQueueConfig queueConfig, String payload, Duration delay) {
+    public Long enqueue(JobQueueConfigPrototype queueConfig, String payload, Duration delay) {
         String queryText = String.format(ENQUEUE_SQL, queueConfig.getTableName());
         try (PreparedStatement ps = srvConfig.getConnection().prepareStatement(queryText, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, (delay == null ? "0" : delay.toMillis()) + " milliseconds");
@@ -63,7 +63,7 @@ public class PostgreJobDao implements JobDao {
     }
 
     @Override
-    public JobRecord pick(JobQueueConfig queueConfig) {
+    public JobRecord pick(JobQueueConfigPrototype queueConfig) {
         String queryText = String.format(PICK_SQL, queueConfig.getTableName(), queueConfig.getTableName());
 
         try (PreparedStatement ps = srvConfig.getConnection().prepareStatement(queryText)) {

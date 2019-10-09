@@ -20,6 +20,7 @@ package colesico.framework.config.codegen;
 
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.config.ConfigModel;
+import colesico.framework.config.DefaultConfig;
 
 import javax.lang.model.type.TypeMirror;
 
@@ -52,20 +53,42 @@ public class ConfigElement {
      */
     private final ClassElement target;
 
+    /**
+     * Configuration source definition
+     */
+    private final ConfigSourceElement source;
+
+    /**
+     * @see DefaultConfig
+     */
     private final boolean defaultMessage;
 
     /**
-     * If classed annotation is defined on configuration instance
+     * If @Classed annotation is defined on configuration instance
      */
     private final TypeMirror classedQualifier;
+
+    /**
+     * If @Named annotation is defined on configuration instance
+     */
     private final String namedQualifier;
 
-    public ConfigElement(ClassElement implementation, ClassElement prototype, String rank, ConfigModel model, ClassElement target, boolean defaultMessage, TypeMirror classedQualifier, String namedQualifier) {
+    public ConfigElement(ClassElement implementation,
+                         ClassElement prototype,
+                         String rank,
+                         ConfigModel model,
+                         ClassElement target,
+                         ConfigSourceElement source,
+                         boolean defaultMessage,
+                         TypeMirror classedQualifier,
+                         String namedQualifier) {
+
         this.implementation = implementation;
         this.prototype = prototype;
         this.rank = rank;
         this.model = model;
         this.target = target;
+        this.source = source;
         this.defaultMessage = defaultMessage;
         this.classedQualifier = classedQualifier;
         this.namedQualifier = namedQualifier;
@@ -103,15 +126,19 @@ public class ConfigElement {
         return namedQualifier;
     }
 
+    public ConfigSourceElement getSource() {
+        return source;
+    }
+
     @Override
     public String toString() {
         return "ConfigElement{" +
-                "implementation=" + implementation +
-                ", prototype=" + prototype +
-                ", rank='" + rank + '\'' +
-                ", model=" + model +
-                ", target=" + target +
-                ", classedDefault=" + defaultMessage +
-                '}';
+            "implementation=" + implementation +
+            ", prototype=" + prototype +
+            ", rank='" + rank + '\'' +
+            ", model=" + model +
+            ", target=" + target +
+            ", classedDefault=" + defaultMessage +
+            '}';
     }
 }

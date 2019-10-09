@@ -32,6 +32,15 @@ import java.lang.annotation.*;
 @Documented
 @Repeatable(Produces.class)
 public @interface Produce {
+
+    String POST_PRODUCE_METHOD = "postProduce";
+    String POST_CONSTRUCT_METHOD = "postConstruct";
+    String CLASSED_METHOD = "classed";
+    String NAMED_METHOD = "named";
+    String POLYPRODUCE_METHOD = "polyproduce";
+    String VALUE_METHOD = "value";
+
+
     /**
      * Class of instance to be produced
      *
@@ -62,4 +71,19 @@ public @interface Produce {
      * @see Classed
      */
     Class<?> classed() default Class.class;
+
+    /**
+     * Whether or not to call instance @PostConstruct listeners
+     *
+     * @return
+     */
+    boolean postConstruct() default true;
+
+    /**
+     * Producer method name to be called after instance been produced but before instance @PostConstruct
+     * This method can be used to handle just created instance before it will be returned from IoC container
+     *
+     * @return
+     */
+    String postProduce() default "";
 }

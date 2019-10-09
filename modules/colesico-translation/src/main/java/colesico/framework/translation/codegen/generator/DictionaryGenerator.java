@@ -9,6 +9,7 @@ import colesico.framework.translation.AbstractDictionary;
 import colesico.framework.translation.TranslationKey;
 import colesico.framework.translation.TranslationKit;
 import colesico.framework.translation.codegen.model.DictionaryElement;
+import colesico.framework.translation.codegen.model.DictionaryRegistry;
 import com.squareup.javapoet.*;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
 import java.util.List;
+import java.util.Map;
 
 public class DictionaryGenerator {
 
@@ -46,7 +48,7 @@ public class DictionaryGenerator {
 
     protected MethodSpec generateProxyMethod(DictionaryElement dictionaryElement, MethodElement keyMethod) {
         logger.debug("Generate dictionary " + dictionaryElement + " proxy method: " + keyMethod);
-        MethodSpec.Builder mb = CodegenUtils.createProxyMethodBuilder(keyMethod,null,null,true);
+        MethodSpec.Builder mb = CodegenUtils.createProxyMethodBuilder(keyMethod, null, null, true);
 
 
         mb.addModifiers(Modifier.PUBLIC);
@@ -108,4 +110,5 @@ public class DictionaryGenerator {
             throw e;
         }
     }
+
 }

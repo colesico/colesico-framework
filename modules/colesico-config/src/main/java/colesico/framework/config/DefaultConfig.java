@@ -21,31 +21,19 @@ package colesico.framework.config;
 import java.lang.annotation.*;
 
 /**
- * Configuration prototype declaration.
- * This annotation should annotate each configuration prototype.
+ * This annotation can be applied to configuration belongs to MESSAGE model
+ * to specify that this configuration must be used when the "@Classed" annotation is not specified.
+ *
  * <p>
  *
  * @author Vladlen Larionov
  * @see ConfigModel
- * @see DefaultConfig
+ * @see ConfigPrototype
+ * <p>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
+@Inherited
 @Documented
-public @interface ConfigPrototype {
-
-    /**
-     * Defines the configuration model
-     *
-     * @return
-     * @see ConfigModel
-     */
-    ConfigModel model();
-
-    /**
-     * Class in which the configuration will be injected.
-     * This value is used for MESSAGE config model to specify the target for that this config is designed.
-     * @return
-     */
-    Class<?> target() default Object.class;
+public @interface DefaultConfig {
 }

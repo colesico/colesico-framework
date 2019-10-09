@@ -19,6 +19,7 @@
 package colesico.framework.ioc.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.assist.codegen.model.MethodElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,14 +34,25 @@ abstract public class FactoryElement {
     protected final ScopeElement scope;
 
     protected final Boolean polyproduce;
+
     protected final String named;
     protected final String classed;
 
     protected final List<InjectableElement> parameters = new ArrayList<>();
 
+    protected final List<MethodElement> postConstructListeners = new ArrayList<>();
+    protected boolean notifyPostConstruct = true;
+
+    protected String postProduceListener = null;
+
     protected int factoryIndex = -1;
 
-    public FactoryElement(ClassType suppliedType, String factoryMethodBaseName, ScopeElement scope, Boolean polyproduce, String named, String classed) {
+    public FactoryElement(ClassType suppliedType,
+                          String factoryMethodBaseName,
+                          ScopeElement scope,
+                          Boolean polyproduce,
+                          String named,
+                          String classed) {
         this.suppliedType = suppliedType;
         this.factoryMethodBaseName = factoryMethodBaseName;
         this.scope = scope;
@@ -85,4 +97,27 @@ abstract public class FactoryElement {
         parameters.add(parameter);
     }
 
+    public List<MethodElement> getPostConstructListeners() {
+        return postConstructListeners;
+    }
+
+    public void addPostConstructListeners(List<MethodElement> listeners) {
+        this.postConstructListeners.addAll(listeners);
+    }
+
+    public boolean isNotifyPostConstruct() {
+        return notifyPostConstruct;
+    }
+
+    public void setNotifyPostConstruct(boolean notifyPostConstruct) {
+        this.notifyPostConstruct = notifyPostConstruct;
+    }
+
+    public String getPostProduceListener() {
+        return postProduceListener;
+    }
+
+    public void setPostProduceListener(String postProduceListener) {
+        this.postProduceListener = postProduceListener;
+    }
 }

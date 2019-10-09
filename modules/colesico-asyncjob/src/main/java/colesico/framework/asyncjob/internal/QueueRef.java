@@ -1,21 +1,21 @@
 package colesico.framework.asyncjob.internal;
 
-import colesico.framework.asyncjob.JobQueueConfig;
+import colesico.framework.asyncjob.JobQueueConfigPrototype;
 
 public final class QueueRef {
 
-    private final JobQueueConfig config;
+    private final JobQueueConfigPrototype config;
 
     /**
      * Time in milliseconds, during  that  the queue can not be captured by the worker
      */
     private volatile long capturedTill = 0;
 
-    public QueueRef(JobQueueConfig config) {
+    public QueueRef(JobQueueConfigPrototype config) {
         this.config = config;
     }
 
-    public JobQueueConfig getConfig() {
+    public JobQueueConfigPrototype getConfig() {
         return config;
     }
 

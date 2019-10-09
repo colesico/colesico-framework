@@ -1,10 +1,7 @@
 package colesico.framework.assist.codegen.model;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.util.ElementFilter;
 import java.util.HashMap;
@@ -20,8 +17,8 @@ public class AnnotationMirrorElement extends ParserElement {
     }
 
     @Override
-    public Element unwrap() {
-        return originAnnotationMirror.getAnnotationType().asElement();
+    public TypeElement unwrap() {
+        return (TypeElement) originAnnotationMirror.getAnnotationType().asElement();
     }
 
     public DeclaredType getType() {

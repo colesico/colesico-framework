@@ -7,7 +7,7 @@ import colesico.framework.config.ConfigPrototype;
  * Queue configuration
  */
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class JobQueueConfig {
+abstract public class JobQueueConfigPrototype {
     /**
      * Database table name for storing jobs
      *

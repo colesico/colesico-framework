@@ -136,8 +136,6 @@ public final class LazyIocContainer implements AdvancedIoc {
             }
         } catch (StackOverflowError soe) {
             throw new IocException(String.format(CIRCULAR_DEP_ERR_MSG, key.toString()));
-        } catch (Exception e){
-
         }
     }
 }

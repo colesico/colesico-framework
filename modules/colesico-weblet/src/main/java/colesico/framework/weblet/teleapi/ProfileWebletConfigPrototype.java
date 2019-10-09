@@ -15,18 +15,15 @@
  * limitations under the License.
  *
  */
-package colesico.framework.service;
 
-import java.lang.annotation.*;
+package colesico.framework.weblet.teleapi;
 
-/**
- * Defines service  method to intercept after service instance creation
- *
- * @author Vladlen Larionov
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
-@Inherited
-@Documented
-public @interface PostConstruct {
+import colesico.framework.config.ConfigModel;
+import colesico.framework.config.ConfigPrototype;
+
+@ConfigPrototype(model = ConfigModel.SINGLE)
+abstract public class ProfileWebletConfigPrototype {
+
+    abstract public int getCookieValidityDays();
+
 }

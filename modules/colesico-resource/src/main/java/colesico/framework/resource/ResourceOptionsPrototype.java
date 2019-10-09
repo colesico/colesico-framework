@@ -29,7 +29,7 @@ import colesico.framework.config.ConfigPrototype;
  * @author Vladlen Larionov
  */
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class ResourceConfig {
+abstract public class ResourceOptionsPrototype {
 
     /**
      * Allows to specify path prefix rewritings: from path prefix -> to path prefix

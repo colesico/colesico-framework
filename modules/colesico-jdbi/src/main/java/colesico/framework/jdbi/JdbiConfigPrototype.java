@@ -8,9 +8,9 @@ import org.jdbi.v3.core.Jdbi;
 import javax.sql.DataSource;
 
 @ConfigPrototype(model = ConfigModel.MESSAGE, target = Jdbi.class)
-abstract public class JdbiConfig {
+abstract public class JdbiConfigPrototype {
 
     abstract public DataSource getDataSource();
 
-    abstract public Polysupplier<JdbiOptions> getOptions();
+    abstract public Polysupplier<JdbiOptionsPrototype> getOptions();
 }

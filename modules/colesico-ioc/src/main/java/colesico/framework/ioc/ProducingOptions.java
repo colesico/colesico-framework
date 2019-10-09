@@ -16,15 +16,22 @@
  *
  */
 
-package colesico.framework.weblet;
+package colesico.framework.ioc;
 
-import colesico.framework.config.ConfigModel;
-import colesico.framework.config.ConfigPrototype;
+import java.lang.annotation.*;
 
 /**
+ * Producer method code generation options
+ *
  * @author Vladlen Larionov
+ * @see Polysupplier
  */
-@ConfigPrototype(model = ConfigModel.SINGLE)
-abstract public class WebletConfig {
+@Retention(RetentionPolicy.SOURCE)
+@Target({ElementType.METHOD})
+@Inherited
+@Documented
+public @interface ProducingOptions {
+    boolean postConstruct() default false;
 
+    String postProduce() default "";
 }

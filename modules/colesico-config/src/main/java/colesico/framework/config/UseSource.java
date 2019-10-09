@@ -18,32 +18,39 @@
 
 package colesico.framework.config;
 
-import colesico.framework.ioc.Rank;
-
 import java.lang.annotation.*;
 
 /**
- * The declaration of the configuration.
- * Each configuration should extend the configuration prototype  and be annotated with this annotation.
+ * Configuration source definition for configuration.
+ * <p>
+ * Configuration source contains a configuration values.
+ * For example it can be a .properties file or a .yaml file or even sql data base,
+ * or remote json resource accessible by http
  * <p>
  *
  * @author Vladlen Larionov
- * @see ConfigModel
- * @see ConfigPrototype
- * @see Default
+ * @see SourceValue
+ * @see ConfigSourceDriver
+ * @see Config
  * <p>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
-public @interface Configuration {
+public @interface UseSource {
 
     /**
-     * Defines configuration rank.
-     * RANK_DEFAULT is used to have ability to override the define default configuration with MINOR rank.
+     * Config source driver
      *
      * @return
      */
-    String rank() default Rank.RANK_DEFAULT;
+    Class<? extends ConfigSourceDriver> driver();
+
+    /**
+     * Config registry connection URI
+     *
+     * @return
+     */
+    String uri();
 }

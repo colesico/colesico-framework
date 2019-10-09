@@ -15,31 +15,36 @@
  * limitations under the License.
  *
  */
-package colesico.framework.undertow;
 
+package colesico.framework.config;
 
-import colesico.framework.config.ConfigModel;
-import colesico.framework.config.ConfigPrototype;
-import colesico.framework.http.HttpMethod;
-import io.undertow.Undertow;
-import io.undertow.server.HttpHandler;
+import colesico.framework.ioc.Rank;
+
+import java.lang.annotation.*;
 
 /**
+ * The declaration of the configuration.
+ * Each configuration should extend the configuration prototype  and be annotated with this annotation.
+ * <p>
+ *
  * @author Vladlen Larionov
+ * @see ConfigModel
+ * @see ConfigPrototype
+ * @see DefaultConfig
+ * @see UseSource
+ * <p>
  */
-@ConfigPrototype(model = ConfigModel.SINGLE)
-abstract public class UndertowConfig {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Inherited
+@Documented
+public @interface Config {
+
     /**
-     * Use this method to setup undertow builder options
-     * @param builder
+     * Defines configuration rank.
+     * RANK_DEFAULT is used to have ability to override the define default configuration with MINOR rank.
+     *
+     * @return
      */
-    abstract public void applyOptions(Undertow.Builder builder);
-
-    public HttpHandler getRootHandler(HttpHandler nextHandler) {
-        return nextHandler; // use default root handler
-    }
-
-    public int getMaxIndividualFileSize() {
-        return 1024 * 1024 * 10; // 10 MB
-    }
+    String rank() default Rank.RANK_DEFAULT;
 }

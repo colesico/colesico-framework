@@ -22,9 +22,8 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileConfig;
 import colesico.framework.profile.teleapi.ProfileTeleAssist;
-import colesico.framework.weblet.teleapi.ProfileWebletConfig;
+import colesico.framework.weblet.teleapi.ProfileWebletConfigPrototype;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WriterContext;
 
@@ -39,11 +38,11 @@ public class ProfileWriter implements WebletTeleWriter<Profile> {
     public static final String COOKIE_NAME = "profile";
     public static final String HEADER_NAME = "Localization";
 
-    protected final ProfileWebletConfig config;
+    protected final ProfileWebletConfigPrototype config;
     protected final ProfileTeleAssist profileTeleAssist;
     protected final Provider<HttpContext> httpContextProv;
 
-    public ProfileWriter(ProfileWebletConfig config, ProfileTeleAssist profileTeleAssist, Provider<HttpContext> httpContextProv) {
+    public ProfileWriter(ProfileWebletConfigPrototype config, ProfileTeleAssist profileTeleAssist, Provider<HttpContext> httpContextProv) {
         this.config = config;
         this.profileTeleAssist = profileTeleAssist;
         this.httpContextProv = httpContextProv;

@@ -34,7 +34,7 @@ public interface ResourceKit {
      * E.g for the rewriting  '/etc/srv'->'/foo'   path '/etc/srv/generator/x' will be rewritten to '/foo/generator/x'
      *
      * @return
-     * @see ResourceConfig
+     * @see ResourceOptionsPrototype
      */
     String rewrite(String resourcePath);
 

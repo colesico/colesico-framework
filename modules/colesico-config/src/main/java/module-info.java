@@ -35,6 +35,7 @@ module colesico.framework.config {
 
     // API
     exports colesico.framework.config;
+    exports colesico.framework.config.internal to colesico.framework.ioc;
 
     // Code generation
     exports colesico.framework.config.codegen;

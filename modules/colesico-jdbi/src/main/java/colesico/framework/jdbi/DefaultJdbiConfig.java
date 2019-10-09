@@ -4,12 +4,12 @@ import colesico.framework.ioc.Polysupplier;
 
 import javax.sql.DataSource;
 
-public class DefaultJdbiConfig extends JdbiConfig {
+public class DefaultJdbiConfig extends JdbiConfigPrototype {
 
     protected final DataSource dataSource;
-    protected final Polysupplier<JdbiOptions> options;
+    protected final Polysupplier<JdbiOptionsPrototype> options;
 
-    public DefaultJdbiConfig(DataSource dataSource, Polysupplier<JdbiOptions> options) {
+    public DefaultJdbiConfig(DataSource dataSource, Polysupplier<JdbiOptionsPrototype> options) {
         this.dataSource = dataSource;
         this.options = options;
     }
@@ -19,7 +19,7 @@ public class DefaultJdbiConfig extends JdbiConfig {
     }
 
     @Override
-    public Polysupplier<JdbiOptions> getOptions() {
+    public Polysupplier<JdbiOptionsPrototype> getOptions() {
         return options;
     }
 

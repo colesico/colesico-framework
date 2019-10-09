@@ -16,23 +16,15 @@
  *
  */
 
-package colesico.framework.weblet.teleapi;
+package colesico.framework.weblet;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
-import colesico.framework.security.assist.MACUtils;
 
+/**
+ * @author Vladlen Larionov
+ */
 @ConfigPrototype(model = ConfigModel.SINGLE)
-abstract public class PrincipalWebletConfig {
-
-    abstract public byte[] getSignatureKey();
-
-    public String getSignatureAlgorithm() {
-        return MACUtils.HmacSHA256;
-    }
-
-    public int getCookieValidityDays() {
-        return 14;
-    }
+abstract public class WebletConfigPrototype {
 
 }

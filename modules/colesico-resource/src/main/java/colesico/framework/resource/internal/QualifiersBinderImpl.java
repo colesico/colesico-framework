@@ -1,8 +1,8 @@
 package colesico.framework.resource.internal;
 
-import colesico.framework.resource.ResourceConfig;
+import colesico.framework.resource.ResourceOptionsPrototype;
 
-final class QualifiersBinderImpl implements ResourceConfig.QualifiersBinder {
+final class QualifiersBinderImpl implements ResourceOptionsPrototype.QualifiersBinder {
 
     private final LocalizingTool localizationTool;
 
@@ -11,7 +11,7 @@ final class QualifiersBinderImpl implements ResourceConfig.QualifiersBinder {
     }
 
     @Override
-    public ResourceConfig.QualifiersBinder bind(String path, String... qualifiersSetSpec) {
+    public ResourceOptionsPrototype.QualifiersBinder bind(String path, String... qualifiersSetSpec) {
         localizationTool.addQualifiers(path, qualifiersSetSpec);
         return this;
     }

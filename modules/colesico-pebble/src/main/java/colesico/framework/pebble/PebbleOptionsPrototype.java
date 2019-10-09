@@ -16,14 +16,18 @@
  *
  */
 
-package colesico.framework.weblet.teleapi;
+package colesico.framework.pebble;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
+import com.mitchellbosecke.pebble.PebbleEngine;
 
-@ConfigPrototype(model = ConfigModel.SINGLE)
-abstract public class ProfileWebletConfig {
-
-    abstract public int getCookieValidityDays();
-
+/**
+ * This config is used to set pebble engine building options
+ *
+ * @author Vladlen Larionov
+ */
+@ConfigPrototype(model = ConfigModel.POLYVARIANT)
+abstract public class PebbleOptionsPrototype {
+    abstract public void applyOptions(PebbleEngine.Builder builder);
 }

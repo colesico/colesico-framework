@@ -18,10 +18,8 @@
 package colesico.framework.undertow.internal;
 
 
-import colesico.framework.undertow.UndertowConfig;
+import colesico.framework.undertow.UndertowConfigPrototype;
 import io.undertow.Undertow;
-import io.undertow.UndertowOptions;
-import org.xnio.Options;
 
 import javax.inject.Singleton;
 
@@ -32,7 +30,7 @@ import javax.inject.Singleton;
  */
 
 @Singleton
-public final class UndertowConfigImpl extends UndertowConfig {
+public final class UndertowConfigImpl extends UndertowConfigPrototype {
 
     @Override
     public void applyOptions(Undertow.Builder builder) {

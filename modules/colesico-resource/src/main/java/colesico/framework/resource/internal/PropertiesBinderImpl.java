@@ -1,8 +1,8 @@
 package colesico.framework.resource.internal;
 
-import colesico.framework.resource.ResourceConfig;
+import colesico.framework.resource.ResourceOptionsPrototype;
 
-public class PropertiesBinderImpl implements ResourceConfig.PropertiesBinder {
+public class PropertiesBinderImpl implements ResourceOptionsPrototype.PropertiesBinder {
 
     private final EvaluationTool evaluationTool;
 
@@ -11,7 +11,7 @@ public class PropertiesBinderImpl implements ResourceConfig.PropertiesBinder {
     }
 
     @Override
-    public ResourceConfig.PropertiesBinder bind(String name, String value) {
+    public ResourceOptionsPrototype.PropertiesBinder bind(String name, String value) {
         evaluationTool.addProperty(name, value);
         return this;
     }

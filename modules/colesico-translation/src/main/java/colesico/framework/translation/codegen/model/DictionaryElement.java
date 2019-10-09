@@ -12,6 +12,9 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Represents dictionary bean
+ */
 public class DictionaryElement {
 
     private final ClassElement originBean;

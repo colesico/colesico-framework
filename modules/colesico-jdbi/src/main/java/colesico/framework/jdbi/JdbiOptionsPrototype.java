@@ -5,6 +5,6 @@ import colesico.framework.config.ConfigPrototype;
 import org.jdbi.v3.core.Jdbi;
 
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class JdbiOptions {
+abstract public class JdbiOptionsPrototype {
     abstract public void apply(final Jdbi jdbi);
 }

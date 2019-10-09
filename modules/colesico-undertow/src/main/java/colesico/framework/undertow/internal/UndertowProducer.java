@@ -22,7 +22,7 @@ import colesico.framework.ioc.Producer;
 import colesico.framework.undertow.ErrorHandler;
 import colesico.framework.undertow.HttpServer;
 import colesico.framework.undertow.RouterHandler;
-import colesico.framework.undertow.UndertowConfig;
+import colesico.framework.undertow.UndertowConfigPrototype;
 
 import javax.inject.Singleton;
 
@@ -48,7 +48,7 @@ public class UndertowProducer {
     }
 
     // Default configuration
-    public UndertowConfig getUndertowConfig(UndertowConfigImpl impl){
+    public UndertowConfigPrototype getUndertowConfig(UndertowConfigImpl impl){
         return impl;
     }
 

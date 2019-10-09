@@ -18,6 +18,7 @@
 
 package colesico.framework.service.codegen.parser;
 
+import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
 import colesico.framework.ioc.CustomScope;
 import colesico.framework.assist.codegen.CodegenException;
@@ -28,6 +29,7 @@ import colesico.framework.service.ServiceMethod;
 import colesico.framework.service.codegen.model.ProxyMethodElement;
 import colesico.framework.service.codegen.model.ServiceElement;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
@@ -35,28 +37,29 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import java.util.List;
 
-public class ServiceParser {
+public class ServiceParser extends FrameworkAbstractParser {
 
     protected final ProcessorContext context;
 
     protected final TeleFacadesParser teleFacadesParser;
 
     public ServiceParser(ProcessorContext context) {
+        super(context.getProcessingEnv());
         this.context = context;
         this.teleFacadesParser = new TeleFacadesParser(context);
     }
 
     protected ClassType getServiceScope(ClassElement serviceElement) {
-        List<AnnotationMirrorElement> annMirors = serviceElement.getAnnotationMirrors();
-        DeclaredType scopeType = null;
-        for (AnnotationMirrorElement annMirr : annMirors) {
-            DeclaredType annType = annMirr.getType();
-            CustomScope customScope = annType.getAnnotation(CustomScope.class);
+        List<AnnotationMirrorElement> annMirorElements = serviceElement.getAnnotationMirrors();
+        TypeElement scopeType = null;
+        for (AnnotationMirrorElement annMirrorElm : annMirorElements) {
+            TypeElement annTypeElm = annMirrorElm.unwrap();
+            CustomScope customScope = annTypeElm.getAnnotation(CustomScope.class);
             if (customScope != null) {
                 if (scopeType != null) {
                     throw CodegenException.of().message("Ambiguous scope declaration").element(serviceElement).build();
                 } else {
-                    scopeType = annType;
+                    scopeType = annTypeElm;
                 }
             }
         }
@@ -111,7 +114,7 @@ public class ServiceParser {
 
             AnnotationElement<LocalMethod> methodLocal = method.getAnnotation(LocalMethod.class);
             boolean isLocal = methodLocal != null || classLocalAnn != null
-                    || !method.unwrap().getModifiers().contains(Modifier.PUBLIC);
+                || !method.unwrap().getModifiers().contains(Modifier.PUBLIC);
 
             ProxyMethodElement proxyMethod = new ProxyMethodElement(method, isPlain, isLocal);
             serviceElement.addProxyMethod(proxyMethod);

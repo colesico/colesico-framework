@@ -24,7 +24,7 @@ import colesico.framework.ioc.ThreadScope;
 import colesico.framework.router.Router;
 import colesico.framework.undertow.ErrorHandler;
 import colesico.framework.undertow.RouterHandler;
-import colesico.framework.undertow.UndertowConfig;
+import colesico.framework.undertow.UndertowConfigPrototype;
 import io.undertow.server.HttpServerExchange;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -46,13 +46,13 @@ public class RouterHandlerImpl implements RouterHandler {
     protected final ThreadScope threadScope;
     protected final Router router;
     protected final ErrorHandler errorHandler;
-    protected final UndertowConfig config;
+    protected final UndertowConfigPrototype config;
 
     @Inject
     public RouterHandlerImpl(ThreadScope threadScope,
                              Router router,
                              ErrorHandler errorHandler,
-                             UndertowConfig config) {
+                             UndertowConfigPrototype config) {
         this.threadScope = threadScope;
         this.router = router;
         this.errorHandler = errorHandler;

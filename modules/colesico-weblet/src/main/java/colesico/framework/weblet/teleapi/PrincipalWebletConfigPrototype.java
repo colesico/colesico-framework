@@ -16,18 +16,23 @@
  *
  */
 
-package colesico.framework.pebble;
+package colesico.framework.weblet.teleapi;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
-import com.mitchellbosecke.pebble.PebbleEngine;
+import colesico.framework.security.assist.MACUtils;
 
-/**
- * This config is used to set pebble engine building options
- *
- * @author Vladlen Larionov
- */
-@ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class PebbleOptionsConfig {
-    abstract public void applyOptions(PebbleEngine.Builder builder);
+@ConfigPrototype(model = ConfigModel.SINGLE)
+abstract public class PrincipalWebletConfigPrototype {
+
+    abstract public byte[] getSignatureKey();
+
+    public String getSignatureAlgorithm() {
+        return MACUtils.HmacSHA256;
+    }
+
+    public int getCookieValidityDays() {
+        return 14;
+    }
+
 }

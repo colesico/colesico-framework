@@ -36,6 +36,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.lang.model.element.*;
@@ -76,7 +78,7 @@ public class ServiceProxyGenerator {
     protected MethodElement findInjectableConstructor(ServiceElement serviceElement) {
 
         List<MethodElement> constructors = serviceElement.getOriginClass().getConstructorsFiltered(
-                c -> c.unwrap().getModifiers().contains(Modifier.PUBLIC) & !c.unwrap().getModifiers().contains(Modifier.FINAL)
+            c -> c.unwrap().getModifiers().contains(Modifier.PUBLIC) & !c.unwrap().getModifiers().contains(Modifier.FINAL)
         );
         MethodElement constructor = null;
         MethodElement firstConstructor = null;
@@ -119,7 +121,7 @@ public class ServiceProxyGenerator {
 
                 String annNamedVal = namedAnn != null ? namedAnn.unwrap().value() : "";
                 TypeName annClassedVal = classedAnn != null ? TypeName.get(classedAnn.getValueTypeMirror(a -> a.value()))
-                        : ClassName.get(Object.class);
+                    : ClassName.get(Object.class);
 
                 if (annNamedVal.equals(fieldNamedVal) && annClassedVal.equals(fieldClassedVal)) {
                     similarParam = paramElm;
@@ -136,7 +138,7 @@ public class ServiceProxyGenerator {
 
 
         MethodSpec.Builder constructorBuilder = CodegenUtils.createProxyMethodBuilder(
-                constructor, null, METHOD_PARAM_PREFIX, false
+            constructor, null, METHOD_PARAM_PREFIX, false
         );
 
         constructorBuilder.addAnnotation(Inject.class);
@@ -180,33 +182,15 @@ public class ServiceProxyGenerator {
             constructorBuilder.addCode(cb);
         }
 
-        //Generate PostConstruct invocations
-        generatePostConstructInvocations(serviceElement, constructorBuilder);
-
         proxyBuilder.addMethod(constructorBuilder.build());
-    }
-
-
-    private void generatePostConstructInvocations(ServiceElement serviceElement, MethodSpec.Builder constructorBuilder) {
-        for (ProxyMethodElement pme : serviceElement.getProxyMethods()) {
-            if (pme.getOriginMethod().getAnnotation(PostConstruct.class) == null) {
-                continue;
-            }
-            if (!pme.getOriginMethod().getParameters().isEmpty()) {
-                throw CodegenException.of().message("Post construct method '"
-                        + serviceElement.getOriginClass().getName()
-                        + "." + pme.getName() + "(...)'  should not have arguments").element(pme.getOriginMethod()).build();
-            }
-            constructorBuilder.addStatement("$N()", pme.getName());
-        }
     }
 
     protected void generateGetSuperClassMethod(ServiceElement service) {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(GET_SUPER_CLASS_METHOD);
         mb.addAnnotation(Override.class)
-                .addModifiers(Modifier.PUBLIC)
-                .returns(ParameterizedTypeName.get(ClassName.get(Class.class), WildcardTypeName.subtypeOf(Object.class)))
-                .addStatement("return $T.class", TypeName.get(service.getOriginClass().asType()));
+            .addModifiers(Modifier.PUBLIC)
+            .returns(ParameterizedTypeName.get(ClassName.get(Class.class), WildcardTypeName.subtypeOf(Object.class)))
+            .addStatement("return $T.class", TypeName.get(service.getOriginClass().asType()));
 
         service.addCustomMethod(new CustomMethodElement(mb.build()));
     }
@@ -261,10 +245,10 @@ public class ServiceProxyGenerator {
         String paramsArrayLiteral = "{" + String.join(",", paramNames) + "}";
 
         proxyMethodBuilder.addStatement("final $T " + INV_CONTEXT_VARIABLE + "=new $T(this,$S,new $T[]$L," + INTERCEPTORS_CHAIN_VARIABLE + ")",
-                ClassName.get(InvocationContext.class),
-                ClassName.get(InvocationContext.class),
-                methodElement.getName(),
-                ArrayTypeName.get(Object.class), paramsArrayLiteral);
+            ClassName.get(InvocationContext.class),
+            ClassName.get(InvocationContext.class),
+            methodElement.getName(),
+            ArrayTypeName.get(Object.class), paramsArrayLiteral);
         TypeMirror returnType = methodElement.getReturnType();
         boolean voidResult = returnType instanceof NoType;
 
@@ -272,7 +256,7 @@ public class ServiceProxyGenerator {
             proxyMethodBuilder.addStatement(INV_CONTEXT_VARIABLE + "." + InvocationContext.PROCEED_METHOD + "()");
         } else {
             proxyMethodBuilder.addStatement("return ($T)" + INV_CONTEXT_VARIABLE + "." + InvocationContext.PROCEED_METHOD + "()",
-                    TypeName.get(methodElement.getReturnType()));
+                TypeName.get(methodElement.getReturnType()));
         }
     }
 
@@ -285,12 +269,20 @@ public class ServiceProxyGenerator {
             }
 
             MethodSpec.Builder proxyMethodBuilder = CodegenUtils.createProxyMethodBuilder(
-                    method.getOriginMethod(), null, METHOD_PARAM_PREFIX, true
+                method.getOriginMethod(), null, METHOD_PARAM_PREFIX, true
             );
 
+            if (method.getOriginMethod().getAnnotation(PostConstruct.class) != null) {
+                proxyMethodBuilder.addAnnotation(PostConstruct.class);
+            }
+
+            if (method.getOriginMethod().getAnnotation(PreDestroy.class) != null) {
+                proxyMethodBuilder.addAnnotation(PreDestroy.class);
+            }
+
             proxyMethodBuilder.addStatement("final $T " + INTERCEPTORS_CHAIN_VARIABLE + "= new $T()",
-                    ClassName.get(InterceptorsChain.class),
-                    ClassName.get(InterceptorsChain.class));
+                ClassName.get(InterceptorsChain.class),
+                ClassName.get(InterceptorsChain.class));
 
             // Adds interceptors code for each interception  phase
             for (String intrcPhase : context.getInterceptionPhases().getPhaseOrder()) {

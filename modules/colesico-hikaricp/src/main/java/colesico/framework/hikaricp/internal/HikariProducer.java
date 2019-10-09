@@ -1,6 +1,6 @@
 package colesico.framework.hikaricp.internal;
 
-import colesico.framework.hikaricp.HikariConfiguration;
+import colesico.framework.hikaricp.HikariConfigPrototype;
 import colesico.framework.hikaricp.HikariProperties;
 import colesico.framework.ioc.*;
 import com.zaxxer.hikari.HikariDataSource;
@@ -24,9 +24,9 @@ public class HikariProducer {
      *
      * @return
      */
-    @Classed(HikariConfiguration.class)
+    @Classed(HikariConfigPrototype.class)
     @Unscoped
-    public DataSource hikariDataSourceFactory(@Message HikariConfiguration settings) {
+    public DataSource hikariDataSourceFactory(@Message HikariConfigPrototype settings) {
         try {
             HikariDataSource dataSource = new HikariDataSource(settings.getDataSourceConfig());
             log.debug("Hikari DB connection pool has been created with configuration: " + settings);
@@ -47,7 +47,7 @@ public class HikariProducer {
      */
     @Singleton
     @Classed(HikariProperties.class)
-    public DataSource propertiesBasedHikariDataSource(@Classed(HikariConfiguration.class) Supplier<DataSource> hdsFactory) {
+    public DataSource propertiesBasedHikariDataSource(@Classed(HikariConfigPrototype.class) Supplier<DataSource> hdsFactory) {
         return hdsFactory.get(new HikariProperties());
     }
 

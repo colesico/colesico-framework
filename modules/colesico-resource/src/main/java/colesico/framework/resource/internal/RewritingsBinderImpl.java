@@ -18,9 +18,9 @@
 
 package colesico.framework.resource.internal;
 
-import colesico.framework.resource.ResourceConfig;
+import colesico.framework.resource.ResourceOptionsPrototype;
 
-final class RewritingsBinderImpl implements ResourceConfig.RewritingsBinder {
+final class RewritingsBinderImpl implements ResourceOptionsPrototype.RewritingsBinder {
 
     private final RewritingTool rewritingTool;
 
@@ -29,7 +29,7 @@ final class RewritingsBinderImpl implements ResourceConfig.RewritingsBinder {
     }
 
     @Override
-    public ResourceConfig.RewritingsBinder bind(String originPathPrefix, String targetPathPrefix) {
+    public ResourceOptionsPrototype.RewritingsBinder bind(String originPathPrefix, String targetPathPrefix) {
         rewritingTool.addRewriting(originPathPrefix, targetPathPrefix);
         return this;
     }

@@ -15,37 +15,30 @@
  * limitations under the License.
  *
  */
+package colesico.framework.undertow;
 
-package colesico.framework.config;
 
-import java.lang.annotation.*;
+import colesico.framework.config.ConfigModel;
+import colesico.framework.config.ConfigPrototype;
+import io.undertow.Undertow;
+import io.undertow.server.HttpHandler;
 
 /**
- * Configuration prototype declaration.
- * This annotation should annotate each configuration prototype.
- * <p>
- *
  * @author Vladlen Larionov
- * @see ConfigModel
- * @see DefaultConfig
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@Documented
-public @interface ConfigPrototype {
-
+@ConfigPrototype(model = ConfigModel.SINGLE)
+abstract public class UndertowConfigPrototype {
     /**
-     * Defines the configuration model
-     *
-     * @return
-     * @see ConfigModel
+     * Use this method to setup undertow builder options
+     * @param builder
      */
-    ConfigModel model();
+    abstract public void applyOptions(Undertow.Builder builder);
 
-    /**
-     * Class in which the configuration will be injected.
-     * This value is used for MESSAGE config model to specify the target for that this config is designed.
-     * @return
-     */
-    Class<?> target() default Object.class;
+    public HttpHandler getRootHandler(HttpHandler nextHandler) {
+        return nextHandler; // use default root handler
+    }
+
+    public int getMaxIndividualFileSize() {
+        return 1024 * 1024 * 10; // 10 MB
+    }
 }

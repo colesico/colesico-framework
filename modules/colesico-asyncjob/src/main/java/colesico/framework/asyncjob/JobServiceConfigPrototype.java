@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.time.Duration;
 
 @ConfigPrototype(model = ConfigModel.SINGLE)
-abstract public class JobServiceConfig {
+abstract public class JobServiceConfigPrototype {
 
     public static final Long DEFAULT_IDLE_TIMEOUT = Duration.ofSeconds(20).toMillis();
     public static final Long DEFAULT_CAPTURE_TIMEOUT = Duration.ofSeconds(60).toMillis();

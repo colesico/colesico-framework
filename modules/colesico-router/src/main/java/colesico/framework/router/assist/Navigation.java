@@ -48,15 +48,6 @@ public class Navigation<N extends Navigation> {
     public Navigation() {
     }
 
-    public Navigation(Class<?> serviceClass, String methodName) {
-        this.serviceClass = serviceClass;
-        this.methodName = methodName;
-    }
-
-    public Navigation(String uri) {
-        this.uri = uri;
-    }
-
     public N uri(String uri) {
         this.uri = uri;
         return (N) this;

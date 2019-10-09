@@ -19,8 +19,10 @@
 package colesico.framework.config.codegen;
 
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
+import colesico.framework.config.ConfigSourceDriver;
 import colesico.framework.ioc.Classed;
 import colesico.framework.ioc.Polyproduce;
+import colesico.framework.ioc.Produce;
 import colesico.framework.ioc.Supplier;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import com.squareup.javapoet.*;
@@ -32,6 +34,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import java.util.List;
 
 /**
  * @author Vladlen Larionov
@@ -47,22 +50,17 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         super(processingEnv);
     }
 
-    protected MethodSpec.Builder createProducingMethodBuilder(final ProducerGenerator prodGen, final ConfigElement confElement, String methodSuffix) {
-        if (methodSuffix == null) {
-            methodSuffix = "";
-        }
-
-        String methodName = "get" + confElement.getImplementation().getSimpleName() + methodSuffix;
+    protected MethodSpec.Builder createProducingOnPrototypeMethodBuilder(final ProducerGenerator prodGen, final ConfigElement confElement) {
+        String methodName = "get" + confElement.getImplementation().getSimpleName();
         MethodSpec.Builder mb = prodGen.addProduceMethod(methodName, TypeName.get(confElement.getPrototype().asType()));
         mb.addParameter(TypeName.get(confElement.getImplementation().asType()), CONF_PARAM, Modifier.FINAL);
-
         // Add return config internal
         mb.addStatement("return $N", CONF_PARAM);
         return mb;
     }
 
     protected void generateProduceSingleConfigPrototype(ProducerGenerator prodGen, ConfigElement confElement) {
-        MethodSpec.Builder mb = createProducingMethodBuilder(prodGen, confElement, null);
+        MethodSpec.Builder mb = createProducingOnPrototypeMethodBuilder(prodGen, confElement);
         AnnotationSpec.Builder singletonAnn = AnnotationSpec.builder(Singleton.class);
         mb.addAnnotation(singletonAnn.build());
 
@@ -77,8 +75,8 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         }
     }
 
-    protected void generateProducePolyvariantConfigPrototype(ProducerGenerator prodGen, ConfigElement confElement) {
-        MethodSpec.Builder mb = createProducingMethodBuilder(prodGen, confElement, null);
+    private void generateProducePolyvariantConfigPrototype(ProducerGenerator prodGen, ConfigElement confElement) {
+        MethodSpec.Builder mb = createProducingOnPrototypeMethodBuilder(prodGen, confElement);
         AnnotationSpec.Builder singletonAnn = AnnotationSpec.builder(Singleton.class);
         mb.addAnnotation(singletonAnn.build());
         AnnotationSpec.Builder polyAnn = AnnotationSpec.builder(Polyproduce.class);
@@ -134,38 +132,66 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         );
     }
 
-    protected void generateProducerClass(ConfigElement confElement) {
+    private void generateInitSourceValues(String postProduceMethodName, ConfigElement confElement, ProducerGenerator prodGen) {
+        MethodSpec.Builder mb = prodGen.addMethod(postProduceMethodName, Modifier.PROTECTED);
+        mb.addParameter(TypeName.get(confElement.getImplementation().asClassType().unwrap()), postProduceMethodName);
+        mb.returns(TypeName.VOID);
+        CodeBlock.Builder cb = CodeBlock.builder();
+        cb.addStatement("final $T connection = null",ClassName.get(ConfigSourceDriver.Connection.class));
+        cb.add("try {\n");
+        cb.indent();
+        //TODO: init values code
+        cb.unindent();
+        cb.add("} finally {\n");
+        cb.indent();
+        cb.addStatement("connection.$N()", ConfigSourceDriver.Connection.CLOSE_METHD);
+        cb.unindent();
+        cb.add("}\n");
+        mb.addCode(cb.build());
+    }
+
+    private void generateProducerClass(ConfigElement confElement) {
         String classSimpleName = confElement.getImplementation().getSimpleName();
         String packageName = confElement.getImplementation().getPackageName();
 
-        ProducerGenerator producerGenerator = new ProducerGenerator(packageName, classSimpleName, this.getClass(), getProcessingEnv());
-        producerGenerator.setProducerRank(confElement.getRank());
+        ProducerGenerator prodGen = new ProducerGenerator(packageName, classSimpleName, this.getClass(), getProcessingEnv());
+        prodGen.setProducerRank(confElement.getRank());
 
         // Generates the configuration implementation producing  via annotation @Produce
-        producerGenerator.addProduceAnnotation(TypeName.get(confElement.getImplementation().asType()));
+        AnnotationSpec.Builder produceAnn = prodGen.addProduceAnnotation(TypeName.get(confElement.getImplementation().asType()));
 
-        //Generates config prototype producing methods based on configuration implementation, etc.
-        switch (confElement.getModel()) {
-            case SINGLE: {
-                generateProduceSingleConfigPrototype(producerGenerator, confElement);
-                break;
-            }
-            case POLYVARIANT: {
-                generateProducePolyvariantConfigPrototype(producerGenerator, confElement);
-                break;
-            }
-            case MESSAGE: {
-                generateProduceClassifiedConfigurable(producerGenerator, confElement);
-                break;
+        if (confElement.getPrototype() != null) {
+            //Generates config prototype producing methods based on configuration implementation, etc.
+            switch (confElement.getModel()) {
+                case SINGLE: {
+                    generateProduceSingleConfigPrototype(prodGen, confElement);
+                    break;
+                }
+                case POLYVARIANT: {
+                    generateProducePolyvariantConfigPrototype(prodGen, confElement);
+                    break;
+                }
+                case MESSAGE: {
+                    generateProduceClassifiedConfigurable(prodGen, confElement);
+                    break;
+                }
             }
         }
-        producerGenerator.generate(confElement.getImplementation().unwrap());
+
+        // Init configuration source values
+        if (confElement.getSource() != null) {
+            String postProduceMethodName = "init" + classSimpleName;
+            produceAnn.addMember(Produce.POST_PRODUCE_METHOD, "$S", postProduceMethodName);
+            generateInitSourceValues(postProduceMethodName, confElement, prodGen);
+        }
+        
+        prodGen.generate(confElement.getImplementation().unwrap());
     }
 
-    public void generate(ConfRegistry confRegistry) {
-        for (ConfigElement ce : confRegistry.getConfigElements()) {
-            logger.debug("Generate config producing for: " + ce.toString());
-            generateProducerClass(ce);
+    public void generate(List<ConfigElement> configElements) {
+        for (ConfigElement confElement : configElements) {
+            logger.debug("Generate config producing for: " + confElement.toString());
+            generateProducerClass(confElement);
         }
     }
 }

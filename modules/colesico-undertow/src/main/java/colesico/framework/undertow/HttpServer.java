@@ -41,12 +41,12 @@ public class HttpServer {
     protected Undertow server;
     protected Undertow.Builder builder;
 
-    protected final UndertowConfig config;
+    protected final UndertowConfigPrototype config;
 
     protected final RouterHandler routerHandler;
 
     @Inject
-    public HttpServer(RouterHandler routerHandler, UndertowConfig config) {
+    public HttpServer(RouterHandler routerHandler, UndertowConfigPrototype config) {
         this.config = config;
         this.routerHandler = routerHandler;
     }

@@ -48,7 +48,7 @@ public class PebbleRenderer implements HtmlRenderer<String> {
     @Inject
     public PebbleRenderer(PebbleTemplateLoader tmplLoader,
                           FrameworkExtension frameworkExtension,
-                          Polysupplier<PebbleOptionsConfig> optionsSup) {
+                          Polysupplier<PebbleOptionsPrototype> optionsSup) {
 
         PebbleEngine.Builder builder = new PebbleEngine.Builder()
                 .loader(tmplLoader)

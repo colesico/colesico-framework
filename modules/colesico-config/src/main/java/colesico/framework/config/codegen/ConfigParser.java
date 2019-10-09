@@ -19,13 +19,11 @@
 package colesico.framework.config.codegen;
 
 import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.assist.codegen.CodegenUtils;
+import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.AnnotationElement;
 import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.config.ConfigModel;
-import colesico.framework.config.ConfigPrototype;
-import colesico.framework.config.Configuration;
-import colesico.framework.config.Default;
+import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.config.*;
 import colesico.framework.ioc.Classed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,39 +33,19 @@ import javax.inject.Named;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Vladlen Larionov
  */
-public class ConfRegistry {
+public class ConfigParser extends FrameworkAbstractParser {
 
-    private Logger logger = LoggerFactory.getLogger(ConfRegistry.class);
+    private Logger logger = LoggerFactory.getLogger(ConfigParser.class);
 
-    private final ProcessingEnvironment processingEnv;
-    private final List<ConfigElement> configElements = new ArrayList<>();
-
-    public ConfRegistry(ProcessingEnvironment processingEnv) {
-        this.processingEnv = processingEnv;
+    public ConfigParser(ProcessingEnvironment processingEnv) {
+        super(processingEnv);
     }
 
-    public boolean isEmpty() {
-        return configElements.isEmpty();
-    }
-
-    public void clear() {
-        configElements.clear();
-    }
-
-    public List<ConfigElement> getConfigElements() {
-        return configElements;
-    }
-
-    private ClassElement getConfigBaseClass(ClassElement configImplementation) {
+    private ClassElement getConfigPrototypeClass(ClassElement configImplementation) {
         TypeElement superClass = configImplementation.unwrap();
         do {
             superClass = (TypeElement) ((DeclaredType) superClass.getSuperclass()).asElement();
@@ -77,31 +55,39 @@ public class ConfRegistry {
             }
         } while (!superClass.getSimpleName().toString().equals("Object"));
 
-        throw CodegenException.of().message("Unable to determine configuration prototype for: " + configImplementation.getName()).element(configImplementation).build();
+        logger.debug("Unable to determine configuration prototype for: " + configImplementation.getName());
+
+        return null;
     }
 
     private ConfigElement createConfigElement(ClassElement configImplementation) {
 
-        ClassElement configPrototype = getConfigBaseClass(configImplementation);
-
-        AnnotationElement<Configuration> configurationAnn = configImplementation.getAnnotation(Configuration.class);
+        AnnotationElement<Config> configurationAnn = configImplementation.getAnnotation(Config.class);
         String rank = configurationAnn.unwrap().rank();
 
-        AnnotationElement<ConfigPrototype> prototypeAnn = configPrototype.getAnnotation(ConfigPrototype.class);
-        ConfigModel model = prototypeAnn.unwrap().model();
-        TypeMirror targetMirror = prototypeAnn.getValueTypeMirror(a -> a.target());
+        ClassElement configPrototype = getConfigPrototypeClass(configImplementation);
+
+        ConfigModel model;
         ClassElement target;
-        if (targetMirror.toString().equals(Object.class.getName())) {
-            target = null;
+        if (configPrototype!=null) {
+            AnnotationElement<ConfigPrototype> prototypeAnn = configPrototype.getAnnotation(ConfigPrototype.class);
+            model = prototypeAnn.unwrap().model();
+            TypeMirror targetMirror = prototypeAnn.getValueTypeMirror(a -> a.target());
+            if (targetMirror.toString().equals(Object.class.getName())) {
+                target = null;
+            } else {
+                target = new ClassElement(processingEnv, (DeclaredType) targetMirror);
+            }
         } else {
-            target = new ClassElement(processingEnv, (DeclaredType) targetMirror);
+            target = null;
+            model = ConfigModel.SINGLE;
         }
 
-        AnnotationElement<Default> defaultAnn = configImplementation.getAnnotation(Default.class);
+        AnnotationElement<DefaultConfig> defaultAnn = configImplementation.getAnnotation(DefaultConfig.class);
         boolean defaultMessage;
         if (defaultAnn != null) {
             if (!ConfigModel.MESSAGE.equals(model)) {
-                throw CodegenException.of().message("@" + Default.class.getSimpleName() +
+                throw CodegenException.of().message("@" + DefaultConfig.class.getSimpleName() +
                     " annotation can be applied only to " + ConfigModel.MESSAGE.name() + " configuration model").build();
             }
             defaultMessage = true;
@@ -120,13 +106,21 @@ public class ConfRegistry {
         AnnotationElement<Named> namedAnn = configImplementation.getAnnotation(Named.class);
         String named = namedAnn == null ? null : namedAnn.unwrap().value();
 
-        return new ConfigElement(configImplementation, configPrototype, rank, model, target, defaultMessage, classed, named);
+        AnnotationElement<UseSource> useSourceAnn = configImplementation.getAnnotation(UseSource.class);
+        ConfigSourceElement sourceElm = null;
+        if (useSourceAnn != null) {
+            TypeMirror driverType = useSourceAnn.getValueTypeMirror(a -> a.driver());
+            ClassType driverClassType = new ClassType(processingEnv, (DeclaredType) driverType);
+            String uri = useSourceAnn.unwrap().uri();
+            sourceElm = new ConfigSourceElement(driverClassType, uri);
+        }
+
+        return new ConfigElement(configImplementation, configPrototype, rank, model, target, sourceElm, defaultMessage, classed, named);
     }
 
-    public ConfigElement register(ClassElement configImplElement) {
+    public ConfigElement parse(ClassElement configImplElement) {
         ConfigElement configElement = createConfigElement(configImplElement);
-        configElements.add(configElement);
-        logger.debug("Configuration " + configElement.getImplementation().getName() + " has been registered");
+        logger.debug("Configuration " + configElement.getImplementation().getName() + " has been parsed");
         return configElement;
     }
 

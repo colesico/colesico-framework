@@ -21,7 +21,7 @@ package colesico.framework.config.codegen;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.config.Configuration;
+import colesico.framework.config.Config;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -32,8 +32,8 @@ import javax.tools.Diagnostic;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -42,7 +42,7 @@ import java.util.Set;
 public class ConfigProcessor extends FrameworkAbstractProcessor {
 
     protected IocGenerator iocGenerator;
-    protected ConfRegistry confRegistry;
+    protected ConfigParser configParser;
 
     public ConfigProcessor() {
         super();
@@ -50,20 +50,20 @@ public class ConfigProcessor extends FrameworkAbstractProcessor {
 
     @Override
     protected Class<? extends Annotation>[] getSupportedAnnotations() {
-        return new Class[]{Configuration.class};
+        return new Class[]{Config.class};
     }
 
     @Override
     protected void onInit() {
         this.iocGenerator = new IocGenerator(processingEnv);
-        this.confRegistry = new ConfRegistry(processingEnv);
+        this.configParser = new ConfigParser(processingEnv);
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        confRegistry.clear();
         logger.debug("Start configurations processing...");
-        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Configuration.class);
+        List<ConfigElement> configElements = new ArrayList<>();
+        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Config.class);
         for (Element elm : elements) {
             if (elm.getKind() != ElementKind.CLASS) {
                 continue;
@@ -73,7 +73,8 @@ public class ConfigProcessor extends FrameworkAbstractProcessor {
                 typeElement = (TypeElement) elm;
                 ClassElement classElement = new ClassElement(processingEnv, typeElement);
                 logger.debug("Processing configuration: " + classElement.getName());
-                confRegistry.register(classElement);
+                ConfigElement ce = configParser.parse(classElement);
+                configElements.add(ce);
             } catch (CodegenException ce) {
                 String message = "Error processing configuration class '" + elm.toString() + "': " + ce.getMessage();
                 logger.debug(message);
@@ -90,8 +91,8 @@ public class ConfigProcessor extends FrameworkAbstractProcessor {
             }
         }
 
-        if (!confRegistry.isEmpty()) {
-            iocGenerator.generate(confRegistry);
+        if (!configElements.isEmpty()) {
+            iocGenerator.generate(configElements);
         }
 
         return true;

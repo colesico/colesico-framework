@@ -44,7 +44,7 @@ public final class ResourceKitImpl implements ResourceKit {
     public ResourceKitImpl(LocalizingTool localizingTool,
                            RewritingTool rewritingTool,
                            EvaluationTool evaluationTool,
-                           Polysupplier<ResourceConfig> configs) {
+                           Polysupplier<ResourceOptionsPrototype> configs) {
 
         this.localizingTool = localizingTool;
         this.rewritingTool = rewritingTool;

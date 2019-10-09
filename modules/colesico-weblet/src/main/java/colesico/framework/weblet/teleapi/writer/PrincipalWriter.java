@@ -24,7 +24,7 @@ import colesico.framework.http.HttpResponse;
 import colesico.framework.security.Principal;
 import colesico.framework.security.assist.MACUtils;
 import colesico.framework.security.teleapi.PrincipalTeleAssist;
-import colesico.framework.weblet.teleapi.PrincipalWebletConfig;
+import colesico.framework.weblet.teleapi.PrincipalWebletConfigPrototype;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WriterContext;
 
@@ -42,11 +42,11 @@ public class PrincipalWriter implements WebletTeleWriter<Principal> {
     public static final String ITEM_DELIMITER = ":";
 
 
-    protected final PrincipalWebletConfig config;
+    protected final PrincipalWebletConfigPrototype config;
     protected final Provider<HttpContext> httpContextProv;
     protected final PrincipalTeleAssist principalTeleAssist;
 
-    public PrincipalWriter(PrincipalWebletConfig config, Provider<HttpContext> httpContextProv, PrincipalTeleAssist principalTeleAssist) {
+    public PrincipalWriter(PrincipalWebletConfigPrototype config, Provider<HttpContext> httpContextProv, PrincipalTeleAssist principalTeleAssist) {
         this.config = config;
         this.httpContextProv = httpContextProv;
         this.principalTeleAssist = principalTeleAssist;

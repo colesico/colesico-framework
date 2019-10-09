@@ -21,7 +21,7 @@ import colesico.framework.ioc.Produce;
 import colesico.framework.ioc.Producer;
 import colesico.framework.profile.DefaultProfileKit;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileConfig;
+import colesico.framework.profile.ProfileConfigPrototype;
 import colesico.framework.profile.ProfileKit;
 import colesico.framework.profile.teleapi.ProfileTeleAssist;
 
@@ -60,7 +60,7 @@ public class ProfileProducer {
      * Default profile config
      */
     @Singleton
-    public ProfileConfig getProfileConfig(ProfileConfigImpl impl) {
+    public ProfileConfigPrototype getProfileConfig(ProfileConfigImpl impl) {
         return impl;
     }
 

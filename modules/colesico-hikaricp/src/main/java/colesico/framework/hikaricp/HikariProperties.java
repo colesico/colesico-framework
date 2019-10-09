@@ -10,7 +10,7 @@ import java.util.Properties;
 /**
  * Properties file based HikariCP config
  */
-public class HikariProperties extends HikariConfiguration {
+public class HikariProperties extends HikariConfigPrototype {
 
     protected final Logger log = LoggerFactory.getLogger(HikariProperties.class);
 

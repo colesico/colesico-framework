@@ -1,10 +1,10 @@
 package colesico.framework.example.web.pebble;
 
-import colesico.framework.config.Configuration;
-import colesico.framework.resource.ResourceConfig;
+import colesico.framework.config.Config;
+import colesico.framework.resource.ResourceOptionsPrototype;
 
-@Configuration
-public class ResourceConf extends ResourceConfig {
+@Config
+public class ResourceConf extends ResourceOptionsPrototype {
     @Override
     public void bindProperties(PropertiesBinder binder) {
         binder.bind("$tmplRoot","colesico/framework/example/web/pebble/tmpl");

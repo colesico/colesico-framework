@@ -2,7 +2,7 @@ package colesico.framework.resource.internal;
 
 import colesico.framework.profile.Localizer;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileConfig;
+import colesico.framework.profile.ProfileConfigPrototype;
 import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.ResourceKit;
 import colesico.framework.resource.assist.FileParser;
@@ -21,7 +21,7 @@ public class LocalizingTool {
     private final String[] qualifiersNames;
     private final PathTrie<Localizer> pathTrie = new PathTrie<>("/");
 
-    public LocalizingTool(Provider<Profile> profileProv, ProfileConfig config) {
+    public LocalizingTool(Provider<Profile> profileProv, ProfileConfigPrototype config) {
         this.profileProv = profileProv;
         this.qualifiersNames = config.getQualifiersNames();
     }

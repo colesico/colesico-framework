@@ -4,6 +4,7 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.resource.assist.FileParser;
 import colesico.framework.translation.codegen.model.DictionaryElement;
 import colesico.framework.translation.codegen.model.BundleElement;
+import colesico.framework.translation.codegen.model.DictionaryRegistry;
 import colesico.framework.translation.codegen.model.TranslationElement;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -20,6 +21,9 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Generates translations properties file for a locale
+ */
 public class BundleGenerator {
 
     private Logger logger = LoggerFactory.getLogger(IocGenerator.class);
@@ -30,30 +34,30 @@ public class BundleGenerator {
         this.processingEnv = processingEnv;
     }
 
-    protected void generateDictionary(String packageName, BundleElement dictionaryElement) {
-        FileParser fp = new FileParser(dictionaryElement.getParentDictionary().getBasePath());
+    protected void generateDictionary(BundleElement bundleElement) {
+        FileParser fp = new FileParser(bundleElement.getParentDictionary().getBasePath());
         String filePath = fp.path();
 
         String fileName;
-        if (StringUtils.isEmpty(dictionaryElement.getLocaleKey())) {
+        if (StringUtils.isEmpty(bundleElement.getLocaleKey())) {
             fileName = fp.fileName() + ".properties";
         } else {
-            fileName = fp.fileName() + '_' + dictionaryElement.getLocaleKey() + ".properties";
+            fileName = fp.fileName() + '_' + bundleElement.getLocaleKey() + ".properties";
         }
 
         String fullPath = filePath + '/' + fileName;
-        String pkgName = filePath.replace('/','.');
+        String pkgName = filePath.replace('/', '.');
         try {
             final FileObject fileObj = processingEnv.getFiler().createResource(
-                    StandardLocation.SOURCE_OUTPUT,
-                    pkgName,
-                    fileName);
+                StandardLocation.SOURCE_OUTPUT,
+                pkgName,
+                fileName);
 
             try (final Writer writer = new BufferedWriter(fileObj.openWriter())) {
-                writer.write("# This is automatically generated dictionary from "+dictionaryElement.getParentDictionary().getOriginBean().asType().toString()+"\n");
-                for (TranslationElement te : dictionaryElement.getTranslations()) {
+                writer.write("# This is automatically generated dictionary from " + bundleElement.getParentDictionary().getOriginBean().asType().toString() + "\n");
+                for (TranslationElement te : bundleElement.getTranslations()) {
                     String val = te.getTranslation();
-                    val = StringUtils.replaceAll(val,"\\n","\\\\n\\\\\n");
+                    val = StringUtils.replace(val, "\n", "\\n\\\n");
                     String line = te.getTranslationKey() + '=' + val + "\n";
                     writer.append(line);
                 }
@@ -65,11 +69,12 @@ public class BundleGenerator {
         }
     }
 
-    public void generate(String packageName, List<DictionaryElement> dictionaryElements) {
-        for (DictionaryElement dbe : dictionaryElements) {
-            for (Map.Entry<String, BundleElement> dictEntry : dbe.getBundlesByLocale().entrySet()) {
-                BundleElement dictElm = dictEntry.getValue();
-                generateDictionary(packageName, dictElm);
+    public void generate(DictionaryRegistry dictionaryRegistry) {
+        for (List<DictionaryElement> dictElements : dictionaryRegistry.getByPackageMap().values()) {
+            for (DictionaryElement dictElm : dictElements) {
+                for (BundleElement bundleElem : dictElm.getBundlesByLocale().values()) {
+                    generateDictionary(bundleElem);
+                }
             }
         }
     }

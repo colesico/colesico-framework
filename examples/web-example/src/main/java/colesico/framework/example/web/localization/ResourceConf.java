@@ -1,11 +1,11 @@
 package colesico.framework.example.web.localization;
 
-import colesico.framework.config.Configuration;
-import colesico.framework.resource.ResourceConfig;
+import colesico.framework.config.Config;
+import colesico.framework.resource.ResourceOptionsPrototype;
 
 
-@Configuration
-public class ResourceConf extends ResourceConfig {
+@Config
+public class ResourceConf extends ResourceOptionsPrototype {
 
     @Override
     public void bindQualifiers(QualifiersBinder binder) {

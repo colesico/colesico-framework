@@ -16,10 +16,10 @@ public class JobServiceImpl implements JobService {
 
     private final Logger logger = LoggerFactory.getLogger(JobService.class);
 
-    private final JobServiceConfig srvConfig;
+    private final JobServiceConfigPrototype srvConfig;
     private final JobDao jobsDao;
     private final PayloadConverter payloadTransformer;
-    private final Polysupplier<JobQueueConfig> queueConfigs;
+    private final Polysupplier<JobQueueConfigPrototype> queueConfigs;
     private final ThreadScope threadScope;
 
     private QueuePool queuePool;
@@ -30,7 +30,7 @@ public class JobServiceImpl implements JobService {
 
     private volatile boolean running = false;
 
-    public JobServiceImpl(JobServiceConfig srvConfig, JobDao jobsDao, PayloadConverter payloadTransformer, Polysupplier<JobQueueConfig> queueConfigs, ThreadScope threadScope) {
+    public JobServiceImpl(JobServiceConfigPrototype srvConfig, JobDao jobsDao, PayloadConverter payloadTransformer, Polysupplier<JobQueueConfigPrototype> queueConfigs, ThreadScope threadScope) {
         this.srvConfig = srvConfig;
         this.jobsDao = jobsDao;
         this.payloadTransformer = payloadTransformer;
@@ -116,7 +116,7 @@ public class JobServiceImpl implements JobService {
         final TransactionalShell txShell = srvConfig.getTransactionalShell();
 
         txShell.requiresNew(() -> {
-            JobQueueConfig queueConfig = queueRef.getConfig();
+            JobQueueConfigPrototype queueConfig = queueRef.getConfig();
             jobsDao.enqueue(queueConfig, payloadStr, delay);
             return null;
         });

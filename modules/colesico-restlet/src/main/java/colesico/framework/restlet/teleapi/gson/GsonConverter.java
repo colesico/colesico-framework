@@ -19,7 +19,7 @@ public class GsonConverter implements RestletJsonConverter {
 
     protected final Gson gson;
 
-    public GsonConverter(Polysupplier<RestletGsonOptions> options) {
+    public GsonConverter(Polysupplier<RestletGsonOptionsPrototype> options) {
         final GsonBuilder builder = new GsonBuilder();
         builder.excludeFieldsWithModifiers(Modifier.STATIC, Modifier.TRANSIENT, Modifier.VOLATILE)
                 .registerTypeHierarchyAdapter(byte[].class, new GsonByteArrayToBase64())

@@ -21,31 +21,23 @@ package colesico.framework.config;
 import java.lang.annotation.*;
 
 /**
- * Configuration prototype declaration.
- * This annotation should annotate each configuration prototype.
- * <p>
+ * Specifies that the configuration class field value should be obtained from configuration source, declared by @ConfigSource
  *
  * @author Vladlen Larionov
- * @see ConfigModel
- * @see DefaultConfig
+ * @see UseSource
+ * @see ConfigSourceDriver
+ * <p>
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
+@Inherited
 @Documented
-public @interface ConfigPrototype {
+public @interface SourceValue {
 
     /**
-     * Defines the configuration model
+     * Query to obtain configuration value from configuration source
      *
      * @return
-     * @see ConfigModel
      */
-    ConfigModel model();
-
-    /**
-     * Class in which the configuration will be injected.
-     * This value is used for MESSAGE config model to specify the target for that this config is designed.
-     * @return
-     */
-    Class<?> target() default Object.class;
+    String value() default "";
 }

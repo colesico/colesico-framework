@@ -1,7 +1,6 @@
 package colesico.framework.translation.codegen.processor;
 
 import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.AnnotationElement;
 import colesico.framework.assist.codegen.model.AnnotationMirrorElement;
@@ -18,8 +17,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.*;
-import javax.lang.model.util.ElementFilter;
-import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -31,11 +28,11 @@ import java.util.Set;
 public class DictionaryProcessor extends FrameworkAbstractProcessor {
 
 
-    protected DictionaryGenerator beanGenerator;
+    protected DictionaryGenerator dictionaryGenerator;
 
     protected DictionaryRegistry dictionaryRegistry;
     protected IocGenerator iocGenerator;
-    protected BundleGenerator dictionaryGenerator;
+    protected BundleGenerator bundleGenerator;
 
     public DictionaryProcessor() {
         super();
@@ -48,9 +45,9 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
 
     @Override
     protected void onInit() {
-        this.beanGenerator = new DictionaryGenerator(processingEnv);
+        this.dictionaryGenerator = new DictionaryGenerator(processingEnv);
         this.iocGenerator = new IocGenerator(processingEnv);
-        this.dictionaryGenerator = new BundleGenerator(processingEnv);
+        this.bundleGenerator = new BundleGenerator(processingEnv);
         this.dictionaryRegistry = new DictionaryRegistry(processingEnv);
     }
 
@@ -68,7 +65,7 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
                 logger.debug("Processing dictionary bean: " + beanDefinitionElement.asType().toString());
                 DictionaryElement dictionaryBeanElement = parseDictionaryFacade(new ClassElement(processingEnv, beanDefinitionElement));
                 dictionaryRegistry.register(dictionaryBeanElement);
-                beanGenerator.generate(dictionaryBeanElement);
+                dictionaryGenerator.generate(dictionaryBeanElement);
             } catch (CodegenException ce) {
                 String message = "Error processing dictionary bean '" + elm.toString() + "': " + ce.getMessage();
                 logger.debug(message);
@@ -86,12 +83,8 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
         }
 
         if (!dictionaryRegistry.isEmpty()) {
-            for (Map.Entry<String, List<DictionaryElement>> entry : dictionaryRegistry.getByPackageMap().entrySet()) {
-                String packageName = entry.getKey();
-                List<DictionaryElement> dictElms = entry.getValue();
-                iocGenerator.generateIocProduccer(packageName, dictElms);
-                dictionaryGenerator.generate(packageName, dictElms);
-            }
+            iocGenerator.generate(dictionaryRegistry);
+            bundleGenerator.generate(dictionaryRegistry);
         }
 
         return true;

@@ -1,6 +1,6 @@
 package colesico.framework.translation.codegen.model;
 
-import colesico.framework.config.codegen.ConfRegistry;
+import colesico.framework.config.codegen.ConfigParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DictionaryRegistry {
-    private Logger logger = LoggerFactory.getLogger(ConfRegistry.class);
+    private Logger logger = LoggerFactory.getLogger(ConfigParser.class);
 
     protected final ProcessingEnvironment processingEnv;
     protected final Elements elementUtils;

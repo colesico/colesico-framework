@@ -11,7 +11,7 @@ public interface JobDao {
     /**
      * Put job to queue
      */
-    Long enqueue(JobQueueConfig queueConfig, String payload, Duration delay);
+    Long enqueue(JobQueueConfigPrototype queueConfig, String payload, Duration delay);
 
     /**
      * Return next job from queue or null
@@ -19,5 +19,5 @@ public interface JobDao {
      * @param queueConfig
      * @return
      */
-    JobRecord pick(JobQueueConfig queueConfig);
+    JobRecord pick(JobQueueConfigPrototype queueConfig);
 }

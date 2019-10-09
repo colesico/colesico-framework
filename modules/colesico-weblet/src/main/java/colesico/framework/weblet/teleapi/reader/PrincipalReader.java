@@ -24,7 +24,7 @@ import colesico.framework.http.HttpRequest;
 import colesico.framework.security.Principal;
 import colesico.framework.security.assist.MACUtils;
 import colesico.framework.security.teleapi.PrincipalTeleAssist;
-import colesico.framework.weblet.teleapi.PrincipalWebletConfig;
+import colesico.framework.weblet.teleapi.PrincipalWebletConfigPrototype;
 import colesico.framework.weblet.teleapi.ReaderContext;
 import colesico.framework.weblet.teleapi.WebletTeleReader;
 import colesico.framework.weblet.teleapi.writer.PrincipalWriter;
@@ -38,11 +38,11 @@ import java.util.StringTokenizer;
 @Singleton
 public class PrincipalReader implements WebletTeleReader<Principal> {
 
-    protected final PrincipalWebletConfig config;
+    protected final PrincipalWebletConfigPrototype config;
     protected final PrincipalTeleAssist principalTeleAssist;
     protected final Provider<HttpContext> httpContextProv;
 
-    public PrincipalReader(PrincipalWebletConfig config, PrincipalTeleAssist principalTeleAssist, Provider<HttpContext> httpContextProv) {
+    public PrincipalReader(PrincipalWebletConfigPrototype config, PrincipalTeleAssist principalTeleAssist, Provider<HttpContext> httpContextProv) {
         this.config = config;
         this.principalTeleAssist = principalTeleAssist;
         this.httpContextProv = httpContextProv;

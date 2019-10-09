@@ -21,19 +21,36 @@ package colesico.framework.config;
 import java.lang.annotation.*;
 
 /**
- * This annotation can be applied to configuration belongs to MESSAGE model
- * to specify that this configuration must be used when the "@Classed" annotation is not specified.
- *
+ * Configuration source definition for @Configuration.
+ * <p>
+ * Configuration source contains a configuration values.
+ * For example it can be a *.properties file or a yaml file or even sql data base,
+ * or remote json resource accessible by http
  * <p>
  *
  * @author Vladlen Larionov
- * @see ConfigModel
- * @see ConfigPrototype
+ * @see SourceValue
+ * @see ConfigSourceDriver
+ * @see Config
  * <p>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
-public @interface Default {
+public @interface ConfigSource {
+
+    /**
+     * Config source driver
+     *
+     * @return
+     */
+    Class<? extends ConfigSourceDriver> drivier();
+
+    /**
+     * Config registry connection URI
+     *
+     * @return
+     */
+    String uri();
 }

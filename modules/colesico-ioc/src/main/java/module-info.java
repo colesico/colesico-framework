@@ -27,6 +27,7 @@ open module colesico.framework.ioc {
 
     // Inherited in client projects
     requires transitive javax.inject;
+    requires transitive java.annotation;
 
     requires jdk.compiler;
 

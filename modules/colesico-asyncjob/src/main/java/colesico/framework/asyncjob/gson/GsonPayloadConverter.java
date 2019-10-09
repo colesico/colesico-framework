@@ -14,7 +14,7 @@ public class GsonPayloadConverter implements PayloadConverter {
 
     protected final Gson gson;
 
-    public GsonPayloadConverter(Polysupplier<JobGsonOptions> options) {
+    public GsonPayloadConverter(Polysupplier<JobGsonOptionsPrototype> options) {
         final GsonBuilder builder = new GsonBuilder();
         builder.excludeFieldsWithModifiers(Modifier.STATIC, Modifier.TRANSIENT, Modifier.VOLATILE);
         options.forEach(o -> o.applyOptions(builder), null);

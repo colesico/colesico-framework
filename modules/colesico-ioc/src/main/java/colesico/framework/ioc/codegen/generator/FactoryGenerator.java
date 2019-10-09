@@ -19,6 +19,7 @@
 package colesico.framework.ioc.codegen.generator;
 
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
+import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.ioc.InjectionPoint;
 import colesico.framework.ioc.IocException;
 import colesico.framework.ioc.codegen.model.CustomFactoryElement;
@@ -44,6 +45,7 @@ import static colesico.framework.ioc.codegen.generator.IocletGenerator.PRODUCER_
 public class FactoryGenerator extends FrameworkAbstractGenerator {
 
     public static final String IOC_FIELD = "ioc";
+    public static final String INSTANCE_VAR = "instance";
 
     protected final KeyGenerator keyGenerator;
 
@@ -109,11 +111,11 @@ public class FactoryGenerator extends FrameworkAbstractGenerator {
 
         // Scope prov field
         if (factoryElement.getScope().getKind() == ScopeElement.ScopeKind.CUSTOM) {
-            methodBody.addStatement("this.$N=$N.$N($L,null)",
+            methodBody.addStatement("this.$N=$N.$N($L)",
                 ScopedFactory.SCOPE_FACTORY_FIELD,
                 Factory.IOC_PARAM,
                 AdvancedIoc.FACTORY_METHOD,
-                keyGenerator.forScope(factoryElement.getScope().getScopeClass().toString()));
+                keyGenerator.forScope(factoryElement.getScope().getScopeClass().asClassElement().getName()));
         }
 
         // Dynamic binding
@@ -213,6 +215,20 @@ public class FactoryGenerator extends FrameworkAbstractGenerator {
         return cb.build();
     }
 
+    protected void generatePostConstructListnersInvocations(MethodSpec.Builder methodBuilder, FactoryElement factoryElement) {
+        if (factoryElement.isNotifyPostConstruct()) {
+            for (MethodElement listenerMethod : factoryElement.getPostConstructListeners()) {
+                methodBuilder.addStatement("$N.$N()", INSTANCE_VAR, listenerMethod.getName());
+            }
+        }
+    }
+
+    protected void generatePostProduceListenerInvocation(MethodSpec.Builder methodBuilder, FactoryElement factoryElement) {
+        if (factoryElement.getPostProduceListener() != null) {
+            methodBuilder.addStatement("$N.get().$N($N)", PRODUCER_FIELD, factoryElement.getPostProduceListener(), INSTANCE_VAR);
+        }
+    }
+
     protected void generateGetMethod(TypeSpec.Builder factoryBuilder, FactoryElement factoryElement) {
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(Factory.GET_METHOD);
         methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
@@ -220,7 +236,10 @@ public class FactoryGenerator extends FrameworkAbstractGenerator {
         methodBuilder.returns(TypeName.get(factoryElement.getSuppliedType().getErasure()));
         methodBuilder.addParameter(ClassName.get(Object.class), Factory.MESSAGE_PARAM, Modifier.FINAL);
         CodeBlock instanceBlock = generateInstanceCreation(methodBuilder, factoryElement);
-        methodBuilder.addStatement("return $L", instanceBlock);
+        methodBuilder.addStatement("$T $N = $L", TypeName.get(factoryElement.getSuppliedType().unwrap()), INSTANCE_VAR, instanceBlock);
+        generatePostProduceListenerInvocation(methodBuilder, factoryElement);
+        generatePostConstructListnersInvocations(methodBuilder, factoryElement);
+        methodBuilder.addStatement("return $N", INSTANCE_VAR);
         factoryBuilder.addMethod(methodBuilder.build());
     }
 
@@ -231,7 +250,10 @@ public class FactoryGenerator extends FrameworkAbstractGenerator {
         methodBuilder.returns(TypeName.get(factoryElement.getSuppliedType().getErasure()));
         methodBuilder.addParameter(ClassName.get(Object.class), Factory.MESSAGE_PARAM, Modifier.FINAL);
         CodeBlock instanceBlock = generateInstanceCreation(methodBuilder, factoryElement);
-        methodBuilder.addStatement("return $L", instanceBlock);
+        methodBuilder.addStatement("$T $N = $L", TypeName.get(factoryElement.getSuppliedType().unwrap()), INSTANCE_VAR, instanceBlock);
+        generatePostProduceListenerInvocation(methodBuilder, factoryElement);
+        generatePostConstructListnersInvocations(methodBuilder, factoryElement);
+        methodBuilder.addStatement("return $N", INSTANCE_VAR);
         factoryBuilder.addMethod(methodBuilder.build());
     }
 

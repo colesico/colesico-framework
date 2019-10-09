@@ -1,11 +1,11 @@
 package colesico.framework.profile.internal;
 
-import colesico.framework.profile.ProfileConfig;
+import colesico.framework.profile.ProfileConfigPrototype;
 
 import javax.inject.Singleton;
 
 @Singleton
-public class ProfileConfigImpl extends ProfileConfig {
+public class ProfileConfigImpl extends ProfileConfigPrototype {
 
     private static final String[] QUALIFIERS_NAMES = new String[]{"L", "C"};
 

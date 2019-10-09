@@ -6,6 +6,9 @@ import javax.lang.model.element.ExecutableElement;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+/**
+ * Represents translations pairs  (key=translation) for the given locale
+ */
 public class BundleElement {
 
     private final DictionaryElement parentDictionary;
@@ -38,9 +41,9 @@ public class BundleElement {
     @Override
     public String toString() {
         return "TranslationsBundleElement{" +
-                " DictionaryBean=" + parentDictionary.getOriginBean().asType().toString() +
-                ", Locale='" + localeKey + '\'' +
-                '}';
+            " DictionaryBean=" + parentDictionary.getOriginBean().asType().toString() +
+            ", Locale='" + localeKey + '\'' +
+            '}';
     }
 
     @Override

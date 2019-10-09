@@ -53,8 +53,8 @@ public class WebletProducer {
 
     // Default config
     @Singleton
-    public PrincipalWebletConfig getPrincipalWriterConfig() {
-        return new PrincipalWebletConfig() {
+    public PrincipalWebletConfigPrototype getPrincipalWriterConfig() {
+        return new PrincipalWebletConfigPrototype() {
             @Override
             public byte[] getSignatureKey() {
                 try {
@@ -68,8 +68,8 @@ public class WebletProducer {
 
     // Default config
     @Singleton
-    public ProfileWebletConfig getProfileWriterConfig() {
-        return new ProfileWebletConfig() {
+    public ProfileWebletConfigPrototype getProfileWriterConfig() {
+        return new ProfileWebletConfigPrototype() {
             @Override
             public int getCookieValidityDays() {
                 return 365;
