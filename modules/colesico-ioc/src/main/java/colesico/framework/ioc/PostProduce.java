@@ -18,21 +18,38 @@
 
 package colesico.framework.ioc;
 
+import colesico.framework.ioc.ioclet.PPLKey;
+
 import java.lang.annotation.*;
 
 /**
- * Producer method code generation options
+ * Post produce listener declaration.
+ * This annotation should be allied to producer method to declare post produce listener.
+ * The post produce listener invoked by IoC container to handle just produced instance.
+ * Post produce listener invoked before @PostConstruct listener.
  *
  * @author Vladlen Larionov
+ * @see PPLKey
  * @see Produce
  * @see Producer
+ * @see PostConstruct
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.METHOD})
 @Inherited
 @Documented
-public @interface ProducingOptions {
-    boolean postConstruct() default false;
+public @interface PostProduce {
+    /**
+     * Reference to named value of producing method or @Produce declaration
+     *
+     * @return
+     */
+    String withNamed() default "";
 
-    boolean postProduce() default false;
+    /**
+     * Reference to classed value of producing method or @Produce declaration
+     *
+     * @return
+     */
+    Class<?> withClassed() default Class.class;
 }

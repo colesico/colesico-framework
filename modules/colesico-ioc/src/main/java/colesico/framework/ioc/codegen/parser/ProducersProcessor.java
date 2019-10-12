@@ -101,7 +101,6 @@ public class ProducersProcessor extends FrameworkAbstractProcessor {
         }
 
         // Write Ioclets java files only at last round
-
         if (roundEnv.processingOver()) {
             logger.debug("Ioclets generation is starting: " + createdIoclets.size());
             for (IocletElement ie : createdIoclets.values()) {
@@ -113,7 +112,6 @@ public class ProducersProcessor extends FrameworkAbstractProcessor {
         return result;
     }
 
-
     protected void generateIoclet(IocletElement iocletElement) {
         try {
             final TypeSpec typeSpec = iocletGenerator.generate(iocletElement);
@@ -122,6 +120,7 @@ public class ProducersProcessor extends FrameworkAbstractProcessor {
             CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, iocletElement.getOriginProducer().unwrap());
         } catch (Exception e) {
             logger.debug("Error generating ioclet: " + ExceptionUtils.getRootCauseMessage(e));
+            e.printStackTrace();
             throw e;
         }
     }

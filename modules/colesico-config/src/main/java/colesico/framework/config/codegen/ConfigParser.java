@@ -20,11 +20,11 @@ package colesico.framework.config.codegen;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
-import colesico.framework.assist.codegen.model.AnnotationElement;
-import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.assist.codegen.model.*;
 import colesico.framework.config.*;
 import colesico.framework.ioc.Classed;
+import colesico.framework.ioc.PostConstruct;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +69,7 @@ public class ConfigParser extends FrameworkAbstractParser {
 
         ConfigModel model;
         ClassElement target;
-        if (configPrototype!=null) {
+        if (configPrototype != null) {
             AnnotationElement<ConfigPrototype> prototypeAnn = configPrototype.getAnnotation(ConfigPrototype.class);
             model = prototypeAnn.unwrap().model();
             TypeMirror targetMirror = prototypeAnn.getValueTypeMirror(a -> a.target());
@@ -106,16 +106,33 @@ public class ConfigParser extends FrameworkAbstractParser {
         AnnotationElement<Named> namedAnn = configImplementation.getAnnotation(Named.class);
         String named = namedAnn == null ? null : namedAnn.unwrap().value();
 
+        // Config source
         AnnotationElement<UseSource> useSourceAnn = configImplementation.getAnnotation(UseSource.class);
         ConfigSourceElement sourceElm = null;
         if (useSourceAnn != null) {
             TypeMirror driverType = useSourceAnn.getValueTypeMirror(a -> a.driver());
             ClassType driverClassType = new ClassType(processingEnv, (DeclaredType) driverType);
-            String uri = useSourceAnn.unwrap().uri();
-            sourceElm = new ConfigSourceElement(driverClassType, uri);
+            String[] params = useSourceAnn.unwrap().params();
+            sourceElm = new ConfigSourceElement(driverClassType, params);
+            parseSourceValues(configImplementation, sourceElm);
         }
 
         return new ConfigElement(configImplementation, configPrototype, rank, model, target, sourceElm, defaultMessage, classed, named);
+    }
+
+    private ConfigSourceElement parseSourceValues(ClassElement configImplementation, ConfigSourceElement confSourceElm) {
+        for (FieldElement me : configImplementation.getFields()) {
+            AnnotationElement<SourceValue> sourceValueAnn = me.getAnnotation(SourceValue.class);
+            if (sourceValueAnn == null) {
+                continue;
+            }
+            String query = me.getName();
+            if (StringUtils.isNotBlank(sourceValueAnn.unwrap().value())) {
+                query = sourceValueAnn.unwrap().value();
+            }
+            confSourceElm.addSourceValue(new SourceValueElement(me, query));
+        }
+        return confSourceElm;
     }
 
     public ConfigElement parse(ClassElement configImplElement) {

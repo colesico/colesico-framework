@@ -32,18 +32,18 @@ abstract public class FactoryElement {
     protected final ClassType suppliedType;
     protected final String factoryMethodBaseName;
     protected final ScopeElement scope;
-
     protected final Boolean polyproduce;
 
+    protected final PPLDefinitionElement postProduce;
     protected final String named;
-    protected final String classed;
+    protected final ClassType classed;
+
+    protected final boolean notifyPostProduce;
+    protected final boolean notifyPostConstruct;
+
+    protected final List<MethodElement> postConstructListeners;
 
     protected final List<InjectableElement> parameters = new ArrayList<>();
-
-    protected final List<MethodElement> postConstructListeners = new ArrayList<>();
-    protected boolean notifyPostConstruct = true;
-
-    protected String postProduceListener = null;
 
     protected int factoryIndex = -1;
 
@@ -51,14 +51,27 @@ abstract public class FactoryElement {
                           String factoryMethodBaseName,
                           ScopeElement scope,
                           Boolean polyproduce,
+                          PPLDefinitionElement postProduce,
                           String named,
-                          String classed) {
+                          ClassType classed,
+                          boolean notifyPostProduce,
+                          boolean notifyPostConstruct,
+                          List<MethodElement> postConstructListeners
+    ) {
         this.suppliedType = suppliedType;
         this.factoryMethodBaseName = factoryMethodBaseName;
         this.scope = scope;
         this.polyproduce = polyproduce;
+        this.postProduce = postProduce;
         this.named = named;
         this.classed = classed;
+        this.notifyPostProduce = notifyPostProduce;
+        this.notifyPostConstruct = notifyPostConstruct;
+        this.postConstructListeners = postConstructListeners;
+    }
+
+    public void addParameter(InjectableElement paramElm) {
+        this.parameters.add(paramElm);
     }
 
     public final String getFactoryMethodName() {
@@ -69,11 +82,15 @@ abstract public class FactoryElement {
         this.factoryIndex = factoryIndex;
     }
 
-    public final ClassType getSuppliedType() {
+    public ClassType getSuppliedType() {
         return suppliedType;
     }
 
-    public final ScopeElement getScope() {
+    public String getFactoryMethodBaseName() {
+        return factoryMethodBaseName;
+    }
+
+    public ScopeElement getScope() {
         return scope;
     }
 
@@ -81,43 +98,35 @@ abstract public class FactoryElement {
         return polyproduce;
     }
 
-    public final List<InjectableElement> getParameters() {
-        return parameters;
-    }
-
     public String getNamed() {
         return named;
     }
 
-    public String getClassed() {
+    public ClassType getClassed() {
         return classed;
     }
 
-    public void addParameter(InjectableElement parameter) {
-        parameters.add(parameter);
+    public PPLDefinitionElement getPostProduce() {
+        return postProduce;
+    }
+
+    public List<InjectableElement> getParameters() {
+        return parameters;
     }
 
     public List<MethodElement> getPostConstructListeners() {
         return postConstructListeners;
     }
 
-    public void addPostConstructListeners(List<MethodElement> listeners) {
-        this.postConstructListeners.addAll(listeners);
-    }
-
     public boolean isNotifyPostConstruct() {
         return notifyPostConstruct;
     }
 
-    public void setNotifyPostConstruct(boolean notifyPostConstruct) {
-        this.notifyPostConstruct = notifyPostConstruct;
+    public boolean isNotifyPostProduce() {
+        return notifyPostProduce;
     }
 
-    public String getPostProduceListener() {
-        return postProduceListener;
-    }
-
-    public void setPostProduceListener(String postProduceListener) {
-        this.postProduceListener = postProduceListener;
+    public int getFactoryIndex() {
+        return factoryIndex;
     }
 }

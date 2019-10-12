@@ -46,9 +46,18 @@ public class InjectableElement {
     private final String named;
 
     //  @Classed value as class names
-    private final String classed;
+    private final ClassType classed;
 
-    public InjectableElement(FactoryElement parentFactory, ParameterElement originParameter, ClassType injectedType, InjectionKind injectionKind, MessageKind messageKind, LinkagePhase linkagePhase, Boolean optional, String named, String classed) {
+    public InjectableElement(FactoryElement parentFactory,
+                             ParameterElement originParameter,
+                             ClassType injectedType,
+                             InjectionKind injectionKind,
+                             MessageKind messageKind,
+                             LinkagePhase linkagePhase,
+                             Boolean optional,
+                             String named,
+                             ClassType classed) {
+
         this.parentFactory = parentFactory;
         this.originParameter = originParameter;
         this.injectedType = injectedType;
@@ -88,7 +97,7 @@ public class InjectableElement {
         return named;
     }
 
-    public String getClassed() {
+    public ClassType getClassed() {
         return classed;
     }
 

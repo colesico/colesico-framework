@@ -36,8 +36,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.lang.model.element.*;
@@ -271,14 +269,6 @@ public class ServiceProxyGenerator {
             MethodSpec.Builder proxyMethodBuilder = CodegenUtils.createProxyMethodBuilder(
                 method.getOriginMethod(), null, METHOD_PARAM_PREFIX, true
             );
-
-            if (method.getOriginMethod().getAnnotation(PostConstruct.class) != null) {
-                proxyMethodBuilder.addAnnotation(PostConstruct.class);
-            }
-
-            if (method.getOriginMethod().getAnnotation(PreDestroy.class) != null) {
-                proxyMethodBuilder.addAnnotation(PreDestroy.class);
-            }
 
             proxyMethodBuilder.addStatement("final $T " + INTERCEPTORS_CHAIN_VARIABLE + "= new $T()",
                 ClassName.get(InterceptorsChain.class),

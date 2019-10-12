@@ -1,22 +1,24 @@
 package colesico.framework.config;
 
+import java.lang.reflect.Type;
+import java.util.Map;
+
 /**
  * Configuration source driver.
  * Supplies an unified api to obtain configuration values from any source (file, database, http resource, e.t.c.)
  */
 public interface ConfigSourceDriver {
-    String GET_VALUE_METHD = "getValue";
+    String CONNECT_METHOD = "connect";
 
     /**
      * Get connection to configuration source
      *
-     * @param uri
      * @return
      */
-    Connection connect(String uri);
+    Connection connect(Map<String, String> params);
 
     interface Connection {
-        String CONNECT_METHD = "connect";
+        String GET_VALUE_METHOD = "getValue";
         String CLOSE_METHD = "close";
 
         /**
@@ -27,7 +29,7 @@ public interface ConfigSourceDriver {
          * @param <T>
          * @return
          */
-        <T> T getValue(Connection connection, Class<T> valueType, String queryText);
+        <T> T getValue(Type valueType, String queryText, T defaultValue);
 
         void close();
     }

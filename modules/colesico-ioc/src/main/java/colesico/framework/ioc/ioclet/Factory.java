@@ -66,6 +66,7 @@ abstract public class Factory<T> implements Provider<T>, Supplier<T> {
 
     /**
      * Called by Ioc container to initialize factory
+     * (perform obtaining dependencies from IoC container)
      */
     public void setup(final AdvancedIoc ioc) {
     }

@@ -18,12 +18,13 @@
 
 package colesico.framework.config.codegen;
 
+import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.codegen.ArrayCodegen;
+import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.config.ConfigSourceDriver;
-import colesico.framework.ioc.Classed;
-import colesico.framework.ioc.Polyproduce;
-import colesico.framework.ioc.Produce;
-import colesico.framework.ioc.Supplier;
+import colesico.framework.ioc.*;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import com.squareup.javapoet.*;
 import org.slf4j.Logger;
@@ -35,6 +36,7 @@ import javax.inject.Singleton;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Vladlen Larionov
@@ -43,6 +45,8 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
     public static final String FACTORY_PARAM = "factory";
     public static final String CONF_PARAM = "config";
+    public static final String SOURCE_DRV_PARAM = "sourceDriver";
+    public static final String CONNECTION_VAR = "conn";
 
     private Logger logger = LoggerFactory.getLogger(IocGenerator.class);
 
@@ -132,21 +136,53 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         );
     }
 
-    private void generateInitSourceValues(String postProduceMethodName, ConfigElement confElement, ProducerGenerator prodGen) {
-        MethodSpec.Builder mb = prodGen.addMethod(postProduceMethodName, Modifier.PROTECTED);
-        mb.addParameter(TypeName.get(confElement.getImplementation().asClassType().unwrap()), postProduceMethodName);
-        mb.returns(TypeName.VOID);
+    private void generateInitSourceValues(ConfigElement confElement, ProducerGenerator prodGen) {
+        String postProduceMethodName = "init" + confElement.getImplementation().getSimpleName();
+        MethodSpec.Builder mb = prodGen.addMethod(postProduceMethodName, Modifier.PUBLIC);
+        mb.addAnnotation(PostProduce.class);
+
+        ParameterSpec.Builder confParam = ParameterSpec.builder(TypeName.get(confElement.getImplementation().asClassType().unwrap()), CONF_PARAM, Modifier.FINAL);
+        confParam.addAnnotation(Message.class);
+        mb.addParameter(confParam.build());
+
+        mb.addParameter(TypeName.get(confElement.getSource().getDriver().unwrap()), SOURCE_DRV_PARAM, Modifier.FINAL);
+
+        mb.returns(TypeName.get(confElement.getImplementation().asClassType().unwrap()));
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.addStatement("final $T connection = null",ClassName.get(ConfigSourceDriver.Connection.class));
-        cb.add("try {\n");
-        cb.indent();
-        //TODO: init values code
-        cb.unindent();
-        cb.add("} finally {\n");
-        cb.indent();
-        cb.addStatement("connection.$N()", ConfigSourceDriver.Connection.CLOSE_METHD);
-        cb.unindent();
-        cb.add("}\n");
+
+        if (confElement.getSource().getParams().length % 2 != 0) {
+            throw CodegenException.of()
+                .message("Config source driver params number is not even")
+                .element(confElement.getImplementation().unwrap()).build();
+        }
+
+        ArrayCodegen paramsCodegen = new ArrayCodegen();
+        for (String param : confElement.getSource().getParams()) {
+            paramsCodegen.add("$S", param);
+        }
+        cb.add("final $T $N = $N.$N($T.of(",
+            ClassName.get(ConfigSourceDriver.Connection.class),
+            CONNECTION_VAR,
+            SOURCE_DRV_PARAM,
+            ConfigSourceDriver.CONNECT_METHOD,
+            ClassName.get(Map.class)
+        );
+        cb.add(paramsCodegen.toFormat(), paramsCodegen.toValues());
+        cb.add("));\n");
+
+        for (SourceValueElement sv : confElement.getSource().getSourceValues()) {
+            // config.setField(conn.getValue(TYPE,"query",config.getField()))
+            cb.add("$N.$N($N.$N(",
+                CONF_PARAM, "set" + StrUtils.firstCharToUpperCase(sv.getOriginField().getName()),
+                CONNECTION_VAR, ConfigSourceDriver.Connection.GET_VALUE_METHOD
+            );
+            CodegenUtils.generateTypePick(sv.getOriginField().asType(), cb);
+            cb.add(", $S, $N.$N()", sv.getQuery(), CONF_PARAM, "get" + StrUtils.firstCharToUpperCase(sv.getOriginField().getName()));
+            cb.add("));\n");
+        }
+
+        cb.addStatement("$N.$N()", CONNECTION_VAR, ConfigSourceDriver.Connection.CLOSE_METHD);
+        cb.addStatement("return $N", CONF_PARAM);
         mb.addCode(cb.build());
     }
 
@@ -180,11 +216,10 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
         // Init configuration source values
         if (confElement.getSource() != null) {
-            String postProduceMethodName = "init" + classSimpleName;
-            produceAnn.addMember(Produce.POST_PRODUCE_METHOD, "$S", postProduceMethodName);
-            generateInitSourceValues(postProduceMethodName, confElement, prodGen);
+            produceAnn.addMember(Produce.POST_PRODUCE_METHOD, "true");
+            generateInitSourceValues(confElement, prodGen);
         }
-        
+
         prodGen.generate(confElement.getImplementation().unwrap());
     }
 

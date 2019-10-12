@@ -21,6 +21,8 @@ package colesico.framework.ioc.codegen.model;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
 
+import java.util.List;
+
 /**
  * @author Vladlen Larionov
  */
@@ -28,8 +30,29 @@ public class CustomFactoryElement extends FactoryElement {
 
     private final MethodElement producerMethod;
 
-    public CustomFactoryElement(ClassType suppliedType, String factoryMethodBaseName, ScopeElement scope, Boolean polyproduce, String named, String classed, MethodElement producerMethod) {
-        super(suppliedType, factoryMethodBaseName, scope, polyproduce, named, classed);
+    public CustomFactoryElement(ClassType suppliedType,
+                                String factoryMethodBaseName,
+                                ScopeElement scope,
+                                Boolean polyproduce,
+                                PPLDefinitionElement postProduce,
+                                String named,
+                                ClassType classed,
+                                boolean notifyPostProduce,
+                                boolean notifyPostConstruct,
+                                List<MethodElement> postConstructListeners,
+                                MethodElement producerMethod
+    ) {
+        super(suppliedType,
+            factoryMethodBaseName,
+            scope,
+            polyproduce,
+            postProduce,
+            named,
+            classed,
+            notifyPostProduce,
+            notifyPostConstruct,
+            postConstructListeners);
+
         this.producerMethod = producerMethod;
     }
 
@@ -40,12 +63,12 @@ public class CustomFactoryElement extends FactoryElement {
     @Override
     public String toString() {
         return "CustomFactoryElement{" +
-                "producerMethod=" + producerMethod +
-                ", suppliedType=" + suppliedType +
-                ", scope=" + scope +
-                ", polyproduce=" + polyproduce +
-                ", named='" + named + '\'' +
-                ", classed='" + classed + '\'' +
-                '}';
+            "producerMethod=" + producerMethod +
+            ", suppliedType=" + suppliedType +
+            ", scope=" + scope +
+            ", polyproduce=" + polyproduce +
+            ", named='" + named + '\'' +
+            ", classed='" + classed + '\'' +
+            '}';
     }
 }

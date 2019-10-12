@@ -44,7 +44,6 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
     protected final FactoryGenerator factoryGenerator;
     protected final KeyGenerator keyGenerator;
 
-
     protected IocletElement iocletElement;
     protected TypeSpec.Builder classBuilder;
 
@@ -101,15 +100,34 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
     }
 
     protected void generateSuplierFactoryMethods() {
-        for (FactoryElement sme : iocletElement.getFactories()) {
-            MethodSpec.Builder mb = MethodSpec.methodBuilder(sme.getFactoryMethodName());
+        for (FactoryElement fe : iocletElement.getFactories()) {
+            MethodSpec.Builder mb = MethodSpec.methodBuilder(fe.getFactoryMethodName());
+
+            if (fe.getPostProduce() == null) {
+                mb.addJavadoc("Factory to produce " + fe.getSuppliedType().asClassElement().getName() + " class instance\n");
+                mb.addJavadoc("Scope: " + fe.getScope().getKind() + "; Custom: " + fe.getScope().getCustomScopeClass()+'\n');
+                if (fe.getNamed() != null) {
+                    mb.addJavadoc("Named: " + fe.getNamed()+'\n');
+                }
+                if (fe.getClassed() != null) {
+                    mb.addJavadoc("Classed: " + fe.getClassed().getErasure().toString()+'\n');
+                }
+                if (fe.getPolyproduce()) {
+                    mb.addJavadoc("Polyproduce: true"+'\n');
+                }
+            } else {
+                mb.addJavadoc("Factory of post produce listener for class " + fe.getSuppliedType().asClassElement().getName() + '\n');
+                mb.addJavadoc("WithNamed: "+fe.getPostProduce().getWithNamed()+'\n');
+                mb.addJavadoc("WithClassed: "+fe.getPostProduce().getWithClassed()+'\n');
+            }
+
             mb.returns(ParameterizedTypeName.get(
                 ClassName.get(Factory.class),
-                TypeName.get(sme.getSuppliedType().getErasure())
+                TypeName.get(fe.getSuppliedType().getErasure())
                 )
             );
             mb.addModifiers(Modifier.PUBLIC);
-            mb.addStatement("return $L", factoryGenerator.generateFactory(sme));
+            mb.addStatement("return $L", factoryGenerator.generateFactory(fe));
             classBuilder.addMethod(mb.build());
         }
     }

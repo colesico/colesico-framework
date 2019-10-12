@@ -48,9 +48,9 @@ public @interface UseSource {
     Class<? extends ConfigSourceDriver> driver();
 
     /**
-     * Config registry connection URI
+     * Config registry connection params in format paramName1,paramValue1,paramName2,paramValue2.. up to ten
      *
      * @return
      */
-    String uri();
+    String[] params() default {};
 }

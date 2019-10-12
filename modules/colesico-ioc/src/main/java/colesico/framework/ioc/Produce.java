@@ -73,17 +73,18 @@ public @interface Produce {
     Class<?> classed() default Class.class;
 
     /**
+     * Producer method name to be called after instance been produced but before instance @PostConstruct
+     * This method can be used to handle just created instance before it will be returned from IoC container
+     *
+     * @return
+     */
+    boolean postProduce() default false;
+
+    /**
      * Whether or not to call instance @PostConstruct listeners
      *
      * @return
      */
     boolean postConstruct() default true;
 
-    /**
-     * Producer method name to be called after instance been produced but before instance @PostConstruct
-     * This method can be used to handle just created instance before it will be returned from IoC container
-     *
-     * @return
-     */
-    String postProduce() default "";
 }

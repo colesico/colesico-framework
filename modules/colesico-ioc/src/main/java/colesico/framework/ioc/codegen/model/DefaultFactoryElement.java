@@ -23,6 +23,8 @@ import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.ioc.Produce;
 
+import java.util.List;
+
 /**
  * @author Vladlen Larionov
  */
@@ -31,8 +33,28 @@ public class DefaultFactoryElement extends FactoryElement {
     private final MethodElement constructor;
     private final AnnotationElement<Produce> produce;
 
-    public DefaultFactoryElement(ClassType suppliedType, String factoryMethodBaseName, ScopeElement scope, Boolean polyproduce, String named, String classed, MethodElement constructor, AnnotationElement<Produce> produce) {
-        super(suppliedType, factoryMethodBaseName, scope, polyproduce, named, classed);
+    public DefaultFactoryElement(ClassType suppliedType,
+                                 String factoryMethodBaseName,
+                                 ScopeElement scope,
+                                 Boolean polyproduce,
+                                 String named,
+                                 ClassType classed,
+                                 boolean notifyPostProduce,
+                                 boolean notifyPostConstruct,
+                                 List<MethodElement> postConstructListeners,
+                                 MethodElement constructor,
+                                 AnnotationElement<Produce> produce
+    ) {
+        super(suppliedType,
+            factoryMethodBaseName,
+            scope,
+            polyproduce,
+            null,
+            named,
+            classed,
+            notifyPostProduce,
+            notifyPostConstruct,
+            postConstructListeners);
         this.constructor = constructor;
         this.produce = produce;
     }

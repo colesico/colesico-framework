@@ -24,16 +24,16 @@ import colesico.framework.assist.codegen.model.ClassType;
  * @author Vladlen Larionov
  */
 public class ScopeElement {
-    private final ClassType scopeClass;
     private final ScopeKind kind;
+    private final ClassType customScopeClass;
 
-    public ScopeElement(ClassType scopeClass, ScopeKind kind) {
-        this.scopeClass = scopeClass;
+    public ScopeElement(ScopeKind kind, ClassType customScopeClass) {
         this.kind = kind;
+        this.customScopeClass = customScopeClass;
     }
 
-    public ClassType getScopeClass() {
-        return scopeClass;
+    public ClassType getCustomScopeClass() {
+        return customScopeClass;
     }
 
     public ScopeKind getKind() {
@@ -43,7 +43,7 @@ public class ScopeElement {
     @Override
     public String toString() {
         return "ScopeElement{" +
-                "scopeClass=" + scopeClass +
+                "scopeClass=" + customScopeClass +
                 ", kind=" + kind +
                 '}';
     }
