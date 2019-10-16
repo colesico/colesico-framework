@@ -55,8 +55,6 @@ public class RecordProcessor extends FrameworkAbstractProcessor {
                 logger.debug(message);
                 ce.print(processingEnv, elm);
             } catch (Exception e) {
-                StringWriter errors = new StringWriter();
-                e.printStackTrace(new PrintWriter(errors));
                 String msg = ExceptionUtils.getRootCauseMessage(e);
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, msg);
                 if (logger.isDebugEnabled()) {

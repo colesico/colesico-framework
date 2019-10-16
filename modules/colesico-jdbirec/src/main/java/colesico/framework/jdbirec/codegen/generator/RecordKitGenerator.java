@@ -121,6 +121,8 @@ public class RecordKitGenerator {
         } else {
             compositionVar = varNames.getNextVarName(composition.getOriginField().getName());
             // SubCompositionType comp=parentComp.getSubComposition()
+            cb.add("\n");
+            cb.add("// Composition: "+composition.getOriginClass().getName()+"\n\n");
             cb.addStatement("$T $N = $N.$N()",
                 TypeName.get(composition.getOriginClass().asType()),
                 compositionVar,
@@ -218,11 +220,13 @@ public class RecordKitGenerator {
 
     protected void generateCompositionFromResultSet(CompositionElement composition, String parentCompositionVar, CodeBlock.Builder cb) {
         CodeBlock.Builder cbo = CodeBlock.builder();
-
         String compositionVar;
         if (parentCompositionVar == null) {
             compositionVar = RecordKit.RECORD_PARAM;
         } else {
+            cbo.add("\n");
+            cbo.add("// Composition: "+composition.getOriginClass().getName());
+            cbo.add("\n\n");
             compositionVar = varNames.getNextVarName(composition.getOriginField().getName());
             // SubCompositionType comp=parentComp.getSubComposition()
             cbo.addStatement("$T $N = $N.$N()",

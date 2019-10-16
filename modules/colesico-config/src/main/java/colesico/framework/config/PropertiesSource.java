@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Properties;
 
 @Singleton
-public class PropertiesSource implements ConfigSourceDriver {
+public class PropertiesSource implements ConfigSource {
 
     /**
      * Properties file  directory
@@ -31,7 +31,7 @@ public class PropertiesSource implements ConfigSourceDriver {
      * Properties file name.
      * Default: application.properties
      */
-    public static final String FILE_NAME = "fileName";
+    public static final String FILE = "fileName";
 
     /**
      * Properties name prefix
@@ -44,7 +44,7 @@ public class PropertiesSource implements ConfigSourceDriver {
     @Override
     public Connection connect(Map<String, String> params) {
         final String prefix = params.get(PREFIX);
-        final String fileName = params.getOrDefault(FILE_NAME, "application.properties");
+        final String fileName = params.getOrDefault(FILE, "application.properties");
         final String directory = params.getOrDefault(DIRECTORY, "./config");
         String fullPath = StrUtils.concatPath(directory, fileName, "/");
 

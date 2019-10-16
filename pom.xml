@@ -94,6 +94,7 @@
 
         <!-- Tests -->
         <org-testng.version>7.0.0</org-testng.version>
+        <httpclient.version>4.5.10</httpclient.version>
 
         <javax.inject.version>1</javax.inject.version>
         <auto-service.version>1.0-rc6</auto-service.version>

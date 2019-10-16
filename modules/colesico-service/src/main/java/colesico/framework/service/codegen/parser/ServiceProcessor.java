@@ -106,9 +106,10 @@ public class ServiceProcessor extends FrameworkAbstractProcessor {
             processClasses(annotations, roundEnv);
             modulatorKit.notifyRoundStop();
             return true;
+        } catch (CodegenException ce) {
+            logger.error("Error processing service: " + ExceptionUtils.getRootCauseMessage(ce));
+            throw ce;
         } catch (Exception e) {
-            StringWriter errors = new StringWriter();
-            e.printStackTrace(new PrintWriter(errors));
             String msg = ExceptionUtils.getRootCauseMessage(e);
             context.getMessager().printMessage(Kind.ERROR, msg);
             if (logger.isDebugEnabled()) {
@@ -126,13 +127,13 @@ public class ServiceProcessor extends FrameworkAbstractProcessor {
         Set<String> serviceTypsNames = new HashSet<>();
 
         for (Class<? extends Annotation> serviceAnnotation : modulatorKit.getServiceAnnotations()) {
-            for (Element e : roundEnv.getElementsAnnotatedWith(serviceAnnotation)) {
-                if (e.getKind() != ElementKind.CLASS) {
+            for (Element elm : roundEnv.getElementsAnnotatedWith(serviceAnnotation)) {
+                if (elm.getKind() != ElementKind.CLASS) {
                     continue;
                 }
                 TypeElement serviceType = null;
                 try {
-                    serviceType = (TypeElement) e;
+                    serviceType = (TypeElement) elm;
                     // @Service annotation are inherited from superclass so need to filter generated proxies by name.
                     // But this is not correct in general, so  need to change in perspective.
                     if (StringUtils.endsWith(serviceType.getSimpleName(), SERVICE_CLASS_SUFFIX + PROXY_CLASS_SUFFIX)) {
@@ -151,15 +152,17 @@ public class ServiceProcessor extends FrameworkAbstractProcessor {
                     serviceTypsNames.add(serviceType.asType().toString());
                     ServiceProxyGenerator serviceGenerator = new ServiceProxyGenerator(context);
                     serviceGenerator.generateService(serviceElement);
-                } catch (CodegenException ex) {
-                    String message = "Error processing class '" + serviceType.toString() + "': " + ex.getMessage();
-                    logger.debug(message);
-                    ex.print(processingEnv, serviceType);
-                    ex.printStackTrace();
-                } catch (Exception ex) {
-                    processingEnv.getMessager().printMessage(Kind.ERROR, "Processing class general error: '" + ex.getMessage(), serviceType);
-                    ex.printStackTrace();
-                    throw ex;
+                } catch (CodegenException ce) {
+                    String message = "Error processing class '" + serviceType.toString() + "': " + ce.getMessage();
+                    logger.error(message);
+                    ce.print(processingEnv, elm);
+                    throw ce;
+                } catch (Exception e) {
+                    processingEnv.getMessager().printMessage(Kind.ERROR, "Processing class general error: '" + e.getMessage(), serviceType);
+                    if (logger.isDebugEnabled()) {
+                        e.printStackTrace();
+                    }
+                    throw e;
                 }
             }
         }

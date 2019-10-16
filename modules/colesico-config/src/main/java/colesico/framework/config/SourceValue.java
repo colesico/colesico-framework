@@ -25,7 +25,7 @@ import java.lang.annotation.*;
  *
  * @author Vladlen Larionov
  * @see UseSource
- * @see ConfigSourceDriver
+ * @see ConfigSource
  * <p>
  */
 @Retention(RetentionPolicy.RUNTIME)

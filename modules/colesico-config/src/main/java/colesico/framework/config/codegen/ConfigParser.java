@@ -23,7 +23,6 @@ import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
 import colesico.framework.config.*;
 import colesico.framework.ioc.Classed;
-import colesico.framework.ioc.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,7 +109,7 @@ public class ConfigParser extends FrameworkAbstractParser {
         AnnotationElement<UseSource> useSourceAnn = configImplementation.getAnnotation(UseSource.class);
         ConfigSourceElement sourceElm = null;
         if (useSourceAnn != null) {
-            TypeMirror driverType = useSourceAnn.getValueTypeMirror(a -> a.driver());
+            TypeMirror driverType = useSourceAnn.getValueTypeMirror(a -> a.type());
             ClassType driverClassType = new ClassType(processingEnv, (DeclaredType) driverType);
             String[] params = useSourceAnn.unwrap().params();
             sourceElm = new ConfigSourceElement(driverClassType, params);

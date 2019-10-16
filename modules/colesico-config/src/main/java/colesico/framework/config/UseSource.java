@@ -30,7 +30,7 @@ import java.lang.annotation.*;
  *
  * @author Vladlen Larionov
  * @see SourceValue
- * @see ConfigSourceDriver
+ * @see ConfigSource
  * @see Config
  * <p>
  */
@@ -41,11 +41,11 @@ import java.lang.annotation.*;
 public @interface UseSource {
 
     /**
-     * Config source driver
+     * Config source type
      *
      * @return
      */
-    Class<? extends ConfigSourceDriver> driver();
+    Class<? extends ConfigSource> type();
 
     /**
      * Config registry connection params in format paramName1,paramValue1,paramName2,paramValue2.. up to ten

@@ -79,11 +79,12 @@ public final class PPLKey<T> implements Key<T> {
             .toHashCode();
     }
 
+
     @Override
     public String toString() {
         return "PPLKey{" +
             "className='" + className + '\'' +
-            ", withName='" + withNamed + '\'' +
+            ", withNamed='" + withNamed + '\'' +
             ", withClassed='" + withClassed + '\'' +
             '}';
     }

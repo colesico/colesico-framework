@@ -28,6 +28,7 @@ import colesico.framework.service.PlainMethod;
 import colesico.framework.service.ServiceMethod;
 import colesico.framework.service.codegen.model.ProxyMethodElement;
 import colesico.framework.service.codegen.model.ServiceElement;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
@@ -35,6 +36,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
+import javax.tools.Diagnostic;
 import java.util.List;
 
 public class ServiceParser extends FrameworkAbstractParser {
@@ -137,9 +139,16 @@ public class ServiceParser extends FrameworkAbstractParser {
             context.getModulatorKit().notifyServiceParsed(service);
             return service;
         } catch (CodegenException ce) {
+            ce.print(processingEnv, serviceTypeElement);
             throw ce;
-        } catch (Exception ex) {
-            throw CodegenException.of().cause(ex).element(serviceTypeElement).build();
+        } catch (Exception e) {
+            String msg = ExceptionUtils.getRootCauseMessage(e);
+            logger.error("Error parsing service class: " + serviceTypeElement + "; message: " + msg);
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, msg);
+            if (logger.isDebugEnabled()) {
+                e.printStackTrace();
+            }
+            throw new RuntimeException(e);
         }
     }
 

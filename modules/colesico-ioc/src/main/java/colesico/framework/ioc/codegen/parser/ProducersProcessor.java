@@ -39,6 +39,7 @@ import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -89,8 +90,6 @@ public class ProducersProcessor extends FrameworkAbstractProcessor {
                 logger.debug(message);
                 ce.print(processingEnv, elm);
             } catch (Exception e) {
-                StringWriter errors = new StringWriter();
-                e.printStackTrace(new PrintWriter(errors));
                 String msg = ExceptionUtils.getRootCauseMessage(e);
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, msg);
                 if (logger.isDebugEnabled()) {
@@ -118,9 +117,15 @@ public class ProducersProcessor extends FrameworkAbstractProcessor {
             // Create class source file
             String packageName = iocletElement.getOriginProducer().getPackageName();
             CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, iocletElement.getOriginProducer().unwrap());
+        } catch (CodegenException ce) {
+            logger.error("Error generating ioclet: " + ExceptionUtils.getRootCauseMessage(ce));
+            ce.print(processingEnv, Optional.ofNullable(iocletElement).map(ie -> ie.getOriginProducer()).map(op -> op.unwrap()).orElse(null));
+            throw ce;
         } catch (Exception e) {
             logger.debug("Error generating ioclet: " + ExceptionUtils.getRootCauseMessage(e));
-            e.printStackTrace();
+            if (logger.isDebugEnabled()) {
+                e.printStackTrace();
+            }
             throw e;
         }
     }

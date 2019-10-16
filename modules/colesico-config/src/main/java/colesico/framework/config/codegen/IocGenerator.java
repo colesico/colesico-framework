@@ -23,7 +23,7 @@ import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
-import colesico.framework.config.ConfigSourceDriver;
+import colesico.framework.config.ConfigSource;
 import colesico.framework.ioc.*;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import com.squareup.javapoet.*;
@@ -161,10 +161,10 @@ public class IocGenerator extends FrameworkAbstractGenerator {
             paramsCodegen.add("$S", param);
         }
         cb.add("final $T $N = $N.$N($T.of(",
-            ClassName.get(ConfigSourceDriver.Connection.class),
+            ClassName.get(ConfigSource.Connection.class),
             CONNECTION_VAR,
             SOURCE_DRV_PARAM,
-            ConfigSourceDriver.CONNECT_METHOD,
+            ConfigSource.CONNECT_METHOD,
             ClassName.get(Map.class)
         );
         cb.add(paramsCodegen.toFormat(), paramsCodegen.toValues());
@@ -174,14 +174,14 @@ public class IocGenerator extends FrameworkAbstractGenerator {
             // config.setField(conn.getValue(TYPE,"query",config.getField()))
             cb.add("$N.$N($N.$N(",
                 CONF_PARAM, "set" + StrUtils.firstCharToUpperCase(sv.getOriginField().getName()),
-                CONNECTION_VAR, ConfigSourceDriver.Connection.GET_VALUE_METHOD
+                CONNECTION_VAR, ConfigSource.Connection.GET_VALUE_METHOD
             );
             CodegenUtils.generateTypePick(sv.getOriginField().asType(), cb);
             cb.add(", $S, $N.$N()", sv.getQuery(), CONF_PARAM, "get" + StrUtils.firstCharToUpperCase(sv.getOriginField().getName()));
             cb.add("));\n");
         }
 
-        cb.addStatement("$N.$N()", CONNECTION_VAR, ConfigSourceDriver.Connection.CLOSE_METHD);
+        cb.addStatement("$N.$N()", CONNECTION_VAR, ConfigSource.Connection.CLOSE_METHD);
         cb.addStatement("return $N", CONF_PARAM);
         mb.addCode(cb.build());
     }

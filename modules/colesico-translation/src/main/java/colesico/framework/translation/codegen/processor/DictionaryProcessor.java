@@ -71,8 +71,6 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
                 logger.debug(message);
                 ce.print(processingEnv, elm);
             } catch (Exception e) {
-                StringWriter errors = new StringWriter();
-                e.printStackTrace(new PrintWriter(errors));
                 String msg = ExceptionUtils.getRootCauseMessage(e);
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, msg);
                 if (logger.isDebugEnabled()) {
@@ -95,8 +93,8 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
 
 
         List<MethodElement> methods = dictionaryBeanInterface.getMethodsFiltered(
-                m -> !m.unwrap().getModifiers().contains(Modifier.DEFAULT) &&
-                        m.unwrap().getReturnType().toString().equals(String.class.getName())
+            m -> !m.unwrap().getModifiers().contains(Modifier.DEFAULT) &&
+                m.unwrap().getReturnType().toString().equals(String.class.getName())
         );
 
 
