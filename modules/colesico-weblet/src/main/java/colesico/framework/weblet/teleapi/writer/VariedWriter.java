@@ -18,40 +18,34 @@
 
 package colesico.framework.weblet.teleapi.writer;
 
-import colesico.framework.http.HttpResponse;
-import colesico.framework.weblet.VariousResponse;
+import colesico.framework.weblet.VariedResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WriterContext;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 /**
  * @author Vladlen Larionov
  */
 @Singleton
-public final class VariousWriter implements WebletTeleWriter<VariousResponse> {
+public final class VariedWriter implements WebletTeleWriter<VariedResponse> {
 
     private final NavigationWriter navigationWriter;
     private final StringWriter stringWriter;
     private final BinaryWriter binaryWriter;
 
-    private final Provider<HttpResponse> responseProv;
-
     @Inject
-    public VariousWriter(NavigationWriter navigationWriter,
-                         StringWriter stringWriter,
-                         BinaryWriter binaryWriter,
-                         Provider<HttpResponse> responseProv) {
+    public VariedWriter(NavigationWriter navigationWriter,
+                        StringWriter stringWriter,
+                        BinaryWriter binaryWriter) {
         this.navigationWriter = navigationWriter;
         this.stringWriter = stringWriter;
         this.binaryWriter = binaryWriter;
-        this.responseProv = responseProv;
     }
 
     @Override
-    public void write(VariousResponse value, WriterContext wrContext) {
+    public void write(VariedResponse value, WriterContext wrContext) {
         if (value.getNavigationResponse() != null) {
             navigationWriter.write(value.getNavigationResponse(), wrContext);
         } else if (value.getStringResponse() != null) {

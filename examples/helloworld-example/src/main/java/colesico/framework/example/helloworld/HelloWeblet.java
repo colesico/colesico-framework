@@ -11,11 +11,11 @@ public class HelloWeblet {
 
     // Browse the url: http://localhost:8080/hello-weblet/say-hello
     public HtmlResponse sayHello() {
-        return new HtmlResponse(SAY_HELLO_TEXT);
+        return HtmlResponse.of(SAY_HELLO_TEXT);
     }
 
     // Browse the url: http://localhost:8080/hello-weblet/holla
     public HtmlResponse holla() {
-        return new HtmlResponse(SAY_HOLLA_TEXT);
+        return HtmlResponse.of(SAY_HOLLA_TEXT);
     }
 }

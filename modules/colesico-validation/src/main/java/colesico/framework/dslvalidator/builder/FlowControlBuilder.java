@@ -5,6 +5,8 @@ import colesico.framework.dslvalidator.DSLValidator;
 import colesico.framework.dslvalidator.commands.*;
 import colesico.framework.translation.Translatable;
 
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 abstract public class FlowControlBuilder {
@@ -14,14 +16,20 @@ abstract public class FlowControlBuilder {
      * @param commands
      * @return
      */
-    protected final <V> DSLValidator<V> program(final Command... commands) {
-        Command program = new GroupChain().addCommands(commands);
-        return new DSLValidator<>(program, null);
+    protected final <V> DSLValidator<V> program(final Command<V>... commands) {
+        GroupSequence<V> sequence = new GroupSequence<>();
+        for (Command<V> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return new DSLValidator<>(sequence, null);
     }
 
-    protected final <V> DSLValidator<V> program(final String subject, final Command... commands) {
-        Command program = new SerialChain();
-        return new DSLValidator<>(program, subject);
+    protected final <V> DSLValidator<V> program(final String subject, final Command<V>... commands) {
+        ChainSequence<V> sequence = new ChainSequence<>();
+        for (Command<V> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return new DSLValidator<>(sequence, subject);
     }
 
     /**
@@ -30,49 +38,65 @@ abstract public class FlowControlBuilder {
      *
      * @param commands
      * @return
-     * @see GroupChain
+     * @see GroupSequence
      */
-    protected final Command group(final Command... commands) {
-        return new GroupChain().addCommands(commands);
+    protected final <V> Command<V> group(final Command<V>... commands) {
+        GroupSequence<V> sequence = new GroupSequence<>();
+        for (Command<V> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return sequence;
     }
 
     /**
      * Executes commands within the local context.
      * In case of local validation errors occur, command execution is interrupted.
+     *
      * @param commands
      * @return
      */
-    protected final Command serial(final Command... commands) {
-        return new SerialChain().addCommands(commands);
+    protected final <V> Command<V> chain(final Command<V>... commands) {
+        ChainSequence<V> sequence = new ChainSequence<>();
+        for (Command<V> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return sequence;
     }
 
     /**
-     * Executes commands within the new child context with specified subject.
+     * Executes commands within the new nested context with specified subject.
      * In case of local validation errors occur, commands execution is interrupted.
      *
      * @param subject
      * @param commands
      * @return
-     * @see SubjectChain
+     * @see SubjectSequence
      */
-    protected final Command on(final String subject, final Command... commands) {
-        return new SubjectChain(subject).addCommands(commands);
+    protected final <V> Command<V> subject(final String subject, final Command<V>... commands) {
+        SubjectSequence<V> sequence = new SubjectSequence<>(subject);
+        for (Command<V> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return sequence;
     }
 
     /**
-     * Creates new child context with the subject and the value, extracted from the value of the local context.
-     * Execute commands within that child context.
-     * In case of validation errors occur in the child context, command execution is interrupted.
+     * Creates new nested context with the subject and the value, extracted from the value of the local context.
+     * Execute commands within that nested context.
+     * In case of validation errors occur in the nested context, command execution is interrupted.
      *
      * @param subject
-     * @param valueExtractor
+     * @param extractor
      * @param commands
-     * @param <T>
      * @return
-     * @see ValueChain
+     * @see FieldSequence
      */
-    protected final <T> Command on(final String subject, final Function<T, Object> valueExtractor, final Command... commands) {
-        return new ValueChain(subject, valueExtractor).addCommands(commands);
+    protected final <V, N> Command<V> field(final String subject, final Function<V, N> extractor, final Command<N>... commands) {
+        FieldSequence<V, N> sequence = new FieldSequence<>(subject, extractor);
+        for (Command<N> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return sequence;
     }
 
     /**
@@ -83,8 +107,20 @@ abstract public class FlowControlBuilder {
      * @param commands
      * @return
      */
-    protected final Command on(final String subject, final int index, final Command... commands) {
-        return new ElementChain(subject, index).addCommands(commands);
+    protected final <V extends List<E>, E> Command<V> item(final String subject, final int index, final Command<E>... commands) {
+        ListSequence<V, E> sequence = new ListSequence<>(subject, index);
+        for (Command<E> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return sequence;
+    }
+
+    protected final <V extends Map<K, E>, K, E> Command<V> entry(final String subject, final K key, final Command<E>... commands) {
+        MapSequence<V, K, E> sequence = new MapSequence<>(subject, key);
+        for (Command<E> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return sequence;
     }
 
     /**
@@ -93,26 +129,30 @@ abstract public class FlowControlBuilder {
      *
      * @param
      * @return
-     * @see ForEachChain
+     * @see IterableSequence
      */
-    protected final Command forEach(final Command... commands) {
-        return new ForEachChain().addCommands(commands);
+    protected final <V extends Iterable<I>, I> Command<V> forEach(final Command<I>... commands) {
+        IterableSequence<V, I> sequence = new IterableSequence<>();
+        for (Command<I> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return sequence;
     }
 
-    protected final Command ifOk(final Command... commands) {
-        return new IfOkChain().addCommands(commands);
+    protected final <V> Command<V> ifNotNull(final Command<V>... commands) {
+        IfNotNullSequence<V> sequence = new IfNotNullSequence<>();
+        for (Command<V> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return sequence;
     }
 
-    protected final Command ifNotNull(final Command... commands) {
-        return new IfNotNullChain().addCommands(commands);
-    }
-
-    protected final Command hookError(String errorCode, Translatable errorMsg, final Command... commands){
-        return new HookErrorChain(errorCode,errorMsg).addCommands(commands);
-    }
-
-    protected final <T> WithOnToken<T> with(Class<T> classis) {
-        return new WithOnToken<>(null, new GroupChain());
+    protected final <V> Command<V> hookError(String errorCode, Translatable errorMsg, final Command<V>... commands) {
+        HookErrorSequence<V> sequence = new HookErrorSequence<>(errorCode, errorMsg);
+        for (Command<V> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return sequence;
     }
 
 }

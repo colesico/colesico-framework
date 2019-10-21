@@ -20,35 +20,35 @@ package colesico.framework.dslvalidator.commands;
 
 import colesico.framework.dslvalidator.ValidationContext;
 
-import java.util.function.Function;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Assumes that the subvalue of value in the current context is an iterable.
- * Extract subvalue with valueExtractor and applies chain commands to its  elements.
+ * Perform command execution on a map entry  determined by key.
  *
  * @author Vladlen Larionov
  */
-public final class EachValueChain<V, C extends Iterable> extends AbstractChain<V> {
+public final class MapSequence<V extends Map<K, E>, K, E> extends AbstractSequence<V, E> {
 
+    /**
+     * Nested context subject
+     */
     private final String subject;
-    private final Function<V, C> valueExtractor;
 
-    public EachValueChain(String subject, Function<V, C> valueExtractor) {
+    /**
+     * Element index
+     */
+    private final K key;
+
+    public MapSequence(String subject, K key) {
         this.subject = subject;
-        this.valueExtractor = valueExtractor;
+        this.key = key;
     }
 
     @Override
     public void execute(ValidationContext<V> context) {
-        C childValues = valueExtractor.apply(context.getValue());
-        if (childValues == null) {
-            return;
-        }
-        int index = 0;
-        for (Object val : childValues) {
-            ValidationContext childContext = ValidationContext.ofChild(context, subject + '[' + (index++) + ']', val);
-            executeCommands(childContext);
-        }
+        E entryValue = context.getValue().get(key);
+        ValidationContext<E> nestedContext = ValidationContext.ofNested(context, subject, entryValue);
+        executeChain(nestedContext);
     }
-
 }

@@ -12,7 +12,7 @@ public class Index {
 
     // Full URI: /
     public HtmlResponse index(){
-        return new HtmlResponse("Hello from Index");
+        return HtmlResponse.of("Hello from Index");
     }
 
 }

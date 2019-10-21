@@ -21,8 +21,8 @@ abstract public class ValidatorBuilder extends FlowControlBuilder {
     /**
      * Verify value exists (string is not blank, collection is not empty, etc)
      */
-    protected Command required() {
-        return new RequiredVerifier(vrMessages);
+    protected <V> Command<V> required() {
+        return new RequiredVerifier<>(vrMessages);
     }
 
     /**
@@ -32,13 +32,12 @@ abstract public class ValidatorBuilder extends FlowControlBuilder {
      * @param errorCode
      * @param errorMessage
      * @param messageParam
-     * @param <T>
      */
-    protected <T> Command predicate(final Predicate<ValidationContext<T>> predicate,
+    protected <V> Command<V> predicate(final Predicate<ValidationContext<V>> predicate,
                                     final String errorCode,
                                     final Translatable errorMessage,
                                     final Object... messageParam) {
-        return new PredicateVerifier(predicate, errorCode, errorMessage, messageParam);
+        return new PredicateVerifier<>(predicate, errorCode, errorMessage, messageParam);
     }
 
     /**
@@ -49,7 +48,7 @@ abstract public class ValidatorBuilder extends FlowControlBuilder {
      * @param errorMessage
      * @param messageParam
      */
-    protected final Command regexp(final String pattern,
+    protected final Command<String> regexp(final String pattern,
                                    final String errorCode,
                                    final Translatable errorMessage,
                                    final Object... messageParam) {
@@ -63,7 +62,7 @@ abstract public class ValidatorBuilder extends FlowControlBuilder {
      * @param min
      * @param max
      */
-    protected final Command length(final Integer min,
+    protected final Command<String> length(final Integer min,
                                    final Integer max) {
 
         return new LengthVerifier(min, max, vrMessages);
@@ -76,7 +75,7 @@ abstract public class ValidatorBuilder extends FlowControlBuilder {
      * @param includeEndpoints
      * @return
      */
-    protected final Command interval(final Number min,
+    protected final <V extends Number> Command<V> interval(final Number min,
                                      final Number max,
                                      final boolean includeEndpoints) {
 
@@ -90,7 +89,7 @@ abstract public class ValidatorBuilder extends FlowControlBuilder {
      * @param includeEndpoints
      * @return
      */
-    protected final Command size(final Number min,
+    protected final <V> Command<V> size(final Number min,
                                  final Number max,
                                  final boolean includeEndpoints) {
 
@@ -102,7 +101,7 @@ abstract public class ValidatorBuilder extends FlowControlBuilder {
      * @param format
      * @return
      */
-    protected final Command dateFormat(final String format) {
+    protected final Command<String> dateFormat(final String format) {
         return new DateFormatVerifier(format, vrMessages);
     }
 

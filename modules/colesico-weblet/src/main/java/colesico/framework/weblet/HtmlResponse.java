@@ -24,17 +24,19 @@ package colesico.framework.weblet;
 public final class HtmlResponse implements StringResponse {
     public static final String HTML_CONTENT_TYPE = "text/html; charset=utf-8";
 
-    private final String contentType;
     private final String content;
 
-    public HtmlResponse(String content) {
+    private HtmlResponse(String content) {
         this.content = content;
-        this.contentType = HTML_CONTENT_TYPE;
+    }
+
+    public static HtmlResponse of(String content){
+        return new HtmlResponse(content);
     }
 
     @Override
     public String getContentType() {
-        return contentType;
+        return HTML_CONTENT_TYPE;
     }
 
     @Override

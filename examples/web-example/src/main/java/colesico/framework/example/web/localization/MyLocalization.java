@@ -21,23 +21,23 @@ public class MyLocalization {
     // http://localhost:8080/my-localization/ru
     public HtmlResponse ru() {
         l10n.setProfile(new DefaultProfile(new Locale("ru", "RU")));
-        return new HtmlResponse("Русский");
+        return HtmlResponse.of("Русский");
     }
 
     // http://localhost:8080/my-localization/en
     public HtmlResponse en() {
         l10n.setProfile(new DefaultProfile(new Locale("en", "GB")));
-        return new HtmlResponse("English");
+        return HtmlResponse.of("English");
     }
 
     // http://localhost:8080/my-localization/message
     public HtmlResponse message() {
-        return new HtmlResponse(translations.hello1());
+        return HtmlResponse.of(translations.hello1());
     }
 
     // http://localhost:8080/my-localization/inherit
     public HtmlResponse inherit() {
         l10n.setProfile(new DefaultProfile(new Locale("ru", "RU")));
-        return new HtmlResponse(translations.hello3());
+        return HtmlResponse.of(translations.hello3());
     }
 }

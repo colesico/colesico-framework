@@ -8,7 +8,7 @@ public class MyWeblet {
 
     //  http://localhost:8080/my-weblet/say-hello
     public HtmlResponse sayHello(){
-        return new HtmlResponse("Hello from MyWeblet");
+        return HtmlResponse.of("Hello from MyWeblet");
     }
 
 }

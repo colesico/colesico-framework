@@ -28,7 +28,7 @@ public class UnknownRouteException extends RuntimeException {
     private final HttpMethod httpMethod;
 
     public UnknownRouteException(String uri, HttpMethod httpMethod) {
-        super("Route '"+ httpMethod+" "+uri+"' is not mapped to any controller");
+        super("Route '"+ httpMethod.getName()+" "+uri+"' is not mapped to any controller");
         this.uri = uri;
         this.httpMethod = httpMethod;
     }

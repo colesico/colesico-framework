@@ -20,6 +20,6 @@ public class SubmitForm {
      */
     @RequestMethod(HttpMethod.POST)
     public HtmlResponse submit() {
-        return new HtmlResponse("Submitted");
+        return HtmlResponse.of("Submitted");
     }
 }

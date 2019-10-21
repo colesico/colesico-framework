@@ -42,8 +42,8 @@ public class Navigation<N extends Navigation> {
     protected String methodName;
     protected HttpMethod httpMethod = HttpMethod.HTTP_METHOD_GET;
     protected int httpCode = 302;
-    protected final Map<String, String> parameters = new HashMap<>();
-    protected final Map<String, String> uriParameters = new HashMap<>();
+    protected final Map<String, String> queryParameters = new HashMap<>();
+    protected final Map<String, String> routeParameters = new HashMap<>();
 
     public Navigation() {
     }
@@ -73,13 +73,13 @@ public class Navigation<N extends Navigation> {
         return (N) this;
     }
 
-    public N param(String name, String value) {
-        parameters.put(name, value);
+    public N queryParam(String name, String value) {
+        queryParameters.put(name, value);
         return (N) this;
     }
 
-    public N uriParam(String name, String value) {
-        uriParameters.put(name, value);
+    public N routeParam(String name, String value) {
+        routeParameters.put(name, value);
         return (N) this;
     }
 
@@ -93,7 +93,7 @@ public class Navigation<N extends Navigation> {
         if (StringUtils.isNotBlank(this.uri)) {
             targetURI = uri;
         } else if (this.serviceClass != null && this.methodName != null) {
-            List<String> slicedRoute = router.getSlicedRoute(this.serviceClass, this.methodName, this.httpMethod, this.uriParameters);
+            List<String> slicedRoute = router.getSlicedRoute(this.serviceClass, this.methodName, this.httpMethod, this.routeParameters);
             if (slicedRoute == null) {
                 throw new NavigationException("Unknown uri for service '" + serviceClass.getName() + "' and method name '" + methodName + "'");
             }
@@ -112,7 +112,7 @@ public class Navigation<N extends Navigation> {
         }
 
         char paramsSeparator = StringUtils.contains(targetURI, "?") ? '&' : '?';
-        String paramsStr = parameters.isEmpty() ? "" : paramsSeparator + buildParamsStr().toString();
+        String paramsStr = queryParameters.isEmpty() ? "" : paramsSeparator + buildParamsStr().toString();
 
         String location = urlPrefix + targetURI + paramsStr;
 
@@ -133,7 +133,7 @@ public class Navigation<N extends Navigation> {
         StringBuilder paramsStrBuilder = new StringBuilder();
         try {
             boolean next = false;
-            for (Map.Entry<String, String> e : parameters.entrySet()) {
+            for (Map.Entry<String, String> e : queryParameters.entrySet()) {
                 String paramValEnc = URLEncoder.encode(e.getValue(), "UTF-8");
                 if (next) {
                     paramsStrBuilder.append("&");

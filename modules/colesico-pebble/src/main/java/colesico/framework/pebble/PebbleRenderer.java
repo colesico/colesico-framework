@@ -65,7 +65,7 @@ public class PebbleRenderer implements HtmlRenderer<String> {
     @Override
     public final <M> HtmlResponse render(String templatePath, M model) {
         Writer writer = evaluate(templatePath, model);
-        return new HtmlResponse(writer.toString());
+        return HtmlResponse.of(writer.toString());
     }
 
     public <M> Writer evaluate(String templatePath, M viewModel) {

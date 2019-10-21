@@ -139,19 +139,27 @@ public class RouteTrie<V> {
     }
 
     public static class Node<V> {
-
+        // Parent route node ref
         protected final Node<V> parent;
+
+        // Node name  (segment name or a parameter name)
         protected final String name;
-        protected final boolean variable;
+
+        // Node is a parameter, is a segment otherwise
+        protected final boolean isParameter;
+
+        // Node payload
         protected V value;
 
+        // Child segments nodes refs
         protected final Map<String, Node<V>> segments = new HashMap();
+        // Child parameter node ref
         protected Node<V> parameter;
 
-        public Node(Node<V> parent, String name, boolean variable) {
+        public Node(Node<V> parent, String name, boolean isParameter) {
             this.parent = parent;
             this.name = name;
-            this.variable = variable;
+            this.isParameter = isParameter;
         }
 
         public V getValue() {
@@ -162,11 +170,21 @@ public class RouteTrie<V> {
             this.value = value;
         }
 
+        /**
+         * Adds child node as a segment
+         * @param name
+         * @return
+         */
         public Node<V> addSegment(String name) {
             Node<V> child = segments.computeIfAbsent(name, nodeName -> new Node<>(this, nodeName, false));
             return child;
         }
 
+        /**
+         * Add child node as a parameter
+         * @param name
+         * @return
+         */
         public Node<V> addParameter(String name) {
             if (this.parameter == null) {
                 this.parameter = new Node<>(this, name, true);
@@ -178,10 +196,19 @@ public class RouteTrie<V> {
             return this.parameter;
         }
 
+        /**
+         * Return child segment node
+         * @param nodeName
+         * @return
+         */
         public Node<V> getSegment(String nodeName) {
             return this.segments.get(nodeName);
         }
 
+        /**
+         * Return child parameter node
+         * @return
+         */
         public Node<V> getParameter() {
             return this.parameter;
         }
@@ -205,8 +232,8 @@ public class RouteTrie<V> {
             return name;
         }
 
-        public boolean isVariable() {
-            return variable;
+        public boolean isParameter() {
+            return isParameter;
         }
     }
 }

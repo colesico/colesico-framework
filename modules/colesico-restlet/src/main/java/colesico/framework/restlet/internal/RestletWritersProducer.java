@@ -10,7 +10,7 @@ import colesico.framework.security.Principal;
 import colesico.framework.weblet.HtmlResponse;
 import colesico.framework.weblet.NavigationResponse;
 import colesico.framework.weblet.TextResponse;
-import colesico.framework.weblet.VariousResponse;
+import colesico.framework.weblet.VariedResponse;
 import colesico.framework.weblet.teleapi.writer.*;
 
 import javax.inject.Singleton;
@@ -38,8 +38,8 @@ public class RestletWritersProducer {
     }
 
     @Singleton
-    @Classed(VariousResponse.class)
-    public RestletTeleWriter getVariousResponseWriter(VariousWriter impl) {
+    @Classed(VariedResponse.class)
+    public RestletTeleWriter getVariedResponseWriter(VariedWriter impl) {
         return new RestletWriterProxy(impl);
     }
 

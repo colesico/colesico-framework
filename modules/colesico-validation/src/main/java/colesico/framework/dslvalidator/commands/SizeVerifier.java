@@ -6,7 +6,7 @@ import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 import java.util.Collection;
 import java.util.Map;
 
-public class SizeVerifier extends AbstractIntervalVerifier<Object> {
+public class SizeVerifier<V> extends AbstractIntervalVerifier<V> {
 
     protected final ValidatorMessages msg;
 
@@ -32,7 +32,7 @@ public class SizeVerifier extends AbstractIntervalVerifier<Object> {
     }
 
     @Override
-    public void execute(ValidationContext<Object> context) {
+    public void execute(ValidationContext<V> context) {
         Object value = context.getValue();
         Number size;
 

@@ -18,25 +18,25 @@
 
 package colesico.framework.dslvalidator.commands;
 
+import colesico.framework.dslvalidator.Sequence;
+import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Executes chain commands within the new subcontext with specified subject.
+ * Executes all sequence commands within the current context.
+ * Commands execution is not interrupted when errors occur.
  *
  * @author Vladlen Larionov
+ * @see ChainSequence
  */
-public final class SubjectChain<V> extends AbstractChain<V> {
-
-    private final String subject;
-
-    public SubjectChain(String subject) {
-        this.subject = subject;
-    }
+public final class GroupSequence<V> extends AbstractSequence<V, V> {
 
     @Override
     public void execute(ValidationContext<V> context) {
-        ValidationContext childContext = ValidationContext.ofChild(context, subject, context.getValue());
-        executeCommands(childContext);
+       executeGroup(context);
     }
 
 }

@@ -19,28 +19,34 @@
 package colesico.framework.weblet;
 
 /**
-* @author Vladlen Larionov
-*/
+ * @author Vladlen Larionov
+ */
 public final class BinaryResponse {
 
+    protected final byte[] content;
+    protected final String contentType;
     protected final String fileName;
-    protected  final String mimeType;
-    protected  final byte[] content;
 
-    public BinaryResponse(String contentType, byte[] bytes) {
-        this.mimeType = contentType;
-        this.content = bytes;
-        this.fileName = null;
+    private BinaryResponse(byte[] content, String contentType, String fileName) {
+        this.content = content;
+        this.contentType = contentType;
+        this.fileName = fileName;
     }
 
-    public BinaryResponse(byte[] bytes) {
-        this.content = bytes;
-        this.mimeType ="application/octet-stream";
-        this.fileName = null;
+    public static BinaryResponse of(byte[] content, String mimeType, String fileName) {
+        return new BinaryResponse(content, mimeType, fileName);
     }
 
-    public String getMimeType() {
-        return mimeType;
+    public static BinaryResponse of(byte[] content, String mimeType) {
+        return new BinaryResponse(content, mimeType, null);
+    }
+
+    public static BinaryResponse of(byte[] content) {
+        return new BinaryResponse(content, "application/octet-stream", null);
+    }
+
+    public String getContentType() {
+        return contentType;
     }
 
     public byte[] getContent() {

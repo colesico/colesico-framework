@@ -122,7 +122,7 @@ public class RecordKitGenerator {
             compositionVar = varNames.getNextVarName(composition.getOriginField().getName());
             // SubCompositionType comp=parentComp.getSubComposition()
             cb.add("\n");
-            cb.add("// Composition: "+composition.getOriginClass().getName()+"\n\n");
+            cb.add("// Composition: " + composition.getOriginClass().getName() + "\n\n");
             cb.addStatement("$T $N = $N.$N()",
                 TypeName.get(composition.getOriginClass().asType()),
                 compositionVar,
@@ -170,39 +170,32 @@ public class RecordKitGenerator {
 
         String fieldType = column.getOriginField().asType().toString();
         switch (fieldType) {
-            case "java.lang.String":
-                cb.add("$N.getString($S)", RecordKit.RESULT_SET_PARAM, column.getName());
-                break;
-            case "java.lang.Character":
             case "char":
-                cb.add("$N.getString($S).charAt(0)", RecordKit.RESULT_SET_PARAM, column.getName());
+                cb.add("$N.getChar($S)", RecordKit.RESULT_SET_PARAM, column.getName());
                 break;
-            case "java.lang.Boolean":
+            case "boolean":
                 cb.add("$N.getBoolean($S)", RecordKit.RESULT_SET_PARAM, column.getName());
                 break;
-            case "java.lang.Long":
             case "long":
                 cb.add("$N.getLong($S)", RecordKit.RESULT_SET_PARAM, column.getName());
                 break;
-            case "java.lang.Integer":
             case "int":
                 cb.add("$N.getInt($S)", RecordKit.RESULT_SET_PARAM, column.getName());
                 break;
-            case "java.lang.Short":
             case "short":
                 cb.add("$N.getShort($S)", RecordKit.RESULT_SET_PARAM, column.getName());
                 break;
-            case "java.lang.Byte":
             case "byte":
                 cb.add("$N.getByte($S)", RecordKit.RESULT_SET_PARAM, column.getName());
                 break;
-            case "java.lang.Double":
             case "double":
                 cb.add("$N.getDouble($S)", RecordKit.RESULT_SET_PARAM, column.getName());
                 break;
-            case "java.lang.Float":
             case "float":
                 cb.add("$N.getFloat($S)", RecordKit.RESULT_SET_PARAM, column.getName());
+                break;
+            case "java.lang.String":
+                cb.add("$N.getString($S)", RecordKit.RESULT_SET_PARAM, column.getName());
                 break;
             case "java.math.BigDecimal":
                 cb.add("$N.getBigDecimal($S)", RecordKit.RESULT_SET_PARAM, column.getName());
@@ -213,8 +206,26 @@ public class RecordKitGenerator {
                     RecordKit.RESULT_SET_PARAM, column.getName()
                 );
                 break;
+            case "java.time.Instant":
+                cb.add("$N.getTimestamp($S) == null ? null : $N.getTimestamp($S).toInstant()",
+                    RecordKit.RESULT_SET_PARAM, column.getName(),
+                    RecordKit.RESULT_SET_PARAM, column.getName()
+                );
+                break;
+
+            case "java.lang.Boolean":
+            case "java.lang.Long":
+            case "java.lang.Integer":
+            case "java.lang.Short":
+            case "java.lang.Byte":
+            case "java.lang.Double":
+            case "java.lang.Float":
+            case "java.lang.Character":
+                cb.add("$N.getObject($S,$T.class)", RecordKit.RESULT_SET_PARAM, column.getName(), TypeName.get(column.getOriginField().asType()));
+                break;
+
             default:
-                cb.add("$N.getObject($S)", RecordKit.RESULT_SET_PARAM, column.getName());
+                cb.add("$N.getObject($S,$T.class)", RecordKit.RESULT_SET_PARAM, column.getName(), TypeName.get(column.getOriginField().asType()));
         }
     }
 
@@ -225,7 +236,7 @@ public class RecordKitGenerator {
             compositionVar = RecordKit.RECORD_PARAM;
         } else {
             cbo.add("\n");
-            cbo.add("// Composition: "+composition.getOriginClass().getName());
+            cbo.add("// Composition: " + composition.getOriginClass().getName());
             cbo.add("\n\n");
             compositionVar = varNames.getNextVarName(composition.getOriginField().getName());
             // SubCompositionType comp=parentComp.getSubComposition()

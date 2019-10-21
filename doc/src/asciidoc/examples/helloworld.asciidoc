@@ -118,7 +118,7 @@ public class HelloWeblet {
 
     // Corresponding url: http://localhost:8080/hello-weblet/say-hello
     public HtmlResponse sayHello(){
-        return new HtmlResponse("Hello World!");
+        return HtmlResponse.of("Hello World!");
     }
 }
 

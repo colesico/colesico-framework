@@ -18,6 +18,7 @@
 
 package colesico.framework.router.internal;
 
+import colesico.framework.router.RouterException;
 import colesico.framework.router.assist.RouteTrie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,10 +55,10 @@ public class RoutesIndex {
         }
         while ((node != null) && (node.getParent() != null)) {
             String segmentName;
-            if (node.isVariable()) {
+            if (node.isParameter()) {
                 segmentName = parameters.get(node.getName());
                 if (segmentName == null) {
-                    segmentName = "";
+                    throw new RouterException("Undetermined value of route parameter :"+node.getName()+" for routeId: "+routeId);
                 }
             } else {
                 segmentName = node.getName();

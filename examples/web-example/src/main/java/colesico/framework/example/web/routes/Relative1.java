@@ -14,6 +14,6 @@ public class Relative1 {
     // http://localhost:8080/my-service/v1.0/relative1/hi
     //
     public HtmlResponse hi() {
-        return new HtmlResponse("Hi!");
+        return HtmlResponse.of("Hi!");
     }
 }

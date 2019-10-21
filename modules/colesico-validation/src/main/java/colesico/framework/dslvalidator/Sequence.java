@@ -21,17 +21,16 @@ package colesico.framework.dslvalidator;
 import java.util.List;
 
 /**
- * Chain of commands
+ * Sequence of commands
  *
  * @author Vladlen Larionov
  */
-public interface Chain<V> extends Command<V> {
-    List<Command<?>> getCommands();
+public interface Sequence<V, C> extends Command<V> {
+    
+    List<Command<C>> getCommands();
 
-    default Chain addCommands(Command... commands) {
-        for (Command cmd : commands) {
-            getCommands().add(cmd);
-        }
+    default Sequence<V, C> addCommand(Command<C> command) {
+        getCommands().add(command);
         return this;
     }
 }

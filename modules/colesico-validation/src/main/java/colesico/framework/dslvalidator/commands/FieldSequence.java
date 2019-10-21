@@ -23,25 +23,32 @@ import colesico.framework.dslvalidator.ValidationContext;
 import java.util.function.Function;
 
 /**
- * Extract subvalue from current context value with valueExtractor function
- * and applies chain commands to that nested value within new subcontext.
+ * Extract field value from current context value with extractor function
+ * and applies commands to that nested value within new nested context.
  *
  * @author Vladlen Larionov
  */
-public final class ValueChain<V, S> extends AbstractChain<V> {
+public final class FieldSequence<V, N> extends AbstractSequence<V, N> {
 
+    /**
+     * Nested context subject
+     */
     private final String subject;
-    private final Function<V, S> valueExtractor;
 
-    public ValueChain(String subject, Function<V, S> valueExtractor) {
+    /**
+     * Extracts nested value from value
+     */
+    private final Function<V, N> extractor;
+
+    public FieldSequence(String subject, Function<V, N> extractor) {
         this.subject = subject;
-        this.valueExtractor = valueExtractor;
+        this.extractor = extractor;
     }
 
     @Override
     public void execute(ValidationContext<V> context) {
-        S childValue = valueExtractor.apply(context.getValue());
-        ValidationContext childContext = ValidationContext.ofChild(context, subject, childValue);
-        executeCommands(childContext);
+        N nestedValue = extractor.apply(context.getValue());
+        ValidationContext<N> nestedContext = ValidationContext.ofNested(context, subject, nestedValue);
+        executeChain(nestedContext);
     }
 }

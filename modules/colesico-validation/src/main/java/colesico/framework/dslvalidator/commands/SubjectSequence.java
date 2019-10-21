@@ -18,38 +18,32 @@
 
 package colesico.framework.dslvalidator.commands;
 
-import colesico.framework.dslvalidator.Chain;
 import colesico.framework.dslvalidator.Command;
+import colesico.framework.dslvalidator.Sequence;
 import colesico.framework.dslvalidator.ValidationContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Basic class for command chain
+ * Executes sequence of commands within the new nested context with specified subject.
  *
  * @author Vladlen Larionov
  */
-abstract public class AbstractChain<V> implements Chain<V> {
-
-    protected final ArrayList<Command<?>> commands = new ArrayList<>();
-
-    @Override
-    public List<Command<?>> getCommands() {
-        return commands;
-    }
+public final class SubjectSequence<V> extends AbstractSequence<V, V> {
 
     /**
-     * Executes chain commands until current context has no errors.
-     * @param context
+     * Nested context subject
      */
-    protected void executeCommands(ValidationContext<?> context) {
-        for (Command command : commands) {
-            if (context.hasErrors()) {
-                return;
-            }
-            command.execute(context);
-        }
+    private final String subject;
+
+    public SubjectSequence(String subject) {
+        this.subject = subject;
     }
 
+    @Override
+    public void execute(ValidationContext<V> context) {
+        ValidationContext<V> nestedContext = ValidationContext.ofNested(context, subject, context.getValue());
+       executeChain(context);
+    }
 }

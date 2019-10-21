@@ -29,7 +29,7 @@ abstract public class ResourceHtmlRenderer implements HtmlRenderer<String> {
         }
 
         String html = doRender(templateFullPath, model);
-        return new HtmlResponse(html);
+        return HtmlResponse.of(html);
     }
 
 }

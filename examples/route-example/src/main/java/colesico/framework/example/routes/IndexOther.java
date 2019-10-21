@@ -19,7 +19,7 @@ public class IndexOther {
      * "index" method name
      */
     public HtmlResponse index(){
-        return new HtmlResponse("Index!");
+        return HtmlResponse.of("Index!");
     }
 
     /**
@@ -27,6 +27,6 @@ public class IndexOther {
      * Corresponding URL http://localhost:8080/api/v1.0/[any path]
      */
     public HtmlResponse other(){
-        return new HtmlResponse("Other!");
+        return HtmlResponse.of("Other!");
     }
 }

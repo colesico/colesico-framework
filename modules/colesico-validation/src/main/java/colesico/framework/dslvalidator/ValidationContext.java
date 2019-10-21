@@ -26,7 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Validation processorContext
+ * Validation context
  *
  * @author Vladlen Larionov
  */
@@ -35,19 +35,19 @@ public final class ValidationContext<V> {
     // Name of value
     private final String subject;
 
-    // Validationg value
+    // Value to be validated
     private final V value;
 
     // Validation errors
     private final List<ValidationError> errors = new ArrayList<>();
 
     // Reference to parent context
-    private final ValidationContext superContext;
+    private final ValidationContext<?> superContext;
 
     // Nested contexts ref.
-    private final List<ValidationContext> childContexts = new LinkedList<>();
+    private final List<ValidationContext<?>> nestedContexts = new LinkedList<>();
 
-    private ValidationContext(ValidationContext superContext, String subject, V value) {
+    private ValidationContext(ValidationContext<?> superContext, String subject, V value) {
         this.subject = subject;
         this.value = value;
         this.superContext = superContext;
@@ -65,7 +65,7 @@ public final class ValidationContext<V> {
     }
 
     /**
-     * Produce child ValidationContext
+     * Produce nested ValidationContext
      *
      * @param superContext
      * @param subject
@@ -73,9 +73,9 @@ public final class ValidationContext<V> {
      * @param <V>
      * @return
      */
-    public static <V> ValidationContext<V> ofChild(ValidationContext superContext, String subject, V value) {
+    public static <V> ValidationContext<V> ofNested(ValidationContext<?> superContext, String subject, V value) {
         ValidationContext<V> childContext = new ValidationContext(superContext, subject, value);
-        superContext.getChildContexts().add(childContext);
+        superContext.getNestedContexts().add(childContext);
         return childContext;
     }
 
@@ -100,11 +100,11 @@ public final class ValidationContext<V> {
         errors.add(error);
     }
 
-    public List<ValidationContext> getChildContexts() {
-        return childContexts;
+    public List<ValidationContext<?>> getNestedContexts() {
+        return nestedContexts;
     }
 
-    public ValidationContext getSuperContext() {
+    public ValidationContext<?> getSuperContext() {
         return superContext;
     }
 
@@ -116,7 +116,7 @@ public final class ValidationContext<V> {
     protected ValidationIssue exportErrors() {
         ValidationIssue issue = new ValidationIssue(getSubject());
 
-        for (ValidationContext childContext : childContexts) {
+        for (ValidationContext<?> childContext : nestedContexts) {
             ValidationIssue childIssue = childContext.exportErrors();
             if (childIssue != null) {
                 issue.addSubissue(childIssue);

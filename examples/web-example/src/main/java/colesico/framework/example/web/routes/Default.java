@@ -11,6 +11,6 @@ public class Default {
 
     // http://localhost:8080/default/hello
     public HtmlResponse hello(){
-        return new HtmlResponse("Hello");
+        return HtmlResponse.of("Hello");
     }
 }

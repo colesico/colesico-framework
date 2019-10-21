@@ -16,20 +16,20 @@ public class RelativeComplex {
     // /api/v1.0 + /relative + /say-hallo
     @Route("say-hallo")
     public HtmlResponse hallo() {
-        return new HtmlResponse("Hallo!");
+        return HtmlResponse.of("Hallo!");
     }
 
     // http://localhost:8080/api/v1.0/relative/say-hei
     @Route("./say-hei")
     // Equivalent @Route("say-hei")
     public HtmlResponse hei() {
-        return new HtmlResponse("Hei!");
+        return HtmlResponse.of("Hei!");
     }
 
     // http://localhost:8080/api/v1.0/relative
     // The equivalent is the method name "index"
     @Route("./")
     public HtmlResponse welcome() {
-        return new HtmlResponse("Welcome!");
+        return HtmlResponse.of("Welcome!");
     }
 }

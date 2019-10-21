@@ -15,6 +15,6 @@ public class RelativeSimple {
     // http://localhost:8080/api/v1.0/relative-route/say-hola
     @Route("say-hola")
     public HtmlResponse hola() {
-        return new HtmlResponse("Hola!");
+        return HtmlResponse.of("Hola!");
     }
 }

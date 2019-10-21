@@ -49,6 +49,6 @@ public final class BinaryWriter implements WebletTeleWriter<BinaryResponse> {
         if (value.getFileName() != null) {
             response.setHeader("Content-Disposition", "attachment; filename=\"" + value.getFileName() + "\"");
         }
-        response.sendData(buffer, value.getMimeType(), 200);
+        response.sendData(buffer, value.getContentType(), 200);
     }
 }

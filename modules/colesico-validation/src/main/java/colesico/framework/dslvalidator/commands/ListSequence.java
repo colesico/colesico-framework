@@ -18,18 +18,38 @@
 
 package colesico.framework.dslvalidator.commands;
 
-
 import colesico.framework.dslvalidator.ValidationContext;
 
+import java.util.List;
+
 /**
- * Executes chain commands if no error within current context
+ * Perform command execution on a list element determined by index.
+ *
  * @author Vladlen Larionov
  */
-public final class IfOkChain<V> extends AbstractChain<V> {
+public final class ListSequence<V extends List<E>, E> extends AbstractSequence<V, E> {
+
+    /**
+     * Nested context subject
+     */
+    private final String subject;
+
+    /**
+     * Element index
+     */
+    private final int index;
+
+    public ListSequence(String subject, int index) {
+        this.subject = subject;
+        this.index = index;
+    }
+
     @Override
     public void execute(ValidationContext<V> context) {
-        if (!context.hasErrors()) {
-            executeCommands(context);
+        if (index < context.getValue().size()) {
+            E elementValue = context.getValue().get(index);
+            ValidationContext<E> nestedContext = ValidationContext.ofNested(context, subject, elementValue);
+            executeChain(nestedContext);
         }
     }
 }

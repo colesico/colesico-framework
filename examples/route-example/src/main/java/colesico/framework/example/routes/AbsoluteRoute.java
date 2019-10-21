@@ -15,7 +15,7 @@ public class AbsoluteRoute {
     // http://localhost:8080/say-hi.html
     @Route("/say-hi.html")
     public HtmlResponse hi() {
-        return new HtmlResponse("Hi!");
+        return HtmlResponse.of("Hi!");
     }
 
     // This is relative route regarding weblet route.
@@ -23,7 +23,7 @@ public class AbsoluteRoute {
     // http://localhost:8080/absolute-route/say-hello.html
     @Route("say-hello.html")
     public HtmlResponse hello() {
-        return new HtmlResponse("Hello!");
+        return HtmlResponse.of("Hello!");
     }
 
 }

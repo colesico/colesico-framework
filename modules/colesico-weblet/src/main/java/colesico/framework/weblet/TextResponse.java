@@ -23,12 +23,20 @@ package colesico.framework.weblet;
  */
 public final class TextResponse implements StringResponse {
 
-    private final String contentType;
     private final String content;
+    private final String contentType;
 
-    public TextResponse(String content, String contentType) {
-        this.contentType = contentType;
+    private TextResponse(String content, String contentType) {
         this.content = content;
+        this.contentType = contentType;
+    }
+    
+    public static TextResponse of (String content, String contentType){
+        return new TextResponse(content,contentType);
+    }
+
+    public static TextResponse of (String content){
+        return new TextResponse(content,"text/plain");
     }
 
     @Override

@@ -16,7 +16,7 @@ import javax.inject.Singleton;
 @Produce(StringWriter.class)
 @Produce(NavigationWriter.class)
 @Produce(BinaryWriter.class)
-@Produce(VariousWriter.class)
+@Produce(VariedWriter.class)
 @Produce(PrincipalWriter.class)
 @Produce(ProfileWriter.class)
 public class WebletWritersProducer {
@@ -46,8 +46,8 @@ public class WebletWritersProducer {
     }
 
     @Singleton
-    @Classed(VariousResponse.class)
-    public WebletTeleWriter getVariousResponseWriter(VariousWriter impl) {
+    @Classed(VariedResponse.class)
+    public WebletTeleWriter getVariedResponseWriter(VariedWriter impl) {
         return impl;
     }
 

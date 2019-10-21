@@ -19,18 +19,19 @@
 package colesico.framework.dslvalidator.commands;
 
 
+import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 
 /**
- * Executes chain commands if context value is not null
+ * Executes sequence commands if context value is not null
  *
  * @author Vladlen Larionov
  */
-public final class IfNotNullChain<V> extends AbstractChain<V> {
+public final class IfNotNullSequence<V> extends AbstractSequence<V, V> {
     @Override
     public void execute(ValidationContext<V> context) {
         if (context.getValue() != null) {
-            executeCommands(context);
+            executeChain(context);
         }
     }
 }

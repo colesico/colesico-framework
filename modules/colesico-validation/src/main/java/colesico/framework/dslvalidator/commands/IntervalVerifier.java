@@ -24,7 +24,7 @@ import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 /**
  * @author Vladlen Larionov
  */
-public final class IntervalVerifier extends AbstractIntervalVerifier<Number> {
+public final class IntervalVerifier<V extends Number> extends AbstractIntervalVerifier<V> {
 
     protected final ValidatorMessages msg;
 
@@ -34,7 +34,7 @@ public final class IntervalVerifier extends AbstractIntervalVerifier<Number> {
     }
 
     @Override
-    public void execute(ValidationContext<Number> context) {
+    public void execute(ValidationContext<V> context) {
         Number value = context.getValue();
         execute(value,context);
     }

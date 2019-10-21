@@ -12,6 +12,6 @@ public class NonRelative {
 
     @Route("print-params.html")
     public HtmlResponse test(){
-        return new HtmlResponse("Test!");
+        return HtmlResponse.of("Test!");
     }
 }
