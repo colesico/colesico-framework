@@ -19,7 +19,9 @@ import java.util.Date;
 @Producer(Rank.RANK_MINOR)
 @Produce(BooleanReader.class)
 @Produce(StringReader.class)
+@Produce(CharacterReader.class)
 @Produce(ByteReader.class)
+@Produce(ShortReader.class)
 @Produce(IntegerReader.class)
 @Produce(LongReader.class)
 @Produce(FloatReader.class)
@@ -46,8 +48,20 @@ public class WebletReadersProducer {
     }
 
     @Singleton
+    @Classed(Character.class)
+    public WebletTeleReader getCharacterReader(CharacterReader impl) {
+        return impl;
+    }
+
+    @Singleton
     @Classed(Byte.class)
     public WebletTeleReader getByteReader(ByteReader impl) {
+        return impl;
+    }
+
+    @Singleton
+    @Classed(Short.class)
+    public WebletTeleReader getShortReader(ShortReader impl) {
         return impl;
     }
 

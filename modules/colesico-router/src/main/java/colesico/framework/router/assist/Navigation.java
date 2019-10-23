@@ -74,12 +74,70 @@ public class Navigation<N extends Navigation> {
     }
 
     public N queryParam(String name, String value) {
-        queryParameters.put(name, value);
+        if (value != null) {
+            queryParameters.put(name, value);
+        }
+        return (N) this;
+    }
+
+    public N queryParam(String name, Long value) {
+        if (value != null) {
+            queryParameters.put(name, Long.toString(value));
+        }
+        return (N) this;
+    }
+
+    public N queryParam(String name, Integer value) {
+        if (value != null) {
+            queryParameters.put(name, Integer.toString(value));
+        }
+        return (N) this;
+    }
+
+    public N queryParam(String name, Short value) {
+        if (value != null) {
+            queryParameters.put(name, Short.toString(value));
+        }
+        return (N) this;
+    }
+
+    public N queryParam(String name, Boolean value) {
+        if (value != null) {
+            queryParameters.put(name, Boolean.toString(value));
+        }
         return (N) this;
     }
 
     public N routeParam(String name, String value) {
-        routeParameters.put(name, value);
+        if (value != null) {
+            routeParameters.put(name, value);
+        }
+        return (N) this;
+    }
+
+    public N routeParam(String name, Long value) {
+        routeParameters.put(name, Long.toString(value));
+        return (N) this;
+    }
+
+    public N routeParam(String name, Integer value) {
+        if (value != null) {
+            routeParameters.put(name, Integer.toString(value));
+        }
+        return (N) this;
+    }
+
+    public N routeParam(String name, Short value) {
+        if (value != null) {
+            routeParameters.put(name, Short.toString(value));
+        }
+        return (N) this;
+    }
+
+    public N routeParam(String name, Boolean value) {
+        if (value != null) {
+            routeParameters.put(name, Boolean.toString(value));
+        }
         return (N) this;
     }
 

@@ -20,24 +20,38 @@ package colesico.framework.weblet.teleapi.reader;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.router.RouterContext;
+import colesico.framework.teleapi.TeleException;
+import colesico.framework.weblet.t9n.WebletMessages;
 import colesico.framework.weblet.teleapi.ReaderContext;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
-public final class CharReader extends AbstractReader<Character> {
+/**
+ * @author Vladlen Larionov
+ */
+@Singleton
+public final class ShortReader extends AbstractReader<Short> {
+    private final WebletMessages messages;
 
-    public CharReader(Provider<RouterContext> routerContextProv, Provider<HttpContext> httpContextProv) {
+    @Inject
+    public ShortReader(Provider<RouterContext> routerContextProv, Provider<HttpContext> httpContextProv, WebletMessages messages) {
         super(routerContextProv, httpContextProv);
+        this.messages = messages;
     }
 
     @Override
-    public Character read(ReaderContext ctx) {
-        String val = ctx.getString(getRouterContext(), getHttpRequest());
-        if (StringUtils.isNotEmpty(val)) {
-            return val.charAt(0);
-        } else {
-            return null;
+    public Short read(ReaderContext ctx) {
+        try {
+            String val = ctx.getString(getRouterContext(), getHttpRequest());
+            if (StringUtils.isEmpty(val)) {
+                return null;
+            }
+            return Short.parseShort(val);
+        } catch (Exception ex) {
+            throw new TeleException(messages.invalidNumberFormat(ctx.getName()));
         }
     }
 }
