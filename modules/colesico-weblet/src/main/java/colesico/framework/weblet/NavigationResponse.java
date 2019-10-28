@@ -33,4 +33,8 @@ public final class NavigationResponse extends Navigation<NavigationResponse> {
     public static NavigationResponse of(String uri) {
         return new NavigationResponse().uri(uri);
     }
+
+    public static NavigationResponse of() {
+        return new NavigationResponse();
+    }
 }

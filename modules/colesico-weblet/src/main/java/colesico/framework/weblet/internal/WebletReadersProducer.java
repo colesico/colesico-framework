@@ -15,6 +15,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 
 @Producer(Rank.RANK_MINOR)
 @Produce(BooleanReader.class)
@@ -23,7 +25,9 @@ import java.util.Date;
 @Produce(ByteReader.class)
 @Produce(ShortReader.class)
 @Produce(IntegerReader.class)
+@Produce(OptionalIntReader.class)
 @Produce(LongReader.class)
+@Produce(OptionalLongReader.class)
 @Produce(FloatReader.class)
 @Produce(DoubleReader.class)
 @Produce(DateReader.class)
@@ -72,8 +76,21 @@ public class WebletReadersProducer {
     }
 
     @Singleton
+    @Classed(OptionalInt.class)
+    public WebletTeleReader getOptionalIntReader(OptionalIntReader impl) {
+        return impl;
+    }
+
+
+    @Singleton
     @Classed(Long.class)
     public WebletTeleReader getLongReader(LongReader impl) {
+        return impl;
+    }
+
+    @Singleton
+    @Classed(OptionalLong.class)
+    public WebletTeleReader getOptionalLongReader(OptionalLongReader impl) {
         return impl;
     }
 

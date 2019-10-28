@@ -33,4 +33,12 @@ public class VarNameSequence {
     public String getNextTempVariable() {
         return TMP_VAR + (tmpVarIndex++);
     }
+
+    public String getNextTempVariable(String namePrefix) {
+        return namePrefix + (tmpVarIndex++);
+    }
+
+    public void reset(){
+        tmpVarIndex = 0;
+    }
 }

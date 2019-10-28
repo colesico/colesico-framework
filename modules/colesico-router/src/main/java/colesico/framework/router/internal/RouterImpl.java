@@ -75,7 +75,7 @@ public class RouterImpl implements Router {
             for (RoutingLigature.RouteInfo routeInfo : ligature.getRoutesIno()) {
                 if (log.isDebugEnabled()) {
                     log.debug("Route '" + routeInfo.getRoute() + "' mapped to tele-method '" +
-                        ligature.getFramletClass().getName() + "->" + routeInfo.getTeleMethodName());
+                        ligature.getServiceClass().getName() + "->" + routeInfo.getTeleMethodName());
 
                 }
                 RouteTrie.Node<TeleMethod> node = routeTrie.addRoute(
@@ -84,18 +84,18 @@ public class RouterImpl implements Router {
                 );
 
                 HttpMethod httpMethod = HttpMethod.of(node.getRoot().getName());
-                routesIndex.addNode(toRouteId(ligature.getFramletClass(), routeInfo.getTeleMethodName(), httpMethod), node);
+                routesIndex.addNode(toRouteId(ligature.getServiceClass(), routeInfo.getTeleMethodName(), httpMethod), node);
             }
         }
     }
 
-    protected String toRouteId(Class<?> framletClass, String teleMethodName, HttpMethod httpMethod) {
-        return framletClass.getName() + ':' + teleMethodName + ':' + httpMethod.getName();
+    protected String toRouteId(Class<?> serviceClass, String teleMethodName, HttpMethod httpMethod) {
+        return serviceClass.getName() + ':' + teleMethodName + ':' + httpMethod.getName();
     }
 
     @Override
-    public List<String> getSlicedRoute(Class<?> framletClass, String teleMethodName, HttpMethod httpMethod, Map<String, String> parameters) {
-        return routesIndex.getSlicedRoute(toRouteId(framletClass, teleMethodName, httpMethod), parameters);
+    public List<String> getSlicedRoute(Class<?> serviceClass, String teleMethodName, HttpMethod httpMethod, Map<String, String> parameters) {
+        return routesIndex.getSlicedRoute(toRouteId(serviceClass, teleMethodName, httpMethod), parameters);
     }
 
     @Override

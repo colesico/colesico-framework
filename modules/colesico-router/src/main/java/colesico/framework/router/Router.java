@@ -27,7 +27,7 @@ import java.util.Map;
  * @author Vladlen Larionov
  */
 public interface Router {
-    List<String> getSlicedRoute(Class<?> framletClass, String teleMethodName, HttpMethod httpMethod, Map<String, String> parameters);
+    List<String> getSlicedRoute(Class<?> serviceClass, String teleMethodName, HttpMethod httpMethod, Map<String, String> parameters);
 
     void perform(HttpMethod httpMethod, String uri);
 }

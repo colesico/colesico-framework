@@ -29,7 +29,6 @@ import colesico.framework.security.AuthorityRequiredException;
 import colesico.framework.security.PrincipalRequiredException;
 import colesico.framework.service.ApplicationException;
 import colesico.framework.teleapi.DataPort;
-import colesico.framework.teleapi.TeleDriver;
 import colesico.framework.validation.ValidationException;
 import colesico.framework.weblet.teleapi.InvokeContext;
 import org.apache.commons.lang3.StringUtils;
@@ -67,19 +66,19 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
     }
 
     @Override
-    public <F> void invoke(F framlet, Binder<F, RestletDataPort> binder, InvokeContext invCtx) {
+    public <S> void invoke(S service, Binder<S, RestletDataPort> binder, InvokeContext invCtx) {
         // Set data port to be accessible
         threadScope.put(DataPort.SCOPE_KEY, restletDataPort);
         // Retrieve http context
         HttpContext httpCtx = httpContextProv.get();
         try {
-            invokeImpl(framlet, binder, invCtx, httpCtx);
+            invokeImpl(service, binder, invCtx, httpCtx);
         } catch (Exception ex) {
             handleCommonError(ex, 500, httpCtx);
         }
     }
 
-    protected <F> void invokeImpl(F framlet, Binder binder, InvokeContext invCtx, HttpContext context) {
+    protected <S> void invokeImpl(S service, Binder binder, InvokeContext invCtx, HttpContext context) {
         HttpRequest httpRequest = context.getRequest();
         try {
 
@@ -90,7 +89,7 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
             }
 
             // Invoke tele-method
-            binder.invoke(framlet, restletDataPort);
+            binder.invoke(service, restletDataPort);
 
         } catch (HttpException hex) {
             if (hex.getCause() != null) {

@@ -20,6 +20,7 @@ package colesico.framework.weblet.teleapi;
 
 /**
  * @author Vladlen Larionov
+ * Weblet tele writer context stub
  */
 public class WriterContext {
 }

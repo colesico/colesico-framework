@@ -69,6 +69,8 @@ public class WebletTeleDriverImpl implements WebletTeleDriver {
         } catch (PrincipalRequiredException pre) {
             if (authenticatorProv.get().authenticate()) {
                 binder.invoke(target, dataPort);
+            } else {
+                throw pre;
             }
         }
     }

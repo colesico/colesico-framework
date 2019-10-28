@@ -27,12 +27,12 @@ public interface WidgetKit {
      * Render widget
      *
      * @param fragmentId identifier of fragment of widget contents in the page
-     * @param widgetFramletClass service class which renders widget
+     * @param widgetClass service class which renders widget
      * @param widgetId id of widget
      * @param params
      */
-    void renderWidget(Class<? extends Widget> widgetFramletClass, String widgetId, String fragmentId, Object... params);
+    void renderWidget(Class<? extends Widget> widgetClass, String widgetId, String fragmentId, Object... params);
 
-    void renderWidget(String widgetFramletClassName, String widgetId, String fragmentId, Object... params);
+    void renderWidget(String widgetClassName, String widgetId, String fragmentId, Object... params);
 
 }

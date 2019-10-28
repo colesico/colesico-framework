@@ -21,6 +21,7 @@ package colesico.framework.weblet.codegen;
 import colesico.framework.assist.CollectionUtils;
 import colesico.framework.assist.codegen.model.AnnotationElement;
 import colesico.framework.router.codegen.RoutesModulator;
+import colesico.framework.service.codegen.model.TeleCompElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
 import colesico.framework.service.codegen.model.TeleParamElement;
 import colesico.framework.service.codegen.model.TeleVarElement;
@@ -80,7 +81,7 @@ public class WebletModulator extends RoutesModulator {
         TeleMethodElement teleMethod = teleParam.getParentTeleMethod();
         CodeBlock.Builder cb = CodeBlock.builder();
 
-        List<String> paramsChain = new ArrayList<>();
+        List<String> paramNamesChain = new ArrayList<>();
 
         TeleVarElement curVar = teleParam;
         TeleVarElement rootVar = teleParam;
@@ -89,19 +90,21 @@ public class WebletModulator extends RoutesModulator {
             AnnotationElement<ParamName> nameAnn = curVar.getOriginVariable().getAnnotation(ParamName.class);
             if (nameAnn != null) {
                 name = nameAnn.unwrap().value();
+            } else if (curVar instanceof TeleCompElement) {
+                name = null;
             } else {
                 name = curVar.getOriginVariable().getName();
             }
 
-            if (StringUtils.isNoneBlank(name)) {
-                paramsChain.add(name);
+            if (StringUtils.isNotBlank(name)) {
+                paramNamesChain.add(name);
             }
             rootVar = curVar;
             curVar = curVar.getParentVariable();
         }
 
-        Collections.reverse(paramsChain);
-        String paramName = StringUtils.join(paramsChain, ".");
+        Collections.reverse(paramNamesChain);
+        String paramName = StringUtils.join(paramNamesChain, "");
         String paramOrigin = Origin.DEFAULT.name();
 
         AnnotationElement<ParamOrigin> originAnn = teleParam.getOriginVariable().getAnnotation(ParamOrigin.class);
@@ -116,10 +119,6 @@ public class WebletModulator extends RoutesModulator {
             paramOrigin = originAnn.unwrap().value().name();
         }
 
-        AnnotationElement<ParamName> nameAnn = teleParam.getOriginVariable().getAnnotation(ParamName.class);
-        if (nameAnn != null && nameAnn.unwrap().value() != "") {
-            paramName = nameAnn.unwrap().value();
-        }
         cb.add("new $T(", ClassName.get(ReaderContext.class));
         cb.add("$S,$T.$N", paramName, ClassName.get(OriginFacade.class), paramOrigin);
         cb.add(")");

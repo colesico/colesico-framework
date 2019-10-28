@@ -46,8 +46,8 @@ abstract public class RoutegenContext {
 
     protected final String serviceRoute;
 
-    public RoutegenContext(ServiceElement framlet) {
-        this.serviceRoute = buildServiceRoute(framlet);
+    public RoutegenContext(ServiceElement service) {
+        this.serviceRoute = buildServiceRoute(service);
     }
 
     public final void registTeleMethod(TeleMethodElement teleMethod) {

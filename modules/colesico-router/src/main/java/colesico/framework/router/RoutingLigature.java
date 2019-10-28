@@ -34,11 +34,11 @@ public final class RoutingLigature {
     public static final String TELE_METHOD_PARAM = "teleMethod";
     public static final String ORIGIN_METHOD_PARAM = "originMethod";
 
-    private final Class<?> framletClass;
+    private final Class<?> serviceClass;
     private final Map<String, RouteInfo> routesMap = new TreeMap<>();
 
-    public RoutingLigature(Class<?> framletClass) {
-        this.framletClass = framletClass;
+    public RoutingLigature(Class<?> serviceClass) {
+        this.serviceClass = serviceClass;
     }
 
     public void add(String route, TeleMethod teleMethod, String teleMethodName) {
@@ -49,8 +49,8 @@ public final class RoutingLigature {
         }
     }
 
-    public Class<?> getFramletClass() {
-        return framletClass;
+    public Class<?> getServiceClass() {
+        return serviceClass;
     }
 
     public Collection<RouteInfo> getRoutesIno() {

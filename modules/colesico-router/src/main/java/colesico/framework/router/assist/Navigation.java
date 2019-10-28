@@ -21,6 +21,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.router.Router;
+import colesico.framework.router.RouterException;
 import colesico.framework.service.ServiceProxy;
 import org.apache.commons.lang3.StringUtils;
 
@@ -80,6 +81,14 @@ public class Navigation<N extends Navigation> {
         return (N) this;
     }
 
+    public N queryParam(String name, Character value) {
+        if (value != null) {
+            queryParameters.put(name, Character.toString(value));
+        }
+        return (N) this;
+    }
+
+
     public N queryParam(String name, Long value) {
         if (value != null) {
             queryParameters.put(name, Long.toString(value));
@@ -108,10 +117,17 @@ public class Navigation<N extends Navigation> {
         return (N) this;
     }
 
-    public N routeParam(String name, String value) {
-        if (value != null) {
-            routeParameters.put(name, value);
+    public N queryParamsMap(Map<String, Object> params) {
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            if (entry.getKey() != null) {
+                queryParameters.put(entry.getKey(), entry.getValue().toString());
+            }
         }
+        return (N) this;
+    }
+
+    public N routeParam(String name, String value) {
+        routeParameters.put(name, value);
         return (N) this;
     }
 
@@ -121,22 +137,27 @@ public class Navigation<N extends Navigation> {
     }
 
     public N routeParam(String name, Integer value) {
-        if (value != null) {
-            routeParameters.put(name, Integer.toString(value));
-        }
+        routeParameters.put(name, Integer.toString(value));
         return (N) this;
     }
 
     public N routeParam(String name, Short value) {
-        if (value != null) {
-            routeParameters.put(name, Short.toString(value));
-        }
+        routeParameters.put(name, Short.toString(value));
         return (N) this;
     }
 
     public N routeParam(String name, Boolean value) {
-        if (value != null) {
-            routeParameters.put(name, Boolean.toString(value));
+        routeParameters.put(name, Boolean.toString(value));
+        return (N) this;
+    }
+
+    public N routeParamsMap(Map<String, Object> params) {
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            if (entry.getKey() != null) {
+                routeParameters.put(entry.getKey(), entry.getValue().toString());
+            } else {
+                throw new RouterException("Empty route parameter value: " + entry.getKey());
+            }
         }
         return (N) this;
     }
