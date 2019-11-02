@@ -19,7 +19,7 @@ The best way to start learning something is to study by examples :)
 * <<examples/helloworld.asciidoc#,Hello world example>>
 * <<examples/restlet.asciidoc#,RESTful service example >>
 
-See other examples in
+See other examples in the
  https://github.com/colesico/colesico-framework/tree/master/examples[source code]
 
 == Framework modules
