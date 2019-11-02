@@ -16,7 +16,6 @@ public class Main {
         final Ioc ioc = iocBuilder.build();
 
         HttpServer httpServer = ioc.instance(HttpServer.class);
-        httpServer.init();
         httpServer.start();
     }
 }

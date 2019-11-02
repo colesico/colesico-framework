@@ -23,6 +23,8 @@ package colesico.framework.weblet;
  */
 public final class TextResponse implements StringResponse {
 
+    public static final String TEXT_CONTENT_TYPE = "text/plain; charset=utf-8";
+
     private final String content;
     private final String contentType;
 
@@ -30,13 +32,13 @@ public final class TextResponse implements StringResponse {
         this.content = content;
         this.contentType = contentType;
     }
-    
-    public static TextResponse of (String content, String contentType){
-        return new TextResponse(content,contentType);
+
+    public static TextResponse of(String content, String contentType) {
+        return new TextResponse(content, contentType);
     }
 
-    public static TextResponse of (String content){
-        return new TextResponse(content,"text/plain");
+    public static TextResponse of(String content) {
+        return new TextResponse(content, TEXT_CONTENT_TYPE);
     }
 
     @Override

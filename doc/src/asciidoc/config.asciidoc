@@ -4,15 +4,42 @@
 
 This module automates the usage of configuration beans and integrates its with the IoC container.
 
-Colesico configuration bean is simple instance of class that extends a config "template" class. 
-Each method of this class is provides some configuration information or other objects.
+In general, a colesico configuration bean is a class with methods that returns or sets some configurations values.
+For example it may be used to provide for an endpoint address or  configure a JDBC DataSource instance
+or apply some actions on various builders passed to configuration beans.
+
 Configuration beans can be obtained from IoC container.
 
-The general principle of using configuration beans:
+There are two configuration bean types:
 
-* Define an abstract class of the configuration bean with abstract methods that supply configuration values or applies some options to input parameters (in case with builders).
-* Add @ConfigPrototype annotation on that bean. This is indicates that the bean is a configuration prototype bean (base bean for configuration that must be extended)
-* Specify the configuration model in the @ConfigPrototype annotation (see ConfigModel class).
-* To obtain an instance of the configuration bean in the service use the dependency injection (depend on the configuration model)
-* To define the concrete configuration values for the configuration bean extend the abstract configuration bean  (configuration prototype)
-* Add @Configuration annotation to this implementation
+1. Simple configuration bean. This is just a pojo class annotated with @Config annotation. It can be used to the directly
+   definition and supplying configuration values.
+2. Prototype-based based configuration bean. This type of beans  is an instance of a class that extends
+   a configuration "prototype" class ("template"). This type of configuration is used for deferred configuration definition.
+   For example a Service can define configuration prototype bean, and the Client can create configuration based on that prototype to
+   provide some configurations to the Service.
+
+Configuration bean can provide hard coded values or load it from external sources (properties/yaml files, database, etc.).
+Module has build-in support for an external configuration value sources:
+
+* @UseSource annotation is used to define configuration source (*.properties file source supported out-of-the-box.
+  Support for yaml files or database, etc. can be easily implemented)
+* @SourceValue annotation defines the value to be bind from data source.
+
+
+=== Prototype-based based configuration
+
+Config module supports different prototype-based based configuration models
+
+* Single. This type of configuration is used to define some global configuration that is the only configuration instance per application (per IoC container).
+  The configuration in this model may be obtained from IoC container by configuration prototype class name.
+  Named or Classed IoC qualifiers can be additionally used on config implementation to differentiate  config singletons.
+* Polyvariant. This type of configuration is used to define some  optional configurations or additional configurations that should be "aggregated"  to fully configure the "service". I.e. it is the multiple configurations instances per application, that may be obtained from injector with  Polyprovider of configuration prototype class name. Named or Classed IoC qualifiers can be additionally used on config implementation to differentiate polyvariant sets.
+* Message. Configuration of tis model is not used directly via injection. To get this configuration the bean should receive configuration instance via IOC Message.
+  The client can inject that  bean by specifying the @Classed qualifier with the configuration implementation class
+
+=== Examples
+
+See full source code in the framework source code section #examples/config-example#
+
+

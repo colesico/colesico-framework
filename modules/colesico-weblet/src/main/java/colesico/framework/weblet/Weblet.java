@@ -21,7 +21,7 @@ package colesico.framework.weblet;
 import java.lang.annotation.*;
 
 /**
- * Basic routerext annotation
+ * Weblet declaration annotation
  * @author Vladlen Larionov
  */
 @Retention(RetentionPolicy.RUNTIME)

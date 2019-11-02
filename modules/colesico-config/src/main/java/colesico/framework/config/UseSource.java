@@ -21,7 +21,7 @@ package colesico.framework.config;
 import java.lang.annotation.*;
 
 /**
- * Configuration source definition for configuration.
+ * Configuration source definition for configuration bean.
  * <p>
  * Configuration source contains a configuration values.
  * For example it can be a .properties file or a .yaml file or even sql data base,
@@ -41,14 +41,15 @@ import java.lang.annotation.*;
 public @interface UseSource {
 
     /**
-     * Config source type
+     * Config source type. PropertiesSource supported out-of the-box.
      *
+     * @see PropertiesSource
      * @return
      */
     Class<? extends ConfigSource> type();
 
     /**
-     * Config registry connection params in format paramName1,paramValue1,paramName2,paramValue2.. up to ten
+     * Configuration source connection/configurations params in format paramName1,paramValue1,paramName2,paramValue2.. up to ten pairs.
      *
      * @return
      */

@@ -2,13 +2,13 @@ package colesico.framework.example.ioc.logger;
 
 public class Logger {
 
-    private final String name;
+    private final String loggerName;
 
-    public Logger(String name) {
-        this.name = name;
+    public Logger(String loggerName) {
+        this.loggerName = loggerName;
     }
 
-    public void log(String message){
-        System.out.println(name+": "+message);
+    public String log(String message) {
+        return loggerName + ":" + message;
     }
 }

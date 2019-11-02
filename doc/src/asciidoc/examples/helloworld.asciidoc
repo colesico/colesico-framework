@@ -87,6 +87,19 @@ then  obtain a http server instance and start it.
 
 [source,java]
 ----
+
+public static void main(String[] args) {
+
+        // Create IoC container instance, obtain http server and start it.
+
+        IocBuilder
+          .forProduction()
+          .instance(HttpServer.class)
+          .start();
+
+}
+
+// Alternative more verbose code
 public static void main(String[] args) {
 
         // Build DI container instance optimized for production.
@@ -98,8 +111,7 @@ public static void main(String[] args) {
         // Obtain http server from DI container
         HttpServer httpServer = ioc.instance(HttpServer.class);
 
-        // Init and start http server
-        httpServer.init();
+        // Start http server
         httpServer.start();
 }
 ----

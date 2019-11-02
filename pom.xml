@@ -25,7 +25,7 @@
     <groupId>net.colesico.framework</groupId>
     <artifactId>colesico-framework</artifactId>
     <packaging>pom</packaging>
-    <version>2.2.1</version>
+    <version>2.2.2</version>
     <name>Colesico Framework</name>
     <description>
         Lightweight application framework for the Java 11+
@@ -184,6 +184,7 @@
                 <module>examples/helloworld-example</module>
                 <module>examples/restlet-example</module>
                 <module>examples/route-example</module>
+                <module>examples/config-example</module>
                 <module>examples/ioc-example</module>
                 <module>examples/web-example</module>
                 <module>examples/eventbus-example</module>

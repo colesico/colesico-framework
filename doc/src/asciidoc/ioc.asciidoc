@@ -8,9 +8,10 @@ Colesico-IoC is a simple, lightweight dependency injection container for Java 11
 
 == Key features:
 
+* Small codebase.
 * Reflection is not used (code generation at compile time with AnnotationProcessor).
 * Dependency injection is constructor-based only.
-* No support for cyclic dependency automatic resolving (manually only).
+* Cyclic dependency resolving support.
 * Can be used as plugin-framework.
 * Producers based instance creation configuration.
 * Dependency injection configuration discovery at container start time (SPI based).
@@ -20,7 +21,8 @@ Colesico-IoC is a simple, lightweight dependency injection container for Java 11
 * Classed injections support (@Classed annotation).
 * Support for multiple dependency implementations (@Polyproduce).
 * Injection point support (e.g. for Logger injection).
-* Java 11+
+* Lifecycle listeners  (@PostConstruct, @PostProduce)
+* Java 11+  (JPMS compatible)
 
 
 == Ioc container
@@ -263,7 +265,7 @@ By default, the builder uses the following ranks:
 The Ioc container builder allows to create any chain of ranks.
 The rank itself is an simple arbitrary text string.
 
-== Injectable constuctors
+== Injectable constructors
 
 Classes for  dependency injection may not have an explicitly defined constructor. Ioc container will use the default constructor to create instances.
 If more than one constructor is declared, the one that will be used for dependency injection must be annotated
@@ -310,6 +312,41 @@ Or with IoC directly:
 ----
   MyMessage message = new MyMessage(...);
   MyBean myBean = ioc.instance(new TypeKey(MyBean.class), message);
+----
+
+== Injection point
+
+In some cases it is useful to know the target class where the dependency is injected.
+For example it may be required for the Logger injection.
+To pass Injection point information to dependency producer use @Contextual annotation and to
+obtain that Injection point in the producer use @Message annotation and InjectionPoint type parameter.
+See logger injection detail example in the ioc-example source code.
+
+== Lifecycle listeners
+
+IoC container supports the following lifecycle listeners:
+
+* PostConstruct. The bean public method annotated with @PostConstruct annotation will be
+  invoked by the IoC container  after bean has been created and PostProduce listener been invoked.
+* PostProduce. @PostProduce annotation should be applied to public producer method to declare post produce listener.
+  The post produce listener is invoked by IoC container to handle just produced instance.
+  Post produce listener invoked before @PostConstruct listener.
+
+== Circular dependencies
+
+@InlineInject annotation should be used in case of cyclic dependencies.
+
+Inline injection has slightly lower performance and does not participate in circular dependencies checking.
+The  dependencies of the instance factory will be obtained from the IoC container at the instance production
+and not at the factory activation.
+
+[source,java]
+----
+
+  public constructor(@InlineInject Provider<T> dependencyProvider){
+        ...
+  }
+
 ----
 
 == Maven pom.xml
@@ -363,4 +400,9 @@ When run by a command like:
 ----
  
 IoC producers in external jar files in the folder lib/* that added without rebuilding the project will not be discovered.
+
+== Examples
+
+See full source code in the framework source code section #examples/ioc-example#
+
 

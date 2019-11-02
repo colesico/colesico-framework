@@ -1,6 +1,6 @@
 # Colesico-framework
 
-`Colesico-framework` is a lightweight full stack microframework for creating server side backend and web applications in Java 11+.
+`Colesico-framework` is a lightweight full stack microframework for creating backend and server side web applications in Java 11+.
 It is inspired by Spring and EJB frameworks but uses more simplified approach to construct an applications. The purpose of this framework is to provide simpler and lightweight alternative. 
 
 ## Documentation
@@ -25,7 +25,7 @@ $ mvn clean install
 <dependency>
   <groupId>net.colesico.framework</groupId>
   <artifactId>colesico-[module or bundle]</artifactId>
-  <version>2.2.1</version>
+  <version>2.2.2</version>
 </dependency>
 ```
 

@@ -36,9 +36,7 @@ public class RestletExampleTest {
     public void init() {
         ioc = IocBuilder.forTests();
 
-        httpServer = ioc.instance(HttpServer.class);
-        httpServer.init();
-        httpServer.start();
+        httpServer = ioc.instance(HttpServer.class).start();
 
         httpClient = HttpClientBuilder.create().build();
     }

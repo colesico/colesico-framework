@@ -9,13 +9,9 @@ Pom file is identical to the  <<helloworld.asciidoc#,hello world example>>
 ----
 public static void main(String[] args) {
 
-        // Obtain http server instance from IoC container
-        HttpServer httpServer = IocBuilder.forProduction().instance(HttpServer.class);
-
-        // Init and start
-        httpServer.init();
-        httpServer.start();
-    }
+   IocBuilder.forProduction().instance(HttpServer.class).start();
+   
+}
 ----
 
 == Data transfer object
@@ -94,7 +90,9 @@ To customize effective request uri use @Route annotation on package/restlet clas
 Compile and run the application: 
 [source]
 ---- 
-java -Xmx25m -cp target/lib/*:target/restlet.jar colesico.framework.example.restlet.Main
+
+java -jar restlet.jar
+
 ----
 
 Define Http header *X-Requested-With:XMLHttpRequest* for REST client.

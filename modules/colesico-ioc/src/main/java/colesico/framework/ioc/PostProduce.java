@@ -24,8 +24,8 @@ import java.lang.annotation.*;
 
 /**
  * Post produce listener declaration.
- * This annotation should be allied to producer method to declare post produce listener.
- * The post produce listener invoked by IoC container to handle just produced instance.
+ * This annotation should be applied to producer method to declare post produce listener.
+ * The post produce listener is invoked by IoC container to handle just produced instance.
  * Post produce listener invoked before @PostConstruct listener.
  *
  * @author Vladlen Larionov

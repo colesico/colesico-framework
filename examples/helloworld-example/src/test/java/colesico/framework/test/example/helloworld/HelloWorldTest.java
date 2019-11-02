@@ -30,9 +30,7 @@ public class HelloWorldTest {
     public void init() {
         ioc = IocBuilder.forTests();
 
-        httpServer = ioc.instance(HttpServer.class);
-        httpServer.init();
-        httpServer.start();
+        httpServer = ioc.instance(HttpServer.class).start();
 
         httpClient = HttpClientBuilder.create().build();
         logger.info("Ready for hello world tests");

@@ -63,7 +63,7 @@ public class UseRestlet {
 
 == HTTP request method
 
-To specify HTTP request method RequestMethod use @RequestMethod annotation on controller request  handler method
+To specify HTTP request method use @RequestMethod annotation on controller request  handler method
 
 == Example
 

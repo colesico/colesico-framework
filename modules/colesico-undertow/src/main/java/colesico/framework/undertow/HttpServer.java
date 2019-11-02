@@ -39,7 +39,6 @@ public class HttpServer {
     public static final String ENCODING = "UTF-8";
 
     protected Undertow server;
-    protected Undertow.Builder builder;
 
     protected final UndertowConfigPrototype config;
 
@@ -63,22 +62,26 @@ public class HttpServer {
         return efp.setNext(nextHandler);
     }
 
-    public HttpServer init() {
+    protected Undertow build() {
         try {
-            builder = Undertow.builder();
+            Undertow.Builder builder = Undertow.builder();
             config.applyOptions(builder);
             HttpHandler formHandler = makeFormHandler(routerHandler);
             builder.setHandler(config.getRootHandler(formHandler));
             server = builder.build();
-            return this;
+            return server;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
+    public Undertow getServer() {
+        return server;
+    }
 
-    public synchronized void start() {
-        server.start();
+    public synchronized HttpServer start() {
+        build().start();
+        return this;
     }
 
     public synchronized void stop() {

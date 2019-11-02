@@ -12,6 +12,14 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * Properties file based configuration source.
+ * Lookup properties file in external directory specified by "directory" config param.
+ * If not found trying to read file from classpath specified by "classpath" parameter.
+ *
+ * @see UseSource
+ * @see SourceValue
+ */
 @Singleton
 public class PropertiesSource implements ConfigSource {
 
@@ -39,7 +47,6 @@ public class PropertiesSource implements ConfigSource {
     public static final String PREFIX = "prefix";
 
     private static final Logger logger = LoggerFactory.getLogger(PropertiesSource.class);
-
 
     @Override
     public Connection connect(Map<String, String> params) {

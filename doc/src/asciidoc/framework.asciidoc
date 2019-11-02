@@ -5,7 +5,7 @@
 
 == What is Colesico Framework?
 
-*Colesico Framework* is a lightweight microframework for creating server side backend and web applications in Java.
+*Colesico Framework* is a lightweight microframework for creating backend and server side web applications in Java.
 It is inspired by Spring and EJB frameworks but uses more simplified approach to construct the applications.
 
 The purpose of this framework is to provide simpler and lightweight alternative.
@@ -18,6 +18,9 @@ The best way to start learning something is to study by examples :)
 
 * <<examples/helloworld.asciidoc#,Hello world example>>
 * <<examples/restlet.asciidoc#,RESTful service example >>
+
+See other examples in
+ https://github.com/colesico/colesico-framework/tree/master/examples[source code]
 
 == Framework modules
 
