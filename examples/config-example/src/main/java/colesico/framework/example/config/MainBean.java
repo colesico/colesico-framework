@@ -66,7 +66,7 @@ public class MainBean {
     }
 
     public String getSourceSimpleConfigValue() {
-        return sourceSimpleConfig.getValue();
+        return sourceSimpleConfig.getValue()+";"+sourceSimpleConfig.getDefaultValue();
     }
 
     public String getSourceSingleConfigValue() {

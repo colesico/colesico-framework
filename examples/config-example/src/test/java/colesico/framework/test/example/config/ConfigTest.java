@@ -43,7 +43,7 @@ public class ConfigTest {
 
     @Test
     public void testSourceSimple(){
-        assertEquals(service.getSourceSimpleConfigValue(),"AppSourceValue");
+        assertEquals(service.getSourceSimpleConfigValue(),"AppSourceValue;DefaultValue");
     }
 
     @Test

@@ -4,7 +4,7 @@
 
 This module automates the usage of configuration beans and integrates its with the IoC container.
 
-In general, a colesico configuration bean is a class with methods that returns or sets some configurations values.
+In general, colesico configuration bean is a class with methods that returns or sets some configurations values.
 For example it may be used to provide for an endpoint address or  configure a JDBC DataSource instance
 or apply some actions on various builders passed to configuration beans.
 
@@ -24,7 +24,7 @@ Module has build-in support for an external configuration value sources:
 
 * @UseSource annotation is used to define configuration source (*.properties file source supported out-of-the-box.
   Support for yaml files or database, etc. can be easily implemented)
-* @SourceValue annotation defines the value to be bind from data source.
+* @SourceValue annotation defines the value to be bound from data source.
 
 
 === Prototype-based based configuration
