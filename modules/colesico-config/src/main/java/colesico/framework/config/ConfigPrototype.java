@@ -41,7 +41,7 @@ public @interface ConfigPrototype {
     ConfigModel model();
 
     /**
-     * Class in which the configuration will be injected.
+     * The class that the configuration will be injected to.
      * This value is used for MESSAGE config model to specify the target for that this config is designed.
      * @return
      */
