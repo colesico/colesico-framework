@@ -18,21 +18,26 @@ package colesico.framework.example.config.source;
 
 import colesico.framework.config.Config;
 import colesico.framework.config.PropertiesSource;
-import colesico.framework.config.SourceValue;
 import colesico.framework.config.UseSource;
 
+import static colesico.framework.config.PropertiesSource.FILE;
+import static colesico.framework.config.PropertiesSource.PREFIX;
+
 /**
- * Custom properties file example.
- * To change define parameters use {@link UseSource#params()}
+ * Custom properties file and params name prefix example.
+ * See {@link PropertiesSource} for all possible customization params for this source type.
  */
 @Config
-@UseSource(params = "config.properties")
-public class SourceSingleConfig extends SourceSingleConfigPrototype {
+@UseSource(bindAll = true,
+    // params in format: name1,value1, name2,value2 ...
+    params = {
+        FILE, "config.properties",
+        PREFIX, "the_prefix"
+    })
+public class SourcePrefixConfig {
 
-    @SourceValue("value1")
     private String value;
 
-    @Override
     public String getValue() {
         return value;
     }

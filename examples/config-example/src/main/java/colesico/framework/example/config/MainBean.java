@@ -1,3 +1,19 @@
+/*
+ * Copyright 20014-2019 Vladlen V. Larionov and others as noted.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package colesico.framework.example.config;
 
 import colesico.framework.example.config.message.TargetBean;
@@ -6,6 +22,7 @@ import colesico.framework.example.config.message.MessageConfig2;
 import colesico.framework.example.config.polyvariant.PolyConfigPrototype;
 import colesico.framework.example.config.simple.SimpleConfig;
 import colesico.framework.example.config.single.SingleConfigPrototype;
+import colesico.framework.example.config.source.SourcePrefixConfig;
 import colesico.framework.example.config.source.SourceSimpleConfig;
 import colesico.framework.example.config.source.SourceSingleConfigPrototype;
 import colesico.framework.ioc.Classed;
@@ -24,18 +41,20 @@ public class MainBean {
 
     private final SourceSimpleConfig sourceSimpleConfig;
     private final SourceSingleConfigPrototype sourceSingleConfig;
+    private final SourcePrefixConfig sourcePrefixConfig;
 
     public MainBean(SimpleConfig simpleConfig,
                     Provider<SingleConfigPrototype> singleConfigProv,
                     Polysupplier<PolyConfigPrototype> polyConfig,
 
                     @Classed(MessageConfig1.class)
-                           TargetBean targetService1,
+                        TargetBean targetService1,
                     @Classed(MessageConfig2.class)
-                           TargetBean targetService2,
+                        TargetBean targetService2,
 
                     SourceSimpleConfig sourceSimpleConfig,
-                    SourceSingleConfigPrototype sourceSingleConfig
+                    SourceSingleConfigPrototype sourceSingleConfig,
+                    SourcePrefixConfig sourcePrefixConfig
     ) {
 
         this.simpleConfig = simpleConfig;
@@ -45,6 +64,7 @@ public class MainBean {
         this.targetService2 = targetService2;
         this.sourceSimpleConfig = sourceSimpleConfig;
         this.sourceSingleConfig = sourceSingleConfig;
+        this.sourcePrefixConfig = sourcePrefixConfig;
     }
 
     public String getSimpleConfigValue() {
@@ -66,11 +86,15 @@ public class MainBean {
     }
 
     public String getSourceSimpleConfigValue() {
-        return sourceSimpleConfig.getValue()+";"+sourceSimpleConfig.getDefaultValue();
+        return sourceSimpleConfig.getValue() + ";" + sourceSimpleConfig.getDefaultValue();
     }
 
     public String getSourceSingleConfigValue() {
         return sourceSingleConfig.getValue();
+    }
+
+    public String getSourcePrefixConfigValue() {
+        return sourcePrefixConfig.getValue();
     }
 
 }

@@ -1,19 +1,17 @@
 /*
- * Copyright 20014-2018 Vladlen Larionov
- *             and others as noted
+ * Copyright 20014-2019 Vladlen V. Larionov and others as noted.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package colesico.framework.config.codegen;
@@ -112,7 +110,7 @@ public class ConfigParser extends FrameworkAbstractParser {
             TypeMirror driverType = useSourceAnn.getValueTypeMirror(a -> a.type());
             ClassType driverClassType = new ClassType(processingEnv, (DeclaredType) driverType);
             String[] params = useSourceAnn.unwrap().params();
-            sourceElm = new ConfigSourceElement(driverClassType, params);
+            sourceElm = new ConfigSourceElement(driverClassType, params, useSourceAnn.unwrap().bindAll());
             parseSourceValues(configImplementation, sourceElm);
         }
 
@@ -122,14 +120,15 @@ public class ConfigParser extends FrameworkAbstractParser {
     private ConfigSourceElement parseSourceValues(ClassElement configImplementation, ConfigSourceElement confSourceElm) {
         for (FieldElement me : configImplementation.getFields()) {
             AnnotationElement<SourceValue> sourceValueAnn = me.getAnnotation(SourceValue.class);
-            if (sourceValueAnn == null) {
-                continue;
+            if (sourceValueAnn != null) {
+                String query = me.getName();
+                if (StringUtils.isNotBlank(sourceValueAnn.unwrap().value())) {
+                    query = sourceValueAnn.unwrap().value();
+                }
+                confSourceElm.addSourceValue(new SourceValueElement(me, query));
+            } else if (confSourceElm.isBindAll()) {
+                confSourceElm.addSourceValue(new SourceValueElement(me, me.getName()));
             }
-            String query = me.getName();
-            if (StringUtils.isNotBlank(sourceValueAnn.unwrap().value())) {
-                query = sourceValueAnn.unwrap().value();
-            }
-            confSourceElm.addSourceValue(new SourceValueElement(me, query));
         }
         return confSourceElm;
     }

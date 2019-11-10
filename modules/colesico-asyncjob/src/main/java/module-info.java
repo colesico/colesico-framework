@@ -5,7 +5,7 @@ module colesico.framework.asyncjob {
     requires transitive colesico.framework.transaction;
     requires transitive colesico.framework.eventbus;
     requires transitive java.sql;
-    requires gson;
+    requires com.google.gson;
 
     requires org.slf4j;
 

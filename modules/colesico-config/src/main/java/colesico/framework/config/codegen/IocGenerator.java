@@ -1,19 +1,17 @@
 /*
- * Copyright 20014-2018 Vladlen Larionov
- *             and others as noted
+ * Copyright 20014-2019 Vladlen V. Larionov and others as noted.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package colesico.framework.config.codegen;
@@ -45,7 +43,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
     public static final String FACTORY_PARAM = "factory";
     public static final String CONF_PARAM = "config";
-    public static final String SOURCE_DRV_PARAM = "sourceDriver";
+    public static final String CONFIG_SOURCE_PARAM = "configSource";
     public static final String CONNECTION_VAR = "conn";
 
     private Logger logger = LoggerFactory.getLogger(IocGenerator.class);
@@ -145,25 +143,33 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         confParam.addAnnotation(Message.class);
         mb.addParameter(confParam.build());
 
-        mb.addParameter(TypeName.get(confElement.getSource().getDriver().unwrap()), SOURCE_DRV_PARAM, Modifier.FINAL);
+        mb.addParameter(TypeName.get(confElement.getSource().getDriver().unwrap()), CONFIG_SOURCE_PARAM, Modifier.FINAL);
 
         mb.returns(TypeName.get(confElement.getImplementation().asClassType().unwrap()));
         CodeBlock.Builder cb = CodeBlock.builder();
 
-        if (confElement.getSource().getParams().length % 2 != 0) {
+        boolean paramEvenOrEmpty = confElement.getSource().getParams().length % 2 == 0;
+        boolean paramSingle = confElement.getSource().getParams().length == 1;
+        if (!(paramEvenOrEmpty || paramSingle)) {
             throw CodegenException.of()
-                .message("Config source driver params number is not even")
+                .message("Config source driver params number is not even or single or empty")
                 .element(confElement.getImplementation().unwrap()).build();
         }
 
         ArrayCodegen paramsCodegen = new ArrayCodegen();
-        for (String param : confElement.getSource().getParams()) {
-            paramsCodegen.add("$S", param);
+        if (paramSingle) {
+            paramsCodegen.add("$T.$N", ClassName.get(ConfigSource.class), "DEFAULT_PARAM");
+            paramsCodegen.add("$S", confElement.getSource().getParams()[0]);
+        } else {
+            for (String param : confElement.getSource().getParams()) {
+                paramsCodegen.add("$S", param);
+            }
         }
+
         cb.add("final $T $N = $N.$N($T.of(",
             ClassName.get(ConfigSource.Connection.class),
             CONNECTION_VAR,
-            SOURCE_DRV_PARAM,
+            CONFIG_SOURCE_PARAM,
             ConfigSource.CONNECT_METHOD,
             ClassName.get(Map.class)
         );
