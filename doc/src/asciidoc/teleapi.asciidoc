@@ -2,5 +2,4 @@
 
 == Colesico-TeleAPI
 
-This module is used to unification of remote method invocations API within the framework.
-For example http request processing  (weblet, restlet modules)  uses  this module to implement remote method invocations.
+This module is used for unification the  remote method invocations API. For example http request processing (weblet, restlet modules) uses this module to implement remote method invocations.
