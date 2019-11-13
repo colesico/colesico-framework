@@ -21,7 +21,7 @@ import colesico.framework.ioc.Producer;
 import colesico.framework.ioc.Rank;
 
 /**
- * Use the extension rank to to replace default or minot production of default plugin
+ * Use the extension rank to replace default or minor production of default plugin
  */
 @Producer(Rank.RANK_EXTENSION)
 @Produce(CustomBean.class)
