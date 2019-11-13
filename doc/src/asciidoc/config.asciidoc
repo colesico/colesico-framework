@@ -42,7 +42,7 @@ Config module supports different prototype-based configuration models:
 
 The configuration source  is used to supply values to configuration beans.
 For example, it allows to assign values from *.properties or yaml files.
-Framework out-of-the-box has a support for binding properties files.
+Framework has an out-of-the-box support for the binding a properties files.
 
 ====  Customized configuration source
 
