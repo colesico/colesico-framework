@@ -16,8 +16,8 @@
 
 package colesico.framework.asyncjob.gson;
 
-import colesico.framework.ioc.Polysupplier;
 import colesico.framework.asyncjob.PayloadConverter;
+import colesico.framework.ioc.Polysupplier;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

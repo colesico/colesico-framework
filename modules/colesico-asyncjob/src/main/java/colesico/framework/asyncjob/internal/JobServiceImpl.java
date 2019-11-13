@@ -16,16 +16,19 @@
 
 package colesico.framework.asyncjob.internal;
 
-import colesico.framework.ioc.ThreadScope;
 import colesico.framework.asyncjob.*;
 import colesico.framework.ioc.Polysupplier;
+import colesico.framework.ioc.ThreadScope;
 import colesico.framework.transaction.TransactionalShell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.time.Duration;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @Singleton
 public class JobServiceImpl implements JobService {

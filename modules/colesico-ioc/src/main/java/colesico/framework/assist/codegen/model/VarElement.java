@@ -44,7 +44,6 @@ abstract public class VarElement extends ParserElement {
     public ClassType asClassType() {
         if (asType().getKind() == TypeKind.DECLARED) {
             return new ClassType(getProcessingEnv(), (DeclaredType) asType());
-
         }
         return null;
     }

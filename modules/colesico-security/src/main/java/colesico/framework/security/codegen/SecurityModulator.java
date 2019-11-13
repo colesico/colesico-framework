@@ -24,9 +24,9 @@ import colesico.framework.security.RequireAuthority;
 import colesico.framework.security.RequirePrincipal;
 import colesico.framework.security.SecurityInterceptor;
 import colesico.framework.security.SecurityKit;
-import colesico.framework.service.codegen.model.ProxyFieldElement;
 import colesico.framework.service.codegen.model.InterceptionElement;
 import colesico.framework.service.codegen.model.InterceptionPhases;
+import colesico.framework.service.codegen.model.ProxyFieldElement;
 import colesico.framework.service.codegen.model.ProxyMethodElement;
 import colesico.framework.service.codegen.modulator.Modulator;
 import com.squareup.javapoet.ClassName;
@@ -51,7 +51,7 @@ public class SecurityModulator extends Modulator {
         if (requirePrincipal != null || requireAuthority != null) {
             if (proxyMethod.isPlain()) {
                 throw CodegenException.of().message("To use @" + RequirePrincipal.class.getSimpleName() + " or @"
-                        + RequireAuthority.class.getSimpleName() + " method should not be plain method").element(proxyMethod.getOriginMethod()).build();
+                    + RequireAuthority.class.getSimpleName() + " method should not be plain method").element(proxyMethod.getOriginMethod()).build();
             }
         } else {
             return;
@@ -74,14 +74,12 @@ public class SecurityModulator extends Modulator {
             paramCode.add("}");
 
             CodeBlock.Builder handlerCode = CodeBlock.builder();
-            handlerCode.add("(($T)$N)::$N", ClassName.get(SecurityInterceptor.class) , SEQURITY_KIT_FIELD, SecurityInterceptor.INTERCEPT_REQUIRE_AUTHORITY_METHOD);
-            proxyMethod.addInterception(InterceptionPhases.AUTHORIZATION,new InterceptionElement(handlerCode.build(),paramCode.build()));
-        } else if (requirePrincipal != null) {
-            CodeBlock.Builder codeBlock = CodeBlock.builder();
-            codeBlock.add("(($T)$N)::$N", ClassName.get(SecurityInterceptor.class) , SEQURITY_KIT_FIELD, SecurityInterceptor.INTERCEPT_REQUIRE_PRINCIPAL_METHOD);
-            proxyMethod.addInterception(InterceptionPhases.AUTHORIZATION,new InterceptionElement(codeBlock.build()));
+            handlerCode.add("(($T)$N)::$N", ClassName.get(SecurityInterceptor.class), SEQURITY_KIT_FIELD, SecurityInterceptor.INTERCEPT_REQUIRE_AUTHORITY_METHOD);
+            proxyMethod.addInterception(InterceptionPhases.AUTHORIZATION, new InterceptionElement(handlerCode.build(), paramCode.build()));
         } else {
-            throw CodegenException.of().message("Security modulator has confused :)").element(proxyMethod.getOriginMethod()).build();
+            CodeBlock.Builder codeBlock = CodeBlock.builder();
+            codeBlock.add("(($T)$N)::$N", ClassName.get(SecurityInterceptor.class), SEQURITY_KIT_FIELD, SecurityInterceptor.INTERCEPT_REQUIRE_PRINCIPAL_METHOD);
+            proxyMethod.addInterception(InterceptionPhases.AUTHORIZATION, new InterceptionElement(codeBlock.build()));
         }
 
     }

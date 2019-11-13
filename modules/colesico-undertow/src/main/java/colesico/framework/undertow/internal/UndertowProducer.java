@@ -15,11 +15,9 @@
  */
 package colesico.framework.undertow.internal;
 
+import colesico.framework.httpserver.HttpServer;
 import colesico.framework.ioc.Produce;
 import colesico.framework.ioc.Producer;
-import colesico.framework.undertow.ErrorHandler;
-import colesico.framework.undertow.HttpServer;
-import colesico.framework.undertow.RouterHandler;
 import colesico.framework.undertow.UndertowConfigPrototype;
 
 import javax.inject.Singleton;
@@ -30,24 +28,18 @@ import static colesico.framework.ioc.Rank.RANK_MINOR;
  * @author Vladlen Larionov
  */
 @Producer(RANK_MINOR)
-@Produce(ErrorHandlerImpl.class)
-@Produce(RouterHandlerImpl.class)
+@Produce(UndertowRequestProcessor.class)
 @Produce(UndertowConfigImpl.class)
-@Produce(HttpServer.class)
+@Produce(UndertowHttpServer.class)
 public class UndertowProducer {
 
-    public RouterHandler getRouterHandler(RouterHandlerImpl impl) {
-        return impl;
-    }
-
-    // Default error handler
     @Singleton
-    public ErrorHandler getErrorHandler(ErrorHandlerImpl impl) {
+    public HttpServer getHttpServer(UndertowHttpServer impl) {
         return impl;
     }
 
     // Default configuration
-    public UndertowConfigPrototype getUndertowConfig(UndertowConfigImpl impl){
+    public UndertowConfigPrototype getUndertowConfig(UndertowConfigImpl impl) {
         return impl;
     }
 

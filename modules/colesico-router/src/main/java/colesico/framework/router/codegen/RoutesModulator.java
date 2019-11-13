@@ -32,7 +32,6 @@ import com.squareup.javapoet.TypeName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.lang.model.element.VariableElement;
 import java.lang.annotation.Annotation;
 import java.util.Deque;
 

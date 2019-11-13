@@ -18,7 +18,6 @@ package colesico.framework.dslvalidator.commands;
 
 import colesico.framework.dslvalidator.ValidationContext;
 
-import java.util.List;
 import java.util.Map;
 
 /**

@@ -20,7 +20,8 @@ package colesico.framework.service.codegen.generator;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
-import colesico.framework.ioc.*;
+import colesico.framework.ioc.Classed;
+import colesico.framework.ioc.Polyproduce;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleFacadeElement;
@@ -35,7 +36,6 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
-import javax.tools.Diagnostic;
 import java.util.*;
 
 

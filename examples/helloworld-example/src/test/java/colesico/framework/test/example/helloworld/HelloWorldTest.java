@@ -17,9 +17,9 @@
 package colesico.framework.test.example.helloworld;
 
 import colesico.framework.example.helloworld.HelloWeblet;
+import colesico.framework.httpserver.HttpServer;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
-import colesico.framework.undertow.HttpServer;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 public class HelloWorldTest {
     private Ioc ioc;

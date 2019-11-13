@@ -18,7 +18,10 @@ package colesico.framework.config.codegen;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
-import colesico.framework.assist.codegen.model.*;
+import colesico.framework.assist.codegen.model.AnnotationElement;
+import colesico.framework.assist.codegen.model.ClassElement;
+import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.config.*;
 import colesico.framework.ioc.Classed;
 import org.apache.commons.lang3.StringUtils;
@@ -69,7 +72,7 @@ public class ConfigParser extends FrameworkAbstractParser {
         if (configPrototype != null) {
             AnnotationElement<ConfigPrototype> prototypeAnn = configPrototype.getAnnotation(ConfigPrototype.class);
             model = prototypeAnn.unwrap().model();
-            TypeMirror targetMirror = prototypeAnn.getValueTypeMirror(a -> a.target());
+            TypeMirror targetMirror = prototypeAnn.getValueTypeMirror(ConfigPrototype::target);
             if (targetMirror.toString().equals(Object.class.getName())) {
                 target = null;
             } else {
@@ -95,7 +98,7 @@ public class ConfigParser extends FrameworkAbstractParser {
         AnnotationElement<Classed> classedAnn = configImplementation.getAnnotation(Classed.class);
         TypeMirror classed;
         if (classedAnn != null) {
-            classed = classedAnn.getValueTypeMirror(a -> a.value());
+            classed = classedAnn.getValueTypeMirror(Classed::value);
         } else {
             classed = null;
         }
@@ -107,7 +110,7 @@ public class ConfigParser extends FrameworkAbstractParser {
         AnnotationElement<UseSource> useSourceAnn = configImplementation.getAnnotation(UseSource.class);
         ConfigSourceElement sourceElm = null;
         if (useSourceAnn != null) {
-            TypeMirror driverType = useSourceAnn.getValueTypeMirror(a -> a.type());
+            TypeMirror driverType = useSourceAnn.getValueTypeMirror(UseSource::type);
             ClassType driverClassType = new ClassType(processingEnv, (DeclaredType) driverType);
             String[] params = useSourceAnn.unwrap().params();
             sourceElm = new ConfigSourceElement(driverClassType, params, useSourceAnn.unwrap().bindAll());

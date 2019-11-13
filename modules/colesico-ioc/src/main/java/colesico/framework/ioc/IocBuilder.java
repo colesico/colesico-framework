@@ -18,7 +18,6 @@ package colesico.framework.ioc;
 
 import colesico.framework.ioc.internal.IocBuilderImpl;
 import colesico.framework.ioc.ioclet.Ioclet;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * IoC container builder interface

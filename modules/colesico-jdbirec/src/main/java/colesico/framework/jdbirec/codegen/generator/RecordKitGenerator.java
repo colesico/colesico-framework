@@ -25,9 +25,8 @@ import colesico.framework.jdbirec.RecordKitFactory;
 import colesico.framework.jdbirec.RecordView;
 import colesico.framework.jdbirec.codegen.model.ColumnElement;
 import colesico.framework.jdbirec.codegen.model.CompositionElement;
-import colesico.framework.jdbirec.codegen.model.ViewSetElement;
 import colesico.framework.jdbirec.codegen.model.RecordElement;
-
+import colesico.framework.jdbirec.codegen.model.ViewSetElement;
 import com.squareup.javapoet.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -116,15 +115,14 @@ public class RecordKitGenerator {
             fieldsStack.push(current.getOriginField());
             current = current.getParentComposition();
         }
-        List<FieldElement> fieldsChain = new ArrayList<>();
-        fieldsChain.addAll(fieldsStack);
+        List<FieldElement> fieldsChain = new ArrayList<>(fieldsStack);
 
         List<String> gettersChain = new ArrayList<>();
         if (StringUtils.isNotEmpty(rootVarName)) {
             gettersChain.add(rootVarName);
         }
-        for (int i = 0; i < fieldsChain.size(); i++) {
-            gettersChain.add(fieldTransformer.apply(fieldsChain.get(i)));
+        for (FieldElement fl: fieldsChain) {
+            gettersChain.add(fieldTransformer.apply(fl));
         }
 
         return StringUtils.join(gettersChain, ".");
@@ -151,7 +149,7 @@ public class RecordKitGenerator {
             if (!column.isExportable()) {
                 continue;
             }
-            String paramName = generateChain(null, column.getParentComposition(), column, f -> f.getName());
+            String paramName = generateChain(null, column.getParentComposition(), column, FieldElement::getName);
             String fieldGetterName = toGetterName(column.getOriginField());
             if (column.getMediator() == null) {
                 // fr.receive("column",comp.getField1())
@@ -361,7 +359,7 @@ public class RecordKitGenerator {
 
             columnNames.add(column.getName());
             if (column.getInsertAs().equals("@field")) {
-                String paramName = generateChain(null, column.getParentComposition(), column, f -> f.getName());
+                String paramName = generateChain(null, column.getParentComposition(), column, FieldElement::getName);
                 columnValues.add(":" + paramName);
             } else {
                 columnValues.add(column.getInsertAs());
@@ -390,7 +388,7 @@ public class RecordKitGenerator {
             }
 
             if (column.getUpdateAs().equals("@field")) {
-                String paramName = generateChain(null, column.getParentComposition(), column, f -> f.getName());
+                String paramName = generateChain(null, column.getParentComposition(), column, FieldElement::getName);
                 assigns.add(column.getName() + " = :" + paramName);
             } else {
                 assigns.add(column.getName() + " = " + column.getUpdateAs());

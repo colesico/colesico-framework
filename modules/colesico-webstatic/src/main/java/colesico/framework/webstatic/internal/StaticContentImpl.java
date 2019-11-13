@@ -19,10 +19,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.ResourceKit;
 import colesico.framework.webstatic.MimeAssist;
-import colesico.framework.webstatic.MimeType;
 import colesico.framework.webstatic.StaticContent;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +61,7 @@ public class StaticContentImpl implements StaticContent {
         try (InputStream is = resourceKit.getStream(resourcePath);
              OutputStream os = httpContext.getResponse().getOutputStream()) {
             byte[] buf = new byte[SEND_BUFFER_SIZE];
-            int c = 0;
+            int c;
             while ((c = is.read(buf, 0, buf.length)) > 0) {
                 os.write(buf, 0, c);
                 os.flush();

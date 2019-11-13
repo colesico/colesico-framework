@@ -16,6 +16,9 @@
 
 package colesico.framework.ioc.codegen.generator;
 
+import colesico.framework.assist.LazySingleton;
+import colesico.framework.assist.codegen.ArrayCodegen;
+import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.ioc.InjectionPoint;
@@ -23,9 +26,6 @@ import colesico.framework.ioc.codegen.model.CustomFactoryElement;
 import colesico.framework.ioc.codegen.model.FactoryElement;
 import colesico.framework.ioc.codegen.model.InjectableElement;
 import colesico.framework.ioc.codegen.model.ScopeElement;
-import colesico.framework.assist.LazySingleton;
-import colesico.framework.assist.codegen.ArrayCodegen;
-import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.ioc.ioclet.*;
 import com.squareup.javapoet.*;
 

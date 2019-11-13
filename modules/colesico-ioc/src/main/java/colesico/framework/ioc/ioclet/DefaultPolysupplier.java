@@ -35,7 +35,7 @@ public final class DefaultPolysupplier<T> implements Polysupplier<T> {
 
     @Override
     public Iterator<T> iterator(Object message) {
-        return new PolysupplierIterator(factory, message);
+        return new PolysupplierIterator<>(factory, message);
     }
 
     @Override

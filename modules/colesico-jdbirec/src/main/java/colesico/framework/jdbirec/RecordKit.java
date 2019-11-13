@@ -83,7 +83,7 @@ abstract public class RecordKit<R> {
 
     public final Map<String, Object> map(R record) {
         final Map<String, Object> result = new HashMap<>();
-        exportRecord(record, (c, v) -> result.put(c, v));
+        exportRecord(record, result::put);
         return result;
     }
 

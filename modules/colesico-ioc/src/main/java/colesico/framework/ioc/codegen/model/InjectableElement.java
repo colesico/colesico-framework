@@ -16,7 +16,6 @@
 
 package colesico.framework.ioc.codegen.model;
 
-import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.ParameterElement;
 

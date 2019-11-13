@@ -49,15 +49,14 @@ public class CSRFProtector {
     }
 
     protected static String getRequestedHostName(HttpRequest request) {
-        String result = request.getHost();
-        return result;
+        return request.getHost();
     }
 
     protected static String getHostFromUrl(String url) {
         if (StringUtils.isBlank(url)) {
             return null;
         }
-        URI uri = null;
+        URI uri;
         try {
             uri = new URI(url);
         } catch (URISyntaxException e) {
@@ -109,9 +108,7 @@ public class CSRFProtector {
         String csrfCookieToken = cookie.getValue();
         String csrfHeaderToken = request.getHeaders().get(CSRF_HEADER);
 
-        if (StringUtils.equals(csrfCookieToken, csrfHeaderToken)) {
-            return;
-        } else {
+        if (!StringUtils.equals(csrfCookieToken, csrfHeaderToken)) {
             throw new ApplicationException("CSRF token mismatch:" + csrfCookieToken + " != " + csrfHeaderToken);
         }
     }

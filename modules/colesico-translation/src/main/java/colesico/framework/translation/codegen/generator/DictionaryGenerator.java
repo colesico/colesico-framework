@@ -20,12 +20,10 @@ import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.AnnotationElement;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.assist.codegen.model.ParameterElement;
-import colesico.framework.assist.codegen.model.ParserElement;
 import colesico.framework.translation.AbstractDictionary;
 import colesico.framework.translation.TranslationKey;
 import colesico.framework.translation.TranslationKit;
 import colesico.framework.translation.codegen.model.DictionaryElement;
-import colesico.framework.translation.codegen.model.DictionaryRegistry;
 import com.squareup.javapoet.*;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -35,11 +33,8 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.VariableElement;
 import java.util.List;
-import java.util.Map;
 
 public class DictionaryGenerator {
 

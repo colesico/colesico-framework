@@ -22,7 +22,7 @@ import colesico.framework.profile.teleapi.ProfileTeleAssist;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Singleton;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 /**
@@ -37,23 +37,15 @@ public class ProfileTeleAssistImpl implements ProfileTeleAssist<DefaultProfile> 
         sb.append(profile.getLocale().getLanguage());
         sb.append('|');
         sb.append(profile.getLocale().getCountry());
-        try {
-            return sb.toString().getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        return sb.toString().getBytes(StandardCharsets.UTF_8);
     }
 
     @Override
     public DefaultProfile deserialize(byte[] profileBytes) {
-        try {
-            String localeStr = new String(profileBytes, "UTF-8");
-            String[] localeItems = StringUtils.split(localeStr, "|");
-            Locale locale = new Locale(localeItems[0], localeItems[1]);
-            return new DefaultProfile(locale);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        String localeStr = new String(profileBytes, StandardCharsets.UTF_8);
+        String[] localeItems = StringUtils.split(localeStr, "|");
+        Locale locale = new Locale(localeItems[0], localeItems[1]);
+        return new DefaultProfile(locale);
     }
 
     @Override

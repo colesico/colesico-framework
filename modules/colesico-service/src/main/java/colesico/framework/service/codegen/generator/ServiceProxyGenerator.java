@@ -17,16 +17,18 @@
 package colesico.framework.service.codegen.generator;
 
 
+import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.AnnotationElement;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.assist.codegen.model.ParameterElement;
 import colesico.framework.ioc.Classed;
 import colesico.framework.ioc.Unscoped;
-import colesico.framework.assist.StrUtils;
-import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.assist.codegen.CodegenUtils;
-import colesico.framework.service.*;
+import colesico.framework.service.Interceptor;
+import colesico.framework.service.InterceptorsChain;
+import colesico.framework.service.InvocationContext;
+import colesico.framework.service.ServiceProxy;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.parser.ProcessorContext;
 import com.squareup.javapoet.*;
@@ -36,11 +38,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.lang.model.element.*;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
-import javax.lang.model.util.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,7 +116,7 @@ public class ServiceProxyGenerator {
             if (paramType.equals(fieldElm.getInjectAs())) {
 
                 String annNamedVal = namedAnn != null ? namedAnn.unwrap().value() : "";
-                TypeName annClassedVal = classedAnn != null ? TypeName.get(classedAnn.getValueTypeMirror(a -> a.value()))
+                TypeName annClassedVal = classedAnn != null ? TypeName.get(classedAnn.getValueTypeMirror(Classed::value))
                     : ClassName.get(Object.class);
 
                 if (annNamedVal.equals(fieldNamedVal) && annClassedVal.equals(fieldClassedVal)) {

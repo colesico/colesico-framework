@@ -24,7 +24,10 @@ import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.*;
-import colesico.framework.jdbirec.codegen.model.*;
+import colesico.framework.jdbirec.codegen.model.ColumnElement;
+import colesico.framework.jdbirec.codegen.model.CompositionElement;
+import colesico.framework.jdbirec.codegen.model.RecordElement;
+import colesico.framework.jdbirec.codegen.model.ViewSetElement;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -135,7 +138,7 @@ public class RecordParser extends FrameworkAbstractParser {
         return null;
     }
 
-    private final List<Column> getColumns(FieldElement field) {
+    private List<Column> getColumns(FieldElement field) {
         final List<Column> columns = new ArrayList<>();
 
         AnnotationElement<Column> columnAnnElm = field.getAnnotation(Column.class);
@@ -180,7 +183,7 @@ public class RecordParser extends FrameworkAbstractParser {
             columnElement.setImportable(columnAnnElm.unwrap().importable());
             columnElement.setExportable(columnAnnElm.unwrap().exportable());
 
-            TypeMirror mediatorType = columnAnnElm.getValueTypeMirror(a -> a.mediator());
+            TypeMirror mediatorType = columnAnnElm.getValueTypeMirror(Column::mediator);
             if (!mediatorType.toString().equals(FieldMediator.class.getName())) {
                 columnElement.setMediator(new ClassType(processingEnv, (DeclaredType) mediatorType));
             }
@@ -221,7 +224,7 @@ public class RecordParser extends FrameworkAbstractParser {
         }
     }
 
-    private final List<Composition> getCompositions(FieldElement field) {
+    private List<Composition> getCompositions(FieldElement field) {
         final List<Composition> compositions = new ArrayList<>();
 
         AnnotationElement<Composition> compositionAnnElm = field.getAnnotation(Composition.class);
@@ -286,7 +289,7 @@ public class RecordParser extends FrameworkAbstractParser {
 
         AnnotationElement<Record> annElm = typeElement.getAnnotation(Record.class);
         recordElement.setTableName(annElm.unwrap().table());
-        TypeMirror extend = annElm.getValueTypeMirror(a -> a.extend());
+        TypeMirror extend = annElm.getValueTypeMirror(Record::extend);
         recordElement.setExtend(new ClassType(processingEnv, (DeclaredType) extend));
 
         parseComposition(recordElement.getRootComposition(), null);

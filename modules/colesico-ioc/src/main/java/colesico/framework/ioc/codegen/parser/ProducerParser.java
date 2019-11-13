@@ -30,7 +30,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import javax.lang.model.element.*;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.ModuleElement;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
@@ -88,7 +90,7 @@ public class ProducerParser extends FrameworkAbstractParser {
 
             AnnotationElement<CustomScope> customScope = am.getAnnotation(CustomScope.class);
             if (customScope != null) {
-                TypeMirror scopeClass = customScope.getValueTypeMirror(a -> a.value());
+                TypeMirror scopeClass = customScope.getValueTypeMirror(CustomScope::value);
                 scopeElm = new ScopeElement(ScopeElement.ScopeKind.CUSTOM, new ClassType(getProcessingEnv(), (DeclaredType) scopeClass));
             }
 
@@ -196,7 +198,7 @@ public class ProducerParser extends FrameworkAbstractParser {
             if (injectionKind == InjectableElement.InjectionKind.MESSAGE) {
                 throw CodegenException.of().message("@Classed message injection").element(parameter.unwrap()).build();
             }
-            TypeMirror classifier = classedAnn.getValueTypeMirror(a -> a.value());
+            TypeMirror classifier = classedAnn.getValueTypeMirror(Classed::value);
             classed = new ClassType(getProcessingEnv(), (DeclaredType) classifier);
             // TODO: check  injectionKind
         } else {
@@ -211,7 +213,7 @@ public class ProducerParser extends FrameworkAbstractParser {
     }
 
     protected DefaultFactoryElement createDefaultFactoryElement(IocletElement iocletElement, AnnotationElement<Produce> produceAnn) {
-        TypeMirror suppliedTypeMirr = produceAnn.getValueTypeMirror(p -> p.value());
+        TypeMirror suppliedTypeMirr = produceAnn.getValueTypeMirror(Produce::value);
 
         logger.debug("Parsing default factory for : " + suppliedTypeMirr.toString());
 
@@ -246,14 +248,14 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         ClassType classed = null;
-        TypeMirror classifier = produceAnn.getValueTypeMirror(a -> a.classed());
+        TypeMirror classifier = produceAnn.getValueTypeMirror(Produce::classed);
         if (!Class.class.getName().equals(classifier.toString())) {
             classed = new ClassType(processingEnv, (DeclaredType) classifier);
         } else {
             // Get @Classed from class definition
             AnnotationElement<Classed> classedAnn = suppliedType.asClassElement().getAnnotation(Classed.class);
             if (classedAnn != null) {
-                classifier = classedAnn.getValueTypeMirror(a -> a.value());
+                classifier = classedAnn.getValueTypeMirror(Classed::value);
                 classed = new ClassType(processingEnv, (DeclaredType) classifier);
             }
         }
@@ -266,7 +268,7 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         if (BooleanUtils.toInteger(named != null)
             + BooleanUtils.toInteger(classed != null) > 1) {
-            CodegenException.of().message("Ambiguous injection qualifiers for " + suppliedType.asClassElement().getName())
+            throw CodegenException.of().message("Ambiguous injection qualifiers for " + suppliedType.asClassElement().getName())
                 .element(iocletElement.getOriginProducer().unwrap()).build();
         }
 
@@ -308,7 +310,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         AnnotationElement<PostProduce> postProduceAnn = method.getAnnotation(PostProduce.class);
         final PPLDefinitionElement postProduce;
         if (postProduceAnn != null) {
-            TypeMirror classifier = postProduceAnn.getValueTypeMirror(a -> a.withClassed());
+            TypeMirror classifier = postProduceAnn.getValueTypeMirror(PostProduce::withClassed);
             ClassType withClassed = null;
             if (!Class.class.getName().equals(classifier.toString())) {
                 withClassed = new ClassType(processingEnv, (DeclaredType) classifier);
@@ -356,14 +358,14 @@ public class ProducerParser extends FrameworkAbstractParser {
         ClassType classed = null;
         TypeMirror classifier;
         if (methodClassedAnn != null) {
-            classifier = methodClassedAnn.getValueTypeMirror(a -> a.value());
+            classifier = methodClassedAnn.getValueTypeMirror(Classed::value);
             classed = new ClassType(processingEnv, (DeclaredType) classifier);
         } else {
             if (postProduce == null) {
                 // Get @Classed from class definition
                 AnnotationElement<Classed> classClassedAnn = suppliedType.asClassElement().getAnnotation(Classed.class);
                 if (classClassedAnn != null) {
-                    classifier = classClassedAnn.getValueTypeMirror(a -> a.value());
+                    classifier = classClassedAnn.getValueTypeMirror(Classed::value);
                     classed = new ClassType(processingEnv, (DeclaredType) classifier);
                 }
             }
@@ -389,7 +391,7 @@ public class ProducerParser extends FrameworkAbstractParser {
             BooleanUtils.toInteger(postProduce != null)
             > 1
         ) {
-            CodegenException.of().message("Ambiguous injection qualifiers").element(method.unwrap()).build();
+            throw CodegenException.of().message("Ambiguous injection qualifiers").element(method.unwrap()).build();
         }
 
         final CustomFactoryElement factory = new CustomFactoryElement(

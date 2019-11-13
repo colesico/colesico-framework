@@ -34,7 +34,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
 
@@ -73,15 +72,15 @@ public class TeleFacadesGenerator {
     protected CodeBlock generateVarValue(TeleVarElement var, CodeBlock.Builder binderBuilder) {
 
         // detect param type considering generics
-        TypeElement paramTypeElm = var.getOriginVariable().asClassType().asClassElement().unwrap();
-        TypeName paramTypeName = TypeName.get(paramTypeElm.asType());
+        TypeMirror paramType = var.getOriginVariable().asClassType().unwrap();
 
         if (var instanceof TeleParamElement) {
             CodeBlock ctx = ((TeleParamElement) var).getReadingContext();
             // Generates code like this: dataPot.read(ParamType.class, new Context(...));
             CodeBlock.Builder cb = CodeBlock.builder();
             cb.add("$N.$N(", TeleDriver.Binder.DATAPORT_PARAM, DataPort.READ_FOR_CLASS_METHOD);
-            cb.add("$T.class,", paramTypeName);
+            // ParamType.class or new TypeWrapper<ParamType<T>>...
+            CodegenUtils.generateTypePick(paramType, cb);cb.add(",");
             cb.add(ctx);
             cb.add(")");
             return cb.build();
@@ -92,7 +91,7 @@ public class TeleFacadesGenerator {
         final String valueVar = varNames.getNextTempVariable(var.getOriginVariable().getName());
         binderBuilder.add("\n// Init composition\n");
         binderBuilder.addStatement("$T $N = new $T()",
-            paramTypeName,
+            TypeName.get(paramType),
             valueVar, TypeName.get(var.getOriginVariable().asType()));
 
         // Generate composition fields

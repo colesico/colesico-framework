@@ -18,8 +18,8 @@ package colesico.framework.translation.codegen.generator;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.resource.assist.FileParser;
-import colesico.framework.translation.codegen.model.DictionaryElement;
 import colesico.framework.translation.codegen.model.BundleElement;
+import colesico.framework.translation.codegen.model.DictionaryElement;
 import colesico.framework.translation.codegen.model.DictionaryRegistry;
 import colesico.framework.translation.codegen.model.TranslationElement;
 import org.apache.commons.lang3.StringUtils;
@@ -35,7 +35,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Generates translations properties file for a locale

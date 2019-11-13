@@ -78,7 +78,7 @@ public class LocalizingTool {
         if (qualifiers == null) {
             return resourcePath;
         }
-        
+
         switch (mode) {
             case FILE:
                 return localizeFile(resourcePath, qualifiers);
@@ -95,7 +95,7 @@ public class LocalizingTool {
      * @param qualifiers
      * @return
      */
-    private final String localizeFile(String resourcePath, String[] qualifiers) {
+    private String localizeFile(String resourcePath, String[] qualifiers) {
         /*
               valid:
 
@@ -130,8 +130,7 @@ public class LocalizingTool {
             sb = new StringBuilder(path).append("/").append(fileName);
         }
 
-        for (int i = 0; i < qualifiers.length; i++) {
-            String qualifier = qualifiers[i];
+        for (String qualifier : qualifiers) {
             sb.append('_').append(qualifier);
         }
 
@@ -161,8 +160,7 @@ public class LocalizingTool {
         final StringBuilder sb;
 
         sb = new StringBuilder(path);
-        for (int i = 0; i < qualifiers.length; i++) {
-            String qualifier = qualifiers[i];
+        for (String qualifier : qualifiers) {
             String qvalue = StringUtils.lowerCase(qualifier);
             sb.append('_').append(qvalue);
         }

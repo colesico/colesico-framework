@@ -39,8 +39,12 @@ public class HikariProperties extends HikariConfigPrototype {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         Properties props = new Properties();
         try (InputStream resourceStream = loader.getResourceAsStream(getPropertiesFilePath())) {
-            props.load(resourceStream);
-            return new HikariConfig(props);
+            if (resourceStream != null) {
+                props.load(resourceStream);
+                return new HikariConfig(props);
+            } else {
+                throw new RuntimeException("No config file: " + getPropertiesFilePath());
+            }
         } catch (Exception ex) {
             log.error("Error loading hikari connection pool config file '" + getPropertiesFilePath() + "' : " + ex.getMessage());
             throw new RuntimeException(ex);

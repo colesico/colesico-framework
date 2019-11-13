@@ -38,7 +38,7 @@ public class CompositePageProvider implements Provider<CompositePage> {
 
     @Override
     public CompositePage get() {
-        return (CompositePage) scope.get(CompositePage.SCOPE_KEY, CompositePageImpl::new,null);
+        return scope.get(CompositePage.SCOPE_KEY, CompositePageImpl::new,null);
 
     }
 }

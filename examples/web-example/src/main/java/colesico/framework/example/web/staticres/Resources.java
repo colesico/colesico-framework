@@ -17,8 +17,8 @@
 package colesico.framework.example.web.staticres;
 
 import colesico.framework.router.Route;
-import colesico.framework.webstatic.StaticContent;
 import colesico.framework.weblet.Weblet;
+import colesico.framework.webstatic.StaticContent;
 
 @Weblet
 public class Resources {

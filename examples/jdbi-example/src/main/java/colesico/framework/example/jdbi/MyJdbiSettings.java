@@ -20,8 +20,8 @@ import colesico.framework.config.Config;
 import colesico.framework.hikaricp.HikariProperties;
 import colesico.framework.ioc.Classed;
 import colesico.framework.ioc.Polysupplier;
-import colesico.framework.jdbi.JdbiOptionsPrototype;
 import colesico.framework.jdbi.DefaultJdbiConfig;
+import colesico.framework.jdbi.JdbiOptionsPrototype;
 
 import javax.sql.DataSource;
 

@@ -33,7 +33,6 @@ abstract public class TypeWrapper<T> {
         this.type = getTypeParameter(getClass());
     }
 
-    @SuppressWarnings("unchecked")
     public static Type getTypeParameter(Class<?> clazz) {
         Type superClass = clazz.getGenericSuperclass();
         if (superClass instanceof Class) {

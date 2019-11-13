@@ -67,11 +67,11 @@ public final class IocIoclet implements Ioclet {
 
     @Override
     public void addFactories(Catalog catalog) {
-        if (catalog.accept(Catalog.Entry.of(new TypeKey(Ioc.class), false))) {
+        if (catalog.accept(Catalog.Entry.of(new TypeKey<>(Ioc.class), false))) {
             catalog.add(getIOCContainerFactory());
         }
 
-        if (catalog.accept(Catalog.Entry.of(new TypeKey(ThreadScope.class), false))) {
+        if (catalog.accept(Catalog.Entry.of(new TypeKey<>(ThreadScope.class), false))) {
             catalog.add(getThreadScopeFactory());
         }
     }

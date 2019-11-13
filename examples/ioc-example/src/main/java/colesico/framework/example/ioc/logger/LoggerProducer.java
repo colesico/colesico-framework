@@ -23,7 +23,7 @@ import colesico.framework.ioc.Produce;
 import colesico.framework.ioc.Producer;
 
 @Producer
-@Produce(MainBean.class)
+@Produce(MainBeanLG.class)
 public class LoggerProducer {
 
     public Logger getLogger(@Message InjectionPoint ip) {

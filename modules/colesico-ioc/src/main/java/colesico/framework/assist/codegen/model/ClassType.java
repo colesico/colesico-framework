@@ -23,6 +23,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import java.util.Objects;
 
 public class ClassType extends ParserType {
 
@@ -72,7 +73,7 @@ public class ClassType extends ParserType {
 
         ClassType classType = (ClassType) o;
 
-        return originDeclaredType != null ? originDeclaredType.equals(classType.originDeclaredType) : classType.originDeclaredType == null;
+        return Objects.equals(originDeclaredType, classType.originDeclaredType);
     }
 
     @Override

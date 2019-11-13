@@ -16,8 +16,8 @@
 
 package colesico.framework.asyncjob.internal;
 
-import colesico.framework.ioc.ThreadScope;
 import colesico.framework.asyncjob.*;
+import colesico.framework.ioc.ThreadScope;
 import colesico.framework.transaction.TransactionalShell;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;

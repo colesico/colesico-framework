@@ -16,12 +16,7 @@
 
 package colesico.framework.dslvalidator.commands;
 
-import colesico.framework.dslvalidator.Command;
-import colesico.framework.dslvalidator.Sequence;
 import colesico.framework.dslvalidator.ValidationContext;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Executes sequence of commands within the new nested context with specified subject.

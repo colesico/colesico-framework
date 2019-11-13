@@ -17,7 +17,6 @@
 package colesico.framework.example.config.source;
 
 import colesico.framework.config.Config;
-import colesico.framework.config.PropertiesSource;
 import colesico.framework.config.SourceValue;
 import colesico.framework.config.UseSource;
 

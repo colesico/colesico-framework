@@ -21,7 +21,7 @@ package colesico.framework.asyncjob.internal;
  */
 public final class QueuePool {
 
-    private final QueueRef queueRefs[];
+    private final QueueRef[] queueRefs;
     private final int queuesNum;
     private final int maxPointer;
     private volatile int pointer = 0;

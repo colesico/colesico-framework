@@ -41,7 +41,6 @@ public class WebletDataPortImpl implements WebletDataPort {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <V> V read(Type valueType, ReaderContext context) {
         final WebletTeleReader<V> reader
                 = ioc.instance(new ClassedKey<>(WebletTeleReader.class.getCanonicalName(), typeToClassName(valueType)), null);

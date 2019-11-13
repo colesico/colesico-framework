@@ -23,8 +23,8 @@ import colesico.framework.router.RouterException;
 import colesico.framework.service.ServiceProxy;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -154,7 +154,7 @@ public class Navigation<N extends Navigation> {
             if (entry.getKey() != null) {
                 routeParameters.put(entry.getKey(), entry.getValue().toString());
             } else {
-                throw new RouterException("Empty route parameter value: " + entry.getKey());
+                throw new RouterException("Empty route parameter value: " + entry);
             }
         }
         return (N) this;
@@ -208,18 +208,14 @@ public class Navigation<N extends Navigation> {
 
     protected StringBuilder buildParamsStr() {
         StringBuilder paramsStrBuilder = new StringBuilder();
-        try {
-            boolean next = false;
-            for (Map.Entry<String, String> e : queryParameters.entrySet()) {
-                String paramValEnc = URLEncoder.encode(e.getValue(), "UTF-8");
-                if (next) {
-                    paramsStrBuilder.append("&");
-                }
-                paramsStrBuilder.append(e.getKey()).append("=").append(paramValEnc);
-                next = true;
+        boolean next = false;
+        for (Map.Entry<String, String> e : queryParameters.entrySet()) {
+            String paramValEnc = URLEncoder.encode(e.getValue(), StandardCharsets.UTF_8);
+            if (next) {
+                paramsStrBuilder.append("&");
             }
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex);
+            paramsStrBuilder.append(e.getKey()).append("=").append(paramValEnc);
+            next = true;
         }
         return paramsStrBuilder;
     }

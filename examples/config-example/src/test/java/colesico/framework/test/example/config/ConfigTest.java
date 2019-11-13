@@ -24,7 +24,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import static org.testng.Assert.*;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class ConfigTest {
     private Ioc ioc;
@@ -70,6 +72,11 @@ public class ConfigTest {
     @Test
     public void testSourcePrefix(){
         assertEquals(service.getSourcePrefixConfigValue(),"PrefixedConfSourceValue");
+    }
+
+    @Test
+    public void testSourceNested(){
+        assertEquals(service.getSourceNestedConfigValue(),"NestedValue");
     }
 
 }

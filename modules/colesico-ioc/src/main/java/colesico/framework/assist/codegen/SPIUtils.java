@@ -25,7 +25,11 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.*;
-import java.util.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 public class SPIUtils {
 
@@ -33,9 +37,10 @@ public class SPIUtils {
 
     static final Logger logger = LoggerFactory.getLogger(SPIUtils.class);
 
+    @SuppressWarnings("unchecked")
     public static Set<String> readSPIFile(InputStream input) {
         Set<String> srvClasses = new HashSet();
-        try (BufferedReader r = new BufferedReader(new InputStreamReader(input, "UTF-8"))) {
+        try (BufferedReader r = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
             String line;
             while ((line = r.readLine()) != null) {
                 int commentStart = line.indexOf('#');
@@ -56,7 +61,7 @@ public class SPIUtils {
 
     public static void writeSPIFile(OutputStream output, Collection<String> srvClasses) {
         try {
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output, "UTF-8"));
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output, StandardCharsets.UTF_8));
             Iterator it = srvClasses.iterator();
 
             while (it.hasNext()) {
@@ -71,8 +76,9 @@ public class SPIUtils {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static void addService(String srvInterface, Set<String> srvClasses, ProcessingEnvironment processingEnv) {
-        logger.debug("Generate SPI file for: "+srvInterface);
+        logger.debug("Generate SPI file for: " + srvInterface);
         try {
             Set allServices = new HashSet();
             Filer filer = processingEnv.getFiler();

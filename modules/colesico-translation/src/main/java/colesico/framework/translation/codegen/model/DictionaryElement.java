@@ -22,7 +22,6 @@ import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.translation.Dictionary;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.lang.model.element.ExecutableElement;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -83,7 +82,7 @@ public class DictionaryElement {
     }
 
     public String getImplClassSimpleName() {
-        return getOriginBean().getSimpleName().toString() + "Impl";
+        return getOriginBean().getSimpleName() + "Impl";
     }
 
     public Map<String, BundleElement> getBundlesByLocale() {

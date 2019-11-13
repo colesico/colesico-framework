@@ -19,9 +19,6 @@ package colesico.framework.eventbus.codegen;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
 
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.type.TypeMirror;
-
 public class EventHandlerElement {
 
     private final MethodElement originMethod;

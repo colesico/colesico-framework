@@ -16,11 +16,11 @@
 
 package colesico.framework.ioc.internal;
 
+import colesico.framework.assist.ServiceLocator;
 import colesico.framework.ioc.*;
 import colesico.framework.ioc.ioclet.AdvancedIoc;
 import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.ioclet.Ioclet;
-import colesico.framework.assist.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -169,7 +169,7 @@ public class IocBuilderImpl implements IocBuilder {
                 ioc = new LazyIocContainer(factories);
                 break;
             default:
-                ioc = new EagerIocContainer(factories);
+                throw new IocException("Unsupported IoC container type");
         }
 
         if (preactivation) {
@@ -191,7 +191,7 @@ public class IocBuilderImpl implements IocBuilder {
                 }
             }
         } catch (StackOverflowError soe) {
-            throw new IocException(String.format(CIRCULAR_DEP_ERR_MSG, currentKey.toString()));
+            throw new IocException(String.format(CIRCULAR_DEP_ERR_MSG, currentKey!=null?currentKey.toString():"?"));
         }
     }
 

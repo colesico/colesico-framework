@@ -16,8 +16,8 @@
 
 package colesico.framework.example.restlet;
 
+import colesico.framework.httpserver.HttpServer;
 import colesico.framework.ioc.IocBuilder;
-import colesico.framework.undertow.HttpServer;
 
 public class Main {
 

@@ -19,7 +19,7 @@ package colesico.framework.ioc;
 import java.lang.annotation.*;
 
 /**
- * Defines the producing of the instance as "multivariant".
+ * Defines the producing of the instance as "multi-variant".
  * This means that the instance creation can be implemented with not just one factory.
  * To get that instance it is possible to use any one of that factories.
  *

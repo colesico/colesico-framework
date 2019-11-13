@@ -157,6 +157,6 @@ public final class Notice {
     }
 
     public enum Type {
-        INFO, SUCCESS, WARNING, ERROR;
+        INFO, SUCCESS, WARNING, ERROR
     }
 }

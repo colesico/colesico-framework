@@ -20,8 +20,6 @@ import colesico.framework.assist.codegen.model.AnnotationElement;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.translation.TranslationKey;
 
-import javax.lang.model.element.ExecutableElement;
-
 public class TranslationElement {
     private final BundleElement parentDictionary;
     private final MethodElement keyMethod;

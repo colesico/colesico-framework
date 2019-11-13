@@ -61,7 +61,7 @@ public class SizeVerifier<V> extends AbstractIntervalVerifier<V> {
         } else if (value.getClass().isArray()) {
             size = ((Object[]) context.getValue()).length;
         } else if (value instanceof String) {
-            size = ((String) ((String) value)).length();
+            size = ((String)value).length();
         } else {
             throw new RuntimeException("Unsupported value type: " + value.getClass().getName());
         }

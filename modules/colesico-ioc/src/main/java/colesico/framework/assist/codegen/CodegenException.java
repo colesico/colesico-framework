@@ -27,6 +27,7 @@ import javax.tools.Diagnostic;
 
 /**
  * An exception thrown while code generation in error case
+ *
  * @author Vladlen Larionov
  */
 public class CodegenException extends RuntimeException {
@@ -55,9 +56,9 @@ public class CodegenException extends RuntimeException {
 
         if (element != null && annotation != null) {
             processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, message, element, annotation);
-        } else if (element != null && annotation == null) {
+        } else if (element != null) {
             processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, message, element);
-        } else if (element == null && annotation != null) {
+        } else if (annotation != null) {
             processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, message, defaultElement, annotation);
         } else {
             processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, message, defaultElement);

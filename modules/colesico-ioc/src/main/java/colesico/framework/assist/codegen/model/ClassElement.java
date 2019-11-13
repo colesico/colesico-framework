@@ -29,6 +29,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public class ClassElement extends ParserElement {
@@ -180,7 +181,7 @@ public class ClassElement extends ParserElement {
 
         ClassElement that = (ClassElement) o;
 
-        return originTypeElement != null ? originTypeElement.equals(that.originTypeElement) : that.originTypeElement == null;
+        return Objects.equals(originTypeElement, that.originTypeElement);
     }
 
     @Override

@@ -32,8 +32,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,6 +54,7 @@ public class ProducersProcessor extends FrameworkAbstractProcessor {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected Class<? extends Annotation>[] getSupportedAnnotations() {
         return new Class[]{Producer.class};
     }
@@ -77,7 +76,7 @@ public class ProducersProcessor extends FrameworkAbstractProcessor {
             if (elm.getKind() != ElementKind.CLASS) {
                 continue;
             }
-            TypeElement producerElement = null;
+            TypeElement producerElement;
             try {
                 producerElement = (TypeElement) elm;
                 IocletElement iocletElement = parseProducer.parse(new ClassElement(processingEnv, producerElement));
@@ -117,7 +116,7 @@ public class ProducersProcessor extends FrameworkAbstractProcessor {
             CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, iocletElement.getOriginProducer().unwrap());
         } catch (CodegenException ce) {
             logger.error("Error generating ioclet: " + ExceptionUtils.getRootCauseMessage(ce));
-            ce.print(processingEnv, Optional.ofNullable(iocletElement).map(ie -> ie.getOriginProducer()).map(op -> op.unwrap()).orElse(null));
+            ce.print(processingEnv, Optional.ofNullable(iocletElement).map(IocletElement::getOriginProducer).map(ClassElement::unwrap).orElse(null));
             throw ce;
         } catch (Exception e) {
             logger.debug("Error generating ioclet: " + ExceptionUtils.getRootCauseMessage(e));

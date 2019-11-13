@@ -40,6 +40,7 @@ module colesico.framework.weblet {
     exports colesico.framework.weblet.codegen;
     exports colesico.framework.weblet.internal to colesico.framework.ioc;
 
+    exports colesico.framework.weblet.t9n;
     opens colesico.framework.weblet.t9n;
 
     provides Modulator with colesico.framework.weblet.codegen.WebletModulator;

@@ -86,7 +86,7 @@ abstract public class ParserElement extends Toolbox {
             }
             ModuleElement.ExportsDirective ed = (ModuleElement.ExportsDirective) d;
             String pkgName = ed.getPackage().toString();
-            if (!getPackage().equals(pkgName)) {
+            if (!getPackage().getQualifiedName().toString().equals(pkgName)) {
                 continue;
             }
             List<? extends ModuleElement> targetModules = ed.getTargetModules();

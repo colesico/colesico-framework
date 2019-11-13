@@ -16,14 +16,14 @@
 
 package colesico.framework.ioc.codegen.generator;
 
+import colesico.framework.assist.LazySingleton;
+import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.ioc.codegen.model.FactoryElement;
 import colesico.framework.ioc.codegen.model.IocletElement;
-import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.ioclet.Catalog;
+import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.ioclet.Ioclet;
-import colesico.framework.assist.LazySingleton;
-import colesico.framework.assist.codegen.CodegenUtils;
 import com.squareup.javapoet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,7 +142,7 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
             // Catalog.Entry.of(new Key(...),true|false)
             cb.add("$T.$N(", ClassName.get(Catalog.Entry.class), Catalog.Entry.OF_METHOD);
             cb.add(keyGenerator.forFactory(spl));
-            cb.add(",$L)", spl.getPolyproduce().booleanValue());
+            cb.add(",$L)", spl.getPolyproduce());
 
             cb.add(")){\n");
             cb.indent();

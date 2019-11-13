@@ -30,7 +30,7 @@ Colesico-framework consists of highly specialized micromodules.
 
 * <<ioc.asciidoc#,Colesico-ioc - Lightweight dependency injection container>>
 * <<config.asciidoc#,Colesico-config - Configuration assistant>>
-* Colesico-teleapi - Unified API for remote  services invocation
+* <<teleapi.asciidoc#,Colesico-teleapi - Unified API for remote  services invocation>>
 * Colesico-service - Business logic beans automation
 
 === Service modules
@@ -55,6 +55,7 @@ Colesico-framework consists of highly specialized micromodules.
 
 * Colesico-http - Unified HTTP API
 * <<router.asciidoc#,Colesico-router - HTTP requests dispatcher>>
+* <<httpserver.asciidoc#,Colesico-httpserver - HTTP server unified API>>
 * Colesico-weblet - HTTP requests handling support (servlets analogue)
 * Colesico-webstatic - Static files (*.js, *.css etc) sharing helper
 * Colesico-restlet - Simplified RESTful Web services support

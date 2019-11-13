@@ -29,8 +29,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
@@ -60,7 +58,7 @@ public class RecordProcessor extends FrameworkAbstractProcessor {
             if (elm.getKind() != ElementKind.CLASS) {
                 continue;
             }
-            TypeElement typeElement = null;
+            TypeElement typeElement;
             try {
                 typeElement = (TypeElement) elm;
                 logger.debug("Process DB record class: "+typeElement.getSimpleName());

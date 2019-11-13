@@ -22,7 +22,6 @@ import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.parser.ProcessorContext;
 import colesico.framework.service.codegen.parser.RoundContext;
 
-import javax.lang.model.element.VariableElement;
 import java.lang.annotation.Annotation;
 import java.util.Deque;
 import java.util.Set;

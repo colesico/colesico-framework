@@ -20,7 +20,6 @@ import colesico.framework.translation.Bundle;
 import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.extension.Function;
 import com.mitchellbosecke.pebble.template.EvaluationContext;
-import com.mitchellbosecke.pebble.template.GlobalContext;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 
 import java.util.List;
@@ -45,8 +44,8 @@ public class T9nFunction implements Function {
     public Object execute(Map<String, Object> args, PebbleTemplate pebbleTemplate, EvaluationContext context, int lineNumber) {
 
         String strKey;
-        Bundle dictionary = null;
-        List<String> textParams = null;
+        Bundle dictionary;
+        List<String> textParams;
 
         Object param0 = args.get(String.valueOf(0));
         if (!(param0 instanceof String)) {

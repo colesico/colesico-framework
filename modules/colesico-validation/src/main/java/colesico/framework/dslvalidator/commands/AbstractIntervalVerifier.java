@@ -18,7 +18,6 @@ package colesico.framework.dslvalidator.commands;
 
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
-import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 
 /**
  * @author Vladlen Larionov

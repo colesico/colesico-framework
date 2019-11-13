@@ -44,6 +44,7 @@ abstract public class ScopedFactory<T, S extends Scope> extends Factory<T> imple
     abstract public void setup(AdvancedIoc ioc);
 
     @Override
+    @SuppressWarnings("unchecked")
     public final T get(Object message) {
         final Scope scope = scopeFac.get(message);
         return (T) scope.get(instanceKey, this, message);

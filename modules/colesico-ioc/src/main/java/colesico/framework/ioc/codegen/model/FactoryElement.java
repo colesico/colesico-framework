@@ -73,7 +73,7 @@ abstract public class FactoryElement {
     }
 
     public final String getFactoryMethodName() {
-        return factoryMethodBaseName + "Factory" + Integer.toString(factoryIndex);
+        return factoryMethodBaseName + "Factory" + factoryIndex;
     }
 
     public void setFactoryIndex(int factoryIndex) {

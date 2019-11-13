@@ -17,6 +17,7 @@
 package colesico.framework.example.config;
 
 import colesico.framework.ioc.IocBuilder;
+
 import static java.lang.System.out;
 
 public class Main {
@@ -30,5 +31,7 @@ public class Main {
         out.println("Values from message configs: "+service.getMessageConfigValues());
         out.println("Value from simple source config: "+service.getSourceSimpleConfigValue());
         out.println("Value from single source config: "+service.getSourceSingleConfigValue());
+        out.println("Value from prefixed source config: "+service.getSourcePrefixConfigValue());
+        out.println("Value from nested source config: "+service.getSourceNestedConfigValue());
     }
 }

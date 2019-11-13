@@ -17,6 +17,7 @@
 package colesico.framework.config;
 
 import colesico.framework.assist.StrUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,9 +25,11 @@ import javax.inject.Singleton;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
+import java.util.function.Function;
 
 /**
  * Properties file based configuration source.
@@ -72,7 +75,6 @@ public class PropertiesSource implements ConfigSource {
             fileName = params.getOrDefault(FILE, DEFAULT_PROPERTIES_FILE);
         }
 
-        final String prefix = params.get(PREFIX);
         final String directory = params.getOrDefault(DIRECTORY, "./config");
         String fullPath = StrUtils.concatPath(directory, fileName, "/");
 
@@ -82,7 +84,7 @@ public class PropertiesSource implements ConfigSource {
             logger.debug("Read configuration from file: " + fullPath);
             try (FileInputStream is = new FileInputStream(fullPath)) {
                 props.load(is);
-                return new ConnectionImpl(props, prefix);
+                return createConnection(props, params);
             } catch (Exception e) {
                 String errorMsg = "Error reading config from file: " + fullPath;
                 logger.error(errorMsg);
@@ -90,13 +92,16 @@ public class PropertiesSource implements ConfigSource {
             }
         }
 
-
         final String classpath = params.getOrDefault(CLASSPATH, "META-INF");
         fullPath = StrUtils.concatPath(classpath, fileName, "/");
 
         try (InputStream is = getClassLoader().getResourceAsStream(fullPath)) {
-            props.load(is);
-            return new ConnectionImpl(props, prefix);
+            if (is != null) {
+                props.load(is);
+                return createConnection(props, params);
+            } else {
+                throw new RuntimeException("File not found: " + fullPath);
+            }
         } catch (Exception e) {
             String errorMsg = "Error reading config from from resource: " + fullPath;
             logger.error(errorMsg);
@@ -109,52 +114,123 @@ public class PropertiesSource implements ConfigSource {
         return classLoader;
     }
 
-    protected <T> T convertFromString(Type valueType, String value) {
-        throw new RuntimeException("Unsupported type: " + valueType);
+    protected Connection createConnection(Properties properties, Map<String, String> params) {
+        return new ConnectionImpl(properties, params.get(PREFIX));
     }
 
     protected class ConnectionImpl implements Connection {
 
         private final Properties properties;
-        private final String preffix;
+        private final String prefix;
 
-        public ConnectionImpl(Properties properties, String preffix) {
+        public ConnectionImpl(Properties properties, String prefix) {
             this.properties = properties;
-            this.preffix = preffix;
+            this.prefix = prefix;
         }
 
         @Override
-        public <T> T getValue(Type valueType, String queryText, T defaultValue) {
-            String key = (preffix != null ? preffix + '.' : "") + queryText;
-            String value = properties.getProperty(key);
-            if (value == null) {
-                return defaultValue;
+        public <T> T getValue(Type valueType, String valueQuery, T defaultValue) {
+            String valueKey = toKey(prefix, valueQuery);
+            Function<String, T> valueConverter = getValueConverter(valueType);
+            if (valueConverter != null) {
+                String rawValue = properties.getProperty(valueKey);
+                if (rawValue != null) {
+                    return valueConverter.apply(rawValue);
+                } else {
+                    return defaultValue;
+                }
+            } else {
+                return buildComposition(valueType, valueKey);
             }
-            if (valueType == String.class) {
-                return (T) value;
-            }
-            if (valueType == Integer.class) {
-                return (T) Integer.valueOf(value);
-            }
-            if (valueType == Boolean.class) {
-                return (T) Boolean.valueOf(value);
-            }
-            if (valueType == Long.class) {
-                return (T) Long.valueOf(value);
-            }
-            if (valueType == Double.class) {
-                return (T) Double.valueOf(value);
-            }
-            if (valueType == Short.class) {
-                return (T) Short.valueOf(value);
-            }
-            return convertFromString(valueType, value);
         }
 
         @Override
         public void close() {
-
+            // nop
         }
+
+        protected <T> Function<String, T> getValueConverter(Type valueType) {
+            if (valueType == String.class) {
+                return v -> (T) v;
+            }
+            if (valueType == Long.class) {
+                return v -> (T) Long.valueOf(v);
+            }
+            if (valueType == Integer.class) {
+                return v -> (T) Integer.valueOf(v);
+            }
+            if (valueType == Short.class) {
+                return v -> (T) Short.valueOf(v);
+            }
+            if (valueType == Byte.class) {
+                return v -> (T) Byte.valueOf(v);
+            }
+            if (valueType == Boolean.class) {
+                return v -> (T) Boolean.valueOf(v);
+            }
+            if (valueType == Double.class) {
+                return v -> (T) Double.valueOf(v);
+            }
+            if (valueType == Float.class) {
+                return v -> (T) Float.valueOf(v);
+            }
+            if (valueType == Character.class) {
+                return v -> (T) Character.valueOf(v.charAt(0));
+            }
+            return null;
+        }
+
+        protected <T> T buildComposition(Type compositionType, String compositionQuery) {
+            try {
+                Class<T> compositionClass = (Class<T>) compositionType;
+                T compositionInstance = compositionClass.getDeclaredConstructor().newInstance();
+                List<Method> setters = getSetters(compositionClass);
+                for (Method setter : setters) {
+                    String valueKey = toKey(compositionQuery, getFieldName(setter));
+                    Type valueType = setter.getParameterTypes()[0];
+                    Function<String, T> valueConverter = getValueConverter(valueType);
+                    if (valueConverter != null) {
+                        String rawValue = properties.getProperty(valueKey);
+                        if (rawValue != null) {
+                            setter.invoke(compositionInstance, valueConverter.apply(rawValue));
+                        }
+                    } else {
+                        buildComposition(valueType, valueKey);
+                    }
+                }
+                return compositionInstance;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        protected String toKey(String prefix, String query) {
+            return (prefix != null ? prefix + '.' : "") + query;
+        }
+
+        protected List<Method> getSetters(Class clazz) {
+            List<Method> result = new ArrayList<>();
+            Class<?> currentClazz = clazz;
+            while (currentClazz.getSuperclass() != null) { // we don't want to process Object.class
+                for (Method method : currentClazz.getDeclaredMethods()) {
+                    if (Modifier.isPublic(method.getModifiers())
+                        && method.getParameterTypes().length == 1
+                        && method.getReturnType() == void.class
+                        && (method.getName().startsWith("set"))
+                    ) {
+                        method.setAccessible(true);
+                        result.add(method);
+                    }
+                }
+                currentClazz = currentClazz.getSuperclass();
+            }
+            return result;
+        }
+
+        protected String getFieldName(Method setter) {
+            return StrUtils.firstCharToLowerCase(StringUtils.substring(setter.getName(), 3));
+        }
+
     }
 
 }

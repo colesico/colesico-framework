@@ -25,7 +25,7 @@ import java.util.function.Supplier;
  */
 public interface HttpSession {
 
-    public void invalidate();
+    void invalidate();
 
     Object get(String attrName);
 

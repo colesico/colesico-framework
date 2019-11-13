@@ -86,7 +86,7 @@ public class ISO8601DateParser {
             int inset = 6;
 
             String s0 = input.substring(0, input.length() - inset);
-            String s1 = input.substring(input.length() - inset, input.length());
+            String s1 = input.substring(input.length() - inset);
 
             input = s0 + "GMT" + s1;
         }
@@ -109,7 +109,7 @@ public class ISO8601DateParser {
         int inset1 = 6;
 
         String s0 = output.substring(0, output.length() - inset0);
-        String s1 = output.substring(output.length() - inset1, output.length());
+        String s1 = output.substring(output.length() - inset1);
 
         String result = s0 + s1;
 

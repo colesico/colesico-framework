@@ -21,7 +21,6 @@ import colesico.framework.translation.TranslationKit;
 import com.mitchellbosecke.pebble.extension.NodeVisitor;
 import com.mitchellbosecke.pebble.node.AbstractRenderableNode;
 import com.mitchellbosecke.pebble.template.EvaluationContextImpl;
-import com.mitchellbosecke.pebble.template.GlobalContext;
 import com.mitchellbosecke.pebble.template.PebbleTemplateImpl;
 
 import java.io.IOException;

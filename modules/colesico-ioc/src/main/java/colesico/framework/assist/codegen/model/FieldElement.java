@@ -21,6 +21,7 @@ import colesico.framework.assist.codegen.CodegenException;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
+import java.util.Objects;
 
 public class FieldElement extends VarElement {
 
@@ -63,7 +64,7 @@ public class FieldElement extends VarElement {
 
         FieldElement that = (FieldElement) o;
 
-        return originVariableElement != null ? originVariableElement.equals(that.originVariableElement) : that.originVariableElement == null;
+        return Objects.equals(originVariableElement, that.originVariableElement);
     }
 
     @Override

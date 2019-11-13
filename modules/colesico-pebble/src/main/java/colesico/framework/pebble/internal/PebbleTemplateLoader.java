@@ -41,7 +41,7 @@ public class PebbleTemplateLoader implements Loader<String> {
     protected final ResourceKit resourceKit;
     protected final Logger logger = LoggerFactory.getLogger(PebbleTemplateLoader.class);
 
-    private String prefix;
+    //private String prefix;
     private String suffix = ".html";
     private String charset = "UTF-8";
 
@@ -96,7 +96,7 @@ public class PebbleTemplateLoader implements Loader<String> {
 
     @Override
     public void setPrefix(String s) {
-        prefix = s;
+        //prefix = s;
     }
 
     @Override

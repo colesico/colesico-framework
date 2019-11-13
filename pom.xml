@@ -23,7 +23,7 @@
     <groupId>net.colesico.framework</groupId>
     <artifactId>colesico-framework</artifactId>
     <packaging>pom</packaging>
-    <version>2.2.3</version>
+    <version>2.3.0</version>
     <name>Colesico Framework</name>
     <description>
         Lightweight application framework for the Java 11+
@@ -147,6 +147,7 @@
                 <!-- Web -->
                 <module>modules/colesico-http</module>
                 <module>modules/colesico-router</module>
+                <module>modules/colesico-httpserver</module>
                 <module>modules/colesico-weblet</module>
                 <module>modules/colesico-webstatic</module>
                 <module>modules/colesico-htmlrenderer</module>

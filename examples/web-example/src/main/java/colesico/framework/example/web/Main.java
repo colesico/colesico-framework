@@ -16,9 +16,9 @@
 
 package colesico.framework.example.web;
 
+import colesico.framework.httpserver.HttpServer;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
-import colesico.framework.undertow.HttpServer;
 
 public class Main {
 

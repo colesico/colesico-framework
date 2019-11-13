@@ -16,12 +16,13 @@
 
 package colesico.framework.example.config;
 
-import colesico.framework.example.config.message.TargetBean;
 import colesico.framework.example.config.message.MessageConfig1;
 import colesico.framework.example.config.message.MessageConfig2;
+import colesico.framework.example.config.message.TargetBean;
 import colesico.framework.example.config.polyvariant.PolyConfigPrototype;
 import colesico.framework.example.config.simple.SimpleConfig;
 import colesico.framework.example.config.single.SingleConfigPrototype;
+import colesico.framework.example.config.source.SourceNestedConfig;
 import colesico.framework.example.config.source.SourcePrefixConfig;
 import colesico.framework.example.config.source.SourceSimpleConfig;
 import colesico.framework.example.config.source.SourceSingleConfigPrototype;
@@ -42,6 +43,7 @@ public class MainBean {
     private final SourceSimpleConfig sourceSimpleConfig;
     private final SourceSingleConfigPrototype sourceSingleConfig;
     private final SourcePrefixConfig sourcePrefixConfig;
+    private final SourceNestedConfig sourceNestedConfig;
 
     public MainBean(SimpleConfig simpleConfig,
                     Provider<SingleConfigPrototype> singleConfigProv,
@@ -54,7 +56,8 @@ public class MainBean {
 
                     SourceSimpleConfig sourceSimpleConfig,
                     SourceSingleConfigPrototype sourceSingleConfig,
-                    SourcePrefixConfig sourcePrefixConfig
+                    SourcePrefixConfig sourcePrefixConfig,
+                    SourceNestedConfig sourceNestedConfig
     ) {
 
         this.simpleConfig = simpleConfig;
@@ -65,6 +68,7 @@ public class MainBean {
         this.sourceSimpleConfig = sourceSimpleConfig;
         this.sourceSingleConfig = sourceSingleConfig;
         this.sourcePrefixConfig = sourcePrefixConfig;
+        this.sourceNestedConfig = sourceNestedConfig;
     }
 
     public String getSimpleConfigValue() {
@@ -95,6 +99,10 @@ public class MainBean {
 
     public String getSourcePrefixConfigValue() {
         return sourcePrefixConfig.getValue();
+    }
+
+    public String getSourceNestedConfigValue() {
+        return sourceNestedConfig.getNested().getValue();
     }
 
 }

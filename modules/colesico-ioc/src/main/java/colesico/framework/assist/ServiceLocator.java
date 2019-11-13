@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.security.AccessControlContext;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -40,7 +41,6 @@ public class ServiceLocator<S> {
 
     static final String SERVICE_CATALOG_PREFIX = "META-INF/services/";
 
-    private final Class<?> caller;
     private final Class<S> service;
     private final ClassLoader classLoader;
     private final Predicate<Class<? extends S>> classFilter;
@@ -50,7 +50,6 @@ public class ServiceLocator<S> {
         if (caller == null) {
             throw new ServiceConfigurationError("Caller class is null");
         }
-        this.caller = caller;
 
         if (service == null) {
             throw new ServiceConfigurationError("Service class is null");
@@ -70,8 +69,8 @@ public class ServiceLocator<S> {
         this.classFilter = classFilter;
 
         this.acc = (System.getSecurityManager() != null)
-                ? AccessController.getContext()
-                : null;
+            ? AccessController.getContext()
+            : null;
     }
 
     protected Set<String> getServiceProviderClassNames(URL serviceProvidersCatalogueUrl) {
@@ -79,7 +78,7 @@ public class ServiceLocator<S> {
             URLConnection uc = serviceProvidersCatalogueUrl.openConnection();
             uc.setUseCaches(false);
             try (InputStream in = uc.getInputStream();
-                 BufferedReader reader = new BufferedReader(new InputStreamReader(in, "utf-8"))) {
+                 BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
                 Predicate<String> filter = (str) -> !((str == null) || str.equals("") || str.startsWith("#"));
                 Set<String> result = reader.lines().map(String::trim).filter(filter).collect(Collectors.toSet());
                 return result;
@@ -102,6 +101,7 @@ public class ServiceLocator<S> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected Set<Class<? extends S>> getServiceProviderClasses(String serviceClassName, ClassLoader classLoader) {
         Set<Class<? extends S>> result = new HashSet<>();
         Enumeration<URL> serviceProviderCatalogues = findServiceProviderCatalogues(serviceClassName, classLoader);

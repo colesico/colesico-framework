@@ -18,7 +18,6 @@ package colesico.framework.translation.codegen.model;
 
 import colesico.framework.assist.codegen.model.MethodElement;
 
-import javax.lang.model.element.ExecutableElement;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

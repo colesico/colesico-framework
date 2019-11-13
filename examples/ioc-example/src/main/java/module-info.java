@@ -6,7 +6,8 @@ module colesico.framework.example.ioc {
     exports colesico.framework.example.ioc.singleton;
     exports colesico.framework.example.ioc.implement;
     exports colesico.framework.example.ioc.named;
-    exports colesico.framework.example.ioc.plugin;
+    exports colesico.framework.example.ioc.replace;
     exports colesico.framework.example.ioc.multiplugin;
+    exports colesico.framework.example.ioc.message;
     exports colesico.framework.example.ioc.logger;
 }

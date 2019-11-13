@@ -58,18 +58,14 @@ public final class RequiredVerifier<V> implements Command<V> {
 
         if (context.getValue() instanceof Collection) {
             if (((Collection) context.getValue()).isEmpty()) {
-                if (StringUtils.isBlank((String) context.getValue())) {
-                    addError(context);
-                }
+                addError(context);
             }
             return;
         }
 
         if (context.getValue() instanceof Map) {
             if (((Map) context.getValue()).isEmpty()) {
-                if (StringUtils.isBlank((String) context.getValue())) {
-                    addError(context);
-                }
+                addError(context);
             }
             return;
         }

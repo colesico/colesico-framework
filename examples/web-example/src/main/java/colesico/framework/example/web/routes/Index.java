@@ -16,7 +16,6 @@
 
 package colesico.framework.example.web.routes;
 
-import colesico.framework.router.Route;
 import colesico.framework.weblet.HtmlResponse;
 import colesico.framework.weblet.Weblet;
 

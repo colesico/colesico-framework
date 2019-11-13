@@ -34,11 +34,8 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.*;
 import javax.tools.Diagnostic;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class DictionaryProcessor extends FrameworkAbstractProcessor {

@@ -20,6 +20,7 @@ import com.squareup.javapoet.TypeName;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -44,9 +45,7 @@ public class ArrayCodegen {
 
     public void add(String format, Object... values) {
         formatsList.add(format);
-        for (Object v : values) {
-            valuesList.add(v);
-        }
+        valuesList.addAll(Arrays.asList(values));
     }
 
     public void addAll(String format, List values) {
@@ -60,9 +59,7 @@ public class ArrayCodegen {
         for (Object val : values) {
             formatsList.add(format);
             Object[] vals = splitter.apply(val);
-            for (Object sv : vals) {
-                valuesList.add(sv);
-            }
+            valuesList.addAll(Arrays.asList(vals));
         }
     }
 
@@ -70,9 +67,7 @@ public class ArrayCodegen {
         for (Object val : values) {
             formatsList.add(format.apply(val));
             Object[] vals = splitter.apply(val);
-            for (Object sv : vals) {
-                valuesList.add(sv);
-            }
+            valuesList.addAll(Arrays.asList(vals));
         }
     }
 

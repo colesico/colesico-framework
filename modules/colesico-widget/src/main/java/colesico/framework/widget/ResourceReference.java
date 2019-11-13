@@ -24,8 +24,8 @@ import java.util.Map;
  */
 public interface ResourceReference {
 
-    static final String CSS_RESOURCE_TYPE = "css";
-    static final String JS_RESOURCE_TYPE = "js";
+    String CSS_RESOURCE_TYPE = "css";
+    String JS_RESOURCE_TYPE = "js";
 
     /**
      *

@@ -22,7 +22,7 @@ import colesico.framework.weblet.assist.CSRFProtector;
 import colesico.framework.weblet.teleapi.*;
 
 import javax.inject.Singleton;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import static colesico.framework.ioc.Rank.RANK_MINOR;
 
@@ -55,11 +55,7 @@ public class WebletProducer {
         return new PrincipalWebletConfigPrototype() {
             @Override
             public byte[] getSignatureKey() {
-                try {
-                    return "0123456789ABCDEF".getBytes("UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    throw new RuntimeException(e);
-                }
+                return "0123456789ABCDEF".getBytes(StandardCharsets.UTF_8);
             }
         };
     }

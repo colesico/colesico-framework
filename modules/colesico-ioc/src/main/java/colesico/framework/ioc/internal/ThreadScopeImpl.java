@@ -30,7 +30,7 @@ import java.util.Set;
  */
 public final class ThreadScopeImpl implements ThreadScope {
 
-    protected final ThreadLocal<Map<Key<?>, Object>> attributesHolder;
+    private final ThreadLocal<Map<Key<?>, Object>> attributesHolder;
 
     public ThreadScopeImpl() {
         attributesHolder = ThreadLocal.withInitial(HashMap::new);
@@ -47,6 +47,7 @@ public final class ThreadScopeImpl implements ThreadScope {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T, C> T get(Key<T> key, Fabricator<T, C> fabricator, C fabricationContext) {
         Map attributes = attributesHolder.get();
         Object obj = attributes.computeIfAbsent(key, k -> fabricator.fabricate(fabricationContext));
@@ -54,6 +55,7 @@ public final class ThreadScopeImpl implements ThreadScope {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T get(Key<T> key) {
         return (T) attributesHolder.get().get(key);
     }

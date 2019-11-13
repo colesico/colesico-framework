@@ -49,12 +49,12 @@ public interface ConfigSource {
         /**
          * Returns a configuration value by query
          *
-         * @param valueType
-         * @param queryText
+         * @param valueType  actual value type to convert to it.
+         * @param valueQuery query to obtain value from source. The query format  is configuration source specific.
          * @param <T>
          * @return
          */
-        <T> T getValue(Type valueType, String queryText, T defaultValue);
+        <T> T getValue(Type valueType, String valueQuery, T defaultValue);
 
         void close();
     }

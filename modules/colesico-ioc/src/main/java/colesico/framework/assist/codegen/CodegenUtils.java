@@ -144,7 +144,7 @@ public class CodegenUtils {
     }
 
     public static MethodSpec.Builder createProxyMethodBuilder(MethodElement method, String methodPrefix, String paramPrefix, boolean skipAnnotations) {
-        MethodSpec.Builder mb = null;
+        MethodSpec.Builder mb;
         if (method.isConstractor()) {
             mb = MethodSpec.constructorBuilder();
         } else {
@@ -180,8 +180,7 @@ public class CodegenUtils {
 
         List<ParameterElement> methodParams = method.getParameters();
         for (ParameterElement param : methodParams) {
-            Set<Modifier> modifiersSet = new HashSet<>();
-            modifiersSet.addAll(param.unwrap().getModifiers());
+            Set<Modifier> modifiersSet = new HashSet<>(param.unwrap().getModifiers());
             modifiersSet.add(Modifier.FINAL);
 
             Modifier[] modifiers = modifiersSet.toArray(new Modifier[modifiersSet.size()]);

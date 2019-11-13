@@ -23,7 +23,6 @@ import colesico.framework.service.codegen.model.TeleCompElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
 import colesico.framework.service.codegen.model.TeleParamElement;
 import colesico.framework.service.codegen.model.TeleVarElement;
-import colesico.framework.service.codegen.modulator.Modulator;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleDriver;
 import colesico.framework.weblet.Origin;

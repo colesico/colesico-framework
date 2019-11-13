@@ -28,13 +28,17 @@ public class SQLUtils {
         }
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         try (InputStream is = classloader.getResourceAsStream(filePath)) {
-            InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
-            BufferedReader reader = new BufferedReader(streamReader);
-            StringBuilder text = new StringBuilder();
-            for (String line; (line = reader.readLine()) != null; ) {
-                text.append(line).append("\n");
+            if (is!=null) {
+                InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
+                BufferedReader reader = new BufferedReader(streamReader);
+                StringBuilder text = new StringBuilder();
+                for (String line; (line = reader.readLine()) != null; ) {
+                    text.append(line).append("\n");
+                }
+                return text.toString();
+            } else {
+                throw new RuntimeException("File not found: "+filePath);
             }
-            return text.toString();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

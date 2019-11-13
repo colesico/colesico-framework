@@ -48,8 +48,7 @@ public class MACUtils {
             final SecretKeySpec keySpec = new SecretKeySpec(key, algorithm);
             hashAlg.init(keySpec);
             hashAlg.update(value);
-            final byte[] result = hashAlg.doFinal();
-            return result;
+            return hashAlg.doFinal();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

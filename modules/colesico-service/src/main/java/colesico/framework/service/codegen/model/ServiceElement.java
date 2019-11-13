@@ -25,7 +25,6 @@ import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.TypeName;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.lang.model.type.DeclaredType;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;

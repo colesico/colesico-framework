@@ -60,9 +60,9 @@ public final class T9nDictionaryParser implements TokenParser {
         int lineNumber = token.getLineNumber();
 
         // dictionary name
-        String dictName = null;
+        String dictName;
         // dictionary base path
-        String basePath = null;
+        String basePath;
 
         // skip the "t9nDictionary" token
         token = stream.next();
@@ -85,7 +85,7 @@ public final class T9nDictionaryParser implements TokenParser {
             if (StringUtils.isBlank(dictName)) {
                 dictName = DEFAULT_DICT_NAME;
             }
-            token = stream.next();
+            stream.next();
         } else {
             dictName = DEFAULT_DICT_NAME;
         }

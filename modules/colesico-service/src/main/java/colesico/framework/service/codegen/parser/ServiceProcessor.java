@@ -17,7 +17,6 @@
 package colesico.framework.service.codegen.parser;
 
 import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.service.codegen.generator.IocGenerator;
 import colesico.framework.service.codegen.generator.ServiceProxyGenerator;
@@ -28,7 +27,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
@@ -36,8 +34,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic.Kind;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;

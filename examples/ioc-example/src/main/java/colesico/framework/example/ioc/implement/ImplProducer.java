@@ -24,6 +24,7 @@ import colesico.framework.ioc.Producer;
 @Producer
 // Declare default producing
 @Produce(BeanImpl.class)
+@Produce(MainBeanIMP.class)
 public class ImplProducer {
 
     // Declare custom producing for BeanInterface

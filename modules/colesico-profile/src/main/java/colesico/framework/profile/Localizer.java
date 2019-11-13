@@ -102,9 +102,7 @@ public final class Localizer {
 
     private void checkNames(String[] qualifierNames, Map<String, String> qualifiersMap) {
         final Set namesSet = new HashSet();
-        for (String name : qualifierNames) {
-            namesSet.add(name);
-        }
+        namesSet.addAll(Arrays.asList(qualifierNames));
 
         for (String name : qualifiersMap.keySet()) {
             if (!namesSet.contains(name)) {

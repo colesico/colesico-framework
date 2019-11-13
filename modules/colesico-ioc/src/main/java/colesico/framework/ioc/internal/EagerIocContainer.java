@@ -20,13 +20,16 @@ import colesico.framework.ioc.Key;
 import colesico.framework.ioc.Polysupplier;
 import colesico.framework.ioc.Supplier;
 import colesico.framework.ioc.UnsatisfiedInjectionException;
-import colesico.framework.ioc.ioclet.*;
+import colesico.framework.ioc.ioclet.AdvancedIoc;
+import colesico.framework.ioc.ioclet.DefaultPolysupplier;
+import colesico.framework.ioc.ioclet.DefaultProvider;
+import colesico.framework.ioc.ioclet.Factory;
 
 import javax.inject.Provider;
 import java.util.Map;
 
 /**
- * Ioc containter implementation for production.
+ * IoC container implementation for production.
  * Requires factories pre-activation after container creation.
  *
  * @author Vladlen Larionov
@@ -40,26 +43,29 @@ public final class EagerIocContainer implements AdvancedIoc {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T instance(Key<T> key, Object message) throws UnsatisfiedInjectionException {
-        Factory<T> factory = (Factory<T>) factories.get(key);
+        Factory factory = factories.get(key);
         if (factory == null) {
             throw new UnsatisfiedInjectionException(key);
         }
-        return factory.get(message);
+        return (T) factory.get(message);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T instanceOrNull(Key<T> key, Object message) {
-        Factory<T> factory = (Factory<T>) factories.get(key);
+        Factory factory = factories.get(key);
         if (factory == null) {
             return null;
         }
-        return factory.get(message);
+        return (T) factory.get(message);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Provider<T> provider(Key<T> key, Object message) throws UnsatisfiedInjectionException {
-        Factory<T> factory = (Factory<T>) factories.get(key);
+        Factory factory = factories.get(key);
         if (factory == null) {
             throw new UnsatisfiedInjectionException(key);
         }
@@ -67,8 +73,9 @@ public final class EagerIocContainer implements AdvancedIoc {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Provider<T> providerOrNull(Key<T> key, Object message) {
-        Factory<T> factory = (Factory<T>) factories.get(key);
+        Factory factory = factories.get(key);
         if (factory == null) {
             return null;
         }
@@ -76,8 +83,9 @@ public final class EagerIocContainer implements AdvancedIoc {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Supplier<T> supplier(Key<T> key) throws UnsatisfiedInjectionException {
-        Factory<T> factory = (Factory<T>) factories.get(key);
+        Factory factory = factories.get(key);
         if (factory == null) {
             throw new UnsatisfiedInjectionException(key);
         }
@@ -85,19 +93,22 @@ public final class EagerIocContainer implements AdvancedIoc {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Supplier<T> supplierOrNull(Key<T> key) {
-        return (Factory<T>) factories.get(key);
+        return (Supplier<T>) factories.get(key);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Polysupplier<T> polysupplier(Key<T> key) {
-        Factory<T> factory = (Factory<T>) factories.get(key);
+        Factory factory = factories.get(key);
         return new DefaultPolysupplier<>(factory);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Factory<T> factory(Key<T> key) throws UnsatisfiedInjectionException {
-        Factory<T> factory = (Factory<T>) factories.get(key);
+        Factory factory = factories.get(key);
         if (factory == null) {
             throw new UnsatisfiedInjectionException(key);
         }
@@ -105,6 +116,7 @@ public final class EagerIocContainer implements AdvancedIoc {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Factory<T> factoryOrNull(Key<T> key) {
         return (Factory<T>) factories.get(key);
     }

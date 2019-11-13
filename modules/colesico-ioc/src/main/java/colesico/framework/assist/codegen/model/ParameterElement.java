@@ -19,6 +19,7 @@ package colesico.framework.assist.codegen.model;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
+import java.util.Objects;
 
 public class ParameterElement extends VarElement {
 
@@ -59,7 +60,7 @@ public class ParameterElement extends VarElement {
 
         ParameterElement that = (ParameterElement) o;
 
-        return originVariableElement != null ? originVariableElement.equals(that.originVariableElement) : that.originVariableElement == null;
+        return Objects.equals(originVariableElement, that.originVariableElement);
     }
 
     @Override

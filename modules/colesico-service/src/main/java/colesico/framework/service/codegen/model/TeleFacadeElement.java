@@ -26,7 +26,6 @@ import colesico.framework.teleapi.TeleFacade;
 import com.squareup.javapoet.CodeBlock;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.lang.model.element.PackageElement;
 import java.util.HashMap;
 import java.util.Map;
 

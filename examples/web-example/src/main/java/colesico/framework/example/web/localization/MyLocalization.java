@@ -16,8 +16,8 @@
 
 package colesico.framework.example.web.localization;
 
-import colesico.framework.profile.ProfileKit;
 import colesico.framework.profile.DefaultProfile;
+import colesico.framework.profile.ProfileKit;
 import colesico.framework.weblet.HtmlResponse;
 import colesico.framework.weblet.Weblet;
 

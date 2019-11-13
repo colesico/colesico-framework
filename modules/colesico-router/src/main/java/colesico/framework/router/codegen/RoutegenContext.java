@@ -17,16 +17,16 @@
 package colesico.framework.router.codegen;
 
 
-import colesico.framework.assist.codegen.model.AnnotationElement;
-import colesico.framework.http.HttpMethod;
 import colesico.framework.assist.Elements;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.model.AnnotationElement;
+import colesico.framework.http.HttpMethod;
 import colesico.framework.router.RequestMethod;
 import colesico.framework.router.Route;
+import colesico.framework.router.assist.RouteTrie;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
-import colesico.framework.router.assist.RouteTrie;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.element.PackageElement;
@@ -101,7 +101,7 @@ abstract public class RoutegenContext {
 
     protected String buildServiceRoute(ServiceElement service) {
         AnnotationElement<Route> routeAnn = service.getOriginClass().getAnnotation(Route.class);
-        String srvRoute = null;
+        String srvRoute;
         if (routeAnn != null) {
             srvRoute = StringUtils.trim(routeAnn.unwrap().value());
 

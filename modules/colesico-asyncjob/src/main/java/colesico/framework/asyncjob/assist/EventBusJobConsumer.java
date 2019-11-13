@@ -16,8 +16,8 @@
 
 package colesico.framework.asyncjob.assist;
 
-import colesico.framework.eventbus.EventBus;
 import colesico.framework.asyncjob.JobConsumer;
+import colesico.framework.eventbus.EventBus;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

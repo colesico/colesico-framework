@@ -19,8 +19,8 @@ package colesico.framework.ioc.internal;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.IocException;
 import colesico.framework.ioc.Key;
-import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.ioclet.Catalog;
+import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.ioclet.Ioclet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,11 +97,12 @@ public class IocletRanker {
         private final State state = new State();
 
         @Override
-        public <T> void add(Factory<T> prodlet) {
-            Factory oldItem = factoriesMap.put(state.key, prodlet);
+        @SuppressWarnings("unchecked")
+        public <T> void add(Factory<T> factory) {
+            Factory oldItem = factoriesMap.put(state.key, factory);
             if (oldItem != null) {
                 if (state.polyproducing) {
-                    prodlet.setNext(oldItem);
+                    factory.setNext(oldItem);
                 } else {
                     throw new IocException("Factory is overridden for key: " + state.key);
                 }

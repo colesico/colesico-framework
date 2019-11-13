@@ -54,8 +54,8 @@ public interface Catalog {
             return polyproducing;
         }
 
-        public static final <T> Entry<T> of(Key<T> key, boolean polyproducing) {
-            return new Entry(key, polyproducing);
+        public static <T> Entry<T> of(Key<T> key, boolean polyproducing) {
+            return new Entry<>(key, polyproducing);
         }
     }
 }

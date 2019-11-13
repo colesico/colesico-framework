@@ -24,8 +24,7 @@ import colesico.framework.service.TeleMethodName;
 import colesico.framework.service.TeleView;
 import colesico.framework.service.codegen.model.*;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.*;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.util.*;
@@ -42,6 +41,12 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
     protected TeleVarElement createTeleVarElement(TeleMethodElement teleMethod, TeleVarElement parentTeleVar, Deque<VarElement> varStack) {
 
         VarElement var = varStack.peek(); // get stack head element (first element of dequeq)
+
+        if (var == null) {
+            throw CodegenException.of()
+                .message("No variable")
+                .build();
+        }
 
         //================= Check composition or parameter
         AnnotationElement<Compound> compounddAnn = var.getAnnotation(Compound.class);
@@ -63,14 +68,14 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
             if (ve.asType().toString().equals(var.asType().toString())) {
                 TeleFacadeElement teleFacade = teleMethod.getParentTeleFacade();
                 throw CodegenException.of().message("Recursive composition for: " +
-                        var.asType().toString() + "->" + var.getName() +
-                        " in: " +
-                        teleFacade.getParentService().getOriginClass().asType().toString() +
-                        "->" + teleMethod.getProxyMethod().getName() + "(..." +
-                        methodParam.toString()
-                        + "...) ")
-                        .element(methodParam)
-                        .build();
+                    var.asType().toString() + "->" + var.getName() +
+                    " in: " +
+                    teleFacade.getParentService().getOriginClass().asType().toString() +
+                    "->" + teleMethod.getProxyMethod().getName() + "(..." +
+                    methodParam.toString()
+                    + "...) ")
+                    .element(methodParam)
+                    .build();
             }
         }
         varStack.push(var); // push var back to stack head
@@ -83,9 +88,9 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
         // Retrieve class fields for composition
         // Filter fields to get only acceptable
         List<FieldElement> fields = var.asClassType().asClassElement().getFieldsFiltered(
-                f -> !f.unwrap().getModifiers().contains(Modifier.FINAL)
-                        && !f.unwrap().getModifiers().contains(Modifier.STATIC)
-                        && f.unwrap().asType().getKind().equals(TypeKind.DECLARED)
+            f -> !f.unwrap().getModifiers().contains(Modifier.FINAL)
+                && !f.unwrap().getModifiers().contains(Modifier.STATIC)
+                && f.unwrap().asType().getKind().equals(TypeKind.DECLARED)
         );
 
 
@@ -102,8 +107,8 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
 
             if (field.asClassType() == null) {
                 throw CodegenException.of().message("Unsupported field type kind for tele-view " + var.asClassType().asClassElement().getName() + "->" + field.getName())
-                        .element(field.unwrap())
-                        .build();
+                    .element(field.unwrap())
+                    .build();
             }
 
             varStack.push(field);
@@ -121,8 +126,8 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
             Deque<VarElement> varStack = new ArrayDeque<>();
             if (param.asClassType() == null) {
                 throw CodegenException.of().message("Unsupported parameter type kind for tele-method " + teleMethod.getName() + "(..." + param.getName() + "...)")
-                        .element(param.unwrap())
-                        .build();
+                    .element(param.unwrap())
+                    .build();
             }
             varStack.push(param);
             TeleVarElement teleParam = createTeleVarElement(teleMethod, null, varStack);
@@ -162,7 +167,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
         if (teleViewAnnotation == null) {
             return result;
         }
-        TypeMirror[] keys = teleViewAnnotation.getValueTypeMirrors(a -> a.value());
+        TypeMirror[] keys = teleViewAnnotation.getValueTypeMirrors(TeleView::value);
         for (TypeMirror k : keys) {
             result.add(k.toString());
         }

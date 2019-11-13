@@ -25,6 +25,6 @@ import colesico.framework.ioc.Producer;
 // Declare default producing: new HelloService(...)
 @Produce(HelloBean.class)
 // Declare default producing: new MainService(...)
-@Produce(MainBean.class)
+@Produce(MainBeanHW.class)
 public class HelloProducer {
 }

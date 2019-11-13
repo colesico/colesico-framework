@@ -111,10 +111,10 @@ public final class HttpRequestImpl implements HttpRequest {
             List<HttpFile> foundFiles = new ArrayList<>();
 
             for (FormData.FormValue value : values) {
-                if (value.isFile()) {
+                if (value.isFileItem()) {
                     HeaderValues hv = value.getHeaders().get("Content-Type");
                     String contentType = hv != null ? hv.getFirst() : "";
-                    HttpFile httpFile = new HttpFileImpl(value.getFileName(), contentType, value.getPath());
+                    HttpFile httpFile = new HttpFileImpl(value.getFileName(), contentType, value.getFileItem().getFile());
                     foundFiles.add(httpFile);
                 } else {
                     foundParams.add(value.getValue());
@@ -223,7 +223,10 @@ public final class HttpRequestImpl implements HttpRequest {
         @Override
         public void release() {
             try {
-                filePath.toFile().delete();
+                boolean res = filePath.toFile().delete();
+                if (!res){
+                    throw new RuntimeException("Cant's release uploaded file");
+                }
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

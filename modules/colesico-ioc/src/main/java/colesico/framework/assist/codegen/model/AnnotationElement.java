@@ -21,6 +21,7 @@ import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class AnnotationElement<A extends Annotation> extends Toolbox {
@@ -67,7 +68,7 @@ public class AnnotationElement<A extends Annotation> extends Toolbox {
 
         AnnotationElement<?> that = (AnnotationElement<?>) o;
 
-        return originAnnotation != null ? originAnnotation.equals(that.originAnnotation) : that.originAnnotation == null;
+        return Objects.equals(originAnnotation, that.originAnnotation);
     }
 
     @Override

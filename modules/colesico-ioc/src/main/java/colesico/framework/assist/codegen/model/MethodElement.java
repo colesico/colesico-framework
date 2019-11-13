@@ -27,6 +27,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public class MethodElement extends ParserElement {
@@ -79,10 +80,12 @@ public class MethodElement extends ParserElement {
 
     public List<ParameterElement> getParameters() {
         List<? extends VariableElement> params = originExecutableElement.getParameters();
-        List<? extends TypeMirror> paramTypes = getExecutableType().getParameterTypes();
+
+        ExecutableType methodType = (ExecutableType) getTypeUtils().asMemberOf(parentClass.asType(), originExecutableElement);
+        List<? extends TypeMirror> paramTypes = methodType.getParameterTypes();
 
         List<ParameterElement> result = new ArrayList<>();
-        int i = 0;
+        int i=0;
         for (VariableElement paramElement : params) {
             TypeMirror paramType = paramTypes.get(i++);
             result.add(new ParameterElement(processingEnv, this, paramElement, paramType));
@@ -100,12 +103,12 @@ public class MethodElement extends ParserElement {
 
     public boolean isGetter() {
         return StringUtils.startsWith(getName(), "get") && getParameters().isEmpty()
-                && !(getReturnType() instanceof NoType);
+            && !(getReturnType() instanceof NoType);
     }
 
     public boolean isSetter() {
         return StringUtils.startsWith(getName(), "set") && (getParameters().size() == 1)
-                && (getReturnType() instanceof NoType);
+            && (getReturnType() instanceof NoType);
     }
 
     @Override
@@ -115,7 +118,7 @@ public class MethodElement extends ParserElement {
 
         MethodElement that = (MethodElement) o;
 
-        return originExecutableElement != null ? originExecutableElement.equals(that.originExecutableElement) : that.originExecutableElement == null;
+        return Objects.equals(originExecutableElement, that.originExecutableElement);
     }
 
     @Override
@@ -126,7 +129,7 @@ public class MethodElement extends ParserElement {
     @Override
     public String toString() {
         return "MethodElement{" +
-                "originElement=" + originExecutableElement +
-                '}';
+            "originElement=" + originExecutableElement +
+            '}';
     }
 }

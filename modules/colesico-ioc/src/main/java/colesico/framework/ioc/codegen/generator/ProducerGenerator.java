@@ -41,7 +41,7 @@ public class ProducerGenerator {
 
     public static final String PRODUCER_CLASS_NAME_SUFFIX = "Producer";
 
-    private final Logger logger = LoggerFactory.getLogger(ProducerGenerator.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProducerGenerator.class);
 
     protected final Class<?> masterGeneratorClass;
 

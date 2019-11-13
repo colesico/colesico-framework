@@ -19,7 +19,6 @@ package colesico.framework.ioc.ioclet;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.Key;
 import colesico.framework.ioc.UnsatisfiedInjectionException;
-import org.slf4j.Logger;
 
 /**
  * IoC container "instrumental" interface.

@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 
 public interface RestletJsonConverter {
     <T> String toJson(T obj);
@@ -32,7 +33,7 @@ public interface RestletJsonConverter {
     }
 
     default <T> T fromJson(InputStream is, Type valueType) {
-        try (Reader reader = new InputStreamReader(is, "UTF-8")) {
+        try (Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
             return fromJson(reader, valueType);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -40,7 +41,7 @@ public interface RestletJsonConverter {
     }
 
     default <T> T fromJson(InputStream is, Class<T> valueClass) {
-        try (Reader reader = new InputStreamReader(is, "UTF-8")) {
+        try (Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
             return fromJson(reader, valueClass);
         } catch (Exception e) {
             throw new RuntimeException(e);

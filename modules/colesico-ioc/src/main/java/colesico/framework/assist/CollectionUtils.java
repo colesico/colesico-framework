@@ -21,24 +21,29 @@ import java.util.*;
 
 /**
  * Helper class designed to work with collections
+ *
  * @author Vladlen Larionov
  */
 public class CollectionUtils {
 
     /**
      * Builds the list with arguments as its elements
+     *
      * @param objs
      * @param <T>
      * @return
      */
+    @SuppressWarnings("unchecked")
     public static <T> List<T> toList(Object... objs) {
-        List result = new ArrayList();
+        List<T> result = new ArrayList<>();
         for (Object o : objs) {
             if (o.getClass().isArray()) {
                 Object[] oa = (Object[]) o;
-                result.addAll(Arrays.asList(oa));
+                for (Object i:oa){
+                    result.add((T) i);
+                }
             } else {
-                result.add(o);
+                result.add((T) o);
             }
         }
         return result;
@@ -46,6 +51,7 @@ public class CollectionUtils {
 
     /**
      * Builds the array with arguments as its elements
+     *
      * @param objs
      * @return
      */
@@ -56,14 +62,13 @@ public class CollectionUtils {
 
     /**
      * Builds set of annotation from arguments
+     *
      * @param ann
      * @return
      */
     public static Set<Class<? extends Annotation>> annotationClassSet(Class<? extends Annotation>... ann) {
-        Set<Class<? extends Annotation>> resut = new HashSet<>();
-        for (Class<? extends Annotation> a : ann) {
-            resut.add(a);
-        }
-        return resut;
+        Set<Class<? extends Annotation>> result = new HashSet<>();
+        result.addAll(Arrays.asList(ann));
+        return result;
     }
 }

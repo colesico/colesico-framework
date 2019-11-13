@@ -16,8 +16,6 @@
 
 package colesico.framework.router;
 
-import colesico.framework.http.HttpMethod;
-
 import java.lang.annotation.*;
 
 /**

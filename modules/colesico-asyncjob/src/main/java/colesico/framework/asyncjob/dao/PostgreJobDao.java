@@ -16,15 +16,18 @@
 
 package colesico.framework.asyncjob.dao;
 
-import colesico.framework.asyncjob.JobQueueConfigPrototype;
-import colesico.framework.asyncjob.JobServiceConfigPrototype;
 import colesico.framework.asyncjob.JobDao;
+import colesico.framework.asyncjob.JobQueueConfigPrototype;
 import colesico.framework.asyncjob.JobRecord;
+import colesico.framework.asyncjob.JobServiceConfigPrototype;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.Duration;
 
 /**
@@ -85,7 +88,7 @@ public class PostgreJobDao implements JobDao {
         try (PreparedStatement ps = srvConfig.getConnection().prepareStatement(queryText)) {
             ps.execute();
             ResultSet rs = ps.getResultSet();
-            if (rs.next() == false) {
+            if (!rs.next()) {
                 return null;
             } else {
                 JobRecord job = new JobRecord();

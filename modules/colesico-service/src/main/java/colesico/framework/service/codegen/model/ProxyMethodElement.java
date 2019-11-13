@@ -18,7 +18,6 @@ package colesico.framework.service.codegen.model;
 
 import colesico.framework.assist.codegen.model.MethodElement;
 
-import javax.lang.model.element.ExecutableElement;
 import java.util.*;
 
 /**

@@ -20,7 +20,7 @@ import colesico.framework.security.DefaultPrincipal;
 import colesico.framework.security.teleapi.PrincipalTeleAssist;
 
 import javax.inject.Singleton;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Default principal tele-assistant
@@ -30,20 +30,12 @@ public class PrincipalTeleAssistImpl implements PrincipalTeleAssist<DefaultPrinc
 
     @Override
     public byte[] serialize(DefaultPrincipal principal) {
-        try {
-            return principal.getUID().getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        return principal.getUID().getBytes(StandardCharsets.UTF_8);
     }
 
     @Override
     public DefaultPrincipal deserialize(byte[] principalBytes) {
-        try {
-            String uid = new String(principalBytes, "UTF-8");
-            return new DefaultPrincipal(uid);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        String uid = new String(principalBytes, StandardCharsets.UTF_8);
+        return new DefaultPrincipal(uid);
     }
 }

@@ -19,14 +19,12 @@ package colesico.framework.service.codegen.modulator;
 import colesico.framework.assist.ServiceLocator;
 import colesico.framework.assist.codegen.model.VarElement;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
-import colesico.framework.service.Service;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.parser.ProcessorContext;
 import colesico.framework.service.codegen.parser.RoundContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.lang.model.element.VariableElement;
 import java.lang.annotation.Annotation;
 import java.util.*;
 

@@ -34,7 +34,6 @@ public class WebUtils {
         }
 
         try {
-
             StringTokenizer langTokenizer = new StringTokenizer(acceptLanguage, ",");
 
             double maxQ = Double.MIN_VALUE;

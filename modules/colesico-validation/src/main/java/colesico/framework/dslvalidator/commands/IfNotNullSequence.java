@@ -17,7 +17,6 @@
 package colesico.framework.dslvalidator.commands;
 
 
-import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 
 /**

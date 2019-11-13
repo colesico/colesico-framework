@@ -19,6 +19,7 @@ package colesico.framework.restlet.teleapi.gson;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 public class GsonByteArrayToBase64 implements JsonSerializer<byte[]>, JsonDeserializer<byte[]> {
@@ -28,7 +29,7 @@ public class GsonByteArrayToBase64 implements JsonSerializer<byte[]>, JsonDeseri
 
     public JsonElement serialize(byte[] src, Type typeOfSrc, JsonSerializationContext context) {
         try {
-            return new JsonPrimitive(new String(Base64.getEncoder().encode(src), "UTF-8"));
+            return new JsonPrimitive(new String(Base64.getEncoder().encode(src), StandardCharsets.UTF_8));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

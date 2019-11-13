@@ -17,7 +17,10 @@
 package colesico.framework.ioc.internal;
 
 import colesico.framework.ioc.*;
-import colesico.framework.ioc.ioclet.*;
+import colesico.framework.ioc.ioclet.AdvancedIoc;
+import colesico.framework.ioc.ioclet.DefaultPolysupplier;
+import colesico.framework.ioc.ioclet.DefaultProvider;
+import colesico.framework.ioc.ioclet.Factory;
 
 import javax.inject.Provider;
 import java.util.Map;
@@ -37,30 +40,32 @@ public final class LazyIocContainer implements AdvancedIoc {
         this.factories = factories;
     }
 
-
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T instance(Key<T> key, Object message) {
-        Factory<T> factory = (Factory<T>) factories.get(key);
+        Factory factory = factories.get(key);
         if (factory == null) {
             throw new UnsatisfiedInjectionException(key);
         }
         activate(factory, key);
-        return factory.get(message);
+        return (T) factory.get(message);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T instanceOrNull(Key<T> key, Object message) {
-        Factory<T> factory = (Factory<T>) factories.get(key);
+        Factory factory = factories.get(key);
         if (factory == null) {
             return null;
         }
         activate(factory, key);
-        return factory.get(message);
+        return (T) factory.get(message);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Provider<T> provider(Key<T> key, Object message) {
-        Factory<T> factory = (Factory<T>) factories.get(key);
+        Factory factory = factories.get(key);
         if (factory == null) {
             throw new UnsatisfiedInjectionException(key);
         }
@@ -69,8 +74,9 @@ public final class LazyIocContainer implements AdvancedIoc {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Provider<T> providerOrNull(Key<T> key, Object message) {
-        Factory<T> factory = (Factory<T>) factories.get(key);
+        Factory factory = factories.get(key);
         if (factory == null) {
             return null;
         }
@@ -79,35 +85,29 @@ public final class LazyIocContainer implements AdvancedIoc {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Supplier<T> supplier(Key<T> key) throws UnsatisfiedInjectionException {
-        Factory<T> factory = (Factory<T>) factories.get(key);
-        if (factory == null) {
-            throw new UnsatisfiedInjectionException(key);
-        }
-        activate(factory, key);
-        return factory;
+        return factory(key);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Supplier<T> supplierOrNull(Key<T> key) {
-        Factory<T> factory = (Factory<T>) factories.get(key);
-        if (factory == null) {
-            return null;
-        }
-        activate(factory, key);
-        return factory;
+        return factoryOrNull(key);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Polysupplier<T> polysupplier(Key<T> key) {
-        Factory<T> factory = (Factory<T>) factories.get(key);
+        Factory factory = factories.get(key);
         activate(factory, key);
         return new DefaultPolysupplier<>(factory);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Factory<T> factory(Key<T> key) throws UnsatisfiedInjectionException {
-        Factory<T> factory = (Factory<T>) factories.get(key);
+        Factory factory = factories.get(key);
         if (factory == null) {
             throw new UnsatisfiedInjectionException(key);
         }
@@ -116,8 +116,9 @@ public final class LazyIocContainer implements AdvancedIoc {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Factory<T> factoryOrNull(Key<T> key) {
-        Factory<T> factory = (Factory<T>) factories.get(key);
+        Factory factory = factories.get(key);
         if (factory == null) {
             return null;
         }

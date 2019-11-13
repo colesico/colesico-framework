@@ -22,11 +22,8 @@ import colesico.framework.translation.codegen.model.DictionaryElement;
 import colesico.framework.translation.codegen.model.DictionaryRegistry;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.tools.Diagnostic;
 import java.util.List;
 import java.util.Map;
 
