@@ -29,7 +29,7 @@ Module has build-in support for an external configuration value sources:
 
 === Prototype-based configuration
 
-Config module supports different prototype-based based configuration models:
+Config module supports different prototype-based configuration models:
 
 * Single. This type of configuration is used to define some global configuration that is the only configuration instance per application (per IoC container).
   The configuration in this model may be obtained from IoC container by configuration prototype class name.
