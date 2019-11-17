@@ -30,7 +30,7 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 @Inherited
 @Documented
-public @interface SourceValue {
+public @interface FromSource {
 
     /**
      * Query to obtain configuration value from configuration source

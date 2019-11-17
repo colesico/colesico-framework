@@ -301,8 +301,8 @@ public class FactoryGenerator extends FrameworkAbstractGenerator {
     }
 
     public TypeName getFactoryTypeName(InjectableElement injectionElement) {
-        String className = injectionElement.getInjectedType().asClassElement().getName();
-        return ParameterizedTypeName.get(ClassName.get(Factory.class), ClassName.bestGuess(className));
+        String typeName = injectionElement.getInjectedType().asClassElement().getName();
+        return ParameterizedTypeName.get(ClassName.get(Factory.class), ClassName.bestGuess(typeName));
     }
 
     protected String getFactoryVarName(InjectableElement injectionElement) {

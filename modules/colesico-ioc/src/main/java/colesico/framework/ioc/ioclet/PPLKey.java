@@ -33,12 +33,12 @@ public final class PPLKey<T> implements Key<T> {
     /**
      * Instance class name
      */
-    private final String className;
+    private final String typeName;
     private final String withNamed;
     private final String withClassed;
 
     public PPLKey(Class<?> clazz, String withNamed, Class<?> withClassed) {
-        this.className = clazz.getCanonicalName();
+        this.typeName = clazz.getCanonicalName();
         this.withNamed = withNamed;
         if (withClassed != null) {
             this.withClassed = withClassed.getCanonicalName();
@@ -47,8 +47,8 @@ public final class PPLKey<T> implements Key<T> {
         }
     }
 
-    public PPLKey(String className, String withNamed, String withClassed) {
-        this.className = className;
+    public PPLKey(String typeName, String withNamed, String withClassed) {
+        this.typeName = typeName;
         this.withNamed = withNamed;
         this.withClassed = withClassed;
     }
@@ -62,7 +62,7 @@ public final class PPLKey<T> implements Key<T> {
         PPLKey<?> pplKey = (PPLKey<?>) o;
 
         return new EqualsBuilder()
-            .append(className, pplKey.className)
+            .append(typeName, pplKey.typeName)
             .append(withNamed, pplKey.withNamed)
             .append(withClassed, pplKey.withClassed)
             .isEquals();
@@ -71,7 +71,7 @@ public final class PPLKey<T> implements Key<T> {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-            .append(className)
+            .append(typeName)
             .append(withNamed)
             .append(withClassed)
             .toHashCode();
@@ -81,7 +81,7 @@ public final class PPLKey<T> implements Key<T> {
     @Override
     public String toString() {
         return "PPLKey{" +
-            "className='" + className + '\'' +
+            "className='" + typeName + '\'' +
             ", withNamed='" + withNamed + '\'' +
             ", withClassed='" + withClassed + '\'' +
             '}';

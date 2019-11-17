@@ -25,14 +25,14 @@ package colesico.framework.ioc;
  */
 public final class TypeKey<T> implements Key<T> {
 
-    private final String className;
+    private final String typeName;
 
-    public TypeKey(String className) {
-        this.className = className;
+    public TypeKey(String typeName) {
+        this.typeName = typeName;
     }
 
     public TypeKey(Class<T> clazz) {
-        this.className = clazz.getCanonicalName();
+        this.typeName = clazz.getCanonicalName();
     }
 
     @Override
@@ -42,19 +42,19 @@ public final class TypeKey<T> implements Key<T> {
 
         TypeKey typeKey = (TypeKey) o;
 
-        return className.equals(typeKey.className);
+        return typeName.equals(typeKey.typeName);
 
     }
 
     @Override
     public int hashCode() {
-        return className.hashCode();
+        return typeName.hashCode();
     }
 
     @Override
     public String toString() {
         return "TypeKey{" +
-                "className='" + className + '\'' +
+                "className='" + typeName + '\'' +
                 '}';
     }
 }

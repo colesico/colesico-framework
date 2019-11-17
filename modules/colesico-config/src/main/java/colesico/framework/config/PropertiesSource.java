@@ -37,7 +37,7 @@ import java.util.function.Function;
  * If not found trying to read file from classpath specified by "classpath" parameter.
  *
  * @see UseSource
- * @see SourceValue
+ * @see FromSource
  */
 @Singleton
 public class PropertiesSource implements ConfigSource {

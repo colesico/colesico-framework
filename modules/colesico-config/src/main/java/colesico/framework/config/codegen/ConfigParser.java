@@ -122,7 +122,7 @@ public class ConfigParser extends FrameworkAbstractParser {
 
     private ConfigSourceElement parseSourceValues(ClassElement configImplementation, ConfigSourceElement confSourceElm) {
         for (FieldElement me : configImplementation.getFields()) {
-            AnnotationElement<SourceValue> sourceValueAnn = me.getAnnotation(SourceValue.class);
+            AnnotationElement<FromSource> sourceValueAnn = me.getAnnotation(FromSource.class);
             if (sourceValueAnn != null) {
                 String query = me.getName();
                 if (StringUtils.isNotBlank(sourceValueAnn.unwrap().value())) {

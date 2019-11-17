@@ -19,7 +19,7 @@ package colesico.framework.config;
 import java.lang.annotation.*;
 
 /**
- * Configuration source definition for configuration bean.
+ * Configuration source usage definition for configuration bean.
  * <p>
  * Configuration source contains a configuration values.
  * For example it can be a .properties file or a .yaml file or even sql data base,
@@ -27,7 +27,7 @@ import java.lang.annotation.*;
  * <p>
  *
  * @author Vladlen Larionov
- * @see SourceValue
+ * @see FromSource
  * @see ConfigSource
  * @see Config
  * <p>
@@ -55,10 +55,10 @@ public @interface UseSource {
 
     /**
      * Assumes that values for all fields are assigned from config source.
-     * If false - the @SourceValue annotation should be used to assign the value to field.
+     * If false - the  @{@link FromSource} annotation should be used to assign the value to field.
      *
      * @return
-     * @see SourceValue
+     * @see FromSource
      */
     boolean bindAll() default false;
 }

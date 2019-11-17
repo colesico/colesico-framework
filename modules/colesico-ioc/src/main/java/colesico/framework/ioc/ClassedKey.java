@@ -22,16 +22,16 @@ package colesico.framework.ioc;
  * @see Key
  */
 public final class ClassedKey<T> implements Key<T> {
-    private final String className;
+    private final String typeName;
     private final String classifier;
 
-    public ClassedKey(String className, String classifier) {
-        this.className = className;
+    public ClassedKey(String typeName, String classifier) {
+        this.typeName = typeName;
         this.classifier = classifier;
     }
 
     public ClassedKey(Class<T> clazz, Class<?> classifier) {
-        this.className = clazz.getCanonicalName();
+        this.typeName = clazz.getCanonicalName();
         this.classifier = classifier.getCanonicalName();
     }
 
@@ -42,13 +42,13 @@ public final class ClassedKey<T> implements Key<T> {
 
         ClassedKey<?> that = (ClassedKey<?>) o;
 
-        if (!className.equals(that.className)) return false;
+        if (!typeName.equals(that.typeName)) return false;
         return classifier.equals(that.classifier);
     }
 
     @Override
     public int hashCode() {
-        int result = className.hashCode();
+        int result = typeName.hashCode();
         result = 31 * result + classifier.hashCode();
         return result;
     }
@@ -56,7 +56,7 @@ public final class ClassedKey<T> implements Key<T> {
     @Override
     public String toString() {
         return "ClassedKey{" +
-                "className='" + className + '\'' +
+                "className='" + typeName + '\'' +
                 ", classifier='" + classifier + '\'' +
                 '}';
     }

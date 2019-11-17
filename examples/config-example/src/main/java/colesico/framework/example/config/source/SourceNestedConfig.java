@@ -1,14 +1,14 @@
 package colesico.framework.example.config.source;
 
 import colesico.framework.config.Config;
-import colesico.framework.config.SourceValue;
+import colesico.framework.config.FromSource;
 import colesico.framework.config.UseSource;
 
 @Config
 @UseSource
 public class SourceNestedConfig {
 
-    @SourceValue
+    @FromSource
     private NestedValue nested;
 
     public NestedValue getNested() {

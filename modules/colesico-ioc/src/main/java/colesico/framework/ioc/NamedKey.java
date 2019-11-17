@@ -24,16 +24,16 @@ package colesico.framework.ioc;
  */
 public final class NamedKey<T> implements Key<T> {
 
-    private final String className;
+    private final String typeName;
     private final String name;
 
-    public NamedKey(String className, String name) {
-        this.className = className;
+    public NamedKey(String typeName, String name) {
+        this.typeName = typeName;
         this.name = name;
     }
 
     public NamedKey(Class<T> clazz, String name) {
-        this.className = clazz.getCanonicalName();
+        this.typeName = clazz.getCanonicalName();
         this.name = name;
     }
 
@@ -44,13 +44,13 @@ public final class NamedKey<T> implements Key<T> {
 
         NamedKey namedKey = (NamedKey) o;
 
-        if (!className.equals(namedKey.className)) return false;
+        if (!typeName.equals(namedKey.typeName)) return false;
         return name.equals(namedKey.name);
     }
 
     @Override
     public int hashCode() {
-        int result = className.hashCode();
+        int result = typeName.hashCode();
         result = 31 * result + name.hashCode();
         return result;
     }
@@ -58,7 +58,7 @@ public final class NamedKey<T> implements Key<T> {
     @Override
     public String toString() {
         return "NamedKey{" +
-                "className='" + className + '\'' +
+                "className='" + typeName + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }

@@ -17,7 +17,7 @@
 package colesico.framework.example.config.source;
 
 import colesico.framework.config.Config;
-import colesico.framework.config.SourceValue;
+import colesico.framework.config.FromSource;
 import colesico.framework.config.UseSource;
 
 /**
@@ -28,7 +28,7 @@ import colesico.framework.config.UseSource;
 @UseSource(params = "config.properties")
 public class SourceSingleConfig extends SourceSingleConfigPrototype {
 
-    @SourceValue("value1")
+    @FromSource("value1")
     private String value;
 
     @Override
