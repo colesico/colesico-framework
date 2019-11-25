@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.ioc.helloworld;
+package colesico.framework.example.ioc.named;
 
-public class MainBeanHW {
+import javax.inject.Named;
 
-    private final HelloBean helloService;
+public class MainBeanNMD {
 
-    public MainBeanHW(HelloBean helloService) {
-        this.helloService = helloService;
+    private final NamedBean defaultBean;
+    private final NamedBean customBean;
+
+    public MainBeanNMD(@Named("default") NamedBean defaultBean, @Named("custom") NamedBean customBean) {
+        this.defaultBean = defaultBean;
+        this.customBean = customBean;
     }
 
-    public String sayHello() {
-        return helloService.sayHello();
+    public String getNames(){
+        return  defaultBean.getName()+";"+customBean.getName();
     }
 }

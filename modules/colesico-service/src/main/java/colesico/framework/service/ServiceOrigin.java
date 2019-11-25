@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.ioc.named;
+package colesico.framework.service;
 
-import colesico.framework.ioc.Produce;
-import colesico.framework.ioc.Producer;
+import java.lang.annotation.*;
 
-import javax.inject.Named;
-
-@Producer
-@Produce(value = NamedBean.class, named = "default")
-@Produce(MainBeanNMD.class)
-public class NamedProducer {
-
-    @Named("custom")
-    public NamedBean getMyNamed() {
-        return new NamedBean("Custom");
-    }
+/**
+ * This annotation is automatically added by service proxy code generator to service proxy
+ * class to have a ability to determine service origin class from proxy class.
+ *
+ * @author Vladlen Larionov
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Inherited
+@Documented
+public @interface ServiceOrigin {
+    Class<?> value();
 }

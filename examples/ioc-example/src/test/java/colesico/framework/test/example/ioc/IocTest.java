@@ -17,12 +17,13 @@
 package colesico.framework.test.example.ioc;
 
 
-import colesico.framework.example.ioc.helloworld.MainBeanHW;
+import colesico.framework.example.ioc.helloworld.MainBeanHWD;
 import colesico.framework.example.ioc.implement.MainBeanIMP;
-import colesico.framework.example.ioc.logger.MainBeanLG;
+import colesico.framework.example.ioc.lifecycle.MainBeanLFC;
+import colesico.framework.example.ioc.logger.MainBeanLOG;
 import colesico.framework.example.ioc.message.MainBeanMSG;
 import colesico.framework.example.ioc.multiplugin.MainBeanMLP;
-import colesico.framework.example.ioc.named.MainBeanNM;
+import colesico.framework.example.ioc.named.MainBeanNMD;
 import colesico.framework.example.ioc.replace.MainBeanREP;
 import colesico.framework.example.ioc.singleton.Singleton1;
 import colesico.framework.example.ioc.singleton.Singleton2;
@@ -47,7 +48,7 @@ public class IocTest {
 
     @Test
     public void testHelloWorld(){
-        MainBeanHW mainBean = ioc.instance(MainBeanHW.class);
+        MainBeanHWD mainBean = ioc.instance(MainBeanHWD.class);
         assertEquals(mainBean.sayHello(),"Hello");
     }
 
@@ -59,8 +60,8 @@ public class IocTest {
 
     @Test
     public void testLogger(){
-        MainBeanLG mainBean = ioc.instance(MainBeanLG.class);
-        assertEquals(mainBean.getLogMessage(),MainBeanLG.class.getName()+"Logger:Message");
+        MainBeanLOG mainBean = ioc.instance(MainBeanLOG.class);
+        assertEquals(mainBean.getLogMessage(), MainBeanLOG.class.getName()+"Logger:Message");
     }
 
     @Test
@@ -79,7 +80,7 @@ public class IocTest {
 
     @Test
     public void testNamed(){
-        MainBeanNM mainBean = ioc.instance(MainBeanNM.class);
+        MainBeanNMD mainBean = ioc.instance(MainBeanNMD.class);
         assertEquals(mainBean.getNames(),"Default;Custom");
     }
 
@@ -98,5 +99,11 @@ public class IocTest {
         Singleton2 s2 = ioc.instance(Singleton2.class);
         assertEquals(s2.getMessage(),"Singleton2-0");
         assertEquals(s2.getMessage(),"Singleton2-1");
+    }
+
+    @Test
+    public void testLifecycle(){
+        MainBeanLFC lfc = ioc.instance(MainBeanLFC.class);
+        assertEquals(lfc.getValue(),"ValueSuffix");
     }
 }

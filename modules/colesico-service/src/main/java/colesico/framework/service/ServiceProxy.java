@@ -25,13 +25,13 @@ public interface ServiceProxy {
 
     String SERVICE_CLASS_SUFFIX = "Service";
     String PROXY_CLASS_SUFFIX = "Proxy";
-    String GET_SUPER_CLASS_METHOD = "getSuperClass";
+    String GET_SERVICE_ORIGIN_METHOD = "getServiceOrigin";
 
     /**
-     * Returns base service class (i.e. class on which this adapter is based)
+     * Returns service origin class (i.e. class on which this proxy is based)
      *
      * @return
      */
-    Class<?> getSuperClass();
+    Class<?> getServiceOrigin();
 
 }

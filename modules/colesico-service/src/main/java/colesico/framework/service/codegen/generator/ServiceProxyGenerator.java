@@ -25,10 +25,7 @@ import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.assist.codegen.model.ParameterElement;
 import colesico.framework.ioc.Classed;
 import colesico.framework.ioc.Unscoped;
-import colesico.framework.service.Interceptor;
-import colesico.framework.service.InterceptorsChain;
-import colesico.framework.service.InvocationContext;
-import colesico.framework.service.ServiceProxy;
+import colesico.framework.service.*;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.parser.ProcessorContext;
 import com.squareup.javapoet.*;
@@ -44,7 +41,7 @@ import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.List;
 
-import static colesico.framework.service.ServiceProxy.GET_SUPER_CLASS_METHOD;
+import static colesico.framework.service.ServiceProxy.GET_SERVICE_ORIGIN_METHOD;
 
 /**
  * Service proxy code generator
@@ -182,7 +179,7 @@ public class ServiceProxyGenerator {
     }
 
     protected void generateGetSuperClassMethod(ServiceElement service) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(GET_SUPER_CLASS_METHOD);
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(GET_SERVICE_ORIGIN_METHOD);
         mb.addAnnotation(Override.class)
             .addModifiers(Modifier.PUBLIC)
             .returns(ParameterizedTypeName.get(ClassName.get(Class.class), WildcardTypeName.subtypeOf(Object.class)))
@@ -320,6 +317,10 @@ public class ServiceProxyGenerator {
 
         AnnotationSpec.Builder scopeAnnBuilder = AnnotationSpec.builder(ClassName.get(Unscoped.class));
         proxyBuilder.addAnnotation(scopeAnnBuilder.build());
+
+        AnnotationSpec.Builder originClassAnnBuilder = AnnotationSpec.builder(ClassName.get(ServiceOrigin.class));
+        originClassAnnBuilder.addMember("value","$T.class",TypeName.get(serviceElement.getOriginClass().asType()));
+        proxyBuilder.addAnnotation(originClassAnnBuilder.build());
 
         // Extra interfaces
         for (TypeName extraInterface : serviceElement.getInterfaces()) {

@@ -58,7 +58,7 @@ public class Navigation<N extends Navigation> {
     }
 
     public N service(Object serviceInstance) {
-        this.serviceClass = ((ServiceProxy) serviceInstance).getSuperClass();
+        this.serviceClass = ((ServiceProxy) serviceInstance).getServiceOrigin();
         return (N) this;
     }
 

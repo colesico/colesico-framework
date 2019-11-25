@@ -19,11 +19,11 @@ package colesico.framework.example.ioc.logger;
 
 import colesico.framework.ioc.Contextual;
 
-public class MainBeanLG {
+public class MainBeanLOG {
 
     private final Logger logger;
 
-    public MainBeanLG(@Contextual Logger logger) {
+    public MainBeanLOG(@Contextual Logger logger) {
         this.logger = logger;
     }
 
