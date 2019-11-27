@@ -30,6 +30,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 
 import static colesico.framework.ioc.Rank.RANK_MINOR;
 
@@ -61,8 +63,20 @@ public class RestletReadersProducer {
     }
 
     @Singleton
+    @Classed(OptionalInt.class)
+    public RestletTeleReader getOptionalIntegerReader(OptionalIntReader impl) {
+        return new RestletReaderProxy(impl);
+    }
+
+    @Singleton
     @Classed(Long.class)
     public RestletTeleReader getLongReader(LongReader impl) {
+        return new RestletReaderProxy(impl);
+    }
+
+    @Singleton
+    @Classed(OptionalLong.class)
+    public RestletTeleReader getOptionalLongReader(OptionalLongReader impl) {
         return new RestletReaderProxy(impl);
     }
 
