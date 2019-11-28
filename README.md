@@ -36,4 +36,20 @@ This project is licensed under the
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning.
+Version number: [major].[minor].[micro]
+
+* [major] - Massive changes affecting many framework 
+modules or a complete change of architecture.
+Requires significant client code changes.
+* [minor] - Minor or no breakages. 
+Changes require a few lines updating in the client code to make it work.
+This also may not break an application compeletely. But it may cause partial degradation. 
+Please, pay attention to check your code is working properly on such updates.
+* [micro]  - Changes do not require a client code updates to make it work.
+This is a bug fixes or new none beaking framework features.
+
+
+Update 1.2.3 to 1.2.4 - should not require any client code changes.
+Update 1.2.3 to 1.3.0 - should require some code changes.
+
+
