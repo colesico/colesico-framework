@@ -46,7 +46,8 @@ Changes require a few lines updating in the client code to make it work.
 This also may not break an application compeletely. But it may cause partial degradation. 
 Please, pay attention to check your code is working properly on such updates.
 * [micro]  - Changes do not require a client code updates to make it work.
-This is a bug fixes or new none beaking framework features.
+This may be a bugfixes, new compatible framework features, documentation updates, etc.
+
 
 
 Update 1.2.3 to 1.2.4 - should not require any client code changes.
