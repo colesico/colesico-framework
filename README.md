@@ -40,15 +40,15 @@ This project uses modified semver approach.
 
 Version number: 
 
-[major].[minor].[micro]
+[major].[moderate].[minor]
 
 * [major] - Massive changes affecting many framework modules or a complete change of architecture.
             Requires significant client code changes.
-* [minor] - Minimal loss of backward compatibility that affects a few framework modules. 
+* [moderate] - Minimal loss of backward compatibility that affects a few framework modules. 
             Changes may require a few lines updating in the client code to make it works.
             This also may not break an application completely, but it may cause partial degradation. 
             Please, pay attention to check your code is working properly on such updates.
-* [micro] - Backward compatible changes that do not require a client code updates to make it work.
+* [minor] - Backward compatible changes that do not require a client code updates to make it work.
             This may be a bugfixes, new compatible framework features, documentation updates, etc.
 
 
