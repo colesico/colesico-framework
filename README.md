@@ -25,7 +25,7 @@ $ mvn clean install
 <dependency>
   <groupId>net.colesico.framework</groupId>
   <artifactId>colesico-[module or bundle]</artifactId>
-  <version>2.3.1</version>
+  <version>N.N.N</version>
 </dependency>
 ```
 
@@ -34,23 +34,28 @@ $ mvn clean install
 This project is licensed under the
 [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).
 
-## Versioning
+## Versioning policy
 
-Version number: [major].[minor].[micro]
+This project uses modified semver approach.
 
-* [major] - Massive changes affecting many framework 
-modules or a complete change of architecture.
-Requires significant client code changes.
-* [minor] - Minor or no breakages. 
-Changes require a few lines updating in the client code to make it work.
-This also may not break an application compeletely. But it may cause partial degradation. 
-Please, pay attention to check your code is working properly on such updates.
-* [micro]  - Changes do not require a client code updates to make it work.
-This may be a bugfixes, new compatible framework features, documentation updates, etc.
+Version number: 
 
+[major].[minor].[micro]
+
+* [major] - Massive changes affecting many framework modules or a complete change of architecture.
+            Requires significant client code changes.
+* [minor] - Minimal loss of backward compatibility that affects a few framework modules. 
+            Changes may require a few lines updating in the client code to make it works.
+            This also may not break an application completely, but it may cause partial degradation. 
+            Please, pay attention to check your code is working properly on such updates.
+* [micro] - Backward compatible changes that do not require a client code updates to make it work.
+            This may be a bugfixes, new compatible framework features, documentation updates, etc.
 
 
 Update 1.2.3 to 1.2.4 - should not require any client code changes.
+
 Update 1.2.3 to 1.3.0 - should require some code changes.
+
+Update 1.2.3 to 2.0.0 - require significant code changes.
 
 
