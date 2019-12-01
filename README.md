@@ -54,8 +54,8 @@ Version number:
 
 Update 1.2.3 to 1.2.4 - should not require any client code changes.
 
-Update 1.2.3 to 1.3.0 - should require some code changes.
+Update 1.2.3 to 1.3.0 - may require some code changes.
 
-Update 1.2.3 to 2.0.0 - require significant code changes.
+Update 1.2.3 to 2.0.0 - require significant client code changes.
 
 
