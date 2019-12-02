@@ -67,5 +67,5 @@ To specify HTTP request method use @RequestMethod annotation on controller reque
 
 == Example
 
-See full http routing example in the framework source code section #examples/route-example#
+See full http routing example in the framework source code section #examples/routing-example#
 

@@ -134,6 +134,9 @@
                 <module>modules/colesico-validation</module>
                 <module>modules/colesico-eventbus</module>
                 <module>modules/colesico-asyncjob</module>
+                
+                <!-- Logging -->
+                <module>modules/colesico-slf4j</module>
 
                 <!-- Transactions -->
                 <module>modules/colesico-transaction</module>
@@ -182,13 +185,14 @@
             <modules>
                 <module>examples/helloworld-example</module>
                 <module>examples/restlet-example</module>
-                <module>examples/route-example</module>
+                <module>examples/routing-example</module>
                 <module>examples/config-example</module>
                 <module>examples/ioc-example</module>
                 <module>examples/web-example</module>
                 <module>examples/eventbus-example</module>
                 <module>examples/transaction-example</module>
                 <module>examples/jdbi-example</module>
+                <module>examples/slf4j-example</module>
             </modules>
         </profile>
         <profile>

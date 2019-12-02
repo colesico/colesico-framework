@@ -1,0 +1,28 @@
+= SLF4J integration module
+
+This module is used to provide ability a SLF4J logger injection to pojo beans and services.
+It is ships with logback default logger for slf4j, that can be changed with maven pom 'exclude'.
+
+To inject logger:
+
+. Add maven dependency for colesico-slf4j
+. Inject logger with @Contextual annotation
+
+Logger injection example:
+
+[source,java]
+----
+import colesico.framework.ioc.Contextual;
+import org.slf4j.Logger;
+
+// Service class (with @Service annotation) or simple POJO bean
+public class MyService {
+
+    private final Logger logger;
+
+    public MyService(@Contextual Logger logger) {
+        this.logger = logger;
+    }
+}
+----
+

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright 20014-2019 Vladlen V. Larionov and others as noted.
   ~
@@ -16,8 +15,9 @@
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
@@ -25,82 +25,75 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>colesico-bundle-mix</artifactId>
+    <groupId>net.colesico.framework.example</groupId>
+    <artifactId>slf4j-example</artifactId>
 
     <packaging>jar</packaging>
-
-    <name>Colesico Miscellaneous Bundle</name>
-    <description>
-        Colesico framework bundle joins miscellaneous useful framework modules
-    </description>
+    <name>Colesico example - Slf4j and Logback</name>
 
     <properties>
     </properties>
 
     <dependencies>
-        <!-- Colesico basic -->
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-bundle-base</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <!-- Colesico mix -->
+        <!-- Colesico web bundle -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-slf4j</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!-- Tests -->
         <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-validation</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${org-testng.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-eventbus</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-asyncjob</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
-    <build>
+   <build>
+        <finalName>routes</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <showWarnings>false</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                    <annotationProcessorPaths>
+                        <!-- Framework annotation processors -->
+                        <path>
+                            <groupId>net.colesico.framework</groupId>
+                            <artifactId>colesico-service</artifactId>
+                            <version>${project.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
             <plugin>
-                <!-- Disable javadoc for this module -->
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven-javadoc-plugin.version}</version>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven-dependency-plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>attach-javadocs</id>
-			            <phase/>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven-jar-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>empty-javadoc-jar</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>jar</goal>
+                            <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <classifier>javadoc</classifier>
-                            <classesDirectory>${basedir}/javadoc</classesDirectory>
+                            <excludeScope>provided</excludeScope>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <excludeArtifactIds>javapoet</excludeArtifactIds>
                         </configuration>
                     </execution>
                 </executions>
