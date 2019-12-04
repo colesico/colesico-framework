@@ -27,21 +27,18 @@ import org.jdbi.v3.core.Jdbi;
 import javax.inject.Singleton;
 
 @Producer
-public class MyProducer {
-
+public class JdbiProducer {
 
     /**
      * Define transactional shell to control transactions.
-     *
-     * @return
      */
     @Singleton
-    public TransactionalShell getTransactionalShell(@Classed(MyJdbiSettings.class) Jdbi jdbi) {
+    public TransactionalShell getTransactionalShell(@Classed(JdbiConfig.class) Jdbi jdbi) {
         return new JdbiTransactionalShell(jdbi);
     }
 
     /**
-     * Define handle producing based on transactional shell
+     * Define handle providing from transactional shell
      */
     @Unscoped
     public Handle getHandle(TransactionalShell txShell) {

@@ -42,29 +42,28 @@ public class HikariProducer {
      */
     @Classed(HikariConfigPrototype.class)
     @Unscoped
-    public DataSource hikariDataSourceFactory(@Message HikariConfigPrototype settings) {
+    public DataSource hikariDataSourceFactory(@Message HikariConfigPrototype config) {
         try {
-            HikariDataSource dataSource = new HikariDataSource(settings.getDataSourceConfig());
-            log.debug("Hikari DB connection pool has been created with configuration: " + settings);
+            HikariDataSource dataSource = new HikariDataSource(config.getHikariConfig());
+            log.debug("Hikari DB connection pool has been created with configuration: " + config);
             return dataSource;
         } catch (Exception e) {
-            log.error("Error initializing Hikari DB connection pool: " + ExceptionUtils.getRootCauseMessage(e) +
-                    "; Configuration: " + settings);
+            log.error("Error initializing Hikari database connection pool: " + ExceptionUtils.getRootCauseMessage(e) + "; Configuration: " + config);
             throw new RuntimeException(e);
         }
     }
 
     /**
      * Produces HikariDataSource for default HikariCP configuration
-     * defined in file META-INF/hikaricp.properties
+     * defined in file ./directory/hikari.properties or resource META-INF/hikari.properties
      *
-     * @param hdsFactory
+     * @param factory
      * @return
      */
     @Singleton
     @Classed(HikariProperties.class)
-    public DataSource propertiesBasedHikariDataSource(@Classed(HikariConfigPrototype.class) Supplier<DataSource> hdsFactory) {
-        return hdsFactory.get(new HikariProperties());
+    public DataSource defaultHikariDataSource(@Classed(HikariConfigPrototype.class) Supplier<DataSource> factory) {
+        return factory.get(new HikariProperties());
     }
 
 }

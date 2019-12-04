@@ -1,0 +1,20 @@
+= JDBI integration module
+
+This module is used to provide an ability to use JDBI  within services via  the "Handle" injection.
+It is also provides a transaction management support  with TransactionalShell.
+
+== Configuration
+
+Configuration steps:
+
+. Create custom Jdbi configuration class that extends JdbiConfigPrototype.
+  This config is used to provide DataSource
+. Create custom Jdbi optional config class that extends JdbiOptionsPrototype.
+. Define producer that produce TransactionalShell implemented by JdbiTransactionalShell;
+. Also define producing method that provides Jdbi Handle instance from  JdbiTransactionalShell.
+
+== Examples
+
+See full source code in the framework source code section #examples/jdbi-example#
+
+

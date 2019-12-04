@@ -128,7 +128,7 @@ public class JdbcTransactionalShell extends AbstractTransactionalShell<JdbcTrans
                 }
 
                 if (tx.getTuning() != null) {
-                    tx.getTuning().apply(connection);
+                    tx.getTuning().applyTuning(connection);
                 }
 
             } catch (Exception e) {

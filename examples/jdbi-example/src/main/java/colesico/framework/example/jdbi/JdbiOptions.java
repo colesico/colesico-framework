@@ -14,29 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.jdbi;
+package colesico.framework.example.jdbi;
 
-import colesico.framework.ioc.Polysupplier;
+import colesico.framework.config.Config;
+import colesico.framework.ioc.Classed;
+import colesico.framework.jdbi.JdbiOptionsPrototype;
+import org.jdbi.v3.core.Jdbi;
 
-import javax.sql.DataSource;
-
-public class DefaultJdbiConfig extends JdbiConfigPrototype {
-
-    protected final DataSource dataSource;
-    protected final Polysupplier<JdbiOptionsPrototype> options;
-
-    public DefaultJdbiConfig(DataSource dataSource, Polysupplier<JdbiOptionsPrototype> options) {
-        this.dataSource = dataSource;
-        this.options = options;
-    }
-
-    public DataSource getDataSource() {
-        return dataSource;
-    }
+@Config
+@Classed(JdbiConfig.class)
+public class JdbiOptions extends JdbiOptionsPrototype {
 
     @Override
-    public Polysupplier<JdbiOptionsPrototype> getOptions() {
-        return options;
+    public void applyOptions(Jdbi jdbi) {
+        System.out.println("JDBI internal config:"+jdbi.getConfig());
     }
-
 }

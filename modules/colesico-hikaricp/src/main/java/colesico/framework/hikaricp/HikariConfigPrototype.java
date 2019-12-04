@@ -24,10 +24,9 @@ import com.zaxxer.hikari.HikariConfig;
 import javax.sql.DataSource;
 
 /**
- * File based abstract configuration
+ * HikariCP configuration
  */
-
 @ConfigPrototype(model = ConfigModel.MESSAGE, target = DataSource.class)
 abstract public class HikariConfigPrototype {
-    abstract public HikariConfig getDataSourceConfig();
+    abstract public HikariConfig getHikariConfig();
 }

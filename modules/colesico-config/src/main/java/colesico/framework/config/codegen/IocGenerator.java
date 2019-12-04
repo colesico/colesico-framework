@@ -55,7 +55,18 @@ public class IocGenerator extends FrameworkAbstractGenerator {
     protected MethodSpec.Builder createProducingOnPrototypeMethodBuilder(final ProducerGenerator prodGen, final ConfigElement confElement) {
         String methodName = "get" + confElement.getImplementation().getSimpleName();
         MethodSpec.Builder mb = prodGen.addProduceMethod(methodName, TypeName.get(confElement.getPrototype().asType()));
-        mb.addParameter(TypeName.get(confElement.getImplementation().asType()), CONF_PARAM, Modifier.FINAL);
+        // Config impl param
+        ParameterSpec.Builder pb = ParameterSpec.builder(TypeName.get(confElement.getImplementation().asType()), CONF_PARAM, Modifier.FINAL);
+        if (confElement.getClassedQualifier() != null) {
+            AnnotationSpec.Builder classedAnn = AnnotationSpec.builder(Classed.class);
+            classedAnn.addMember("value", "$T.class", TypeName.get(confElement.getClassedQualifier()));
+            pb.addAnnotation(classedAnn.build());
+        } else if (confElement.getNamedQualifier() != null) {
+            AnnotationSpec.Builder namedAnn = AnnotationSpec.builder(Named.class);
+            namedAnn.addMember("value", "$S", confElement.getNamedQualifier());
+            pb.addAnnotation(namedAnn.build());
+        }
+        mb.addParameter(pb.build());
         // Add return config internal
         mb.addStatement("return $N", CONF_PARAM);
         return mb;
@@ -68,7 +79,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
         if (confElement.getClassedQualifier() != null) {
             AnnotationSpec.Builder ann = AnnotationSpec.builder(Classed.class);
-            ann.addMember("value", "$T", TypeName.get(confElement.getClassedQualifier()));
+            ann.addMember("value", "$T.class", TypeName.get(confElement.getClassedQualifier()));
             mb.addAnnotation(ann.build());
         } else if (confElement.getNamedQualifier() != null) {
             AnnotationSpec.Builder ann = AnnotationSpec.builder(Named.class);
@@ -86,7 +97,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
         if (confElement.getClassedQualifier() != null) {
             AnnotationSpec.Builder ann = AnnotationSpec.builder(Classed.class);
-            ann.addMember("value", "$T", TypeName.get(confElement.getClassedQualifier()));
+            ann.addMember("value", "$T.class", TypeName.get(confElement.getClassedQualifier()));
             mb.addAnnotation(ann.build());
         } else if (confElement.getNamedQualifier() != null) {
             AnnotationSpec.Builder ann = AnnotationSpec.builder(Named.class);
@@ -95,7 +106,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         }
     }
 
-    private void generateProduceClassifiedConfigurable(ProducerGenerator prodGen, ConfigElement confElement) {
+    private void generateProduceMessageConfigurable(ProducerGenerator prodGen, ConfigElement confElement) {
         TypeElement targetElm = confElement.getTarget().unwrap();
         MethodSpec.Builder mb = prodGen.addProduceMethod("get" + targetElm.getSimpleName().toString() + "With" + confElement.getImplementation().getSimpleName(),
             ClassName.bestGuess(targetElm.getQualifiedName().toString()));
@@ -214,7 +225,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
                     break;
                 }
                 case MESSAGE: {
-                    generateProduceClassifiedConfigurable(prodGen, confElement);
+                    generateProduceMessageConfigurable(prodGen, confElement);
                     break;
                 }
             }

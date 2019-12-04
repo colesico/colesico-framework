@@ -100,7 +100,7 @@ public class JdbiTransactionalShell extends AbstractTransactionalShell<JdbiTrans
             handle = jdbi.open();
             handle.begin();
             if (tx.getTuning() != null) {
-                tx.getTuning().apply(handle);
+                tx.getTuning().applyTuning(handle);
             }
             tx.setHandle(handle);
         }

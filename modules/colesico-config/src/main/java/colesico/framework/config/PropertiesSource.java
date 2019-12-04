@@ -49,7 +49,7 @@ public class PropertiesSource implements ConfigSource {
     public static final String DIRECTORY = "directory";
 
     /**
-     * Properties file classpath
+     * Properties file classpath directory
      * Default: META-INF
      */
     public static final String CLASSPATH = "classpath";
@@ -103,7 +103,7 @@ public class PropertiesSource implements ConfigSource {
                 throw new RuntimeException("File not found: " + fullPath);
             }
         } catch (Exception e) {
-            String errorMsg = "Error reading config from from resource: " + fullPath;
+            String errorMsg = "Error reading config from  resource: " + fullPath;
             logger.error(errorMsg);
             throw new RuntimeException(errorMsg, e);
         }

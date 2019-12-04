@@ -8,5 +8,6 @@ module colesico.framework.example.config {
     exports colesico.framework.example.config.simple;
     exports colesico.framework.example.config.single;
     exports colesico.framework.example.config.source;
+    exports colesico.framework.example.config.classed;
     
 }

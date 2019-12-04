@@ -49,7 +49,7 @@ Colesico-framework consists of highly specialized micromodules.
 
 * Colesico-jdbc - Jdbc integration  (transactions support, etc.)
 * Colesico-hikaricp - HikariCP integration  (database connection pool)
-* Colesico-jdbi - Jdbi integration  (transactions support, etc.)
+*  <<jdbi.asciidoc#,Colesico-jdbi - Jdbi integration  (transactions support, etc.)>>
 * Colesico-jdbirec - Jdbi data mapping/binding assistant
 
 === Web modules

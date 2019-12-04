@@ -79,4 +79,9 @@ public class ConfigTest {
         assertEquals(service.getSourceNestedConfigValue(),"NestedValue");
     }
 
+    @Test
+    public void testClassedConfigs(){
+        assertEquals(service.getClassedConfigValue(),"SingleConfig;PolyConfig");
+    }
+
 }

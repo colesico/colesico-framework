@@ -21,15 +21,15 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>2.3.2</version>
+        <version>2.4.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-    
-	<groupId>net.colesico.framework.example</groupId>
+
+    <groupId>net.colesico.framework.example</groupId>
     <artifactId>jdbi-example</artifactId>
-	
+
     <packaging>jar</packaging>
-    <name>Colesico example - jDBI integration</name>
+    <name>Colesico example - Jdbi integration</name>
 
     <properties>
     </properties>
@@ -49,9 +49,9 @@
 
         <!-- Logger -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.verion}</version>
         </dependency>
 
         <!-- H2 db -->
@@ -61,7 +61,13 @@
             <version>${h2database.version}</version>
         </dependency>
 
-
+        <!-- Tests -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${org-testng.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -77,7 +83,7 @@
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
                     <annotationProcessorPaths>
-						<path>
+                        <path>
                             <groupId>net.colesico.framework</groupId>
                             <artifactId>colesico-service</artifactId>
                             <version>${project.version}</version>

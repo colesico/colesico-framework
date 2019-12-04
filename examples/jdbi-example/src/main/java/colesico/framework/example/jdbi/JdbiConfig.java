@@ -20,17 +20,32 @@ import colesico.framework.config.Config;
 import colesico.framework.hikaricp.HikariProperties;
 import colesico.framework.ioc.Classed;
 import colesico.framework.ioc.Polysupplier;
-import colesico.framework.jdbi.DefaultJdbiConfig;
+import colesico.framework.jdbi.AbstractJdbiConfig;
 import colesico.framework.jdbi.JdbiOptionsPrototype;
 
+import javax.inject.Inject;
 import javax.sql.DataSource;
 
 
 @Config
-public class MyJdbiSettings extends DefaultJdbiConfig {
+public class JdbiConfig extends AbstractJdbiConfig {
 
-    // jDBI will use  hikari data source configured with hikari.properties file
-    public MyJdbiSettings(@Classed(HikariProperties.class) DataSource dataSource, Polysupplier<JdbiOptionsPrototype> options) {
+    /**
+     * Jdbi will use hikari data source configured with hikari.properties file
+     * and  optional configurations classed by JdbiConfig  will be applied to jdbi instance
+     *
+     * @param dataSource
+     * @param options
+     */
+    @Inject
+    public JdbiConfig(
+
+        @Classed(HikariProperties.class)
+            DataSource dataSource,
+
+        @Classed(JdbiConfig.class)
+            Polysupplier<JdbiOptionsPrototype> options) {
+
         super(dataSource, options);
     }
 }

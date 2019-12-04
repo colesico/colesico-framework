@@ -24,12 +24,12 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 @Service
-public class MyService {
+public class AppService {
 
     private final Provider<Handle> handleProv;
 
     @Inject
-    public MyService(Provider<Handle> handleProv) {
+    public AppService(Provider<Handle> handleProv) {
         this.handleProv = handleProv;
     }
 
@@ -40,7 +40,7 @@ public class MyService {
         String val = handle.createQuery("select avalue from avalues where akey=:key")
                 .bind("key", key)
                 .mapTo(String.class)
-                .findOnly();
+                .first();
 
         return val;
     }

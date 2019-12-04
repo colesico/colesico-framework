@@ -22,5 +22,5 @@ package colesico.framework.transaction;
  */
 @FunctionalInterface
 public interface Tuning<T> {
-    void apply(T target);
+    void applyTuning(T target);
 }

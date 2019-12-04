@@ -23,6 +23,9 @@ import org.jdbi.v3.core.Jdbi;
 
 import javax.sql.DataSource;
 
+/**
+ * Supplies  mandatory data source  and optional configurators
+ */
 @ConfigPrototype(model = ConfigModel.MESSAGE, target = Jdbi.class)
 abstract public class JdbiConfigPrototype {
 

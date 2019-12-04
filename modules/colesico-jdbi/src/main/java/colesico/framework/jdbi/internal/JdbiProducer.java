@@ -32,15 +32,17 @@ public class JdbiProducer {
      * Jdbi factory
      * Creates Jdbi instance configured with settings
      *
-     * @param settings
+     * @param config
      * @return
      */
     @Unscoped
     @Classed(JdbiConfigPrototype.class)
-    public Jdbi jdbiFactory(@Message JdbiConfigPrototype settings) {
-        final Jdbi jdbi = Jdbi.create(settings.getDataSource());
+    public Jdbi jdbiFactory(@Message JdbiConfigPrototype config) {
+        final Jdbi jdbi = Jdbi.create(config.getDataSource());
         jdbi.installPlugins();
-        settings.getOptions().forEach(o -> o.apply(jdbi), null);
+        if (config.getOptions() != null) {
+            config.getOptions().forEach(o -> o.applyOptions(jdbi), null);
+        }
         return jdbi;
     }
 

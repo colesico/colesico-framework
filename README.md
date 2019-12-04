@@ -25,9 +25,11 @@ $ mvn clean install
 <dependency>
   <groupId>net.colesico.framework</groupId>
   <artifactId>colesico-[module or bundle]</artifactId>
-  <version>N.N.N</version>
+  <version>${colesico-version}</version>
 </dependency>
 ```
+
+[${colesico-version}](https://search.maven.org/artifact/net.colesico.framework/colesico-framework)
 
 ## License
 

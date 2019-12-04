@@ -16,6 +16,7 @@
 
 package colesico.framework.example.config;
 
+import colesico.framework.example.config.classed.ClassedConfigsBean;
 import colesico.framework.example.config.message.MessageConfig1;
 import colesico.framework.example.config.message.MessageConfig2;
 import colesico.framework.example.config.message.TargetBean;
@@ -45,19 +46,31 @@ public class MainBean {
     private final SourcePrefixConfig sourcePrefixConfig;
     private final SourceNestedConfig sourceNestedConfig;
 
+    private final ClassedConfigsBean classedConfigsBean;
+
     public MainBean(SimpleConfig simpleConfig,
+                    // Config in single configuration model
                     Provider<SingleConfigPrototype> singleConfigProv,
+
+                    // Config in polyvariant configuration model
                     Polysupplier<PolyConfigPrototype> polyConfig,
 
+                    // A bean configured with the configuration in the message model
                     @Classed(MessageConfig1.class)
                         TargetBean targetService1,
+
+                    // A bean configured with the configuration in the message model
                     @Classed(MessageConfig2.class)
                         TargetBean targetService2,
 
+                    // The configuration  the values of that is read from config source
                     SourceSimpleConfig sourceSimpleConfig,
                     SourceSingleConfigPrototype sourceSingleConfig,
                     SourcePrefixConfig sourcePrefixConfig,
-                    SourceNestedConfig sourceNestedConfig
+                    SourceNestedConfig sourceNestedConfig,
+
+                    // Classed single and named configs injected to classedConfigsBean
+                    ClassedConfigsBean classedConfigsBean
     ) {
 
         this.simpleConfig = simpleConfig;
@@ -69,6 +82,7 @@ public class MainBean {
         this.sourceSingleConfig = sourceSingleConfig;
         this.sourcePrefixConfig = sourcePrefixConfig;
         this.sourceNestedConfig = sourceNestedConfig;
+        this.classedConfigsBean = classedConfigsBean;
     }
 
     public String getSimpleConfigValue() {
@@ -103,6 +117,10 @@ public class MainBean {
 
     public String getSourceNestedConfigValue() {
         return sourceNestedConfig.getNested().getValue();
+    }
+
+    public String getClassedConfigValue() {
+        return classedConfigsBean.getValues();
     }
 
 }

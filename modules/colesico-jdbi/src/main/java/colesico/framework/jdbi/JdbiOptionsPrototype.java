@@ -20,7 +20,11 @@ import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
 import org.jdbi.v3.core.Jdbi;
 
+/**
+ * Jdbi optional configuration  prototype.
+ * Us used to apply optional configuration to jdbi instance
+ */
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
 abstract public class JdbiOptionsPrototype {
-    abstract public void apply(final Jdbi jdbi);
+    abstract public void applyOptions(final Jdbi jdbi);
 }

@@ -26,7 +26,7 @@ import colesico.framework.weblet.Weblet;
  */
 @Weblet
 @Route("./relative") // or just @Route("relative")
-public class RelativePkgRouting {
+public class PackageRelativeRouting {
 
     // http://localhost:8080/api/v1.0/relative/say-hallo
     // /api/v1.0 + /relative + /say-hallo
