@@ -184,3 +184,6 @@ public class MyService {
    }
 ----
 
+== Examples
+
+See full source code in the framework source code section #examples/transaction-example#

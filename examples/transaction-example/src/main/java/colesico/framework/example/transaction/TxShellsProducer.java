@@ -22,27 +22,36 @@ import colesico.framework.transaction.TransactionalShell;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+/**
+ * Transactional shells producer
+ */
 @Producer
-public class MyProducer {
+public class TxShellsProducer {
 
     /**
      * Define default transactional shell
      * @return
      */
     @Singleton
-    public TransactionalShell getTxExec1(){
+    public TransactionalShell getDefaultTxShell(){
         return new TransctionalShellMock("Default");
     }
 
+    /**
+     * Custom transactional shell
+     */
     @Singleton
     @Named("custom")
-    public TransactionalShell getTxExec2(){
+    public TransactionalShell getCustomTxShell(){
         return new TransctionalShellMock("Custom");
     }
 
+    /**
+     * Yet another custom transactional shell  that be used for the programmatic transaction control example
+     */
     @Singleton
-    @Named("alternative")
-    public TransactionalShell getTxExec3(){
-        return new TransctionalShellMock("MyTx...");
+    @Named("prog")
+    public TransactionalShell getProgTxShell(){
+        return new TransctionalShellMock("Programmatic");
     }
 }

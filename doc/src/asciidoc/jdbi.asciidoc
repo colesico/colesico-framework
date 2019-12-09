@@ -3,15 +3,67 @@
 This module is used to provide an ability to use JDBI  within services via  the "Handle" injection.
 It is also provides a transaction management support  with TransactionalShell.
 
-== Configuration
+Typical usage in the service:
 
-Configuration steps:
+[source,java]
+----
+@Service
+public class TheService {
+
+    private final Provider<Handle> handleProv;
+
+    @Inject
+    public TheService(Provider<Handle> handleProv) {
+        this.handleProv = handleProv;
+    }
+
+    @Transactional
+    public String readFromDB() {
+
+        return handleProv.get()  // Obtain attached to a transaction Jdbi Handle
+                  .createQuery(...)
+                  .bind(...)
+                  .mapTo(String.class)
+                  .first();
+
+        // No need to close handle
+    }
+}
+----
+
+== Usage
 
 . Create custom Jdbi configuration class that extends JdbiConfigPrototype.
-  This config is used to provide DataSource
+  This config is used to provide a DataSource to Jdbi instance.
 . Create custom Jdbi optional config class that extends JdbiOptionsPrototype.
 . Define producer that produce TransactionalShell implemented by JdbiTransactionalShell;
-. Also define producing method that provides Jdbi Handle instance from  JdbiTransactionalShell.
+. Also define producing method that provides Jdbi Handle instance from JdbiTransactionalShell.
+
+Producer example:
+
+[source,java]
+----
+@Producer
+public class JdbiProducer {
+
+    /**
+     * Define transactional shell to control transactions.
+     */
+    @Singleton
+    public TransactionalShell getTransactionalShell(@Classed(CustomJdbiConfig.class) Jdbi jdbi) {
+        return new JdbiTransactionalShell(jdbi);
+    }
+
+    /**
+     * Define handle providing from transactional shell
+     */
+    @Unscoped
+    public Handle getHandle(TransactionalShell txShell) {
+        return ((JdbiTransactionalShell) txShell).getHandle();
+    }
+
+}
+----
 
 == Examples
 

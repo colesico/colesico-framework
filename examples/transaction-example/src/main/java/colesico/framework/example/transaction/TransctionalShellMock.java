@@ -21,34 +21,37 @@ import colesico.framework.transaction.UnitOfWork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Transactional shell mock that demonstrates how the actual transactional shell can be implemented
+ */
 public class TransctionalShellMock implements TransactionalShell<Object> {
 
     Logger log = LoggerFactory.getLogger(TransctionalShellMock.class);
 
-    final String executorName;
+    final String shellName;
 
-    public TransctionalShellMock(String executorName) {
-        this.executorName = executorName;
+    public TransctionalShellMock(String shellName) {
+        this.shellName = shellName;
     }
 
     @Override
-    public <R> R required(UnitOfWork<R> unitOfWork, Object options) {
-        log.info("Required begin |" + executorName);
+    public <R> R required(UnitOfWork<R> unitOfWork, Object tuning) {
+        log.info("Required begin |" + shellName);
         R result = unitOfWork.execute();
-        log.info("Required end |" + executorName);
+        log.info("Required end |" + shellName);
         return result;
     }
 
     @Override
-    public <R> R requiresNew(UnitOfWork<R> unitOfWork, Object options) {
-        log.info("RequiresNew begin |" + executorName);
+    public <R> R requiresNew(UnitOfWork<R> unitOfWork, Object tuning) {
+        log.info("RequiresNew begin |" + shellName);
         R result = unitOfWork.execute();
-        log.info("RequiresNew end |" + executorName);
+        log.info("RequiresNew end |" + shellName);
         return result;
     }
 
     @Override
-    public <R> R mandatory(UnitOfWork<R> unitOfWork, Object options) {
+    public <R> R mandatory(UnitOfWork<R> unitOfWork, Object tuning) {
         log.info("Mandatory begin");
         R result = unitOfWork.execute();
         log.info("Mandatory end");
@@ -56,7 +59,7 @@ public class TransctionalShellMock implements TransactionalShell<Object> {
     }
 
     @Override
-    public <R> R notSupported(UnitOfWork<R> unitOfWork, Object options) {
+    public <R> R notSupported(UnitOfWork<R> unitOfWork, Object tuning) {
         log.info("NotSupported begin");
         R result = unitOfWork.execute();
         log.info("NotSupported end");
@@ -64,7 +67,7 @@ public class TransctionalShellMock implements TransactionalShell<Object> {
     }
 
     @Override
-    public <R> R supports(UnitOfWork<R> unitOfWork, Object options) {
+    public <R> R supports(UnitOfWork<R> unitOfWork, Object tuning) {
         log.info("Supports begin");
         R result = unitOfWork.execute();
         log.info("Supports end");
@@ -72,7 +75,7 @@ public class TransctionalShellMock implements TransactionalShell<Object> {
     }
 
     @Override
-    public <R> R never(UnitOfWork<R> unitOfWork, Object options) {
+    public <R> R never(UnitOfWork<R> unitOfWork, Object tuning) {
         log.info("Never begin");
         R result = unitOfWork.execute();
         log.info("Never end");
@@ -80,7 +83,7 @@ public class TransctionalShellMock implements TransactionalShell<Object> {
     }
 
     @Override
-    public <R> R nested(UnitOfWork<R> unitOfWork, Object options) {
+    public <R> R nested(UnitOfWork<R> unitOfWork, Object tuning) {
         log.info("Nested begin");
         R result = unitOfWork.execute();
         log.info("Nested end");

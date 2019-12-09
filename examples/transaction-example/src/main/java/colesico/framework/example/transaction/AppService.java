@@ -25,19 +25,27 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 
+/**
+ * An application service.
+ * This service implicitly uses default and "custom" transactional shells
+ * and explicitly uses "prog" shell for programmatic transaction control.
+ */
 @Service
-public class MyService {
+public class AppService {
 
-    Logger log = LoggerFactory.getLogger(MyService.class);
+    Logger log = LoggerFactory.getLogger(AppService.class);
 
-    private final TransactionalShell<Object> customTxShell;
+    /**
+     * Shell to be used in programmatic tx control manner
+     */
+    private final TransactionalShell<Object> progShell;
 
-    public MyService(@Named("custom") TransactionalShell customTxShell) {
-        this.customTxShell = customTxShell;
+    public AppService(@Named("prog") TransactionalShell progShell) {
+        this.progShell = progShell;
     }
 
     /**
-     * Declarative  transaction control style with default transactional shell
+     * Declarative transaction control style with default transactional shell
      *
      * @param value
      * @return
@@ -49,7 +57,8 @@ public class MyService {
     }
 
     /**
-     * Declarative  transaction control style with custom transactional shell
+     * Declarative  transaction control style with custom transactional shell.
+     * shell = "custom" refers to @Named("custom") TransactionalSell in the producer
      *
      * @param value
      * @return
@@ -61,34 +70,34 @@ public class MyService {
     }
 
     /**
-     * @param value
-     * @return
+     * Programmatic transaction control with "prog" transactional shell
      */
-    @Transactional(shell = "alternative")
-    public Boolean update2(String value) {
-        log.info("Value=" + value);
-        return Boolean.TRUE;
-    }
-
-    // Mixed programmatic  and declarative transaction control style
-    @Transactional(shell = "custom")
-    public Boolean create(String value) {
-        return customTxShell.requiresNew(() -> {
+    public Boolean delete(String value) {
+        return progShell.required(() -> {
             log.info("Value=" + value);
             return Boolean.FALSE;
         });
     }
 
     /**
-     * Programmatic transaction control style
-     *
-     * @param value
-     * @return
+     * Declarative  transaction control  with "prog" transactional shell.
      */
-    public Boolean delete(String value) {
-        return customTxShell.required(() -> {
+    @Transactional(shell = "prog")
+    public Boolean update2(String value) {
+        log.info("Value=" + value);
+        return Boolean.TRUE;
+    }
+
+    /**
+     * Mixed programmatic  and declarative transaction control style
+     */
+    @Transactional(shell = "prog")
+    public Boolean create(String value) {
+        return progShell.requiresNew(() -> {
             log.info("Value=" + value);
             return Boolean.FALSE;
         });
     }
+
+
 }

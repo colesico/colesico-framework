@@ -22,7 +22,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        MyService myService= IocBuilder.forDevelopment().instance(MyService.class);
+        AppService myService= IocBuilder.forDevelopment().instance(AppService.class);
         myService.create("create");
 
         myService.save("save");
