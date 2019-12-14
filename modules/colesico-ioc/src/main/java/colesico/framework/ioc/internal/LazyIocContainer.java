@@ -127,14 +127,10 @@ public final class LazyIocContainer implements AdvancedIoc {
     }
 
     protected void activate(Factory factory, Key key) {
-        try {
-            Factory s = factory;
-            while (s != null) {
-                s.activate(this);
-                s = s.next();
-            }
-        } catch (StackOverflowError soe) {
-            throw new IocException(String.format(CIRCULAR_DEP_ERR_MSG, key.toString()));
+        Factory s = factory;
+        while (s != null) {
+            s.activate(this);
+            s = s.next();
         }
     }
 }

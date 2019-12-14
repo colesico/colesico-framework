@@ -33,11 +33,17 @@ import javax.inject.Provider;
  */
 abstract public class Factory<T> implements Provider<T>, Supplier<T> {
 
+    /**
+     * Codegen support names
+     */
     public static final String GET_METHOD = "get";
     public static final String SETUP_METHOD = "setup";
     public static final String MESSAGE_PARAM = "message";
     public static final String IOC_PARAM = "ioc";
 
+    /**
+     * Current activation status
+     */
     private volatile boolean inactive = true;
 
     private Factory<T> next = null;
@@ -63,8 +69,8 @@ abstract public class Factory<T> implements Provider<T>, Supplier<T> {
     }
 
     /**
-     * Called by Ioc container to initialize factory
-     * (perform obtaining dependencies from IoC container)
+     * Called by IoC container to initialize factory
+     * (perform obtaining dependencies factories  from IoC container)
      */
     public void setup(final AdvancedIoc ioc) {
     }

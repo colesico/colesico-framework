@@ -110,9 +110,12 @@ public class IocBuilderImpl implements IocBuilder {
         IocletRanker ranker = new IocletRanker();
 
         if (useDefaultRanks) {
+            log.debug("Use default ranks: on");
             ranker.pushRank(Rank.RANK_MINOR);
             ranker.pushRank(Rank.RANK_DEFAULT);
             ranker.pushRank(Rank.RANK_EXTENSION);
+        } else {
+            log.debug("Use default ranks: off");
         }
 
         for (String rank : extraRanks) {
@@ -121,33 +124,38 @@ public class IocBuilderImpl implements IocBuilder {
 
         // Log ranks stack
         if (log.isDebugEnabled()) {
-            StringBuilder rsb = new StringBuilder("Ioc ranks stack: ");
+            StringBuilder rsb = new StringBuilder("IoC ranks stack: ");
             for (IocletRanker.RankItem ri : ranker.getRankStack()) {
                 rsb.append(ri.getRank()).append("; ");
             }
             log.debug(rsb.toString());
         }
 
-
         if (ignoredProducers.isEmpty()) {
             if (iocletsDiscovery) {
+                log.debug("Ioclets discovery: on");
                 List<Ioclet> foundList = lookupIoclets();
                 for (Ioclet ioclet : foundList) {
                     ranker.addIoclet(ioclet);
                 }
+            } else {
+                log.debug("Ioclets discovery: off");
             }
             for (Ioclet ioclet : extraIoclets) {
                 ranker.addIoclet(ioclet);
-
             }
         } else {
+            log.debug("Has ignored IoC producers");
             if (iocletsDiscovery) {
+                log.debug("Ioclets discovery: on");
                 List<Ioclet> foundList = lookupIoclets();
                 for (Ioclet ioclet : foundList) {
                     if (!ignoredProducers.contains(ioclet.getProducerId())) {
                         ranker.addIoclet(ioclet);
                     }
                 }
+            } else {
+                log.debug("Ioclets discovery: off");
             }
             for (Ioclet ioclet : extraIoclets) {
                 if (!ignoredProducers.contains(ioclet.getProducerId())) {
@@ -161,6 +169,7 @@ public class IocBuilderImpl implements IocBuilder {
 
         AdvancedIoc ioc;
 
+        log.debug("IoC type: " + iocType.name());
         switch (iocType) {
             case EAGER:
                 ioc = new EagerIocContainer(factories);
@@ -173,7 +182,10 @@ public class IocBuilderImpl implements IocBuilder {
         }
 
         if (preactivation) {
+            log.debug("Preactivation: on");
             activateFactories(ioc, factories);
+        } else {
+            log.debug("Preactivation: off");
         }
 
         return ioc;

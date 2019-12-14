@@ -19,7 +19,6 @@ package colesico.framework.router.internal;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.ioc.Classed;
-import colesico.framework.ioc.InlineInject;
 import colesico.framework.ioc.Polysupplier;
 import colesico.framework.ioc.ThreadScope;
 import colesico.framework.router.Router;
@@ -53,7 +52,6 @@ public class RouterImpl implements Router {
 
     @Inject
     public RouterImpl(
-        @InlineInject
         @Classed(Router.class)
             Polysupplier<TeleFacade> teleFacadesSupp,
         ThreadScope threadScope) {

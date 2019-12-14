@@ -125,7 +125,10 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
         for (ParameterElement param : method.getParameters()) {
             Deque<VarElement> varStack = new ArrayDeque<>();
             if (param.asClassType() == null) {
-                throw CodegenException.of().message("Unsupported parameter type kind for tele-method " + teleMethod.getName() + "(..." + param.getName() + "...)")
+                throw CodegenException.of()
+                    .message("Unsupported parameter type for tele-method "
+                        + teleMethod.getParentTeleFacade().getParentService().getOriginClass().getName()+"."
+                        + teleMethod.getName() + "(..." +param.asType().toString()+" "+ param.getName() + "...)")
                     .element(param.unwrap())
                     .build();
             }

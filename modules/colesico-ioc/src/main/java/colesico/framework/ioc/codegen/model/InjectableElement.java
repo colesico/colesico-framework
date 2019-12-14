@@ -34,7 +34,6 @@ public class InjectableElement {
 
     private final InjectionKind injectionKind;
     private final MessageKind messageKind;
-    private final LinkagePhase linkagePhase;
 
     // Optional injection
     private final boolean optional;
@@ -50,7 +49,6 @@ public class InjectableElement {
                              ClassType injectedType,
                              InjectionKind injectionKind,
                              MessageKind messageKind,
-                             LinkagePhase linkagePhase,
                              Boolean optional,
                              String named,
                              ClassType classed) {
@@ -60,7 +58,6 @@ public class InjectableElement {
         this.injectedType = injectedType;
         this.injectionKind = injectionKind;
         this.messageKind = messageKind;
-        this.linkagePhase = linkagePhase;
         this.optional = optional;
         this.named = named;
         this.classed = classed;
@@ -98,10 +95,6 @@ public class InjectableElement {
         return classed;
     }
 
-    public LinkagePhase getLinkagePhase() {
-        return linkagePhase;
-    }
-
     public enum InjectionKind {
         MESSAGE,
         INSTANCE,
@@ -114,19 +107,4 @@ public class InjectableElement {
         OUTER_MESSAGE,
         INJECTION_POINT,
     }
-
-    /**
-     * Dependency linkage phases
-     */
-    public enum LinkagePhase {
-        /**
-         * On activation phase  (in 'setup' factory method)
-         */
-        ACTIVATION,
-        /**
-         * On production  (in 'get' factory method or in the methods that it calls)
-         */
-        PRODUCTION
-    }
-
 }

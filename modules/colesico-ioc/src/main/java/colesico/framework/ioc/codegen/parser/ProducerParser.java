@@ -174,12 +174,6 @@ public class ProducerParser extends FrameworkAbstractParser {
             InjectableElement.MessageKind.INJECTION_POINT :
             InjectableElement.MessageKind.OUTER_MESSAGE;
 
-        // Binding
-        AnnotationElement<InlineInject> dynamicInjectAnn = parameter.getAnnotation(InlineInject.class);
-        InjectableElement.LinkagePhase linkagePhase = dynamicInjectAnn == null ?
-            InjectableElement.LinkagePhase.ACTIVATION :
-            InjectableElement.LinkagePhase.PRODUCTION;
-
         // Extra key types
         String named;
         AnnotationElement<Named> namedAnn = parameter.getAnnotation(Named.class);
@@ -209,7 +203,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         AnnotationElement<OptionalInject> optionalAnn = parameter.getAnnotation(OptionalInject.class);
         boolean optional = optionalAnn != null;
 
-        return new InjectableElement(parentFactory, parameter, injectedType, injectionKind, messageKind, linkagePhase, optional, named, classed);
+        return new InjectableElement(parentFactory, parameter, injectedType, injectionKind, messageKind, optional, named, classed);
     }
 
     protected DefaultFactoryElement createDefaultFactoryElement(IocletElement iocletElement, AnnotationElement<Produce> produceAnn) {

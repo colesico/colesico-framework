@@ -20,7 +20,6 @@ import colesico.framework.eventbus.EventBinding;
 import colesico.framework.eventbus.EventBus;
 import colesico.framework.eventbus.EventHandler;
 import colesico.framework.eventbus.EventsListener;
-import colesico.framework.ioc.InlineInject;
 import colesico.framework.ioc.Polysupplier;
 
 import javax.inject.Inject;
@@ -36,7 +35,7 @@ public class EventBusImpl implements EventBus {
     protected final Map<Class<?>, List<EventHandler<?>>> eventsBindings = new HashMap();
 
     @Inject
-    public EventBusImpl(@InlineInject Polysupplier<EventsListener> listenersSupp) {
+    public EventBusImpl(Polysupplier<EventsListener> listenersSupp) {
         initBindings(listenersSupp);
     }
 

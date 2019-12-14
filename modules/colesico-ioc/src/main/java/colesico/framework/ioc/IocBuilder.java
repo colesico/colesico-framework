@@ -119,7 +119,10 @@ public interface IocBuilder {
      * @return
      */
     static Ioc forDevelopment() {
-        return get().useContainerType(ContainerType.LAZY).disablePreactivation().build();
+        return get()
+            .useContainerType(ContainerType.LAZY)
+            .disablePreactivation()
+            .build();
     }
 
     /**
@@ -129,7 +132,7 @@ public interface IocBuilder {
      */
 
     static Ioc forTests() {
-        return get().useContainerType(ContainerType.LAZY).useRank(Rank.RANK_TEST).build();
+        return get().useRank(Rank.RANK_TEST).build();
     }
 
     /**

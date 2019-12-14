@@ -42,7 +42,7 @@ Builder allows to create an Ioc containers configured for using in:
 
 * production (slow container start, fast dependency injection at runtime)
 * developing  (fast container start, slow dependency injection at runtime)
-* testing  (slow container start, slow dependency injection at runtime, dependencies satisfaction and cyclic dependencies autocheck)
+* testing  (the same as production but with extra rank - "test")
 
 Default Ioc container creation will create the container configured for the production:
 
@@ -334,16 +334,12 @@ IoC container supports the following lifecycle listeners:
 
 == Circular dependencies
 
-@InlineInject annotation should be used in case of cyclic dependencies.
-
-Inline injection has slightly lower performance and does not participate in circular dependencies checking.
-The  dependencies of the instance factory will be obtained from the IoC container at the instance production
-and not at the factory activation.
+In case of circular dependencies use Provider<Type> instead of direct instance injection.
 
 [source,java]
 ----
 
-  public constructor(@InlineInject Provider<T> dependencyProvider){
+  public constructor(Provider<T> dependencyProvider){
         ...
   }
 
