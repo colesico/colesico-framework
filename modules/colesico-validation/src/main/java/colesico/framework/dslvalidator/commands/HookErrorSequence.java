@@ -1,11 +1,11 @@
 /*
- * Copyright 20014-2019 Vladlen V. Larionov and others as noted.
+ * Copyright © 2014-2020 Vladlen V. Larionov and others as noted.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,12 +22,12 @@ import colesico.framework.translation.Translatable;
 import java.util.List;
 
 /**
- * This sequence after commands execution checks for nested errors presents.
+ * This sequence checks for nested contexts errors presents after commands execution.
  * If nested exceptions is present adds error to current context
  *
  * @param
  */
-public final class HookErrorSequence<V> extends AbstractSequence<V, V> {
+public  class HookErrorSequence<V> extends AbstractSequence<V, V> {
 
     private final String errorCode;
     private final Translatable errorMessage;
@@ -39,13 +39,12 @@ public final class HookErrorSequence<V> extends AbstractSequence<V, V> {
         this.messageParams = messageParam;
     }
 
-    protected boolean hasDeepErrors(ValidationContext<V> context) {
-        if (context.hasErrors()) {
-            return true;
-        }
+    protected boolean hasNestedErrors(ValidationContext<V> context) {
         List<ValidationContext<?>> nestedContexts = context.getNestedContexts();
         for (ValidationContext nestedCtx : nestedContexts) {
             if (nestedCtx.hasErrors()) {
+                return true;
+            } else if (hasNestedErrors(nestedCtx)){
                 return true;
             }
         }
@@ -55,7 +54,7 @@ public final class HookErrorSequence<V> extends AbstractSequence<V, V> {
     @Override
     public void execute(ValidationContext<V> context) {
         executeChain(context);
-        if (hasDeepErrors(context)) {
+        if (hasNestedErrors(context)) {
             context.addError(errorCode, errorMessage.translate(messageParams));
         }
     }

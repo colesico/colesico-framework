@@ -1,11 +1,11 @@
 /*
- * Copyright 20014-2019 Vladlen V. Larionov and others as noted.
+ * Copyright © 2014-2020 Vladlen V. Larionov and others as noted.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,6 +19,11 @@ package colesico.framework.assist;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+/**
+ * Wrapper to obtain generic type from its definition.
+ * Usage: new TypeWrapper<List<String>>>(){}.unwrap() -> type of List<String>
+ * @param <T>
+ */
 abstract public class TypeWrapper<T> {
 
     public static final String UNWRAP_METHOD="unwrap";

@@ -1,11 +1,11 @@
 /*
- * Copyright 20014-2019 Vladlen V. Larionov and others as noted.
+ * Copyright © 2014-2020 Vladlen V. Larionov and others as noted.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -42,17 +42,18 @@ abstract public class AbstractIntervalVerifier<V> implements Command<V> {
     abstract protected String valueShouldBeLessThan(Number max);
 
     protected void execute(Number value, ValidationContext context) {
+        boolean checkEqual = !includeEndpoints;
         if (value != null) {
             if (min != null && max != null) {
-                if (lte(value, min) || lte(max, value)) {
+                if (lte(value, min, checkEqual) || lte(max, value, checkEqual)) {
                     context.addError(this.getClass().getSimpleName() + "Between", valueShouldBeBetween(min, max));
                 }
             } else if (min != null) {
-                if (lte(value, min)) {
+                if (lte(value, min, checkEqual)) {
                     context.addError(getClass().getSimpleName() + "Min", valueShouldBeGreaterThan(min));
                 }
             } else if (max != null) {
-                if (lte(max, value)) {
+                if (lte(max, value, checkEqual)) {
                     context.addError(getClass().getSimpleName() + "Max", valueShouldBeLessThan(max));
                 }
             } else {
@@ -68,47 +69,47 @@ abstract public class AbstractIntervalVerifier<V> implements Command<V> {
      * @param valB
      * @return
      */
-    protected boolean lte(Number valA, Number valB) {
+    protected boolean lte(Number valA, Number valB, boolean checkEqual) {
         if (valA instanceof Integer && valB instanceof Integer) {
-            if (includeEndpoints) {
-                return valA.intValue() < valB.intValue();
-            } else {
+            if (checkEqual) {
                 return valA.intValue() <= valB.intValue();
+            } else {
+                return valA.intValue() < valB.intValue();
             }
         }
         if (valA instanceof Long && valB instanceof Long) {
-            if (includeEndpoints) {
-                return valA.longValue() < valB.longValue();
-            } else {
+            if (checkEqual) {
                 return valA.longValue() <= valB.longValue();
+            } else {
+                return valA.longValue() < valB.longValue();
             }
         }
         if (valA instanceof Double && valB instanceof Double) {
-            if (includeEndpoints) {
-                return valA.doubleValue() < valB.doubleValue();
-            } else {
+            if (checkEqual) {
                 return valA.doubleValue() <= valB.doubleValue();
+            } else {
+                return valA.doubleValue() < valB.doubleValue();
             }
         }
         if (valA instanceof Short && valB instanceof Short) {
-            if (includeEndpoints) {
-                return valA.shortValue() < valB.shortValue();
-            } else {
+            if (checkEqual) {
                 return valA.shortValue() <= valB.shortValue();
+            } else {
+                return valA.shortValue() < valB.shortValue();
             }
         }
         if (valA instanceof Float && valB instanceof Float) {
-            if (includeEndpoints) {
-                return valA.floatValue() < valB.floatValue();
-            } else {
+            if (checkEqual) {
                 return valA.floatValue() <= valB.floatValue();
+            } else {
+                return valA.floatValue() < valB.floatValue();
             }
         }
         if (valA instanceof Byte && valB instanceof Byte) {
-            if (includeEndpoints) {
-                return valA.byteValue() < valB.byteValue();
-            } else {
+            if (checkEqual) {
                 return valA.byteValue() <= valB.byteValue();
+            } else {
+                return valA.byteValue() < valB.byteValue();
             }
         }
         throw new RuntimeException("Unsupported value type:" + valA.getClass().getName() + " or " + valB.getClass().getName());
