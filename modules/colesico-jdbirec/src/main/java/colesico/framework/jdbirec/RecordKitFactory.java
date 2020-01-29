@@ -23,7 +23,7 @@ import java.lang.reflect.Constructor;
 
 public class RecordKitFactory {
 
-    public static String KIT_CLASS_SUFFIX = "RecordKit";
+    public static final String KIT_CLASS_SUFFIX = "RecordKit";
 
     private static <R, K extends RecordKit<R>> K getKit(String kitClassName, Class<R> recordClass, String view) {
         try {

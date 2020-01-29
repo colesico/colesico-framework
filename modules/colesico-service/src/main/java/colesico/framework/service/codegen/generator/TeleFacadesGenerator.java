@@ -130,8 +130,6 @@ public class TeleFacadesGenerator {
 
         //======================== Get service instance and call service method
 
-        TeleFacadeElement teleFacade = teleMethod.getParentTeleFacade();
-
         // Create writer variable
         //   MyResult result =
         CodeBlock.Builder callMethodCb = CodeBlock.builder();

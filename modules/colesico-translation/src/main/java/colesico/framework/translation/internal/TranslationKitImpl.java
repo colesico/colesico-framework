@@ -131,8 +131,7 @@ public class TranslationKitImpl implements TranslationKit {
             log.error(errMsg);
             throw new TranslationExceprion(errMsg);
         }
-        try {
-            InputStreamReader isr = new InputStreamReader(in, StandardCharsets.UTF_8);
+        try (InputStreamReader isr = new InputStreamReader(in, StandardCharsets.UTF_8);) {
             prop.load(isr);
             return prop;
         } catch (Exception ex) {

@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public final class RouterContext {
 
-    public static Key<RouterContext> SCOPE_KEY = new TypeKey<>(RouterContext.class);
+    public static final Key<RouterContext> SCOPE_KEY = new TypeKey<>(RouterContext.class);
 
     protected final String uri;
     protected final Map<String, String> parameters;

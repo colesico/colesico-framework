@@ -413,7 +413,7 @@ public class ProducerParser extends FrameworkAbstractParser {
     protected void parseProducingMethods(IocletElement iocletElement) {
         // Scan producer methods
         List<MethodElement> methods = iocletElement.getOriginProducer().getMethodsFiltered(
-            m -> !m.unwrap().getModifiers().contains(Modifier.FINAL) & m.unwrap().getModifiers().contains(Modifier.PUBLIC)
+            m -> !m.unwrap().getModifiers().contains(Modifier.FINAL) && m.unwrap().getModifiers().contains(Modifier.PUBLIC)
         );
 
         for (MethodElement method : methods) {

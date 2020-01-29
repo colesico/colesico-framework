@@ -89,14 +89,12 @@ public final class InterceptionPhases {
 
     public void addPhaseAfter(String existingPhase, String newPhase) {
         checkAddPhase(existingPhase, newPhase);
-        phaseOrder.indexOf(existingPhase);
         int phaseIndex = phaseOrder.indexOf(existingPhase) + 1;
         phaseOrder.add(phaseIndex, newPhase);
     }
 
     public void addPhaseBefore(String existingPhase, String newPhase) {
         checkAddPhase(existingPhase, newPhase);
-        phaseOrder.indexOf(existingPhase);
         int phaseIndex = phaseOrder.indexOf(existingPhase);
         phaseOrder.add(phaseIndex, newPhase);
     }

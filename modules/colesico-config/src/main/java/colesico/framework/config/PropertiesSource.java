@@ -118,7 +118,7 @@ public class PropertiesSource implements ConfigSource {
         return new ConnectionImpl(properties, params.get(PREFIX));
     }
 
-    protected class ConnectionImpl implements Connection {
+    protected static class ConnectionImpl implements Connection {
 
         private final Properties properties;
         private final String prefix;

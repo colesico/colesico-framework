@@ -1,0 +1,26 @@
+<FindBugsFilter>
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2,RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="colesico.framework.asyncjob.dao.PostgreJobDao" />
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE" />
+    </Match>
+    <Match>
+        <Class name="colesico.framework.asyncjob.internal.JobServiceImpl" />
+        <Bug pattern="IS2_INCONSISTENT_SYNC" />
+    </Match>
+    <Match>
+        <Class name="colesico.framework.asyncjob.internal.QueuePool" />
+        <Bug pattern="VO_VOLATILE_INCREMENT" />
+    </Match>
+    <Match>
+        <Class name="colesico.framework.weblet.teleapi.reader.BooleanReader" />
+        <Bug pattern="NP_BOOLEAN_RETURN_NULL" />
+    </Match>
+    <Match>
+        <Class name="colesico.framework.webstatic.internal.StaticContentImpl" />
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE" />
+    </Match>
+
+</FindBugsFilter>

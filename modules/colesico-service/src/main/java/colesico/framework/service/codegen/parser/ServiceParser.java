@@ -70,7 +70,6 @@ public class ServiceParser extends FrameworkAbstractParser {
 
         final boolean isFinal = m.unwrap().getModifiers().contains(Modifier.FINAL);
         final boolean isPublic = m.unwrap().getModifiers().contains(Modifier.PUBLIC);
-        final boolean isProtected = m.unwrap().getModifiers().contains(Modifier.PROTECTED);
         final boolean isPrivate = m.unwrap().getModifiers().contains(Modifier.PRIVATE);
         final boolean isPlain = plainMethodAnn != null;
         final boolean isServ = serviceMethodAnn != null;

@@ -37,6 +37,6 @@ public final class SubjectSequence<V> extends AbstractSequence<V, V> {
     @Override
     public void execute(ValidationContext<V> context) {
         ValidationContext<V> nestedContext = ValidationContext.ofNested(context, subject, context.getValue());
-       executeChain(context);
+        executeChain(nestedContext);
     }
 }

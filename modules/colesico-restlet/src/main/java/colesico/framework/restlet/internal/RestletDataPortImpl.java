@@ -36,6 +36,8 @@ import javax.inject.Singleton;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 @Singleton
 public class RestletDataPortImpl implements RestletDataPort {
@@ -94,7 +96,7 @@ public class RestletDataPortImpl implements RestletDataPort {
         if (json == null) {
             httpResponse.sendText("", RESPONSE_CONTENT_TYPE, 204);
         } else {
-            httpResponse.sendData(ByteBuffer.wrap(json.getBytes()), RESPONSE_CONTENT_TYPE, 200);
+            httpResponse.sendData(ByteBuffer.wrap(json.getBytes(StandardCharsets.UTF_8)), RESPONSE_CONTENT_TYPE, 200);
         }
     }
 

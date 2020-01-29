@@ -25,7 +25,7 @@ import static colesico.framework.ioc.Rank.RANK_MINOR;
 
 @Producer(RANK_MINOR)
 public class TeleApiProducer {
-    protected final String NO_DATA_PORT_MSG = "TeleAPI: Data port for the active thread is not provided";
+    protected static final String NO_DATA_PORT_MSG = "TeleAPI: Data port for the active thread is not provided";
 
     public DataPort getDataPort(ThreadScope scope) {
         DataPort port = scope.get(DataPort.SCOPE_KEY);

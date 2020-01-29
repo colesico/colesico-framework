@@ -71,7 +71,7 @@ public class ServiceProxyGenerator {
     protected MethodElement findInjectableConstructor(ServiceElement serviceElement) {
 
         List<MethodElement> constructors = serviceElement.getOriginClass().getConstructorsFiltered(
-            c -> c.unwrap().getModifiers().contains(Modifier.PUBLIC) & !c.unwrap().getModifiers().contains(Modifier.FINAL)
+            c -> c.unwrap().getModifiers().contains(Modifier.PUBLIC) && !c.unwrap().getModifiers().contains(Modifier.FINAL)
         );
         MethodElement constructor = null;
         MethodElement firstConstructor = null;
