@@ -19,18 +19,16 @@ package colesico.framework.test.example.routing;
 import colesico.framework.httpserver.HttpServer;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.nio.charset.StandardCharsets;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 public class RoutingTest {
     private Ioc ioc;
@@ -41,7 +39,7 @@ public class RoutingTest {
     public void init() {
         ioc = IocBuilder.forTests();
         httpServer = ioc.instance(HttpServer.class).start();
-        httpClient = HttpClientBuilder.create().build();
+        httpClient = HttpClient.newHttpClient();
     }
 
     @AfterClass
@@ -49,57 +47,78 @@ public class RoutingTest {
         httpServer.stop();
     }
 
-    @Test
-    public void testDefaultRouting() throws Exception{
-        var request = new HttpGet("http://localhost:8080/default-routing/hello");
-        String response = EntityUtils.toString(httpClient.execute(request).getEntity(), StandardCharsets.UTF_8);
-        assertEquals(response,"Hello");
+    private HttpRequest createGETRequest(String uri) {
+        return HttpRequest.newBuilder().uri(URI.create(uri)).build();
+    }
+
+    private HttpRequest createPOSTRequest(String uri, String data) {
+        if (data != null) {
+            return HttpRequest.newBuilder().uri(URI.create(uri)).POST(HttpRequest.BodyPublishers.ofString(data)).build();
+        } else {
+            return HttpRequest.newBuilder().uri(URI.create(uri)).POST(HttpRequest.BodyPublishers.noBody()).build();
+        }
+    }
+
+    private String getResponse(HttpRequest request) {
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.body();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-    public void testAbsoluteRouting() throws Exception{
-        var request = new HttpGet("http://localhost:8080/say-hi.html");
-        String response = EntityUtils.toString(httpClient.execute(request).getEntity(), StandardCharsets.UTF_8);
-        assertEquals(response,"Hi");
+    public void testDefaultRouting() throws Exception {
+        var request = createGETRequest("http://localhost:8080/default-routing/hello");
+        String response = getResponse(request);
+        assertEquals(response, "Hello");
+    }
 
-        request = new HttpGet("http://localhost:8080/absolute-route/say-hello.html");
-        response = EntityUtils.toString(httpClient.execute(request).getEntity(), StandardCharsets.UTF_8);
-        assertEquals(response,"Hello");
+    @Test
+    public void testAbsoluteRouting() throws Exception {
+        var request = createGETRequest("http://localhost:8080/say-hi.html");
+        String response = getResponse(request);
+        assertEquals(response, "Hi");
+
+        request = createGETRequest("http://localhost:8080/absolute-route/say-hello.html");
+        response = getResponse(request);
+        assertEquals(response, "Hello");
     }
 
     @Test
     public void testIndexOtherRouting() throws Exception {
-        var request = new HttpGet("http://localhost:8080/");
-        String response = EntityUtils.toString(httpClient.execute(request).getEntity(), StandardCharsets.UTF_8);
+        var request = createGETRequest("http://localhost:8080/");
+        String response = getResponse(request);
         assertEquals(response, "Index");
 
-        request = new HttpGet("http://localhost:8080/bla-bla");
-        response = EntityUtils.toString(httpClient.execute(request).getEntity(), StandardCharsets.UTF_8);
-        assertEquals(response,"Other");
+        request = createGETRequest("http://localhost:8080/bla-bla");
+        response = getResponse(request);
+        assertEquals(response, "Other");
     }
 
     @Test
     public void testRelativeRouting() throws Exception {
-        var request = new HttpGet("http://localhost:8080/relative-routing/say-hola");
-        String response = EntityUtils.toString(httpClient.execute(request).getEntity(), StandardCharsets.UTF_8);
+        var request = createGETRequest("http://localhost:8080/relative-routing/say-hola");
+        String response = getResponse(request);
         assertEquals(response, "Hola");
     }
 
     @Test
     public void testPkgRelRouting() throws Exception {
-        var request = new HttpGet("http://localhost:8080/api/v1.0/relative/say-hallo");
-        String response = EntityUtils.toString(httpClient.execute(request).getEntity(), StandardCharsets.UTF_8);
+        var request = createGETRequest("http://localhost:8080/api/v1.0/relative/say-hallo");
+        String response = getResponse(request);
         assertEquals(response, "Hallo");
 
-        request = new HttpGet("http://localhost:8080/api/v1.0/relative/say-hei");
-        response = EntityUtils.toString(httpClient.execute(request).getEntity(), StandardCharsets.UTF_8);
-        assertEquals(response,"Hei");
+        request = createGETRequest("http://localhost:8080/api/v1.0/relative/say-hei");
+        response = getResponse(request);
+        assertEquals(response, "Hei");
     }
 
     @Test
     public void testSubmitRouting() throws Exception {
-        var request = new HttpPost("http://localhost:8080/my-form/submit");
-        String response = EntityUtils.toString(httpClient.execute(request).getEntity(), StandardCharsets.UTF_8);
+        var request = createPOSTRequest("http://localhost:8080/my-form/submit", null);
+        String response = getResponse(request);
         assertEquals(response, "Submit");
     }
 }

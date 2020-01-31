@@ -21,12 +21,12 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>2.4.3</version>
+        <version>2.4.4</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <groupId>net.colesico.framework.example</groupId>
-    <artifactId>route-example</artifactId>
+    <artifactId>routing-example</artifactId>
 
     <packaging>jar</packaging>
     <name>Colesico example - HTTP routes</name>
@@ -54,12 +54,6 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${org-testng.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${httpclient.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -22,12 +22,12 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>2.4.3</version>
+        <version>2.4.4</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
 	<groupId>net.colesico.framework.doc</groupId>
-    <artifactId>colesico-doc</artifactId>
+    <artifactId>doc</artifactId>
     <packaging>pom</packaging>
 	
     <name>Colesico Framework Documentation</name>

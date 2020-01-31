@@ -22,12 +22,6 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
@@ -36,6 +30,10 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -51,10 +49,8 @@ public class RestletExampleTest {
     @BeforeClass
     public void init() {
         ioc = IocBuilder.forTests();
-
         httpServer = ioc.instance(HttpServer.class).start();
-
-        httpClient = HttpClientBuilder.create().build();
+        httpClient =  HttpClient.newBuilder().build();
     }
 
     @AfterClass
@@ -62,23 +58,27 @@ public class RestletExampleTest {
         httpServer.stop();
     }
 
-    private String requestGET(String url) throws IOException {
-        var request = new HttpGet(url);
-        request.setHeader("X-Requested-With", "XMLHttpRequest");
-        String jsonText = EntityUtils.toString(httpClient.execute(request).getEntity(), StandardCharsets.UTF_8);
-        return jsonText;
+    private String requestGET(String url) throws Exception {
+        var request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("X-Requested-With", "XMLHttpRequest")
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        return response.body();
     }
 
-    private String requestPOST(String url, String jsonRequest ) throws IOException {
-        var request = new HttpPost(url);
-        request.setHeader("X-Requested-With", "XMLHttpRequest");
-        request.setEntity(new StringEntity(jsonRequest));
-        String jsonText = EntityUtils.toString(httpClient.execute(request).getEntity(), StandardCharsets.UTF_8);
-        return jsonText;
+    private String requestPOST(String url, String jsonRequest ) throws Exception {
+        var request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("X-Requested-With", "XMLHttpRequest")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonRequest))
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        return response.body();
     }
 
     @Test
-    public void test1() throws IOException {
+    public void test1() throws Exception {
         List<User> users = gson.fromJson(requestGET("http://localhost:8085/rest-api/list"), new TypeToken<List<User>>() {
         }.getType());
         assertEquals(users.get(0).getName(), "Ivan");
@@ -86,14 +86,14 @@ public class RestletExampleTest {
     }
 
     @Test
-    public void test2() throws IOException {
+    public void test2() throws Exception {
         User user = gson.fromJson(requestGET("http://localhost:8085/rest-api/find?id=1"), (Type) User.class);
         assertEquals(user.getName(), "Katherine");
         assertEquals(user.getId().longValue(), 1L);
     }
 
     @Test
-    public void test3() throws IOException {
+    public void test3() throws Exception {
         User user = new User();
         user.setId(2L);
         user.setName("AName");
