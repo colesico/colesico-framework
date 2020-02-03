@@ -16,6 +16,14 @@
 
 package colesico.framework.teleapi;
 
-public interface TeleReader<V,C> {
-     V read(C context);
+/**
+ * Remote data reader.
+ * For cases that the data port is built on a pluggable/modular architecture in which a separate data
+ * reader or writer is used for given data type.
+ *
+ * @param <V> the read value
+ * @param <C> the read context
+ */
+public interface TeleReader<V, C> {
+    V read(C context);
 }

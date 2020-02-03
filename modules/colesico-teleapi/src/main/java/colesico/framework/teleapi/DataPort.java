@@ -33,8 +33,8 @@ import java.lang.reflect.Type;
  */
 public interface DataPort<R, W> {
 
-    String READ_FOR_CLASS_METHOD = "read";
-    String WRITE_FOR_TYPE_METHOD = "write";
+    String READ_METHOD = "read";
+    String WRITE_METHOD = "write";
 
     /**
      * Key for storing instance of TeleDataPort in process scope
@@ -42,7 +42,7 @@ public interface DataPort<R, W> {
     Key<DataPort> SCOPE_KEY = new TypeKey<>(DataPort.class);
 
     /**
-     * Read value from client request.
+     * Read value from remote request.
      *
      * @param valueType
      * @param context
@@ -52,7 +52,7 @@ public interface DataPort<R, W> {
     <V> V read(Type valueType, R context);
 
     /**
-     * Writes data to the client response.
+     * Writes data to the remote response.
      *
      * @param valueType
      * @param value

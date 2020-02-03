@@ -54,19 +54,19 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
 
     protected final ThreadScope threadScope;
     protected final Provider<HttpContext> httpContextProv;
-    protected final RestletDataPort restletDataPort;
+    protected final RestletDataPort dataPort;
 
     @Inject
-    public RestletTeleDriverImpl(ThreadScope threadScope, Provider<HttpContext> httpContextProv, RestletDataPort restletDataPort) {
+    public RestletTeleDriverImpl(ThreadScope threadScope, Provider<HttpContext> httpContextProv, RestletDataPort dataPort) {
         this.threadScope = threadScope;
         this.httpContextProv = httpContextProv;
-        this.restletDataPort = restletDataPort;
+        this.dataPort = dataPort;
     }
 
     @Override
     public <S> void invoke(S service, Binder<S, RestletDataPort> binder, WTFInvocationContext invCtx) {
         // Set data port to be accessible
-        threadScope.put(DataPort.SCOPE_KEY, restletDataPort);
+        threadScope.put(DataPort.SCOPE_KEY, dataPort);
         // Retrieve http context
         HttpContext httpCtx = httpContextProv.get();
         try {
@@ -89,7 +89,7 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
             // CSRF protection
             guardCSFR(httpRequest);
             // Invoke tele-method
-            binder.invoke(service, restletDataPort);
+            binder.invoke(service, dataPort);
 
         } catch (HttpException hex) {
             if (hex.getCause() != null) {
@@ -142,14 +142,14 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
             log.error(errMsg, ex);
         }
         RestletErrorResponse response = new RestletErrorResponse(context.getRequest().getRequestURI(), httpCode, getMessage(ex));
-        restletDataPort.sendError(response, httpCode);
+        dataPort.sendError(response, httpCode);
     }
 
     protected void handleValidationError(ValidationException ex, int httpCode, HttpContext context) {
         String errMsg = MessageFormat.format("Restlet validation error: {0}", ExceptionUtils.getRootCauseMessage(ex));
         log.warn(errMsg);
         RestletErrorResponse response = new RestletErrorResponse(context.getRequest().getRequestURI(), httpCode, ex.getIssue());
-        restletDataPort.sendError(response, httpCode);
+        dataPort.sendError(response, httpCode);
     }
 
 }

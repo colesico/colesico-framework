@@ -78,7 +78,7 @@ public class TeleFacadesGenerator {
             CodeBlock ctx = ((TeleParamElement) var).getReadingContext();
             // Generates code like this: dataPot.read(ParamType.class, new Context(...));
             CodeBlock.Builder cb = CodeBlock.builder();
-            cb.add("$N.$N(", TeleDriver.Binder.DATAPORT_PARAM, DataPort.READ_FOR_CLASS_METHOD);
+            cb.add("$N.$N(", TeleDriver.Binder.DATAPORT_PARAM, DataPort.READ_METHOD);
             // ParamType.class or new TypeWrapper<ParamType<T>>...
             CodegenUtils.generateTypePick(paramType, cb);cb.add(",");
             cb.add(ctx);
@@ -119,7 +119,7 @@ public class TeleFacadesGenerator {
             CodeBlock value = generateVarValue(param, binderBuilder);
             String paramName = param.getOriginVariable().getName() + PARAM_SUFFIX;
             serviceMethodArgs.add("$N", paramName);
-            binderBuilder.add("\n// Assign telemethod parameter value \n");
+            binderBuilder.add("\n// Assign tele-method parameter value from remote client\n");
             binderBuilder.add("$T $N = ", TypeName.get(param.getOriginVariable().asType()), paramName);
             binderBuilder.add(value);
             binderBuilder.add(";\n");
@@ -147,7 +147,8 @@ public class TeleFacadesGenerator {
         //    dataPort.write(MyResp.class,result,new Ctx());
         // or  for generics: dataPort.write(new TypeWrapper<MyResp>(){}.unwrap(),result,new Ctx());
         if (!voidResult) {
-            binderBuilder.add("$N.$N(", TeleDriver.Binder.DATAPORT_PARAM, DataPort.WRITE_FOR_TYPE_METHOD);
+            binderBuilder.add("\n// Send result to remote client\n");
+            binderBuilder.add("$N.$N(", TeleDriver.Binder.DATAPORT_PARAM, DataPort.WRITE_METHOD);
             CodegenUtils.generateTypePick(returnType, binderBuilder);
             binderBuilder.add(", ");
             binderBuilder.add("$N, ", TeleDriver.RESULT_PARAM);

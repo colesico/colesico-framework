@@ -20,6 +20,8 @@ import colesico.framework.ioc.Key;
 import colesico.framework.ioc.ThreadScope;
 import colesico.framework.ioc.TypeKey;
 import colesico.framework.teleapi.DataPort;
+import colesico.framework.teleapi.TeleReader;
+import colesico.framework.teleapi.TeleWriter;
 
 import javax.inject.Provider;
 

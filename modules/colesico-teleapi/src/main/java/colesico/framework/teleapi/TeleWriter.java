@@ -16,7 +16,12 @@
 
 package colesico.framework.teleapi;
 
-
-public interface TeleWriter<V,C> {
+/**
+ * Remote data writer
+ *
+ * @param <V> the value to be write
+ * @param <C> the write context
+ */
+public interface TeleWriter<V, C> {
     void write(V value, C context);
 }
