@@ -17,25 +17,25 @@
 package colesico.framework.security.internal;
 
 import colesico.framework.security.DefaultPrincipal;
-import colesico.framework.security.teleapi.PrincipalTeleAssist;
+import colesico.framework.security.teleapi.PrincipalSerializer;
 
 import javax.inject.Singleton;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Default principal tele-assistant
+ * Default principal serializer
  */
 @Singleton
-public class PrincipalTeleAssistImpl implements PrincipalTeleAssist<DefaultPrincipal> {
+public class PrincipalSerializerImpl implements PrincipalSerializer<DefaultPrincipal> {
 
     @Override
     public byte[] serialize(DefaultPrincipal principal) {
-        return principal.getUID().getBytes(StandardCharsets.UTF_8);
+        return principal.getId().getBytes(StandardCharsets.UTF_8);
     }
 
     @Override
     public DefaultPrincipal deserialize(byte[] principalBytes) {
-        String uid = new String(principalBytes, StandardCharsets.UTF_8);
-        return new DefaultPrincipal(uid);
+        String id = new String(principalBytes, StandardCharsets.UTF_8);
+        return new DefaultPrincipal(id);
     }
 }

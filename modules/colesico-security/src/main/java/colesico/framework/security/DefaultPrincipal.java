@@ -18,18 +18,20 @@ package colesico.framework.security;
 
 /**
  * Principal default implementation
+ *
+ * @author Vladlen Larionov
  */
-public class DefaultPrincipal implements Principal {
+public class DefaultPrincipal implements Principal<String> {
 
-    private final String uid;
+    private final String id;
 
-    public DefaultPrincipal(String uid) {
-        this.uid = uid;
+    public DefaultPrincipal(String id) {
+        this.id = id;
     }
 
     @Override
-    public String getUID() {
-        return uid;
+    public String getId() {
+        return id;
     }
 
     @Override
@@ -39,18 +41,16 @@ public class DefaultPrincipal implements Principal {
 
         DefaultPrincipal that = (DefaultPrincipal) o;
 
-        return uid.equals(that.uid);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return uid.hashCode();
+        return id.hashCode();
     }
 
     @Override
     public String toString() {
-        return "DefaultPrincipal{" +
-                "uid='" + uid + '\'' +
-                '}';
+        return "DefaultPrincipal{id=" + id + '}';
     }
 }

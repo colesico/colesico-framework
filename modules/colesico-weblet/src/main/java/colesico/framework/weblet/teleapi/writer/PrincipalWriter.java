@@ -21,7 +21,7 @@ import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.security.Principal;
 import colesico.framework.security.assist.MACUtils;
-import colesico.framework.security.teleapi.PrincipalTeleAssist;
+import colesico.framework.security.teleapi.PrincipalSerializer;
 import colesico.framework.weblet.teleapi.PrincipalWebletConfigPrototype;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WriterContext;
@@ -42,12 +42,12 @@ public class PrincipalWriter implements WebletTeleWriter<Principal> {
 
     protected final PrincipalWebletConfigPrototype config;
     protected final Provider<HttpContext> httpContextProv;
-    protected final PrincipalTeleAssist principalTeleAssist;
+    protected final PrincipalSerializer principalSerializer;
 
-    public PrincipalWriter(PrincipalWebletConfigPrototype config, Provider<HttpContext> httpContextProv, PrincipalTeleAssist principalTeleAssist) {
+    public PrincipalWriter(PrincipalWebletConfigPrototype config, Provider<HttpContext> httpContextProv, PrincipalSerializer principalSerializer) {
         this.config = config;
         this.httpContextProv = httpContextProv;
-        this.principalTeleAssist = principalTeleAssist;
+        this.principalSerializer = principalSerializer;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class PrincipalWriter implements WebletTeleWriter<Principal> {
 
         if (principal != null) {
 
-            byte[] principalBytes = principalTeleAssist.serialize(principal);
+            byte[] principalBytes = principalSerializer.serialize(principal);
             byte[] signatureBytes = MACUtils.sign(config.getSignatureAlgorithm(), principalBytes, config.getSignatureKey());
 
             Base64.Encoder encoder = Base64.getEncoder();

@@ -21,14 +21,13 @@ import java.io.Serializable;
 /**
  * Principal base interface
  *
+ * @param <U> principal ID type
  * @author Vladlen Larionov
  */
-public interface Principal extends Cloneable, Serializable {
+public interface Principal<U> extends Cloneable, Serializable {
 
     /**
      * Returns principal unique identifier
-     *
-     * @return
      */
-    String getUID();
+    U getId();
 }

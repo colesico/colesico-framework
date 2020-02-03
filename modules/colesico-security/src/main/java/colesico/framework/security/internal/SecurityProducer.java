@@ -22,7 +22,7 @@ import colesico.framework.security.DefaultSecurityKit;
 import colesico.framework.security.Principal;
 import colesico.framework.security.SecurityInterceptor;
 import colesico.framework.security.SecurityKit;
-import colesico.framework.security.teleapi.PrincipalTeleAssist;
+import colesico.framework.security.teleapi.PrincipalSerializer;
 
 import javax.inject.Singleton;
 
@@ -30,7 +30,7 @@ import static colesico.framework.ioc.Rank.RANK_MINOR;
 
 @Producer(RANK_MINOR)
 @Produce(DefaultSecurityKit.class)
-@Produce(PrincipalTeleAssistImpl.class)
+@Produce(PrincipalSerializerImpl.class)
 public class SecurityProducer {
 
     @Singleton
@@ -48,7 +48,7 @@ public class SecurityProducer {
     }
 
     @Singleton
-    public PrincipalTeleAssist getPrincipalTeleAssist(PrincipalTeleAssistImpl impl) {
+    public PrincipalSerializer getPrincipalTeleAssist(PrincipalSerializerImpl impl) {
         return impl;
     }
 

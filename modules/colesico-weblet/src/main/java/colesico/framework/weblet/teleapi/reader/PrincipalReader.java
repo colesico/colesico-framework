@@ -21,7 +21,7 @@ import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.security.Principal;
 import colesico.framework.security.assist.MACUtils;
-import colesico.framework.security.teleapi.PrincipalTeleAssist;
+import colesico.framework.security.teleapi.PrincipalSerializer;
 import colesico.framework.weblet.teleapi.PrincipalWebletConfigPrototype;
 import colesico.framework.weblet.teleapi.ReaderContext;
 import colesico.framework.weblet.teleapi.WebletTeleReader;
@@ -37,12 +37,12 @@ import java.util.StringTokenizer;
 public class PrincipalReader implements WebletTeleReader<Principal> {
 
     protected final PrincipalWebletConfigPrototype config;
-    protected final PrincipalTeleAssist principalTeleAssist;
+    protected final PrincipalSerializer principalSerializer;
     protected final Provider<HttpContext> httpContextProv;
 
-    public PrincipalReader(PrincipalWebletConfigPrototype config, PrincipalTeleAssist principalTeleAssist, Provider<HttpContext> httpContextProv) {
+    public PrincipalReader(PrincipalWebletConfigPrototype config, PrincipalSerializer principalSerializer, Provider<HttpContext> httpContextProv) {
         this.config = config;
-        this.principalTeleAssist = principalTeleAssist;
+        this.principalSerializer = principalSerializer;
         this.httpContextProv = httpContextProv;
     }
 
@@ -75,7 +75,7 @@ public class PrincipalReader implements WebletTeleReader<Principal> {
             throw new SecurityException("Invalid principal signature");
         }
 
-        Principal principal = principalTeleAssist.deserialize(principalBytes);
+        Principal principal = principalSerializer.deserialize(principalBytes);
         return principal;
     }
 }

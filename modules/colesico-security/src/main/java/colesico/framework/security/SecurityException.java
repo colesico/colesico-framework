@@ -19,7 +19,7 @@ package colesico.framework.security;
 import colesico.framework.service.ApplicationException;
 
 /**
- * Security exceptions base class
+ * Security exceptions base class / Security common exception
  *
  * @author Vladlen Larionov
  */

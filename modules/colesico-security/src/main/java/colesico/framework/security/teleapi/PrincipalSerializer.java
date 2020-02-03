@@ -18,7 +18,11 @@ package colesico.framework.security.teleapi;
 
 import colesico.framework.security.Principal;
 
-public interface PrincipalTeleAssist<P extends Principal> {
+/**
+ * Principal serializer for using in tele-api data port
+ * @param <P>
+ */
+public interface PrincipalSerializer<P extends Principal> {
 
     byte[] serialize(P principal);
 
