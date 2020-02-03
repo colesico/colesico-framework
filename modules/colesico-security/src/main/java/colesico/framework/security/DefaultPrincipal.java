@@ -16,20 +16,28 @@
 
 package colesico.framework.security;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Objects;
+
 /**
  * Principal default implementation
  *
  * @author Vladlen Larionov
  */
-public class DefaultPrincipal implements Principal<String> {
+public final class DefaultPrincipal implements Principal {
+
+    private static final long serialVersionUID = 1L;
 
     private final String id;
 
     public DefaultPrincipal(String id) {
+        if (StringUtils.isBlank(id)) {
+            throw new RuntimeException("Principal ID is blank");
+        }
         this.id = id;
     }
 
-    @Override
     public String getId() {
         return id;
     }
@@ -38,15 +46,13 @@ public class DefaultPrincipal implements Principal<String> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         DefaultPrincipal that = (DefaultPrincipal) o;
-
         return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(id);
     }
 
     @Override

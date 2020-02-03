@@ -28,8 +28,8 @@ import java.lang.reflect.Type;
  * A request "controller"  (tele-driver, controller servlet or something similar) creates and puts TeleDataPort instance
  * to the process scope for each request process.
  *
- * @param <R>
- * @param <W>
+ * @param <R> Data reading context
+ * @param <W> Data writing context
  */
 public interface DataPort<R, W> {
 

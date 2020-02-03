@@ -19,15 +19,9 @@ package colesico.framework.security;
 import java.io.Serializable;
 
 /**
- * Principal base interface
+ * Principal marker interface
  *
- * @param <U> principal ID type
  * @author Vladlen Larionov
  */
-public interface Principal<U> extends Cloneable, Serializable {
-
-    /**
-     * Returns principal unique identifier
-     */
-    U getId();
+public interface Principal extends Cloneable, Serializable {
 }

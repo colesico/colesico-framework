@@ -17,10 +17,10 @@
 package colesico.framework.restlet.teleapi;
 
 import colesico.framework.teleapi.TeleDriver;
-import colesico.framework.weblet.teleapi.InvokeContext;
+import colesico.framework.weblet.teleapi.WTFInvocationContext;
 import colesico.framework.weblet.teleapi.ReaderContext;
 import colesico.framework.weblet.teleapi.WriterContext;
 
-public interface RestletTeleDriver extends TeleDriver<ReaderContext, WriterContext, InvokeContext, RestletDataPort> {
+public interface RestletTeleDriver extends TeleDriver<ReaderContext, WriterContext, WTFInvocationContext, RestletDataPort> {
 
 }

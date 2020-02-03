@@ -63,7 +63,7 @@ public class RestletDataPortImpl implements RestletDataPort {
     @Override
     @SuppressWarnings("unchecked")
     public <V> V read(Type valueType, ReaderContext context) {
-        // try get accurate reader
+        // Try to get accurate reader
         final Supplier<RestletTeleReader> supplier
                 = ioc.supplierOrNull(new ClassedKey<>(RestletTeleReader.class.getCanonicalName(), typeToClassName(valueType)));
         if (supplier != null) {
@@ -71,7 +71,7 @@ public class RestletDataPortImpl implements RestletDataPort {
             return reader.read(context);
         }
 
-        // no accurate reader. read as json
+        // No accurate reader here so are reading data as json
         HttpContext httpContext = httpContextProv.get();
         try (InputStream is = httpContext.getRequest().getInputStream()) {
             return jsonConverter.fromJson(is, valueType);

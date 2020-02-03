@@ -28,7 +28,7 @@ import colesico.framework.security.PrincipalRequiredException;
 import colesico.framework.service.ApplicationException;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.validation.ValidationException;
-import colesico.framework.weblet.teleapi.InvokeContext;
+import colesico.framework.weblet.teleapi.WTFInvocationContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -64,7 +64,7 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
     }
 
     @Override
-    public <S> void invoke(S service, Binder<S, RestletDataPort> binder, InvokeContext invCtx) {
+    public <S> void invoke(S service, Binder<S, RestletDataPort> binder, WTFInvocationContext invCtx) {
         // Set data port to be accessible
         threadScope.put(DataPort.SCOPE_KEY, restletDataPort);
         // Retrieve http context
@@ -76,16 +76,18 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
         }
     }
 
-    protected <S> void invokeImpl(S service, Binder binder, InvokeContext invCtx, HttpContext context) {
+    protected void guardCSFR(HttpRequest httpRequest) {
+        String xRequestedWith = httpRequest.getHeaders().get(X_REQUESTED_WITH_HEADER);
+        if (!X_REQUESTED_WITH_HEADER_VAL.equals(xRequestedWith)) {
+            throw new ApplicationException("Http header '" + X_REQUESTED_WITH_HEADER + "=" + X_REQUESTED_WITH_HEADER_VAL + "' required");
+        }
+    }
+
+    protected <S> void invokeImpl(S service, Binder binder, WTFInvocationContext invCtx, HttpContext context) {
         HttpRequest httpRequest = context.getRequest();
         try {
-
             // CSRF protection
-            String xRequestedWith = httpRequest.getHeaders().get(X_REQUESTED_WITH_HEADER);
-            if (!X_REQUESTED_WITH_HEADER_VAL.equals(xRequestedWith)) {
-                throw new ApplicationException("Http header '" + X_REQUESTED_WITH_HEADER + "=" + X_REQUESTED_WITH_HEADER_VAL + "' required");
-            }
-
+            guardCSFR(httpRequest);
             // Invoke tele-method
             binder.invoke(service, restletDataPort);
 

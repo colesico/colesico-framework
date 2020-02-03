@@ -17,10 +17,12 @@
 package colesico.framework.teleapi;
 
 /**
- * Tele-invocations driver.
- * Controls invocation process concerning tele driver environment (protocol etc), performs error handling.
- *
- * @author Vladlen Larionov
+ *  Tele-invocations driver.
+ *  Controls invocation process concerning tele driver environment (protocol etc), performs error handling.
+ * @param <R> Data reading context
+ * @param <W> Data writing context
+ * @param <I> Target tele-facade invocation context
+ * @param <P> Data port
  */
 public interface TeleDriver<R, W, I, P extends DataPort<R, W>> {
 
@@ -40,8 +42,8 @@ public interface TeleDriver<R, W, I, P extends DataPort<R, W>> {
 
     /**
      * Is used to retrieve target method parameters values from tele data port and puts back a result.
-     * @param <T>
-     * @param <P>
+     * @param <T> Target tele-facade method
+     * @param <P> Data port
      */
     @FunctionalInterface
     interface Binder<T, P extends DataPort> {
