@@ -96,7 +96,7 @@ public interface HttpRequest {
     InputStream getInputStream();
 
     /**
-     * Dump request data to characters output for subsequent logging
+     * Dump request data to characters output for further logging
      */
     void dump(Writer out);
 }

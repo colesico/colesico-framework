@@ -57,7 +57,7 @@ public interface HttpResponse {
     boolean isResponded();
 
     /**
-     * Dump response data to characters output for subsequent logging
+     * Dump response data to characters output for further logging
      */
     void dump(Writer out);
 }
