@@ -24,9 +24,9 @@ import java.util.Map;
 public interface HttpRequest {
 
     /**
-     * Returns the http map method. validation.e GET or POST, etc.
+     * Returns the http method. validation.e GET or POST, etc.
      *
-     * @return http map method as uppercase string
+     * @return http method as uppercase string
      */
     HttpMethod getRequestMethod();
 
@@ -87,7 +87,7 @@ public interface HttpRequest {
     HttpValues<String, HttpFile> getPostFiles();
 
     /**
-     * Returns map body input stream
+     * Returns body input stream
      *
      * @return
      */
