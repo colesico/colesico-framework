@@ -19,14 +19,16 @@ package colesico.framework.teleapi;
 import javax.inject.Provider;
 
 /**
- * Unified façade for remote method calls
+ * Unified facade for remote method calls
  *
- * @author Vladlen Larionov
+ * @param <T> target to be invoked (usually a service)
+ * @param <D> tele-driver that is serving tele-invocation
+ * @param <L> ligature - a tele-methods bindings to tele-protocol data
  */
-abstract public class TeleFacade<T, D extends TeleDriver,B> {
+abstract public class TeleFacade<T, D extends TeleDriver, L> {
 
     public static final String TELE_FACADE_SUFFIX = "Facade";
-    public static final String TELEDRIVER_FIELD = "teleDriver";
+    public static final String TELED_RIVER_FIELD = "teleDriver";
     public static final String TARGET_PROV_FIELD = "targetProv";
     public static final String GET_LIGATURE_METHOD = "getLigature";
 
@@ -45,5 +47,8 @@ abstract public class TeleFacade<T, D extends TeleDriver,B> {
         this.targetProv = targetProv;
     }
 
-    abstract public B getLigature();
+    /**
+     * Returns binding between actual tele-facade methods and tele-protocol data that points to the  tele-methods
+     */
+    abstract public L getLigature();
 }

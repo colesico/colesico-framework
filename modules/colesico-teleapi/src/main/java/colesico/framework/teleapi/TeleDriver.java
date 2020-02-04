@@ -21,7 +21,7 @@ package colesico.framework.teleapi;
  *  Controls invocation process concerning tele driver environment (protocol etc), performs error handling.
  * @param <R> Data reading context
  * @param <W> Data writing context
- * @param <I> Target tele-facade invocation context
+ * @param <I> Target (service) invocation context
  * @param <P> Data port
  */
 public interface TeleDriver<R, W, I, P extends DataPort<R, W>> {
@@ -42,7 +42,7 @@ public interface TeleDriver<R, W, I, P extends DataPort<R, W>> {
 
     /**
      * Is used to retrieve target method parameters values from tele data port and puts back a result.
-     * @param <T> Target tele-facade method
+     * @param <T> Target (service) to be invoked
      * @param <P> Data port
      */
     @FunctionalInterface

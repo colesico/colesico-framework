@@ -19,10 +19,13 @@ package colesico.framework.restlet.internal;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpException;
 import colesico.framework.http.HttpRequest;
+import colesico.framework.ioc.Polysupplier;
 import colesico.framework.ioc.ThreadScope;
 import colesico.framework.restlet.RestletErrorResponse;
 import colesico.framework.restlet.teleapi.RestletDataPort;
+import colesico.framework.restlet.teleapi.RestletResponseListener;
 import colesico.framework.restlet.teleapi.RestletTeleDriver;
+import colesico.framework.restlet.teleapi.RestletRequestListener;
 import colesico.framework.security.AuthorityRequiredException;
 import colesico.framework.security.PrincipalRequiredException;
 import colesico.framework.service.ApplicationException;
@@ -55,12 +58,21 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
     protected final ThreadScope threadScope;
     protected final Provider<HttpContext> httpContextProv;
     protected final RestletDataPort dataPort;
+    protected final Polysupplier<RestletRequestListener> reqListenerSup;
+    protected final Polysupplier<RestletResponseListener> respListenerSup;
+
 
     @Inject
-    public RestletTeleDriverImpl(ThreadScope threadScope, Provider<HttpContext> httpContextProv, RestletDataPort dataPort) {
+    public RestletTeleDriverImpl(ThreadScope threadScope,
+                                 Provider<HttpContext> httpContextProv,
+                                 RestletDataPort dataPort,
+                                 Polysupplier<RestletRequestListener> reqListenerSup,
+                                 Polysupplier<RestletResponseListener> respListenerSup) {
         this.threadScope = threadScope;
         this.httpContextProv = httpContextProv;
         this.dataPort = dataPort;
+        this.reqListenerSup = reqListenerSup;
+        this.respListenerSup = respListenerSup;
     }
 
     @Override
@@ -83,11 +95,28 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
         }
     }
 
-    protected <S> void invokeImpl(S service, Binder binder, WTFInvocationContext invCtx, HttpContext context) {
+    protected void notifyRequestListener(final HttpContext context, final Object service) {
+        if (reqListenerSup.isNotEmpty()) {
+            reqListenerSup.forEach(s -> s.onRequest(context, dataPort, service), null);
+        }
+    }
+
+    protected void notifyResponseListener(final HttpContext context) {
+        if (respListenerSup.isNotEmpty()) {
+            respListenerSup.forEach(s -> s.onResponse(context, dataPort), null);
+        }
+    }
+
+
+    protected <S> void invokeImpl(S service, Binder binder, WTFInvocationContext invCtx, final HttpContext context) {
         HttpRequest httpRequest = context.getRequest();
         try {
+            // Request listener notification
+            notifyRequestListener(context, service);
+
             // CSRF protection
             guardCSFR(httpRequest);
+
             // Invoke tele-method
             binder.invoke(service, dataPort);
 
@@ -107,6 +136,8 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
             handleCommonError(prex, 401, context);
         } catch (AuthorityRequiredException arex) {
             handleCommonError(arex, 403, context);
+        } finally {
+            notifyResponseListener(context);
         }
     }
 

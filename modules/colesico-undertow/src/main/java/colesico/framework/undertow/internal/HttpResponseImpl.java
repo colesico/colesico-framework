@@ -38,7 +38,6 @@ public class HttpResponseImpl implements HttpResponse {
         this.exchange = exchange;
     }
 
-
     public HttpServerExchange getExchange() {
         return exchange;
     }
@@ -128,5 +127,6 @@ public class HttpResponseImpl implements HttpResponse {
     public boolean isResponded() {
         return exchange.isResponseStarted();
     }
+
 
 }

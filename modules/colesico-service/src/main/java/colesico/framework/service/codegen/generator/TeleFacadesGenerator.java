@@ -38,7 +38,7 @@ import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
 
 import static colesico.framework.teleapi.TeleFacade.TARGET_PROV_FIELD;
-import static colesico.framework.teleapi.TeleFacade.TELEDRIVER_FIELD;
+import static colesico.framework.teleapi.TeleFacade.TELED_RIVER_FIELD;
 
 /**
  * @author Vladlen Larionov
@@ -64,8 +64,8 @@ public class TeleFacadesGenerator {
             TARGET_PROV_FIELD,
             Modifier.FINAL);
 
-        mb.addParameter(ClassName.get(teleFacade.getTeleDriverClass()), TELEDRIVER_FIELD, Modifier.FINAL);
-        mb.addStatement("super($N,$N)", TARGET_PROV_FIELD, TELEDRIVER_FIELD);
+        mb.addParameter(ClassName.get(teleFacade.getTeleDriverClass()), TELED_RIVER_FIELD, Modifier.FINAL);
+        mb.addStatement("super($N,$N)", TARGET_PROV_FIELD, TELED_RIVER_FIELD);
         classBuilder.addMethod(mb.build());
     }
 
@@ -187,7 +187,7 @@ public class TeleFacadesGenerator {
             cb.addStatement("$T $N=$N.get()", serviceTypeName, TeleDriver.TARGET_PARAM, TeleFacade.TARGET_PROV_FIELD);
 
             // Call teleDriver
-            cb.add("$N.$N($N,$N,", TeleFacade.TELEDRIVER_FIELD, TeleDriver.INVOKE_METHOD,
+            cb.add("$N.$N($N,$N,", TeleFacade.TELED_RIVER_FIELD, TeleDriver.INVOKE_METHOD,
                 TeleDriver.TARGET_PARAM,
                 TeleDriver.BINDER_PARAM);
             CodeBlock invCtx = teleMethod.getInvokingContext();
