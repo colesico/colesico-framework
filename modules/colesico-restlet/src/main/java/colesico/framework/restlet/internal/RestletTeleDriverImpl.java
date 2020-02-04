@@ -22,16 +22,13 @@ import colesico.framework.http.HttpRequest;
 import colesico.framework.ioc.Polysupplier;
 import colesico.framework.ioc.ThreadScope;
 import colesico.framework.restlet.RestletErrorResponse;
-import colesico.framework.restlet.teleapi.RestletDataPort;
-import colesico.framework.restlet.teleapi.RestletResponseListener;
-import colesico.framework.restlet.teleapi.RestletTeleDriver;
-import colesico.framework.restlet.teleapi.RestletRequestListener;
+import colesico.framework.restlet.teleapi.*;
 import colesico.framework.security.AuthorityRequiredException;
 import colesico.framework.security.PrincipalRequiredException;
 import colesico.framework.service.ApplicationException;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.validation.ValidationException;
-import colesico.framework.weblet.teleapi.WTFInvocationContext;
+import colesico.framework.weblet.teleapi.WTIContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -76,7 +73,7 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
     }
 
     @Override
-    public <S> void invoke(S service, Binder<S, RestletDataPort> binder, WTFInvocationContext invCtx) {
+    public <S> void invoke(S service, Binder<S, RestletDataPort> binder, RTIContext invCtx) {
         // Set data port to be accessible
         threadScope.put(DataPort.SCOPE_KEY, dataPort);
         // Retrieve http context
@@ -108,11 +105,11 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
     }
 
 
-    protected <S> void invokeImpl(S service, Binder binder, WTFInvocationContext invCtx, final HttpContext context) {
-        HttpRequest httpRequest = context.getRequest();
+    protected <S> void invokeImpl(S service, Binder binder, RTIContext invCtx, final HttpContext httpCtx) {
+        HttpRequest httpRequest = httpCtx.getRequest();
         try {
             // Request listener notification
-            notifyRequestListener(context, service);
+            notifyRequestListener(httpCtx, service);
 
             // CSRF protection
             guardCSFR(httpRequest);
@@ -123,21 +120,21 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
         } catch (HttpException hex) {
             if (hex.getCause() != null) {
                 if (hex.getCause() instanceof ValidationException) {
-                    handleValidationError((ValidationException) hex.getCause(), hex.getHttpCode(), context);
+                    handleValidationError((ValidationException) hex.getCause(), hex.getHttpCode(), httpCtx);
                 } else {
-                    handleCommonError(hex.getCause(), hex.getHttpCode(), context);
+                    handleCommonError(hex.getCause(), hex.getHttpCode(), httpCtx);
                 }
             } else {
-                handleCommonError(hex, hex.getHttpCode(), context);
+                handleCommonError(hex, hex.getHttpCode(), httpCtx);
             }
         } catch (ValidationException vex) {
-            handleValidationError(vex, 400, context);
+            handleValidationError(vex, 400, httpCtx);
         } catch (PrincipalRequiredException prex) {
-            handleCommonError(prex, 401, context);
+            handleCommonError(prex, 401, httpCtx);
         } catch (AuthorityRequiredException arex) {
-            handleCommonError(arex, 403, context);
+            handleCommonError(arex, 403, httpCtx);
         } finally {
-            notifyResponseListener(context);
+            notifyResponseListener(httpCtx);
         }
     }
 

@@ -17,8 +17,8 @@
 package colesico.framework.weblet.teleapi;
 
 /**
- * Weblet tele-facade invocation context
+ * Weblet tele-invocation context
  * This is stub context. Can later be used for pass extra params to tele-invoker
  */
-public class WTFInvocationContext {
+public class WTIContext {
 }

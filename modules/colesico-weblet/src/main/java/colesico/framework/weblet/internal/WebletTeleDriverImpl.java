@@ -24,7 +24,7 @@ import colesico.framework.security.PrincipalRequiredException;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.weblet.assist.CSRFProtector;
 import colesico.framework.weblet.teleapi.Authenticator;
-import colesico.framework.weblet.teleapi.WTFInvocationContext;
+import colesico.framework.weblet.teleapi.WTIContext;
 import colesico.framework.weblet.teleapi.WebletDataPort;
 import colesico.framework.weblet.teleapi.WebletTeleDriver;
 import org.slf4j.Logger;
@@ -58,7 +58,7 @@ public class WebletTeleDriverImpl implements WebletTeleDriver {
     }
 
     @Override
-    public <T> void invoke(T target, Binder<T, WebletDataPort> binder, WTFInvocationContext context) {
+    public <T> void invoke(T target, Binder<T, WebletDataPort> binder, WTIContext context) {
         try {
             threadScope.put(DataPort.SCOPE_KEY, dataPort);
             HttpRequest request = httpContextProv.get().getRequest();
