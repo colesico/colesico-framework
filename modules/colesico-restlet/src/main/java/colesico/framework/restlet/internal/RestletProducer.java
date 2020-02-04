@@ -18,9 +18,9 @@ package colesico.framework.restlet.internal;
 
 import colesico.framework.ioc.Produce;
 import colesico.framework.ioc.Producer;
-import colesico.framework.restlet.teleapi.RestletDataPort;
-import colesico.framework.restlet.teleapi.RestletJsonConverter;
-import colesico.framework.restlet.teleapi.RestletTeleDriver;
+import colesico.framework.restlet.Restlet;
+import colesico.framework.restlet.assist.LogRestletListener;
+import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.gson.GsonConverter;
 
 import javax.inject.Singleton;
@@ -34,6 +34,7 @@ import static colesico.framework.ioc.Rank.RANK_MINOR;
 @Produce(RestletDataPortImpl.class)
 @Produce(RestletTeleDriverImpl.class)
 @Produce(GsonConverter.class)
+@Produce(LogRestletListener.class)
 public class RestletProducer {
 
     @Singleton
@@ -51,4 +52,13 @@ public class RestletProducer {
         return impl;
     }
 
+    @Singleton
+    public RestletRequestListener getRestletRequestListener(LogRestletListener impl) {
+        return impl;
+    }
+
+    @Singleton
+    public RestletResponseListener getRestletResponseListener(LogRestletListener impl) {
+        return impl;
+    }
 }

@@ -16,6 +16,7 @@
 package colesico.framework.undertow.internal;
 
 import colesico.framework.http.*;
+import io.undertow.security.api.SecurityContext;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.Cookie;
 import io.undertow.server.handlers.form.FormData;
@@ -24,8 +25,7 @@ import io.undertow.util.HeaderValues;
 import io.undertow.util.HttpString;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -42,6 +42,8 @@ public final class HttpRequestImpl implements HttpRequest {
     private HttpValues<String, String> queryParams = null;
     private HttpValues<String, String> postParams = null;
     private HttpValues<String, HttpFile> postFiles = null;
+
+    private InputStream inputStream = null;
 
     public HttpRequestImpl(HttpServerExchange exchange) {
         this.exchange = exchange;
@@ -69,13 +71,13 @@ public final class HttpRequestImpl implements HttpRequest {
         for (Map.Entry<String, Cookie> e : exchange.getRequestCookies().entrySet()) {
             Cookie cookie = e.getValue();
             HttpCookie httpCookie = new HttpCookie()
-                .setName(cookie.getName())
-                .setValue(cookie.getValue())
-                .setDomain(cookie.getDomain())
-                .setPath(cookie.getPath())
-                .setExpires(cookie.getExpires())
-                .setSecure(cookie.isSecure())
-                .setHttpOnly(cookie.isHttpOnly());
+                    .setName(cookie.getName())
+                    .setValue(cookie.getValue())
+                    .setDomain(cookie.getDomain())
+                    .setPath(cookie.getPath())
+                    .setExpires(cookie.getExpires())
+                    .setSecure(cookie.isSecure())
+                    .setHttpOnly(cookie.isHttpOnly());
             cookiesMap.put(e.getKey(), httpCookie);
         }
         return Collections.unmodifiableMap(cookiesMap);
@@ -205,8 +207,67 @@ public final class HttpRequestImpl implements HttpRequest {
 
     @Override
     public InputStream getInputStream() {
-        exchange.startBlocking();
-        return exchange.getInputStream();
+        if (inputStream == null) {
+            exchange.startBlocking();
+            inputStream = exchange.getInputStream();
+        }
+        return inputStream;
+    }
+
+    @Override
+    public void dump(Writer out) {
+        try {
+            out.append(getRequestMethod().getName() + "  "+ exchange.getRequestURI() + "\n");
+            out.append("\n");
+            out.append(" scheme: " +  getRequestScheme() + "\n");
+            out.append(" protocol: " + exchange.getProtocol() + "\n");
+            out.append(" remoteAddr: " + exchange.getSourceAddress() + "\n");
+            out.append(" remoteHost: " + exchange.getSourceAddress().getHostName() + "\n");
+            out.append(" serverPort: " + exchange.getDestinationAddress().getPort() + "\n");
+            out.append(" isSecure:" + exchange.isSecure() + "\n");
+            for (HeaderValues header : exchange.getRequestHeaders()) {
+                for (String value : header) {
+                    out.append(" header: " + header.getHeaderName() + "=" + value + "\n");
+                }
+            }
+            Map<String, Cookie> cookies = exchange.getRequestCookies();
+            if (cookies != null) {
+                for (Map.Entry<String, Cookie> entry : cookies.entrySet()) {
+                    Cookie cookie = entry.getValue();
+                    out.append(" cookie: " + cookie.getName() + "=" +
+                            cookie.getValue() + "\n");
+                }
+            }
+            final SecurityContext sc = exchange.getSecurityContext();
+            if (sc != null) {
+                if (sc.isAuthenticated()) {
+                    out.append(" authType: " + sc.getMechanismName() + "\n");
+                    out.append(" principle: " + sc.getAuthenticatedAccount().getPrincipal() + "\n");
+                } else {
+                    out.append(" authType: none" + "\n");
+                }
+            }
+
+            if (inputStream == null) {
+                out.append(" body:\n");
+                exchange.startBlocking();
+                inputStream = new BufferedInputStream(exchange.getInputStream());
+                inputStream.mark(0);
+                InputStreamReader isReader = new InputStreamReader(inputStream);
+                BufferedReader reader = new BufferedReader(isReader);
+                String str;
+                while ((str = reader.readLine()) != null) {
+                    out.append(str);
+                }
+                inputStream.reset();
+                out.append("\n");
+            } else {
+                out.append(" body: Input stream has already been open\n");
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static class HttpFileImpl implements HttpFile {
@@ -224,7 +285,7 @@ public final class HttpRequestImpl implements HttpRequest {
         public void release() {
             try {
                 boolean res = filePath.toFile().delete();
-                if (!res){
+                if (!res) {
                     throw new RuntimeException("Cant's release uploaded file");
                 }
             } catch (Exception e) {

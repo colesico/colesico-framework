@@ -35,6 +35,7 @@ module colesico.framework.restlet {
     opens colesico.framework.restlet;
     exports colesico.framework.restlet.teleapi;
     exports colesico.framework.restlet.teleapi.gson;
+    exports colesico.framework.restlet.assist;
 
     // Internal
     exports colesico.framework.restlet.internal to colesico.framework.ioc;

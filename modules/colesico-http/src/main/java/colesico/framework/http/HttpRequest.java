@@ -16,6 +16,8 @@
 package colesico.framework.http;
 
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Writer;
 import java.util.Map;
 
 /**
@@ -93,4 +95,8 @@ public interface HttpRequest {
      */
     InputStream getInputStream();
 
+    /**
+     * Dump request data to characters output for subsequent logging
+     */
+    void dump(Writer out);
 }

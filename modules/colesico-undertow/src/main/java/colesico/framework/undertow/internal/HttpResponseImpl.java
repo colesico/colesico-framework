@@ -17,15 +17,19 @@ package colesico.framework.undertow.internal;
 
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
+import io.undertow.attribute.StoredResponse;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.Cookie;
 import io.undertow.server.handlers.CookieImpl;
+import io.undertow.util.HeaderValues;
 import io.undertow.util.Headers;
 import io.undertow.util.HttpString;
 import io.undertow.util.StatusCodes;
 
 import java.io.OutputStream;
+import java.io.Writer;
 import java.nio.ByteBuffer;
+import java.util.Map;
 
 /**
  * @author Vladlen Larionov
@@ -128,5 +132,28 @@ public class HttpResponseImpl implements HttpResponse {
         return exchange.isResponseStarted();
     }
 
-
+    @Override
+    public void dump(Writer out) {
+        try {
+            out.append(" status: " + exchange.getStatusCode() + "\n");
+            for (HeaderValues header : exchange.getResponseHeaders()) {
+                for (String value : header) {
+                    out.append(" header: " + header.getHeaderName() + "=" + value + "\n");
+                }
+            }
+            Map<String, Cookie> cookies = exchange.getResponseCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies.values()) {
+                    out.append(" cookie: " + cookie.getName() + "=" + cookie.getValue() + "; domain=" + cookie.getDomain() + "; path=" + cookie.getPath() + "\n");
+                }
+            }
+            String storedResponse = StoredResponse.INSTANCE.readAttribute(exchange);
+            if (storedResponse != null) {
+                out.append(" body: \n");
+                out.append(storedResponse);
+            }
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
 }

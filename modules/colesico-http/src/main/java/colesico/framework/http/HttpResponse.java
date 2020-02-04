@@ -16,6 +16,7 @@
 package colesico.framework.http;
 
 import java.io.OutputStream;
+import java.io.Writer;
 import java.nio.ByteBuffer;
 
 /**
@@ -54,4 +55,9 @@ public interface HttpResponse {
      * @return
      */
     boolean isResponded();
+
+    /**
+     * Dump response data to characters output for subsequent logging
+     */
+    void dump(Writer out);
 }
