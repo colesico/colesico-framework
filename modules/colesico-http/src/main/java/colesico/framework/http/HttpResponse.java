@@ -32,20 +32,24 @@ public interface HttpResponse {
 
     void setHeader(String name, String vale);
 
+    /**
+     * Send text response
+     */
     void sendText(String text, String contentType, Integer statusCode);
 
     /**
-     * @param byteBuffer
-     * @param contentType Default application/octet-stream
+     * Send binary response
      */
     void sendData(ByteBuffer byteBuffer, String contentType, Integer statusCode);
 
-
     /**
-     * @param location
-     * @param statusCode Redirection http code. Default = 302
+     * Send redirect  (Http header Location)
      */
     void sendRedirect(String location, Integer statusCode);
+
+    default void sendRedirect(String location) {
+        sendRedirect(location, 302);
+    }
 
     OutputStream getOutputStream();
 

@@ -24,7 +24,7 @@ import colesico.framework.ioc.ThreadScope;
 import static colesico.framework.ioc.Rank.RANK_MINOR;
 
 /**
- * Dagger partition for dispatcher service group
+ * Default HTTP producer
  *
  * @author Vladlen Larionov
  */
@@ -35,11 +35,11 @@ public class HttpProducer {
         return scope.get(HttpContext.SCOPE_KEY);
     }
 
-    public HttpRequest getHttpRequest(HttpContext prov) {
-        return prov.getRequest();
+    public HttpRequest getHttpRequest(HttpContext ctx) {
+        return ctx.getRequest();
     }
 
-    public HttpResponse getHttpResponse(HttpContext prov) {
-        return prov.getResponse();
+    public HttpResponse getHttpResponse(HttpContext ctx) {
+        return ctx.getResponse();
     }
 }

@@ -22,6 +22,7 @@ import colesico.framework.httpserver.ErrorHandler;
 import colesico.framework.httpserver.RequestProcessor;
 import colesico.framework.ioc.ThreadScope;
 import colesico.framework.router.Router;
+import colesico.framework.undertow.UndertowConfigPrototype;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 
@@ -55,5 +56,6 @@ public class UndertowRequestProcessor extends RequestProcessor<HttpServerExchang
             return;
         }
         processRequest(exchange);
+        exchange.endExchange();
     }
 }

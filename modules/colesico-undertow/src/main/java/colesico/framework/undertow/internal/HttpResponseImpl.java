@@ -18,13 +18,14 @@ package colesico.framework.undertow.internal;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import io.undertow.attribute.StoredResponse;
+import io.undertow.conduits.StoredResponseStreamSinkConduit;
+import io.undertow.server.ConduitWrapper;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.Cookie;
 import io.undertow.server.handlers.CookieImpl;
-import io.undertow.util.HeaderValues;
-import io.undertow.util.Headers;
-import io.undertow.util.HttpString;
-import io.undertow.util.StatusCodes;
+import io.undertow.util.*;
+import org.apache.commons.lang3.StringUtils;
+import org.xnio.conduits.StreamSinkConduit;
 
 import java.io.OutputStream;
 import java.io.Writer;
@@ -63,11 +64,11 @@ public class HttpResponseImpl implements HttpResponse {
     }
 
     protected void sendMetadata(String contentType, Integer statusCode) {
-        if (contentType == null) {
-            contentType = "text/html; charset=utf-8";
+        if (StringUtils.isEmpty(contentType)) {
+            throw new RuntimeException("ContentType is empty");
         }
         if (statusCode == null) {
-            statusCode = 200;
+            throw new RuntimeException("StatusCode is null");
         }
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, contentType);
         exchange.setStatusCode(statusCode);
@@ -77,12 +78,14 @@ public class HttpResponseImpl implements HttpResponse {
     public void sendText(String text, String contentType, Integer statusCode) {
         sendMetadata(contentType, statusCode);
         exchange.getResponseSender().send(text);
+        exchange.endExchange();
     }
 
     @Override
     public void sendData(ByteBuffer byteBuffer, String contentType, Integer statusCode) {
         sendMetadata(contentType, statusCode);
         exchange.getResponseSender().send(byteBuffer);
+        exchange.endExchange();
     }
 
 
@@ -120,7 +123,7 @@ public class HttpResponseImpl implements HttpResponse {
     @Override
     public void sendRedirect(String location, Integer code) {
         if (code == null) {
-            code = StatusCodes.FOUND;
+            throw new RuntimeException("StatusCode is null");
         }
         exchange.setStatusCode(code);
         exchange.getResponseHeaders().put(Headers.LOCATION, location);
@@ -132,28 +135,34 @@ public class HttpResponseImpl implements HttpResponse {
         return exchange.isResponseStarted();
     }
 
+    /**
+     * To dump response body io.undertow.server.handlers.StoredResponseHandler should be added to server.
+     *
+     * @param out
+     */
     @Override
     public void dump(Writer out) {
         try {
-            out.append(" status: " + exchange.getStatusCode() + "\n");
+            out.append("status: " + exchange.getStatusCode() + "\n");
             for (HeaderValues header : exchange.getResponseHeaders()) {
                 for (String value : header) {
-                    out.append(" header: " + header.getHeaderName() + "=" + value + "\n");
+                    out.append("header: " + header.getHeaderName() + "=" + value + "\n");
                 }
             }
             Map<String, Cookie> cookies = exchange.getResponseCookies();
             if (cookies != null) {
                 for (Cookie cookie : cookies.values()) {
-                    out.append(" cookie: " + cookie.getName() + "=" + cookie.getValue() + "; domain=" + cookie.getDomain() + "; path=" + cookie.getPath() + "\n");
+                    out.append("cookie: " + cookie.getName() + "=" + cookie.getValue() + "; domain=" + cookie.getDomain() + "; path=" + cookie.getPath() + "\n");
                 }
             }
-            String storedResponse = StoredResponse.INSTANCE.readAttribute(exchange);
-            if (storedResponse != null) {
-                out.append(" body: \n");
-                out.append(storedResponse);
+            String dumperResponse = RequestDumperResponse.INSTANCE.readAttribute(exchange);
+            if (dumperResponse != null) {
+                out.append("body: \n");
+                out.append(dumperResponse);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
 }

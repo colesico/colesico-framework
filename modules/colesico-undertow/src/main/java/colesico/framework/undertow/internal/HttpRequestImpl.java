@@ -217,39 +217,38 @@ public final class HttpRequestImpl implements HttpRequest {
     @Override
     public void dump(Writer out) {
         try {
-            out.append(getRequestMethod().getName() + "  "+ exchange.getRequestURI() + "\n");
-            out.append("\n");
-            out.append(" scheme: " +  getRequestScheme() + "\n");
-            out.append(" protocol: " + exchange.getProtocol() + "\n");
-            out.append(" remoteAddr: " + exchange.getSourceAddress() + "\n");
-            out.append(" remoteHost: " + exchange.getSourceAddress().getHostName() + "\n");
-            out.append(" serverPort: " + exchange.getDestinationAddress().getPort() + "\n");
-            out.append(" isSecure:" + exchange.isSecure() + "\n");
+            out.append(getRequestMethod().getName() + "  " + exchange.getRequestURI() + "\n");
+            out.append("scheme: " + getRequestScheme() + "\n");
+            out.append("protocol: " + exchange.getProtocol() + "\n");
+            out.append("remoteAddr: " + exchange.getSourceAddress() + "\n");
+            out.append("remoteHost: " + exchange.getSourceAddress().getHostName() + "\n");
+            out.append("serverPort: " + exchange.getDestinationAddress().getPort() + "\n");
+            out.append("isSecure:" + exchange.isSecure() + "\n");
             for (HeaderValues header : exchange.getRequestHeaders()) {
                 for (String value : header) {
-                    out.append(" header: " + header.getHeaderName() + "=" + value + "\n");
+                    out.append("header: " + header.getHeaderName() + "=" + value + "\n");
                 }
             }
             Map<String, Cookie> cookies = exchange.getRequestCookies();
             if (cookies != null) {
                 for (Map.Entry<String, Cookie> entry : cookies.entrySet()) {
                     Cookie cookie = entry.getValue();
-                    out.append(" cookie: " + cookie.getName() + "=" +
+                    out.append("cookie: " + cookie.getName() + "=" +
                             cookie.getValue() + "\n");
                 }
             }
             final SecurityContext sc = exchange.getSecurityContext();
             if (sc != null) {
                 if (sc.isAuthenticated()) {
-                    out.append(" authType: " + sc.getMechanismName() + "\n");
-                    out.append(" principle: " + sc.getAuthenticatedAccount().getPrincipal() + "\n");
+                    out.append("authType: " + sc.getMechanismName() + "\n");
+                    out.append("principle: " + sc.getAuthenticatedAccount().getPrincipal() + "\n");
                 } else {
-                    out.append(" authType: none" + "\n");
+                    out.append("authType: none" + "\n");
                 }
             }
 
             if (inputStream == null) {
-                out.append(" body:\n");
+                out.append("body:\n");
                 exchange.startBlocking();
                 inputStream = new BufferedInputStream(exchange.getInputStream());
                 inputStream.mark(0);
@@ -262,7 +261,7 @@ public final class HttpRequestImpl implements HttpRequest {
                 inputStream.reset();
                 out.append("\n");
             } else {
-                out.append(" body: Input stream has already been open\n");
+                out.append("body: Input stream has already been open\n");
             }
 
         } catch (Exception e) {

@@ -28,12 +28,20 @@ import io.undertow.server.HttpHandler;
 abstract public class UndertowConfigPrototype {
     /**
      * Use this method to setup undertow builder options
+     *
      * @param builder
      */
     abstract public void applyOptions(Undertow.Builder builder);
 
     public HttpHandler getRootHandler(HttpHandler nextHandler) {
         return nextHandler; // use default root handler
+    }
+
+    /**
+     * Enable this to allow dumping http response body
+     */
+    public boolean enableStoredResponses() {
+        return false;
     }
 
     public int getMaxIndividualFileSize() {
