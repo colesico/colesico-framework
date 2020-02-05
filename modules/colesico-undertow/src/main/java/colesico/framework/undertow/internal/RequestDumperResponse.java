@@ -3,7 +3,6 @@ package colesico.framework.undertow.internal;
 import io.undertow.UndertowLogger;
 import io.undertow.attribute.ExchangeAttribute;
 import io.undertow.attribute.ReadOnlyAttributeException;
-import io.undertow.conduits.StoredResponseStreamSinkConduit;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.HeaderMap;
 import io.undertow.util.Headers;
@@ -18,7 +17,7 @@ public class RequestDumperResponse implements ExchangeAttribute {
     }
 
     public String readAttribute(HttpServerExchange exchange) {
-        byte[] data = (byte[]) exchange.getAttachment(StoredResponseStreamSinkConduit.RESPONSE);
+        byte[] data = (byte[]) exchange.getAttachment(ResponseDumperConduit.RESPONSE);
         if (data == null) {
             return null;
         } else {

@@ -1,7 +1,6 @@
 package colesico.framework.undertow.internal;
 
 import io.undertow.UndertowMessages;
-import io.undertow.conduits.StoredResponseStreamSinkConduit;
 import io.undertow.server.ConduitWrapper;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -149,7 +148,7 @@ public class ResponseDumperConduit extends AbstractStreamSinkConduit<StreamSinkC
             exchange.addResponseWrapper(new ConduitWrapper<StreamSinkConduit>() {
                 @Override
                 public StreamSinkConduit wrap(ConduitFactory<StreamSinkConduit> factory, HttpServerExchange exchange) {
-                    return new StoredResponseStreamSinkConduit(factory.create(), exchange);
+                    return new ResponseDumperConduit(factory.create(), exchange);
                 }
             });
             next.handleRequest(exchange);
