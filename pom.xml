@@ -195,6 +195,7 @@
                 <module>examples/eventbus-example</module>
                 <module>examples/transaction-example</module>
                 <module>examples/jdbi-example</module>
+                <module>examples/jdbc-example</module>
                 <module>examples/slf4j-example</module>
             </modules>
         </profile>

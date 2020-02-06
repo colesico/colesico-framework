@@ -35,7 +35,7 @@ public class JdbiConfig extends AbstractJdbiConfig {
     @Inject
     public JdbiConfig(
 
-            // Jdbi will use hikaricp data source configured with hikari.properties file.
+            // Jdbi will use hikaricp data source configured with hikari.properties file
             @Classed(HikariProperties.class)
                     DataSource dataSource,
 
