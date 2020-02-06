@@ -16,7 +16,6 @@
 
 package colesico.framework.example.jdbc;
 
-import colesico.framework.hikaricp.HikariProperties;
 import colesico.framework.ioc.Classed;
 import colesico.framework.ioc.Producer;
 import colesico.framework.ioc.Unscoped;
