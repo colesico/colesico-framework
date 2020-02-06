@@ -20,6 +20,9 @@ import colesico.framework.ioc.Polysupplier;
 
 import javax.sql.DataSource;
 
+/**
+ * Default abstract jdbi config
+ */
 abstract public class AbstractJdbiConfig extends JdbiConfigPrototype {
 
     protected final DataSource dataSource;

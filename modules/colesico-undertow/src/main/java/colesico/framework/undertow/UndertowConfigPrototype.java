@@ -33,12 +33,17 @@ abstract public class UndertowConfigPrototype {
      */
     abstract public void applyOptions(Undertow.Builder builder);
 
+    /**
+     * This option allow to set custom root http handler.
+     */
     public HttpHandler getRootHandler(HttpHandler nextHandler) {
         return nextHandler; // use default root handler
     }
 
     /**
-     * Enable this to allow dumping http response body
+     * Enable this to allow dumping http response body.
+     * Enabling this option is useful for responses debugging.
+     * Using this in a production will cause a slight performance degradation.
      */
     public boolean enableStoredResponses() {
         return false;

@@ -29,11 +29,12 @@ import javax.inject.Named;
  * An application service.
  * This service implicitly uses default and "custom" transactional shells
  * and explicitly uses "prog" shell for programmatic transaction control.
+ * Each method demonstrates the way the tx control can be used.
  */
 @Service
 public class AppService {
 
-    Logger log = LoggerFactory.getLogger(AppService.class);
+    TextBuffer out = TextBuffer.INSTANCE;
 
     /**
      * Shell to be used in programmatic tx control manner
@@ -52,7 +53,7 @@ public class AppService {
      */
     @Transactional(propagation = TransactionPropagation.REQUIRES_NEW)
     public Boolean save(String value) {
-        log.info("Value=" + value);
+        out.append("save=" + value);
         return Boolean.TRUE;
     }
 
@@ -63,9 +64,9 @@ public class AppService {
      * @param value
      * @return
      */
-    @Transactional(shell = "custom")
+    @Transactional(shell = "custom",propagation = TransactionPropagation.MANDATORY)
     public Boolean update(String value) {
-        log.info("Value=" + value);
+        out.append("update=" + value);
         return Boolean.TRUE;
     }
 
@@ -74,7 +75,7 @@ public class AppService {
      */
     public Boolean delete(String value) {
         return progShell.required(() -> {
-            log.info("Value=" + value);
+            out.append("delete=" + value);
             return Boolean.FALSE;
         });
     }
@@ -84,7 +85,7 @@ public class AppService {
      */
     @Transactional(shell = "prog")
     public Boolean update2(String value) {
-        log.info("Value=" + value);
+        out.append("update2=" + value);
         return Boolean.TRUE;
     }
 
@@ -93,8 +94,8 @@ public class AppService {
      */
     @Transactional(shell = "prog")
     public Boolean create(String value) {
-        return progShell.requiresNew(() -> {
-            log.info("Value=" + value);
+        return progShell.never(() -> {
+            out.append("create=" + value);
             return Boolean.FALSE;
         });
     }

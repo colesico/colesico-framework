@@ -1,3 +1,19 @@
+/*
+ * Copyright © 2014-2020 Vladlen V. Larionov and others as noted.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package colesico.framework.undertow.internal;
 
 import io.undertow.UndertowMessages;
@@ -18,16 +34,18 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
 /**
+ * This conduit is used for store http response to further dumping/logging purposes
+ *
  * @author Stuart Douglas
  * @author Vladlen Larionov
  */
-public class ResponseDumperConduit extends AbstractStreamSinkConduit<StreamSinkConduit> {
+public class StoreResponseConduit extends AbstractStreamSinkConduit<StreamSinkConduit> {
 
     public static final AttachmentKey<byte[]> RESPONSE = AttachmentKey.create(byte[].class);
     private ByteArrayOutputStream outputStream;
     private final HttpServerExchange exchange;
 
-    public ResponseDumperConduit(StreamSinkConduit next, HttpServerExchange exchange) {
+    public StoreResponseConduit(StreamSinkConduit next, HttpServerExchange exchange) {
         super(next);
         this.exchange = exchange;
         long length = exchange.getResponseContentLength();
@@ -136,10 +154,11 @@ public class ResponseDumperConduit extends AbstractStreamSinkConduit<StreamSinkC
         super.terminateWrites();
     }
 
-    public static class ResponseDumperHandler implements HttpHandler {
+    public static class StoreResponseHandler implements HttpHandler {
+
         private final HttpHandler next;
 
-        public ResponseDumperHandler(HttpHandler next) {
+        public StoreResponseHandler(HttpHandler next) {
             this.next = next;
         }
 
@@ -148,7 +167,7 @@ public class ResponseDumperConduit extends AbstractStreamSinkConduit<StreamSinkC
             exchange.addResponseWrapper(new ConduitWrapper<StreamSinkConduit>() {
                 @Override
                 public StreamSinkConduit wrap(ConduitFactory<StreamSinkConduit> factory, HttpServerExchange exchange) {
-                    return new ResponseDumperConduit(factory.create(), exchange);
+                    return new StoreResponseConduit(factory.create(), exchange);
                 }
             });
             next.handleRequest(exchange);

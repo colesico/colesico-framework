@@ -19,7 +19,6 @@ import colesico.framework.httpserver.HttpServer;
 import colesico.framework.undertow.UndertowConfigPrototype;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
-import io.undertow.server.handlers.StoredResponseHandler;
 import io.undertow.server.handlers.form.EagerFormParsingHandler;
 import io.undertow.server.handlers.form.FormEncodedDataDefinition;
 import io.undertow.server.handlers.form.FormParserFactory;
@@ -66,12 +65,12 @@ public class UndertowHttpServer implements HttpServer {
     protected Undertow build() {
         try {
             Undertow.Builder builder = Undertow.builder();
-            config.applyOptions(builder);
             HttpHandler rootHandler = makeFormHandler(requestProcessor);
             if (config.enableStoredResponses()) {
-                rootHandler = new ResponseDumperConduit.ResponseDumperHandler(rootHandler);
+                rootHandler = new StoreResponseConduit.StoreResponseHandler(rootHandler);
             }
             builder.setHandler(config.getRootHandler(rootHandler));
+            config.applyOptions(builder);
             server = builder.build();
             return server;
         } catch (Exception e) {

@@ -26,6 +26,9 @@ import org.jdbi.v3.core.Jdbi;
 
 import javax.inject.Singleton;
 
+/**
+ * Typical jdbi producer
+ */
 @Producer
 public class JdbiProducer {
 

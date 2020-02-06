@@ -30,7 +30,7 @@ import java.net.http.HttpResponse;
 
 import static org.testng.Assert.assertEquals;
 
-public class RoutingTest {
+public class RoutingExampleTest {
     private Ioc ioc;
     private HttpServer httpServer;
     private HttpClient httpClient;

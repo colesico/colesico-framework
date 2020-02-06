@@ -21,12 +21,15 @@ import colesico.framework.ioc.Classed;
 import colesico.framework.jdbi.JdbiOptionsPrototype;
 import org.jdbi.v3.core.Jdbi;
 
+/**
+ * This config allow to set up jdbi extra configuration options.
+ */
 @Config
 @Classed(JdbiConfig.class)
 public class JdbiOptions extends JdbiOptionsPrototype {
 
     @Override
     public void applyOptions(Jdbi jdbi) {
-        System.out.println("JDBI internal config:"+jdbi.getConfig());
+        System.out.println("JDBI internal config: "+jdbi.getConfig());
     }
 }

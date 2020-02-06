@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-package colesico.framework.test.example.jdbi;
+package colesico.framework.test.example.slf4j;
 
-import colesico.framework.example.jdbi.AppService;
+import colesico.framework.example.slf4j.MainBean;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
-public class JdbiTest {
+import static org.testng.Assert.assertTrue;
+
+public class Slf4jExampleTest {
+
     private Ioc ioc;
 
     @BeforeClass
@@ -33,8 +38,13 @@ public class JdbiTest {
     }
 
     @Test
-    public void testHelloWorld(){
-        AppService service = ioc.instance(AppService.class);
-        assertEquals(service.readValue(1),"a-value");
+    public void testLog() throws Exception{
+        MainBean mainBean = ioc.instance(MainBean.class);
+        mainBean.logMessage("TestLogMessage");
+
+        String logText = new String(Files.readAllBytes(Paths.get("target/test.log")));
+        assertTrue(StringUtils.contains(logText,"TestLogMessage"));
+        assertTrue(StringUtils.contains(logText,MainBean.class.getName()));
     }
+
 }

@@ -33,8 +33,8 @@ public class Sender {
     }
 
     public void sendEvent() {
-        eventBus.send(new MyEvent1("hello 1"));
-        eventBus.send(new MyEvent2("hello 2"));
+        eventBus.send(new MyEvent1("Hello1"));
+        eventBus.send(new MyEvent2("Hello2"));
     }
 
     @OnEvent

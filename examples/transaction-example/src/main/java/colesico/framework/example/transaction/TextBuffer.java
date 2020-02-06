@@ -14,14 +14,28 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.jdbi;
+package colesico.framework.example.transaction;
 
-import colesico.framework.ioc.IocBuilder;
+public class TextBuffer {
 
-public class Main {
+    public static final TextBuffer INSTANCE = new TextBuffer();
 
-    public static void main(String[] args) {
-        AppService srv = IocBuilder.forProduction().instance(AppService.class);
-        System.out.println("Value from DB = "+srv.readValue(1));
+    StringBuilder sb = new StringBuilder();
+
+    private TextBuffer() {
+        this.sb = sb;
     }
+
+    public void reset() {
+        sb = new StringBuilder();
+    }
+
+    public void append(String str) {
+        sb.append('(').append(str).append(')');
+    }
+
+    public String getValue() {
+        return sb.toString();
+    }
+
 }

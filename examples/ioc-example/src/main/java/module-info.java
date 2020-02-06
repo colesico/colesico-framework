@@ -2,6 +2,7 @@ module colesico.framework.example.ioc {
 
     requires transitive colesico.framework.ioc;
 
+    exports colesico.framework.example.ioc;
     exports colesico.framework.example.ioc.helloworld;
     exports colesico.framework.example.ioc.singleton;
     exports colesico.framework.example.ioc.implement;

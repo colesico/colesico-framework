@@ -26,6 +26,9 @@ import javax.inject.Provider;
 @Service
 public class AppService {
 
+    /**
+     * JDBI handle provider
+     */
     private final Provider<Handle> handleProv;
 
     @Inject

@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package colesico.framework.undertow.internal;
 
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
-import io.undertow.attribute.StoredResponse;
-import io.undertow.conduits.StoredResponseStreamSinkConduit;
-import io.undertow.server.ConduitWrapper;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.Cookie;
 import io.undertow.server.handlers.CookieImpl;
 import io.undertow.util.*;
 import org.apache.commons.lang3.StringUtils;
-import org.xnio.conduits.StreamSinkConduit;
 
 import java.io.OutputStream;
 import java.io.Writer;
@@ -155,7 +152,7 @@ public class HttpResponseImpl implements HttpResponse {
                     out.append("cookie: " + cookie.getName() + "=" + cookie.getValue() + "; domain=" + cookie.getDomain() + "; path=" + cookie.getPath() + "\n");
                 }
             }
-            String dumperResponse = RequestDumperResponse.INSTANCE.readAttribute(exchange);
+            String dumperResponse = StoreResponseAttribute.INSTANCE.readAttribute(exchange);
             if (dumperResponse != null) {
                 out.append("body: \n");
                 out.append(dumperResponse);

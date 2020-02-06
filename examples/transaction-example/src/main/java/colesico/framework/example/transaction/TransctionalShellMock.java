@@ -21,12 +21,15 @@ import colesico.framework.transaction.UnitOfWork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.PrintStream;
+import java.io.StringWriter;
+
 /**
  * Transactional shell mock that demonstrates how the actual transactional shell can be implemented
  */
 public class TransctionalShellMock implements TransactionalShell<Object> {
 
-    Logger log = LoggerFactory.getLogger(TransctionalShellMock.class);
+    TextBuffer out = TextBuffer.INSTANCE;
 
     final String shellName;
 
@@ -34,59 +37,63 @@ public class TransctionalShellMock implements TransactionalShell<Object> {
         this.shellName = shellName;
     }
 
+    public TextBuffer getOut() {
+        return out;
+    }
+
     @Override
     public <R> R required(UnitOfWork<R> unitOfWork, Object tuning) {
-        log.info("Required begin |" + shellName);
+        out.append("Required-begin-" + shellName );
         R result = unitOfWork.execute();
-        log.info("Required end |" + shellName);
+        out.append("Required-end-" + shellName );
         return result;
     }
 
     @Override
     public <R> R requiresNew(UnitOfWork<R> unitOfWork, Object tuning) {
-        log.info("RequiresNew begin |" + shellName);
+        out.append("RequiresNew-begin-" + shellName );
         R result = unitOfWork.execute();
-        log.info("RequiresNew end |" + shellName);
+        out.append("RequiresNew-end-" + shellName );
         return result;
     }
 
     @Override
     public <R> R mandatory(UnitOfWork<R> unitOfWork, Object tuning) {
-        log.info("Mandatory begin");
+        out.append("Mandatory-begin-" + shellName );
         R result = unitOfWork.execute();
-        log.info("Mandatory end");
+        out.append("Mandatory-end-" + shellName );
         return result;
     }
 
     @Override
     public <R> R notSupported(UnitOfWork<R> unitOfWork, Object tuning) {
-        log.info("NotSupported begin");
+        out.append("NotSupported-begin-" + shellName );
         R result = unitOfWork.execute();
-        log.info("NotSupported end");
+        out.append("NotSupported-end-" + shellName );
         return result;
     }
 
     @Override
     public <R> R supports(UnitOfWork<R> unitOfWork, Object tuning) {
-        log.info("Supports begin");
+        out.append("Supports-begin-" + shellName );
         R result = unitOfWork.execute();
-        log.info("Supports end");
+        out.append("Supports-end-" + shellName );
         return result;
     }
 
     @Override
     public <R> R never(UnitOfWork<R> unitOfWork, Object tuning) {
-        log.info("Never begin");
+        out.append("Never-begin-" + shellName );
         R result = unitOfWork.execute();
-        log.info("Never end");
+        out.append("Never-end-" + shellName );
         return result;
     }
 
     @Override
     public <R> R nested(UnitOfWork<R> unitOfWork, Object tuning) {
-        log.info("Nested begin");
+        out.append("Nested begin");
         R result = unitOfWork.execute();
-        log.info("Nested end");
+        out.append("Nested end");
         return result;
     }
 
