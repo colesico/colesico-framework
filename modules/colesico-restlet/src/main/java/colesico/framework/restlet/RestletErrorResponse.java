@@ -45,7 +45,7 @@ public class RestletErrorResponse implements Serializable {
         this.uri = uri;
         this.status = status;
         this.issue = issue;
-        this.message = "Validation error occurred. See 'issue' field for details.";
+        this.message = "Validation error occurred, see issue field for details.";
     }
 
     public String getUri() {
