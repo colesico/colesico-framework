@@ -259,7 +259,6 @@ public final class HttpRequestImpl implements HttpRequest {
                     out.append(str);
                 }
                 inputStream.reset();
-                out.append("\n");
             } else {
                 out.append("body: Input stream has already been open\n");
             }
