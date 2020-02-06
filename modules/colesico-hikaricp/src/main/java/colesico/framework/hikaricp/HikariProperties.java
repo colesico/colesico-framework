@@ -29,15 +29,16 @@ import java.util.Properties;
 
 /**
  * Properties file based HikariCP config.
- *
+ * <p>
  * Usage:
  * <pre>
  *   class AClass {
  *      public AClass( @Classed(HikariProperties.class) DataSource dataSource){...}
  *   }
  * </pre>
+ * </p>
  */
-public class HikariProperties extends HikariConfigPrototype {
+abstract public class HikariProperties extends HikariConfigPrototype {
 
     protected final Logger logger = LoggerFactory.getLogger(HikariProperties.class);
 
@@ -105,7 +106,8 @@ public class HikariProperties extends HikariConfigPrototype {
     @Override
     public String toString() {
         return "HikariProperties{" + getDirectory() + "/" + getFileName()
-            + " | " + getClasspath() + "/" + getFileName() + "}";
+                + " | " + getClasspath() + "/" + getFileName() + "}";
     }
+
 }
 

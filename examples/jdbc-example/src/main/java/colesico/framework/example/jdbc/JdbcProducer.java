@@ -35,10 +35,10 @@ public class JdbcProducer {
 
     /**
      * Define transactional shell to control transactions.
-     * DataSource is a HikariCP data source configured by hikari.properties file
+     * DataSource is a HikariCP data source configured by custom-custom-hikari.properties file
      */
     @Singleton
-    public TransactionalShell getTransactionalShell(@Classed(HikariProperties.class) DataSource ds) {
+    public TransactionalShell getTransactionalShell(@Classed(CustomHikariProperties.class) DataSource ds) {
         return new JdbcTransactionalShell(ds);
     }
 

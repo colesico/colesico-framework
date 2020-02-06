@@ -63,7 +63,7 @@ public class HikariProducer {
     @Singleton
     @Classed(HikariProperties.class)
     public DataSource defaultHikariDataSource(@Classed(HikariConfigPrototype.class) Supplier<DataSource> factory) {
-        return factory.get(new HikariProperties());
+        return factory.get(new HikariProperties(){});
     }
 
 }
