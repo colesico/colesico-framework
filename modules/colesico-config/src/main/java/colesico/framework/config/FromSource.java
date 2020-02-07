@@ -32,10 +32,4 @@ import java.lang.annotation.*;
 @Documented
 public @interface FromSource {
 
-    /**
-     * Query to obtain configuration value from configuration source
-     *
-     * @return
-     */
-    String value() default "";
 }

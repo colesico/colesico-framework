@@ -45,6 +45,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
     public static final String CONF_PARAM = "config";
     public static final String CONFIG_SOURCE_PARAM = "configSource";
     public static final String CONNECTION_VAR = "conn";
+    public static final String TANK_VAR = "configTank";
 
     private Logger logger = LoggerFactory.getLogger(IocGenerator.class);
 
@@ -109,7 +110,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
     private void generateProduceMessageConfigurable(ProducerGenerator prodGen, ConfigElement confElement) {
         TypeElement targetElm = confElement.getTarget().unwrap();
         MethodSpec.Builder mb = prodGen.addProduceMethod("get" + targetElm.getSimpleName().toString() + "With" + confElement.getImplementation().getSimpleName(),
-            ClassName.bestGuess(targetElm.getQualifiedName().toString()));
+                ClassName.bestGuess(targetElm.getQualifiedName().toString()));
 
         if (!confElement.getDefaultMessage()) {
             AnnotationSpec.Builder classedAnn = AnnotationSpec.builder(Classed.class);
@@ -121,9 +122,9 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
         //Parameter @Classed(AConfig.class) Supplier<Service> target
         ParameterSpec.Builder targetBuilder = ParameterSpec.builder(
-            ParameterizedTypeName.get(ClassName.get(Supplier.class), TypeName.get(confElement.getTarget().asType())),
-            FACTORY_PARAM,
-            Modifier.FINAL
+                ParameterizedTypeName.get(ClassName.get(Supplier.class), TypeName.get(confElement.getTarget().asType())),
+                FACTORY_PARAM,
+                Modifier.FINAL
         );
         AnnotationSpec.Builder targetAnnBuilder = AnnotationSpec.builder(Classed.class);
         targetAnnBuilder.addMember("value", "$T.class", TypeName.get(confElement.getPrototype().asType()));
@@ -132,16 +133,16 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
         //Parameter ConfImpl config
         ParameterSpec.Builder configBuilder = ParameterSpec.builder(
-            TypeName.get(confElement.getImplementation().asType()),
-            CONF_PARAM,
-            Modifier.FINAL
+                TypeName.get(confElement.getImplementation().asType()),
+                CONF_PARAM,
+                Modifier.FINAL
         );
         mb.addParameter(configBuilder.build());
 
         mb.addStatement("return $N.$N($N)",
-            FACTORY_PARAM,
-            Supplier.GET_METHOD,
-            CONF_PARAM
+                FACTORY_PARAM,
+                Supplier.GET_METHOD,
+                CONF_PARAM
         );
     }
 
@@ -163,8 +164,8 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         boolean paramSingle = confElement.getSource().getParams().length == 1;
         if (!(paramEvenOrEmpty || paramSingle)) {
             throw CodegenException.of()
-                .message("Config source driver params number is not even or single or empty")
-                .element(confElement.getImplementation().unwrap()).build();
+                    .message("Config source driver params number is not even or single or empty")
+                    .element(confElement.getImplementation().unwrap()).build();
         }
 
         ArrayCodegen paramsCodegen = new ArrayCodegen();
@@ -177,27 +178,43 @@ public class IocGenerator extends FrameworkAbstractGenerator {
             }
         }
 
+        // final Connection conn = configSource.connect(Map.of(...)
         cb.add("final $T $N = $N.$N($T.of(",
-            ClassName.get(ConfigSource.Connection.class),
-            CONNECTION_VAR,
-            CONFIG_SOURCE_PARAM,
-            ConfigSource.CONNECT_METHOD,
-            ClassName.get(Map.class)
+                ClassName.get(ConfigSource.Connection.class),
+                CONNECTION_VAR,
+                CONFIG_SOURCE_PARAM,
+                ConfigSource.CONNECT_METHOD,
+                ClassName.get(Map.class)
         );
         cb.add(paramsCodegen.toFormat(), paramsCodegen.toValues());
         cb.add("));\n");
 
+        // final TankType tank = conn.getValue(TankType.class)
+        TypeName tankType = ClassName.bestGuess(confElement.getImplementation().getPackageName() + "." + confElement.getTankClassSimpleName());
+        cb.addStatement("final $T $N = $N.$N($T.class)",
+                tankType,
+                TANK_VAR,
+                CONNECTION_VAR,
+                ConfigSource.Connection.GET_VALUE_METHOD,
+                tankType
+        );
+
+       // cb.addStatement("if ( $N == null ){ return $N; }", TANK_VAR, CONF_PARAM);
+
         for (SourceValueElement sv : confElement.getSource().getSourceValues()) {
-            // config.setField(conn.getValue(TYPE,"query",config.getField()))
-            cb.add("$N.$N($N.$N(",
-                CONF_PARAM, "set" + StrUtils.firstCharToUpperCase(sv.getOriginField().getName()),
-                CONNECTION_VAR, ConfigSource.Connection.GET_VALUE_METHOD
+            String fieldName = sv.getOriginField().getName();
+            // if (tank.getField()!=null {config.setField(tank.getField())}
+            cb.addStatement("if ( $N.$N() != null ){ $N.$N($N.$N()); }",
+                    TANK_VAR,
+                    "get" + StrUtils.firstCharToUpperCase(fieldName),
+                    CONF_PARAM,
+                    "set" + StrUtils.firstCharToUpperCase(fieldName),
+                    TANK_VAR,
+                    "get" + StrUtils.firstCharToUpperCase(fieldName)
             );
-            CodegenUtils.generateTypePick(sv.getOriginField().asType(), cb);
-            cb.add(", $S, $N.$N()", sv.getQuery(), CONF_PARAM, "get" + StrUtils.firstCharToUpperCase(sv.getOriginField().getName()));
-            cb.add("));\n");
         }
 
+        // close connection
         cb.addStatement("$N.$N()", CONNECTION_VAR, ConfigSource.Connection.CLOSE_METHD);
         cb.addStatement("return $N", CONF_PARAM);
         mb.addCode(cb.build());

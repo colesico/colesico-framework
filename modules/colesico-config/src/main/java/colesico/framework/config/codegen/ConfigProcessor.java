@@ -38,6 +38,7 @@ import java.util.Set;
 public class ConfigProcessor extends FrameworkAbstractProcessor {
 
     protected IocGenerator iocGenerator;
+    protected TankGenerator tankGenerator;
     protected ConfigParser configParser;
 
     public ConfigProcessor() {
@@ -52,6 +53,7 @@ public class ConfigProcessor extends FrameworkAbstractProcessor {
     @Override
     protected void onInit() {
         this.iocGenerator = new IocGenerator(processingEnv);
+        this.tankGenerator = new TankGenerator(processingEnv);
         this.configParser = new ConfigParser(processingEnv);
     }
 
@@ -86,7 +88,13 @@ public class ConfigProcessor extends FrameworkAbstractProcessor {
         }
 
         if (!configElements.isEmpty()) {
-            iocGenerator.generate(configElements);
+            try {
+                tankGenerator.generate(configElements);
+                iocGenerator.generate(configElements);
+            } catch (Exception e){
+                e.printStackTrace();
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, ExceptionUtils.getRootCauseMessage(e));
+            }
         }
 
         return true;

@@ -15,7 +15,7 @@ Logger injection example:
 import colesico.framework.ioc.Contextual;
 import org.slf4j.Logger;
 
-// Service class (with @Service annotation) or simple POJO bean
+@Service // or just POJO bean
 public class MyService {
 
     private final Logger logger;

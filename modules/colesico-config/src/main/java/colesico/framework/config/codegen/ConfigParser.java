@@ -88,7 +88,7 @@ public class ConfigParser extends FrameworkAbstractParser {
         if (defaultAnn != null) {
             if (!ConfigModel.MESSAGE.equals(model)) {
                 throw CodegenException.of().message("@" + DefaultConfig.class.getSimpleName() +
-                    " annotation can be applied only to " + ConfigModel.MESSAGE.name() + " configuration model").build();
+                        " annotation can be applied only to " + ConfigModel.MESSAGE.name() + " configuration model").build();
             }
             defaultMessage = true;
         } else {
@@ -123,14 +123,8 @@ public class ConfigParser extends FrameworkAbstractParser {
     private ConfigSourceElement parseSourceValues(ClassElement configImplementation, ConfigSourceElement confSourceElm) {
         for (FieldElement me : configImplementation.getFields()) {
             AnnotationElement<FromSource> sourceValueAnn = me.getAnnotation(FromSource.class);
-            if (sourceValueAnn != null) {
-                String query = me.getName();
-                if (StringUtils.isNotBlank(sourceValueAnn.unwrap().value())) {
-                    query = sourceValueAnn.unwrap().value();
-                }
-                confSourceElm.addSourceValue(new SourceValueElement(me, query));
-            } else if (confSourceElm.isBindAll()) {
-                confSourceElm.addSourceValue(new SourceValueElement(me, me.getName()));
+            if (confSourceElm.isBindAll() || (sourceValueAnn != null)) {
+                confSourceElm.addSourceValue(new SourceValueElement(me));
             }
         }
         return confSourceElm;

@@ -129,19 +129,9 @@ public class PropertiesSource implements ConfigSource {
         }
 
         @Override
-        public <T> T getValue(Type valueType, String valueQuery, T defaultValue) {
-            String valueKey = toKey(prefix, valueQuery);
-            Function<String, T> valueConverter = getValueConverter(valueType);
-            if (valueConverter != null) {
-                String rawValue = properties.getProperty(valueKey);
-                if (rawValue != null) {
-                    return valueConverter.apply(rawValue);
-                } else {
-                    return defaultValue;
-                }
-            } else {
-                return buildComposition(valueType, valueKey);
-            }
+        public <T> T getValue(Type valueType) {
+            T result = buildComposition(valueType, prefix);
+            return result;
         }
 
         @Override
@@ -180,19 +170,23 @@ public class PropertiesSource implements ConfigSource {
             return null;
         }
 
-        protected <T> T buildComposition(Type compositionType, String compositionQuery) {
+        protected <T> T buildComposition(Type compositionType, String compositionPath) {
             try {
                 Class<T> compositionClass = (Class<T>) compositionType;
                 T compositionInstance = compositionClass.getDeclaredConstructor().newInstance();
                 List<Method> setters = getSetters(compositionClass);
                 for (Method setter : setters) {
-                    String valueKey = toKey(compositionQuery, getFieldName(setter));
+                    String valueKey = toKey(compositionPath, getFieldName(setter));
+                    System.out.println("Key="+valueKey);
                     Type valueType = setter.getParameterTypes()[0];
                     Function<String, T> valueConverter = getValueConverter(valueType);
                     if (valueConverter != null) {
                         String rawValue = properties.getProperty(valueKey);
+                        System.out.println("RawValue="+rawValue);
                         if (rawValue != null) {
-                            setter.invoke(compositionInstance, valueConverter.apply(rawValue));
+                            T value = valueConverter.apply(rawValue);
+                            System.out.println("Value="+value);
+                            setter.invoke(compositionInstance,value);
                         }
                     } else {
                         buildComposition(valueType, valueKey);
@@ -204,8 +198,8 @@ public class PropertiesSource implements ConfigSource {
             }
         }
 
-        protected String toKey(String prefix, String query) {
-            return (prefix != null ? prefix + '.' : "") + query;
+        protected String toKey(String prefix, String path) {
+            return (prefix != null ? prefix + '.' : "") + path;
         }
 
         protected List<Method> getSetters(Class clazz) {
@@ -214,9 +208,9 @@ public class PropertiesSource implements ConfigSource {
             while (currentClazz.getSuperclass() != null) { // we don't want to process Object.class
                 for (Method method : currentClazz.getDeclaredMethods()) {
                     if (Modifier.isPublic(method.getModifiers())
-                        && method.getParameterTypes().length == 1
-                        && method.getReturnType() == void.class
-                        && (method.getName().startsWith("set"))
+                            && method.getParameterTypes().length == 1
+                            && method.getReturnType() == void.class
+                            && (method.getName().startsWith("set"))
                     ) {
                         method.setAccessible(true);
                         result.add(method);

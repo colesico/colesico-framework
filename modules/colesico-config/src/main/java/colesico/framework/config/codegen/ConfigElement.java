@@ -26,6 +26,9 @@ import javax.lang.model.type.TypeMirror;
  * @author Vladlen Larionov
  */
 public class ConfigElement {
+
+    public static final String TANK_CLASS_SUFFIX = "Tank";
+
     /**
      * Configuration implementation class
      */
@@ -128,15 +131,19 @@ public class ConfigElement {
         return source;
     }
 
+    public String getTankClassSimpleName() {
+        return getImplementation().getSimpleName() + TANK_CLASS_SUFFIX;
+    }
+
     @Override
     public String toString() {
         return "ConfigElement{" +
-            "implementation=" + implementation +
-            ", prototype=" + prototype +
-            ", rank='" + rank + '\'' +
-            ", model=" + model +
-            ", target=" + target +
-            ", classedDefault=" + defaultMessage +
-            '}';
+                "implementation=" + implementation +
+                ", prototype=" + prototype +
+                ", rank='" + rank + '\'' +
+                ", model=" + model +
+                ", target=" + target +
+                ", classedDefault=" + defaultMessage +
+                '}';
     }
 }

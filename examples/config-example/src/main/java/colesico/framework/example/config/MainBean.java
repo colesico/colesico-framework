@@ -23,10 +23,7 @@ import colesico.framework.example.config.message.TargetBean;
 import colesico.framework.example.config.polyvariant.PolyConfigPrototype;
 import colesico.framework.example.config.simple.SimpleConfig;
 import colesico.framework.example.config.single.SingleConfigPrototype;
-import colesico.framework.example.config.source.SourceNestedConfig;
-import colesico.framework.example.config.source.SourcePrefixConfig;
-import colesico.framework.example.config.source.SourceSimpleConfig;
-import colesico.framework.example.config.source.SourceSingleConfigPrototype;
+import colesico.framework.example.config.source.*;
 import colesico.framework.ioc.Classed;
 import colesico.framework.ioc.Polysupplier;
 
@@ -116,7 +113,8 @@ public class MainBean {
     }
 
     public String getSourceNestedConfigValue() {
-        return sourceNestedConfig.getNested().getValue();
+        NestedValue nested = sourceNestedConfig.getNested();
+        return nested.getValue();
     }
 
     public String getClassedConfigValue() {
