@@ -39,7 +39,7 @@ public class TestLocalizationTool {
     @BeforeClass
     public void init() {
         logger.info("Init test");
-        ioc = IocBuilder.forTests();
+        ioc = IocBuilder.forTests().build();
         localizingTool = ioc.instance(LocalizingTool.class);
     }
 

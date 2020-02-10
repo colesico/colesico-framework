@@ -30,26 +30,25 @@ public interface IocBuilder {
     String IOC_PROFILE_PROPERTY = "colesico.framework.ioc.profile";
 
     /**
-     * Creates default production ready IoC container
+     * Creates  production ready IoC container builder
      */
     static IocBuilder forProduction() {
         return IocBuilderImpl.forProduction();
     }
 
     /**
-     * Creates default development ready IoC container
+     * Creates default development ready IoC container builder
      */
     static IocBuilder forDevelopment() {
         return IocBuilderImpl.forDevelopment();
     }
 
     /**
-     * Creates default testing ready IoC container
+     * Creates default testing ready IoC container builder
      */
     static IocBuilder forTests() {
         return IocBuilderImpl.forTests();
     }
-
 
     /**
      * Add  rank to ranks stack.

@@ -102,12 +102,6 @@ public class IocBuilderImpl implements IocBuilder {
     }
 
     @Override
-    public IocBuilderImpl disablePreactivation() {
-        this.preactivation = false;
-        return this;
-    }
-
-    @Override
     public IocBuilderImpl ignoreProducer(String producerId) {
         ignoredProducers.add(producerId);
         return this;
@@ -115,6 +109,11 @@ public class IocBuilderImpl implements IocBuilder {
 
     private IocBuilderImpl useContainerType(ContainerType iocType) {
         this.iocType = iocType;
+        return this;
+    }
+
+    private IocBuilderImpl disablePreactivation() {
+        this.preactivation = false;
         return this;
     }
 
