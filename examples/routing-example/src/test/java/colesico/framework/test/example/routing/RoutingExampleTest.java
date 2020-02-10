@@ -37,7 +37,7 @@ public class RoutingExampleTest {
 
     @BeforeClass
     public void init() {
-        ioc = IocBuilder.forTests();
+        ioc = IocBuilder.forTests().build();
         httpServer = ioc.instance(HttpServer.class).start();
         httpClient = HttpClient.newHttpClient();
     }

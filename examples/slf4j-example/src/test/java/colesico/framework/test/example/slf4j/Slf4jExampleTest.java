@@ -34,7 +34,7 @@ public class Slf4jExampleTest {
 
     @BeforeClass
     public void init() {
-        ioc = IocBuilder.forTests();
+        ioc = IocBuilder.forTests().build();
     }
 
     @Test

@@ -26,7 +26,7 @@ import colesico.framework.ioc.*;
 
 public class Main {
     public static void main(String[] args) {
-        Ioc ioc = IocBuilder.forProduction();
+        Ioc ioc = IocBuilder.forProduction().build();
 
         Singleton1 s1 = ioc.instance(Singleton1.class);
         System.out.println(s1.getMessage());

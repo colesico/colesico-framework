@@ -21,7 +21,7 @@ import colesico.framework.ioc.IocBuilder;
 public class Main {
 
     public static void main(String[] args) {
-         MainBean mainBean = IocBuilder.forProduction().instance(MainBean.class);
+         MainBean mainBean = IocBuilder.forProduction().build().instance(MainBean.class);
          mainBean.logMessage("LogMessage");
     }
 }

@@ -30,6 +30,28 @@ public interface IocBuilder {
     String IOC_PROFILE_PROPERTY = "colesico.framework.ioc.profile";
 
     /**
+     * Creates default production ready IoC container
+     */
+    static IocBuilder forProduction() {
+        return IocBuilderImpl.forProduction();
+    }
+
+    /**
+     * Creates default development ready IoC container
+     */
+    static IocBuilder forDevelopment() {
+        return IocBuilderImpl.forDevelopment();
+    }
+
+    /**
+     * Creates default testing ready IoC container
+     */
+    static IocBuilder forTests() {
+        return IocBuilderImpl.forTests();
+    }
+
+
+    /**
      * Add  rank to ranks stack.
      * By default builder use this ranks: 'minor', 'default', 'extension'.
      * With tis method 'test' rank can be added.
@@ -66,36 +88,12 @@ public interface IocBuilder {
     IocBuilder useIoclet(Ioclet ioclet);
 
     /**
-     * Prevent factories activation after container build.
-     * By default builder activates the factories after IoC container has been created.
-     *
-     * @return
-     * @see ContainerType
-     */
-    IocBuilder disablePreactivation();
-
-    /**
-     * Configure IocType
-     * <p>
-     * Default - EAGER
-     *
-     * @param val
-     * @return
-     * @see ContainerType
-     */
-    IocBuilder useContainerType(ContainerType val);
-
-    /**
      * Do not use ioclet for specified producer
      *
      * @param producerId
-     * @return
      */
     IocBuilder ignoreProducer(String producerId);
 
-    static IocBuilder get() {
-        return new IocBuilderImpl();
-    }
 
     /**
      * Builds an IoC container instance based on builder configuration
@@ -104,51 +102,4 @@ public interface IocBuilder {
      */
     Ioc build();
 
-    /**
-     * Creates default production ready IoC container
-     *
-     * @return
-     */
-    static Ioc forProduction() {
-        return get().build();
-    }
-
-    /**
-     * Creates default development ready IoC container
-     *
-     * @return
-     */
-    static Ioc forDevelopment() {
-        return get()
-            .useContainerType(ContainerType.LAZY)
-            .disablePreactivation()
-            .build();
-    }
-
-    /**
-     * Creates default testing ready IoC container
-     *
-     * @return
-     */
-
-    static Ioc forTests() {
-        return get().useRank(Rank.RANK_TEST).build();
-    }
-
-    /**
-     * IoC container instance type.
-     * Two types of containers are supported - for the productive environment and for development/testing.
-     */
-    enum ContainerType {
-        /**
-         * For productive environment
-         * Factories must be activated by builder once at the IoC container instance creation
-         */
-        EAGER,
-        /**
-         * For development/testing process
-         * A request to activate a factory is performed every time the factory is called
-         */
-        LAZY
-    }
 }

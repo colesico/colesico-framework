@@ -23,7 +23,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Ioc ioc = IocBuilder.forProduction();
+        Ioc ioc = IocBuilder.forProduction().build();
         Sender sender = ioc.instance(Sender.class);
         sender.sendEvent();
 

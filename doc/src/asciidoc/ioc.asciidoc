@@ -33,7 +33,7 @@ Ioc container can be created with the builder:
 
 [source,java]
 ----
-IocBuilder iocBuilder = IocBuilder.get();
+IocBuilder iocBuilder = IocBuilder.forProduction();
 ----
 
 Builder is not thread safe. But Ioc container is thread safe and can be used in multithreaded environment.
@@ -51,26 +51,11 @@ Default Ioc container creation will create the container configured for the prod
 Ioc ioc = iocBuilder.build();
 ----
 
-or with "shortcut" method:
-
-[source,java]
-----
-Ioc ioc = IocBuilder.forProduction();
-----
-
 Testing purpose container creation example:
 
 [source,java]
 ----
-iocBuilder.mode(useContainer(ContainerType.LAZY).useRank(Rank.RANK_TEST));
-Ioc ioc = iocBuilder.build();
-----
-
-or with "shortcut" method:
-
-[source,java]
-----
-Ioc ioc = iocBuilder.forTests();
+Ioc ioc = iocBuilder.forTests().build();
 ----
 
 Obtaining instances with injected dependencies is done using this methods:

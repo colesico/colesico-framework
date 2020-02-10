@@ -14,14 +14,8 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.jdbi;
+package colesico.framework.ioc.internal;
 
-import colesico.framework.ioc.IocBuilder;
-
-public class Main {
-
-    public static void main(String[] args) {
-        AppService srv = IocBuilder.forProduction().build().instance(AppService.class);
-        System.out.println("Value from DB = "+srv.readValue(1));
-    }
+enum ContainerType {
+    EAGER, LAZY;
 }

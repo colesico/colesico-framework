@@ -25,8 +25,7 @@ import colesico.framework.ioc.IocBuilder;
 public class MainDev {
 
     public static void main(String[] args) {
-        IocBuilder
-            .forDevelopment()
+        IocBuilder.forDevelopment().build()
             .instance(HttpServer.class)
             .start();
     }

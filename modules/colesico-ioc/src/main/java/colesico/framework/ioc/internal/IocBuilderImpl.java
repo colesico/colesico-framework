@@ -56,52 +56,65 @@ public class IocBuilderImpl implements IocBuilder {
 
     protected ContainerType iocType;
 
-    public IocBuilderImpl() {
+    private IocBuilderImpl() {
         useDefaultRanks = true;
         iocletsDiscovery = true;
         preactivation = true;
         iocType = ContainerType.EAGER;
     }
 
+    public static IocBuilderImpl forProduction() {
+        return new IocBuilderImpl();
+    }
+
+    public static IocBuilderImpl forDevelopment() {
+        return new IocBuilderImpl().useContainerType(ContainerType.LAZY)
+                .useContainerType(ContainerType.LAZY)
+                .disablePreactivation();
+    }
+
+    public static IocBuilderImpl forTests() {
+        return new IocBuilderImpl().useRank(Rank.RANK_TEST);
+    }
+
     @Override
-    public IocBuilder useRank(String name) {
+    public IocBuilderImpl useRank(String name) {
         extraRanks.add(name);
         return this;
     }
 
     @Override
-    public IocBuilder disableDefaultRanks() {
+    public IocBuilderImpl disableDefaultRanks() {
         useDefaultRanks = false;
         return this;
     }
 
     @Override
-    public IocBuilder disableIocletsDiscovery() {
+    public IocBuilderImpl disableIocletsDiscovery() {
         this.iocletsDiscovery = false;
         return this;
     }
 
     @Override
-    public IocBuilder useIoclet(Ioclet ioclet) {
+    public IocBuilderImpl useIoclet(Ioclet ioclet) {
         extraIoclets.add(ioclet);
         return this;
     }
 
     @Override
-    public IocBuilder disablePreactivation() {
+    public IocBuilderImpl disablePreactivation() {
         this.preactivation = false;
         return this;
     }
 
     @Override
-    public IocBuilder useContainerType(ContainerType val) {
-        this.iocType = val;
+    public IocBuilderImpl ignoreProducer(String producerId) {
+        ignoredProducers.add(producerId);
         return this;
     }
 
-    @Override
-    public IocBuilder ignoreProducer(String producerId) {
-        ignoredProducers.add(producerId);
+    private IocBuilderImpl useContainerType(ContainerType iocType) {
+        this.iocType = iocType;
         return this;
     }
 
@@ -203,7 +216,7 @@ public class IocBuilderImpl implements IocBuilder {
                 }
             }
         } catch (StackOverflowError soe) {
-            throw new IocException(String.format(CIRCULAR_DEP_ERR_MSG, currentKey!=null?currentKey.toString():"?"));
+            throw new IocException(String.format(CIRCULAR_DEP_ERR_MSG, currentKey != null ? currentKey.toString() : "?"));
         }
     }
 

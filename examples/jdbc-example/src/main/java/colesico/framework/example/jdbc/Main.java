@@ -21,7 +21,7 @@ import colesico.framework.ioc.IocBuilder;
 public class Main {
 
     public static void main(String[] args) {
-        AppService srv = IocBuilder.forProduction().instance(AppService.class);
+        AppService srv = IocBuilder.forProduction().build().instance(AppService.class);
         System.out.println("Value from DB = "+srv.readValue(1));
     }
 }

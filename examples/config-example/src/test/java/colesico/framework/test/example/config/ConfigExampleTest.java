@@ -35,7 +35,7 @@ public class ConfigExampleTest {
 
     @BeforeClass
     public void init() {
-        ioc = IocBuilder.forTests();
+        ioc = IocBuilder.forTests().build();
         service = ioc.instance(MainBean.class);
     }
 

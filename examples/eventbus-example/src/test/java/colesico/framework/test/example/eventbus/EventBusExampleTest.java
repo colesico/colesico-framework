@@ -30,7 +30,7 @@ public class EventBusExampleTest {
 
     @BeforeClass
     public void init() {
-        ioc = IocBuilder.forTests();
+        ioc = IocBuilder.forTests().build();
      }
 
      @Test
