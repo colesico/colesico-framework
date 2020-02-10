@@ -27,7 +27,6 @@ import javax.lang.model.type.TypeMirror;
  */
 public class ConfigElement {
 
-    public static final String TANK_CLASS_SUFFIX = "Tank";
 
     /**
      * Configuration implementation class
@@ -57,7 +56,7 @@ public class ConfigElement {
     /**
      * Configuration source definition
      */
-    private final ConfigSourceElement source;
+    private ConfigSourceElement source;
 
     /**
      * @see DefaultConfig
@@ -79,7 +78,7 @@ public class ConfigElement {
                          String rank,
                          ConfigModel model,
                          ClassElement target,
-                         ConfigSourceElement source,
+
                          boolean defaultMessage,
                          TypeMirror classedQualifier,
                          String namedQualifier) {
@@ -89,7 +88,6 @@ public class ConfigElement {
         this.rank = rank;
         this.model = model;
         this.target = target;
-        this.source = source;
         this.defaultMessage = defaultMessage;
         this.classedQualifier = classedQualifier;
         this.namedQualifier = namedQualifier;
@@ -131,8 +129,8 @@ public class ConfigElement {
         return source;
     }
 
-    public String getTankClassSimpleName() {
-        return getImplementation().getSimpleName() + TANK_CLASS_SUFFIX;
+    public void setSource(ConfigSourceElement source) {
+        this.source = source;
     }
 
     @Override

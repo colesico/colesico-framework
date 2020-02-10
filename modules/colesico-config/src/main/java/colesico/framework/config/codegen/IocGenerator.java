@@ -45,7 +45,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
     public static final String CONF_PARAM = "config";
     public static final String CONFIG_SOURCE_PARAM = "configSource";
     public static final String CONNECTION_VAR = "conn";
-    public static final String TANK_VAR = "configTank";
+    public static final String BAG_VAR = "configBag";
 
     private Logger logger = LoggerFactory.getLogger(IocGenerator.class);
 
@@ -189,27 +189,27 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         cb.add(paramsCodegen.toFormat(), paramsCodegen.toValues());
         cb.add("));\n");
 
-        // final TankType tank = conn.getValue(TankType.class)
-        TypeName tankType = ClassName.bestGuess(confElement.getImplementation().getPackageName() + "." + confElement.getTankClassSimpleName());
+        // final BagType bag = conn.getValue(BagType.class)
+        TypeName bagType = ClassName.bestGuess(confElement.getImplementation().getPackageName() + "." + confElement.getSource().getBagClassSimpleName());
         cb.addStatement("final $T $N = $N.$N($T.class)",
-                tankType,
-                TANK_VAR,
+                bagType,
+                BAG_VAR,
                 CONNECTION_VAR,
                 ConfigSource.Connection.GET_VALUE_METHOD,
-                tankType
+                bagType
         );
 
-       // cb.addStatement("if ( $N == null ){ return $N; }", TANK_VAR, CONF_PARAM);
+        cb.addStatement("if ( $N == null ){ return $N; }", BAG_VAR, CONF_PARAM);
 
         for (SourceValueElement sv : confElement.getSource().getSourceValues()) {
             String fieldName = sv.getOriginField().getName();
-            // if (tank.getField()!=null {config.setField(tank.getField())}
+            // if (bag.getField()!=null {config.setField(bag.getField())}
             cb.addStatement("if ( $N.$N() != null ){ $N.$N($N.$N()); }",
-                    TANK_VAR,
+                    BAG_VAR,
                     "get" + StrUtils.firstCharToUpperCase(fieldName),
                     CONF_PARAM,
                     "set" + StrUtils.firstCharToUpperCase(fieldName),
-                    TANK_VAR,
+                    BAG_VAR,
                     "get" + StrUtils.firstCharToUpperCase(fieldName)
             );
         }

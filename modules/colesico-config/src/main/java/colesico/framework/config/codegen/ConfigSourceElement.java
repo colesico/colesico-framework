@@ -22,13 +22,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigSourceElement {
+
+    public static final String BAG_CLASS_SUFFIX = "Bag";
+
+    private final ConfigElement parentConfig;
     private final ClassType driver;
     private final String[] params;
     private final boolean bindAll;
 
     private final List<SourceValueElement> sourceValues = new ArrayList<>();
 
-    public ConfigSourceElement(ClassType driver, String[] params, boolean bindAll) {
+    public ConfigSourceElement(ConfigElement parentConfig, ClassType driver, String[] params, boolean bindAll) {
+        this.parentConfig = parentConfig;
         this.driver = driver;
         this.params = params;
         this.bindAll = bindAll;
@@ -53,4 +58,9 @@ public class ConfigSourceElement {
     public boolean isBindAll() {
         return bindAll;
     }
+
+    public String getBagClassSimpleName() {
+        return parentConfig.getImplementation().getSimpleName() + BAG_CLASS_SUFFIX;
+    }
+
 }

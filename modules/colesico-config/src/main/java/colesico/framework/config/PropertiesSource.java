@@ -177,20 +177,18 @@ public class PropertiesSource implements ConfigSource {
                 List<Method> setters = getSetters(compositionClass);
                 for (Method setter : setters) {
                     String valueKey = toKey(compositionPath, getFieldName(setter));
-                    System.out.println("Key="+valueKey);
                     Type valueType = setter.getParameterTypes()[0];
+                    T value = null;
                     Function<String, T> valueConverter = getValueConverter(valueType);
                     if (valueConverter != null) {
                         String rawValue = properties.getProperty(valueKey);
-                        System.out.println("RawValue="+rawValue);
                         if (rawValue != null) {
-                            T value = valueConverter.apply(rawValue);
-                            System.out.println("Value="+value);
-                            setter.invoke(compositionInstance,value);
+                            value = valueConverter.apply(rawValue);
                         }
                     } else {
-                        buildComposition(valueType, valueKey);
+                        value = buildComposition(valueType, valueKey);
                     }
+                    setter.invoke(compositionInstance, value);
                 }
                 return compositionInstance;
             } catch (Exception e) {

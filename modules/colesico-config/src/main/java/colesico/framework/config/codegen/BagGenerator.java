@@ -28,13 +28,13 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
 import java.util.List;
 
-public class TankGenerator extends FrameworkAbstractGenerator {
+public class BagGenerator extends FrameworkAbstractGenerator {
 
-    public TankGenerator(ProcessingEnvironment processingEnv) {
+    public BagGenerator(ProcessingEnvironment processingEnv) {
         super(processingEnv);
     }
 
-    private void generateTankProperties(TypeSpec.Builder mirrorBuilder, ConfigElement confElement) {
+    private void generateBagProperties(TypeSpec.Builder mirrorBuilder, ConfigElement confElement) {
         for (SourceValueElement sve : confElement.getSource().getSourceValues()) {
 
             String fieldName = sve.getOriginField().getName();
@@ -57,25 +57,25 @@ public class TankGenerator extends FrameworkAbstractGenerator {
         }
     }
 
-    public void generateConfigTank(ConfigElement confElement) {
-        String classSimpleName = confElement.getTankClassSimpleName();
+    public void generateConfigBag(ConfigElement confElement) {
+        String classSimpleName = confElement.getSource().getBagClassSimpleName();
         String packageName = confElement.getImplementation().getPackageName();
 
-        TypeSpec.Builder tankBuilder = TypeSpec.classBuilder(classSimpleName);
-        tankBuilder.addModifiers(Modifier.PUBLIC);
-        tankBuilder.addAnnotation(CodegenUtils.generateGenstamp(TankGenerator.class.getName(), null, null));
+        TypeSpec.Builder bagBuilder = TypeSpec.classBuilder(classSimpleName);
+        bagBuilder.addModifiers(Modifier.PUBLIC);
+        bagBuilder.addAnnotation(CodegenUtils.generateGenstamp(BagGenerator.class.getName(), null, null));
 
-        generateTankProperties(tankBuilder,confElement);
+        generateBagProperties(bagBuilder, confElement);
 
-        final TypeSpec typeSpec = tankBuilder.build();
+        final TypeSpec typeSpec = bagBuilder.build();
         CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, confElement.getImplementation().unwrap());
     }
 
     public void generate(List<ConfigElement> configElements) {
         for (ConfigElement confElement : configElements) {
-            logger.debug("Generate config tank for: " + confElement.toString());
-            if (confElement.getSource()!=null) {
-                generateConfigTank(confElement);
+            logger.debug("Generate config bag for: " + confElement.toString());
+            if (confElement.getSource() != null) {
+                generateConfigBag(confElement);
             }
         }
     }

@@ -38,7 +38,7 @@ public class JdbcExampleTest {
 
     @Test
     public void testHelloWorld() {
-        logger.info("Run JDBI test");
+        logger.info("Run JDBC test");
         AppService service = ioc.instance(AppService.class);
         assertEquals(service.readValue(1), "a-value");
     }

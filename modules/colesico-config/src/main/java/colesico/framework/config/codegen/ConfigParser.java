@@ -106,6 +106,8 @@ public class ConfigParser extends FrameworkAbstractParser {
         AnnotationElement<Named> namedAnn = configImplementation.getAnnotation(Named.class);
         String named = namedAnn == null ? null : namedAnn.unwrap().value();
 
+        ConfigElement configElement = new ConfigElement(configImplementation, configPrototype, rank, model, target, defaultMessage, classed, named);
+
         // Config source
         AnnotationElement<UseSource> useSourceAnn = configImplementation.getAnnotation(UseSource.class);
         ConfigSourceElement sourceElm = null;
@@ -113,11 +115,12 @@ public class ConfigParser extends FrameworkAbstractParser {
             TypeMirror driverType = useSourceAnn.getValueTypeMirror(UseSource::type);
             ClassType driverClassType = new ClassType(processingEnv, (DeclaredType) driverType);
             String[] params = useSourceAnn.unwrap().params();
-            sourceElm = new ConfigSourceElement(driverClassType, params, useSourceAnn.unwrap().bindAll());
+            sourceElm = new ConfigSourceElement(configElement, driverClassType, params, useSourceAnn.unwrap().bindAll());
+            configElement.setSource(sourceElm);
             parseSourceValues(configImplementation, sourceElm);
         }
 
-        return new ConfigElement(configImplementation, configPrototype, rank, model, target, sourceElm, defaultMessage, classed, named);
+        return configElement;
     }
 
     private ConfigSourceElement parseSourceValues(ClassElement configImplementation, ConfigSourceElement confSourceElm) {
