@@ -26,8 +26,11 @@ import io.undertow.util.HttpString;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Vladlen Larionov
@@ -215,7 +218,7 @@ public final class HttpRequestImpl implements HttpRequest {
     }
 
     @Override
-    public void dump(Writer out) {
+    public void dump(final Writer out) {
         try {
             out.append(getRequestMethod().getName() + "  " + exchange.getRequestURI() + "\n");
             out.append("scheme: " + getRequestScheme() + "\n");
@@ -250,14 +253,19 @@ public final class HttpRequestImpl implements HttpRequest {
             if (inputStream == null) {
                 out.append("body:\n");
                 exchange.startBlocking();
-                inputStream = new BufferedInputStream(exchange.getInputStream());
-                inputStream.mark(0);
-                InputStreamReader isReader = new InputStreamReader(inputStream);
-                BufferedReader reader = new BufferedReader(isReader);
-                String str;
-                while ((str = reader.readLine()) != null) {
-                    out.append(str);
-                }
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                exchange.getInputStream().transferTo(baos);
+                inputStream = new ByteArrayInputStream(baos.toByteArray());
+
+                Stream<String> bodyLines = new BufferedReader(new InputStreamReader(inputStream)).lines();
+                bodyLines.forEach(line -> {
+                    try {
+                        out.append(line).append('\n');
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
                 inputStream.reset();
             } else {
                 out.append("body: Input stream has already been open\n");
