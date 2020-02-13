@@ -16,7 +16,10 @@
 
 package colesico.framework.config;
 
-import colesico.framework.ioc.Rank;
+
+
+import colesico.framework.ioc.tag.DefaultTag;
+import colesico.framework.ioc.tag.Tag;
 
 import java.lang.annotation.*;
 
@@ -39,10 +42,10 @@ import java.lang.annotation.*;
 public @interface Config {
 
     /**
-     * Defines configuration rank.
-     * RANK_DEFAULT is used to have ability to override the define default configuration with MINOR rank.
+     * Defines configuration tag.
+     * DefaultTag is used to have ability to override the define default configuration with MinorTag rank.
      *
      * @return
      */
-    String rank() default Rank.RANK_DEFAULT;
+    Class<? extends Tag> tag() default DefaultTag.class;
 }

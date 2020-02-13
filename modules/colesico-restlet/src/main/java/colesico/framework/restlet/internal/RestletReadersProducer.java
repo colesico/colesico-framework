@@ -33,9 +33,9 @@ import java.util.Date;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
 
-@Producer(RANK_MINOR)
+
+@Producer(MinorTag.class)
 public class RestletReadersProducer {
 
     @Singleton

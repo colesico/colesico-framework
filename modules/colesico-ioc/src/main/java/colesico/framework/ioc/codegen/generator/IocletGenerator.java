@@ -89,7 +89,7 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
 
     protected void generateGetProducerIdMethod() {
         //log.info("Generate  method: "+Ioclet.GET_PRODUCER_NAME_METHOD);
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(Ioclet.GET_PRODUCER_ID_METHOD);
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(Ioclet.GET_ID_METHOD);
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         mb.returns(ClassName.get(String.class));
         mb.addAnnotation(Override.class);

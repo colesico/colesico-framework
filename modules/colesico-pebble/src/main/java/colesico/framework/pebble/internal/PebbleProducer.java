@@ -23,12 +23,12 @@ import colesico.framework.ioc.annotation.Produce;
 import colesico.framework.ioc.annotation.Producer;
 import colesico.framework.pebble.PebbleRenderer;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
+
 
 /**
  * @author Vladlen Larionov
  */
-@Producer(RANK_MINOR)
+@Producer(MinorTag.class)
 @Produce(PebbleRenderer.class)
 @Produce(PebbleTemplateLoader.class)
 @Produce(FrameworkExtension.class)

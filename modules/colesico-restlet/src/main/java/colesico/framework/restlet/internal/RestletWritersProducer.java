@@ -30,10 +30,10 @@ import colesico.framework.weblet.teleapi.writer.*;
 
 import javax.inject.Singleton;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
 
 
-@Producer(RANK_MINOR)
+
+@Producer(MinorTag.class)
 public class RestletWritersProducer {
 
     @Singleton

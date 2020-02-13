@@ -17,6 +17,7 @@
 package colesico.framework.config.codegen;
 
 import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.AnnotationElement;
 import colesico.framework.assist.codegen.model.ClassElement;
@@ -24,6 +25,7 @@ import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.config.*;
 import colesico.framework.ioc.annotation.Classed;
+import com.squareup.javapoet.TypeName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +64,7 @@ public class ConfigParser extends FrameworkAbstractParser {
     private ConfigElement createConfigElement(ClassElement configImplementation) {
 
         AnnotationElement<Config> configurationAnn = configImplementation.getAnnotation(Config.class);
-        String rank = configurationAnn.unwrap().rank();
+        TypeName tag = TypeName.get(configurationAnn.getValueTypeMirror(a->a.tag()));
 
         ClassElement configPrototype = getConfigPrototypeClass(configImplementation);
 
@@ -105,7 +107,7 @@ public class ConfigParser extends FrameworkAbstractParser {
         AnnotationElement<Named> namedAnn = configImplementation.getAnnotation(Named.class);
         String named = namedAnn == null ? null : namedAnn.unwrap().value();
 
-        ConfigElement configElement = new ConfigElement(configImplementation, configPrototype, rank, model, target, defaultMessage, classed, named);
+        ConfigElement configElement = new ConfigElement(configImplementation, configPrototype, tag, model, target, defaultMessage, classed, named);
 
         // Config source
         AnnotationElement<UseSource> useSourceAnn = configImplementation.getAnnotation(UseSource.class);

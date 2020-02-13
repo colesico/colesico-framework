@@ -20,8 +20,9 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.ioclet.*;
+import colesico.framework.ioc.tag.MinorTag;
+import colesico.framework.ioc.tag.Tag;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
 
 /**
  * @author Vladlen Larionov
@@ -56,22 +57,22 @@ public final class IocIoclet implements Ioclet {
     }
 
     @Override
-    public String getProducerId() {
+    public String getId() {
         return IocIoclet.class.getName();
     }
 
     @Override
-    public String getRank() {
-        return RANK_MINOR;
+    public Tag getTag() {
+        return new MinorTag();
     }
 
     @Override
     public void addFactories(Catalog catalog) {
-        if (catalog.accept(Catalog.Entry.of(new TypeKey<>(Ioc.class), false))) {
+        if (catalog.accept(Catalog.entry(new TypeKey<>(Ioc.class), null, false))) {
             catalog.add(getIOCContainerFactory());
         }
 
-        if (catalog.accept(Catalog.Entry.of(new TypeKey<>(ThreadScope.class), false))) {
+        if (catalog.accept(Catalog.entry(new TypeKey<>(ThreadScope.class), null, false))) {
             catalog.add(getThreadScopeFactory());
         }
     }

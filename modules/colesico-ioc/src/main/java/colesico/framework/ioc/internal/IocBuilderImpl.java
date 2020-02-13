@@ -76,7 +76,7 @@ public class IocBuilderImpl implements IocBuilder {
     }
 
     public static IocBuilderImpl forTests() {
-        return new IocBuilderImpl().useRank(Rank.RANK_TEST);
+        return new IocBuilderImpl().useRank(TestTag.class);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class IocBuilderImpl implements IocBuilder {
     }
 
     @Override
-    public IocBuilderImpl disableDefaultRanks() {
+    public IocBuilderImpl disableDefaultTags() {
         useDefaultRanks = false;
         return this;
     }
@@ -125,9 +125,9 @@ public class IocBuilderImpl implements IocBuilder {
 
         if (useDefaultRanks) {
             log.debug("Use default ranks: on");
-            ranker.pushRank(Rank.RANK_MINOR);
+            ranker.pushRank(MinorTag.class);
             ranker.pushRank(Rank.RANK_DEFAULT);
-            ranker.pushRank(Rank.RANK_EXTENSION);
+            ranker.pushRank(ExtensionTag.class);
         } else {
             log.debug("Use default ranks: off");
         }
@@ -164,7 +164,7 @@ public class IocBuilderImpl implements IocBuilder {
                 log.debug("Ioclets discovery: on");
                 List<Ioclet> foundList = lookupIoclets();
                 for (Ioclet ioclet : foundList) {
-                    if (!ignoredProducers.contains(ioclet.getProducerId())) {
+                    if (!ignoredProducers.contains(ioclet.getId())) {
                         ranker.addIoclet(ioclet);
                     }
                 }
@@ -172,7 +172,7 @@ public class IocBuilderImpl implements IocBuilder {
                 log.debug("Ioclets discovery: off");
             }
             for (Ioclet ioclet : extraIoclets) {
-                if (!ignoredProducers.contains(ioclet.getProducerId())) {
+                if (!ignoredProducers.contains(ioclet.getId())) {
                     ranker.addIoclet(ioclet);
                 }
             }
@@ -226,7 +226,7 @@ public class IocBuilderImpl implements IocBuilder {
         log.debug("Lookup ioclets...");
         ServiceLocator<Ioclet> locator = ServiceLocator.of(this.getClass(), Ioclet.class);
         for (Ioclet ioclet : locator.getProviders()) {
-            log.debug("Found ioclet '" + ioclet.getClass().getName() + "' for producer '" + ioclet.getProducerId() + "' with rank '" + ioclet.getRank() + "'");
+            log.debug("Found ioclet '" + ioclet.getClass().getName() + "' for producer '" + ioclet.getId() + "' with rank '" + ioclet.getRank() + "'");
             result.add(ioclet);
         }
         return result;

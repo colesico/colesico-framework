@@ -16,6 +16,7 @@
 
 package colesico.framework.ioc.ioclet;
 
+import colesico.framework.ioc.tag.Tag;
 import colesico.framework.ioc.annotation.Producer;
 
 /**
@@ -25,27 +26,26 @@ import colesico.framework.ioc.annotation.Producer;
  * @author Vladlen Larionov
  */
 public interface Ioclet {
-    String GET_PRODUCER_ID_METHOD = "getProducerId";
-    String GET_RANK_METHOD = "getRank";
+    String GET_ID_METHOD = "getId";
+    String GET_TAG_METHOD = "getTag";
     String ADD_FACTORIES_METHOD = "addFactories";
     String CATALOG_PARAM = "catalog";
 
     /**
-     * Unique producer ID on which the ioclet is based on.
-     * Typically it is a full name of producer class
+     * Unique ioclet ID.
+     * Typically it is a full name of producer class on which the ioclet is based on.
      *
      * @return
      * @see Producer
      */
-    String getProducerId();
+    String getId();
 
     /**
-     * Rank of Ioclet. Obtained from producer definition
+     * Returns tag obtained from producer definition
      *
-     * @return ioclet rank
-     * @see colesico.framework.ioc.Rank
+     * @see Tag
      */
-    String getRank();
+    Tag getTag();
 
     /**
      * This method implementation should register the factories

@@ -22,12 +22,12 @@ import colesico.framework.widget.WidgetKit;
 
 import javax.inject.Singleton;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
+
 
 /**
  * @author Vladlen Larionov
  */
-@Producer(RANK_MINOR)
+@Producer(MinorTag.class)
 @Produce(WidgetKitImpl.class)
 @Produce(CompositePageProvider.class)
 public class WidgetProducer {

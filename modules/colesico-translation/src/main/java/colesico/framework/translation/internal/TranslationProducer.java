@@ -22,9 +22,9 @@ import colesico.framework.translation.TranslationKit;
 
 import javax.inject.Singleton;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
 
-@Producer(RANK_MINOR)
+
+@Producer(MinorTag.class)
 @Produce(TranslationKitImpl.class)
 public class TranslationProducer {
 

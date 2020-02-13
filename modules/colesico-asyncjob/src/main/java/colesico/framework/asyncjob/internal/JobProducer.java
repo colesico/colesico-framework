@@ -28,9 +28,9 @@ import colesico.framework.ioc.annotation.Producer;
 
 import javax.inject.Singleton;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
 
-@Producer(RANK_MINOR)
+
+@Producer(MinorTag.class)
 @Produce(JobServiceImpl.class)
 @Produce(PostgreJobDao.class)
 @Produce(GsonPayloadConverter.class)

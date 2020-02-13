@@ -21,9 +21,9 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleException;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
 
-@Producer(RANK_MINOR)
+
+@Producer(MinorTag.class)
 public class TeleApiProducer {
     protected static final String NO_DATA_PORT_MSG = "TeleAPI: Data port for the active thread is not provided";
 

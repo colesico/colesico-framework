@@ -22,9 +22,9 @@ import colesico.framework.resource.ResourceKit;
 
 import javax.inject.Singleton;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
 
-@Producer(RANK_MINOR)
+
+@Producer(MinorTag.class)
 @Produce(ResourceKitImpl.class)
 @Produce(LocalizingTool.class)
 @Produce(RewritingTool.class)

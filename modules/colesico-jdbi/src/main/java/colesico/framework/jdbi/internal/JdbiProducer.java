@@ -23,9 +23,9 @@ import colesico.framework.ioc.annotation.Unscoped;
 import colesico.framework.jdbi.JdbiConfigPrototype;
 import org.jdbi.v3.core.Jdbi;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
 
-@Producer(RANK_MINOR)
+
+@Producer(MinorTag.class)
 public class JdbiProducer {
 
     /**

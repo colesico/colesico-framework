@@ -22,9 +22,9 @@ import colesico.framework.ioc.annotation.Producer;
 
 import javax.inject.Singleton;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
 
-@Producer(RANK_MINOR)
+
+@Producer(MinorTag.class)
 @Produce(EventBusImpl.class)
 public class EventBusProducer {
 

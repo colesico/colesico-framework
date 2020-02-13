@@ -23,12 +23,12 @@ import colesico.framework.router.RouterContext;
 
 import javax.inject.Singleton;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
+
 
 /**
  * @author Vladlen Larionov
  */
-@Producer(RANK_MINOR)
+@Producer(MinorTag.class)
 @Produce(RouterImpl.class)
 public class RouterProducer {
 

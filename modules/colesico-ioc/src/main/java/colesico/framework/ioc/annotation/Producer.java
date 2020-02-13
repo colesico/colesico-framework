@@ -16,11 +16,9 @@
 
 package colesico.framework.ioc.annotation;
 
-import colesico.framework.ioc.Rank;
+import colesico.framework.ioc.tag.Tag;
 
 import java.lang.annotation.*;
-
-import static colesico.framework.ioc.Rank.RANK_DEFAULT;
 
 /**
  * Declares producer for IoC container
@@ -34,9 +32,9 @@ import static colesico.framework.ioc.Rank.RANK_DEFAULT;
 public @interface Producer {
 
     /**
-     * Rank of the producer
-     * @see Rank
-     * @return rank value
+     * Tag of the producer
+     * @see Tag
+     * @return tag class
      */
-    String value() default RANK_DEFAULT;
+    Class<? extends Tag> value() default Tag.class;
 }

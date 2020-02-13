@@ -225,7 +225,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         String packageName = confElement.getImplementation().getPackageName();
 
         ProducerGenerator prodGen = new ProducerGenerator(packageName, classSimpleName, this.getClass(), getProcessingEnv());
-        prodGen.setProducerRank(confElement.getRank());
+        prodGen.setProducerTag(confElement.getTag());
 
         // Generates the configuration implementation producing  via annotation @Produce
         AnnotationSpec.Builder produceAnn = prodGen.addProduceAnnotation(TypeName.get(confElement.getImplementation().asType()));

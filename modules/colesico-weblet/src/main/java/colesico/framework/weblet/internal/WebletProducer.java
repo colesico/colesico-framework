@@ -24,9 +24,9 @@ import colesico.framework.weblet.teleapi.*;
 import javax.inject.Singleton;
 import java.nio.charset.StandardCharsets;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
 
-@Producer(RANK_MINOR)
+
+@Producer(MinorTag.class)
 @Produce(CSRFProtector.class)
 @Produce(WebletDataPortImpl.class)
 @Produce(WebletTeleDriverImpl.class)

@@ -26,9 +26,9 @@ import colesico.framework.profile.teleapi.ProfileTeleAssist;
 import javax.inject.Singleton;
 import java.util.Locale;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
 
-@Producer(RANK_MINOR)
+
+@Producer(MinorTag.class)
 @Produce(DefaultProfileKit.class)
 @Produce(ProfileConfigImpl.class)
 @Produce(ProfileTeleAssistImpl.class)

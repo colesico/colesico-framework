@@ -31,9 +31,9 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Singleton;
 import javax.sql.DataSource;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
 
-@Producer(RANK_MINOR)
+
+@Producer(MinorTag.class)
 public class HikariProducer {
 
     protected final Logger log = LoggerFactory.getLogger(HikariProducer.class);

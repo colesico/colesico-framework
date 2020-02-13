@@ -24,12 +24,12 @@ import colesico.framework.undertow.UndertowConfigPrototype;
 
 import javax.inject.Singleton;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
+
 
 /**
  * @author Vladlen Larionov
  */
-@Producer(RANK_MINOR)
+@Producer(MinorTag.class)
 @Produce(UndertowRequestProcessor.class)
 @Produce(UndertowConfigImpl.class)
 @Produce(UndertowHttpServer.class)

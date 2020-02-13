@@ -18,6 +18,7 @@ package colesico.framework.ioc;
 
 import colesico.framework.ioc.internal.IocBuilderImpl;
 import colesico.framework.ioc.ioclet.Ioclet;
+import colesico.framework.ioc.tag.Tag;
 
 /**
  * IoC container builder interface
@@ -51,22 +52,21 @@ public interface IocBuilder {
     }
 
     /**
-     * Add  rank to ranks stack.
-     * By default builder use this ranks: 'minor', 'default', 'extension'.
-     * With tis method 'test' rank can be added.
-     *
-     * @param name rank name
-     * @return builder instance
-     * @see Rank
+     * Add tag to tags priority stack.
+     * By default builder use this tags:
+     *  {@link colesico.framework.ioc.tag.MinorTag},
+     *  {@link colesico.framework.ioc.tag.DefaultTag},
+     *  {@link colesico.framework.ioc.tag.ExtensionTag},
+     * With tis method  any other tag can be added.
      */
-    IocBuilder useRank(String name);
+    IocBuilder useTag(Class<? extends Tag> tagClass);
 
     /**
-     * Disable using default ranks
+     * Disable using default tags
      *
      * @return
      */
-    IocBuilder disableDefaultRanks();
+    IocBuilder disableDefaultTags();
 
     /**
      * Disable automatic ioclets discovery.

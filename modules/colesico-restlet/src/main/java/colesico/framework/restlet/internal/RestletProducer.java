@@ -24,12 +24,12 @@ import colesico.framework.restlet.teleapi.gson.GsonConverter;
 
 import javax.inject.Singleton;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
+
 
 /**
  * @author Vladlen Larionov
  */
-@Producer(RANK_MINOR)
+@Producer(MinorTag.class)
 @Produce(RestletDataPortImpl.class)
 @Produce(RestletTeleDriverImpl.class)
 @Produce(GsonConverter.class)

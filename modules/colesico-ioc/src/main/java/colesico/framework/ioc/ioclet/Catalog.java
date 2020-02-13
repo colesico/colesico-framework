@@ -18,6 +18,7 @@ package colesico.framework.ioc.ioclet;
 
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.Key;
+import colesico.framework.ioc.tag.Tag;
 
 /**
  * Factories catalog.
@@ -30,19 +31,27 @@ import colesico.framework.ioc.key.Key;
 public interface Catalog {
     String ACCEPT_METHOD = "accept";
     String ADD_METHOD = "add";
+    String ENTRY_METHOD = "entry";
 
     <T> void add(Factory<T> factory);
 
     <T> boolean accept(Entry<T> entry);
 
-    class Entry<T> {
-        public static final String OF_METHOD = "of";
+    /**
+     * Entry factory
+     */
+    static <T> Entry<T> entry(Key<T> key, Tag tag, boolean polyproducing) {
+        return new Entry<>(key, tag, polyproducing);
+    }
 
+    class Entry<T> {
         private final Key<T> key;
+        private final Tag tag;
         private final boolean polyproducing;
 
-        public Entry(Key<T> key, boolean polyproducing) {
+        public Entry(Key<T> key, Tag tag, boolean polyproducing) {
             this.key = key;
+            this.tag = tag;
             this.polyproducing = polyproducing;
         }
 
@@ -54,8 +63,5 @@ public interface Catalog {
             return polyproducing;
         }
 
-        public static <T> Entry<T> of(Key<T> key, boolean polyproducing) {
-            return new Entry<>(key, polyproducing);
-        }
     }
 }

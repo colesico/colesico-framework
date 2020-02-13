@@ -20,12 +20,12 @@ import colesico.framework.ioc.annotation.Producer;
 import colesico.framework.ioc.annotation.Unscoped;
 import colesico.framework.webstatic.StaticContent;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
+
 
 /**
  * @author Vladlen Larionov
  */
-@Producer(RANK_MINOR)
+@Producer(MinorTag.class)
 @Produce(StaticContentBuilderImpl.class)
 public class WebStaticProducer {
     @Unscoped

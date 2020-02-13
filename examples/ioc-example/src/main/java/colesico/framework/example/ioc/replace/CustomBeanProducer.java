@@ -18,12 +18,12 @@ package colesico.framework.example.ioc.replace;
 
 import colesico.framework.ioc.annotation.Produce;
 import colesico.framework.ioc.annotation.Producer;
-import colesico.framework.ioc.Rank;
+
 
 /**
  * Use the extension rank to replace default or minor production of default plugin
  */
-@Producer(Rank.RANK_EXTENSION)
+@Producer(ExtensionTag.class)
 @Produce(CustomBean.class)
 public class CustomBeanProducer {
 

@@ -19,6 +19,7 @@ package colesico.framework.config.codegen;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.DefaultConfig;
+import com.squareup.javapoet.TypeName;
 
 import javax.lang.model.type.TypeMirror;
 
@@ -41,7 +42,7 @@ public class ConfigElement {
     /**
      * Configuration rank
      */
-    private final String rank;
+    private final TypeName tag;
 
     /**
      * Type of configuration
@@ -75,7 +76,7 @@ public class ConfigElement {
 
     public ConfigElement(ClassElement implementation,
                          ClassElement prototype,
-                         String rank,
+                         TypeName tag,
                          ConfigModel model,
                          ClassElement target,
 
@@ -85,7 +86,7 @@ public class ConfigElement {
 
         this.implementation = implementation;
         this.prototype = prototype;
-        this.rank = rank;
+        this.tag = tag;
         this.model = model;
         this.target = target;
         this.defaultMessage = defaultMessage;
@@ -101,8 +102,8 @@ public class ConfigElement {
         return prototype;
     }
 
-    public String getRank() {
-        return rank;
+    public TypeName getTag() {
+        return tag;
     }
 
     public ConfigModel getModel() {
@@ -138,7 +139,7 @@ public class ConfigElement {
         return "ConfigElement{" +
                 "implementation=" + implementation +
                 ", prototype=" + prototype +
-                ", rank='" + rank + '\'' +
+                ", rank='" + tag + '\'' +
                 ", model=" + model +
                 ", target=" + target +
                 ", classedDefault=" + defaultMessage +

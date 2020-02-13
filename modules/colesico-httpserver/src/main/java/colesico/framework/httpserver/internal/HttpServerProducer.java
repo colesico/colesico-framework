@@ -21,9 +21,9 @@ import colesico.framework.httpserver.ErrorHandler;
 import colesico.framework.ioc.annotation.Produce;
 import colesico.framework.ioc.annotation.Producer;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
 
-@Producer(RANK_MINOR)
+
+@Producer(MinorTag.class)
 @Produce(DefaultErrorHandler.class)
 public class HttpServerProducer {
     public ErrorHandler getDefaultErrorHandler(DefaultErrorHandler impl) {

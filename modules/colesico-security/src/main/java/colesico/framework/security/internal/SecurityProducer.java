@@ -26,9 +26,9 @@ import colesico.framework.security.teleapi.PrincipalSerializer;
 
 import javax.inject.Singleton;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
 
-@Producer(RANK_MINOR)
+
+@Producer(MinorTag.class)
 @Produce(DefaultSecurityKit.class)
 @Produce(PrincipalSerializerImpl.class)
 public class SecurityProducer {

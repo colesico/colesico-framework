@@ -21,14 +21,14 @@ import colesico.framework.http.HttpResponse;
 import colesico.framework.ioc.annotation.Producer;
 import colesico.framework.ioc.scope.ThreadScope;
 
-import static colesico.framework.ioc.Rank.RANK_MINOR;
+
 
 /**
  * Default HTTP producer
  *
  * @author Vladlen Larionov
  */
-@Producer(RANK_MINOR)
+@Producer(MinorTag.class)
 public class HttpProducer {
 
     public HttpContext getHttpContext(ThreadScope scope) {
