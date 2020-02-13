@@ -17,6 +17,8 @@
 package colesico.framework.ioc;
 
 
+import colesico.framework.ioc.annotation.Message;
+
 /**
  * Basic supplier interface.
  * Supplier is used to obtain instances from IoC container with support of message pass to the factory that creates that instance

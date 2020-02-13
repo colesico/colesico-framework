@@ -17,10 +17,11 @@
 package colesico.framework.ioc.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.ioc.annotation.PostProduce;
 
 /**
  * Post produce listener element
- * @see colesico.framework.ioc.PostProduce
+ * @see PostProduce
  */
 public class PPLDefinitionElement {
 

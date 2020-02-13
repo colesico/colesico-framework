@@ -16,8 +16,8 @@
 
 package colesico.framework.example.config.classed;
 
-import colesico.framework.ioc.Produce;
-import colesico.framework.ioc.Producer;
+import colesico.framework.ioc.annotation.Produce;
+import colesico.framework.ioc.annotation.Producer;
 
 @Producer
 @Produce(ClassedConfigsBean.class)

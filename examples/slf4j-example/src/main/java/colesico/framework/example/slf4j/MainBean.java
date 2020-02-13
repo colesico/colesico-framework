@@ -16,7 +16,7 @@
 
 package colesico.framework.example.slf4j;
 
-import colesico.framework.ioc.Contextual;
+import colesico.framework.ioc.annotation.Contextual;
 import colesico.framework.service.Service;
 import org.slf4j.Logger;
 

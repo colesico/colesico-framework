@@ -39,6 +39,9 @@ open module colesico.framework.ioc {
 
     exports colesico.framework.ioc;
     exports colesico.framework.ioc.ioclet;
+    exports colesico.framework.ioc.key;
+    exports colesico.framework.ioc.annotation;
+    exports colesico.framework.ioc.exception;
 
     // Code generation
     exports colesico.framework.ioc.codegen.model;

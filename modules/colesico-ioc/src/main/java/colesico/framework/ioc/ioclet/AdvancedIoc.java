@@ -17,8 +17,8 @@
 package colesico.framework.ioc.ioclet;
 
 import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.Key;
-import colesico.framework.ioc.UnsatisfiedInjectionException;
+import colesico.framework.ioc.key.Key;
+import colesico.framework.ioc.exception.UnsatisfiedInjectionException;
 
 /**
  * IoC container "instrumental" interface.

@@ -15,9 +15,9 @@
  */
 package colesico.framework.webstatic.internal;
 
-import colesico.framework.ioc.Produce;
-import colesico.framework.ioc.Producer;
-import colesico.framework.ioc.Unscoped;
+import colesico.framework.ioc.annotation.Produce;
+import colesico.framework.ioc.annotation.Producer;
+import colesico.framework.ioc.annotation.Unscoped;
 import colesico.framework.webstatic.StaticContent;
 
 import static colesico.framework.ioc.Rank.RANK_MINOR;

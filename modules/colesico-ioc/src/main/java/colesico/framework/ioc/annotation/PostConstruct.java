@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.annotation;
 
 import java.lang.annotation.*;
 
-/**
- * Defines instance scope as thread scoped
- *
- * @author Vladlen Larionov
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
-@Inherited
 @Documented
-@CustomScope(ThreadScope.class)
-public @interface ThreadScoped {
+@Retention(RetentionPolicy.SOURCE)
+@Target({ElementType.METHOD})
+@Inherited
+public @interface PostConstruct {
 }

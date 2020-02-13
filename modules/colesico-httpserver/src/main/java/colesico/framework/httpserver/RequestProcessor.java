@@ -19,7 +19,7 @@ package colesico.framework.httpserver;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.http.HttpResponse;
-import colesico.framework.ioc.ThreadScope;
+import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.Router;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;

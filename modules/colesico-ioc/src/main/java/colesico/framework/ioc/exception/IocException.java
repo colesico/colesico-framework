@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.exception;
+
+import colesico.framework.ioc.Ioc;
 
 /**
- * Thread scope interface
+ * General IoC error
  *
  * @author Vladlen Larionov
+ * @see Ioc
  */
-public interface ThreadScope extends Scope {
-    /**
-     * Should be called by the "dispatcher" before processing the request.
-     * For example, the dispatcher of http request  (servlet) must call this method before processing the request.
-     */
-    void init();
+public class IocException extends RuntimeException {
+    public IocException(String message) {
+        super(message);
+    }
 
-    /**
-     * Should be called by the "dispatcher" after processing the request
-     */
-    void destroy();
+    public IocException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

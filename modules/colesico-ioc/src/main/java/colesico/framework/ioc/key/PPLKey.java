@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.ioclet;
+package colesico.framework.ioc.key;
 
-import colesico.framework.ioc.Key;
+import colesico.framework.ioc.annotation.PostProduce;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -26,7 +26,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  *
  * @author Vladlen Larionov
  * @see Key
- * @see colesico.framework.ioc.PostProduce
+ * @see PostProduce
  */
 public final class PPLKey<T> implements Key<T> {
 

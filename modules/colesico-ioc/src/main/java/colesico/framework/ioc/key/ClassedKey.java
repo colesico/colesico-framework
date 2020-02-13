@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.key;
 
 /**
- * The key for obtaining an instance from the IOC container by instance class.
- *
+ * The key by which the IoC container will find the factory to instantiate the class T annotated with @Classed
+ * @param <T> instance type
  * @see Key
- *
- * @author Vladlen Larionov
  */
-public final class TypeKey<T> implements Key<T> {
-
+public final class ClassedKey<T> implements Key<T> {
     private final String typeName;
+    private final String classifier;
 
-    public TypeKey(String typeName) {
+    public ClassedKey(String typeName, String classifier) {
         this.typeName = typeName;
+        this.classifier = classifier;
     }
 
-    public TypeKey(Class<T> clazz) {
+    public ClassedKey(Class<T> clazz, Class<?> classifier) {
         this.typeName = clazz.getCanonicalName();
+        this.classifier = classifier.getCanonicalName();
     }
 
     @Override
@@ -40,21 +40,24 @@ public final class TypeKey<T> implements Key<T> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        TypeKey typeKey = (TypeKey) o;
+        ClassedKey<?> that = (ClassedKey<?>) o;
 
-        return typeName.equals(typeKey.typeName);
-
+        if (!typeName.equals(that.typeName)) return false;
+        return classifier.equals(that.classifier);
     }
 
     @Override
     public int hashCode() {
-        return typeName.hashCode();
+        int result = typeName.hashCode();
+        result = 31 * result + classifier.hashCode();
+        return result;
     }
 
     @Override
     public String toString() {
-        return "TypeKey{" +
+        return "ClassedKey{" +
                 "className='" + typeName + '\'' +
+                ", classifier='" + classifier + '\'' +
                 '}';
     }
 }

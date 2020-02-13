@@ -14,26 +14,21 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.annotation;
+
+import javax.inject.Qualifier;
+import java.lang.annotation.*;
+
 
 /**
- * Will be throw when the IOC container can not find the factory for given key.
- *
- * @author Vladlen Larionov
- * @see Key
- * @see Ioc
+ * Specifies an optional injection.
+ * If this annotation in specified on constructor parameter the parameter value may be null in case the
+ * dependency is not found.
  */
-public class UnsatisfiedInjectionException extends IocException {
-    public static final String PROVIDER_NOT_FOUND_MSG = "Unsatisfied injection for key '%s'";
-
-    private final Key key;
-
-    public UnsatisfiedInjectionException(Key key) {
-        super(String.format(PROVIDER_NOT_FOUND_MSG, key.toString()));
-        this.key = key;
-    }
-
-    public Key getKey() {
-        return key;
-    }
+@Qualifier
+@Documented
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+public @interface OptionalInject {
 }

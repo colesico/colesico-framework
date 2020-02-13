@@ -18,7 +18,7 @@ package colesico.framework.test.dslvalidator;
 
 import colesico.framework.dslvalidator.builder.ValidatorBuilder;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
-import colesico.framework.ioc.Unscoped;
+import colesico.framework.ioc.annotation.Unscoped;
 import colesico.framework.validation.Validator;
 
 import javax.inject.Inject;

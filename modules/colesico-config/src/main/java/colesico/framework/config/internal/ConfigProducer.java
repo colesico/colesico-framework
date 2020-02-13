@@ -18,8 +18,8 @@ package colesico.framework.config.internal;
 
 import colesico.framework.config.ConfigSource;
 import colesico.framework.config.PropertiesSource;
-import colesico.framework.ioc.Produce;
-import colesico.framework.ioc.Producer;
+import colesico.framework.ioc.annotation.Produce;
+import colesico.framework.ioc.annotation.Producer;
 
 import javax.inject.Singleton;
 

@@ -17,8 +17,8 @@
 package colesico.framework.ioc.internal;
 
 import colesico.framework.ioc.IocBuilder;
-import colesico.framework.ioc.IocException;
-import colesico.framework.ioc.Key;
+import colesico.framework.ioc.exception.IocException;
+import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.ioclet.Catalog;
 import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.ioclet.Ioclet;

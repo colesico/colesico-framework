@@ -16,6 +16,8 @@
 
 package colesico.framework.ioc;
 
+import colesico.framework.ioc.annotation.Message;
+
 /**
  * Automatically generated IoC message that can be used for example for Logger factories (or other)
  * to  get the class name for which the logger instance  is intended.

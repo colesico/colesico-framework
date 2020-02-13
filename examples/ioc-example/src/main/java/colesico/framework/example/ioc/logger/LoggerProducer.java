@@ -18,9 +18,9 @@ package colesico.framework.example.ioc.logger;
 
 
 import colesico.framework.ioc.InjectionPoint;
-import colesico.framework.ioc.Message;
-import colesico.framework.ioc.Produce;
-import colesico.framework.ioc.Producer;
+import colesico.framework.ioc.annotation.Message;
+import colesico.framework.ioc.annotation.Produce;
+import colesico.framework.ioc.annotation.Producer;
 
 @Producer
 @Produce(MainBeanLOG.class)

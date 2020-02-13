@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.scope;
 
 /**
- * General IoC error
+ * Values factory for a scope.
+ * Used by the scope to create a missing values.
+ *
+ * @see Scope
  *
  * @author Vladlen Larionov
- * @see Ioc
  */
-public class IocException extends RuntimeException {
-    public IocException(String message) {
-        super(message);
-    }
-
-    public IocException(String message, Throwable cause) {
-        super(message, cause);
-    }
+@FunctionalInterface
+public interface Fabricator<T,C> {
+    /**
+     * Returns instance of T.
+     *
+     * @return a value
+     */
+    T fabricate(C fabricationContext);
 }

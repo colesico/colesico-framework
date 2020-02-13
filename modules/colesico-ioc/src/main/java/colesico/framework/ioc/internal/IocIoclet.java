@@ -17,8 +17,8 @@
 package colesico.framework.ioc.internal;
 
 import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.ThreadScope;
-import colesico.framework.ioc.TypeKey;
+import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.ioclet.*;
 
 import static colesico.framework.ioc.Rank.RANK_MINOR;

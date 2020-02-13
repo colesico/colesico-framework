@@ -16,7 +16,7 @@
 
 package colesico.framework.weblet.internal;
 
-import colesico.framework.ioc.ClassedKey;
+import colesico.framework.ioc.key.ClassedKey;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.weblet.teleapi.*;
 

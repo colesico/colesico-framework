@@ -17,7 +17,7 @@
 package colesico.framework.ioc.ioclet;
 
 import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.Key;
+import colesico.framework.ioc.key.Key;
 
 /**
  * Factories catalog.

@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.annotation;
 
+import colesico.framework.ioc.InjectionPoint;
+
+import javax.inject.Qualifier;
 import java.lang.annotation.*;
 
 /**
- * Producer method code generation options
+ * Use this annotation to pass InjectionPoint to instance factory.
+ * This annotation is used to mark the constructor parameter to pass the information about the class in which this parameter is injected.
+ * This information is used while the parameter instance been created.
+ * For example this annotation should be used to context dependent logger injection.
  *
- * @author Vladlen Larionov
- * @see Produce
- * @see Producer
+ *
+ * @see InjectionPoint
  */
-@Retention(RetentionPolicy.SOURCE)
-@Target({ElementType.METHOD})
-@Inherited
+@Qualifier
 @Documented
-public @interface ProducingOptions {
-    boolean postConstruct() default false;
-
-    boolean postProduce() default false;
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+public @interface Contextual {
 }

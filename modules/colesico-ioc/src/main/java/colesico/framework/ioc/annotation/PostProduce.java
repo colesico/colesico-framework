@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.annotation;
 
-import colesico.framework.ioc.ioclet.PPLKey;
+import colesico.framework.ioc.key.PPLKey;
 
 import java.lang.annotation.*;
 

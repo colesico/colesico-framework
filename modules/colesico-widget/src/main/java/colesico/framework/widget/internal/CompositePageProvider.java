@@ -15,7 +15,7 @@
  */
 package colesico.framework.widget.internal;
 
-import colesico.framework.ioc.ThreadScope;
+import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.widget.CompositePage;
 
 import javax.inject.Inject;

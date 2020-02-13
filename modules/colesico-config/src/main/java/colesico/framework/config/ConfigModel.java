@@ -17,8 +17,8 @@
 package colesico.framework.config;
 
 
-import colesico.framework.ioc.Classed;
-import colesico.framework.ioc.Message;
+import colesico.framework.ioc.annotation.Classed;
+import colesico.framework.ioc.annotation.Message;
 import colesico.framework.ioc.Polysupplier;
 
 /**

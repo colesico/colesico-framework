@@ -16,6 +16,10 @@
 
 package colesico.framework.ioc;
 
+import colesico.framework.ioc.exception.UnsatisfiedInjectionException;
+import colesico.framework.ioc.key.Key;
+import colesico.framework.ioc.key.TypeKey;
+
 import javax.inject.Provider;
 
 /**

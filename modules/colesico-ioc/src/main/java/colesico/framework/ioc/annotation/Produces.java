@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.annotation;
 
-import javax.inject.Qualifier;
 import java.lang.annotation.*;
 
-
 /**
- * Indicates that the injection parameter is an IoC message.
- *
- * IoC messages are not retrieved statically from the IOC container
- * but are passed as a parameter to the instance factory
+ * Set of @Produce annotation
+ * @see Produce
+ * @author Vladlen Larionov
  */
-@Qualifier
-@Documented
-@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
 @Inherited
-public @interface Message {
+@Documented
+public @interface Produces {
+    Produce[] value();
 }

@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.annotation;
 
+import javax.inject.Qualifier;
 import java.lang.annotation.*;
 
+
 /**
- * An instance of the class associated with this annotation
- * will be created each time it is requested from the IoC container.
+ * Indicates that the injection parameter is an IoC message.
  *
- * @author Vladlen Larionov
+ * IoC messages are not retrieved statically from the IOC container
+ * but are passed as a parameter to the instance factory
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
-@Inherited
+@Qualifier
 @Documented
-public @interface Unscoped {
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+public @interface Message {
 }

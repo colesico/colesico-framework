@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
-
-import java.lang.annotation.*;
+package colesico.framework.ioc.scope;
 
 /**
- * Set of @Produce annotation
- * @see Produce
+ * Thread scope interface
+ *
  * @author Vladlen Larionov
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@Inherited
-@Documented
-public @interface Produces {
-    Produce[] value();
+public interface ThreadScope extends Scope {
+    /**
+     * Should be called by the "dispatcher" before processing the request.
+     * For example, the dispatcher of http request  (servlet) must call this method before processing the request.
+     */
+    void init();
+
+    /**
+     * Should be called by the "dispatcher" after processing the request
+     */
+    void destroy();
 }

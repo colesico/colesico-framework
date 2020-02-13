@@ -22,7 +22,7 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenMode;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.assist.codegen.model.MethodElement;
-import colesico.framework.ioc.InstanceProducingException;
+import colesico.framework.ioc.exception.InstanceProducingException;
 import colesico.framework.ioc.InjectionPoint;
 import colesico.framework.ioc.codegen.model.CustomFactoryElement;
 import colesico.framework.ioc.codegen.model.FactoryElement;

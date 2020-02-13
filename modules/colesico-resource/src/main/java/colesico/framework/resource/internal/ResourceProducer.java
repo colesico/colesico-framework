@@ -16,8 +16,8 @@
 package colesico.framework.resource.internal;
 
 
-import colesico.framework.ioc.Produce;
-import colesico.framework.ioc.Producer;
+import colesico.framework.ioc.annotation.Produce;
+import colesico.framework.ioc.annotation.Producer;
 import colesico.framework.resource.ResourceKit;
 
 import javax.inject.Singleton;

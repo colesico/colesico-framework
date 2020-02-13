@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.annotation;
 
-import javax.inject.Qualifier;
 import java.lang.annotation.*;
 
-
 /**
- * Specifies an optional injection.
- * If this annotation in specified on constructor parameter the parameter value may be null in case the
- * dependency is not found.
+ * An instance of the class associated with this annotation
+ * will be created each time it is requested from the IoC container.
+ *
+ * @author Vladlen Larionov
  */
-@Qualifier
-@Documented
-@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Inherited
-public @interface OptionalInject {
+@Documented
+public @interface Unscoped {
 }

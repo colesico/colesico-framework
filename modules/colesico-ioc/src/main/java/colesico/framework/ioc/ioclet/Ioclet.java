@@ -16,6 +16,8 @@
 
 package colesico.framework.ioc.ioclet;
 
+import colesico.framework.ioc.annotation.Producer;
+
 /**
  * IoC container module that provides the factories to the IoC container.
  * <p>
@@ -33,7 +35,7 @@ public interface Ioclet {
      * Typically it is a full name of producer class
      *
      * @return
-     * @see colesico.framework.ioc.Producer
+     * @see Producer
      */
     String getProducerId();
 

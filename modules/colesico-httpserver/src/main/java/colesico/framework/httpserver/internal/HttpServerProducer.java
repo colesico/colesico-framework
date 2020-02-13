@@ -18,8 +18,8 @@ package colesico.framework.httpserver.internal;
 
 import colesico.framework.httpserver.DefaultErrorHandler;
 import colesico.framework.httpserver.ErrorHandler;
-import colesico.framework.ioc.Produce;
-import colesico.framework.ioc.Producer;
+import colesico.framework.ioc.annotation.Produce;
+import colesico.framework.ioc.annotation.Producer;
 
 import static colesico.framework.ioc.Rank.RANK_MINOR;
 

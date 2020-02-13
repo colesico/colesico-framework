@@ -14,21 +14,29 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.annotation;
+
+import colesico.framework.ioc.Rank;
 
 import java.lang.annotation.*;
 
+import static colesico.framework.ioc.Rank.RANK_DEFAULT;
+
 /**
- * Defines the producing of the instance as "multi-variant".
- * This means that the instance creation can be implemented with not just one factory.
- * To get that instance it is possible to use any one of that factories.
+ * Declares producer for IoC container
  *
  * @author Vladlen Larionov
- * @see Polysupplier
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target(ElementType.TYPE)
 @Inherited
 @Documented
-public @interface Polyproduce {
+public @interface Producer {
+
+    /**
+     * Rank of the producer
+     * @see Rank
+     * @return rank value
+     */
+    String value() default RANK_DEFAULT;
 }

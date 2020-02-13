@@ -21,7 +21,7 @@ import colesico.framework.example.transaction.TextBuffer;
 import colesico.framework.example.transaction.TransctionalShellMock;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
-import colesico.framework.ioc.NamedKey;
+import colesico.framework.ioc.key.NamedKey;
 import colesico.framework.transaction.TransactionalShell;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

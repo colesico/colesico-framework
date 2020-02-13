@@ -18,7 +18,7 @@ package colesico.framework.weblet.internal;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpRequest;
-import colesico.framework.ioc.ThreadScope;
+import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.RouterContext;
 import colesico.framework.security.PrincipalRequiredException;
 import colesico.framework.teleapi.DataPort;

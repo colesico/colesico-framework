@@ -14,22 +14,27 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.annotation;
+
+import colesico.framework.ioc.key.ClassedKey;
+
+import javax.inject.Qualifier;
+import java.lang.annotation.*;
 
 /**
- * Values factory for a scope.
- * Used by the scope to create a missing values.
- *
- * @see Scope
+ * Classes-based injection qualifier.
+ * Use this annotation to differentiate injection between different objects of the same type.
+ * This annotation is equivalent to @Named
  *
  * @author Vladlen Larionov
+ * @see ClassedKey
+ * @see javax.inject.Named
  */
-@FunctionalInterface
-public interface Fabricator<T,C> {
-    /**
-     * Returns instance of T.
-     *
-     * @return a value
-     */
-    T fabricate(C fabricationContext);
+@Qualifier
+@Documented
+@Target({ElementType.METHOD, ElementType.TYPE, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+public @interface Classed {
+    Class<?> value();
 }

@@ -16,10 +16,10 @@
 
 package colesico.framework.ioc.internal;
 
-import colesico.framework.ioc.Key;
+import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.Polysupplier;
 import colesico.framework.ioc.Supplier;
-import colesico.framework.ioc.UnsatisfiedInjectionException;
+import colesico.framework.ioc.exception.UnsatisfiedInjectionException;
 import colesico.framework.ioc.ioclet.AdvancedIoc;
 import colesico.framework.ioc.ioclet.DefaultPolysupplier;
 import colesico.framework.ioc.ioclet.DefaultProvider;

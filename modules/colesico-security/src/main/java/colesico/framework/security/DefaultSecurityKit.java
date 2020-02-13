@@ -16,9 +16,9 @@
 
 package colesico.framework.security;
 
-import colesico.framework.ioc.Key;
-import colesico.framework.ioc.ThreadScope;
-import colesico.framework.ioc.TypeKey;
+import colesico.framework.ioc.key.Key;
+import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.service.InvocationContext;
 import colesico.framework.teleapi.DataPort;
 

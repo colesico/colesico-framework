@@ -16,9 +16,9 @@
 
 package colesico.framework.weblet.internal;
 
-import colesico.framework.ioc.Classed;
-import colesico.framework.ioc.Produce;
-import colesico.framework.ioc.Producer;
+import colesico.framework.ioc.annotation.Classed;
+import colesico.framework.ioc.annotation.Produce;
+import colesico.framework.ioc.annotation.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.security.Principal;
 import colesico.framework.weblet.*;

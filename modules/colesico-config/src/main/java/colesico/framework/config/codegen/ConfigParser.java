@@ -23,8 +23,7 @@ import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.config.*;
-import colesico.framework.ioc.Classed;
-import org.apache.commons.lang3.StringUtils;
+import colesico.framework.ioc.annotation.Classed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

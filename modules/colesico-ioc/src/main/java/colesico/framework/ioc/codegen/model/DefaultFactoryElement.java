@@ -19,7 +19,7 @@ package colesico.framework.ioc.codegen.model;
 import colesico.framework.assist.codegen.model.AnnotationElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
-import colesico.framework.ioc.Produce;
+import colesico.framework.ioc.annotation.Produce;
 
 import java.util.List;
 

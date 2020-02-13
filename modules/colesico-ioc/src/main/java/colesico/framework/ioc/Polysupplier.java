@@ -16,6 +16,9 @@
 
 package colesico.framework.ioc;
 
+import colesico.framework.ioc.annotation.Polyproduce;
+import colesico.framework.ioc.key.Key;
+
 import java.util.Iterator;
 import java.util.function.Consumer;
 
@@ -24,7 +27,7 @@ import java.util.function.Consumer;
  * Polysupplier represents a chain of factories for the given key.
  *
  * @param <T> instance type
- * @see Key< T >
+ * @see Key < T >
  * @see Polyproduce
  */
 public interface Polysupplier<T> {

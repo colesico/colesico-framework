@@ -14,24 +14,30 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.annotation;
 
-import javax.inject.Qualifier;
+import colesico.framework.ioc.scope.Scope;
+
 import java.lang.annotation.*;
 
 /**
- * Use this annotation to pass InjectionPoint to instance factory.
- * This annotation is used to mark the constructor parameter to pass the information about the class in which this parameter is injected.
- * This information is used while the parameter instance been created.
- * For example this annotation should be used to context dependent logger injection.
+ * Defines actual scope implementation class for scope definition annotation.
+ * Used to define the custom scope annotation and specify the Scope implementation class that
+ * is associated with the annotation.
+ * For example, see @ThreadScoped predefined custom scope
  *
- *
- * @see InjectionPoint
+ * @see Scope
+ * @see ThreadScoped
+ * @author Vladlen Larionov
  */
-@Qualifier
-@Documented
-@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.ANNOTATION_TYPE})
 @Inherited
-public @interface Contextual {
+@Documented
+public @interface CustomScope {
+    /**
+     * Scope intrface or implementation class
+     * @return
+     */
+    Class<? extends Scope> value();
 }

@@ -23,8 +23,8 @@ import colesico.framework.asyncjob.PayloadConverter;
 import colesico.framework.asyncjob.assist.EventBusJobConsumer;
 import colesico.framework.asyncjob.dao.PostgreJobDao;
 import colesico.framework.asyncjob.gson.GsonPayloadConverter;
-import colesico.framework.ioc.Produce;
-import colesico.framework.ioc.Producer;
+import colesico.framework.ioc.annotation.Produce;
+import colesico.framework.ioc.annotation.Producer;
 
 import javax.inject.Singleton;
 

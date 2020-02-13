@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.key;
 
 /**
  * The key for obtaining an instance from the IoC container by instance class and name.

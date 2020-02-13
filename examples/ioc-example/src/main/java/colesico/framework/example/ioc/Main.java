@@ -23,6 +23,7 @@ import colesico.framework.example.ioc.named.NamedBean;
 import colesico.framework.example.ioc.singleton.Singleton1;
 import colesico.framework.example.ioc.singleton.Singleton2;
 import colesico.framework.ioc.*;
+import colesico.framework.ioc.key.NamedKey;
 
 public class Main {
     public static void main(String[] args) {

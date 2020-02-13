@@ -17,7 +17,7 @@
 package colesico.framework.example.config.classed;
 
 import colesico.framework.config.Config;
-import colesico.framework.ioc.Classed;
+import colesico.framework.ioc.annotation.Classed;
 
 @Config
 @Classed(Classifier.class)

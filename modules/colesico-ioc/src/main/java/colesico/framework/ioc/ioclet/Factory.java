@@ -16,7 +16,7 @@
 
 package colesico.framework.ioc.ioclet;
 
-import colesico.framework.ioc.Polyproduce;
+import colesico.framework.ioc.annotation.Polyproduce;
 import colesico.framework.ioc.Polysupplier;
 import colesico.framework.ioc.Supplier;
 

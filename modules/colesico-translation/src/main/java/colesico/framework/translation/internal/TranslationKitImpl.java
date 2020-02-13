@@ -17,8 +17,8 @@
 package colesico.framework.translation.internal;
 
 
-import colesico.framework.ioc.StringKey;
-import colesico.framework.ioc.ThreadScope;
+import colesico.framework.ioc.key.StringKey;
+import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.resource.ResourceKit;
 import colesico.framework.translation.Bundle;
 import colesico.framework.translation.Translatable;

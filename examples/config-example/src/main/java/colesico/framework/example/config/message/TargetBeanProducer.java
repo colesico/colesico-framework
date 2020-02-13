@@ -17,8 +17,8 @@
 package colesico.framework.example.config.message;
 
 
-import colesico.framework.ioc.Produce;
-import colesico.framework.ioc.Producer;
+import colesico.framework.ioc.annotation.Produce;
+import colesico.framework.ioc.annotation.Producer;
 
 @Producer
 @Produce(value = TargetBean.class, classed = MessageConfigPrototype.class)

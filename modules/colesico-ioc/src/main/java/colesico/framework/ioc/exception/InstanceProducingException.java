@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.exception;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 

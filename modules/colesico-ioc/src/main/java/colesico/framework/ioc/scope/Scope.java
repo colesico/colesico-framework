@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package colesico.framework.ioc;
+package colesico.framework.ioc.scope;
+
+import colesico.framework.ioc.key.Key;
 
 import java.util.Set;
 

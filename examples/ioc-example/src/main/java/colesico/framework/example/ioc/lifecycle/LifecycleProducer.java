@@ -16,10 +16,10 @@
 
 package colesico.framework.example.ioc.lifecycle;
 
-import colesico.framework.ioc.Message;
-import colesico.framework.ioc.PostProduce;
-import colesico.framework.ioc.Produce;
-import colesico.framework.ioc.Producer;
+import colesico.framework.ioc.annotation.Message;
+import colesico.framework.ioc.annotation.PostProduce;
+import colesico.framework.ioc.annotation.Produce;
+import colesico.framework.ioc.annotation.Producer;
 
 @Producer
 @Produce(value = MainBeanLFC.class, postProduce = true)

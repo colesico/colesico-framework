@@ -16,9 +16,9 @@
 
 package colesico.framework.example.jdbi;
 
-import colesico.framework.ioc.Classed;
-import colesico.framework.ioc.Producer;
-import colesico.framework.ioc.Unscoped;
+import colesico.framework.ioc.annotation.Classed;
+import colesico.framework.ioc.annotation.Producer;
+import colesico.framework.ioc.annotation.Unscoped;
 import colesico.framework.jdbi.JdbiTransactionalShell;
 import colesico.framework.transaction.TransactionalShell;
 import org.jdbi.v3.core.Handle;

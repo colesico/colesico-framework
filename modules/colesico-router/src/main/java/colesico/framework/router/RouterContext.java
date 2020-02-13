@@ -16,8 +16,8 @@
 
 package colesico.framework.router;
 
-import colesico.framework.ioc.Key;
-import colesico.framework.ioc.TypeKey;
+import colesico.framework.ioc.key.Key;
+import colesico.framework.ioc.key.TypeKey;
 
 import java.util.Collections;
 import java.util.Map;

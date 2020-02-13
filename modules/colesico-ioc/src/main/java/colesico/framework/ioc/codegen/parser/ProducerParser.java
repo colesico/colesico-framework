@@ -21,7 +21,10 @@ import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.Genstamp;
 import colesico.framework.assist.codegen.model.*;
 import colesico.framework.ioc.*;
+import colesico.framework.ioc.annotation.*;
 import colesico.framework.ioc.codegen.model.*;
+import colesico.framework.ioc.annotation.CustomScope;
+import colesico.framework.ioc.annotation.Unscoped;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 

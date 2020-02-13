@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.key;
 
 /**
  * Used to store non IoC objects in a scope

@@ -14,28 +14,23 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.annotation;
 
 import java.lang.annotation.*;
 
 /**
- * Defines actual scope implementation class for scope definition annotation.
- * Used to define the custom scope annotation and specify the Scope implementation class that
- * is associated with the annotation.
- * For example, see @ThreadScoped predefined custom scope
+ * Producer method code generation options
  *
- * @see Scope
- * @see ThreadScoped
  * @author Vladlen Larionov
+ * @see Produce
+ * @see Producer
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.ANNOTATION_TYPE})
+@Retention(RetentionPolicy.SOURCE)
+@Target({ElementType.METHOD})
 @Inherited
 @Documented
-public @interface CustomScope {
-    /**
-     * Scope intrface or implementation class
-     * @return
-     */
-    Class<? extends Scope> value();
+public @interface ProducingOptions {
+    boolean postConstruct() default false;
+
+    boolean postProduce() default false;
 }

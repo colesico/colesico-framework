@@ -22,7 +22,7 @@ import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.ParameterElement;
 import colesico.framework.eventbus.EventsListener;
 import colesico.framework.eventbus.OnEvent;
-import colesico.framework.ioc.Polyproduce;
+import colesico.framework.ioc.annotation.Polyproduce;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.codegen.model.ProxyMethodElement;
 import colesico.framework.service.codegen.model.ServiceElement;

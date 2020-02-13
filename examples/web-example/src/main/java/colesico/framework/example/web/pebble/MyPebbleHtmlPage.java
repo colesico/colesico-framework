@@ -17,7 +17,7 @@
 package colesico.framework.example.web.pebble;
 
 import colesico.framework.htmlrenderer.HtmlRenderer;
-import colesico.framework.ioc.Classed;
+import colesico.framework.ioc.annotation.Classed;
 import colesico.framework.pebble.PebbleRenderer;
 import colesico.framework.weblet.HtmlResponse;
 import colesico.framework.weblet.Weblet;

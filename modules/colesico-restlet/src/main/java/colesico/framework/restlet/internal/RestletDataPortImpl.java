@@ -18,7 +18,7 @@ package colesico.framework.restlet.internal;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpResponse;
-import colesico.framework.ioc.ClassedKey;
+import colesico.framework.ioc.key.ClassedKey;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.Supplier;
 import colesico.framework.restlet.RestletErrorResponse;
@@ -36,7 +36,6 @@ import javax.inject.Singleton;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 @Singleton

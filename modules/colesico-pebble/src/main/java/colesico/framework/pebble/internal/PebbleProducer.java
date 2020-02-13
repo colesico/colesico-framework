@@ -18,9 +18,9 @@ package colesico.framework.pebble.internal;
 
 
 import colesico.framework.htmlrenderer.HtmlRenderer;
-import colesico.framework.ioc.Classed;
-import colesico.framework.ioc.Produce;
-import colesico.framework.ioc.Producer;
+import colesico.framework.ioc.annotation.Classed;
+import colesico.framework.ioc.annotation.Produce;
+import colesico.framework.ioc.annotation.Producer;
 import colesico.framework.pebble.PebbleRenderer;
 
 import static colesico.framework.ioc.Rank.RANK_MINOR;
