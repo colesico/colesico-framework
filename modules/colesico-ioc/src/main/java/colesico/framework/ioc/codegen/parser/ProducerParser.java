@@ -284,16 +284,12 @@ public class ProducerParser extends FrameworkAbstractParser {
             condition = new ConditionElement(new ClassType(getProcessingEnv(), (TypeElement) conditionClass));
         }
 
-        // Substitution
-        SubstitutionElement substitution = new SubstitutionElement(produceAnn.unwrap().substitute());
-
         final DefaultFactoryElement factory =
                 new DefaultFactoryElement(
                         suppliedType,
                         factoryMethodBaseName,
                         scope,
                         condition,
-                        substitution,
                         polyproduce,
                         named,
                         classed,
@@ -420,11 +416,9 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         // Substitution
         AnnotationElement<Substitute> subsAnn = method.getAnnotation(Substitute.class);
-        SubstitutionElement substitution;
+        SubstitutionElement substitution = null;
         if (subsAnn != null) {
             substitution = new SubstitutionElement(subsAnn.unwrap().value());
-        } else {
-            substitution = new SubstitutionElement(Substitution.NONE);
         }
 
         final CustomFactoryElement factory = new CustomFactoryElement(

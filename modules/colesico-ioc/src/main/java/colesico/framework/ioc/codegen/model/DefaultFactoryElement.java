@@ -35,7 +35,6 @@ public class DefaultFactoryElement extends FactoryElement {
                                  String factoryMethodBaseName,
                                  ScopeElement scope,
                                  ConditionElement condition,
-                                 SubstitutionElement substitution,
                                  Boolean polyproduce,
                                  String named,
                                  ClassType classed,
@@ -46,17 +45,17 @@ public class DefaultFactoryElement extends FactoryElement {
                                  AnnotationElement<Produce> produce
     ) {
         super(suppliedType,
-            factoryMethodBaseName,
-            scope,
-            condition,
-            substitution,
-            polyproduce,
-            null,
-            named,
-            classed,
-            notifyPostProduce,
-            notifyPostConstruct,
-            postConstructListeners);
+                factoryMethodBaseName,
+                scope,
+                condition,
+                null,
+                polyproduce,
+                null,
+                named,
+                classed,
+                notifyPostProduce,
+                notifyPostConstruct,
+                postConstructListeners);
         this.constructor = constructor;
         this.produce = produce;
     }

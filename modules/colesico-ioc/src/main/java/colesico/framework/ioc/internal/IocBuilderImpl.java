@@ -20,6 +20,7 @@ import colesico.framework.assist.ServiceLocator;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.IocException;
+import colesico.framework.ioc.condition.Condition;
 import colesico.framework.ioc.ioclet.AdvancedIoc;
 import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.ioclet.Ioclet;
@@ -28,8 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-
-import static colesico.framework.ioc.internal.LazyIocContainer.CIRCULAR_DEP_ERR_MSG;
 
 /**
  * @author Vladlen Larionov
@@ -44,52 +43,16 @@ public class IocBuilderImpl implements IocBuilder {
      */
     protected List<Ioclet> extraIoclets = new ArrayList<>();
 
-    /**
-     * Manually added ranks;
-     */
-    protected List<String> extraRanks = new ArrayList<>();
-
-    protected Set<String> ignoredProducers = new HashSet<>();
-
-    protected boolean useDefaultRanks;
-
     protected boolean iocletsDiscovery;
 
-    protected boolean preactivation;
-
-    protected ContainerType iocType;
+    protected CatalogImpl catalog;
 
     private IocBuilderImpl() {
-        useDefaultRanks = true;
         iocletsDiscovery = true;
-        preactivation = true;
-        iocType = ContainerType.EAGER;
     }
 
-    public static IocBuilderImpl forProduction() {
+    public static IocBuilderImpl instance() {
         return new IocBuilderImpl();
-    }
-
-    public static IocBuilderImpl forDevelopment() {
-        return new IocBuilderImpl().useContainerType(ContainerType.LAZY)
-                .useContainerType(ContainerType.LAZY)
-                .disablePreactivation();
-    }
-
-    public static IocBuilderImpl forTests() {
-        return new IocBuilderImpl().useRank(TestTag.class);
-    }
-
-    @Override
-    public IocBuilderImpl useRank(String name) {
-        extraRanks.add(name);
-        return this;
-    }
-
-    @Override
-    public IocBuilderImpl disableDefaultTags() {
-        useDefaultRanks = false;
-        return this;
     }
 
     @Override
@@ -105,105 +68,40 @@ public class IocBuilderImpl implements IocBuilder {
     }
 
     @Override
-    public IocBuilderImpl ignoreProducer(String producerId) {
-        ignoredProducers.add(producerId);
-        return this;
-    }
-
-    private IocBuilderImpl useContainerType(ContainerType iocType) {
-        this.iocType = iocType;
-        return this;
-    }
-
-    private IocBuilderImpl disablePreactivation() {
-        this.preactivation = false;
-        return this;
-    }
-
-    @Override
     public Ioc build() {
-        IocletRanker ranker = new IocletRanker();
 
-        if (useDefaultRanks) {
-            log.debug("Use default ranks: on");
-            ranker.pushRank(MinorTag.class);
-            ranker.pushRank(Rank.RANK_DEFAULT);
-            ranker.pushRank(ExtensionTag.class);
-        } else {
-            log.debug("Use default ranks: off");
-        }
+        catalog = new CatalogImpl();
 
-        for (String rank : extraRanks) {
-            ranker.pushRank(rank);
-        }
-
-        // Log ranks stack
-        if (log.isDebugEnabled()) {
-            StringBuilder rsb = new StringBuilder("IoC ranks stack: ");
-            for (IocletRanker.RankItem ri : ranker.getRankStack()) {
-                rsb.append(ri.getRank()).append("; ");
-            }
-            log.debug(rsb.toString());
-        }
-
-        if (ignoredProducers.isEmpty()) {
-            if (iocletsDiscovery) {
-                log.debug("Ioclets discovery: on");
-                List<Ioclet> foundList = lookupIoclets();
-                for (Ioclet ioclet : foundList) {
-                    ranker.addIoclet(ioclet);
-                }
-            } else {
-                log.debug("Ioclets discovery: off");
-            }
-            for (Ioclet ioclet : extraIoclets) {
-                ranker.addIoclet(ioclet);
+        if (iocletsDiscovery) {
+            log.debug("Ioclets discovery: on");
+            List<Ioclet> foundList = lookupIoclets();
+            for (Ioclet ioclet : foundList) {
+                registerIoclet(ioclet);
             }
         } else {
-            log.debug("Has ignored IoC producers");
-            if (iocletsDiscovery) {
-                log.debug("Ioclets discovery: on");
-                List<Ioclet> foundList = lookupIoclets();
-                for (Ioclet ioclet : foundList) {
-                    if (!ignoredProducers.contains(ioclet.getId())) {
-                        ranker.addIoclet(ioclet);
-                    }
-                }
-            } else {
-                log.debug("Ioclets discovery: off");
-            }
-            for (Ioclet ioclet : extraIoclets) {
-                if (!ignoredProducers.contains(ioclet.getId())) {
-                    ranker.addIoclet(ioclet);
-                }
-            }
+            log.debug("Ioclets discovery: off");
         }
 
-
-        Map<Key<?>, Factory<?>> factories = ranker.toFactories();
-
-        AdvancedIoc ioc;
-
-        log.debug("IoC type: " + iocType.name());
-        switch (iocType) {
-            case EAGER:
-                ioc = new EagerIocContainer(factories);
-                break;
-            case LAZY:
-                ioc = new LazyIocContainer(factories);
-                break;
-            default:
-                throw new IocException("Unsupported IoC container type");
+        for (Ioclet ioclet : extraIoclets) {
+            registerIoclet(ioclet);
         }
 
-        if (preactivation) {
-            log.debug("Preactivation: on");
-            activateFactories(ioc, factories);
-        } else {
-            log.debug("Preactivation: off");
-        }
+        Map<Key<?>, Factory<?>> factories = catalog.getFactories();
+
+        AdvancedIoc ioc = new IocContainerImpl(factories);
+
+        activateFactories(ioc, factories);
 
         return ioc;
+    }
+
+    protected void registerIoclet(Ioclet ioclet) {
+        Condition condition = ioclet.getCondition();
+        if ((condition != null) && !condition.isMet(null)) {
+            return;
+        }
+
+        ioclet.addFactories(catalog);
     }
 
     protected void activateFactories(AdvancedIoc ioc, Map<Key<?>, Factory<?>> factories) {
@@ -218,7 +116,7 @@ public class IocBuilderImpl implements IocBuilder {
                 }
             }
         } catch (StackOverflowError soe) {
-            throw new IocException(String.format(CIRCULAR_DEP_ERR_MSG, currentKey != null ? currentKey.toString() : "?"));
+            throw new IocException(String.format("Possible circular dependencies", currentKey != null ? currentKey.toString() : "?"));
         }
     }
 
@@ -227,7 +125,7 @@ public class IocBuilderImpl implements IocBuilder {
         log.debug("Lookup ioclets...");
         ServiceLocator<Ioclet> locator = ServiceLocator.of(this.getClass(), Ioclet.class);
         for (Ioclet ioclet : locator.getProviders()) {
-            log.debug("Found ioclet '" + ioclet.getClass().getName() + "' for producer '" + ioclet.getId() + "' with rank '" + ioclet.getRank() + "'");
+            log.debug("Found ioclet '" + ioclet.getClass().getName() + "' with id: '" + ioclet.getId());
             result.add(ioclet);
         }
         return result;

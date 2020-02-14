@@ -43,18 +43,17 @@ public class CustomFactoryElement extends FactoryElement {
                                 MethodElement producerMethod
     ) {
         super(suppliedType,
-            factoryMethodBaseName,
-            scope,
-            condition,
-            substitution,
-            polyproduce,
-            postProduce,
-            named,
-            classed,
-            notifyPostProduce,
-            notifyPostConstruct,
-            postConstructListeners);
-
+                factoryMethodBaseName,
+                scope,
+                condition,
+                substitution,
+                polyproduce,
+                postProduce,
+                named,
+                classed,
+                notifyPostProduce,
+                notifyPostConstruct,
+                postConstructListeners);
         this.producerMethod = producerMethod;
     }
 
@@ -62,15 +61,19 @@ public class CustomFactoryElement extends FactoryElement {
         return producerMethod;
     }
 
+    public SubstitutionElement getSubstitution() {
+        return substitution;
+    }
+
     @Override
     public String toString() {
         return "CustomFactoryElement{" +
-            "producerMethod=" + producerMethod +
-            ", suppliedType=" + suppliedType +
-            ", scope=" + scope +
-            ", polyproduce=" + polyproduce +
-            ", named='" + named + '\'' +
-            ", classed='" + classed + '\'' +
-            '}';
+                "producerMethod=" + producerMethod +
+                ", suppliedType=" + suppliedType +
+                ", scope=" + scope +
+                ", polyproduce=" + polyproduce +
+                ", named='" + named + '\'' +
+                ", classed='" + classed + '\'' +
+                '}';
     }
 }

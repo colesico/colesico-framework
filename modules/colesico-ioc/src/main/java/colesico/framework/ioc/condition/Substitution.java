@@ -22,7 +22,7 @@ package colesico.framework.ioc.condition;
  */
 public enum Substitution {
 
-    NONE(0), NORMAL(1), MEDIUM(2), HIGHER(3);
+    NORMAL(1), MEDIUM(2), HIGHER(3);
 
     private final int rank;
 

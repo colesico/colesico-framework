@@ -29,28 +29,26 @@ import javax.inject.Provider;
 import java.util.Map;
 
 /**
- * Ioc container implementation to use in develop mode / for testing
+ * IoC container implementation for production.
+ * Requires factories pre-activation after container creation.
  *
  * @author Vladlen Larionov
  */
-public final class LazyIocContainer implements AdvancedIoc {
-
-    public static final String CIRCULAR_DEP_ERR_MSG = "Circular dependence for key: %s";
+public final class IocContainerImpl implements AdvancedIoc {
 
     private final Map<Key<?>, Factory<?>> factories;
 
-    public LazyIocContainer(Map<Key<?>, Factory<?>> factories) {
+    public IocContainerImpl(Map<Key<?>, Factory<?>> factories) {
         this.factories = factories;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T instance(Key<T> key, Object message) {
+    public <T> T instance(Key<T> key, Object message) throws UnsatisfiedInjectionException {
         Factory factory = factories.get(key);
         if (factory == null) {
             throw new UnsatisfiedInjectionException(key);
         }
-        activate(factory, key);
         return (T) factory.get(message);
     }
 
@@ -61,18 +59,16 @@ public final class LazyIocContainer implements AdvancedIoc {
         if (factory == null) {
             return null;
         }
-        activate(factory, key);
         return (T) factory.get(message);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Provider<T> provider(Key<T> key, Object message) {
+    public <T> Provider<T> provider(Key<T> key, Object message) throws UnsatisfiedInjectionException {
         Factory factory = factories.get(key);
         if (factory == null) {
             throw new UnsatisfiedInjectionException(key);
         }
-        activate(factory, key);
         return new DefaultProvider<>(factory, message);
     }
 
@@ -83,27 +79,29 @@ public final class LazyIocContainer implements AdvancedIoc {
         if (factory == null) {
             return null;
         }
-        activate(factory, key);
         return new DefaultProvider<>(factory, message);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> Supplier<T> supplier(Key<T> key) throws UnsatisfiedInjectionException {
-        return factory(key);
+        Factory factory = factories.get(key);
+        if (factory == null) {
+            throw new UnsatisfiedInjectionException(key);
+        }
+        return factory;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> Supplier<T> supplierOrNull(Key<T> key) {
-        return factoryOrNull(key);
+        return (Supplier<T>) factories.get(key);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> Polysupplier<T> polysupplier(Key<T> key) {
         Factory factory = factories.get(key);
-        activate(factory, key);
         return new DefaultPolysupplier<>(factory);
     }
 
@@ -114,26 +112,13 @@ public final class LazyIocContainer implements AdvancedIoc {
         if (factory == null) {
             throw new UnsatisfiedInjectionException(key);
         }
-        activate(factory, key);
         return factory;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> Factory<T> factoryOrNull(Key<T> key) {
-        Factory factory = factories.get(key);
-        if (factory == null) {
-            return null;
-        }
-        activate(factory, key);
-        return factory;
+        return (Factory<T>) factories.get(key);
     }
 
-    protected void activate(Factory factory, Key key) {
-        Factory s = factory;
-        while (s != null) {
-            s.activate(this);
-            s = s.next();
-        }
-    }
 }

@@ -18,7 +18,6 @@ package colesico.framework.ioc;
 
 import colesico.framework.ioc.internal.IocBuilderImpl;
 import colesico.framework.ioc.ioclet.Ioclet;
-import colesico.framework.ioc.tag.Tag;
 
 /**
  * IoC container builder interface
@@ -31,42 +30,11 @@ public interface IocBuilder {
     String IOC_PROFILE_PROPERTY = "colesico.framework.ioc.profile";
 
     /**
-     * Creates  production ready IoC container builder
+     * Creates  IoC container builder
      */
-    static IocBuilder forProduction() {
-        return IocBuilderImpl.forProduction();
+    static IocBuilder builder() {
+        return IocBuilderImpl.instance();
     }
-
-    /**
-     * Creates default development ready IoC container builder
-     */
-    static IocBuilder forDevelopment() {
-        return IocBuilderImpl.forDevelopment();
-    }
-
-    /**
-     * Creates default testing ready IoC container builder
-     */
-    static IocBuilder forTests() {
-        return IocBuilderImpl.forTests();
-    }
-
-    /**
-     * Add tag to tags priority stack.
-     * By default builder use this tags:
-     *  {@link colesico.framework.ioc.tag.MinorTag},
-     *  {@link colesico.framework.ioc.tag.DefaultTag},
-     *  {@link colesico.framework.ioc.tag.ExtensionTag},
-     * With tis method  any other tag can be added.
-     */
-    IocBuilder useTag(Class<? extends Tag> tagClass);
-
-    /**
-     * Disable using default tags
-     *
-     * @return
-     */
-    IocBuilder disableDefaultTags();
 
     /**
      * Disable automatic ioclets discovery.
@@ -87,18 +55,9 @@ public interface IocBuilder {
     IocBuilder useIoclet(Ioclet ioclet);
 
     /**
-     * Do not use ioclet for specified producer
-     *
-     * @param producerId
-     */
-    IocBuilder ignoreProducer(String producerId);
-
-
-    /**
      * Builds an IoC container instance based on builder configuration
      *
      * @return
      */
     Ioc build();
-
 }

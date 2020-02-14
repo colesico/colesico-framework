@@ -52,11 +52,11 @@ public @interface Produce {
 
     /**
      * Producing condition
+     *
+     * @see colesico.framework.ioc.condition.Requires
      * @see Condition
      */
     Class<? extends Condition> requires() default Condition.class;
-
-    Substitution substitute() default Substitution.NONE;
 
     /**
      * Analogue of the @Polyproduce annotation
