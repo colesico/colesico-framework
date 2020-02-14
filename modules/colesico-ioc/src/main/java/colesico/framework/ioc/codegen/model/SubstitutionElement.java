@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.condition;
+package colesico.framework.ioc.codegen.model;
 
-/**
- * Substitution type.
- * Higher ranks has precedence over low to perform substitution
- */
-public enum Substitution {
+import colesico.framework.ioc.condition.Substitution;
 
-    NONE(0), NORMAL(1), MEDIUM(2), HIGHER(3);
+public class SubstitutionElement {
+    private final Substitution substitutionType;
 
-    private final int rank;
-
-    Substitution(int rank) {
-        this.rank = rank;
+    public SubstitutionElement(Substitution substitutionType) {
+        this.substitutionType = substitutionType;
     }
 
-    public int getRank() {
-        return rank;
+    public Substitution getSubstitutionType() {
+        return substitutionType;
     }
 }
+

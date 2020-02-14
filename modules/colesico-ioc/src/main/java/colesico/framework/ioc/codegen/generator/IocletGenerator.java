@@ -21,6 +21,8 @@ import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.ioc.codegen.model.FactoryElement;
 import colesico.framework.ioc.codegen.model.IocletElement;
+import colesico.framework.ioc.condition.Condition;
+import colesico.framework.ioc.condition.Substitution;
 import colesico.framework.ioc.ioclet.Catalog;
 import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.ioclet.Ioclet;
@@ -77,13 +79,17 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
         classBuilder.addField(fb.build());
     }
 
-    protected void generateGetRankMethod() {
-        //log.info("Generate  method: "+Ioclet.GET_RANK_METHOD);
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(Ioclet.GET_RANK_METHOD);
+    protected void generateGetConditionMethod() {
+        //log.info("Generate  method: "+Ioclet.GET_CONDITION_METHOD);
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(Ioclet.GET_CONDITION_METHOD);
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-        mb.returns(ClassName.get(String.class));
+        mb.returns(ClassName.get(Condition.class));
         mb.addAnnotation(Override.class);
-        mb.addStatement("return $S", iocletElement.getRank());
+        if (iocletElement.getCondition() != null) {
+            mb.addStatement("return new $T()", TypeName.get(iocletElement.getCondition().getConditionClass().unwrap()));
+        } else {
+            mb.addStatement("return null");
+        }
         classBuilder.addMethod(mb.build());
     }
 
@@ -93,7 +99,7 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         mb.returns(ClassName.get(String.class));
         mb.addAnnotation(Override.class);
-        mb.addStatement("return $S", iocletElement.getProducerId());
+        mb.addStatement("return $S", iocletElement.getIocletId());
         classBuilder.addMethod(mb.build());
     }
 
@@ -103,26 +109,26 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
 
             if (fe.getPostProduce() == null) {
                 mb.addJavadoc("Factory to produce " + fe.getSuppliedType().asClassElement().getName() + " class instance\n");
-                mb.addJavadoc("Scope: " + fe.getScope().getKind() + "; Custom: " + fe.getScope().getCustomScopeClass()+'\n');
+                mb.addJavadoc("Scope: " + fe.getScope().getKind() + "; Custom: " + fe.getScope().getCustomScopeClass() + '\n');
                 if (fe.getNamed() != null) {
-                    mb.addJavadoc("Named: " + fe.getNamed()+'\n');
+                    mb.addJavadoc("Named: " + fe.getNamed() + '\n');
                 }
                 if (fe.getClassed() != null) {
-                    mb.addJavadoc("Classed: " + fe.getClassed().getErasure().toString()+'\n');
+                    mb.addJavadoc("Classed: " + fe.getClassed().getErasure().toString() + '\n');
                 }
                 if (fe.getPolyproduce()) {
-                    mb.addJavadoc("Polyproduce: true"+'\n');
+                    mb.addJavadoc("Polyproduce: true" + '\n');
                 }
             } else {
                 mb.addJavadoc("Factory of post produce listener for class " + fe.getSuppliedType().asClassElement().getName() + '\n');
-                mb.addJavadoc("WithNamed: "+fe.getPostProduce().getWithNamed()+'\n');
-                mb.addJavadoc("WithClassed: "+fe.getPostProduce().getWithClassed()+'\n');
+                mb.addJavadoc("WithNamed: " + fe.getPostProduce().getWithNamed() + '\n');
+                mb.addJavadoc("WithClassed: " + fe.getPostProduce().getWithClassed() + '\n');
             }
 
             mb.returns(ParameterizedTypeName.get(
-                ClassName.get(Factory.class),
-                TypeName.get(fe.getSuppliedType().getErasure())
-                )
+                    ClassName.get(Factory.class),
+                    TypeName.get(fe.getSuppliedType().getErasure())
+                    )
             );
             mb.addModifiers(Modifier.PUBLIC);
             mb.addStatement("return $L", factoryGenerator.generateFactory(fe));
@@ -135,18 +141,30 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         mb.addParameter(ClassName.get(Catalog.class), Ioclet.CATALOG_PARAM, Modifier.FINAL);
         mb.addAnnotation(Override.class);
-        for (FactoryElement spl : iocletElement.getFactories()) {
+        for (FactoryElement factoryElm : iocletElement.getFactories()) {
             CodeBlock.Builder cb = CodeBlock.builder();
+            // if (catalog.accept(
             cb.add("if($N.$N(", Ioclet.CATALOG_PARAM, Catalog.ACCEPT_METHOD);
 
-            // Catalog.Entry.of(new Key(...),true|false)
-            cb.add("$T.$N(", ClassName.get(Catalog.Entry.class), Catalog.Entry.OF_METHOD);
-            cb.add(keyGenerator.forFactory(spl));
-            cb.add(",$L)", spl.getPolyproduce());
+            // new Key(), condition, substitute, polyproduce
+            cb.add(keyGenerator.forFactory(factoryElm));
+            if (factoryElm.getCondition() != null) {
+                cb.add(", new $T()", TypeName.get(factoryElm.getCondition().getConditionClass().unwrap()));
+            } else {
+                cb.add(", null");
+            }
+            if (factoryElm.getSubstitution() != null) {
+                cb.add(", $T.$N", ClassName.get(Substitution.class), factoryElm.getSubstitution().getSubstitutionType().name());
+            } else {
+                cb.add(", null");
+            }
+            cb.add(", $L", factoryElm.getPolyproduce());
 
             cb.add(")){\n");
+
+            // catalog.add(factoryX())
             cb.indent();
-            cb.addStatement("$N.$N($N())", Ioclet.CATALOG_PARAM, Catalog.ADD_METHOD, spl.getFactoryMethodName());
+            cb.addStatement("$N.$N($N())", Ioclet.CATALOG_PARAM, Catalog.ADD_METHOD, factoryElm.getFactoryMethodName());
             cb.unindent();
             cb.add("}\n\n");
             mb.addCode(cb.build());
@@ -168,7 +186,7 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
 
         generateProducerField();
         generateGetProducerIdMethod();
-        generateGetRankMethod();
+        generateGetConditionMethod();
         generateSuplierFactoryMethods();
         generateAddFactoriesMethod();
 

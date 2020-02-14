@@ -30,8 +30,8 @@ public class IocletElement {
     public static final String IOCLET_SUFFIX = "Ioclet";
 
     private final ClassElement originProducer;
-    private final String producerId;
-    private final String rank;
+    private final String iocletId;
+    private final ConditionElement condition;
 
     private final String iocletClassSimpleName;
     private final String iocletPackageName;
@@ -39,10 +39,13 @@ public class IocletElement {
 
     private final List<FactoryElement> factories = new ArrayList<>();
 
-    public IocletElement(ClassElement originProducer, String producerId, String rank, String iocletClassSimpleName, String iocletPackageName) {
+    public IocletElement(ClassElement originProducer,
+                         String iocletId,
+                         ConditionElement condition,
+                         String iocletClassSimpleName, String iocletPackageName) {
         this.originProducer = originProducer;
-        this.producerId = producerId;
-        this.rank = rank;
+        this.iocletId = iocletId;
+        this.condition = condition;
         this.iocletClassSimpleName = iocletClassSimpleName;
         this.iocletPackageName = iocletPackageName;
     }
@@ -52,20 +55,20 @@ public class IocletElement {
         factories.add(factoryElement);
     }
 
-    public String getRank() {
-        return rank;
-    }
-
     public List<FactoryElement> getFactories() {
         return factories;
     }
 
-    public String getProducerId() {
-        return producerId;
+    public String getIocletId() {
+        return iocletId;
     }
 
     public ClassElement getOriginProducer() {
         return originProducer;
+    }
+
+    public ConditionElement getCondition() {
+        return condition;
     }
 
     public String getIocletClassName() {
@@ -83,8 +86,8 @@ public class IocletElement {
     @Override
     public String toString() {
         return "IocletElement{" +
-                "producerId='" + producerId + '\'' +
-                ", rank='" + rank + '\'' +
+                "originProducer=" + originProducer +
+                ", iocletId='" + iocletId + '\'' +
                 '}';
     }
 }

@@ -30,6 +30,8 @@ abstract public class FactoryElement {
     protected final ClassType suppliedType;
     protected final String factoryMethodBaseName;
     protected final ScopeElement scope;
+    protected final ConditionElement condition;
+    protected final SubstitutionElement substitution;
     protected final Boolean polyproduce;
 
     protected final PPLDefinitionElement postProduce;
@@ -48,6 +50,8 @@ abstract public class FactoryElement {
     public FactoryElement(ClassType suppliedType,
                           String factoryMethodBaseName,
                           ScopeElement scope,
+                          ConditionElement condition,
+                          SubstitutionElement substitution,
                           Boolean polyproduce,
                           PPLDefinitionElement postProduce,
                           String named,
@@ -59,6 +63,8 @@ abstract public class FactoryElement {
         this.suppliedType = suppliedType;
         this.factoryMethodBaseName = factoryMethodBaseName;
         this.scope = scope;
+        this.condition = condition;
+        this.substitution = substitution;
         this.polyproduce = polyproduce;
         this.postProduce = postProduce;
         this.named = named;
@@ -90,6 +96,14 @@ abstract public class FactoryElement {
 
     public ScopeElement getScope() {
         return scope;
+    }
+
+    public ConditionElement getCondition() {
+        return condition;
+    }
+
+    public SubstitutionElement getSubstitution() {
+        return substitution;
     }
 
     public Boolean getPolyproduce() {

@@ -21,6 +21,10 @@ import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.Genstamp;
 import colesico.framework.assist.codegen.model.*;
 import colesico.framework.ioc.codegen.model.*;
+import colesico.framework.ioc.condition.Condition;
+import colesico.framework.ioc.condition.Requires;
+import colesico.framework.ioc.condition.Substitute;
+import colesico.framework.ioc.condition.Substitution;
 import colesico.framework.ioc.listener.PostConstruct;
 import colesico.framework.ioc.listener.PostProduce;
 import colesico.framework.ioc.listener.ProducingOptions;
@@ -55,8 +59,8 @@ public class ProducerParser extends FrameworkAbstractParser {
 
     protected MethodElement getInjectableConstructor(ClassElement producer) {
         List<MethodElement> methods = producer.getConstructorsFiltered(
-            m -> m.unwrap().getModifiers().contains(Modifier.PUBLIC)
-                && !m.unwrap().getModifiers().contains(Modifier.FINAL)
+                m -> m.unwrap().getModifiers().contains(Modifier.PUBLIC)
+                        && !m.unwrap().getModifiers().contains(Modifier.FINAL)
         );
 
         MethodElement constructor = null;
@@ -121,13 +125,13 @@ public class ProducerParser extends FrameworkAbstractParser {
             }
             if (!me.getParameters().isEmpty()) {
                 throw CodegenException.of().message("Post construct method '"
-                    + suppliedTypeElement.getName()
-                    + "." + me.getName() + "(...)'  should not have arguments").element(me.unwrap()).build();
+                        + suppliedTypeElement.getName()
+                        + "." + me.getName() + "(...)'  should not have arguments").element(me.unwrap()).build();
             }
             if (!me.unwrap().getModifiers().contains(Modifier.PUBLIC)) {
                 throw CodegenException.of().message("Post construct method '"
-                    + suppliedTypeElement.getName()
-                    + "." + me.getName() + "(...)'  should be a public").element(me.unwrap()).build();
+                        + suppliedTypeElement.getName()
+                        + "." + me.getName() + "(...)'  should be a public").element(me.unwrap()).build();
             }
             listeners.add(me);
         }
@@ -178,8 +182,8 @@ public class ProducerParser extends FrameworkAbstractParser {
         // Messaging
         AnnotationElement<Contextual> contextualAnn = parameter.getAnnotation(Contextual.class);
         InjectableElement.MessageKind messageKind = contextualAnn != null ?
-            InjectableElement.MessageKind.INJECTION_POINT :
-            InjectableElement.MessageKind.OUTER_MESSAGE;
+                InjectableElement.MessageKind.INJECTION_POINT :
+                InjectableElement.MessageKind.OUTER_MESSAGE;
 
         // Extra key types
         String named;
@@ -268,24 +272,36 @@ public class ProducerParser extends FrameworkAbstractParser {
         final List<MethodElement> postConstructListeners = parsePostConstructListeners(suppliedType);
 
         if (BooleanUtils.toInteger(named != null)
-            + BooleanUtils.toInteger(classed != null) > 1) {
+                + BooleanUtils.toInteger(classed != null) > 1) {
             throw CodegenException.of().message("Ambiguous injection qualifiers for " + suppliedType.asClassElement().getName())
-                .element(iocletElement.getOriginProducer().unwrap()).build();
+                    .element(iocletElement.getOriginProducer().unwrap()).build();
         }
 
+        // Condition
+        ConditionElement condition = null;
+        TypeMirror conditionClass = produceAnn.getValueTypeMirror(a -> a.requires());
+        if (conditionClass.toString() != Condition.class.getCanonicalName()) {
+            condition = new ConditionElement(new ClassType(getProcessingEnv(), (TypeElement) conditionClass));
+        }
+
+        // Substitution
+        SubstitutionElement substitution = new SubstitutionElement(produceAnn.unwrap().substitute());
+
         final DefaultFactoryElement factory =
-            new DefaultFactoryElement(
-                suppliedType,
-                factoryMethodBaseName,
-                scope,
-                polyproduce,
-                named,
-                classed,
-                notifyPostProduce,
-                notifyPostConstruct,
-                postConstructListeners,
-                constructor,
-                produceAnn);
+                new DefaultFactoryElement(
+                        suppliedType,
+                        factoryMethodBaseName,
+                        scope,
+                        condition,
+                        substitution,
+                        polyproduce,
+                        named,
+                        classed,
+                        notifyPostProduce,
+                        notifyPostConstruct,
+                        postConstructListeners,
+                        constructor,
+                        produceAnn);
 
         for (ParameterElement param : constructor.getParameters()) {
             factory.addParameter(createInjectableElement(factory, param));
@@ -354,7 +370,7 @@ public class ProducerParser extends FrameworkAbstractParser {
             }
         }
 
-        // classed
+        // Classed
         AnnotationElement<Classed> methodClassedAnn = method.getAnnotation(Classed.class);
         ClassType classed = null;
         TypeMirror classifier;
@@ -388,25 +404,43 @@ public class ProducerParser extends FrameworkAbstractParser {
         final List<MethodElement> postConstructListeners = parsePostConstructListeners(suppliedType);
 
         if (BooleanUtils.toInteger(StringUtils.isNotEmpty(named)) +
-            BooleanUtils.toInteger(classed != null) +
-            BooleanUtils.toInteger(postProduce != null)
-            > 1
+                BooleanUtils.toInteger(classed != null) +
+                BooleanUtils.toInteger(postProduce != null)
+                > 1
         ) {
             throw CodegenException.of().message("Ambiguous injection qualifiers").element(method.unwrap()).build();
         }
 
+        // Condition
+        AnnotationElement<Requires> reqAnn = method.getAnnotation(Requires.class);
+        ConditionElement condition = null;
+        if (reqAnn != null) {
+            condition = new ConditionElement(new ClassType(getProcessingEnv(), (TypeElement) reqAnn.getValueTypeMirror(a -> a.value())));
+        }
+
+        // Substitution
+        AnnotationElement<Substitute> subsAnn = method.getAnnotation(Substitute.class);
+        SubstitutionElement substitution;
+        if (subsAnn != null) {
+            substitution = new SubstitutionElement(subsAnn.unwrap().value());
+        } else {
+            substitution = new SubstitutionElement(Substitution.NONE);
+        }
+
         final CustomFactoryElement factory = new CustomFactoryElement(
-            suppliedType,
-            factoryMethodBaseName,
-            scope,
-            polyproduce,
-            postProduce,
-            named,
-            classed,
-            notifyPostProduce,
-            notifyPostConstruct,
-            postConstructListeners,
-            method);
+                suppliedType,
+                factoryMethodBaseName,
+                scope,
+                condition,
+                substitution,
+                polyproduce,
+                postProduce,
+                named,
+                classed,
+                notifyPostProduce,
+                notifyPostConstruct,
+                postConstructListeners,
+                method);
 
         for (ParameterElement param : method.getParameters()) {
             factory.addParameter(createInjectableElement(factory, param));
@@ -420,7 +454,7 @@ public class ProducerParser extends FrameworkAbstractParser {
     protected void parseProducingMethods(IocletElement iocletElement) {
         // Scan producer methods
         List<MethodElement> methods = iocletElement.getOriginProducer().getMethodsFiltered(
-            m -> !m.unwrap().getModifiers().contains(Modifier.FINAL) && m.unwrap().getModifiers().contains(Modifier.PUBLIC)
+                m -> !m.unwrap().getModifiers().contains(Modifier.FINAL) && m.unwrap().getModifiers().contains(Modifier.PUBLIC)
         );
 
         for (MethodElement method : methods) {
@@ -454,10 +488,10 @@ public class ProducerParser extends FrameworkAbstractParser {
         Genstamp genstampAnn = producerElement.unwrap().getAnnotation(Genstamp.class);
         if (genstampAnn != null) {
             logger.debug(Genstamp.class.getSimpleName() + "{" +
-                "Generator=" + genstampAnn.generator() +
-                "; Timestamp=" + genstampAnn.timestamp() +
-                "; HashId=" + genstampAnn.hashId() +
-                "}");
+                    "Generator=" + genstampAnn.generator() +
+                    "; Timestamp=" + genstampAnn.timestamp() +
+                    "; HashId=" + genstampAnn.hashId() +
+                    "}");
         }
     }
 
@@ -482,12 +516,15 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         String iocletClassSimpleName = producerClassSimpleName + IocletElement.IOCLET_SUFFIX;
 
-        String producerId = producerElement.getName();
+        String iocletId = producerElement.getName();
 
-        AnnotationElement<Producer> producerAnn = producerElement.getAnnotation(Producer.class);
-        String producerRank = producerAnn.unwrap().value();
+        AnnotationElement<Requires> reqAnn = producerElement.getAnnotation(Requires.class);
+        ConditionElement condition = null;
+        if (reqAnn != null) {
+            condition = new ConditionElement(new ClassType(getProcessingEnv(), (TypeElement) reqAnn.getValueTypeMirror(a -> a.value())));
+        }
 
-        IocletElement iocletElement = new IocletElement(producerElement, producerId, producerRank, iocletClassSimpleName, packageName);
+        IocletElement iocletElement = new IocletElement(producerElement, iocletId, condition, iocletClassSimpleName, packageName);
 
         parseProducingMethods(iocletElement);
         paresProducingAnnotations(iocletElement);

@@ -16,6 +16,8 @@
 
 package colesico.framework.ioc.production;
 
+import colesico.framework.ioc.condition.Condition;
+import colesico.framework.ioc.condition.Substitution;
 import colesico.framework.ioc.scope.Unscoped;
 
 import java.lang.annotation.*;
@@ -47,6 +49,14 @@ public @interface Produce {
      * @return Class of instance to be produced
      */
     Class<?> value();
+
+    /**
+     * Producing condition
+     * @see Condition
+     */
+    Class<? extends Condition> requires() default Condition.class;
+
+    Substitution substitute() default Substitution.NONE;
 
     /**
      * Analogue of the @Polyproduce annotation
