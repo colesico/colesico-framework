@@ -17,7 +17,6 @@
 package colesico.framework.restlet.teleapi;
 
 import colesico.framework.teleapi.TeleDriver;
-import colesico.framework.weblet.teleapi.WTIContext;
 import colesico.framework.weblet.teleapi.ReaderContext;
 import colesico.framework.weblet.teleapi.WriterContext;
 

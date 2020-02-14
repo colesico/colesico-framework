@@ -16,8 +16,8 @@
 
 package colesico.framework.ioc.ioclet;
 
-import colesico.framework.ioc.exception.IocException;
-import colesico.framework.ioc.Polysupplier;
+import colesico.framework.ioc.IocException;
+import colesico.framework.ioc.production.Polysupplier;
 
 import java.util.Iterator;
 

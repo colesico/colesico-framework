@@ -16,7 +16,7 @@
 
 package colesico.framework.teleapi.internal;
 
-import colesico.framework.ioc.annotation.Producer;
+import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleException;

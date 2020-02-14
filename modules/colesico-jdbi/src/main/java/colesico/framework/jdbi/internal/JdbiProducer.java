@@ -16,10 +16,10 @@
 
 package colesico.framework.jdbi.internal;
 
-import colesico.framework.ioc.annotation.Classed;
-import colesico.framework.ioc.annotation.Message;
-import colesico.framework.ioc.annotation.Producer;
-import colesico.framework.ioc.annotation.Unscoped;
+import colesico.framework.ioc.message.Message;
+import colesico.framework.ioc.production.Classed;
+import colesico.framework.ioc.production.Producer;
+import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.jdbi.JdbiConfigPrototype;
 import org.jdbi.v3.core.Jdbi;
 

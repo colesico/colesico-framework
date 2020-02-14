@@ -14,22 +14,29 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.annotation;
-
-import javax.inject.Qualifier;
-import java.lang.annotation.*;
-
+package colesico.framework.ioc.message;
 
 /**
- * Indicates that the injection parameter is an IoC message.
+ * Automatically generated IoC message that can be used for example for Logger factories (or other)
+ * to  get the class name for which the logger instance  is intended.
  *
- * IoC messages are not retrieved statically from the IOC container
- * but are passed as a parameter to the instance factory
+ * @see Message
  */
-@Qualifier
-@Documented
-@Target(ElementType.PARAMETER)
-@Retention(RetentionPolicy.RUNTIME)
-@Inherited
-public @interface Message {
+public final class InjectionPoint {
+    private final Class<?> targetClass;
+
+    public InjectionPoint(Class<?> targetClass) {
+        this.targetClass = targetClass;
+    }
+
+    public Class<?> getTargetClass() {
+        return targetClass;
+    }
+
+    @Override
+    public String toString() {
+        return "InjectionPoint{" +
+                "targetClass=" + targetClass +
+                '}';
+    }
 }

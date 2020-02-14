@@ -24,8 +24,8 @@ import colesico.framework.example.config.polyvariant.PolyConfigPrototype;
 import colesico.framework.example.config.simple.SimpleConfig;
 import colesico.framework.example.config.single.SingleConfigPrototype;
 import colesico.framework.example.config.source.*;
-import colesico.framework.ioc.annotation.Classed;
-import colesico.framework.ioc.Polysupplier;
+import colesico.framework.ioc.production.Classed;
+import colesico.framework.ioc.production.Polysupplier;
 
 import javax.inject.Provider;
 

@@ -16,7 +16,7 @@
 
 package colesico.framework.jdbi;
 
-import colesico.framework.ioc.Polysupplier;
+import colesico.framework.ioc.production.Polysupplier;
 
 import javax.sql.DataSource;
 

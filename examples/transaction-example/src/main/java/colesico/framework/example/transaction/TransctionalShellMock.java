@@ -18,11 +18,6 @@ package colesico.framework.example.transaction;
 
 import colesico.framework.transaction.TransactionalShell;
 import colesico.framework.transaction.UnitOfWork;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.PrintStream;
-import java.io.StringWriter;
 
 /**
  * Transactional shell mock that demonstrates how the actual transactional shell can be implemented

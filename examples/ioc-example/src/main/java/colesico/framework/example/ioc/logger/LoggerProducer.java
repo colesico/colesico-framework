@@ -17,10 +17,10 @@
 package colesico.framework.example.ioc.logger;
 
 
-import colesico.framework.ioc.InjectionPoint;
-import colesico.framework.ioc.annotation.Message;
-import colesico.framework.ioc.annotation.Produce;
-import colesico.framework.ioc.annotation.Producer;
+import colesico.framework.ioc.message.InjectionPoint;
+import colesico.framework.ioc.message.Message;
+import colesico.framework.ioc.production.Produce;
+import colesico.framework.ioc.production.Producer;
 
 @Producer
 @Produce(MainBeanLOG.class)

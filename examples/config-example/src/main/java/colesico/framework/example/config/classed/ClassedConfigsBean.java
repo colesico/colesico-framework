@@ -16,8 +16,8 @@
 
 package colesico.framework.example.config.classed;
 
-import colesico.framework.ioc.annotation.Classed;
-import colesico.framework.ioc.Polysupplier;
+import colesico.framework.ioc.production.Classed;
+import colesico.framework.ioc.production.Polysupplier;
 
 public class ClassedConfigsBean {
     private final SingleConfigPrototype singleConfig;

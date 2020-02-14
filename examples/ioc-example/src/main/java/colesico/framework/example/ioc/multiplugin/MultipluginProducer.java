@@ -16,9 +16,9 @@
 
 package colesico.framework.example.ioc.multiplugin;
 
-import colesico.framework.ioc.annotation.Polyproduce;
-import colesico.framework.ioc.annotation.Produce;
-import colesico.framework.ioc.annotation.Producer;
+import colesico.framework.ioc.production.Polyproduce;
+import colesico.framework.ioc.production.Produce;
+import colesico.framework.ioc.production.Producer;
 
 @Producer
 @Produce(Plugin1.class)

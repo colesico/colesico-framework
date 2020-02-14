@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.tag;
+package colesico.framework.ioc.condition;
 
-/**
- * Depending on various conditions determines the possibility of using an IoC factory in the IoC container.
- */
-public interface Tag {
 
-    /**
-     * Determines that the corresponding IoC factory can be used in the IoC container to produce instances.
-     */
-    boolean isEnabled();
+public class TestingProcess implements Condition {
 
-    /**
-     * Decides whether a given ioclet can replace other
-     */
-    boolean canReplace(Tag other);
+    private static boolean isActive = false;
 
+    public static synchronized void activate() {
+        isActive = true;
+    }
+
+    @Override
+    public boolean isMet(ConditionContext context) {
+        return isActive;
+    }
 }

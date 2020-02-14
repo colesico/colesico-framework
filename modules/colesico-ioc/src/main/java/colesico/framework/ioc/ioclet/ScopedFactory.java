@@ -16,8 +16,8 @@
 
 package colesico.framework.ioc.ioclet;
 
-import colesico.framework.ioc.scope.Fabricator;
 import colesico.framework.ioc.key.Key;
+import colesico.framework.ioc.scope.Fabricator;
 import colesico.framework.ioc.scope.Scope;
 
 /**

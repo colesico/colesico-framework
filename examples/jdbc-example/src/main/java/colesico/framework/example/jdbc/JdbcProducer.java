@@ -16,9 +16,9 @@
 
 package colesico.framework.example.jdbc;
 
-import colesico.framework.ioc.annotation.Classed;
-import colesico.framework.ioc.annotation.Producer;
-import colesico.framework.ioc.annotation.Unscoped;
+import colesico.framework.ioc.production.Classed;
+import colesico.framework.ioc.production.Producer;
+import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.jdbc.JdbcTransactionalShell;
 import colesico.framework.transaction.TransactionalShell;
 

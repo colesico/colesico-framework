@@ -20,7 +20,7 @@ import colesico.framework.eventbus.EventBinding;
 import colesico.framework.eventbus.EventBus;
 import colesico.framework.eventbus.EventHandler;
 import colesico.framework.eventbus.EventsListener;
-import colesico.framework.ioc.Polysupplier;
+import colesico.framework.ioc.production.Polysupplier;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

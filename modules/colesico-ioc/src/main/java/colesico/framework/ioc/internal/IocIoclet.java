@@ -17,9 +17,9 @@
 package colesico.framework.ioc.internal;
 
 import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.scope.ThreadScope;
-import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.ioclet.*;
+import colesico.framework.ioc.key.TypeKey;
+import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.ioc.tag.MinorTag;
 import colesico.framework.ioc.tag.Tag;
 

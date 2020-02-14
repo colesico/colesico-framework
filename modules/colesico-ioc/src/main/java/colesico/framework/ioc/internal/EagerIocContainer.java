@@ -16,14 +16,14 @@
 
 package colesico.framework.ioc.internal;
 
-import colesico.framework.ioc.key.Key;
-import colesico.framework.ioc.Polysupplier;
-import colesico.framework.ioc.Supplier;
-import colesico.framework.ioc.exception.UnsatisfiedInjectionException;
+import colesico.framework.ioc.UnsatisfiedInjectionException;
 import colesico.framework.ioc.ioclet.AdvancedIoc;
 import colesico.framework.ioc.ioclet.DefaultPolysupplier;
 import colesico.framework.ioc.ioclet.DefaultProvider;
 import colesico.framework.ioc.ioclet.Factory;
+import colesico.framework.ioc.key.Key;
+import colesico.framework.ioc.production.Polysupplier;
+import colesico.framework.ioc.production.Supplier;
 
 import javax.inject.Provider;
 import java.util.Map;

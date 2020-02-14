@@ -17,8 +17,8 @@
 package colesico.framework.profile;
 
 import colesico.framework.ioc.key.Key;
-import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.ioc.key.TypeKey;
+import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.teleapi.DataPort;
 
 import javax.inject.Provider;

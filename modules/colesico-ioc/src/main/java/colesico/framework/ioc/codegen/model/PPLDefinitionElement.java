@@ -17,7 +17,7 @@
 package colesico.framework.ioc.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassType;
-import colesico.framework.ioc.annotation.PostProduce;
+import colesico.framework.ioc.listener.PostProduce;
 
 /**
  * Post produce listener element

@@ -16,8 +16,8 @@
 
 package colesico.framework.restlet.internal;
 
-import colesico.framework.ioc.annotation.Produce;
-import colesico.framework.ioc.annotation.Producer;
+import colesico.framework.ioc.production.Produce;
+import colesico.framework.ioc.production.Producer;
 import colesico.framework.restlet.assist.LogRestletListener;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.gson.GsonConverter;

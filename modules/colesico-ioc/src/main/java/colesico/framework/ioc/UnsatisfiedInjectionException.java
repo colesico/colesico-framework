@@ -14,21 +14,30 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.annotation;
+package colesico.framework.ioc;
 
-import colesico.framework.ioc.scope.ThreadScope;
-
-import java.lang.annotation.*;
+import colesico.framework.ioc.Ioc;
+import colesico.framework.ioc.IocException;
+import colesico.framework.ioc.key.Key;
 
 /**
- * Defines instance scope as thread scoped
+ * Will be throw when the IOC container can not find the factory for given key.
  *
  * @author Vladlen Larionov
+ * @see Key
+ * @see Ioc
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
-@Inherited
-@Documented
-@CustomScope(ThreadScope.class)
-public @interface ThreadScoped {
+public class UnsatisfiedInjectionException extends IocException {
+    public static final String PROVIDER_NOT_FOUND_MSG = "Unsatisfied injection for key '%s'";
+
+    private final Key key;
+
+    public UnsatisfiedInjectionException(Key key) {
+        super(String.format(PROVIDER_NOT_FOUND_MSG, key.toString()));
+        this.key = key;
+    }
+
+    public Key getKey() {
+        return key;
+    }
 }

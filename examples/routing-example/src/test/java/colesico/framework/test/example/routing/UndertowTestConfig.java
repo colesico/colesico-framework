@@ -17,7 +17,6 @@
 package colesico.framework.test.example.routing;
 
 import colesico.framework.config.Config;
-
 import colesico.framework.undertow.UndertowConfigPrototype;
 import io.undertow.Undertow;
 

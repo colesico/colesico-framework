@@ -16,8 +16,8 @@
 
 package colesico.framework.restlet.internal;
 
-import colesico.framework.ioc.annotation.Classed;
-import colesico.framework.ioc.annotation.Producer;
+import colesico.framework.ioc.production.Classed;
+import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 import colesico.framework.restlet.teleapi.RestletWriterProxy;

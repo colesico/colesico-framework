@@ -15,8 +15,8 @@
  */
 package colesico.framework.ioc.internal;
 
-import colesico.framework.ioc.scope.Fabricator;
 import colesico.framework.ioc.key.Key;
+import colesico.framework.ioc.scope.Fabricator;
 import colesico.framework.ioc.scope.ThreadScope;
 
 import java.util.HashMap;

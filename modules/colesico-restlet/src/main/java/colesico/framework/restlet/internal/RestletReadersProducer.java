@@ -17,8 +17,8 @@
 package colesico.framework.restlet.internal;
 
 import colesico.framework.http.HttpFile;
-import colesico.framework.ioc.annotation.Classed;
-import colesico.framework.ioc.annotation.Producer;
+import colesico.framework.ioc.production.Classed;
+import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.restlet.teleapi.RestletReaderProxy;
 import colesico.framework.restlet.teleapi.RestletTeleReader;

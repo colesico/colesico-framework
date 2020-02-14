@@ -16,7 +16,7 @@
 
 package colesico.framework.example.ioc.multiplugin;
 
-import colesico.framework.ioc.Polysupplier;
+import colesico.framework.ioc.production.Polysupplier;
 
 import java.util.ArrayList;
 import java.util.List;

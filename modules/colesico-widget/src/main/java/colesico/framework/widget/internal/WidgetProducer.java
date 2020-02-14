@@ -15,8 +15,8 @@
  */
 package colesico.framework.widget.internal;
 
-import colesico.framework.ioc.annotation.Produce;
-import colesico.framework.ioc.annotation.Producer;
+import colesico.framework.ioc.production.Produce;
+import colesico.framework.ioc.production.Producer;
 import colesico.framework.widget.CompositePage;
 import colesico.framework.widget.WidgetKit;
 

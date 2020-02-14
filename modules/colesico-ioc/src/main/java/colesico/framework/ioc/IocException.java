@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.annotation;
+package colesico.framework.ioc;
 
-import java.lang.annotation.*;
+import colesico.framework.ioc.Ioc;
 
 /**
- * An instance of the class associated with this annotation
- * will be created each time it is requested from the IoC container.
+ * General IoC error
  *
  * @author Vladlen Larionov
+ * @see Ioc
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
-@Inherited
-@Documented
-public @interface Unscoped {
+public class IocException extends RuntimeException {
+    public IocException(String message) {
+        super(message);
+    }
+
+    public IocException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

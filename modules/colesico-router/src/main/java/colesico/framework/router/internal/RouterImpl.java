@@ -18,8 +18,8 @@ package colesico.framework.router.internal;
 
 import colesico.framework.assist.StrUtils;
 import colesico.framework.http.HttpMethod;
-import colesico.framework.ioc.annotation.Classed;
-import colesico.framework.ioc.Polysupplier;
+import colesico.framework.ioc.production.Classed;
+import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterContext;

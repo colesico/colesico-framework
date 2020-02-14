@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.production;
 
-import colesico.framework.ioc.annotation.Polyproduce;
 import colesico.framework.ioc.key.Key;
 
 import java.util.Iterator;

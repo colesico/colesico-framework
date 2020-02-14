@@ -16,7 +16,7 @@
 
 package colesico.framework.ioc.key;
 
-import colesico.framework.ioc.annotation.PostProduce;
+import colesico.framework.ioc.listener.PostProduce;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

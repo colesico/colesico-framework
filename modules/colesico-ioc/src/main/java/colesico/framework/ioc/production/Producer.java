@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.annotation;
+package colesico.framework.ioc.production;
 
-import javax.inject.Qualifier;
 import java.lang.annotation.*;
 
-
 /**
- * Specifies an optional injection.
- * If this annotation in specified on constructor parameter the parameter value may be null in case the
- * dependency is not found.
+ * Declares producer for IoC container
+ *
+ * @author Vladlen Larionov
  */
-@Qualifier
-@Documented
-@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
 @Inherited
-public @interface OptionalInject {
+@Documented
+public @interface Producer {
+
 }

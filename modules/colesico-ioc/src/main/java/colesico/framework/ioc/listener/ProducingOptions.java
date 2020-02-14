@@ -14,24 +14,26 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc;
+package colesico.framework.ioc.listener;
 
+import colesico.framework.ioc.production.Produce;
+import colesico.framework.ioc.production.Producer;
 
-import colesico.framework.ioc.annotation.Message;
+import java.lang.annotation.*;
 
 /**
- * Basic supplier interface.
- * Supplier is used to obtain instances from IoC container with support of message pass to the factory that creates that instance
+ * Producer method code generation options
+ *
+ * @author Vladlen Larionov
+ * @see Produce
+ * @see Producer
  */
-public interface Supplier<T> {
+@Retention(RetentionPolicy.SOURCE)
+@Target({ElementType.METHOD})
+@Inherited
+@Documented
+public @interface ProducingOptions {
+    boolean postConstruct() default false;
 
-    String GET_METHOD = "get";
-    String MESSAGE_PARAM = "message";
-
-    /**
-     * Should returns instance of T
-     *
-     * @see Message
-     */
-    T get(Object message);
+    boolean postProduce() default false;
 }

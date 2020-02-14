@@ -18,8 +18,8 @@ package colesico.framework.example.jdbi;
 
 import colesico.framework.config.Config;
 import colesico.framework.hikaricp.HikariProperties;
-import colesico.framework.ioc.annotation.Classed;
-import colesico.framework.ioc.Polysupplier;
+import colesico.framework.ioc.production.Classed;
+import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.jdbi.AbstractJdbiConfig;
 import colesico.framework.jdbi.JdbiOptionsPrototype;
 

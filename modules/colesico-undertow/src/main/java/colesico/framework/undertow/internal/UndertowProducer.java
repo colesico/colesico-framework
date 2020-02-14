@@ -18,8 +18,8 @@
 package colesico.framework.undertow.internal;
 
 import colesico.framework.httpserver.HttpServer;
-import colesico.framework.ioc.annotation.Produce;
-import colesico.framework.ioc.annotation.Producer;
+import colesico.framework.ioc.production.Produce;
+import colesico.framework.ioc.production.Producer;
 import colesico.framework.undertow.UndertowConfigPrototype;
 
 import javax.inject.Singleton;

@@ -22,8 +22,11 @@ import colesico.framework.example.ioc.multiplugin.PluginInterface;
 import colesico.framework.example.ioc.named.NamedBean;
 import colesico.framework.example.ioc.singleton.Singleton1;
 import colesico.framework.example.ioc.singleton.Singleton2;
-import colesico.framework.ioc.*;
+import colesico.framework.ioc.Ioc;
+import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.key.NamedKey;
+import colesico.framework.ioc.production.Polysupplier;
+import colesico.framework.ioc.production.Supplier;
 
 public class Main {
     public static void main(String[] args) {

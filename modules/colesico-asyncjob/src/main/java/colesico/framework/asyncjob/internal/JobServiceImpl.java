@@ -17,7 +17,7 @@
 package colesico.framework.asyncjob.internal;
 
 import colesico.framework.asyncjob.*;
-import colesico.framework.ioc.Polysupplier;
+import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.transaction.TransactionalShell;
 import org.slf4j.Logger;

@@ -17,7 +17,7 @@
 package colesico.framework.example.ioc.logger;
 
 
-import colesico.framework.ioc.annotation.Contextual;
+import colesico.framework.ioc.message.Contextual;
 
 public class MainBeanLOG {
 

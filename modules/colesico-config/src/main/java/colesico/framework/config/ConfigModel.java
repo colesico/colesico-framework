@@ -17,9 +17,9 @@
 package colesico.framework.config;
 
 
-import colesico.framework.ioc.annotation.Classed;
-import colesico.framework.ioc.annotation.Message;
-import colesico.framework.ioc.Polysupplier;
+import colesico.framework.ioc.message.Message;
+import colesico.framework.ioc.production.Classed;
+import colesico.framework.ioc.production.Polysupplier;
 
 /**
  * Configuration models

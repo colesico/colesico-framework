@@ -14,21 +14,11 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.tag;
+package colesico.framework.ioc.condition;
 
 /**
- * For extensions producing
+ * The condition under which the factory will be added to the IoC container
  */
-public class ExtensionTag implements Tag {
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean canReplace(Tag other) {
-        return (other instanceof MinorTag) || (other instanceof DefaultTag);
-    }
-
+public interface Condition {
+    boolean  isMet(ConditionContext context);
 }

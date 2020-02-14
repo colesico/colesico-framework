@@ -18,7 +18,7 @@ package colesico.framework.http.internal;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.http.HttpResponse;
-import colesico.framework.ioc.annotation.Producer;
+import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.ThreadScope;
 
 

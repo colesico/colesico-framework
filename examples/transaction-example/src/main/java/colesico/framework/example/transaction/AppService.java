@@ -20,8 +20,6 @@ import colesico.framework.service.Service;
 import colesico.framework.transaction.TransactionPropagation;
 import colesico.framework.transaction.Transactional;
 import colesico.framework.transaction.TransactionalShell;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 

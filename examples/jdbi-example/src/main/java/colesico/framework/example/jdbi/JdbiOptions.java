@@ -17,7 +17,7 @@
 package colesico.framework.example.jdbi;
 
 import colesico.framework.config.Config;
-import colesico.framework.ioc.annotation.Classed;
+import colesico.framework.ioc.production.Classed;
 import colesico.framework.jdbi.JdbiOptionsPrototype;
 import org.jdbi.v3.core.Jdbi;
 

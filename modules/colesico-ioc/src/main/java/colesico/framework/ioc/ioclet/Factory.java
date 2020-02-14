@@ -16,9 +16,9 @@
 
 package colesico.framework.ioc.ioclet;
 
-import colesico.framework.ioc.annotation.Polyproduce;
-import colesico.framework.ioc.Polysupplier;
-import colesico.framework.ioc.Supplier;
+import colesico.framework.ioc.production.Polyproduce;
+import colesico.framework.ioc.production.Polysupplier;
+import colesico.framework.ioc.production.Supplier;
 
 import javax.inject.Provider;
 

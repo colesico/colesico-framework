@@ -16,7 +16,7 @@
 
 package colesico.framework.ioc.key;
 
-import colesico.framework.ioc.annotation.Polyproduce;
+import colesico.framework.ioc.production.Polyproduce;
 
 /**
  * The key by which the container will find the factory to instantiate the class T

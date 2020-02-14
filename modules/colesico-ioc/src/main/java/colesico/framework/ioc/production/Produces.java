@@ -14,27 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.annotation;
+package colesico.framework.ioc.production;
 
-import colesico.framework.ioc.key.ClassedKey;
-
-import javax.inject.Qualifier;
 import java.lang.annotation.*;
 
 /**
- * Classes-based injection qualifier.
- * Use this annotation to differentiate injection between different objects of the same type.
- * This annotation is equivalent to @Named
- *
+ * Set of @Produce annotation
+ * @see Produce
  * @author Vladlen Larionov
- * @see ClassedKey
- * @see javax.inject.Named
  */
-@Qualifier
-@Documented
-@Target({ElementType.METHOD, ElementType.TYPE, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
 @Inherited
-public @interface Classed {
-    Class<?> value();
+@Documented
+public @interface Produces {
+    Produce[] value();
 }

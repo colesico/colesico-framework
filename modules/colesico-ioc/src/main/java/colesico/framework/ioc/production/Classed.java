@@ -14,29 +14,27 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.exception;
+package colesico.framework.ioc.production;
 
-import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.key.Key;
+import colesico.framework.ioc.key.ClassedKey;
+
+import javax.inject.Qualifier;
+import java.lang.annotation.*;
 
 /**
- * Will be throw when the IOC container can not find the factory for given key.
+ * Classes-based injection qualifier.
+ * Use this annotation to differentiate injection between different objects of the same type.
+ * This annotation is equivalent to @Named
  *
  * @author Vladlen Larionov
- * @see Key
- * @see Ioc
+ * @see ClassedKey
+ * @see javax.inject.Named
  */
-public class UnsatisfiedInjectionException extends IocException {
-    public static final String PROVIDER_NOT_FOUND_MSG = "Unsatisfied injection for key '%s'";
-
-    private final Key key;
-
-    public UnsatisfiedInjectionException(Key key) {
-        super(String.format(PROVIDER_NOT_FOUND_MSG, key.toString()));
-        this.key = key;
-    }
-
-    public Key getKey() {
-        return key;
-    }
+@Qualifier
+@Documented
+@Target({ElementType.METHOD, ElementType.TYPE, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+public @interface Classed {
+    Class<?> value();
 }

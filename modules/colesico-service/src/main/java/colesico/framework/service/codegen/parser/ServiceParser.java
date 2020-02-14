@@ -19,7 +19,7 @@ package colesico.framework.service.codegen.parser;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
-import colesico.framework.ioc.annotation.CustomScope;
+import colesico.framework.ioc.scope.CustomScope;
 import colesico.framework.service.LocalMethod;
 import colesico.framework.service.PlainMethod;
 import colesico.framework.service.ServiceMethod;

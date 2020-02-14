@@ -16,7 +16,7 @@
 
 package colesico.framework.example.ioc.lifecycle;
 
-import colesico.framework.ioc.annotation.PostConstruct;
+import colesico.framework.ioc.listener.PostConstruct;
 
 public class MainBeanLFC {
 

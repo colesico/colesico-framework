@@ -14,27 +14,18 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.annotation;
-
-import colesico.framework.ioc.tag.Tag;
+package colesico.framework.ioc.condition;
 
 import java.lang.annotation.*;
 
 /**
- * Declares producer for IoC container
- *
- * @author Vladlen Larionov
+ * Defines a replacement for an existing other equivalent producing.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Inherited
 @Documented
-public @interface Producer {
+public @interface Substitute {
 
-    /**
-     * Tag of the producer
-     * @see Tag
-     * @return tag class
-     */
-    Class<? extends Tag> value() default Tag.class;
+    Substitution value() default Substitution.NORMAL;
 }

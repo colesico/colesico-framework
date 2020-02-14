@@ -16,9 +16,8 @@
 
 package colesico.framework.test.resource;
 
-import colesico.framework.ioc.annotation.Polyproduce;
-import colesico.framework.ioc.annotation.Producer;
-
+import colesico.framework.ioc.production.Polyproduce;
+import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.DefaultProfile;
 import colesico.framework.profile.Profile;
 import colesico.framework.resource.ResourceOptionsPrototype;

@@ -19,7 +19,7 @@ package colesico.framework.restlet.internal;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpException;
 import colesico.framework.http.HttpRequest;
-import colesico.framework.ioc.Polysupplier;
+import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.restlet.RestletErrorResponse;
 import colesico.framework.restlet.teleapi.*;

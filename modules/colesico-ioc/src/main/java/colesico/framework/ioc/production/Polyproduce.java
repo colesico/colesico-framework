@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.ioc.lifecycle;
+package colesico.framework.ioc.production;
 
-import colesico.framework.ioc.listener.PostProduce;
-import colesico.framework.ioc.message.Message;
-import colesico.framework.ioc.production.Produce;
-import colesico.framework.ioc.production.Producer;
+import java.lang.annotation.*;
 
-@Producer
-@Produce(value = MainBeanLFC.class, postProduce = true)
-public class LifecycleProducer {
-
-    // This is post produce listener
-    @PostProduce
-    public MainBeanLFC postProduce(@Message MainBeanLFC instance) {
-        instance.setValue("Value");
-        return instance;
-    }
+/**
+ * Defines the producing of the instance as "multi-variant".
+ * This means that the instance creation can be implemented with not just one factory.
+ * To get that instance it is possible to use any one of that factories.
+ *
+ * @author Vladlen Larionov
+ * @see Polysupplier
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.TYPE})
+@Inherited
+@Documented
+public @interface Polyproduce {
 }

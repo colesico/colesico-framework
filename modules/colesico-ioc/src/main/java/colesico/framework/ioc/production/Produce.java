@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.annotation;
+package colesico.framework.ioc.production;
+
+import colesico.framework.ioc.scope.Unscoped;
 
 import java.lang.annotation.*;
 

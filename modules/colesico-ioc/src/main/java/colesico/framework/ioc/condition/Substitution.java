@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.tag;
+package colesico.framework.ioc.condition;
 
 /**
- * For tests producing
+ * Substitution type.
+ * Higher ranks has precedence over low to perform substitution
  */
-public class TestTag implements Tag {
+public enum Substitution {
 
-    @Override
-    public boolean isEnabled() {
-        return true;
+    NORMAL(1), MEDIUM(2), HIGHER(3);
+
+    private final int rank;
+
+    Substitution(int rank) {
+        this.rank = rank;
     }
 
-    @Override
-    public boolean canReplace(Tag other) {
-        return (other instanceof MinorTag) || (other instanceof DefaultTag) || (other instanceof ExtensionTag);
+    public int getRank() {
+        return rank;
     }
 }

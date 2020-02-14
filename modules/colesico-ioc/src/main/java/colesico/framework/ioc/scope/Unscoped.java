@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.annotation;
+package colesico.framework.ioc.scope;
 
 import java.lang.annotation.*;
 
 /**
- * Set of @Produce annotation
- * @see Produce
+ * An instance of the class associated with this annotation
+ * will be created each time it is requested from the IoC container.
+ *
  * @author Vladlen Larionov
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Inherited
 @Documented
-public @interface Produces {
-    Produce[] value();
+public @interface Unscoped {
 }

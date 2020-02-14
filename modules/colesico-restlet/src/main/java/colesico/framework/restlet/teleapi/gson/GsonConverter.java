@@ -16,7 +16,7 @@
 
 package colesico.framework.restlet.teleapi.gson;
 
-import colesico.framework.ioc.Polysupplier;
+import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.restlet.teleapi.RestletJsonConverter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -18,9 +18,9 @@ package colesico.framework.restlet.internal;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpResponse;
-import colesico.framework.ioc.key.ClassedKey;
 import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.Supplier;
+import colesico.framework.ioc.key.ClassedKey;
+import colesico.framework.ioc.production.Supplier;
 import colesico.framework.restlet.RestletErrorResponse;
 import colesico.framework.restlet.teleapi.RestletDataPort;
 import colesico.framework.restlet.teleapi.RestletJsonConverter;

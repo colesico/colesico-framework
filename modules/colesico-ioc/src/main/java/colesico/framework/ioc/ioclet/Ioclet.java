@@ -16,8 +16,8 @@
 
 package colesico.framework.ioc.ioclet;
 
-import colesico.framework.ioc.tag.Tag;
-import colesico.framework.ioc.annotation.Producer;
+import colesico.framework.ioc.condition.Condition;
+import colesico.framework.ioc.production.Producer;
 
 /**
  * IoC container module that provides the factories to the IoC container.
@@ -27,7 +27,7 @@ import colesico.framework.ioc.annotation.Producer;
  */
 public interface Ioclet {
     String GET_ID_METHOD = "getId";
-    String GET_TAG_METHOD = "getTag";
+    String GET_CONDITION_METHOD = "getCondition";
     String ADD_FACTORIES_METHOD = "addFactories";
     String CATALOG_PARAM = "catalog";
 
@@ -41,11 +41,11 @@ public interface Ioclet {
     String getId();
 
     /**
-     * Returns tag obtained from producer definition
+     * Returns producer baser condition
      *
-     * @see Tag
+     * @see Condition
      */
-    Tag getTag();
+    Condition getCondition();
 
     /**
      * This method implementation should register the factories

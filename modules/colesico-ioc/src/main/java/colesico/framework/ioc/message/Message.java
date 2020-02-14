@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.ioc.lifecycle;
+package colesico.framework.ioc.message;
 
-import colesico.framework.ioc.listener.PostProduce;
-import colesico.framework.ioc.message.Message;
-import colesico.framework.ioc.production.Produce;
-import colesico.framework.ioc.production.Producer;
+import javax.inject.Qualifier;
+import java.lang.annotation.*;
 
-@Producer
-@Produce(value = MainBeanLFC.class, postProduce = true)
-public class LifecycleProducer {
 
-    // This is post produce listener
-    @PostProduce
-    public MainBeanLFC postProduce(@Message MainBeanLFC instance) {
-        instance.setValue("Value");
-        return instance;
-    }
+/**
+ * Indicates that the injection parameter is an IoC message.
+ *
+ * IoC messages are not retrieved statically from the IOC container
+ * but are passed as a parameter to the instance factory
+ */
+@Qualifier
+@Documented
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+public @interface Message {
 }

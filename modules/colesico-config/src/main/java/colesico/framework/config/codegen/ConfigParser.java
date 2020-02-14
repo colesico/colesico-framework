@@ -17,14 +17,13 @@
 package colesico.framework.config.codegen;
 
 import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.AnnotationElement;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.config.*;
-import colesico.framework.ioc.annotation.Classed;
+import colesico.framework.ioc.production.Classed;
 import com.squareup.javapoet.TypeName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

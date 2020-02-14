@@ -17,8 +17,9 @@
 package colesico.framework.ioc.internal;
 
 import colesico.framework.assist.ServiceLocator;
-import colesico.framework.ioc.*;
-import colesico.framework.ioc.exception.IocException;
+import colesico.framework.ioc.Ioc;
+import colesico.framework.ioc.IocBuilder;
+import colesico.framework.ioc.IocException;
 import colesico.framework.ioc.ioclet.AdvancedIoc;
 import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.ioclet.Ioclet;

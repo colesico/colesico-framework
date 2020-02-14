@@ -16,7 +16,7 @@
 
 package colesico.framework.example.ioc.message;
 
-import colesico.framework.ioc.annotation.Message;
+import colesico.framework.ioc.message.Message;
 
 public class ReceiverBean {
     private final TextMessage message;

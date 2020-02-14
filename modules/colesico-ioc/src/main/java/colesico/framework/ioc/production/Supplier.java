@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.annotation;
+package colesico.framework.ioc.production;
 
-import colesico.framework.ioc.Polysupplier;
 
-import java.lang.annotation.*;
+import colesico.framework.ioc.message.Message;
 
 /**
- * Defines the producing of the instance as "multi-variant".
- * This means that the instance creation can be implemented with not just one factory.
- * To get that instance it is possible to use any one of that factories.
- *
- * @author Vladlen Larionov
- * @see Polysupplier
+ * Basic supplier interface.
+ * Supplier is used to obtain instances from IoC container with support of message pass to the factory that creates that instance
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE})
-@Inherited
-@Documented
-public @interface Polyproduce {
+public interface Supplier<T> {
+
+    String GET_METHOD = "get";
+    String MESSAGE_PARAM = "message";
+
+    /**
+     * Should returns instance of T
+     *
+     * @see Message
+     */
+    T get(Object message);
 }

@@ -14,30 +14,17 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.annotation;
-
-import colesico.framework.ioc.scope.Scope;
+package colesico.framework.ioc.condition;
 
 import java.lang.annotation.*;
 
 /**
- * Defines actual scope implementation class for scope definition annotation.
- * Used to define the custom scope annotation and specify the Scope implementation class that
- * is associated with the annotation.
- * For example, see @ThreadScoped predefined custom scope
- *
- * @see Scope
- * @see ThreadScoped
- * @author Vladlen Larionov
+ * Indicates that the ioclet/factory will be added to the IoC container on the specified condition.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.ANNOTATION_TYPE})
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Inherited
 @Documented
-public @interface CustomScope {
-    /**
-     * Scope intrface or implementation class
-     * @return
-     */
-    Class<? extends Scope> value();
+public @interface Requires {
+    Class<? extends Condition> value();
 }

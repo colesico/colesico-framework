@@ -15,7 +15,7 @@
  */
 package colesico.framework.resource.internal;
 
-import colesico.framework.ioc.Polysupplier;
+import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.ResourceKit;
 import colesico.framework.resource.ResourceNotFoundException;

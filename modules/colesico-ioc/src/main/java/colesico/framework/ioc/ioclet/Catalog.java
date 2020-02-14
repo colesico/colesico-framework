@@ -17,8 +17,9 @@
 package colesico.framework.ioc.ioclet;
 
 import colesico.framework.ioc.Ioc;
+import colesico.framework.ioc.condition.Condition;
+import colesico.framework.ioc.condition.Substitution;
 import colesico.framework.ioc.key.Key;
-import colesico.framework.ioc.tag.Tag;
 
 /**
  * Factories catalog.
@@ -31,37 +32,9 @@ import colesico.framework.ioc.tag.Tag;
 public interface Catalog {
     String ACCEPT_METHOD = "accept";
     String ADD_METHOD = "add";
-    String ENTRY_METHOD = "entry";
+
+    <T> boolean accept(Key<T> key, Condition condition, Substitution substitution, boolean polyproducing);
 
     <T> void add(Factory<T> factory);
 
-    <T> boolean accept(Entry<T> entry);
-
-    /**
-     * Entry factory
-     */
-    static <T> Entry<T> entry(Key<T> key, Tag tag, boolean polyproducing) {
-        return new Entry<>(key, tag, polyproducing);
-    }
-
-    class Entry<T> {
-        private final Key<T> key;
-        private final Tag tag;
-        private final boolean polyproducing;
-
-        public Entry(Key<T> key, Tag tag, boolean polyproducing) {
-            this.key = key;
-            this.tag = tag;
-            this.polyproducing = polyproducing;
-        }
-
-        public final Key<T> getKey() {
-            return key;
-        }
-
-        public final boolean isPolyproducing() {
-            return polyproducing;
-        }
-
-    }
 }

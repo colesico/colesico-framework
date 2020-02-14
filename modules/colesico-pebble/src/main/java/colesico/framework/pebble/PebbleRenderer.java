@@ -17,7 +17,7 @@
 package colesico.framework.pebble;
 
 import colesico.framework.htmlrenderer.HtmlRenderer;
-import colesico.framework.ioc.Polysupplier;
+import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.pebble.internal.FrameworkExtension;
 import colesico.framework.pebble.internal.PebbleTemplateLoader;
 import colesico.framework.weblet.HtmlResponse;

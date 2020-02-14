@@ -20,10 +20,10 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.ioc.annotation.Producer;
 import colesico.framework.ioc.codegen.generator.IocletGenerator;
 import colesico.framework.ioc.codegen.generator.SPIGenerator;
 import colesico.framework.ioc.codegen.model.IocletElement;
+import colesico.framework.ioc.production.Producer;
 import com.squareup.javapoet.TypeSpec;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 

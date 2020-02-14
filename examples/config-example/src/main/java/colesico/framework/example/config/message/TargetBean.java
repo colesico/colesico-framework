@@ -16,7 +16,7 @@
 
 package colesico.framework.example.config.message;
 
-import colesico.framework.ioc.annotation.Message;
+import colesico.framework.ioc.message.Message;
 
 /**
  * A message based configurable service

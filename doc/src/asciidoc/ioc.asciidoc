@@ -63,7 +63,7 @@ Obtaining instances with injected dependencies is done using this methods:
 * instance - returns class instance
 * provider - returns class instance provider  (javax.inject.Provider<>), is used to "deferred" instance obtaining/creation.
 * supplier - returns class instance supplier, is used to "deferred" instance obtaining/creation with the ability to pass a message.
-* polysupplier  - returns chain of class instance suppliers (colesico.framework.ioc.Polysupplier<>)
+* polysupplier  - returns chain of class instance suppliers (colesico.framework.ioc.production.Polysupplier<>)
 
 To specify what instance to return, use the "keys":
 

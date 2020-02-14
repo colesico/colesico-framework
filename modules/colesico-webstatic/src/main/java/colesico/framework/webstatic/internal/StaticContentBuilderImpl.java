@@ -17,9 +17,9 @@
 package colesico.framework.webstatic.internal;
 
 import colesico.framework.http.HttpContext;
-import colesico.framework.ioc.InjectionPoint;
-import colesico.framework.ioc.annotation.Message;
-import colesico.framework.ioc.annotation.Unscoped;
+import colesico.framework.ioc.message.InjectionPoint;
+import colesico.framework.ioc.message.Message;
+import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.resource.ResourceKit;
 import colesico.framework.webstatic.StaticContent;
 import org.apache.commons.lang3.StringUtils;

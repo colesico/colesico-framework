@@ -16,7 +16,7 @@
 
 package colesico.framework.example.ioc.message;
 
-import colesico.framework.ioc.Supplier;
+import colesico.framework.ioc.production.Supplier;
 
 public class MainBeanMSG {
 

@@ -16,9 +16,9 @@
 
 package colesico.framework.slf4j;
 
-import colesico.framework.ioc.InjectionPoint;
-import colesico.framework.ioc.annotation.Message;
-import colesico.framework.ioc.annotation.Producer;
+import colesico.framework.ioc.message.InjectionPoint;
+import colesico.framework.ioc.message.Message;
+import colesico.framework.ioc.production.Producer;
 import colesico.framework.service.ServiceOrigin;
 import colesico.framework.service.ServiceProxy;
 import org.slf4j.Logger;

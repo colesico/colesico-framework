@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.exception;
+package colesico.framework.ioc.scope;
 
-import colesico.framework.ioc.Ioc;
+import java.lang.annotation.*;
 
 /**
- * General IoC error
+ * Defines instance scope as thread scoped
  *
  * @author Vladlen Larionov
- * @see Ioc
  */
-public class IocException extends RuntimeException {
-    public IocException(String message) {
-        super(message);
-    }
-
-    public IocException(String message, Throwable cause) {
-        super(message, cause);
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Inherited
+@Documented
+@CustomScope(ThreadScope.class)
+public @interface ThreadScoped {
 }

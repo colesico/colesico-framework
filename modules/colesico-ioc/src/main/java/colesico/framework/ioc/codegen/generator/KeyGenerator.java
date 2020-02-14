@@ -18,14 +18,14 @@ package colesico.framework.ioc.codegen.generator;
 
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.assist.codegen.model.ClassType;
-import colesico.framework.ioc.key.ClassedKey;
-import colesico.framework.ioc.key.NamedKey;
-import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.codegen.model.FactoryElement;
 import colesico.framework.ioc.codegen.model.InjectableElement;
 import colesico.framework.ioc.ioclet.AdvancedIoc;
 import colesico.framework.ioc.ioclet.Ioclet;
+import colesico.framework.ioc.key.ClassedKey;
+import colesico.framework.ioc.key.NamedKey;
 import colesico.framework.ioc.key.PPLKey;
+import colesico.framework.ioc.key.TypeKey;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.TypeName;

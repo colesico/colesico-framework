@@ -14,21 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.tag;
+package colesico.framework.ioc.condition;
 
-/**
- * For default producing
- */
-public class DefaultTag implements Tag {
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean canReplace(Tag other) {
-        return other instanceof MinorTag;
-    }
-
+public class ConditionContext {
 }

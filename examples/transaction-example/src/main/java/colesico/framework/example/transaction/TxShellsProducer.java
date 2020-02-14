@@ -16,7 +16,7 @@
 
 package colesico.framework.example.transaction;
 
-import colesico.framework.ioc.annotation.Producer;
+import colesico.framework.ioc.production.Producer;
 import colesico.framework.transaction.TransactionalShell;
 
 import javax.inject.Named;
