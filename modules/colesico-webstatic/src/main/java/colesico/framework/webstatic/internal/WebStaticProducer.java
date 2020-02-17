@@ -25,7 +25,7 @@ import colesico.framework.webstatic.StaticContent;
 /**
  * @author Vladlen Larionov
  */
-@Producer(MinorTag.class)
+@Producer
 @Produce(StaticContentBuilderImpl.class)
 public class WebStaticProducer {
     @Unscoped

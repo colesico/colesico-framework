@@ -18,6 +18,7 @@ package colesico.framework.test.resource;
 
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
+import colesico.framework.ioc.conditional.TestCondition;
 import colesico.framework.resource.ResourceKit;
 import colesico.framework.resource.internal.LocalizingTool;
 import org.slf4j.Logger;
@@ -35,11 +36,11 @@ public class TestLocalizationTool {
     public static final String PATH2 = "root/foo/file.txt";
     public static final String PATH3 = "root/folder/file.txt";
 
-
     @BeforeClass
     public void init() {
         logger.info("Init test");
-        ioc = IocBuilder.forTests().build();
+        TestCondition.activate();
+        ioc = IocBuilder.create().build();
         localizingTool = ioc.instance(LocalizingTool.class);
     }
 

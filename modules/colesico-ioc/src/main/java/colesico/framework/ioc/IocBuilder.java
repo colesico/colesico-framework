@@ -30,8 +30,8 @@ public interface IocBuilder {
     /**
      * Creates  IoC container builder
      */
-    static IocBuilder instance() {
-        return IocBuilderImpl.instance();
+    static IocBuilder create() {
+        return IocBuilderImpl.create();
     }
 
     /**

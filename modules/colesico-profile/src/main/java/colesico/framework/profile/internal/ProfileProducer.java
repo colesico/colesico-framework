@@ -28,7 +28,7 @@ import java.util.Locale;
 
 
 
-@Producer(MinorTag.class)
+@Producer
 @Produce(DefaultProfileKit.class)
 @Produce(ProfileConfigImpl.class)
 @Produce(ProfileTeleAssistImpl.class)

@@ -16,21 +16,31 @@
 
 package colesico.framework.ioc.internal;
 
+import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.IocException;
 import colesico.framework.ioc.conditional.Condition;
+import colesico.framework.ioc.conditional.ConditionContext;
 import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.ioclet.Catalog;
 import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.key.Key;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CatalogImpl implements Catalog {
 
+    private static final Logger log = LoggerFactory.getLogger(Catalog.class);
+
     protected final Map<Key<?>, CatalogEntry<?>> entriesMap = new HashMap();
     protected CatalogEntry curEntry;
+    protected final ConditionContext conditionContext;
 
+    public CatalogImpl(ConditionContext conditionContext) {
+        this.conditionContext = conditionContext;
+    }
 
     @Override
     public <T> boolean accept(Key<T> key, Condition condition, Substitution substitution, boolean polyproducing) {
@@ -38,7 +48,8 @@ public class CatalogImpl implements Catalog {
         curEntry = new CatalogEntry(key, condition, substitution, polyproducing);
 
         // Check condition
-        if ((condition != null) && !condition.isMet(null)) {
+        if ((condition != null) && !condition.isMet(conditionContext)) {
+            log.debug("Condition not met for key: "+key);
             return false;
         }
 
@@ -80,18 +91,28 @@ public class CatalogImpl implements Catalog {
     @Override
     public <T> void add(Factory<T> factory) {
         curEntry.setFactory(factory);
-        CatalogEntry<?> prevEntry = entriesMap.put(curEntry.getKey(), curEntry);
-        if (prevEntry != null) {
-            if (prevEntry.isPolyproducing()) {
+        switch (curEntry.getAction()) {
+            case NONE:
+                throw new IocException("Cataloging is not permitted");
+            case PUT:
+            case SUBSTITUTE:
+                entriesMap.put(curEntry.getKey(), curEntry);
+                return;
+            case APPEND:
+                CatalogEntry<?> prevEntry = entriesMap.put(curEntry.getKey(), curEntry);
                 curEntry.getFactory().setNext(prevEntry.getFactory());
-            } else {
-                throw new IocException("Factory has overridden for key: " + curEntry.getKey());
-            }
+                return;
+            default:
+                throw new IocException("Unsupported catalog action: " + curEntry.getAction());
         }
     }
 
     public Map<Key<?>, Factory<?>> getFactories() {
-        return null;
+        Map<Key<?>, Factory<?>> result = new HashMap<>();
+        for (CatalogEntry entry : entriesMap.values()) {
+            result.put(entry.getKey(), entry.getFactory());
+        }
+        return result;
     }
 
 

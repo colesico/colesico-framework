@@ -18,6 +18,7 @@ package colesico.framework.test.resource;
 
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
+import colesico.framework.ioc.conditional.TestCondition;
 import colesico.framework.resource.internal.EvaluationTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,8 @@ public class TestEvaluationTool {
     @BeforeClass
     public void init() {
         logger.info("Init test");
-        ioc = IocBuilder.forTests().build();
+        TestCondition.activate();
+        ioc = IocBuilder.create().build();
         evaluationTool = ioc.instance(EvaluationTool.class);
         evaluationTool.addProperty("$alias", "foo/dummy");
     }

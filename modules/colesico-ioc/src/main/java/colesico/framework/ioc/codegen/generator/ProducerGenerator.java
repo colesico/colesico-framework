@@ -59,6 +59,8 @@ public class ProducerGenerator {
     protected final List<MethodSpec.Builder> producerMethods = new ArrayList<>();
     protected final List<FieldSpec.Builder> producerFields = new ArrayList<>();
 
+    protected TypeName producerCondition;
+
     public ProducerGenerator(String producerPackageName, String producerClassSimpleName, Class<?> masterGeneratorClass, ProcessingEnvironment processingEnv) {
         logger.debug("Creating IoC producer generator: " + producerPackageName + "." + producerClassSimpleName);
         this.masterGeneratorClass = masterGeneratorClass;
@@ -75,7 +77,6 @@ public class ProducerGenerator {
         this.producerClassSimpleName = producerClassSimpleName;
         this.producerClassName = this.producerPackageName + '.' + this.producerClassSimpleName;
         this.producerClassFilePath = "/" + StringUtils.replace(producerClassName, ".", "/") + ".java";
-
     }
 
     public String getProducerClassName() {
@@ -115,7 +116,6 @@ public class ProducerGenerator {
         return mb;
     }
 
-
     public AnnotationSpec.Builder addProduceAnnotation(TypeName value) {
         AnnotationSpec.Builder produceAnn = AnnotationSpec.builder(Produce.class);
         produceAnn.addMember("value", "$T.class", value);
@@ -136,6 +136,10 @@ public class ProducerGenerator {
         mb.addParameter(implType, "impl", Modifier.FINAL);
         mb.addStatement("return impl");
         return mb;
+    }
+
+    public void setProducerCondition(TypeName producerCondition) {
+        this.producerCondition = producerCondition;
     }
 
     public TypeSpec.Builder typeBuilder() {

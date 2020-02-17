@@ -16,6 +16,9 @@
 
 package colesico.framework.test.resource;
 
+import colesico.framework.ioc.conditional.Requires;
+import colesico.framework.ioc.conditional.Substitute;
+import colesico.framework.ioc.conditional.TestCondition;
 import colesico.framework.ioc.production.Polyproduce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.DefaultProfile;
@@ -25,18 +28,20 @@ import colesico.framework.resource.ResourceOptionsPrototype;
 import javax.inject.Singleton;
 import java.util.Locale;
 
-@Producer(TestTag.class)
+@Producer
+@Requires(TestCondition.class)
+@Substitute
 public class TestProducer {
 
     @Singleton
     public Profile getProfile() {
-        return new DefaultProfile(new Locale("en","RU"));
+        return new DefaultProfile(new Locale("en", "RU"));
     }
 
     @Singleton
     @Polyproduce
     public ResourceOptionsPrototype getResourceConfig() {
-        return new ResourcesConf();
+        return new ResourcesOptions();
     }
 }
 

@@ -17,10 +17,13 @@
 package colesico.framework.test.example.helloworld;
 
 import colesico.framework.config.Config;
+import colesico.framework.ioc.conditional.Requires;
+import colesico.framework.ioc.conditional.TestCondition;
 import colesico.framework.undertow.UndertowConfigPrototype;
 import io.undertow.Undertow;
 
-@Config(tag = TestTag.class)
+@Config
+@Requires(TestCondition.class)
 public class UndertowTestConfig extends UndertowConfigPrototype {
 
     @Override

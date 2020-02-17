@@ -14,9 +14,24 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.conditional;
+package colesico.framework.ioc.internal;
 
-public interface ConditionContext {
-    void setAttribute(Class<?> keyClass, Object value);
-    <T> T getAttribute(Class<T> keyClass);
+import colesico.framework.ioc.conditional.ConditionContext;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public final class ConditionContextImpl implements ConditionContext {
+
+    private final Map<Class<?>, Object> attributes = new HashMap<>();
+
+    @Override
+    public void setAttribute(Class<?> keyClass, Object value) {
+        attributes.put(keyClass, value);
+    }
+
+    @Override
+    public <T> T getAttribute(Class<T> keyClass) {
+        return (T) attributes.get(keyClass);
+    }
 }

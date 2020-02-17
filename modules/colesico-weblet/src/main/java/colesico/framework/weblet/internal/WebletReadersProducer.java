@@ -35,7 +35,7 @@ import java.util.OptionalLong;
 
 
 
-@Producer(MinorTag.class)
+@Producer
 @Produce(BooleanReader.class)
 @Produce(StringReader.class)
 @Produce(CharacterReader.class)

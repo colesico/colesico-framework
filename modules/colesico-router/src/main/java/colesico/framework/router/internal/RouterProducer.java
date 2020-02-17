@@ -28,7 +28,7 @@ import javax.inject.Singleton;
 /**
  * @author Vladlen Larionov
  */
-@Producer(MinorTag.class)
+@Producer
 @Produce(RouterImpl.class)
 public class RouterProducer {
 

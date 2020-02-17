@@ -29,7 +29,7 @@ import javax.inject.Singleton;
 /**
  * @author Vladlen Larionov
  */
-@Producer(MinorTag.class)
+@Producer
 @Produce(UndertowRequestProcessor.class)
 @Produce(UndertowConfigImpl.class)
 @Produce(UndertowHttpServer.class)

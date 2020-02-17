@@ -28,7 +28,7 @@ import colesico.framework.ioc.scope.ThreadScope;
  *
  * @author Vladlen Larionov
  */
-@Producer(MinorTag.class)
+@Producer
 public class HttpProducer {
 
     public HttpContext getHttpContext(ThreadScope scope) {

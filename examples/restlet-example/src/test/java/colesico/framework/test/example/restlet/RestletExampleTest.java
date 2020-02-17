@@ -46,7 +46,7 @@ public class RestletExampleTest {
 
     @BeforeClass
     public void init() {
-        ioc = IocBuilder.forTests().build();
+        ioc = IocBuilder.create().build();
         httpServer = ioc.instance(HttpServer.class).start();
         httpClient =  HttpClient.newBuilder().build();
     }

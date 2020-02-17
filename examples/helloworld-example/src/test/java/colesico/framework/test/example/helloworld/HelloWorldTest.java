@@ -41,7 +41,7 @@ public class HelloWorldTest {
 
     @BeforeClass
     public void init() {
-        ioc = IocBuilder.forTests().build();
+        ioc = IocBuilder.create().build();
 
         httpServer = ioc.instance(HttpServer.class).start();
 

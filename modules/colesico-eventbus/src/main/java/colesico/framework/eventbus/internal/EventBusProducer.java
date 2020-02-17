@@ -22,9 +22,7 @@ import colesico.framework.ioc.production.Producer;
 
 import javax.inject.Singleton;
 
-
-
-@Producer(MinorTag.class)
+@Producer
 @Produce(EventBusImpl.class)
 public class EventBusProducer {
 

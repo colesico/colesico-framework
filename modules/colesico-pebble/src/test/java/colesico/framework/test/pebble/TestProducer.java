@@ -16,10 +16,13 @@
 
 package colesico.framework.test.pebble;
 
+import colesico.framework.ioc.conditional.Requires;
+import colesico.framework.ioc.conditional.TestCondition;
 import colesico.framework.ioc.production.Producer;
 
 
-@Producer(TestTag.class)
+@Producer
+@Requires(TestCondition.class)
 public class TestProducer {
 
 }

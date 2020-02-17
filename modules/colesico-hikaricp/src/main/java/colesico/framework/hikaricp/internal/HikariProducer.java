@@ -31,9 +31,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Singleton;
 import javax.sql.DataSource;
 
-
-
-@Producer(MinorTag.class)
+@Producer
 public class HikariProducer {
 
     protected final Logger log = LoggerFactory.getLogger(HikariProducer.class);

@@ -21,6 +21,7 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.IocException;
 import colesico.framework.ioc.conditional.Condition;
+import colesico.framework.ioc.conditional.ConditionContext;
 import colesico.framework.ioc.ioclet.AdvancedIoc;
 import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.ioclet.Ioclet;
@@ -47,11 +48,13 @@ public class IocBuilderImpl implements IocBuilder {
 
     protected CatalogImpl catalog;
 
+    protected ConditionContext conditionContext = new ConditionContextImpl();
+
     private IocBuilderImpl() {
         iocletsDiscovery = true;
     }
 
-    public static IocBuilderImpl instance() {
+    public static IocBuilderImpl create() {
         return new IocBuilderImpl();
     }
 
@@ -70,7 +73,7 @@ public class IocBuilderImpl implements IocBuilder {
     @Override
     public Ioc build() {
 
-        catalog = new CatalogImpl();
+        catalog = new CatalogImpl(conditionContext);
 
         if (iocletsDiscovery) {
             log.debug("Ioclets discovery: on");
@@ -97,7 +100,8 @@ public class IocBuilderImpl implements IocBuilder {
 
     protected void registerIoclet(Ioclet ioclet) {
         Condition condition = ioclet.getCondition();
-        if ((condition != null) && !condition.isMet(null)) {
+        if ((condition != null) && !condition.isMet(conditionContext)) {
+            log.debug("Condition not met for ioclet: "+ioclet.getId());
             return;
         }
 
@@ -125,7 +129,7 @@ public class IocBuilderImpl implements IocBuilder {
         log.debug("Lookup ioclets...");
         ServiceLocator<Ioclet> locator = ServiceLocator.of(this.getClass(), Ioclet.class);
         for (Ioclet ioclet : locator.getProviders()) {
-            log.debug("Found ioclet '" + ioclet.getClass().getName() + "' with id: '" + ioclet.getId());
+            log.debug("Found ioclet '" + ioclet.getClass().getName() + "' with id: '" + ioclet.getId()+"'");
             result.add(ioclet);
         }
         return result;

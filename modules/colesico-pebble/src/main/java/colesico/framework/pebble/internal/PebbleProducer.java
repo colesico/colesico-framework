@@ -28,7 +28,7 @@ import colesico.framework.pebble.PebbleRenderer;
 /**
  * @author Vladlen Larionov
  */
-@Producer(MinorTag.class)
+@Producer
 @Produce(PebbleRenderer.class)
 @Produce(PebbleTemplateLoader.class)
 @Produce(FrameworkExtension.class)

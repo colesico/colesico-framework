@@ -42,7 +42,7 @@ public class TransactionExampleTest {
 
     @BeforeClass
     public void init() {
-        ioc = IocBuilder.forTests().build();
+        ioc = IocBuilder.create().build();
         defaultTxShell = (TransctionalShellMock) ioc.instance(TransactionalShell.class);
         customTxShell = (TransctionalShellMock) ioc.instance(new NamedKey<>(TransactionalShell.class, "custom"), null);
         progTxShell = (TransctionalShellMock) ioc.instance(new NamedKey<>(TransactionalShell.class, "prog"), null);

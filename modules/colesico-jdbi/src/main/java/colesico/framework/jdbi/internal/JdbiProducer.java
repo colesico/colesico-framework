@@ -23,9 +23,7 @@ import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.jdbi.JdbiConfigPrototype;
 import org.jdbi.v3.core.Jdbi;
 
-
-
-@Producer(MinorTag.class)
+@Producer
 public class JdbiProducer {
 
     /**

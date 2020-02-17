@@ -23,7 +23,7 @@ import colesico.framework.teleapi.TeleException;
 
 
 
-@Producer(MinorTag.class)
+@Producer
 public class TeleApiProducer {
     protected static final String NO_DATA_PORT_MSG = "TeleAPI: Data port for the active thread is not provided";
 

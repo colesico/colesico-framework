@@ -33,7 +33,7 @@ import javax.inject.Singleton;
 
 
 
-@Producer(MinorTag.class)
+@Producer
 public class RestletWritersProducer {
 
     @Singleton

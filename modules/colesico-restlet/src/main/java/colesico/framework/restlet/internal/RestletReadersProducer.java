@@ -35,7 +35,7 @@ import java.util.OptionalLong;
 
 
 
-@Producer(MinorTag.class)
+@Producer
 public class RestletReadersProducer {
 
     @Singleton

@@ -55,7 +55,7 @@ Testing purpose container creation example:
 
 [source,java]
 ----
-Ioc ioc = iocBuilder.forTests().build();
+Ioc ioc = iocBuilder.instance().build();
 ----
 
 Obtaining instances with injected dependencies is done using this methods:

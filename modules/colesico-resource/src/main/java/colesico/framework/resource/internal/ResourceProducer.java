@@ -15,7 +15,6 @@
  */
 package colesico.framework.resource.internal;
 
-
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.resource.ResourceKit;
@@ -24,7 +23,7 @@ import javax.inject.Singleton;
 
 
 
-@Producer(MinorTag.class)
+@Producer
 @Produce(ResourceKitImpl.class)
 @Produce(LocalizingTool.class)
 @Produce(RewritingTool.class)

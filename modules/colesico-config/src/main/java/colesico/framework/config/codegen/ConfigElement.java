@@ -40,9 +40,9 @@ public class ConfigElement {
     private final ClassElement prototype;
 
     /**
-     * Configuration rank
+     * Configuration condition
      */
-    private final TypeName tag;
+    private final TypeName condition;
 
     /**
      * Type of configuration
@@ -76,7 +76,7 @@ public class ConfigElement {
 
     public ConfigElement(ClassElement implementation,
                          ClassElement prototype,
-                         TypeName tag,
+                         TypeName condition,
                          ConfigModel model,
                          ClassElement target,
 
@@ -86,7 +86,7 @@ public class ConfigElement {
 
         this.implementation = implementation;
         this.prototype = prototype;
-        this.tag = tag;
+        this.condition = condition;
         this.model = model;
         this.target = target;
         this.defaultMessage = defaultMessage;
@@ -102,8 +102,8 @@ public class ConfigElement {
         return prototype;
     }
 
-    public TypeName getTag() {
-        return tag;
+    public TypeName getCondition() {
+        return condition;
     }
 
     public ConfigModel getModel() {
@@ -139,7 +139,7 @@ public class ConfigElement {
         return "ConfigElement{" +
                 "implementation=" + implementation +
                 ", prototype=" + prototype +
-                ", rank='" + tag + '\'' +
+                ", rank='" + condition + '\'' +
                 ", model=" + model +
                 ", target=" + target +
                 ", classedDefault=" + defaultMessage +

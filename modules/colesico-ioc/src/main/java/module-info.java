@@ -41,6 +41,7 @@ open module colesico.framework.ioc {
     exports colesico.framework.ioc.ioclet;
     exports colesico.framework.ioc.key;
     exports colesico.framework.ioc.production;
+    exports colesico.framework.ioc.scope;
     exports colesico.framework.ioc.listener;
     exports colesico.framework.ioc.message;
     exports colesico.framework.ioc.conditional;
@@ -50,6 +51,7 @@ open module colesico.framework.ioc {
     exports colesico.framework.ioc.codegen.parser;
     exports colesico.framework.ioc.codegen.generator;
     exports colesico.framework.assist.codegen.model;
+
 
     provides javax.annotation.processing.Processor with ProducersProcessor;
 

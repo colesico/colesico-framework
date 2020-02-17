@@ -279,8 +279,8 @@ public class ProducerParser extends FrameworkAbstractParser {
         // Condition
         ConditionElement condition = null;
         TypeMirror conditionClass = produceAnn.getValueTypeMirror(a -> a.requires());
-        if (conditionClass.toString() != Condition.class.getCanonicalName()) {
-            condition = new ConditionElement(new ClassType(getProcessingEnv(), (TypeElement) conditionClass));
+        if (!conditionClass.toString().equals(Condition.class.getCanonicalName())) {
+            condition = new ConditionElement(new ClassType(getProcessingEnv(), (DeclaredType) conditionClass));
         }
 
         final DefaultFactoryElement factory =
@@ -410,11 +410,14 @@ public class ProducerParser extends FrameworkAbstractParser {
         AnnotationElement<Requires> reqAnn = method.getAnnotation(Requires.class);
         ConditionElement condition = null;
         if (reqAnn != null) {
-            condition = new ConditionElement(new ClassType(getProcessingEnv(), (TypeElement) reqAnn.getValueTypeMirror(a -> a.value())));
+            condition = new ConditionElement(new ClassType(getProcessingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(a -> a.value())));
         }
 
         // Substitution
         AnnotationElement<Substitute> subsAnn = method.getAnnotation(Substitute.class);
+        if (subsAnn == null) {
+            subsAnn = method.getParentClass().getAnnotation(Substitute.class);
+        }
         SubstitutionElement substitution = null;
         if (subsAnn != null) {
             substitution = new SubstitutionElement(subsAnn.unwrap().value());
@@ -514,7 +517,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         AnnotationElement<Requires> reqAnn = producerElement.getAnnotation(Requires.class);
         ConditionElement condition = null;
         if (reqAnn != null) {
-            condition = new ConditionElement(new ClassType(getProcessingEnv(), (TypeElement) reqAnn.getValueTypeMirror(a -> a.value())));
+            condition = new ConditionElement(new ClassType(getProcessingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(a -> a.value())));
         }
 
         IocletElement iocletElement = new IocletElement(producerElement, iocletId, condition, iocletClassSimpleName, packageName);

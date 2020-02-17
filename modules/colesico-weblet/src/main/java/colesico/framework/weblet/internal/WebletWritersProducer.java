@@ -29,7 +29,7 @@ import javax.inject.Singleton;
 
 
 
-@Producer(MinorTag.class)
+@Producer
 @Produce(StringWriter.class)
 @Produce(NavigationWriter.class)
 @Produce(BinaryWriter.class)

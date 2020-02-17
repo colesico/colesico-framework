@@ -26,9 +26,7 @@ import colesico.framework.security.teleapi.PrincipalSerializer;
 
 import javax.inject.Singleton;
 
-
-
-@Producer(MinorTag.class)
+@Producer
 @Produce(DefaultSecurityKit.class)
 @Produce(PrincipalSerializerImpl.class)
 public class SecurityProducer {

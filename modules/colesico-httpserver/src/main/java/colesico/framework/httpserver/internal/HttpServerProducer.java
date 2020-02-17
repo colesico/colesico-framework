@@ -23,7 +23,7 @@ import colesico.framework.ioc.production.Producer;
 
 
 
-@Producer(MinorTag.class)
+@Producer
 @Produce(DefaultErrorHandler.class)
 public class HttpServerProducer {
     public ErrorHandler getDefaultErrorHandler(DefaultErrorHandler impl) {

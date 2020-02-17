@@ -16,6 +16,9 @@
 
 package colesico.framework.test.dslvalidator;
 
+import colesico.framework.ioc.conditional.Requires;
+import colesico.framework.ioc.conditional.Substitute;
+import colesico.framework.ioc.conditional.TestCondition;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.DefaultProfile;
@@ -24,12 +27,14 @@ import colesico.framework.profile.Profile;
 import javax.inject.Singleton;
 import java.util.Locale;
 
-@Producer(TestTag.class)
+@Producer
+@Requires(TestCondition.class)
+@Substitute
 @Produce(MyValidatorBuilder.class)
 public class TestProducer {
 
     @Singleton
     public Profile getProfile() {
-        return new DefaultProfile(new Locale("en","RU"));
+        return new DefaultProfile(new Locale("en", "RU"));
     }
 }

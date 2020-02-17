@@ -17,10 +17,15 @@
 package colesico.framework.test.example.restlet;
 
 import colesico.framework.config.Config;
+import colesico.framework.ioc.conditional.Requires;
+import colesico.framework.ioc.conditional.Substitute;
+import colesico.framework.ioc.conditional.TestCondition;
 import colesico.framework.undertow.UndertowConfigPrototype;
 import io.undertow.Undertow;
 
-@Config(tag = TestTag.class)
+@Config
+@Requires(TestCondition.class)
+@Substitute
 public class UndertowTestConfig extends UndertowConfigPrototype {
 
     @Override

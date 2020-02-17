@@ -24,7 +24,7 @@ import javax.inject.Singleton;
 
 
 
-@Producer(MinorTag.class)
+@Producer
 @Produce(TranslationKitImpl.class)
 public class TranslationProducer {
 

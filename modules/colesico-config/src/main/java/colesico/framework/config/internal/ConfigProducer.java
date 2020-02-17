@@ -23,9 +23,6 @@ import colesico.framework.ioc.production.Producer;
 
 import javax.inject.Singleton;
 
-
-
-@Producer(MinorTag.class)
 @Produce(PropertiesSource.class)
 public class ConfigProducer {
 

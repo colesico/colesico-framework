@@ -18,6 +18,7 @@ package colesico.framework.test.dslvalidator;
 
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
+import colesico.framework.ioc.conditional.TestCondition;
 import colesico.framework.validation.ValidationIssue;
 import colesico.framework.validation.Validator;
 import org.testng.annotations.BeforeClass;
@@ -32,7 +33,8 @@ public class DefaultTest {
 
     @BeforeClass
     public void init() {
-        ioc = IocBuilder.forTests().build();
+        TestCondition.activate();
+        ioc = IocBuilder.create().build();
         dataBean = new MyDataBean(10L,"AName","AValue");
     }
 

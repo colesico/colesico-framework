@@ -28,9 +28,7 @@ import colesico.framework.ioc.production.Producer;
 
 import javax.inject.Singleton;
 
-
-
-@Producer(MinorTag.class)
+@Producer
 @Produce(JobServiceImpl.class)
 @Produce(PostgreJobDao.class)
 @Produce(GsonPayloadConverter.class)

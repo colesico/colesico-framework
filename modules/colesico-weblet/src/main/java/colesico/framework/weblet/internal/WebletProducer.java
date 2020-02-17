@@ -26,7 +26,7 @@ import java.nio.charset.StandardCharsets;
 
 
 
-@Producer(MinorTag.class)
+@Producer
 @Produce(CSRFProtector.class)
 @Produce(WebletDataPortImpl.class)
 @Produce(WebletTeleDriverImpl.class)
