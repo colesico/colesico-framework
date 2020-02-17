@@ -28,7 +28,7 @@ import colesico.framework.ioc.ioclet.Ioclet;
 public interface IocBuilder {
 
     /**
-     * Creates  IoC container builder
+     * Creates IoC container builder
      */
     static IocBuilder create() {
         return IocBuilderImpl.create();

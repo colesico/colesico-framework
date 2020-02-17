@@ -26,7 +26,7 @@ public class Main {
 
         // Setup web builder
         // IocBuilder is not thread safe
-        IocBuilder iocBuilder = IocBuilder.forProduction();
+        IocBuilder iocBuilder = IocBuilder.create();
 
         // Build web instance. Ioc instance is thread safe
         final Ioc ioc = iocBuilder.build();

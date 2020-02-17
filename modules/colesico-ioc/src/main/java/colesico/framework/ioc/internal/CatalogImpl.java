@@ -50,7 +50,7 @@ public class CatalogImpl implements Catalog {
 
         // Check condition
         if ((condition != null) && !condition.isMet(conditionContext)) {
-            log.debug("Condition not met for key: "+key);
+            log.debug("Condition not met for key: " + key);
             return false;
         }
 
@@ -61,23 +61,34 @@ public class CatalogImpl implements Catalog {
         }
 
         // Check substitution
-        if (curEntry.getSubstitution() != null) {
+        if (curEntry.getSubstitution() != null || prevEntry.getSubstitution() != null) {
+
             if (curEntry.isPolyproducing() != prevEntry.isPolyproducing()) {
                 throw new IocException("Substitution polyproducing mismatch for key: " + key);
             }
 
-            if (
-                    prevEntry.getSubstitution() == null
-                            || curEntry.getSubstitution().getRank() > prevEntry.getSubstitution().getRank()
-            ) {
+            if (curEntry.getSubstitution() != null && prevEntry.getSubstitution() != null) {
+
+                if (curEntry.getSubstitution().getRank() > prevEntry.getSubstitution().getRank()) {
+                    curEntry.setAction(EntryAction.SUBSTITUTE);
+                    return true;
+                }
+
+                if (curEntry.getSubstitution().getRank() < prevEntry.getSubstitution().getRank()) {
+                    curEntry.setAction(EntryAction.NONE);
+                    return true;
+                }
+
+                throw new IocException("Ambiguous substitution definition for key: " + key);
+            }
+
+            if (curEntry.getSubstitution() != null && prevEntry.getSubstitution() == null) {
                 curEntry.setAction(EntryAction.SUBSTITUTE);
                 return true;
             }
 
-            if (curEntry.getSubstitution().getRank() == prevEntry.getSubstitution().getRank()) {
-                throw new IocException("Ambiguous substitution definition for key: " + key);
-            }
-
+            // curEntry.getSubstitution() == null && prevEntry.getSubstitution() != null
+            curEntry.setAction(EntryAction.NONE);
             return false;
         }
 
@@ -86,7 +97,8 @@ public class CatalogImpl implements Catalog {
             return true;
         }
 
-        throw new IocException("Ambiguous factory for key: "+key+";");
+        throw new IocException("Ambiguous factory for key: " + key + ";");
+
     }
 
     @Override

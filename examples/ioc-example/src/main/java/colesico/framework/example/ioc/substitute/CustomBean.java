@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.ioc.replace;
+package colesico.framework.example.ioc.substitute;
 
-public class MainBeanREP {
-    private final BeanInterface plugin;
 
-    public MainBeanREP(BeanInterface plugin) {
-        this.plugin = plugin;
-    }
+/**
+ * This plugin will replace the default plugin
+ */
+public class CustomBean implements BeanInterface {
 
-    public String getPluginInfo() {
-        return plugin.getInfo();
+    @Override
+    public String getInfo() {
+        return "CustomBean";
     }
 }

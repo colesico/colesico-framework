@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.transaction;
+package colesico.framework.example.ioc.conditional;
 
-import colesico.framework.ioc.IocBuilder;
+import colesico.framework.ioc.conditional.Condition;
+import colesico.framework.ioc.conditional.ConditionContext;
 
-public class Main {
+public class CustomCondition implements Condition {
 
-    public static void main(String[] args) {
+    private static boolean enabled = false;
 
-        AppService myService= IocBuilder.create().build().instance(AppService.class);
-        myService.create("create");
+    public static synchronized void enable() {
+        enabled = true;
+    }
 
-        myService.save("save");
-        myService.delete("delete");
-        myService.update("update");
-        myService.update2("update2");
+    public static synchronized void disable() {
+        enabled = false;
+    }
 
+    @Override
+    public boolean isMet(ConditionContext context) {
+        return enabled;
     }
 }

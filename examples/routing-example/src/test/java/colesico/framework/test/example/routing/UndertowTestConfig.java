@@ -17,14 +17,16 @@
 package colesico.framework.test.example.routing;
 
 import colesico.framework.config.Config;
+import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.undertow.UndertowConfigPrototype;
 import io.undertow.Undertow;
 
-@Config(tag = TestTag.class)
+@Config
+@Substitute
 public class UndertowTestConfig extends UndertowConfigPrototype {
 
     @Override
     public void applyOptions(Undertow.Builder builder) {
-        builder.addHttpListener(8080, "localhost");
+        builder.addHttpListener(8083, "localhost");
     }
 }

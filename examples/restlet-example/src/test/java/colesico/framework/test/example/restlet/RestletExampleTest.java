@@ -47,7 +47,7 @@ public class RestletExampleTest {
 
     @BeforeClass
     public void init() {
-        TestCondition.activate();
+        TestCondition.enable();
         ioc = IocBuilder.create().build();
         httpServer = ioc.instance(HttpServer.class).start();
         httpClient =  HttpClient.newBuilder().build();

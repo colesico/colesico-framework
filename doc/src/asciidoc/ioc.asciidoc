@@ -33,29 +33,22 @@ Ioc container can be created with the builder:
 
 [source,java]
 ----
-IocBuilder iocBuilder = IocBuilder.forProduction();
+IocBuilder iocBuilder = IocBuilder.create();
 ----
 
 Builder is not thread safe. But Ioc container is thread safe and can be used in multithreaded environment.
-
-Builder allows to create an Ioc containers configured for using in:
-
-* production (slow container start, fast dependency injection at runtime)
-* developing  (fast container start, slow dependency injection at runtime)
-* testing  (the same as production but with extra rank - "test")
-
-Default Ioc container creation will create the container configured for the production:
+To create IoC container from builder:
 
 [source,java]
 ----
 Ioc ioc = iocBuilder.build();
 ----
 
-Testing purpose container creation example:
+Or just simple:
 
 [source,java]
 ----
-Ioc ioc = iocBuilder.instance().build();
+Ioc ioc = IocBuilder.create().build();
 ----
 
 Obtaining instances with injected dependencies is done using this methods:
@@ -329,6 +322,11 @@ In case of circular dependencies use Provider<Type> instead of direct instance i
   }
 
 ----
+
+== Conditional dependencies
+
+ To define conditional instance producing for example for test cases use @Requires annotation.
+ It allows to specify Condition class that be used to  make a desission to include producing factory to IoC Containner.
 
 == Maven pom.xml
 

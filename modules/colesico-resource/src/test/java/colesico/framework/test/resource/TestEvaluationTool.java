@@ -38,7 +38,7 @@ public class TestEvaluationTool {
     @BeforeClass
     public void init() {
         logger.info("Init test");
-        TestCondition.activate();
+        TestCondition.enable();
         ioc = IocBuilder.create().build();
         evaluationTool = ioc.instance(EvaluationTool.class);
         evaluationTool.addProperty("$alias", "foo/dummy");

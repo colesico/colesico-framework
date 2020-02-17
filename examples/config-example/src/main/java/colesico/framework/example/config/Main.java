@@ -24,7 +24,7 @@ import static java.lang.System.out;
 public class Main {
 
     public static void main(String[] args) {
-        MainBean service = IocBuilder.forProduction().build().instance(MainBean.class);
+        MainBean service = IocBuilder.create().build().instance(MainBean.class);
 
         out.println("Value from simple config: "+service.getSimpleConfigValue());
         out.println("Value from single config: "+service.getSingleConfigValue());

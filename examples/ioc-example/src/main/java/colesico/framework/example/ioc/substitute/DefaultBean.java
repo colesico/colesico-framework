@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.ioc.replace;
+package colesico.framework.example.ioc.substitute;
 
 /**
  * Default plugin implementation

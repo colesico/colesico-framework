@@ -19,6 +19,7 @@ package colesico.framework.test.example.routing;
 import colesico.framework.httpserver.HttpServer;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
+import colesico.framework.ioc.conditional.TestCondition;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -37,6 +38,7 @@ public class RoutingExampleTest {
 
     @BeforeClass
     public void init() {
+        TestCondition.enable();
         ioc = IocBuilder.create().build();
         httpServer = ioc.instance(HttpServer.class).start();
         httpClient = HttpClient.newHttpClient();
@@ -70,54 +72,54 @@ public class RoutingExampleTest {
 
     @Test
     public void testDefaultRouting() throws Exception {
-        var request = createGETRequest("http://localhost:8080/default-routing/hello");
+        var request = createGETRequest("http://localhost:8083/default-routing/hello");
         String response = getResponse(request);
         assertEquals(response, "Hello");
     }
 
     @Test
     public void testAbsoluteRouting() throws Exception {
-        var request = createGETRequest("http://localhost:8080/say-hi.html");
+        var request = createGETRequest("http://localhost:8083/say-hi.html");
         String response = getResponse(request);
         assertEquals(response, "Hi");
 
-        request = createGETRequest("http://localhost:8080/absolute-route/say-hello.html");
+        request = createGETRequest("http://localhost:8083/absolute-route/say-hello.html");
         response = getResponse(request);
         assertEquals(response, "Hello");
     }
 
     @Test
     public void testIndexOtherRouting() throws Exception {
-        var request = createGETRequest("http://localhost:8080/");
+        var request = createGETRequest("http://localhost:8083/");
         String response = getResponse(request);
         assertEquals(response, "Index");
 
-        request = createGETRequest("http://localhost:8080/bla-bla");
+        request = createGETRequest("http://localhost:8083/bla-bla");
         response = getResponse(request);
         assertEquals(response, "Other");
     }
 
     @Test
     public void testRelativeRouting() throws Exception {
-        var request = createGETRequest("http://localhost:8080/relative-routing/say-hola");
+        var request = createGETRequest("http://localhost:8083/relative-routing/say-hola");
         String response = getResponse(request);
         assertEquals(response, "Hola");
     }
 
     @Test
     public void testPkgRelRouting() throws Exception {
-        var request = createGETRequest("http://localhost:8080/api/v1.0/relative/say-hallo");
+        var request = createGETRequest("http://localhost:8083/api/v1.0/relative/say-hallo");
         String response = getResponse(request);
         assertEquals(response, "Hallo");
 
-        request = createGETRequest("http://localhost:8080/api/v1.0/relative/say-hei");
+        request = createGETRequest("http://localhost:8083/api/v1.0/relative/say-hei");
         response = getResponse(request);
         assertEquals(response, "Hei");
     }
 
     @Test
     public void testSubmitRouting() throws Exception {
-        var request = createPOSTRequest("http://localhost:8080/my-form/submit", null);
+        var request = createPOSTRequest("http://localhost:8083/my-form/submit", null);
         String response = getResponse(request);
         assertEquals(response, "Submit");
     }

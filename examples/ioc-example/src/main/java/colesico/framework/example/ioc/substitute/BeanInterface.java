@@ -14,16 +14,8 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.ioc.replace;
+package colesico.framework.example.ioc.substitute;
 
-
-/**
- * This plugin will replace the default plugin
- */
-public class CustomBean implements BeanInterface {
-
-    @Override
-    public String getInfo() {
-        return "CustomBean";
-    }
+public interface BeanInterface {
+    String getInfo();
 }

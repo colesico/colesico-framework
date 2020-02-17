@@ -25,7 +25,7 @@ import io.undertow.Undertow;
 
 @Config
 @Requires(TestCondition.class)
-//@Substitute
+@Substitute
 public class UndertowTestConfig extends UndertowConfigPrototype {
 
     @Override

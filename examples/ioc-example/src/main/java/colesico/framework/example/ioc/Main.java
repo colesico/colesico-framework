@@ -30,7 +30,7 @@ import colesico.framework.ioc.production.Supplier;
 
 public class Main {
     public static void main(String[] args) {
-        Ioc ioc = IocBuilder.forProduction().build();
+        Ioc ioc = IocBuilder.create().build();
 
         Singleton1 s1 = ioc.instance(Singleton1.class);
         System.out.println(s1.getMessage());

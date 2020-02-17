@@ -33,7 +33,7 @@ public class DefaultTest {
 
     @BeforeClass
     public void init() {
-        TestCondition.activate();
+        TestCondition.enable();
         ioc = IocBuilder.create().build();
         dataBean = new MyDataBean(10L,"AName","AValue");
     }

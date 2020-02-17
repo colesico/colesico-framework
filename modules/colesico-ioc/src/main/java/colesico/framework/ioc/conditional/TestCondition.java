@@ -19,14 +19,18 @@ package colesico.framework.ioc.conditional;
 
 public class TestCondition implements Condition {
 
-    private static boolean isActive = false;
+    private static boolean enabled = false;
 
-    public static synchronized void activate() {
-        isActive = true;
+    public static synchronized void enable() {
+        enabled = true;
+    }
+
+    public static synchronized void disable() {
+        enabled = false;
     }
 
     @Override
     public boolean isMet(ConditionContext context) {
-        return isActive;
+        return enabled;
     }
 }

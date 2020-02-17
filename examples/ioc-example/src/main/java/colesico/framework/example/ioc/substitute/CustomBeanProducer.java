@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.ioc.replace;
+package colesico.framework.example.ioc.substitute;
 
+import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 
@@ -23,10 +24,11 @@ import colesico.framework.ioc.production.Producer;
 /**
  * Use the extension rank to replace default or minor production of default plugin
  */
-@Producer(ExtensionTag.class)
+@Producer
 @Produce(CustomBean.class)
 public class CustomBeanProducer {
 
+    @Substitute
     public BeanInterface getPlugin(CustomBean impl){
         return impl;
     }

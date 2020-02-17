@@ -24,7 +24,7 @@ import colesico.framework.example.ioc.logger.MainBeanLOG;
 import colesico.framework.example.ioc.message.MainBeanMSG;
 import colesico.framework.example.ioc.multiplugin.MainBeanMLP;
 import colesico.framework.example.ioc.named.MainBeanNMD;
-import colesico.framework.example.ioc.replace.MainBeanREP;
+import colesico.framework.example.ioc.substitute.MainBeanREP;
 import colesico.framework.example.ioc.singleton.Singleton1;
 import colesico.framework.example.ioc.singleton.Singleton2;
 import colesico.framework.ioc.Ioc;
@@ -85,7 +85,7 @@ public class IocExampleTest {
     }
 
     @Test
-    public void testReplace(){
+    public void testSubstitute(){
         MainBeanREP mainBean = ioc.instance(MainBeanREP.class);
         assertEquals(mainBean.getPluginInfo(),"CustomBean");
     }
@@ -106,4 +106,6 @@ public class IocExampleTest {
         MainBeanLFC lfc = ioc.instance(MainBeanLFC.class);
         assertEquals(lfc.getValue(),"ValueSuffix");
     }
+
+
 }

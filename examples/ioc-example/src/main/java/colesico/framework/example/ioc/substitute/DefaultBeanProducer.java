@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.ioc.replace;
+package colesico.framework.example.ioc.substitute;
 
-public interface BeanInterface {
-    String getInfo();
+import colesico.framework.ioc.production.Produce;
+import colesico.framework.ioc.production.Producer;
+
+
+@Producer
+@Produce(DefaultBean.class)
+@Produce(MainBeanREP.class)
+public class DefaultBeanProducer {
+    public BeanInterface getPlugin(DefaultBean impl) {
+        return impl;
+    }
 }

@@ -14,21 +14,26 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.transaction;
+package colesico.framework.example.ioc.conditional;
 
-import colesico.framework.ioc.IocBuilder;
+import colesico.framework.ioc.conditional.Requires;
+import colesico.framework.ioc.conditional.TestCondition;
+import colesico.framework.ioc.production.Produce;
+import colesico.framework.ioc.production.Producer;
 
-public class Main {
+@Producer
+@Produce(RegularBean.class)
+@Produce(TestBean.class)
+public class ConditionalProducer {
 
-    public static void main(String[] args) {
-
-        AppService myService= IocBuilder.create().build().instance(AppService.class);
-        myService.create("create");
-
-        myService.save("save");
-        myService.delete("delete");
-        myService.update("update");
-        myService.update2("update2");
-
+    @Requires(CustomCondition.class)
+    public IBean getRegBean(RegularBean impl) {
+        return impl;
     }
+
+    @Requires(TestCondition.class)
+    public IBean getTestBean(TestBean impl) {
+        return impl;
+    }
+
 }

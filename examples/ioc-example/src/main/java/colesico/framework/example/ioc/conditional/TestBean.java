@@ -14,21 +14,13 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.transaction;
+package colesico.framework.example.ioc.conditional;
 
-import colesico.framework.ioc.IocBuilder;
+public class TestBean implements IBean{
 
-public class Main {
-
-    public static void main(String[] args) {
-
-        AppService myService= IocBuilder.create().build().instance(AppService.class);
-        myService.create("create");
-
-        myService.save("save");
-        myService.delete("delete");
-        myService.update("update");
-        myService.update2("update2");
-
+    @Override
+    public String getInfo() {
+        return "TestBean";
     }
 }
+
