@@ -16,6 +16,7 @@
 
 package colesico.framework.ioc.internal;
 
+import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.IocException;
 import colesico.framework.ioc.conditional.Condition;
@@ -85,7 +86,7 @@ public class CatalogImpl implements Catalog {
             return true;
         }
 
-        return false;
+        throw new IocException("Ambiguous factory for key: "+key+";");
     }
 
     @Override

@@ -23,10 +23,10 @@ import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.config.*;
-import colesico.framework.ioc.conditional.Condition;
 import colesico.framework.ioc.conditional.Requires;
+import colesico.framework.ioc.conditional.Substitute;
+import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Classed;
-import com.squareup.javapoet.TypeName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,15 +62,9 @@ public class ConfigParser extends FrameworkAbstractParser {
         return null;
     }
 
-    private ConfigElement createConfigElement(ClassElement configImplementation) {
+    private ConfigElement createConfigElement(ClassElement configImpl) {
 
-        AnnotationElement<Requires> configurationAnn = configImplementation.getAnnotation(Requires.class);
-        TypeName condition = null;
-        if (configurationAnn != null) {
-            condition = TypeName.get(configurationAnn.getValueTypeMirror(a -> a.value()));
-        }
-
-        ClassElement configPrototype = getConfigPrototypeClass(configImplementation);
+        ClassElement configPrototype = getConfigPrototypeClass(configImpl);
 
         ConfigModel model;
         ClassElement target;
@@ -88,7 +82,7 @@ public class ConfigParser extends FrameworkAbstractParser {
             model = ConfigModel.SINGLE;
         }
 
-        AnnotationElement<DefaultConfig> defaultAnn = configImplementation.getAnnotation(DefaultConfig.class);
+        AnnotationElement<DefaultConfig> defaultAnn = configImpl.getAnnotation(DefaultConfig.class);
         boolean defaultMessage;
         if (defaultAnn != null) {
             if (!ConfigModel.MESSAGE.equals(model)) {
@@ -100,7 +94,8 @@ public class ConfigParser extends FrameworkAbstractParser {
             defaultMessage = false;
         }
 
-        AnnotationElement<Classed> classedAnn = configImplementation.getAnnotation(Classed.class);
+        // Classed
+        AnnotationElement<Classed> classedAnn = configImpl.getAnnotation(Classed.class);
         TypeMirror classed;
         if (classedAnn != null) {
             classed = classedAnn.getValueTypeMirror(Classed::value);
@@ -108,13 +103,28 @@ public class ConfigParser extends FrameworkAbstractParser {
             classed = null;
         }
 
-        AnnotationElement<Named> namedAnn = configImplementation.getAnnotation(Named.class);
+        // Named
+        AnnotationElement<Named> namedAnn = configImpl.getAnnotation(Named.class);
         String named = namedAnn == null ? null : namedAnn.unwrap().value();
 
-        ConfigElement configElement = new ConfigElement(configImplementation, configPrototype, condition, model, target, defaultMessage, classed, named);
+        // Condition
+        AnnotationElement<Requires> reqAnn = configImpl.getAnnotation(Requires.class);
+        ClassType condition = null;
+        if (reqAnn != null) {
+            condition = new ClassType(getProcessingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(a -> a.value()));
+        }
+
+        // Substitution
+        AnnotationElement<Substitute> subsAnn = configImpl.getAnnotation(Substitute.class);
+        Substitution substitution = null;
+        if (subsAnn!=null){
+            substitution = subsAnn.unwrap().value();
+        }
+
+        ConfigElement configElement = new ConfigElement(configImpl, configPrototype, condition, substitution,model, target, defaultMessage, classed, named);
 
         // Config source
-        AnnotationElement<UseSource> useSourceAnn = configImplementation.getAnnotation(UseSource.class);
+        AnnotationElement<UseSource> useSourceAnn = configImpl.getAnnotation(UseSource.class);
         ConfigSourceElement sourceElm = null;
         if (useSourceAnn != null) {
             TypeMirror driverType = useSourceAnn.getValueTypeMirror(UseSource::type);
@@ -122,7 +132,7 @@ public class ConfigParser extends FrameworkAbstractParser {
             String[] params = useSourceAnn.unwrap().params();
             sourceElm = new ConfigSourceElement(configElement, driverClassType, params, useSourceAnn.unwrap().bindAll());
             configElement.setSource(sourceElm);
-            parseSourceValues(configImplementation, sourceElm);
+            parseSourceValues(configImpl, sourceElm);
         }
 
         return configElement;

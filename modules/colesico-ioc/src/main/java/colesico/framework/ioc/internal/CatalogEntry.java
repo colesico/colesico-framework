@@ -22,10 +22,12 @@ import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.key.Key;
 
 public final class CatalogEntry<T> {
+
     private final Key<T> key;
     private final Condition condition;
     private final Substitution substitution;
     private final boolean polyproducing;
+
     private EntryAction action;
 
     private Factory<T> factory;

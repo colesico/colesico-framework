@@ -22,11 +22,9 @@ import colesico.framework.ioc.ioclet.*;
 import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.scope.ThreadScope;
 
-
 /**
  * @author Vladlen Larionov
  */
-
 public final class IocIoclet implements Ioclet {
 
     private Factory<Ioc> getIOCContainerFactory() {
@@ -61,18 +59,12 @@ public final class IocIoclet implements Ioclet {
     }
 
     @Override
-    public Condition getCondition() {
-        return null;
-    }
-
-
-    @Override
     public void addFactories(Catalog catalog) {
         if (catalog.accept(new TypeKey<>(Ioc.class), null, null, false)) {
             catalog.add(getIOCContainerFactory());
         }
 
-        if (catalog.accept(new TypeKey<>(ThreadScope.class), null, null, false)){
+        if (catalog.accept(new TypeKey<>(ThreadScope.class), null, null, false)) {
             catalog.add(getThreadScopeFactory());
         }
     }

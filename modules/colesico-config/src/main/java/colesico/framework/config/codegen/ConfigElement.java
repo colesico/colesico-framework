@@ -17,9 +17,10 @@
 package colesico.framework.config.codegen;
 
 import colesico.framework.assist.codegen.model.ClassElement;
+import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.DefaultConfig;
-import com.squareup.javapoet.TypeName;
+import colesico.framework.ioc.conditional.Substitution;
 
 import javax.lang.model.type.TypeMirror;
 
@@ -27,7 +28,6 @@ import javax.lang.model.type.TypeMirror;
  * @author Vladlen Larionov
  */
 public class ConfigElement {
-
 
     /**
      * Configuration implementation class
@@ -42,7 +42,12 @@ public class ConfigElement {
     /**
      * Configuration condition
      */
-    private final TypeName condition;
+    private final ClassType condition;
+
+    /**
+     * Configuration substitution
+     */
+    private final Substitution substitution;
 
     /**
      * Type of configuration
@@ -76,10 +81,10 @@ public class ConfigElement {
 
     public ConfigElement(ClassElement implementation,
                          ClassElement prototype,
-                         TypeName condition,
+                         ClassType condition,
+                         Substitution substitution,
                          ConfigModel model,
                          ClassElement target,
-
                          boolean defaultMessage,
                          TypeMirror classedQualifier,
                          String namedQualifier) {
@@ -87,6 +92,7 @@ public class ConfigElement {
         this.implementation = implementation;
         this.prototype = prototype;
         this.condition = condition;
+        this.substitution = substitution;
         this.model = model;
         this.target = target;
         this.defaultMessage = defaultMessage;
@@ -102,8 +108,12 @@ public class ConfigElement {
         return prototype;
     }
 
-    public TypeName getCondition() {
+    public ClassType getCondition() {
         return condition;
+    }
+
+    public Substitution getSubstitution() {
+        return substitution;
     }
 
     public ConfigModel getModel() {
@@ -139,10 +149,14 @@ public class ConfigElement {
         return "ConfigElement{" +
                 "implementation=" + implementation +
                 ", prototype=" + prototype +
-                ", rank='" + condition + '\'' +
+                ", condition=" + condition +
+                ", substitution=" + substitution +
                 ", model=" + model +
                 ", target=" + target +
-                ", classedDefault=" + defaultMessage +
+                ", source=" + source +
+                ", defaultMessage=" + defaultMessage +
+                ", classedQualifier=" + classedQualifier +
+                ", namedQualifier='" + namedQualifier + '\'' +
                 '}';
     }
 }

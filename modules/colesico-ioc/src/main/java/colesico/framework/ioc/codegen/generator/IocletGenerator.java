@@ -79,20 +79,6 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
         classBuilder.addField(fb.build());
     }
 
-    protected void generateGetConditionMethod() {
-        //log.info("Generate  method: "+Ioclet.GET_CONDITION_METHOD);
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(Ioclet.GET_CONDITION_METHOD);
-        mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-        mb.returns(ClassName.get(Condition.class));
-        mb.addAnnotation(Override.class);
-        if (iocletElement.getCondition() != null) {
-            mb.addStatement("return new $T()", TypeName.get(iocletElement.getCondition().getConditionClass().unwrap()));
-        } else {
-            mb.addStatement("return null");
-        }
-        classBuilder.addMethod(mb.build());
-    }
-
     protected void generateGetProducerIdMethod() {
         //log.info("Generate  method: "+Ioclet.GET_PRODUCER_NAME_METHOD);
         MethodSpec.Builder mb = MethodSpec.methodBuilder(Ioclet.GET_ID_METHOD);
@@ -186,7 +172,6 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
 
         generateProducerField();
         generateGetProducerIdMethod();
-        generateGetConditionMethod();
         generateSuplierFactoryMethods();
         generateAddFactoriesMethod();
 

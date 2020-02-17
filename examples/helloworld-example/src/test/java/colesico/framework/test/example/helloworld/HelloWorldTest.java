@@ -20,6 +20,7 @@ import colesico.framework.example.helloworld.HelloWeblet;
 import colesico.framework.httpserver.HttpServer;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
+import colesico.framework.ioc.conditional.TestCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
@@ -41,6 +42,7 @@ public class HelloWorldTest {
 
     @BeforeClass
     public void init() {
+        TestCondition.activate();
         ioc = IocBuilder.create().build();
 
         httpServer = ioc.instance(HttpServer.class).start();

@@ -26,6 +26,7 @@ import colesico.framework.ioc.ioclet.AdvancedIoc;
 import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.ioclet.Ioclet;
 import colesico.framework.ioc.key.Key;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,18 +76,25 @@ public class IocBuilderImpl implements IocBuilder {
 
         catalog = new CatalogImpl(conditionContext);
 
-        if (iocletsDiscovery) {
-            log.debug("Ioclets discovery: on");
-            List<Ioclet> foundList = lookupIoclets();
-            for (Ioclet ioclet : foundList) {
-                registerIoclet(ioclet);
+        Ioclet curIoclet = null;
+        try {
+            if (iocletsDiscovery) {
+                log.debug("Ioclets discovery: on");
+                List<Ioclet> foundList = lookupIoclets();
+                for (Ioclet ioclet : foundList) {
+                    curIoclet = ioclet;
+                    ioclet.addFactories(catalog);
+                }
+            } else {
+                log.debug("Ioclets discovery: off");
             }
-        } else {
-            log.debug("Ioclets discovery: off");
-        }
 
-        for (Ioclet ioclet : extraIoclets) {
-            registerIoclet(ioclet);
+            for (Ioclet ioclet : extraIoclets) {
+                curIoclet = ioclet;
+                ioclet.addFactories(catalog);
+            }
+        } catch (Exception e) {
+            throw new IocException("Error loading ioclet: " + (curIoclet != null ? curIoclet.getId() : "?") + "; message: " + ExceptionUtils.getRootCauseMessage(e));
         }
 
         Map<Key<?>, Factory<?>> factories = catalog.getFactories();
@@ -96,16 +104,6 @@ public class IocBuilderImpl implements IocBuilder {
         activateFactories(ioc, factories);
 
         return ioc;
-    }
-
-    protected void registerIoclet(Ioclet ioclet) {
-        Condition condition = ioclet.getCondition();
-        if ((condition != null) && !condition.isMet(conditionContext)) {
-            log.debug("Condition not met for ioclet: "+ioclet.getId());
-            return;
-        }
-
-        ioclet.addFactories(catalog);
     }
 
     protected void activateFactories(AdvancedIoc ioc, Map<Key<?>, Factory<?>> factories) {
@@ -129,7 +127,7 @@ public class IocBuilderImpl implements IocBuilder {
         log.debug("Lookup ioclets...");
         ServiceLocator<Ioclet> locator = ServiceLocator.of(this.getClass(), Ioclet.class);
         for (Ioclet ioclet : locator.getProviders()) {
-            log.debug("Found ioclet '" + ioclet.getClass().getName() + "' with id: '" + ioclet.getId()+"'");
+            log.debug("Found ioclet '" + ioclet.getClass().getName() + "' with id: '" + ioclet.getId() + "'");
             result.add(ioclet);
         }
         return result;

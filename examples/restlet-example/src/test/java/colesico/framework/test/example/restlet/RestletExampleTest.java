@@ -20,6 +20,7 @@ import colesico.framework.example.restlet.User;
 import colesico.framework.httpserver.HttpServer;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
+import colesico.framework.ioc.conditional.TestCondition;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
@@ -46,6 +47,7 @@ public class RestletExampleTest {
 
     @BeforeClass
     public void init() {
+        TestCondition.activate();
         ioc = IocBuilder.create().build();
         httpServer = ioc.instance(HttpServer.class).start();
         httpClient =  HttpClient.newBuilder().build();

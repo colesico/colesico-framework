@@ -27,7 +27,6 @@ import colesico.framework.ioc.production.Producer;
  */
 public interface Ioclet {
     String GET_ID_METHOD = "getId";
-    String GET_CONDITION_METHOD = "getCondition";
     String ADD_FACTORIES_METHOD = "addFactories";
     String CATALOG_PARAM = "catalog";
 
@@ -39,13 +38,6 @@ public interface Ioclet {
      * @see Producer
      */
     String getId();
-
-    /**
-     * Returns producer baser condition
-     *
-     * @see Condition
-     */
-    Condition getCondition();
 
     /**
      * This method implementation should register the factories

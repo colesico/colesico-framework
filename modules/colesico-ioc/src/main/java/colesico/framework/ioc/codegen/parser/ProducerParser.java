@@ -408,6 +408,9 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         // Condition
         AnnotationElement<Requires> reqAnn = method.getAnnotation(Requires.class);
+        if (reqAnn == null) {
+            reqAnn = method.getParentClass().getAnnotation(Requires.class);
+        }
         ConditionElement condition = null;
         if (reqAnn != null) {
             condition = new ConditionElement(new ClassType(getProcessingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(a -> a.value())));

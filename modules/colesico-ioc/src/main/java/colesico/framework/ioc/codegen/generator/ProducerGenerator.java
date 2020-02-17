@@ -17,6 +17,10 @@
 package colesico.framework.ioc.codegen.generator;
 
 import colesico.framework.assist.codegen.CodegenUtils;
+import colesico.framework.ioc.conditional.Condition;
+import colesico.framework.ioc.conditional.Requires;
+import colesico.framework.ioc.conditional.Substitute;
+import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import com.squareup.javapoet.*;
@@ -58,8 +62,6 @@ public class ProducerGenerator {
     protected final List<AnnotationSpec.Builder> producerAnnotations = new ArrayList<>();
     protected final List<MethodSpec.Builder> producerMethods = new ArrayList<>();
     protected final List<FieldSpec.Builder> producerFields = new ArrayList<>();
-
-    protected TypeName producerCondition;
 
     public ProducerGenerator(String producerPackageName, String producerClassSimpleName, Class<?> masterGeneratorClass, ProcessingEnvironment processingEnv) {
         logger.debug("Creating IoC producer generator: " + producerPackageName + "." + producerClassSimpleName);
@@ -138,8 +140,18 @@ public class ProducerGenerator {
         return mb;
     }
 
-    public void setProducerCondition(TypeName producerCondition) {
-        this.producerCondition = producerCondition;
+    public void addConditionAnnotation(TypeName producerCondition) {
+        AnnotationSpec.Builder ab = AnnotationSpec.builder(Requires.class);
+        ab.addMember("value", "$T.class", producerCondition);
+        producerAnnotations.add(ab);
+    }
+
+    public void addSubstitutionAnnotation(Substitution subs) {
+        AnnotationSpec.Builder ab = AnnotationSpec.builder(Substitute.class);
+        if (subs != Substitution.NORMAL) {
+            ab.addMember("value", "$T.$N", ClassName.get(Substitution.class), subs.name());
+        }
+        producerAnnotations.add(ab);
     }
 
     public TypeSpec.Builder typeBuilder() {
@@ -149,6 +161,7 @@ public class ProducerGenerator {
 
         AnnotationSpec.Builder b = AnnotationSpec.builder(Producer.class);
         producerBuilder.addAnnotation(b.build());
+
 
         for (AnnotationSpec.Builder annSpec : producerAnnotations) {
             producerBuilder.addAnnotation(annSpec.build());
