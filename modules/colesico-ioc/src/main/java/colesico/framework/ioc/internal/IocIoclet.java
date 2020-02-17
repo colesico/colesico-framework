@@ -17,11 +17,10 @@
 package colesico.framework.ioc.internal;
 
 import colesico.framework.ioc.Ioc;
+import colesico.framework.ioc.conditional.Condition;
 import colesico.framework.ioc.ioclet.*;
 import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.scope.ThreadScope;
-import colesico.framework.ioc.tag.MinorTag;
-import colesico.framework.ioc.tag.Tag;
 
 
 /**
@@ -62,17 +61,18 @@ public final class IocIoclet implements Ioclet {
     }
 
     @Override
-    public Tag getTag() {
-        return new MinorTag();
+    public Condition getCondition() {
+        return null;
     }
+
 
     @Override
     public void addFactories(Catalog catalog) {
-        if (catalog.accept(Catalog.entry(new TypeKey<>(Ioc.class), null, false))) {
+        if (catalog.accept(new TypeKey<>(Ioc.class), null, null, false)) {
             catalog.add(getIOCContainerFactory());
         }
 
-        if (catalog.accept(Catalog.entry(new TypeKey<>(ThreadScope.class), null, false))) {
+        if (catalog.accept(new TypeKey<>(ThreadScope.class), null, null, false)){
             catalog.add(getThreadScopeFactory());
         }
     }

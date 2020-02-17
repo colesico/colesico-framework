@@ -17,8 +17,8 @@
 package colesico.framework.ioc.internal;
 
 import colesico.framework.ioc.IocException;
-import colesico.framework.ioc.condition.Condition;
-import colesico.framework.ioc.condition.Substitution;
+import colesico.framework.ioc.conditional.Condition;
+import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.ioclet.Catalog;
 import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.key.Key;
@@ -32,18 +32,19 @@ public class CatalogImpl implements Catalog {
     protected CatalogEntry curEntry;
 
 
-
     @Override
     public <T> boolean accept(Key<T> key, Condition condition, Substitution substitution, boolean polyproducing) {
+
+        curEntry = new CatalogEntry(key, condition, substitution, polyproducing);
+
         // Check condition
         if ((condition != null) && !condition.isMet(null)) {
             return false;
         }
 
-        curEntry = new CatalogEntry(key, condition, substitution, polyproducing);
-
         CatalogEntry prevEntry = entriesMap.get(key);
         if (prevEntry == null) {
+            curEntry.setAction(EntryAction.PUT);
             return true;
         }
 
@@ -52,21 +53,24 @@ public class CatalogImpl implements Catalog {
             if (curEntry.isPolyproducing() != prevEntry.isPolyproducing()) {
                 throw new IocException("Substitution polyproducing mismatch for key: " + key);
             }
-            if (prevEntry.getSubstitution() == null ){
-                s??
+
+            if (
+                    prevEntry.getSubstitution() == null
+                            || curEntry.getSubstitution().getRank() > prevEntry.getSubstitution().getRank()
+            ) {
+                curEntry.setAction(EntryAction.SUBSTITUTE);
+                return true;
             }
 
-            if (curEntry.getSubstitution().getRank() > prevEntry.getSubstitution().getRank()) {
-                return true;
-            } else if (curEntry.getSubstitution().getRank() == prevEntry.getSubstitution().getRank()) {
+            if (curEntry.getSubstitution().getRank() == prevEntry.getSubstitution().getRank()) {
                 throw new IocException("Ambiguous substitution definition for key: " + key);
-            } else {
-                return false;
             }
+
+            return false;
         }
 
-
-        if (prevEntry.isPolyproducing() && polyproducing) {
+        if (curEntry.isPolyproducing() && prevEntry.isPolyproducing()) {
+            curEntry.setAction(EntryAction.APPEND);
             return true;
         }
 
@@ -89,4 +93,6 @@ public class CatalogImpl implements Catalog {
     public Map<Key<?>, Factory<?>> getFactories() {
         return null;
     }
+
+
 }

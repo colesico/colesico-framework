@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.condition;
+package colesico.framework.ioc.internal;
 
-public class ConditionContext {
+public enum EntryAction {
+    NONE, PUT, APPEND, SUBSTITUTE;
 }

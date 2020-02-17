@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.condition;
+package colesico.framework.ioc.conditional;
 
 import java.lang.annotation.*;
 

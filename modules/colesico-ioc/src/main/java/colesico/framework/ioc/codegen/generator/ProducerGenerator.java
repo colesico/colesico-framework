@@ -19,7 +19,6 @@ package colesico.framework.ioc.codegen.generator;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.ioc.tag.MinorTag;
 import com.squareup.javapoet.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -56,8 +55,6 @@ public class ProducerGenerator {
     protected final String producerClassName;
     protected final String producerClassFilePath;
 
-    protected TypeName producerTag = ClassName.get(MinorTag.class);
-
     protected final List<AnnotationSpec.Builder> producerAnnotations = new ArrayList<>();
     protected final List<MethodSpec.Builder> producerMethods = new ArrayList<>();
     protected final List<FieldSpec.Builder> producerFields = new ArrayList<>();
@@ -87,10 +84,6 @@ public class ProducerGenerator {
 
     public String getProducerClassFilePath() {
         return producerClassFilePath;
-    }
-
-    public void setProducerTag(TypeName producerTag) {
-        this.producerTag = producerTag;
     }
 
     public boolean isProducerExists() {
@@ -151,7 +144,6 @@ public class ProducerGenerator {
         producerBuilder.addAnnotation(CodegenUtils.generateGenstamp(masterGeneratorClass.getName(), null, null));
 
         AnnotationSpec.Builder b = AnnotationSpec.builder(Producer.class);
-        b.addMember("value", "$S", producerTag);
         producerBuilder.addAnnotation(b.build());
 
         for (AnnotationSpec.Builder annSpec : producerAnnotations) {

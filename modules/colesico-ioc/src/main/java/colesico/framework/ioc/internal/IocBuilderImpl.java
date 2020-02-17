@@ -20,7 +20,7 @@ import colesico.framework.assist.ServiceLocator;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.IocException;
-import colesico.framework.ioc.condition.Condition;
+import colesico.framework.ioc.conditional.Condition;
 import colesico.framework.ioc.ioclet.AdvancedIoc;
 import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.ioclet.Ioclet;

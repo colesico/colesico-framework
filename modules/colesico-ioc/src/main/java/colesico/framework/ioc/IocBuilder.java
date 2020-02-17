@@ -27,12 +27,10 @@ import colesico.framework.ioc.ioclet.Ioclet;
  */
 public interface IocBuilder {
 
-    String IOC_PROFILE_PROPERTY = "colesico.framework.ioc.profile";
-
     /**
      * Creates  IoC container builder
      */
-    static IocBuilder builder() {
+    static IocBuilder instance() {
         return IocBuilderImpl.instance();
     }
 
@@ -40,7 +38,6 @@ public interface IocBuilder {
      * Disable automatic ioclets discovery.
      * By default the builder will search for the ioclets using the ServiceLoader mechanism.
      *
-     * @return
      * @see #useIoclet
      */
     IocBuilder disableIocletsDiscovery();
@@ -48,16 +45,12 @@ public interface IocBuilder {
     /**
      * Add custom ioclet to Ioc container
      *
-     * @param ioclet
-     * @return
      * @see Ioclet
      */
     IocBuilder useIoclet(Ioclet ioclet);
 
     /**
      * Builds an IoC container instance based on builder configuration
-     *
-     * @return
      */
     Ioc build();
 }

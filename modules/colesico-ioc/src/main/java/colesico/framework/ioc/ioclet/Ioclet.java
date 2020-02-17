@@ -16,7 +16,7 @@
 
 package colesico.framework.ioc.ioclet;
 
-import colesico.framework.ioc.condition.Condition;
+import colesico.framework.ioc.conditional.Condition;
 import colesico.framework.ioc.production.Producer;
 
 /**

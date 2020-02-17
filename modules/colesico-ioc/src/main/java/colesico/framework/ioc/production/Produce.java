@@ -16,8 +16,7 @@
 
 package colesico.framework.ioc.production;
 
-import colesico.framework.ioc.condition.Condition;
-import colesico.framework.ioc.condition.Substitution;
+import colesico.framework.ioc.conditional.Condition;
 import colesico.framework.ioc.scope.Unscoped;
 
 import java.lang.annotation.*;
@@ -53,7 +52,7 @@ public @interface Produce {
     /**
      * Producing condition
      *
-     * @see colesico.framework.ioc.condition.Requires
+     * @see colesico.framework.ioc.conditional.Requires
      * @see Condition
      */
     Class<? extends Condition> requires() default Condition.class;

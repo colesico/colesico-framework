@@ -16,8 +16,8 @@
 
 package colesico.framework.ioc.internal;
 
-import colesico.framework.ioc.condition.Condition;
-import colesico.framework.ioc.condition.Substitution;
+import colesico.framework.ioc.conditional.Condition;
+import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.key.Key;
 
@@ -26,6 +26,7 @@ public final class CatalogEntry<T> {
     private final Condition condition;
     private final Substitution substitution;
     private final boolean polyproducing;
+    private EntryAction action;
 
     private Factory<T> factory;
 
@@ -34,6 +35,7 @@ public final class CatalogEntry<T> {
         this.condition = condition;
         this.substitution = substitution;
         this.polyproducing = polyproducing;
+        this.action = EntryAction.NONE;
     }
 
     public Key<T> getKey() {
@@ -58,5 +60,13 @@ public final class CatalogEntry<T> {
 
     public void setFactory(Factory<T> factory) {
         this.factory = factory;
+    }
+
+    public EntryAction getAction() {
+        return action;
+    }
+
+    public void setAction(EntryAction action) {
+        this.action = action;
     }
 }

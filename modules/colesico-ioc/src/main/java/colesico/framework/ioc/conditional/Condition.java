@@ -14,19 +14,11 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.condition;
+package colesico.framework.ioc.conditional;
 
-
-public class TestingProcess implements Condition {
-
-    private static boolean isActive = false;
-
-    public static synchronized void activate() {
-        isActive = true;
-    }
-
-    @Override
-    public boolean isMet(ConditionContext context) {
-        return isActive;
-    }
+/**
+ * The condition under which the factory will be added to the IoC container
+ */
+public interface Condition {
+    boolean  isMet(ConditionContext context);
 }

@@ -40,10 +40,10 @@ open module colesico.framework.ioc {
     exports colesico.framework.ioc;
     exports colesico.framework.ioc.ioclet;
     exports colesico.framework.ioc.key;
-    exports colesico.framework.ioc.exception;
     exports colesico.framework.ioc.production;
     exports colesico.framework.ioc.listener;
     exports colesico.framework.ioc.message;
+    exports colesico.framework.ioc.conditional;
 
     // Code generation
     exports colesico.framework.ioc.codegen.model;

@@ -16,11 +16,6 @@
 
 package colesico.framework.config;
 
-
-
-import colesico.framework.ioc.tag.DefaultTag;
-import colesico.framework.ioc.tag.Tag;
-
 import java.lang.annotation.*;
 
 /**
@@ -40,12 +35,5 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 public @interface Config {
-
-    /**
-     * Defines configuration tag.
-     * DefaultTag is used to have ability to override the define default configuration with MinorTag rank.
-     *
-     * @return
-     */
-    Class<? extends Tag> tag() default DefaultTag.class;
 }
+

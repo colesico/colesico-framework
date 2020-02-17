@@ -17,8 +17,8 @@
 package colesico.framework.ioc.ioclet;
 
 import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.condition.Condition;
-import colesico.framework.ioc.condition.Substitution;
+import colesico.framework.ioc.conditional.Condition;
+import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.key.Key;
 
 /**
