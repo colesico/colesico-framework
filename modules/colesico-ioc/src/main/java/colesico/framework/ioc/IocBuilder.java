@@ -16,6 +16,7 @@
 
 package colesico.framework.ioc;
 
+import colesico.framework.ioc.conditional.ConditionContext;
 import colesico.framework.ioc.internal.IocBuilderImpl;
 import colesico.framework.ioc.ioclet.Ioclet;
 
@@ -48,6 +49,12 @@ public interface IocBuilder {
      * @see Ioclet
      */
     IocBuilder useIoclet(Ioclet ioclet);
+
+    /**
+     * Returns condition context for (pre)configure the conditions
+     * @see colesico.framework.ioc.conditional.Requires
+     */
+    ConditionContext getConditionContext();
 
     /**
      * Builds an IoC container instance based on builder configuration

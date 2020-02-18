@@ -72,6 +72,11 @@ public class IocBuilderImpl implements IocBuilder {
     }
 
     @Override
+    public ConditionContext getConditionContext() {
+        return conditionContext;
+    }
+
+    @Override
     public Ioc build() {
 
         catalog = new CatalogImpl(conditionContext);
