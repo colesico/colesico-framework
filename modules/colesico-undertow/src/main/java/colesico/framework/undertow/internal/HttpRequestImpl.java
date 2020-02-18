@@ -26,6 +26,7 @@ import io.undertow.util.HttpString;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Stream;
@@ -255,7 +256,7 @@ public final class HttpRequestImpl implements HttpRequest {
                 exchange.getInputStream().transferTo(baos);
                 inputStream = new ByteArrayInputStream(baos.toByteArray());
 
-                Stream<String> bodyLines = new BufferedReader(new InputStreamReader(inputStream)).lines();
+                Stream<String> bodyLines = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines();
                 bodyLines.forEach(line -> {
                     try {
                         out.append(line).append('\n');

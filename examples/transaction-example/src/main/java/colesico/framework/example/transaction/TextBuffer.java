@@ -23,7 +23,7 @@ public class TextBuffer {
     StringBuilder sb = new StringBuilder();
 
     private TextBuffer() {
-        this.sb = sb;
+
     }
 
     public void reset() {

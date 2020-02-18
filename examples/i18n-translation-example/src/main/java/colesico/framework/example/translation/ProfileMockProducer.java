@@ -25,6 +25,7 @@ import java.util.Locale;
 
 /**
  * This producer is used to mock up a Profile producing for some locales
+ * For real application it is not necessary to define this producer since default Profile producing is implemented.
  */
 @Producer
 public class ProfileMockProducer {

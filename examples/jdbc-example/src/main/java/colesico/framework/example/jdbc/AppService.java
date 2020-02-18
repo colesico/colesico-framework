@@ -42,11 +42,12 @@ public class AppService {
     public String readValue(Integer key) {
         try (PreparedStatement stmt = connectionProv.get().prepareStatement("select avalue from avalues where akey=?")) {
             stmt.setInt(1, key);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return rs.getString(1);
-            } else {
-                return null;
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString(1);
+                } else {
+                    return null;
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
