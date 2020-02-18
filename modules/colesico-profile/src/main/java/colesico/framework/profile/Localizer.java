@@ -35,12 +35,12 @@ public final class Localizer {
     /**
      * Binds qualifiers to subject.
      *
-     * @param qualifierNames all possible qualifiers names in predefined order.
+     * @param qualifierNames    all possible qualifiers names in predefined order.
      * @param qualifiersSetSpec qualifiers set specification string in the format: qualifier1=value1;qualifier2=value2...
      */
     public void add(final String[] qualifierNames, final String... qualifiersSetSpec) {
         for (String qsItem : qualifiersSetSpec) {
-            LinkedHashMap<String, String> qualifiersMap = parseQualifiersSetSpec(qsItem);
+            LinkedHashMap<String, String> qualifiersMap = parseQualifiersSetSpec(qualifierNames, qsItem);
             checkNames(qualifierNames, qualifiersMap);
             Node lastNode = provideLastNode(qualifierNames, qualifiersMap);
             lastNode.setQualifiers(toQualifiers(qualifiersMap));
@@ -91,16 +91,27 @@ public final class Localizer {
 
     /**
      * Returns map of qualifierName=>qualifierValue
+     *
+     * @param qualifierNames canonical qualifiers order
      * @param qualifiersSpec
      * @return
      */
-    private LinkedHashMap<String, String> parseQualifiersSetSpec(String qualifiersSpec) {
-        LinkedHashMap<String, String> result = new LinkedHashMap<>();
+    private LinkedHashMap<String, String> parseQualifiersSetSpec(String[] qualifierNames, String qualifiersSpec) {
+        Map<String, String> qualValues = new HashMap<>();
         StringTokenizer st = new StringTokenizer(qualifiersSpec, ";");
         while (st.hasMoreElements()) {
             String qualifierSpec = st.nextToken();
             QualifierSpec qualifier = parseQualifierSpec(qualifierSpec);
-            result.put(qualifier.getKey(), qualifier.getValue());
+            qualValues.put(qualifier.getKey(), qualifier.getValue());
+        }
+
+        // Arrange qualifiers in canonical order
+        LinkedHashMap<String, String> result = new LinkedHashMap<>();
+        for (String qualName : qualifierNames) {
+            String qualValue = qualValues.get(qualName);
+            if (qualValue != null) {
+                result.put(qualName, qualValue);
+            }
         }
         return result;
     }

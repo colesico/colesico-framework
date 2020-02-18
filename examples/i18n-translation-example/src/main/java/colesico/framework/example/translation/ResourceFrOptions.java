@@ -28,6 +28,6 @@ public class ResourceFrOptions extends ResourceOptionsPrototype {
 
     @Override
     public void bindQualifiers(QualifiersBinder binder) {
-        binder.bind(AppDictionary.class,"L=fr;C=FR");
+        binder.bind(AppDictionary.class,"C=FR;L=fr");
     }
 }

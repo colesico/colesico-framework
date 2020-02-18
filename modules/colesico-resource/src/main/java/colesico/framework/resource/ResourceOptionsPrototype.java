@@ -67,7 +67,8 @@ abstract public class ResourceOptionsPrototype {
          *
          * @param path              resource path to be localized
          * @param qualifiersSetSpec qualifier values set in format qual1=val1;qual2=val2...
-         * @return
+         *                          Qualifier values order is unimportant.
+         * @see colesico.framework.profile.ProfileConfigPrototype
          */
         QualifiersBinder bind(String path, String... qualifiersSetSpec);
 
