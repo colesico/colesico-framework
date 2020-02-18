@@ -14,7 +14,7 @@ Then create your application startup point:
 public class Main {
 
    public static void main(String[] args) {
-      IocBuilder.forProduction().instance(HttpServer.class).start();
+      IocBuilder.create().instance(HttpServer.class).start();
    }
    
 }

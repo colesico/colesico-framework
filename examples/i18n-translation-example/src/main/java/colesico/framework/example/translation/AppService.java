@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.jdbc;
+package colesico.framework.example.translation;
 
-import colesico.framework.ioc.IocBuilder;
+import javax.inject.Singleton;
 
-public class Main {
+@Singleton
+public class AppService {
 
-    public static void main(String[] args) {
-        AppService srv = IocBuilder.create().build().instance(AppService.class);
-        System.out.println("Value from DB = "+srv.readValue(1));
+    private final AppDictionary standaloneDictionary;
+
+    public AppService(AppDictionary standaloneDictionary) {
+        this.standaloneDictionary = standaloneDictionary;
+    }
+
+    public String sayHello(){
+        return standaloneDictionary.hello();
+    }
+
+    public String sayBye(){
+        return standaloneDictionary.bye("Anonymous");
     }
 }

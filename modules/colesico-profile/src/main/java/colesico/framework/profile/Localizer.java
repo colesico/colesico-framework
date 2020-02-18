@@ -35,12 +35,12 @@ public final class Localizer {
     /**
      * Binds qualifiers to subject.
      *
-     * @param qualifierNames    all possible qualifiers names in predefined order.
-     * @param qualifiersSetSpec qualifiers set specification string in the format: name1=value1;name2=value2...
+     * @param qualifierNames all possible qualifiers names in predefined order.
+     * @param qualifiersSetSpec qualifiers set specification string in the format: qualifier1=value1;qualifier2=value2...
      */
     public void add(final String[] qualifierNames, final String... qualifiersSetSpec) {
-        for (String qssItem : qualifiersSetSpec) {
-            LinkedHashMap<String, String> qualifiersMap = parseQualifiersSetSpec(qssItem);
+        for (String qsItem : qualifiersSetSpec) {
+            LinkedHashMap<String, String> qualifiersMap = parseQualifiersSetSpec(qsItem);
             checkNames(qualifierNames, qualifiersMap);
             Node lastNode = provideLastNode(qualifierNames, qualifiersMap);
             lastNode.setQualifiers(toQualifiers(qualifiersMap));
@@ -89,9 +89,14 @@ public final class Localizer {
         return curNode;
     }
 
-    private LinkedHashMap<String, String> parseQualifiersSetSpec(String qualifiersSetSpec) {
+    /**
+     * Returns map of qualifierName=>qualifierValue
+     * @param qualifiersSpec
+     * @return
+     */
+    private LinkedHashMap<String, String> parseQualifiersSetSpec(String qualifiersSpec) {
         LinkedHashMap<String, String> result = new LinkedHashMap<>();
-        StringTokenizer st = new StringTokenizer(qualifiersSetSpec, ";");
+        StringTokenizer st = new StringTokenizer(qualifiersSpec, ";");
         while (st.hasMoreElements()) {
             String qualifierSpec = st.nextToken();
             QualifierSpec qualifier = parseQualifierSpec(qualifierSpec);

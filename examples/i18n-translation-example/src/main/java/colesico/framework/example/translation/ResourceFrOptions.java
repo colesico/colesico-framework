@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package colesico.framework.profile.internal;
+package colesico.framework.example.translation;
 
-import colesico.framework.profile.ProfileConfigPrototype;
+import colesico.framework.config.Config;
+import colesico.framework.resource.ResourceOptionsPrototype;
 
-import javax.inject.Singleton;
-
-@Singleton
-public class ProfileConfigImpl extends ProfileConfigPrototype {
-
-    // L - language ; C - country
-    private static final String[] QUALIFIERS_NAMES = new String[]{"L", "C"};
+/**
+ * This config is for an extra translation bundle  (french).
+ * It demonstrates an ability to append translation file to an existing translations
+ */
+@Config
+public class ResourceFrOptions extends ResourceOptionsPrototype {
 
     @Override
-    public String[] getQualifiersNames() {
-        return QUALIFIERS_NAMES;
+    public void bindQualifiers(QualifiersBinder binder) {
+        binder.bind(AppDictionary.class,"L=fr;C=FR");
     }
-
 }

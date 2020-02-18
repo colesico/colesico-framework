@@ -2,7 +2,7 @@
 
 == Colesico-IoC
 
-Colesico-IoC is a simple, lightweight dependency injection container for Java 11 and above.
+Colesico-IoC is a simple, lightweight and fast dependency injection container for Java 11 and above.
 
 [[features]]
 
@@ -44,7 +44,7 @@ To create IoC container from builder:
 Ioc ioc = iocBuilder.build();
 ----
 
-Or just simple:
+Or just:
 
 [source,java]
 ----
@@ -219,30 +219,6 @@ public class MyProducer{
 
 In this example the Instances of both classes MyBean1 and MyBean2 are singletones.
 
-== Ranks
-
-Ranks acts like a Spring framework DI profile conception.
-
-To be able to override the creation of instances the mechanism of ranks of producers is used.  
-For example, for testing, using stubs, etc., or for plugins that override any functionality.
-
-Each producer has a certain rank. If several producers "produce" instances of the same class,
-then the Ioc container to create the instance will use the producer with a higher rank.
-
-The priority of rank  is set by the IoC container builder.
-
-By default, the builder uses the following ranks:
-
-* "minor" for low-priority producers
-* "default" for producers without an explicit specified rank
-* "extension" for extension producers that overrides minor/default producers (plugins, etc)
-* "test" for testing purposes when using stubs, etc.
-    
-"minor" - rank with the lowest priority, "test" - the highest priority.
-
-The Ioc container builder allows to create any chain of ranks.
-The rank itself is an simple arbitrary text string.
-
 == Injectable constructors
 
 Classes for  dependency injection may not have an explicitly defined constructor. Ioc container will use the default constructor to create instances.
@@ -316,17 +292,21 @@ In case of circular dependencies use Provider<Type> instead of direct instance i
 
 [source,java]
 ----
-
   public constructor(Provider<T> dependencyProvider){
         ...
   }
-
 ----
 
-== Conditional dependencies
+== Conditional beans
 
- To define conditional instance producing for example for test cases use @Requires annotation.
- It allows to specify Condition class that be used to  make a desission to include producing factory to IoC Containner.
+To define conditional instance producing (for example for test cases) use @Requires annotation.
+It allows to specify Condition class that be used to  make a decision to include producing factory to IoC Container.
+
+== Bean substitution
+
+It is possible to overriding existing beans to customize behaviour for testing purposes or a plugins support.
+IoC module provides an explicit @Substitute annotation, which allows to specify bean replacement and integrates with
+support for Conditional Beans.
 
 == Maven pom.xml
 

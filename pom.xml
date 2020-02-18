@@ -197,6 +197,7 @@
                 <module>examples/jdbi-example</module>
                 <module>examples/jdbc-example</module>
                 <module>examples/slf4j-example</module>
+                <module>examples/i18n-translation-example</module>
             </modules>
         </profile>
         <profile>

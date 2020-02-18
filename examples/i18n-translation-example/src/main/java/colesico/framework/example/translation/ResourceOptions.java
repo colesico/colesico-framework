@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.profile.internal;
+package colesico.framework.example.translation;
 
-import colesico.framework.profile.ProfileConfigPrototype;
+import colesico.framework.config.Config;
+import colesico.framework.resource.ResourceOptionsPrototype;
 
-import javax.inject.Singleton;
-
-@Singleton
-public class ProfileConfigImpl extends ProfileConfigPrototype {
-
-    // L - language ; C - country
-    private static final String[] QUALIFIERS_NAMES = new String[]{"L", "C"};
+/**
+ * This configuration defines all possible qualified values for translation dictionary
+ */
+@Config
+public class ResourceOptions extends ResourceOptionsPrototype {
 
     @Override
-    public String[] getQualifiersNames() {
-        return QUALIFIERS_NAMES;
+    public void bindQualifiers(QualifiersBinder binder) {
+        binder.bind(AppDictionary.class,"L=ru","L=en");
     }
-
 }

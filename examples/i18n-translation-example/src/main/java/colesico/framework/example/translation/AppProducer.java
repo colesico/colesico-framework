@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.jdbc;
+package colesico.framework.example.translation;
 
-import colesico.framework.ioc.IocBuilder;
+import colesico.framework.ioc.production.Produce;
+import colesico.framework.ioc.production.Producer;
 
-public class Main {
+@Producer
+@Produce(AppService.class)
+public class AppProducer {
 
-    public static void main(String[] args) {
-        AppService srv = IocBuilder.create().build().instance(AppService.class);
-        System.out.println("Value from DB = "+srv.readValue(1));
-    }
-}
+  }

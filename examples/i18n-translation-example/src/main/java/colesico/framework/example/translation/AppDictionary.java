@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.jdbc;
+package colesico.framework.example.translation;
 
-import colesico.framework.ioc.IocBuilder;
+import colesico.framework.translation.Dictionary;
+import colesico.framework.translation.assist.En;
+import colesico.framework.translation.assist.Ru;
+import colesico.framework.translation.assist.Text;
 
-public class Main {
+/**
+ * An appropriate properties file will be generated for this interface.
+ */
+@Dictionary
+public interface AppDictionary {
 
-    public static void main(String[] args) {
-        AppService srv = IocBuilder.create().build().instance(AppService.class);
-        System.out.println("Value from DB = "+srv.readValue(1));
-    }
+    @En("Hello")  // For en language
+    @Ru("Привет") // For ru lang
+    @Text("HI")   // Default translation for any lang
+    String hello();
+
+    @Text("Bye {0}")
+    String bye(String user);
 }

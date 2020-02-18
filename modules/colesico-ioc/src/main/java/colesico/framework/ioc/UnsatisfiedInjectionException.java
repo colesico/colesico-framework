@@ -16,8 +16,6 @@
 
 package colesico.framework.ioc;
 
-import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.IocException;
 import colesico.framework.ioc.key.Key;
 
 /**

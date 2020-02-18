@@ -42,7 +42,12 @@ public class LocalizingTool {
         this.qualifiersNames = config.getQualifiersNames();
     }
 
-    public void addQualifiers(String path, String... qualifiersSetSpec) {
+    /**
+     * Register qualifiers values for  specific resource path
+     * @param path
+     * @param qualifiersSetSpec qualifier values set specification string in the format: qualifier1=value1;qualifier2=value2...
+     */
+    public void  addQualifiers(String path, String... qualifiersSetSpec) {
         final PathTrie.Node<Localizer> node = pathTrie.add(path);
         Localizer localizer = node.getValue();
         if (localizer == null) {

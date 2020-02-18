@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.jdbc;
+package colesico.framework.example.translation;
 
 import colesico.framework.ioc.IocBuilder;
 
@@ -22,6 +22,6 @@ public class Main {
 
     public static void main(String[] args) {
         AppService srv = IocBuilder.create().build().instance(AppService.class);
-        System.out.println("Value from DB = "+srv.readValue(1));
+        System.out.println("SayHello = "+srv.sayHello());
     }
 }

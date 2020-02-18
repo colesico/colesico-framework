@@ -61,6 +61,18 @@ abstract public class ResourceOptionsPrototype {
     }
 
     public interface QualifiersBinder {
-        QualifiersBinder bind(String path, String... qualifiersSpec);
+
+        /**
+         * Binds posible qualifiers values to specific resource path
+         *
+         * @param path              resource path to be localized
+         * @param qualifiersSetSpec qualifier values set in format qual1=val1;qual2=val2...
+         * @return
+         */
+        QualifiersBinder bind(String path, String... qualifiersSetSpec);
+
+        default QualifiersBinder bind(Class clazz, String... qualifiersSetSpec) {
+            return bind(clazz.getCanonicalName().replace('.', '/'), qualifiersSetSpec);
+        }
     }
 }

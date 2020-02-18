@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.jdbc;
+package colesico.framework.ioc;
 
-import colesico.framework.ioc.IocBuilder;
+public class AmbiguousDependencyException extends IocException{
+    public AmbiguousDependencyException(String message) {
+        super(message);
+    }
 
-public class Main {
-
-    public static void main(String[] args) {
-        AppService srv = IocBuilder.create().build().instance(AppService.class);
-        System.out.println("Value from DB = "+srv.readValue(1));
+    public AmbiguousDependencyException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

@@ -16,6 +16,7 @@
 
 package colesico.framework.ioc.internal;
 
+import colesico.framework.ioc.AmbiguousDependencyException;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.IocException;
@@ -79,7 +80,7 @@ public class CatalogImpl implements Catalog {
                     return true;
                 }
 
-                throw new IocException("Ambiguous substitution definition for key: " + key);
+                throw new AmbiguousDependencyException("Ambiguous substitution definition for key: " + key);
             }
 
             if (curEntry.getSubstitution() != null && prevEntry.getSubstitution() == null) {
@@ -97,7 +98,7 @@ public class CatalogImpl implements Catalog {
             return true;
         }
 
-        throw new IocException("Ambiguous factory for key: " + key + ";");
+        throw new AmbiguousDependencyException("Ambiguous factory for key: " + key + ";");
 
     }
 

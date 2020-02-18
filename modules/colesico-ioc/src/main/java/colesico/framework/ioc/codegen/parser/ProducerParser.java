@@ -278,9 +278,14 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         // Condition
         ConditionElement condition = null;
-        TypeMirror conditionClass = produceAnn.getValueTypeMirror(a -> a.requires());
+        TypeMirror conditionClass = produceAnn.getValueTypeMirror(Produce::requires);
         if (!conditionClass.toString().equals(Condition.class.getCanonicalName())) {
             condition = new ConditionElement(new ClassType(getProcessingEnv(), (DeclaredType) conditionClass));
+        } else {
+            AnnotationElement<Requires> reqAnn = iocletElement.getOriginProducer().getAnnotation(Requires.class);
+            if (reqAnn != null) {
+                condition = new ConditionElement(new ClassType(getProcessingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(Requires::value)));
+            }
         }
 
         final DefaultFactoryElement factory =
@@ -347,10 +352,10 @@ public class ProducerParser extends FrameworkAbstractParser {
             scope = new ScopeElement(ScopeElement.ScopeKind.SINGLETON, null);
         }
 
-        // polyproduce
+        // Polyproduce
         boolean polyproduce = method.getAnnotation(Polyproduce.class) != null;
 
-        // named
+        // Named
         String named = null;
         AnnotationElement<Named> methodNamedAnn = method.getAnnotation(Named.class);
         if (methodNamedAnn != null) {
@@ -413,7 +418,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
         ConditionElement condition = null;
         if (reqAnn != null) {
-            condition = new ConditionElement(new ClassType(getProcessingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(a -> a.value())));
+            condition = new ConditionElement(new ClassType(getProcessingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(Requires::value)));
         }
 
         // Substitution
@@ -453,7 +458,9 @@ public class ProducerParser extends FrameworkAbstractParser {
     protected void parseProducingMethods(IocletElement iocletElement) {
         // Scan producer methods
         List<MethodElement> methods = iocletElement.getOriginProducer().getMethodsFiltered(
-                m -> !m.unwrap().getModifiers().contains(Modifier.FINAL) && m.unwrap().getModifiers().contains(Modifier.PUBLIC)
+                m -> !m.unwrap().getModifiers().contains(Modifier.FINAL)
+                        && m.unwrap().getModifiers().contains(Modifier.PUBLIC)
+                        && !m.unwrap().getModifiers().contains(Modifier.STATIC)
         );
 
         for (MethodElement method : methods) {
@@ -517,13 +524,7 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         String iocletId = producerElement.getName();
 
-        AnnotationElement<Requires> reqAnn = producerElement.getAnnotation(Requires.class);
-        ConditionElement condition = null;
-        if (reqAnn != null) {
-            condition = new ConditionElement(new ClassType(getProcessingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(a -> a.value())));
-        }
-
-        IocletElement iocletElement = new IocletElement(producerElement, iocletId, condition, iocletClassSimpleName, packageName);
+        IocletElement iocletElement = new IocletElement(producerElement, iocletId, iocletClassSimpleName, packageName);
 
         parseProducingMethods(iocletElement);
         paresProducingAnnotations(iocletElement);

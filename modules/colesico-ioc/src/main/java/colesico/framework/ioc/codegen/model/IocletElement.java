@@ -31,7 +31,6 @@ public class IocletElement {
 
     private final ClassElement originProducer;
     private final String iocletId;
-    private final ConditionElement condition;
 
     private final String iocletClassSimpleName;
     private final String iocletPackageName;
@@ -41,11 +40,9 @@ public class IocletElement {
 
     public IocletElement(ClassElement originProducer,
                          String iocletId,
-                         ConditionElement condition,
                          String iocletClassSimpleName, String iocletPackageName) {
         this.originProducer = originProducer;
         this.iocletId = iocletId;
-        this.condition = condition;
         this.iocletClassSimpleName = iocletClassSimpleName;
         this.iocletPackageName = iocletPackageName;
     }
@@ -65,10 +62,6 @@ public class IocletElement {
 
     public ClassElement getOriginProducer() {
         return originProducer;
-    }
-
-    public ConditionElement getCondition() {
-        return condition;
     }
 
     public String getIocletClassName() {

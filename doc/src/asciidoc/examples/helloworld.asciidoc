@@ -103,7 +103,7 @@ public static void main(String[] args) {
 public static void main(String[] args) {
 
         // Build DI container instance optimized for production.
-        final Ioc ioc = IocBuilder.forProduction();
+        final Ioc ioc = IocBuilder.create();
 
         // Or for development/tests purposes:
         // final Ioc ioc = IocBuilder.forDevelopment();
