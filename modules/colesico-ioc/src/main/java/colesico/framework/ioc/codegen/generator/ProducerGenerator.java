@@ -17,7 +17,6 @@
 package colesico.framework.ioc.codegen.generator;
 
 import colesico.framework.assist.codegen.CodegenUtils;
-import colesico.framework.ioc.conditional.Condition;
 import colesico.framework.ioc.conditional.Requires;
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.conditional.Substitution;
@@ -148,7 +147,7 @@ public class ProducerGenerator {
 
     public void addSubstitutionAnnotation(Substitution subs) {
         AnnotationSpec.Builder ab = AnnotationSpec.builder(Substitute.class);
-        if (subs != Substitution.NORMAL) {
+        if (subs != Substitution.DEFAULT) {
             ab.addMember("value", "$T.$N", ClassName.get(Substitution.class), subs.name());
         }
         producerAnnotations.add(ab);

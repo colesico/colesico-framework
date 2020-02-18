@@ -22,8 +22,24 @@ package colesico.framework.ioc.conditional;
  */
 public enum Substitution {
 
-    NORMAL(1), EXTRA(2);
+    /**
+     * For replace default instances  production
+     */
+    DEFAULT(1),
 
+    /**
+     * For plugins/extensions that replaces regular functionality
+     */
+    EXTENSION(2),
+
+    /**
+     * For testing purposes
+     */
+    TEST(3);
+
+    /**
+     * Substitution priority. 1 - minimum ; 3 - maximum
+     */
     private final int rank;
 
     Substitution(int rank) {

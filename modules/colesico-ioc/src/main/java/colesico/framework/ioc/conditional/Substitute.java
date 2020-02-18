@@ -27,5 +27,5 @@ import java.lang.annotation.*;
 @Documented
 public @interface Substitute {
 
-    Substitution value() default Substitution.NORMAL;
+    Substitution value() default Substitution.DEFAULT;
 }
