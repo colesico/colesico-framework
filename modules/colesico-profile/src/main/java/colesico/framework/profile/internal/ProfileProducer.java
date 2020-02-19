@@ -21,17 +21,18 @@ import colesico.framework.profile.DefaultProfileKit;
 import colesico.framework.profile.Profile;
 import colesico.framework.profile.ProfileConfigPrototype;
 import colesico.framework.profile.ProfileKit;
-import colesico.framework.profile.teleapi.ProfileTeleAssist;
+import colesico.framework.profile.teleapi.CommonProfileCreator;
+import colesico.framework.profile.teleapi.ProfileSerializer;
 
 import javax.inject.Singleton;
 import java.util.Locale;
 
 
-
 @Producer
 @Produce(DefaultProfileKit.class)
 @Produce(ProfileConfigImpl.class)
-@Produce(ProfileTeleAssistImpl.class)
+@Produce(ProfileSerializerImpl.class)
+@Produce(CommonProfileCreatorImpl.class)
 public class ProfileProducer {
 
     @Singleton
@@ -50,7 +51,12 @@ public class ProfileProducer {
     }
 
     @Singleton
-    public ProfileTeleAssist getProfileTeleAssist(ProfileTeleAssistImpl impl){
+    public ProfileSerializer getProfileSerializer(ProfileSerializerImpl impl) {
+        return impl;
+    }
+
+    @Singleton
+    public CommonProfileCreator getCommonProfileCreator(CommonProfileCreatorImpl impl) {
         return impl;
     }
 

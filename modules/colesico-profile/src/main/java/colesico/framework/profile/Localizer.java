@@ -16,10 +16,12 @@
 
 package colesico.framework.profile;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.util.*;
-
+/**
+ * Localization assistant
+ */
 public final class Localizer {
 
     private static final String ANY_VALUE = "*";
@@ -33,29 +35,22 @@ public final class Localizer {
     }
 
     /**
-     * Binds qualifiers to subject.
-     *
-     * @param qualifierNames    all possible qualifiers names in predefined order.
-     * @param qualifiersSetSpec qualifiers set specification string in the format: qualifier1=value1;qualifier2=value2...
+     * Adds resource localization
      */
-    public void add(final String[] qualifierNames, final String... qualifiersSetSpec) {
-        for (String qsItem : qualifiersSetSpec) {
-            LinkedHashMap<String, String> qualifiersMap = parseQualifiersSetSpec(qualifierNames, qsItem);
-            checkNames(qualifierNames, qualifiersMap);
-            Node lastNode = provideLastNode(qualifierNames, qualifiersMap);
-            lastNode.setQualifiers(toQualifiers(qualifiersMap));
-        }
+    public void addLocalization(final SubjectQualifiers qualifiers) {
+        Node lastNode = provideLastNode(qualifiers);
+        lastNode.setQualifiers(qualifiers);
     }
 
     /**
-     * Returns matched qualifiers.
+     * Returns matched resource qualifiers.
      *
-     * @param masterQualifiers must fully be in accordance with qualifierNames in specify(...) method (by number and order)
+     * @param profileQualifiers qualification obtained from profile
      * @return null if no qualifier bound
      */
-    public String[] localize(final String[] masterQualifiers) {
+    public SubjectQualifiers localize(final ProfileQualifiers profileQualifiers) {
         Node curNode = rootNode;
-        for (String q : masterQualifiers) {
+        for (String q : profileQualifiers) {
             Node node = curNode.getNext(q);
             if (node == null) {
                 node = curNode.getNext(ANY_VALUE);
@@ -68,19 +63,9 @@ public final class Localizer {
         return curNode.getQualifiers();
     }
 
-    private String[] toQualifiers(LinkedHashMap<String, String> qualifiersMap) {
-        String[] result = new String[qualifiersMap.size()];
-        int i = 0;
-        for (Map.Entry<String, String> q : qualifiersMap.entrySet()) {
-            result[i++] = q.getValue();
-        }
-        return result;
-    }
-
-    private Node provideLastNode(String[] qualifierNames, Map<String, String> qualifiersMap) {
+    private Node provideLastNode(SubjectQualifiers subjectQualifiers) {
         Node curNode = rootNode;
-        for (String qualifierName : qualifierNames) {
-            String qualifierValue = qualifiersMap.get(qualifierName);
+        for (String qualifierValue : subjectQualifiers) {
             if (qualifierValue == null) {
                 qualifierValue = ANY_VALUE;
             }
@@ -89,77 +74,12 @@ public final class Localizer {
         return curNode;
     }
 
-    /**
-     * Returns map of qualifierName=>qualifierValue
-     *
-     * @param qualifierNames canonical qualifiers order
-     * @param qualifiersSpec
-     * @return
-     */
-    private LinkedHashMap<String, String> parseQualifiersSetSpec(String[] qualifierNames, String qualifiersSpec) {
-        Map<String, String> qualValues = new HashMap<>();
-        StringTokenizer st = new StringTokenizer(qualifiersSpec, ";");
-        while (st.hasMoreElements()) {
-            String qualifierSpec = st.nextToken();
-            QualifierSpec qualifier = parseQualifierSpec(qualifierSpec);
-            qualValues.put(qualifier.getKey(), qualifier.getValue());
-        }
-
-        // Arrange qualifiers in canonical order
-        LinkedHashMap<String, String> result = new LinkedHashMap<>();
-        for (String qualName : qualifierNames) {
-            String qualValue = qualValues.get(qualName);
-            if (qualValue != null) {
-                result.put(qualName, qualValue);
-            }
-        }
-        return result;
-    }
-
-    private void checkNames(String[] qualifierNames, Map<String, String> qualifiersMap) {
-        final Set namesSet = new HashSet();
-        namesSet.addAll(Arrays.asList(qualifierNames));
-
-        for (String name : qualifiersMap.keySet()) {
-            if (!namesSet.contains(name)) {
-                throw new RuntimeException("Invalid qualifier name: " + name);
-            }
-        }
-    }
-
-    private QualifierSpec parseQualifierSpec(String qualifierSpec) {
-        StringTokenizer st = new StringTokenizer(qualifierSpec, "=");
-        String name = StringUtils.trim(st.nextToken());
-        if (!st.hasMoreElements()) {
-            throw new RuntimeException("Invalid qualifier specification format: " + qualifierSpec);
-        }
-        String val = StringUtils.trim(st.nextToken());
-        return new QualifierSpec(name, val);
-    }
-
-    private static class QualifierSpec {
-        private final String key;
-        private final String value;
-
-        public QualifierSpec(String key, String value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        public String getKey() {
-            return key;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
-
     private static final class Node {
-        // node qualification
-        private String[] qualifiers;
 
-        // nested named nodes
+        // Node subject qualifiers
+        private SubjectQualifiers qualifiers;
+
+        // Nested named nodes
         private Map<String, Node> nextNodes;
 
         public Node getNext(String name) {
@@ -173,17 +93,17 @@ public final class Localizer {
             return nextNodes.computeIfAbsent(name, key -> new Node());
         }
 
-        public String[] getQualifiers() {
+        public SubjectQualifiers getQualifiers() {
             return qualifiers;
         }
 
-        public void setQualifiers(String[] qualifiers) {
+        public void setQualifiers(SubjectQualifiers qualifiers) {
             this.qualifiers = qualifiers;
         }
 
         @Override
         public String toString() {
-            return "Localizer.Node{qualifiers=" + Arrays.toString(qualifiers) + '}';
+            return "Localizer.Node{qualifiers=" + qualifiers + '}';
         }
     }
 }

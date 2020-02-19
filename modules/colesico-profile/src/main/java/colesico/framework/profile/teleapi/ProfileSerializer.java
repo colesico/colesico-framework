@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
-package colesico.framework.resource.internal;
+package colesico.framework.profile.teleapi;
 
-import colesico.framework.resource.ResourceOptionsPrototype;
+import colesico.framework.profile.Profile;
 
-public class PropertiesBinderImpl implements ResourceOptionsPrototype.PropertiesBinder {
+import java.util.Locale;
 
-    private final EvaluationTool evaluationTool;
+public interface ProfileSerializer<P extends Profile> {
 
-    public PropertiesBinderImpl(EvaluationTool evaluationTool) {
-        this.evaluationTool = evaluationTool;
-    }
+    byte[] serialize(P profile);
 
-    @Override
-    public ResourceOptionsPrototype.PropertiesBinder bind(String name, String value) {
-        evaluationTool.addProperty(name, value);
-        return this;
-    }
-
+    P deserialize(byte[] profileBytes);
 }

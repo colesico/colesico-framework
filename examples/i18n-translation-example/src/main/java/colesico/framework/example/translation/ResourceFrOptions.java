@@ -27,7 +27,7 @@ import colesico.framework.resource.ResourceOptionsPrototype;
 public class ResourceFrOptions extends ResourceOptionsPrototype {
 
     @Override
-    public void bindQualifiers(QualifiersBinder binder) {
-        binder.bind(AppDictionary.class,"C=FR;L=fr");
+    public void addLocalizations(LocalizationsDigest digest) {
+        digest.add(AppDictionary.class,"C=FR;L=fr");
     }
 }

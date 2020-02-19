@@ -34,46 +34,50 @@ abstract public class ResourceOptionsPrototype {
      *
      * @return
      */
-    public void bindRewritings(RewritingsBinder binder) {
+    public void addRewritings(RewritingsDigest digest) {
     }
 
     /**
-     * Allows to bind  the localization qualifiers to resource path prefix.
+     * Allows to add resource localizations
      *
-     * @param binder
+     * @param digest
      */
-    public void bindQualifiers(QualifiersBinder binder) {
+    public void addLocalizations(LocalizationsDigest digest) {
     }
 
-    public void bindProperties(PropertiesBinder binder) {
+    public void addProperties(PropertiesDigest digest) {
     }
 
-    public interface PropertiesBinder {
-        PropertiesBinder bind(String name, String value);
+    public interface PropertiesDigest {
+        PropertiesDigest add(String name, String value);
     }
 
-    public interface RewritingsBinder {
+    /**
+     * Reciting rules
+     */
+    public interface RewritingsDigest {
         /**
+         * Add rewriting
          * @param originPathPrefix origin path prefix or full path
          * @param targetPathPrefix target path prefix of full path
          */
-        RewritingsBinder bind(String originPathPrefix, String targetPathPrefix);
+        RewritingsDigest add(String originPathPrefix, String targetPathPrefix);
     }
 
-    public interface QualifiersBinder {
+    public interface LocalizationsDigest {
 
         /**
-         * Binds posible qualifiers values to specific resource path
+         * Binds possible qualifiers values to specific resource path
          *
          * @param path              resource path to be localized
-         * @param qualifiersSetSpec qualifier values set in format qual1=val1;qual2=val2...
+         * @param qualifiersSpec qualifier values set in format qualName1=val1;qualName2=val2...
          *                          Qualifier values order is unimportant.
          * @see colesico.framework.profile.ProfileConfigPrototype
          */
-        QualifiersBinder bind(String path, String... qualifiersSetSpec);
+        LocalizationsDigest add(String path, String... qualifiersSpec);
 
-        default QualifiersBinder bind(Class clazz, String... qualifiersSetSpec) {
-            return bind(clazz.getCanonicalName().replace('.', '/'), qualifiersSetSpec);
+        default LocalizationsDigest add(Class clazz, String... qualifiersSpec) {
+            return add(clazz.getCanonicalName().replace('.', '/'), qualifiersSpec);
         }
     }
 }

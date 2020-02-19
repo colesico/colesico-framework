@@ -21,8 +21,8 @@ import colesico.framework.resource.ResourceOptionsPrototype;
 public class ResourcesOptions extends ResourceOptionsPrototype {
 
     @Override
-    public void bindProperties(PropertiesBinder binder) {
-        binder.bind("$alias", "foo/dummy");
+    public void addProperties(PropertiesDigest digest) {
+        digest.add("$alias", "foo/dummy");
     }
 
 }

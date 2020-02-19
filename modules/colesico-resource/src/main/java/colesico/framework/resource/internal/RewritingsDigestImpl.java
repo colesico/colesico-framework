@@ -18,16 +18,16 @@ package colesico.framework.resource.internal;
 
 import colesico.framework.resource.ResourceOptionsPrototype;
 
-final class RewritingsBinderImpl implements ResourceOptionsPrototype.RewritingsBinder {
+final class RewritingsDigestImpl implements ResourceOptionsPrototype.RewritingsDigest {
 
     private final RewritingTool rewritingTool;
 
-    public RewritingsBinderImpl(RewritingTool rewritingTool) {
+    public RewritingsDigestImpl(RewritingTool rewritingTool) {
         this.rewritingTool = rewritingTool;
     }
 
     @Override
-    public ResourceOptionsPrototype.RewritingsBinder bind(String originPathPrefix, String targetPathPrefix) {
+    public ResourceOptionsPrototype.RewritingsDigest add(String originPathPrefix, String targetPathPrefix) {
         rewritingTool.addRewriting(originPathPrefix, targetPathPrefix);
         return this;
     }

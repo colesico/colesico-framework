@@ -16,6 +16,8 @@
 
 package colesico.framework.profile;
 
+import colesico.framework.profile.teleapi.CommonProfileCreator;
+
 /**
  * Profile Service.
  * This service provides centralized access to the user profile.
@@ -25,13 +27,13 @@ public interface ProfileKit {
     /**
      * This method should provide current user valid profile.
      * The method should provide the ability to quickly re-read the profile within the thread.
-     * @param <P>
-     * @return
+     * If it is impassible to determine current user profile method returns common profile {@link CommonProfileCreator}
      */
     <P extends Profile> P getProfile();
 
     /**
-     * This method
+     * Setup curent user profile
+     *
      * @param profile
      */
     void setProfile(Profile profile);

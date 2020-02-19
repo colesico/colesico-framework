@@ -45,6 +45,7 @@ public class DefaultSecurityKit implements SecurityInterceptor {
     /**
      * Override this method to get more specific principal read control
      * This method is used to fine grained control of user principal: check validity, enrich with extra data, e.t.c.
+     *
      * @param port
      * @return Valid principal or null
      */
@@ -55,6 +56,7 @@ public class DefaultSecurityKit implements SecurityInterceptor {
     /**
      * Override this method to get more specific principal write control.
      * This method is used to fine grain write control of user principal.
+     *
      * @param port
      * @param principal
      */

@@ -17,18 +17,19 @@
 package colesico.framework.profile.internal;
 
 import colesico.framework.profile.ProfileConfigPrototype;
+import colesico.framework.profile.QualifierStandard;
 
 import javax.inject.Singleton;
 
 @Singleton
 public class ProfileConfigImpl extends ProfileConfigPrototype {
 
-    // L - language ; C - country
-    private static final String[] QUALIFIERS_NAMES = new String[]{"L", "C"};
+    // L - language ; C - country; V - variant
+    private static final QualifierStandard QUALIFIER_IDS = new QualifierStandard(new String[]{"L", "C", "V"});
 
     @Override
-    public String[] getQualifiersNames() {
-        return QUALIFIERS_NAMES;
+    public QualifierStandard getQualifierStandard() {
+        return QUALIFIER_IDS;
     }
 
 }

@@ -17,6 +17,7 @@
 package colesico.framework.security;
 
 /**
+ * Provides basic security service
  * @author Vladlen Larionov
  */
 public interface SecurityKit {

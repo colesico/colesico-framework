@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 @Singleton
-public class EvaluationTool {
+public class EvaluatingTool {
 
     public static final char PROPERTY_PREFIX = '$';
     public static final char PATH_SEPARATOR = '/';

@@ -20,7 +20,8 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.teleapi.ProfileTeleAssist;
+import colesico.framework.profile.teleapi.CommonProfileCreator;
+import colesico.framework.profile.teleapi.ProfileSerializer;
 import colesico.framework.weblet.assist.WebUtils;
 import colesico.framework.weblet.teleapi.ReaderContext;
 import colesico.framework.weblet.teleapi.WebletTeleReader;
@@ -42,12 +43,14 @@ public class ProfileReader implements WebletTeleReader<Profile> {
 
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
 
-    protected final ProfileTeleAssist profileTeleAssist;
+    protected final ProfileSerializer profileSerializer;
+    protected final CommonProfileCreator commonProfileCreator;
     protected final Provider<HttpContext> httpContextProv;
 
     @Inject
-    public ProfileReader(ProfileTeleAssist profileTeleAssist, Provider<HttpContext> httpContextProv) {
-        this.profileTeleAssist = profileTeleAssist;
+    public ProfileReader(ProfileSerializer profileSerializer, CommonProfileCreator commonProfileCreator, Provider<HttpContext> httpContextProv) {
+        this.profileSerializer = profileSerializer;
+        this.commonProfileCreator = commonProfileCreator;
         this.httpContextProv = httpContextProv;
     }
 
@@ -68,18 +71,18 @@ public class ProfileReader implements WebletTeleReader<Profile> {
         Base64.Decoder decoder = Base64.getDecoder();
         byte[] profileBytes = decoder.decode(profileValue);
 
-        Profile profile = profileTeleAssist.deserialize(profileBytes);
+        Profile profile = profileSerializer.deserialize(profileBytes);
         return profile;
     }
 
-    protected Profile getDefaultProfile(HttpRequest request) {
+    protected Profile getCommonProfile(HttpRequest request) {
         String accLangs = request.getHeaders().get(ACCEPT_LANGUAGE_HEADER);
         Locale locale = WebUtils.getAcceptedLanguage(accLangs);
         if (locale == null) {
             locale = Locale.getDefault();
         }
 
-        return profileTeleAssist.buildDefault(locale);
+        return commonProfileCreator.createCommonProfile(locale);
     }
 
     @Override
@@ -87,7 +90,7 @@ public class ProfileReader implements WebletTeleReader<Profile> {
         HttpRequest request = httpContextProv.get().getRequest();
         Profile profile = getCustomProfile(request);
         if (profile == null) {
-            profile = getDefaultProfile(request);
+            profile = getCommonProfile(request);
         }
         return profile;
     }

@@ -23,10 +23,8 @@ import colesico.framework.config.ConfigPrototype;
 abstract public class ProfileConfigPrototype {
 
     /**
-     * Return all possible qualifier names in the order of the profile qualifiers
-     *
-     * @return
+     * Return all possible qualifier names in standard order
      */
-    abstract public String[] getQualifiersNames();
+    abstract public QualifierStandard getQualifierStandard();
 
 }

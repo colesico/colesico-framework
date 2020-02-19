@@ -46,9 +46,9 @@ public class TestLocalizationTool {
 
     @Test
     public void test1() {
-        localizingTool.addQualifiers(PATH1, "L=en;C=GB");
-        localizingTool.addQualifiers(PATH2, "L=en");
-        localizingTool.addQualifiers(PATH3, "C=RU");
+        localizingTool.addLocalization(PATH1, "L=en;C=GB");
+        localizingTool.addLocalization(PATH2, "L=en");
+        localizingTool.addLocalization(PATH3, "C=RU");
 
         String lpath = localizingTool.localize(PATH1, ResourceKit.L10NMode.FILE);
         System.out.println("path=" + lpath);

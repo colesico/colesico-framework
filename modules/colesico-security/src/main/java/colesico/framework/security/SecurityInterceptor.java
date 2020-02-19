@@ -18,6 +18,11 @@ package colesico.framework.security;
 
 import colesico.framework.service.InvocationContext;
 
+/**
+ * Is used to handle security interception
+ * @see RequirePrincipal
+ * @see RequireAuthority
+ */
 public interface SecurityInterceptor extends SecurityKit {
     String INTERCEPT_REQUIRE_PRINCIPAL_METHOD="interceptRequirePrincipal";
     String INTERCEPT_REQUIRE_AUTHORITY_METHOD="interceptRequireAuthority";

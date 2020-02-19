@@ -16,22 +16,18 @@
 
 package colesico.framework.profile;
 
-import colesico.framework.ioc.key.Key;
-import colesico.framework.ioc.key.TypeKey;
-
 import java.io.Serializable;
 import java.util.Locale;
 
 /**
- * Localization profile basic interface.
- * Defines key values for profile.
+ * Localization profile.
+ * The specific implementation depends on the needs of the application and is implemented in the application.
+ * Framework provides default implementation {@link DefaultProfile}
  */
 public interface Profile extends Cloneable, Serializable {
 
     String GET_LOCALE_METHOD = "getLocale";
     String GET_QUALIFIERS_METHOD = "getQualifiers";
-
-    Key<Profile> SCOPE_KEY = new TypeKey<>(Profile.class);
 
     /**
      * Returns client locale.
@@ -41,11 +37,7 @@ public interface Profile extends Cloneable, Serializable {
     Locale getLocale();
 
     /**
-     * Returns localization qualifiers.
-     * Localization qualifiers is used to select appropriate localized resource, etc
-     * The qualifiers in the array must be ordered in accordance with the order specified in the profile configuration
-     *
-     * @return profile qualifiers
+     * Returns localization qualifier values
      */
-    String[] getQualifiers();
+    ProfileQualifiers getQualifiers();
 }

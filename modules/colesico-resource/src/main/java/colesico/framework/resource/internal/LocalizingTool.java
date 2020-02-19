@@ -16,9 +16,7 @@
 
 package colesico.framework.resource.internal;
 
-import colesico.framework.profile.Localizer;
-import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileConfigPrototype;
+import colesico.framework.profile.*;
 import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.ResourceKit;
 import colesico.framework.resource.assist.FileParser;
@@ -34,30 +32,36 @@ public class LocalizingTool {
 
     private final Provider<Profile> profileProv;
 
-    private final String[] qualifiersNames;
     private final PathTrie<Localizer> pathTrie = new PathTrie<>("/");
+    private final QualifierStandard qualifierStandard;
 
     public LocalizingTool(Provider<Profile> profileProv, ProfileConfigPrototype config) {
         this.profileProv = profileProv;
-        this.qualifiersNames = config.getQualifiersNames();
+        this.qualifierStandard = config.getQualifierStandard();
     }
 
     /**
-     * Register qualifiers values for  specific resource path
+     * Register localizing qualifiers for specific resource path
+     *
      * @param path
-     * @param qualifiersSetSpec qualifier values set specification string in the format: qualifier1=value1;qualifier2=value2...
-     *                          Qualifier values order is unimportant, it will be ordered at parsing
+     * @param qualifiersSpec qualifier values set specification string in the format: qualifierName1=value1;qualifierName2=value2...
+     *                       Qualifier values order is unimportant, it will be ordered at parsing
      */
-    public void  addQualifiers(String path, String... qualifiersSetSpec) {
+    public void addLocalization(String path, String... qualifiersSpec) {
         final PathTrie.Node<Localizer> node = pathTrie.add(path);
         Localizer localizer = node.getValue();
         if (localizer == null) {
             localizer = new Localizer();
             node.setValue(localizer);
         }
-        localizer.add(qualifiersNames, qualifiersSetSpec);
+        for (String qualifiersSpecItem : qualifiersSpec) {
+            localizer.addLocalization(SubjectQualifiers.fromSpec(qualifiersSpecItem, qualifierStandard));
+        }
     }
 
+    /**
+     * Localize based on current profile
+     */
     public String localize(final String resourcePath, final ResourceKit.L10NMode mode) {
         return localize(resourcePath, mode, () -> {
             Profile profile = profileProv.get();
@@ -65,11 +69,14 @@ public class LocalizingTool {
         });
     }
 
-    public String localize(final String resourcePath, final ResourceKit.L10NMode mode, final String[] qualifiers) {
+    /**
+     * Localize based on given qualifiers
+     */
+    public String localize(final String resourcePath, final ResourceKit.L10NMode mode, final ProfileQualifiers qualifiers) {
         return localize(resourcePath, mode, () -> qualifiers);
     }
 
-    private String localize(final String resourcePath, final ResourceKit.L10NMode mode, final Supplier<String[]> qualifiersSup) {
+    private String localize(final String resourcePath, final ResourceKit.L10NMode mode, final Supplier<ProfileQualifiers> qualifiersSup) {
         if (mode.equals(ResourceKit.L10NMode.NONE)) {
             return resourcePath;
         }
@@ -79,7 +86,7 @@ public class LocalizingTool {
             return resourcePath;
         }
 
-        String[] qualifiers = localizer.localize(qualifiersSup.get());
+        SubjectQualifiers qualifiers = localizer.localize(qualifiersSup.get());
 
         if (qualifiers == null) {
             return resourcePath;
@@ -101,7 +108,7 @@ public class LocalizingTool {
      * @param qualifiers
      * @return
      */
-    private String localizeFile(String resourcePath, String[] qualifiers) {
+    private String localizeFile(String resourcePath, SubjectQualifiers qualifiers) {
         /*
               valid:
 
@@ -136,9 +143,7 @@ public class LocalizingTool {
             sb = new StringBuilder(path).append("/").append(fileName);
         }
 
-        for (String qualifier : qualifiers) {
-            sb.append('_').append(qualifier);
-        }
+        sb.append(qualifiers.toSuffix('_'));
 
         if (!"".equals(fileExt)) {
             sb.append('.').append(fileExt);
@@ -146,7 +151,7 @@ public class LocalizingTool {
         return sb.toString();
     }
 
-    private String localizeDir(String resourcePath, String[] qualifiers) {
+    private String localizeDir(String resourcePath, SubjectQualifiers qualifiers) {
         /*
               root/dir/ - > root/dir_en_GB/
               root/dir  - > root_en_GB/dir
@@ -166,10 +171,9 @@ public class LocalizingTool {
         final StringBuilder sb;
 
         sb = new StringBuilder(path);
-        for (String qualifier : qualifiers) {
-            String qvalue = StringUtils.lowerCase(qualifier);
-            sb.append('_').append(qvalue);
-        }
+
+        sb.append(qualifiers.toSuffix('_'));
+
         sb.append("/").append(fileName);
         if (!"".equals(fileExt)) {
             sb.append('.').append(fileExt);

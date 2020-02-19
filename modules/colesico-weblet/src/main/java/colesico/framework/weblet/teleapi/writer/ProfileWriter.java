@@ -20,7 +20,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.teleapi.ProfileTeleAssist;
+import colesico.framework.profile.teleapi.ProfileSerializer;
 import colesico.framework.weblet.teleapi.ProfileWebletConfigPrototype;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WriterContext;
@@ -37,12 +37,12 @@ public class ProfileWriter implements WebletTeleWriter<Profile> {
     public static final String HEADER_NAME = "Localization";
 
     protected final ProfileWebletConfigPrototype config;
-    protected final ProfileTeleAssist profileTeleAssist;
+    protected final ProfileSerializer profileSerializer;
     protected final Provider<HttpContext> httpContextProv;
 
-    public ProfileWriter(ProfileWebletConfigPrototype config, ProfileTeleAssist profileTeleAssist, Provider<HttpContext> httpContextProv) {
+    public ProfileWriter(ProfileWebletConfigPrototype config, ProfileSerializer profileSerializer, Provider<HttpContext> httpContextProv) {
         this.config = config;
-        this.profileTeleAssist = profileTeleAssist;
+        this.profileSerializer = profileSerializer;
         this.httpContextProv = httpContextProv;
     }
 
@@ -52,7 +52,7 @@ public class ProfileWriter implements WebletTeleWriter<Profile> {
         Calendar expires = Calendar.getInstance();
         String profileValue;
         if (profile != null) {
-            byte[] profileBytes = profileTeleAssist.serialize(profile);
+            byte[] profileBytes = profileSerializer.serialize(profile);
             Base64.Encoder encoder = Base64.getEncoder();
             profileValue = encoder.encodeToString(profileBytes);
             expires.add(Calendar.DAY_OF_MONTH, config.getCookieValidityDays());

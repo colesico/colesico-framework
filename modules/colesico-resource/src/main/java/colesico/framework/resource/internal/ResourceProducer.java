@@ -27,7 +27,7 @@ import javax.inject.Singleton;
 @Produce(ResourceKitImpl.class)
 @Produce(LocalizingTool.class)
 @Produce(RewritingTool.class)
-@Produce(EvaluationTool.class)
+@Produce(EvaluatingTool.class)
 public class ResourceProducer {
 
     @Singleton

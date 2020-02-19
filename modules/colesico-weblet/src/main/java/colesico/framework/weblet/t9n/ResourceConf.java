@@ -24,7 +24,7 @@ import colesico.framework.translation.TranslationKit;
 public class ResourceConf extends ResourceOptionsPrototype {
 
     @Override
-    public void bindQualifiers(QualifiersBinder binder) {
-        binder.bind(TranslationKit.toBasePath(WebletMessages.class),"L=ru");
+    public void addLocalizations(LocalizationsDigest digest) {
+        digest.add(TranslationKit.toBasePath(WebletMessages.class),"L=ru");
     }
 }

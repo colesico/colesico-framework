@@ -16,7 +16,6 @@
 
 package colesico.framework.profile;
 
-
 import java.util.Locale;
 
 /**
@@ -25,15 +24,19 @@ import java.util.Locale;
 public class DefaultProfile implements Profile {
 
     private Locale locale;
-    private String[] qualifiers;
+    private ProfileQualifiers profileQualifiers;
 
     public DefaultProfile(Locale locale) {
         this.locale = locale;
         createQualifiers();
     }
 
-    protected void createQualifiers() {
-        this.qualifiers = new String[]{locale.getLanguage(), locale.getCountry()};
+    private void createQualifiers() {
+        this.profileQualifiers = new ProfileQualifiers(new String[]{
+                locale.getLanguage() != "" ? locale.getLanguage() : null,
+                locale.getCountry() != "" ? locale.getCountry() : null,
+                locale.getVariant() != "" ? locale.getVariant() : null
+        });
     }
 
     @Override
@@ -47,7 +50,7 @@ public class DefaultProfile implements Profile {
     }
 
     @Override
-    public String[] getQualifiers() {
-        return qualifiers;
+    public ProfileQualifiers getQualifiers() {
+        return profileQualifiers;
     }
 }

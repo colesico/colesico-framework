@@ -18,7 +18,7 @@ package colesico.framework.profile.internal;
 
 import colesico.framework.profile.DefaultProfile;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.teleapi.ProfileTeleAssist;
+import colesico.framework.profile.teleapi.ProfileSerializer;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Singleton;
@@ -29,7 +29,7 @@ import java.util.Locale;
  * Default profile tele-assistant
  */
 @Singleton
-public class ProfileTeleAssistImpl implements ProfileTeleAssist<DefaultProfile> {
+public class ProfileSerializerImpl implements ProfileSerializer<DefaultProfile> {
 
     @Override
     public byte[] serialize(DefaultProfile profile) {
@@ -45,11 +45,6 @@ public class ProfileTeleAssistImpl implements ProfileTeleAssist<DefaultProfile> 
         String localeStr = new String(profileBytes, StandardCharsets.UTF_8);
         String[] localeItems = StringUtils.split(localeStr, "|");
         Locale locale = new Locale(localeItems[0], localeItems[1]);
-        return new DefaultProfile(locale);
-    }
-
-    @Override
-    public Profile buildDefault(Locale locale) {
         return new DefaultProfile(locale);
     }
 

@@ -19,7 +19,7 @@ package colesico.framework.test.resource;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.conditional.TestCondition;
-import colesico.framework.resource.internal.EvaluationTool;
+import colesico.framework.resource.internal.EvaluatingTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
@@ -27,12 +27,12 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
-public class TestEvaluationTool {
+public class TestEvaluatingTool {
 
     private Ioc ioc;
-    private EvaluationTool evaluationTool;
+    private EvaluatingTool evaluatingTool;
 
-    Logger logger = LoggerFactory.getLogger(TestEvaluationTool.class);
+    Logger logger = LoggerFactory.getLogger(TestEvaluatingTool.class);
 
 
     @BeforeClass
@@ -40,42 +40,42 @@ public class TestEvaluationTool {
         logger.info("Init test");
         TestCondition.enable();
         ioc = IocBuilder.create().build();
-        evaluationTool = ioc.instance(EvaluationTool.class);
-        evaluationTool.addProperty("$alias", "foo/dummy");
+        evaluatingTool = ioc.instance(EvaluatingTool.class);
+        evaluatingTool.addProperty("$alias", "foo/dummy");
     }
 
     @Test
     public void test1() {
         String path;
 
-        path = evaluationTool.evaluate("/");
+        path = evaluatingTool.evaluate("/");
         assertEquals(path, "/");
 
-        path = evaluationTool.evaluate("/home");
+        path = evaluatingTool.evaluate("/home");
         assertEquals(path, "/home");
 
-        path = evaluationTool.evaluate("home");
+        path = evaluatingTool.evaluate("home");
         assertEquals(path, "home");
 
-        path = evaluationTool.evaluate("$alias/home");
+        path = evaluatingTool.evaluate("$alias/home");
         assertEquals(path, "foo/dummy/home");
 
-        path = evaluationTool.evaluate("/$alias/home");
+        path = evaluatingTool.evaluate("/$alias/home");
         assertEquals(path, "/foo/dummy/home");
 
-        path = evaluationTool.evaluate("/$alias/home/");
+        path = evaluatingTool.evaluate("/$alias/home/");
         assertEquals(path, "/foo/dummy/home/");
 
         System.out.println(path);
 
 
-        path = evaluationTool.evaluate("/$alias");
+        path = evaluatingTool.evaluate("/$alias");
         assertEquals(path, "/foo/dummy");
 
-        path = evaluationTool.evaluate("/$alias/");
+        path = evaluatingTool.evaluate("/$alias/");
         assertEquals(path, "/foo/dummy/");
 
-        path = evaluationTool.evaluate("$alias");
+        path = evaluatingTool.evaluate("$alias");
         assertEquals(path, "foo/dummy");
     }
 }

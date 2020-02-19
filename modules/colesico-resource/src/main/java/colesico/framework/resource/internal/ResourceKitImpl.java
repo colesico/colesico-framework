@@ -16,6 +16,7 @@
 package colesico.framework.resource.internal;
 
 import colesico.framework.ioc.production.Polysupplier;
+import colesico.framework.profile.ProfileQualifiers;
 import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.ResourceKit;
 import colesico.framework.resource.ResourceNotFoundException;
@@ -39,26 +40,26 @@ public final class ResourceKitImpl implements ResourceKit {
     protected final Logger log = LoggerFactory.getLogger(ResourceKit.class);
     private final LocalizingTool localizingTool;
     private final RewritingTool rewritingTool;
-    private final EvaluationTool evaluationTool;
+    private final EvaluatingTool evaluatingTool;
 
     @Inject
     public ResourceKitImpl(LocalizingTool localizingTool,
                            RewritingTool rewritingTool,
-                           EvaluationTool evaluationTool,
+                           EvaluatingTool evaluatingTool,
                            Polysupplier<ResourceOptionsPrototype> configs) {
 
         this.localizingTool = localizingTool;
         this.rewritingTool = rewritingTool;
-        this.evaluationTool = evaluationTool;
+        this.evaluatingTool = evaluatingTool;
 
-        final QualifiersBinderImpl qualifiersBinder = new QualifiersBinderImpl(localizingTool);
-        final RewritingsBinderImpl rewritingsBinder = new RewritingsBinderImpl(rewritingTool);
-        final PropertiesBinderImpl propertiesBinder = new PropertiesBinderImpl(evaluationTool);
+        final LocalizationsDigestImpl qualifiersBinder = new LocalizationsDigestImpl(localizingTool);
+        final RewritingsDigestImpl rewritingsBinder = new RewritingsDigestImpl(rewritingTool);
+        final PropertiesDigestImpl propertiesBinder = new PropertiesDigestImpl(evaluatingTool);
 
         configs.forEach(c -> {
-            c.bindQualifiers(qualifiersBinder);
-            c.bindRewritings(rewritingsBinder);
-            c.bindProperties(propertiesBinder);
+            c.addLocalizations(qualifiersBinder);
+            c.addRewritings(rewritingsBinder);
+            c.addProperties(propertiesBinder);
         }, null);
 
     }
@@ -88,7 +89,7 @@ public final class ResourceKitImpl implements ResourceKit {
     }
 
     @Override
-    public String localize(String resourcePath, L10NMode mode, String[] qualfiers) {
+    public String localize(String resourcePath, L10NMode mode, ProfileQualifiers qualfiers) {
         return localizingTool.localize(resourcePath, mode, qualfiers);
     }
 
@@ -99,7 +100,7 @@ public final class ResourceKitImpl implements ResourceKit {
 
     @Override
     public String evaluate(String resourcePath) {
-        return evaluationTool.evaluate(resourcePath);
+        return evaluatingTool.evaluate(resourcePath);
     }
 
     private ClassLoader getClassLoader() {

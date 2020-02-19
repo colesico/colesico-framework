@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.translation;
+package colesico.framework.profile.internal;
 
-import colesico.framework.ioc.production.Produce;
-import colesico.framework.ioc.production.Producer;
+import colesico.framework.profile.teleapi.CommonProfileCreator;
+import colesico.framework.profile.DefaultProfile;
+import colesico.framework.profile.Profile;
 
-@Producer
-@Produce(AppService.class)
-public class AppProducer {
+import java.util.Locale;
 
+public class CommonProfileCreatorImpl implements CommonProfileCreator {
+
+    @Override
+    public Profile createCommonProfile(Locale locale) {
+        return new DefaultProfile(locale);
+    }
 }

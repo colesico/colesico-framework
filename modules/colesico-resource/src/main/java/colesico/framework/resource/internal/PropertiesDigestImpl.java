@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-package colesico.framework.profile.teleapi;
+package colesico.framework.resource.internal;
 
-import colesico.framework.profile.Profile;
+import colesico.framework.resource.ResourceOptionsPrototype;
 
-import java.util.Locale;
+public class PropertiesDigestImpl implements ResourceOptionsPrototype.PropertiesDigest {
 
-public interface ProfileTeleAssist<P extends Profile> {
+    private final EvaluatingTool evaluatingTool;
 
-    byte[] serialize(P profile);
+    public PropertiesDigestImpl(EvaluatingTool evaluatingTool) {
+        this.evaluatingTool = evaluatingTool;
+    }
 
-    P deserialize(byte[] profileBytes);
+    @Override
+    public ResourceOptionsPrototype.PropertiesDigest add(String name, String value) {
+        evaluatingTool.addProperty(name, value);
+        return this;
+    }
 
-    Profile buildDefault(Locale locale);
 }

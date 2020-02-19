@@ -15,12 +15,14 @@
  */
 package colesico.framework.resource;
 
+import colesico.framework.profile.ProfileQualifiers;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 
 /**
- * Service for reading application resources
+ * Resources service  (localization, rewriting, etc.)
  *
  * @author Vladlen Larionov
  */
@@ -37,21 +39,43 @@ public interface ResourceKit {
     String rewrite(String resourcePath);
 
     /**
-     * Rewrite path according to qualifiers and current locale
+     * Localize path according to  current profile
      */
     String localize(String resourcePath, L10NMode mode);
 
-    String localize(String resourcePath, L10NMode mode, String[] qualfiers);
+    /**
+     * Localize path according to  given qualifiers
+     */
+    String localize(String resourcePath, L10NMode mode, ProfileQualifiers qualfiers);
 
+    /**
+     * Evaluate  path with variables to concrete path
+     */
     String evaluate(String resourcePath);
 
     Enumeration<URL> getURLs(String resourcePath);
 
     InputStream getStream(String resourcePath);
 
-
+    /**
+     * Resource localization mode
+     */
     enum L10NMode {
-        NONE, FILE, DIR
+
+        /**
+         * Doesn't use localization
+         */
+        NONE,
+
+        /**
+         * Localize as file, e.g. path/file.ext -> path/file_ru_RU.ext
+         */
+        FILE,
+
+        /**
+         * Localize as directory, e.g. path/file.ext -> path_en_UK/file.ext
+         */
+        DIR
     }
 
 }
