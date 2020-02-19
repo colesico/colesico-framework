@@ -26,7 +26,7 @@
     </parent>
 
     <groupId>net.colesico.framework.example</groupId>
-    <artifactId>i18n-translation-example</artifactId>
+    <artifactId>translation-example</artifactId>
 
     <packaging>jar</packaging>
     <name>Colesico example - Text translation for i18n</name>
