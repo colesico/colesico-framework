@@ -45,12 +45,12 @@ public final class Localizer {
     /**
      * Returns matched resource qualifiers.
      *
-     * @param profileQualifiers qualification obtained from profile
+     * @param qualifiers qualification obtained from profile
      * @return null if no qualifier bound
      */
-    public SubjectQualifiers localize(final ProfileQualifiers profileQualifiers) {
+    public SubjectQualifiers localize(final ObjectiveQualifiers qualifiers) {
         Node curNode = rootNode;
-        for (String q : profileQualifiers) {
+        for (String q : qualifiers) {
             Node node = curNode.getNext(q);
             if (node == null) {
                 node = curNode.getNext(ANY_VALUE);
@@ -63,9 +63,9 @@ public final class Localizer {
         return curNode.getQualifiers();
     }
 
-    private Node provideLastNode(SubjectQualifiers subjectQualifiers) {
+    private Node provideLastNode(SubjectQualifiers qualifiers) {
         Node curNode = rootNode;
-        for (String qualifierValue : subjectQualifiers) {
+        for (String qualifierValue : qualifiers) {
             if (qualifierValue == null) {
                 qualifierValue = ANY_VALUE;
             }

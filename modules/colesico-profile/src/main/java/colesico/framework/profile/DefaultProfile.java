@@ -24,7 +24,7 @@ import java.util.Locale;
 public class DefaultProfile implements Profile {
 
     private Locale locale;
-    private ProfileQualifiers profileQualifiers;
+    private ObjectiveQualifiers qualifiers;
 
     public DefaultProfile(Locale locale) {
         this.locale = locale;
@@ -32,7 +32,7 @@ public class DefaultProfile implements Profile {
     }
 
     private void createQualifiers() {
-        this.profileQualifiers = new ProfileQualifiers(new String[]{
+        this.qualifiers = new ObjectiveQualifiers(new String[]{
                 locale.getLanguage() != "" ? locale.getLanguage() : null,
                 locale.getCountry() != "" ? locale.getCountry() : null,
                 locale.getVariant() != "" ? locale.getVariant() : null
@@ -50,7 +50,7 @@ public class DefaultProfile implements Profile {
     }
 
     @Override
-    public ProfileQualifiers getQualifiers() {
-        return profileQualifiers;
+    public ObjectiveQualifiers getQualifiers() {
+        return qualifiers;
     }
 }

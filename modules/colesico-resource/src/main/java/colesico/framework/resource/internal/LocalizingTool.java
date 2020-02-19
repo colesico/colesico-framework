@@ -21,7 +21,6 @@ import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.ResourceKit;
 import colesico.framework.resource.assist.FileParser;
 import colesico.framework.resource.assist.PathTrie;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -72,11 +71,11 @@ public class LocalizingTool {
     /**
      * Localize based on given qualifiers
      */
-    public String localize(final String resourcePath, final ResourceKit.L10NMode mode, final ProfileQualifiers qualifiers) {
+    public String localize(final String resourcePath, final ResourceKit.L10NMode mode, final ObjectiveQualifiers qualifiers) {
         return localize(resourcePath, mode, () -> qualifiers);
     }
 
-    private String localize(final String resourcePath, final ResourceKit.L10NMode mode, final Supplier<ProfileQualifiers> qualifiersSup) {
+    private String localize(final String resourcePath, final ResourceKit.L10NMode mode, final Supplier<ObjectiveQualifiers> qualifiersSup) {
         if (mode.equals(ResourceKit.L10NMode.NONE)) {
             return resourcePath;
         }

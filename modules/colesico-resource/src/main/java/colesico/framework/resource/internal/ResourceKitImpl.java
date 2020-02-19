@@ -16,7 +16,7 @@
 package colesico.framework.resource.internal;
 
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.profile.ProfileQualifiers;
+import colesico.framework.profile.ObjectiveQualifiers;
 import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.ResourceKit;
 import colesico.framework.resource.ResourceNotFoundException;
@@ -89,7 +89,7 @@ public final class ResourceKitImpl implements ResourceKit {
     }
 
     @Override
-    public String localize(String resourcePath, L10NMode mode, ProfileQualifiers qualfiers) {
+    public String localize(String resourcePath, L10NMode mode, ObjectiveQualifiers qualfiers) {
         return localizingTool.localize(resourcePath, mode, qualfiers);
     }
 

@@ -15,7 +15,7 @@
  */
 package colesico.framework.resource;
 
-import colesico.framework.profile.ProfileQualifiers;
+import colesico.framework.profile.ObjectiveQualifiers;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -46,7 +46,7 @@ public interface ResourceKit {
     /**
      * Localize path according to  given qualifiers
      */
-    String localize(String resourcePath, L10NMode mode, ProfileQualifiers qualfiers);
+    String localize(String resourcePath, L10NMode mode, ObjectiveQualifiers qualfiers);
 
     /**
      * Evaluate  path with variables to concrete path

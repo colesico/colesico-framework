@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 /**
  * Localization qualifier values from profile is used to select appropriate localized resource, etc.
  */
-public final class ProfileQualifiers implements Iterable<String> {
+public final class ObjectiveQualifiers implements Iterable<String> {
 
     /**
      * Qualifiers
@@ -32,7 +32,7 @@ public final class ProfileQualifiers implements Iterable<String> {
      */
     private final String[] values;
 
-    public ProfileQualifiers(String[] values) {
+    public ObjectiveQualifiers(String[] values) {
         this.values = values;
     }
 

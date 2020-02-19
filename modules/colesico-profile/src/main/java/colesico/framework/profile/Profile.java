@@ -39,5 +39,5 @@ public interface Profile extends Cloneable, Serializable {
     /**
      * Returns localization qualifier values
      */
-    ProfileQualifiers getQualifiers();
+    ObjectiveQualifiers getQualifiers();
 }
