@@ -20,7 +20,7 @@ package colesico.framework.router.codegen;
 import colesico.framework.assist.Elements;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.assist.codegen.model.AnnotationElement;
+import colesico.framework.assist.codegen.model.AnnotationToolbox;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.router.RequestMethod;
 import colesico.framework.router.Route;
@@ -64,7 +64,7 @@ abstract public class RoutegenContext {
 
     protected String buildMethodRoute(TeleMethodElement teleMethod) {
 
-        AnnotationElement<Route> routeAnn = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(Route.class);
+        AnnotationToolbox<Route> routeAnn = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(Route.class);
         String methodRoute;
         if (routeAnn != null) {
             methodRoute = StringUtils.trim(routeAnn.unwrap().value());
@@ -91,7 +91,7 @@ abstract public class RoutegenContext {
         }
 
         HttpMethod httpMethod = HttpMethod.HTTP_METHOD_GET;
-        AnnotationElement<RequestMethod> methodAnnotation = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(RequestMethod.class);
+        AnnotationToolbox<RequestMethod> methodAnnotation = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(RequestMethod.class);
         if (methodAnnotation != null) {
             httpMethod = HttpMethod.of(methodAnnotation.unwrap().value());
         }
@@ -100,7 +100,7 @@ abstract public class RoutegenContext {
     }
 
     protected String buildServiceRoute(ServiceElement service) {
-        AnnotationElement<Route> routeAnn = service.getOriginClass().getAnnotation(Route.class);
+        AnnotationToolbox<Route> routeAnn = service.getOriginClass().getAnnotation(Route.class);
         String srvRoute;
         if (routeAnn != null) {
             srvRoute = StringUtils.trim(routeAnn.unwrap().value());

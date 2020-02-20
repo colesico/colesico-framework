@@ -15,7 +15,7 @@
  */
 package colesico.framework.router.codegen;
 
-import colesico.framework.assist.codegen.model.AnnotationElement;
+import colesico.framework.assist.codegen.model.AnnotationToolbox;
 import colesico.framework.assist.codegen.model.VarElement;
 import colesico.framework.router.Router;
 import colesico.framework.router.RoutingLigature;
@@ -117,7 +117,7 @@ abstract public class RoutesModulator extends Modulator {
     @Override
     public void onAddTeleFacade(ServiceElement serviceElm) {
         super.onService(serviceElm);
-        AnnotationElement teleAnn = serviceElm.getOriginClass().getAnnotation(getTeleAnnotation());
+        AnnotationToolbox teleAnn = serviceElm.getOriginClass().getAnnotation(getTeleAnnotation());
 
         if (teleAnn == null) {
             return;

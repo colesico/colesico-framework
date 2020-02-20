@@ -21,14 +21,14 @@ import java.util.Iterator;
 import java.util.function.Consumer;
 
 /**
- * All possible qualifier names in standard order.
+ * Defines all possible qualifier names and its canonical order.
  * Order of qualifiers is important due localization process that defines look up order of  localization
  */
-public final class QualifierStandard implements Iterable<String> {
+public final class QualifiersDefinition implements Iterable<String> {
 
     private final String[] names;
 
-    public QualifierStandard(String[] names) {
+    public QualifiersDefinition(String[] names) {
         this.names = names;
     }
 

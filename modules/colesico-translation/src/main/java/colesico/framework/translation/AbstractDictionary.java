@@ -16,7 +16,7 @@
 
 package colesico.framework.translation;
 
-abstract public class AbstractDictionary implements AdvancedDictionary {
+abstract public class AbstractDictionary implements TranslationDictionary {
 
     public static final String TRANSLATE_OR_KEY_METHOD = "translateOrKey";
     public static final String TRANSLATION_KIT_FIELD = "translationKit";

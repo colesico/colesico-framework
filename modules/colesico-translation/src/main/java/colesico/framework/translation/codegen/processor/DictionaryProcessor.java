@@ -18,8 +18,8 @@ package colesico.framework.translation.codegen.processor;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
-import colesico.framework.assist.codegen.model.AnnotationElement;
-import colesico.framework.assist.codegen.model.AnnotationMirrorElement;
+import colesico.framework.assist.codegen.model.AnnotationToolbox;
+import colesico.framework.assist.codegen.model.AnnotationType;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.translation.Dictionary;
@@ -106,8 +106,8 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
 
 
         List<MethodElement> methods = dictionaryBeanInterface.getMethodsFiltered(
-            m -> !m.unwrap().getModifiers().contains(Modifier.DEFAULT) &&
-                m.unwrap().getReturnType().toString().equals(String.class.getName())
+                m -> !m.unwrap().getModifiers().contains(Modifier.DEFAULT) &&
+                        m.unwrap().getReturnType().toString().equals(String.class.getName())
         );
 
 
@@ -115,9 +115,9 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
             dictionaryBeanElement.addTranslationMethod(method);
 
             // Find translations
-            List<AnnotationMirrorElement> annList = method.getAnnotationMirrors();
-            for (AnnotationMirrorElement ann : annList) {
-                AnnotationElement<Translation> translationAnn = ann.getAnnotation(Translation.class);
+            List<AnnotationType> annList = method.getAnnotationTypes();
+            for (AnnotationType ann : annList) {
+                AnnotationToolbox<Translation> translationAnn = ann.asElement().getAnnotation(Translation.class);
                 if (translationAnn == null) {
                     continue;
                 }

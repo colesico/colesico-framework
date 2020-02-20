@@ -32,7 +32,7 @@ public final class SubjectQualifiers implements Iterable<String> {
      */
     private final String[] values;
 
-    public static SubjectQualifiers fromMap(Map<String, String> qualifiersMap, QualifierStandard standard) {
+    public static SubjectQualifiers fromMap(Map<String, String> qualifiersMap, QualifiersDefinition standard) {
         // Check empty
         if (qualifiersMap == null || qualifiersMap.isEmpty()) {
             throw new RuntimeException("Qualifiers is empty");
@@ -67,7 +67,7 @@ public final class SubjectQualifiers implements Iterable<String> {
      * @param standard
      * @return
      */
-    public static SubjectQualifiers fromSpec(String qualifiersSpec, QualifierStandard standard) {
+    public static SubjectQualifiers fromSpec(String qualifiersSpec, QualifiersDefinition standard) {
         return fromMap(parseQualifiersSpec(qualifiersSpec), standard);
     }
 

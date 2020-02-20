@@ -49,7 +49,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
         }
 
         //================= Check composition or parameter
-        AnnotationElement<Compound> compounddAnn = var.getAnnotation(Compound.class);
+        AnnotationToolbox<Compound> compounddAnn = var.getAnnotation(Compound.class);
         if (compounddAnn == null) {
             TeleParamElement teleParam = new TeleParamElement(var);
             teleMethod.linkVariable(teleParam);
@@ -95,7 +95,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
 
 
         // Process fields
-        AnnotationElement<TeleView> teleViewAnn = varStack.getFirst().getAnnotation(TeleView.class);
+        AnnotationToolbox<TeleView> teleViewAnn = varStack.getFirst().getAnnotation(TeleView.class);
         Set<String> masterViews = getTeleViewKeys(teleViewAnn);
         for (FieldElement field : fields) {
             // Check field by "TeleView"
@@ -144,7 +144,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
             if (proxyMethod.isLocal()) {
                 continue;
             }
-            AnnotationElement<TeleMethodName> teleMethodNameAnn = proxyMethod.getOriginMethod().getAnnotation(TeleMethodName.class);
+            AnnotationToolbox<TeleMethodName> teleMethodNameAnn = proxyMethod.getOriginMethod().getAnnotation(TeleMethodName.class);
             final String teleMethodName;
             if (teleMethodNameAnn != null) {
                 teleMethodName = teleMethodNameAnn.unwrap().value();
@@ -165,7 +165,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
         }
     }
 
-    private Set<String> getTeleViewKeys(AnnotationElement<TeleView> teleViewAnnotation) {
+    private Set<String> getTeleViewKeys(AnnotationToolbox<TeleView> teleViewAnnotation) {
         Set<String> result = new HashSet<>();
         if (teleViewAnnotation == null) {
             return result;

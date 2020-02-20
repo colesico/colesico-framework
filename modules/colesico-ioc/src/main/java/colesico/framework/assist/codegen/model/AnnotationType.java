@@ -22,26 +22,27 @@ import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AnnotationMirrorElement extends ParserElement {
+public class AnnotationType extends ParserType {
 
     protected final AnnotationMirror originAnnotationMirror;
 
-    public AnnotationMirrorElement(ProcessingEnvironment processingEnv, AnnotationMirror annotationMirror) {
+    public AnnotationType(ProcessingEnvironment processingEnv, AnnotationMirror annotationMirror) {
         super(processingEnv);
         this.originAnnotationMirror = annotationMirror;
     }
 
     @Override
-    public TypeElement unwrap() {
-        return (TypeElement) originAnnotationMirror.getAnnotationType().asElement();
+    public TypeMirror unwrap() {
+        return originAnnotationMirror.getAnnotationType();
     }
 
-    public DeclaredType getType() {
-        return originAnnotationMirror.getAnnotationType();
+    public AnnotationElement asElement() {
+        return new AnnotationElement(processingEnv, (TypeElement) originAnnotationMirror.getAnnotationType().asElement());
     }
 
     public AnnotationValue getValue(String fieldName) {

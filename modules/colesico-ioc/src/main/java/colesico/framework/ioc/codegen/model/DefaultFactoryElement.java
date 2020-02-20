@@ -16,7 +16,7 @@
 
 package colesico.framework.ioc.codegen.model;
 
-import colesico.framework.assist.codegen.model.AnnotationElement;
+import colesico.framework.assist.codegen.model.AnnotationToolbox;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.ioc.production.Produce;
@@ -29,7 +29,7 @@ import java.util.List;
 public class DefaultFactoryElement extends FactoryElement {
 
     private final MethodElement constructor;
-    private final AnnotationElement<Produce> produce;
+    private final AnnotationToolbox<Produce> produce;
 
     public DefaultFactoryElement(ClassType suppliedType,
                                  String factoryMethodBaseName,
@@ -42,7 +42,7 @@ public class DefaultFactoryElement extends FactoryElement {
                                  boolean notifyPostConstruct,
                                  List<MethodElement> postConstructListeners,
                                  MethodElement constructor,
-                                 AnnotationElement<Produce> produce
+                                 AnnotationToolbox<Produce> produce
     ) {
         super(suppliedType,
                 factoryMethodBaseName,
@@ -64,7 +64,7 @@ public class DefaultFactoryElement extends FactoryElement {
         return constructor;
     }
 
-    public AnnotationElement<Produce> getProduce() {
+    public AnnotationToolbox<Produce> getProduce() {
         return produce;
     }
 }

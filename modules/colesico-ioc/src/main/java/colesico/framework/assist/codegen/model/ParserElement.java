@@ -52,19 +52,19 @@ abstract public class ParserElement extends Toolbox {
     }
 
 
-    public <A extends Annotation> AnnotationElement<A> getAnnotation(Class<A> annClass) {
+    public <A extends Annotation> AnnotationToolbox<A> getAnnotation(Class<A> annClass) {
         A annotation = unwrap().getAnnotation(annClass);
         if (annotation == null) {
             return null;
         }
-        return new AnnotationElement<>(processingEnv, annotation);
+        return new AnnotationToolbox<>(processingEnv, annotation);
     }
 
-    public List<AnnotationMirrorElement> getAnnotationMirrors() {
+    public List<AnnotationType> getAnnotationTypes() {
         List<? extends AnnotationMirror> ams = unwrap().getAnnotationMirrors();
-        List<AnnotationMirrorElement> result = new ArrayList<>();
+        List<AnnotationType> result = new ArrayList<>();
         for (AnnotationMirror am : ams) {
-            result.add(new AnnotationMirrorElement(processingEnv, am));
+            result.add(new AnnotationType(processingEnv, am));
         }
         return result;
     }

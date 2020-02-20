@@ -32,11 +32,11 @@ public class LocalizingTool {
     private final Provider<Profile> profileProv;
 
     private final PathTrie<Localizer> pathTrie = new PathTrie<>("/");
-    private final QualifierStandard qualifierStandard;
+    private final QualifiersDefinition qualifiersDefinition;
 
     public LocalizingTool(Provider<Profile> profileProv, ProfileConfigPrototype config) {
         this.profileProv = profileProv;
-        this.qualifierStandard = config.getQualifierStandard();
+        this.qualifiersDefinition = config.getQualifiersDefinition();
     }
 
     /**
@@ -44,7 +44,7 @@ public class LocalizingTool {
      *
      * @param path
      * @param qualifiersSpec qualifier values set specification string in the format: qualifierName1=value1;qualifierName2=value2...
-     *                       Qualifier values order is unimportant, it will be ordered at parsing
+     *                       Qualifier values order is unimportant, it will be ordered at parsing time
      */
     public void addLocalization(String path, String... qualifiersSpec) {
         final PathTrie.Node<Localizer> node = pathTrie.add(path);
@@ -54,7 +54,7 @@ public class LocalizingTool {
             node.setValue(localizer);
         }
         for (String qualifiersSpecItem : qualifiersSpec) {
-            localizer.addLocalization(SubjectQualifiers.fromSpec(qualifiersSpecItem, qualifierStandard));
+            localizer.addLocalization(SubjectQualifiers.fromSpec(qualifiersSpecItem, qualifiersDefinition));
         }
     }
 

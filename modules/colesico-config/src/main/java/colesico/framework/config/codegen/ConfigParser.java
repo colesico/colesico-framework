@@ -18,7 +18,7 @@ package colesico.framework.config.codegen;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
-import colesico.framework.assist.codegen.model.AnnotationElement;
+import colesico.framework.assist.codegen.model.AnnotationToolbox;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
@@ -69,7 +69,7 @@ public class ConfigParser extends FrameworkAbstractParser {
         ConfigModel model;
         ClassElement target;
         if (configPrototype != null) {
-            AnnotationElement<ConfigPrototype> prototypeAnn = configPrototype.getAnnotation(ConfigPrototype.class);
+            AnnotationToolbox<ConfigPrototype> prototypeAnn = configPrototype.getAnnotation(ConfigPrototype.class);
             model = prototypeAnn.unwrap().model();
             TypeMirror targetMirror = prototypeAnn.getValueTypeMirror(ConfigPrototype::target);
             if (targetMirror.toString().equals(Object.class.getName())) {
@@ -82,7 +82,7 @@ public class ConfigParser extends FrameworkAbstractParser {
             model = ConfigModel.SINGLE;
         }
 
-        AnnotationElement<DefaultConfig> defaultAnn = configImpl.getAnnotation(DefaultConfig.class);
+        AnnotationToolbox<DefaultConfig> defaultAnn = configImpl.getAnnotation(DefaultConfig.class);
         boolean defaultMessage;
         if (defaultAnn != null) {
             if (!ConfigModel.MESSAGE.equals(model)) {
@@ -95,7 +95,7 @@ public class ConfigParser extends FrameworkAbstractParser {
         }
 
         // Classed
-        AnnotationElement<Classed> classedAnn = configImpl.getAnnotation(Classed.class);
+        AnnotationToolbox<Classed> classedAnn = configImpl.getAnnotation(Classed.class);
         TypeMirror classed;
         if (classedAnn != null) {
             classed = classedAnn.getValueTypeMirror(Classed::value);
@@ -104,18 +104,18 @@ public class ConfigParser extends FrameworkAbstractParser {
         }
 
         // Named
-        AnnotationElement<Named> namedAnn = configImpl.getAnnotation(Named.class);
+        AnnotationToolbox<Named> namedAnn = configImpl.getAnnotation(Named.class);
         String named = namedAnn == null ? null : namedAnn.unwrap().value();
 
         // Condition
-        AnnotationElement<Requires> reqAnn = configImpl.getAnnotation(Requires.class);
+        AnnotationToolbox<Requires> reqAnn = configImpl.getAnnotation(Requires.class);
         ClassType condition = null;
         if (reqAnn != null) {
             condition = new ClassType(getProcessingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(a -> a.value()));
         }
 
         // Substitution
-        AnnotationElement<Substitute> subsAnn = configImpl.getAnnotation(Substitute.class);
+        AnnotationToolbox<Substitute> subsAnn = configImpl.getAnnotation(Substitute.class);
         Substitution substitution = null;
         if (subsAnn!=null){
             substitution = subsAnn.unwrap().value();
@@ -124,7 +124,7 @@ public class ConfigParser extends FrameworkAbstractParser {
         ConfigElement configElement = new ConfigElement(configImpl, configPrototype, condition, substitution,model, target, defaultMessage, classed, named);
 
         // Config source
-        AnnotationElement<UseSource> useSourceAnn = configImpl.getAnnotation(UseSource.class);
+        AnnotationToolbox<UseSource> useSourceAnn = configImpl.getAnnotation(UseSource.class);
         ConfigSourceElement sourceElm = null;
         if (useSourceAnn != null) {
             TypeMirror driverType = useSourceAnn.getValueTypeMirror(UseSource::type);
@@ -140,7 +140,7 @@ public class ConfigParser extends FrameworkAbstractParser {
 
     private ConfigSourceElement parseSourceValues(ClassElement configImplementation, ConfigSourceElement confSourceElm) {
         for (FieldElement me : configImplementation.getFields()) {
-            AnnotationElement<FromSource> sourceValueAnn = me.getAnnotation(FromSource.class);
+            AnnotationToolbox<FromSource> sourceValueAnn = me.getAnnotation(FromSource.class);
             if (confSourceElm.isBindAll() || (sourceValueAnn != null)) {
                 confSourceElm.addSourceValue(new SourceValueElement(me));
             }

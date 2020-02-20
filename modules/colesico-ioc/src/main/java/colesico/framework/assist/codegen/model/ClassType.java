@@ -31,18 +31,17 @@ public class ClassType extends ParserType {
 
     public ClassType(ProcessingEnvironment processingEnv, DeclaredType classType) {
         super(processingEnv);
-        if (classType == null){
+        if (classType == null) {
             throw CodegenException.of().message("classType is null").build();
         }
         this.originDeclaredType = classType;
     }
 
-    public ClassType(ProcessingEnvironment processingEnv, TypeElement typeElement) {
-        super(processingEnv);
-        if (typeElement == null){
+    public static ClassType fromElement(ProcessingEnvironment processingEnv, TypeElement typeElement) {
+        if (typeElement == null) {
             throw CodegenException.of().message("typeElement is null").build();
         }
-        this.originDeclaredType = (DeclaredType) typeElement.asType();
+        return new ClassType(processingEnv, (DeclaredType) typeElement.asType());
     }
 
     @Override

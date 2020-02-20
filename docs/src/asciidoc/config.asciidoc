@@ -14,7 +14,7 @@ There are two configuration bean types:
 
 1. Simple configuration bean. This is just a pojo class annotated with @Config annotation. It can be used to the directly
    definition and supplying configuration values.
-2. Prototype-based based configuration bean. This type of beans  is an instance of a class that extends
+2. Prototype-based configuration bean. This type of beans  is an instance of a class that extends
    a configuration "prototype" class ("template"). This type of configuration is used for deferred configuration definition.
    For example a Service can define configuration prototype bean, and the Client can create configuration based on that prototype to
    provide some configurations to the Service.

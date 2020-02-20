@@ -16,7 +16,10 @@
 
 package colesico.framework.translation;
 
-public interface AdvancedDictionary {
+/**
+ * Translation dictionary API
+ */
+public interface TranslationDictionary {
 
     String TRANSLATE_METHOD = "translate";
     String GET_BUNDLE_METHOD = "getBundle";

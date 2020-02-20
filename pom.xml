@@ -23,7 +23,7 @@
     <groupId>net.colesico.framework</groupId>
     <artifactId>colesico-framework</artifactId>
     <packaging>pom</packaging>
-    <version>3.1.0</version>
+    <version>3.1.1</version>
     <name>Colesico Framework</name>
     <description>
         Lightweight application framework for the Java 11+
@@ -93,7 +93,7 @@
 
         <!-- DB -->
         <hikaricp.version>3.4.2</hikaricp.version>
-        <jdbi.version>3.12.0</jdbi.version>
+        <jdbi3.version>3.12.2</jdbi3.version>
         <h2database.version>1.4.200</h2database.version>
 
         <pebble.version>3.1.2</pebble.version>
@@ -203,7 +203,7 @@
         <profile>
             <id>doc</id>
             <modules>
-                <module>doc</module>
+                <module>docs</module>
             </modules>
         </profile>
         <profile>

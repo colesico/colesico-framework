@@ -17,7 +17,7 @@
 package colesico.framework.eventbus.codegen;
 
 import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.assist.codegen.model.AnnotationElement;
+import colesico.framework.assist.codegen.model.AnnotationToolbox;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.ParameterElement;
 import colesico.framework.eventbus.EventsListener;
@@ -57,7 +57,7 @@ public class EventBusModulator extends Modulator {
     public void onProxyMethod(ProxyMethodElement proxyMethod) {
         super.onProxyMethod(proxyMethod);
 
-        AnnotationElement<OnEvent> handlerAnn = proxyMethod.getOriginMethod().getAnnotation(OnEvent.class);
+        AnnotationToolbox<OnEvent> handlerAnn = proxyMethod.getOriginMethod().getAnnotation(OnEvent.class);
         if (handlerAnn == null) {
             return;
         }

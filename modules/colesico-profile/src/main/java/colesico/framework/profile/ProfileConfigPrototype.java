@@ -22,9 +22,6 @@ import colesico.framework.config.ConfigPrototype;
 @ConfigPrototype(model = ConfigModel.SINGLE)
 abstract public class ProfileConfigPrototype {
 
-    /**
-     * Return all possible qualifier names in standard order
-     */
-    abstract public QualifierStandard getQualifierStandard();
+    abstract public QualifiersDefinition getQualifiersDefinition();
 
 }

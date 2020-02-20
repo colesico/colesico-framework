@@ -19,7 +19,7 @@ package colesico.framework.jdbirec.codegen.parser;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
-import colesico.framework.assist.codegen.model.AnnotationElement;
+import colesico.framework.assist.codegen.model.AnnotationToolbox;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
@@ -141,11 +141,11 @@ public class RecordParser extends FrameworkAbstractParser {
     private List<Column> getColumns(FieldElement field) {
         final List<Column> columns = new ArrayList<>();
 
-        AnnotationElement<Column> columnAnnElm = field.getAnnotation(Column.class);
+        AnnotationToolbox<Column> columnAnnElm = field.getAnnotation(Column.class);
         if (columnAnnElm != null) {
             columns.add(columnAnnElm.unwrap());
         } else {
-            AnnotationElement<Columns> columnsAnnElm = field.getAnnotation(Columns.class);
+            AnnotationToolbox<Columns> columnsAnnElm = field.getAnnotation(Columns.class);
             if (columnsAnnElm != null) {
                 columns.addAll(Arrays.asList(columnsAnnElm.unwrap().value()));
             }
@@ -162,7 +162,7 @@ public class RecordParser extends FrameworkAbstractParser {
                 continue;
             }
 
-            AnnotationElement<Column> columnAnnElm = new AnnotationElement<>(processingEnv, columnAnn);
+            AnnotationToolbox<Column> columnAnnElm = new AnnotationToolbox<>(processingEnv, columnAnn);
 
             String name;
             if (columnAnnElm.unwrap().name().equals("@field")) {
@@ -227,11 +227,11 @@ public class RecordParser extends FrameworkAbstractParser {
     private List<Composition> getCompositions(FieldElement field) {
         final List<Composition> compositions = new ArrayList<>();
 
-        AnnotationElement<Composition> compositionAnnElm = field.getAnnotation(Composition.class);
+        AnnotationToolbox<Composition> compositionAnnElm = field.getAnnotation(Composition.class);
         if (compositionAnnElm != null) {
             compositions.add(compositionAnnElm.unwrap());
         } else {
-            AnnotationElement<Compositions> compositionsAnnElm = field.getAnnotation(Compositions.class);
+            AnnotationToolbox<Compositions> compositionsAnnElm = field.getAnnotation(Compositions.class);
             if (compositionsAnnElm != null) {
                 compositions.addAll(Arrays.asList(compositionsAnnElm.unwrap().value()));
             }
@@ -254,7 +254,7 @@ public class RecordParser extends FrameworkAbstractParser {
             final List<Composition> compositions = getCompositions(field);
             for (Composition compositionAnn : compositions) {
 
-                AnnotationElement<Composition> compositionAnnElm = new AnnotationElement<>(processingEnv, compositionAnn);
+                AnnotationToolbox<Composition> compositionAnnElm = new AnnotationToolbox<>(processingEnv, compositionAnn);
 
                 // Check view
                 if (!isInView(compositionElm.getParentRecord().getView(), compositionAnnElm.unwrap().views())) {
@@ -288,7 +288,7 @@ public class RecordParser extends FrameworkAbstractParser {
     protected RecordElement parseRecord(ClassElement typeElement, String view) {
         recordElement = new RecordElement(typeElement, view);
 
-        AnnotationElement<Record> annElm = typeElement.getAnnotation(Record.class);
+        AnnotationToolbox<Record> annElm = typeElement.getAnnotation(Record.class);
         recordElement.setTableName(annElm.unwrap().table());
         TypeMirror extend = annElm.getValueTypeMirror(Record::extend);
         recordElement.setExtend(new ClassType(processingEnv, (DeclaredType) extend));
@@ -299,7 +299,7 @@ public class RecordParser extends FrameworkAbstractParser {
 
     public ViewSetElement parse(ClassElement typeElement) {
         logger.debug("Parse JDBI record: " + typeElement);
-        AnnotationElement<Record> annElm = typeElement.getAnnotation(Record.class);
+        AnnotationToolbox<Record> annElm = typeElement.getAnnotation(Record.class);
         String[] views = annElm.unwrap().views();
         checkViewNames(views, typeElement.unwrap());
 

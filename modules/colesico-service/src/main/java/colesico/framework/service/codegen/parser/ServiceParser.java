@@ -29,6 +29,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
 import javax.tools.Diagnostic;
 import java.util.List;
 
@@ -45,16 +46,18 @@ public class ServiceParser extends FrameworkAbstractParser {
     }
 
     protected ClassType getServiceScope(ClassElement serviceElement) {
-        List<AnnotationMirrorElement> annMirorElements = serviceElement.getAnnotationMirrors();
-        TypeElement scopeType = null;
-        for (AnnotationMirrorElement annMirrorElm : annMirorElements) {
-            TypeElement annTypeElm = annMirrorElm.unwrap();
-            CustomScope customScope = annTypeElm.getAnnotation(CustomScope.class);
+        List<AnnotationType> allAnnotations = serviceElement.getAnnotationTypes();
+        DeclaredType scopeType = null;
+        for (AnnotationType annotation : allAnnotations) {
+            AnnotationElement annotationElement = annotation.asElement();
+
+            // Check is annotation annotated with @CustomScope
+            AnnotationToolbox<CustomScope> customScope = annotationElement.getAnnotation(CustomScope.class);
             if (customScope != null) {
                 if (scopeType != null) {
                     throw CodegenException.of().message("Ambiguous scope declaration").element(serviceElement).build();
                 } else {
-                    scopeType = annTypeElm;
+                    scopeType = (DeclaredType) annotation.unwrap();
                 }
             }
         }
@@ -63,10 +66,10 @@ public class ServiceParser extends FrameworkAbstractParser {
 
 
     protected boolean isPlainMethod(MethodElement m, ClassElement classElement) {
-        AnnotationElement<PlainMethod> classPlainAnn = classElement.getAnnotation(PlainMethod.class);
-        AnnotationElement<ServiceMethod> classServAnn = classElement.getAnnotation(ServiceMethod.class);
-        AnnotationElement<PlainMethod> plainMethodAnn = m.getAnnotation(PlainMethod.class);
-        AnnotationElement<ServiceMethod> serviceMethodAnn = m.getAnnotation(ServiceMethod.class);
+        AnnotationToolbox<PlainMethod> classPlainAnn = classElement.getAnnotation(PlainMethod.class);
+        AnnotationToolbox<ServiceMethod> classServAnn = classElement.getAnnotation(ServiceMethod.class);
+        AnnotationToolbox<PlainMethod> plainMethodAnn = m.getAnnotation(PlainMethod.class);
+        AnnotationToolbox<ServiceMethod> serviceMethodAnn = m.getAnnotation(ServiceMethod.class);
 
         final boolean isFinal = m.unwrap().getModifiers().contains(Modifier.FINAL);
         final boolean isPublic = m.unwrap().getModifiers().contains(Modifier.PUBLIC);
@@ -99,16 +102,16 @@ public class ServiceParser extends FrameworkAbstractParser {
 
     protected void addProxyMethods(ServiceElement serviceElement) {
         ClassElement classElement = serviceElement.getOriginClass();
-        AnnotationElement<LocalMethod> classLocalAnn = classElement.getAnnotation(LocalMethod.class);
+        AnnotationToolbox<LocalMethod> classLocalAnn = classElement.getAnnotation(LocalMethod.class);
 
         List<MethodElement> methods = classElement.getMethods();
 
         for (MethodElement method : methods) {
             boolean isPlain = isPlainMethod(method, classElement);
 
-            AnnotationElement<LocalMethod> methodLocal = method.getAnnotation(LocalMethod.class);
+            AnnotationToolbox<LocalMethod> methodLocal = method.getAnnotation(LocalMethod.class);
             boolean isLocal = methodLocal != null || classLocalAnn != null
-                || !method.unwrap().getModifiers().contains(Modifier.PUBLIC);
+                    || !method.unwrap().getModifiers().contains(Modifier.PUBLIC);
 
             ProxyMethodElement proxyMethod = new ProxyMethodElement(method, isPlain, isLocal);
             serviceElement.addProxyMethod(proxyMethod);

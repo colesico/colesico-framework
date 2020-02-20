@@ -17,7 +17,7 @@
 package colesico.framework.profile.internal;
 
 import colesico.framework.profile.ProfileConfigPrototype;
-import colesico.framework.profile.QualifierStandard;
+import colesico.framework.profile.QualifiersDefinition;
 
 import javax.inject.Singleton;
 
@@ -25,11 +25,11 @@ import javax.inject.Singleton;
 public class ProfileConfigImpl extends ProfileConfigPrototype {
 
     // L - language ; C - country; V - variant
-    private static final QualifierStandard QUALIFIER_IDS = new QualifierStandard(new String[]{"L", "C", "V"});
+    private static final QualifiersDefinition QUALIFIERS_DEF = new QualifiersDefinition(new String[]{"L", "C", "V"});
 
     @Override
-    public QualifierStandard getQualifierStandard() {
-        return QUALIFIER_IDS;
+    public QualifiersDefinition getQualifiersDefinition() {
+        return QUALIFIERS_DEF;
     }
 
 }

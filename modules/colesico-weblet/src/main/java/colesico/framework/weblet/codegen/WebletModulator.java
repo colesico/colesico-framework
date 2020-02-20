@@ -17,7 +17,7 @@
 package colesico.framework.weblet.codegen;
 
 import colesico.framework.assist.CollectionUtils;
-import colesico.framework.assist.codegen.model.AnnotationElement;
+import colesico.framework.assist.codegen.model.AnnotationToolbox;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.model.TeleCompElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
@@ -84,7 +84,7 @@ public class WebletModulator extends RoutesModulator {
         TeleVarElement rootVar = teleParam;
         while (curVar != null) {
             String name;
-            AnnotationElement<ParamName> nameAnn = curVar.getOriginVariable().getAnnotation(ParamName.class);
+            AnnotationToolbox<ParamName> nameAnn = curVar.getOriginVariable().getAnnotation(ParamName.class);
             if (nameAnn != null) {
                 name = nameAnn.unwrap().value();
             } else if (curVar instanceof TeleCompElement) {
@@ -104,7 +104,7 @@ public class WebletModulator extends RoutesModulator {
         String paramName = StringUtils.join(paramNamesChain, "");
         String paramOrigin = Origin.DEFAULT.name();
 
-        AnnotationElement<ParamOrigin> originAnn = teleParam.getOriginVariable().getAnnotation(ParamOrigin.class);
+        AnnotationToolbox<ParamOrigin> originAnn = teleParam.getOriginVariable().getAnnotation(ParamOrigin.class);
         if (originAnn == null) {
             originAnn = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(ParamOrigin.class);
             if (originAnn == null) {
