@@ -28,6 +28,7 @@ import colesico.framework.webstatic.StaticContent;
 @Producer
 @Produce(StaticContentBuilderImpl.class)
 public class WebStaticProducer {
+
     @Unscoped
     public StaticContent.Builder getBuilder(StaticContentBuilderImpl impl) {
         return impl;

@@ -18,6 +18,7 @@ package colesico.framework.webstatic.internal;
 import colesico.framework.http.HttpContext;
 import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.ResourceKit;
+import colesico.framework.resource.ResourceNotFoundException;
 import colesico.framework.webstatic.MimeAssist;
 import colesico.framework.webstatic.StaticContent;
 import org.slf4j.Logger;
@@ -66,8 +67,10 @@ public class StaticContentImpl implements StaticContent {
                 os.write(buf, 0, c);
                 os.flush();
             }
-        } catch (Exception ex) {
-            throw new ResourceException("Read resource '" + resourceUri + "->" + resourcePath + "' error", ex);
+        } catch (ResourceNotFoundException rnfe){
+            log.warn("Static resource not found: "+resourcePath);
+        } catch (Exception e) {
+            throw new ResourceException("Read resource '" + resourceUri + "->" + resourcePath + "' error", e);
         }
     }
 

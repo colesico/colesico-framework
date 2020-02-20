@@ -27,7 +27,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public interface StaticContent {
 
-    String QUALIFICATION_MODE_PARAM = "qmod";
+    String L10N_MODE_PARAM = "l10n";
 
     void send(String resourceUri, ResourceKit.L10NMode mode);
 
@@ -46,7 +46,7 @@ public interface StaticContent {
                     send(resourceUri, ResourceKit.L10NMode.NONE);
                     break;
                 default:
-                    throw new RuntimeException("Unsupported qualification mode: " + l10nMode);
+                    throw new RuntimeException("Unsupported localization mode: " + l10nMode);
             }
         }
     }

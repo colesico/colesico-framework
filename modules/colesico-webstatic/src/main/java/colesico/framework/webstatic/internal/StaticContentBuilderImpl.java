@@ -31,7 +31,7 @@ import javax.inject.Provider;
 @Unscoped
 public class StaticContentBuilderImpl implements StaticContent.Builder {
 
-    protected Logger log = LoggerFactory.getLogger(StaticContent.Builder.class);
+    protected Logger log = LoggerFactory.getLogger(StaticContent.Builder.class.getCanonicalName());
     protected final Provider<HttpContext> httpContextProv;
     protected final ResourceKit resourceKit;
     protected String resourcesRoot;
@@ -46,11 +46,11 @@ public class StaticContentBuilderImpl implements StaticContent.Builder {
 
         if (injectionPoint != null) {
             String moduleName = injectionPoint.getTargetClass().getModule().getName();
-            if (moduleName!=null) {
+            if (moduleName != null) {
                 String contentRootPkg = moduleName.replace('.', '/') + "/" + DEFAULT_RESOURCES_DIR;
                 this.resourcesRoot = contentRootPkg;
             } else {
-                throw new RuntimeException("Unnamed module for injection point: "+injectionPoint);
+                throw new RuntimeException("Unnamed module for injection point: " + injectionPoint);
             }
         }
         log.debug("Initial content root: " + resourcesRoot);
