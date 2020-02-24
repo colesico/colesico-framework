@@ -93,7 +93,8 @@ public static void main(String[] args) {
         // Create IoC container instance, obtain http server and start it.
 
         IocBuilder
-          .forProduction()
+          .create()
+          .build()
           .instance(HttpServer.class)
           .start();
 
@@ -102,11 +103,8 @@ public static void main(String[] args) {
 // Alternative more verbose code
 public static void main(String[] args) {
 
-        // Build DI container instance optimized for production.
-        final Ioc ioc = IocBuilder.create();
-
-        // Or for development/tests purposes:
-        // final Ioc ioc = IocBuilder.forDevelopment();
+        // Build DI container instance
+        final Ioc ioc = IocBuilder.create().build();
 
         // Obtain http server from DI container
         HttpServer httpServer = ioc.instance(HttpServer.class);
