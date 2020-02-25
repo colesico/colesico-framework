@@ -39,9 +39,6 @@ Since colesico framework generates extra java code you also must to attach annot
     <artifactId>maven-compiler-plugin</artifactId>
     <version>${maven-compiler-plugin.version}</version>
     <configuration>
-        <source>${maven.compiler.source}</source>
-        <target>${maven.compiler.target}</target>
-        <encoding>${project.build.sourceEncoding}</encoding>
         <annotationProcessorPaths>
             <!-- Framework annotation processors -->
             <path>
