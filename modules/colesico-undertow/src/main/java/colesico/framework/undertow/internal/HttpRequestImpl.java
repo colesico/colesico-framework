@@ -219,12 +219,14 @@ public final class HttpRequestImpl implements HttpRequest {
     @Override
     public void dump(final Writer out) {
         try {
-            out.append(getRequestMethod().getName() + "  " + exchange.getRequestURI() + "\n");
-            out.append("scheme: " + getRequestScheme() + "\n");
+            out.append(getRequestMethod().getName() + " " + getRequestScheme() + "://"
+                    + exchange.getHostName()
+                    + ":" + exchange.getDestinationAddress().getPort()
+                    + exchange.getRequestURI()
+                    + "?"+exchange.getQueryString() + "\n");
             out.append("protocol: " + exchange.getProtocol() + "\n");
             out.append("remoteAddr: " + exchange.getSourceAddress() + "\n");
             out.append("remoteHost: " + exchange.getSourceAddress().getHostName() + "\n");
-            out.append("serverPort: " + exchange.getDestinationAddress().getPort() + "\n");
             out.append("isSecure:" + exchange.isSecure() + "\n");
             for (HeaderValues header : exchange.getRequestHeaders()) {
                 for (String value : header) {
