@@ -33,8 +33,6 @@ import java.util.Date;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 
-
-
 @Producer
 public class RestletReadersProducer {
 
@@ -53,6 +51,12 @@ public class RestletReadersProducer {
     @Singleton
     @Classed(Byte.class)
     public RestletTeleReader getByteReader(ByteReader impl) {
+        return new RestletReaderProxy(impl);
+    }
+
+    @Singleton
+    @Classed(Short.class)
+    public RestletTeleReader getShortReader(ShortReader impl) {
         return new RestletReaderProxy(impl);
     }
 

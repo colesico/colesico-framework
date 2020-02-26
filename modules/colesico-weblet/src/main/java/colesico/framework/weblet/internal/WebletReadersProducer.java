@@ -33,8 +33,6 @@ import java.util.Date;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 
-
-
 @Producer
 @Produce(BooleanReader.class)
 @Produce(StringReader.class)
@@ -97,7 +95,6 @@ public class WebletReadersProducer {
     public WebletTeleReader getOptionalIntReader(OptionalIntReader impl) {
         return impl;
     }
-
 
     @Singleton
     @Classed(Long.class)
