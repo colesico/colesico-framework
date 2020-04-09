@@ -19,13 +19,12 @@ package colesico.framework.rpc;
 import java.lang.annotation.*;
 
 /**
- * Remote procedure call for services interface definition
+ * Remote procedure call interface definition for services
+ *
  * @author Vladlen Larionov
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-@Inherited
 @Documented
 public @interface Remote {
-    String value();
 }

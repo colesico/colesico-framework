@@ -36,7 +36,6 @@ abstract public class RoutesModulator<D extends TeleDriver<R, W, I, P>, P extend
         extends TeleModulator<D, P, R, W, I, RoutegenContext, RoutingLigature, Router> {
 
     protected static final String ROUTES_MAPPER_CLASS_SUFFIX = "Routes";
-    protected static final String LIGATURE_VAR = "ligature";
 
     protected final Logger logger = LoggerFactory.getLogger(RoutesModulator.class);
 

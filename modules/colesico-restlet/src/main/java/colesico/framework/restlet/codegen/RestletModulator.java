@@ -18,11 +18,13 @@ package colesico.framework.restlet.codegen;
 
 
 import colesico.framework.assist.CollectionUtils;
+import colesico.framework.assist.codegen.model.AnnotationToolbox;
 import colesico.framework.restlet.Restlet;
 import colesico.framework.restlet.teleapi.RestletTIContext;
 import colesico.framework.restlet.teleapi.RestletDataPort;
 import colesico.framework.restlet.teleapi.RestletTeleDriver;
 import colesico.framework.router.codegen.RoutesModulator;
+import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleParamElement;
 import colesico.framework.weblet.teleapi.WebletTDRContext;
 import colesico.framework.weblet.teleapi.WebletTDWContext;
@@ -40,13 +42,14 @@ public class RestletModulator extends
         RoutesModulator<RestletTeleDriver, RestletDataPort, WebletTDRContext, WebletTDWContext, RestletTIContext> {
 
     @Override
-    protected Class<? extends Annotation> getTeleAnnotation() {
-        return Restlet.class;
+    protected String getTeleType() {
+        return Restlet.class.getSimpleName();
     }
 
     @Override
-    protected String getTeleType() {
-        return Restlet.class.getSimpleName();
+    protected boolean isTeleFacadeSupported(ServiceElement serviceElm) {
+        AnnotationToolbox teleAnn = serviceElm.getOriginClass().getAnnotation(Restlet.class);
+        return teleAnn != null;
     }
 
     @Override

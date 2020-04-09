@@ -14,33 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.rpc.teleapi;
+package colesico.framework.rpc.codegen.model;
 
-import colesico.framework.teleapi.TeleMethod;
+import colesico.framework.service.codegen.model.TeleMethodElement;
 
-import java.util.HashMap;
-import java.util.Map;
+public class RpcTeleMethodElement {
+    
+    private final TeleMethodElement teleMethod;
 
-public final class RpcLigature {
-    public static final String ADD_METHOD = "add";
-    private final String className;
-
-    private final Map<String, TeleMethod> methods = new HashMap<>();
-
-    public RpcLigature(String className) {
-        this.className = className;
+    public RpcTeleMethodElement(TeleMethodElement teleMethod) {
+        this.teleMethod = teleMethod;
     }
 
-    public String getClassName() {
-        return className;
+    public TeleMethodElement getTeleMethod() {
+        return teleMethod;
     }
-
-    public Map<String, TeleMethod> getMethods() {
-        return methods;
-    }
-
-    public void add(String name, TeleMethod methodRef) {
-        methods.put(name, methodRef);
-    }
-
 }

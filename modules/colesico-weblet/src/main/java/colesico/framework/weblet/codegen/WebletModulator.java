@@ -19,10 +19,7 @@ package colesico.framework.weblet.codegen;
 import colesico.framework.assist.CollectionUtils;
 import colesico.framework.assist.codegen.model.AnnotationToolbox;
 import colesico.framework.router.codegen.RoutesModulator;
-import colesico.framework.service.codegen.model.TeleCompElement;
-import colesico.framework.service.codegen.model.TeleMethodElement;
-import colesico.framework.service.codegen.model.TeleParamElement;
-import colesico.framework.service.codegen.model.TeleVarElement;
+import colesico.framework.service.codegen.model.*;
 import colesico.framework.weblet.Origin;
 import colesico.framework.weblet.ParamName;
 import colesico.framework.weblet.ParamOrigin;
@@ -45,13 +42,14 @@ public class WebletModulator extends
         RoutesModulator<WebletTeleDriver, WebletDataPort, WebletTDRContext, WebletTDWContext, WebletTIContext> {
 
     @Override
-    protected Class<? extends Annotation> getTeleAnnotation() {
-        return Weblet.class;
+    protected String getTeleType() {
+        return Weblet.class.getSimpleName();
     }
 
     @Override
-    protected String getTeleType() {
-        return Weblet.class.getSimpleName();
+    protected boolean isTeleFacadeSupported(ServiceElement serviceElm) {
+        AnnotationToolbox teleAnn = serviceElm.getOriginClass().getAnnotation(Weblet.class);
+        return teleAnn != null;
     }
 
     @Override

@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class ClassElement extends ParserElement {
 
@@ -167,6 +168,12 @@ public class ClassElement extends ParserElement {
             }
         }
         return result;
+    }
+
+    public List<ClassType> getInterfaces() {
+        List<DeclaredType> result = new ArrayList<>();
+        List<? extends TypeMirror> intList = originTypeElement.getInterfaces();
+        return intList.stream().map(tm -> new ClassType(processingEnv, (DeclaredType) tm)).collect(Collectors.toList());
     }
 
     public boolean isSameType(Class clazz) {

@@ -46,9 +46,11 @@ public abstract class TeleModulator<
         M extends TeleModulatorContext,
         L, Q> extends Modulator {
 
+    public static final String LIGATURE_VAR = "ligature";
+
     abstract protected String getTeleType();
 
-    abstract protected Class<? extends Annotation> getTeleAnnotation();
+    abstract protected boolean isTeleFacadeSupported(ServiceElement serviceElm);
 
     abstract protected Class<D> getTeleDriverClass();
 
@@ -67,9 +69,8 @@ public abstract class TeleModulator<
     @Override
     public void onAddTeleFacade(ServiceElement serviceElm) {
         super.onService(serviceElm);
-        AnnotationToolbox teleAnn = serviceElm.getOriginClass().getAnnotation(getTeleAnnotation());
 
-        if (teleAnn == null) {
+        if (!isTeleFacadeSupported(serviceElm)) {
             return;
         }
 

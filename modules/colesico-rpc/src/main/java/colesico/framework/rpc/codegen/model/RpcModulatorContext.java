@@ -16,12 +16,42 @@
 
 package colesico.framework.rpc.codegen.model;
 
+import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
 import colesico.framework.service.codegen.modulator.TeleModulatorContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RpcModulatorContext implements TeleModulatorContext {
+
+    private final ServiceElement serviceElement;
+
+    private final List<ClassType> originRpcInterfaces;
+
+    private List<RpcTeleMethodElement> teleMethods = new ArrayList<>();
+
+    public RpcModulatorContext(ServiceElement serviceElement, List<ClassType> originRpcInterfaces) {
+        this.serviceElement = serviceElement;
+        this.originRpcInterfaces = originRpcInterfaces;
+    }
+
     @Override
     public void registTeleMethod(TeleMethodElement teleMethodElement) {
+        RpcTeleMethodElement rpcTme = new RpcTeleMethodElement(teleMethodElement);
+        teleMethods.add(rpcTme);
+    }
 
+    public List<RpcTeleMethodElement> getTeleMethods() {
+        return teleMethods;
+    }
+
+    public ServiceElement getServiceElement() {
+        return serviceElement;
+    }
+
+    public List<ClassType> getOriginRpcInterfaces() {
+        return originRpcInterfaces;
     }
 }
