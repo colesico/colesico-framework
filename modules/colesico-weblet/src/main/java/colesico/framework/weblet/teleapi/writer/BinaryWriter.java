@@ -19,7 +19,7 @@ package colesico.framework.weblet.teleapi.writer;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.weblet.BinaryResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
-import colesico.framework.weblet.teleapi.WriterContext;
+import colesico.framework.weblet.teleapi.WebletTDWContext;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -40,7 +40,7 @@ public final class BinaryWriter implements WebletTeleWriter<BinaryResponse> {
     }
 
     @Override
-    public void write(BinaryResponse value, WriterContext wrContext) {
+    public void write(BinaryResponse value, WebletTDWContext wrContext) {
         ByteBuffer buffer = ByteBuffer.wrap(value.getContent());
         HttpResponse response = responseProv.get();
         //force download?

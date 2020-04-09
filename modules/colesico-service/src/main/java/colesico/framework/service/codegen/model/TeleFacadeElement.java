@@ -44,7 +44,8 @@ public final class TeleFacadeElement {
 
     private CodeBlock ligatureMethodBody;
 
-    private final IocQualifiers iocQualifiers;
+    // IoC Qualifier for  producer method
+    private final IocQualifier iocQualifier;
 
     private final Map<Class, Object> properties;
 
@@ -52,14 +53,14 @@ public final class TeleFacadeElement {
                              Class<? extends TeleDriver> teleDriverClass,
                              Class<? extends DataPort> dataPortClass,
                              Class<?> ligatureClass,
-                             IocQualifiers iocQualifiers) {
+                             IocQualifier iocQualifier) {
         this.teleType = checkTeleType(teleType);
         this.teleDriverClass = teleDriverClass;
         this.ligatureClass = ligatureClass;
         this.dataPortClass = dataPortClass;
         this.teleMethods = new Elements<>();
         this.properties = new HashMap();
-        this.iocQualifiers = iocQualifiers;
+        this.iocQualifier = iocQualifier;
     }
 
     private String checkTeleType(String teleType) {
@@ -146,11 +147,11 @@ public final class TeleFacadeElement {
         return ligatureClass;
     }
 
-    public IocQualifiers getIocQualifiers() {
-        return iocQualifiers;
+    public IocQualifier getIocQualifier() {
+        return iocQualifier;
     }
 
-    public static final class IocQualifiers {
+    public static final class IocQualifier {
         private final String named;
         private final String classed;
 
@@ -162,25 +163,25 @@ public final class TeleFacadeElement {
             return classed;
         }
 
-        private IocQualifiers(String named, String classed) {
+        private IocQualifier(String named, String classed) {
             this.named = named;
             this.classed = classed;
         }
 
-        public static IocQualifiers ofEmpty() {
-            return new IocQualifiers(null, null);
+        public static IocQualifier ofEmpty() {
+            return new IocQualifier(null, null);
         }
 
-        public static IocQualifiers ofNamed(String name) {
-            return new IocQualifiers(name, null);
+        public static IocQualifier ofNamed(String name) {
+            return new IocQualifier(name, null);
         }
 
-        public static IocQualifiers ofClassed(String classed) {
-            return new IocQualifiers(null, classed);
+        public static IocQualifier ofClassed(String classed) {
+            return new IocQualifier(null, classed);
         }
 
-        public static IocQualifiers ofClassed(Class classed) {
-            return new IocQualifiers(null, classed.getName());
+        public static IocQualifier ofClassed(Class classed) {
+            return new IocQualifier(null, classed.getName());
         }
     }
 

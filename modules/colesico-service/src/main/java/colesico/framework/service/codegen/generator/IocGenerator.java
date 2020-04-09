@@ -90,13 +90,13 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         mb.addAnnotation(Polyproduce.class);
 
         // Add IOC qualifiers
-        if (StringUtils.isNotEmpty(teleFacadeElement.getIocQualifiers().getNamed())) {
+        if (StringUtils.isNotEmpty(teleFacadeElement.getIocQualifier().getNamed())) {
             AnnotationSpec.Builder anb = AnnotationSpec.builder(Named.class);
-            anb.addMember("value", "$S", teleFacadeElement.getIocQualifiers().getNamed());
+            anb.addMember("value", "$S", teleFacadeElement.getIocQualifier().getNamed());
             mb.addAnnotation(anb.build());
-        } else if (teleFacadeElement.getIocQualifiers().getClassed() != null) {
+        } else if (teleFacadeElement.getIocQualifier().getClassed() != null) {
             AnnotationSpec.Builder anb = AnnotationSpec.builder(Classed.class);
-            anb.addMember("value", "$T.class", ClassName.bestGuess(teleFacadeElement.getIocQualifiers().getClassed()));
+            anb.addMember("value", "$T.class", ClassName.bestGuess(teleFacadeElement.getIocQualifier().getClassed()));
             mb.addAnnotation(anb.build());
         }
 

@@ -14,11 +14,18 @@
  * limitations under the License.
  */
 
-package colesico.framework.weblet.teleapi;
+package colesico.framework.rpc;
+
+import java.lang.annotation.*;
 
 /**
+ * Remote procedure call for services interface definition
  * @author Vladlen Larionov
- * Weblet tele writer context stub
  */
-public class WriterContext {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+@Inherited
+@Documented
+public @interface Remote {
+    String value();
 }

@@ -19,7 +19,7 @@ package colesico.framework.weblet.teleapi.reader;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpFile;
 import colesico.framework.http.HttpRequest;
-import colesico.framework.weblet.teleapi.ReaderContext;
+import colesico.framework.weblet.teleapi.WebletTDRContext;
 import colesico.framework.weblet.teleapi.WebletTeleReader;
 
 import javax.inject.Provider;
@@ -36,7 +36,7 @@ public final class HttpFileReader implements WebletTeleReader<HttpFile> {
     }
 
     @Override
-    public HttpFile read(ReaderContext ctx) {
+    public HttpFile read(WebletTDRContext ctx) {
         HttpRequest request = httpContextProv.get().getRequest();
         return request.getPostFiles().get(ctx.getName());
     }

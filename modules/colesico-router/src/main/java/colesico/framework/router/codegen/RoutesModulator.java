@@ -15,15 +15,11 @@
  */
 package colesico.framework.router.codegen;
 
-import colesico.framework.assist.codegen.model.AnnotationToolbox;
-import colesico.framework.assist.codegen.model.VarElement;
 import colesico.framework.router.Router;
 import colesico.framework.router.RoutingLigature;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleFacadeElement;
-import colesico.framework.service.codegen.model.TeleMethodElement;
-import colesico.framework.service.codegen.model.TeleParamElement;
-import colesico.framework.service.codegen.modulator.Modulator;
+import colesico.framework.service.codegen.modulator.TeleModulator;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleDriver;
 import com.squareup.javapoet.ClassName;
@@ -32,52 +28,37 @@ import com.squareup.javapoet.TypeName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.annotation.Annotation;
-import java.util.Deque;
-
 
 /**
  * @author Vladlen Larionov
  */
-abstract public class RoutesModulator extends Modulator {
+abstract public class RoutesModulator<D extends TeleDriver<R, W, I, P>, P extends DataPort<R, W>, R, W, I>
+        extends TeleModulator<D, P, R, W, I, RoutegenContext, RoutingLigature, Router> {
 
     protected static final String ROUTES_MAPPER_CLASS_SUFFIX = "Routes";
     protected static final String LIGATURE_VAR = "ligature";
 
     protected final Logger logger = LoggerFactory.getLogger(RoutesModulator.class);
 
-    abstract protected Class<? extends Annotation> getTeleAnnotation();
-
-    abstract protected String getTeleType();
-
-    abstract protected Class<? extends TeleDriver> getTeleDriverClass();
-
-    abstract protected Class<? extends DataPort> getDataPortClass();
-
-    protected Class<?> getInvocationOptionsClass() {
-        return Object.class;
+    @Override
+    protected Class<RoutegenContext> getTeleModulatorContextClass() {
+        return RoutegenContext.class;
     }
 
-    protected Class<?> getLigatureClass() {
+    @Override
+    protected RoutegenContext createTeleModulatorContext(ServiceElement serviceElm) {
+        return new RoutegenContext(serviceElm) {
+        };
+    }
+
+    @Override
+    protected Class<RoutingLigature> getLigatureClass() {
         return RoutingLigature.class;
     }
 
-    protected CodeBlock generateInvokingContext(TeleMethodElement teleMethod) {
-        CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("null");
-        return cb.build();
-    }
-
-    protected CodeBlock generateWritingContext(TeleMethodElement teleMethod) {
-        CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("null");
-        return cb.build();
-    }
-
-    protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
-        CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("null");
-        return cb.build();
+    @Override
+    protected Class<Router> getQualifierClass() {
+        return Router.class;
     }
 
     protected CodeBlock generateLigatureMethodBody(TeleFacadeElement teleFacade) {
@@ -113,60 +94,4 @@ abstract public class RoutesModulator extends Modulator {
 
         return cb.build();
     }
-
-    @Override
-    public void onAddTeleFacade(ServiceElement serviceElm) {
-        super.onService(serviceElm);
-        AnnotationToolbox teleAnn = serviceElm.getOriginClass().getAnnotation(getTeleAnnotation());
-
-        if (teleAnn == null) {
-            return;
-        }
-
-        TeleFacadeElement teleFacade = new TeleFacadeElement(
-                getTeleType(),
-                getTeleDriverClass(),
-                getDataPortClass(),
-                getLigatureClass(),
-                TeleFacadeElement.IocQualifiers.ofClassed(Router.class));
-        serviceElm.addTeleFacade(teleFacade);
-
-        RoutegenContext routegenContext = new RoutegenContext(serviceElm) {
-        };
-        teleFacade.setProperty(RoutegenContext.class, routegenContext);
-    }
-
-    @Override
-    public void onAddTeleMethod(TeleMethodElement teleMethod) {
-        super.onAddTeleMethod(teleMethod);
-        TeleFacadeElement teleFacade = teleMethod.getParentTeleFacade();
-        if (!teleFacade.getTeleType().equals(getTeleType())) {
-            return;
-        }
-        RoutegenContext routegenContext = teleFacade.getProperty(RoutegenContext.class);
-        routegenContext.registTeleMethod(teleMethod);
-        teleMethod.setInvokingContext(generateInvokingContext(teleMethod));
-        teleMethod.setWritingContext(generateWritingContext(teleMethod));
-    }
-
-    @Override
-    public void onLinkTeleParam(TeleParamElement teleParam, Deque<VarElement> varStack) {
-        super.onLinkTeleParam(teleParam, varStack);
-        TeleMethodElement teleMethod = teleParam.getParentTeleMethod();
-        TeleFacadeElement teleFacade = teleMethod.getParentTeleFacade();
-        if (!teleFacade.getTeleType().equals(getTeleType())) {
-            return;
-        }
-        teleParam.setReadingContext(generateReadingContext(teleParam));
-    }
-
-    @Override
-    public void onTeleFacadeParsed(TeleFacadeElement teleFacade) {
-        super.onTeleFacadeParsed(teleFacade);
-        if (!teleFacade.getTeleType().equals(getTeleType())) {
-            return;
-        }
-        teleFacade.setLigatureMethodBody(generateLigatureMethodBody(teleFacade));
-    }
-
 }

@@ -23,7 +23,7 @@
     <groupId>net.colesico.framework</groupId>
     <artifactId>colesico-framework</artifactId>
     <packaging>pom</packaging>
-    <version>3.1.3</version>
+    <version>3.2.0</version>
     <name>Colesico Framework</name>
     <description>
         Lightweight application framework for the Java 11+
@@ -71,19 +71,19 @@
 
         <!-- Maven plugins -->
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
+        <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
         <asciidoctor-maven-plugin.version>1.6.0</asciidoctor-maven-plugin.version>
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
         <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
-        <spotbugs-maven-plugin.version>3.1.12.2</spotbugs-maven-plugin.version>
+        <spotbugs-maven-plugin.version>4.0.0</spotbugs-maven-plugin.version>
 
         <!-- Other -->
-        <commons-lang3.version>3.9</commons-lang3.version>
+        <commons-lang3.version>3.10</commons-lang3.version>
         <commons-io.version>2.6</commons-io.version>
 
         <!-- Logging -->
@@ -101,7 +101,7 @@
 
         <cache2k.version>1.2.4.Final</cache2k.version>
         <javapoet.version>1.12.1</javapoet.version>
-        <undertow.version>2.0.29.Final</undertow.version>
+        <undertow.version>2.0.30.Final</undertow.version>
 
         <!-- Tests -->
         <org-testng.version>7.1.0</org-testng.version>
@@ -110,7 +110,7 @@
         <auto-service.version>1.0-rc6</auto-service.version>
 
         <!-- Code analyze -->
-        <spotbugs.version>4.0.0-RC1</spotbugs.version>
+        <spotbugs.version>4.0.1</spotbugs.version>
     </properties>
 
     <modules>
@@ -131,12 +131,14 @@
                 <module>modules/colesico-resource</module>
                 <module>modules/colesico-teleapi</module>
                 <module>modules/colesico-service</module>
+                <module>modules/colesico-security</module>
                 <module>modules/colesico-profile</module>
                 <module>modules/colesico-translation</module>
-                <module>modules/colesico-security</module>
+                <module>modules/colesico-rpc</module>
                 <module>modules/colesico-validation</module>
                 <module>modules/colesico-eventbus</module>
                 <module>modules/colesico-asyncjob</module>
+              
 
                 <!-- Logging -->
                 <module>modules/colesico-slf4j</module>

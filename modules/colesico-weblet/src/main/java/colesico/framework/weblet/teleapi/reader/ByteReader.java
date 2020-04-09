@@ -20,7 +20,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.weblet.t9n.WebletMessages;
-import colesico.framework.weblet.teleapi.ReaderContext;
+import colesico.framework.weblet.teleapi.WebletTDRContext;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -41,7 +41,7 @@ public final class ByteReader extends AbstractReader<Byte> {
     }
 
     @Override
-    public Byte read(ReaderContext ctx) {
+    public Byte read(WebletTDRContext ctx) {
         try {
             String val = ctx.getString(getRouterContext(), getHttpRequest());
             if (StringUtils.isEmpty(val)) {

@@ -28,8 +28,8 @@ import colesico.framework.restlet.teleapi.RestletTeleReader;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 import colesico.framework.teleapi.TeleReader;
 import colesico.framework.teleapi.TeleWriter;
-import colesico.framework.weblet.teleapi.ReaderContext;
-import colesico.framework.weblet.teleapi.WriterContext;
+import colesico.framework.weblet.teleapi.WebletTDRContext;
+import colesico.framework.weblet.teleapi.WebletTDWContext;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -61,12 +61,12 @@ public class RestletDataPortImpl implements RestletDataPort {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <V> V read(Type valueType, ReaderContext context) {
+    public <V> V read(Type valueType, WebletTDRContext context) {
         // Try to get accurate reader
         final Supplier<RestletTeleReader> supplier
                 = ioc.supplierOrNull(new ClassedKey<>(RestletTeleReader.class.getCanonicalName(), typeToClassName(valueType)));
         if (supplier != null) {
-            final TeleReader<V, ReaderContext> reader = supplier.get(null);
+            final TeleReader<V, WebletTDRContext> reader = supplier.get(null);
             return reader.read(context);
         }
 
@@ -80,11 +80,11 @@ public class RestletDataPortImpl implements RestletDataPort {
     }
 
     @Override
-    public <V> void write(Type valueType, V value, WriterContext context) {
+    public <V> void write(Type valueType, V value, WebletTDWContext context) {
         final Supplier<RestletTeleWriter> supplier
                 = ioc.supplierOrNull(new ClassedKey<>(RestletTeleWriter.class.getCanonicalName(), typeToClassName(valueType)));
         if (supplier != null) {
-            final TeleWriter<V, WriterContext> writer = supplier.get(null);
+            final TeleWriter<V, WebletTDWContext> writer = supplier.get(null);
             writer.write(value, context);
             return;
         }

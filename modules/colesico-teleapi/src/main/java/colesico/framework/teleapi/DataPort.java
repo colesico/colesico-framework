@@ -45,7 +45,7 @@ public interface DataPort<R, W> {
      * Read value from remote request.
      *
      * @param valueType
-     * @param context
+     * @param context data reader context
      * @param <V>
      * @return
      */
@@ -56,7 +56,7 @@ public interface DataPort<R, W> {
      *
      * @param valueType
      * @param value
-     * @param context
+     * @param context data writer context
      * @param <V>
      */
     <V> void write(Type valueType, V value, W context);

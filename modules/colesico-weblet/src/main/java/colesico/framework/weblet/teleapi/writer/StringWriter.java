@@ -19,7 +19,7 @@ package colesico.framework.weblet.teleapi.writer;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.weblet.StringResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
-import colesico.framework.weblet.teleapi.WriterContext;
+import colesico.framework.weblet.teleapi.WebletTDWContext;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -38,7 +38,7 @@ public final class StringWriter implements WebletTeleWriter<StringResponse> {
     }
 
     @Override
-    public void write(StringResponse value, WriterContext wrContext) {
+    public void write(StringResponse value, WebletTDWContext wrContext) {
         responseProv.get().sendText(value.getContent(), value.getContentType(), 200);
     }
 }

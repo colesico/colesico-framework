@@ -20,7 +20,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.weblet.t9n.WebletMessages;
-import colesico.framework.weblet.teleapi.ReaderContext;
+import colesico.framework.weblet.teleapi.WebletTDRContext;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -41,7 +41,7 @@ public final class LongReader extends AbstractReader<Long> {
     }
 
     @Override
-    public Long read(ReaderContext ctx) {
+    public Long read(WebletTDRContext ctx) {
         try {
             String val = ctx.getString(getRouterContext(), getHttpRequest());
             if (StringUtils.isEmpty(val)) {

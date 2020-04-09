@@ -23,16 +23,11 @@ import colesico.framework.service.codegen.model.TeleCompElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
 import colesico.framework.service.codegen.model.TeleParamElement;
 import colesico.framework.service.codegen.model.TeleVarElement;
-import colesico.framework.teleapi.DataPort;
-import colesico.framework.teleapi.TeleDriver;
 import colesico.framework.weblet.Origin;
 import colesico.framework.weblet.ParamName;
 import colesico.framework.weblet.ParamOrigin;
 import colesico.framework.weblet.Weblet;
-import colesico.framework.weblet.teleapi.OriginFacade;
-import colesico.framework.weblet.teleapi.ReaderContext;
-import colesico.framework.weblet.teleapi.WebletDataPort;
-import colesico.framework.weblet.teleapi.WebletTeleDriver;
+import colesico.framework.weblet.teleapi.*;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import org.apache.commons.lang3.StringUtils;
@@ -46,7 +41,8 @@ import java.util.Set;
 /**
  * @author Vladlen Larionov
  */
-public class WebletModulator extends RoutesModulator {
+public class WebletModulator extends
+        RoutesModulator<WebletTeleDriver, WebletDataPort, WebletTDRContext, WebletTDWContext, WebletTIContext> {
 
     @Override
     protected Class<? extends Annotation> getTeleAnnotation() {
@@ -59,12 +55,12 @@ public class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected Class<? extends TeleDriver> getTeleDriverClass() {
+    protected Class<WebletTeleDriver> getTeleDriverClass() {
         return WebletTeleDriver.class;
     }
 
     @Override
-    protected Class<? extends DataPort> getDataPortClass() {
+    protected Class<WebletDataPort> getDataPortClass() {
         return WebletDataPort.class;
     }
 
@@ -75,6 +71,10 @@ public class WebletModulator extends RoutesModulator {
 
     @Override
     protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
+        return generateReadingContextImpl(teleParam);
+    }
+
+    public static CodeBlock generateReadingContextImpl(TeleParamElement teleParam) {
         TeleMethodElement teleMethod = teleParam.getParentTeleMethod();
         CodeBlock.Builder cb = CodeBlock.builder();
 
@@ -116,7 +116,7 @@ public class WebletModulator extends RoutesModulator {
             paramOrigin = originAnn.unwrap().value().name();
         }
 
-        cb.add("new $T(", ClassName.get(ReaderContext.class));
+        cb.add("new $T(", ClassName.get(WebletTDRContext.class));
         cb.add("$S,$T.$N", paramName, ClassName.get(OriginFacade.class), paramOrigin);
         cb.add(")");
         return cb.build();

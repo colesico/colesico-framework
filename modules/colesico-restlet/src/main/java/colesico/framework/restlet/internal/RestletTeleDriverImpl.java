@@ -72,7 +72,7 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
     }
 
     @Override
-    public <S> void invoke(S service, Binder<S, RestletDataPort> binder, RTIContext invCtx) {
+    public <S> void invoke(S service, Binder<S, RestletDataPort> binder, RestletTIContext invCtx) {
         // Set data port to be accessible
         threadScope.put(DataPort.SCOPE_KEY, dataPort);
         // Retrieve http context
@@ -104,7 +104,7 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
     }
 
 
-    protected <S> void invokeImpl(S service, Binder binder, RTIContext invCtx, final HttpContext httpCtx) {
+    protected <S> void invokeImpl(S service, Binder binder, RestletTIContext invCtx, final HttpContext httpCtx) {
         HttpRequest httpRequest = httpCtx.getRequest();
         try {
             // Request listener notification

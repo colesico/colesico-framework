@@ -20,13 +20,14 @@ import colesico.framework.http.HttpRequest;
 import colesico.framework.router.RouterContext;
 
 /**
+ * Weblet tele-data reading context
  * @author Vladlen Larionov
  */
-public class ReaderContext {
+public class WebletTDRContext {
     private final String name;
     private final OriginFacade origin;
 
-    public ReaderContext(String name, OriginFacade origin) {
+    public WebletTDRContext(String name, OriginFacade origin) {
         this.name = name;
         this.origin = origin;
     }

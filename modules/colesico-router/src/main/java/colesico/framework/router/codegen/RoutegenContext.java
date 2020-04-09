@@ -27,6 +27,7 @@ import colesico.framework.router.Route;
 import colesico.framework.router.assist.RouteTrie;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
+import colesico.framework.service.codegen.modulator.TeleModulatorContext;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.element.PackageElement;
@@ -34,7 +35,7 @@ import javax.lang.model.element.PackageElement;
 /**
  * @author Vladlen Larionov
  */
-abstract public class RoutegenContext {
+abstract public class RoutegenContext implements TeleModulatorContext {
 
     protected static final String INDEX_SERVICE_PREFIX = "Index";
     protected static final String INDEX_METHOD_NAME = "index";
@@ -48,6 +49,7 @@ abstract public class RoutegenContext {
         this.serviceRoute = buildServiceRoute(service);
     }
 
+    @Override
     public final void registTeleMethod(TeleMethodElement teleMethod) {
         String teleMethodName = teleMethod.getName();
         final String route = buildMethodRoute(teleMethod);
@@ -55,8 +57,8 @@ abstract public class RoutegenContext {
         RoutedTeleMethodElement rtme = teleMethods.find(rte -> rte.getRoute().equals(route));
         if (null != rtme) {
             throw CodegenException.of()
-                .message("Duplicate router path: " + route + "->" + teleMethodName + "(...). Route already binded to " + rtme.getTeleMethod().getProxyMethod().getName() + "(...)")
-                .element(teleMethod.getProxyMethod().getOriginMethod()).build();
+                    .message("Duplicate router path: " + route + "->" + teleMethodName + "(...). Route already binded to " + rtme.getTeleMethod().getProxyMethod().getName() + "(...)")
+                    .element(teleMethod.getProxyMethod().getOriginMethod()).build();
         }
         RoutedTeleMethodElement routedTeleMethodElement = new RoutedTeleMethodElement(teleMethod, route);
         teleMethods.add(routedTeleMethodElement);
@@ -139,9 +141,9 @@ abstract public class RoutegenContext {
         String route = StringUtils.trim(routeAnn.value());
         if (!route.startsWith(RouteTrie.SEGMENT_DELEMITER)) {
             throw CodegenException.of()
-                .message("Wrong package route: " + route + ". Must starts with '" + RouteTrie.SEGMENT_DELEMITER + "'")
-                .element(pkg)
-                .build();
+                    .message("Wrong package route: " + route + ". Must starts with '" + RouteTrie.SEGMENT_DELEMITER + "'")
+                    .element(pkg)
+                    .build();
         }
         return route;
     }

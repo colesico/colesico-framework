@@ -18,7 +18,7 @@ package colesico.framework.weblet.teleapi.writer;
 
 import colesico.framework.weblet.VariedResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
-import colesico.framework.weblet.teleapi.WriterContext;
+import colesico.framework.weblet.teleapi.WebletTDWContext;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,7 +43,7 @@ public final class VariedWriter implements WebletTeleWriter<VariedResponse> {
     }
 
     @Override
-    public void write(VariedResponse value, WriterContext wrContext) {
+    public void write(VariedResponse value, WebletTDWContext wrContext) {
         if (value.getNavigationResponse() != null) {
             navigationWriter.write(value.getNavigationResponse(), wrContext);
         } else if (value.getStringResponse() != null) {

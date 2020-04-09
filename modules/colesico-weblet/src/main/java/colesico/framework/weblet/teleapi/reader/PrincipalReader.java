@@ -23,7 +23,7 @@ import colesico.framework.security.Principal;
 import colesico.framework.security.assist.MACUtils;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 import colesico.framework.weblet.teleapi.PrincipalWebletConfigPrototype;
-import colesico.framework.weblet.teleapi.ReaderContext;
+import colesico.framework.weblet.teleapi.WebletTDRContext;
 import colesico.framework.weblet.teleapi.WebletTeleReader;
 import colesico.framework.weblet.teleapi.writer.PrincipalWriter;
 import org.apache.commons.lang3.StringUtils;
@@ -47,7 +47,7 @@ public class PrincipalReader implements WebletTeleReader<Principal> {
     }
 
     @Override
-    public Principal read(ReaderContext context) {
+    public Principal read(WebletTDRContext context) {
         HttpRequest request = httpContextProv.get().getRequest();
 
         // Retrieve principal from http header

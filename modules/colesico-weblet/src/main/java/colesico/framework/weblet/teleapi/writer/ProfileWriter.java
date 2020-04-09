@@ -23,7 +23,7 @@ import colesico.framework.profile.Profile;
 import colesico.framework.profile.teleapi.ProfileSerializer;
 import colesico.framework.weblet.teleapi.ProfileWebletConfigPrototype;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
-import colesico.framework.weblet.teleapi.WriterContext;
+import colesico.framework.weblet.teleapi.WebletTDWContext;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -47,7 +47,7 @@ public class ProfileWriter implements WebletTeleWriter<Profile> {
     }
 
     @Override
-    public final void write(Profile profile, WriterContext wrContext) {
+    public final void write(Profile profile, WebletTDWContext wrContext) {
         // Calc expiring
         Calendar expires = Calendar.getInstance();
         String profileValue;

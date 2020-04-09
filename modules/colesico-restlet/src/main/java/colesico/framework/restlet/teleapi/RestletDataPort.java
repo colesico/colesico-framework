@@ -18,10 +18,10 @@ package colesico.framework.restlet.teleapi;
 
 import colesico.framework.restlet.RestletErrorResponse;
 import colesico.framework.teleapi.DataPort;
-import colesico.framework.weblet.teleapi.ReaderContext;
-import colesico.framework.weblet.teleapi.WriterContext;
+import colesico.framework.weblet.teleapi.WebletTDRContext;
+import colesico.framework.weblet.teleapi.WebletTDWContext;
 
-public interface RestletDataPort extends DataPort<ReaderContext,WriterContext> {
+public interface RestletDataPort extends DataPort<WebletTDRContext, WebletTDWContext> {
     String RESPONSE_CONTENT_TYPE = "application/json; charset=utf-8";
     void sendError(  RestletErrorResponse response , int httpCode);
 }

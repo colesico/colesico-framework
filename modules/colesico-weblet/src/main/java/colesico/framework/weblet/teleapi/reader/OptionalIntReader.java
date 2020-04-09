@@ -20,7 +20,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.weblet.t9n.WebletMessages;
-import colesico.framework.weblet.teleapi.ReaderContext;
+import colesico.framework.weblet.teleapi.WebletTDRContext;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -43,7 +43,7 @@ public final class OptionalIntReader extends AbstractReader<OptionalInt> {
     }
 
     @Override
-    public OptionalInt read(ReaderContext ctx) {
+    public OptionalInt read(WebletTDRContext ctx) {
         try {
             String val = ctx.getString(this.getRouterContext(), this.getHttpRequest());
             if (StringUtils.isBlank(val)) {
