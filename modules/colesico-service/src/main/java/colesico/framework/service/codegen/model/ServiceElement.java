@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Represnts a Framework Automated Bean
+ * Represents a service proxy
  *
  * @author Vladlen Larionov
  */

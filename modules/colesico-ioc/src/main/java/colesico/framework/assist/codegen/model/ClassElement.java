@@ -25,6 +25,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import java.util.ArrayList;
@@ -144,9 +145,30 @@ public class ClassElement extends ParserElement {
         return result;
     }
 
+    /**
+     * Return all class methods  (whether inherited or declared directly)
+     */
     public List<MethodElement> getMethods() {
         List<MethodElement> result = new ArrayList<>();
         List<? extends Element> members = getElementUtils().getAllMembers(originTypeElement);
+        List<ExecutableElement> methods = ElementFilter.methodsIn(members);
+        for (ExecutableElement method : methods) {
+            TypeElement methodClass = (TypeElement) method.getEnclosingElement();
+            String methodClassName = methodClass.asType().toString();
+            if (methodClassName.equals(Object.class.getName())) {
+                continue;
+            }
+            result.add(new MethodElement(processingEnv, this, method));
+        }
+        return result;
+    }
+
+    /**
+     * Return class declared directly methods (not inherited)
+     */
+    public List<MethodElement> getDeclaredMethods() {
+        List<MethodElement> result = new ArrayList<>();
+        List<? extends Element> members = originTypeElement.getEnclosedElements();
         List<ExecutableElement> methods = ElementFilter.methodsIn(members);
         for (ExecutableElement method : methods) {
             TypeElement methodClass = (TypeElement) method.getEnclosingElement();
@@ -170,10 +192,32 @@ public class ClassElement extends ParserElement {
         return result;
     }
 
+    public ClassType getSuperClass() {
+        if (originTypeElement.getSuperclass().getKind() == TypeKind.NONE) {
+            return null;
+        }
+        return new ClassType(processingEnv, (DeclaredType) originTypeElement.getSuperclass());
+    }
+
+    /**
+     * Returns all direct and inherited interfaces
+     *
+     * @return
+     */
     public List<ClassType> getInterfaces() {
-        List<DeclaredType> result = new ArrayList<>();
-        List<? extends TypeMirror> intList = originTypeElement.getInterfaces();
-        return intList.stream().map(tm -> new ClassType(processingEnv, (DeclaredType) tm)).collect(Collectors.toList());
+        List<ClassType> result = new ArrayList<>();
+        ClassElement classElm = this;
+        while (null != classElm) {
+            List<? extends TypeMirror> declaredIfaces = classElm.unwrap().getInterfaces();
+            List<ClassType> ifacesClassTypes = declaredIfaces.stream()
+                    .map(tiface -> new ClassType(processingEnv, (DeclaredType) tiface))
+                    .collect(Collectors.toList());
+            result.addAll(ifacesClassTypes);
+            
+            ClassType superClass = classElm.getSuperClass();
+            classElm = superClass == null ? null : superClass.asClassElement();
+        }
+        return result;
     }
 
     public boolean isSameType(Class clazz) {

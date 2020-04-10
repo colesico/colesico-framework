@@ -27,7 +27,7 @@ public class TeleCompElement extends TeleVarElement {
 
     public TeleCompElement(VarElement originVariable) {
         super(originVariable);
-        variables = new ArrayList<>();
+        this.variables = new ArrayList<>();
     }
 
     public void addVariable(TeleVarElement var) {
@@ -37,4 +37,5 @@ public class TeleCompElement extends TeleVarElement {
     public List<TeleVarElement> getVariables() {
         return variables;
     }
+
 }

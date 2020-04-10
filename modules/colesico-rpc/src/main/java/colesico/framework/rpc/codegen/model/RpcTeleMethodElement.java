@@ -16,17 +16,29 @@
 
 package colesico.framework.rpc.codegen.model;
 
+import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
 
 public class RpcTeleMethodElement {
-    
+
     private final TeleMethodElement teleMethod;
 
-    public RpcTeleMethodElement(TeleMethodElement teleMethod) {
+    /**
+     * RPC interface method  (super method for this method)
+     */
+    private final MethodElement rpcInterfaceMethod;
+
+    public RpcTeleMethodElement(TeleMethodElement teleMethod, MethodElement rpcInterfaceMethod) {
         this.teleMethod = teleMethod;
+        this.rpcInterfaceMethod = rpcInterfaceMethod;
     }
 
     public TeleMethodElement getTeleMethod() {
         return teleMethod;
     }
+
+    public MethodElement getRpcInterfaceMethod() {
+        return rpcInterfaceMethod;
+    }
+
 }

@@ -16,7 +16,6 @@
 
 package colesico.framework.service.codegen.modulator;
 
-import colesico.framework.assist.codegen.model.AnnotationToolbox;
 import colesico.framework.assist.codegen.model.VarElement;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleFacadeElement;
@@ -26,7 +25,6 @@ import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleDriver;
 import com.squareup.javapoet.CodeBlock;
 
-import java.lang.annotation.Annotation;
 import java.util.Deque;
 
 /**
@@ -42,8 +40,7 @@ import java.util.Deque;
 public abstract class TeleModulator<
         D extends TeleDriver<R, W, I, P>,
         P extends DataPort<R, W>,
-        R, W, I,
-        M extends TeleModulatorContext,
+        R, W, I, M,
         L, Q> extends Modulator {
 
     public static final String LIGATURE_VAR = "ligature";
@@ -63,6 +60,8 @@ public abstract class TeleModulator<
     abstract protected Class<M> getTeleModulatorContextClass();
 
     abstract protected M createTeleModulatorContext(ServiceElement serviceElm);
+
+    abstract protected void addTeleMethod(TeleMethodElement teleMethodElement, M teleModulatorContext);
 
     abstract protected CodeBlock generateLigatureMethodBody(TeleFacadeElement teleFacade);
 
@@ -94,7 +93,7 @@ public abstract class TeleModulator<
             return;
         }
         M teleModulatorContext = teleFacade.getProperty(getTeleModulatorContextClass());
-        teleModulatorContext.registTeleMethod(teleMethod);
+        addTeleMethod(teleMethod, teleModulatorContext);
         teleMethod.setInvokingContext(generateInvokingContext(teleMethod));
         teleMethod.setWritingContext(generateWritingContext(teleMethod));
     }

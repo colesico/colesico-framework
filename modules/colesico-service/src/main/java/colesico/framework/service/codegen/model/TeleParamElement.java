@@ -21,11 +21,13 @@ import com.squareup.javapoet.CodeBlock;
 
 public final class TeleParamElement extends TeleVarElement {
 
-    // read model context
     private CodeBlock readingContext;
 
-    public TeleParamElement(VarElement originVariable) {
+    protected final Integer paramIndex;
+
+    public TeleParamElement(VarElement originVariable, Integer paramIndex) {
         super(originVariable);
+        this.paramIndex = paramIndex;
     }
 
     public CodeBlock getReadingContext() {
@@ -34,5 +36,9 @@ public final class TeleParamElement extends TeleVarElement {
 
     public void setReadingContext(CodeBlock readingContext) {
         this.readingContext = readingContext;
+    }
+
+    public Integer getParamIndex() {
+        return paramIndex;
     }
 }

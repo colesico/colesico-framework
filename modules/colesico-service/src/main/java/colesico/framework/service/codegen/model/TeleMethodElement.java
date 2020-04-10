@@ -19,7 +19,9 @@ package colesico.framework.service.codegen.model;
 import com.squareup.javapoet.CodeBlock;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Vladlen Larionov
@@ -27,11 +29,19 @@ import java.util.List;
 public final class TeleMethodElement {
 
     protected TeleFacadeElement parentTeleFacade;
-    // tele-method name
+    /**
+     * tele-method name
+     */
     private final String name;
-    // service method reference
+
+    /**
+     * Method of a service proxy. This can be used to access origin service method.
+     */
     private final ProxyMethodElement proxyMethod;
-    // tele-method parameters
+
+    /**
+     * Tele-method parameters
+     */
     private final List<TeleVarElement> parameters;
 
     //  writing result context
@@ -39,14 +49,26 @@ public final class TeleMethodElement {
     // invoke service method context
     private CodeBlock invokingContext;
 
+    private final Map<Class, Object> properties;
+
     public TeleMethodElement(String name, ProxyMethodElement proxyMethod) {
         this.name = name;
         this.proxyMethod = proxyMethod;
         this.parameters = new ArrayList<>();
+        this.properties = new HashMap<>();
+    }
+
+    public <C> C getProperty(Class<C> propertyClass) {
+        return (C) properties.get(propertyClass);
+    }
+
+    public void setProperty(Class<?> propertyClass, Object property) {
+        properties.put(propertyClass, property);
     }
 
     /**
      * Add parameter of tele-method
+     *
      * @param param
      */
     public void addParameter(TeleVarElement param) {
@@ -56,6 +78,7 @@ public final class TeleMethodElement {
 
     /**
      * Associate tele-var element with this tele-metod
+     *
      * @param var
      */
     public void linkVariable(TeleVarElement var) {

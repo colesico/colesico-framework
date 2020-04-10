@@ -27,7 +27,6 @@ import colesico.framework.router.Route;
 import colesico.framework.router.assist.RouteTrie;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
-import colesico.framework.service.codegen.modulator.TeleModulatorContext;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.element.PackageElement;
@@ -35,7 +34,7 @@ import javax.lang.model.element.PackageElement;
 /**
  * @author Vladlen Larionov
  */
-abstract public class RoutegenContext implements TeleModulatorContext {
+abstract public class RoutegenContext {
 
     protected static final String INDEX_SERVICE_PREFIX = "Index";
     protected static final String INDEX_METHOD_NAME = "index";
@@ -49,8 +48,7 @@ abstract public class RoutegenContext implements TeleModulatorContext {
         this.serviceRoute = buildServiceRoute(service);
     }
 
-    @Override
-    public final void registTeleMethod(TeleMethodElement teleMethod) {
+    public final void addTeleMethod(TeleMethodElement teleMethod) {
         String teleMethodName = teleMethod.getName();
         final String route = buildMethodRoute(teleMethod);
 

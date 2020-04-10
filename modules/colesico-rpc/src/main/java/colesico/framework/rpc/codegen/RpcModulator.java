@@ -16,6 +16,8 @@
 
 package colesico.framework.rpc.codegen;
 
+import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.model.AnnotationToolbox;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
@@ -23,19 +25,23 @@ import colesico.framework.rpc.Remote;
 import colesico.framework.rpc.codegen.model.RpcModulatorContext;
 import colesico.framework.rpc.codegen.model.RpcTeleMethodElement;
 import colesico.framework.rpc.teleapi.*;
-import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.service.codegen.model.TeleFacadeElement;
-import colesico.framework.service.codegen.model.TeleParamElement;
+import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.modulator.TeleModulator;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.TypeName;
+import org.apache.commons.lang3.StringUtils;
 
+import javax.lang.model.element.ExecutableElement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RpcModulator extends
         TeleModulator<RpcTeleDriver, RpcDataPort, RpcTDRContext, RpcTDWContext, RpcTIContext, RpcModulatorContext, RpcLigature, Remote> {
+
+    public static final String PARAM_NAME_PREFIX = "P_";
 
     @Override
     protected String getTeleType() {
@@ -80,16 +86,40 @@ public class RpcModulator extends
 
     @Override
     protected RpcModulatorContext createTeleModulatorContext(ServiceElement serviceElm) {
-        ClassElement serviceClass = serviceElm.getOriginClass();
-        List<ClassType> allInterfaces = serviceClass.getInterfaces();
-        List<ClassType> rpcInterfaces = new ArrayList<>();
-        for (ClassType iface : allInterfaces) {
-            if (null != iface.asElement().getAnnotation(Remote.class)) {
-                rpcInterfaces.add(iface);
+        List<ClassType> allInterfaces = serviceElm.getOriginClass().getInterfaces();
+        List<ClassType> rpcInterfaces = allInterfaces.stream()
+                .filter(iface -> iface.asElement().getAnnotation(Remote.class) != null)
+                .collect(Collectors.toList());
+
+        if (rpcInterfaces.size() != 1) {
+            throw CodegenException.of()
+                    .message("Invalid RPC interfaces number for service: " + serviceElm.getOriginClass().getName())
+                    .element(serviceElm.getOriginClass().unwrap()).build();
+        }
+        return new RpcModulatorContext(serviceElm, rpcInterfaces.get(0));
+    }
+
+    @Override
+    protected void addTeleMethod(TeleMethodElement teleMethodElement, RpcModulatorContext teleModulatorContext) {
+
+        List<MethodElement> rpcMethods = teleModulatorContext.getRpcInterface().asClassElement().getMethods();
+        for (MethodElement rpcMethodElm : rpcMethods) {
+            if (getProcessorContext().getElementUtils()
+                    .overrides(teleMethodElement.getProxyMethod().getOriginMethod().unwrap(),
+                            rpcMethodElm.unwrap(),
+                            teleMethodElement.getParentTeleFacade().getParentService().getOriginClass().unwrap()
+                    )) {
+                RpcTeleMethodElement rpcTme = new RpcTeleMethodElement(teleMethodElement, rpcMethodElm);
+                teleMethodElement.setProperty(RpcTeleMethodElement.class, rpcTme);
+                teleModulatorContext.addTeleMethod(rpcTme);
             }
         }
 
-        return new RpcModulatorContext(serviceElm, rpcInterfaces);
+        ExecutableElement method = teleMethodElement.getProxyMethod().getOriginMethod().unwrap();
+        throw CodegenException.of()
+                .message("RPC interface method is not defined for method: " + method.getSimpleName())
+                .element(method).build();
+
     }
 
     @Override
@@ -120,13 +150,20 @@ public class RpcModulator extends
 
     @Override
     protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
+        // Build param names chain
+        List<String> paramNamesChain = new ArrayList<>();
+        TeleVarElement curVar = teleParam;
+        while (curVar != null) {
+            String name = curVar.getOriginVariable().getName();
+            paramNamesChain.add(name);
+            curVar = curVar.getParentVariable();
+        }
+        Collections.reverse(paramNamesChain);
 
-        MethodElement serviceMethodElm = teleParam.getParentTeleMethod().getProxyMethod().getOriginMethod();
-        getProcessorContext().getTypeUtils().asMemberOf()
-        serviceMethodElm.unwrap().as
+        paramNamesChain.set(0, PARAM_NAME_PREFIX + teleParam.getParamIndex().toString());
 
-        //getProcessorContext().getElementUtils().getOrigin()
-        String paramName = teleParam.getOriginVariable().getName();
+        String paramName = StringUtils.join(paramNamesChain, ".");
+
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("new $T(", ClassName.get(RpcTDRContext.class));
         cb.add("$S", paramName);

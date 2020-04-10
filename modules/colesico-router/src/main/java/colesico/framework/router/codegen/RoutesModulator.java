@@ -19,6 +19,7 @@ import colesico.framework.router.Router;
 import colesico.framework.router.RoutingLigature;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleFacadeElement;
+import colesico.framework.service.codegen.model.TeleMethodElement;
 import colesico.framework.service.codegen.modulator.TeleModulator;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleDriver;
@@ -58,6 +59,11 @@ abstract public class RoutesModulator<D extends TeleDriver<R, W, I, P>, P extend
     @Override
     protected Class<Router> getQualifierClass() {
         return Router.class;
+    }
+
+    @Override
+    protected void addTeleMethod(TeleMethodElement teleMethodElement, RoutegenContext teleModulatorContext) {
+        teleModulatorContext.addTeleMethod(teleMethodElement);
     }
 
     protected CodeBlock generateLigatureMethodBody(TeleFacadeElement teleFacade) {
