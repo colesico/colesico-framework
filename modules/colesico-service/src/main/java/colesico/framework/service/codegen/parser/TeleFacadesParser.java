@@ -82,6 +82,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
         varStack.push(var); // push var back to stack head
 
         TeleCompElement teleComp = new TeleCompElement(var);
+        teleComp.setParentVariable(parentTeleVar);
         teleMethod.linkVariable(teleComp);
 
         // ============ Process fields

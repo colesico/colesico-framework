@@ -18,7 +18,8 @@ package colesico.framework.rpc.codegen;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.*;
-import colesico.framework.rpc.Remote;
+import colesico.framework.rpc.RpcApi;
+import colesico.framework.rpc.RpcName;
 import colesico.framework.rpc.codegen.model.RpcModulatorContext;
 import colesico.framework.rpc.codegen.model.RpcTeleMethodElement;
 import colesico.framework.rpc.teleapi.*;
@@ -26,7 +27,6 @@ import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.modulator.TeleModulator;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.TypeName;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RpcModulator extends
-        TeleModulator<RpcTeleDriver, RpcDataPort, RpcTDRContext, RpcTDWContext, RpcTIContext, RpcModulatorContext, RpcLigature, Remote> {
+        TeleModulator<RpcTeleDriver, RpcDataPort, RpcTDRContext, RpcTDWContext, RpcTIContext, RpcModulatorContext, RpcLigature, RpcApi> {
 
     public static final String PARAM_NAME_PREFIX = "arg";
 
@@ -46,14 +46,14 @@ public class RpcModulator extends
 
     @Override
     protected String getTeleType() {
-        return Remote.class.getSimpleName();
+        return RpcApi.class.getSimpleName();
     }
 
     @Override
     protected boolean isTeleFacadeSupported(ServiceElement serviceElm) {
         List<ClassType> allInterfaces = serviceElm.getOriginClass().getInterfaces();
         for (ClassType iface : allInterfaces) {
-            if (null != iface.asElement().getAnnotation(Remote.class)) {
+            if (null != iface.asElement().getAnnotation(RpcApi.class)) {
                 return true;
             }
         }
@@ -76,8 +76,8 @@ public class RpcModulator extends
     }
 
     @Override
-    protected Class<Remote> getQualifierClass() {
-        return Remote.class;
+    protected Class<RpcApi> getQualifierClass() {
+        return RpcApi.class;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class RpcModulator extends
         logger.debug("Create RpcModulator context for service " + serviceElm.getOriginClass().getName());
         List<ClassType> allInterfaces = serviceElm.getOriginClass().getInterfaces();
         List<ClassType> rpcInterfaces = allInterfaces.stream()
-                .filter(iface -> iface.asElement().getAnnotation(Remote.class) != null)
+                .filter(iface -> iface.asElement().getAnnotation(RpcApi.class) != null)
                 .collect(Collectors.toList());
 
         if (rpcInterfaces.size() != 1) {
@@ -120,9 +120,9 @@ public class RpcModulator extends
                 RpcTeleMethodElement rpcTme = new RpcTeleMethodElement(teleMethodElement, rpcMethodElm);
                 teleMethodElement.setProperty(RpcTeleMethodElement.class, rpcTme);
                 teleModulatorContext.addTeleMethod(rpcTme);
-                if (logger.isDebugEnabled()){
-                    StringBuilder sb = new StringBuilder(teleModulatorContext.getRpcInterface().unwrap().toString()+"( ");
-                    for (ParameterElement param: rpcMethodElm.getParameters()){
+                if (logger.isDebugEnabled()) {
+                    StringBuilder sb = new StringBuilder(teleModulatorContext.getRpcInterface().unwrap().toString() + "( ");
+                    for (ParameterElement param : rpcMethodElm.getParameters()) {
                         sb.append(param.getName()).append(", ");
                     }
                     sb.append(" )");
@@ -153,10 +153,15 @@ public class RpcModulator extends
         RpcModulatorContext rpcmContext = teleFacade.getProperty(RpcModulatorContext.class);
 
         for (RpcTeleMethodElement teleMethod : rpcmContext.getTeleMethods()) {
+
+            AnnotationToolbox<RpcName> ann = teleMethod.getRpcInterfaceMethod().getAnnotation(RpcName.class);
+
+            String rpcName = ann == null ? teleMethod.getTeleMethod().getName() : ann.unwrap().value();
+
             cb.addStatement("$N.$N($S,this::$N)",
                     LIGATURE_VAR,
                     RpcLigature.ADD_METHOD,
-                    teleMethod.getTeleMethod().getName(),
+                    rpcName,
                     teleMethod.getTeleMethod().getName()
             );
         }
@@ -171,14 +176,14 @@ public class RpcModulator extends
         List<String> paramNamesChain = new ArrayList<>();
         TeleVarElement curVar = teleParam;
         while (curVar != null) {
-            String name = curVar.getOriginVariable().getName();
+            String name = getRpcName(curVar);
             paramNamesChain.add(name);
             curVar = curVar.getParentVariable();
         }
         Collections.reverse(paramNamesChain);
 
         // Replace first param name with its index
-        paramNamesChain.set(0, PARAM_NAME_PREFIX + teleParam.getParamIndex().toString());
+        paramNamesChain.set(0, getRpcNameFromInterface(teleParam));
 
         String paramName = StringUtils.join(paramNamesChain, ".");
 
@@ -187,5 +192,29 @@ public class RpcModulator extends
         cb.add("$S", paramName);
         cb.add(")");
         return cb.build();
+    }
+
+    protected String getRpcName(TeleVarElement varElm) {
+        String rpcName = varElm.getOriginVariable().getName();
+        AnnotationToolbox<RpcName> ann = varElm.getOriginVariable().getAnnotation(RpcName.class);
+        if (ann != null) {
+            rpcName = ann.unwrap().value();
+        }
+        return rpcName;
+    }
+
+    protected String getRpcNameFromInterface(TeleParamElement teleParam) {
+
+        RpcTeleMethodElement rpcTme = teleParam.getParentTeleMethod().getProperty(RpcTeleMethodElement.class);
+        ParameterElement rpcParamElm = rpcTme.getRpcInterfaceMethod().getParameters()
+                .get(teleParam.getParamIndex());
+
+        AnnotationToolbox<RpcName> ann = rpcParamElm.getAnnotation(RpcName.class);
+        if (ann != null) {
+            return ann.unwrap().value();
+        }
+
+        return PARAM_NAME_PREFIX + teleParam.getParamIndex();
+
     }
 }

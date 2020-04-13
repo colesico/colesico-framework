@@ -31,4 +31,9 @@ public class HelloService implements HelloServiceRemote {
                 +"-"+id+dataBean.getValue()
                 +"-"+compound.getData().getValue();
     }
+
+    @Override
+    public String getMessage2() {
+        return HELLO_MESSAGE;
+    }
 }

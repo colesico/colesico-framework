@@ -19,26 +19,21 @@ package colesico.framework.test.example.rpc;
 
 import colesico.framework.httpserver.HttpServer;
 import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.IocBuilder;
-import colesico.framework.ioc.conditional.TestCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.net.URI;
 import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
 import static org.testng.Assert.assertEquals;
 
-public class RpcTest {
+public class RpcApiTest {
     private Ioc ioc;
     private HttpServer httpServer;
     private HttpClient httpClient;
-    private Logger logger = LoggerFactory.getLogger(RpcTest.class);
+    private Logger logger = LoggerFactory.getLogger(RpcApiTest.class);
 
     @BeforeClass
     public void init() {
