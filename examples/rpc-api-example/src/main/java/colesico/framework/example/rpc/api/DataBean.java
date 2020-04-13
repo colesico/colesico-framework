@@ -1,0 +1,13 @@
+package colesico.framework.example.rpc.api;
+
+public class DataBean {
+    public String value;
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+}

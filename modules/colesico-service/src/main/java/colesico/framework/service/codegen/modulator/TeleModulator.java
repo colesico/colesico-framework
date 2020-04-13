@@ -61,7 +61,10 @@ public abstract class TeleModulator<
 
     abstract protected M createTeleModulatorContext(ServiceElement serviceElm);
 
-    abstract protected void addTeleMethod(TeleMethodElement teleMethodElement, M teleModulatorContext);
+    /**
+     * Called to add telemethod in context
+     */
+    abstract protected void addTeleMethodToContext(TeleMethodElement teleMethodElement, M teleModulatorContext);
 
     abstract protected CodeBlock generateLigatureMethodBody(TeleFacadeElement teleFacade);
 
@@ -93,7 +96,7 @@ public abstract class TeleModulator<
             return;
         }
         M teleModulatorContext = teleFacade.getProperty(getTeleModulatorContextClass());
-        addTeleMethod(teleMethod, teleModulatorContext);
+        addTeleMethodToContext(teleMethod, teleModulatorContext);
         teleMethod.setInvokingContext(generateInvokingContext(teleMethod));
         teleMethod.setWritingContext(generateWritingContext(teleMethod));
     }

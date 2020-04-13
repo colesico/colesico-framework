@@ -46,19 +46,6 @@
             <artifactId>colesico-service</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <!-- Logger -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.verion}</version>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -74,6 +61,7 @@
                             <artifactId>colesico-ioc</artifactId>
                             <version>${project.version}</version>
                         </path>
+
                         <!-- Enable compile debug log -->
                         <dependency>
                             <groupId>org.slf4j</groupId>

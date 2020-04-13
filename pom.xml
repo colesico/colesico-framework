@@ -138,7 +138,7 @@
                 <module>modules/colesico-validation</module>
                 <module>modules/colesico-eventbus</module>
                 <module>modules/colesico-asyncjob</module>
-              
+
 
                 <!-- Logging -->
                 <module>modules/colesico-slf4j</module>
@@ -185,7 +185,7 @@
         <profile>
             <id>examples</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
                 <module>examples/helloworld-example</module>
@@ -200,10 +200,15 @@
                 <module>examples/jdbc-example</module>
                 <module>examples/slf4j-example</module>
                 <module>examples/translation-example</module>
+                <module>examples/rpc-example</module>
+                <module>examples/rpc-api-example</module>
             </modules>
         </profile>
         <profile>
             <id>doc</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
             <modules>
                 <module>docs</module>
             </modules>
