@@ -17,7 +17,7 @@
 package colesico.framework.rpc.teleapi;
 
 /**
- * RPC tele-invocation context
+ * RPC tele-invocation context stub
  */
-public class RpcTIContext {
+public final class RpcTIContext {
 }

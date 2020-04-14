@@ -46,6 +46,11 @@
             <artifactId>colesico-service</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-http</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

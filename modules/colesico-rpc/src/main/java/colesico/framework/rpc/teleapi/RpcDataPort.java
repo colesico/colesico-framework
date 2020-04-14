@@ -16,19 +16,11 @@
 
 package colesico.framework.rpc.teleapi;
 
+import colesico.framework.rpc.Fault;
 import colesico.framework.teleapi.DataPort;
 
-import java.lang.reflect.Type;
+public interface RpcDataPort extends DataPort<RpcTDRContext, RpcTDWContext> {
+    String RESPONSE_CONTENT_TYPE = "text/plain; charset=utf-8";
 
-public class RpcDataPort implements DataPort<RpcTDRContext, RpcTDWContext> {
-
-    @Override
-    public <V> V read(Type valueType, RpcTDRContext context) {
-        return null;
-    }
-
-    @Override
-    public <V> void write(Type valueType, V value, RpcTDWContext context) {
-
-    }
+    void writeFault(Fault fault);
 }

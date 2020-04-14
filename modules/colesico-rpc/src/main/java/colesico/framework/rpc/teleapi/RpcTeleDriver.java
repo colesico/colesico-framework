@@ -18,11 +18,6 @@ package colesico.framework.rpc.teleapi;
 
 import colesico.framework.teleapi.TeleDriver;
 
-public class RpcTeleDriver implements TeleDriver<RpcTDRContext, RpcTDWContext, RpcTIContext, RpcDataPort> {
-
-    @Override
-    public <T> void invoke(T target, Binder<T, RpcDataPort> binder, RpcTIContext context) {
-
-    }
+public interface RpcTeleDriver extends TeleDriver<RpcTDRContext, RpcTDWContext, RpcTIContext, RpcDataPort> {
 
 }

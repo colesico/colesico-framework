@@ -17,7 +17,7 @@
 package colesico.framework.rpc.teleapi;
 
 /**
- * RPC tele-tata writing context
+ * RPC tele-tata writing context stub
  */
-public class RpcTDWContext {
+public final class RpcTDWContext {
 }

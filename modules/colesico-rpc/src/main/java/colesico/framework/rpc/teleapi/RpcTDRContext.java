@@ -17,7 +17,7 @@
 package colesico.framework.rpc.teleapi;
 
 /**
- * RPC tele-data readting context
+ * RPC tele-data reading context
  */
 public final class RpcTDRContext {
     private final String paramName;
