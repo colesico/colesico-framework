@@ -43,6 +43,7 @@ public class RpcTeleDriverImpl implements RpcTeleDriver {
     protected void handleException(Exception e) {
         Fault fault = new Fault();
         fault.setMessage(ExceptionUtils.getRootCauseMessage(e));
+        handleFault(fault);
     }
 
     protected void handleFault(Fault fault) {
