@@ -169,14 +169,14 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
             log.error(errMsg, ex);
         }
         RestletErrorResponse response = new RestletErrorResponse(context.getRequest().getRequestURI(), httpCode, getMessage(ex));
-        dataPort.sendError(response, httpCode);
+        dataPort.writeError(response, httpCode);
     }
 
     protected void handleValidationError(ValidationException ex, int httpCode, HttpContext context) {
         String errMsg = MessageFormat.format("Restlet validation error: {0}", ExceptionUtils.getRootCauseMessage(ex));
         log.warn(errMsg);
         RestletErrorResponse response = new RestletErrorResponse(context.getRequest().getRequestURI(), httpCode, ex.getIssue());
-        dataPort.sendError(response, httpCode);
+        dataPort.writeError(response, httpCode);
     }
 
 }

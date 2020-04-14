@@ -100,7 +100,7 @@ public class RestletDataPortImpl implements RestletDataPort {
     }
 
     @Override
-    public void sendError(RestletErrorResponse response, int httpCode) {
+    public void writeError(RestletErrorResponse response, int httpCode) {
         HttpContext context = httpContextProv.get();
         String json = jsonConverter.toJson(response);
         context.getResponse().sendText(json, RESPONSE_CONTENT_TYPE, httpCode);
