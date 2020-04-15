@@ -61,7 +61,7 @@ abstract public class RequestProcessor<C> {
         threadScope.put(HttpContext.SCOPE_KEY, httpContext);
 
         try {
-            router.perform(httpRequest.getRequestMethod(), httpRequest.getRequestURI());
+            router.dispatch(httpRequest.getRequestMethod(), httpRequest.getRequestURI());
         } catch (Exception ex) {
             String errMsg = MessageFormat.format("Request processing error: {0}", ExceptionUtils.getRootCauseMessage(ex));
             log.error(errMsg);

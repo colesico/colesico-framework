@@ -98,20 +98,20 @@ public class RouterImpl implements Router {
     }
 
     @Override
-    public void perform(HttpMethod httpMethod, String uri) {
+    public void dispatch(HttpMethod httpMethod, String uri) {
         RouteTrie.RouteResolution<TeleMethod> routeResolution = routeTrie.resolveRoute(StrUtils.concatPath(httpMethod.getName(), uri, RouteTrie.SEGMENT_DELEMITER));
         if (routeResolution == null) {
             throw new UnknownRouteException(uri, httpMethod);
         }
 
-        TeleMethod telemethod = routeResolution.getNode().getValue();
-        if (telemethod == null) {
+        TeleMethod teleMethod = routeResolution.getNode().getValue();
+        if (teleMethod == null) {
             throw new UnknownRouteException(uri, httpMethod);
         }
 
         RouterContext routerContext = new RouterContext(uri, routeResolution.getParams());
         threadScope.put(RouterContext.SCOPE_KEY, routerContext);
 
-        telemethod.invoke();
+        teleMethod.invoke();
     }
 }
