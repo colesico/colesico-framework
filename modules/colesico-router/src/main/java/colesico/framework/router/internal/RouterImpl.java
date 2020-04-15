@@ -56,10 +56,10 @@ public class RouterImpl implements Router {
             Polysupplier<TeleFacade> teleFacadesSupp,
         ThreadScope threadScope) {
         this.threadScope = threadScope;
-        loadRoutes(teleFacadesSupp);
+        loadRoutesMapping(teleFacadesSupp);
     }
 
-    protected void loadRoutes(Polysupplier<TeleFacade> teleFacadeSupp) {
+    protected void loadRoutesMapping(Polysupplier<TeleFacade> teleFacadeSupp) {
         log.debug("Lookup routing tele-facades... ");
 
         routeTrie = new RouteTrie<>(null);

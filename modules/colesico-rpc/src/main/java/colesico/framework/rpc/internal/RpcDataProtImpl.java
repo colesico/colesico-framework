@@ -2,7 +2,7 @@ package colesico.framework.rpc.internal;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpResponse;
-import colesico.framework.rpc.Fault;
+import colesico.framework.rpc.Error;
 import colesico.framework.rpc.teleapi.RpcDataPort;
 import colesico.framework.rpc.teleapi.RpcSerializer;
 import colesico.framework.rpc.teleapi.RpcTDRContext;
@@ -49,10 +49,10 @@ public class RpcDataProtImpl implements RpcDataPort {
     }
 
     @Override
-    public void writeFault(Fault fault) {
+    public void writeError(Error error) {
         HttpContext httpContext = httpContextProv.get();
         HttpResponse httpResponse = httpContext.getResponse();
-        String ser = serializer.serialize(fault);
+        String ser = serializer.serialize(error);
         httpResponse.sendData(ByteBuffer.wrap(ser.getBytes(StandardCharsets.UTF_8)), RESPONSE_CONTENT_TYPE, 500);
     }
 }

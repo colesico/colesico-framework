@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RpcModulator extends
-        TeleModulator<RpcTeleDriver, RpcDataPort, RpcTDRContext, RpcTDWContext, RpcTIContext, RpcModulatorContext, RpcLigature, RpcApi> {
+        TeleModulator<RpcTeleDriver, RpcDataPort, RpcTDRContext, RpcTDWContext, RpcTIContext, RpcModulatorContext, RpcLigature, RpcRequestDispatcher> {
 
     public static final String PARAM_NAME_PREFIX = "arg";
 
@@ -76,8 +76,8 @@ public class RpcModulator extends
     }
 
     @Override
-    protected Class<RpcApi> getQualifierClass() {
-        return RpcApi.class;
+    protected Class<RpcRequestDispatcher> getQualifierClass() {
+        return RpcRequestDispatcher.class;
     }
 
     @Override
