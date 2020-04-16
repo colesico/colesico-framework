@@ -102,6 +102,7 @@
         <cache2k.version>1.2.4.Final</cache2k.version>
         <javapoet.version>1.12.1</javapoet.version>
         <undertow.version>2.0.30.Final</undertow.version>
+        <kryo.version>5.0.0-RC5</kryo.version>
 
         <!-- Tests -->
         <org-testng.version>7.1.0</org-testng.version>

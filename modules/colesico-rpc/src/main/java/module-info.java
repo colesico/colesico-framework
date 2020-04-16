@@ -9,6 +9,8 @@ module colesico.framework.rpc {
     requires java.compiler;
     requires org.apache.commons.lang3;
     requires org.slf4j;
+    requires com.esotericsoftware.kryo.kryo5;
+    requires colesico.framework.security;
 
 
     exports colesico.framework.rpc;
