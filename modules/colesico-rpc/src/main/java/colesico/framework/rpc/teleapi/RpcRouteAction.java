@@ -1,9 +1,7 @@
-package colesico.framework.rpc.internal;
+package colesico.framework.rpc.teleapi;
 
 import colesico.framework.http.HttpRequest;
 import colesico.framework.http.HttpValues;
-import colesico.framework.rpc.RpcException;
-import colesico.framework.rpc.teleapi.RpcDispatcher;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;

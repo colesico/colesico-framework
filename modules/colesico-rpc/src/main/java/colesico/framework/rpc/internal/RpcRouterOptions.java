@@ -4,6 +4,7 @@ import colesico.framework.config.Config;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.router.RouterBuilder;
 import colesico.framework.router.RouterOptions;
+import colesico.framework.rpc.teleapi.RpcRouteAction;
 
 import javax.inject.Inject;
 
