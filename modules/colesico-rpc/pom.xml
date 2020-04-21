@@ -85,6 +85,11 @@
                             <artifactId>colesico-ioc</artifactId>
                             <version>${project.version}</version>
                         </path>
+                        <path>
+                            <groupId>net.colesico.framework</groupId>
+                            <artifactId>colesico-config</artifactId>
+                            <version>${project.version}</version>
+                        </path>
 
                         <!-- Enable compile debug log -->
                         <dependency>
