@@ -4,6 +4,7 @@ module colesico.framework.rpc {
     // Inherited in client projects
     requires transitive colesico.framework.service;
     requires colesico.framework.http;
+    requires colesico.framework.router;
 
     requires com.squareup.javapoet;
     requires java.compiler;

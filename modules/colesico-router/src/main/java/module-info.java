@@ -5,6 +5,7 @@ module colesico.framework.router {
 
     requires transitive colesico.framework.service;
     requires transitive colesico.framework.http;
+    requires transitive colesico.framework.config;
 
     requires org.slf4j;
 

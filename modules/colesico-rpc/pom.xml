@@ -51,6 +51,12 @@
             <artifactId>colesico-http</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-router</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
 
         <!-- Kryo for library-->
         <dependency>

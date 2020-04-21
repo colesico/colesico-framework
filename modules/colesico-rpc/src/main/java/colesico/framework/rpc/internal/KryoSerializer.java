@@ -8,7 +8,6 @@ import com.esotericsoftware.kryo.kryo5.util.Pool;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.Base64;

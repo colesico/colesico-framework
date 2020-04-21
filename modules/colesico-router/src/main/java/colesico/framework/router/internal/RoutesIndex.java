@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Routes index to serve obtaining route by its id  (service class + tele-method name)
  * @author Vladlen Larionov
  */
 public class RoutesIndex {

@@ -15,26 +15,34 @@
  */
 package colesico.framework.router.internal;
 
+import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.Router;
+import colesico.framework.router.RouterBuilder;
 import colesico.framework.router.RouterContext;
+import colesico.framework.router.RouterOptions;
 
 import javax.inject.Singleton;
-
 
 
 /**
  * @author Vladlen Larionov
  */
 @Producer
-@Produce(RouterImpl.class)
+@Produce(RouterBuilderImpl.class)
 public class RouterProducer {
 
     @Singleton
-    public Router getRouter(RouterImpl impl) {
+    public RouterBuilder getRouterBuilder(final RouterBuilderImpl impl, Polysupplier<RouterOptions> options) {
+        options.forEach(o -> o.applyOptions(impl), null);
         return impl;
+    }
+
+    @Singleton
+    public Router getRouter(RouterBuilder builder) {
+        return builder.build();
     }
 
     public RouterContext getActionContext(ThreadScope threadScope) {

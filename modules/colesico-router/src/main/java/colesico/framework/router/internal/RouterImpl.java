@@ -40,7 +40,6 @@ import java.util.Map;
 /**
  * @author Vladlen Larionov
  */
-@Singleton
 public class RouterImpl implements Router {
 
     protected final Logger log = LoggerFactory.getLogger(Router.class);
@@ -51,12 +50,8 @@ public class RouterImpl implements Router {
     protected RoutesIndex routesIndex;
 
     @Inject
-    public RouterImpl(
-        @Classed(Router.class)
-            Polysupplier<TeleFacade> teleFacadesSupp,
-        ThreadScope threadScope) {
+    public RouterImpl(ThreadScope threadScope) {
         this.threadScope = threadScope;
-        loadRoutesMapping(teleFacadesSupp);
     }
 
     protected void loadRoutesMapping(Polysupplier<TeleFacade> teleFacadeSupp) {
@@ -74,12 +69,12 @@ public class RouterImpl implements Router {
             for (RoutingLigature.RouteInfo routeInfo : ligature.getRoutesIno()) {
                 if (log.isDebugEnabled()) {
                     log.debug("Route '" + routeInfo.getRoute() + "' mapped to tele-method '" +
-                        ligature.getServiceClass().getName() + "->" + routeInfo.getTeleMethodName());
+                            ligature.getServiceClass().getName() + "->" + routeInfo.getTeleMethodName());
 
                 }
                 RouteTrie.Node<TeleMethod> node = routeTrie.addRoute(
-                    routeInfo.getRoute(),
-                    routeInfo.getTeleMethod()
+                        routeInfo.getRoute(),
+                        routeInfo.getTeleMethodRef()
                 );
 
                 HttpMethod httpMethod = HttpMethod.of(node.getRoot().getName());
@@ -88,13 +83,19 @@ public class RouterImpl implements Router {
         }
     }
 
+    protected void addRouteAction(HttpMethod httpMethod, String route, Class<?> targetClass, TeleMethod targetMethodRef, String targetMethodName) {
+        RouteTrie.Node<TeleMethod> node = routeTrie.addRoute(route, targetMethodRef);
+        routesIndex.addNode(toRouteId(targetClass, targetMethodName, httpMethod), node);
+    }
+
     protected String toRouteId(Class<?> serviceClass, String teleMethodName, HttpMethod httpMethod) {
         return serviceClass.getName() + ':' + teleMethodName + ':' + httpMethod.getName();
     }
 
+
     @Override
-    public List<String> getSlicedRoute(Class<?> serviceClass, String teleMethodName, HttpMethod httpMethod, Map<String, String> parameters) {
-        return routesIndex.getSlicedRoute(toRouteId(serviceClass, teleMethodName, httpMethod), parameters);
+    public List<String> getSlicedRoute(Class<?> targetClass, String targetMethodName, HttpMethod httpMethod, Map<String, String> parameters) {
+        return routesIndex.getSlicedRoute(toRouteId(targetClass, targetMethodName, httpMethod), parameters);
     }
 
     @Override

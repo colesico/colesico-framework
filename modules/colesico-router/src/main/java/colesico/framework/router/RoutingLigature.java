@@ -29,7 +29,7 @@ public final class RoutingLigature {
 
     public static final String ADD_METHOD = "add";
     public static final String ROUTE_PARAM = "route";
-    public static final String TELE_METHOD_PARAM = "teleMethod";
+    public static final String TELE_METHOD_REF_PARAM = "teleMethodRef";
     public static final String ORIGIN_METHOD_PARAM = "originMethod";
 
     private final Class<?> serviceClass;
@@ -39,8 +39,8 @@ public final class RoutingLigature {
         this.serviceClass = serviceClass;
     }
 
-    public void add(String route, TeleMethod teleMethod, String teleMethodName) {
-        RouteInfo routeInfo = new RouteInfo(route, teleMethod, teleMethodName);
+    public void add(String route, TeleMethod teleMethodRef, String teleMethodName) {
+        RouteInfo routeInfo = new RouteInfo(route, teleMethodRef, teleMethodName);
         RouteInfo oldRouteInfo = routesMap.put(route, routeInfo);
         if (oldRouteInfo != null) {
             throw new RouterException("Duplicate route: " + route + " -> " + routeInfo + " | " + oldRouteInfo);
@@ -57,12 +57,12 @@ public final class RoutingLigature {
 
     public static final class RouteInfo {
         private final String route;
-        private final TeleMethod teleMethod;
+        private final TeleMethod teleMethodRef;
         private final String teleMethodName;
 
-        public RouteInfo(String route, TeleMethod teleMethod, String teleMethodName) {
+        public RouteInfo(String route, TeleMethod teleMethodRef, String teleMethodName) {
             this.route = route;
-            this.teleMethod = teleMethod;
+            this.teleMethodRef = teleMethodRef;
             this.teleMethodName = teleMethodName;
         }
 
@@ -70,8 +70,8 @@ public final class RoutingLigature {
             return route;
         }
 
-        public TeleMethod getTeleMethod() {
-            return teleMethod;
+        public TeleMethod getTeleMethodRef() {
+            return teleMethodRef;
         }
 
         public String getTeleMethodName() {
