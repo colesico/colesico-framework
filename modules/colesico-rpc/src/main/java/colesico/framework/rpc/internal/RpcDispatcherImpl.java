@@ -7,7 +7,7 @@ import colesico.framework.rpc.RpcException;
 import colesico.framework.rpc.UnknownRpcClassError;
 import colesico.framework.rpc.UnknownRpcMethodError;
 import colesico.framework.rpc.teleapi.RpcDataPort;
-import colesico.framework.rpc.teleapi.RpcRequestDispatcher;
+import colesico.framework.rpc.teleapi.RpcDispatcher;
 import colesico.framework.rpc.teleapi.RpcLigature;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.TeleMethod;
@@ -21,9 +21,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 @Singleton
-public class RpcRequestDispatcherImpl implements RpcRequestDispatcher {
+public class RpcDispatcherImpl implements RpcDispatcher {
 
-    protected final Logger log = LoggerFactory.getLogger(RpcRequestDispatcher.class);
+    protected final Logger log = LoggerFactory.getLogger(RpcDispatcher.class);
     protected final RpcDataPort dataPort;
 
     /**
@@ -31,7 +31,7 @@ public class RpcRequestDispatcherImpl implements RpcRequestDispatcher {
      */
     protected final Map<String, Map<String, TeleMethod>> classToMethods = new HashMap<>();
 
-    public RpcRequestDispatcherImpl(@Classed(RpcRequestDispatcher.class) Polysupplier<TeleFacade> teleFacadesSupp, RpcDataPort dataPort) {
+    public RpcDispatcherImpl(@Classed(RpcDispatcher.class) Polysupplier<TeleFacade> teleFacadesSupp, RpcDataPort dataPort) {
         this.dataPort = dataPort;
         loadMethodsMapping(teleFacadesSupp);
     }

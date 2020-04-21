@@ -1,5 +1,5 @@
 package colesico.framework.rpc.teleapi;
 
-public interface RpcRequestDispatcher {
+public interface RpcDispatcher {
     void dispatch(String className, String methodName);
 }

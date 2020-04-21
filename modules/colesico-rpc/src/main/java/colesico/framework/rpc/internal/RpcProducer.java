@@ -4,7 +4,7 @@ import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.rpc.teleapi.RpcDataPort;
-import colesico.framework.rpc.teleapi.RpcRequestDispatcher;
+import colesico.framework.rpc.teleapi.RpcDispatcher;
 import colesico.framework.rpc.teleapi.RpcSerializer;
 import colesico.framework.rpc.teleapi.RpcTeleDriver;
 import colesico.framework.rpc.teleapi.reader.PrincipalReader;
@@ -18,7 +18,8 @@ import javax.inject.Singleton;
 @Producer
 @Produce(RpcDataProtImpl.class)
 @Produce(RpcTeleDriverImpl.class)
-@Produce(RpcRequestDispatcherImpl.class)
+@Produce(RpcDispatcherImpl.class)
+@Produce(RpcHttpDispatcher.class)
 @Produce(KryoSerializer.class)
 
 @Produce(PrincipalReader.class)
@@ -36,12 +37,12 @@ public class RpcProducer {
     }
 
     @Singleton
-    public RpcRequestDispatcher getRpcTeleDriver(RpcRequestDispatcherImpl impl) {
+    public RpcDispatcher getRpcTeleDriver(RpcDispatcherImpl impl) {
         return impl;
     }
 
     @Singleton
-    public RpcSerializer getDefaultSerializer(KryoSerializer impl){
+    public RpcSerializer getDefaultSerializer(KryoSerializer impl) {
         return impl;
     }
 
