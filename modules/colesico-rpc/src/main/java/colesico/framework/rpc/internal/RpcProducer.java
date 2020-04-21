@@ -19,7 +19,7 @@ import javax.inject.Singleton;
 @Produce(RpcDataProtImpl.class)
 @Produce(RpcTeleDriverImpl.class)
 @Produce(RpcDispatcherImpl.class)
-@Produce(RpcHttpDispatcher.class)
+@Produce(RpcRouteAction.class)
 @Produce(KryoSerializer.class)
 
 @Produce(PrincipalReader.class)

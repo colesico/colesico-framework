@@ -1,5 +1,7 @@
 package colesico.framework.rpc.internal;
 
+import colesico.framework.http.HttpRequest;
+import colesico.framework.http.HttpValues;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.rpc.Error;
@@ -15,6 +17,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,12 +29,14 @@ public class RpcDispatcherImpl implements RpcDispatcher {
     protected final Logger log = LoggerFactory.getLogger(RpcDispatcher.class);
     protected final RpcDataPort dataPort;
 
+
     /**
      * Class name to methods map
      */
     protected final Map<String, Map<String, TeleMethod>> classToMethods = new HashMap<>();
 
-    public RpcDispatcherImpl(@Classed(RpcDispatcher.class) Polysupplier<TeleFacade> teleFacadesSupp, RpcDataPort dataPort) {
+    public RpcDispatcherImpl(@Classed(RpcDispatcher.class) Polysupplier<TeleFacade> teleFacadesSupp,
+                             RpcDataPort dataPort) {
         this.dataPort = dataPort;
         loadMethodsMapping(teleFacadesSupp);
     }
@@ -78,7 +83,6 @@ public class RpcDispatcherImpl implements RpcDispatcher {
             }
 
             teleMethod.invoke();
-
         } catch (RpcException re) {
             handleError(re.getError(), className, methodName);
         } catch (Exception e) {
