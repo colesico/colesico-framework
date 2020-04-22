@@ -15,7 +15,7 @@ public interface RouterBuilder {
      * @param targetMethodRef  action class method reference
      * @param targetMethodName action method name
      */
-    void addRouteAction(HttpMethod httpMethod, String route, Class<?> targetClass, TeleMethod targetMethodRef, String targetMethodName);
+    void addCustomAction(HttpMethod httpMethod, String route, Class<?> targetClass, TeleMethod targetMethodRef, String targetMethodName);
 
     Router build();
 }

@@ -19,6 +19,8 @@ package colesico.framework.test.example.rpc;
 
 import colesico.framework.httpserver.HttpServer;
 import colesico.framework.ioc.Ioc;
+import colesico.framework.ioc.IocBuilder;
+import colesico.framework.ioc.conditional.TestCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
@@ -37,7 +39,7 @@ public class RpcApiTest {
 
     @BeforeClass
     public void init() {
-        /*
+
         TestCondition.enable();
         ioc = IocBuilder.create().build();
 
@@ -46,12 +48,12 @@ public class RpcApiTest {
         httpClient = HttpClient.newHttpClient();
         logger.info("Ready for rpc tests");
 
-         */
+
     }
 
     @AfterClass
     public void destroy() {
-       // httpServer.stop();
+        // httpServer.stop();
     }
 
     @Test

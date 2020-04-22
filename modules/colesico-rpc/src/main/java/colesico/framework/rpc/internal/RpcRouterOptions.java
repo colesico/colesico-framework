@@ -20,7 +20,7 @@ public class RpcRouterOptions extends RouterOptions {
 
     @Override
     public void applyOptions(RouterBuilder builder) {
-        builder.addRouteAction(HttpMethod.HTTP_METHOD_POST,
+        builder.addCustomAction(HttpMethod.HTTP_METHOD_POST,
                 RpcRouteAction.DISPATCHER_ROUTE,
                 RpcRouteAction.class,
                 actionHandler::dispatch,
