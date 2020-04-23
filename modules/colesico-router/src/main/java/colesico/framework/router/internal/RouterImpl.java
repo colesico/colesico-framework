@@ -87,8 +87,8 @@ public class RouterImpl implements Router {
         RouteTrie.Node<TeleMethod> node = routeTrie.addRoute(route, targetMethodRef);
         routesIndex.addNode(toRouteId(targetClass, targetMethodName, httpMethod), node);
         if (log.isDebugEnabled()) {
-            log.debug("Route '" + httpMethod.getName() + "/" + route + "' mapped to custom action method '" +
-                    targetClass.getName() + "->" + targetMethodName);
+            log.debug("Route '" + httpMethod.getName() + route + "' mapped to custom action method '" +
+                    targetClass.getName() + "->" + targetMethodName+"()");
 
         }
     }
