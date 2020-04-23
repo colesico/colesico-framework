@@ -30,6 +30,7 @@
 
     <packaging>jar</packaging>
     <name>Colesico example - Transactions control</name>
+    <url>https://github.com/colesico/colesico-framework</url>
 
     <properties>
     </properties>

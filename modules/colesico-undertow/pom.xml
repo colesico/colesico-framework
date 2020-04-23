@@ -34,7 +34,7 @@
     <description>
         Colesico framework undertow http server integration.
     </description>
-    <url>https://github.com/colesico/colesico-framework</url>
+    <url>https://github.com/colesico/colesico-framework/colesico-undertow</url>
 
     <properties>
     </properties>
