@@ -24,6 +24,7 @@ import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.*;
+import colesico.framework.jdbirec.Record;
 import colesico.framework.jdbirec.codegen.model.ColumnElement;
 import colesico.framework.jdbirec.codegen.model.CompositionElement;
 import colesico.framework.jdbirec.codegen.model.RecordElement;
