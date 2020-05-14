@@ -16,7 +16,6 @@
 
 package colesico.framework.jdbirec;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jdbi.v3.core.mapper.RowMapper;
 
 import java.sql.ResultSet;
@@ -28,11 +27,12 @@ abstract public class RecordKit<R> {
 
     public static final String EXPORT_METOD = "exportRecord";
     public static final String IMPORT_METHOD = "importRecord";
-    public static final String TABLE_NAME_METHOD = "tableName";
-    public static final String SQL_INSERT_METHOD = "sqlInsert";
-    public static final String SQL_UPDATE_METHOD = "sqlUpdate";
-    public static final String SQL_SELECT_METHOD = "sqlSelect";
     public static final String NEW_RECORD_METHOD = "newRecord";
+
+    public static final String TABLE_NAME_METHOD = "tableName";
+    public static final String GET_COLUMNS_TOKEN_METHOD = "getColumnsToken";
+    public static final String GET_UPDATES_TOKEN = "getUpdatesToken";
+    public static final String GET_VALUES_TOKEN = "getValuesToken";
 
     public static final String RECORD_PARAM = "rec";
     public static final String FIELD_RECEIVER_PARAM = "fr";
@@ -40,10 +40,15 @@ abstract public class RecordKit<R> {
     public static final String QUALIFICATION_PARAM = "qualification";
 
     public static final String TABLE_NAME_REF = "@table";
+    public static final String COLUMNS_REF = "@columns";
+    public static final String UPDATES_REF = "@updates";
+    public static final String VALUES_REF = "@values";
 
     abstract public void exportRecord(R rec, FieldReceiver fr);
 
     abstract public R importRecord(R rec, ResultSet rs) throws SQLException;
+
+    abstract public R newRecord();
 
     /**
      * Return table name
@@ -53,32 +58,32 @@ abstract public class RecordKit<R> {
     abstract public String tableName();
 
     /**
-     * Return insert sql query text
-     *
-     * @return
+     * Column names separate with  comma:  column1,column2...
+     * This token for use in select and insert statements
      */
-    abstract public String sqlInsert();
+    abstract protected String getColumnsToken();
 
-    abstract public String sqlUpdate(String qualification);
+    /**
+     * Param names separated with comma: :param1,:param2...
+     * This token for use in insert statements
+     */
+    abstract protected String getValuesToken();
 
-    abstract public String sqlSelect(String qualification);
+    /**
+     * Column assignments separated with comma: column1 = :param1, column2 = :param2 ...
+     * This token for use in update statements
+     */
+    abstract protected String getUpdatesToken();
 
-    abstract public R newRecord();
-
-    public final String sql(String sqlText) {
-        return sqlText.replace(TABLE_NAME_REF, tableName());
-    }
-
-    public final String sqlInsert(String qualification) {
-        if (qualification != null) {
-            return sqlInsert() + " " + qualification;
-        } else {
-            return sqlInsert();
-        }
-    }
-
-    public final String sqlDelete(String qualification) {
-        return "delete from " + tableName() + (StringUtils.isNotBlank(qualification) ? ' ' + qualification : "");
+    /**
+     * Transforms sql text with references (@table, @columns, @updates, @values) to actual sql
+     */
+    public final String sql(String query) {
+        return query
+                .replace(TABLE_NAME_REF, tableName())
+                .replace(COLUMNS_REF, getColumnsToken())
+                .replace(VALUES_REF, getValuesToken())
+                .replace(UPDATES_REF, getUpdatesToken());
     }
 
     public final Map<String, Object> map(R record) {

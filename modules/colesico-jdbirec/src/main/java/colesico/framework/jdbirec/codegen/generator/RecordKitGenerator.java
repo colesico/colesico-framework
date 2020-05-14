@@ -121,7 +121,7 @@ public class RecordKitGenerator {
         if (StringUtils.isNotEmpty(rootVarName)) {
             gettersChain.add(rootVarName);
         }
-        for (FieldElement fl: fieldsChain) {
+        for (FieldElement fl : fieldsChain) {
             gettersChain.add(fieldTransformer.apply(fl));
         }
 
@@ -138,10 +138,10 @@ public class RecordKitGenerator {
             cb.add("\n");
             cb.add("// Composition: " + composition.getOriginClass().getName() + "\n\n");
             cb.addStatement("$T $N = $N.$N()",
-                TypeName.get(composition.getOriginClass().asType()),
-                compositionVar,
-                parentCompositionVar,
-                toGetterName(composition.getOriginField()));
+                    TypeName.get(composition.getOriginClass().asType()),
+                    compositionVar,
+                    parentCompositionVar,
+                    toGetterName(composition.getOriginField()));
             cb.add("if ($N == null) { $N = new $T(); }\n", compositionVar, compositionVar, TypeName.get(composition.getOriginClass().asType()));
         }
 
@@ -175,10 +175,10 @@ public class RecordKitGenerator {
         if (column.getMediator() != null) {
             String mediatorField = mediatorFields.addField(column.getMediator().unwrap());
             cb.add("$N.$N($S,$N)",
-                mediatorField,
-                FieldMediator.IMPORT_METHOD,
-                column.getName(),
-                RecordKit.RESULT_SET_PARAM);
+                    mediatorField,
+                    FieldMediator.IMPORT_METHOD,
+                    column.getName(),
+                    RecordKit.RESULT_SET_PARAM);
             return;
         }
 
@@ -216,14 +216,14 @@ public class RecordKitGenerator {
                 break;
             case "java.time.LocalDateTime":
                 cb.add("$N.getTimestamp($S) == null ? null : $N.getTimestamp($S).toLocalDateTime()",
-                    RecordKit.RESULT_SET_PARAM, column.getName(),
-                    RecordKit.RESULT_SET_PARAM, column.getName()
+                        RecordKit.RESULT_SET_PARAM, column.getName(),
+                        RecordKit.RESULT_SET_PARAM, column.getName()
                 );
                 break;
             case "java.time.Instant":
                 cb.add("$N.getTimestamp($S) == null ? null : $N.getTimestamp($S).toInstant()",
-                    RecordKit.RESULT_SET_PARAM, column.getName(),
-                    RecordKit.RESULT_SET_PARAM, column.getName()
+                        RecordKit.RESULT_SET_PARAM, column.getName(),
+                        RecordKit.RESULT_SET_PARAM, column.getName()
                 );
                 break;
 
@@ -255,10 +255,10 @@ public class RecordKitGenerator {
             compositionVar = varNames.getNextVarName(composition.getOriginField().getName());
             // SubCompositionType comp=parentComp.getSubComposition()
             cbo.addStatement("$T $N = $N.$N()",
-                TypeName.get(composition.getOriginClass().asType()),
-                compositionVar,
-                parentCompositionVar,
-                toGetterName(composition.getOriginField()));
+                    TypeName.get(composition.getOriginClass().asType()),
+                    compositionVar,
+                    parentCompositionVar,
+                    toGetterName(composition.getOriginField()));
             // if (comp == null )
             cbo.add("if ($N == null) {\n", compositionVar);
             cbo.indent();
@@ -302,7 +302,7 @@ public class RecordKitGenerator {
         mb.addAnnotation(Override.class);
         mb.addParameter(TypeName.get(recordElement.getOriginClass().asType()), RecordKit.RECORD_PARAM, Modifier.FINAL);
         mb.addParameter(TypeName.get(RecordKit.FieldReceiver.class),
-            RecordKit.FIELD_RECEIVER_PARAM, Modifier.FINAL);
+                RecordKit.FIELD_RECEIVER_PARAM, Modifier.FINAL);
 
         CodeBlock.Builder cb = CodeBlock.builder();
         varNames = new VarNames();
@@ -342,14 +342,36 @@ public class RecordKitGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    protected void generateInsertSQL() {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(RecordKit.SQL_INSERT_METHOD);
-        mb.addModifiers(Modifier.PUBLIC);
+    protected void generateGetColumnsToken() {
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(RecordKit.GET_COLUMNS_TOKEN_METHOD);
+        mb.addModifiers(Modifier.PROTECTED);
         mb.addAnnotation(Override.class);
         mb.returns(ClassName.get(String.class));
 
         List<ColumnElement> allColumns = recordElement.getAllColumns();
-        StringBuilder sb = new StringBuilder("INSERT INTO " + getTableName() + " (");
+        List<String> columnNames = new ArrayList<>();
+        for (ColumnElement column : allColumns) {
+            if (column.getSelectAs() == null) {
+                continue;
+            }
+            if (column.getSelectAs().equals("@column")) {
+                columnNames.add(column.getName());
+            } else {
+                columnNames.add(column.getSelectAs());
+            }
+        }
+        String token = StringUtils.join(columnNames, ", ");
+        mb.addStatement("return $S", token);
+        classBuilder.addMethod(mb.build());
+    }
+
+    protected void generateGetValuesToken() {
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(RecordKit.GET_VALUES_TOKEN);
+        mb.addModifiers(Modifier.PROTECTED);
+        mb.addAnnotation(Override.class);
+        mb.returns(ClassName.get(String.class));
+
+        List<ColumnElement> allColumns = recordElement.getAllColumns();
         List<String> columnNames = new ArrayList<>();
         List<String> columnValues = new ArrayList<>();
         for (ColumnElement column : allColumns) {
@@ -365,22 +387,20 @@ public class RecordKitGenerator {
                 columnValues.add(column.getInsertAs());
             }
         }
-        sb.append(StringUtils.join(columnNames, ", ")).append(')');
-        sb.append(" VALUES (").append(StringUtils.join(columnValues, ',')).append(")");
+        String columnsToken = StringUtils.join(columnNames, ", ");
+        String valuesToken = StringUtils.join(columnValues, ',');
 
-        mb.addStatement("return $S", sb.toString());
+        mb.addStatement("return $S", valuesToken);
         classBuilder.addMethod(mb.build());
     }
 
-    protected void generateUpdateSQL() {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(RecordKit.SQL_UPDATE_METHOD);
-        mb.addModifiers(Modifier.PUBLIC);
+    protected void generateGetUpdatesToken() {
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(RecordKit.GET_UPDATES_TOKEN);
+        mb.addModifiers(Modifier.PROTECTED);
         mb.addAnnotation(Override.class);
         mb.returns(ClassName.get(String.class));
-        mb.addParameter(ClassName.get(String.class), RecordKit.QUALIFICATION_PARAM, Modifier.FINAL);
 
         List<ColumnElement> allColumns = recordElement.getAllColumns();
-        StringBuilder sb = new StringBuilder("UPDATE " + getTableName() + " SET ");
         List<String> assigns = new ArrayList<>();
         for (ColumnElement column : allColumns) {
             if (column.getUpdateAs() == null) {
@@ -394,43 +414,12 @@ public class RecordKitGenerator {
                 assigns.add(column.getName() + " = " + column.getUpdateAs());
             }
         }
-        sb.append(StringUtils.join(assigns, ", "));
+        String token = StringUtils.join(assigns, ", ");
 
-        mb.addStatement("return $S + ($T.isBlank($N)?\"\" : \" \"+$N)", sb.toString(),
-            ClassName.get(StringUtils.class), RecordKit.QUALIFICATION_PARAM, RecordKit.QUALIFICATION_PARAM);
+        mb.addStatement("return $S", token);
         classBuilder.addMethod(mb.build());
     }
 
-    protected String generateSelectSQL() {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(RecordKit.SQL_SELECT_METHOD);
-        mb.addModifiers(Modifier.PUBLIC);
-        mb.addAnnotation(Override.class);
-        mb.returns(ClassName.get(String.class));
-        mb.addParameter(ClassName.get(String.class), RecordKit.QUALIFICATION_PARAM, Modifier.FINAL);
-
-
-        List<ColumnElement> allColumns = recordElement.getAllColumns();
-        StringBuilder sb = new StringBuilder("SELECT ");
-        List<String> columnNames = new ArrayList<>();
-        for (ColumnElement column : allColumns) {
-            if (column.getSelectAs() == null) {
-                continue;
-            }
-            if (column.getSelectAs().equals("@column")) {
-                columnNames.add(column.getName());
-            } else {
-                columnNames.add(column.getSelectAs());
-            }
-        }
-        sb.append(StringUtils.join(columnNames, ", "));
-        sb.append(' ');
-        mb.addStatement("return $S + $N.replace($S,$S)",
-            sb.toString(),
-            RecordKit.QUALIFICATION_PARAM,
-            RecordKit.TABLE_NAME_REF, getTableName());
-        classBuilder.addMethod(mb.build());
-        return sb.toString();
-    }
 
     protected String generateCreateTableSQL() {
         List<ColumnElement> allColumns = recordElement.getAllColumns();
@@ -466,17 +455,17 @@ public class RecordKitGenerator {
         classBuilder.addModifiers(Modifier.PUBLIC);
 
         TypeName baseTypeName = ParameterizedTypeName.get(
-            ClassName.bestGuess(recordElement.getExtend().asClassElement().getName()),
-            TypeName.get(recordElement.getOriginClass().asType()));
+                ClassName.bestGuess(recordElement.getExtend().asClassElement().getName()),
+                TypeName.get(recordElement.getOriginClass().asType()));
 
         classBuilder.superclass(baseTypeName);
 
         generateExportMethod();
         generatImportMethod();
         generateTableName();
-        generateInsertSQL();
-        generateUpdateSQL();
-        generateSelectSQL();
+        generateGetColumnsToken();
+        generateGetValuesToken();
+        generateGetUpdatesToken();
 
         classBuilder.addJavadoc(generateCreateTableSQL());
 
