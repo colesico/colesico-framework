@@ -16,7 +16,9 @@
 
 package colesico.framework.profile;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Default profile implementation
@@ -25,6 +27,7 @@ public class DefaultProfile implements Profile {
 
     private Locale locale;
     private ObjectiveQualifiers qualifiers;
+    private final Map<Class<?>, Object> extensions = new HashMap<>();
 
     public DefaultProfile(Locale locale) {
         this.locale = locale;
@@ -53,4 +56,13 @@ public class DefaultProfile implements Profile {
     public ObjectiveQualifiers getQualifiers() {
         return qualifiers;
     }
+
+    public void setExtension(Class<?> keyClass, Object value) {
+        extensions.put(keyClass, value);
+    }
+
+    public <T> T getExtension(Class<T> keyClass) {
+        return (T) extensions.get(keyClass);
+    }
+
 }
