@@ -95,7 +95,6 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
         List<FieldElement> fields = var.asClassType().asClassElement().getFieldsFiltered(
                 f -> !f.unwrap().getModifiers().contains(Modifier.FINAL)
                         && !f.unwrap().getModifiers().contains(Modifier.STATIC)
-                        && f.unwrap().asType().getKind().equals(TypeKind.DECLARED)
         );
 
         // Process fields
