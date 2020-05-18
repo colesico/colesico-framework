@@ -60,9 +60,9 @@ public class TeleFacadesGenerator {
         mb.addAnnotation(ClassName.get(Inject.class));
         mb.addModifiers(Modifier.PUBLIC);
         mb.addParameter(
-            ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(teleFacade.getParentService().getOriginClass().asType())),
-            TARGET_PROV_FIELD,
-            Modifier.FINAL);
+                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(teleFacade.getParentService().getOriginClass().asType())),
+                TARGET_PROV_FIELD,
+                Modifier.FINAL);
 
         mb.addParameter(ClassName.get(teleFacade.getTeleDriverClass()), TELED_RIVER_FIELD, Modifier.FINAL);
         mb.addStatement("super($N,$N)", TARGET_PROV_FIELD, TELED_RIVER_FIELD);
@@ -70,6 +70,10 @@ public class TeleFacadesGenerator {
     }
 
     protected CodeBlock generateVarValue(TeleVarElement var, CodeBlock.Builder binderBuilder) {
+
+        if (var.getIsLocal()) {
+            return CodeBlock.builder().add("null").build();
+        }
 
         // detect param type considering generics
         TypeMirror paramType = var.getOriginVariable().asClassType().unwrap();
@@ -80,7 +84,8 @@ public class TeleFacadesGenerator {
             CodeBlock.Builder cb = CodeBlock.builder();
             cb.add("$N.$N(", TeleDriver.Binder.DATAPORT_PARAM, DataPort.READ_METHOD);
             // ParamType.class or new TypeWrapper<ParamType<T>>...
-            CodegenUtils.generateTypePick(paramType, cb);cb.add(",");
+            CodegenUtils.generateTypePick(paramType, cb);
+            cb.add(",");
             cb.add(ctx);
             cb.add(")");
             return cb.build();
@@ -91,11 +96,17 @@ public class TeleFacadesGenerator {
         final String valueVar = varNames.getNextTempVariable(var.getOriginVariable().getName());
         binderBuilder.add("\n// Init composition\n");
         binderBuilder.addStatement("$T $N = new $T()",
-            TypeName.get(paramType),
-            valueVar, TypeName.get(var.getOriginVariable().asType()));
+                TypeName.get(paramType),
+                valueVar, TypeName.get(var.getOriginVariable().asType()));
 
         // Generate composition fields
         for (TeleVarElement subvar : ((TeleCompElement) var).getVariables()) {
+
+            //Skip local params
+            if (subvar.getIsLocal()) {
+                continue;
+            }
+
             CodeBlock value = generateVarValue(subvar, binderBuilder);
             String setterName = "set" + StrUtils.firstCharToUpperCase(subvar.getOriginVariable().getName());
             binderBuilder.add("$N.$N(", valueVar, setterName);
@@ -170,13 +181,13 @@ public class TeleFacadesGenerator {
             // Subroutine definition
             CodeBlock.Builder cb = CodeBlock.builder();
             cb.add("final $T $N=($N,$N)->{\n",
-                ParameterizedTypeName.get(
-                    ClassName.get(TeleDriver.Binder.class),
-                    TypeName.get(service.getOriginClass().asType()),
-                    ClassName.get(teleFacade.getDataPortClass())),
-                TeleDriver.BINDER_PARAM,
-                TeleDriver.Binder.TARGET_PARAM,
-                TeleDriver.Binder.DATAPORT_PARAM);
+                    ParameterizedTypeName.get(
+                            ClassName.get(TeleDriver.Binder.class),
+                            TypeName.get(service.getOriginClass().asType()),
+                            ClassName.get(teleFacade.getDataPortClass())),
+                    TeleDriver.BINDER_PARAM,
+                    TeleDriver.Binder.TARGET_PARAM,
+                    TeleDriver.Binder.DATAPORT_PARAM);
             cb.indent();
             cb.add(generateBinderBody(teleMethod));
             cb.unindent();
@@ -188,8 +199,8 @@ public class TeleFacadesGenerator {
 
             // Call teleDriver
             cb.add("$N.$N($N,$N,", TeleFacade.TELED_RIVER_FIELD, TeleDriver.INVOKE_METHOD,
-                TeleDriver.TARGET_PARAM,
-                TeleDriver.BINDER_PARAM);
+                    TeleDriver.TARGET_PARAM,
+                    TeleDriver.BINDER_PARAM);
             CodeBlock invCtx = teleMethod.getInvokingContext();
             cb.add(invCtx);
             cb.add(");\n");
@@ -228,9 +239,9 @@ public class TeleFacadesGenerator {
 
 
             classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(TeleFacade.class),
-                TypeName.get(service.getOriginClass().asType()),
-                ClassName.get(teleFacade.getTeleDriverClass()),
-                ClassName.get(teleFacade.getLigatureClass())));
+                    TypeName.get(service.getOriginClass().asType()),
+                    ClassName.get(teleFacade.getTeleDriverClass()),
+                    ClassName.get(teleFacade.getLigatureClass())));
 
             generateCounstructor(teleFacade, classBuilder);
             generateTeleMethods(teleFacade, classBuilder);

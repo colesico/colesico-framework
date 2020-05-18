@@ -25,8 +25,8 @@ public class TeleCompElement extends TeleVarElement {
 
     private final List<TeleVarElement> variables;
 
-    public TeleCompElement(VarElement originVariable) {
-        super(originVariable);
+    public TeleCompElement(VarElement originVariable, Boolean isLocal) {
+        super(originVariable, isLocal);
         this.variables = new ArrayList<>();
     }
 

@@ -25,8 +25,8 @@ public final class TeleParamElement extends TeleVarElement {
 
     protected final Integer paramIndex;
 
-    public TeleParamElement(VarElement originVariable, Integer paramIndex) {
-        super(originVariable);
+    public TeleParamElement(VarElement originVariable, Boolean isLocal, Integer paramIndex) {
+        super(originVariable, isLocal);
         this.paramIndex = paramIndex;
     }
 

@@ -24,8 +24,14 @@ abstract public class TeleVarElement {
     protected TeleVarElement parentVariable;
     protected final VarElement originVariable;
 
-    public TeleVarElement(VarElement originVariable) {
+    /**
+     * Indicates that variable has a @LocalParam annotation
+     */
+    final protected Boolean isLocal;
+
+    public TeleVarElement(VarElement originVariable, Boolean isLocal) {
         this.originVariable = originVariable;
+        this.isLocal = isLocal;
     }
 
     public TeleMethodElement getParentTeleMethod() {
@@ -42,6 +48,10 @@ abstract public class TeleVarElement {
 
     public void setParentVariable(TeleVarElement parentVariable) {
         this.parentVariable = parentVariable;
+    }
+
+    public Boolean getIsLocal() {
+        return isLocal;
     }
 
     @Override

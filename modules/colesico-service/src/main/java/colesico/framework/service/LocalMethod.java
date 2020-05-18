@@ -20,7 +20,7 @@ import java.lang.annotation.*;
 /**
  * Indicates that the method is not tele-method.
  *
- * Local method will not present in any service tele-facades
+ * Local method will not present in any service tele-facades and can't be invoked remotely
  *
  * @author Vladlen Larionov
  */

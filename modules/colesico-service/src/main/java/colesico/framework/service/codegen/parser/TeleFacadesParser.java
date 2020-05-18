@@ -20,6 +20,7 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
 import colesico.framework.service.Compound;
+import colesico.framework.service.LocalParam;
 import colesico.framework.service.TeleMethodName;
 import colesico.framework.service.TeleView;
 import colesico.framework.service.codegen.model.*;
@@ -48,11 +49,13 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
                     .build();
         }
 
+        AnnotationToolbox<LocalParam> localParamAnn = var.getAnnotation(LocalParam.class);
+
         //================= Check compound or parameter
         AnnotationToolbox<Compound> compounddAnn = var.getAnnotation(Compound.class);
         if (compounddAnn == null) {
             // simple parameter
-            TeleParamElement teleParam = new TeleParamElement(var, paramIndex);
+            TeleParamElement teleParam = new TeleParamElement(var, localParamAnn != null, paramIndex);
             teleMethod.linkVariable(teleParam);
             teleParam.setParentVariable(parentTeleVar);
             context.getModulatorKit().notifyLinkTeleParam(teleParam, varStack);
@@ -81,7 +84,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
         }
         varStack.push(var); // push var back to stack head
 
-        TeleCompElement teleComp = new TeleCompElement(var);
+        TeleCompElement teleComp = new TeleCompElement(var, localParamAnn != null);
         teleComp.setParentVariable(parentTeleVar);
         teleMethod.linkVariable(teleComp);
 
