@@ -48,7 +48,7 @@ public final class BooleanReader extends AbstractReader<Boolean> {
             if (StringUtils.isBlank(str)) {
                 return null;
             }
-            return Boolean.getBoolean(str);
+            return Boolean.parseBoolean(str);
         } catch (Exception ex) {
             throw new TeleException(messages.invalidBooleanFormat(ctx.getName()));
         }
