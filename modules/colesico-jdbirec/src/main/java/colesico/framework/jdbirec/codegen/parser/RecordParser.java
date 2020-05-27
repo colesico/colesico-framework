@@ -189,7 +189,7 @@ public class RecordParser extends FrameworkAbstractParser {
                 columnElement.setMediator(new ClassType(processingEnv, (DeclaredType) mediatorType));
             }
 
-            // insertUs
+            // insertAs
             if (!OP_NOP.equals(columnAnnElm.unwrap().insertAs())) {
                 if (columnAnnElm.unwrap().insertAs().equals(OU_UPDATE)) {
                     if (!OP_NOP.equals(columnAnnElm.unwrap().updateAs())) {
@@ -200,7 +200,7 @@ public class RecordParser extends FrameworkAbstractParser {
                 }
             }
 
-            // updateUs
+            // updateAs
             if (!OP_NOP.equals(columnAnnElm.unwrap().updateAs())) {
                 if (columnAnnElm.unwrap().updateAs().equals(OP_INSERT)) {
                     if (!OP_NOP.equals(columnAnnElm.unwrap().insertAs())) {
@@ -210,6 +210,8 @@ public class RecordParser extends FrameworkAbstractParser {
                     columnElement.setUpdateAs(columnAnnElm.unwrap().updateAs());
                 }
             }
+
+            // selectAs
             if (!OP_NOP.equals(columnAnnElm.unwrap().selectAs())) {
                 columnElement.setSelectAs(columnAnnElm.unwrap().selectAs());
             }
@@ -247,11 +249,11 @@ public class RecordParser extends FrameworkAbstractParser {
         }
 
         List<FieldElement> fields = compositionElm.getOriginClass().getFieldsFiltered(
-            f -> !f.unwrap().getModifiers().contains(Modifier.STATIC)
+                f -> !f.unwrap().getModifiers().contains(Modifier.STATIC)
         );
 
         for (FieldElement field : fields) {
-            logger.debug("Process RECORD field: "+field);
+            logger.debug("Process RECORD field: " + field);
             final List<Composition> compositions = getCompositions(field);
             for (Composition compositionAnn : compositions) {
 

@@ -30,6 +30,7 @@ abstract public class RecordKit<R> {
     public static final String NEW_RECORD_METHOD = "newRecord";
 
     public static final String TABLE_NAME_METHOD = "tableName";
+    public static final String GET_RECORD_TOKEN_METHOD = "getRecordToken";
     public static final String GET_COLUMNS_TOKEN_METHOD = "getColumnsToken";
     public static final String GET_UPDATES_TOKEN = "getUpdatesToken";
     public static final String GET_VALUES_TOKEN = "getValuesToken";
@@ -40,6 +41,7 @@ abstract public class RecordKit<R> {
     public static final String QUALIFICATION_PARAM = "qualification";
 
     public static final String TABLE_NAME_REF = "@table";
+    public static final String RECORD_REF = "@record";
     public static final String COLUMNS_REF = "@columns";
     public static final String UPDATES_REF = "@updates";
     public static final String VALUES_REF = "@values";
@@ -58,8 +60,14 @@ abstract public class RecordKit<R> {
     abstract public String tableName();
 
     /**
+     * Select columns and expressions, separated by comma:  column1,column2, expr(column3)...
+     * This token for use in select statements
+     */
+    abstract protected String getRecordToken();
+
+    /**
      * Column names separate with  comma:  column1,column2...
-     * This token for use in select and insert statements
+     * This token for use in insert statements
      */
     abstract protected String getColumnsToken();
 
@@ -81,6 +89,7 @@ abstract public class RecordKit<R> {
     public final String sql(String query) {
         return query
                 .replace(TABLE_NAME_REF, tableName())
+                .replace(RECORD_REF, getRecordToken())
                 .replace(COLUMNS_REF, getColumnsToken())
                 .replace(VALUES_REF, getValuesToken())
                 .replace(UPDATES_REF, getUpdatesToken());

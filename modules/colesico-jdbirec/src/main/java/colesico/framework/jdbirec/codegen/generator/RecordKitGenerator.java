@@ -342,6 +342,26 @@ public class RecordKitGenerator {
         classBuilder.addMethod(mb.build());
     }
 
+    protected void generateGetRecordToken() {
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(RecordKit.GET_RECORD_TOKEN_METHOD);
+        mb.addModifiers(Modifier.PROTECTED);
+        mb.addAnnotation(Override.class);
+        mb.returns(ClassName.get(String.class));
+
+        List<ColumnElement> allColumns = recordElement.getAllColumns();
+        List<String> selectItems = new ArrayList<>();
+        for (ColumnElement column : allColumns) {
+            if (column.getSelectAs() == null) {
+                continue;
+            }
+            String selectAs = StringUtils.replace(column.getSelectAs(), "@column", column.getName());
+            selectItems.add(selectAs);
+        }
+        String token = StringUtils.join(selectItems, ", ");
+        mb.addStatement("return $S", token);
+        classBuilder.addMethod(mb.build());
+    }
+
     protected void generateGetColumnsToken() {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(RecordKit.GET_COLUMNS_TOKEN_METHOD);
         mb.addModifiers(Modifier.PROTECTED);
@@ -351,14 +371,10 @@ public class RecordKitGenerator {
         List<ColumnElement> allColumns = recordElement.getAllColumns();
         List<String> columnNames = new ArrayList<>();
         for (ColumnElement column : allColumns) {
-            if (column.getSelectAs() == null) {
+            if (column.getInsertAs() == null) {
                 continue;
             }
-            if (column.getSelectAs().equals("@column")) {
-                columnNames.add(column.getName());
-            } else {
-                columnNames.add(column.getSelectAs());
-            }
+            columnNames.add(column.getName());
         }
         String token = StringUtils.join(columnNames, ", ");
         mb.addStatement("return $S", token);
@@ -463,6 +479,7 @@ public class RecordKitGenerator {
         generateExportMethod();
         generatImportMethod();
         generateTableName();
+        generateGetRecordToken();
         generateGetColumnsToken();
         generateGetValuesToken();
         generateGetUpdatesToken();
