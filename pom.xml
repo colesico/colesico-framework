@@ -79,6 +79,7 @@
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <!-- Do not change javadoc version without tests! -->
         <maven-javadoc-plugin.version>3.0.0</maven-javadoc-plugin.version>
+        <org.ow2.asm.version>8.0.1</org.ow2.asm.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
         <spotbugs-maven-plugin.version>4.0.0</spotbugs-maven-plugin.version>
@@ -207,7 +208,7 @@
             </modules>
         </profile>
         <profile>
-            <id>doc</id>
+            <id>docs</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
@@ -281,7 +282,7 @@
                             <dependency>
                                 <groupId>org.ow2.asm</groupId>
                                 <artifactId>asm</artifactId>
-                                <version>7.0</version>
+                                <version>${org.ow2.asm.version}</version>
                             </dependency>
                         </dependencies>
                     </plugin>
@@ -341,7 +342,7 @@
                             <dependency>
                                 <groupId>org.ow2.asm</groupId>
                                 <artifactId>asm</artifactId>
-                                <version>8.0.1</version>
+                                <version>${org.ow2.asm.version}</version>
                             </dependency>
                         </dependencies>
                     </plugin>
