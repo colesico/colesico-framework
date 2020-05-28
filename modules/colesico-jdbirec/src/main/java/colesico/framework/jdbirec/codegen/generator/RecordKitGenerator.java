@@ -388,14 +388,12 @@ public class RecordKitGenerator {
         mb.returns(ClassName.get(String.class));
 
         List<ColumnElement> allColumns = recordElement.getAllColumns();
-        List<String> columnNames = new ArrayList<>();
         List<String> columnValues = new ArrayList<>();
         for (ColumnElement column : allColumns) {
             if (column.getInsertAs() == null) {
                 continue;
             }
 
-            columnNames.add(column.getName());
             if (column.getInsertAs().equals("@field")) {
                 String paramName = generateChain(null, column.getParentComposition(), column, FieldElement::getName);
                 columnValues.add(":" + paramName);
@@ -403,8 +401,7 @@ public class RecordKitGenerator {
                 columnValues.add(column.getInsertAs());
             }
         }
-        String columnsToken = StringUtils.join(columnNames, ", ");
-        String valuesToken = StringUtils.join(columnValues, ',');
+        String valuesToken = StringUtils.join(columnValues, ", ");
 
         mb.addStatement("return $S", valuesToken);
         classBuilder.addMethod(mb.build());

@@ -43,7 +43,7 @@ public class RouterBuilderImpl implements RouterBuilder {
         return router;
     }
 
-    private final class CustomRouteAction {
+    private static final class CustomRouteAction {
         private final HttpMethod httpMethod;
         private final String route;
         private final Class<?> targetClass;

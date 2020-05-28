@@ -16,6 +16,8 @@
 
 package colesico.framework.profile;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -36,9 +38,9 @@ public class DefaultProfile implements Profile {
 
     private void createQualifiers() {
         this.qualifiers = new ObjectiveQualifiers(new String[]{
-                locale.getLanguage() != "" ? locale.getLanguage() : null,
-                locale.getCountry() != "" ? locale.getCountry() : null,
-                locale.getVariant() != "" ? locale.getVariant() : null
+                StringUtils.isBlank(locale.getLanguage()) ? null : locale.getLanguage(),
+                StringUtils.isBlank(locale.getCountry()) ? null : locale.getCountry(),
+                StringUtils.isBlank(locale.getVariant()) ? null : locale.getVariant()
         });
     }
 

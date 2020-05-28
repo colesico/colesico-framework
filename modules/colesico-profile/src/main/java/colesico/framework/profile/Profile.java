@@ -24,7 +24,7 @@ import java.util.Locale;
  * The specific implementation depends on the needs of the application and is implemented in the application.
  * Framework provides default implementation {@link DefaultProfile}
  */
-public interface Profile extends Cloneable, Serializable {
+public interface Profile {
 
     String GET_LOCALE_METHOD = "getLocale";
     String GET_QUALIFIERS_METHOD = "getQualifiers";
