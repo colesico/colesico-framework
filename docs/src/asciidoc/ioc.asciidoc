@@ -2,13 +2,13 @@
 
 == Colesico-IoC
 
-Colesico-IoC is a simple, lightweight and fast dependency injection container for Java 11 and above.
+Colesico-IoC is a simple, lightweight and fast dependency injection container for Java 14 and above.
 
 [[features]]
 
 == Key features:
 
-* Small codebase.
+* Small codebase and great performance.
 * Reflection is not used (code generation at compile time with AnnotationProcessor).
 * Dependency injection is constructor-based only.
 * Cyclic dependency resolving support.
@@ -22,7 +22,7 @@ Colesico-IoC is a simple, lightweight and fast dependency injection container fo
 * Support for multiple dependency implementations (@Polyproduce).
 * Injection point support (e.g. for Logger injection).
 * Lifecycle listeners  (@PostConstruct, @PostProduce)
-* Java 11+  (JPMS compatible)
+* JPMS compatible
 
 
 == Ioc container
