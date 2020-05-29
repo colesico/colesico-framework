@@ -276,6 +276,30 @@ To pass Injection point information to dependency producer use @Contextual annot
 obtain that Injection point in the producer use @Message annotation and InjectionPoint type parameter.
 See logger injection detail example in the ioc-example source code.
 
+Example:
+
+[source,java]
+----
+@Producer
+public class LogProducer {
+
+    public Logger getLogger(@Message InjectionPoint ip) {
+        return LoggerFactory.getLogger(ip.getTargetClass());
+    }
+}
+
+
+@Sevice
+public class ServiceBean{
+    final Logger logger;
+
+    @Inject
+    public ServiceBean(@Contextual Logger logger){
+        this.logger = logger;
+    }
+}
+----
+
 == Lifecycle listeners
 
 IoC container supports the following lifecycle listeners:
@@ -284,7 +308,29 @@ IoC container supports the following lifecycle listeners:
   invoked by the IoC container  after bean has been created and PostProduce listener been invoked.
 * PostProduce. @PostProduce annotation should be applied to public producer method to declare post produce listener.
   The post produce listener is invoked by IoC container to handle just produced instance.
-  Post produce listener invoked before @PostConstruct listener.
+
+==== PostProduce
+
+Post produce listener invoked before @PostConstruct listener.
+PostProduce listener method should accept producing instance as
+message and return the same instance (or substituted)
+
+Example:
+
+[source,java]
+----
+@Producer
+public class ConfigProducer{
+
+    ...
+
+    @PostProduce
+    public Config initUndertowConfig(@Message Config config) {
+        config.setValue("OK");
+        return config;
+    }
+}
+----
 
 == Circular dependencies
 
