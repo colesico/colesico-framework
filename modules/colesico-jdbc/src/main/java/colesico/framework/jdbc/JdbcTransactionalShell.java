@@ -75,9 +75,15 @@ public class JdbcTransactionalShell extends AbstractTransactionalShell<JdbcTrans
         transactions.set(tx);
 
         Connection connection = null;
+        R result = null;
         try {
-            R result = unitOfWork.execute();
-            connection = tx.getConnection();
+
+            try {
+                result = unitOfWork.execute();
+            } finally {
+                connection = tx.getConnection();
+            }
+
             if (connection != null) {
                 if (tx.getRollbackOnly()) {
                     connection.rollback();
@@ -85,7 +91,7 @@ public class JdbcTransactionalShell extends AbstractTransactionalShell<JdbcTrans
                     connection.commit();
                 }
             }
-            return result;
+
         } catch (Exception e) {
             if (connection != null) {
                 try {
@@ -94,7 +100,7 @@ public class JdbcTransactionalShell extends AbstractTransactionalShell<JdbcTrans
                     logger.error("Error rolling back JDBC connection: " + ExceptionUtils.getRootCauseMessage(rbe));
                 }
             }
-            throw rethrow(e);
+            rethrow(e);
         } finally {
             if (connection != null) {
                 try {
@@ -105,6 +111,7 @@ public class JdbcTransactionalShell extends AbstractTransactionalShell<JdbcTrans
             }
             transactions.remove();
         }
+        return result;
     }
 
     @Override
