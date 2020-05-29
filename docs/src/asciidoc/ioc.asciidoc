@@ -106,6 +106,12 @@ you can specify just an instance class. (it will be implicitly converted to Type
   MyBean defaultBean = ioc.instance(MyBean.class);
 ----
 
+== Qualifications
+
+By default IoC uses the following qualifiers to clarify dependency injection:
+
+* @Named - allows you to qualify a dependency using an any string name
+* @Classed - the same as @Named but instead of a text name, an arbitrary class is used
 
 == Producers
 
