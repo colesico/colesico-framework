@@ -16,10 +16,16 @@
 
 package colesico.framework.jdbi.internal;
 
+import colesico.framework.transaction.Transaction;
 import colesico.framework.transaction.Tuning;
 import org.jdbi.v3.core.Handle;
 
-public class JdbiTransaction {
+import java.util.Random;
+
+public class JdbiTransaction implements Transaction {
+
+    // Transaction ID
+    private String id;
 
     private Handle handle;
     private Tuning<Handle> tuning;
@@ -49,5 +55,14 @@ public class JdbiTransaction {
 
     public void setRollbackOnly(boolean rollbackOnly) {
         this.rollbackOnly = rollbackOnly;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public JdbiTransaction setId(String id) {
+        this.id = id;
+        return this;
     }
 }

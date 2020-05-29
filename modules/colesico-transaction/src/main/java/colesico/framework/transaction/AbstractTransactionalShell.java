@@ -16,6 +16,7 @@
 
 package colesico.framework.transaction;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 
 /**
@@ -24,7 +25,7 @@ import org.slf4j.Logger;
  * @param <T> transaction type
  * @param <U> tuning type
  */
-abstract public class AbstractTransactionalShell<T, U> implements TransactionalShell<U> {
+abstract public class AbstractTransactionalShell<T extends Transaction, U> implements TransactionalShell<U> {
 
     protected final Logger logger;
 
@@ -36,85 +37,156 @@ abstract public class AbstractTransactionalShell<T, U> implements TransactionalS
 
     abstract protected <R> R createNew(UnitOfWork<R> unitOfWork, U tuning);
 
+    protected String getTxId(T transaction) {
+        return transaction == null ? null : transaction.getId();
+    }
+
     @Override
     public <R> R required(UnitOfWork<R> unitOfWork, U tuning) {
-        logger.debug("TX-Required begin");
         T tx = transactions.get();
-        R result;
-        if (tx == null) {
-            result = createNew(unitOfWork, tuning);
-        } else {
-            result = unitOfWork.execute();
+        if (logger.isDebugEnabled()) {
+            logger.debug("TX-Required begin thId:{}", getTxId(tx));
         }
-        logger.debug("TX-Required end");
+        R result = null;
+        try {
+            if (tx == null) {
+                result = createNew(unitOfWork, tuning);
+            } else {
+                result = unitOfWork.execute();
+            }
+        } catch (Throwable e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("TX-Required exception: {}; txId:{}", ExceptionUtils.getRootCauseMessage(e), getTxId(tx));
+            }
+           rethrow(e);
+        } finally {
+            logger.debug("TX-Required end");
+        }
         return result;
     }
 
     @Override
     public <R> R requiresNew(UnitOfWork<R> unitOfWork, U tuning) {
-        logger.debug("TX-RequiresNew begin");
         T tx = transactions.get();
-        if (tx == null) {
-            R result = createNew(unitOfWork, tuning);
-            logger.debug("TX-RequiresNew end");
-            return result;
-        } else {
-            try {
-                transactions.remove();
-                return createNew(unitOfWork, tuning);
-            } finally {
-                transactions.set(tx);
-                logger.debug("TX-RequiresNew end");
-            }
+        if (logger.isDebugEnabled()) {
+            logger.debug("TX-RequiresNew begin thId:{}", getTxId(tx));
         }
+        R result = null;
+        try {
+            if (tx == null) {
+                result = createNew(unitOfWork, tuning);
+            } else {
+                try {
+                    transactions.remove();
+                    result = createNew(unitOfWork, tuning);
+                } finally {
+                    transactions.set(tx);
+                }
+            }
+        } catch (Throwable e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("TX-RequiresNew exception: {}; txId:{}", ExceptionUtils.getRootCauseMessage(e), getTxId(tx));
+            }
+           rethrow(e);
+        } finally {
+            logger.debug("TX-RequiresNew end");
+        }
+        return result;
     }
 
     @Override
     public <R> R mandatory(UnitOfWork<R> unitOfWork, U tuning) {
-        logger.debug("TX-Mandatory begin");
-        getTransaction();
-        R result = unitOfWork.execute();
-        logger.debug("TX-Mandatory end");
+        R result = null;
+        T tx = transactions.get();
+        if (logger.isDebugEnabled()) {
+            logger.debug("TX-Mandatory begin thId:{}", getTxId(tx));
+        }
+        try {
+            if (tx == null) {
+                throw new IllegalStateException("No active transaction");
+            }
+            result = unitOfWork.execute();
+        } catch (Throwable e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("TX-Mandatory exception: {}; txId:{}", ExceptionUtils.getRootCauseMessage(e), getTxId(tx));
+            }
+           rethrow(e);
+        } finally {
+            logger.debug("TX-Mandatory end");
+        }
         return result;
     }
 
     @Override
     public <R> R notSupported(UnitOfWork<R> unitOfWork, U tuning) {
-        logger.debug("TX-NotSupported begin");
         T tx = transactions.get();
-        if (tx == null) {
-            R result = unitOfWork.execute();
-            logger.debug("TX-NotSupported end");
-            return result;
-        } else {
-            try {
-                transactions.remove();
-                return unitOfWork.execute();
-            } finally {
-                transactions.set(tx);
-                logger.debug("TX-NotSupported end");
-            }
+        if (logger.isDebugEnabled()) {
+            logger.debug("TX-NotSupported begin thId:{}", getTxId(tx));
         }
+        R result = null;
+        try {
+            if (tx == null) {
+                result = unitOfWork.execute();
+            } else {
+                try {
+                    transactions.remove();
+                    return unitOfWork.execute();
+                } finally {
+                    transactions.set(tx);
+                }
+            }
+        } catch (Throwable e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("TX-NotSupported exception: {}; txId:{}", ExceptionUtils.getRootCauseMessage(e), getTxId(tx));
+            }
+           rethrow(e);
+        } finally {
+            logger.debug("TX-NotSupported end");
+        }
+        return result;
     }
 
     @Override
     public <R> R supports(UnitOfWork<R> unitOfWork, U tuning) {
-        logger.debug("TX-Supports begin");
-        R result = unitOfWork.execute();
-        logger.debug("TX-Supports end");
+        R result = null;
+        T tx = transactions.get();
+        if (logger.isDebugEnabled()) {
+            logger.debug("TX-Supports begin thId:{}", getTxId(tx));
+        }
+        try {
+            result = unitOfWork.execute();
+        } catch (Throwable e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("TX-Supports exception: {}; txId:{}", ExceptionUtils.getRootCauseMessage(e), getTxId(tx));
+            }
+           rethrow(e);
+        } finally {
+            logger.debug("TX-Supports end");
+        }
         return result;
     }
 
     @Override
     public <R> R never(UnitOfWork<R> unitOfWork, U tuning) {
-        logger.debug("TX-Never begin");
         T tx = transactions.get();
-        if (tx != null) {
-            logger.debug("TX-Never ned");
-            throw new IllegalStateException("Active transaction exists");
+        if (logger.isDebugEnabled()) {
+            logger.debug("TX-Never begin thId:{}", getTxId(tx));
         }
-        logger.debug("TX-Never ned");
-        return unitOfWork.execute();
+        R result = null;
+        try {
+            if (tx != null) {
+                throw new IllegalStateException("Active transaction exists");
+            }
+            result = unitOfWork.execute();
+        } catch (Throwable e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("TX-Never exception: {}; txId:{}", ExceptionUtils.getRootCauseMessage(e), getTxId(tx));
+            }
+           rethrow(e);
+        } finally {
+            logger.debug("TX-Never ned");
+        }
+        return result;
     }
 
     @Override

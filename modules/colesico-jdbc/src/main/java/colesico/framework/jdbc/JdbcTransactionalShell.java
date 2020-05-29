@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.util.Random;
 
 /**
  * Transactional shell simple implementation.
@@ -32,6 +33,11 @@ import java.sql.Connection;
  * Nested transactions are not supported.
  */
 public class JdbcTransactionalShell extends AbstractTransactionalShell<JdbcTransaction, Tuning<Connection>> {
+
+    /**
+     * To generate Transaction.Id
+     */
+    private static Random random = new Random();
 
     protected final DataSource dataSource;
 
@@ -59,7 +65,13 @@ public class JdbcTransactionalShell extends AbstractTransactionalShell<JdbcTrans
         if (transactions.get() != null) {
             throw new IllegalStateException("Active JDBC transaction exists");
         }
-        JdbcTransaction tx = new JdbcTransaction().setTuning(tuning);
+
+        String txId = Long.toHexString(System.currentTimeMillis()) + ':' + Long.toHexString(random.nextLong());
+
+        JdbcTransaction tx = new JdbcTransaction()
+                .setTuning(tuning)
+                .setId(txId);
+
         transactions.set(tx);
 
         Connection connection = null;

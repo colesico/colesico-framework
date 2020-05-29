@@ -16,11 +16,15 @@
 
 package colesico.framework.jdbc.internal;
 
+import colesico.framework.transaction.Transaction;
 import colesico.framework.transaction.Tuning;
 
 import java.sql.Connection;
+import java.util.Random;
 
-public class JdbcTransaction {
+public class JdbcTransaction implements Transaction {
+
+    private String id;
 
     private Connection connection;
     private Tuning<Connection> tuning;
@@ -50,5 +54,15 @@ public class JdbcTransaction {
 
     public void setRollbackOnly(Boolean rollbackOnly) {
         this.rollbackOnly = rollbackOnly;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    public JdbcTransaction setId(String id) {
+        this.id = id;
+        return this;
     }
 }
