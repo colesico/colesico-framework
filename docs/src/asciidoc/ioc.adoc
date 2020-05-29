@@ -108,7 +108,7 @@ you can specify just an instance class. (it will be implicitly converted to Type
 
 == Qualifications
 
-By default IoC uses the following qualifiers to clarify dependency injection:
+By default IoC uses the following qualifiers to disambiguate dependency injection:
 
 * @Named - allows you to qualify a dependency using an any string name
 * @Classed - the same as @Named but instead of a text name, an arbitrary class is used

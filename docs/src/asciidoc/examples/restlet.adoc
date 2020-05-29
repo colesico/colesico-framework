@@ -3,7 +3,7 @@
 == Maven
 
 To build simple REST JSON service you must first to setup your maven project.
-Pom file is identical to the  <<helloworld.asciidoc#,hello world example>>
+Pom file is identical to the  <<helloworld.adoc#,hello world example>>
 
 == Main class
 

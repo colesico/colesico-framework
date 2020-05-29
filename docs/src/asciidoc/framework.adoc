@@ -16,8 +16,8 @@ Colesico Framework does not almost use the reflection at runtime. The approach u
 
 The best way to start learning something is to study by examples :)
 
-* <<examples/helloworld.asciidoc#,Hello world example>>
-* <<examples/restlet.asciidoc#,RESTful service example >>
+* <<examples/helloworld.adoc#,Hello world example>>
+* <<examples/restlet.adoc#,RESTful service example >>
 
 See other examples in the
  https://github.com/colesico/colesico-framework/tree/master/examples[source code]
@@ -28,35 +28,35 @@ Colesico-framework consists of highly specialized micromodules.
 
 === Core modules
 
-* <<ioc.asciidoc#,Colesico-ioc - Lightweight dependency injection container>>
-* <<config.asciidoc#,Colesico-config - Configuration assistant>>
-* <<teleapi.asciidoc#,Colesico-teleapi - Unified API for remote  services invocation>>
-* <<service.asciidoc#,Colesico-service - Business logic beans automation>>
+* <<ioc.adoc#,Colesico-ioc - Lightweight dependency injection container>>
+* <<config.adoc#,Colesico-config - Configuration assistant>>
+* <<teleapi.adoc#,Colesico-teleapi - Unified API for remote  services invocation>>
+* <<service.adoc#,Colesico-service - Business logic beans automation>>
 
 === Service modules
 
-* <<transaction.asciidoc#,Colesico-transaction - Unified transaction control for services>>
+* <<transaction.adoc#,Colesico-transaction - Unified transaction control for services>>
 * Colesico-security - Security service
-* <<profile.asciidoc#,Colesico-profile - localization profile assistant service>>
+* <<profile.adoc#,Colesico-profile - localization profile assistant service>>
 * Colesico-translation - Simple text translation support for services
 * Colesico-resource - Provides an ability of resource rewriting and localization
 * Colesico-validation - DSL style extendable data validator
-* <<eventbus.asciidoc#,Colesico-eventbus - Simple even bus for services>>
+* <<eventbus.adoc#,Colesico-eventbus - Simple even bus for services>>
 * Colesico-asyncjob - Async job background execution
-* <<slf4j.asciidoc#,Colesico-slf4j - Slf4j integration>>
+* <<slf4j.adoc#,Colesico-slf4j - Slf4j integration>>
 
 === Database interaction modules
 
 * Colesico-jdbc - Jdbc integration  (transactions support, etc.)
 * Colesico-hikaricp - HikariCP integration  (database connection pool)
-*  <<jdbi.asciidoc#,Colesico-jdbi - Jdbi integration  (transactions support, etc.)>>
+*  <<jdbi.adoc#,Colesico-jdbi - Jdbi integration  (transactions support, etc.)>>
 * Colesico-jdbirec - Jdbi data mapping/binding assistant
 
 === Web modules
 
 * Colesico-http - Unified HTTP API
-* <<router.asciidoc#,Colesico-router - HTTP requests dispatcher>>
-* <<httpserver.asciidoc#,Colesico-httpserver - HTTP server unified API>>
+* <<router.adoc#,Colesico-router - HTTP requests dispatcher>>
+* <<httpserver.adoc#,Colesico-httpserver - HTTP server unified API>>
 * Colesico-weblet - HTTP requests handling support (servlets analogue)
 * Colesico-webstatic - Static files (*.js, *.css etc) sharing helper
 * Colesico-restlet - Simplified RESTful Web services support

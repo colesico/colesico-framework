@@ -79,7 +79,7 @@ Also, all dependencies should be collected to the target/lib folder. For this pu
 == Main
 
 Define "Main" class and "main" static method that be a start point of you application.
-Inside that method you should build an instance of the <<../ioc.asciidoc#,inversion of control container>>,
+Inside that method you should build an instance of the <<../ioc.adoc#,inversion of control container>>,
 then  obtain a http server instance and start it.
 
 [source,java]
@@ -141,7 +141,7 @@ It is possible to customize request uri with @Route annotation applied on :
 * weblet class
 * weblet handler method
 
-<<../router.asciidoc#, See Router module details>>
+<<../router.adoc#, See Router module details>>
 
 == Run the Application
 
