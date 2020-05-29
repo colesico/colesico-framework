@@ -5,7 +5,7 @@ It is inspired by Spring and EJB frameworks but uses more simplified approach to
 
 ## Documentation
 
- [Colesico-framework docs/manual](https://github.com/colesico/colesico-framework/blob/master/docs/src/asciidoc/framework.asciidoc)
+ [Colesico-framework docs/manual](https://github.com/colesico/colesico-framework/blob/master/docs/src/asciidoc/framework.adoc)
 
 ## Examples
 
