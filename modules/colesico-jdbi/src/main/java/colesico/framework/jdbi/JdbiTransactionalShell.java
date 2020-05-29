@@ -54,14 +54,18 @@ public class JdbiTransactionalShell extends AbstractTransactionalShell<JdbiTrans
 
     @Override
     protected <R> R createNew(UnitOfWork<R> unitOfWork, Tuning<Handle> tuning) {
-        logger.debug("TX-New (JDBI) begin");
+        logger.debug("TX-New-JDBI begin");
         JdbiTransaction tx = transactions.get();
         if (tx != null) {
             throw new IllegalStateException("Active Jdbi transaction exists; txId:" + getTxId(tx));
         }
 
-        String txId = Long.toHexString(System.currentTimeMillis()) + ':' + Long.toHexString(random.nextLong());
-        logger.debug("TX-New (JDBI) txId: {}", txId);
+        String txId = null;
+        if (logger.isDebugEnabled()) {
+            txId = Long.toHexString(System.currentTimeMillis()) + ':' + Long.toHexString(random.nextLong());
+            logger.debug("TX-New-JDBI txId: {}", txId);
+        }
+
         tx = new JdbiTransaction()
                 .setTuning(tuning)
                 .setId(txId);
@@ -79,49 +83,49 @@ public class JdbiTransactionalShell extends AbstractTransactionalShell<JdbiTrans
 
             if (handle != null) {
                 if (tx.getRollbackOnly()) {
-                    logger.debug("TX-New (JDBI) rollback JDBI handle");
+                    logger.debug("TX-New-JDBI rollback handle (on success)");
                     handle.rollback();
                 } else {
-                    logger.debug("TX-New (JDBI) commit JDBI handle");
+                    logger.debug("TX-New-JDBI commit handle (on success)");
                     handle.commit();
                 }
             } else {
-                logger.debug("TX-New (JDBI) close JDBI handle is null");
+                logger.debug("TX-New-JDBI handle is null (success)");
             }
         } catch (Exception e) {
-            logger.debug("TX-New (JDBI) exception:" + ExceptionUtils.getRootCauseMessage(e));
+            logger.debug("TX-New-JDBI exception:" + ExceptionUtils.getRootCauseMessage(e));
 
             if (handle != null) {
                 try {
-                    logger.debug("TX-New (JDBI) rollback JDBI handle");
+                    logger.debug("TX-New-JDBI rollback handle (on error)");
                     handle.rollback();
                 } catch (Exception rbe) {
-                    logger.error("Error rolling back Jdbi connection: " + ExceptionUtils.getRootCauseMessage(rbe));
+                    logger.error("Error rolling back handle: {}", ExceptionUtils.getRootCauseMessage(rbe));
                 }
             } else {
-                logger.debug("TX-New (JDBI) close JDBI handle is null");
+                logger.debug("TX-New-JDBI handle is null (on error)");
             }
             rethrow(e);
         } finally {
 
             if (handle != null) {
                 try {
-                    logger.debug("TX-New (JDBI) close JDBI handle");
+                    logger.debug("TX-New-JDBI close handle (on finally)");
                     handle.close();
                 } catch (Exception e) {
-                    logger.error("Error closing JDBI connection: " + ExceptionUtils.getRootCauseMessage(e));
+                    logger.error("Error closing handle: " + ExceptionUtils.getRootCauseMessage(e));
                 }
             } else {
-                logger.debug("TX-New (JDBI) close JDBI handle is null");
+                logger.debug("TX-New-JDBI handle is null (on finally)");
             }
             transactions.remove();
-            logger.debug("TX-New (JDBI) end");
+            logger.debug("TX-New-JDBI end");
         }
         return result;
     }
 
     /**
-     * Return active Jdbi handle bound to active transaction
+     * Return active jdbi handle bound from active transaction
      *
      * @return Jdbi handle
      */
