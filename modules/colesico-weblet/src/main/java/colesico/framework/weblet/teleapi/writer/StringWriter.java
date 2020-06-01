@@ -18,6 +18,7 @@ package colesico.framework.weblet.teleapi.writer;
 
 import colesico.framework.http.HttpResponse;
 import colesico.framework.weblet.StringResponse;
+import colesico.framework.weblet.WebletException;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WebletTDWContext;
 
@@ -39,6 +40,9 @@ public final class StringWriter implements WebletTeleWriter<StringResponse> {
 
     @Override
     public void write(StringResponse value, WebletTDWContext wrContext) {
+        if (value==null || value.getContent()==null){
+            throw new WebletException("Response is null");
+        }
         responseProv.get().sendText(value.getContent(), value.getContentType(), 200);
     }
 }
