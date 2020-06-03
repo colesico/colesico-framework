@@ -16,6 +16,7 @@
 
 package colesico.framework.pebble.internal;
 
+import colesico.framework.ioc.Ioc;
 import colesico.framework.translation.TranslationKit;
 import com.mitchellbosecke.pebble.extension.AbstractExtension;
 import com.mitchellbosecke.pebble.extension.Filter;
@@ -36,10 +37,12 @@ import java.util.Map;
 public class FrameworkExtension extends AbstractExtension {
 
     private final TranslationKit t9n;
+    private final Ioc ioc;
 
     @Inject
-    public FrameworkExtension(TranslationKit t9n) {
+    public FrameworkExtension(TranslationKit t9n, Ioc ioc) {
         this.t9n = t9n;
+        this.ioc = ioc;
     }
 
     @Override
@@ -52,7 +55,11 @@ public class FrameworkExtension extends AbstractExtension {
     @Override
     public Map<String, Function> getFunctions() {
         Map<String, Function> functions = new HashMap<>();
+        functions.put(GetBeanFunction.FUNCTION_NAME, new GetBeanFunction(ioc));
+        functions.put(GetNamedBeanFunction.FUNCTION_NAME, new GetNamedBeanFunction(ioc));
+        functions.put(GetClassedBeanFunction.FUNCTION_NAME, new GetClassedBeanFunction(ioc));
         functions.put(T9nFunction.FUNCTION_NAME, new T9nFunction());
+
         return functions;
     }
 
