@@ -47,13 +47,6 @@ public @interface UseSource {
     Class<? extends ConfigSource> type() default ConfigSource.class;
 
     /**
-     * Configuration source connection/configurations params in format paramName1,paramValue1,paramName2,paramValue2.. up to ten pairs.
-     *
-     * @return
-     */
-    String[] params() default {};
-
-    /**
      * Assumes that values for all fields are assigned from config source.
      * If false - the  @{@link FromSource} annotation should be used to assign the value to field.
      *

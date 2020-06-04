@@ -27,7 +27,7 @@ public interface ConfigSource {
     /**
      * Default parameter name for config source.
      * This parameter name should be used by code generator when the only parameter
-     * is passed with {@link UseSource#params()}
+     * is passed with {@link SourceParam}
      *
      * @see UseSource
      */

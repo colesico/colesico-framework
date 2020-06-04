@@ -164,22 +164,10 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         mb.returns(TypeName.get(confElement.getImplementation().asClassType().unwrap()));
         CodeBlock.Builder cb = CodeBlock.builder();
 
-        boolean paramEvenOrEmpty = confElement.getSource().getParams().length % 2 == 0;
-        boolean paramSingle = confElement.getSource().getParams().length == 1;
-        if (!(paramEvenOrEmpty || paramSingle)) {
-            throw CodegenException.of()
-                    .message("Config source driver params number is not even or single or empty")
-                    .element(confElement.getImplementation().unwrap()).build();
-        }
-
         ArrayCodegen paramsCodegen = new ArrayCodegen();
-        if (paramSingle) {
-            paramsCodegen.add("$T.$N", ClassName.get(ConfigSource.class), "DEFAULT_PARAM");
-            paramsCodegen.add("$S", confElement.getSource().getParams()[0]);
-        } else {
-            for (String param : confElement.getSource().getParams()) {
-                paramsCodegen.add("$S", param);
-            }
+        for (Map.Entry<String, String> param : confElement.getSource().getParams().entrySet()) {
+            paramsCodegen.add("$S", param.getKey());
+            paramsCodegen.add("$S", param.getValue());
         }
 
         // final Connection conn = configSource.connect(Map.of(...)
@@ -236,7 +224,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         }
 
         // Substitution
-        if (confElement.getSubstitution()!=null){
+        if (confElement.getSubstitution() != null) {
             prodGen.addSubstitutionAnnotation(confElement.getSubstitution());
         }
 

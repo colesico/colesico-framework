@@ -35,6 +35,8 @@ import javax.inject.Named;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Vladlen Larionov
@@ -117,11 +119,11 @@ public class ConfigParser extends FrameworkAbstractParser {
         // Substitution
         AnnotationToolbox<Substitute> subsAnn = configImpl.getAnnotation(Substitute.class);
         Substitution substitution = null;
-        if (subsAnn!=null){
+        if (subsAnn != null) {
             substitution = subsAnn.unwrap().value();
         }
 
-        ConfigElement configElement = new ConfigElement(configImpl, configPrototype, condition, substitution,model, target, defaultMessage, classed, named);
+        ConfigElement configElement = new ConfigElement(configImpl, configPrototype, condition, substitution, model, target, defaultMessage, classed, named);
 
         // Config source
         AnnotationToolbox<UseSource> useSourceAnn = configImpl.getAnnotation(UseSource.class);
@@ -129,13 +131,31 @@ public class ConfigParser extends FrameworkAbstractParser {
         if (useSourceAnn != null) {
             TypeMirror driverType = useSourceAnn.getValueTypeMirror(UseSource::type);
             ClassType driverClassType = new ClassType(processingEnv, (DeclaredType) driverType);
-            String[] params = useSourceAnn.unwrap().params();
+            Map<String, String> params = parseSourceParams(configImpl);
             sourceElm = new ConfigSourceElement(configElement, driverClassType, params, useSourceAnn.unwrap().bindAll());
             configElement.setSource(sourceElm);
             parseSourceValues(configImpl, sourceElm);
+
+
         }
 
         return configElement;
+    }
+
+    private Map<String, String> parseSourceParams(ClassElement configImpl) {
+        Map<String, String> result = new HashMap<>();
+        AnnotationToolbox<SourceParams> sourceParamsAnn = configImpl.getAnnotation(SourceParams.class);
+        if (sourceParamsAnn == null) {
+            AnnotationToolbox<SourceParam> sourceParamAnn = configImpl.getAnnotation(SourceParam.class);
+            if (sourceParamAnn != null) {
+                result.put(sourceParamAnn.unwrap().name(), sourceParamAnn.unwrap().value());
+            }
+        } else {
+            for (SourceParam sourceParam : sourceParamsAnn.unwrap().value()) {
+                result.put(sourceParam.name(), sourceParam.value());
+            }
+        }
+        return result;
     }
 
     private ConfigSourceElement parseSourceValues(ClassElement configImplementation, ConfigSourceElement confSourceElm) {

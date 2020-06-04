@@ -20,6 +20,7 @@ import colesico.framework.assist.codegen.model.ClassType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ConfigSourceElement {
 
@@ -27,12 +28,12 @@ public class ConfigSourceElement {
 
     private final ConfigElement parentConfig;
     private final ClassType driver;
-    private final String[] params;
+    private final Map<String, String> params;
     private final boolean bindAll;
 
     private final List<SourceValueElement> sourceValues = new ArrayList<>();
 
-    public ConfigSourceElement(ConfigElement parentConfig, ClassType driver, String[] params, boolean bindAll) {
+    public ConfigSourceElement(ConfigElement parentConfig, ClassType driver, Map<String, String> params, boolean bindAll) {
         this.parentConfig = parentConfig;
         this.driver = driver;
         this.params = params;
@@ -47,7 +48,7 @@ public class ConfigSourceElement {
         return driver;
     }
 
-    public String[] getParams() {
+    public Map<String, String> getParams() {
         return params;
     }
 
