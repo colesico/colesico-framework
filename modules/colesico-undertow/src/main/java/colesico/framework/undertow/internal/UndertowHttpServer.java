@@ -42,10 +42,10 @@ public class UndertowHttpServer implements HttpServer {
 
     protected final UndertowConfigPrototype config;
 
-    protected final UndertowRequestProcessor requestProcessor;
+    protected final UndertowHttpHandler requestProcessor;
 
     @Inject
-    public UndertowHttpServer(UndertowConfigPrototype config, UndertowRequestProcessor requestProcessor) {
+    public UndertowHttpServer(UndertowConfigPrototype config, UndertowHttpHandler requestProcessor) {
         this.config = config;
         this.requestProcessor = requestProcessor;
     }

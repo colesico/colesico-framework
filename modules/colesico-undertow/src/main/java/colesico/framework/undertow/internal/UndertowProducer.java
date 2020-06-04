@@ -30,8 +30,8 @@ import javax.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Producer
-@Produce(UndertowRequestProcessor.class)
-@Produce(BlockingRequestProcessor.class)
+@Produce(UndertowHttpHandler.class)
+@Produce(UndertowBlockingHandler.class)
 @Produce(UndertowConfigImpl.class)
 @Produce(UndertowHttpServer.class)
 public class UndertowProducer {

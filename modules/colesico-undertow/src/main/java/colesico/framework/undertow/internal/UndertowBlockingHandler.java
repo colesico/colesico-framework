@@ -19,12 +19,12 @@ import javax.inject.Inject;
  * dispatched from UndertowRequestProcessor
  */
 @Unscoped
-public class BlockingRequestProcessor extends RequestProcessor<HttpServerExchange> implements HttpHandler {
+public class UndertowBlockingHandler extends RequestProcessor<HttpServerExchange> implements HttpHandler {
 
     private final ActionResolution resolution;
 
     @Inject
-    public BlockingRequestProcessor(@Message ActionResolution resolution, ThreadScope threadScope, Router router, ErrorHandler errorHandler) {
+    public UndertowBlockingHandler(@Message ActionResolution resolution, ThreadScope threadScope, Router router, ErrorHandler errorHandler) {
         super(threadScope, router, errorHandler);
         this.resolution = resolution;
     }

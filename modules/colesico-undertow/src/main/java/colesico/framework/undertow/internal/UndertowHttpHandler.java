@@ -35,17 +35,17 @@ import javax.inject.Singleton;
 import java.util.Map;
 
 @Singleton
-public class UndertowRequestProcessor extends RequestProcessor<HttpServerExchange> implements HttpHandler {
+public class UndertowHttpHandler extends RequestProcessor<HttpServerExchange> implements HttpHandler {
 
-    private final Supplier<BlockingRequestProcessor> blockingRequestProccessorSup;
+    private final Supplier<UndertowBlockingHandler> blockingHandlerSup;
 
     @Inject
-    public UndertowRequestProcessor(ThreadScope threadScope,
-                                    Router router,
-                                    ErrorHandler errorHandler,
-                                    Supplier<BlockingRequestProcessor> blockingRequestProccessorSup) {
+    public UndertowHttpHandler(ThreadScope threadScope,
+                               Router router,
+                               ErrorHandler errorHandler,
+                               Supplier<UndertowBlockingHandler> blockingHandlerSup) {
         super(threadScope, router, errorHandler);
-        this.blockingRequestProccessorSup = blockingRequestProccessorSup;
+        this.blockingHandlerSup = blockingHandlerSup;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class UndertowRequestProcessor extends RequestProcessor<HttpServerExchang
                 exchange.startBlocking();
                 if (exchange.isInIoThread()) {
                     // Create blocking handler
-                    HttpHandler blockingHandler = blockingRequestProccessorSup.get(actionResolution);
+                    HttpHandler blockingHandler = blockingHandlerSup.get(actionResolution);
                     exchange.dispatch(blockingHandler);
                     return;
                 }
