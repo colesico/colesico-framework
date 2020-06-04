@@ -37,15 +37,15 @@ import java.util.Map;
 @Singleton
 public class UndertowRequestProcessor extends RequestProcessor<HttpServerExchange> implements HttpHandler {
 
-    private final Supplier<UndertowBlockingRequestProcessor> blockingProcessourSup;
+    private final Supplier<BlockingRequestProcessor> blockingRequestProccessorSup;
 
     @Inject
     public UndertowRequestProcessor(ThreadScope threadScope,
                                     Router router,
                                     ErrorHandler errorHandler,
-                                    Supplier<UndertowBlockingRequestProcessor> blockingProcessourSup) {
+                                    Supplier<BlockingRequestProcessor> blockingRequestProccessorSup) {
         super(threadScope, router, errorHandler);
-        this.blockingProcessourSup = blockingProcessourSup;
+        this.blockingRequestProccessorSup = blockingRequestProccessorSup;
     }
 
     @Override
@@ -64,21 +64,23 @@ public class UndertowRequestProcessor extends RequestProcessor<HttpServerExchang
         // Retrieve action resolution
         HttpMethod requestMethod = HttpMethod.of(exchange.getRequestMethod().toString());
         String requestUri = StringUtils.substringBefore(exchange.getRequestURI(), "?");
-        ActionResolution resolution = resolveAction(requestMethod, requestUri, exchange);
+        ActionResolution actionResolution = resolveAction(requestMethod, requestUri, exchange);
 
-        if (resolution != null) {
+        if (actionResolution != null) {
             // Check  blocking|nonblocking processing
-            Map<String, String> routeAttributes = resolution.getRouteAction().getAttributes();
+            Map<String, String> routeAttributes = actionResolution.getRouteAction().getAttributes();
             boolean blockingProcessing = routeAttributes == null || (!routeAttributes.containsKey(HttpServerAttributes.NON_BLOCKING_PROCESSING));
             if (blockingProcessing) {
                 // Dispatching to a worker thread
                 exchange.startBlocking();
                 if (exchange.isInIoThread()) {
-                    exchange.dispatch(blockingProcessourSup.get(resolution));
+                    // Create blocking handler
+                    HttpHandler blockingHandler = blockingRequestProccessorSup.get(actionResolution);
+                    exchange.dispatch(blockingHandler);
                     return;
                 }
             }
-            performAction(resolution, exchange);
+            performAction(actionResolution, exchange);
         }
         exchange.endExchange();
     }
