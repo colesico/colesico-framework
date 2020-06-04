@@ -24,7 +24,7 @@ import colesico.framework.config.UseSource;
  * This config by default use {@link PropertiesSource} type and
  * receives values from application.properties
  *
- * To change properties file name or path use {@link UseSource#params()}
+ * To change properties file name or path use {@link colesico.framework.config.SourceParam}
  * @see PropertiesSource
  */
 @Config

@@ -19,14 +19,15 @@ package colesico.framework.router;
 import colesico.framework.http.HttpMethod;
 
 /**
-* @author Vladlen Larionov
-*/
+ * @author Vladlen Larionov
+ */
 public class UnknownRouteException extends RuntimeException {
-    private final String uri;
     private final HttpMethod httpMethod;
+    private final String uri;
 
-    public UnknownRouteException(String uri, HttpMethod httpMethod) {
-        super("Route '"+ httpMethod.getName()+" "+uri+"' is not mapped to any controller");
+
+    public UnknownRouteException(HttpMethod httpMethod, String uri) {
+        super("Route '" + httpMethod.getName() + " " + uri + "' is not mapped to any controller");
         this.uri = uri;
         this.httpMethod = httpMethod;
     }

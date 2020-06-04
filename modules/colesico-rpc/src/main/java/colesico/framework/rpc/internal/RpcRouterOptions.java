@@ -24,6 +24,7 @@ public class RpcRouterOptions extends RouterOptions {
                 RpcRouteAction.DISPATCHER_ROUTE,
                 RpcRouteAction.class,
                 actionHandler::dispatch,
-                "dispatch");
+                "dispatch",
+                null);
     }
 }

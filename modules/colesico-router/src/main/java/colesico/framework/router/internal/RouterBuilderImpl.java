@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Singleton
 public class RouterBuilderImpl implements RouterBuilder {
@@ -29,8 +30,15 @@ public class RouterBuilderImpl implements RouterBuilder {
     }
 
     @Override
-    public void addCustomAction(HttpMethod httpMethod, String route, Class<?> targetClass, TeleMethod targetMethodRef, String targetMethodName) {
-        customRouteActions.add(new CustomRouteAction(httpMethod, route, targetClass, targetMethodRef, targetMethodName));
+    public void addCustomAction(HttpMethod httpMethod,
+                                String route,
+                                Class<?> targetClass,
+                                TeleMethod targetMethodRef,
+                                String targetMethodName,
+                                Map<String, String> routeAttributes) {
+
+        customRouteActions.add(new CustomRouteAction(httpMethod, route, targetClass, targetMethodRef,
+                targetMethodName, routeAttributes));
     }
 
     @Override
@@ -38,7 +46,12 @@ public class RouterBuilderImpl implements RouterBuilder {
         RouterImpl router = new RouterImpl(threadScope);
         router.loadRoutesMapping(teleFacadesSupp);
         for (CustomRouteAction cra : customRouteActions) {
-            router.addCustomAction(cra.getHttpMethod(), cra.getRoute(), cra.getTargetClass(), cra.getTargetMethodRef(), cra.getTargetMethodName());
+            router.addCustomAction(cra.getHttpMethod(),
+                    cra.getRoute(),
+                    cra.getTargetClass(),
+                    cra.getTargetMethodRef(),
+                    cra.getTargetMethodName(),
+                    cra.getRouteAttributes());
         }
         return router;
     }
@@ -49,13 +62,20 @@ public class RouterBuilderImpl implements RouterBuilder {
         private final Class<?> targetClass;
         private final TeleMethod targetMethodRef;
         private final String targetMethodName;
+        private final Map<String, String> routeAttributes;
 
-        public CustomRouteAction(HttpMethod httpMethod, String route, Class<?> targetClass, TeleMethod targetMethodRef, String targetMethodName) {
+        public CustomRouteAction(HttpMethod httpMethod,
+                                 String route,
+                                 Class<?> targetClass,
+                                 TeleMethod targetMethodRef,
+                                 String targetMethodName,
+                                 Map<String, String> routeAttributes) {
             this.httpMethod = httpMethod;
             this.route = route;
             this.targetClass = targetClass;
             this.targetMethodRef = targetMethodRef;
             this.targetMethodName = targetMethodName;
+            this.routeAttributes = routeAttributes;
         }
 
         public HttpMethod getHttpMethod() {
@@ -76,6 +96,10 @@ public class RouterBuilderImpl implements RouterBuilder {
 
         public String getTargetMethodName() {
             return targetMethodName;
+        }
+
+        public Map<String, String> getRouteAttributes() {
+            return routeAttributes;
         }
     }
 }

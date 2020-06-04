@@ -16,14 +16,17 @@
 
 package colesico.framework.undertow.internal;
 
+import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.httpserver.ErrorHandler;
 import colesico.framework.httpserver.RequestProcessor;
 import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.router.ActionResolution;
 import colesico.framework.router.Router;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -54,7 +57,13 @@ public class UndertowRequestProcessor extends RequestProcessor<HttpServerExchang
             exchange.dispatch(this);
             return;
         }
-        processRequest(exchange);
+
+        HttpMethod requestMethod = HttpMethod.of(exchange.getRequestMethod().toString());
+        String requestUri = StringUtils.substringBefore(exchange.getRequestURI(), "?");
+        ActionResolution resolution = resolveAction(requestMethod, requestUri, exchange);
+        if (resolution != null) {
+            performAction(resolution, exchange);
+        }
         exchange.endExchange();
     }
 }

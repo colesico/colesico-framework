@@ -17,9 +17,11 @@
 package colesico.framework.httpserver;
 
 import colesico.framework.http.HttpContext;
+import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.router.ActionResolution;
 import colesico.framework.router.Router;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -50,29 +52,47 @@ abstract public class RequestProcessor<C> {
 
     abstract protected HttpResponse createHttpResponse(C context);
 
-    public void processRequest(C context) {
-        // Create contexts
-        HttpRequest httpRequest = createHttpRequest(context);
-        HttpResponse httpResponse = createHttpResponse(context);
-        HttpContext httpContext = new HttpContext(httpRequest, httpResponse);
+    public ActionResolution resolveAction(HttpMethod requestHttpMethod, String requestUri, C context) {
+        try {
+            return router.resolveAction(requestHttpMethod, requestUri);
+        } catch (Exception ex) {
+            handleException(ex, createHttpContext(context));
+            return null;
+        }
+    }
+
+    public void performAction(ActionResolution resolution, C context) {
+
+        HttpContext httpContext = createHttpContext(context);
 
         // Put contexts to process scope
         threadScope.init();
         threadScope.put(HttpContext.SCOPE_KEY, httpContext);
 
         try {
-            router.dispatch(httpRequest.getRequestMethod(), httpRequest.getRequestURI());
+            router.performAction(resolution);
         } catch (Exception ex) {
-            String errMsg = MessageFormat.format("Request processing error: {0}", ExceptionUtils.getRootCauseMessage(ex));
-            log.error(errMsg);
-            try {
-                errorHandler.handleException(ex, httpContext);
-            } catch (Exception ex2) {
-                String errMsg2 = MessageFormat.format("Handling exception error: {0}", ExceptionUtils.getRootCauseMessage(ex2));
-                log.error(errMsg2);
-            }
+            handleException(ex, httpContext);
         } finally {
             threadScope.destroy();
+        }
+    }
+
+    protected HttpContext createHttpContext(C context) {
+        // Create contexts
+        HttpRequest httpRequest = createHttpRequest(context);
+        HttpResponse httpResponse = createHttpResponse(context);
+        HttpContext httpContext = new HttpContext(httpRequest, httpResponse);
+
+        return httpContext;
+    }
+
+    protected void handleException(Exception ex, HttpContext httpContext) {
+        log.error("Request processing error: {}", ExceptionUtils.getRootCauseMessage(ex));
+        try {
+            errorHandler.handleException(ex, httpContext);
+        } catch (Exception ex2) {
+            log.error("Handling exception error: {}", ExceptionUtils.getRootCauseMessage(ex2));
         }
     }
 }

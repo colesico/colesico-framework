@@ -29,16 +29,20 @@ public final class RouterContext {
 
     public static final Key<RouterContext> SCOPE_KEY = new TypeKey<>(RouterContext.class);
 
-    protected final String uri;
+    protected final String requestUri;
+
+    /**
+     * Route params values  (ex:  /foo/1/boo/2 -> 1 and 2)
+     */
     protected final Map<String, String> parameters;
 
-    public RouterContext(String uri, Map<String, String> paramsMap) {
-        this.uri = uri;
-        this.parameters = Collections.unmodifiableMap(paramsMap);
+    public RouterContext(String requestUri, Map<String, String> routeParameters) {
+        this.requestUri = requestUri;
+        this.parameters = Collections.unmodifiableMap(routeParameters);
     }
 
-    public String getUri() {
-        return uri;
+    public String getRequestUri() {
+        return requestUri;
     }
 
     /**

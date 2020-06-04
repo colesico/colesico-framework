@@ -39,8 +39,8 @@ public final class RoutingLigature {
         this.serviceClass = serviceClass;
     }
 
-    public void add(String route, TeleMethod teleMethodRef, String teleMethodName) {
-        RouteInfo routeInfo = new RouteInfo(route, teleMethodRef, teleMethodName);
+    public void add(String route, TeleMethod teleMethodRef, String teleMethodName, Map<String, String> routeAttributes) {
+        RouteInfo routeInfo = new RouteInfo(route, teleMethodRef, teleMethodName, routeAttributes);
         RouteInfo oldRouteInfo = routesMap.put(route, routeInfo);
         if (oldRouteInfo != null) {
             throw new RouterException("Duplicate route: " + route + " -> " + routeInfo + " | " + oldRouteInfo);
@@ -59,11 +59,17 @@ public final class RoutingLigature {
         private final String route;
         private final TeleMethod teleMethodRef;
         private final String teleMethodName;
+        private final Map<String, String> routeAttributes;
 
-        public RouteInfo(String route, TeleMethod teleMethodRef, String teleMethodName) {
+        public RouteInfo(String route,
+                         TeleMethod teleMethodRef,
+                         String teleMethodName,
+                         Map<String, String> routeAttributes) {
+
             this.route = route;
             this.teleMethodRef = teleMethodRef;
             this.teleMethodName = teleMethodName;
+            this.routeAttributes = routeAttributes;
         }
 
         public String getRoute() {
@@ -76,6 +82,10 @@ public final class RoutingLigature {
 
         public String getTeleMethodName() {
             return teleMethodName;
+        }
+
+        public Map<String, String> getRouteAttributes() {
+            return routeAttributes;
         }
 
         @Override

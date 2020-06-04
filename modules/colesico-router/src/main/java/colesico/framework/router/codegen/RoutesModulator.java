@@ -89,7 +89,7 @@ abstract public class RoutesModulator<D extends TeleDriver<R, W, I, P>, P extend
     protected CodeBlock generateRouteMapping(TeleFacadeElement teleFacade, RoutegenContext.RoutedTeleMethodElement routedTeleMethod) {
 
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.addStatement("$N.$N($S,this::$N,$S)",
+        cb.addStatement("$N.$N($S,this::$N,$S,null)",
                 LIGATURE_VAR,
                 RoutingLigature.ADD_METHOD,
                 routedTeleMethod.getRoute(),

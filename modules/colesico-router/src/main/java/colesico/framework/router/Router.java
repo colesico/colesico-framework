@@ -17,7 +17,6 @@
 package colesico.framework.router;
 
 import colesico.framework.http.HttpMethod;
-import colesico.framework.teleapi.TeleMethod;
 
 import java.util.List;
 import java.util.Map;
@@ -29,18 +28,25 @@ public interface Router {
 
     /**
      * Returns route parts associated with given handler
-     * @param targetClass service class or custom action class
+     *
+     * @param targetClass      service class or custom action class
      * @param targetMethodName service tele method name or custom action method name
-     * @param httpMethod http request method
-     * @param parameters route parameters
+     * @param httpMethod       http request method
+     * @param parameters       route parameters
      * @return
      */
     List<String> getSlicedRoute(Class<?> targetClass, String targetMethodName, HttpMethod httpMethod, Map<String, String> parameters);
 
-     /**
-     * Calls handler associated with uri  (e.g. service method or custom handler)
-     * @param httpMethod
-     * @param uri
+    /**
+     * Resolve action from request uri and http method.
+     * Returns resolution bean for tuning the processing of the request based on the
+     * values of the attributes as well as the subsequent call of the tele-method -
+     * the request handler
      */
-    void dispatch(HttpMethod httpMethod, String uri);
+    ActionResolution resolveAction(HttpMethod requestHttpMethod, String requestUri);
+
+    /**
+     * Calls handler associated with   (e.g. service method or custom handler)
+     */
+    void performAction(ActionResolution resolution);
 }
