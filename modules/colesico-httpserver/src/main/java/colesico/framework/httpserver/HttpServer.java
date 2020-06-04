@@ -20,5 +20,5 @@ package colesico.framework.httpserver;
  */
 public interface HttpServer {
     HttpServer start();
-     void stop();
+    void stop();
 }
