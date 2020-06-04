@@ -18,7 +18,6 @@ package colesico.framework.config.codegen;
 
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.ArrayCodegen;
-import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.config.ConfigSource;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
@@ -165,7 +164,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         CodeBlock.Builder cb = CodeBlock.builder();
 
         ArrayCodegen paramsCodegen = new ArrayCodegen();
-        for (Map.Entry<String, String> param : confElement.getSource().getParams().entrySet()) {
+        for (Map.Entry<String, String> param : confElement.getSource().getOptions().entrySet()) {
             paramsCodegen.add("$S", param.getKey());
             paramsCodegen.add("$S", param.getValue());
         }

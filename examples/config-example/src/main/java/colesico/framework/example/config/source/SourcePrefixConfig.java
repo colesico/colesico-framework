@@ -18,7 +18,7 @@ package colesico.framework.example.config.source;
 
 import colesico.framework.config.Config;
 import colesico.framework.config.PropertiesSource;
-import colesico.framework.config.SourceParam;
+import colesico.framework.config.SourceOption;
 import colesico.framework.config.UseSource;
 
 import static colesico.framework.config.PropertiesSource.FILE;
@@ -32,8 +32,8 @@ import static colesico.framework.config.PropertiesSource.PREFIX;
 @UseSource(bindAll = true)
 
 // Configuration source parameters
-@SourceParam(name = FILE,value = "config.properties")
-@SourceParam(name = PREFIX, value = "the_prefix")
+@SourceOption(name = FILE,value = "config.properties")
+@SourceOption(name = PREFIX, value = "the_prefix")
 public class SourcePrefixConfig {
 
     private String value;

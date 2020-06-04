@@ -18,13 +18,14 @@ package colesico.framework.example.config.source;
 
 import colesico.framework.config.Config;
 import colesico.framework.config.PropertiesSource;
+import colesico.framework.config.SourceOption;
 import colesico.framework.config.UseSource;
 
 /**
  * This config by default use {@link PropertiesSource} type and
  * receives values from application.properties
  *
- * To change properties file name or path use {@link colesico.framework.config.SourceParam}
+ * To change properties file name or path use {@link SourceOption}
  * @see PropertiesSource
  */
 @Config

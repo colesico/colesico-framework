@@ -9,8 +9,8 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
-@Repeatable(SourceParams.class)
-public @interface SourceParam {
+@Repeatable(SourceOptions.class)
+public @interface SourceOption {
 
     /**
      * Parameter name

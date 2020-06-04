@@ -28,15 +28,15 @@ public class ConfigSourceElement {
 
     private final ConfigElement parentConfig;
     private final ClassType driver;
-    private final Map<String, String> params;
+    private final Map<String, String> options;
     private final boolean bindAll;
 
     private final List<SourceValueElement> sourceValues = new ArrayList<>();
 
-    public ConfigSourceElement(ConfigElement parentConfig, ClassType driver, Map<String, String> params, boolean bindAll) {
+    public ConfigSourceElement(ConfigElement parentConfig, ClassType driver, Map<String, String> options, boolean bindAll) {
         this.parentConfig = parentConfig;
         this.driver = driver;
-        this.params = params;
+        this.options = options;
         this.bindAll = bindAll;
     }
 
@@ -48,8 +48,8 @@ public class ConfigSourceElement {
         return driver;
     }
 
-    public Map<String, String> getParams() {
-        return params;
+    public Map<String, String> getOptions() {
+        return options;
     }
 
     public List<SourceValueElement> getSourceValues() {

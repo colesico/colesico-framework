@@ -131,8 +131,8 @@ public class ConfigParser extends FrameworkAbstractParser {
         if (useSourceAnn != null) {
             TypeMirror driverType = useSourceAnn.getValueTypeMirror(UseSource::type);
             ClassType driverClassType = new ClassType(processingEnv, (DeclaredType) driverType);
-            Map<String, String> params = parseSourceParams(configImpl);
-            sourceElm = new ConfigSourceElement(configElement, driverClassType, params, useSourceAnn.unwrap().bindAll());
+            Map<String, String> options = parseSourceOptions(configImpl);
+            sourceElm = new ConfigSourceElement(configElement, driverClassType, options, useSourceAnn.unwrap().bindAll());
             configElement.setSource(sourceElm);
             parseSourceValues(configImpl, sourceElm);
 
@@ -142,17 +142,17 @@ public class ConfigParser extends FrameworkAbstractParser {
         return configElement;
     }
 
-    private Map<String, String> parseSourceParams(ClassElement configImpl) {
+    private Map<String, String> parseSourceOptions(ClassElement configImpl) {
         Map<String, String> result = new HashMap<>();
-        AnnotationToolbox<SourceParams> sourceParamsAnn = configImpl.getAnnotation(SourceParams.class);
-        if (sourceParamsAnn == null) {
-            AnnotationToolbox<SourceParam> sourceParamAnn = configImpl.getAnnotation(SourceParam.class);
-            if (sourceParamAnn != null) {
-                result.put(sourceParamAnn.unwrap().name(), sourceParamAnn.unwrap().value());
+        AnnotationToolbox<SourceOptions> sourceOptionsAnn = configImpl.getAnnotation(SourceOptions.class);
+        if (sourceOptionsAnn == null) {
+            AnnotationToolbox<SourceOption> sourceOptAnn = configImpl.getAnnotation(SourceOption.class);
+            if (sourceOptAnn != null) {
+                result.put(sourceOptAnn.unwrap().name(), sourceOptAnn.unwrap().value());
             }
         } else {
-            for (SourceParam sourceParam : sourceParamsAnn.unwrap().value()) {
-                result.put(sourceParam.name(), sourceParam.value());
+            for (SourceOption sourceOption : sourceOptionsAnn.unwrap().value()) {
+                result.put(sourceOption.name(), sourceOption.value());
             }
         }
         return result;
