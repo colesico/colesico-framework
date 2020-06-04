@@ -12,6 +12,8 @@ The purpose of this framework is to provide simpler and lightweight alternative.
 
 Colesico Framework does not almost use the reflection at runtime. The approach used is the generation of extra auxiliary code at compile time  using the annotation processors.
 
+Colesico framework is also an analog of such frameworks as Quarkus and Micronaut but is lighter and simpler.
+
 == Getting started
 
 The best way to start learning something is to study by examples :)
