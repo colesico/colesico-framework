@@ -6,7 +6,7 @@ It is inspired by Spring and EJB frameworks but uses more simplified approach to
 Colesico framework is based on an extendable architecture that makes it easy to integrate third party frameworks. 
 It also does not almost use the reflection at runtime. The approach used is the generation of extra auxiliary code at compile time  using the annotation processors.
 
-Colesico framework is also  an analog of such frameworks as Quarkus and Micronaut but is lighter and simpler.
+Colesico framework is also  an analog of such frameworks as Quarkus and Micronaut but is [lighter and faster](https://github.com/colesico/java-frameworks-comparison)
 
 ## Documentation
 
