@@ -27,6 +27,7 @@ import colesico.framework.ioc.conditional.Requires;
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Classed;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +38,8 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import java.util.HashMap;
 import java.util.Map;
+
+import static colesico.framework.config.FileSource.*;
 
 /**
  * @author Vladlen Larionov
@@ -144,6 +147,20 @@ public class ConfigParser extends FrameworkAbstractParser {
 
     private Map<String, String> parseSourceOptions(ClassElement configImpl) {
         Map<String, String> result = new HashMap<>();
+
+        AnnotationToolbox<FileSource> fileSourceAnn = configImpl.getAnnotation(FileSource.class);
+        if (fileSourceAnn != null) {
+            if (StringUtils.isNotBlank(fileSourceAnn.unwrap().file())) {
+                result.put(FILE_OPTION, fileSourceAnn.unwrap().file());
+            }
+            if (StringUtils.isNotBlank(fileSourceAnn.unwrap().directory())) {
+                result.put(DIRECTORY_OPTION, fileSourceAnn.unwrap().directory());
+            }
+            if (StringUtils.isNotBlank(fileSourceAnn.unwrap().classpath())) {
+                result.put(CLASSPATH_OPTION, fileSourceAnn.unwrap().classpath());
+            }
+        }
+
         AnnotationToolbox<SourceOptions> sourceOptionsAnn = configImpl.getAnnotation(SourceOptions.class);
         if (sourceOptionsAnn == null) {
             AnnotationToolbox<SourceOption> sourceOptAnn = configImpl.getAnnotation(SourceOption.class);
@@ -155,6 +172,7 @@ public class ConfigParser extends FrameworkAbstractParser {
                 result.put(sourceOption.name(), sourceOption.value());
             }
         }
+
         return result;
     }
 

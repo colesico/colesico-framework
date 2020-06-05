@@ -31,8 +31,6 @@ public interface ConfigSource {
      *
      * @see UseSource
      */
-    String DEFAULT_PARAM = "default";
-
     String CONNECT_METHOD = "connect";
 
     /**

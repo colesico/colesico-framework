@@ -34,6 +34,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.function.Function;
 
+import static colesico.framework.config.FileSource.*;
+
 /**
  * Properties file based configuration source.
  * Lookup properties file in external directory specified by "directory" config param.
@@ -46,39 +48,18 @@ import java.util.function.Function;
 public class PropertiesSource implements ConfigSource {
 
     /**
-     * Properties file  directory
-     * Default: ./config
-     */
-    public static final String DIRECTORY = "directory";
-
-    /**
-     * Properties file classpath directory
-     * Default: META-INF
-     */
-    public static final String CLASSPATH = "classpath";
-
-    /**
-     * Properties file name.
-     * Default: application.properties
-     */
-    public static final String FILE = "fileName";
-
-    /**
      * Properties name prefix
      */
-    public static final String PREFIX = "prefix";
+    public static final String PREFIX_OPTION = "prefix";
 
     protected static final Logger logger = LoggerFactory.getLogger(PropertiesSource.class);
-    protected static final String DEFAULT_PROPERTIES_FILE = "application.properties";
+
 
     @Override
     public Connection connect(Map<String, String> params) {
-        String fileName = params.get(DEFAULT_PARAM);
-        if (fileName == null) {
-            fileName = params.getOrDefault(FILE, DEFAULT_PROPERTIES_FILE);
-        }
+        String fileName = params.getOrDefault(FILE_OPTION, "application.properties");
 
-        final String directory = params.getOrDefault(DIRECTORY, "./config");
+        final String directory = params.getOrDefault(DIRECTORY_OPTION, "./config");
         String fullPath = StrUtils.concatPath(directory, fileName, "/");
 
         final Properties props = new Properties();
@@ -95,7 +76,7 @@ public class PropertiesSource implements ConfigSource {
             }
         }
 
-        final String classpath = params.getOrDefault(CLASSPATH, "META-INF");
+        final String classpath = params.getOrDefault(CLASSPATH_OPTION, "META-INF");
         fullPath = StrUtils.concatPath(classpath, fileName, "/");
 
         try (InputStream is = getClassLoader().getResourceAsStream(fullPath)) {
@@ -118,7 +99,7 @@ public class PropertiesSource implements ConfigSource {
     }
 
     protected Connection createConnection(Properties properties, Map<String, String> params) {
-        return new ConnectionImpl(properties, params.get(PREFIX));
+        return new ConnectionImpl(properties, params.get(PREFIX_OPTION));
     }
 
     protected static class ConnectionImpl implements Connection {

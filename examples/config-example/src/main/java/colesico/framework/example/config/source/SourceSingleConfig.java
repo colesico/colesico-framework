@@ -16,13 +16,10 @@
 
 package colesico.framework.example.config.source;
 
-import colesico.framework.config.Config;
-import colesico.framework.config.FromSource;
-import colesico.framework.config.SourceOption;
-import colesico.framework.config.UseSource;
+import colesico.framework.config.*;
 
-import static colesico.framework.config.PropertiesSource.CLASSPATH;
-import static colesico.framework.config.PropertiesSource.FILE;
+import static colesico.framework.config.FileSource.CLASSPATH_OPTION;
+import static colesico.framework.config.FileSource.FILE_OPTION;
 
 /**
  * Custom properties file example.
@@ -32,9 +29,7 @@ import static colesico.framework.config.PropertiesSource.FILE;
 // Declare configuration source to bind parameters from configuration file
 @UseSource
 // Define file name
-@SourceOption(name = FILE, value = "config.properties")
-// ClassPath dir
-@SourceOption(name = CLASSPATH, value = "META-INF")
+@FileSource(file = "config.properties")
 public class SourceSingleConfig extends SourceSingleConfigPrototype {
 
     @FromSource
