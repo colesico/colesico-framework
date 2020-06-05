@@ -15,6 +15,7 @@
  */
 package colesico.framework.router.codegen;
 
+import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.router.Router;
 import colesico.framework.router.RoutingLigature;
 import colesico.framework.service.codegen.model.ServiceElement;
@@ -28,6 +29,8 @@ import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.TypeName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 
 /**
@@ -89,7 +92,8 @@ abstract public class RoutesModulator<D extends TeleDriver<R, W, I, P>, P extend
     protected CodeBlock generateRouteMapping(TeleFacadeElement teleFacade, RoutegenContext.RoutedTeleMethodElement routedTeleMethod) {
 
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.addStatement("$N.$N($S,this::$N,$S,null)",
+
+        cb.add("$N.$N($S,this::$N,$S,",
                 LIGATURE_VAR,
                 RoutingLigature.ADD_METHOD,
                 routedTeleMethod.getRoute(),
@@ -97,6 +101,21 @@ abstract public class RoutesModulator<D extends TeleDriver<R, W, I, P>, P extend
                 routedTeleMethod.getTeleMethod().getName()
         );
 
+        if (routedTeleMethod.getRouteAttributes().isEmpty()) {
+            cb.add("null");
+        } else {
+            ArrayCodegen attrCodegen = new ArrayCodegen();
+            for (Map.Entry<String, String> param : routedTeleMethod.getRouteAttributes().entrySet()) {
+                attrCodegen.add("$S", param.getKey());
+                attrCodegen.add("$S", param.getValue());
+            }
+            // Map.of("attrName","attrValue"...)
+            cb.add("$T.of(", ClassName.get(Map.class));
+            cb.add(attrCodegen.toFormat(), attrCodegen.toValues());
+            cb.add(")");
+        }
+
+        cb.add(");\n");
         return cb.build();
     }
 }

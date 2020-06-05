@@ -21,6 +21,7 @@ import colesico.framework.config.FromSource;
 import colesico.framework.config.SourceOption;
 import colesico.framework.config.UseSource;
 
+import static colesico.framework.config.PropertiesSource.CLASSPATH;
 import static colesico.framework.config.PropertiesSource.FILE;
 
 /**
@@ -32,6 +33,8 @@ import static colesico.framework.config.PropertiesSource.FILE;
 @UseSource
 // Define file name
 @SourceOption(name = FILE, value = "config.properties")
+// ClassPath dir
+@SourceOption(name = CLASSPATH, value = "META-INF")
 public class SourceSingleConfig extends SourceSingleConfigPrototype {
 
     @FromSource

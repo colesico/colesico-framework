@@ -20,9 +20,12 @@ import colesico.framework.http.HttpMethod;
 import colesico.framework.restlet.Restlet;
 import colesico.framework.router.RequestMethod;
 import colesico.framework.router.Route;
+import colesico.framework.router.RouteAttribute;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static colesico.framework.httpserver.HttpServerAttribute.NON_BLOCKING;
 
 /**
  * Mandatory http header X-Requested-With:XMLHttpRequest
@@ -30,21 +33,36 @@ import java.util.List;
 @Restlet
 public class RestApi {
 
-    // GET http://localhost:8080/rest-api/list
+    /**
+     * GET http://localhost:8080/rest-api/list
+     */
     public List<User> list() {
         return Arrays.asList(new User(1L, "Ivan"), new User(2L, "John"));
     }
 
-    // GET http://localhost:8080/rest-api/find?id=1
+    /**
+     * GET http://localhost:8080/rest-api/find?id=1
+     */
     @Route("find")
     public User get(Long id) {
-        return new User(id,"Katherine");
+        return new User(id, "Katherine");
     }
 
-    // POST  http://localhost:8080/rest-api/save +  data {"id":1,"name":"Anne"}
+    /**
+     * POST  http://localhost:8080/rest-api/save +  data {"id":1,"name":"Anne"}
+     */
     @RequestMethod(HttpMethod.POST)
-    public Long save(User user){
+    public Long save(User user) {
         return user.getId();
+    }
+
+    /**
+     * Non blocking processing example  (see undertow non-blocking XNIO channels)
+     * POST  http://localhost:8080/rest-api/non-blocking
+     */
+    @RouteAttribute(name = NON_BLOCKING, value = "true")
+    public String nonBlocking() {
+        return "NonBlocking";
     }
 
 }

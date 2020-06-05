@@ -1,8 +1,8 @@
 package colesico.framework.httpserver;
 
-public final class HttpServerAttributes {
+public final class HttpServerAttribute {
     /**
      * Use this attribute to specify non blocking request processing  (in IO thread)
      */
-    public static final String NON_BLOCKING_PROCESSING="NBP";
+    public static final String NON_BLOCKING ="NON_BLOCKING";
 }

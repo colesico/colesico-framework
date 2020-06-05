@@ -21,15 +21,24 @@ import colesico.framework.assist.Elements;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.AnnotationToolbox;
+import colesico.framework.assist.codegen.model.ClassElement;
+import colesico.framework.assist.codegen.model.MethodElement;
+import colesico.framework.assist.codegen.model.ParserElement;
+import colesico.framework.config.SourceOption;
+import colesico.framework.config.SourceOptions;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.router.RequestMethod;
 import colesico.framework.router.Route;
+import colesico.framework.router.RouteAttribute;
+import colesico.framework.router.RouteAttributes;
 import colesico.framework.router.assist.RouteTrie;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.element.PackageElement;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Vladlen Larionov
@@ -58,7 +67,12 @@ abstract public class RoutegenContext {
                     .message("Duplicate router path: " + route + "->" + teleMethodName + "(...). Route already binded to " + rtme.getTeleMethod().getProxyMethod().getName() + "(...)")
                     .element(teleMethod.getProxyMethod().getOriginMethod()).build();
         }
-        RoutedTeleMethodElement routedTeleMethodElement = new RoutedTeleMethodElement(teleMethod, route);
+
+        Map<String, String> methodRouteArrts = parseRouteAttributes(teleMethod.getProxyMethod().getOriginMethod());
+        Map<String, String> classRouteArrts = parseRouteAttributes(teleMethod.getProxyMethod().getOriginMethod().getParentClass());
+        classRouteArrts.putAll(methodRouteArrts);
+
+        RoutedTeleMethodElement routedTeleMethodElement = new RoutedTeleMethodElement(teleMethod, route, classRouteArrts);
         teleMethods.add(routedTeleMethodElement);
     }
 
@@ -146,6 +160,22 @@ abstract public class RoutegenContext {
         return route;
     }
 
+    protected Map<String, String> parseRouteAttributes(ParserElement methodOrClass) {
+        Map<String, String> result = new HashMap<>();
+        AnnotationToolbox<RouteAttributes> routeAttributesAnn = methodOrClass.getAnnotation(RouteAttributes.class);
+        if (routeAttributesAnn == null) {
+            AnnotationToolbox<RouteAttribute> routeAttrAnn = methodOrClass.getAnnotation(RouteAttribute.class);
+            if (routeAttrAnn != null) {
+                result.put(routeAttrAnn.unwrap().name(), routeAttrAnn.unwrap().value());
+            }
+        } else {
+            for (RouteAttribute routeAttrAnn : routeAttributesAnn.unwrap().value()) {
+                result.put(routeAttrAnn.name(), routeAttrAnn.value());
+            }
+        }
+        return result;
+    }
+
     public final Elements<RoutedTeleMethodElement> getTeleMethods() {
         return teleMethods;
     }
@@ -153,11 +183,12 @@ abstract public class RoutegenContext {
     public static class RoutedTeleMethodElement {
         protected final TeleMethodElement teleMethod;
         protected final String route;
+        protected final Map<String, String> routeAttributes;
 
-
-        public RoutedTeleMethodElement(TeleMethodElement teleMethod, String route) {
+        public RoutedTeleMethodElement(TeleMethodElement teleMethod, String route, Map<String, String> routeAttributes) {
             this.teleMethod = teleMethod;
             this.route = route;
+            this.routeAttributes = routeAttributes;
         }
 
         public final String getRoute() {
@@ -166,6 +197,10 @@ abstract public class RoutegenContext {
 
         public TeleMethodElement getTeleMethod() {
             return teleMethod;
+        }
+
+        public Map<String, String> getRouteAttributes() {
+            return routeAttributes;
         }
     }
 

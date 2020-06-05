@@ -20,7 +20,7 @@ import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.httpserver.ErrorHandler;
-import colesico.framework.httpserver.HttpServerAttributes;
+import colesico.framework.httpserver.HttpServerAttribute;
 import colesico.framework.httpserver.RequestProcessor;
 import colesico.framework.ioc.production.Supplier;
 import colesico.framework.ioc.scope.ThreadScope;
@@ -67,9 +67,12 @@ public class UndertowHttpHandler extends RequestProcessor<HttpServerExchange> im
         ActionResolution actionResolution = resolveAction(requestMethod, requestUri, exchange);
 
         if (actionResolution != null) {
-            // Check  blocking|nonblocking processing
+            // Check  blocking|non-blocking processing
             Map<String, String> routeAttributes = actionResolution.getRouteAction().getAttributes();
-            boolean blockingProcessing = routeAttributes == null || (!routeAttributes.containsKey(HttpServerAttributes.NON_BLOCKING_PROCESSING));
+
+            boolean blockingProcessing = routeAttributes == null
+                    || (!"true".equals(routeAttributes.get(HttpServerAttribute.NON_BLOCKING)));
+
             if (blockingProcessing) {
                 // Dispatching to a worker thread
                 exchange.startBlocking();

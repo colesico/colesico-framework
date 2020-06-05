@@ -7,7 +7,7 @@ import java.lang.annotation.*;
  * This attributes can be used for example in http server to tune each request handling.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Inherited
 @Documented
 @Repeatable(RouteAttributes.class)
