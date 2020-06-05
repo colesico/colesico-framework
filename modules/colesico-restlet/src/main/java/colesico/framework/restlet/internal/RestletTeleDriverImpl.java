@@ -21,6 +21,7 @@ import colesico.framework.http.HttpException;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.restlet.RestletConfigPrototype;
 import colesico.framework.restlet.RestletErrorResponse;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.security.AuthorityRequiredException;
@@ -51,6 +52,8 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
 
     protected final Logger log = LoggerFactory.getLogger(RestletTeleDriver.class);
 
+    protected final RestletConfigPrototype config;
+
     protected final ThreadScope threadScope;
     protected final Provider<HttpContext> httpContextProv;
     protected final RestletDataPort dataPort;
@@ -59,11 +62,13 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
 
 
     @Inject
-    public RestletTeleDriverImpl(ThreadScope threadScope,
+    public RestletTeleDriverImpl(RestletConfigPrototype config,
+                                 ThreadScope threadScope,
                                  Provider<HttpContext> httpContextProv,
                                  RestletDataPort dataPort,
                                  Polysupplier<RestletRequestListener> reqListenerSup,
                                  Polysupplier<RestletResponseListener> respListenerSup) {
+        this.config = config;
         this.threadScope = threadScope;
         this.httpContextProv = httpContextProv;
         this.dataPort = dataPort;
@@ -111,7 +116,9 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
             notifyRequestListener(httpCtx, service);
 
             // CSRF protection
-            guardCSFR(httpRequest);
+            if (config.enableCSFRProtection()) {
+                guardCSFR(httpRequest);
+            }
 
             // Invoke tele-method
             binder.invoke(service, dataPort);

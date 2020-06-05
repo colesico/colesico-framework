@@ -18,12 +18,12 @@ package colesico.framework.restlet.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
+import colesico.framework.restlet.RestletConfigPrototype;
 import colesico.framework.restlet.assist.LogRestletListener;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.gson.GsonConverter;
 
 import javax.inject.Singleton;
-
 
 
 /**
@@ -59,5 +59,10 @@ public class RestletProducer {
     @Singleton
     public RestletResponseListener getRestletResponseListener(LogRestletListener impl) {
         return impl;
+    }
+
+    @Singleton
+    public RestletConfigPrototype getDefaultRestletConfig() {
+        return new RestletConfigImpl();
     }
 }
