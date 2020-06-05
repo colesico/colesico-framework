@@ -60,7 +60,7 @@ public class User {
 *Restlet* is a http requests controller that receives a json request and produces json responses.
 
 * Define a restlet class that contains a  method that would be responsive for request handling.
-* Annotate weblet class with @Restlet annnotation.
+* Annotate restlet class with @Restlet annnotation.
 
 [source,java]
 ----
