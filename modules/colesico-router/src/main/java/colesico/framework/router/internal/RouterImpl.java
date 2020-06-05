@@ -101,9 +101,10 @@ public class RouterImpl implements Router {
     @Override
     public ActionResolution resolveAction(HttpMethod requestHttpMethod, String requestUri) {
         RouteTrie.RouteResolution<RouteAction> routeResolution = routeTrie.resolveRoute(StrUtils.concatPath(requestHttpMethod.getName(), requestUri, RouteTrie.SEGMENT_DELEMITER));
-        if (routeResolution == null) {
+        if (routeResolution == null || routeResolution.getNode() == null || routeResolution.getNode().getValue() == null) {
             throw new UnknownRouteException(requestHttpMethod, requestUri);
         }
+
         return new ActionResolution(requestHttpMethod,
                 requestUri,
                 routeResolution.getNode().getValue(),
