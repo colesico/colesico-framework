@@ -101,9 +101,6 @@ Compile and run the application:
 java -jar restlet.jar
 
 ----
-
-Define Http header *X-Requested-With:XMLHttpRequest* for REST client.
-
 Try to call the following REST "endpoints":
 
 * http://localhost:8080/rest-api/list
