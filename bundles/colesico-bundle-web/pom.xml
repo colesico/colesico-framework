@@ -21,7 +21,7 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>3.4.0-SNAPSHOT</version>
+        <version>3.4.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -41,21 +41,11 @@
         <!-- Colesico basic -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-bundle-base</artifactId>
+            <artifactId>colesico-bundle-rest</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <!-- Colesico web  -->
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-http</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-router</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-htmlrenderer</artifactId>
@@ -64,11 +54,6 @@
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-weblet</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-restlet</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

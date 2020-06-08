@@ -23,7 +23,7 @@
     <groupId>net.colesico.framework</groupId>
     <artifactId>colesico-framework</artifactId>
     <packaging>pom</packaging>
-    <version>3.4.0-SNAPSHOT</version>
+    <version>3.4.0</version>
     <name>Colesico Framework</name>
     <description>
         Lightweight application framework for the Java 14+
@@ -181,6 +181,7 @@
                 <module>bundles/colesico-bundle-base</module>
                 <module>bundles/colesico-bundle-sql</module>
                 <module>bundles/colesico-bundle-l10n</module>
+                <module>bundles/colesico-bundle-rest</module>
                 <module>bundles/colesico-bundle-web</module>
                 <module>bundles/colesico-bundle-mix</module>
             </modules>
