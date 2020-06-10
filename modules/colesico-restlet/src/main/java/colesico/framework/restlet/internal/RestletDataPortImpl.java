@@ -41,6 +41,7 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 @Singleton
 public class RestletDataPortImpl implements RestletDataPort {
@@ -79,13 +80,20 @@ public class RestletDataPortImpl implements RestletDataPort {
 
         // No accurate reader here so are reading data as json
         HttpContext httpContext = httpContextProv.get();
-        boolean useCtx = HttpMethod.HTTP_METHOD_GET.equals(httpContext.getRequest().getRequestMethod());
+        HttpMethod requestMethod = httpContext.getRequest().getRequestMethod();
+
+        // Should the value be read with context?
+        boolean useCtx = HttpMethod.HTTP_METHOD_GET.equals(requestMethod)
+                || HttpMethod.HTTP_METHOD_HEAD.equals(requestMethod);
+
         if (useCtx) {
             try {
-                String jsonStr = context.getString(routerContextProv.get(), httpContext.getRequest());
-                if (StringUtils.isBlank(jsonStr)) {
+                String base64Str = context.getString(routerContextProv.get(), httpContext.getRequest());
+                if (StringUtils.isBlank(base64Str)) {
                     return null;
                 }
+                Base64.Decoder base64Decode = Base64.getDecoder();
+                String jsonStr = new String(base64Decode.decode(base64Str), StandardCharsets.UTF_8);
                 return jsonConverter.fromJson(jsonStr, valueType);
             } catch (Exception e) {
                 throw new RuntimeException(e);
