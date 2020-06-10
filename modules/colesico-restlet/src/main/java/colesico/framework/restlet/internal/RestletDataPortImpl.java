@@ -17,6 +17,8 @@
 package colesico.framework.restlet.internal;
 
 import colesico.framework.http.HttpContext;
+import colesico.framework.http.HttpMethod;
+import colesico.framework.http.HttpRequest;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.ClassedKey;
@@ -26,10 +28,12 @@ import colesico.framework.restlet.teleapi.RestletDataPort;
 import colesico.framework.restlet.teleapi.RestletJsonConverter;
 import colesico.framework.restlet.teleapi.RestletTeleReader;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
+import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleReader;
 import colesico.framework.teleapi.TeleWriter;
 import colesico.framework.weblet.teleapi.WebletTDRContext;
 import colesico.framework.weblet.teleapi.WebletTDWContext;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -43,11 +47,14 @@ public class RestletDataPortImpl implements RestletDataPort {
 
     protected final Ioc ioc;
     protected final Provider<HttpContext> httpContextProv;
+    protected final Provider<RouterContext> routerContextProv;
+
     protected final RestletJsonConverter jsonConverter;
 
-    public RestletDataPortImpl(Ioc ioc, Provider<HttpContext> httpContextProv, RestletJsonConverter jsonConverter) {
+    public RestletDataPortImpl(Ioc ioc, Provider<HttpContext> httpContextProv, Provider<RouterContext> routerContextProv, RestletJsonConverter jsonConverter) {
         this.ioc = ioc;
         this.httpContextProv = httpContextProv;
+        this.routerContextProv = routerContextProv;
         this.jsonConverter = jsonConverter;
     }
 
@@ -72,10 +79,23 @@ public class RestletDataPortImpl implements RestletDataPort {
 
         // No accurate reader here so are reading data as json
         HttpContext httpContext = httpContextProv.get();
-        try (InputStream is = httpContext.getRequest().getInputStream()) {
-            return jsonConverter.fromJson(is, valueType);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        boolean useCtx = HttpMethod.HTTP_METHOD_GET.equals(httpContext.getRequest().getRequestMethod());
+        if (useCtx) {
+            try {
+                String jsonStr = context.getString(routerContextProv.get(), httpContext.getRequest());
+                if (StringUtils.isBlank(jsonStr)) {
+                    return null;
+                }
+                return jsonConverter.fromJson(jsonStr, valueType);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            try (InputStream is = httpContext.getRequest().getInputStream()) {
+                return jsonConverter.fromJson(is, valueType);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
