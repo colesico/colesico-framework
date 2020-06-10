@@ -17,8 +17,36 @@
 package colesico.framework.weblet;
 
 /**
- * @author Vladlen Larionov
+ * Origin types to read a parameter value from them
  */
 public enum Origin {
-    ROUTE,QUERY,POST,HEADER,COOKIE,DEFAULT
+    /**
+     * From url path
+     */
+    ROUTE,
+
+    /**
+     * From url query string
+     */
+    QUERY,
+
+    /**
+     * From request body post params
+     */
+    POST,
+
+    /**
+     * From http header
+     */
+    HEADER,
+
+    /**
+     * From cookie value
+     */
+    COOKIE,
+
+    /**
+     * Iterative: from route, query string, post params
+     */
+    DEFAULT
 }
