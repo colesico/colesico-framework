@@ -51,7 +51,10 @@ public enum Origin {
     COOKIE,
 
     /**
-     * From query params for get and head requests, from post params for post,put,patch
+     * Strategy depends on data port implementation.
+     * <p>
+     * Default behavior: for GET, HEAD requests - from query,route params;
+     * for POST,PUT,PATCH - from post,query,route params
      */
     AUTO
 }
