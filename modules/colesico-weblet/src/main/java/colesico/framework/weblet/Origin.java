@@ -17,7 +17,8 @@
 package colesico.framework.weblet;
 
 /**
- * Origin types to read a parameter value from them
+ * Origin types to read a parameter value from them.
+ * This enums defines default strategy for reading param values from http context
  */
 public enum Origin {
     /**
