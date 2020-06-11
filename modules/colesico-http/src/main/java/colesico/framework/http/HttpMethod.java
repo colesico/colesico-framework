@@ -64,6 +64,11 @@ public final class HttpMethod {
     }
 
     @Override
+    public String toString() {
+        return "HttpMethod."+name;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
