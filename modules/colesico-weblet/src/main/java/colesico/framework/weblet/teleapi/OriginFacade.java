@@ -17,36 +17,128 @@
 package colesico.framework.weblet.teleapi;
 
 import colesico.framework.http.HttpCookie;
+import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.router.RouterContext;
+import colesico.framework.weblet.Origin;
+
+import java.io.InputStream;
 
 /**
- * @author Vladlen Larionov
+ * Facade to
  */
-@FunctionalInterface
 public interface OriginFacade {
 
-    OriginFacade ROUTE = (name, r, h) -> r.getParameters().get(name);
-    OriginFacade QUERY = (name, r, h) -> h.getQueryParameters().get(name);
-    OriginFacade POST = (name, r, h) -> h.getPostParameters().get(name);
-    OriginFacade HEADER = (name, r, h) -> h.getHeaders().get(name);
-    OriginFacade COOKIE = (name, r, h) -> {
-        HttpCookie cookie = h.getCookies().get(name);
-        return cookie == null ? null : cookie.getValue();
+    OriginFacade ROUTE = new OriginFacade() {
+        @Override
+        public Origin getOrigin() {
+            return Origin.ROUTE;
+        }
+
+        @Override
+        public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
+            return routerContext.getParameters().get(name);
+        }
     };
 
-    OriginFacade DEFAULT = (name, r, h) -> {
-        String value = r.getParameters().get(name);
-        if (value != null) {
-            return value;
+
+    OriginFacade QUERY = new OriginFacade() {
+        @Override
+        public Origin getOrigin() {
+            return Origin.QUERY;
         }
-        value = h.getQueryParameters().get(name);
-        if (value != null) {
-            return value;
+
+        @Override
+        public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
+            return httpRequest.getQueryParameters().get(name);
         }
-        value = h.getPostParameters().get(name);
-        return value;
     };
+
+    OriginFacade POST = new OriginFacade() {
+        @Override
+        public Origin getOrigin() {
+            return Origin.POST;
+        }
+
+        @Override
+        public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
+            return httpRequest.getPostParameters().get(name);
+        }
+    };
+
+    OriginFacade BODY = new OriginFacade() {
+        @Override
+        public Origin getOrigin() {
+            return Origin.BODY;
+        }
+
+        @Override
+        public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
+            throw new UnsupportedOperationException("Use request input stream to read from this origin");
+        }
+    };
+
+    OriginFacade HEADER = new OriginFacade() {
+        @Override
+        public Origin getOrigin() {
+            return Origin.HEADER;
+        }
+
+        @Override
+        public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
+            return httpRequest.getHeaders().get(name);
+        }
+    };
+
+    OriginFacade COOKIE = new OriginFacade() {
+        @Override
+        public Origin getOrigin() {
+            return Origin.COOKIE;
+        }
+
+        @Override
+        public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
+            HttpCookie cookie = httpRequest.getCookies().get(name);
+            return cookie == null ? null : cookie.getValue();
+        }
+    };
+
+    OriginFacade AUTO = new OriginFacade() {
+        @Override
+        public Origin getOrigin() {
+            return Origin.AUTO;
+        }
+
+        @Override
+        public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
+            String value = null;
+            switch (httpRequest.getRequestMethod().getName()) {
+                case HttpMethod.GET:
+                case HttpMethod.HEAD:
+                    value = httpRequest.getQueryParameters().get(name);
+                    if (value != null) {
+                        return value;
+                    }
+                    return routerContext.getParameters().get(name);
+                case HttpMethod.POST:
+                case HttpMethod.PUT:
+                case HttpMethod.PATCH:
+                    value = httpRequest.getPostParameters().get(name);
+                    if (value != null) {
+                        return value;
+                    }
+                    value = httpRequest.getQueryParameters().get(name);
+                    if (value != null) {
+                        return value;
+                    }
+                    return routerContext.getParameters().get(name);
+                default:
+                    return value;
+            }
+        }
+    };
+
+    Origin getOrigin();
 
     String getString(String name, RouterContext routerContext, HttpRequest httpRequest);
 }

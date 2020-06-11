@@ -36,6 +36,11 @@ public enum Origin {
     POST,
 
     /**
+     * From request body
+     */
+    BODY,
+
+    /**
      * From http header
      */
     HEADER,
@@ -46,7 +51,7 @@ public enum Origin {
     COOKIE,
 
     /**
-     * Iterative: from route, query string, post params
+     * From query params for get and head requests, from post params for post,put,patch
      */
-    DEFAULT
+    AUTO
 }

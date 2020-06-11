@@ -18,25 +18,42 @@ package colesico.framework.weblet.teleapi;
 
 import colesico.framework.http.HttpRequest;
 import colesico.framework.router.RouterContext;
+import colesico.framework.weblet.Origin;
 
 /**
  * Weblet tele-data reading context
+ *
  * @author Vladlen Larionov
  */
 public class WebletTDRContext {
     private final String name;
-    private final OriginFacade origin;
+    private final OriginFacade originFacade;
 
-    public WebletTDRContext(String name, OriginFacade origin) {
+    public WebletTDRContext(String name, OriginFacade originFacade) {
         this.name = name;
-        this.origin = origin;
+        this.originFacade = originFacade;
     }
 
+    /**
+     * Parameter name
+     */
     public final String getName() {
         return name;
     }
 
-    public final String getString(RouterContext routerContext, HttpRequest httpRequest){
-        return origin.getString(name,routerContext,httpRequest);
+    /**
+     * Parameter value
+     */
+    public final String getString(RouterContext routerContext, HttpRequest httpRequest) {
+        return originFacade.getString(name, routerContext, httpRequest);
+    }
+
+    /**
+     * Parameter origin
+     *
+     * @see Origin
+     */
+    public final Origin getOrigin() {
+        return originFacade.getOrigin();
     }
 }

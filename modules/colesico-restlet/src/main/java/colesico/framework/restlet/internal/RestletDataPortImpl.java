@@ -31,6 +31,7 @@ import colesico.framework.restlet.teleapi.RestletTeleWriter;
 import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleReader;
 import colesico.framework.teleapi.TeleWriter;
+import colesico.framework.weblet.Origin;
 import colesico.framework.weblet.teleapi.WebletTDRContext;
 import colesico.framework.weblet.teleapi.WebletTDWContext;
 import org.apache.commons.lang3.StringUtils;
@@ -42,6 +43,8 @@ import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+
+import static colesico.framework.http.HttpMethod.*;
 
 @Singleton
 public class RestletDataPortImpl implements RestletDataPort {
@@ -82,25 +85,23 @@ public class RestletDataPortImpl implements RestletDataPort {
         HttpContext httpContext = httpContextProv.get();
         HttpMethod requestMethod = httpContext.getRequest().getRequestMethod();
 
-        // Should the value be read with context?
-        boolean useCtx = HttpMethod.HTTP_METHOD_GET.equals(requestMethod)
-                || HttpMethod.HTTP_METHOD_HEAD.equals(requestMethod);
+        // Should the value be read from input stream?
+        boolean useInputStream = (context.getOrigin().equals(Origin.AUTO) || context.getOrigin().equals(Origin.BODY))
+                && (requestMethod.equals(HTTP_METHOD_POST) || requestMethod.equals(HTTP_METHOD_PUT) || requestMethod.equals(HTTP_METHOD_PATCH));
 
-        if (useCtx) {
-            try {
-                String base64Str = context.getString(routerContextProv.get(), httpContext.getRequest());
-                if (StringUtils.isBlank(base64Str)) {
-                    return null;
-                }
-                Base64.Decoder base64Decode = Base64.getDecoder();
-                String jsonStr = new String(base64Decode.decode(base64Str), StandardCharsets.UTF_8);
-                return jsonConverter.fromJson(jsonStr, valueType);
+        if (useInputStream) {
+            try (InputStream is = httpContext.getRequest().getInputStream()) {
+                return jsonConverter.fromJson(is, valueType);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         } else {
-            try (InputStream is = httpContext.getRequest().getInputStream()) {
-                return jsonConverter.fromJson(is, valueType);
+            try {
+                String strValue = context.getString(routerContextProv.get(), httpContext.getRequest());
+                if (StringUtils.isBlank(strValue)) {
+                    return null;
+                }
+                return jsonConverter.fromJson(strValue, valueType);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

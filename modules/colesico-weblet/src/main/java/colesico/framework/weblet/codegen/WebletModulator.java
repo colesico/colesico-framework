@@ -101,7 +101,7 @@ public class WebletModulator extends
         Collections.reverse(paramNamesChain);
         String paramName = StringUtils.join(paramNamesChain, "");
 
-        String paramOrigin = Origin.DEFAULT.name();
+        String paramOrigin = Origin.AUTO.name();
 
         AnnotationToolbox<ParamOrigin> originAnn = teleParam.getOriginVariable().getAnnotation(ParamOrigin.class);
         if (originAnn == null) {
