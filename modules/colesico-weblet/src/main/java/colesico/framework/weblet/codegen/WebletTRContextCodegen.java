@@ -22,12 +22,12 @@ import java.util.List;
 
 public class WebletTRContextCodegen {
 
-    private final TeleParamElement teleParam;
-    private final Class<?> contextClass;
-    private final Class<? extends OriginFacade> originFacadeClass;
+    protected final TeleParamElement teleParam;
+    protected final Class<?> contextClass;
+    protected final Class<? extends OriginFacade> originFacadeClass;
 
-    private final TeleMethodElement teleMethod;
-    private final CodeBlock.Builder cb = CodeBlock.builder();
+    protected final TeleMethodElement teleMethod;
+    protected final CodeBlock.Builder cb = CodeBlock.builder();
 
     public WebletTRContextCodegen(TeleParamElement teleParam, Class<?> contextClass, Class<? extends OriginFacade> originFacadeClass) {
         this.teleParam = teleParam;

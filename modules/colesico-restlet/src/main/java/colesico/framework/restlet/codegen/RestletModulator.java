@@ -26,13 +26,13 @@ import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
 import colesico.framework.service.codegen.model.TeleParamElement;
 import colesico.framework.weblet.codegen.WebletTRContextCodegen;
+import colesico.framework.weblet.codegen.WebletTWContextCodegen;
 import colesico.framework.weblet.teleapi.WebletOriginFacade;
+import colesico.framework.weblet.teleapi.WebletTWContext;
 import com.squareup.javapoet.CodeBlock;
 
 import java.lang.annotation.Annotation;
 import java.util.Set;
-
-import static colesico.framework.weblet.codegen.WebletModulator.generateWritingContextImpl;
 
 /**
  * @author Vladlen Larionov
@@ -68,12 +68,13 @@ public class RestletModulator extends
 
     @Override
     protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
-        WebletTRContextCodegen codegen = new WebletTRContextCodegen(teleParam, RestletTRContext.class, WebletOriginFacade.class);
+        RestletTRContextCodegen codegen = new RestletTRContextCodegen(teleParam, RestletTRContext.class, WebletOriginFacade.class);
         return codegen.generate();
     }
 
     @Override
     protected CodeBlock generateWritingContext(TeleMethodElement teleMethod) {
-        return generateWritingContextImpl(RestletTWContext.class);
+        RestletTWContextCodegen codegen = new RestletTWContextCodegen(teleMethod, RestletTWContext.class);
+        return codegen.generate();
     }
 }

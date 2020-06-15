@@ -68,16 +68,9 @@ public class WebletModulator extends
 
     @Override
     protected CodeBlock generateWritingContext(TeleMethodElement teleMethod) {
-        return generateWritingContextImpl(WebletTWContext.class);
+        WebletTWContextCodegen codegen = new WebletTWContextCodegen(teleMethod, WebletTWContext.class);
+        return codegen.generate();
     }
 
-    public static CodeBlock generateWritingContextImpl(Class<?> contextClass) {
-        CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("new $T(", ClassName.get(contextClass));
-        // TODO:
-        cb.add("null");
-        cb.add(")");
-        return cb.build();
-    }
 
 }
