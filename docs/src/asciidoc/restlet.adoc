@@ -1,0 +1,25 @@
+= Restlet module
+
+Restlet is the RESTfull requests controller. It provides processing such requests in
+terms of converting input parameters to java classes and the reverse process for answering.
+
+Restlet is primarily focused on working with JSON.
+Compared to JAX-RS, a restlets has a smaller set of features, but it is flexible enough to use, lightweight
+and very fast.
+
+== Restlet definition
+
+Restlet is just a  POJO  java class annotated with @Restlet annotation.
+From the framework point of view, the restlet is a service and accordingly has all the features
+of the <<service.adoc#,service>>.
+
+== Requests routing
+
+Request routing for restlets is  performed  by a router.
+All routing rules are describing  according to the rules
+of the  <<router.adoc#,router>> routings.
+
+== Example
+
+See full http routing example in the framework source code section #examples/restlet-example#
+

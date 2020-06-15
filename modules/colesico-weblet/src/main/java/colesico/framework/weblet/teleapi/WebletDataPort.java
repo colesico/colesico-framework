@@ -18,5 +18,5 @@ package colesico.framework.weblet.teleapi;
 
 import colesico.framework.teleapi.DataPort;
 
-public interface WebletDataPort extends DataPort<WebletTDRContext, WebletTDWContext>{
+public interface WebletDataPort extends DataPort<WebletTRContext, WebletTWContext>{
 }

@@ -18,7 +18,7 @@ package colesico.framework.weblet.teleapi.reader;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.router.RouterContext;
-import colesico.framework.weblet.teleapi.WebletTDRContext;
+import colesico.framework.weblet.teleapi.WebletTRContext;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -36,7 +36,7 @@ public final class CharacterReader extends AbstractReader<Character> {
     }
 
     @Override
-    public Character read(WebletTDRContext ctx) {
+    public Character read(WebletTRContext ctx) {
         String str = StringUtils.trim(ctx.getString(getRouterContext(), getHttpRequest()));
         return StringUtils.isNotEmpty(str) ? str.charAt(0) : null;
     }

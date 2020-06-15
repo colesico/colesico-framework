@@ -20,7 +20,7 @@ import colesico.framework.http.HttpResponse;
 import colesico.framework.weblet.StringResponse;
 import colesico.framework.weblet.WebletException;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
-import colesico.framework.weblet.teleapi.WebletTDWContext;
+import colesico.framework.weblet.teleapi.WebletTWContext;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -39,7 +39,7 @@ public final class StringWriter implements WebletTeleWriter<StringResponse> {
     }
 
     @Override
-    public void write(StringResponse value, WebletTDWContext wrContext) {
+    public void write(StringResponse value, WebletTWContext wrContext) {
         if (value==null || value.getContent()==null){
             throw new WebletException("Response is null");
         }

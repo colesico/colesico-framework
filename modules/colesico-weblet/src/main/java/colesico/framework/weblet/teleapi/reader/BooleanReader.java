@@ -20,7 +20,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.weblet.t9n.WebletMessages;
-import colesico.framework.weblet.teleapi.WebletTDRContext;
+import colesico.framework.weblet.teleapi.WebletTRContext;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -42,7 +42,7 @@ public final class BooleanReader extends AbstractReader<Boolean> {
     }
 
     @Override
-    public Boolean read(WebletTDRContext ctx) {
+    public Boolean read(WebletTRContext ctx) {
         try {
             String str = ctx.getString(getRouterContext(), getHttpRequest());
             if (StringUtils.isBlank(str)) {

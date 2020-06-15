@@ -18,16 +18,23 @@ package colesico.framework.restlet.teleapi;
 
 import colesico.framework.teleapi.TeleReader;
 
-public final class RestletReaderProxy<V, C> implements RestletTeleReader<V, C> {
+import java.util.function.Function;
+
+/**
+ * Proxy to use another readers as restlet reader
+ */
+public final class RestletReaderProxy<V, C> implements RestletTeleReader<V> {
 
     private final TeleReader<V, C> reader;
+    private final Function<RestletTRContext, C> ctxConverter;
 
-    public RestletReaderProxy(TeleReader<V, C> reader) {
+    public RestletReaderProxy(TeleReader<V, C> reader, Function<RestletTRContext, C> ctxConverter) {
         this.reader = reader;
+        this.ctxConverter = ctxConverter;
     }
 
     @Override
-    public V read(C context) {
-        return reader.read(context);
+    public V read(RestletTRContext context) {
+        return reader.read(ctxConverter.apply(context));
     }
 }

@@ -20,7 +20,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.router.Router;
 import colesico.framework.weblet.NavigationResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
-import colesico.framework.weblet.teleapi.WebletTDWContext;
+import colesico.framework.weblet.teleapi.WebletTWContext;
 
 import javax.inject.Provider;
 
@@ -38,7 +38,7 @@ public final class NavigationWriter implements WebletTeleWriter<NavigationRespon
     }
 
     @Override
-    public void write(NavigationResponse navResp, WebletTDWContext wrContext) {
+    public void write(NavigationResponse navResp, WebletTWContext wrContext) {
         navResp.redirect(router, httpContextProv.get());
     }
 }

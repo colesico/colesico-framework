@@ -18,16 +18,26 @@ package colesico.framework.restlet.teleapi;
 
 import colesico.framework.teleapi.TeleWriter;
 
-public final class RestletWriterProxy<V, C> implements RestletTeleWriter<V, C> {
+import java.util.function.Function;
+
+/**
+ * Proxy to use any writer as restlet writer
+ *
+ * @param <V> value type
+ * @param <C> target writer context type
+ */
+public final class RestletWriterProxy<V, C> implements RestletTeleWriter<V> {
 
     private final TeleWriter<V, C> writer;
+    private final Function<RestletTWContext, C> ctxConverter;
 
-    public RestletWriterProxy(TeleWriter<V, C> writer) {
+    public RestletWriterProxy(TeleWriter<V, C> writer, Function<RestletTWContext, C> ctxConverter) {
         this.writer = writer;
+        this.ctxConverter = ctxConverter;
     }
 
     @Override
-    public void write(V value, C context) {
-        writer.write(value, context);
+    public void write(V value, RestletTWContext context) {
+        writer.write(value, ctxConverter.apply(context));
     }
 }

@@ -18,22 +18,18 @@ package colesico.framework.restlet.internal;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
-import colesico.framework.http.HttpRequest;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.ClassedKey;
 import colesico.framework.ioc.production.Supplier;
 import colesico.framework.restlet.RestletErrorResponse;
-import colesico.framework.restlet.teleapi.RestletDataPort;
-import colesico.framework.restlet.teleapi.RestletJsonConverter;
-import colesico.framework.restlet.teleapi.RestletTeleReader;
-import colesico.framework.restlet.teleapi.RestletTeleWriter;
+import colesico.framework.restlet.teleapi.*;
 import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleReader;
 import colesico.framework.teleapi.TeleWriter;
 import colesico.framework.weblet.Origin;
-import colesico.framework.weblet.teleapi.WebletTDRContext;
-import colesico.framework.weblet.teleapi.WebletTDWContext;
+import colesico.framework.weblet.teleapi.WebletTRContext;
+import colesico.framework.weblet.teleapi.WebletTWContext;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Provider;
@@ -42,7 +38,6 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 import static colesico.framework.http.HttpMethod.*;
 
@@ -72,12 +67,12 @@ public class RestletDataPortImpl implements RestletDataPort {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <V> V read(Type valueType, WebletTDRContext context) {
+    public <V> V read(Type valueType, RestletTRContext context) {
         // Try to get accurate reader
         final Supplier<RestletTeleReader> supplier
                 = ioc.supplierOrNull(new ClassedKey<>(RestletTeleReader.class.getCanonicalName(), typeToClassName(valueType)));
         if (supplier != null) {
-            final TeleReader<V, WebletTDRContext> reader = supplier.get(null);
+            final TeleReader<V, RestletTRContext> reader = supplier.get(null);
             return reader.read(context);
         }
 
@@ -86,7 +81,9 @@ public class RestletDataPortImpl implements RestletDataPort {
         HttpMethod requestMethod = httpContext.getRequest().getRequestMethod();
 
         // Should the value be read from input stream?
-        boolean useInputStream = (context.getOrigin().equals(Origin.AUTO) || context.getOrigin().equals(Origin.BODY))
+        Origin origin = context.getOriginFacade().getOrigin();
+
+        boolean useInputStream = (origin.equals(Origin.AUTO) || origin.equals(Origin.BODY))
                 && (requestMethod.equals(HTTP_METHOD_POST) || requestMethod.equals(HTTP_METHOD_PUT) || requestMethod.equals(HTTP_METHOD_PATCH));
 
         if (useInputStream) {
@@ -109,11 +106,11 @@ public class RestletDataPortImpl implements RestletDataPort {
     }
 
     @Override
-    public <V> void write(Type valueType, V value, WebletTDWContext context) {
+    public <V> void write(Type valueType, V value, RestletTWContext context) {
         final Supplier<RestletTeleWriter> supplier
                 = ioc.supplierOrNull(new ClassedKey<>(RestletTeleWriter.class.getCanonicalName(), typeToClassName(valueType)));
         if (supplier != null) {
-            final TeleWriter<V, WebletTDWContext> writer = supplier.get(null);
+            final TeleWriter<V, RestletTWContext> writer = supplier.get(null);
             writer.write(value, context);
             return;
         }

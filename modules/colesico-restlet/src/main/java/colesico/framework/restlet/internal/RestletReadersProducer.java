@@ -21,8 +21,10 @@ import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.restlet.teleapi.RestletReaderProxy;
+import colesico.framework.restlet.teleapi.RestletTRContext;
 import colesico.framework.restlet.teleapi.RestletTeleReader;
 import colesico.framework.security.Principal;
+import colesico.framework.weblet.teleapi.WebletTRContext;
 import colesico.framework.weblet.teleapi.reader.*;
 
 import javax.inject.Singleton;
@@ -32,110 +34,114 @@ import java.time.LocalTime;
 import java.util.Date;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
+import java.util.function.Function;
 
 @Producer
 public class RestletReadersProducer {
 
+    public static final Function<RestletTRContext, WebletTRContext>
+            ctxConverter = c -> new WebletTRContext(c.getName(), c.getOriginFacade());
+
     @Singleton
     @Classed(Boolean.class)
     public RestletTeleReader getBooleanReader(BooleanReader impl) {
-        return new RestletReaderProxy(impl);
+        return new RestletReaderProxy(impl, ctxConverter);
     }
 
     @Singleton
     @Classed(String.class)
     public RestletTeleReader getStringReader(StringReader impl) {
-        return new RestletReaderProxy(impl);
+        return new RestletReaderProxy(impl, ctxConverter);
     }
 
     @Singleton
     @Classed(Byte.class)
     public RestletTeleReader getByteReader(ByteReader impl) {
-        return new RestletReaderProxy(impl);
+        return new RestletReaderProxy(impl, ctxConverter);
     }
 
     @Singleton
     @Classed(Short.class)
     public RestletTeleReader getShortReader(ShortReader impl) {
-        return new RestletReaderProxy(impl);
+        return new RestletReaderProxy(impl, ctxConverter);
     }
 
     @Singleton
     @Classed(Integer.class)
     public RestletTeleReader getIntegerReader(IntegerReader impl) {
-        return new RestletReaderProxy(impl);
+        return new RestletReaderProxy(impl, ctxConverter);
     }
 
     @Singleton
     @Classed(OptionalInt.class)
     public RestletTeleReader getOptionalIntegerReader(OptionalIntReader impl) {
-        return new RestletReaderProxy(impl);
+        return new RestletReaderProxy(impl, ctxConverter);
     }
 
     @Singleton
     @Classed(Long.class)
     public RestletTeleReader getLongReader(LongReader impl) {
-        return new RestletReaderProxy(impl);
+        return new RestletReaderProxy(impl, ctxConverter);
     }
 
     @Singleton
     @Classed(OptionalLong.class)
     public RestletTeleReader getOptionalLongReader(OptionalLongReader impl) {
-        return new RestletReaderProxy(impl);
+        return new RestletReaderProxy(impl, ctxConverter);
     }
 
     @Singleton
     @Classed(Float.class)
     public RestletTeleReader getFloatReader(FloatReader impl) {
-        return new RestletReaderProxy(impl);
+        return new RestletReaderProxy(impl, ctxConverter);
     }
 
     @Singleton
     @Classed(Double.class)
     public RestletTeleReader getDoubleReader(DoubleReader impl) {
-        return new RestletReaderProxy(impl);
+        return new RestletReaderProxy(impl, ctxConverter);
     }
 
     @Singleton
     @Classed(Date.class)
     public RestletTeleReader getDateReader(DateReader impl) {
-        return new RestletReaderProxy(impl);
+        return new RestletReaderProxy(impl, ctxConverter);
     }
 
     @Singleton
     @Classed(LocalDate.class)
     public RestletTeleReader getLocalDateReader(LocalDateReader impl) {
-        return new RestletReaderProxy(impl);
+        return new RestletReaderProxy(impl, ctxConverter);
     }
 
     @Singleton
     @Classed(LocalTime.class)
     public RestletTeleReader getLocalTimeReader(LocalTimeReader impl) {
-        return new RestletReaderProxy(impl);
+        return new RestletReaderProxy(impl, ctxConverter);
     }
 
     @Singleton
     @Classed(LocalDateTime.class)
     public RestletTeleReader getLocalDateTimeReader(LocalDateTimeReader impl) {
-        return new RestletReaderProxy(impl);
+        return new RestletReaderProxy(impl, ctxConverter);
     }
 
     @Singleton
     @Classed(HttpFile.class)
     public RestletTeleReader getHttpFileReader(HttpFileReader impl) {
-        return new RestletReaderProxy(impl);
+        return new RestletReaderProxy(impl, ctxConverter);
     }
 
     @Singleton
     @Classed(Profile.class)
     public RestletTeleReader getProfileReader(ProfileReader impl) {
-        return new RestletReaderProxy(impl);
+        return new RestletReaderProxy(impl, ctxConverter);
     }
 
     @Singleton
     @Classed(Principal.class)
     public RestletTeleReader getPrincipalReader(PrincipalReader impl) {
-        return new RestletReaderProxy(impl);
+        return new RestletReaderProxy(impl, ctxConverter);
     }
 
 }

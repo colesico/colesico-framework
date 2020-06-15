@@ -20,7 +20,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.weblet.t9n.WebletMessages;
-import colesico.framework.weblet.teleapi.WebletTDRContext;
+import colesico.framework.weblet.teleapi.WebletTRContext;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -44,7 +44,7 @@ public final class LocalDateTimeReader extends AbstractReader<LocalDateTime> {
     }
 
     @Override
-    public LocalDateTime read(WebletTDRContext ctx) {
+    public LocalDateTime read(WebletTRContext ctx) {
         try {
             String val = ctx.getString(getRouterContext(), getHttpRequest());
             if (StringUtils.isEmpty(val)) {

@@ -24,7 +24,7 @@ import colesico.framework.security.assist.MACUtils;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 import colesico.framework.weblet.teleapi.PrincipalWebletConfigPrototype;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
-import colesico.framework.weblet.teleapi.WebletTDWContext;
+import colesico.framework.weblet.teleapi.WebletTWContext;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -51,7 +51,7 @@ public class PrincipalWriter implements WebletTeleWriter<Principal> {
     }
 
     @Override
-    public void write(Principal principal, WebletTDWContext context) {
+    public void write(Principal principal, WebletTWContext context) {
         String principalValue;
         Calendar expires = Calendar.getInstance();
 

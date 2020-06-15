@@ -41,17 +41,24 @@ public class WebletDataPortImpl implements WebletDataPort {
     }
 
     @Override
-    public <V> V read(Type valueType, WebletTDRContext context) {
-        final WebletTeleReader<V> reader
-                = ioc.instance(new ClassedKey<>(WebletTeleReader.class.getCanonicalName(), typeToClassName(valueType)), null);
+    public <V> V read(Type valueType, WebletTRContext context) {
+        WebletTeleReader<V> reader;
+        if (context.getReaderClass() != null) {
+            reader = ioc.instance(context.getReaderClass());
+        } else {
+            reader = ioc.instance(new ClassedKey<>(WebletTeleReader.class.getCanonicalName(), typeToClassName(valueType)), null);
+        }
         return reader.read(context);
     }
 
     @Override
-    public <V> void write(Type valueType, V value, WebletTDWContext context) {
-        final WebletTeleWriter<V> writer
-                = ioc.instance(new ClassedKey<>(WebletTeleWriter.class.getCanonicalName(), typeToClassName(valueType)), null);
-
+    public <V> void write(Type valueType, V value, WebletTWContext context) {
+        WebletTeleWriter<V> writer;
+        if (context.getWriterClass() != null) {
+            writer = ioc.instance(context.getWriterClass());
+        } else {
+            writer = ioc.instance(new ClassedKey<>(WebletTeleWriter.class.getCanonicalName(), typeToClassName(valueType)), null);
+        }
         writer.write(value, context);
     }
 }

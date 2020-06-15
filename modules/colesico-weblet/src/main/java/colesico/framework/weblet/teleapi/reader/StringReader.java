@@ -18,7 +18,7 @@ package colesico.framework.weblet.teleapi.reader;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.router.RouterContext;
-import colesico.framework.weblet.teleapi.WebletTDRContext;
+import colesico.framework.weblet.teleapi.WebletTRContext;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -35,7 +35,7 @@ public final class StringReader extends AbstractReader<String> {
     }
 
     @Override
-    public String read(WebletTDRContext ctx) {
+    public String read(WebletTRContext ctx) {
         return ctx.getString(getRouterContext(), getHttpRequest());
     }
 }

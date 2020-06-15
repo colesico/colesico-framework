@@ -61,7 +61,7 @@ Colesico-framework consists of highly specialized micromodules.
 * <<httpserver.adoc#,Colesico-httpserver - HTTP server unified API>>
 * Colesico-weblet - HTTP requests handling support (servlets analogue)
 * Colesico-webstatic - Static files (*.js, *.css etc) sharing helper
-* Colesico-restlet - Simplified RESTful Web services support
+* <<restlet.adoc#,Colesico-restlet - Simplified RESTful Web services support>>
 * Colesico-htmlrenderer - Unified html rendering API
 * Colesico-pebble - Pebble templating engine  integration
 * Colesico-undertow - Undertow web server integration

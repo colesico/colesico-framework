@@ -53,9 +53,6 @@ public enum Origin {
 
     /**
      * Strategy depends on data port implementation.
-     * <p>
-     * Default behavior: for GET, HEAD requests - from query,route params;
-     * for POST,PUT,PATCH - from post,query,route params
      */
     AUTO
 }

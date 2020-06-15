@@ -18,7 +18,25 @@ package colesico.framework.weblet.teleapi;
 
 /**
  * @author Vladlen Larionov
- * Weblet tele-data writing context stub
+ * Weblet tele-writing context stub
  */
-public class WebletTDWContext {
+public final class WebletTWContext {
+
+    /**
+     * Custom writer class or null.
+     * If null - default writer will be used
+     */
+    private final Class<? extends WebletTeleWriter> writerClass;
+
+    public WebletTWContext(Class<? extends WebletTeleWriter> writerClass) {
+        this.writerClass = writerClass;
+    }
+
+    public WebletTWContext() {
+        this.writerClass = null;
+    }
+
+    public Class<? extends WebletTeleWriter> getWriterClass() {
+        return writerClass;
+    }
 }

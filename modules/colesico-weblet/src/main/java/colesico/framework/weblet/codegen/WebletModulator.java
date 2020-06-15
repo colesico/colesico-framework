@@ -20,26 +20,19 @@ import colesico.framework.assist.CollectionUtils;
 import colesico.framework.assist.codegen.model.AnnotationToolbox;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.model.*;
-import colesico.framework.weblet.Origin;
-import colesico.framework.weblet.ParamName;
-import colesico.framework.weblet.ParamOrigin;
 import colesico.framework.weblet.Weblet;
 import colesico.framework.weblet.teleapi.*;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
-import org.apache.commons.lang3.StringUtils;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 /**
  * @author Vladlen Larionov
  */
 public class WebletModulator extends
-        RoutesModulator<WebletTeleDriver, WebletDataPort, WebletTDRContext, WebletTDWContext, WebletTIContext> {
+        RoutesModulator<WebletTeleDriver, WebletDataPort, WebletTRContext, WebletTWContext, WebletTIContext> {
 
     @Override
     protected String getTeleType() {
@@ -69,55 +62,22 @@ public class WebletModulator extends
 
     @Override
     protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
-        return generateReadingContextImpl(teleParam);
+        WebletTRContextCodegen codegen = new WebletTRContextCodegen(teleParam, WebletTRContext.class, WebletOriginFacade.class);
+        return codegen.generate();
     }
 
-    public static CodeBlock generateReadingContextImpl(TeleParamElement teleParam) {
-        TeleMethodElement teleMethod = teleParam.getParentTeleMethod();
+    @Override
+    protected CodeBlock generateWritingContext(TeleMethodElement teleMethod) {
+        return generateWritingContextImpl(WebletTWContext.class);
+    }
+
+    public static CodeBlock generateWritingContextImpl(Class<?> contextClass) {
         CodeBlock.Builder cb = CodeBlock.builder();
-
-        List<String> paramNamesChain = new ArrayList<>();
-
-        TeleVarElement curVar = teleParam;
-        TeleVarElement rootVar = teleParam;
-        while (curVar != null) {
-            String name;
-            AnnotationToolbox<ParamName> nameAnn = curVar.getOriginVariable().getAnnotation(ParamName.class);
-            if (nameAnn != null) {
-                name = nameAnn.unwrap().value();
-            } else if (curVar instanceof TeleCompElement) {
-                name = null;
-            } else {
-                name = curVar.getOriginVariable().getName();
-            }
-
-            if (StringUtils.isNotBlank(name)) {
-                paramNamesChain.add(name);
-            }
-            rootVar = curVar;
-            curVar = curVar.getParentVariable();
-        }
-
-        Collections.reverse(paramNamesChain);
-        String paramName = StringUtils.join(paramNamesChain, "");
-
-        String paramOrigin = Origin.AUTO.name();
-
-        AnnotationToolbox<ParamOrigin> originAnn = teleParam.getOriginVariable().getAnnotation(ParamOrigin.class);
-        if (originAnn == null) {
-            originAnn = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(ParamOrigin.class);
-            if (originAnn == null) {
-                originAnn = rootVar.getOriginVariable().getAnnotation(ParamOrigin.class);
-            }
-        }
-
-        if (originAnn != null) {
-            paramOrigin = originAnn.unwrap().value().name();
-        }
-
-        cb.add("new $T(", ClassName.get(WebletTDRContext.class));
-        cb.add("$S,$T.$N", paramName, ClassName.get(OriginFacade.class), paramOrigin);
+        cb.add("new $T(", ClassName.get(contextClass));
+        // TODO:
+        cb.add("null");
         cb.add(")");
         return cb.build();
     }
+
 }

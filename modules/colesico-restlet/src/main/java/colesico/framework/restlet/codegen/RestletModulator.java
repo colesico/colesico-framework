@@ -20,26 +20,25 @@ package colesico.framework.restlet.codegen;
 import colesico.framework.assist.CollectionUtils;
 import colesico.framework.assist.codegen.model.AnnotationToolbox;
 import colesico.framework.restlet.Restlet;
-import colesico.framework.restlet.teleapi.RestletTIContext;
-import colesico.framework.restlet.teleapi.RestletDataPort;
-import colesico.framework.restlet.teleapi.RestletTeleDriver;
+import colesico.framework.restlet.teleapi.*;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.model.ServiceElement;
+import colesico.framework.service.codegen.model.TeleMethodElement;
 import colesico.framework.service.codegen.model.TeleParamElement;
-import colesico.framework.weblet.teleapi.WebletTDRContext;
-import colesico.framework.weblet.teleapi.WebletTDWContext;
+import colesico.framework.weblet.codegen.WebletTRContextCodegen;
+import colesico.framework.weblet.teleapi.WebletOriginFacade;
 import com.squareup.javapoet.CodeBlock;
 
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-import static colesico.framework.weblet.codegen.WebletModulator.generateReadingContextImpl;
+import static colesico.framework.weblet.codegen.WebletModulator.generateWritingContextImpl;
 
 /**
  * @author Vladlen Larionov
  */
 public class RestletModulator extends
-        RoutesModulator<RestletTeleDriver, RestletDataPort, WebletTDRContext, WebletTDWContext, RestletTIContext> {
+        RoutesModulator<RestletTeleDriver, RestletDataPort, RestletTRContext, RestletTWContext, RestletTIContext> {
 
     @Override
     protected String getTeleType() {
@@ -69,6 +68,12 @@ public class RestletModulator extends
 
     @Override
     protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
-        return generateReadingContextImpl(teleParam);
+        WebletTRContextCodegen codegen = new WebletTRContextCodegen(teleParam, RestletTRContext.class, WebletOriginFacade.class);
+        return codegen.generate();
+    }
+
+    @Override
+    protected CodeBlock generateWritingContext(TeleMethodElement teleMethod) {
+        return generateWritingContextImpl(RestletTWContext.class);
     }
 }

@@ -21,7 +21,7 @@ import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.weblet.assist.ISO8601DateParser;
 import colesico.framework.weblet.t9n.WebletMessages;
-import colesico.framework.weblet.teleapi.WebletTDRContext;
+import colesico.framework.weblet.teleapi.WebletTRContext;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -43,7 +43,7 @@ public final class DateReader extends AbstractReader<Date> {
     }
 
     @Override
-    public Date read(WebletTDRContext ctx) {
+    public Date read(WebletTRContext ctx) {
         try {
             String val = ctx.getString(getRouterContext(), getHttpRequest());
             if (StringUtils.isEmpty(val)) {

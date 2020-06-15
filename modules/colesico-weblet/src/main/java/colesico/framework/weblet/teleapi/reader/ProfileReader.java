@@ -23,7 +23,7 @@ import colesico.framework.profile.Profile;
 import colesico.framework.profile.teleapi.CommonProfileCreator;
 import colesico.framework.profile.teleapi.ProfileSerializer;
 import colesico.framework.weblet.assist.WebUtils;
-import colesico.framework.weblet.teleapi.WebletTDRContext;
+import colesico.framework.weblet.teleapi.WebletTRContext;
 import colesico.framework.weblet.teleapi.WebletTeleReader;
 import colesico.framework.weblet.teleapi.writer.ProfileWriter;
 import org.apache.commons.lang3.StringUtils;
@@ -86,7 +86,7 @@ public class ProfileReader implements WebletTeleReader<Profile> {
     }
 
     @Override
-    public final Profile read(WebletTDRContext context) {
+    public final Profile read(WebletTRContext context) {
         HttpRequest request = httpContextProv.get().getRequest();
         Profile profile = getCustomProfile(request);
         if (profile == null) {
