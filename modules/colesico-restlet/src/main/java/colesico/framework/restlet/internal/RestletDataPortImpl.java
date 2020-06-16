@@ -25,6 +25,9 @@ import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.production.Supplier;
 import colesico.framework.restlet.RestletErrorResponse;
 import colesico.framework.restlet.teleapi.*;
+import colesico.framework.restlet.teleapi.reader.ObjectReader;
+import colesico.framework.restlet.teleapi.writer.JsonWriter;
+import colesico.framework.restlet.teleapi.writer.ObjectWriter;
 import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleReader;
 import colesico.framework.teleapi.TeleWriter;
@@ -67,72 +70,53 @@ public class RestletDataPortImpl implements RestletDataPort {
     @Override
     @SuppressWarnings("unchecked")
     public <V> V read(Type valueType, RestletTRContext context) {
-        // Try to get accurate reader
-        final Supplier<RestletTeleReader> supplier
-                = ioc.supplierOrNull(new ClassedKey<>(RestletTeleReader.class.getCanonicalName(), typeToClassName(valueType)));
-        if (supplier != null) {
-            final TeleReader<V, RestletTRContext> reader = supplier.get(null);
-            return reader.read(context);
-        }
+        // Store value type to context
+        context.setValueType(valueType);
 
-        // No accurate reader here so are reading data as json
-        HttpContext httpContext = httpContextProv.get();
-        HttpMethod requestMethod = httpContext.getRequest().getRequestMethod();
+        RestletTeleReader<V> reader;
 
-        // Should the value be read from input stream?
-        Origin origin = context.getOriginFacade().getOrigin();
-
-        boolean useInputStream = (origin.equals(Origin.AUTO) || origin.equals(Origin.BODY))
-                && (requestMethod.equals(HTTP_METHOD_POST) || requestMethod.equals(HTTP_METHOD_PUT) || requestMethod.equals(HTTP_METHOD_PATCH));
-
-        if (useInputStream) {
-            try (InputStream is = httpContext.getRequest().getInputStream()) {
-                return jsonConverter.fromJson(is, valueType);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+        if (context.getReaderClass() != null) {
+            // Use specified reader
+            reader = ioc.instance(context.getReaderClass());
         } else {
-            try {
-                String strValue = context.getString(routerContextProv.get(), httpContext.getRequest());
-                if (StringUtils.isBlank(strValue)) {
-                    return null;
-                }
-                return jsonConverter.fromJson(strValue, valueType);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            // Use reader by param type
+            reader = ioc.instanceOrNull(new ClassedKey<>(RestletTeleReader.class.getCanonicalName(), typeToClassName(valueType)), null);
         }
+
+        // No accurate reader here so are reading data as object
+        if (reader == null) {
+            reader = (RestletTeleReader<V>) ioc.instance(ObjectReader.class);
+        }
+
+        return reader.read(context);
     }
 
     @Override
     public <V> void write(Type valueType, V value, RestletTWContext context) {
         RestletTeleWriter<V> writer;
 
-        if (context.getWriterClass() == null) {
-            writer = ioc.instanceOrNull(new ClassedKey<>(RestletTeleWriter.class.getCanonicalName(), typeToClassName(valueType)), null);
-        } else {
+
+        if (context.getWriterClass() != null) {
+            // Spesified writer
             writer = ioc.instance(context.getWriterClass());
-        }
-
-        if (writer != null) {
-            writer.write(value, context);
-            return;
-        }
-
-        HttpContext httpContext = httpContextProv.get();
-        HttpResponse httpResponse = httpContext.getResponse();
-        String json = jsonConverter.toJson(value);
-        if (json == null) {
-            httpResponse.sendText("", JSON_CONTENT_TYPE, 204);
         } else {
-            httpResponse.sendData(ByteBuffer.wrap(json.getBytes(StandardCharsets.UTF_8)), JSON_CONTENT_TYPE, 200);
+            // By type writer
+            writer = ioc.instanceOrNull(new ClassedKey<>(RestletTeleWriter.class.getCanonicalName(), typeToClassName(valueType)), null);
         }
+
+        if (writer == null) {
+            // Default object writer
+            writer = (RestletTeleWriter<V>) ioc.instance(ObjectWriter.class);
+        }
+
+        writer.write(value, context);
     }
 
     @Override
     public void writeError(RestletErrorResponse response, int httpCode) {
-        HttpContext context = httpContextProv.get();
-        String json = jsonConverter.toJson(response);
-        context.getResponse().sendText(json, JSON_CONTENT_TYPE, httpCode);
+        RestletTeleWriter writer = ioc.instance(ObjectWriter.class);
+        RestletTWContext context = new RestletTWContext();
+        context.setHttpCode(httpCode);
+        writer.write(response, context);
     }
 }

@@ -101,7 +101,7 @@ public class RestletExampleTest {
         assertEquals(id.longValue(), 2L);
     }
 
-    //@Test
+    @Test
     public void testNonBlocking() throws Exception {
         String result = requestGET("http://localhost:8085/rest-api/non-blocking");
         //assertEquals("NonBlocking",result);

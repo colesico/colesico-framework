@@ -58,6 +58,7 @@ Colesico-framework consists of highly specialized micromodules.
 
 * Colesico-http - Unified HTTP API
 * <<router.adoc#,Colesico-router - HTTP requests dispatcher>>
+* Colesico-telehttp - Unified TeleAPI for HTTP interaction
 * <<httpserver.adoc#,Colesico-httpserver - HTTP server unified API>>
 * Colesico-weblet - HTTP requests handling support (servlets analogue)
 * Colesico-webstatic - Static files (*.js, *.css etc) sharing helper

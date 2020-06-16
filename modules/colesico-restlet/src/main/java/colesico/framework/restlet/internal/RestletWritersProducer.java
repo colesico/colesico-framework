@@ -21,6 +21,8 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
+import colesico.framework.restlet.teleapi.writer.JsonWriter;
+import colesico.framework.restlet.teleapi.writer.ObjectWriter;
 import colesico.framework.restlet.teleapi.writer.PlainTextWriter;
 import colesico.framework.restlet.teleapi.writer.RestletWriterProxy;
 import colesico.framework.security.Principal;
@@ -31,7 +33,14 @@ import javax.inject.Singleton;
 
 @Producer
 @Produce(PlainTextWriter.class)
+@Produce(JsonWriter.class)
 public class RestletWritersProducer {
+
+    // Default object writer
+    @Singleton
+    public ObjectWriter getObjectWriter(JsonWriter impl){
+        return impl;
+    }
 
     @Singleton
     @Classed(Principal.class)

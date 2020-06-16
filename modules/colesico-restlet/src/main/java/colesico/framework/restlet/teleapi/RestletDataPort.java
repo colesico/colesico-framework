@@ -20,7 +20,5 @@ import colesico.framework.restlet.RestletErrorResponse;
 import colesico.framework.teleapi.DataPort;
 
 public interface RestletDataPort extends DataPort<RestletTRContext, RestletTWContext> {
-    String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
-
     void writeError(RestletErrorResponse response, int httpCode);
 }
