@@ -42,6 +42,11 @@ public final class WebletTRContext extends HttpTRContext {
         this.readerClass = null;
     }
 
+    public WebletTRContext() {
+        super(null, null);
+        this.readerClass = null;
+    }
+
     public Class<? extends WebletTeleReader> getReaderClass() {
         return readerClass;
     }

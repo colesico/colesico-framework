@@ -43,6 +43,9 @@ public class WebletDataPortImpl implements WebletDataPort {
 
     @Override
     public <V> V read(Type valueType, WebletTRContext context) {
+        if (context == null) {
+            context = new WebletTRContext();
+        }
         WebletTeleReader<V> reader;
         if (context.getReaderClass() != null) {
             reader = ioc.instance(context.getReaderClass());
@@ -54,6 +57,9 @@ public class WebletDataPortImpl implements WebletDataPort {
 
     @Override
     public <V> void write(Type valueType, V value, WebletTWContext context) {
+        if (context ==null){
+            context = new WebletTWContext();
+        }
         WebletTeleWriter<V> writer;
         if (context.getWriterClass() != null) {
             writer = ioc.instance(context.getWriterClass());

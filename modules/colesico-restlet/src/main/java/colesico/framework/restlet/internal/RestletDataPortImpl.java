@@ -70,6 +70,10 @@ public class RestletDataPortImpl implements RestletDataPort {
     @Override
     @SuppressWarnings("unchecked")
     public <V> V read(Type valueType, RestletTRContext context) {
+        if (context == null) {
+            context = new RestletTRContext();
+        }
+
         // Store value type to context
         context.setValueType(valueType);
 
@@ -93,8 +97,11 @@ public class RestletDataPortImpl implements RestletDataPort {
 
     @Override
     public <V> void write(Type valueType, V value, RestletTWContext context) {
-        RestletTeleWriter<V> writer;
+        if (context == null) {
+            context = new RestletTWContext();
+        }
 
+        RestletTeleWriter<V> writer;
 
         if (context.getWriterClass() != null) {
             // Spesified writer

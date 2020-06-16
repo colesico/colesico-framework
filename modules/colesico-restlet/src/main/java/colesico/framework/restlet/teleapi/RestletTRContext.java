@@ -25,6 +25,11 @@ public final class RestletTRContext extends HttpTRContext {
         this.readerClass = null;
     }
 
+    public RestletTRContext() {
+        super(null, null);
+        this.readerClass = null;
+    }
+
     public Class<? extends RestletTeleReader> getReaderClass() {
         return readerClass;
     }
