@@ -3,6 +3,9 @@ package colesico.framework.telehttp;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.router.RouterContext;
 
+/**
+ * Basic tele-reading context for http interaction
+ */
 abstract public class HttpTRContext {
 
     /**

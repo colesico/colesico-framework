@@ -8,6 +8,11 @@ import colesico.framework.teleapi.TeleReader;
 
 import javax.inject.Provider;
 
+/**
+ * Basic tele-reader for reading param vales from remote client via http
+ * @param <V>
+ * @param <C>
+ */
 abstract public class HttpTeleReader<V, C extends HttpTRContext> implements TeleReader<V, C> {
 
     protected final Provider<RouterContext> routerContextProv;

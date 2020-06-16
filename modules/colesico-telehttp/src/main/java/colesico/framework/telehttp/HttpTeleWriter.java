@@ -7,6 +7,11 @@ import colesico.framework.teleapi.TeleWriter;
 
 import javax.inject.Provider;
 
+/**
+ * Basic tel-writer for interaction over http
+ * @param <V> value type
+ * @param <C> writing context
+ */
 abstract public class HttpTeleWriter<V, C extends HttpTWContext> implements TeleWriter<V, C> {
 
     protected final Provider<HttpContext> httpContextProv;
