@@ -66,9 +66,9 @@ Also, all dependencies should be collected to the target/lib folder. For this pu
 				<goal>copy-dependencies</goal>
 			</goals>
 			<configuration>
-				<excludeScope>provided</excludeScope>
-				<outputDirectory>${project.build.directory}/lib</outputDirectory>
-				<excludeArtifactIds>javapoet</excludeArtifactIds>
+				 <includeScope>runtime</includeScope>
+                 <excludeArtifactIds>javapoet</excludeArtifactIds>
+				 <outputDirectory>${project.build.directory}/lib</outputDirectory>
 			</configuration>
 		</execution>
 	</executions>
