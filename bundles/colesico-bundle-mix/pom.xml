@@ -29,7 +29,7 @@
 
     <packaging>jar</packaging>
 
-    <name>Colesico Miscellaneous Bundle</name>
+    <name>Colesico Bundle Miscellaneous</name>
     <description>
         Colesico framework bundle joins miscellaneous useful framework modules
     </description>

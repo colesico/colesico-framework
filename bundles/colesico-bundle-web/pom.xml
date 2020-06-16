@@ -29,7 +29,7 @@
 
     <packaging>jar</packaging>
 
-    <name>Colesico Web Bundle</name>
+    <name>Colesico Bundle Web</name>
     <description>
         Colesico framework bundle joins framework modules for web application development
     </description>

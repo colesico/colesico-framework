@@ -29,7 +29,7 @@
 
     <packaging>jar</packaging>
 
-    <name>Colesico Base Bundle</name>
+    <name>Colesico Bundle Base</name>
     <description>
         Colesico framework bundle joins basic framework modules
     </description>

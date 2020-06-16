@@ -29,7 +29,7 @@
 
     <packaging>jar</packaging>
 
-    <name>Colesico SQL Bundle</name>
+    <name>Colesico Bundle SQL</name>
     <description>
         Colesico framework bundle joins framework modules for database interaction
     </description>

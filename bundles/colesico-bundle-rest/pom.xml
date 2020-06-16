@@ -29,7 +29,7 @@
 
     <packaging>jar</packaging>
 
-    <name>Colesico Json-REST Bundle</name>
+    <name>Colesico Bundle REST</name>
     <description>
         Colesico framework bundle joins framework modules for rest service development
     </description>
