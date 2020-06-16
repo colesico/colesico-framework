@@ -78,7 +78,7 @@ public class RestletExampleTest {
     }
 
     @Test
-    public void test1() throws Exception {
+    public void testList() throws Exception {
         List<User> users = gson.fromJson(requestGET("http://localhost:8085/rest-api/list"), new TypeToken<List<User>>() {
         }.getType());
         assertEquals(users.get(0).getName(), "Ivan");
@@ -86,14 +86,14 @@ public class RestletExampleTest {
     }
 
     @Test
-    public void test2() throws Exception {
+    public void testFind() throws Exception {
         User user = gson.fromJson(requestGET("http://localhost:8085/rest-api/find?id=1"), (Type) User.class);
         assertEquals(user.getName(), "Katherine");
         assertEquals(user.getId().longValue(), 1L);
     }
 
     @Test
-    public void test3() throws Exception {
+    public void testSave() throws Exception {
         User user = new User();
         user.setId(2L);
         user.setName("AName");
@@ -101,4 +101,9 @@ public class RestletExampleTest {
         assertEquals(id.longValue(), 2L);
     }
 
+    @Test
+    public void testNonBlocking() throws Exception {
+        String result = requestGET("http://localhost:8085/rest-api/non-blocking");
+        assertEquals("NonBlocking",result);
+    }
 }

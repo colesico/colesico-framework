@@ -21,15 +21,14 @@ import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.ClassedKey;
+import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.production.Supplier;
 import colesico.framework.restlet.RestletErrorResponse;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleReader;
 import colesico.framework.teleapi.TeleWriter;
-import colesico.framework.weblet.Origin;
-import colesico.framework.weblet.teleapi.WebletTRContext;
-import colesico.framework.weblet.teleapi.WebletTWContext;
+import colesico.framework.telehttp.Origin;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Provider;
@@ -107,10 +106,15 @@ public class RestletDataPortImpl implements RestletDataPort {
 
     @Override
     public <V> void write(Type valueType, V value, RestletTWContext context) {
-        final Supplier<RestletTeleWriter> supplier
-                = ioc.supplierOrNull(new ClassedKey<>(RestletTeleWriter.class.getCanonicalName(), typeToClassName(valueType)));
-        if (supplier != null) {
-            final TeleWriter<V, RestletTWContext> writer = supplier.get(null);
+        RestletTeleWriter<V> writer;
+
+        if (context.getWriterClass() == null) {
+            writer = ioc.instanceOrNull(new ClassedKey<>(RestletTeleWriter.class.getCanonicalName(), typeToClassName(valueType)), null);
+        } else {
+            writer = ioc.instance(context.getWriterClass());
+        }
+
+        if (writer != null) {
             writer.write(value, context);
             return;
         }
@@ -119,9 +123,9 @@ public class RestletDataPortImpl implements RestletDataPort {
         HttpResponse httpResponse = httpContext.getResponse();
         String json = jsonConverter.toJson(value);
         if (json == null) {
-            httpResponse.sendText("", RESPONSE_CONTENT_TYPE, 204);
+            httpResponse.sendText("", JSON_CONTENT_TYPE, 204);
         } else {
-            httpResponse.sendData(ByteBuffer.wrap(json.getBytes(StandardCharsets.UTF_8)), RESPONSE_CONTENT_TYPE, 200);
+            httpResponse.sendData(ByteBuffer.wrap(json.getBytes(StandardCharsets.UTF_8)), JSON_CONTENT_TYPE, 200);
         }
     }
 
@@ -129,6 +133,6 @@ public class RestletDataPortImpl implements RestletDataPort {
     public void writeError(RestletErrorResponse response, int httpCode) {
         HttpContext context = httpContextProv.get();
         String json = jsonConverter.toJson(response);
-        context.getResponse().sendText(json, RESPONSE_CONTENT_TYPE, httpCode);
+        context.getResponse().sendText(json, JSON_CONTENT_TYPE, httpCode);
     }
 }

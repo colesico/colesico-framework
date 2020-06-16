@@ -17,45 +17,21 @@
 package colesico.framework.restlet.internal;
 
 import colesico.framework.ioc.production.Classed;
+import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
-import colesico.framework.restlet.teleapi.RestletWriterProxy;
+import colesico.framework.restlet.teleapi.writer.PlainTextWriter;
+import colesico.framework.restlet.teleapi.writer.RestletWriterProxy;
 import colesico.framework.security.Principal;
-import colesico.framework.weblet.HtmlResponse;
-import colesico.framework.weblet.NavigationResponse;
-import colesico.framework.weblet.TextResponse;
-import colesico.framework.weblet.VariedResponse;
-import colesico.framework.weblet.teleapi.writer.*;
+import colesico.framework.telehttp.writer.PrincipalWriter;
+import colesico.framework.telehttp.writer.ProfileWriter;
 
 import javax.inject.Singleton;
 
 @Producer
+@Produce(PlainTextWriter.class)
 public class RestletWritersProducer {
-
-    @Singleton
-    @Classed(TextResponse.class)
-    public RestletTeleWriter getTextResponseWriter(StringWriter impl) {
-        return RestletWriterProxy.of(impl);
-    }
-
-    @Singleton
-    @Classed(HtmlResponse.class)
-    public RestletTeleWriter getHtmlResponseWriter(StringWriter impl) {
-        return RestletWriterProxy.of(impl);
-    }
-
-    @Singleton
-    @Classed(NavigationResponse.class)
-    public RestletTeleWriter getNavigationResponseWriter(NavigationWriter impl) {
-        return RestletWriterProxy.of(impl);
-    }
-
-    @Singleton
-    @Classed(VariedResponse.class)
-    public RestletTeleWriter getVariedResponseWriter(VariedWriter impl) {
-        return RestletWriterProxy.of(impl);
-    }
 
     @Singleton
     @Classed(Principal.class)

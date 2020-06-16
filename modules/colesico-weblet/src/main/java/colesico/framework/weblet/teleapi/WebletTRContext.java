@@ -16,25 +16,15 @@
 
 package colesico.framework.weblet.teleapi;
 
-import colesico.framework.http.HttpRequest;
-import colesico.framework.router.RouterContext;
+import colesico.framework.telehttp.HttpTRContext;
+import colesico.framework.telehttp.OriginFacade;
 
 /**
  * Weblet tele-reading context
  *
  * @author Vladlen Larionov
  */
-public final class WebletTRContext {
-
-    /**
-     * Parameter name
-     */
-    private final String name;
-
-    /**
-     * Origin facade to read parameter from it
-     */
-    private final OriginFacade originFacade;
+public final class WebletTRContext extends HttpTRContext {
 
     /**
      * Custom reader class or null.
@@ -43,40 +33,17 @@ public final class WebletTRContext {
     private final Class<? extends WebletTeleReader> readerClass;
 
     public WebletTRContext(String name, OriginFacade originFacade, Class<? extends WebletTeleReader> readerClass) {
-        this.name = name;
-        this.originFacade = originFacade;
+        super(name, originFacade);
         this.readerClass = readerClass;
     }
 
     public WebletTRContext(String name, OriginFacade originFacade) {
-        this.name = name;
-        this.originFacade = originFacade;
+        super(name, originFacade);
         this.readerClass = null;
-    }
-
-    /**
-     * Parameter name
-     */
-    public final String getName() {
-        return name;
-    }
-
-    /**
-     * Origin facade
-     */
-    public OriginFacade getOriginFacade() {
-        return originFacade;
     }
 
     public Class<? extends WebletTeleReader> getReaderClass() {
         return readerClass;
     }
 
-
-    /**
-     * Parameter value
-     */
-    public final String getString(RouterContext routerContext, HttpRequest httpRequest) {
-        return originFacade.getString(name, routerContext, httpRequest);
-    }
 }

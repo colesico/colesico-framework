@@ -39,28 +39,9 @@
 
     <dependencies>
         <!-- Colesico -->
-
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-security</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-profile</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-translation</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-router</artifactId>
+            <artifactId>colesico-telehttp</artifactId>
             <version>${project.version}</version>
         </dependency>
 

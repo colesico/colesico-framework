@@ -16,6 +16,7 @@
 
 package colesico.framework.weblet.teleapi.writer;
 
+import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.weblet.BinaryResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
@@ -30,23 +31,28 @@ import java.nio.ByteBuffer;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class BinaryWriter implements WebletTeleWriter<BinaryResponse> {
-
-    private final Provider<HttpResponse> responseProv;
+public final class BinaryWriter extends WebletTeleWriter<BinaryResponse> {
 
     @Inject
-    public BinaryWriter(Provider<HttpResponse> responseProv) {
-        this.responseProv = responseProv;
+    public BinaryWriter(Provider<HttpContext> httpContextProv) {
+        super(httpContextProv);
     }
 
     @Override
     public void write(BinaryResponse value, WebletTWContext wrContext) {
-        ByteBuffer buffer = ByteBuffer.wrap(value.getContent());
-        HttpResponse response = responseProv.get();
-        //force download?
+
+        HttpResponse response = getResponse();
+
+        if (value == null || value.getContent() == null || value.getContent().length == 0) {
+            response.sendData(ByteBuffer.allocate(0), BinaryResponse.DEFAULT_CONTENT_TYPE, 204);
+        }
+
+        // Force download?
         if (value.getFileName() != null) {
             response.setHeader("Content-Disposition", "attachment; filename=\"" + value.getFileName() + "\"");
         }
+
+        ByteBuffer buffer = ByteBuffer.wrap(value.getContent());
         response.sendData(buffer, value.getContentType(), 200);
     }
 }

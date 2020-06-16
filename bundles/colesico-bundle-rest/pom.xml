@@ -58,6 +58,11 @@
         </dependency>
         <dependency>
             <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-teleapi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-restlet</artifactId>
             <version>${project.version}</version>
         </dependency>

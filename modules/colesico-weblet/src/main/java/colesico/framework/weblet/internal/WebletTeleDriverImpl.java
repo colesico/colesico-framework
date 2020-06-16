@@ -22,7 +22,7 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.RouterContext;
 import colesico.framework.security.PrincipalRequiredException;
 import colesico.framework.teleapi.DataPort;
-import colesico.framework.weblet.assist.CSRFProtector;
+import colesico.framework.telehttp.assist.CSRFProtector;
 import colesico.framework.weblet.teleapi.Authenticator;
 import colesico.framework.weblet.teleapi.WebletTIContext;
 import colesico.framework.weblet.teleapi.WebletDataPort;

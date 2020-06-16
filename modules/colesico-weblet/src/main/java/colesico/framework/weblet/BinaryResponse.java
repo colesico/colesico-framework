@@ -21,6 +21,8 @@ package colesico.framework.weblet;
  */
 public final class BinaryResponse {
 
+    public static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
+
     protected final byte[] content;
     protected final String contentType;
     protected final String fileName;
@@ -31,16 +33,16 @@ public final class BinaryResponse {
         this.fileName = fileName;
     }
 
-    public static BinaryResponse of(byte[] content, String mimeType, String fileName) {
-        return new BinaryResponse(content, mimeType, fileName);
+    public static BinaryResponse of(byte[] content, String contentType, String fileName) {
+        return new BinaryResponse(content, contentType, fileName);
     }
 
-    public static BinaryResponse of(byte[] content, String mimeType) {
-        return new BinaryResponse(content, mimeType, null);
+    public static BinaryResponse of(byte[] content, String contentType) {
+        return new BinaryResponse(content, contentType, null);
     }
 
     public static BinaryResponse of(byte[] content) {
-        return new BinaryResponse(content, "application/octet-stream", null);
+        return new BinaryResponse(content, DEFAULT_CONTENT_TYPE, null);
     }
 
     public String getContentType() {

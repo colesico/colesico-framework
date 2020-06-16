@@ -18,9 +18,11 @@ package colesico.framework.example.restlet;
 
 import colesico.framework.http.HttpMethod;
 import colesico.framework.restlet.Restlet;
+import colesico.framework.restlet.teleapi.RestletResponseWriter;
 import colesico.framework.router.RequestMethod;
 import colesico.framework.router.Route;
 import colesico.framework.router.RouteAttribute;
+import colesico.framework.restlet.teleapi.writer.PlainTextWriter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -61,6 +63,7 @@ public class RestApi {
      * POST  http://localhost:8080/rest-api/non-blocking
      */
     @RouteAttribute(name = NON_BLOCKING, value = "true")
+    @RestletResponseWriter(PlainTextWriter.class)
     public String nonBlocking() {
         return "NonBlocking";
     }

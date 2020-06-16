@@ -19,6 +19,7 @@ package colesico.framework.weblet.internal;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.ClassedKey;
 import colesico.framework.weblet.teleapi.*;
+import colesico.framework.weblet.teleapi.WebletTeleReader;
 
 import javax.inject.Singleton;
 import java.lang.reflect.Type;

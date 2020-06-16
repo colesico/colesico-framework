@@ -22,19 +22,20 @@ import colesico.framework.weblet.NavigationResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WebletTWContext;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 
 /**
  * @author Vladlen Larionov
  */
-public final class NavigationWriter implements WebletTeleWriter<NavigationResponse> {
+public final class NavigationWriter extends WebletTeleWriter<NavigationResponse> {
 
     protected final Router router;
-    protected final Provider<HttpContext> httpContextProv;
 
-    public NavigationWriter(Router router, Provider<HttpContext> httpContextProv) {
+    @Inject
+    public NavigationWriter(Provider<HttpContext> httpContextProv, Router router) {
+        super(httpContextProv);
         this.router = router;
-        this.httpContextProv = httpContextProv;
     }
 
     @Override

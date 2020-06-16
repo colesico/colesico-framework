@@ -1,20 +1,9 @@
 package colesico.framework.restlet.teleapi;
 
-import colesico.framework.http.HttpRequest;
-import colesico.framework.router.RouterContext;
-import colesico.framework.weblet.teleapi.OriginFacade;
+import colesico.framework.telehttp.HttpTRContext;
+import colesico.framework.telehttp.OriginFacade;
 
-public final class RestletTRContext {
-
-    /**
-     * Parameter name
-     */
-    private final String name;
-
-    /**
-     * Origin facade to read parameter from it
-     */
-    private final OriginFacade originFacade;
+public final class RestletTRContext extends HttpTRContext {
 
     /**
      * Custom reader class or null.
@@ -23,33 +12,17 @@ public final class RestletTRContext {
     private final Class<? extends RestletTeleReader> readerClass;
 
     public RestletTRContext(String name, OriginFacade originFacade, Class<? extends RestletTeleReader> readerClass) {
-        this.name = name;
-        this.originFacade = originFacade;
+        super(name, originFacade);
         this.readerClass = readerClass;
     }
 
-    /**
-     * Parameter name
-     */
-    public final String getName() {
-        return name;
+    public RestletTRContext(String name, OriginFacade originFacade) {
+        super(name, originFacade);
+        this.readerClass = null;
     }
 
     public Class<? extends RestletTeleReader> getReaderClass() {
         return readerClass;
     }
 
-    /**
-     * Origin facade
-     */
-    public OriginFacade getOriginFacade() {
-        return originFacade;
-    }
-
-    /**
-     * Parameter value
-     */
-    public final String getString(RouterContext routerContext, HttpRequest httpRequest) {
-        return originFacade.getString(name, routerContext, httpRequest);
-    }
 }

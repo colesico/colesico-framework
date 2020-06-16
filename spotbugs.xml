@@ -15,7 +15,7 @@
         <Bug pattern="VO_VOLATILE_INCREMENT" />
     </Match>
     <Match>
-        <Class name="colesico.framework.weblet.teleapi.reader.BooleanReader" />
+        <Class name="colesico.framework.telehttp.reader.BooleanReader" />
         <Bug pattern="NP_BOOLEAN_RETURN_NULL" />
     </Match>
     <Match>

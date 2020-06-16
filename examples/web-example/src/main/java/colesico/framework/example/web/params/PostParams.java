@@ -16,7 +16,9 @@
 
 package colesico.framework.example.web.params;
 
-import colesico.framework.http.HttpMethod;
+import colesico.framework.http.teleapi.Origin;
+import colesico.framework.telehttp.ParamName;
+import colesico.framework.http.teleapi.ParamOrigin;
 import colesico.framework.router.RequestMethod;
 import colesico.framework.weblet.*;
 

@@ -17,7 +17,19 @@
 package colesico.framework.weblet.teleapi;
 
 
-import colesico.framework.teleapi.TeleReader;
+import colesico.framework.http.HttpContext;
+import colesico.framework.telehttp.HttpTeleReader;
+import colesico.framework.router.RouterContext;
 
-public interface WebletTeleReader<V> extends TeleReader<V, WebletTRContext> {
+import javax.inject.Provider;
+
+abstract public class WebletTeleReader<V> extends HttpTeleReader<V, WebletTRContext> {
+
+    public WebletTeleReader(Provider<RouterContext> routerContextProv, Provider<HttpContext> httpContextProv) {
+        super(routerContextProv, httpContextProv);
+    }
+
+    public WebletTeleReader(HttpTeleReader reader) {
+        super(reader);
+    }
 }

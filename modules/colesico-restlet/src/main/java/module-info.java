@@ -21,7 +21,7 @@ module colesico.framework.restlet {
     requires static java.compiler;
     requires static com.squareup.javapoet;
 
-    requires transitive colesico.framework.weblet;
+    requires transitive colesico.framework.telehttp;
     requires transitive colesico.framework.validation;
 
     requires org.slf4j;
@@ -34,6 +34,8 @@ module colesico.framework.restlet {
     exports colesico.framework.restlet;
     opens colesico.framework.restlet;
     exports colesico.framework.restlet.teleapi;
+    exports colesico.framework.restlet.teleapi.reader;
+    exports colesico.framework.restlet.teleapi.writer;
     exports colesico.framework.restlet.teleapi.gson;
     exports colesico.framework.restlet.assist;
 

@@ -16,11 +16,14 @@
 
 package colesico.framework.weblet.teleapi;
 
+import colesico.framework.telehttp.HttpTWContext;
+
 /**
- * @author Vladlen Larionov
  * Weblet tele-writing context stub
+ *
+ * @author Vladlen Larionov
  */
-public final class WebletTWContext {
+public final class WebletTWContext extends HttpTWContext {
 
     /**
      * Custom writer class or null.

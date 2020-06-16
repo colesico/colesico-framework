@@ -18,16 +18,12 @@ package colesico.framework.weblet.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.weblet.assist.CSRFProtector;
 import colesico.framework.weblet.teleapi.*;
 
 import javax.inject.Singleton;
-import java.nio.charset.StandardCharsets;
-
 
 
 @Producer
-@Produce(CSRFProtector.class)
 @Produce(WebletDataPortImpl.class)
 @Produce(WebletTeleDriverImpl.class)
 @Produce(AuthenticatorImpl.class)
@@ -47,28 +43,6 @@ public class WebletProducer {
     @Singleton
     public Authenticator getAuthenticator(AuthenticatorImpl impl) {
         return impl;
-    }
-
-    // Default config
-    @Singleton
-    public PrincipalWebletConfigPrototype getPrincipalWriterConfig() {
-        return new PrincipalWebletConfigPrototype() {
-            @Override
-            public byte[] getSignatureKey() {
-                return "0123456789ABCDEF".getBytes(StandardCharsets.UTF_8);
-            }
-        };
-    }
-
-    // Default config
-    @Singleton
-    public ProfileWebletConfigPrototype getProfileWriterConfig() {
-        return new ProfileWebletConfigPrototype() {
-            @Override
-            public int getCookieValidityDays() {
-                return 365;
-            }
-        };
     }
 
 }

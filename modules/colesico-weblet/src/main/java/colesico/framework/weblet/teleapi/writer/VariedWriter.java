@@ -16,27 +16,28 @@
 
 package colesico.framework.weblet.teleapi.writer;
 
+import colesico.framework.http.HttpContext;
 import colesico.framework.weblet.VariedResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WebletTWContext;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 /**
  * @author Vladlen Larionov
  */
 @Singleton
-public final class VariedWriter implements WebletTeleWriter<VariedResponse> {
+public final class VariedWriter extends WebletTeleWriter<VariedResponse> {
 
     private final NavigationWriter navigationWriter;
     private final StringWriter stringWriter;
     private final BinaryWriter binaryWriter;
 
     @Inject
-    public VariedWriter(NavigationWriter navigationWriter,
-                        StringWriter stringWriter,
-                        BinaryWriter binaryWriter) {
+    public VariedWriter(Provider<HttpContext> httpContextProv, NavigationWriter navigationWriter, StringWriter stringWriter, BinaryWriter binaryWriter) {
+        super(httpContextProv);
         this.navigationWriter = navigationWriter;
         this.stringWriter = stringWriter;
         this.binaryWriter = binaryWriter;
@@ -51,7 +52,7 @@ public final class VariedWriter implements WebletTeleWriter<VariedResponse> {
         } else if (value.getBinaryResponse() != null) {
             binaryWriter.write(value.getBinaryResponse(), wrContext);
         } else {
-            throw new RuntimeException("Undefined weblet response");
+            throw new RuntimeException("Empty response");
         }
     }
 }

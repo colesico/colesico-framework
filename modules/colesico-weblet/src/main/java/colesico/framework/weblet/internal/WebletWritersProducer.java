@@ -16,6 +16,9 @@
 
 package colesico.framework.weblet.internal;
 
+import colesico.framework.telehttp.writer.PlainTextWriter;
+import colesico.framework.telehttp.writer.PrincipalWriter;
+import colesico.framework.telehttp.writer.ProfileWriter;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
@@ -27,15 +30,11 @@ import colesico.framework.weblet.teleapi.writer.*;
 
 import javax.inject.Singleton;
 
-
-
 @Producer
 @Produce(StringWriter.class)
 @Produce(NavigationWriter.class)
 @Produce(BinaryWriter.class)
 @Produce(VariedWriter.class)
-@Produce(PrincipalWriter.class)
-@Produce(ProfileWriter.class)
 public class WebletWritersProducer {
 
     @Singleton
@@ -71,13 +70,49 @@ public class WebletWritersProducer {
     @Singleton
     @Classed(Principal.class)
     public WebletTeleWriter getPrincipalWriter(PrincipalWriter impl) {
-        return impl;
+        return WebletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(Profile.class)
     public WebletTeleWriter getProfileWriter(ProfileWriter impl) {
-        return impl;
+        return WebletWriterProxy.of(impl);
+    }
+
+    @Singleton
+    @Classed(String.class)
+    public WebletTeleWriter getStringWriter(PlainTextWriter impl) {
+        return WebletWriterProxy.of(impl);
+    }
+
+    @Singleton
+    @Classed(Long.class)
+    public WebletTeleWriter getLongWriter(PlainTextWriter impl) {
+        return WebletWriterProxy.of(impl);
+    }
+
+    @Singleton
+    @Classed(Integer.class)
+    public WebletTeleWriter getIntegerWriter(PlainTextWriter impl) {
+        return WebletWriterProxy.of(impl);
+    }
+
+    @Singleton
+    @Classed(Short.class)
+    public WebletTeleWriter getShortWriter(PlainTextWriter impl) {
+        return WebletWriterProxy.of(impl);
+    }
+
+    @Singleton
+    @Classed(Byte.class)
+    public WebletTeleWriter getByteWriter(PlainTextWriter impl) {
+        return WebletWriterProxy.of(impl);
+    }
+
+    @Singleton
+    @Classed(Character.class)
+    public WebletTeleWriter getCharWriter(PlainTextWriter impl) {
+        return WebletWriterProxy.of(impl);
     }
 
 }

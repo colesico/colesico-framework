@@ -16,16 +16,13 @@
 
 package colesico.framework.restlet.internal;
 
-import colesico.framework.http.HttpFile;
+import colesico.framework.telehttp.reader.*;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
-import colesico.framework.restlet.teleapi.RestletReaderProxy;
-import colesico.framework.restlet.teleapi.RestletTRContext;
+import colesico.framework.restlet.teleapi.reader.RestletReaderProxy;
 import colesico.framework.restlet.teleapi.RestletTeleReader;
 import colesico.framework.security.Principal;
-import colesico.framework.weblet.teleapi.WebletTRContext;
-import colesico.framework.weblet.teleapi.reader.*;
 
 import javax.inject.Singleton;
 import java.time.LocalDate;
@@ -34,7 +31,6 @@ import java.time.LocalTime;
 import java.util.Date;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
-import java.util.function.Function;
 
 @Producer
 public class RestletReadersProducer {
@@ -120,12 +116,6 @@ public class RestletReadersProducer {
     @Singleton
     @Classed(LocalDateTime.class)
     public RestletTeleReader getLocalDateTimeReader(LocalDateTimeReader impl) {
-        return RestletReaderProxy.of(impl);
-    }
-
-    @Singleton
-    @Classed(HttpFile.class)
-    public RestletTeleReader getHttpFileReader(HttpFileReader impl) {
         return RestletReaderProxy.of(impl);
     }
 

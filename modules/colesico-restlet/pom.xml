@@ -43,7 +43,7 @@
         <!-- Colesico -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-weblet</artifactId>
+            <artifactId>colesico-telehttp</artifactId>
             <version>${project.version}</version>
         </dependency>
 

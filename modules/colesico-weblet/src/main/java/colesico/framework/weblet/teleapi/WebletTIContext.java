@@ -16,9 +16,11 @@
 
 package colesico.framework.weblet.teleapi;
 
+import colesico.framework.telehttp.HttpTIContext;
+
 /**
  * Weblet tele-invocation context
  * This is stub context. Can later be used for pass extra params to tele-invoker
  */
-public class WebletTIContext {
+public final class WebletTIContext extends HttpTIContext {
 }

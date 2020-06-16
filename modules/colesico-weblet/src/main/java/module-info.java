@@ -21,10 +21,7 @@ module colesico.framework.weblet {
     requires static java.compiler;
     requires static com.squareup.javapoet;
 
-    requires transitive colesico.framework.security;
-    requires transitive colesico.framework.profile;
-    requires transitive colesico.framework.translation;
-    requires transitive colesico.framework.router;
+    requires transitive colesico.framework.telehttp;
 
     requires org.slf4j;
 
@@ -40,8 +37,6 @@ module colesico.framework.weblet {
     exports colesico.framework.weblet.codegen;
     exports colesico.framework.weblet.internal to colesico.framework.ioc;
 
-    exports colesico.framework.weblet.t9n;
-    opens colesico.framework.weblet.t9n;
 
     provides Modulator with colesico.framework.weblet.codegen.WebletModulator;
 }

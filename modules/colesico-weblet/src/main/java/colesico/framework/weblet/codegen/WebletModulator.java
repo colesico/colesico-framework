@@ -20,11 +20,16 @@ import colesico.framework.assist.CollectionUtils;
 import colesico.framework.assist.codegen.model.AnnotationToolbox;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.model.*;
+import colesico.framework.telehttp.Origin;
+import colesico.framework.telehttp.ParamOrigin;
+import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
 import colesico.framework.weblet.Weblet;
 import colesico.framework.weblet.teleapi.*;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.TypeName;
 
+import javax.lang.model.type.TypeMirror;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
@@ -62,15 +67,65 @@ public class WebletModulator extends
 
     @Override
     protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
-        WebletTRContextCodegen codegen = new WebletTRContextCodegen(teleParam, WebletTRContext.class, WebletOriginFacade.class);
-        return codegen.generate();
+        String paramName = TeleHttpCodegenUtils.getParamName(teleParam);
+
+        CodeBlock.Builder cb = CodeBlock.builder();
+        cb.add("new $T(", ClassName.get(WebletTRContext.class));
+        cb.add("$S", paramName);
+
+        // Param origin
+        TeleVarElement rootVar = TeleHttpCodegenUtils.getRootVar(teleParam);
+        Origin paramOrigin = TeleHttpCodegenUtils.getParamOrigin(teleParam, rootVar);
+        cb.add(", $T.$N", ClassName.get(WebletOriginFacade.class), paramOrigin.name());
+
+        TypeName customReader = getCustomReaderClass(teleParam, rootVar);
+        if (customReader == null) {
+            cb.add(", null");
+        } else {
+            cb.add(", $T.class", customReader);
+        }
+
+        cb.add(")");
+        return cb.build();
     }
 
     @Override
     protected CodeBlock generateWritingContext(TeleMethodElement teleMethod) {
-        WebletTWContextCodegen codegen = new WebletTWContextCodegen(teleMethod, WebletTWContext.class);
-        return codegen.generate();
+        CodeBlock.Builder cb = CodeBlock.builder();
+        cb.add("new $T(", ClassName.get(WebletTWContext.class));
+
+        TypeName customWriter = getCustomWriterClass(teleMethod);
+        if (customWriter == null) {
+            cb.add("null");
+        } else {
+            cb.add("$T.class", customWriter);
+        }
+        cb.add(")");
+        return cb.build();
     }
 
+    protected TypeName getCustomWriterClass(TeleMethodElement teleMethod) {
+        var wrAnn = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(WebletResponseWriter.class);
+        if (wrAnn == null) {
+            wrAnn = teleMethod.getParentTeleFacade().getParentService().getOriginClass().getAnnotation(WebletResponseWriter.class);
+        }
+        if (wrAnn == null) {
+            return null;
+        }
+        TypeMirror readerClassMirror = wrAnn.getValueTypeMirror(a -> a.value());
+        return TypeName.get(readerClassMirror);
+    }
+
+    protected TypeName getCustomReaderClass(TeleParamElement teleParam, TeleVarElement rootVar) {
+        var rdAnn = teleParam.getOriginVariable().getAnnotation(WebletParamReader.class);
+        if (rdAnn == null) {
+            rdAnn = rootVar.getOriginVariable().getAnnotation(WebletParamReader.class);
+        }
+        if (rdAnn == null) {
+            return null;
+        }
+        TypeMirror readerClassMirror = rdAnn.getValueTypeMirror(a -> a.value());
+        return TypeName.get(readerClassMirror);
+    }
 
 }

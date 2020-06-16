@@ -1,6 +1,8 @@
 package colesico.framework.restlet.teleapi;
 
-public final class RestletTWContext {
+import colesico.framework.telehttp.HttpTWContext;
+
+public final class RestletTWContext extends HttpTWContext {
 
     /**
      * Custom writer class or null.

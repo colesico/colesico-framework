@@ -16,7 +16,17 @@
 
 package colesico.framework.weblet.teleapi;
 
-import colesico.framework.teleapi.TeleWriter;
+import colesico.framework.http.HttpContext;
+import colesico.framework.telehttp.HttpTeleWriter;
 
-public interface WebletTeleWriter<V> extends TeleWriter<V, WebletTWContext> {
+import javax.inject.Provider;
+
+abstract public class WebletTeleWriter<V> extends HttpTeleWriter<V, WebletTWContext> {
+    public WebletTeleWriter(Provider<HttpContext> httpContextProv) {
+        super(httpContextProv);
+    }
+
+    public WebletTeleWriter(HttpTeleWriter writer) {
+        super(writer);
+    }
 }
