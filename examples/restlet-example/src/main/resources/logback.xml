@@ -25,7 +25,7 @@
         <appender-ref ref="STDOUT"/>
     </root>
 
-    <logger  name="colesico" level="debug" additivity="false">
+    <logger  name="colesico" level="DEBUG" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 </configuration>

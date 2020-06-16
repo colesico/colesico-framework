@@ -223,7 +223,7 @@ public final class HttpRequestImpl implements HttpRequest {
                     + exchange.getHostName()
                     + ":" + exchange.getDestinationAddress().getPort()
                     + exchange.getRequestURI()
-                    + "?"+exchange.getQueryString() + "\n");
+                    + "?" + exchange.getQueryString() + "\n");
             out.append("protocol: " + exchange.getProtocol() + "\n");
             out.append("remoteAddr: " + exchange.getSourceAddress() + "\n");
             out.append("remoteHost: " + exchange.getSourceAddress().getHostName() + "\n");
@@ -253,21 +253,24 @@ public final class HttpRequestImpl implements HttpRequest {
 
             if (inputStream == null) {
                 out.append("body:\n");
-                exchange.startBlocking();
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                exchange.getInputStream().transferTo(baos);
-                inputStream = new ByteArrayInputStream(baos.toByteArray());
+                if (!exchange.isInIoThread()) {
+                    exchange.startBlocking();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    exchange.getInputStream().transferTo(baos);
+                    inputStream = new ByteArrayInputStream(baos.toByteArray());
+                    Stream<String> bodyLines = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines();
+                    bodyLines.forEach(line -> {
+                        try {
+                            out.append(line).append('\n');
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
 
-                Stream<String> bodyLines = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines();
-                bodyLines.forEach(line -> {
-                    try {
-                        out.append(line).append('\n');
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-
-                inputStream.reset();
+                    inputStream.reset();
+                } else {
+                    out.append("Request is in non-blocking mode. Can't dump request body");
+                }
             } else {
                 out.append("body: Input stream has already been open\n");
             }
