@@ -17,6 +17,8 @@
 package colesico.framework.restlet.teleapi;
 
 import colesico.framework.teleapi.TeleWriter;
+import colesico.framework.weblet.teleapi.WebletTWContext;
+import colesico.framework.weblet.teleapi.WebletTeleWriter;
 
 import java.util.function.Function;
 
@@ -39,5 +41,11 @@ public final class RestletWriterProxy<V, C> implements RestletTeleWriter<V> {
     @Override
     public void write(V value, RestletTWContext context) {
         writer.write(value, ctxConverter.apply(context));
+    }
+
+    public static final Function<RestletTWContext, WebletTWContext> webletCtxConverter = c -> new WebletTWContext();
+
+    public static <V> RestletWriterProxy<V, WebletTWContext> of(WebletTeleWriter writer) {
+        return new RestletWriterProxy<>(writer, webletCtxConverter);
     }
 }

@@ -17,6 +17,8 @@
 package colesico.framework.restlet.teleapi;
 
 import colesico.framework.teleapi.TeleReader;
+import colesico.framework.weblet.teleapi.WebletTRContext;
+import colesico.framework.weblet.teleapi.WebletTeleReader;
 
 import java.util.function.Function;
 
@@ -36,5 +38,11 @@ public final class RestletReaderProxy<V, C> implements RestletTeleReader<V> {
     @Override
     public V read(RestletTRContext context) {
         return reader.read(ctxConverter.apply(context));
+    }
+
+    public static final Function<RestletTRContext, WebletTRContext> webletCtxConverter = c -> new WebletTRContext(c.getName(), c.getOriginFacade());
+
+    public static <V> RestletReaderProxy<V, WebletTRContext> of(WebletTeleReader reader) {
+        return new RestletReaderProxy<>(reader, webletCtxConverter);
     }
 }

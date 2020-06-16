@@ -19,7 +19,6 @@ package colesico.framework.restlet.internal;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
-import colesico.framework.restlet.teleapi.RestletTWContext;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 import colesico.framework.restlet.teleapi.RestletWriterProxy;
 import colesico.framework.security.Principal;
@@ -27,51 +26,46 @@ import colesico.framework.weblet.HtmlResponse;
 import colesico.framework.weblet.NavigationResponse;
 import colesico.framework.weblet.TextResponse;
 import colesico.framework.weblet.VariedResponse;
-import colesico.framework.weblet.teleapi.WebletTWContext;
 import colesico.framework.weblet.teleapi.writer.*;
 
 import javax.inject.Singleton;
-import java.util.function.Function;
 
 @Producer
 public class RestletWritersProducer {
 
-    public static final Function<RestletTWContext, WebletTWContext>
-            ctxConverter = c -> new WebletTWContext();
-
     @Singleton
     @Classed(TextResponse.class)
     public RestletTeleWriter getTextResponseWriter(StringWriter impl) {
-        return new RestletWriterProxy(impl, ctxConverter);
+        return RestletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(HtmlResponse.class)
     public RestletTeleWriter getHtmlResponseWriter(StringWriter impl) {
-        return new RestletWriterProxy(impl, ctxConverter);
+        return RestletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(NavigationResponse.class)
     public RestletTeleWriter getNavigationResponseWriter(NavigationWriter impl) {
-        return new RestletWriterProxy(impl, ctxConverter);
+        return RestletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(VariedResponse.class)
     public RestletTeleWriter getVariedResponseWriter(VariedWriter impl) {
-        return new RestletWriterProxy(impl, ctxConverter);
+        return RestletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(Principal.class)
     public RestletTeleWriter getPrincipalWriter(PrincipalWriter impl) {
-        return new RestletWriterProxy(impl, ctxConverter);
+        return RestletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(Profile.class)
     public RestletTeleWriter getProfileWriter(ProfileWriter impl) {
-        return new RestletWriterProxy(impl, ctxConverter);
+        return RestletWriterProxy.of(impl);
     }
 }
