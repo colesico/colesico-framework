@@ -107,6 +107,11 @@ public class ServiceParser extends FrameworkAbstractParser {
         List<MethodElement> methods = classElement.getMethods();
 
         for (MethodElement method : methods) {
+            if (method.unwrap().getModifiers().contains(Modifier.STATIC)){
+                // skip static methods
+                continue;
+            }
+
             boolean isPlain = isPlainMethod(method, classElement);
 
             AnnotationToolbox<LocalMethod> methodLocal = method.getAnnotation(LocalMethod.class);
