@@ -21,7 +21,7 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>3.5.0</version>
+        <version>3.5.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -67,15 +67,6 @@
             <artifactId>colesico-translation</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
-        </dependency>
-
-
-        <!-- Auto service -->
-        <dependency>
-            <groupId>com.google.auto.service</groupId>
-            <artifactId>auto-service</artifactId>
-            <version>${auto-service.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- Logger -->

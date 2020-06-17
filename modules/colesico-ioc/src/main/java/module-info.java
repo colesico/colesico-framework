@@ -17,7 +17,7 @@
 import colesico.framework.ioc.codegen.parser.ProducersProcessor;
 import colesico.framework.ioc.ioclet.Ioclet;
 
-open module colesico.framework.ioc {
+module colesico.framework.ioc {
 
     // Compile time
     requires static java.compiler;
@@ -53,7 +53,7 @@ open module colesico.framework.ioc {
     exports colesico.framework.assist.codegen.model;
 
 
-    provides javax.annotation.processing.Processor with ProducersProcessor;
+    //provides javax.annotation.processing.Processor with ProducersProcessor;
 
     uses Ioclet;
 }

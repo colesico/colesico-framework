@@ -23,7 +23,7 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>3.5.0</version>
+        <version>3.5.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -67,6 +67,7 @@
             <artifactId>javax.inject</artifactId>
             <version>${javax.inject.version}</version>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -77,6 +78,10 @@
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration combine.children="append">
                     <annotationProcessorPaths>
+                        <!-- Unused annotation processor. Any processor can be here.
+                         If remove stops compiling.
+                         Maven bug?
+                        -->
                         <path>
                             <groupId>com.google.auto.service</groupId>
                             <artifactId>auto-service</artifactId>

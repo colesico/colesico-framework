@@ -43,7 +43,6 @@ import java.util.Set;
  */
 public class ProducersProcessor extends FrameworkAbstractProcessor {
 
-
     protected ProducerParser parseProducer;
     protected IocletGenerator iocletGenerator;
     protected SPIGenerator spiGenerator;
