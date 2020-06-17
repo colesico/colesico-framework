@@ -112,9 +112,6 @@
 
         <!-- Code analyze -->
         <spotbugs.version>4.0.4</spotbugs.version>
-
-        <!-- Compilation -->
-        <auto-service.version>1.0-rc7</auto-service.version>
     </properties>
 
     <modules>
