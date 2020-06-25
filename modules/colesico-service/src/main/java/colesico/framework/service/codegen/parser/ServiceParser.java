@@ -68,21 +68,21 @@ public class ServiceParser extends FrameworkAbstractParser {
     protected boolean isPlainMethod(MethodElement m, ClassElement classElement) {
         AnnotationToolbox<PlainMethod> classPlainAnn = classElement.getAnnotation(PlainMethod.class);
         AnnotationToolbox<ServiceMethod> classServAnn = classElement.getAnnotation(ServiceMethod.class);
-        AnnotationToolbox<PlainMethod> plainMethodAnn = m.getAnnotation(PlainMethod.class);
+        List<AnnotationToolbox<PlainMethod>> plainMethodAnns = m.getAnnotationsInherited(PlainMethod.class);
         AnnotationToolbox<ServiceMethod> serviceMethodAnn = m.getAnnotation(ServiceMethod.class);
 
         final boolean isFinal = m.unwrap().getModifiers().contains(Modifier.FINAL);
         final boolean isPublic = m.unwrap().getModifiers().contains(Modifier.PUBLIC);
         final boolean isPrivate = m.unwrap().getModifiers().contains(Modifier.PRIVATE);
-        final boolean isPlain = plainMethodAnn != null;
         final boolean isServ = serviceMethodAnn != null;
-
-        if (isPlain || isFinal || isPrivate) {
-            return true;
-        }
+        final boolean isPlain = !plainMethodAnns.isEmpty();
 
         if (isServ) {
             return false;
+        }
+
+        if (isPlain || isFinal || isPrivate) {
+            return true;
         }
 
         if (classPlainAnn != null) {
@@ -107,7 +107,7 @@ public class ServiceParser extends FrameworkAbstractParser {
         List<MethodElement> methods = classElement.getMethods();
 
         for (MethodElement method : methods) {
-            if (method.unwrap().getModifiers().contains(Modifier.STATIC)){
+            if (method.unwrap().getModifiers().contains(Modifier.STATIC)) {
                 // skip static methods
                 continue;
             }
