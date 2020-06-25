@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -133,6 +134,21 @@ public class MethodElement extends ParserElement {
             classElm = superClassElm;
         }
         return null;
+    }
+
+    /**
+     * Returns declared and inherited from super classes annotations
+     */
+    public <A extends Annotation> List<AnnotationToolbox<A>> getAnnotationsInherited(Class<A> annClass) {
+        List<AnnotationToolbox<A>> result = new ArrayList<>();
+        MethodElement superMethod = this;
+        do {
+            AnnotationToolbox<A> ann = superMethod.getAnnotation(annClass);
+            if (ann != null) {
+                result.add(ann);
+            }
+        } while ((superMethod = superMethod.getSuperMethod()) != null);
+        return result;
     }
 
     /**
