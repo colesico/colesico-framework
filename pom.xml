@@ -23,7 +23,7 @@
     <groupId>net.colesico.framework</groupId>
     <artifactId>colesico-framework</artifactId>
     <packaging>pom</packaging>
-    <version>3.5.2-SNAPSHOT</version>
+    <version>3.6.0-SNAPSHOT</version>
     <name>Colesico Framework</name>
     <description>
         Lightweight application framework for Java 14+
@@ -139,7 +139,7 @@
                 <module>modules/colesico-rpc</module>
                 <module>modules/colesico-validation</module>
                 <module>modules/colesico-eventbus</module>
-                <module>modules/colesico-asyncjob</module>
+                <module>modules/colesico-asynctask</module>
 
 
                 <!-- Logging -->
@@ -206,6 +206,7 @@
                 <module>examples/translation-example</module>
                 <module>examples/rpc-example</module>
                 <module>examples/rpc-api-example</module>
+                <module>examples/asynctask-example</module>
             </modules>
         </profile>
         <profile>
