@@ -41,14 +41,6 @@ public final class TaskQueue implements TaskPublisher {
                 TimeUnit.MILLISECONDS, queue, threadFactory);
     }
 
-    public BlockingQueue<Runnable> getQueue() {
-        return queue;
-    }
-
-    public ExecutorService getExecutorService() {
-        return executorService;
-    }
-
     @Override
     public <P> void enqueue(final P taskPayload) {
         final long enqueueTime = System.currentTimeMillis();
