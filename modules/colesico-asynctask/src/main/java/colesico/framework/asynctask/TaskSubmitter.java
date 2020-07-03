@@ -16,6 +16,6 @@
 
 package colesico.framework.asynctask;
 
-public interface TaskPublisher {
-    <P> void enqueue(P taskPayload);
+public interface TaskSubmitter {
+    <P> void submit(P taskPayload);
 }

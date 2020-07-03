@@ -1,18 +1,18 @@
 package colesico.framework.example.asynctask;
 
-import colesico.framework.asynctask.TaskPublisher;
+import colesico.framework.asynctask.TaskSubmitter;
 import colesico.framework.service.Service;
 
 @Service
 public class TaskPublisherService {
-    final TaskPublisher taskPublisher;
+    final TaskSubmitter taskSubmitter;
 
-    public TaskPublisherService(TaskPublisher taskPublisher) {
-        this.taskPublisher = taskPublisher;
+    public TaskPublisherService(TaskSubmitter taskSubmitter) {
+        this.taskSubmitter = taskSubmitter;
     }
 
     public void enqueueTask() {
         ATask task = new ATask("value");
-        taskPublisher.enqueue(task);
+        taskSubmitter.submit(task);
     }
 }

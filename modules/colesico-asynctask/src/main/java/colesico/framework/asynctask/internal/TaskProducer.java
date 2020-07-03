@@ -16,7 +16,8 @@
 
 package colesico.framework.asynctask.internal;
 
-import colesico.framework.asynctask.TaskPublisher;
+import colesico.framework.asynctask.TaskScheduler;
+import colesico.framework.asynctask.TaskSubmitter;
 import colesico.framework.asynctask.TaskService;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
@@ -25,7 +26,6 @@ import javax.inject.Singleton;
 
 @Producer
 @Produce(TaskServiceImpl.class)
-
 @Produce(DefaultConsumer.class)
 public class TaskProducer {
 
@@ -35,7 +35,12 @@ public class TaskProducer {
     }
 
     @Singleton
-    public TaskPublisher getTaskPublisher(TaskServiceImpl impl) {
+    public TaskSubmitter getTaskPublisher(TaskServiceImpl impl) {
+        return impl;
+    }
+
+    @Singleton
+    public TaskScheduler getTaskScheduler(TaskServiceImpl impl) {
         return impl;
     }
 

@@ -17,6 +17,7 @@
 package colesico.framework.asynctask.internal;
 
 import colesico.framework.asynctask.TaskQueueConfigPrototype;
+import colesico.framework.asynctask.TaskScheduleConfigPrototype;
 import colesico.framework.asynctask.TaskService;
 import colesico.framework.ioc.production.Polysupplier;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Singleton
 public class TaskServiceImpl implements TaskService {
@@ -32,14 +34,21 @@ public class TaskServiceImpl implements TaskService {
     private final Logger logger = LoggerFactory.getLogger(TaskService.class);
 
     private final Polysupplier<TaskQueueConfigPrototype> queueConfigs;
+    private final Polysupplier<TaskScheduleConfigPrototype> scheduleConfigs;
+
     private final DefaultConsumer defaultConsumer;
 
-    private final Map<Class<?>, TaskQueue> queues = new HashMap<>();
+    private final Map<Class<?>, TaskQueueExecutor> queues = new HashMap<>();
+    private final Map<Class<?>, TaskScheduleExecutor> schedules = new HashMap<>();
 
     private volatile boolean running = false;
 
-    public TaskServiceImpl(Polysupplier<TaskQueueConfigPrototype> queueConfigs, DefaultConsumer defaultConsumer) {
+    public TaskServiceImpl(Polysupplier<TaskQueueConfigPrototype> queueConfigs,
+                           Polysupplier<TaskScheduleConfigPrototype> scheduleConfigs,
+                           DefaultConsumer defaultConsumer) {
+
         this.queueConfigs = queueConfigs;
+        this.scheduleConfigs = scheduleConfigs;
         this.defaultConsumer = defaultConsumer;
     }
 
@@ -54,13 +63,26 @@ public class TaskServiceImpl implements TaskService {
         queueConfigs.forEach(queueConfig -> {
             logger.debug("Found task queue definition for payload type '{}'", queueConfig.getPayloadType());
 
-            TaskQueue taskQueue = new TaskQueue(queueConfig, defaultConsumer);
-            TaskQueue oldQueue = queues.put(queueConfig.getPayloadType(), taskQueue);
-            if (oldQueue != null) {
+            TaskQueueExecutor taskExecutor = new TaskQueueExecutor(defaultConsumer, queueConfig);
+            TaskExecutor prev = queues.put(queueConfig.getPayloadType(), taskExecutor);
+            if (prev != null) {
                 throw new RuntimeException("Duplicate task payload type '" + queueConfig.getPayloadType() + "' defined in " + queueConfig);
             }
 
         }, null);
+
+        schedules.clear();
+        scheduleConfigs.forEach(queueConfig -> {
+            logger.debug("Found task schedule definition for payload type '{}'", queueConfig.getPayloadType());
+
+            TaskScheduleExecutor taskExecutor = new TaskScheduleExecutor(defaultConsumer, queueConfig);
+            TaskExecutor prev = schedules.put(queueConfig.getPayloadType(), taskExecutor);
+            if (prev != null) {
+                throw new RuntimeException("Duplicate task payload type '" + queueConfig.getPayloadType() + "' defined in " + queueConfig);
+            }
+
+        }, null);
+
 
         running = true;
         logger.debug("Async tasks service has been started");
@@ -70,12 +92,12 @@ public class TaskServiceImpl implements TaskService {
     public synchronized void stop() {
         checkRunning();
         // Stop
-        for (TaskQueue queue : queues.values()) {
+        for (TaskQueueExecutor queue : queues.values()) {
             queue.stop();
         }
 
         // Await termination
-        for (TaskQueue queue : queues.values()) {
+        for (TaskQueueExecutor queue : queues.values()) {
             queue.awaitTermination(60);
         }
 
@@ -94,13 +116,36 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public <P> void enqueue(P taskPayload) {
+    public <P> void submit(P taskPayload) {
         checkRunning();
-        final TaskQueue queue = queues.get(taskPayload.getClass());
-        if (queue == null) {
+        final TaskQueueExecutor executor = queues.get(taskPayload.getClass());
+        if (executor == null) {
             throw new RuntimeException("Undetermined task payload: " + taskPayload);
         }
-        queue.enqueue(taskPayload);
+        executor.submit(taskPayload);
     }
 
+    private <P> TaskScheduleExecutor getScheduleExecutor(P taskPayload) {
+        checkRunning();
+        final TaskScheduleExecutor executor = schedules.get(taskPayload.getClass());
+        if (executor == null) {
+            throw new RuntimeException("Undetermined task payload: " + taskPayload);
+        }
+        return executor;
+    }
+
+    @Override
+    public <P> void schedule(P taskPayload, long delay, TimeUnit unit) {
+        getScheduleExecutor(taskPayload).schedule(taskPayload, delay, unit);
+    }
+
+    @Override
+    public <P> void scheduleAtFixedRate(P taskPayload, long initialDelay, long period, TimeUnit unit) {
+        getScheduleExecutor(taskPayload).scheduleAtFixedRate(taskPayload, initialDelay, period, unit);
+    }
+
+    @Override
+    public <P> void scheduleWithFixedDelay(P taskPayload, long initialDelay, long delay, TimeUnit unit) {
+        getScheduleExecutor(taskPayload).scheduleWithFixedDelay(taskPayload, initialDelay, delay, unit);
+    }
 }

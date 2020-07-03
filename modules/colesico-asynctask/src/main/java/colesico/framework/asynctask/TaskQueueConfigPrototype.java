@@ -20,23 +20,13 @@ import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
 
 /**
- * Queue configuration
+ * ThreadPoolExecutor configuration
  */
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class TaskQueueConfigPrototype {
-
-    abstract public Class<?> getPayloadType();
-
-    public TaskConsumer getTaskConsumer() {
-        return null;
-    }
+abstract public class TaskQueueConfigPrototype extends TaskExecutorConfigBase {
 
     public int getQueueCapacity() {
         return 500;
-    }
-
-    public int getCorePoolSize() {
-        return 1;
     }
 
     public int getMaximumPoolSize() {
@@ -45,11 +35,6 @@ abstract public class TaskQueueConfigPrototype {
 
     public long getKeepAliveTime() {
         return 0L;
-    }
-
-    @Override
-    public final String toString() {
-        return this.getClass().getSimpleName() + "{ payloadType=" + getPayloadType() + '}';
     }
 
 }

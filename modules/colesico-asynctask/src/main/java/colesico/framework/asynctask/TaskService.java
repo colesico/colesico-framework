@@ -17,7 +17,7 @@
 package colesico.framework.asynctask;
 
 
-public interface TaskService extends TaskPublisher {
+public interface TaskService extends TaskSubmitter, TaskScheduler {
     void start();
 
     void stop();

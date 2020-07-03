@@ -16,8 +16,6 @@
 
 package colesico.framework.example.asynctask;
 
-import colesico.framework.asynctask.TaskConsumer;
-import colesico.framework.asynctask.TaskPublisher;
 import colesico.framework.asynctask.TaskService;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
