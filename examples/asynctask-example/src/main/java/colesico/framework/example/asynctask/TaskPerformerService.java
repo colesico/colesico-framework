@@ -4,7 +4,7 @@ import colesico.framework.eventbus.OnEvent;
 import colesico.framework.service.Service;
 
 @Service
-public class TaskConsumerService {
+public class TaskPerformerService {
 
     public ATask task;
 

@@ -44,7 +44,7 @@ Colesico-framework consists of highly specialized micromodules.
 * Colesico-resource - Provides an ability of resource rewriting and localization
 * Colesico-validation - DSL style extendable data validator
 * <<eventbus.adoc#,Colesico-eventbus - Simple even bus for services>>
-* Colesico-asyncjob - Async job background execution
+* Colesico-asynctask - Async tasks background execution (task queue, schedule)
 * <<slf4j.adoc#,Colesico-slf4j - Slf4j integration>>
 
 === Database interaction modules

@@ -4,10 +4,10 @@ import colesico.framework.asynctask.TaskSubmitter;
 import colesico.framework.service.Service;
 
 @Service
-public class TaskPublisherService {
+public class TaskSubmitterService {
     final TaskSubmitter taskSubmitter;
 
-    public TaskPublisherService(TaskSubmitter taskSubmitter) {
+    public TaskSubmitterService(TaskSubmitter taskSubmitter) {
         this.taskSubmitter = taskSubmitter;
     }
 

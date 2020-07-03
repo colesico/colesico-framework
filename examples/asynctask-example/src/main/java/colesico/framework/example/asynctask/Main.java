@@ -29,7 +29,7 @@ public class Main {
         taskService.start();
 
         // Enqueue task
-        TaskPublisherService publisherService = ioc.instance(TaskPublisherService.class);
+        TaskSubmitterService publisherService = ioc.instance(TaskSubmitterService.class);
         publisherService.enqueueTask();
 
         // Await some time
@@ -43,7 +43,7 @@ public class Main {
         taskService.stop();
 
         // Print task
-        TaskConsumerService consumerService = ioc.instance(TaskConsumerService.class);
+        TaskPerformerService consumerService = ioc.instance(TaskPerformerService.class);
         System.out.println(consumerService.task);
     }
 }

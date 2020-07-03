@@ -20,6 +20,6 @@ package colesico.framework.asynctask;
  * Task performer
  */
 @FunctionalInterface
-public interface TaskConsumer<P> {
-    void consume(P jobPayload);
+public interface TaskPerformer<P> {
+    void perform(P taskPayload);
 }

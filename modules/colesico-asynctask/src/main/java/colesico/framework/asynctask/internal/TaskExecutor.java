@@ -1,6 +1,6 @@
 package colesico.framework.asynctask.internal;
 
-import colesico.framework.asynctask.TaskConsumer;
+import colesico.framework.asynctask.TaskPerformer;
 import colesico.framework.asynctask.TaskExecutorConfigBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,13 +16,13 @@ abstract public class TaskExecutor {
 
     protected static final Logger logger = LoggerFactory.getLogger(TaskExecutor.class);
 
-    protected final DefaultConsumer defaultConsumer;
+    protected final DefaultTaskPerformer defaultConsumer;
 
     abstract protected ExecutorService getExecutorService();
 
     abstract protected TaskExecutorConfigBase getConfig();
 
-    public TaskExecutor(DefaultConsumer defaultConsumer) {
+    public TaskExecutor(DefaultTaskPerformer defaultConsumer) {
         this.defaultConsumer = defaultConsumer;
     }
 
@@ -31,11 +31,11 @@ abstract public class TaskExecutor {
         return () -> {
             final long queueingDuration = System.currentTimeMillis() - enqueueTime;
             logger.debug("Task queuing duration {}", queueingDuration);
-            TaskConsumer consumer = getConfig().getTaskConsumer();
+            TaskPerformer consumer = getConfig().getTaskConsumer();
             if (consumer != null) {
-                consumer.consume(taskPayload);
+                consumer.perform(taskPayload);
             } else {
-                defaultConsumer.consume(taskPayload);
+                defaultConsumer.perform(taskPayload);
             }
         };
     }

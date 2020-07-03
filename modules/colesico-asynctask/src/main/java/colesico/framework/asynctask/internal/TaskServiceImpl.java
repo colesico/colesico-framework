@@ -34,7 +34,7 @@ public class TaskServiceImpl implements TaskService, TaskSubmitter, TaskSchedule
     private final Polysupplier<TaskQueueConfigPrototype> queueConfigs;
     private final Polysupplier<TaskScheduleConfigPrototype> scheduleConfigs;
 
-    private final DefaultConsumer defaultConsumer;
+    private final DefaultTaskPerformer defaultConsumer;
 
     private final Map<Class<?>, TaskQueueExecutor> queues = new HashMap<>();
     private final Map<Class<?>, TaskScheduleExecutor> schedules = new HashMap<>();
@@ -43,7 +43,7 @@ public class TaskServiceImpl implements TaskService, TaskSubmitter, TaskSchedule
 
     public TaskServiceImpl(Polysupplier<TaskQueueConfigPrototype> queueConfigs,
                            Polysupplier<TaskScheduleConfigPrototype> scheduleConfigs,
-                           DefaultConsumer defaultConsumer) {
+                           DefaultTaskPerformer defaultConsumer) {
 
         this.queueConfigs = queueConfigs;
         this.scheduleConfigs = scheduleConfigs;

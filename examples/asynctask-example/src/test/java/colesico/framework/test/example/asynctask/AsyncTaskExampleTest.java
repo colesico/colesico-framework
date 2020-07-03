@@ -18,8 +18,8 @@ package colesico.framework.test.example.asynctask;
 
 
 import colesico.framework.asynctask.TaskService;
-import colesico.framework.example.asynctask.TaskConsumerService;
-import colesico.framework.example.asynctask.TaskPublisherService;
+import colesico.framework.example.asynctask.TaskPerformerService;
+import colesico.framework.example.asynctask.TaskSubmitterService;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import org.testng.annotations.AfterClass;
@@ -48,7 +48,7 @@ public class AsyncTaskExampleTest {
     public void test() {
 
         // Enqueue task
-        TaskPublisherService publisherService = ioc.instance(TaskPublisherService.class);
+        TaskSubmitterService publisherService = ioc.instance(TaskSubmitterService.class);
         publisherService.enqueueTask();
 
         // Await some time
@@ -58,7 +58,7 @@ public class AsyncTaskExampleTest {
             e.printStackTrace();
         }
 
-        TaskConsumerService consumerService = ioc.instance(TaskConsumerService.class);
+        TaskPerformerService consumerService = ioc.instance(TaskPerformerService.class);
         System.out.println();
 
         assertEquals(consumerService.task.value, "value");

@@ -26,7 +26,7 @@ import javax.inject.Singleton;
 
 @Producer
 @Produce(TaskServiceImpl.class)
-@Produce(DefaultConsumer.class)
+@Produce(DefaultTaskPerformer.class)
 public class TaskProducer {
 
     @Singleton

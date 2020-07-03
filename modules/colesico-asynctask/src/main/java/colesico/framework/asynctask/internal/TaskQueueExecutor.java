@@ -16,7 +16,7 @@ public final class TaskQueueExecutor extends TaskExecutor {
     private final BlockingQueue<Runnable> queue;
     private final ThreadPoolExecutor executorService;
 
-    public TaskQueueExecutor(DefaultConsumer defaultConsumer, TaskQueueConfigPrototype config) {
+    public TaskQueueExecutor(DefaultTaskPerformer defaultConsumer, TaskQueueConfigPrototype config) {
         super(defaultConsumer);
         this.config = config;
 

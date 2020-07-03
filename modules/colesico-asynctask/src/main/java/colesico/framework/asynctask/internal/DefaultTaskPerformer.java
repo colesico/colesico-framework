@@ -17,7 +17,7 @@
 package colesico.framework.asynctask.internal;
 
 
-import colesico.framework.asynctask.TaskConsumer;
+import colesico.framework.asynctask.TaskPerformer;
 import colesico.framework.eventbus.EventBus;
 
 import javax.inject.Inject;
@@ -27,17 +27,17 @@ import javax.inject.Singleton;
  * Event bus based task consumer.
  */
 @Singleton
-public final class DefaultConsumer implements TaskConsumer<Object> {
+public final class DefaultTaskPerformer implements TaskPerformer<Object> {
 
     private final EventBus eventBus;
 
     @Inject
-    public DefaultConsumer(EventBus eventBus) {
+    public DefaultTaskPerformer(EventBus eventBus) {
         this.eventBus = eventBus;
     }
 
     @Override
-    public void consume(Object jobPayload) {
-        eventBus.send(jobPayload);
+    public void perform(Object taskPayload) {
+        eventBus.send(taskPayload);
     }
 }

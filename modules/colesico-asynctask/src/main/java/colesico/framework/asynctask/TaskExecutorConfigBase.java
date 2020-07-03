@@ -7,7 +7,7 @@ abstract public class TaskExecutorConfigBase {
 
     abstract public Class<?> getPayloadType();
 
-    public TaskConsumer getTaskConsumer() {
+    public TaskPerformer getTaskConsumer() {
         return null;
     }
 
