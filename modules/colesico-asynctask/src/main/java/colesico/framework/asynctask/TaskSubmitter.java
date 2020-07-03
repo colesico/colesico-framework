@@ -16,6 +16,9 @@
 
 package colesico.framework.asynctask;
 
+/**
+ * Is used to put task to queue for background execution
+ */
 public interface TaskSubmitter {
     <P> void submit(P taskPayload);
 }

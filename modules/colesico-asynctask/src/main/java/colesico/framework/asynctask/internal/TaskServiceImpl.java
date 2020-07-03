@@ -16,9 +16,7 @@
 
 package colesico.framework.asynctask.internal;
 
-import colesico.framework.asynctask.TaskQueueConfigPrototype;
-import colesico.framework.asynctask.TaskScheduleConfigPrototype;
-import colesico.framework.asynctask.TaskService;
+import colesico.framework.asynctask.*;
 import colesico.framework.ioc.production.Polysupplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +27,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
-public class TaskServiceImpl implements TaskService {
+public class TaskServiceImpl implements TaskService, TaskSubmitter, TaskScheduler {
 
     private final Logger logger = LoggerFactory.getLogger(TaskService.class);
 

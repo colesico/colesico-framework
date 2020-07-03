@@ -20,7 +20,7 @@ import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
 
 /**
- * ThreadPoolExecutor configuration
+ * Task queue configuration prototype
  */
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
 abstract public class TaskQueueConfigPrototype extends TaskExecutorConfigBase {

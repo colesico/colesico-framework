@@ -1,7 +1,7 @@
 package colesico.framework.asynctask;
 
 /**
- * Config basis
+ * Task executor config basis
  */
 abstract public class TaskExecutorConfigBase {
 
@@ -17,7 +17,7 @@ abstract public class TaskExecutorConfigBase {
 
     @Override
     public final String toString() {
-        return this.getClass().getSimpleName() + "{ payloadType=" + getPayloadType() + '}';
+        return this.getClass().getSimpleName() + "{ payload=" + getPayloadType() + '}';
     }
 
 }

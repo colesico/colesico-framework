@@ -2,6 +2,9 @@ package colesico.framework.asynctask;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Is used to create task execution schedule
+ */
 public interface TaskScheduler {
     <P> void schedule(P taskPayload, long delay, TimeUnit unit);
 

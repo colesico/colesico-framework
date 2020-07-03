@@ -15,7 +15,6 @@ public final class TaskScheduleExecutor extends TaskExecutor {
     private final ThreadFactory threadFactory;
     private final ScheduledExecutorService executorService;
 
-
     public TaskScheduleExecutor(DefaultConsumer defaultConsumer, TaskScheduleConfigPrototype config) {
         super(defaultConsumer);
         this.config = config;

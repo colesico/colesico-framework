@@ -16,12 +16,13 @@
 
 package colesico.framework.asynctask;
 
-
-public interface TaskService extends TaskSubmitter, TaskScheduler {
+/**
+ * Task management service
+ */
+public interface TaskService{
     void start();
 
     void stop();
 
     boolean isRunning();
-
 }
