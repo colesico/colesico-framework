@@ -39,8 +39,8 @@ public class Main {
         taskService.start();
 
         // Enqueue task
-        TaskSubmitterService publisherService = ioc.instance(TaskSubmitterService.class);
-        publisherService.enqueueTask();
+        TasksSubmitterService publisherService = ioc.instance(TasksSubmitterService.class);
+        publisherService.enqueueTasks();
 
         // Await some time for task been processed
         sleep(100);

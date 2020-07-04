@@ -6,19 +6,21 @@ import colesico.framework.example.asynctask.performer.PerfTaskPayload;
 import colesico.framework.service.Service;
 
 @Service
-public class TaskSubmitterService {
+public class TasksSubmitterService {
 
     final TaskSubmitter taskSubmitter;
 
-    public TaskSubmitterService(TaskSubmitter taskSubmitter) {
+    public TasksSubmitterService(TaskSubmitter taskSubmitter) {
         this.taskSubmitter = taskSubmitter;
     }
 
-    public void enqueueTask() {
+    public void enqueueTasks() {
+        // Submit first task
         TaskPayload payload = new TaskPayload("value");
         taskSubmitter.submit(payload);
 
-        PerfTaskPayload perfPayload = new PerfTaskPayload("perv");
+        // submit second task
+        PerfTaskPayload perfPayload = new PerfTaskPayload("perf");
         taskSubmitter.submit(perfPayload);
     }
 }
