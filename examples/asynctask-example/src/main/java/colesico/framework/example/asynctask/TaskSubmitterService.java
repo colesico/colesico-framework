@@ -1,6 +1,8 @@
-package colesico.framework.example.asynctask.eventbus;
+package colesico.framework.example.asynctask;
 
 import colesico.framework.asynctask.TaskSubmitter;
+import colesico.framework.example.asynctask.eventbus.TaskPayload;
+import colesico.framework.example.asynctask.performer.PerfTaskPayload;
 import colesico.framework.service.Service;
 
 @Service
@@ -15,5 +17,8 @@ public class TaskSubmitterService {
     public void enqueueTask() {
         TaskPayload payload = new TaskPayload("value");
         taskSubmitter.submit(payload);
+
+        PerfTaskPayload perfPayload = new PerfTaskPayload("perv");
+        taskSubmitter.submit(perfPayload);
     }
 }
