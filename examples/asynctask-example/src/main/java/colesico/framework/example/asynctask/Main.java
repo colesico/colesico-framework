@@ -21,6 +21,14 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 
 public class Main {
+    private static void sleep(long ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         Ioc ioc = IocBuilder.create().build();
 
@@ -32,18 +40,14 @@ public class Main {
         TaskSubmitterService publisherService = ioc.instance(TaskSubmitterService.class);
         publisherService.enqueueTask();
 
-        // Await some time
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // Await some time for task been processed
+        sleep(100);
+
+        // Print task payload
+        TaskPerformerService consumerService = ioc.instance(TaskPerformerService.class);
+        System.out.println(consumerService.payload);
 
         // Stop task service
         taskService.stop();
-
-        // Print task
-        TaskPerformerService consumerService = ioc.instance(TaskPerformerService.class);
-        System.out.println(consumerService.task);
     }
 }

@@ -45,7 +45,7 @@ public class AsyncTaskExampleTest {
     }
 
     @Test
-    public void test() {
+    public void test1() {
 
         // Enqueue task
         TaskSubmitterService publisherService = ioc.instance(TaskSubmitterService.class);
@@ -53,7 +53,7 @@ public class AsyncTaskExampleTest {
 
         // Await some time
         try {
-            Thread.sleep(500);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -61,7 +61,7 @@ public class AsyncTaskExampleTest {
         TaskPerformerService consumerService = ioc.instance(TaskPerformerService.class);
         System.out.println();
 
-        assertEquals(consumerService.task.value, "value");
+        assertEquals(consumerService.payload.value, "value");
     }
 
 

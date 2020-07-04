@@ -5,6 +5,7 @@ import colesico.framework.service.Service;
 
 @Service
 public class TaskSubmitterService {
+    
     final TaskSubmitter taskSubmitter;
 
     public TaskSubmitterService(TaskSubmitter taskSubmitter) {
@@ -12,7 +13,7 @@ public class TaskSubmitterService {
     }
 
     public void enqueueTask() {
-        ATask task = new ATask("value");
-        taskSubmitter.submit(task);
+        TaskPayload payload = new TaskPayload("value");
+        taskSubmitter.submit(payload);
     }
 }

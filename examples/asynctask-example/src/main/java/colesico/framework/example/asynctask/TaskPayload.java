@@ -1,9 +1,13 @@
 package colesico.framework.example.asynctask;
 
-public class ATask {
+/**
+ * Task data
+ */
+public class TaskPayload {
+
     public String value;
 
-    public ATask(String value) {
+    public TaskPayload(String value) {
         this.value = value;
     }
 

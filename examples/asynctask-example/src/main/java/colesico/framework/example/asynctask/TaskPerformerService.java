@@ -6,10 +6,13 @@ import colesico.framework.service.Service;
 @Service
 public class TaskPerformerService {
 
-    public ATask task;
+    public TaskPayload payload;
 
+    /**
+     * This method performs task
+     */
     @OnEvent
-    public void onTask(ATask task) {
-        this.task = task;
+    public void performTask(TaskPayload payload) {
+        this.payload = payload;
     }
 }
