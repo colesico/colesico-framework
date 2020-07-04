@@ -1,4 +1,4 @@
-package colesico.framework.example.asynctask;
+package colesico.framework.example.asynctask.eventbus;
 
 /**
  * Task data

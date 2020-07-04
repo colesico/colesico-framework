@@ -1,11 +1,11 @@
-package colesico.framework.example.asynctask;
+package colesico.framework.example.asynctask.eventbus;
 
 import colesico.framework.asynctask.TaskSubmitter;
 import colesico.framework.service.Service;
 
 @Service
 public class TaskSubmitterService {
-    
+
     final TaskSubmitter taskSubmitter;
 
     public TaskSubmitterService(TaskSubmitter taskSubmitter) {

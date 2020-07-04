@@ -31,9 +31,9 @@ abstract public class TaskExecutor {
         return () -> {
             final long queueingDuration = System.currentTimeMillis() - enqueueTime;
             logger.debug("Task queuing duration {}", queueingDuration);
-            TaskPerformer consumer = getConfig().getTaskConsumer();
-            if (consumer != null) {
-                consumer.perform(taskPayload);
+            TaskPerformer performer = getConfig().getTaskPerformer();
+            if (performer != null) {
+                performer.perform(taskPayload);
             } else {
                 defaultConsumer.perform(taskPayload);
             }

@@ -1,10 +1,13 @@
-package colesico.framework.example.asynctask;
+package colesico.framework.example.asynctask.eventbus;
 
 import colesico.framework.eventbus.OnEvent;
 import colesico.framework.service.Service;
 
+/**
+ * Task listener
+ */
 @Service
-public class TaskPerformerService {
+public class TaskListenerService {
 
     public TaskPayload payload;
 
@@ -15,4 +18,5 @@ public class TaskPerformerService {
     public void performTask(TaskPayload payload) {
         this.payload = payload;
     }
+
 }

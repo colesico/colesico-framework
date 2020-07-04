@@ -14,7 +14,7 @@ abstract public class TaskExecutorConfigBase {
      * Task performer for the given payload type.
      * If null the event bus will acts as a performer
      */
-    public TaskPerformer getTaskConsumer() {
+    public TaskPerformer getTaskPerformer() {
         return null;
     }
 

@@ -17,10 +17,13 @@
 package colesico.framework.example.asynctask;
 
 import colesico.framework.asynctask.TaskService;
+import colesico.framework.example.asynctask.eventbus.TaskListenerService;
+import colesico.framework.example.asynctask.eventbus.TaskSubmitterService;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 
 public class Main {
+
     private static void sleep(long ms) {
         try {
             Thread.sleep(ms);
@@ -44,7 +47,7 @@ public class Main {
         sleep(100);
 
         // Print task payload
-        TaskPerformerService consumerService = ioc.instance(TaskPerformerService.class);
+        TaskListenerService consumerService = ioc.instance(TaskListenerService.class);
         System.out.println(consumerService.payload);
 
         // Stop task service
