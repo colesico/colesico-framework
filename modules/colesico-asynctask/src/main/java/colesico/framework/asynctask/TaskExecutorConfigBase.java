@@ -5,12 +5,22 @@ package colesico.framework.asynctask;
  */
 abstract public class TaskExecutorConfigBase {
 
+    /**
+     * Task payload type. This type will be associated with concrete task executor
+     */
     abstract public Class<?> getPayloadType();
 
+    /**
+     * Task performer for the given payload type.
+     * If null the event bus will acts as a performer
+     */
     public TaskPerformer getTaskConsumer() {
         return null;
     }
 
+    /**
+     * Initial task workers pool size
+     */
     public int getCorePoolSize() {
         return 1;
     }

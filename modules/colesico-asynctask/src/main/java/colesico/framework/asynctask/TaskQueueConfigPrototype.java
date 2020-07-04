@@ -25,10 +25,16 @@ import colesico.framework.config.ConfigPrototype;
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
 abstract public class TaskQueueConfigPrototype extends TaskExecutorConfigBase {
 
+    /**
+     * 0 - for unlimited
+     */
     public int getQueueCapacity() {
         return 500;
     }
 
+    /**
+     * Maximum number of active task workers
+     */
     public int getMaximumPoolSize() {
         return 1;
     }
