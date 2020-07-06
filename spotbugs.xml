@@ -26,6 +26,13 @@
         <Class name="colesico.framework.telehttp.writer.PlainTextWriter" />
         <Bug pattern="NP_NULL_ON_SOME_PATH" />
     </Match>
-
+    <Match>
+        <Class name="colesico.framework.weblet.teleapi.writer.BinaryWriter" />
+        <Bug pattern="NP_NULL_ON_SOME_PATH" />
+    </Match>
+    <Match>
+        <Class name="colesico.framework.weblet.teleapi.writer.StringWriter" />
+        <Bug pattern="NP_NULL_ON_SOME_PATH" />
+    </Match>
 
 </FindBugsFilter>

@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 @Singleton
 public final class JsonWriter extends ObjectWriter {
 
-    public static String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
+    public static final String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
 
     protected final RestletJsonConverter jsonConverter;
 
