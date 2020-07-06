@@ -21,7 +21,7 @@ import colesico.framework.config.PropertiesSource;
 import colesico.framework.config.SourceOption;
 import colesico.framework.config.UseSource;
 
-import static colesico.framework.config.FileSource.FILE_OPTION;
+import static colesico.framework.config.UseFileSource.FILE_OPTION;
 import static colesico.framework.config.PropertiesSource.PREFIX_OPTION;
 
 /**

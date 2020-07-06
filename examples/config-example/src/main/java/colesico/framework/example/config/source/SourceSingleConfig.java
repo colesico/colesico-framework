@@ -18,18 +18,13 @@ package colesico.framework.example.config.source;
 
 import colesico.framework.config.*;
 
-import static colesico.framework.config.FileSource.CLASSPATH_OPTION;
-import static colesico.framework.config.FileSource.FILE_OPTION;
-
 /**
  * Custom properties file example.
  * To change define parameters use {@link SourceOption}
  */
 @Config
 // Declare configuration source to bind parameters from configuration file
-@UseSource(bindAll = false)
-// Define file name
-@FileSource(file = "config.properties")
+@UseFileSource(file = "config.properties", bindAll = false)
 public class SourceSingleConfig extends SourceSingleConfigPrototype {
 
     @FromSource

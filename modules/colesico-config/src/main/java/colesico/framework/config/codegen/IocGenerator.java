@@ -158,7 +158,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         confParam.addAnnotation(Message.class);
         mb.addParameter(confParam.build());
 
-        mb.addParameter(TypeName.get(confElement.getSource().getDriver().unwrap()), CONFIG_SOURCE_PARAM, Modifier.FINAL);
+        mb.addParameter(TypeName.get(confElement.getSource().getSourceType().unwrap()), CONFIG_SOURCE_PARAM, Modifier.FINAL);
 
         mb.returns(TypeName.get(confElement.getImplementation().asClassType().unwrap()));
         CodeBlock.Builder cb = CodeBlock.builder();

@@ -27,15 +27,15 @@ public class ConfigSourceElement {
     public static final String BAG_CLASS_SUFFIX = "Bag";
 
     private final ConfigElement parentConfig;
-    private final ClassType driver;
+    private final ClassType sourceType;
     private final Map<String, String> options;
     private final boolean bindAll;
 
     private final List<SourceValueElement> sourceValues = new ArrayList<>();
 
-    public ConfigSourceElement(ConfigElement parentConfig, ClassType driver, Map<String, String> options, boolean bindAll) {
+    public ConfigSourceElement(ConfigElement parentConfig, ClassType sourceType, Map<String, String> options, boolean bindAll) {
         this.parentConfig = parentConfig;
-        this.driver = driver;
+        this.sourceType = sourceType;
         this.options = options;
         this.bindAll = bindAll;
     }
@@ -44,8 +44,8 @@ public class ConfigSourceElement {
         sourceValues.add(sv);
     }
 
-    public ClassType getDriver() {
-        return driver;
+    public ClassType getSourceType() {
+        return sourceType;
     }
 
     public Map<String, String> getOptions() {

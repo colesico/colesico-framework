@@ -39,7 +39,7 @@ import javax.lang.model.type.TypeMirror;
 import java.util.HashMap;
 import java.util.Map;
 
-import static colesico.framework.config.FileSource.*;
+import static colesico.framework.config.UseFileSource.*;
 
 /**
  * @author Vladlen Larionov
@@ -130,16 +130,23 @@ public class ConfigParser extends FrameworkAbstractParser {
 
         // Config source
         AnnotationToolbox<UseSource> useSourceAnn = configImpl.getAnnotation(UseSource.class);
+        AnnotationToolbox<UseFileSource> useFileSourceAnn = configImpl.getAnnotation(UseFileSource.class);
         ConfigSourceElement sourceElm = null;
-        if (useSourceAnn != null) {
-            TypeMirror driverType = useSourceAnn.getValueTypeMirror(UseSource::type);
-            ClassType driverClassType = new ClassType(processingEnv, (DeclaredType) driverType);
+        if (useSourceAnn != null || useFileSourceAnn != null) {
+            TypeMirror sourceType;
+            boolean bindAll;
+            if (useSourceAnn != null) {
+                sourceType = useSourceAnn.getValueTypeMirror(UseSource::type);
+                bindAll = useSourceAnn.unwrap().bindAll();
+            } else {
+                sourceType = useFileSourceAnn.getValueTypeMirror(UseFileSource::type);
+                bindAll = useFileSourceAnn.unwrap().bindAll();
+            }
+            ClassType sourceClassType = new ClassType(processingEnv, (DeclaredType) sourceType);
             Map<String, String> options = parseSourceOptions(configImpl);
-            sourceElm = new ConfigSourceElement(configElement, driverClassType, options, useSourceAnn.unwrap().bindAll());
+            sourceElm = new ConfigSourceElement(configElement, sourceClassType, options, bindAll);
             configElement.setSource(sourceElm);
             parseSourceValues(configImpl, sourceElm);
-
-
         }
 
         return configElement;
@@ -148,7 +155,7 @@ public class ConfigParser extends FrameworkAbstractParser {
     private Map<String, String> parseSourceOptions(ClassElement configImpl) {
         Map<String, String> result = new HashMap<>();
 
-        AnnotationToolbox<FileSource> fileSourceAnn = configImpl.getAnnotation(FileSource.class);
+        AnnotationToolbox<UseFileSource> fileSourceAnn = configImpl.getAnnotation(UseFileSource.class);
         if (fileSourceAnn != null) {
             if (StringUtils.isNotBlank(fileSourceAnn.unwrap().file())) {
                 result.put(FILE_OPTION, fileSourceAnn.unwrap().file());

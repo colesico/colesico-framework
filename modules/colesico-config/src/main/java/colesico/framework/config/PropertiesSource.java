@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.function.Function;
 
-import static colesico.framework.config.FileSource.*;
+import static colesico.framework.config.UseFileSource.*;
 
 /**
  * Properties file based configuration source.
