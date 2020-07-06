@@ -53,5 +53,5 @@ public @interface UseSource {
      * @return
      * @see FromSource
      */
-    boolean bindAll() default false;
+    boolean bindAll() default true;
 }

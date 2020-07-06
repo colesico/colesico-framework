@@ -29,7 +29,7 @@ import static colesico.framework.config.PropertiesSource.PREFIX_OPTION;
  * See {@link PropertiesSource} for all possible customization params for this source type.
  */
 @Config
-@UseSource(bindAll = true)
+@UseSource
 
 // Configuration source parameters
 @SourceOption(name = FILE_OPTION,value = "config.properties")

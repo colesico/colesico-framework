@@ -21,7 +21,7 @@ import colesico.framework.config.FromSource;
 import colesico.framework.config.UseSource;
 
 @Config
-@UseSource
+@UseSource(bindAll = false)
 public class SourceNestedConfig {
 
     @FromSource

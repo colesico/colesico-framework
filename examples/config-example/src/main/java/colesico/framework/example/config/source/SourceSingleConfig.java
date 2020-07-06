@@ -27,7 +27,7 @@ import static colesico.framework.config.FileSource.FILE_OPTION;
  */
 @Config
 // Declare configuration source to bind parameters from configuration file
-@UseSource
+@UseSource(bindAll = false)
 // Define file name
 @FileSource(file = "config.properties")
 public class SourceSingleConfig extends SourceSingleConfigPrototype {

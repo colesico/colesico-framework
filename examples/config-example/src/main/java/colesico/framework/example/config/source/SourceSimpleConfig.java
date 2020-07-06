@@ -29,7 +29,7 @@ import colesico.framework.config.UseSource;
  * @see PropertiesSource
  */
 @Config
-@UseSource(bindAll = true)
+@UseSource
 public class SourceSimpleConfig {
 
     private String value;
