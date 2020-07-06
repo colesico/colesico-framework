@@ -28,7 +28,7 @@
     <artifactId>colesico-telehttp</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico Http TeleAPI Module</name>
+    <name>Colesico Tele Http Module</name>
     <description>
         Colesico Framework TeleAPI for Http unification
     </description>

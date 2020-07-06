@@ -52,9 +52,9 @@ abstract public class TaskExecutor {
         try {
             boolean taskCompleted = getExecutorService().awaitTermination(seconds, TimeUnit.SECONDS);
             if (!taskCompleted) {
-                logger.info("Some tasks were not completed for queue: " + getConfig().getPayloadType().getSimpleName());
+                logger.info("Some tasks were not completed for payload: " + getConfig().getPayloadType().getSimpleName());
                 final List<Runnable> rejected = getExecutorService().shutdownNow();
-                // TODO: dump task payloads
+                logger.info("Rejected tasks: " + rejected.size());
             }
         } catch (InterruptedException e) {
             logger.error("Await termination interrupted");
