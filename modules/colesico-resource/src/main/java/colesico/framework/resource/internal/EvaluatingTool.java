@@ -96,7 +96,7 @@ public class EvaluatingTool {
     }
 
     public void dumpProperties(StringWriter writer) {
-        writer.write("Evaluating properties:\n");
+        writer.write("Evaluated properties:\n");
         for (Map.Entry<String, String> property : propertiesMap.entrySet()) {
             writer.write("    " + property.getKey() + "=" + property.getValue() + "\n");
         }
