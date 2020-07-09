@@ -25,7 +25,7 @@ import colesico.framework.translation.TranslationKit;
 public class ResourceConf extends ResourceOptionsPrototype {
 
     @Override
-    public void addLocalizations(LocalizationsDigest digest) {
+    public void addLocalizations(LocalizationDigest digest) {
         digest.add(TranslationKit.toBasePath(Messages.class),"L=ru");
     }
 }

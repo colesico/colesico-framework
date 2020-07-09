@@ -18,18 +18,21 @@ package colesico.framework.resource.internal;
 
 import colesico.framework.resource.ResourceOptionsPrototype;
 
-public class PropertiesDigestImpl implements ResourceOptionsPrototype.PropertiesDigest {
+final class RewritingDigestImpl implements ResourceOptionsPrototype.RewritingDigest {
 
-    private final EvaluatingTool evaluatingTool;
+    private final RewritingTool rewritingTool;
 
-    public PropertiesDigestImpl(EvaluatingTool evaluatingTool) {
-        this.evaluatingTool = evaluatingTool;
+    public RewritingDigestImpl(RewritingTool rewritingTool) {
+        this.rewritingTool = rewritingTool;
     }
 
     @Override
-    public ResourceOptionsPrototype.PropertiesDigest add(String name, String value) {
-        evaluatingTool.addProperty(name, value);
+    public ResourceOptionsPrototype.RewritingDigest add(String originPathPrefix, String targetPathPrefix) {
+        rewritingTool.addRewriting(originPathPrefix, targetPathPrefix);
         return this;
     }
 
+    public RewritingTool getRewritingTool() {
+        return rewritingTool;
+    }
 }

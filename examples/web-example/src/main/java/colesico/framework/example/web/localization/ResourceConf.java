@@ -24,7 +24,7 @@ import colesico.framework.resource.ResourceOptionsPrototype;
 public class ResourceConf extends ResourceOptionsPrototype {
 
     @Override
-    public void addLocalizations(LocalizationsDigest digest) {
+    public void addLocalizations(LocalizationDigest digest) {
         digest.add(MyDictionary.BUNDLE_PATH,"L=ru","L=fr");
     }
 }

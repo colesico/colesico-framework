@@ -22,7 +22,7 @@ import colesico.framework.resource.ResourceOptionsPrototype;
 @Config
 public class ResourceConf extends ResourceOptionsPrototype {
     @Override
-    public void addProperties(PropertiesDigest digest) {
+    public void addProperties(PropertyDigest digest) {
         digest.add("$tmplRoot","colesico/framework/example/web/pebble/tmpl");
     }
 }

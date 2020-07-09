@@ -18,17 +18,21 @@ package colesico.framework.resource.internal;
 
 import colesico.framework.resource.ResourceOptionsPrototype;
 
-final class LocalizationsDigestImpl implements ResourceOptionsPrototype.LocalizationsDigest {
+final class LocalizationDigestImpl implements ResourceOptionsPrototype.LocalizationDigest {
 
     private final LocalizingTool localizationTool;
 
-    public LocalizationsDigestImpl(LocalizingTool localizationTool) {
+    public LocalizationDigestImpl(LocalizingTool localizationTool) {
         this.localizationTool = localizationTool;
     }
 
     @Override
-    public ResourceOptionsPrototype.LocalizationsDigest add(String path, String... qualifiersSpec) {
+    public ResourceOptionsPrototype.LocalizationDigest add(String path, String... qualifiersSpec) {
         localizationTool.addLocalization(path, qualifiersSpec);
         return this;
+    }
+
+    public LocalizingTool getLocalizationTool() {
+        return localizationTool;
     }
 }

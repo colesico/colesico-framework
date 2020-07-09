@@ -19,6 +19,7 @@ package colesico.framework.resource.internal;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Singleton;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,4 +95,10 @@ public class EvaluatingTool {
         return StringUtils.join(pathItems, PATH_SEPARATOR);
     }
 
+    public void dumpProperties(StringWriter writer) {
+        writer.write("Evaluating properties:\n");
+        for (Map.Entry<String, String> property : propertiesMap.entrySet()) {
+            writer.write("    " + property.getKey() + "=" + property.getValue() + "\n");
+        }
+    }
 }

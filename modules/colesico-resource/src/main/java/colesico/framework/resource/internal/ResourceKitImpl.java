@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.Enumeration;
 
@@ -52,16 +53,21 @@ public final class ResourceKitImpl implements ResourceKit {
         this.rewritingTool = rewritingTool;
         this.evaluatingTool = evaluatingTool;
 
-        final LocalizationsDigestImpl qualifiersBinder = new LocalizationsDigestImpl(localizingTool);
-        final RewritingsDigestImpl rewritingsBinder = new RewritingsDigestImpl(rewritingTool);
-        final PropertiesDigestImpl propertiesBinder = new PropertiesDigestImpl(evaluatingTool);
+        final LocalizationDigestImpl localizationDigest = new LocalizationDigestImpl(localizingTool);
+        final RewritingDigestImpl rewritingDigest = new RewritingDigestImpl(rewritingTool);
+        final PropertyDigestImpl propertyDigest = new PropertyDigestImpl(evaluatingTool);
 
         configs.forEach(c -> {
-            c.addLocalizations(qualifiersBinder);
-            c.addRewritings(rewritingsBinder);
-            c.addProperties(propertiesBinder);
+            c.addLocalizations(localizationDigest);
+            c.addRewritings(rewritingDigest);
+            c.addProperties(propertyDigest);
         }, null);
 
+        if (log.isDebugEnabled()) {
+            StringWriter writer = new StringWriter();
+            propertyDigest.getEvaluatingTool().dumpProperties(writer);
+            log.debug(writer.toString());
+        }
     }
 
     @Override

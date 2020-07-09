@@ -34,7 +34,7 @@ abstract public class ResourceOptionsPrototype {
      *
      * @return
      */
-    public void addRewritings(RewritingsDigest digest) {
+    public void addRewritings(RewritingDigest digest) {
     }
 
     /**
@@ -42,29 +42,29 @@ abstract public class ResourceOptionsPrototype {
      *
      * @param digest
      */
-    public void addLocalizations(LocalizationsDigest digest) {
+    public void addLocalizations(LocalizationDigest digest) {
     }
 
-    public void addProperties(PropertiesDigest digest) {
+    public void addProperties(PropertyDigest digest) {
     }
 
-    public interface PropertiesDigest {
-        PropertiesDigest add(String name, String value);
+    public interface PropertyDigest {
+        PropertyDigest add(String name, String value);
     }
 
     /**
      * Reciting rules
      */
-    public interface RewritingsDigest {
+    public interface RewritingDigest {
         /**
          * Add rewriting
          * @param originPathPrefix origin path prefix or full path
          * @param targetPathPrefix target path prefix of full path
          */
-        RewritingsDigest add(String originPathPrefix, String targetPathPrefix);
+        RewritingDigest add(String originPathPrefix, String targetPathPrefix);
     }
 
-    public interface LocalizationsDigest {
+    public interface LocalizationDigest {
 
         /**
          * Binds possible qualifiers values to specific resource path
@@ -74,9 +74,9 @@ abstract public class ResourceOptionsPrototype {
          *                          Qualifier values order is unimportant.
          * @see colesico.framework.profile.ProfileConfigPrototype
          */
-        LocalizationsDigest add(String path, String... qualifiersSpec);
+        LocalizationDigest add(String path, String... qualifiersSpec);
 
-        default LocalizationsDigest add(Class clazz, String... qualifiersSpec) {
+        default LocalizationDigest add(Class clazz, String... qualifiersSpec) {
             return add(clazz.getCanonicalName().replace('.', '/'), qualifiersSpec);
         }
     }

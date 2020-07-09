@@ -21,7 +21,7 @@ import colesico.framework.resource.ResourceOptionsPrototype;
 public class ResourcesOptions extends ResourceOptionsPrototype {
 
     @Override
-    public void addProperties(PropertiesDigest digest) {
+    public void addProperties(PropertyDigest digest) {
         digest.add("$alias", "foo/dummy");
     }
 
