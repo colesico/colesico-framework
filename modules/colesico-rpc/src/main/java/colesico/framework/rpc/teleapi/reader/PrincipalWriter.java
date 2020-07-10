@@ -2,6 +2,7 @@ package colesico.framework.rpc.teleapi.reader;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpResponse;
+import colesico.framework.rpc.teleapi.RpcResponse;
 import colesico.framework.rpc.teleapi.RpcTWContext;
 import colesico.framework.security.Principal;
 import colesico.framework.security.teleapi.PrincipalSerializer;
@@ -22,16 +23,13 @@ public class PrincipalWriter implements RpcTeleWriter<Principal> {
 
     @Override
     public void write(Principal principal, RpcTWContext context) {
-        String principalVal;
+        byte[] principalBytes;
         if (principal != null) {
-            byte[] principalBytes = principalSerializer.serialize(principal);
-            Base64.Encoder encoder = Base64.getEncoder();
-            principalVal = encoder.encodeToString(principalBytes);
+            principalBytes = principalSerializer.serialize(principal);
         } else {
-            principalVal = null;
+            principalBytes = null;
         }
-
-        HttpResponse response = httpContextProv.get().getResponse();
-        response.setHeader(HEADER_NAME, principalVal);
+        RpcResponse response = context.getResponse();
+        response.getHeaders().put(HEADER_NAME, principalBytes);
     }
 }

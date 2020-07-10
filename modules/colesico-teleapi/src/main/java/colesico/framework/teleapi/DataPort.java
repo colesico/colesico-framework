@@ -25,7 +25,7 @@ import java.lang.reflect.Type;
 /**
  * Data exchange port for communication with remote client.
  * This port is destined for retrieving parameters values from remote client and sending back a results.
- * A request "controller"  (tele-driver, controller servlet or something similar) creates and puts TeleDataPort instance
+ * A request "controller"  (tele-driver, controller servlet or something similar) creates and puts DataPort instance
  * to the process scope for each request process.
  *
  * @param <R> Data reading context
