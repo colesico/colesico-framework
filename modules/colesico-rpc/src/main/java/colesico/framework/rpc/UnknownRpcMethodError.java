@@ -1,6 +1,6 @@
 package colesico.framework.rpc;
 
-public class UnknownRpcMethodError extends Error {
+public class UnknownRpcMethodError extends RpcError {
     private String className;
     private String methodName;
 

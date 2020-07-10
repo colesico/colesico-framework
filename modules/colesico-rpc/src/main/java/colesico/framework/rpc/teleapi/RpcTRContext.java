@@ -19,14 +19,23 @@ package colesico.framework.rpc.teleapi;
 /**
  * RPC tele-data reading context
  */
-public final class RpcTDRContext {
+public final class RpcTRContext {
     private final String paramName;
+    private RpcRequest request;
 
-    public RpcTDRContext(String paramName) {
+    public RpcTRContext(String paramName) {
         this.paramName = paramName;
     }
 
     public String getParamName() {
         return paramName;
+    }
+
+    public RpcRequest getRequest() {
+        return request;
+    }
+
+    public void setRequest(RpcRequest request) {
+        this.request = request;
     }
 }

@@ -2,10 +2,9 @@ package colesico.framework.rpc.teleapi.reader;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpRequest;
-import colesico.framework.rpc.teleapi.RpcTDRContext;
+import colesico.framework.rpc.teleapi.RpcTRContext;
 import colesico.framework.security.Principal;
 import colesico.framework.security.teleapi.PrincipalSerializer;
-import colesico.framework.teleapi.TeleReader;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Provider;
@@ -24,7 +23,7 @@ public class PrincipalReader implements RpcTeleReader<Principal> {
     }
 
     @Override
-    public Principal read(RpcTDRContext context) {
+    public Principal read(RpcTRContext context) {
         HttpRequest request = httpContextProv.get().getRequest();
 
         // Retrieve principal from http header

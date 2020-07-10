@@ -1,12 +1,12 @@
 package colesico.framework.rpc;
 
-public class Error {
+public class RpcError {
     private String message;
 
-    public Error() {
+    public RpcError() {
     }
 
-    public Error(String message) {
+    public RpcError(String message) {
         this.message = message;
     }
 

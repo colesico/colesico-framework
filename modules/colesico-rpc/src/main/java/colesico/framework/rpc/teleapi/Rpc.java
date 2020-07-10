@@ -1,7 +1,7 @@
 package colesico.framework.rpc.teleapi;
 
 /**
- * Teletype marker an qualifier
+ * Teletype marker
  */
 public interface Rpc {
 }

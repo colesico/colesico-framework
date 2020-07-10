@@ -23,24 +23,24 @@ import java.util.Map;
 
 public final class RpcLigature {
     public static final String ADD_METHOD = "add";
-    private final String className;
+    private final String targetClass;
 
-    private final Map<String, TeleMethod> methods = new HashMap<>();
+    private final Map<String, TeleMethod> targetMethods = new HashMap<>();
 
     public RpcLigature(String className) {
-        this.className = className;
+        this.targetClass = className;
     }
 
-    public String getClassName() {
-        return className;
+    public String getTargetClass() {
+        return targetClass;
     }
 
-    public Map<String, TeleMethod> getMethods() {
-        return methods;
+    public Map<String, TeleMethod> getTargetMethods() {
+        return targetMethods;
     }
 
     public void add(String name, TeleMethod methodRef) {
-        methods.put(name, methodRef);
+        targetMethods.put(name, methodRef);
     }
 
 }

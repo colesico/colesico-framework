@@ -18,6 +18,6 @@ package colesico.framework.rpc.teleapi;
 
 import colesico.framework.teleapi.TeleDriver;
 
-public interface RpcTeleDriver extends TeleDriver<RpcTDRContext, RpcTDWContext, RpcTIContext, RpcDataPort> {
+public interface RpcTeleDriver extends TeleDriver<RpcTRContext, RpcTWContext, RpcTIContext, RpcDataPort> {
 
 }

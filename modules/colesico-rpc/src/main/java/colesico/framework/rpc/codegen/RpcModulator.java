@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RpcModulator extends
-        TeleModulator<RpcTeleDriver, RpcDataPort, RpcTDRContext, RpcTDWContext, RpcTIContext, RpcModulatorContext, RpcLigature, Rpc> {
+        TeleModulator<RpcTeleDriver, RpcDataPort, RpcTRContext, RpcTWContext, RpcTIContext, RpcModulatorContext, RpcLigature, Rpc> {
 
     public static final String PARAM_NAME_PREFIX = "arg";
 
@@ -188,7 +188,7 @@ public class RpcModulator extends
         String paramName = StringUtils.join(paramNamesChain, ".");
 
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("new $T(", ClassName.get(RpcTDRContext.class));
+        cb.add("new $T(", ClassName.get(RpcTRContext.class));
         cb.add("$S", paramName);
         cb.add(")");
         return cb.build();

@@ -1,22 +1,22 @@
 package colesico.framework.rpc;
 
 /**
- * Basic remote exception
+ * Basic rpc exception
  */
 public final class RpcException extends RuntimeException {
-    private final Error error;
+    private final RpcError error;
 
-    public RpcException(Error error) {
+    public RpcException(RpcError error) {
         super(error.getMessage());
         this.error = error;
     }
 
-    public RpcException(Error error, Throwable cause) {
+    public RpcException(RpcError error, Throwable cause) {
         super(error.getMessage(), cause);
         this.error = error;
     }
 
-    public Error getError() {
+    public RpcError getError() {
         return error;
     }
 }
