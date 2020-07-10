@@ -17,8 +17,8 @@
 package colesico.framework.teleapi;
 
 /**
- *  Tele-invocations driver.
- *  Controls invocation process concerning tele driver environment (protocol etc), performs error handling.
+ *  Tele-Invocations Driver.
+ *  Controls invocation process considering tele-driver environment (protocol etc.), performs error handling, etc.
  * @param <R> Data reading context
  * @param <W> Data writing context
  * @param <I> Target (service) invocation context
