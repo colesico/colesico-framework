@@ -165,7 +165,7 @@ public class Navigation<N extends Navigation> {
         return (N) this;
     }
 
-    public String toLocation(Router router, HttpContext context) {
+    public String toLocation(Router router) {
         String targetURI;
         if (StringUtils.isNotBlank(this.uri)) {
             targetURI = uri;
@@ -180,18 +180,10 @@ public class Navigation<N extends Navigation> {
             throw new NavigationException("Location URI or service and methodName are not specified");
         }
 
-        String urlPrefix;
-        if (context != null) {
-            HttpRequest request = context.getRequest();
-            urlPrefix = buildURLPrefix(request.getRequestScheme(), request.getHost(), request.getPort());
-        } else {
-            urlPrefix = "";
-        }
-
         char paramsSeparator = StringUtils.contains(targetURI, "?") ? '&' : '?';
         String paramsStr = queryParameters.isEmpty() ? "" : paramsSeparator + buildParamsStr().toString();
 
-        String location = urlPrefix + targetURI + paramsStr;
+        String location = targetURI + paramsStr;
 
         return location;
     }
@@ -201,7 +193,7 @@ public class Navigation<N extends Navigation> {
     }
 
     public void redirect(Router router, HttpContext context) {
-        String location = toLocation(router, context);
+        String location = toLocation(router);
         context.getResponse().sendRedirect(location, httpCode);
     }
 
