@@ -5,10 +5,10 @@
 To build simple application you must first to setup your maven project.
 This should be a regular jar application with the framework dependencies.
 
-Although the framework consists of many modules, to specify dependencies you can use an bundle module
+Although the framework consists of many modules, to specify dependencies you can use a bundle module
 that includes the most frequently used specific modules - colesico-bundle-web  (or colesico-bundle-sql, etc.).
 
-Because the framework can support different http servers, you must specify which one  server you want to use.
+Framework can support different http servers, so you must specify which one  server you want to use.
 
 [source,xml]
 ----
