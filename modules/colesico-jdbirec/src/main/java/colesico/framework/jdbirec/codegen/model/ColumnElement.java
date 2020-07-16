@@ -37,6 +37,8 @@ public class ColumnElement {
 
     protected boolean option;
 
+    protected String tableName;
+
     public ColumnElement(FieldElement originField, String name) {
         if (name == null) {
             throw new RuntimeException("Name is null");
@@ -123,6 +125,14 @@ public class ColumnElement {
 
     public void setUpdateAs(String updateAs) {
         this.updateAs = updateAs;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 
     public boolean equals(Object o) {

@@ -154,7 +154,7 @@ public class RecordParser extends FrameworkAbstractParser {
         return columns;
     }
 
-    protected void parseColumn(final CompositionElement composition, FieldElement field, String namePrefix) {
+    protected void parseColumn(final CompositionElement composition, FieldElement field) {
         final List<Column> columns = getColumns(field);
         for (Column columnAnn : columns) {
 
@@ -177,9 +177,11 @@ public class RecordParser extends FrameworkAbstractParser {
                 continue;
             }
 
-            String columnName = StringUtils.trim(namePrefix + rewriteName(acceptedChain, name));
+            String columnName = StringUtils.trim(composition.getNamePrefix() + rewriteName(acceptedChain, name));
             ColumnElement columnElement = new ColumnElement(field, columnName);
             composition.addColumn(columnElement);
+
+            columnElement.setTableName(composition.getTableName());
 
             columnElement.setImportable(columnAnnElm.unwrap().importable());
             columnElement.setExportable(columnAnnElm.unwrap().exportable());
@@ -242,13 +244,10 @@ public class RecordParser extends FrameworkAbstractParser {
         return compositions;
     }
 
-    protected void parseComposition(final CompositionElement compositionElm, String namePrefix) {
-        logger.debug("Parse RECORD composition: " + compositionElm);
-        if (namePrefix == null) {
-            namePrefix = "";
-        }
+    protected void parseComposition(final CompositionElement composition) {
+        logger.debug("Parse RECORD composition: " + composition);
 
-        List<FieldElement> fields = compositionElm.getOriginClass().getFieldsFiltered(
+        List<FieldElement> fields = composition.getOriginClass().getFieldsFiltered(
                 f -> !f.unwrap().getModifiers().contains(Modifier.STATIC)
         );
 
@@ -260,17 +259,38 @@ public class RecordParser extends FrameworkAbstractParser {
                 AnnotationToolbox<Composition> compositionAnnElm = new AnnotationToolbox<>(processingEnv, compositionAnn);
 
                 // Check view
-                if (!isInView(compositionElm.getParentRecord().getView(), compositionAnnElm.unwrap().views())) {
+                if (!isInView(composition.getParentRecord().getView(), compositionAnnElm.unwrap().views())) {
                     continue;
                 }
 
                 // Filter compositions that contains only not acceptable fields
-                if (acceptChain(compositionElm, field.getName(), false) == null) {
+                if (acceptChain(composition, field.getName(), false) == null) {
                     continue;
                 }
 
                 ClassElement compositionClass = field.asClassType().asClassElement();
                 CompositionElement subComposition = new CompositionElement(recordElement, compositionClass, field);
+
+                subComposition.setNamePrefix(composition.getNamePrefix() + compositionAnnElm.unwrap().columnsPrefix());
+
+                String tableName = composition.getTableName();
+
+                if (compositionAnnElm.unwrap().jointRecord()) {
+                    AnnotationToolbox<Record> jointRecAnn = compositionClass.getAnnotation(Record.class);
+                    if (jointRecAnn == null) {
+                        throw CodegenException.of()
+                                .message("Joint record has no @" + Record.class.getSimpleName() + " annotation")
+                                .element(compositionClass.unwrap())
+                                .build();
+                    }
+                    tableName = jointRecAnn.unwrap().table();
+
+                    if (StringUtils.isNotBlank(jointRecAnn.unwrap().tableAlias())) {
+                        recordElement.addTableAlias(jointRecAnn.unwrap().tableAlias(), jointRecAnn.unwrap().table());
+                    }
+                }
+
+                subComposition.setTableName(tableName);
 
                 if (compositionAnnElm.unwrap().columns().length > 0) {
                     subComposition.setImportedColumns(compositionAnnElm.unwrap().columns());
@@ -280,23 +300,27 @@ public class RecordParser extends FrameworkAbstractParser {
                     subComposition.setKeyColumn(compositionAnnElm.unwrap().keyColumn());
                 }
 
-                compositionElm.addSubComposition(subComposition);
-                parseComposition(subComposition, namePrefix + compositionAnnElm.unwrap().columnsPrefix());
+                composition.addSubComposition(subComposition);
+                parseComposition(subComposition);
                 break;
             }
-            parseColumn(compositionElm, field, namePrefix);
+            parseColumn(composition, field);
         }
     }
+
 
     protected RecordElement parseRecord(ClassElement typeElement, String view) {
         recordElement = new RecordElement(typeElement, view);
 
-        AnnotationToolbox<Record> annElm = typeElement.getAnnotation(Record.class);
-        recordElement.setTableName(annElm.unwrap().table());
-        TypeMirror extend = annElm.getValueTypeMirror(Record::extend);
+        AnnotationToolbox<Record> recAnnElm = typeElement.getAnnotation(Record.class);
+        recordElement.setTableName(recAnnElm.unwrap().table());
+        if (StringUtils.isNotBlank(recAnnElm.unwrap().tableAlias())) {
+            recordElement.addTableAlias(recAnnElm.unwrap().tableAlias(), recAnnElm.unwrap().table());
+        }
+        TypeMirror extend = recAnnElm.getValueTypeMirror(Record::extend);
         recordElement.setExtend(new ClassType(processingEnv, (DeclaredType) extend));
 
-        parseComposition(recordElement.getRootComposition(), null);
+        parseComposition(recordElement.getRootComposition());
         return recordElement;
     }
 

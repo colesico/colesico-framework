@@ -57,6 +57,10 @@ public class CompositionElement {
 
     private final Set<CompositionElement> subCompositions = new LinkedHashSet<>();
 
+    private String namePrefix = "";
+
+    private String tableName;
+
     public CompositionElement(RecordElement parentRecord, ClassElement originClass, FieldElement originField) {
         this.parentRecord = parentRecord;
         this.originClass = originClass;
@@ -139,11 +143,27 @@ public class CompositionElement {
         return subCompositions;
     }
 
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public String getNamePrefix() {
+        return namePrefix;
+    }
+
+    public void setNamePrefix(String namePrefix) {
+        this.namePrefix = namePrefix;
+    }
+
     @Override
     public String toString() {
         return "CompositionElement{" +
-            "originClass=" + originClass +
-            ", originField=" + originField +
-            '}';
+                "originClass=" + originClass +
+                ", originField=" + originField +
+                '}';
     }
 }

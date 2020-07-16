@@ -36,6 +36,11 @@ public @interface Record {
     String table() default "";
 
     /**
+     * Table alias to use in sql queries
+     */
+    String tableAlias() default "";
+
+    /**
      * To be able to work within the same record with different sets of fields of this record,
      * the system of views is used. Each view includes a specific set of record fields.
      * View name must consist of letters and numbers only.

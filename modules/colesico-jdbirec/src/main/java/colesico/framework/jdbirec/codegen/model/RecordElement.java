@@ -20,7 +20,9 @@ import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RecordElement {
 
@@ -29,6 +31,7 @@ public class RecordElement {
     private final String view;
     private ClassType extend;
     private String tableName;
+    private Map<String, String> tableAliases = new HashMap<>();
 
 
     public RecordElement(ClassElement originClass, String view) {
@@ -73,5 +76,13 @@ public class RecordElement {
 
     public String getView() {
         return view;
+    }
+
+    public Map<String, String> getTableAliases() {
+        return tableAliases;
+    }
+
+    public void addTableAlias(String alias, String table) {
+        tableAliases.put(alias, table);
     }
 }

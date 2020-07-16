@@ -29,7 +29,8 @@ abstract public class RecordKit<R> {
     public static final String IMPORT_METHOD = "importRecord";
     public static final String NEW_RECORD_METHOD = "newRecord";
 
-    public static final String TABLE_NAME_METHOD = "tableName";
+    public static final String GET_TABLE_NAME_METHOD = "getTableName";
+    public static final String GET_TABLE_ALIASES_METHOD = "getTableAliases";
     public static final String GET_RECORD_TOKEN_METHOD = "getRecordToken";
     public static final String GET_COLUMNS_TOKEN_METHOD = "getColumnsToken";
     public static final String GET_UPDATES_TOKEN = "getUpdatesToken";
@@ -57,7 +58,12 @@ abstract public class RecordKit<R> {
      *
      * @return
      */
-    abstract public String tableName();
+    abstract public String getTableName();
+
+    /**
+     * Returns table aliases
+     */
+    abstract public Map<String, String> getTableAliases();
 
     /**
      * Select columns and expressions, separated by comma:  column1,column2, expr(column3)...
@@ -87,12 +93,23 @@ abstract public class RecordKit<R> {
      * Transforms sql text with references (@table, @columns, @updates, @values) to actual sql
      */
     public final String sql(String query) {
-        return query
-                .replace(TABLE_NAME_REF, tableName())
+
+        query = query
+                .replace(TABLE_NAME_REF, getTableName())
                 .replace(RECORD_REF, getRecordToken())
                 .replace(COLUMNS_REF, getColumnsToken())
                 .replace(VALUES_REF, getValuesToken())
                 .replace(UPDATES_REF, getUpdatesToken());
+
+        Map<String, String> tableAls = getTableAliases();
+        if (tableAls != null) {
+            for (Map.Entry<String, String> jt : tableAls.entrySet()) {
+                String ref = "@" + jt.getKey();
+                query = query.replace(ref, jt.getValue());
+            }
+        }
+
+        return query;
     }
 
     public final Map<String, Object> map(R record) {

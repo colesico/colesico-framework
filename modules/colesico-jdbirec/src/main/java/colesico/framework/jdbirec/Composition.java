@@ -30,7 +30,8 @@ import java.lang.annotation.*;
 public @interface Composition {
 
     /**
-     * Composition columns name prefix
+     * Composition columns name prefix.
+     * This value is used to set the general prefix for names the composition columns.
      */
     String columnsPrefix() default "";
 
@@ -58,5 +59,10 @@ public @interface Composition {
      * @see Record#views()
      */
     String[] views() default {RecordView.ALL_VIEWS};
+
+    /**
+     * Interpret this composition as join record  (select from table join...)
+     */
+    boolean jointRecord() default false;
 
 }
