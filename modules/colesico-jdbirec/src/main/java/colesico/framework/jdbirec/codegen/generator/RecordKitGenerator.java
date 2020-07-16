@@ -171,8 +171,9 @@ public class RecordKitGenerator {
         }
     }
 
-    private String getColumnFullName(ColumnElement column){
-        return StringUtils.isNotBlank(column.getTableName())? column.getName():column.getTableName()+'.'+column.getName();
+    private String getSelectColumnName(ColumnElement column) {
+        return column.getName();
+        //return StringUtils.isBlank(column.getTableName()) ? column.getName() : column.getTableName() + '.' + column.getName();
     }
 
     protected void generateGetValue(ColumnElement column, CodeBlock.Builder cb) {
@@ -182,8 +183,7 @@ public class RecordKitGenerator {
             cb.add("$N.$N($S,$N)",
                     mediatorField,
                     FieldMediator.IMPORT_METHOD,
-                    getColumnFullName(column),
-                    column.getName(),
+                    getSelectColumnName(column),
                     RecordKit.RESULT_SET_PARAM);
             return;
         }
@@ -191,45 +191,45 @@ public class RecordKitGenerator {
         String fieldType = column.getOriginField().asType().toString();
         switch (fieldType) {
             case "char":
-                cb.add("$N.getChar($S)", RecordKit.RESULT_SET_PARAM, getColumnFullName(column));
+                cb.add("$N.getChar($S)", RecordKit.RESULT_SET_PARAM, getSelectColumnName(column));
                 break;
             case "boolean":
-                cb.add("$N.getBoolean($S)", RecordKit.RESULT_SET_PARAM, getColumnFullName(column));
+                cb.add("$N.getBoolean($S)", RecordKit.RESULT_SET_PARAM, getSelectColumnName(column));
                 break;
             case "long":
-                cb.add("$N.getLong($S)", RecordKit.RESULT_SET_PARAM, getColumnFullName(column));
+                cb.add("$N.getLong($S)", RecordKit.RESULT_SET_PARAM, getSelectColumnName(column));
                 break;
             case "int":
-                cb.add("$N.getInt($S)", RecordKit.RESULT_SET_PARAM,getColumnFullName(column));
+                cb.add("$N.getInt($S)", RecordKit.RESULT_SET_PARAM, getSelectColumnName(column));
                 break;
             case "short":
-                cb.add("$N.getShort($S)", RecordKit.RESULT_SET_PARAM, getColumnFullName(column));
+                cb.add("$N.getShort($S)", RecordKit.RESULT_SET_PARAM, getSelectColumnName(column));
                 break;
             case "byte":
-                cb.add("$N.getByte($S)", RecordKit.RESULT_SET_PARAM, getColumnFullName(column));
+                cb.add("$N.getByte($S)", RecordKit.RESULT_SET_PARAM, getSelectColumnName(column));
                 break;
             case "double":
-                cb.add("$N.getDouble($S)", RecordKit.RESULT_SET_PARAM, getColumnFullName(column));
+                cb.add("$N.getDouble($S)", RecordKit.RESULT_SET_PARAM, getSelectColumnName(column));
                 break;
             case "float":
-                cb.add("$N.getFloat($S)", RecordKit.RESULT_SET_PARAM, getColumnFullName(column));
+                cb.add("$N.getFloat($S)", RecordKit.RESULT_SET_PARAM, getSelectColumnName(column));
                 break;
             case "java.lang.String":
-                cb.add("$N.getString($S)", RecordKit.RESULT_SET_PARAM,getColumnFullName(column));
+                cb.add("$N.getString($S)", RecordKit.RESULT_SET_PARAM, getSelectColumnName(column));
                 break;
             case "java.math.BigDecimal":
-                cb.add("$N.getBigDecimal($S)", RecordKit.RESULT_SET_PARAM, getColumnFullName(column));
+                cb.add("$N.getBigDecimal($S)", RecordKit.RESULT_SET_PARAM, getSelectColumnName(column));
                 break;
             case "java.time.LocalDateTime":
                 cb.add("$N.getTimestamp($S) == null ? null : $N.getTimestamp($S).toLocalDateTime()",
-                        RecordKit.RESULT_SET_PARAM, getColumnFullName(column),
-                        RecordKit.RESULT_SET_PARAM, getColumnFullName(column)
+                        RecordKit.RESULT_SET_PARAM, getSelectColumnName(column),
+                        RecordKit.RESULT_SET_PARAM, getSelectColumnName(column)
                 );
                 break;
             case "java.time.Instant":
                 cb.add("$N.getTimestamp($S) == null ? null : $N.getTimestamp($S).toInstant()",
-                        RecordKit.RESULT_SET_PARAM, getColumnFullName(column),
-                        RecordKit.RESULT_SET_PARAM,getColumnFullName(column)
+                        RecordKit.RESULT_SET_PARAM, getSelectColumnName(column),
+                        RecordKit.RESULT_SET_PARAM, getSelectColumnName(column)
                 );
                 break;
 
@@ -241,11 +241,11 @@ public class RecordKitGenerator {
             case "java.lang.Double":
             case "java.lang.Float":
             case "java.lang.Character":
-                cb.add("$N.getObject($S,$T.class)", RecordKit.RESULT_SET_PARAM, getColumnFullName(column), TypeName.get(column.getOriginField().asType()));
+                cb.add("$N.getObject($S,$T.class)", RecordKit.RESULT_SET_PARAM, getSelectColumnName(column), TypeName.get(column.getOriginField().asType()));
                 break;
 
             default:
-                cb.add("$N.getObject($S,$T.class)", RecordKit.RESULT_SET_PARAM, getColumnFullName(column), TypeName.get(column.getOriginField().asType()));
+                cb.add("$N.getObject($S,$T.class)", RecordKit.RESULT_SET_PARAM, getSelectColumnName(column), TypeName.get(column.getOriginField().asType()));
         }
     }
 
@@ -384,8 +384,8 @@ public class RecordKitGenerator {
             if (column.getSelectAs() == null) {
                 continue;
             }
-            String fullName = StringUtils.isBlank(column.getTableName()) ? column.getName() : column.getTableName() + '.' + column.getName();
-            String selectAs = StringUtils.replace(column.getSelectAs(), "@column", fullName);
+            String selectAs = StringUtils.replace(column.getSelectAs(), "@column", column.getName());
+            selectAs = StringUtils.isBlank(column.getTableName()) ? selectAs : column.getTableName() + '.' + selectAs;
             selectItems.add(selectAs);
         }
         String token = StringUtils.join(selectItems, ", ");
