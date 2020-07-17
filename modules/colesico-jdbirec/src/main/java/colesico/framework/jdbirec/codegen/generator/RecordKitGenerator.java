@@ -380,12 +380,21 @@ public class RecordKitGenerator {
 
         List<ColumnElement> allColumns = recordElement.getAllColumns();
         List<String> selectItems = new ArrayList<>();
+
         for (ColumnElement column : allColumns) {
             if (column.getSelectAs() == null) {
                 continue;
             }
-            String selectAs = StringUtils.replace(column.getSelectAs(), "@column", column.getName());
-            selectAs = StringUtils.isBlank(column.getTableName()) ? selectAs : column.getTableName() + '.' + selectAs;
+
+            String selectAs;
+            if (StringUtils.isBlank(column.getTableName())) {
+                selectAs = column.getSelectAs().replaceAll("@column\\((.+)\\)", "$1 " + column.getName());
+                selectAs = StringUtils.replace(selectAs, "@column", column.getName());
+            } else {
+                selectAs = column.getSelectAs().replaceAll("@column\\((.+)\\)", column.getTableName() + ".$1 " + column.getName());
+                selectAs = StringUtils.replace(selectAs, "@column", column.getTableName() + '.' + column.getName());
+            }
+
             selectItems.add(selectAs);
         }
         String token = StringUtils.join(selectItems, ", ");

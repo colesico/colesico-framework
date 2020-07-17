@@ -69,7 +69,7 @@ public @interface Column {
      * Column value for selecting.
      * \@column - select column value
      * \@nop -  don't select
-     * <p>
+     * To specify another column for selection use @column([name]), where [name] - another column name
      *
      * @return
      */
@@ -78,6 +78,7 @@ public @interface Column {
     /**
      * Column definition for create table sql.
      * If \@nop is specified column will not be included to the create table definition.
+     *
      * @return
      */
     String definition() default "";
@@ -93,7 +94,6 @@ public @interface Column {
      * Use this field value in {@link RecordKit#importRecord(Object, ResultSet)} method,
      * so field value will not be obtained from sql query result set.
      *
-     *
      * @return
      */
     boolean importable() default true;
@@ -107,8 +107,8 @@ public @interface Column {
     boolean virtual() default false;
 
     /**
-     * @see Record#views()
      * @return
+     * @see Record#views()
      */
     String[] views() default {RecordView.ALL_VIEWS};
 }
