@@ -32,16 +32,13 @@ import java.sql.ResultSet;
 public @interface Column {
 
     /**
-     * Column name
-     *
-     * @return
+     * Column name.
+     * \@filed means auto generated name from field value
      */
     String name() default "@field";
 
     /**
      * Value mediator to transmit field value to sql format and back
-     *
-     * @return
      */
     Class<? extends FieldMediator> mediator() default FieldMediator.class;
 
@@ -67,9 +64,11 @@ public @interface Column {
 
     /**
      * Column value for selecting.
-     * \@column - select column value
-     * \@nop -  don't select
-     * To specify another column for selection use @column([name]), where [name] - another column name
+     * <p>
+     * \@column - Select column value. Column identified by @Column.name value
+     * To specify another column for selection use: @column([name]), where [name] - another column name
+     * <p>
+     * \@nop -  Don't select
      *
      * @return
      */

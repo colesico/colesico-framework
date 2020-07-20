@@ -386,13 +386,19 @@ public class RecordKitGenerator {
                 continue;
             }
 
-            String selectAs;
+            String selectAs = column.getSelectAs();
             if (StringUtils.isBlank(column.getTableName())) {
-                selectAs = column.getSelectAs().replaceAll("@column\\((.+)\\)", "$1 " + column.getName());
+                selectAs = selectAs.replaceAll("@column\\((.+)\\)", "$1");
                 selectAs = StringUtils.replace(selectAs, "@column", column.getName());
             } else {
-                selectAs = column.getSelectAs().replaceAll("@column\\((.+)\\)", column.getTableName() + ".$1 " + column.getName());
+                selectAs = selectAs.replaceAll("@column\\((.+)\\)", column.getTableName() + ".$1");
                 selectAs = StringUtils.replace(selectAs, "@column", column.getTableName() + '.' + column.getName());
+            }
+            if (!(selectAs.equalsIgnoreCase(column.getName())
+                    || selectAs.endsWith('.' + column.getName())
+                    || selectAs.endsWith(' ' + column.getName())
+            )) {
+                selectAs = selectAs + ' ' + column.getName();
             }
 
             selectItems.add(selectAs);
