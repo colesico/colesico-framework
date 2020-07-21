@@ -315,16 +315,26 @@ public class RecordKitParser extends FrameworkAbstractParser {
 
     protected RecordKitElement parseRecordView(ClassElement recordKitClass, String view) {
 
-        ClassType recordType;
-        ClassType superClass = recordKitClass.getSuperClass();
-        if (superClass == null || !superClass.unwrap().toString().equals(RecordKitApi.class.getName())) {
+        ClassType superClass = null;
+
+        List<ClassType> interfaces = recordKitClass.getInterfaces();
+        for (ClassType iface : interfaces) {
+            if (iface.getErasure().toString().equals(RecordKitApi.class.getName())) {
+                superClass = iface;
+                break;
+            }
+        }
+
+        if (superClass == null) {
             throw CodegenException.of().element(recordKitClass.unwrap()).message("Not extends " + RecordKitApi.class.getName()).build();
         }
+
         if (superClass.unwrap().getTypeArguments().size() != 1) {
             throw CodegenException.of().element(recordKitClass.unwrap()).message("Unable to extract record type").build();
         }
+
         TypeMirror recordMirror = superClass.unwrap().getTypeArguments().get(0);
-        recordType = new ClassType(processingEnv, (DeclaredType) recordMirror);
+        ClassType recordType = new ClassType(processingEnv, (DeclaredType) recordMirror);
 
         AnnotationTerm<RecordKit> recordKitAnn = recordKitClass.getAnnotation(RecordKit.class);
         String tableName = recordKitAnn.unwrap().tableName();
