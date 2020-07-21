@@ -18,7 +18,7 @@ package colesico.framework.config.codegen;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
-import colesico.framework.assist.codegen.model.AnnotationToolbox;
+import colesico.framework.assist.codegen.model.AnnotationTerm;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
@@ -74,7 +74,7 @@ public class ConfigParser extends FrameworkAbstractParser {
         ConfigModel model;
         ClassElement target;
         if (configPrototype != null) {
-            AnnotationToolbox<ConfigPrototype> prototypeAnn = configPrototype.getAnnotation(ConfigPrototype.class);
+            AnnotationTerm<ConfigPrototype> prototypeAnn = configPrototype.getAnnotation(ConfigPrototype.class);
             model = prototypeAnn.unwrap().model();
             TypeMirror targetMirror = prototypeAnn.getValueTypeMirror(ConfigPrototype::target);
             if (targetMirror.toString().equals(Object.class.getName())) {
@@ -87,7 +87,7 @@ public class ConfigParser extends FrameworkAbstractParser {
             model = ConfigModel.SINGLE;
         }
 
-        AnnotationToolbox<DefaultConfig> defaultAnn = configImpl.getAnnotation(DefaultConfig.class);
+        AnnotationTerm<DefaultConfig> defaultAnn = configImpl.getAnnotation(DefaultConfig.class);
         boolean defaultMessage;
         if (defaultAnn != null) {
             if (!ConfigModel.MESSAGE.equals(model)) {
@@ -100,7 +100,7 @@ public class ConfigParser extends FrameworkAbstractParser {
         }
 
         // Classed
-        AnnotationToolbox<Classed> classedAnn = configImpl.getAnnotation(Classed.class);
+        AnnotationTerm<Classed> classedAnn = configImpl.getAnnotation(Classed.class);
         TypeMirror classed;
         if (classedAnn != null) {
             classed = classedAnn.getValueTypeMirror(Classed::value);
@@ -109,18 +109,18 @@ public class ConfigParser extends FrameworkAbstractParser {
         }
 
         // Named
-        AnnotationToolbox<Named> namedAnn = configImpl.getAnnotation(Named.class);
+        AnnotationTerm<Named> namedAnn = configImpl.getAnnotation(Named.class);
         String named = namedAnn == null ? null : namedAnn.unwrap().value();
 
         // Condition
-        AnnotationToolbox<Requires> reqAnn = configImpl.getAnnotation(Requires.class);
+        AnnotationTerm<Requires> reqAnn = configImpl.getAnnotation(Requires.class);
         ClassType condition = null;
         if (reqAnn != null) {
             condition = new ClassType(getProcessingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(a -> a.value()));
         }
 
         // Substitution
-        AnnotationToolbox<Substitute> subsAnn = configImpl.getAnnotation(Substitute.class);
+        AnnotationTerm<Substitute> subsAnn = configImpl.getAnnotation(Substitute.class);
         Substitution substitution = null;
         if (subsAnn != null) {
             substitution = subsAnn.unwrap().value();
@@ -129,8 +129,8 @@ public class ConfigParser extends FrameworkAbstractParser {
         ConfigElement configElement = new ConfigElement(configImpl, configPrototype, condition, substitution, model, target, defaultMessage, classed, named);
 
         // Config source
-        AnnotationToolbox<UseSource> useSourceAnn = configImpl.getAnnotation(UseSource.class);
-        AnnotationToolbox<UseFileSource> useFileSourceAnn = configImpl.getAnnotation(UseFileSource.class);
+        AnnotationTerm<UseSource> useSourceAnn = configImpl.getAnnotation(UseSource.class);
+        AnnotationTerm<UseFileSource> useFileSourceAnn = configImpl.getAnnotation(UseFileSource.class);
         ConfigSourceElement sourceElm = null;
         if (useSourceAnn != null || useFileSourceAnn != null) {
             TypeMirror sourceType;
@@ -155,7 +155,7 @@ public class ConfigParser extends FrameworkAbstractParser {
     private Map<String, String> parseSourceOptions(ClassElement configImpl) {
         Map<String, String> result = new HashMap<>();
 
-        AnnotationToolbox<UseFileSource> fileSourceAnn = configImpl.getAnnotation(UseFileSource.class);
+        AnnotationTerm<UseFileSource> fileSourceAnn = configImpl.getAnnotation(UseFileSource.class);
         if (fileSourceAnn != null) {
             if (StringUtils.isNotBlank(fileSourceAnn.unwrap().file())) {
                 result.put(FILE_OPTION, fileSourceAnn.unwrap().file());
@@ -168,9 +168,9 @@ public class ConfigParser extends FrameworkAbstractParser {
             }
         }
 
-        AnnotationToolbox<SourceOptions> sourceOptionsAnn = configImpl.getAnnotation(SourceOptions.class);
+        AnnotationTerm<SourceOptions> sourceOptionsAnn = configImpl.getAnnotation(SourceOptions.class);
         if (sourceOptionsAnn == null) {
-            AnnotationToolbox<SourceOption> sourceOptAnn = configImpl.getAnnotation(SourceOption.class);
+            AnnotationTerm<SourceOption> sourceOptAnn = configImpl.getAnnotation(SourceOption.class);
             if (sourceOptAnn != null) {
                 result.put(sourceOptAnn.unwrap().name(), sourceOptAnn.unwrap().value());
             }
@@ -185,7 +185,7 @@ public class ConfigParser extends FrameworkAbstractParser {
 
     private ConfigSourceElement parseSourceValues(ClassElement configImplementation, ConfigSourceElement confSourceElm) {
         for (FieldElement me : configImplementation.getFields()) {
-            AnnotationToolbox<FromSource> sourceValueAnn = me.getAnnotation(FromSource.class);
+            AnnotationTerm<FromSource> sourceValueAnn = me.getAnnotation(FromSource.class);
             if (confSourceElm.isBindAll() || (sourceValueAnn != null)) {
                 confSourceElm.addSourceValue(new SourceValueElement(me));
             }

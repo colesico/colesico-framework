@@ -139,11 +139,11 @@ public class MethodElement extends ParserElement {
     /**
      * Returns declared and inherited from super classes annotations
      */
-    public <A extends Annotation> List<AnnotationToolbox<A>> getAnnotationsInherited(Class<A> annClass) {
-        List<AnnotationToolbox<A>> result = new ArrayList<>();
+    public <A extends Annotation> List<AnnotationTerm<A>> getAnnotationsInherited(Class<A> annClass) {
+        List<AnnotationTerm<A>> result = new ArrayList<>();
         MethodElement superMethod = this;
         do {
-            AnnotationToolbox<A> ann = superMethod.getAnnotation(annClass);
+            AnnotationTerm<A> ann = superMethod.getAnnotation(annClass);
             if (ann != null) {
                 result.add(ann);
             }

@@ -17,7 +17,7 @@
 package colesico.framework.translation.codegen.generator;
 
 import colesico.framework.assist.codegen.CodegenUtils;
-import colesico.framework.assist.codegen.model.AnnotationToolbox;
+import colesico.framework.assist.codegen.model.AnnotationTerm;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.assist.codegen.model.ParameterElement;
 import colesico.framework.translation.AbstractDictionary;
@@ -67,7 +67,7 @@ public class DictionaryGenerator {
         cb.add("return $N(", AbstractDictionary.TRANSLATE_OR_KEY_METHOD);
 
         String t9nKey;
-        AnnotationToolbox<TranslationKey> t9nKeyAnn = keyMethod.getAnnotation(TranslationKey.class);
+        AnnotationTerm<TranslationKey> t9nKeyAnn = keyMethod.getAnnotation(TranslationKey.class);
         if (t9nKeyAnn != null) {
             t9nKey = t9nKeyAnn.unwrap().value();
         } else {

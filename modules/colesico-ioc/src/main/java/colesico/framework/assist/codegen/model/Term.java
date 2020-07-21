@@ -20,11 +20,14 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-abstract public class Toolbox {
+/**
+ * Basic tooled element
+ */
+abstract public class Term {
 
     protected final ProcessingEnvironment processingEnv;
 
-    public Toolbox(ProcessingEnvironment processingEnv) {
+    public Term(ProcessingEnvironment processingEnv) {
         this.processingEnv = processingEnv;
     }
 

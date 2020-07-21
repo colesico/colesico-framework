@@ -17,7 +17,7 @@
 package colesico.framework.jdbirec.mediators;
 
 import colesico.framework.jdbirec.FieldMediator;
-import colesico.framework.jdbirec.RecordKit;
+import colesico.framework.jdbirec.AbstractRecordKit;
 
 import java.sql.Array;
 import java.sql.ResultSet;
@@ -41,7 +41,7 @@ abstract public class ListMediator<T> implements FieldMediator<List<T>> {
     }
 
     @Override
-    public void exportField(List<T> value, String fieldName, RecordKit.FieldReceiver fr) {
+    public void exportField(List<T> value, String fieldName, AbstractRecordKit.FieldReceiver fr) {
         fr.set(fieldName, value == null ? null : value.toArray(newArray(value.size())));
     }
 

@@ -23,7 +23,7 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>3.7.1-SNAPSHOT</version>
+        <version>3.8.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -56,6 +56,12 @@
             <artifactId>colesico-router</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-security</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
 
 
         <!-- Kryo for library-->
@@ -64,12 +70,7 @@
             <artifactId>kryo5</artifactId>
             <version>${kryo.version}</version>
         </dependency>
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-security</artifactId>
-            <version>3.2.0</version>
-            <scope>compile</scope>
-        </dependency>
+
     </dependencies>
 
     <build>

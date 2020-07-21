@@ -24,28 +24,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RecordElement {
+public class RecordKitElement {
 
-    private final ClassElement originClass;
-    private final CompositionElement rootComposition;
     private final String view;
-    private ClassType extend;
-    private String tableName;
+    private final ClassElement recordKitClass;
+    private final ClassType recordType;
+    private final ClassType extend;
+    private final String tableName;
     private Map<String, String> tableAliases = new HashMap<>();
 
+    private final CompositionElement rootComposition;
 
-    public RecordElement(ClassElement originClass, String view) {
-        this.originClass = originClass;
-        this.rootComposition = new CompositionElement(this, originClass, null);
+    public RecordKitElement(String view, ClassElement recordKitClass, ClassType recordType, ClassType extend, String tableName) {
         this.view = view;
+        this.recordKitClass = recordKitClass;
+        this.recordType = recordType;
+        this.extend = extend;
+        this.tableName = tableName;
+        this.rootComposition = new CompositionElement(this, recordType.asClassElement(), null);
     }
 
     public CompositionElement getRootComposition() {
         return rootComposition;
     }
 
-    public ClassElement getOriginClass() {
-        return originClass;
+    public ClassType getRecordType() {
+        return recordType;
     }
 
     public boolean hasColumn(ColumnElement columnElement) {
@@ -62,16 +66,8 @@ public class RecordElement {
         return tableName;
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
     public ClassType getExtend() {
         return extend;
-    }
-
-    public void setExtend(ClassType extend) {
-        this.extend = extend;
     }
 
     public String getView() {
@@ -84,5 +80,9 @@ public class RecordElement {
 
     public void addTableAlias(String alias, String table) {
         tableAliases.put(alias, table);
+    }
+
+    public ClassElement getRecordKitClass() {
+        return recordKitClass;
     }
 }

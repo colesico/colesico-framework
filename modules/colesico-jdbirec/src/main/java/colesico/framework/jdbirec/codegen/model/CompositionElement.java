@@ -27,7 +27,7 @@ import java.util.Set;
 
 public class CompositionElement {
 
-    private final RecordElement parentRecord;
+    private final RecordKitElement parentRecordKit;
 
     /**
      * Composition class
@@ -39,6 +39,9 @@ public class CompositionElement {
      */
     private final FieldElement originField;
 
+    /**
+     * Parent composition ref
+     */
     private CompositionElement parentComposition;
 
     /**
@@ -59,10 +62,14 @@ public class CompositionElement {
 
     private String namePrefix = "";
 
+    /**
+     * Composition table name.
+     * This is for joint records.
+     */
     private String tableName;
 
-    public CompositionElement(RecordElement parentRecord, ClassElement originClass, FieldElement originField) {
-        this.parentRecord = parentRecord;
+    public CompositionElement(RecordKitElement parentRecordKit, ClassElement originClass, FieldElement originField) {
+        this.parentRecordKit = parentRecordKit;
         this.originClass = originClass;
         this.originField = originField;
     }
@@ -92,15 +99,15 @@ public class CompositionElement {
     }
 
     public void addColumn(ColumnElement columnElm) {
-        if (parentRecord.hasColumn(columnElm)) {
+        if (parentRecordKit.hasColumn(columnElm)) {
             throw CodegenException.of().message("Duplicate column: " + columnElm.getName()).element(columnElm.getOriginField()).build();
         }
         columns.add(columnElm);
         columnElm.setParentComposition(this);
     }
 
-    public RecordElement getParentRecord() {
-        return parentRecord;
+    public RecordKitElement getParentRecordKit() {
+        return parentRecordKit;
     }
 
     public ClassElement getOriginClass() {

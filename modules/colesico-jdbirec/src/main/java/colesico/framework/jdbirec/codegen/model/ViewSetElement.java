@@ -21,13 +21,14 @@ import java.util.Map;
 
 public class ViewSetElement {
 
-    protected final Map<String, RecordElement> records = new HashMap<>();
+    protected final Map<String, RecordKitElement> recordKits = new HashMap<>();
 
-    public Map<String, RecordElement> getRecords() {
-        return records;
+    public Map<String, RecordKitElement> getRecordKits() {
+        return recordKits;
     }
 
-    public void addRecord(String view, RecordElement record) {
-        records.put(view, record);
+    public void addRecordKit(String view, RecordKitElement recordKit) {
+        recordKits.put(view, recordKit);
     }
+
 }

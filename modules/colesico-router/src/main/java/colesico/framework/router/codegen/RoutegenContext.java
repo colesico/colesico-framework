@@ -20,12 +20,8 @@ package colesico.framework.router.codegen;
 import colesico.framework.assist.Elements;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.assist.codegen.model.AnnotationToolbox;
-import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.assist.codegen.model.MethodElement;
+import colesico.framework.assist.codegen.model.AnnotationTerm;
 import colesico.framework.assist.codegen.model.ParserElement;
-import colesico.framework.config.SourceOption;
-import colesico.framework.config.SourceOptions;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.router.RequestMethod;
 import colesico.framework.router.Route;
@@ -78,7 +74,7 @@ abstract public class RoutegenContext {
 
     protected String buildMethodRoute(TeleMethodElement teleMethod) {
 
-        AnnotationToolbox<Route> routeAnn = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(Route.class);
+        AnnotationTerm<Route> routeAnn = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(Route.class);
         String methodRoute;
         if (routeAnn != null) {
             methodRoute = StringUtils.trim(routeAnn.unwrap().value());
@@ -105,7 +101,7 @@ abstract public class RoutegenContext {
         }
 
         HttpMethod httpMethod = HttpMethod.HTTP_METHOD_GET;
-        AnnotationToolbox<RequestMethod> methodAnnotation = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(RequestMethod.class);
+        AnnotationTerm<RequestMethod> methodAnnotation = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(RequestMethod.class);
         if (methodAnnotation != null) {
             httpMethod = HttpMethod.of(methodAnnotation.unwrap().value());
         }
@@ -114,7 +110,7 @@ abstract public class RoutegenContext {
     }
 
     protected String buildServiceRoute(ServiceElement service) {
-        AnnotationToolbox<Route> routeAnn = service.getOriginClass().getAnnotation(Route.class);
+        AnnotationTerm<Route> routeAnn = service.getOriginClass().getAnnotation(Route.class);
         String srvRoute;
         if (routeAnn != null) {
             srvRoute = StringUtils.trim(routeAnn.unwrap().value());
@@ -162,9 +158,9 @@ abstract public class RoutegenContext {
 
     protected Map<String, String> parseRouteAttributes(ParserElement methodOrClass) {
         Map<String, String> result = new HashMap<>();
-        AnnotationToolbox<RouteAttributes> routeAttributesAnn = methodOrClass.getAnnotation(RouteAttributes.class);
+        AnnotationTerm<RouteAttributes> routeAttributesAnn = methodOrClass.getAnnotation(RouteAttributes.class);
         if (routeAttributesAnn == null) {
-            AnnotationToolbox<RouteAttribute> routeAttrAnn = methodOrClass.getAnnotation(RouteAttribute.class);
+            AnnotationTerm<RouteAttribute> routeAttrAnn = methodOrClass.getAnnotation(RouteAttribute.class);
             if (routeAttrAnn != null) {
                 result.put(routeAttrAnn.unwrap().name(), routeAttrAnn.unwrap().value());
             }

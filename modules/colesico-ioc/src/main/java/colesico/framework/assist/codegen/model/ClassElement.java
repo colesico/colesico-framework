@@ -201,8 +201,6 @@ public class ClassElement extends ParserElement {
 
     /**
      * Returns all direct and inherited interfaces
-     *
-     * @return
      */
     public List<ClassType> getInterfaces() {
         List<ClassType> result = new ArrayList<>();
@@ -213,7 +211,7 @@ public class ClassElement extends ParserElement {
                     .map(tiface -> new ClassType(processingEnv, (DeclaredType) tiface))
                     .collect(Collectors.toList());
             result.addAll(ifacesClassTypes);
-            
+
             ClassType superClass = classElm.getSuperClass();
             classElm = superClass == null ? null : superClass.asClassElement();
         }

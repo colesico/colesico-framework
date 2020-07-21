@@ -26,7 +26,6 @@ import colesico.framework.service.TeleView;
 import colesico.framework.service.codegen.model.*;
 
 import javax.lang.model.element.Modifier;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.util.*;
 
@@ -49,10 +48,10 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
                     .build();
         }
 
-        AnnotationToolbox<LocalParam> localParamAnn = var.getAnnotation(LocalParam.class);
+        AnnotationTerm<LocalParam> localParamAnn = var.getAnnotation(LocalParam.class);
 
         //================= Check compound or parameter
-        AnnotationToolbox<Compound> compounddAnn = var.getAnnotation(Compound.class);
+        AnnotationTerm<Compound> compounddAnn = var.getAnnotation(Compound.class);
         if (compounddAnn == null) {
             // simple parameter
             TeleParamElement teleParam = new TeleParamElement(var, localParamAnn != null, paramIndex);
@@ -98,7 +97,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
         );
 
         // Process fields
-        AnnotationToolbox<TeleView> teleViewAnn = varStack.getFirst().getAnnotation(TeleView.class);
+        AnnotationTerm<TeleView> teleViewAnn = varStack.getFirst().getAnnotation(TeleView.class);
         Set<String> masterViews = getTeleViewKeys(teleViewAnn);
         for (FieldElement field : fields) {
             // Check field by "TeleView"
@@ -149,7 +148,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
             if (proxyMethod.isLocal()) {
                 continue;
             }
-            AnnotationToolbox<TeleMethodName> teleMethodNameAnn = proxyMethod.getOriginMethod().getAnnotation(TeleMethodName.class);
+            AnnotationTerm<TeleMethodName> teleMethodNameAnn = proxyMethod.getOriginMethod().getAnnotation(TeleMethodName.class);
             final String teleMethodName;
             if (teleMethodNameAnn != null) {
                 teleMethodName = teleMethodNameAnn.unwrap().value();
@@ -170,7 +169,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
         }
     }
 
-    private Set<String> getTeleViewKeys(AnnotationToolbox<TeleView> teleViewAnnotation) {
+    private Set<String> getTeleViewKeys(AnnotationTerm<TeleView> teleViewAnnotation) {
         Set<String> result = new HashSet<>();
         if (teleViewAnnotation == null) {
             return result;

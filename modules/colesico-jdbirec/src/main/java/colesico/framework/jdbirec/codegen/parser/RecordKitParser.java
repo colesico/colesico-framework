@@ -19,15 +19,15 @@ package colesico.framework.jdbirec.codegen.parser;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
-import colesico.framework.assist.codegen.model.AnnotationToolbox;
+import colesico.framework.assist.codegen.model.AnnotationTerm;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.*;
-import colesico.framework.jdbirec.Record;
+import colesico.framework.jdbirec.RecordKit;
 import colesico.framework.jdbirec.codegen.model.ColumnElement;
 import colesico.framework.jdbirec.codegen.model.CompositionElement;
-import colesico.framework.jdbirec.codegen.model.RecordElement;
+import colesico.framework.jdbirec.codegen.model.RecordKitElement;
 import colesico.framework.jdbirec.codegen.model.ViewSetElement;
 import org.apache.commons.lang3.StringUtils;
 
@@ -38,7 +38,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import java.util.*;
 
-public class RecordParser extends FrameworkAbstractParser {
+public class RecordKitParser extends FrameworkAbstractParser {
 
     public static final String OP_NOP = "@nop";
     public static final String OU_UPDATE = "@update";
@@ -46,9 +46,9 @@ public class RecordParser extends FrameworkAbstractParser {
     /**
      * Parsing record
      */
-    protected RecordElement recordElement;
+    protected RecordKitElement recordKitElement;
 
-    public RecordParser(ProcessingEnvironment processingEnv) {
+    public RecordKitParser(ProcessingEnvironment processingEnv) {
         super(processingEnv);
     }
 
@@ -142,11 +142,11 @@ public class RecordParser extends FrameworkAbstractParser {
     private List<Column> getColumns(FieldElement field) {
         final List<Column> columns = new ArrayList<>();
 
-        AnnotationToolbox<Column> columnAnnElm = field.getAnnotation(Column.class);
+        AnnotationTerm<Column> columnAnnElm = field.getAnnotation(Column.class);
         if (columnAnnElm != null) {
             columns.add(columnAnnElm.unwrap());
         } else {
-            AnnotationToolbox<Columns> columnsAnnElm = field.getAnnotation(Columns.class);
+            AnnotationTerm<Columns> columnsAnnElm = field.getAnnotation(Columns.class);
             if (columnsAnnElm != null) {
                 columns.addAll(Arrays.asList(columnsAnnElm.unwrap().value()));
             }
@@ -159,11 +159,11 @@ public class RecordParser extends FrameworkAbstractParser {
         for (Column columnAnn : columns) {
 
             // Check view
-            if (!isInView(composition.getParentRecord().getView(), columnAnn.views())) {
+            if (!isInView(composition.getParentRecordKit().getView(), columnAnn.views())) {
                 continue;
             }
 
-            AnnotationToolbox<Column> columnAnnElm = new AnnotationToolbox<>(processingEnv, columnAnn);
+            AnnotationTerm<Column> columnAnnElm = new AnnotationTerm<>(processingEnv, columnAnn);
 
             String name;
             if (columnAnnElm.unwrap().name().equals("@field")) {
@@ -180,8 +180,6 @@ public class RecordParser extends FrameworkAbstractParser {
             String columnName = StringUtils.trim(composition.getNamePrefix() + rewriteName(acceptedChain, name));
             ColumnElement columnElement = new ColumnElement(field, columnName);
             composition.addColumn(columnElement);
-
-            columnElement.setTableName(composition.getTableName());
 
             columnElement.setImportable(columnAnnElm.unwrap().importable());
             columnElement.setExportable(columnAnnElm.unwrap().exportable());
@@ -237,11 +235,11 @@ public class RecordParser extends FrameworkAbstractParser {
     private List<Composition> getCompositions(FieldElement field) {
         final List<Composition> compositions = new ArrayList<>();
 
-        AnnotationToolbox<Composition> compositionAnnElm = field.getAnnotation(Composition.class);
+        AnnotationTerm<Composition> compositionAnnElm = field.getAnnotation(Composition.class);
         if (compositionAnnElm != null) {
             compositions.add(compositionAnnElm.unwrap());
         } else {
-            AnnotationToolbox<Compositions> compositionsAnnElm = field.getAnnotation(Compositions.class);
+            AnnotationTerm<Compositions> compositionsAnnElm = field.getAnnotation(Compositions.class);
             if (compositionsAnnElm != null) {
                 compositions.addAll(Arrays.asList(compositionsAnnElm.unwrap().value()));
             }
@@ -259,12 +257,12 @@ public class RecordParser extends FrameworkAbstractParser {
         for (FieldElement field : fields) {
             logger.debug("Process RECORD field: " + field);
             final List<Composition> compositions = getCompositions(field);
-            for (Composition compositionAnn : compositions) {
+            for (Composition compAnn : compositions) {
 
-                AnnotationToolbox<Composition> compositionAnnElm = new AnnotationToolbox<>(processingEnv, compositionAnn);
+                AnnotationTerm<Composition> compositionAnn = new AnnotationTerm<>(processingEnv, compAnn);
 
                 // Check view
-                if (!isInView(composition.getParentRecord().getView(), compositionAnnElm.unwrap().views())) {
+                if (!isInView(composition.getParentRecordKit().getView(), compositionAnn.unwrap().views())) {
                     continue;
                 }
 
@@ -274,35 +272,36 @@ public class RecordParser extends FrameworkAbstractParser {
                 }
 
                 ClassElement compositionClass = field.asClassType().asClassElement();
-                CompositionElement subComposition = new CompositionElement(recordElement, compositionClass, field);
+                CompositionElement subComposition = new CompositionElement(recordKitElement, compositionClass, field);
 
-                subComposition.setNamePrefix(composition.getNamePrefix() + compositionAnnElm.unwrap().columnsPrefix());
+                subComposition.setNamePrefix(composition.getNamePrefix() + compositionAnn.unwrap().columnsPrefix());
 
                 String tableName = composition.getTableName();
 
-                if (compositionAnnElm.unwrap().jointRecord()) {
-                    AnnotationToolbox<Record> jointRecAnn = compositionClass.getAnnotation(Record.class);
-                    if (jointRecAnn == null) {
+                TypeMirror jointType = compositionAnn.getValueTypeMirror(Composition::jointRecord);
+                if (!jointType.toString().equals(RecordKitApi.class.getName())) {
+                    AnnotationTerm<RecordKit> jointRecKitAnn = compositionClass.getAnnotation(RecordKit.class);
+                    if (jointRecKitAnn == null) {
                         throw CodegenException.of()
-                                .message("Joint record has no @" + Record.class.getSimpleName() + " annotation")
+                                .message("Joint record kit has no @" + RecordKit.class.getSimpleName() + " annotation")
                                 .element(compositionClass.unwrap())
                                 .build();
                     }
-                    tableName = jointRecAnn.unwrap().table();
+                    tableName = jointRecKitAnn.unwrap().tableName();
 
-                    if (StringUtils.isNotBlank(jointRecAnn.unwrap().tableAlias())) {
-                        recordElement.addTableAlias(jointRecAnn.unwrap().tableAlias(), jointRecAnn.unwrap().table());
+                    if (StringUtils.isNotBlank(jointRecKitAnn.unwrap().tableAlias())) {
+                        recordKitElement.addTableAlias(jointRecKitAnn.unwrap().tableAlias(), jointRecKitAnn.unwrap().tableName());
                     }
                 }
 
                 subComposition.setTableName(tableName);
 
-                if (compositionAnnElm.unwrap().columns().length > 0) {
-                    subComposition.setImportedColumns(compositionAnnElm.unwrap().columns());
+                if (compositionAnn.unwrap().columns().length > 0) {
+                    subComposition.setImportedColumns(compositionAnn.unwrap().columns());
                 }
 
-                if (StringUtils.isNoneBlank(compositionAnnElm.unwrap().keyColumn())) {
-                    subComposition.setKeyColumn(compositionAnnElm.unwrap().keyColumn());
+                if (StringUtils.isNoneBlank(compositionAnn.unwrap().keyColumn())) {
+                    subComposition.setKeyColumn(compositionAnn.unwrap().keyColumn());
                 }
 
                 composition.addSubComposition(subComposition);
@@ -314,26 +313,38 @@ public class RecordParser extends FrameworkAbstractParser {
     }
 
 
-    protected RecordElement parseRecord(ClassElement typeElement, String view) {
-        recordElement = new RecordElement(typeElement, view);
+    protected RecordKitElement parseRecordView(ClassElement recordKitClass, String view) {
 
-        AnnotationToolbox<Record> recAnnElm = typeElement.getAnnotation(Record.class);
-        recordElement.setTableName(recAnnElm.unwrap().table());
-        if (StringUtils.isNotBlank(recAnnElm.unwrap().tableAlias())) {
-            recordElement.addTableAlias(recAnnElm.unwrap().tableAlias(), recAnnElm.unwrap().table());
+        ClassType recordType;
+        ClassType superClass = recordKitClass.getSuperClass();
+        if (superClass == null || !superClass.unwrap().toString().equals(RecordKitApi.class.getName())) {
+            throw CodegenException.of().element(recordKitClass.unwrap()).message("Not extends " + RecordKitApi.class.getName()).build();
         }
-        TypeMirror extend = recAnnElm.getValueTypeMirror(Record::extend);
-        recordElement.setExtend(new ClassType(processingEnv, (DeclaredType) extend));
+        if (superClass.unwrap().getTypeArguments().size() != 1) {
+            throw CodegenException.of().element(recordKitClass.unwrap()).message("Unable to extract record type").build();
+        }
+        TypeMirror recordMirror = superClass.unwrap().getTypeArguments().get(0);
+        recordType = new ClassType(processingEnv, (DeclaredType) recordMirror);
 
-        parseComposition(recordElement.getRootComposition());
-        return recordElement;
+        AnnotationTerm<RecordKit> recordKitAnn = recordKitClass.getAnnotation(RecordKit.class);
+        String tableName = recordKitAnn.unwrap().tableName();
+        TypeMirror extendMirror = recordKitAnn.getValueTypeMirror(RecordKit::extend);
+        ClassType extendType = new ClassType(processingEnv, (DeclaredType) extendMirror);
+        recordKitElement = new RecordKitElement(view, recordKitClass, recordType, extendType, tableName);
+
+        if (StringUtils.isNotBlank(recordKitAnn.unwrap().tableAlias())) {
+            recordKitElement.addTableAlias(recordKitAnn.unwrap().tableAlias(), recordKitAnn.unwrap().tableName());
+        }
+        parseComposition(recordKitElement.getRootComposition());
+        return recordKitElement;
     }
 
-    public ViewSetElement parse(ClassElement typeElement) {
-        logger.debug("Parse JDBI record: " + typeElement);
-        AnnotationToolbox<Record> annElm = typeElement.getAnnotation(Record.class);
-        String[] views = annElm.unwrap().views();
-        checkViewNames(views, typeElement.unwrap());
+    public ViewSetElement parse(ClassElement recordKitClass) {
+        logger.debug("Parse JDBI record kit: " + recordKitClass);
+
+        AnnotationTerm<RecordKit> recordKitAnn = recordKitClass.getAnnotation(RecordKit.class);
+        String[] views = recordKitAnn.unwrap().views();
+        checkViewNames(views, recordKitClass.unwrap());
 
         List<String> viewsList = new ArrayList<>();
         for (String prof : views) {
@@ -342,12 +353,12 @@ public class RecordParser extends FrameworkAbstractParser {
             }
         }
 
-        ViewSetElement profSetElm = new ViewSetElement();
+        ViewSetElement viewSetElm = new ViewSetElement();
         for (String view : viewsList) {
-            RecordElement recordElm = parseRecord(typeElement, view);
-            profSetElm.addRecord(view, recordElm);
+            RecordKitElement recordElm = parseRecordView(recordKitClass, view);
+            viewSetElm.addRecordKit(view, recordElm);
         }
 
-        return profSetElm;
+        return viewSetElm;
     }
 }

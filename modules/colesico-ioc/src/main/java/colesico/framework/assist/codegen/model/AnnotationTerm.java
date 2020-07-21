@@ -24,11 +24,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class AnnotationToolbox<A extends Annotation> extends Toolbox {
+public class AnnotationTerm<A extends Annotation> extends Term {
 
     protected final A originAnnotation;
 
-    public AnnotationToolbox(ProcessingEnvironment processingEnv, A annotation) {
+    public AnnotationTerm(ProcessingEnvironment processingEnv, A annotation) {
         super(processingEnv);
         this.originAnnotation = annotation;
     }
@@ -66,7 +66,7 @@ public class AnnotationToolbox<A extends Annotation> extends Toolbox {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AnnotationToolbox<?> that = (AnnotationToolbox<?>) o;
+        AnnotationTerm<?> that = (AnnotationTerm<?>) o;
 
         return Objects.equals(originAnnotation, that.originAnnotation);
     }
@@ -78,7 +78,7 @@ public class AnnotationToolbox<A extends Annotation> extends Toolbox {
 
     @Override
     public String toString() {
-        return "AnnotationToolbox{" +
+        return "AnnotationTerm{" +
                 "originAnnotation=" + originAnnotation +
                 '}';
     }

@@ -17,7 +17,7 @@
 package colesico.framework.transaction.codegen;
 
 import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.assist.codegen.model.AnnotationToolbox;
+import colesico.framework.assist.codegen.model.AnnotationTerm;
 import colesico.framework.service.Interceptor;
 import colesico.framework.service.InvocationContext;
 import colesico.framework.service.codegen.model.*;
@@ -72,7 +72,7 @@ public class TxModulator extends Modulator {
     public void onProxyMethod(ProxyMethodElement proxyMethod) {
         super.onProxyMethod(proxyMethod);
 
-        AnnotationToolbox<Transactional> txAnnotation = proxyMethod.getOriginMethod().getAnnotation(Transactional.class);
+        AnnotationTerm<Transactional> txAnnotation = proxyMethod.getOriginMethod().getAnnotation(Transactional.class);
         if (txAnnotation == null) {
             txAnnotation = proxyMethod.getParentService().getOriginClass().getAnnotation(Transactional.class);
             if (txAnnotation == null) {

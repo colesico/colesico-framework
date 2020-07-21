@@ -17,11 +17,10 @@
 package colesico.framework.weblet.codegen;
 
 import colesico.framework.assist.CollectionUtils;
-import colesico.framework.assist.codegen.model.AnnotationToolbox;
+import colesico.framework.assist.codegen.model.AnnotationTerm;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.telehttp.Origin;
-import colesico.framework.telehttp.ParamOrigin;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
 import colesico.framework.weblet.Weblet;
 import colesico.framework.weblet.teleapi.*;
@@ -46,7 +45,7 @@ public class WebletModulator extends
 
     @Override
     protected boolean isTeleFacadeSupported(ServiceElement serviceElm) {
-        AnnotationToolbox teleAnn = serviceElm.getOriginClass().getAnnotation(Weblet.class);
+        AnnotationTerm teleAnn = serviceElm.getOriginClass().getAnnotation(Weblet.class);
         return teleAnn != null;
     }
 

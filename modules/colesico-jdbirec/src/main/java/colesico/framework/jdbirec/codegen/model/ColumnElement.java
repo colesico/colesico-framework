@@ -18,26 +18,55 @@ package colesico.framework.jdbirec.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
+import colesico.framework.jdbirec.Column;
 
 public class ColumnElement {
 
+    /**
+     * Composition class field
+     */
     protected final FieldElement originField;
+
+    /**
+     * Parent composition ref
+     */
     protected CompositionElement parentComposition;
+
+    /**
+     * Column name
+     */
     protected final String name;
+
+    /**
+     * Mediator class
+     *
+     * @see colesico.framework.jdbirec.FieldMediator
+     */
     protected ClassType mediator;
 
+    /**
+     * Column value can be imported from result set
+     */
     protected boolean importable;
+
+    /**
+     * Column value can be exported to prepared statement
+     */
     protected boolean exportable;
 
     protected String insertAs;
     protected String updateAs;
     protected String selectAs;
 
+    /**
+     * Create column SQL definition
+     */
     protected String definition;
 
-    protected boolean option;
-
-    protected String tableName;
+    /**
+     * @see Column#virtual()
+     */
+    protected boolean virtual;
 
     public ColumnElement(FieldElement originField, String name) {
         if (name == null) {
@@ -87,12 +116,12 @@ public class ColumnElement {
         this.definition = definition;
     }
 
-    public boolean isOption() {
-        return option;
+    public boolean isVirtual() {
+        return virtual;
     }
 
-    public void setOption(boolean option) {
-        this.option = option;
+    public void setVirtual(boolean virtual) {
+        this.virtual = virtual;
     }
 
     public boolean isImportable() {
@@ -125,14 +154,6 @@ public class ColumnElement {
 
     public void setUpdateAs(String updateAs) {
         this.updateAs = updateAs;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
     }
 
     public boolean equals(Object o) {

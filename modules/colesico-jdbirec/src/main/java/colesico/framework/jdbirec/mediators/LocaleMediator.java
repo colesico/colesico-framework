@@ -17,7 +17,7 @@
 package colesico.framework.jdbirec.mediators;
 
 import colesico.framework.jdbirec.FieldMediator;
-import colesico.framework.jdbirec.RecordKit;
+import colesico.framework.jdbirec.AbstractRecordKit;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.ResultSet;
@@ -36,7 +36,7 @@ public class LocaleMediator implements FieldMediator<Locale> {
     }
 
     @Override
-    public void exportField(Locale locale, String fieldName, RecordKit.FieldReceiver fr) {
+    public void exportField(Locale locale, String fieldName, AbstractRecordKit.FieldReceiver fr) {
         fr.set(fieldName, locale == null ? null : locale.toLanguageTag());
     }
 

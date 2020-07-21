@@ -56,13 +56,13 @@ public @interface Composition {
 
     /**
      * @return
-     * @see Record#views()
+     * @see RecordKit#views()
      */
     String[] views() default {RecordView.ALL_VIEWS};
 
     /**
      * Interpret this composition as join record  (select from table join...)
      */
-    boolean jointRecord() default false;
+    Class<? extends RecordKitApi> jointRecord() default RecordKitApi.class;
 
 }

@@ -22,7 +22,7 @@ import java.sql.ResultSet;
 /**
  * Defines record column. Analogue of JPA @Column annotation
  *
- * @see Record
+ * @see RecordKit
  */
 @Documented
 @Target(ElementType.FIELD)
@@ -45,7 +45,7 @@ public @interface Column {
     /**
      * Column value for insert and update sql.
      * \@field  - insert field value
-     * \@update - the same as insertAs
+     * \@update - the same as updateAs
      * \@nop -  no insertion
      *
      * @return
@@ -83,14 +83,14 @@ public @interface Column {
     String definition() default "";
 
     /**
-     * Use this field value in {@link RecordKit#exportRecord(Object, RecordKit.FieldReceiver)} method
+     * Use this field value in {@link AbstractRecordKit#exportRecord(Object, AbstractRecordKit.FieldReceiver)} method
      *
      * @return
      */
     boolean exportable() default true;
 
     /**
-     * Use this field value in {@link RecordKit#importRecord(Object, ResultSet)} method,
+     * Use this field value in {@link AbstractRecordKit#importRecord(Object, ResultSet)} method,
      * so field value will not be obtained from sql query result set.
      *
      * @return
@@ -107,7 +107,7 @@ public @interface Column {
 
     /**
      * @return
-     * @see Record#views()
+     * @see RecordKit#views()
      */
     String[] views() default {RecordView.ALL_VIEWS};
 }

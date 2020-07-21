@@ -19,7 +19,7 @@ package colesico.framework.jdbirec.codegen.parser;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.jdbirec.Record;
+import colesico.framework.jdbirec.RecordKit;
 import colesico.framework.jdbirec.codegen.generator.RecordKitGenerator;
 import colesico.framework.jdbirec.codegen.model.ViewSetElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -34,7 +34,7 @@ import java.util.Set;
 
 public class RecordProcessor extends FrameworkAbstractProcessor {
 
-    private RecordParser recordParser;
+    private RecordKitParser recordKitParser;
     private RecordKitGenerator recordHelperGenerator;
 
     public RecordProcessor() {
@@ -43,26 +43,26 @@ public class RecordProcessor extends FrameworkAbstractProcessor {
 
     @Override
     protected Class<? extends Annotation>[] getSupportedAnnotations() {
-        return new Class[]{Record.class};
+        return new Class[]{RecordKit.class};
     }
 
     @Override
     protected void onInit() {
-        recordParser = new RecordParser(processingEnv);
+        recordKitParser = new RecordKitParser(processingEnv);
         recordHelperGenerator = new RecordKitGenerator(processingEnv);
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        for (Element elm : roundEnv.getElementsAnnotatedWith(Record.class)) {
-            if (elm.getKind() != ElementKind.CLASS) {
-                continue;
+        for (Element elm : roundEnv.getElementsAnnotatedWith(RecordKit.class)) {
+            if (!(elm.getKind() == ElementKind.INTERFACE)) {
+                throw CodegenException.of().element(elm).message("Not an interface").build();
             }
-            TypeElement typeElement;
+            TypeElement recordKitClass;
             try {
-                typeElement = (TypeElement) elm;
-                logger.debug("Process DB record class: "+typeElement.getSimpleName());
-                ViewSetElement views = recordParser.parse(new ClassElement(processingEnv, typeElement));
+                recordKitClass = (TypeElement) elm;
+                logger.debug("Processing record kit class: " + recordKitClass.getSimpleName());
+                ViewSetElement views = recordKitParser.parse(new ClassElement(processingEnv, recordKitClass));
                 recordHelperGenerator.generate(views);
             } catch (CodegenException ce) {
                 String message = "Error processing class '" + elm.toString() + "': " + ce.getMessage();
