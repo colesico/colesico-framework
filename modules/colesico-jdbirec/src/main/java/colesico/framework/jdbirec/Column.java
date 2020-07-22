@@ -22,7 +22,7 @@ import java.sql.ResultSet;
 /**
  * Defines record column. Analogue of JPA @Column annotation
  *
- * @see RecordKit
+ * @see RecordKitConfig
  */
 @Documented
 @Target(ElementType.FIELD)
@@ -107,7 +107,7 @@ public @interface Column {
 
     /**
      * @return
-     * @see RecordKit#views()
+     * @see RecordKitConfig#views()
      */
     String[] views() default {RecordView.ALL_VIEWS};
 }

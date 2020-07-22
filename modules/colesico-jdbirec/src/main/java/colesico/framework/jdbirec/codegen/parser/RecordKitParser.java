@@ -24,7 +24,7 @@ import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.*;
-import colesico.framework.jdbirec.RecordKit;
+import colesico.framework.jdbirec.RecordKitConfig;
 import colesico.framework.jdbirec.codegen.model.ColumnElement;
 import colesico.framework.jdbirec.codegen.model.CompositionElement;
 import colesico.framework.jdbirec.codegen.model.RecordKitElement;
@@ -279,11 +279,11 @@ public class RecordKitParser extends FrameworkAbstractParser {
                 String tableName = composition.getTableName();
 
                 TypeMirror jointType = compositionAnn.getValueTypeMirror(Composition::jointRecord);
-                if (!jointType.toString().equals(RecordKitApi.class.getName())) {
-                    AnnotationTerm<RecordKit> jointRecKitAnn = compositionClass.getAnnotation(RecordKit.class);
+                if (!jointType.toString().equals(RecordKit.class.getName())) {
+                    AnnotationTerm<RecordKitConfig> jointRecKitAnn = compositionClass.getAnnotation(RecordKitConfig.class);
                     if (jointRecKitAnn == null) {
                         throw CodegenException.of()
-                                .message("Joint record kit has no @" + RecordKit.class.getSimpleName() + " annotation")
+                                .message("Joint record kit has no @" + RecordKitConfig.class.getSimpleName() + " annotation")
                                 .element(compositionClass.unwrap())
                                 .build();
                     }
@@ -319,14 +319,14 @@ public class RecordKitParser extends FrameworkAbstractParser {
 
         List<ClassType> interfaces = recordKitClass.getInterfaces();
         for (ClassType iface : interfaces) {
-            if (iface.getErasure().toString().equals(RecordKitApi.class.getName())) {
+            if (iface.getErasure().toString().equals(RecordKit.class.getName())) {
                 superClass = iface;
                 break;
             }
         }
 
         if (superClass == null) {
-            throw CodegenException.of().element(recordKitClass.unwrap()).message("Not extends " + RecordKitApi.class.getName()).build();
+            throw CodegenException.of().element(recordKitClass.unwrap()).message("Not extends " + RecordKit.class.getName()).build();
         }
 
         if (superClass.unwrap().getTypeArguments().size() != 1) {
@@ -336,14 +336,14 @@ public class RecordKitParser extends FrameworkAbstractParser {
         TypeMirror recordMirror = superClass.unwrap().getTypeArguments().get(0);
         ClassType recordType = new ClassType(processingEnv, (DeclaredType) recordMirror);
 
-        AnnotationTerm<RecordKit> recordKitAnn = recordKitClass.getAnnotation(RecordKit.class);
-        String tableName = recordKitAnn.unwrap().tableName();
-        TypeMirror extendMirror = recordKitAnn.getValueTypeMirror(RecordKit::extend);
+        AnnotationTerm<RecordKitConfig> configAnn = recordKitClass.getAnnotation(RecordKitConfig.class);
+        String tableName = configAnn.unwrap().tableName();
+        TypeMirror extendMirror = configAnn.getValueTypeMirror(RecordKitConfig::extend);
         ClassType extendType = new ClassType(processingEnv, (DeclaredType) extendMirror);
         recordKitElement = new RecordKitElement(view, recordKitClass, recordType, extendType, tableName);
 
-        if (StringUtils.isNotBlank(recordKitAnn.unwrap().tableAlias())) {
-            recordKitElement.addTableAlias(recordKitAnn.unwrap().tableAlias(), recordKitAnn.unwrap().tableName());
+        if (StringUtils.isNotBlank(configAnn.unwrap().tableAlias())) {
+            recordKitElement.addTableAlias(configAnn.unwrap().tableAlias(), configAnn.unwrap().tableName());
         }
         parseComposition(recordKitElement.getRootComposition());
         return recordKitElement;
@@ -352,8 +352,8 @@ public class RecordKitParser extends FrameworkAbstractParser {
     public ViewSetElement parse(ClassElement recordKitClass) {
         logger.debug("Parse JDBI record kit: " + recordKitClass);
 
-        AnnotationTerm<RecordKit> recordKitAnn = recordKitClass.getAnnotation(RecordKit.class);
-        String[] views = recordKitAnn.unwrap().views();
+        AnnotationTerm<RecordKitConfig> configAnn = recordKitClass.getAnnotation(RecordKitConfig.class);
+        String[] views = configAnn.unwrap().views();
         checkViewNames(views, recordKitClass.unwrap());
 
         List<String> viewsList = new ArrayList<>();

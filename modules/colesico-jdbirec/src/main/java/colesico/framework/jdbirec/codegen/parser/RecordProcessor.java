@@ -19,7 +19,7 @@ package colesico.framework.jdbirec.codegen.parser;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.jdbirec.RecordKit;
+import colesico.framework.jdbirec.RecordKitConfig;
 import colesico.framework.jdbirec.codegen.generator.RecordKitGenerator;
 import colesico.framework.jdbirec.codegen.model.ViewSetElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -43,7 +43,7 @@ public class RecordProcessor extends FrameworkAbstractProcessor {
 
     @Override
     protected Class<? extends Annotation>[] getSupportedAnnotations() {
-        return new Class[]{RecordKit.class};
+        return new Class[]{RecordKitConfig.class};
     }
 
     @Override
@@ -54,7 +54,7 @@ public class RecordProcessor extends FrameworkAbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        for (Element elm : roundEnv.getElementsAnnotatedWith(RecordKit.class)) {
+        for (Element elm : roundEnv.getElementsAnnotatedWith(RecordKitConfig.class)) {
             if (!(elm.getKind() == ElementKind.INTERFACE)) {
                 throw CodegenException.of().element(elm).message("Not an interface").build();
             }
