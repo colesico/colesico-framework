@@ -20,6 +20,8 @@ import colesico.framework.assist.codegen.CodegenException;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.util.Objects;
 
@@ -53,8 +55,17 @@ public class FieldElement extends VarElement {
     }
 
     @Override
-    public TypeMirror asType() {
+    public TypeMirror asTypeMirror() {
         return parentClass.asClassType().getMemberType(originVariableElement);
+    }
+
+    @Override
+    public ClassType asClassType() {
+        TypeMirror fieldMirror = parentClass.asClassType().getMemberType(originVariableElement);
+        if (fieldMirror.getKind() != TypeKind.DECLARED) {
+            return null;
+        }
+        return new ClassType(getProcessingEnv(), (DeclaredType) fieldMirror);
     }
 
     @Override

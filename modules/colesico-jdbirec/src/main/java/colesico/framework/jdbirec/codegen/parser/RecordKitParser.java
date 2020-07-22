@@ -271,7 +271,8 @@ public class RecordKitParser extends FrameworkAbstractParser {
                     continue;
                 }
 
-                ClassElement compositionClass = field.asClassType().asClassElement();
+                ClassElement compositionClass = field.
+                        asClassType().asClassElement();
                 CompositionElement subComposition = new CompositionElement(recordKitElement, compositionClass, field);
 
                 subComposition.setNamePrefix(composition.getNamePrefix() + compositionAnn.unwrap().columnsPrefix());

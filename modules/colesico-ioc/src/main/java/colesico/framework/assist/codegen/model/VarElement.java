@@ -39,11 +39,11 @@ abstract public class VarElement extends ParserElement {
         return StrUtils.addPrefix(prefix, getName());
     }
 
-    abstract public TypeMirror asType();
+    abstract public TypeMirror asTypeMirror();
 
     public ClassType asClassType() {
-        if (asType().getKind() == TypeKind.DECLARED) {
-            return new ClassType(getProcessingEnv(), (DeclaredType) asType());
+        if (asTypeMirror().getKind() == TypeKind.DECLARED) {
+            return new ClassType(getProcessingEnv(), (DeclaredType) asTypeMirror());
         }
         return null;
     }

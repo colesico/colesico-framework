@@ -106,7 +106,7 @@ public class ServiceProxyGenerator {
         TypeName fieldClassedVal = fieldElm.getClassed() != null ? fieldElm.getClassed() : ClassName.get(Object.class);
 
         for (ParameterElement paramElm : constructorParams) {
-            TypeName paramType = TypeName.get(paramElm.asType());
+            TypeName paramType = TypeName.get(paramElm.asTypeMirror());
             AnnotationTerm<Named> namedAnn = paramElm.getAnnotation(Named.class);
             AnnotationTerm<Classed> classedAnn = paramElm.getAnnotation(Classed.class);
 
@@ -208,7 +208,7 @@ public class ServiceProxyGenerator {
         int i = 0;
         for (ParameterElement paramElm : methodParams) {
             String paramName = "p[" + i + "]";
-            paramItems.add(TypeName.get(paramElm.asType()));
+            paramItems.add(TypeName.get(paramElm.asTypeMirror()));
             paramItems.add(paramName);
             paramFormats.add("($T)$N");
             i++;

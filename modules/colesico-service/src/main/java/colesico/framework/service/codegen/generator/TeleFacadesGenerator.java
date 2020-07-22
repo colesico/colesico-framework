@@ -97,7 +97,7 @@ public class TeleFacadesGenerator {
         binderBuilder.add("\n// Init composition\n");
         binderBuilder.addStatement("$T $N = new $T()",
                 TypeName.get(paramType),
-                valueVar, TypeName.get(var.getOriginVariable().asType()));
+                valueVar, TypeName.get(var.getOriginVariable().asTypeMirror()));
 
         // Generate composition fields
         for (TeleVarElement subvar : ((TeleCompElement) var).getVariables()) {
@@ -131,7 +131,7 @@ public class TeleFacadesGenerator {
             String paramName = param.getOriginVariable().getName() + PARAM_SUFFIX;
             serviceMethodArgs.add("$N", paramName);
             binderBuilder.add("\n// Assign tele-method parameter value from remote client\n");
-            binderBuilder.add("$T $N = ", TypeName.get(param.getOriginVariable().asType()), paramName);
+            binderBuilder.add("$T $N = ", TypeName.get(param.getOriginVariable().asTypeMirror()), paramName);
             binderBuilder.add(value);
             binderBuilder.add(";\n");
         }

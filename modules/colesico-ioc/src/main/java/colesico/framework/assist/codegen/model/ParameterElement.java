@@ -18,6 +18,8 @@ package colesico.framework.assist.codegen.model;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.util.Objects;
 
@@ -45,8 +47,16 @@ public class ParameterElement extends VarElement {
     }
 
     @Override
-    public TypeMirror asType() {
+    public TypeMirror asTypeMirror() {
         return originTypeMirror;
+    }
+
+    @Override
+    public ClassType asClassType() {
+        if (originTypeMirror.getKind() != TypeKind.DECLARED) {
+            return null;
+        }
+        return new ClassType(getProcessingEnv(), (DeclaredType) originTypeMirror);
     }
 
     public MethodElement getParentMethod() {
