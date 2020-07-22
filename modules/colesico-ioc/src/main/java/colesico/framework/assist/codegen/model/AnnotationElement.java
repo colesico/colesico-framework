@@ -22,15 +22,15 @@ import javax.lang.model.element.TypeElement;
 
 public class AnnotationElement extends ParserElement{
 
-    private final TypeElement originAnnotationTypeElement;
+    private final TypeElement originAnnotation;
 
-    public AnnotationElement(ProcessingEnvironment processingEnv, TypeElement originAnnotationTypeElement) {
+    public AnnotationElement(ProcessingEnvironment processingEnv, TypeElement originAnnotation) {
         super(processingEnv);
-        this.originAnnotationTypeElement = originAnnotationTypeElement;
+        this.originAnnotation = originAnnotation;
     }
 
     @Override
     public Element unwrap() {
-        return originAnnotationTypeElement;
+        return originAnnotation;
     }
 }

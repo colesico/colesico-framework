@@ -25,7 +25,7 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract public class ParserElement extends Term {
+abstract public class ParserElement extends Atom {
 
     public ParserElement(ProcessingEnvironment processingEnv) {
         super(processingEnv);
@@ -52,12 +52,12 @@ abstract public class ParserElement extends Term {
     }
 
 
-    public <A extends Annotation> AnnotationTerm<A> getAnnotation(Class<A> annClass) {
+    public <A extends Annotation> AnnotationAtom<A> getAnnotation(Class<A> annClass) {
         A annotation = unwrap().getAnnotation(annClass);
         if (annotation == null) {
             return null;
         }
-        return new AnnotationTerm<>(processingEnv, annotation);
+        return new AnnotationAtom<>(processingEnv, annotation);
     }
 
     public List<AnnotationType> getAnnotationTypes() {

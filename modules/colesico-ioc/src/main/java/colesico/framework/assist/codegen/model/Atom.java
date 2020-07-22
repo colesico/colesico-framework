@@ -23,11 +23,11 @@ import javax.lang.model.util.Types;
 /**
  * Basic tooled element
  */
-abstract public class Term {
+abstract public class Atom {
 
     protected final ProcessingEnvironment processingEnv;
 
-    public Term(ProcessingEnvironment processingEnv) {
+    public Atom(ProcessingEnvironment processingEnv) {
         this.processingEnv = processingEnv;
     }
 

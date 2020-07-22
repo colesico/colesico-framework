@@ -21,7 +21,6 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import java.util.HashMap;
@@ -29,24 +28,24 @@ import java.util.Map;
 
 public class AnnotationType extends ParserType {
 
-    protected final AnnotationMirror originAnnotationMirror;
+    protected final AnnotationMirror originAnnotation;
 
     public AnnotationType(ProcessingEnvironment processingEnv, AnnotationMirror annotationMirror) {
         super(processingEnv);
-        this.originAnnotationMirror = annotationMirror;
+        this.originAnnotation = annotationMirror;
     }
 
     @Override
     public TypeMirror unwrap() {
-        return originAnnotationMirror.getAnnotationType();
+        return originAnnotation.getAnnotationType();
     }
 
     public AnnotationElement asElement() {
-        return new AnnotationElement(processingEnv, (TypeElement) originAnnotationMirror.getAnnotationType().asElement());
+        return new AnnotationElement(processingEnv, (TypeElement) originAnnotation.getAnnotationType().asElement());
     }
 
     public AnnotationValue getValue(String fieldName) {
-        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : originAnnotationMirror.getElementValues().entrySet()) {
+        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : originAnnotation.getElementValues().entrySet()) {
             if (fieldName.equals(entry.getKey().getSimpleName().toString())) {
                 return entry.getValue();
             }
@@ -56,10 +55,10 @@ public class AnnotationType extends ParserType {
 
     public Map<? extends ExecutableElement, ? extends AnnotationValue> getValuesWithDefaults() {
         Map<ExecutableElement, AnnotationValue> valMap = new HashMap<>();
-        if (originAnnotationMirror.getElementValues() != null) {
-            valMap.putAll(originAnnotationMirror.getElementValues());
+        if (originAnnotation.getElementValues() != null) {
+            valMap.putAll(originAnnotation.getElementValues());
         }
-        for (ExecutableElement meth : ElementFilter.methodsIn(originAnnotationMirror.getAnnotationType().asElement().getEnclosedElements())) {
+        for (ExecutableElement meth : ElementFilter.methodsIn(originAnnotation.getAnnotationType().asElement().getEnclosedElements())) {
             AnnotationValue defaultValue = meth.getDefaultValue();
             if (defaultValue != null && !valMap.containsKey(meth)) {
                 valMap.put(meth, defaultValue);

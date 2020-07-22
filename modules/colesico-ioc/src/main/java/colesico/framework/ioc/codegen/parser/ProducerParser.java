@@ -68,7 +68,7 @@ public class ProducerParser extends FrameworkAbstractParser {
             if (firstConstructor == null) {
                 firstConstructor = method;
             }
-            AnnotationTerm<Inject> injectAnn = method.getAnnotation(Inject.class);
+            AnnotationAtom<Inject> injectAnn = method.getAnnotation(Inject.class);
             if (injectAnn == null) {
                 continue;
             }
@@ -83,12 +83,12 @@ public class ProducerParser extends FrameworkAbstractParser {
 
     protected ScopeElement obtainScope(ParserElement element) {
 
-        AnnotationTerm<Singleton> singleton = element.getAnnotation(Singleton.class);
+        AnnotationAtom<Singleton> singleton = element.getAnnotation(Singleton.class);
         if (singleton != null) {
             return new ScopeElement(ScopeElement.ScopeKind.SINGLETON, null);
         }
 
-        AnnotationTerm<Unscoped> unscoped = element.getAnnotation(Unscoped.class);
+        AnnotationAtom<Unscoped> unscoped = element.getAnnotation(Unscoped.class);
         if (unscoped != null) {
             return new ScopeElement(ScopeElement.ScopeKind.UNSCOPED, null);
         }
@@ -98,7 +98,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         for (AnnotationType am : element.getAnnotationTypes()) {
             ScopeElement scopeElm = null;
 
-            AnnotationTerm<CustomScope> customScope = am.asElement().getAnnotation(CustomScope.class);
+            AnnotationAtom<CustomScope> customScope = am.asElement().getAnnotation(CustomScope.class);
             if (customScope != null) {
                 TypeMirror scopeClass = customScope.getValueTypeMirror(CustomScope::value);
                 scopeElm = new ScopeElement(ScopeElement.ScopeKind.CUSTOM, new ClassType(getProcessingEnv(), (DeclaredType) scopeClass));
@@ -144,7 +144,7 @@ public class ProducerParser extends FrameworkAbstractParser {
             throw CodegenException.of().message("Unsupported parameter type kind for " + parameter.getName()).element(parameter.unwrap()).build();
         }
 
-        AnnotationTerm<Message> messageAnn = parameter.getAnnotation(Message.class);
+        AnnotationAtom<Message> messageAnn = parameter.getAnnotation(Message.class);
         boolean isMessage = messageAnn != null;
 
         String parameterClassName = parameter.asClassType().getErasure().toString();
@@ -179,14 +179,14 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         // Messaging
-        AnnotationTerm<Contextual> contextualAnn = parameter.getAnnotation(Contextual.class);
+        AnnotationAtom<Contextual> contextualAnn = parameter.getAnnotation(Contextual.class);
         InjectableElement.MessageKind messageKind = contextualAnn != null ?
                 InjectableElement.MessageKind.INJECTION_POINT :
                 InjectableElement.MessageKind.OUTER_MESSAGE;
 
         // Extra key types
         String named;
-        AnnotationTerm<Named> namedAnn = parameter.getAnnotation(Named.class);
+        AnnotationAtom<Named> namedAnn = parameter.getAnnotation(Named.class);
         if (namedAnn != null) {
             if (injectionKind == InjectableElement.InjectionKind.MESSAGE) {
                 throw CodegenException.of().message("@Named message injection").element(parameter.unwrap()).build();
@@ -197,7 +197,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         ClassType classed;
-        AnnotationTerm<Classed> classedAnn = parameter.getAnnotation(Classed.class);
+        AnnotationAtom<Classed> classedAnn = parameter.getAnnotation(Classed.class);
         if (classedAnn != null) {
             if (injectionKind == InjectableElement.InjectionKind.MESSAGE) {
                 throw CodegenException.of().message("@Classed message injection").element(parameter.unwrap()).build();
@@ -210,13 +210,13 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         // Optional injection
-        AnnotationTerm<OptionalInject> optionalAnn = parameter.getAnnotation(OptionalInject.class);
+        AnnotationAtom<OptionalInject> optionalAnn = parameter.getAnnotation(OptionalInject.class);
         boolean optional = optionalAnn != null;
 
         return new InjectableElement(parentFactory, parameter, injectedType, injectionKind, messageKind, optional, named, classed);
     }
 
-    protected DefaultFactoryElement createDefaultFactoryElement(IocletElement iocletElement, AnnotationTerm<Produce> produceAnn) {
+    protected DefaultFactoryElement createDefaultFactoryElement(IocletElement iocletElement, AnnotationAtom<Produce> produceAnn) {
         TypeMirror suppliedTypeMirr = produceAnn.getValueTypeMirror(Produce::value);
 
         logger.debug("Parsing default factory for : " + suppliedTypeMirr.toString());
@@ -245,7 +245,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         String named = StringUtils.isEmpty(produceAnn.unwrap().named()) ? null : produceAnn.unwrap().named();
         if (named == null) {
             // Get @Named from class definition
-            AnnotationTerm<Named> namedAnn = suppliedType.asClassElement().getAnnotation(Named.class);
+            AnnotationAtom<Named> namedAnn = suppliedType.asClassElement().getAnnotation(Named.class);
             if (namedAnn != null) {
                 named = namedAnn.unwrap().value();
             }
@@ -257,7 +257,7 @@ public class ProducerParser extends FrameworkAbstractParser {
             classed = new ClassType(processingEnv, (DeclaredType) classifier);
         } else {
             // Get @Classed from class definition
-            AnnotationTerm<Classed> classedAnn = suppliedType.asClassElement().getAnnotation(Classed.class);
+            AnnotationAtom<Classed> classedAnn = suppliedType.asClassElement().getAnnotation(Classed.class);
             if (classedAnn != null) {
                 classifier = classedAnn.getValueTypeMirror(Classed::value);
                 classed = new ClassType(processingEnv, (DeclaredType) classifier);
@@ -282,7 +282,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         if (!conditionClass.toString().equals(Condition.class.getCanonicalName())) {
             condition = new ConditionElement(new ClassType(getProcessingEnv(), (DeclaredType) conditionClass));
         } else {
-            AnnotationTerm<Requires> reqAnn = iocletElement.getOriginProducer().getAnnotation(Requires.class);
+            AnnotationAtom<Requires> reqAnn = iocletElement.getOriginProducer().getAnnotation(Requires.class);
             if (reqAnn != null) {
                 condition = new ConditionElement(new ClassType(getProcessingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(Requires::value)));
             }
@@ -324,7 +324,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         final String factoryMethodBaseName = method.getName();
 
         // Post produce listener
-        AnnotationTerm<PostProduce> postProduceAnn = method.getAnnotation(PostProduce.class);
+        AnnotationAtom<PostProduce> postProduceAnn = method.getAnnotation(PostProduce.class);
         final PPLDefinitionElement postProduce;
         if (postProduceAnn != null) {
             TypeMirror classifier = postProduceAnn.getValueTypeMirror(PostProduce::withClassed);
@@ -357,13 +357,13 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         // Named
         String named = null;
-        AnnotationTerm<Named> methodNamedAnn = method.getAnnotation(Named.class);
+        AnnotationAtom<Named> methodNamedAnn = method.getAnnotation(Named.class);
         if (methodNamedAnn != null) {
             named = methodNamedAnn.unwrap().value();
         } else {
             if (postProduce == null) {
                 // Get @Named from class definition
-                AnnotationTerm<Named> classNamedAnn = suppliedType.asClassElement().getAnnotation(Named.class);
+                AnnotationAtom<Named> classNamedAnn = suppliedType.asClassElement().getAnnotation(Named.class);
                 if (classNamedAnn != null) {
                     named = classNamedAnn.unwrap().value();
                 }
@@ -371,7 +371,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         // Classed
-        AnnotationTerm<Classed> methodClassedAnn = method.getAnnotation(Classed.class);
+        AnnotationAtom<Classed> methodClassedAnn = method.getAnnotation(Classed.class);
         ClassType classed = null;
         TypeMirror classifier;
         if (methodClassedAnn != null) {
@@ -380,7 +380,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         } else {
             if (postProduce == null) {
                 // Get @Classed from class definition
-                AnnotationTerm<Classed> classClassedAnn = suppliedType.asClassElement().getAnnotation(Classed.class);
+                AnnotationAtom<Classed> classClassedAnn = suppliedType.asClassElement().getAnnotation(Classed.class);
                 if (classClassedAnn != null) {
                     classifier = classClassedAnn.getValueTypeMirror(Classed::value);
                     classed = new ClassType(processingEnv, (DeclaredType) classifier);
@@ -391,7 +391,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         // notifyPostProduce notifyPostConstruct
         final boolean notifyPostProduce;
         final boolean notifyPostConstruct;
-        AnnotationTerm<ProducingOptions> optionsAnn = method.getAnnotation(ProducingOptions.class);
+        AnnotationAtom<ProducingOptions> optionsAnn = method.getAnnotation(ProducingOptions.class);
         if (optionsAnn != null) {
             notifyPostProduce = optionsAnn.unwrap().postProduce();
             notifyPostConstruct = optionsAnn.unwrap().postConstruct();
@@ -412,7 +412,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         // Condition
-        AnnotationTerm<Requires> reqAnn = method.getAnnotation(Requires.class);
+        AnnotationAtom<Requires> reqAnn = method.getAnnotation(Requires.class);
         if (reqAnn == null) {
             reqAnn = method.getParentClass().getAnnotation(Requires.class);
         }
@@ -422,7 +422,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         // Substitution
-        AnnotationTerm<Substitute> subsAnn = method.getAnnotation(Substitute.class);
+        AnnotationAtom<Substitute> subsAnn = method.getAnnotation(Substitute.class);
         if (subsAnn == null) {
             subsAnn = method.getParentClass().getAnnotation(Substitute.class);
         }
@@ -472,20 +472,20 @@ public class ProducerParser extends FrameworkAbstractParser {
     protected void paresProducingAnnotations(IocletElement iocletElement) {
         // Scan @Produce annotation
         ClassElement producer = iocletElement.getOriginProducer();
-        List<AnnotationTerm<Produce>> produceList = new ArrayList<>();
-        AnnotationTerm<Produces> produces = producer.getAnnotation(Produces.class);
+        List<AnnotationAtom<Produce>> produceList = new ArrayList<>();
+        AnnotationAtom<Produces> produces = producer.getAnnotation(Produces.class);
         if (produces != null) {
             for (Produce produce : produces.unwrap().value()) {
-                produceList.add(new AnnotationTerm<>(getProcessingEnv(), produce));
+                produceList.add(new AnnotationAtom<>(getProcessingEnv(), produce));
             }
         } else {
-            AnnotationTerm<Produce> produce = producer.getAnnotation(Produce.class);
+            AnnotationAtom<Produce> produce = producer.getAnnotation(Produce.class);
             if (produce != null) {
                 produceList.add(produce);
             }
         }
 
-        for (AnnotationTerm<Produce> produce : produceList) {
+        for (AnnotationAtom<Produce> produce : produceList) {
             iocletElement.addFactory(createDefaultFactoryElement(iocletElement, produce));
         }
     }

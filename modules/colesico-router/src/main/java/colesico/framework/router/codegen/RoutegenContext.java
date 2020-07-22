@@ -20,7 +20,7 @@ package colesico.framework.router.codegen;
 import colesico.framework.assist.Elements;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.assist.codegen.model.AnnotationTerm;
+import colesico.framework.assist.codegen.model.AnnotationAtom;
 import colesico.framework.assist.codegen.model.ParserElement;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.router.RequestMethod;
@@ -74,7 +74,7 @@ abstract public class RoutegenContext {
 
     protected String buildMethodRoute(TeleMethodElement teleMethod) {
 
-        AnnotationTerm<Route> routeAnn = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(Route.class);
+        AnnotationAtom<Route> routeAnn = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(Route.class);
         String methodRoute;
         if (routeAnn != null) {
             methodRoute = StringUtils.trim(routeAnn.unwrap().value());
@@ -101,7 +101,7 @@ abstract public class RoutegenContext {
         }
 
         HttpMethod httpMethod = HttpMethod.HTTP_METHOD_GET;
-        AnnotationTerm<RequestMethod> methodAnnotation = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(RequestMethod.class);
+        AnnotationAtom<RequestMethod> methodAnnotation = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(RequestMethod.class);
         if (methodAnnotation != null) {
             httpMethod = HttpMethod.of(methodAnnotation.unwrap().value());
         }
@@ -110,7 +110,7 @@ abstract public class RoutegenContext {
     }
 
     protected String buildServiceRoute(ServiceElement service) {
-        AnnotationTerm<Route> routeAnn = service.getOriginClass().getAnnotation(Route.class);
+        AnnotationAtom<Route> routeAnn = service.getOriginClass().getAnnotation(Route.class);
         String srvRoute;
         if (routeAnn != null) {
             srvRoute = StringUtils.trim(routeAnn.unwrap().value());
@@ -158,9 +158,9 @@ abstract public class RoutegenContext {
 
     protected Map<String, String> parseRouteAttributes(ParserElement methodOrClass) {
         Map<String, String> result = new HashMap<>();
-        AnnotationTerm<RouteAttributes> routeAttributesAnn = methodOrClass.getAnnotation(RouteAttributes.class);
+        AnnotationAtom<RouteAttributes> routeAttributesAnn = methodOrClass.getAnnotation(RouteAttributes.class);
         if (routeAttributesAnn == null) {
-            AnnotationTerm<RouteAttribute> routeAttrAnn = methodOrClass.getAnnotation(RouteAttribute.class);
+            AnnotationAtom<RouteAttribute> routeAttrAnn = methodOrClass.getAnnotation(RouteAttribute.class);
             if (routeAttrAnn != null) {
                 result.put(routeAttrAnn.unwrap().name(), routeAttrAnn.unwrap().value());
             }
