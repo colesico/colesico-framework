@@ -287,10 +287,10 @@ public class RecordKitParser extends FrameworkAbstractParser {
                                 .element(compositionClass.unwrap())
                                 .build();
                     }
-                    tableName = jointRecKitAnn.unwrap().tableName();
+                    tableName = jointRecKitAnn.unwrap().table();
 
                     if (StringUtils.isNotBlank(jointRecKitAnn.unwrap().tableAlias())) {
-                        recordKitElement.addTableAlias(jointRecKitAnn.unwrap().tableAlias(), jointRecKitAnn.unwrap().tableName());
+                        recordKitElement.addTableAlias(jointRecKitAnn.unwrap().tableAlias(), jointRecKitAnn.unwrap().table());
                     }
                 }
 
@@ -337,13 +337,13 @@ public class RecordKitParser extends FrameworkAbstractParser {
         ClassType recordType = new ClassType(processingEnv, (DeclaredType) recordMirror);
 
         AnnotationTerm<RecordKitConfig> configAnn = recordKitClass.getAnnotation(RecordKitConfig.class);
-        String tableName = configAnn.unwrap().tableName();
+        String tableName = configAnn.unwrap().table();
         TypeMirror extendMirror = configAnn.getValueTypeMirror(RecordKitConfig::extend);
         ClassType extendType = new ClassType(processingEnv, (DeclaredType) extendMirror);
         recordKitElement = new RecordKitElement(view, recordKitClass, recordType, extendType, tableName);
 
         if (StringUtils.isNotBlank(configAnn.unwrap().tableAlias())) {
-            recordKitElement.addTableAlias(configAnn.unwrap().tableAlias(), configAnn.unwrap().tableName());
+            recordKitElement.addTableAlias(configAnn.unwrap().tableAlias(), configAnn.unwrap().table());
         }
         parseComposition(recordKitElement.getRootComposition());
         return recordKitElement;

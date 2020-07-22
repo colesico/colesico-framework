@@ -32,7 +32,7 @@ public @interface RecordKitConfig {
      *
      * @return
      */
-    String tableName() default "";
+    String table() default "";
 
     /**
      * Table alias to use in sql queries
