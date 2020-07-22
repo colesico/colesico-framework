@@ -188,7 +188,7 @@ public class RecordKitGenerator {
             return;
         }
 
-        String fieldType = column.getOriginField().asTypeMirror().toString();
+        String fieldType = column.getOriginField().getOriginType().toString();
         switch (fieldType) {
             case "char":
                 cb.add("$N.getChar($S)", AbstractRecordKit.RESULT_SET_PARAM, getSelectColumnName(column));
@@ -241,11 +241,11 @@ public class RecordKitGenerator {
             case "java.lang.Double":
             case "java.lang.Float":
             case "java.lang.Character":
-                cb.add("$N.getObject($S,$T.class)", AbstractRecordKit.RESULT_SET_PARAM, getSelectColumnName(column), TypeName.get(column.getOriginField().asTypeMirror()));
+                cb.add("$N.getObject($S,$T.class)", AbstractRecordKit.RESULT_SET_PARAM, getSelectColumnName(column), TypeName.get(column.getOriginField().getOriginType()));
                 break;
 
             default:
-                cb.add("$N.getObject($S,$T.class)", AbstractRecordKit.RESULT_SET_PARAM, getSelectColumnName(column), TypeName.get(column.getOriginField().asTypeMirror()));
+                cb.add("$N.getObject($S,$T.class)", AbstractRecordKit.RESULT_SET_PARAM, getSelectColumnName(column), TypeName.get(column.getOriginField().getOriginType()));
         }
     }
 

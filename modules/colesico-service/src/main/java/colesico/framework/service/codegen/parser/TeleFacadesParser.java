@@ -68,12 +68,12 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
         VarElement methodParam = varStack.peekLast(); // get element from stack tail  (last element of dequeue)
         varStack.pop();     // temporaty remove var from stack head   (first element of deque)
         for (VarElement ve : varStack) {
-            if (ve.asTypeMirror().toString().equals(var.asTypeMirror().toString())) {
+            if (ve.getOriginType().toString().equals(var.getOriginType().toString())) {
                 TeleFacadeElement teleFacade = teleMethod.getParentTeleFacade();
                 throw CodegenException.of().message("Recursive composition for: " +
-                        var.asTypeMirror().toString() + "->" + var.getName() +
+                        var.getOriginType().toString() + "->" + var.getName() +
                         " in: " +
-                        teleFacade.getParentService().getOriginClass().asDeclaredType().toString() +
+                        teleFacade.getParentService().getOriginClass().getOriginType().toString() +
                         "->" + teleMethod.getProxyMethod().getName() + "(..." +
                         methodParam.toString()
                         + "...) ")
@@ -131,7 +131,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
                 throw CodegenException.of()
                         .message("Unsupported parameter type for tele-method "
                                 + teleMethod.getParentTeleFacade().getParentService().getOriginClass().getName() + "."
-                                + teleMethod.getName() + "(..." + param.asTypeMirror().toString() + " " + param.getName() + "...)")
+                                + teleMethod.getName() + "(..." + param.getOriginType().toString() + " " + param.getName() + "...)")
                         .element(param.unwrap())
                         .build();
             }

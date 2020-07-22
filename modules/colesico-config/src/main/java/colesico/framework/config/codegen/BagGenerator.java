@@ -38,7 +38,7 @@ public class BagGenerator extends FrameworkAbstractGenerator {
         for (SourceValueElement sve : confElement.getSource().getSourceValues()) {
 
             String fieldName = sve.getOriginField().getName();
-            TypeName fieldTypeName = TypeName.get(sve.getOriginField().asTypeMirror());
+            TypeName fieldTypeName = TypeName.get(sve.getOriginField().getOriginType());
             FieldSpec.Builder fb = FieldSpec.builder(fieldTypeName, fieldName, Modifier.PRIVATE);
             mirrorBuilder.addField(fb.build());
 

@@ -21,6 +21,7 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.PackageElement;
+import javax.lang.model.type.TypeMirror;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,8 @@ abstract public class ParserElement extends Assist {
     }
 
     abstract public Element unwrap();
+
+    abstract public TypeMirror getOriginType();
 
     public ModuleElement getModule() {
         return getElementUtils().getModuleOf(unwrap());

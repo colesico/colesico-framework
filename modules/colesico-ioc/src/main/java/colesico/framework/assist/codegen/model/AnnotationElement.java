@@ -19,8 +19,9 @@ package colesico.framework.assist.codegen.model;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 
-public class AnnotationElement extends ParserElement{
+public class AnnotationElement extends ParserElement {
 
     private final TypeElement originAnnotation;
 
@@ -32,5 +33,10 @@ public class AnnotationElement extends ParserElement{
     @Override
     public Element unwrap() {
         return originAnnotation;
+    }
+
+    @Override
+    public TypeMirror getOriginType() {
+        return originAnnotation.asType();
     }
 }

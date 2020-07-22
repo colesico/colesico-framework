@@ -74,6 +74,12 @@
                             <artifactId>colesico-translation</artifactId>
                             <version>${project.version}</version>
                         </path>
+                        <!-- To disable compile debug log remove this dependency-->
+                        <dependency>
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>slf4j-simple</artifactId>
+                            <version>${slf4j.version}</version>
+                        </dependency>
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>

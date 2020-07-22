@@ -64,7 +64,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
             // Add produce method
             String methodName = "get" + srvElm.getOriginClass().getSimpleName();
-            MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, TypeName.get(srvElm.getOriginClass().asDeclaredType()));
+            MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, TypeName.get(srvElm.getOriginClass().getOriginType()));
 
             if (srvElm.getCustomScopeType() == null) {
                 AnnotationSpec.Builder scopeAnnBuilder = AnnotationSpec.builder(ClassName.get(Singleton.class));

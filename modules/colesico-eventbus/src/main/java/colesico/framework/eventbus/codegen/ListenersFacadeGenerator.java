@@ -49,7 +49,7 @@ public class ListenersFacadeGenerator {
         mb.addAnnotation(ClassName.get(Inject.class));
         mb.addModifiers(Modifier.PUBLIC);
         mb.addParameter(
-                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(service.getOriginClass().asDeclaredType())),
+                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(service.getOriginClass().getOriginType())),
                 EventsListener.TARGET_PROV_FIELD,
                 Modifier.FINAL);
 
@@ -65,7 +65,7 @@ public class ListenersFacadeGenerator {
         mb.addParameter(pb.build());
 
         mb.addStatement("$T $N=this.$N.get()",
-                TypeName.get(service.getOriginClass().asDeclaredType()),
+                TypeName.get(service.getOriginClass().getOriginType()),
                 TARGET_VAR,
                 EventsListener.TARGET_PROV_FIELD);
         mb.addStatement("$N.$N($N)",
@@ -128,7 +128,7 @@ public class ListenersFacadeGenerator {
 
         TypeSpec.Builder classBuilder = TypeSpec.classBuilder(facadeClassSimpleName);
         classBuilder.addModifiers(Modifier.PUBLIC);
-        classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(EventsListener.class), TypeName.get(service.getOriginClass().asDeclaredType())));
+        classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(EventsListener.class), TypeName.get(service.getOriginClass().getOriginType())));
 
         classBuilder.addAnnotation(CodegenUtils.generateGenstamp(this.getClass().getName(), null, null));
         classBuilder.addAnnotation(Singleton.class);

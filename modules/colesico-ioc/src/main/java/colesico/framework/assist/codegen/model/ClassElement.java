@@ -25,6 +25,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
@@ -98,12 +99,17 @@ public class ClassElement extends ParserElement {
         return originElement.getSimpleName().toString();
     }
 
-    public DeclaredType asDeclaredType() {
-        return (DeclaredType) originElement.asType();
+    @Override
+    public DeclaredType getOriginType() {
+        return originType;
+    }
+
+    public TypeMirror getMemberType(Element element) {
+        return getTypeUtils().asMemberOf(originType, element);
     }
 
     public ClassType asClassType() {
-        return new ClassType(getProcessingEnv(), asDeclaredType());
+        return new ClassType(getProcessingEnv(), getOriginType());
     }
 
     public List<FieldElement> getFields() {
@@ -111,8 +117,7 @@ public class ClassElement extends ParserElement {
         List<? extends Element> members = getElementUtils().getAllMembers(originElement);
         List<VariableElement> fields = ElementFilter.fieldsIn(members);
         for (VariableElement field : fields) {
-            TypeMirror fieldType = getTypeUtils().asMemberOf(originType, field);
-            result.add(new FieldElement(processingEnv, this, field, fieldType));
+            result.add(new FieldElement(processingEnv, this, field));
         }
         return result;
     }
@@ -131,14 +136,14 @@ public class ClassElement extends ParserElement {
     public List<MethodElement> getConstructors() {
         List<MethodElement> result = new ArrayList<>();
         List<? extends Element> members = getElementUtils().getAllMembers(originElement);
-        List<ExecutableElement> constrs = ElementFilter.constructorsIn(members);
-        for (ExecutableElement constr : constrs) {
-            TypeElement methodClass = (TypeElement) constr.getEnclosingElement();
+        List<ExecutableElement> methods = ElementFilter.constructorsIn(members);
+        for (ExecutableElement method : methods) {
+            TypeElement methodClass = (TypeElement) method.getEnclosingElement();
             String methodClassName = methodClass.asType().toString();
             if (methodClassName.equals(Object.class.getName())) {
                 continue;
             }
-            result.add(new MethodElement(processingEnv, this, constr));
+            result.add(new MethodElement(processingEnv, this, method, (ExecutableType) method.asType()));
         }
         return result;
     }
@@ -167,7 +172,8 @@ public class ClassElement extends ParserElement {
             if (methodClassName.equals(Object.class.getName())) {
                 continue;
             }
-            result.add(new MethodElement(processingEnv, this, method));
+            ExecutableType methodType = (ExecutableType) getTypeUtils().asMemberOf(originType, method);
+            result.add(new MethodElement(processingEnv, this, method, methodType));
         }
         return result;
     }
@@ -185,7 +191,8 @@ public class ClassElement extends ParserElement {
             if (methodClassName.equals(Object.class.getName())) {
                 continue;
             }
-            result.add(new MethodElement(processingEnv, this, method));
+            ExecutableType methodType = (ExecutableType) getTypeUtils().asMemberOf(originType, method);
+            result.add(new MethodElement(processingEnv, this, method, methodType));
         }
         return result;
     }
@@ -229,7 +236,7 @@ public class ClassElement extends ParserElement {
 
     public boolean isSameType(Class clazz) {
         TypeMirror clazzTypeMirror = getElementUtils().getTypeElement(clazz.getCanonicalName()).asType();
-        return getTypeUtils().isSameType(clazzTypeMirror, originElement.asType());
+        return getTypeUtils().isSameType(clazzTypeMirror, originType);
     }
 
     @Override

@@ -141,4 +141,12 @@ abstract public class FactoryElement {
     public int getFactoryIndex() {
         return factoryIndex;
     }
+
+    @Override
+    public String toString() {
+        return "FactoryElement{" +
+                "suppliedType=" + suppliedType +
+                ", factoryMethodBaseName='" + factoryMethodBaseName + '\'' +
+                '}';
+    }
 }

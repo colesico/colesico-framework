@@ -19,6 +19,7 @@ package colesico.framework.assist.codegen.model;
 import colesico.framework.assist.codegen.CodegenException;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
@@ -29,9 +30,8 @@ public class FieldElement extends VarElement {
 
     protected final ClassElement parentClass;
     protected final VariableElement originElement;
-    protected final TypeMirror originType;
 
-    public FieldElement(ProcessingEnvironment processingEnv, ClassElement parentClass, VariableElement fieldElement, TypeMirror fieldType) {
+    public FieldElement(ProcessingEnvironment processingEnv, ClassElement parentClass, VariableElement fieldElement) {
         super(processingEnv);
 
         if (!fieldElement.getKind().isField()) {
@@ -40,7 +40,6 @@ public class FieldElement extends VarElement {
 
         this.parentClass = parentClass;
         this.originElement = fieldElement;
-        this.originType = fieldType;
     }
 
     @Override
@@ -58,16 +57,16 @@ public class FieldElement extends VarElement {
     }
 
     @Override
-    public TypeMirror asTypeMirror() {
-        return originType;
+    public TypeMirror getOriginType() {
+        return parentClass.getMemberType(originElement);
     }
 
     @Override
     public ClassType asClassType() {
-        if (originType.getKind() != TypeKind.DECLARED) {
+        if (getOriginType().getKind() != TypeKind.DECLARED) {
             return null;
         }
-        return new ClassType(getProcessingEnv(), (DeclaredType) originType);
+        return new ClassType(getProcessingEnv(), (DeclaredType) getOriginType());
     }
 
     @Override

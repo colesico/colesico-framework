@@ -23,6 +23,7 @@ import colesico.framework.http.HttpResponse;
 import colesico.framework.service.ApplicationException;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.net.URI;
@@ -31,7 +32,7 @@ import java.util.Base64;
 import java.util.Random;
 
 @Singleton
-public class CSRFProtector {
+public class CSRFProtector<V> {
 
     public static final String ORIGIN_HEADER = "Origin";
     public static final String REFERER_HEADER = "Referer";
@@ -40,12 +41,17 @@ public class CSRFProtector {
 
     protected final Provider<HttpResponse> responseProv;
 
+    @Inject
     public CSRFProtector(Provider<HttpResponse> responseProv) {
         this.responseProv = responseProv;
     }
 
     public String sendToken() {
         return sendToken(responseProv.get());
+    }
+
+    public V test(V v) {
+        return v;
     }
 
     protected static String getRequestedHostName(HttpRequest request) {

@@ -106,7 +106,7 @@ public class ServiceProxyGenerator {
         TypeName fieldClassedVal = fieldElm.getClassed() != null ? fieldElm.getClassed() : ClassName.get(Object.class);
 
         for (ParameterElement paramElm : constructorParams) {
-            TypeName paramType = TypeName.get(paramElm.asTypeMirror());
+            TypeName paramType = TypeName.get(paramElm.getOriginType());
             AnnotationAssist<Named> namedAnn = paramElm.getAnnotation(Named.class);
             AnnotationAssist<Classed> classedAnn = paramElm.getAnnotation(Classed.class);
 
@@ -183,7 +183,7 @@ public class ServiceProxyGenerator {
         mb.addAnnotation(Override.class)
             .addModifiers(Modifier.PUBLIC)
             .returns(ParameterizedTypeName.get(ClassName.get(Class.class), WildcardTypeName.subtypeOf(Object.class)))
-            .addStatement("return $T.class", TypeName.get(service.getOriginClass().asDeclaredType()));
+            .addStatement("return $T.class", TypeName.get(service.getOriginClass().getOriginType()));
 
         service.addCustomMethod(new CustomMethodElement(mb.build()));
     }
@@ -208,7 +208,7 @@ public class ServiceProxyGenerator {
         int i = 0;
         for (ParameterElement paramElm : methodParams) {
             String paramName = "p[" + i + "]";
-            paramItems.add(TypeName.get(paramElm.asTypeMirror()));
+            paramItems.add(TypeName.get(paramElm.getOriginType()));
             paramItems.add(paramName);
             paramFormats.add("($T)$N");
             i++;
@@ -307,7 +307,7 @@ public class ServiceProxyGenerator {
 
     public void generateService(ServiceElement serviceElement) {
 
-        TypeSpec.Builder proxyBuilder = TypeSpec.classBuilder(serviceElement.getProxyClassSimpleName()).superclass(TypeName.get(serviceElement.getOriginClass().asDeclaredType()));
+        TypeSpec.Builder proxyBuilder = TypeSpec.classBuilder(serviceElement.getProxyClassSimpleName()).superclass(TypeName.get(serviceElement.getOriginClass().getOriginType()));
         proxyBuilder.addSuperinterface(ClassName.get(ServiceProxy.class));
         proxyBuilder.addModifiers(Modifier.PUBLIC);
         proxyBuilder.addModifiers(Modifier.FINAL);
@@ -319,7 +319,7 @@ public class ServiceProxyGenerator {
         proxyBuilder.addAnnotation(scopeAnnBuilder.build());
 
         AnnotationSpec.Builder originClassAnnBuilder = AnnotationSpec.builder(ClassName.get(ServiceOrigin.class));
-        originClassAnnBuilder.addMember("value","$T.class",TypeName.get(serviceElement.getOriginClass().asDeclaredType()));
+        originClassAnnBuilder.addMember("value","$T.class",TypeName.get(serviceElement.getOriginClass().getOriginType()));
         proxyBuilder.addAnnotation(originClassAnnBuilder.build());
 
         // Extra interfaces

@@ -56,7 +56,7 @@ public class BundleElement {
     @Override
     public String toString() {
         return "TranslationsBundleElement{" +
-            " DictionaryBean=" + parentDictionary.getOriginBean().asDeclaredType().toString() +
+            " DictionaryBean=" + parentDictionary.getOriginBean().getOriginType().toString() +
             ", Locale='" + localeKey + '\'' +
             '}';
     }

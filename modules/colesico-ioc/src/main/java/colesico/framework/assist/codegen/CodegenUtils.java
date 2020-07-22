@@ -185,7 +185,7 @@ public class CodegenUtils {
 
             Modifier[] modifiers = modifiersSet.toArray(new Modifier[modifiersSet.size()]);
             String paramName = param.getNameWithPrefix(paramPrefix);
-            TypeMirror paramType = param.asTypeMirror();
+            TypeMirror paramType = param.getOriginType();
 
             ParameterSpec.Builder paramBilder = ParameterSpec.builder(TypeName.get(paramType), paramName, modifiers);
 

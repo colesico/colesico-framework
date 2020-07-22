@@ -60,7 +60,7 @@ public class TeleFacadesGenerator {
         mb.addAnnotation(ClassName.get(Inject.class));
         mb.addModifiers(Modifier.PUBLIC);
         mb.addParameter(
-                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(teleFacade.getParentService().getOriginClass().asDeclaredType())),
+                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(teleFacade.getParentService().getOriginClass().getOriginType())),
                 TARGET_PROV_FIELD,
                 Modifier.FINAL);
 
@@ -97,7 +97,7 @@ public class TeleFacadesGenerator {
         binderBuilder.add("\n// Init composition\n");
         binderBuilder.addStatement("$T $N = new $T()",
                 TypeName.get(paramType),
-                valueVar, TypeName.get(var.getOriginVariable().asTypeMirror()));
+                valueVar, TypeName.get(var.getOriginVariable().getOriginType()));
 
         // Generate composition fields
         for (TeleVarElement subvar : ((TeleCompElement) var).getVariables()) {
@@ -131,7 +131,7 @@ public class TeleFacadesGenerator {
             String paramName = param.getOriginVariable().getName() + PARAM_SUFFIX;
             serviceMethodArgs.add("$N", paramName);
             binderBuilder.add("\n// Assign tele-method parameter value from remote client\n");
-            binderBuilder.add("$T $N = ", TypeName.get(param.getOriginVariable().asTypeMirror()), paramName);
+            binderBuilder.add("$T $N = ", TypeName.get(param.getOriginVariable().getOriginType()), paramName);
             binderBuilder.add(value);
             binderBuilder.add(";\n");
         }
@@ -183,7 +183,7 @@ public class TeleFacadesGenerator {
             cb.add("final $T $N=($N,$N)->{\n",
                     ParameterizedTypeName.get(
                             ClassName.get(TeleDriver.Binder.class),
-                            TypeName.get(service.getOriginClass().asDeclaredType()),
+                            TypeName.get(service.getOriginClass().getOriginType()),
                             ClassName.get(teleFacade.getDataPortClass())),
                     TeleDriver.BINDER_PARAM,
                     TeleDriver.Binder.TARGET_PARAM,
@@ -194,7 +194,7 @@ public class TeleFacadesGenerator {
             cb.add("};\n");
 
             // Get service instance:  Service service=serviceProv.get();
-            TypeName serviceTypeName = TypeName.get(teleFacade.getParentService().getOriginClass().asDeclaredType());
+            TypeName serviceTypeName = TypeName.get(teleFacade.getParentService().getOriginClass().getOriginType());
             cb.addStatement("$T $N=$N.get()", serviceTypeName, TeleDriver.TARGET_PARAM, TeleFacade.TARGET_PROV_FIELD);
 
             // Call teleDriver
@@ -239,7 +239,7 @@ public class TeleFacadesGenerator {
 
 
             classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(TeleFacade.class),
-                    TypeName.get(service.getOriginClass().asDeclaredType()),
+                    TypeName.get(service.getOriginClass().getOriginType()),
                     ClassName.get(teleFacade.getTeleDriverClass()),
                     ClassName.get(teleFacade.getLigatureClass())));
 

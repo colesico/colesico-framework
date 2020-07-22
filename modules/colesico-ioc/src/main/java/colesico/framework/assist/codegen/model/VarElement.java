@@ -22,7 +22,6 @@ import org.apache.commons.lang3.StringUtils;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
 
 abstract public class VarElement extends ParserElement {
 
@@ -39,11 +38,9 @@ abstract public class VarElement extends ParserElement {
         return StrUtils.addPrefix(prefix, getName());
     }
 
-    abstract public TypeMirror asTypeMirror();
-
     public ClassType asClassType() {
-        if (asTypeMirror().getKind() == TypeKind.DECLARED) {
-            return new ClassType(getProcessingEnv(), (DeclaredType) asTypeMirror());
+        if (getOriginType().getKind() == TypeKind.DECLARED) {
+            return new ClassType(getProcessingEnv(), (DeclaredType) getOriginType());
         }
         return null;
     }

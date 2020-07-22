@@ -44,6 +44,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.List;
@@ -139,7 +140,6 @@ public class ProducerParser extends FrameworkAbstractParser {
 
     protected InjectableElement createInjectableElement(final FactoryElement parentFactory, final ParameterElement parameter) {
         logger.debug("Create injectable element for: " + parameter);
-
         if (parameter.asClassType() == null) {
             throw CodegenException.of().message("Unsupported parameter type kind for " + parameter.getName()).element(parameter.unwrap()).build();
         }
@@ -217,22 +217,22 @@ public class ProducerParser extends FrameworkAbstractParser {
     }
 
     protected DefaultFactoryElement createDefaultFactoryElement(IocletElement iocletElement, AnnotationAssist<Produce> produceAnn) {
-        TypeMirror suppliedTypeMirr = produceAnn.getValueTypeMirror(Produce::value);
+        TypeMirror suppliedMirror = getTypeUtils().erasure(produceAnn.getValueTypeMirror(Produce::value));
 
-        logger.debug("Parsing default factory for : " + suppliedTypeMirr.toString());
+        logger.debug("Parsing default factory for : " + suppliedMirror);
 
-        TypeElement typeElement = (TypeElement) ((DeclaredType) suppliedTypeMirr).asElement();
+        TypeElement typeElement = (TypeElement) ((DeclaredType) suppliedMirror).asElement();
         if (!(typeElement.getKind().isClass() || typeElement.getKind().isInterface())) {
-            throw CodegenException.of().message("Unsupported type kind for:" + suppliedTypeMirr).element(iocletElement.getOriginProducer().unwrap()).build();
+            throw CodegenException.of().message("Unsupported type kind for:" + suppliedMirror).element(iocletElement.getOriginProducer().unwrap()).build();
         }
 
-        final ClassType suppliedType = new ClassType(getProcessingEnv(), (DeclaredType) suppliedTypeMirr);
+        final ClassType suppliedType = new ClassType(getProcessingEnv(), (DeclaredType) suppliedMirror);
 
         final String factoryMethodBaseName = "get" + suppliedType.asClassElement().getSimpleName();
 
         MethodElement constructor = getInjectableConstructor(suppliedType.asClassElement());
         if (constructor == null) {
-            throw CodegenException.of().message("Unable to find injectable constructor for class: " + suppliedTypeMirr.toString()).build();
+            throw CodegenException.of().message("Unable to find injectable constructor for class: " + suppliedMirror.toString()).build();
         }
 
         ScopeElement scope = obtainScope(suppliedType.asClassElement());

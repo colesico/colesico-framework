@@ -84,4 +84,11 @@ public class ClassType extends ParserType {
     public int hashCode() {
         return originType != null ? originType.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return "ClassType{" +
+                "originType=" + originType +
+                '}';
+    }
 }

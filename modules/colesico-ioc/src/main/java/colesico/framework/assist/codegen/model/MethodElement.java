@@ -40,11 +40,13 @@ public class MethodElement extends ParserElement {
      * Origin service method
      */
     protected final ExecutableElement originElement;
+    protected final ExecutableType originType;
 
-    public MethodElement(ProcessingEnvironment processingEnv, ClassElement parentClass, ExecutableElement methodElement) {
+    public MethodElement(ProcessingEnvironment processingEnv, ClassElement parentClass, ExecutableElement originElement, ExecutableType originType) {
         super(processingEnv);
         this.parentClass = parentClass;
-        this.originElement = methodElement;
+        this.originElement = originElement;
+        this.originType = originType;
     }
 
     @Override
@@ -56,14 +58,16 @@ public class MethodElement extends ParserElement {
         return parentClass;
     }
 
-    public ExecutableType getExecutableType() {
-        ClassElement parentClass = getParentClass();
-        ExecutableType result = (ExecutableType) parentClass.asClassType().getMemberType(originElement);
-        return result;
+    public ExecutableType getOriginType() {
+        return originType;
+    }
+
+    public TypeMirror getMemberType(Element element) {
+        return getTypeUtils().asMemberOf((DeclaredType) getOriginType(), element);
     }
 
     public TypeMirror getReturnType() {
-        return getExecutableType().getReturnType();
+        return getOriginType().getReturnType();
     }
 
     public ClassType getReturnClassType() {
@@ -87,8 +91,7 @@ public class MethodElement extends ParserElement {
     public List<ParameterElement> getParameters() {
         List<? extends VariableElement> params = originElement.getParameters();
 
-        ExecutableType methodType = (ExecutableType) getTypeUtils().asMemberOf(parentClass.asDeclaredType(), originElement);
-        List<? extends TypeMirror> paramTypes = methodType.getParameterTypes();
+        List<? extends TypeMirror> paramTypes = getOriginType().getParameterTypes();
 
         List<ParameterElement> result = new ArrayList<>();
         int i = 0;
@@ -122,16 +125,17 @@ public class MethodElement extends ParserElement {
      */
     public MethodElement getSuperMethod() {
         ClassElement classElm = parentClass;
-        ClassType superClass;
-        while (null != (superClass = classElm.getSuperClass())) {
-            ClassElement superClassElm = superClass.asClassElement();
-            for (MethodElement superMethodElm : superClassElm.getDeclaredMethods()) {
+        ClassType superType;
+        while (null != (superType = classElm.getSuperClass())) {
+            ClassElement superClass = superType.asClassElement();
+            for (MethodElement superMethodElm : superClass.getDeclaredMethods()) {
                 ExecutableElement method = superMethodElm.unwrap();
                 if (getElementUtils().overrides(originElement, method, classElm.unwrap())) {
-                    return new MethodElement(processingEnv, superClassElm, method);
+                    ExecutableType methodType = (ExecutableType) getTypeUtils().asMemberOf(superType.unwrap(), method);
+                    return new MethodElement(processingEnv, superClass, method, methodType);
                 }
             }
-            classElm = superClassElm;
+            classElm = superClass;
         }
         return null;
     }
@@ -156,22 +160,23 @@ public class MethodElement extends ParserElement {
      */
     public List<MethodElement> getInterfaceMethods() {
         List<MethodElement> result = new ArrayList<>();
-        ClassElement classElm = parentClass;
+        ClassElement classElement = parentClass;
 
-        while (classElm != null) {
-            List<ClassType> interfaces = classElm.getInterfaces();
+        while (classElement != null) {
+            List<ClassType> interfaces = classElement.getInterfaces();
             for (ClassType ifaceType : interfaces) {
                 ClassElement ifaceElement = ifaceType.asClassElement();
-                for (MethodElement ifaceMethodElm : ifaceElement.getDeclaredMethods()) {
-                    ExecutableElement ifaceMethod = ifaceMethodElm.unwrap();
-                    if (getElementUtils().overrides(originElement, ifaceMethod, classElm.unwrap())) {
-                        result.add(new MethodElement(processingEnv, ifaceElement, ifaceMethod));
+                for (MethodElement methodElement : ifaceElement.getDeclaredMethods()) {
+                    ExecutableElement method = methodElement.unwrap();
+                    if (getElementUtils().overrides(originElement, method, classElement.unwrap())) {
+                        ExecutableType methodType = (ExecutableType) getTypeUtils().asMemberOf(ifaceType.unwrap(), method);
+                        result.add(new MethodElement(processingEnv, ifaceElement, method, methodType));
                         break;
                     }
                 }
             }
-            ClassType superClass = classElm.getSuperClass();
-            classElm = superClass == null ? null : superClass.asClassElement();
+            ClassType superClass = classElement.getSuperClass();
+            classElement = superClass == null ? null : superClass.asClassElement();
         }
 
         return result;

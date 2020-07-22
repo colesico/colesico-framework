@@ -69,7 +69,7 @@ public class BundleGenerator {
                 fileName);
 
             try (final Writer writer = new BufferedWriter(fileObj.openWriter())) {
-                writer.write("# This is automatically generated dictionary from " + bundleElement.getParentDictionary().getOriginBean().asDeclaredType().toString() + "\n");
+                writer.write("# This is automatically generated dictionary from " + bundleElement.getParentDictionary().getOriginBean().getOriginType().toString() + "\n");
                 for (TranslationElement te : bundleElement.getTranslations()) {
                     String val = te.getTranslation();
                     val = StringUtils.replace(val, "\n", "\\n\\\n");

@@ -47,7 +47,7 @@ public class ParameterElement extends VarElement {
     }
 
     @Override
-    public TypeMirror asTypeMirror() {
+    public TypeMirror getOriginType() {
         return originType;
     }
 
@@ -81,8 +81,8 @@ public class ParameterElement extends VarElement {
     @Override
     public String toString() {
         return "ParameterElement{" +
-                "originVariableElement=" + originElement +
-                ", originTypeMirror=" + originType +
+                "originElement=" + originElement +
+                ", originType=" + originType +
                 '}';
     }
 }
