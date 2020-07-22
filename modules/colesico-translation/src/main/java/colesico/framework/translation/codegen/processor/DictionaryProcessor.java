@@ -18,7 +18,7 @@ package colesico.framework.translation.codegen.processor;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
-import colesico.framework.assist.codegen.model.AnnotationAtom;
+import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.AnnotationType;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.MethodElement;
@@ -117,7 +117,7 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
             // Find translations
             List<AnnotationType> annList = method.getAnnotationTypes();
             for (AnnotationType ann : annList) {
-                AnnotationAtom<Translation> translationAnn = ann.asElement().getAnnotation(Translation.class);
+                AnnotationAssist<Translation> translationAnn = ann.asElement().getAnnotation(Translation.class);
                 if (translationAnn == null) {
                     continue;
                 }

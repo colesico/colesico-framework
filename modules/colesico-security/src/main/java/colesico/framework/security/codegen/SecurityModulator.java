@@ -19,7 +19,7 @@ package colesico.framework.security.codegen;
 
 import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.assist.codegen.model.AnnotationAtom;
+import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.security.RequireAuthority;
 import colesico.framework.security.RequirePrincipal;
 import colesico.framework.security.SecurityInterceptor;
@@ -45,8 +45,8 @@ public class SecurityModulator extends Modulator {
     @Override
     public void onProxyMethod(ProxyMethodElement proxyMethod) {
         super.onProxyMethod(proxyMethod);
-        final AnnotationAtom<RequirePrincipal> requirePrincipal = proxyMethod.getOriginMethod().getAnnotation(RequirePrincipal.class);
-        final AnnotationAtom<RequireAuthority> requireAuthority = proxyMethod.getOriginMethod().getAnnotation(RequireAuthority.class);
+        final AnnotationAssist<RequirePrincipal> requirePrincipal = proxyMethod.getOriginMethod().getAnnotation(RequirePrincipal.class);
+        final AnnotationAssist<RequireAuthority> requireAuthority = proxyMethod.getOriginMethod().getAnnotation(RequireAuthority.class);
 
         if (requirePrincipal != null || requireAuthority != null) {
             if (proxyMethod.isPlain()) {

@@ -1,6 +1,6 @@
 package colesico.framework.telehttp.codegen;
 
-import colesico.framework.assist.codegen.model.AnnotationAtom;
+import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.service.codegen.model.TeleCompElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
 import colesico.framework.service.codegen.model.TeleParamElement;
@@ -23,7 +23,7 @@ public class TeleHttpCodegenUtils {
         TeleVarElement rootVar = teleParam;
         while (curVar != null) {
             String name;
-            AnnotationAtom<ParamName> nameAnn = curVar.getOriginVariable().getAnnotation(ParamName.class);
+            AnnotationAssist<ParamName> nameAnn = curVar.getOriginVariable().getAnnotation(ParamName.class);
             if (nameAnn != null) {
                 name = nameAnn.unwrap().value();
             } else if (curVar instanceof TeleCompElement) {
@@ -57,7 +57,7 @@ public class TeleHttpCodegenUtils {
     public static Origin getParamOrigin(TeleParamElement teleParam, TeleVarElement rootVar) {
         TeleMethodElement teleMethod = teleParam.getParentTeleMethod();
         Origin paramOrigin = Origin.AUTO;
-        AnnotationAtom<ParamOrigin> originAnn = teleParam.getOriginVariable().getAnnotation(ParamOrigin.class);
+        AnnotationAssist<ParamOrigin> originAnn = teleParam.getOriginVariable().getAnnotation(ParamOrigin.class);
         if (originAnn == null) {
             originAnn = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(ParamOrigin.class);
             if (originAnn == null) {

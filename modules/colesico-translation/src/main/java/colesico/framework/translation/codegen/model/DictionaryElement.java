@@ -16,7 +16,7 @@
 
 package colesico.framework.translation.codegen.model;
 
-import colesico.framework.assist.codegen.model.AnnotationAtom;
+import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.translation.Dictionary;
@@ -44,7 +44,7 @@ public class DictionaryElement {
         }
         this.originBean = dictionaryInterface;
 
-        AnnotationAtom<Dictionary> beanAnn = dictionaryInterface.getAnnotation(Dictionary.class);
+        AnnotationAssist<Dictionary> beanAnn = dictionaryInterface.getAnnotation(Dictionary.class);
         String bPath;
         if (StringUtils.isNoneBlank(beanAnn.unwrap().basePath())) {
             bPath = beanAnn.unwrap().basePath();

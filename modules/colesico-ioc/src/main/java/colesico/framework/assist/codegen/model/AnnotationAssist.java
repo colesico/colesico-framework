@@ -24,11 +24,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class AnnotationAtom<A extends Annotation> extends Atom {
+public class AnnotationAssist<A extends Annotation> extends Assist {
 
     protected final A originAnnotation;
 
-    public AnnotationAtom(ProcessingEnvironment processingEnv, A annotation) {
+    public AnnotationAssist(ProcessingEnvironment processingEnv, A annotation) {
         super(processingEnv);
         this.originAnnotation = annotation;
     }
@@ -66,7 +66,7 @@ public class AnnotationAtom<A extends Annotation> extends Atom {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AnnotationAtom<?> that = (AnnotationAtom<?>) o;
+        AnnotationAssist<?> that = (AnnotationAssist<?>) o;
 
         return Objects.equals(originAnnotation, that.originAnnotation);
     }

@@ -16,7 +16,7 @@
 
 package colesico.framework.translation.codegen.model;
 
-import colesico.framework.assist.codegen.model.AnnotationAtom;
+import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.translation.TranslationKey;
 
@@ -44,7 +44,7 @@ public class TranslationElement {
     }
 
     public String getTranslationKey() {
-        AnnotationAtom<TranslationKey> tk = keyMethod.getAnnotation(TranslationKey.class);
+        AnnotationAssist<TranslationKey> tk = keyMethod.getAnnotation(TranslationKey.class);
         if (tk != null) {
             return tk.unwrap().value();
         } else {

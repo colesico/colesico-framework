@@ -18,7 +18,7 @@ package colesico.framework.restlet.codegen;
 
 
 import colesico.framework.assist.CollectionUtils;
-import colesico.framework.assist.codegen.model.AnnotationAtom;
+import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.restlet.Restlet;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.router.codegen.RoutesModulator;
@@ -49,7 +49,7 @@ public class RestletModulator extends
 
     @Override
     protected boolean isTeleFacadeSupported(ServiceElement serviceElm) {
-        AnnotationAtom teleAnn = serviceElm.getOriginClass().getAnnotation(Restlet.class);
+        AnnotationAssist teleAnn = serviceElm.getOriginClass().getAnnotation(Restlet.class);
         return teleAnn != null;
     }
 

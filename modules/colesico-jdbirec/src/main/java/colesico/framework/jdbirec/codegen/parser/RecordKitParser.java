@@ -19,7 +19,7 @@ package colesico.framework.jdbirec.codegen.parser;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
-import colesico.framework.assist.codegen.model.AnnotationAtom;
+import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
@@ -142,11 +142,11 @@ public class RecordKitParser extends FrameworkAbstractParser {
     private List<Column> getColumns(FieldElement field) {
         final List<Column> columns = new ArrayList<>();
 
-        AnnotationAtom<Column> columnAnnElm = field.getAnnotation(Column.class);
+        AnnotationAssist<Column> columnAnnElm = field.getAnnotation(Column.class);
         if (columnAnnElm != null) {
             columns.add(columnAnnElm.unwrap());
         } else {
-            AnnotationAtom<Columns> columnsAnnElm = field.getAnnotation(Columns.class);
+            AnnotationAssist<Columns> columnsAnnElm = field.getAnnotation(Columns.class);
             if (columnsAnnElm != null) {
                 columns.addAll(Arrays.asList(columnsAnnElm.unwrap().value()));
             }
@@ -163,7 +163,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
                 continue;
             }
 
-            AnnotationAtom<Column> columnAnnElm = new AnnotationAtom<>(processingEnv, columnAnn);
+            AnnotationAssist<Column> columnAnnElm = new AnnotationAssist<>(processingEnv, columnAnn);
 
             String name;
             if (columnAnnElm.unwrap().name().equals("@field")) {
@@ -235,11 +235,11 @@ public class RecordKitParser extends FrameworkAbstractParser {
     private List<Composition> getCompositions(FieldElement field) {
         final List<Composition> compositions = new ArrayList<>();
 
-        AnnotationAtom<Composition> compositionAnnElm = field.getAnnotation(Composition.class);
+        AnnotationAssist<Composition> compositionAnnElm = field.getAnnotation(Composition.class);
         if (compositionAnnElm != null) {
             compositions.add(compositionAnnElm.unwrap());
         } else {
-            AnnotationAtom<Compositions> compositionsAnnElm = field.getAnnotation(Compositions.class);
+            AnnotationAssist<Compositions> compositionsAnnElm = field.getAnnotation(Compositions.class);
             if (compositionsAnnElm != null) {
                 compositions.addAll(Arrays.asList(compositionsAnnElm.unwrap().value()));
             }
@@ -259,7 +259,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
             final List<Composition> compositions = getCompositions(field);
             for (Composition compAnn : compositions) {
 
-                AnnotationAtom<Composition> compositionAnn = new AnnotationAtom<>(processingEnv, compAnn);
+                AnnotationAssist<Composition> compositionAnn = new AnnotationAssist<>(processingEnv, compAnn);
 
                 // Check view
                 if (!isInView(composition.getParentRecordKit().getView(), compositionAnn.unwrap().views())) {
@@ -281,7 +281,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
 
                 TypeMirror jointType = compositionAnn.getValueTypeMirror(Composition::jointRecord);
                 if (!jointType.toString().equals(RecordKit.class.getName())) {
-                    AnnotationAtom<RecordKitConfig> jointRecKitAnn = compositionClass.getAnnotation(RecordKitConfig.class);
+                    AnnotationAssist<RecordKitConfig> jointRecKitAnn = compositionClass.getAnnotation(RecordKitConfig.class);
                     if (jointRecKitAnn == null) {
                         throw CodegenException.of()
                                 .message("Joint record kit has no @" + RecordKitConfig.class.getSimpleName() + " annotation")
@@ -337,7 +337,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
         TypeMirror recordMirror = superClass.unwrap().getTypeArguments().get(0);
         ClassType recordType = new ClassType(processingEnv, (DeclaredType) recordMirror);
 
-        AnnotationAtom<RecordKitConfig> configAnn = recordKitClass.getAnnotation(RecordKitConfig.class);
+        AnnotationAssist<RecordKitConfig> configAnn = recordKitClass.getAnnotation(RecordKitConfig.class);
         String tableName = configAnn.unwrap().table();
         TypeMirror extendMirror = configAnn.getValueTypeMirror(RecordKitConfig::extend);
         ClassType extendType = new ClassType(processingEnv, (DeclaredType) extendMirror);
@@ -353,7 +353,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
     public ViewSetElement parse(ClassElement recordKitClass) {
         logger.debug("Parse JDBI record kit: " + recordKitClass);
 
-        AnnotationAtom<RecordKitConfig> configAnn = recordKitClass.getAnnotation(RecordKitConfig.class);
+        AnnotationAssist<RecordKitConfig> configAnn = recordKitClass.getAnnotation(RecordKitConfig.class);
         String[] views = configAnn.unwrap().views();
         checkViewNames(views, recordKitClass.unwrap());
 

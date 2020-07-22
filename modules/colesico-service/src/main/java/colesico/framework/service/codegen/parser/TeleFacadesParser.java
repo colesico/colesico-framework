@@ -48,10 +48,10 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
                     .build();
         }
 
-        AnnotationAtom<LocalParam> localParamAnn = var.getAnnotation(LocalParam.class);
+        AnnotationAssist<LocalParam> localParamAnn = var.getAnnotation(LocalParam.class);
 
         //================= Check compound or parameter
-        AnnotationAtom<Compound> compounddAnn = var.getAnnotation(Compound.class);
+        AnnotationAssist<Compound> compounddAnn = var.getAnnotation(Compound.class);
         if (compounddAnn == null) {
             // simple parameter
             TeleParamElement teleParam = new TeleParamElement(var, localParamAnn != null, paramIndex);
@@ -97,7 +97,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
         );
 
         // Process fields
-        AnnotationAtom<TeleView> teleViewAnn = varStack.getFirst().getAnnotation(TeleView.class);
+        AnnotationAssist<TeleView> teleViewAnn = varStack.getFirst().getAnnotation(TeleView.class);
         Set<String> masterViews = getTeleViewKeys(teleViewAnn);
         for (FieldElement field : fields) {
             // Check field by "TeleView"
@@ -148,7 +148,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
             if (proxyMethod.isLocal()) {
                 continue;
             }
-            AnnotationAtom<TeleMethodName> teleMethodNameAnn = proxyMethod.getOriginMethod().getAnnotation(TeleMethodName.class);
+            AnnotationAssist<TeleMethodName> teleMethodNameAnn = proxyMethod.getOriginMethod().getAnnotation(TeleMethodName.class);
             final String teleMethodName;
             if (teleMethodNameAnn != null) {
                 teleMethodName = teleMethodNameAnn.unwrap().value();
@@ -169,7 +169,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
         }
     }
 
-    private Set<String> getTeleViewKeys(AnnotationAtom<TeleView> teleViewAnnotation) {
+    private Set<String> getTeleViewKeys(AnnotationAssist<TeleView> teleViewAnnotation) {
         Set<String> result = new HashSet<>();
         if (teleViewAnnotation == null) {
             return result;

@@ -154,7 +154,7 @@ public class RpcModulator extends
 
         for (RpcTeleMethodElement teleMethod : rpcmContext.getTeleMethods()) {
 
-            AnnotationAtom<RpcName> ann = teleMethod.getRpcInterfaceMethod().getAnnotation(RpcName.class);
+            AnnotationAssist<RpcName> ann = teleMethod.getRpcInterfaceMethod().getAnnotation(RpcName.class);
 
             String rpcName = ann == null ? teleMethod.getTeleMethod().getName() : ann.unwrap().value();
 
@@ -196,7 +196,7 @@ public class RpcModulator extends
 
     protected String getRpcName(TeleVarElement varElm) {
         String rpcName = varElm.getOriginVariable().getName();
-        AnnotationAtom<RpcName> ann = varElm.getOriginVariable().getAnnotation(RpcName.class);
+        AnnotationAssist<RpcName> ann = varElm.getOriginVariable().getAnnotation(RpcName.class);
         if (ann != null) {
             rpcName = ann.unwrap().value();
         }
@@ -209,7 +209,7 @@ public class RpcModulator extends
         ParameterElement rpcParamElm = rpcTme.getRpcInterfaceMethod().getParameters()
                 .get(teleParam.getParamIndex());
 
-        AnnotationAtom<RpcName> ann = rpcParamElm.getAnnotation(RpcName.class);
+        AnnotationAssist<RpcName> ann = rpcParamElm.getAnnotation(RpcName.class);
         if (ann != null) {
             return ann.unwrap().value();
         }

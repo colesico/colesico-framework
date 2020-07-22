@@ -19,7 +19,7 @@ package colesico.framework.service.codegen.generator;
 
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenUtils;
-import colesico.framework.assist.codegen.model.AnnotationAtom;
+import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.assist.codegen.model.ParameterElement;
@@ -79,7 +79,7 @@ public class ServiceProxyGenerator {
             if (firstConstructor == null) {
                 firstConstructor = method;
             }
-            AnnotationAtom<Inject> constructMarker = method.getAnnotation(Inject.class);
+            AnnotationAssist<Inject> constructMarker = method.getAnnotation(Inject.class);
             if (constructMarker == null) {
                 continue;
             }
@@ -107,8 +107,8 @@ public class ServiceProxyGenerator {
 
         for (ParameterElement paramElm : constructorParams) {
             TypeName paramType = TypeName.get(paramElm.asTypeMirror());
-            AnnotationAtom<Named> namedAnn = paramElm.getAnnotation(Named.class);
-            AnnotationAtom<Classed> classedAnn = paramElm.getAnnotation(Classed.class);
+            AnnotationAssist<Named> namedAnn = paramElm.getAnnotation(Named.class);
+            AnnotationAssist<Classed> classedAnn = paramElm.getAnnotation(Classed.class);
 
             if (paramType.equals(fieldElm.getInjectAs())) {
 

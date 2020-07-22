@@ -52,7 +52,7 @@ public class ServiceParser extends FrameworkAbstractParser {
             AnnotationElement annotationElement = annotation.asElement();
 
             // Check is annotation annotated with @CustomScope
-            AnnotationAtom<CustomScope> customScope = annotationElement.getAnnotation(CustomScope.class);
+            AnnotationAssist<CustomScope> customScope = annotationElement.getAnnotation(CustomScope.class);
             if (customScope != null) {
                 if (scopeType != null) {
                     throw CodegenException.of().message("Ambiguous scope declaration").element(serviceElement).build();
@@ -66,10 +66,10 @@ public class ServiceParser extends FrameworkAbstractParser {
 
 
     protected boolean isPlainMethod(MethodElement m, ClassElement classElement) {
-        AnnotationAtom<PlainMethod> classPlainAnn = classElement.getAnnotation(PlainMethod.class);
-        AnnotationAtom<ServiceMethod> classServAnn = classElement.getAnnotation(ServiceMethod.class);
-        List<AnnotationAtom<PlainMethod>> plainMethodAnns = m.getAnnotationsInherited(PlainMethod.class);
-        AnnotationAtom<ServiceMethod> serviceMethodAnn = m.getAnnotation(ServiceMethod.class);
+        AnnotationAssist<PlainMethod> classPlainAnn = classElement.getAnnotation(PlainMethod.class);
+        AnnotationAssist<ServiceMethod> classServAnn = classElement.getAnnotation(ServiceMethod.class);
+        List<AnnotationAssist<PlainMethod>> plainMethodAnns = m.getAnnotationsInherited(PlainMethod.class);
+        AnnotationAssist<ServiceMethod> serviceMethodAnn = m.getAnnotation(ServiceMethod.class);
 
         final boolean isFinal = m.unwrap().getModifiers().contains(Modifier.FINAL);
         final boolean isPublic = m.unwrap().getModifiers().contains(Modifier.PUBLIC);
@@ -102,7 +102,7 @@ public class ServiceParser extends FrameworkAbstractParser {
 
     protected void addProxyMethods(ServiceElement serviceElement) {
         ClassElement classElement = serviceElement.getOriginClass();
-        AnnotationAtom<LocalMethod> classLocalAnn = classElement.getAnnotation(LocalMethod.class);
+        AnnotationAssist<LocalMethod> classLocalAnn = classElement.getAnnotation(LocalMethod.class);
 
         List<MethodElement> methods = classElement.getMethods();
 
@@ -114,7 +114,7 @@ public class ServiceParser extends FrameworkAbstractParser {
 
             boolean isPlain = isPlainMethod(method, classElement);
 
-            AnnotationAtom<LocalMethod> methodLocal = method.getAnnotation(LocalMethod.class);
+            AnnotationAssist<LocalMethod> methodLocal = method.getAnnotation(LocalMethod.class);
             boolean isLocal = methodLocal != null || classLocalAnn != null
                     || !method.unwrap().getModifiers().contains(Modifier.PUBLIC);
 
