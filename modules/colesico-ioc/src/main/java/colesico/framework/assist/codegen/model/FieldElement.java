@@ -28,21 +28,24 @@ import java.util.Objects;
 public class FieldElement extends VarElement {
 
     protected final ClassElement parentClass;
-    protected final VariableElement originVariableElement;
+    protected final VariableElement originElement;
+    protected final TypeMirror originType;
 
-    public FieldElement(ProcessingEnvironment processingEnv, ClassElement parentClass, VariableElement fieldElement) {
+    public FieldElement(ProcessingEnvironment processingEnv, ClassElement parentClass, VariableElement fieldElement, TypeMirror fieldType) {
         super(processingEnv);
+
         if (!fieldElement.getKind().isField()) {
             throw CodegenException.of().message("Unsupported element kind:" + fieldElement.getKind()).element(fieldElement).build();
         }
 
         this.parentClass = parentClass;
-        this.originVariableElement = fieldElement;
+        this.originElement = fieldElement;
+        this.originType = fieldType;
     }
 
     @Override
     public VariableElement unwrap() {
-        return originVariableElement;
+        return originElement;
     }
 
     public ClassElement getParentClass() {
@@ -51,21 +54,20 @@ public class FieldElement extends VarElement {
 
     @Override
     public String getName() {
-        return originVariableElement.getSimpleName().toString();
+        return originElement.getSimpleName().toString();
     }
 
     @Override
     public TypeMirror asTypeMirror() {
-        return parentClass.asClassType().getMemberType(originVariableElement);
+        return originType;
     }
 
     @Override
     public ClassType asClassType() {
-        TypeMirror fieldMirror = parentClass.asClassType().getMemberType(originVariableElement);
-        if (fieldMirror.getKind() != TypeKind.DECLARED) {
+        if (originType.getKind() != TypeKind.DECLARED) {
             return null;
         }
-        return new ClassType(getProcessingEnv(), (DeclaredType) fieldMirror);
+        return new ClassType(getProcessingEnv(), (DeclaredType) originType);
     }
 
     @Override
@@ -75,18 +77,18 @@ public class FieldElement extends VarElement {
 
         FieldElement that = (FieldElement) o;
 
-        return Objects.equals(originVariableElement, that.originVariableElement);
+        return Objects.equals(originElement, that.originElement);
     }
 
     @Override
     public int hashCode() {
-        return originVariableElement != null ? originVariableElement.hashCode() : 0;
+        return originElement != null ? originElement.hashCode() : 0;
     }
 
     @Override
     public String toString() {
         return "FieldElement{" +
-                "originVariableElement=" + originVariableElement +
+                "originVariableElement=" + originElement +
                 '}';
     }
 }

@@ -41,7 +41,7 @@ public class RecordKitElement {
         this.recordType = recordType;
         this.extend = extend;
         this.tableName = tableName;
-        this.rootComposition = new CompositionElement(this, recordType.asClassElement(), null);
+        this.rootComposition = new CompositionElement(this, recordType, null);
     }
 
     public CompositionElement getRootComposition() {

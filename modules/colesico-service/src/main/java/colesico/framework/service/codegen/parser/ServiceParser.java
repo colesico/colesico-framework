@@ -127,7 +127,7 @@ public class ServiceParser extends FrameworkAbstractParser {
 
     public ServiceElement parse(TypeElement serviceTypeElement) {
         try {
-            ClassElement serviceClassElement = new ClassElement(context.getProcessingEnv(), serviceTypeElement);
+            ClassElement serviceClassElement = ClassElement.fromElement(context.getProcessingEnv(), serviceTypeElement);
             ServiceElement service = new ServiceElement(serviceClassElement, getServiceScope(serviceClassElement));
             context.getModulatorKit().notifyService(service);
 

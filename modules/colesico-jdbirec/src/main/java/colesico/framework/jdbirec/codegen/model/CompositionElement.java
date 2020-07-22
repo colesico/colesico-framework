@@ -18,6 +18,7 @@ package colesico.framework.jdbirec.codegen.model;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.ClassElement;
+import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.Composition;
 
@@ -30,9 +31,9 @@ public class CompositionElement {
     private final RecordKitElement parentRecordKit;
 
     /**
-     * Composition class
+     * Composition class type
      */
-    private final ClassElement originClass;
+    private final ClassType originType;
 
     /**
      * Composition field in the parent composition
@@ -68,9 +69,9 @@ public class CompositionElement {
      */
     private String tableName;
 
-    public CompositionElement(RecordKitElement parentRecordKit, ClassElement originClass, FieldElement originField) {
+    public CompositionElement(RecordKitElement parentRecordKit, ClassType originType, FieldElement originField) {
         this.parentRecordKit = parentRecordKit;
-        this.originClass = originClass;
+        this.originType = originType;
         this.originField = originField;
     }
 
@@ -110,8 +111,8 @@ public class CompositionElement {
         return parentRecordKit;
     }
 
-    public ClassElement getOriginClass() {
-        return originClass;
+    public ClassType getOriginType() {
+        return originType;
     }
 
     public FieldElement getOriginField() {
@@ -169,7 +170,7 @@ public class CompositionElement {
     @Override
     public String toString() {
         return "CompositionElement{" +
-                "originClass=" + originClass +
+                "originClass=" + originType +
                 ", originField=" + originField +
                 '}';
     }

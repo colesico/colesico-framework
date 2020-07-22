@@ -58,7 +58,7 @@ public class ConfigParser extends FrameworkAbstractParser {
             superClass = (TypeElement) ((DeclaredType) superClass.getSuperclass()).asElement();
             ConfigPrototype cpAnn = superClass.getAnnotation(ConfigPrototype.class);
             if (cpAnn != null) {
-                return new ClassElement(processingEnv, superClass);
+                return ClassElement.fromElement(processingEnv, superClass);
             }
         } while (!superClass.getSimpleName().toString().equals("Object"));
 
@@ -80,7 +80,7 @@ public class ConfigParser extends FrameworkAbstractParser {
             if (targetMirror.toString().equals(Object.class.getName())) {
                 target = null;
             } else {
-                target = new ClassElement(processingEnv, (DeclaredType) targetMirror);
+                target = ClassElement.fromType(processingEnv, (DeclaredType) targetMirror);
             }
         } else {
             target = null;

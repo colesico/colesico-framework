@@ -93,10 +93,10 @@ public class DictionaryGenerator {
         String beanClassName = dictionaryElement.getImplClassSimpleName();
         logger.debug("Generate  dictionary bean: " + beanClassName);
         TypeSpec.Builder dictionaryBuilder = TypeSpec.classBuilder(beanClassName);
-        dictionaryBuilder.addSuperinterface(TypeName.get(dictionaryElement.getOriginBean().asType()));
+        dictionaryBuilder.addSuperinterface(TypeName.get(dictionaryElement.getOriginBean().asDeclaredType()));
         dictionaryBuilder.superclass(ClassName.get(AbstractDictionary.class));
 
-        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "Origin: " + dictionaryElement.getOriginBean().asType().toString());
+        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "Origin: " + dictionaryElement.getOriginBean().asDeclaredType().toString());
         dictionaryBuilder.addAnnotation(genstamp);
 
         dictionaryBuilder.addAnnotation(Singleton.class);

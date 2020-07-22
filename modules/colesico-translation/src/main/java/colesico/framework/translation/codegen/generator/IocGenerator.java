@@ -46,7 +46,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
             producerGenerator.addProduceAnnotation(implTypeName);
 
             String methodName = "get" + dbe.getOriginBean().getSimpleName() + i;
-            TypeName retTypeName = TypeName.get(dbe.getOriginBean().asType());
+            TypeName retTypeName = TypeName.get(dbe.getOriginBean().asDeclaredType());
             producerGenerator.addImplementMethod(methodName, retTypeName, implTypeName);
             i++;
         }

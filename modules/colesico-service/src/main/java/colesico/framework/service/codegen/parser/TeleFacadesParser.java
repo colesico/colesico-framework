@@ -73,7 +73,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
                 throw CodegenException.of().message("Recursive composition for: " +
                         var.asTypeMirror().toString() + "->" + var.getName() +
                         " in: " +
-                        teleFacade.getParentService().getOriginClass().asType().toString() +
+                        teleFacade.getParentService().getOriginClass().asDeclaredType().toString() +
                         "->" + teleMethod.getProxyMethod().getName() + "(..." +
                         methodParam.toString()
                         + "...) ")

@@ -21,20 +21,25 @@ import colesico.framework.assist.codegen.CodegenException;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 public class ClassType extends ParserType {
 
-    protected final DeclaredType originDeclaredType;
+    protected final DeclaredType originType;
 
     public ClassType(ProcessingEnvironment processingEnv, DeclaredType classType) {
         super(processingEnv);
         if (classType == null) {
             throw CodegenException.of().message("classType is null").build();
         }
-        this.originDeclaredType = classType;
+        this.originType = classType;
     }
 
     public static ClassType fromElement(ProcessingEnvironment processingEnv, TypeElement typeElement) {
@@ -46,23 +51,23 @@ public class ClassType extends ParserType {
 
     @Override
     public DeclaredType unwrap() {
-        return originDeclaredType;
+        return originType;
     }
 
-    public TypeElement asElement() {
-        return (TypeElement) originDeclaredType.asElement();
+    public TypeElement asTypeElement() {
+        return (TypeElement) originType.asElement();
     }
 
     public ClassElement asClassElement() {
-        return new ClassElement(getProcessingEnv(), asElement());
+        return ClassElement.fromType(getProcessingEnv(), originType);
     }
 
     public DeclaredType getErasure() {
-        return (DeclaredType) getTypeUtils().erasure(originDeclaredType);
+        return (DeclaredType) getTypeUtils().erasure(originType);
     }
 
     public TypeMirror getMemberType(Element element) {
-        return getTypeUtils().asMemberOf(originDeclaredType, element);
+        return getTypeUtils().asMemberOf(originType, element);
     }
 
     @Override
@@ -72,11 +77,11 @@ public class ClassType extends ParserType {
 
         ClassType classType = (ClassType) o;
 
-        return Objects.equals(originDeclaredType, classType.originDeclaredType);
+        return Objects.equals(originType, classType.originType);
     }
 
     @Override
     public int hashCode() {
-        return originDeclaredType != null ? originDeclaredType.hashCode() : 0;
+        return originType != null ? originType.hashCode() : 0;
     }
 }

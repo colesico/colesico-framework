@@ -78,7 +78,7 @@ public class ProducersProcessor extends FrameworkAbstractProcessor {
             TypeElement producerElement;
             try {
                 producerElement = (TypeElement) elm;
-                IocletElement iocletElement = parseProducer.parse(new ClassElement(processingEnv, producerElement));
+                IocletElement iocletElement = parseProducer.parse(ClassElement.fromElement(processingEnv, producerElement));
                 createdIoclets.put(producerElement, iocletElement);
                 result = true;
             } catch (CodegenException ce) {

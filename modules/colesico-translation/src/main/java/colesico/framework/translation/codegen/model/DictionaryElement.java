@@ -92,7 +92,7 @@ public class DictionaryElement {
     @Override
     public String toString() {
         return "DictionaryBeanElement{" +
-                "originBean=" + originBean.asType().toString() +
+                "originBean=" + originBean.asDeclaredType().toString() +
                 ", basePath='" + basePath + '\'' +
                 '}';
     }

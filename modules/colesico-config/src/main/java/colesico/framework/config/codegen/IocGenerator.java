@@ -58,9 +58,9 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
     protected MethodSpec.Builder createProducingOnPrototypeMethodBuilder(final ProducerGenerator prodGen, final ConfigElement confElement) {
         String methodName = "get" + confElement.getImplementation().getSimpleName();
-        MethodSpec.Builder mb = prodGen.addProduceMethod(methodName, TypeName.get(confElement.getPrototype().asType()));
+        MethodSpec.Builder mb = prodGen.addProduceMethod(methodName, TypeName.get(confElement.getPrototype().asDeclaredType()));
         // Config impl param
-        ParameterSpec.Builder pb = ParameterSpec.builder(TypeName.get(confElement.getImplementation().asType()), CONF_PARAM, Modifier.FINAL);
+        ParameterSpec.Builder pb = ParameterSpec.builder(TypeName.get(confElement.getImplementation().asDeclaredType()), CONF_PARAM, Modifier.FINAL);
         if (confElement.getClassedQualifier() != null) {
             AnnotationSpec.Builder classedAnn = AnnotationSpec.builder(Classed.class);
             classedAnn.addMember("value", "$T.class", TypeName.get(confElement.getClassedQualifier()));
@@ -117,7 +117,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
         if (!confElement.getDefaultMessage()) {
             AnnotationSpec.Builder classedAnn = AnnotationSpec.builder(Classed.class);
-            classedAnn.addMember("value", "$T.class", TypeName.get(confElement.getImplementation().asType()));
+            classedAnn.addMember("value", "$T.class", TypeName.get(confElement.getImplementation().asDeclaredType()));
             mb.addAnnotation(classedAnn.build());
         }
 
@@ -125,18 +125,18 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
         //Parameter @Classed(AConfig.class) Supplier<Service> target
         ParameterSpec.Builder targetBuilder = ParameterSpec.builder(
-                ParameterizedTypeName.get(ClassName.get(Supplier.class), TypeName.get(confElement.getTarget().asType())),
+                ParameterizedTypeName.get(ClassName.get(Supplier.class), TypeName.get(confElement.getTarget().asDeclaredType())),
                 FACTORY_PARAM,
                 Modifier.FINAL
         );
         AnnotationSpec.Builder targetAnnBuilder = AnnotationSpec.builder(Classed.class);
-        targetAnnBuilder.addMember("value", "$T.class", TypeName.get(confElement.getPrototype().asType()));
+        targetAnnBuilder.addMember("value", "$T.class", TypeName.get(confElement.getPrototype().asDeclaredType()));
         targetBuilder.addAnnotation(targetAnnBuilder.build());
         mb.addParameter(targetBuilder.build());
 
         //Parameter ConfImpl config
         ParameterSpec.Builder configBuilder = ParameterSpec.builder(
-                TypeName.get(confElement.getImplementation().asType()),
+                TypeName.get(confElement.getImplementation().asDeclaredType()),
                 CONF_PARAM,
                 Modifier.FINAL
         );
@@ -228,7 +228,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         }
 
         // Generates the configuration implementation producing  via annotation @Produce
-        AnnotationSpec.Builder produceAnn = prodGen.addProduceAnnotation(TypeName.get(confElement.getImplementation().asType()));
+        AnnotationSpec.Builder produceAnn = prodGen.addProduceAnnotation(TypeName.get(confElement.getImplementation().asDeclaredType()));
 
         if (confElement.getPrototype() != null) {
             //Generates config prototype producing methods based on configuration implementation, etc.

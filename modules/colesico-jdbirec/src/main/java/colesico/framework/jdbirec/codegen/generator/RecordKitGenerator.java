@@ -137,13 +137,13 @@ public class RecordKitGenerator {
             compositionVar = varNames.getNextVarName(composition.getOriginField().getName());
             // SubCompositionType comp=parentComp.getSubComposition()
             cb.add("\n");
-            cb.add("// Composition: " + composition.getOriginClass().getName() + "\n\n");
+            cb.add("// Composition: " + composition.getOriginType().unwrap() + "\n\n");
             cb.addStatement("$T $N = $N.$N()",
-                    TypeName.get(composition.getOriginClass().asType()),
+                    TypeName.get(composition.getOriginType().unwrap()),
                     compositionVar,
                     parentCompositionVar,
                     toGetterName(composition.getOriginField()));
-            cb.add("if ($N == null) { $N = new $T(); }\n", compositionVar, compositionVar, TypeName.get(composition.getOriginClass().asType()));
+            cb.add("if ($N == null) { $N = new $T(); }\n", compositionVar, compositionVar, TypeName.get(composition.getOriginType().unwrap()));
         }
 
         for (ColumnElement column : composition.getColumns()) {
@@ -256,12 +256,12 @@ public class RecordKitGenerator {
             compositionVar = AbstractRecordKit.RECORD_PARAM;
         } else {
             cbo.add("\n");
-            cbo.add("// Composition: " + composition.getOriginClass().getName());
+            cbo.add("// Composition: " + composition.getOriginType().unwrap());
             cbo.add("\n\n");
             compositionVar = varNames.getNextVarName(composition.getOriginField().getName());
             // SubCompositionType comp=parentComp.getSubComposition()
             cbo.addStatement("$T $N = $N.$N()",
-                    TypeName.get(composition.getOriginClass().asType()),
+                    TypeName.get(composition.getOriginType().unwrap()),
                     compositionVar,
                     parentCompositionVar,
                     toGetterName(composition.getOriginField()));
@@ -269,7 +269,7 @@ public class RecordKitGenerator {
             cbo.add("if ($N == null) {\n", compositionVar);
             cbo.indent();
             // comp = new SubCompositionType();
-            cbo.addStatement("$N = new $T()", compositionVar, TypeName.get(composition.getOriginClass().asType()));
+            cbo.addStatement("$N = new $T()", compositionVar, TypeName.get(composition.getOriginType().unwrap()));
             // parentComp.setSubComposition(comp)
             cbo.addStatement("$N.$N($N)", parentCompositionVar, toSetterName(composition.getOriginField()), compositionVar);
             cbo.unindent();

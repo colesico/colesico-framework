@@ -26,37 +26,37 @@ import java.util.Objects;
 public class ParameterElement extends VarElement {
 
     protected final MethodElement parentMethod;
-    protected final VariableElement originVariableElement;
-    protected final TypeMirror originTypeMirror;
+    protected final VariableElement originElement;
+    protected final TypeMirror originType;
 
     public ParameterElement(ProcessingEnvironment processingEnv, MethodElement parentMethod, VariableElement parameterElement, TypeMirror parameterType) {
         super(processingEnv);
         this.parentMethod = parentMethod;
-        this.originVariableElement = parameterElement;
-        this.originTypeMirror = parameterType;
+        this.originElement = parameterElement;
+        this.originType = parameterType;
     }
 
     @Override
     public VariableElement unwrap() {
-        return originVariableElement;
+        return originElement;
     }
 
     @Override
     public String getName() {
-        return originVariableElement.getSimpleName().toString();
+        return originElement.getSimpleName().toString();
     }
 
     @Override
     public TypeMirror asTypeMirror() {
-        return originTypeMirror;
+        return originType;
     }
 
     @Override
     public ClassType asClassType() {
-        if (originTypeMirror.getKind() != TypeKind.DECLARED) {
+        if (originType.getKind() != TypeKind.DECLARED) {
             return null;
         }
-        return new ClassType(getProcessingEnv(), (DeclaredType) originTypeMirror);
+        return new ClassType(getProcessingEnv(), (DeclaredType) originType);
     }
 
     public MethodElement getParentMethod() {
@@ -70,19 +70,19 @@ public class ParameterElement extends VarElement {
 
         ParameterElement that = (ParameterElement) o;
 
-        return Objects.equals(originVariableElement, that.originVariableElement);
+        return Objects.equals(originElement, that.originElement);
     }
 
     @Override
     public int hashCode() {
-        return originVariableElement != null ? originVariableElement.hashCode() : 0;
+        return originElement != null ? originElement.hashCode() : 0;
     }
 
     @Override
     public String toString() {
         return "ParameterElement{" +
-                "originVariableElement=" + originVariableElement +
-                ", originTypeMirror=" + originTypeMirror +
+                "originVariableElement=" + originElement +
+                ", originTypeMirror=" + originType +
                 '}';
     }
 }

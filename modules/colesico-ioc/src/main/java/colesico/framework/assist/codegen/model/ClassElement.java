@@ -36,74 +36,83 @@ import java.util.stream.Collectors;
 
 public class ClassElement extends ParserElement {
 
-    protected final TypeElement originTypeElement;
+    protected final TypeElement originElement;
+    protected final DeclaredType originType;
 
-    public ClassElement(ProcessingEnvironment processingEnv, Class clazz) {
+    public ClassElement(ProcessingEnvironment processingEnv, TypeElement originElement, DeclaredType originType) {
         super(processingEnv);
+        this.originElement = originElement;
+        this.originType = originType;
+    }
+
+    public static ClassElement fromClass(ProcessingEnvironment processingEnv, Class clazz) {
         if (clazz == null) {
             throw CodegenException.of().message("class is  null").build();
         }
-        this.originTypeElement = getElementUtils().getTypeElement(clazz.getCanonicalName());
+        TypeElement element = processingEnv.getElementUtils().getTypeElement(clazz.getCanonicalName());
+        DeclaredType type = (DeclaredType) element.asType();
+        return new ClassElement(processingEnv, element, type);
     }
 
-    public ClassElement(ProcessingEnvironment processingEnv, String className) {
-        super(processingEnv);
+    public static ClassElement fromClassName(ProcessingEnvironment processingEnv, String className) {
         if (StringUtils.isEmpty(className)) {
             throw CodegenException.of().message("className is empty").build();
         }
-        TypeElement elm = getElementUtils().getTypeElement(className);
-        if (!(elm.getKind().isClass() || elm.getKind().isInterface())) {
-            throw CodegenException.of().message("Unsupported element kind:" + elm.getKind() + " for class name: " + className).build();
+        TypeElement element = processingEnv.getElementUtils().getTypeElement(className);
+        if (!(element.getKind().isClass() || element.getKind().isInterface())) {
+            throw CodegenException.of().message("Unsupported element kind:" + element.getKind() + " for class name: " + className).build();
         }
-        this.originTypeElement = elm;
+        DeclaredType type = (DeclaredType) element.asType();
+        return new ClassElement(processingEnv, element, type);
     }
 
-    public ClassElement(ProcessingEnvironment processingEnv, TypeElement classElement) {
-        super(processingEnv);
-        if (classElement == null) {
+    public static ClassElement fromElement(ProcessingEnvironment processingEnv, TypeElement element) {
+        if (element == null) {
             throw CodegenException.of().message("classElement is null").build();
         }
-        if (!(classElement.getKind().isClass() || classElement.getKind().isInterface())) {
-            throw CodegenException.of().message("Unsupported element kind:" + classElement.getKind()).element(classElement).build();
+        if (!(element.getKind().isClass() || element.getKind().isInterface())) {
+            throw CodegenException.of().message("Unsupported element kind:" + element.getKind()).element(element).build();
         }
-        this.originTypeElement = classElement;
+        DeclaredType type = (DeclaredType) element.asType();
+        return new ClassElement(processingEnv, element, type);
     }
 
-    public ClassElement(ProcessingEnvironment processingEnv, DeclaredType classType) {
-        super(processingEnv);
-        if (classType == null) {
+    public static ClassElement fromType(ProcessingEnvironment processingEnv, DeclaredType type) {
+        if (type == null) {
             throw CodegenException.of().message("classType is null").build();
         }
-        this.originTypeElement = (TypeElement) classType.asElement();
+        TypeElement element = (TypeElement) type.asElement();
+        return new ClassElement(processingEnv, element, type);
     }
 
     @Override
     public TypeElement unwrap() {
-        return originTypeElement;
+        return originElement;
     }
 
     public String getName() {
-        return originTypeElement.toString();
+        return originElement.toString();
     }
 
     public String getSimpleName() {
-        return originTypeElement.getSimpleName().toString();
+        return originElement.getSimpleName().toString();
     }
 
-    public DeclaredType asType() {
-        return (DeclaredType) originTypeElement.asType();
+    public DeclaredType asDeclaredType() {
+        return (DeclaredType) originElement.asType();
     }
 
     public ClassType asClassType() {
-        return new ClassType(getProcessingEnv(), asType());
+        return new ClassType(getProcessingEnv(), asDeclaredType());
     }
 
     public List<FieldElement> getFields() {
         List<FieldElement> result = new ArrayList<>();
-        List<? extends Element> members = getElementUtils().getAllMembers(originTypeElement);
+        List<? extends Element> members = getElementUtils().getAllMembers(originElement);
         List<VariableElement> fields = ElementFilter.fieldsIn(members);
         for (VariableElement field : fields) {
-            result.add(new FieldElement(processingEnv, this, field));
+            TypeMirror fieldType = getTypeUtils().asMemberOf(originType, field);
+            result.add(new FieldElement(processingEnv, this, field, fieldType));
         }
         return result;
     }
@@ -121,7 +130,7 @@ public class ClassElement extends ParserElement {
 
     public List<MethodElement> getConstructors() {
         List<MethodElement> result = new ArrayList<>();
-        List<? extends Element> members = getElementUtils().getAllMembers(originTypeElement);
+        List<? extends Element> members = getElementUtils().getAllMembers(originElement);
         List<ExecutableElement> constrs = ElementFilter.constructorsIn(members);
         for (ExecutableElement constr : constrs) {
             TypeElement methodClass = (TypeElement) constr.getEnclosingElement();
@@ -150,7 +159,7 @@ public class ClassElement extends ParserElement {
      */
     public List<MethodElement> getMethods() {
         List<MethodElement> result = new ArrayList<>();
-        List<? extends Element> members = getElementUtils().getAllMembers(originTypeElement);
+        List<? extends Element> members = getElementUtils().getAllMembers(originElement);
         List<ExecutableElement> methods = ElementFilter.methodsIn(members);
         for (ExecutableElement method : methods) {
             TypeElement methodClass = (TypeElement) method.getEnclosingElement();
@@ -168,7 +177,7 @@ public class ClassElement extends ParserElement {
      */
     public List<MethodElement> getDeclaredMethods() {
         List<MethodElement> result = new ArrayList<>();
-        List<? extends Element> members = originTypeElement.getEnclosedElements();
+        List<? extends Element> members = originElement.getEnclosedElements();
         List<ExecutableElement> methods = ElementFilter.methodsIn(members);
         for (ExecutableElement method : methods) {
             TypeElement methodClass = (TypeElement) method.getEnclosingElement();
@@ -193,10 +202,10 @@ public class ClassElement extends ParserElement {
     }
 
     public ClassType getSuperClass() {
-        if (originTypeElement.getSuperclass().getKind() == TypeKind.NONE) {
+        if (originElement.getSuperclass().getKind() == TypeKind.NONE) {
             return null;
         }
-        return new ClassType(processingEnv, (DeclaredType) originTypeElement.getSuperclass());
+        return new ClassType(processingEnv, (DeclaredType) originElement.getSuperclass());
     }
 
     /**
@@ -220,7 +229,7 @@ public class ClassElement extends ParserElement {
 
     public boolean isSameType(Class clazz) {
         TypeMirror clazzTypeMirror = getElementUtils().getTypeElement(clazz.getCanonicalName()).asType();
-        return getTypeUtils().isSameType(clazzTypeMirror, originTypeElement.asType());
+        return getTypeUtils().isSameType(clazzTypeMirror, originElement.asType());
     }
 
     @Override
@@ -230,18 +239,18 @@ public class ClassElement extends ParserElement {
 
         ClassElement that = (ClassElement) o;
 
-        return Objects.equals(originTypeElement, that.originTypeElement);
+        return Objects.equals(originElement, that.originElement);
     }
 
     @Override
     public int hashCode() {
-        return originTypeElement != null ? originTypeElement.hashCode() : 0;
+        return originElement != null ? originElement.hashCode() : 0;
     }
 
     @Override
     public String toString() {
         return "ClassElement{" +
-                "originElement=" + originTypeElement +
+                "originElement=" + originElement +
                 '}';
     }
 }

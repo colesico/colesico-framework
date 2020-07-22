@@ -250,12 +250,12 @@ public class RecordKitParser extends FrameworkAbstractParser {
     protected void parseComposition(final CompositionElement composition) {
         logger.debug("Parse RECORD composition: " + composition);
 
-        List<FieldElement> fields = composition.getOriginClass().getFieldsFiltered(
+        List<FieldElement> fields = composition.getOriginType().asClassElement().getFieldsFiltered(
                 f -> !f.unwrap().getModifiers().contains(Modifier.STATIC)
         );
 
         for (FieldElement field : fields) {
-            logger.debug("Process RECORD field: " + field);
+            logger.debug("Process record field: {} of type {}", field.getName(), field.unwrap().asType());
             final List<Composition> compositions = getCompositions(field);
             for (Composition compAnn : compositions) {
 
@@ -271,29 +271,14 @@ public class RecordKitParser extends FrameworkAbstractParser {
                     continue;
                 }
 
-                ClassElement compositionClass = field.
-                        asClassType().asClassElement();
-                CompositionElement subComposition = new CompositionElement(recordKitElement, compositionClass, field);
+                ClassType compositionType = field.asClassType();
+                CompositionElement subComposition = new CompositionElement(recordKitElement, compositionType, field);
 
                 subComposition.setNamePrefix(composition.getNamePrefix() + compositionAnn.unwrap().columnsPrefix());
 
                 String tableName = composition.getTableName();
 
-                TypeMirror jointType = compositionAnn.getValueTypeMirror(Composition::jointRecord);
-                if (!jointType.toString().equals(RecordKit.class.getName())) {
-                    AnnotationAssist<RecordKitConfig> jointRecKitAnn = compositionClass.getAnnotation(RecordKitConfig.class);
-                    if (jointRecKitAnn == null) {
-                        throw CodegenException.of()
-                                .message("Joint record kit has no @" + RecordKitConfig.class.getSimpleName() + " annotation")
-                                .element(compositionClass.unwrap())
-                                .build();
-                    }
-                    tableName = jointRecKitAnn.unwrap().table();
-
-                    if (StringUtils.isNotBlank(jointRecKitAnn.unwrap().tableAlias())) {
-                        recordKitElement.addTableAlias(jointRecKitAnn.unwrap().tableAlias(), jointRecKitAnn.unwrap().table());
-                    }
-                }
+                // TODO JOINT
 
                 subComposition.setTableName(tableName);
 

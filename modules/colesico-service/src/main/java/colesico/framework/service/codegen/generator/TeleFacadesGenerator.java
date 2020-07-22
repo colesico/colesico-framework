@@ -60,7 +60,7 @@ public class TeleFacadesGenerator {
         mb.addAnnotation(ClassName.get(Inject.class));
         mb.addModifiers(Modifier.PUBLIC);
         mb.addParameter(
-                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(teleFacade.getParentService().getOriginClass().asType())),
+                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(teleFacade.getParentService().getOriginClass().asDeclaredType())),
                 TARGET_PROV_FIELD,
                 Modifier.FINAL);
 
@@ -183,7 +183,7 @@ public class TeleFacadesGenerator {
             cb.add("final $T $N=($N,$N)->{\n",
                     ParameterizedTypeName.get(
                             ClassName.get(TeleDriver.Binder.class),
-                            TypeName.get(service.getOriginClass().asType()),
+                            TypeName.get(service.getOriginClass().asDeclaredType()),
                             ClassName.get(teleFacade.getDataPortClass())),
                     TeleDriver.BINDER_PARAM,
                     TeleDriver.Binder.TARGET_PARAM,
@@ -194,7 +194,7 @@ public class TeleFacadesGenerator {
             cb.add("};\n");
 
             // Get service instance:  Service service=serviceProv.get();
-            TypeName serviceTypeName = TypeName.get(teleFacade.getParentService().getOriginClass().asType());
+            TypeName serviceTypeName = TypeName.get(teleFacade.getParentService().getOriginClass().asDeclaredType());
             cb.addStatement("$T $N=$N.get()", serviceTypeName, TeleDriver.TARGET_PARAM, TeleFacade.TARGET_PROV_FIELD);
 
             // Call teleDriver
@@ -239,7 +239,7 @@ public class TeleFacadesGenerator {
 
 
             classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(TeleFacade.class),
-                    TypeName.get(service.getOriginClass().asType()),
+                    TypeName.get(service.getOriginClass().asDeclaredType()),
                     ClassName.get(teleFacade.getTeleDriverClass()),
                     ClassName.get(teleFacade.getLigatureClass())));
 

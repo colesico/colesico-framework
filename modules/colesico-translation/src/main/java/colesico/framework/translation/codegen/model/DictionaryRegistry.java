@@ -59,7 +59,7 @@ public class DictionaryRegistry {
         List<DictionaryElement> packageDictBeans = byPackageMap.computeIfAbsent(packageName, k -> new ArrayList<>());
         packageDictBeans.add(dictionaryElement);
 
-        logger.debug("Dictionary bean " + dictionaryElement.getOriginBean().asType().toString() + " has been registered");
+        logger.debug("Dictionary bean " + dictionaryElement.getOriginBean().asDeclaredType().toString() + " has been registered");
         return dictionaryElement;
     }
 }

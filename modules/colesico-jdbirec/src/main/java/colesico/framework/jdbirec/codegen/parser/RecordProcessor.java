@@ -62,7 +62,7 @@ public class RecordProcessor extends FrameworkAbstractProcessor {
             try {
                 recordKitClass = (TypeElement) elm;
                 logger.debug("Processing record kit class: " + recordKitClass.getSimpleName());
-                ViewSetElement views = recordKitParser.parse(new ClassElement(processingEnv, recordKitClass));
+                ViewSetElement views = recordKitParser.parse(ClassElement.fromElement(processingEnv, recordKitClass));
                 recordHelperGenerator.generate(views);
             } catch (CodegenException ce) {
                 String message = "Error processing class '" + elm.toString() + "': " + ce.getMessage();

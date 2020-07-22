@@ -53,7 +53,7 @@ public class RpcModulator extends
     protected boolean isTeleFacadeSupported(ServiceElement serviceElm) {
         List<ClassType> allInterfaces = serviceElm.getOriginClass().getInterfaces();
         for (ClassType iface : allInterfaces) {
-            if (null != iface.asElement().getAnnotation(RpcApi.class)) {
+            if (null != iface.asTypeElement().getAnnotation(RpcApi.class)) {
                 return true;
             }
         }
@@ -90,7 +90,7 @@ public class RpcModulator extends
         logger.debug("Create RpcModulator context for service " + serviceElm.getOriginClass().getName());
         List<ClassType> allInterfaces = serviceElm.getOriginClass().getInterfaces();
         List<ClassType> rpcInterfaces = allInterfaces.stream()
-                .filter(iface -> iface.asElement().getAnnotation(RpcApi.class) != null)
+                .filter(iface -> iface.asTypeElement().getAnnotation(RpcApi.class) != null)
                 .collect(Collectors.toList());
 
         if (rpcInterfaces.size() != 1) {

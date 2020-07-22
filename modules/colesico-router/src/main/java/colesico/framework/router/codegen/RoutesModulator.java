@@ -76,7 +76,7 @@ abstract public class RoutesModulator<D extends TeleDriver<R, W, I, P>, P extend
                 ClassName.get(RoutingLigature.class),
                 LIGATURE_VAR,
                 ClassName.get(RoutingLigature.class),
-                TypeName.get(teleFacade.getParentService().getOriginClass().asType())
+                TypeName.get(teleFacade.getParentService().getOriginClass().asDeclaredType())
         );
 
         RoutegenContext routegenContext = teleFacade.getProperty(RoutegenContext.class);

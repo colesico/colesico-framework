@@ -39,17 +39,17 @@ public class MethodElement extends ParserElement {
     /**
      * Origin service method
      */
-    protected final ExecutableElement originExecutableElement;
+    protected final ExecutableElement originElement;
 
     public MethodElement(ProcessingEnvironment processingEnv, ClassElement parentClass, ExecutableElement methodElement) {
         super(processingEnv);
         this.parentClass = parentClass;
-        this.originExecutableElement = methodElement;
+        this.originElement = methodElement;
     }
 
     @Override
     public ExecutableElement unwrap() {
-        return originExecutableElement;
+        return originElement;
     }
 
     public ClassElement getParentClass() {
@@ -58,7 +58,7 @@ public class MethodElement extends ParserElement {
 
     public ExecutableType getExecutableType() {
         ClassElement parentClass = getParentClass();
-        ExecutableType result = (ExecutableType) parentClass.asClassType().getMemberType(originExecutableElement);
+        ExecutableType result = (ExecutableType) parentClass.asClassType().getMemberType(originElement);
         return result;
     }
 
@@ -74,7 +74,7 @@ public class MethodElement extends ParserElement {
     }
 
     public String getName() {
-        return originExecutableElement.getSimpleName().toString();
+        return originElement.getSimpleName().toString();
     }
 
     public String getNameWithPrefix(String prefix) {
@@ -85,9 +85,9 @@ public class MethodElement extends ParserElement {
     }
 
     public List<ParameterElement> getParameters() {
-        List<? extends VariableElement> params = originExecutableElement.getParameters();
+        List<? extends VariableElement> params = originElement.getParameters();
 
-        ExecutableType methodType = (ExecutableType) getTypeUtils().asMemberOf(parentClass.asType(), originExecutableElement);
+        ExecutableType methodType = (ExecutableType) getTypeUtils().asMemberOf(parentClass.asDeclaredType(), originElement);
         List<? extends TypeMirror> paramTypes = methodType.getParameterTypes();
 
         List<ParameterElement> result = new ArrayList<>();
@@ -104,7 +104,7 @@ public class MethodElement extends ParserElement {
     }
 
     public boolean isConstractor() {
-        return originExecutableElement.getKind() == ElementKind.CONSTRUCTOR;
+        return originElement.getKind() == ElementKind.CONSTRUCTOR;
     }
 
     public boolean isGetter() {
@@ -127,7 +127,7 @@ public class MethodElement extends ParserElement {
             ClassElement superClassElm = superClass.asClassElement();
             for (MethodElement superMethodElm : superClassElm.getDeclaredMethods()) {
                 ExecutableElement method = superMethodElm.unwrap();
-                if (getElementUtils().overrides(originExecutableElement, method, classElm.unwrap())) {
+                if (getElementUtils().overrides(originElement, method, classElm.unwrap())) {
                     return new MethodElement(processingEnv, superClassElm, method);
                 }
             }
@@ -164,7 +164,7 @@ public class MethodElement extends ParserElement {
                 ClassElement ifaceElement = ifaceType.asClassElement();
                 for (MethodElement ifaceMethodElm : ifaceElement.getDeclaredMethods()) {
                     ExecutableElement ifaceMethod = ifaceMethodElm.unwrap();
-                    if (getElementUtils().overrides(originExecutableElement, ifaceMethod, classElm.unwrap())) {
+                    if (getElementUtils().overrides(originElement, ifaceMethod, classElm.unwrap())) {
                         result.add(new MethodElement(processingEnv, ifaceElement, ifaceMethod));
                         break;
                     }
@@ -184,18 +184,18 @@ public class MethodElement extends ParserElement {
 
         MethodElement that = (MethodElement) o;
 
-        return Objects.equals(originExecutableElement, that.originExecutableElement);
+        return Objects.equals(originElement, that.originElement);
     }
 
     @Override
     public int hashCode() {
-        return originExecutableElement != null ? originExecutableElement.hashCode() : 0;
+        return originElement != null ? originElement.hashCode() : 0;
     }
 
     @Override
     public String toString() {
         return "MethodElement{" +
-                "originElement=" + originExecutableElement +
+                "originElement=" + originElement +
                 '}';
     }
 }
