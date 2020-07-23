@@ -519,6 +519,7 @@ public class RecordKitGenerator {
                 TypeName.get(recordKitElement.getRecordType().unwrap()));
 
         classBuilder.superclass(baseTypeName);
+        classBuilder.addSuperinterface(TypeName.get(recordKitElement.getRecordKitClass().asClassType().unwrap()));
 
         generateExportMethod();
         generatImportMethod();
