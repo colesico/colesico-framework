@@ -350,6 +350,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
 
             JointRecord rec = new JointRecord(jointTableName, jointRecordType);
             recordKitElement.addJointRecord(rec);
+            recordKitElement.addTableAlias(jointConfigAnn.unwrap().tableAlias(), jointTableName);
         }
 
         parseComposition(recordKitElement.getRootComposition());
