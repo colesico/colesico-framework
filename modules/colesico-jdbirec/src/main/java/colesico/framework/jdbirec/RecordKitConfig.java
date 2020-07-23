@@ -50,4 +50,10 @@ public @interface RecordKitConfig {
      * Base class to be extended with generated record kit
      */
     Class<? extends RecordKit> extend() default AbstractRecordKit.class;
+
+    /**
+     * Interpret the composition as join records (select from table join...)
+     */
+    Class<? extends RecordKit>[] join() default {};
+
 }

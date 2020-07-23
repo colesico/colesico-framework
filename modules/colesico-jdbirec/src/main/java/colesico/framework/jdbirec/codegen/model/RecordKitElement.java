@@ -32,6 +32,7 @@ public class RecordKitElement {
     private final ClassType extend;
     private final String tableName;
     private Map<String, String> tableAliases = new HashMap<>();
+    private Map<ClassType, JointRecord> jointRecords = new HashMap<>();
 
     private final CompositionElement rootComposition;
 
@@ -62,6 +63,10 @@ public class RecordKitElement {
         return result;
     }
 
+    public void addJointRecord(JointRecord rec) {
+        jointRecords.put(rec.getRecordType(), rec);
+    }
+
     public String getTableName() {
         return tableName;
     }
@@ -84,5 +89,9 @@ public class RecordKitElement {
 
     public ClassElement getRecordKitClass() {
         return recordKitClass;
+    }
+
+    public Map<ClassType, JointRecord> getJointRecords() {
+        return jointRecords;
     }
 }
