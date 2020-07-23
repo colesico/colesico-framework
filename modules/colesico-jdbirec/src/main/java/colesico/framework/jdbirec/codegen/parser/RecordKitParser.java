@@ -245,7 +245,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
     }
 
     protected void parseComposition(final CompositionElement composition) {
-        logger.debug("Parse RECORD composition: " + composition);
+        logger.debug("Parse record composition: " + composition);
 
         List<FieldElement> fields = composition.getOriginType().asClassElement().getFieldsFiltered(
                 f -> !f.unwrap().getModifiers().contains(Modifier.STATIC)

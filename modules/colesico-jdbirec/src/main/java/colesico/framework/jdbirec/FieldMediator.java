@@ -22,7 +22,7 @@ import java.sql.SQLException;
 /**
  * Is used to customize database columns values to field value transforming and back.
  *
- * @param <F>
+ * @param <F> field class
  */
 public interface FieldMediator<F> {
 

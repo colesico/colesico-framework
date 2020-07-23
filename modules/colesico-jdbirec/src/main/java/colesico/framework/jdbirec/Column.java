@@ -47,8 +47,6 @@ public @interface Column {
      * \@field  - insert field value
      * \@update - the same as updateAs
      * \@nop -  no insertion
-     *
-     * @return
      */
     String insertAs() default "@field";
 
@@ -57,8 +55,6 @@ public @interface Column {
      * \@field  - insert field value
      * \@insert - the same as insertAs
      * \@nop -  don't update
-     *
-     * @return
      */
     String updateAs() default "@insert";
 
@@ -69,44 +65,35 @@ public @interface Column {
      * To specify another column for selection use: @column([name]), where [name] - another column name
      * <p>
      * \@nop -  Don't select
-     *
-     * @return
      */
     String selectAs() default "@column";
 
     /**
      * Column definition for create table sql.
      * If \@nop is specified column will not be included to the create table definition.
-     *
-     * @return
      */
     String definition() default "";
 
     /**
      * Use this field value in {@link AbstractRecordKit#exportRecord(Object, AbstractRecordKit.FieldReceiver)} method
-     *
-     * @return
      */
     boolean exportable() default true;
 
     /**
      * Use this field value in {@link AbstractRecordKit#importRecord(Object, ResultSet)} method,
      * so field value will not be obtained from sql query result set.
-     *
-     * @return
      */
     boolean importable() default true;
 
     /**
      * Indicates that the column is not belongs to the record in it is declared and can be linked
      * to another records with @Composition
-     *
-     * @return
      */
     boolean virtual() default false;
 
     /**
-     * @return
+     * Record views
+     *
      * @see RecordKitConfig#views()
      */
     String[] views() default {RecordView.ALL_VIEWS};
