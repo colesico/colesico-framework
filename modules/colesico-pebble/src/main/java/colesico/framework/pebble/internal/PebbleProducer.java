@@ -24,7 +24,6 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.pebble.PebbleRenderer;
 
 
-
 /**
  * @author Vladlen Larionov
  */
@@ -36,13 +35,14 @@ public class PebbleProducer {
 
     /**
      * Factory
-     *
-     * @param impl
-     * @return
      */
     @Classed(PebbleRenderer.class)
     public HtmlRenderer getHtmlRender(PebbleRenderer impl) {
         return impl;
     }
 
+    @Classed(PebbleRenderer.class)
+    public HtmlRenderer<String> getHtmlRenderString(PebbleRenderer impl) {
+        return impl;
+    }
 }

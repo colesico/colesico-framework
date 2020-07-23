@@ -16,12 +16,13 @@
 
 package colesico.framework.ioc.key;
 
+import java.lang.reflect.Type;
+
 /**
  * The key for obtaining an instance from the IOC container by instance class.
  *
- * @see Key
- *
  * @author Vladlen Larionov
+ * @see Key
  */
 public final class TypeKey<T> implements Key<T> {
 
@@ -31,8 +32,8 @@ public final class TypeKey<T> implements Key<T> {
         this.typeName = typeName;
     }
 
-    public TypeKey(Class<T> clazz) {
-        this.typeName = clazz.getCanonicalName();
+    public TypeKey(Class<T> type) {
+        this.typeName = type.getCanonicalName();
     }
 
     @Override

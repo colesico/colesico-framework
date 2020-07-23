@@ -265,7 +265,7 @@ public class FactoryGenerator extends FrameworkAbstractGenerator {
     protected TypeSpec generateSingletonFactory(FactoryElement factoryElement) {
         TypeSpec.Builder factoryBuilder = TypeSpec.anonymousClassBuilder("");
         factoryBuilder.superclass(ParameterizedTypeName.get(ClassName.get(SingletonFactory.class),
-            TypeName.get(factoryElement.getSuppliedType().getErasure())));
+            TypeName.get(factoryElement.getSuppliedType().unwrap())));
         generateSetupMethod(factoryBuilder, factoryElement);
         generateProducingMethod(factoryBuilder, factoryElement, SingletonFactory.CREATE_METHOD);
         return factoryBuilder.build();
@@ -274,7 +274,7 @@ public class FactoryGenerator extends FrameworkAbstractGenerator {
     protected TypeSpec generateScopedFactory(FactoryElement factoryElement) {
         TypeSpec.Builder classBuilder = TypeSpec.anonymousClassBuilder("$L", keyGenerator.forFactory(factoryElement));
         classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(ScopedFactory.class),
-            TypeName.get(factoryElement.getSuppliedType().getErasure()),
+            TypeName.get(factoryElement.getSuppliedType().unwrap()),
             TypeName.get(factoryElement.getScope().getCustomScopeClass().unwrap())));
         generateSetupMethod(classBuilder, factoryElement);
         generateProducingMethod(classBuilder, factoryElement, ScopedFactory.FABRICATE_METHOD);
@@ -284,15 +284,14 @@ public class FactoryGenerator extends FrameworkAbstractGenerator {
     protected TypeSpec generateUnscopedFactory(FactoryElement factoryElement) {
         TypeSpec.Builder factoryBuilder = TypeSpec.anonymousClassBuilder("");
         factoryBuilder.superclass(ParameterizedTypeName.get(ClassName.get(Factory.class),
-            TypeName.get(factoryElement.getSuppliedType().getErasure())));
+            TypeName.get(factoryElement.getSuppliedType().unwrap())));
         generateSetupMethod(factoryBuilder, factoryElement);
         generateProducingMethod(factoryBuilder, factoryElement, Factory.GET_METHOD);
         return factoryBuilder.build();
     }
 
     public TypeName getFactoryTypeName(InjectableElement injectionElement) {
-        String typeName = injectionElement.getInjectedType().asClassElement().getName();
-        return ParameterizedTypeName.get(ClassName.get(Factory.class), ClassName.bestGuess(typeName));
+        return ParameterizedTypeName.get(ClassName.get(Factory.class), TypeName.get(injectionElement.getInjectedType().unwrap()));
     }
 
     protected String getFactoryVarName(InjectableElement injectionElement) {

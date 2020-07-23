@@ -21,7 +21,6 @@ import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.ioc.codegen.model.FactoryElement;
 import colesico.framework.ioc.codegen.model.IocletElement;
-import colesico.framework.ioc.conditional.Condition;
 import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.ioclet.Catalog;
 import colesico.framework.ioc.ioclet.Factory;
@@ -89,12 +88,12 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    protected void generateSuplierFactoryMethods() {
+    protected void generateSupplierFactoryMethods() {
         for (FactoryElement fe : iocletElement.getFactories()) {
             MethodSpec.Builder mb = MethodSpec.methodBuilder(fe.getFactoryMethodName());
 
             if (fe.getPostProduce() == null) {
-                mb.addJavadoc("Factory to produce " + fe.getSuppliedType().asClassElement().getName() + " class instance\n");
+                mb.addJavadoc("Factory to produce " + fe.getSuppliedType().unwrap().toString() + " class instance\n");
                 mb.addJavadoc("Scope: " + fe.getScope().getKind() + "; Custom: " + fe.getScope().getCustomScopeClass() + '\n');
                 if (fe.getNamed() != null) {
                     mb.addJavadoc("Named: " + fe.getNamed() + '\n');
@@ -113,7 +112,7 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
 
             mb.returns(ParameterizedTypeName.get(
                     ClassName.get(Factory.class),
-                    TypeName.get(fe.getSuppliedType().getErasure())
+                    TypeName.get(fe.getSuppliedType().unwrap())
                     )
             );
             mb.addModifiers(Modifier.PUBLIC);
@@ -172,7 +171,7 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
 
         generateProducerField();
         generateGetProducerIdMethod();
-        generateSuplierFactoryMethods();
+        generateSupplierFactoryMethods();
         generateAddFactoriesMethod();
 
         return classBuilder.build();

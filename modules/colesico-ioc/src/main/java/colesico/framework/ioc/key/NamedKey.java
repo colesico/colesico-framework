@@ -16,11 +16,13 @@
 
 package colesico.framework.ioc.key;
 
+import java.lang.reflect.Type;
+
 /**
  * The key for obtaining an instance from the IoC container by instance class and name.
  *
- * @see javax.inject.Named
  * @author Vladlen Larionov
+ * @see javax.inject.Named
  */
 public final class NamedKey<T> implements Key<T> {
 
@@ -32,8 +34,8 @@ public final class NamedKey<T> implements Key<T> {
         this.name = name;
     }
 
-    public NamedKey(Class<T> clazz, String name) {
-        this.typeName = clazz.getCanonicalName();
+    public NamedKey(Class<T> type, String name) {
+        this.typeName = type.getCanonicalName();
         this.name = name;
     }
 

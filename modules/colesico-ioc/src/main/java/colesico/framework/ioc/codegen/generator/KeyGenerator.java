@@ -43,7 +43,7 @@ public class KeyGenerator extends FrameworkAbstractGenerator {
 
     private CodeBlock generateTypeKeyStringBased(ClassType instanceType) {
         CodeBlock.Builder codeBlock = CodeBlock.builder();
-        codeBlock.add("new $T($S)", ClassName.get(TypeKey.class), instanceType.getErasure().toString());
+        codeBlock.add("new $T($S)", ClassName.get(TypeKey.class), instanceType.unwrap().toString());
         return codeBlock.build();
     }
 
@@ -55,35 +55,35 @@ public class KeyGenerator extends FrameworkAbstractGenerator {
 
     private CodeBlock generateNamedKeyStringBased(ClassType instanceType, String name) {
         CodeBlock.Builder codeBlock = CodeBlock.builder();
-        codeBlock.add("new $T($S,$S)", ClassName.get(NamedKey.class), instanceType.getErasure().toString(), name);
-        return codeBlock.build();
-    }
-
-    private CodeBlock generateClassedKeyStringBased(ClassType instanceType, ClassType classifier) {
-        CodeBlock.Builder codeBlock = CodeBlock.builder();
-        codeBlock.add("new $T($S,$S)",
-            ClassName.get(ClassedKey.class), instanceType.getErasure().toString(), classifier.getErasure().toString()
-        );
+        codeBlock.add("new $T($S,$S)", ClassName.get(NamedKey.class), instanceType.unwrap().toString(), name);
         return codeBlock.build();
     }
 
     private CodeBlock generateClassedKeyClassBased(ClassType instanceType, ClassType classifier) {
         CodeBlock.Builder codeBlock = CodeBlock.builder();
         codeBlock.add("new $T($T.class,$T.class)",
-            ClassName.get(ClassedKey.class), TypeName.get(instanceType.getErasure()), TypeName.get(classifier.getErasure()));
+                ClassName.get(ClassedKey.class), TypeName.get(instanceType.getErasure()), TypeName.get(classifier.getErasure()));
+        return codeBlock.build();
+    }
+
+    private CodeBlock generateClassedKeyStringBased(ClassType instanceType, ClassType classifier) {
+        CodeBlock.Builder codeBlock = CodeBlock.builder();
+        codeBlock.add("new $T($S,$S)",
+                ClassName.get(ClassedKey.class), instanceType.unwrap().toString(), classifier.getErasure().toString()
+        );
         return codeBlock.build();
     }
 
     private CodeBlock generatePPLKeyStringBased(ClassType instanceType, String withNamed, ClassType withClassed) {
         CodeBlock.Builder codeBlock = CodeBlock.builder();
-        if (withClassed!=null) {
+        if (withClassed != null) {
             codeBlock.add("new $T($S,$S,$S)",
-                ClassName.get(PPLKey.class),
-                instanceType.getErasure().toString(), withNamed, withClassed.getErasure().toString());
+                    ClassName.get(PPLKey.class),
+                    instanceType.unwrap().toString(), withNamed, withClassed.getErasure().toString());
         } else {
             codeBlock.add("new $T($S,$S,null)",
-                ClassName.get(PPLKey.class),
-                instanceType.getErasure().toString(), withNamed);
+                    ClassName.get(PPLKey.class),
+                    instanceType.unwrap().toString(), withNamed);
         }
         return codeBlock.build();
     }
@@ -92,12 +92,12 @@ public class KeyGenerator extends FrameworkAbstractGenerator {
         CodeBlock.Builder codeBlock = CodeBlock.builder();
         if (withClassed != null) {
             codeBlock.add("new $T($T.class,$S,$T.class)",
-                ClassName.get(PPLKey.class),
-                TypeName.get(instanceType.getErasure()), withNamed, TypeName.get(withClassed.getErasure()));
+                    ClassName.get(PPLKey.class),
+                    TypeName.get(instanceType.getErasure()), withNamed, TypeName.get(withClassed.getErasure()));
         } else {
             codeBlock.add("new $T($T.class,$S,null)",
-                ClassName.get(PPLKey.class),
-                TypeName.get(instanceType.getErasure()), withNamed);
+                    ClassName.get(PPLKey.class),
+                    TypeName.get(instanceType.getErasure()), withNamed);
         }
         return codeBlock.build();
     }
@@ -112,7 +112,7 @@ public class KeyGenerator extends FrameworkAbstractGenerator {
     public CodeBlock forFactory(FactoryElement factory) {
         if (factory.getPostProduce() != null) {
             return generatePPLKeyStringBased(factory.getSuppliedType(),
-                factory.getPostProduce().getWithNamed(), factory.getPostProduce().getWithClassed());
+                    factory.getPostProduce().getWithNamed(), factory.getPostProduce().getWithClassed());
         } else if (factory.getClassed() != null) {
             return generateClassedKeyStringBased(factory.getSuppliedType(), factory.getClassed());
         } else if (factory.getNamed() != null) {
@@ -132,11 +132,11 @@ public class KeyGenerator extends FrameworkAbstractGenerator {
      */
     public CodeBlock forInjection(InjectableElement param) {
         if (param.getClassed() != null) {
-            return generateClassedKeyClassBased(param.getInjectedType(), param.getClassed());
+            return generateClassedKeyStringBased(param.getInjectedType(), param.getClassed());
         } else if (param.getNamed() != null) {
             return generateNamedKeyStringBased(param.getInjectedType(), param.getNamed());
         } else {
-            return generateTypeKeyClassBased(param.getInjectedType());
+            return generateTypeKeyStringBased(param.getInjectedType());
         }
     }
 
