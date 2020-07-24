@@ -51,7 +51,7 @@ Or just:
 Ioc ioc = IocBuilder.create().build();
 ----
 
-Obtaining instances with injected dependencies is done using this methods:
+Obtaining instances with injected dependencies is done using these methods:
 
 * instance - returns class instance
 * provider - returns class instance provider  (javax.inject.Provider<>), is used to "deferred" instance obtaining/creation.
