@@ -85,12 +85,29 @@ public final class ValidationContext<V> {
         return childContext;
     }
 
+    /**
+     * Returns root validation context
+     */
     public <U> ValidationContext<U> getRootContext() {
         ValidationContext curCtx = this;
         while (curCtx.getSuperContext() != null) {
             curCtx = curCtx.getSuperContext();
         }
         return curCtx;
+    }
+
+    /**
+     * Returns deep nested context specified by subjects path
+     */
+    public <U> ValidationContext<U> getNestedContext(String... path) {
+        ValidationContext ctx = this;
+        for (String subject : path) {
+            ctx = (ValidationContext) ctx.getNestedContexts().get(subject);
+            if (ctx == null) {
+                throw new RuntimeException("Invalid context path");
+            }
+        }
+        return ctx;
     }
 
     public String getSubject() {
@@ -102,20 +119,6 @@ public final class ValidationContext<V> {
      */
     public V getValue() {
         return value;
-    }
-
-    /**
-     * Returns value from context that specified by subjects path
-     */
-    public <U> U getValue(String... path) {
-        ValidationContext ctx = getRootContext();
-        for (String subject : path) {
-            ctx = (ValidationContext) ctx.getNestedContexts().get(subject);
-            if (ctx == null) {
-                throw new RuntimeException("Invalid context path");
-            }
-        }
-        return (U) ctx.getValue();
     }
 
     public List<ValidationError> getErrors() {
