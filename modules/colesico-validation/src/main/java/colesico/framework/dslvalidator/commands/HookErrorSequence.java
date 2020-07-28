@@ -19,7 +19,10 @@ package colesico.framework.dslvalidator.commands;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.translation.Translatable;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This sequence checks for nested contexts errors presents after commands execution.
@@ -27,7 +30,7 @@ import java.util.List;
  *
  * @param
  */
-public  class HookErrorSequence<V> extends AbstractSequence<V, V> {
+public class HookErrorSequence<V> extends AbstractSequence<V, V> {
 
     private final String errorCode;
     private final Translatable errorMessage;
@@ -40,11 +43,11 @@ public  class HookErrorSequence<V> extends AbstractSequence<V, V> {
     }
 
     protected boolean hasNestedErrors(ValidationContext<V> context) {
-        List<ValidationContext<?>> nestedContexts = context.getNestedContexts();
+        Collection<ValidationContext> nestedContexts = context.getNestedContexts().values();
         for (ValidationContext nestedCtx : nestedContexts) {
             if (nestedCtx.hasErrors()) {
                 return true;
-            } else if (hasNestedErrors(nestedCtx)){
+            } else if (hasNestedErrors(nestedCtx)) {
                 return true;
             }
         }

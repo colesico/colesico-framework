@@ -16,12 +16,12 @@
 
 package colesico.framework.dslvalidator;
 
+import colesico.framework.translation.assist.Ru;
 import colesico.framework.validation.ValidationError;
 import colesico.framework.validation.ValidationIssue;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Validation context
@@ -42,10 +42,10 @@ public final class ValidationContext<V> {
     // Reference to parent context
     private final ValidationContext<?> superContext;
 
-    // Nested contexts ref.
-    private final List<ValidationContext<?>> nestedContexts = new LinkedList<>();
+    // Nested contexts ref. (subject->context)
+    private final Map<String, ValidationContext> nestedContexts = new LinkedHashMap<>();
 
-    private ValidationContext(ValidationContext<?> superContext, String subject, V value) {
+    private ValidationContext(ValidationContext superContext, String subject, V value) {
         this.subject = subject;
         this.value = value;
         this.superContext = superContext;
@@ -72,17 +72,50 @@ public final class ValidationContext<V> {
      * @return
      */
     public static <V> ValidationContext<V> ofNested(ValidationContext<?> superContext, String subject, V value) {
+        if (superContext == null) {
+            throw new RuntimeException("Super context is null");
+        }
+
+        if (StringUtils.isBlank(subject)) {
+            throw new RuntimeException("Nested context subject is empty");
+        }
+
         ValidationContext<V> childContext = new ValidationContext(superContext, subject, value);
-        superContext.getNestedContexts().add(childContext);
+        superContext.getNestedContexts().put(childContext.getSubject(), childContext);
         return childContext;
+    }
+
+    public <U> ValidationContext<U> getRootContext() {
+        ValidationContext curCtx = this;
+        while (curCtx.getSuperContext() != null) {
+            curCtx = curCtx.getSuperContext();
+        }
+        return curCtx;
     }
 
     public String getSubject() {
         return subject;
     }
 
+    /**
+     * Returns value from this context
+     */
     public V getValue() {
         return value;
+    }
+
+    /**
+     * Returns value from context that specified by subjects path
+     */
+    public <U> U getValue(String... path) {
+        ValidationContext ctx = getRootContext();
+        for (String subject : path) {
+            ctx = (ValidationContext) ctx.getNestedContexts().get(subject);
+            if (ctx == null) {
+                throw new RuntimeException("Invalid context path");
+            }
+        }
+        return (U) ctx.getValue();
     }
 
     public List<ValidationError> getErrors() {
@@ -98,7 +131,7 @@ public final class ValidationContext<V> {
         errors.add(error);
     }
 
-    public List<ValidationContext<?>> getNestedContexts() {
+    public Map<String, ValidationContext> getNestedContexts() {
         return nestedContexts;
     }
 
@@ -114,7 +147,7 @@ public final class ValidationContext<V> {
     protected ValidationIssue exportErrors() {
         ValidationIssue issue = new ValidationIssue(getSubject());
 
-        for (ValidationContext<?> childContext : nestedContexts) {
+        for (ValidationContext<?> childContext : nestedContexts.values()) {
             ValidationIssue childIssue = childContext.exportErrors();
             if (childIssue != null) {
                 issue.addSubissue(childIssue);
