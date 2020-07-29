@@ -16,12 +16,14 @@
 
 package colesico.framework.dslvalidator;
 
-import colesico.framework.translation.assist.Ru;
 import colesico.framework.validation.ValidationError;
 import colesico.framework.validation.ValidationIssue;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Validation context
@@ -36,6 +38,9 @@ public final class ValidationContext<V> {
     // Value to be validated
     private final V value;
 
+    // Validation parameters - any values that can be used by validators.
+    private Object[] params;
+
     // Validation errors
     private final List<ValidationError> errors = new ArrayList<>();
 
@@ -45,10 +50,11 @@ public final class ValidationContext<V> {
     // Nested contexts ref. (subject->context)
     private final Map<String, ValidationContext> nestedContexts = new LinkedHashMap<>();
 
-    private ValidationContext(ValidationContext superContext, String subject, V value) {
+    private ValidationContext(ValidationContext superContext, String subject, V value, Object... params) {
         this.subject = subject;
         this.value = value;
         this.superContext = superContext;
+        this.params = params;
     }
 
     /**
@@ -58,8 +64,8 @@ public final class ValidationContext<V> {
      * @param <V>
      * @return
      */
-    public static <V> ValidationContext<V> ofRoot(String subject, V value) {
-        return new ValidationContext(null, subject, value);
+    public static <V> ValidationContext<V> ofRoot(String subject, V value, Object... params) {
+        return new ValidationContext(null, subject, value, params);
     }
 
     /**
@@ -71,16 +77,8 @@ public final class ValidationContext<V> {
      * @param <V>
      * @return
      */
-    public static <V> ValidationContext<V> ofNested(ValidationContext<?> superContext, String subject, V value) {
-        if (superContext == null) {
-            throw new RuntimeException("Super context is null");
-        }
-
-        if (StringUtils.isBlank(subject)) {
-            throw new RuntimeException("Nested context subject is empty");
-        }
-
-        ValidationContext<V> childContext = new ValidationContext(superContext, subject, value);
+    public static <V> ValidationContext<V> ofNested(ValidationContext<?> superContext, String subject, V value, Object... params) {
+        ValidationContext<V> childContext = new ValidationContext(superContext, subject, value, params);
         superContext.getNestedContexts().put(childContext.getSubject(), childContext);
         return childContext;
     }
@@ -99,12 +97,12 @@ public final class ValidationContext<V> {
     /**
      * Returns deep nested context specified by subjects path
      */
-    public <U> ValidationContext<U> getNestedContext(String... path) {
+    public <U> ValidationContext<U> findNestedContext(String... path) {
         ValidationContext ctx = this;
         for (String subject : path) {
             ctx = (ValidationContext) ctx.getNestedContexts().get(subject);
             if (ctx == null) {
-                throw new RuntimeException("Invalid context path");
+                return null;
             }
         }
         return ctx;
@@ -119,6 +117,14 @@ public final class ValidationContext<V> {
      */
     public V getValue() {
         return value;
+    }
+
+    public Object[] getParams() {
+        return params;
+    }
+
+    public void setParams(Object[] params) {
+        this.params = params;
     }
 
     public List<ValidationError> getErrors() {

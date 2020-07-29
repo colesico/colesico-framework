@@ -50,9 +50,9 @@ abstract public class ValidatorBuilder extends FlowControlBuilder {
      * @param messageParam
      */
     protected <V> Command<V> predicate(final Predicate<ValidationContext<V>> predicate,
-                                    final String errorCode,
-                                    final Translatable errorMessage,
-                                    final Object... messageParam) {
+                                       final String errorCode,
+                                       final Translatable errorMessage,
+                                       final Object... messageParam) {
         return new PredicateVerifier<>(predicate, errorCode, errorMessage, messageParam);
     }
 
@@ -65,9 +65,9 @@ abstract public class ValidatorBuilder extends FlowControlBuilder {
      * @param messageParam
      */
     protected final Command<String> regexp(final String pattern,
-                                   final String errorCode,
-                                   final Translatable errorMessage,
-                                   final Object... messageParam) {
+                                           final String errorCode,
+                                           final Translatable errorMessage,
+                                           final Object... messageParam) {
 
         return new RegexpVerifier(pattern, errorCode, errorMessage, messageParam);
     }
@@ -79,41 +79,44 @@ abstract public class ValidatorBuilder extends FlowControlBuilder {
      * @param max
      */
     protected final Command<String> length(final Integer min,
-                                   final Integer max) {
+                                           final Integer max) {
 
         return new LengthVerifier(min, max, vrMessages);
     }
 
     /**
      * Verify number range
+     *
      * @param min
      * @param max
      * @param includeEndpoints
      * @return
      */
     protected final <V extends Number> Command<V> interval(final Number min,
-                                     final Number max,
-                                     final boolean includeEndpoints) {
+                                                           final Number max,
+                                                           final boolean includeEndpoints) {
 
         return new IntervalVerifier(min, max, includeEndpoints, vrMessages);
     }
 
     /**
      * Verify collection size range
+     *
      * @param min
      * @param max
      * @param includeEndpoints
      * @return
      */
     protected final <V> Command<V> size(final Number min,
-                                 final Number max,
-                                 final boolean includeEndpoints) {
+                                        final Number max,
+                                        final boolean includeEndpoints) {
 
         return new SizeVerifier(min, max, includeEndpoints, vrMessages);
     }
 
     /**
      * Verify date format
+     *
      * @param format
      * @return
      */

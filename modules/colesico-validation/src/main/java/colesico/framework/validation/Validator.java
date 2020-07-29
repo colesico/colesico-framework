@@ -24,7 +24,7 @@ public interface Validator<V> {
      * @param value
      * @return null if ok, ValidationIssue otherwise
      */
-    ValidationIssue validate(V value);
+    ValidationIssue validate(V value, Object... params);
 
     /**
      * Validates a value
@@ -33,5 +33,5 @@ public interface Validator<V> {
      * @param value
      * @throws ValidationException
      */
-    void accept(V value) throws ValidationException;
+    void accept(V value, Object... params) throws ValidationException;
 }

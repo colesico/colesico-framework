@@ -45,8 +45,8 @@ public final class DSLValidator<V> implements Validator<V> {
      * @return
      */
     @Override
-    public ValidationIssue validate(V value) {
-        ValidationContext<V> context = ValidationContext.ofRoot(subject, value);
+    public ValidationIssue validate(V value, Object... params) {
+        ValidationContext<V> context = ValidationContext.ofRoot(subject, value, params);
         program.execute(context);
         return context.toIssue();
     }
@@ -58,8 +58,8 @@ public final class DSLValidator<V> implements Validator<V> {
      * @throws ValidationException if some validation errors occurred
      */
     @Override
-    public void accept(V value) throws ValidationException {
-        ValidationContext<V> context = ValidationContext.ofRoot(subject, value);
+    public void accept(V value, Object... params) throws ValidationException {
+        ValidationContext<V> context = ValidationContext.ofRoot(subject, value, params);
         program.execute(context);
         ValidationIssue issue = context.toIssue();
         if (issue != null) {
