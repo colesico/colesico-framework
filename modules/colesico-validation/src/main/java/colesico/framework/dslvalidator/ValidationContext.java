@@ -95,7 +95,7 @@ public final class ValidationContext<V> {
     }
 
     /**
-     * Returns deep nested context specified by subjects path
+     * Finds deep nested context specified by subjects path
      */
     public <U> ValidationContext<U> findNestedContext(String... path) {
         ValidationContext ctx = this;
