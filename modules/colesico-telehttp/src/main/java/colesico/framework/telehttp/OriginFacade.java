@@ -21,6 +21,11 @@ import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.router.RouterContext;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+
 /**
  * Facade to
  */
@@ -36,6 +41,11 @@ public interface OriginFacade {
         public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
             return routerContext.getParameters().get(name);
         }
+
+        @Override
+        public String toString() {
+            return "ROUTE";
+        }
     };
 
     OriginFacade QUERY = new OriginFacade() {
@@ -47,6 +57,11 @@ public interface OriginFacade {
         @Override
         public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
             return httpRequest.getQueryParameters().get(name);
+        }
+
+        @Override
+        public String toString() {
+            return "QUERY";
         }
     };
 
@@ -60,6 +75,11 @@ public interface OriginFacade {
         public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
             return httpRequest.getPostParameters().get(name);
         }
+
+        @Override
+        public String toString() {
+            return "POST";
+        }
     };
 
     OriginFacade BODY = new OriginFacade() {
@@ -70,7 +90,22 @@ public interface OriginFacade {
 
         @Override
         public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
-            throw new UnsupportedOperationException("Use request input stream to read from this origin");
+            try (InputStream inputStream = httpRequest.getInputStream()) {
+                ByteArrayOutputStream result = new ByteArrayOutputStream();
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = inputStream.read(buffer)) != -1) {
+                    result.write(buffer, 0, length);
+                }
+                return result.toString(StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "BODY";
         }
     };
 
@@ -84,6 +119,11 @@ public interface OriginFacade {
         public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
             return httpRequest.getHeaders().get(name);
         }
+
+        @Override
+        public String toString() {
+            return "HEADER";
+        }
     };
 
     OriginFacade COOKIE = new OriginFacade() {
@@ -96,6 +136,11 @@ public interface OriginFacade {
         public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
             HttpCookie cookie = httpRequest.getCookies().get(name);
             return cookie == null ? null : cookie.getValue();
+        }
+
+        @Override
+        public String toString() {
+            return "COOKIE";
         }
     };
 
@@ -115,26 +160,31 @@ public interface OriginFacade {
             switch (httpRequest.getRequestMethod().getName()) {
                 case HttpMethod.GET:
                 case HttpMethod.HEAD:
-                    value = httpRequest.getQueryParameters().get(name);
-                    if (value != null) {
-                        return value;
+                    if (httpRequest.getQueryParameters().hasKey(name)) {
+                        return httpRequest.getQueryParameters().get(name);
                     }
                     return routerContext.getParameters().get(name);
                 case HttpMethod.POST:
                 case HttpMethod.PUT:
                 case HttpMethod.PATCH:
-                    value = httpRequest.getPostParameters().get(name);
-                    if (value != null) {
-                        return value;
+                    if (httpRequest.getPostParameters().hasKey(name)) {
+                        return httpRequest.getPostParameters().get(name);
                     }
-                    value = httpRequest.getQueryParameters().get(name);
-                    if (value != null) {
-                        return value;
+                    if (httpRequest.getQueryParameters().hasKey(name)) {
+                        return httpRequest.getQueryParameters().get(name);
                     }
-                    return routerContext.getParameters().get(name);
+                    if (routerContext.getParameters().containsKey(name)) {
+                        return routerContext.getParameters().get(name);
+                    }
+                    return BODY.getString(name, routerContext, httpRequest);
                 default:
                     return value;
             }
+        }
+
+        @Override
+        public String toString() {
+            return "AUTO";
         }
     };
 

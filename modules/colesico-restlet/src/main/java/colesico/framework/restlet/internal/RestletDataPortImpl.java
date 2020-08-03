@@ -77,7 +77,7 @@ public class RestletDataPortImpl implements RestletDataPort {
         // Store value type to context
         context.setValueType(valueType);
 
-        RestletTeleReader<V> reader;
+        RestletTeleReader<V> reader = null;
 
         if (context.getReaderClass() != null) {
             // Use specified reader
@@ -85,13 +85,12 @@ public class RestletDataPortImpl implements RestletDataPort {
         } else {
             // Use reader by param type
             reader = ioc.instanceOrNull(new ClassedKey<>(RestletTeleReader.class.getCanonicalName(), typeToClassName(valueType)), null);
-        }
 
-        // No accurate reader here so are reading data as object
-        if (reader == null) {
-            reader = (RestletTeleReader<V>) ioc.instance(ObjectReader.class);
+            // No accurate reader here so are reading data as object
+            if (reader == null) {
+                reader = (RestletTeleReader<V>) ioc.instance(ObjectReader.class);
+            }
         }
-
         return reader.read(context);
     }
 

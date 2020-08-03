@@ -23,7 +23,7 @@ import java.util.Set;
 /**
  * @author Vladlen Larionov
  */
-public final class HttpValues<K, V>   {
+public final class HttpValues<K, V> {
 
     private final Map<K, MultiValue<V>> valuesMap;
 
@@ -31,7 +31,11 @@ public final class HttpValues<K, V>   {
         this.valuesMap = valuesMap;
     }
 
-    public V get(Object key) {
+    public boolean hasKey(K key) {
+        return valuesMap.containsKey(key);
+    }
+
+    public V get(K key) {
         MultiValue<V> multiValue = valuesMap.get(key);
         if (multiValue == null) {
             return null;
@@ -39,19 +43,19 @@ public final class HttpValues<K, V>   {
         return multiValue.value();
     }
 
-    public Set<K> getKeys(){
+    public Set<K> getKeys() {
         return Collections.unmodifiableSet(valuesMap.keySet());
     }
 
-    public MultiValue<V> getAll(Object key){
+    public MultiValue<V> getAll(K key) {
         return valuesMap.get(key);
     }
 
-    public int size(){
+    public int size() {
         return valuesMap.size();
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return valuesMap.isEmpty();
     }
 
