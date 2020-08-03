@@ -103,7 +103,7 @@ public class RestletDataPortImpl implements RestletDataPort {
         RestletTeleWriter<V> writer;
 
         if (context.getWriterClass() != null) {
-            // Spesified writer
+            // Specified writer
             writer = ioc.instance(context.getWriterClass());
         } else {
             // By type writer

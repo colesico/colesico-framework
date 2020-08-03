@@ -47,6 +47,7 @@ module colesico.framework.restlet {
 
     // Resources
     opens colesico.framework.restlet.t9n to colesico.framework.localization;
+    opens colesico.framework.restlet.assist;
 
     provides Modulator with colesico.framework.restlet.codegen.RestletModulator;
 
