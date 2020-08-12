@@ -113,7 +113,7 @@ public class RouteTrie<V> {
         private final String route;
 
         public DuplicateRouteException(String route) {
-            super("Duplicate route: "+route);
+            super("Duplicate route: " + route);
             this.route = route;
         }
 
@@ -170,6 +170,7 @@ public class RouteTrie<V> {
 
         /**
          * Adds child node as a segment
+         *
          * @param name
          * @return
          */
@@ -180,6 +181,7 @@ public class RouteTrie<V> {
 
         /**
          * Add child node as a parameter
+         *
          * @param name
          * @return
          */
@@ -196,6 +198,7 @@ public class RouteTrie<V> {
 
         /**
          * Return child segment node
+         *
          * @param nodeName
          * @return
          */
@@ -205,6 +208,7 @@ public class RouteTrie<V> {
 
         /**
          * Return child parameter node
+         *
          * @return
          */
         public Node<V> getParameter() {
@@ -218,7 +222,7 @@ public class RouteTrie<V> {
         public Node<V> getRoot() {
             Node<V> root = this;
             while (root.parent != null) {
-                if (root.parent.parent==null){
+                if (root.parent.parent == null) {
                     return root;
                 }
                 root = root.parent;

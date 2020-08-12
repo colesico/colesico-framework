@@ -3,6 +3,7 @@ package colesico.framework.rpc.internal;
 import colesico.framework.rpc.teleapi.RpcDataPort;
 import colesico.framework.rpc.teleapi.RpcTIContext;
 import colesico.framework.rpc.teleapi.RpcTeleDriver;
+import colesico.framework.teleapi.TeleMethod;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -17,8 +18,8 @@ public class RpcTeleDriverImpl implements RpcTeleDriver {
     }
 
     @Override
-    public <T> void invoke(T service, Binder<T, RpcDataPort> binder, RpcTIContext invCtx) {
-        binder.invoke(service, dataPortProv.get());
+    public <T> void invoke(T service, TeleMethod<T, RpcDataPort> method, RpcTIContext invCtx) {
+        method.invoke(service, dataPortProv.get());
     }
 
 }

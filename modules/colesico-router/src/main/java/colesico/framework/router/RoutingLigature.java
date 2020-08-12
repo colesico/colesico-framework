@@ -16,7 +16,7 @@
 
 package colesico.framework.router;
 
-import colesico.framework.teleapi.TeleMethod;
+import colesico.framework.teleapi.TeleHandler;
 
 import java.util.Collection;
 import java.util.Map;
@@ -39,7 +39,7 @@ public final class RoutingLigature {
         this.serviceClass = serviceClass;
     }
 
-    public void add(String route, TeleMethod teleMethodRef, String teleMethodName, Map<String, String> routeAttributes) {
+    public void add(String route, TeleHandler teleMethodRef, String teleMethodName, Map<String, String> routeAttributes) {
         RouteInfo routeInfo = new RouteInfo(route, teleMethodRef, teleMethodName, routeAttributes);
         RouteInfo oldRouteInfo = routesMap.put(route, routeInfo);
         if (oldRouteInfo != null) {
@@ -51,18 +51,18 @@ public final class RoutingLigature {
         return serviceClass;
     }
 
-    public Collection<RouteInfo> getRoutesIno() {
+    public Collection<RouteInfo> getRoutesInfo() {
         return routesMap.values();
     }
 
     public static final class RouteInfo {
         private final String route;
-        private final TeleMethod teleMethodRef;
+        private final TeleHandler teleMethodRef;
         private final String teleMethodName;
         private final Map<String, String> routeAttributes;
 
         public RouteInfo(String route,
-                         TeleMethod teleMethodRef,
+                         TeleHandler teleMethodRef,
                          String teleMethodName,
                          Map<String, String> routeAttributes) {
 
@@ -76,7 +76,7 @@ public final class RoutingLigature {
             return route;
         }
 
-        public TeleMethod getTeleMethodRef() {
+        public TeleHandler getTeleMethodRef() {
             return teleMethodRef;
         }
 

@@ -24,6 +24,7 @@ import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.parser.ProcessorContext;
 import colesico.framework.teleapi.DataPort;
+import colesico.framework.teleapi.TeleMethod;
 import colesico.framework.teleapi.TeleDriver;
 import colesico.framework.teleapi.TeleFacade;
 import com.squareup.javapoet.*;
@@ -82,7 +83,7 @@ public class TeleFacadesGenerator {
             CodeBlock ctx = ((TeleParamElement) var).getReadingContext();
             // Generates code like this: dataPot.read(ParamType.class, new Context(...));
             CodeBlock.Builder cb = CodeBlock.builder();
-            cb.add("$N.$N(", TeleDriver.Binder.DATAPORT_PARAM, DataPort.READ_METHOD);
+            cb.add("$N.$N(", TeleMethod.DATA_PORT_PARAM, DataPort.READ_METHOD);
             // ParamType.class or new TypeWrapper<ParamType<T>>...
             CodegenUtils.generateTypePick(paramType, cb);
             cb.add(",");
@@ -151,7 +152,7 @@ public class TeleFacadesGenerator {
 
         // Call service method
         //   target.myMethod(...);
-        callMethodCb.add(TeleDriver.Binder.TARGET_PARAM + "." + teleMethod.getProxyMethod().getName() + "(" + serviceMethodArgs.toFormat() + ");\n", serviceMethodArgs.toValues());
+        callMethodCb.add(TeleMethod.TARGET_PARAM + "." + teleMethod.getProxyMethod().getName() + "(" + serviceMethodArgs.toFormat() + ");\n", serviceMethodArgs.toValues());
         binderBuilder.add(callMethodCb.build());
 
         // Send result to client via data port
@@ -159,7 +160,7 @@ public class TeleFacadesGenerator {
         // or  for generics: dataPort.write(new TypeWrapper<MyResp>(){}.unwrap(),result,new Ctx());
         if (!voidResult) {
             binderBuilder.add("\n// Send result to remote client\n");
-            binderBuilder.add("$N.$N(", TeleDriver.Binder.DATAPORT_PARAM, DataPort.WRITE_METHOD);
+            binderBuilder.add("$N.$N(", TeleMethod.DATA_PORT_PARAM, DataPort.WRITE_METHOD);
             CodegenUtils.generateTypePick(returnType, binderBuilder);
             binderBuilder.add(", ");
             binderBuilder.add("$N, ", TeleDriver.RESULT_PARAM);
@@ -176,18 +177,16 @@ public class TeleFacadesGenerator {
         for (TeleMethodElement teleMethod : teleFacade.getTeleMethods()) {
             MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(teleMethod.getName());
             methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-            methodBuilder.returns(TypeName.VOID);
+            ParameterizedTypeName returnType = ParameterizedTypeName.get(
+                    ClassName.get(TeleMethod.class),
+                    TypeName.get(service.getOriginClass().getOriginType()),
+                    ClassName.get(teleFacade.getDataPortClass())
+            );
+            methodBuilder.returns(returnType);
 
             // Subroutine definition
             CodeBlock.Builder cb = CodeBlock.builder();
-            cb.add("final $T $N=($N,$N)->{\n",
-                    ParameterizedTypeName.get(
-                            ClassName.get(TeleDriver.Binder.class),
-                            TypeName.get(service.getOriginClass().getOriginType()),
-                            ClassName.get(teleFacade.getDataPortClass())),
-                    TeleDriver.BINDER_PARAM,
-                    TeleDriver.Binder.TARGET_PARAM,
-                    TeleDriver.Binder.DATAPORT_PARAM);
+            cb.add("return ($N,$N) -> {\n", TeleMethod.TARGET_PARAM, TeleMethod.DATA_PORT_PARAM);
             cb.indent();
             cb.add(generateBinderBody(teleMethod));
             cb.unindent();
@@ -200,7 +199,7 @@ public class TeleFacadesGenerator {
             // Call teleDriver
             cb.add("$N.$N($N,$N,", TeleFacade.TELED_RIVER_FIELD, TeleDriver.INVOKE_METHOD,
                     TeleDriver.TARGET_PARAM,
-                    TeleDriver.BINDER_PARAM);
+                    TeleDriver.METHOD_PARAM);
             CodeBlock invCtx = teleMethod.getInvokingContext();
             cb.add(invCtx);
             cb.add(");\n");

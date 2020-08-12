@@ -23,7 +23,7 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.*;
 import colesico.framework.router.assist.RouteTrie;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.TeleMethod;
+import colesico.framework.teleapi.TeleHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +61,7 @@ public class RouterImpl implements Router {
             log.debug("Found routing tele-facade: " + teleFacade.getClass().getName());
             RoutingLigature ligature = (RoutingLigature) teleFacade.getLigature();
 
-            for (RoutingLigature.RouteInfo routeInfo : ligature.getRoutesIno()) {
+            for (RoutingLigature.RouteInfo routeInfo : ligature.getRoutesInfo()) {
                 if (log.isDebugEnabled()) {
                     log.debug("Route '" + routeInfo.getRoute() + "' mapped to tele-method '" +
                             ligature.getServiceClass().getName() + "->" + routeInfo.getTeleMethodName());
@@ -78,7 +78,7 @@ public class RouterImpl implements Router {
         }
     }
 
-    protected void addCustomAction(HttpMethod httpMethod, String route, Class<?> targetClass, TeleMethod targetMethodRef, String targetMethodName, Map<String, String> routeAttributes) {
+    protected void addCustomAction(HttpMethod httpMethod, String route, Class<?> targetClass, TeleHandler targetMethodRef, String targetMethodName, Map<String, String> routeAttributes) {
         RouteTrie.Node<RouteAction> node = routeTrie.addRoute(route, new RouteAction(targetMethodRef, routeAttributes));
         routesIndex.addNode(toRouteId(targetClass, targetMethodName, httpMethod), node);
         if (log.isDebugEnabled()) {
@@ -113,16 +113,16 @@ public class RouterImpl implements Router {
 
     @Override
     public void performAction(ActionResolution resolution) {
-        TeleMethod teleMethod = resolution.getRouteAction().getTeleMethod();
+        TeleHandler teleMethod = resolution.getRouteAction().getTeleMethod();
 
         if (teleMethod == null) {
-            throw new UnknownRouteException(resolution.getRequestHttpMethod(), resolution.getRequestUri());
+            throw new UnknownRouteException(resolution.getRequestMethod(), resolution.getRequestUri());
         }
 
         RouterContext routerContext = new RouterContext(resolution.getRequestUri(), resolution.getRouteParameters());
         threadScope.put(RouterContext.SCOPE_KEY, routerContext);
 
-        teleMethod.invoke();
+        teleMethod.execute();
     }
 
 

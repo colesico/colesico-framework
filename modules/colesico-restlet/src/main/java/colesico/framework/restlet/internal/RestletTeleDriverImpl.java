@@ -28,6 +28,7 @@ import colesico.framework.security.AuthorityRequiredException;
 import colesico.framework.security.PrincipalRequiredException;
 import colesico.framework.service.ApplicationException;
 import colesico.framework.teleapi.DataPort;
+import colesico.framework.teleapi.TeleMethod;
 import colesico.framework.validation.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -77,13 +78,13 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
     }
 
     @Override
-    public <S> void invoke(S service, Binder<S, RestletDataPort> binder, RestletTIContext invCtx) {
+    public <S> void invoke(S service, TeleMethod<S, RestletDataPort> method, RestletTIContext invCtx) {
         // Set data port to be accessible
         threadScope.put(DataPort.SCOPE_KEY, dataPort);
         // Retrieve http context
         HttpContext httpCtx = httpContextProv.get();
         try {
-            invokeImpl(service, binder, invCtx, httpCtx);
+            invokeImpl(service, method, invCtx, httpCtx);
         } catch (Exception ex) {
             handleCommonError(ex, 500, httpCtx);
         }
@@ -109,7 +110,7 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
     }
 
 
-    protected <S> void invokeImpl(S service, Binder binder, RestletTIContext invCtx, final HttpContext httpCtx) {
+    protected <S> void invokeImpl(S service, TeleMethod binder, RestletTIContext invCtx, final HttpContext httpCtx) {
         HttpRequest httpRequest = httpCtx.getRequest();
         try {
             // Request listener notification

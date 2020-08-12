@@ -9,7 +9,7 @@ public final class ActionResolution {
     /**
      * Request http method
      */
-    private final HttpMethod requestHttpMethod;
+    private final HttpMethod requestMethod;
 
     /**
      * Request URI
@@ -26,15 +26,15 @@ public final class ActionResolution {
      */
     private final Map<String, String> routeParameters;
 
-    public ActionResolution(HttpMethod requestHttpMethod, String requestUri, RouteAction routeAction, Map<String, String> routeParameters) {
-        this.requestHttpMethod = requestHttpMethod;
+    public ActionResolution(HttpMethod requestMethod, String requestUri, RouteAction routeAction, Map<String, String> routeParameters) {
+        this.requestMethod = requestMethod;
         this.requestUri = requestUri;
         this.routeAction = routeAction;
         this.routeParameters = routeParameters;
     }
 
-    public HttpMethod getRequestHttpMethod() {
-        return requestHttpMethod;
+    public HttpMethod getRequestMethod() {
+        return requestMethod;
     }
 
     public String getRequestUri() {

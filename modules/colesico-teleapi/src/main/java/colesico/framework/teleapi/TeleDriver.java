@@ -27,29 +27,17 @@ package colesico.framework.teleapi;
 public interface TeleDriver<R, W, I, P extends DataPort<R, W>> {
 
     String INVOKE_METHOD = "invoke";
-    String BINDER_PARAM = "binder";
+    String METHOD_PARAM = "method";
     String TARGET_PARAM = "target";
     String RESULT_PARAM = "result";
 
     /**
      * Performs target method tele-invocation
      * @param target
-     * @param binder
+     * @param method
      * @param context
      * @param <T>
      */
-    <T> void invoke(T target, Binder<T, P> binder, I context);
+    <T> void invoke(T target, TeleMethod<T, P> method, I context);
 
-    /**
-     * Is used to retrieve target method parameters values from tele data port and puts back a result.
-     * @param <T> Target (service) to be invoked
-     * @param <P> Data port
-     */
-    @FunctionalInterface
-    interface Binder<T, P extends DataPort> {
-        String TARGET_PARAM = "target";
-        String DATAPORT_PARAM = "dataPort";
-
-        void invoke(T target, P dataPort);
-    }
 }

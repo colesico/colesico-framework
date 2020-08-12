@@ -16,7 +16,7 @@
 
 package colesico.framework.rpc.teleapi;
 
-import colesico.framework.teleapi.TeleMethod;
+import colesico.framework.teleapi.TeleHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +25,7 @@ public final class RpcLigature {
     public static final String ADD_METHOD = "add";
     private final String targetClass;
 
-    private final Map<String, TeleMethod> targetMethods = new HashMap<>();
+    private final Map<String, TeleHandler> targetMethods = new HashMap<>();
 
     public RpcLigature(String className) {
         this.targetClass = className;
@@ -35,11 +35,11 @@ public final class RpcLigature {
         return targetClass;
     }
 
-    public Map<String, TeleMethod> getTargetMethods() {
+    public Map<String, TeleHandler> getTargetMethods() {
         return targetMethods;
     }
 
-    public void add(String name, TeleMethod methodRef) {
+    public void add(String name, TeleHandler methodRef) {
         targetMethods.put(name, methodRef);
     }
 
