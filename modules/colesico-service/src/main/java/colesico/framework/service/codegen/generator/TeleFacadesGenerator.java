@@ -181,10 +181,10 @@ public class TeleFacadesGenerator {
         return cb.build();
     }
 
-    protected void generateTeleMethods(TeleFacadeElement teleFacade, TypeSpec.Builder classBuilder) {
+    protected void generateTeleMethodBuilders(TeleFacadeElement teleFacade, TypeSpec.Builder classBuilder) {
         ServiceElement service = teleFacade.getParentService();
         for (TeleMethodElement teleMethod : teleFacade.getTeleMethods()) {
-            MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(teleMethod.getName());
+            MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(teleMethod.getBuilderName());
             methodBuilder.addJavadoc("Returns $T instance for target method '$N'", ClassName.get(TeleMethod.class), teleMethod.getProxyMethod().getName());
             methodBuilder.addModifiers(Modifier.PRIVATE);
             methodBuilder.returns(ClassName.get(TeleMethod.class));
@@ -248,7 +248,7 @@ public class TeleFacadesGenerator {
                     ClassName.get(teleFacade.getLigatureClass())));
 
             generateCounstructor(teleFacade, classBuilder);
-            generateTeleMethods(teleFacade, classBuilder);
+            generateTeleMethodBuilders(teleFacade, classBuilder);
             generateGetLigatureMethod(teleFacade, classBuilder);
 
             createTeleFacade(service, teleFacade, classBuilder);

@@ -106,6 +106,7 @@ public final class TeleFacadeElement {
         }
         teleMethods.add(teleMethod);
         teleMethod.parentTeleFacade = this;
+        teleMethod.index = teleMethods.size();
     }
 
     public Elements<TeleMethodElement> getTeleMethods() {

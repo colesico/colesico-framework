@@ -148,14 +148,8 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
             if (proxyMethod.isLocal()) {
                 continue;
             }
-            AnnotationAssist<TeleMethodName> teleMethodNameAnn = proxyMethod.getOriginMethod().getAnnotation(TeleMethodName.class);
-            final String teleMethodName;
-            if (teleMethodNameAnn != null) {
-                teleMethodName = teleMethodNameAnn.unwrap().value();
-            } else {
-                teleMethodName = proxyMethod.getName();
-            }
-            TeleMethodElement teleMethod = new TeleMethodElement(teleMethodName, proxyMethod);
+
+            TeleMethodElement teleMethod = new TeleMethodElement(proxyMethod);
             teleFacade.addTeleMethod(teleMethod);
             context.getModulatorKit().notifyAddTeleMethod(teleMethod);
             addTeleMethodParams(teleMethod);

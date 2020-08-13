@@ -97,7 +97,7 @@ abstract public class RoutesModulator<D extends TeleDriver<R, W, I, P>, P extend
                 LIGATURE_VAR,
                 RoutingLigature.ADD_METHOD,
                 routedTeleMethod.getRoute(),
-                routedTeleMethod.getTeleMethod().getName(),
+                routedTeleMethod.getTeleMethod().getBuilderName(),
                 routedTeleMethod.getTeleMethod().getName()
         );
 

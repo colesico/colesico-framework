@@ -162,7 +162,7 @@ public class RpcModulator extends
                     LIGATURE_VAR,
                     RpcLigature.ADD_METHOD,
                     rpcName,
-                    teleMethod.getTeleMethod().getName()
+                    teleMethod.getTeleMethod().getBuilderName()
             );
         }
 

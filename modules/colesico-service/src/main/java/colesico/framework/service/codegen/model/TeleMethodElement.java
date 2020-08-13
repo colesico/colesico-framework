@@ -16,6 +16,7 @@
 
 package colesico.framework.service.codegen.model;
 
+import colesico.framework.assist.StrUtils;
 import com.squareup.javapoet.CodeBlock;
 
 import java.util.ArrayList;
@@ -29,10 +30,6 @@ import java.util.Map;
 public final class TeleMethodElement {
 
     protected TeleFacadeElement parentTeleFacade;
-    /**
-     * tele-method name
-     */
-    private final String name;
 
     /**
      * Method of a service proxy. This can be used to access origin service method.
@@ -51,8 +48,12 @@ public final class TeleMethodElement {
 
     private final Map<Class, Object> properties;
 
-    public TeleMethodElement(String name, ProxyMethodElement proxyMethod) {
-        this.name = name;
+    /**
+     * Tele-method index in tele-facade
+     */
+    protected Integer index;
+
+    public TeleMethodElement(ProxyMethodElement proxyMethod) {
         this.proxyMethod = proxyMethod;
         this.parameters = new ArrayList<>();
         this.properties = new HashMap<>();
@@ -78,15 +79,17 @@ public final class TeleMethodElement {
 
     /**
      * Associate tele-var element with this tele-metod
-     *
-     * @param var
      */
     public void linkVariable(TeleVarElement var) {
         var.parentTeleMethod = this;
     }
 
     public String getName() {
-        return name;
+        return proxyMethod.getName();
+    }
+
+    public String getBuilderName() {
+        return "get" + StrUtils.firstCharToUpperCase(proxyMethod.getName()) + "TeleMethod"+index;
     }
 
     public ProxyMethodElement getProxyMethod() {
@@ -117,11 +120,14 @@ public final class TeleMethodElement {
         this.invokingContext = invokingContext;
     }
 
+    public Integer getIndex() {
+        return index;
+    }
+
     @Override
     public String toString() {
         return "TeleMethodElement{" +
-                "name='" + name + '\'' +
-                ", proxyMethod=" + proxyMethod +
+                "proxyMethod=" + proxyMethod +
                 '}';
     }
 }
