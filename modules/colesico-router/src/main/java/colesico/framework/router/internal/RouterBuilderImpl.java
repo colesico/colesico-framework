@@ -7,7 +7,7 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterBuilder;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.TeleHandler;
+import colesico.framework.teleapi.TeleMethod;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,7 +33,7 @@ public class RouterBuilderImpl implements RouterBuilder {
     public void addCustomAction(HttpMethod httpMethod,
                                 String route,
                                 Class<?> targetClass,
-                                TeleHandler targetMethodRef,
+                                TeleMethod targetMethodRef,
                                 String targetMethodName,
                                 Map<String, String> routeAttributes) {
 
@@ -60,14 +60,14 @@ public class RouterBuilderImpl implements RouterBuilder {
         private final HttpMethod httpMethod;
         private final String route;
         private final Class<?> targetClass;
-        private final TeleHandler targetMethodRef;
+        private final TeleMethod targetMethodRef;
         private final String targetMethodName;
         private final Map<String, String> routeAttributes;
 
         public CustomRouteAction(HttpMethod httpMethod,
                                  String route,
                                  Class<?> targetClass,
-                                 TeleHandler targetMethodRef,
+                                 TeleMethod targetMethodRef,
                                  String targetMethodName,
                                  Map<String, String> routeAttributes) {
             this.httpMethod = httpMethod;
@@ -90,7 +90,7 @@ public class RouterBuilderImpl implements RouterBuilder {
             return targetClass;
         }
 
-        public TeleHandler getTargetMethodRef() {
+        public TeleMethod getTargetMethodRef() {
             return targetMethodRef;
         }
 

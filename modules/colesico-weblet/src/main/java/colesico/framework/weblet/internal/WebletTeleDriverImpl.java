@@ -22,7 +22,7 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.RouterContext;
 import colesico.framework.security.PrincipalRequiredException;
 import colesico.framework.teleapi.DataPort;
-import colesico.framework.teleapi.TeleMethod;
+import colesico.framework.teleapi.MethodInvoker;
 import colesico.framework.telehttp.assist.CSRFProtector;
 import colesico.framework.weblet.teleapi.Authenticator;
 import colesico.framework.weblet.teleapi.WebletTIContext;
@@ -59,15 +59,15 @@ public class WebletTeleDriverImpl implements WebletTeleDriver {
     }
 
     @Override
-    public <T> void invoke(T target, TeleMethod<T, WebletDataPort> method, WebletTIContext context) {
+    public <T> void invoke(T target, MethodInvoker<T, WebletDataPort> invoker, WebletTIContext context) {
         try {
             threadScope.put(DataPort.SCOPE_KEY, dataPort);
             HttpRequest request = httpContextProv.get().getRequest();
             CSRFProtector.check(request);
-            method.invoke(target, dataPort);
+            invoker.invoke(target, dataPort);
         } catch (PrincipalRequiredException pre) {
             if (authenticatorProv.get().authenticate()) {
-                method.invoke(target, dataPort);
+                invoker.invoke(target, dataPort);
             } else {
                 throw pre;
             }

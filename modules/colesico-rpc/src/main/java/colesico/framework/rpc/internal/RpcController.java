@@ -11,7 +11,7 @@ import colesico.framework.rpc.UnknownRpcMethodError;
 import colesico.framework.rpc.teleapi.*;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.TeleHandler;
+import colesico.framework.teleapi.TeleMethod;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ public class RpcController {
     /**
      * Class names to methods map
      */
-    protected final Map<String, Map<String, TeleHandler>> targetsMap = new HashMap<>();
+    protected final Map<String, Map<String, TeleMethod>> targetsMap = new HashMap<>();
 
     public RpcController(@Classed(Rpc.class) Polysupplier<TeleFacade> teleFacadesSupp,
                          Ioc ioc,
@@ -59,9 +59,9 @@ public class RpcController {
         final RpcResponse response = new RpcResponse();
         try {
             request = exchange.readRequest();
-            TeleHandler teleMethod = findTeleMethod(request);
+            TeleMethod teleMethod = findTeleMethod(request);
             instantiateDataPort(request, response);
-            teleMethod.execute();
+            teleMethod.invoke();
         } catch (RpcException re) {
             handleError(re.getError(), request, response);
         } catch (Exception e) {
@@ -96,13 +96,13 @@ public class RpcController {
             logger.debug("Found RPC tele-facade: {}", teleFacade.getClass().getName());
             RpcLigature ligature = (RpcLigature) teleFacade.getLigature();
 
-            Map<String, TeleHandler> classMethods = targetsMap.get(ligature.getTargetClass());
+            Map<String, TeleMethod> classMethods = targetsMap.get(ligature.getTargetClass());
             if (classMethods == null) {
                 classMethods = new HashMap<>();
                 targetsMap.put(ligature.getTargetClass(), classMethods);
             }
 
-            for (Map.Entry<String, TeleHandler> methodInfo : ligature.getTargetMethods().entrySet()) {
+            for (Map.Entry<String, TeleMethod> methodInfo : ligature.getTargetMethods().entrySet()) {
                 classMethods.put(methodInfo.getKey(), methodInfo.getValue());
                 if (logger.isDebugEnabled()) {
                     logger.debug("RPC method "
@@ -119,13 +119,13 @@ public class RpcController {
         threadScope.put(DataPort.SCOPE_KEY, dataPort);
     }
 
-    protected TeleHandler findTeleMethod(RpcRequest request) {
-        Map<String, TeleHandler> classMethods = targetsMap.get(request.getTargetClass());
+    protected TeleMethod findTeleMethod(RpcRequest request) {
+        Map<String, TeleMethod> classMethods = targetsMap.get(request.getTargetClass());
         if (classMethods == null) {
             throw new RpcException(new UnknownRpcClassError("RPC tele-facade not found for class " + request.getTargetClass(), request.getTargetClass()));
         }
 
-        TeleHandler teleMethod = classMethods.get(request.getTargetMethod());
+        TeleMethod teleMethod = classMethods.get(request.getTargetMethod());
         if (teleMethod == null) {
             throw new RpcException(new UnknownRpcMethodError("RPC tele-method '" + request.getTargetMethod() + "' not found for class " + request.getTargetClass(),
                     request.getTargetClass(), request.getTargetMethod()));

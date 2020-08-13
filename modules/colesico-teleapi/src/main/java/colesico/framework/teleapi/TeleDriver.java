@@ -27,17 +27,17 @@ package colesico.framework.teleapi;
 public interface TeleDriver<R, W, I, P extends DataPort<R, W>> {
 
     String INVOKE_METHOD = "invoke";
-    String METHOD_PARAM = "method";
+    String INVOKER_PARAM = "invoker";
     String TARGET_PARAM = "target";
     String RESULT_PARAM = "result";
 
     /**
      * Performs target method tele-invocation
      * @param target
-     * @param method
+     * @param invoker
      * @param context
      * @param <T>
      */
-    <T> void invoke(T target, TeleMethod<T, P> method, I context);
+    <T> void invoke(T target, MethodInvoker<T, P> invoker, I context);
 
 }

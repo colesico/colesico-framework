@@ -25,13 +25,12 @@ import javax.inject.Provider;
  * @param <D> tele-driver that is serving tele-invocation
  * @param <L> ligature - a tele-methods bindings to tele-protocol data
  */
-abstract public class TeleFacade<T, P extends DataPort, D extends TeleDriver, L> {
+abstract public class TeleFacade<T, D extends TeleDriver, L> {
 
     public static final String TELE_FACADE_SUFFIX = "Facade";
-    public static final String TELED_RIVER_FIELD = "teleDriver";
+    public static final String TELE_DRIVER_FIELD = "teleDriver";
     public static final String TARGET_PROV_FIELD = "targetProv";
     public static final String GET_LIGATURE_METHOD = "getLigature";
-    public static final String GET_HANDLER_METHOD = "getHandler";
 
     /**
      * Tele-invocation driver
@@ -39,7 +38,7 @@ abstract public class TeleFacade<T, P extends DataPort, D extends TeleDriver, L>
     protected final D teleDriver;
 
     /**
-     * Target service
+     * Target service provider
      */
     protected final Provider<T> targetProv;
 
@@ -49,14 +48,7 @@ abstract public class TeleFacade<T, P extends DataPort, D extends TeleDriver, L>
     }
 
     /**
-     * Returns handler that calls tele driver to invoke target method
-     */
-    protected final TeleHandler getHandler(TeleMethod<T, P> teleMethod) {
-        return () -> teleDriver.invoke(targetProv.get(), teleMethod, null);
-    }
-
-    /**
-     * Returns binding between actual tele-facade methods and tele-protocol data that points to the  tele-methods
+     * Returns binding between actual tele-facade methods and tele-protocol data that points to the tele-methods
      */
     abstract public L getLigature();
 }

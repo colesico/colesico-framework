@@ -93,7 +93,7 @@ abstract public class RoutesModulator<D extends TeleDriver<R, W, I, P>, P extend
 
         CodeBlock.Builder cb = CodeBlock.builder();
 
-        cb.add("$N.$N($S,this::$N,$S,",
+        cb.add("$N.$N($S,$N(),$S,",
                 LIGATURE_VAR,
                 RoutingLigature.ADD_METHOD,
                 routedTeleMethod.getRoute(),

@@ -23,7 +23,7 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.*;
 import colesico.framework.router.assist.RouteTrie;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.TeleHandler;
+import colesico.framework.teleapi.TeleMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +78,7 @@ public class RouterImpl implements Router {
         }
     }
 
-    protected void addCustomAction(HttpMethod httpMethod, String route, Class<?> targetClass, TeleHandler targetMethodRef, String targetMethodName, Map<String, String> routeAttributes) {
+    protected void addCustomAction(HttpMethod httpMethod, String route, Class<?> targetClass, TeleMethod targetMethodRef, String targetMethodName, Map<String, String> routeAttributes) {
         RouteTrie.Node<RouteAction> node = routeTrie.addRoute(route, new RouteAction(targetMethodRef, routeAttributes));
         routesIndex.addNode(toRouteId(targetClass, targetMethodName, httpMethod), node);
         if (log.isDebugEnabled()) {
@@ -113,7 +113,7 @@ public class RouterImpl implements Router {
 
     @Override
     public void performAction(ActionResolution resolution) {
-        TeleHandler teleMethod = resolution.getRouteAction().getTeleMethod();
+        TeleMethod teleMethod = resolution.getRouteAction().getTeleMethod();
 
         if (teleMethod == null) {
             throw new UnknownRouteException(resolution.getRequestMethod(), resolution.getRequestUri());
@@ -122,7 +122,7 @@ public class RouterImpl implements Router {
         RouterContext routerContext = new RouterContext(resolution.getRequestUri(), resolution.getRouteParameters());
         threadScope.put(RouterContext.SCOPE_KEY, routerContext);
 
-        teleMethod.execute();
+        teleMethod.invoke();
     }
 
 

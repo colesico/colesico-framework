@@ -158,7 +158,7 @@ public class RpcModulator extends
 
             String rpcName = ann == null ? teleMethod.getTeleMethod().getName() : ann.unwrap().value();
 
-            cb.addStatement("$N.$N($S,this::$N)",
+            cb.addStatement("$N.$N($S,$N())",
                     LIGATURE_VAR,
                     RpcLigature.ADD_METHOD,
                     rpcName,
