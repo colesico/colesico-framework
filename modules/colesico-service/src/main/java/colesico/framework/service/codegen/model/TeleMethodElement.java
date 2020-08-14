@@ -89,7 +89,7 @@ public final class TeleMethodElement {
     }
 
     public String getBuilderName() {
-        return "get" + StrUtils.firstCharToUpperCase(proxyMethod.getName()) + "TeleMethod"+index;
+        return "get" + StrUtils.firstCharToUpperCase(proxyMethod.getName()) +"TM"+ index;
     }
 
     public ProxyMethodElement getProxyMethod() {
