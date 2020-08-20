@@ -416,6 +416,22 @@ public class TestCondition implements Condition {
 It is possible to overriding existing beans to customize behaviour for testing purposes or a plugins support.
 IoC module provides an explicit @Substitute annotation, which allows to specify bean replacement and integrates with support for Conditional Beans.
 
+[source,java]
+----
+
+@Producer
+@Produce(CustomBean.class)
+public class CustomBeanProducer {
+
+    @Substitute
+    public BeanInterface getPlugin(CustomBean impl){
+        return impl;
+    }
+}
+----
+
+TIP: @Substitute annotation allows specifying *substitution rank*  (substitution priority)
+
 == Maven pom.xml
 
 Specify dependence:
