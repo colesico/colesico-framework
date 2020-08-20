@@ -1,6 +1,6 @@
 [[intro]]
 
-== Colesico-EventBus
+= Colesico-EventBus
 
 Simple event bus support for business logic beans (services).
 

@@ -1,6 +1,6 @@
 [[intro]]
 
-== Colesico-Transaction
+= Colesico-Transaction
 
 This module is intent to unified transactions management support.
 

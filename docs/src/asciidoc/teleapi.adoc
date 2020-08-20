@@ -1,6 +1,6 @@
 [[intro]]
 
-== Colesico-TeleAPI
+= Colesico-TeleAPI
 
 The module is generally not intended for use in client applications using the framework,
 but is used mainly for internal purposes.

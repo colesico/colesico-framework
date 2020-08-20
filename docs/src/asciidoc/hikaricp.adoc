@@ -1,6 +1,6 @@
 [[intro]]
 
-== Colesico-HikariCP
+= Colesico-HikariCP
 
 HikariCP - Fast, simple, reliable. HikariCP is a "zero-overhead" production ready JDBC connection pool.
 This pool is the default pool used in the framework.

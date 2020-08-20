@@ -1,6 +1,6 @@
 [[intro]]
 
-== Colesico-Profile
+= Colesico-Profile
 
 This module is used as centralized access point to user profile.
 Profile is a sets of data associated with a specific user to customize the representation of information for user.

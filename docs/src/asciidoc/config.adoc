@@ -1,6 +1,6 @@
 [[intro]]
 
-== Colesico-Config
+= Colesico-Config
 
 This module automates the usage of configuration beans and integrates its with the IoC container.
 

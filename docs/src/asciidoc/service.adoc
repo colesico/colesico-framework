@@ -1,6 +1,6 @@
 [[intro]]
 
-== Colesico-Service
+= Colesico-Service
 
 Services are the basic essence of representing business logic in applications.
 Weblet, restlet, rpc beans  are also based on them.

@@ -1,5 +1,5 @@
 [[intro]]
 
-== Colesico-HTTPServer
+= Colesico-HTTPServer
 
 This module is designed to unify and support the integration the framework with different http servers, for example undertow, jetty.

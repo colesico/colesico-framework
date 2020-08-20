@@ -1,6 +1,6 @@
 [[intro]]
 
-== Colesico-IoC
+= Colesico-IoC
 
 Colesico-IoC is a simple, lightweight and fast dependency injection container for Java 14 and above.
 
