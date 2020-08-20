@@ -1,0 +1,92 @@
+[[intro]]
+
+== Colesico-HikariCP
+
+HikariCP - Fast, simple, reliable. HikariCP is a "zero-overhead" production ready JDBC connection pool.
+This pool is the default pool used in the framework.
+
+
+HikariCP pool can be configured with different ways.
+
+== Default properties file
+
+The easiest way to set up a pool is with the *hikari.properties* file.
+This file may be located in a *./config* subdirectory of application working directory or in *META-INF*
+resource folder of application.
+The framework will look for this file first in the directory and then in the resources.
+
+To get DataSource configured with hikari.properties just inject it @Classed qualifier:
+
+[source,java]
+----
+
+// Constructor
+public MyService(@Classed(HikariProperties.class) DataSource ds){
+   this.ds = ds;
+}
+
+----
+
+== Custom properties file(s)
+
+In the case of working with several data sources, use different properties files.
+
+Define custom config with getFileName() method overriding:
+
+[source,java]
+----
+
+@Config
+public class CustomHikariProperties extends HikariProperties {
+    @Override
+    protected String getFileName() {
+        return "custom-hikari.properties";
+    }
+}
+
+----
+TIP: Here is also getDirectory() and getClassPath() methods can be overridden to chang properties file location.
+
+Then inject DataSource to your service with @Classed qualifier:
+
+[source,java]
+----
+
+// Constructor
+public MyService(@Classed(CustomHikariProperties.class) DataSource ds){
+   this.ds = ds;
+}
+
+----
+
+== Programmatic configuration
+
+It is used when it is necessary to make flexible software configuration using the
+HikariConfig class.
+
+Define config implementation:
+
+[source,java]
+----
+
+@Config
+public class MyHikariConfig extends HikariConfigPrototype{
+    @Override
+    public final HikariConfig getHikariConfig() {
+        // initialize and return HikariConfig object
+    }
+}
+
+----
+
+Then inject DataSource to your service with @Classed qualifier:
+
+[source,java]
+----
+
+// Constructor
+public MyService(@Classed(MyHikariConfig.class) DataSource ds){
+   this.ds = ds;
+}
+
+----
