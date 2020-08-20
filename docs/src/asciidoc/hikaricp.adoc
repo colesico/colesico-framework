@@ -15,7 +15,7 @@ This file may be located in a *./config* subdirectory of application working dir
 resource folder of application.
 The framework will look for this file first in the directory and then in the resources.
 
-To get DataSource configured with hikari.properties just inject it @Classed qualifier:
+To get DataSource configured with hikari.properties just inject it with @Classed qualifier:
 
 [source,java]
 ----
