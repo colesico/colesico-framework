@@ -1,0 +1,88 @@
+= JDBC integration module
+
+This module provides support for using jdbc connection, data source through IoC injection and support for transaction management with TransactionalShell.
+
+Typical usage in the service:
+
+[source,java]
+----
+@Service
+public class MyService {
+
+    private final Provider<Connection> connProv;
+
+    @Inject
+    public TheService(Provider<Connection> connProv) {
+        this.connProv = connProv;
+    }
+
+    @Transactional
+    public String update() {
+
+       try (Statement stmt = connectionProv.get().createStatement()){
+            stmt.executeUpdate();
+       }  catch (SQLException e) {
+           // ...
+       }
+
+        // No need to commit transaction and close connection
+    }
+}
+----
+
+== Setup
+
+
+1) Configure data source
+
+To configure default datasource create hikari.properties file in the resources META-INF.
+
+[source,properties]
+----
+driverClassName=...
+jdbcUrl=jdbc:...
+----
+
+2) Create jdbc producer
+
+Create IoC producer to produce JDBC transactional shell, connection and data source:
+
+
+[source,java]
+----
+@Producer
+public class JdbcProducer {
+
+    /**
+     * Define transactional shell to control transactions.
+     * DataSource is a HikariCP data source configured by hikari.properties file
+     */
+    @Singleton
+    public TransactionalShell getTransactionalShell(@Classed(HikariProperties.class) DataSource ds) {
+        return new JdbcTransactionalShell(ds);
+    }
+
+    /**
+     * Define connection providing from transactional shell
+     */
+    @Unscoped
+    public Connection getConnection(TransactionalShell txShell) {
+        return ((JdbcTransactionalShell) txShell).getConnection();
+    }
+
+    /**
+     * Optionally define the data source providing
+     */
+    @Unscoped
+    public DataSource getDataSource(TransactionalShell txShell) {
+        return ((JdbcTransactionalShell) txShell).getDataSource();
+    }
+
+}
+----
+
+== Examples
+
+See full source code in the framework source code section #examples/jdbi-example#
+
+
