@@ -1,6 +1,7 @@
 = JDBC integration module
 
-This module provides support for using jdbc connection, data source through IoC injection and support for transaction management with TransactionalShell.
+This module provides support for using jdbc connection through IoC injection and support
+for database transaction management with TransactionalShell (@Transactional annotation).
 
 Typical usage in the service:
 
@@ -63,7 +64,7 @@ public class JdbcProducer {
     }
 
     /**
-     * Define connection providing from transactional shell
+     * Produce connection providing from transactional shell
      */
     @Unscoped
     public Connection getConnection(TransactionalShell txShell) {
@@ -71,7 +72,7 @@ public class JdbcProducer {
     }
 
     /**
-     * Optionally define the data source providing
+     * Optionally produce the data source from TxShell
      */
     @Unscoped
     public DataSource getDataSource(TransactionalShell txShell) {
