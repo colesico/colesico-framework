@@ -36,7 +36,7 @@ public class MyService {
 
 == Simple usage
 
-In case of a single jdbi instance can be used the predefined JdbiConfig default configuration class.
+In case of a single jdbi instance can be used the predefined DefaultJdbiConfig configuration class.
 
 1) Configure data source by creating _hikari.properties_ file:
 
@@ -55,7 +55,7 @@ Application can have multiple separate JdbiOptions classes.
 [source,java]
 ----
 @Config
-@Classed(JdbiConfig.class)
+@Classed(DefaultJdbiConfig.class)
 public class JdbiOptions extends JdbiOptionsPrototype {
 
     @Override
@@ -78,7 +78,7 @@ public class JdbiProducer {
      * Produce transactional shell to control transactions.
      */
     @Singleton
-    public TransactionalShell getTxShell(@Classed(JdbiConfig.class) Jdbi jdbi) {
+    public TransactionalShell getTxShell(@Classed(DefaultJdbiConfig.class) Jdbi jdbi) {
         return new JdbiTransactionalShell(jdbi);
     }
 

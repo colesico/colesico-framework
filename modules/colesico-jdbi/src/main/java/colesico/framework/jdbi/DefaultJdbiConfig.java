@@ -29,16 +29,16 @@ import javax.sql.DataSource;
  * To override this config use {@link  colesico.framework.ioc.conditional.Substitute}
  */
 @Config
-public final class JdbiConfig extends AbstractJdbiConfig {
+public final class DefaultJdbiConfig extends AbstractJdbiConfig {
 
     @Inject
-    public JdbiConfig(
+    public DefaultJdbiConfig(
 
             // Jdbi will use hikaricp data source configured with hikari.properties file
             @Classed(HikariProperties.class) DataSource dataSource,
 
             // Optional configurations will be applied to the jdbi instance.
-            @Classed(JdbiConfig.class) Polysupplier<JdbiOptionsPrototype> options) {
+            @Classed(DefaultJdbiConfig.class) Polysupplier<JdbiOptionsPrototype> options) {
 
         super(dataSource, options);
     }

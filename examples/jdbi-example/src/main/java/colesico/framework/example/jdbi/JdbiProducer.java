@@ -18,11 +18,9 @@ package colesico.framework.example.jdbi;
 
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.ioc.scope.Unscoped;
-import colesico.framework.jdbi.JdbiConfig;
+import colesico.framework.jdbi.DefaultJdbiConfig;
 import colesico.framework.jdbi.JdbiTransactionalShell;
 import colesico.framework.transaction.TransactionalShell;
-import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
 import javax.inject.Singleton;
@@ -37,7 +35,7 @@ public class JdbiProducer {
      * Define transactional shell to control transactions.
      */
     @Singleton
-    public TransactionalShell getTransactionalShell(@Classed(JdbiConfig.class) Jdbi jdbi) {
+    public TransactionalShell getTransactionalShell(@Classed(DefaultJdbiConfig.class) Jdbi jdbi) {
         return new JdbiTransactionalShell(jdbi);
     }
 
