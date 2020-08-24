@@ -1,6 +1,6 @@
 = JDBI integration module
 
-This module is used to provide an ability to use JDBI within services via the "Handle" injection.
+This module  provides an ability to use JDBI within services via the "Handle" injection.
 It is also provides a transaction management support with TransactionalShell.
 
 Typical usage:
