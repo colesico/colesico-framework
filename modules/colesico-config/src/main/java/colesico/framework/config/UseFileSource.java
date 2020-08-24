@@ -3,7 +3,7 @@ package colesico.framework.config;
 import java.lang.annotation.*;
 
 /**
- * @UseSource extension to user for file based config sources.
+ * @UseSource extension to use for file based config sources.
  * It is shortcut for @UseSource and @SourceOption(name = FILE_OPTION, value = "...")...
  */
 @Retention(RetentionPolicy.RUNTIME)

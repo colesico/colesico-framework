@@ -22,13 +22,14 @@ There are two configuration bean types:
 Configuration bean can provide hard coded values or load it from external sources (properties/yaml files, database, etc.).
 Module has build-in support for an external configuration value sources:
 
-* @UseSource annotation is used to define configuration source (*.properties file source supported out-of-the-box.
-  Support for yaml files or database, etc. can be additionally implemented)
+* @UseSource annotation defines configuration source (*.properties file source supported out-of-the-box.
+  Support - for yaml files or database, etc. can be additionally implemented)
 * @SourceOption annotation is used to define configuration source custom option. For example specify a configuration file name.
 * @FromSource annotation defines the value to be bound from data source.
+* @UseFileSource - defines file-based config source. It is shortcut, internally
+  framework converts it to @UseSource and @SourceOption(name = ..., value = "...")
 
-
-=== Prototype-based configuration
+== Prototype-based configuration
 
 Config module supports different prototype-based configuration models:
 
@@ -43,19 +44,19 @@ Config module supports different prototype-based configuration models:
 * Message. Configuration of tis model is not used directly via injection. To get this configuration the bean should receive configuration instance via IOC Message.
   The client can inject that  bean by specifying the @Classed qualifier with the configuration implementation class
 
-=== Configuration source
+== Configuration source
 
 The configuration source  is used to supply values to configuration beans.
 For example, it allows to assign values from *.properties or yaml files.
 Framework has an out-of-the-box support for the binding a properties files.
 
-====  Customized configuration source
+==  Customized configuration source
 
-To create new custom configuration source define its class  that implements ConfigSource interface.
-To use this new custom configuration source as default  define its IoC producing  with IoC producer.
-Also, it is possible to use this source directly by specifying it in @UseSource annotation.
+To create new custom configuration source define its class that implements ConfigSource
+interface. To use this new custom configuration source as default  define its IoC producing  with IoC producer.
+Also, it is possible to use this source directly by specifying it in @UseSource/@UseFileSource annotation.
 
-=== Examples
+== Examples
 
 See full source code in the framework source code section #examples/config-example#
 
