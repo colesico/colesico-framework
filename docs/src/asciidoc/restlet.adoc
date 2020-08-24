@@ -1,17 +1,17 @@
 = Restlet module
 
-Restlet is the RESTfull requests controller. It provides processing such requests in
+Restlet is a REST requests controller. It provides processing such requests in
 terms of converting input parameters to java classes and the reverse process for answering.
 
 Restlet is primarily focused on working with JSON.
-Compared to JAX-RS, a restlets has a smaller set of features, but it is flexible enough to use, lightweight
+Compared to JAX-RS, restlets has a smaller set of features, but it is flexible enough to use, lightweight
 and very fast.
 
 == Restlet definition
 
 Restlet is just a  POJO  java class annotated with @Restlet annotation.
 From the framework point of view, the restlet is a service and accordingly has all the features
-of the <<service.adoc#,service>>.
+of the <<service.adoc#, service>>.
 
 == Requests routing
 

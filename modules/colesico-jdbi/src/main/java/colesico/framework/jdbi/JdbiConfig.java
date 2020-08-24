@@ -14,34 +14,31 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.jdbi;
+package colesico.framework.jdbi;
 
 import colesico.framework.config.Config;
 import colesico.framework.hikaricp.HikariProperties;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.jdbi.AbstractJdbiConfig;
-import colesico.framework.jdbi.JdbiOptionsPrototype;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
 /**
- * This is main jdbi config based on default jdbi config
+ * Default jdbi config.
+ * To override this config use {@link  colesico.framework.ioc.conditional.Substitute}
  */
 @Config
-public class JdbiConfig extends AbstractJdbiConfig {
+public final class JdbiConfig extends AbstractJdbiConfig {
 
     @Inject
     public JdbiConfig(
 
             // Jdbi will use hikaricp data source configured with hikari.properties file
-            @Classed(HikariProperties.class)
-                    DataSource dataSource,
+            @Classed(HikariProperties.class) DataSource dataSource,
 
             // Optional configurations will be applied to the jdbi instance.
-            @Classed(JdbiConfig.class)
-                    Polysupplier<JdbiOptionsPrototype> options) {
+            @Classed(JdbiConfig.class) Polysupplier<JdbiOptionsPrototype> options) {
 
         super(dataSource, options);
     }

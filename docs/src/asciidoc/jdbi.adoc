@@ -1,26 +1,27 @@
 = JDBI integration module
 
-This module is used to provide an ability to use JDBI  within services via  the "Handle" injection.
-It is also provides a transaction management support  with TransactionalShell.
+This module is used to provide an ability to use JDBI within services via the "Handle" injection.
+It is also provides a transaction management support with TransactionalShell.
 
-Typical usage in the service:
+Typical usage:
 
+.MyService.java
 [source,java]
 ----
 @Service
-public class TheService {
+public class MyService {
 
     private final Provider<Handle> handleProv;
 
     @Inject
-    public TheService(Provider<Handle> handleProv) {
+    public TheService(Provider<Handle> handleProv) { <.>
         this.handleProv = handleProv;
     }
 
     @Transactional
     public String readFromDB() {
 
-        return handleProv.get()  // Obtain attached to a transaction Jdbi Handle
+        return handleProv.get()  <.>
                   .createQuery(...)
                   .bind(...)
                   .mapTo(String.class)
@@ -30,14 +31,41 @@ public class TheService {
     }
 }
 ----
+<.> Inject handler provider
+<.> Obtain attached to a transaction Jdbi Handle
 
-== Usage
+== Simple usage
 
-. Create custom Jdbi configuration class that extends JdbiConfigPrototype.
-  This config is used to provide a DataSource to Jdbi instance.
-. Create custom Jdbi optional config class that extends JdbiOptionsPrototype.
-. Define producer that produce TransactionalShell implemented by JdbiTransactionalShell;
-. Also define producing method that provides Jdbi Handle instance from JdbiTransactionalShell.
+In case of a single jdbi instance can be used the predefined JdbiConfig default configuration class.
+
+1) Configure data source by creating _hikari.properties_ file:
+
+.config/hikari.properties or META-INF/hikari.properties
+[source,properties]
+----
+driverClassName=...
+jdbcUrl=jdbc:...
+----
+
+2) Optionally create custom jdbi options class extends JdbiOptionsPrototype.
+This class can be used for jdbi extra configuration.
+Application can have multiple separate JdbiOptions classes.
+
+.JdbiOptions.java
+[source,java]
+----
+@Config
+@Classed(JdbiConfig.class)
+public class JdbiOptions extends JdbiOptionsPrototype {
+
+    @Override
+    public void applyOptions(Jdbi jdbi) {
+        // Apply configuration to jdbi instance
+    }
+}
+----
+
+3) Define a producer that produce TransactionalShell implemented by JdbiTransactionalShell.
 
 Producer example:
 
@@ -47,21 +75,91 @@ Producer example:
 public class JdbiProducer {
 
     /**
-     * Define transactional shell to control transactions.
+     * Produce transactional shell to control transactions.
      */
     @Singleton
-    public TransactionalShell getTransactionalShell(@Classed(CustomJdbiConfig.class) Jdbi jdbi) {
+    public TransactionalShell getTxShell(@Classed(JdbiConfig.class) Jdbi jdbi) {
+        return new JdbiTransactionalShell(jdbi);
+    }
+
+}
+----
+
+== Multiple jdbi instances
+
+To use multiple jdbi instances, or customize default jdbi configuration use a custom configuration.
+
+1) Create a set of custom jdbi configuration classes extends AbstractJdbiConfig (or JdbiConfigPrototype) for each jdbi instance.
+This config will be used to provide the DataSource and apply JdbiOptions to the Jdbi instance.
+
+.CustomJdbiConfig.java
+[source,java]
+----
+@Config
+public class CustomJdbiConfig extends AbstractJdbiConfig {
+
+    @Inject
+    public CustomJdbiConfig(
+
+            // Jdbi will use user defined custom hikaricp data source
+            @Classed(CustomHikariProperties.class) DataSource dataSource,
+
+            // Optional configurations will be applied to the jdbi instance.
+            @Classed(CustomJdbiConfig.class) Polysupplier<JdbiOptionsPrototype> options) {
+
+        super(dataSource, options);
+    }
+}
+----
+
+2) Define appropriate producer to produce TransactionalSnell and Handle bound to each jdbi instance
+
+.CustomJdbiProducer.java
+[source,java]
+----
+@Producer
+public class CustomJdbiProducer {
+
+    /**
+     * Produce transactional shell to control transactions.
+     */
+    @Singleton
+    @Named("custom")
+    public TransactionalShell getTxShell(@Classed(CustomJdbiConfig.class) Jdbi jdbi) {
         return new JdbiTransactionalShell(jdbi);
     }
 
     /**
-     * Define handle providing from transactional shell
+     * Produce custom handle providing from transactional shell
      */
     @Unscoped
-    public Handle getHandle(TransactionalShell txShell) {
+    @Named("custom")
+    public Handle getHandle(@Named("custom") TransactionalShell txShell) {
         return ((JdbiTransactionalShell) txShell).getHandle();
     }
 
+}
+----
+
+Inject custom jdbi handle with @Named annotation
+
+.MyService.java
+[source,java]
+----
+@Service
+public class MyService {
+
+    private final Provider<Handle> handleProv;
+
+    @Inject
+    public TheService(@Named("custom") Provider<Handle> handleProv) {
+        this.handleProv = handleProv;
+    }
+
+    @Transactional(shell="custom")
+    public String readFromDB() {
+        return handleProv.get()....
+    }
 }
 ----
 

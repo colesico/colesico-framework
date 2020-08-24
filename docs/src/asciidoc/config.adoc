@@ -2,7 +2,7 @@
 
 = Colesico-Config
 
-This module automates the usage of configuration beans and integrates its with the IoC container.
+This module automates the usage of configuration beans and integrates them with the IoC container.
 
 In general, colesico configuration bean is a class with methods that returns or sets some configurations values.
 For example it may be used to provide for an endpoint address or  configure a JDBC DataSource instance
@@ -12,10 +12,10 @@ Configuration beans can be obtained from IoC container.
 
 There are two configuration bean types:
 
-1. Simple configuration bean. This is just a pojo class annotated with @Config annotation. It can be used to the directly
-   definition and supplying configuration values.
-2. Prototype-based configuration bean. This type of beans  is an instance of a class that extends
-   a configuration "prototype" class ("template"). This type of configuration is used for deferred configuration definition.
+1. Simple configuration bean. This is just a pojo class annotated with @Config annotation.
+   It can be used to the directly definition and supplying configuration values.
+2. Prototype-based configuration bean. This type of beans  is an instance of a class extends
+   a configuration "prototype" class ("template"). This type of configuration is used to deferred configuration definition.
    For example a Service can define configuration prototype bean, and the Client can create configuration based on that prototype to
    provide some configurations to the Service.
 
@@ -32,10 +32,14 @@ Module has build-in support for an external configuration value sources:
 
 Config module supports different prototype-based configuration models:
 
-* Single. This type of configuration is used to define some global configuration that is the only configuration instance per application (per IoC container).
-  The configuration in this model may be obtained from IoC container by configuration prototype class name.
-  Named or Classed IoC qualifiers can be additionally used on config implementation to differentiate  config singletons.
-* Polyvariant. This type of configuration is used to define some  optional configurations or additional configurations that should be "aggregated"  to fully configure the "service". I.e. it is the multiple configurations instances per application, that may be obtained from injector with  Polyprovider of configuration prototype class name. Named or Classed IoC qualifiers can be additionally used on config implementation to differentiate polyvariant sets.
+* Single. This type of configuration is used to define some global configuration that is the only configuration instance
+  per application (per IoC container).  The configuration in this model may be obtained from IoC container by configuration
+  prototype class name.  Named or Classed IoC qualifiers can be additionally used on config implementation to differentiate
+  config singletons.
+* Polyvariant. This type of configuration is used to define some  optional configurations or additional configurations
+  that should be "aggregated"  to fully configure the "service". I.e. it is the multiple configurations instances per
+  application, that may be obtained from injector with  Polyprovider of configuration prototype class name.
+  Named or Classed IoC qualifiers can be additionally used on config implementation to differentiate polyvariant sets.
 * Message. Configuration of tis model is not used directly via injection. To get this configuration the bean should receive configuration instance via IOC Message.
   The client can inject that  bean by specifying the @Classed qualifier with the configuration implementation class
 
@@ -49,7 +53,7 @@ Framework has an out-of-the-box support for the binding a properties files.
 
 To create new custom configuration source define its class  that implements ConfigSource interface.
 To use this new custom configuration source as default  define its IoC producing  with IoC producer.
-Also it is possible to use this source directly by specifying it in @UseSource annotation.
+Also, it is possible to use this source directly by specifying it in @UseSource annotation.
 
 === Examples
 

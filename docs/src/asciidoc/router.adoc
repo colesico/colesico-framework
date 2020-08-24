@@ -11,7 +11,7 @@ Router concatenates class simple name with method name and converts camel case n
 
 There are special cases:
 
-* Controller classes names started with "Index" is associated with local root route '/' (the root of package route)
+* Controller classes names started with "Index" associated with local root route '/' (the root of package route)
   This is an analouge of @Route("./") definition (see below)
 * Method name "index" is associated with local root route '/' (the root of controller route).
   This is an analouge of @Route("./") definition

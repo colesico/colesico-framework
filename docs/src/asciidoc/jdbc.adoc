@@ -3,8 +3,9 @@
 This module provides support for using jdbc connection through IoC injection and support
 for database transaction management with TransactionalShell (@Transactional annotation).
 
-Typical usage in the service:
+Typical usage within the service:
 
+.MyService.java
 [source,java]
 ----
 @Service
@@ -36,8 +37,9 @@ public class MyService {
 
 1) Configure data source
 
-To configure default datasource create hikari.properties file in the resources META-INF.
+To configure default datasource create hikari.properties file.
 
+.config/hikari.properties or META-INF/hikari.properties
 [source,properties]
 ----
 driverClassName=...
@@ -48,7 +50,7 @@ jdbcUrl=jdbc:...
 
 Create IoC producer to produce JDBC transactional shell, connection and data source:
 
-
+.JdbcProducer.java
 [source,java]
 ----
 @Producer

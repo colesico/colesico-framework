@@ -31,7 +31,7 @@ public MyService(@Classed(HikariProperties.class) DataSource ds){
 
 In the case of working with several data sources, use different properties files.
 
-Define custom config with getFileName() method overriding:
+Define a custom config with getFileName() method overriding:
 
 [source,java]
 ----
@@ -90,3 +90,7 @@ public MyService(@Classed(MyHikariConfig.class) DataSource ds){
 }
 
 ----
+
+== Examples
+
+See full source code in the framework source code section #examples/jdbc-example#

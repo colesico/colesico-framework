@@ -19,6 +19,7 @@ package colesico.framework.example.jdbi;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
+import colesico.framework.jdbi.JdbiConfig;
 import colesico.framework.jdbi.JdbiTransactionalShell;
 import colesico.framework.transaction.TransactionalShell;
 import org.jdbi.v3.core.Handle;
@@ -40,12 +41,5 @@ public class JdbiProducer {
         return new JdbiTransactionalShell(jdbi);
     }
 
-    /**
-     * Define handle providing from transactional shell
-     */
-    @Unscoped
-    public Handle getHandle(TransactionalShell txShell) {
-        return ((JdbiTransactionalShell) txShell).getHandle();
-    }
 
 }

@@ -3,12 +3,11 @@
 = Colesico-Service
 
 Services are the basic essence of representing business logic in applications.
-Weblet, restlet, rpc beans  are also based on them.
-It provides the opportunity for various automation for business logic beans, weblets,
+It provides the opportunity for various automation for business logic beans, (weblets,
 restlets and others built on their basis. For example, they provide support for
 transaction management, support for remote methods invocations, interceptors.
 
-Servives is a regular POJO with @Service annotation.
+Services is a regular POJOs with @Service annotation.
 
 Simple service example:
 
@@ -27,17 +26,17 @@ public class MyService {
 
 Services are integrated in the IoC  (Dependency Injection module).
 There is no need to declare an IoC producer to use service beans in the context
-of dependency injection. Services are singleton by default. But their scope can be
-redefined using the appropriate annotations (@ThreadScoped , e.t.c)
+of dependency injection. Service is singleton by default. But their scope can be
+redefined using the appropriate annotations (@ThreadScoped , etc)
 
 To automate the service beans the framework uses code generation  at the compilation stage.
-It creates proxy classes that extend service classes.
+It creates a proxy classes that extends service classes.
 
 == Service methods
 
 By default, the service methods that the framework instrumentates are all public methods of the service bean.
-To instrumentate a protected method,  should use the @ServiceMethod annotation (on method or class).
-To exclude method from instrumentation  should use the @PlainMethod annotation.
+To instrumentate a protected method,  use the @ServiceMethod annotation (on method or class).
+To exclude method from instrumentation  use the @PlainMethod annotation.
 
 == Self method invocation
 
