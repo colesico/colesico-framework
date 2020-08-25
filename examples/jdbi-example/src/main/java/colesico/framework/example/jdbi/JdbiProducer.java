@@ -32,12 +32,11 @@ import javax.inject.Singleton;
 public class JdbiProducer {
 
     /**
-     * Define transactional shell to control transactions.
+     * Produce transactional shell to control transactions.
      */
     @Singleton
     public TransactionalShell getTransactionalShell(@Classed(DefaultJdbiConfig.class) Jdbi jdbi) {
         return new JdbiTransactionalShell(jdbi);
     }
-
 
 }
