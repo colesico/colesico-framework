@@ -57,7 +57,8 @@ Obtaining instances with injected dependencies is done using these methods:
 
 * instance - returns class instance
 * provider - returns class instance provider (javax.inject.Provider<>), is used to "deferred" instance obtaining/creation.
-* supplier - returns class instance supplier, is used to "deferred" instance obtaining/creation with the ability to pass a message.
+* supplier - returns class instance supplier, is used to "deferred" instance obtaining/creation with the ability to pass
+  a  <<messages,message>>.
 * polysupplier - returns chain of class instance suppliers (colesico.framework.ioc.production.Polysupplier<>)
 
 To specify what instance to return, use the "keys":
@@ -66,6 +67,7 @@ To specify what instance to return, use the "keys":
 * NamedKey - allows to specify instance class and the named label
 * ClassedKey - this is like the NamedKey but instead of a string label is used any class.
 
+[source,java]
 ----
   MyBean defaultBean = ioc.instance(new TypeKey(MyBean.class), null);
   MyBean namedBean = ioc.instance(new NamedKey(MyBean.class,"AnyName"), null);
@@ -244,6 +246,7 @@ The constructor parameters can be annotated with the @Named, @Classed annotation
 (for named/classed dependencies)
 
 == Messages
+[[messages]]
 
 The messages are an instance supplying conception when it is possible to pass any object
 as a parameter for instance creation. For example this may be used for Logger
