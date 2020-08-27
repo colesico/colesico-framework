@@ -51,7 +51,7 @@ abstract public class ParserElement extends Assist {
 
     public String getPackageName() {
         PackageElement packageElement = getPackage();
-        return packageElement.toString();
+        return packageElement.getQualifiedName().toString();
     }
 
 
