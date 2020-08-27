@@ -18,6 +18,7 @@ package colesico.framework.jdbirec.codegen.parser;
 
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
@@ -182,7 +183,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
             columnElement.setExportable(columnAnnElm.unwrap().exportable());
 
             TypeMirror mediatorType = columnAnnElm.getValueTypeMirror(Column::mediator);
-            if (!mediatorType.toString().equals(FieldMediator.class.getName())) {
+            if (!CodegenUtils.isAssignable(FieldMediator.class, mediatorType, processingEnv)) {
                 columnElement.setMediator(new ClassType(processingEnv, (DeclaredType) mediatorType));
             }
 
@@ -227,6 +228,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
             }
 
         }
+
     }
 
     private List<Composition> getCompositions(FieldElement field) {
@@ -305,7 +307,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
         ClassType superClass = null;
         List<ClassType> interfaces = recordKitClass.getInterfaces();
         for (ClassType iface : interfaces) {
-            if (iface.getErasure().toString().equals(RecordKit.class.getName())) {
+            if (iface.getErasure().toString().equals(RecordKit.class.getCanonicalName())) {
                 superClass = iface;
                 break;
             }

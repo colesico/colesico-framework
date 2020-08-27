@@ -17,6 +17,7 @@
 package colesico.framework.config.codegen;
 
 import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
@@ -77,7 +78,7 @@ public class ConfigParser extends FrameworkAbstractParser {
             AnnotationAssist<ConfigPrototype> prototypeAnn = configPrototype.getAnnotation(ConfigPrototype.class);
             model = prototypeAnn.unwrap().model();
             TypeMirror targetMirror = prototypeAnn.getValueTypeMirror(ConfigPrototype::target);
-            if (targetMirror.toString().equals(Object.class.getName())) {
+            if (CodegenUtils.isAssignable(Object.class, targetMirror, processingEnv)) {
                 target = null;
             } else {
                 target = ClassElement.fromType(processingEnv, (DeclaredType) targetMirror);

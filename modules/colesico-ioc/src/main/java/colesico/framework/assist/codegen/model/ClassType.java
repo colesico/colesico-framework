@@ -70,6 +70,10 @@ public class ClassType extends ParserType {
         return getTypeUtils().asMemberOf(originType, element);
     }
 
+    public String getName() {
+        return originType.toString();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -18,6 +18,10 @@ package colesico.framework.ioc.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassType;
 
+/**
+ * Represents condition for @Requires
+ * @see colesico.framework.ioc.conditional.Requires
+ */
 public class ConditionElement {
     private ClassType conditionClass;
 

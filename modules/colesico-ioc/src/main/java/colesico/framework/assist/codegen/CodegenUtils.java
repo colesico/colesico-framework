@@ -28,6 +28,8 @@ import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
@@ -51,10 +53,10 @@ public class CodegenUtils {
 
     public static void createJavaFile(ProcessingEnvironment procEnv, TypeSpec typeSpec, String packageName, Element... linkedElements) {
         final JavaFile javaFile = JavaFile.builder(packageName, typeSpec)
-            .addFileComment("This is automatically generated file. Do not modify!")
-            .skipJavaLangImports(true)
-            .indent("    ")
-            .build();
+                .addFileComment("This is automatically generated file. Do not modify!")
+                .skipJavaLangImports(true)
+                .indent("    ")
+                .build();
 
         String fullName = javaFile.packageName + "." + typeSpec.name;
         try {
@@ -252,4 +254,15 @@ public class CodegenUtils {
         }
         return isGenericType;
     }
+
+    /**
+     * Test class type is assignable to mirror type
+     */
+    public static boolean isAssignable(Class clazz, TypeMirror typeMirror, ProcessingEnvironment env) {
+        Elements elementUtils = env.getElementUtils();
+        Types typeUtils = env.getTypeUtils();
+        TypeMirror clazzMirror = elementUtils.getTypeElement(clazz.getCanonicalName()).asType();
+        return typeUtils.isAssignable(clazzMirror, typeMirror);
+    }
+
 }

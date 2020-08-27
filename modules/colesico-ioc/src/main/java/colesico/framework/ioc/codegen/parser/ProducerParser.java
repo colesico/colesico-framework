@@ -17,6 +17,7 @@
 package colesico.framework.ioc.codegen.parser;
 
 import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.Genstamp;
 import colesico.framework.assist.codegen.model.*;
@@ -252,7 +253,7 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         ClassType classed = null;
         TypeMirror classifier = produceAnn.getValueTypeMirror(Produce::classed);
-        if (!Class.class.getName().equals(classifier.toString())) {
+        if (!CodegenUtils.isAssignable(Class.class, classifier, processingEnv)) {
             classed = new ClassType(processingEnv, (DeclaredType) classifier);
         } else {
             // Get @Classed from class definition
@@ -278,7 +279,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         // Condition
         ConditionElement condition = null;
         TypeMirror conditionClass = produceAnn.getValueTypeMirror(Produce::requires);
-        if (!conditionClass.toString().equals(Condition.class.getCanonicalName())) {
+        if (!CodegenUtils.isAssignable(Condition.class, conditionClass, processingEnv)) {
             condition = new ConditionElement(new ClassType(getProcessingEnv(), (DeclaredType) conditionClass));
         } else {
             AnnotationAssist<Requires> reqAnn = iocletElement.getOriginProducer().getAnnotation(Requires.class);
@@ -328,7 +329,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         if (postProduceAnn != null) {
             TypeMirror classifier = postProduceAnn.getValueTypeMirror(PostProduce::withClassed);
             ClassType withClassed = null;
-            if (!Class.class.getName().equals(classifier.toString())) {
+            if (!CodegenUtils.isAssignable(Class.class, classifier, processingEnv)) {
                 withClassed = new ClassType(processingEnv, (DeclaredType) classifier);
             }
             String withNamed = StringUtils.isNotBlank(postProduceAnn.unwrap().withNamed()) ? postProduceAnn.unwrap().withNamed() : null;

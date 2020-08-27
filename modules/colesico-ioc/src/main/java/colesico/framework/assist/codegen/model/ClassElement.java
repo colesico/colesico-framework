@@ -17,6 +17,7 @@
 package colesico.framework.assist.codegen.model;
 
 import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.CodegenUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -92,7 +93,7 @@ public class ClassElement extends ParserElement {
     }
 
     public String getName() {
-        return originElement.toString();
+        return originElement.getQualifiedName().toString();
     }
 
     public String getSimpleName() {
@@ -168,8 +169,7 @@ public class ClassElement extends ParserElement {
         List<ExecutableElement> methods = ElementFilter.methodsIn(members);
         for (ExecutableElement method : methods) {
             TypeElement methodClass = (TypeElement) method.getEnclosingElement();
-            String methodClassName = methodClass.asType().toString();
-            if (methodClassName.equals(Object.class.getName())) {
+            if (CodegenUtils.isAssignable(Object.class, methodClass.asType(), processingEnv)) {
                 continue;
             }
             ExecutableType methodType = (ExecutableType) getTypeUtils().asMemberOf(originType, method);
@@ -187,8 +187,7 @@ public class ClassElement extends ParserElement {
         List<ExecutableElement> methods = ElementFilter.methodsIn(members);
         for (ExecutableElement method : methods) {
             TypeElement methodClass = (TypeElement) method.getEnclosingElement();
-            String methodClassName = methodClass.asType().toString();
-            if (methodClassName.equals(Object.class.getName())) {
+            if (CodegenUtils.isAssignable(Object.class, methodClass.asType(), processingEnv)) {
                 continue;
             }
             ExecutableType methodType = (ExecutableType) getTypeUtils().asMemberOf(originType, method);

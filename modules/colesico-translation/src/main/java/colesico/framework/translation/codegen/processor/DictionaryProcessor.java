@@ -17,6 +17,7 @@
 package colesico.framework.translation.codegen.processor;
 
 import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.AnnotationType;
@@ -107,9 +108,8 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
 
         List<MethodElement> methods = dictionaryBeanInterface.getMethodsFiltered(
                 m -> !m.unwrap().getModifiers().contains(Modifier.DEFAULT) &&
-                        m.unwrap().getReturnType().toString().equals(String.class.getName())
+                        CodegenUtils.isAssignable(String.class, m.unwrap().getReturnType(), processingEnv)
         );
-
 
         for (MethodElement method : methods) {
             dictionaryBeanElement.addTranslationMethod(method);

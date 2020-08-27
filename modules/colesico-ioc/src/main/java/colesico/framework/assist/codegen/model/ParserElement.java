@@ -88,7 +88,7 @@ abstract public class ParserElement extends Assist {
                 continue;
             }
             ModuleElement.ExportsDirective ed = (ModuleElement.ExportsDirective) d;
-            String pkgName = ed.getPackage().toString();
+            String pkgName = ed.getPackage().getQualifiedName().toString();
             if (!getPackage().getQualifiedName().toString().equals(pkgName)) {
                 continue;
             }
@@ -97,7 +97,7 @@ abstract public class ParserElement extends Assist {
                 return true;
             }
             for (ModuleElement m : targetModules) {
-                if (m.toString().equals(targetModule)) {
+                if (m.getQualifiedName().toString().equals(targetModule)) {
                     return true;
                 }
             }
