@@ -16,8 +16,6 @@
 
 package colesico.framework.ioc.key;
 
-import java.lang.reflect.Type;
-
 /**
  * The key for obtaining an instance from the IoC container by instance class and name.
  *
@@ -60,7 +58,7 @@ public final class NamedKey<T> implements Key<T> {
     @Override
     public String toString() {
         return "NamedKey{" +
-                "className='" + typeName + '\'' +
+                "typeName='" + typeName + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }

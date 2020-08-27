@@ -44,8 +44,6 @@ public @interface Produce {
 
     /**
      * Class of instance to be produced
-     *
-     * @return Class of instance to be produced
      */
     Class<?> value();
 
@@ -60,7 +58,6 @@ public @interface Produce {
     /**
      * Analogue of the @Polyproduce annotation
      *
-     * @return
      * @see Polyproduce
      */
     boolean polyproduce() default false;
@@ -68,7 +65,6 @@ public @interface Produce {
     /**
      * Analogue of the @Named annotation
      *
-     * @return name
      * @see javax.inject.Named
      */
     String named() default "";
@@ -76,23 +72,18 @@ public @interface Produce {
     /**
      * Analogue of th @Classed annotation
      *
-     * @return
      * @see Classed
      */
     Class<?> classed() default Class.class;
 
     /**
-     * Producer method name to be called after instance been produced but before instance @PostConstruct
-     * This method can be used to handle just created instance before it will be returned from IoC container
-     *
-     * @return
+     * Whether or not to invoke post produce listener after instance been produced (but before instance @PostConstruct).
+     * This  can be used to handle just created instance before it will be returned from IoC container
      */
     boolean postProduce() default false;
 
     /**
      * Whether or not to call instance @PostConstruct listeners
-     *
-     * @return
      */
     boolean postConstruct() default true;
 

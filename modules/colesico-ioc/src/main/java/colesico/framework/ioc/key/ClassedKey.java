@@ -16,8 +16,6 @@
 
 package colesico.framework.ioc.key;
 
-import java.lang.reflect.Type;
-
 /**
  * The key by which the IoC container will find the factory to instantiate the class T annotated with @Classed
  *
@@ -59,7 +57,7 @@ public final class ClassedKey<T> implements Key<T> {
     @Override
     public String toString() {
         return "ClassedKey{" +
-                "className='" + typeName + '\'' +
+                "typeName='" + typeName + '\'' +
                 ", classifier='" + classifier + '\'' +
                 '}';
     }
