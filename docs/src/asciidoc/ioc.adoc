@@ -323,24 +323,24 @@ public class ServiceBean{
 
 IoC container supports the following lifecycle listeners:
 
-* PostConstruct.
-The bean public method annotated with @PostConstruct annotation will be
-invoked by the IoC container after a bean has been created and PostProduce listener
+* Post construct.
+The bean public method annotated with _@PostConstruct_ annotation will be
+invoked by the IoC container after a bean has been created and post produce listener
 been invoked.
-* PostProduce.
-@PostProduce annotation should be applied to public producer method to declare post produce listener.
+* Post produce.
+_@PostProduce_ annotation should be applied to public producer method to declare post produce listener.
 The post produce listener invoked by the IoC container to handle just produced instance.
 
 === Listeners control
 
-By default, PostProduce life cycle listeners invocation is disabled and PostConstruct is enabled.
-To change this for a specific instance use @ListenersControl annotation on the producing method
-or @Produce.postProduce/postConstruct on default producing declarations.
+By default, post produce life cycle listeners invocation is disabled and post construct is enabled.
+To change this for a specific instance use _@ListenersControl_ annotation on the producing method
+or _@Produce.postProduce/postConstruct_ on default producing declarations.
 
-==== PostProduce
+=== @PostProduce
 
 Post produce listener invoked before @PostConstruct listener.
-PostProduce listener method should accept producing instance as message and return the
+Post produce listener method should accept producing instance as message and return the
 same instance (or substituted)
 
 Example:
@@ -360,7 +360,7 @@ public class ConfigProducer{
 }
 ----
 
-==== PostConstruct
+=== @PostConstruct
 
 Post construct listener invoke by IoC container after the instance has been created.
 To define a listener add @PostConstruct annotation on any no-params public instance class method.
