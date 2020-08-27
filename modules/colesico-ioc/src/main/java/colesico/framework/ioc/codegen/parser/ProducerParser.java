@@ -26,7 +26,7 @@ import colesico.framework.ioc.conditional.Requires;
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.listener.PostConstruct;
 import colesico.framework.ioc.listener.PostProduce;
-import colesico.framework.ioc.listener.ProducingOptions;
+import colesico.framework.ioc.listener.ListenersControl;
 import colesico.framework.ioc.message.Contextual;
 import colesico.framework.ioc.message.Message;
 import colesico.framework.ioc.production.*;
@@ -44,7 +44,6 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.List;
@@ -391,13 +390,13 @@ public class ProducerParser extends FrameworkAbstractParser {
         // notifyPostProduce notifyPostConstruct
         final boolean notifyPostProduce;
         final boolean notifyPostConstruct;
-        AnnotationAssist<ProducingOptions> optionsAnn = method.getAnnotation(ProducingOptions.class);
-        if (optionsAnn != null) {
-            notifyPostProduce = optionsAnn.unwrap().postProduce();
-            notifyPostConstruct = optionsAnn.unwrap().postConstruct();
+        AnnotationAssist<ListenersControl> listenersControlAnn = method.getAnnotation(ListenersControl.class);
+        if (listenersControlAnn != null) {
+            notifyPostProduce = listenersControlAnn.unwrap().postProduce();
+            notifyPostConstruct = listenersControlAnn.unwrap().postConstruct();
         } else {
             notifyPostProduce = false;
-            notifyPostConstruct = false;
+            notifyPostConstruct = postProduceAnn == null;
         }
 
         // postConstructListeners

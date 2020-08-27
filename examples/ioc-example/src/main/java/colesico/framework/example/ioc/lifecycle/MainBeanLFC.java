@@ -24,7 +24,7 @@ public class MainBeanLFC {
 
     @PostConstruct
     public void init(){
-        value = value + "Suffix";
+        value = value + "Init";
     }
 
     public String getValue() {

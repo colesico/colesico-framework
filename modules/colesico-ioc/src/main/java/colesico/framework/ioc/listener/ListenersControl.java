@@ -22,7 +22,7 @@ import colesico.framework.ioc.production.Producer;
 import java.lang.annotation.*;
 
 /**
- * Producer method code generation options
+ * Producer method code generation listeners control
  *
  * @author Vladlen Larionov
  * @see Produce
@@ -32,8 +32,16 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 @Inherited
 @Documented
-public @interface ProducingOptions {
-    boolean postConstruct() default false;
+public @interface ListenersControl {
 
+    /**
+     * Invoke post produce method
+     */
     boolean postProduce() default false;
+
+    /**
+     * Invoke post construct method
+     */
+    boolean postConstruct() default true;
+
 }

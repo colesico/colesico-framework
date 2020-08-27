@@ -331,6 +331,12 @@ been invoked.
 @PostProduce annotation should be applied to public producer method to declare post produce listener.
 The post produce listener invoked by the IoC container to handle just produced instance.
 
+=== Listeners control
+
+By default, PostProduce life cycle listeners invocation is disabled and PostConstruct is enabled.
+To change this for a specific instance use @ListenersControl annotation on the producing method
+or @Produce.postProduce/postConstruct on default producing declarations.
+
 ==== PostProduce
 
 Post produce listener invoked before @PostConstruct listener.

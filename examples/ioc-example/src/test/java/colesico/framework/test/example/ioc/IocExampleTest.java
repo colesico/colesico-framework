@@ -104,7 +104,7 @@ public class IocExampleTest {
     @Test
     public void testLifecycle(){
         MainBeanLFC lfc = ioc.instance(MainBeanLFC.class);
-        assertEquals(lfc.getValue(),"ValueSuffix");
+        assertEquals(lfc.getValue(),"ValueInit");
     }
 
 
