@@ -233,7 +233,7 @@ public class MyProducer{
 
 In this example the Instances of both classes MyBean1 and MyBean2 are singletones.
 
-=== Thread scopes
+=== Thread scope
 
 When the thread scope is used with threads from a thread pool,
 before using it in a thread retrieved from the pool,
