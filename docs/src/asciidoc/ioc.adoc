@@ -233,6 +233,13 @@ public class MyProducer{
 
 In this example the Instances of both classes MyBean1 and MyBean2 are singletones.
 
+=== Thread scopes
+
+When the thread scope is used with threads from a thread pool,
+before using it in a thread retrieved from the pool,
+it is  mandatory need call ThreadScope.init() on the scope instance
+and  call ThreadScope.destroy() before returning the thread to the pool.
+
 == Injectable constructors
 
 Classes for dependency injection may not have an explicitly defined constructor.
