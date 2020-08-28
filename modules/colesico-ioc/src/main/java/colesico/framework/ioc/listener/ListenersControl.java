@@ -24,7 +24,6 @@ import java.lang.annotation.*;
 /**
  * Producer method code generation listeners control
  *
- * @author Vladlen Larionov
  * @see Produce
  * @see Producer
  */
@@ -42,6 +41,6 @@ public @interface ListenersControl {
     /**
      * Invoke post construct method
      */
-    boolean postConstruct() default true;
+    boolean postConstruct() default false;
 
 }

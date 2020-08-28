@@ -166,7 +166,7 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
         classBuilder.addModifiers(Modifier.PUBLIC);
         classBuilder.addModifiers(Modifier.FINAL);
 
-        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "Producer: " + iocletElement.getOriginProducer().toString());
+        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "Producer: " + iocletElement.getOriginProducer().getName());
         classBuilder.addAnnotation(genstamp);
 
         generateProducerField();

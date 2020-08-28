@@ -245,6 +245,10 @@ If the constructor is the only, the @Inject annotation is optional.
 The constructor parameters can be annotated with the @Named, @Classed annotations
 (for named/classed dependencies)
 
+== Field/properties based injection
+
+This kind of injection is not supported.
+
 == Messages
 [[messages]]
 
@@ -333,9 +337,10 @@ The post produce listener invoked by the IoC container to handle just produced i
 
 === Listeners control
 
-By default, post produce life cycle listeners invocation is disabled and post construct is enabled.
-To change this for a specific instance use _@ListenersControl_ annotation on the producing method
-or _@Produce.postProduce/postConstruct_ on default producing declarations.
+By default, for the default producing (_@Produce_) post produce life cycle listeners invocation is disabled
+and post construct is enabled. For the producing methods all listener invocation are disabled.
+To enable listeners invocation for a specific instance use _@ListenersControl_ annotation on the producing
+method or _@Produce.postProduce/postConstruct_ on default producing declarations.
 
 === @PostProduce
 

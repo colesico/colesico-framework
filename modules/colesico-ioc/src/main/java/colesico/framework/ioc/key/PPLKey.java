@@ -20,6 +20,8 @@ import colesico.framework.ioc.listener.PostProduce;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.Objects;
+
 /**
  * Post produce listener key.
  * Is used for obtaining the post produce listener from the IOC container to perform post produce handling.
@@ -56,27 +58,17 @@ public final class PPLKey<T> implements Key<T> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
-
         PPLKey<?> pplKey = (PPLKey<?>) o;
-
-        return new EqualsBuilder()
-            .append(typeName, pplKey.typeName)
-            .append(withNamed, pplKey.withNamed)
-            .append(withClassed, pplKey.withClassed)
-            .isEquals();
+        return typeName.equals(pplKey.typeName) &&
+                Objects.equals(withNamed, pplKey.withNamed) &&
+                Objects.equals(withClassed, pplKey.withClassed);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-            .append(typeName)
-            .append(withNamed)
-            .append(withClassed)
-            .toHashCode();
+        return Objects.hash(typeName, withNamed, withClassed);
     }
-
 
     @Override
     public String toString() {

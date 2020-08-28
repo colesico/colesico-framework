@@ -29,7 +29,6 @@ import colesico.framework.example.ioc.singleton.Singleton1;
 import colesico.framework.example.ioc.singleton.Singleton2;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
-import org.apache.commons.lang3.StringUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -47,64 +46,64 @@ public class IocExampleTest {
     }
 
     @Test
-    public void testHelloWorld(){
+    public void testHelloWorld() {
         MainBeanHWD mainBean = ioc.instance(MainBeanHWD.class);
-        assertEquals(mainBean.sayHello(),"Hello");
+        assertEquals(mainBean.sayHello(), "Hello");
     }
 
     @Test
-    public void testImplement(){
+    public void testImplement() {
         MainBeanIMP mainBean = ioc.instance(MainBeanIMP.class);
-        assertEquals(mainBean.getValue(),"BeanImpl");
+        assertEquals(mainBean.getValue(), "BeanImpl");
     }
 
     @Test
-    public void testLogger(){
+    public void testLogger() {
         MainBeanLOG mainBean = ioc.instance(MainBeanLOG.class);
-        assertEquals(mainBean.getLogMessage(), MainBeanLOG.class.getName()+"Logger:Message");
+        assertEquals(mainBean.getLogMessage(), MainBeanLOG.class.getName() + "Logger:Message");
     }
 
     @Test
-    public void testMessage(){
+    public void testMessage() {
         MainBeanMSG mainBean = ioc.instance(MainBeanMSG.class);
-        assertEquals(mainBean.getMessageText(),"MainBeanMSG");
+        assertEquals(mainBean.getMessageText(), "MainBeanMSG");
     }
 
     @Test
-    public void testMultiplugin(){
+    public void testMultiplugin() {
         MainBeanMLP mainBean = ioc.instance(MainBeanMLP.class);
-        List<String> result =mainBean.getPluginsInfo();
+        List<String> result = mainBean.getPluginsInfo();
         Collections.sort(result);
-        assertEquals("Plugin1;Plugin2", StringUtils.join(result,";"));
+        assertEquals("Plugin1;Plugin2", result.get(0) + ";" + result.get(1));
     }
 
     @Test
-    public void testNamed(){
+    public void testNamed() {
         MainBeanNMD mainBean = ioc.instance(MainBeanNMD.class);
-        assertEquals(mainBean.getNames(),"Default;Custom");
+        assertEquals(mainBean.getNames(), "Default;Custom");
     }
 
     @Test
-    public void testSubstitute(){
+    public void testSubstitute() {
         MainBeanREP mainBean = ioc.instance(MainBeanREP.class);
-        assertEquals(mainBean.getPluginInfo(),"CustomBean");
+        assertEquals(mainBean.getPluginInfo(), "CustomBean");
     }
 
     @Test
-    public void testSingleton(){
+    public void testSingleton() {
         Singleton1 s1 = ioc.instance(Singleton1.class);
-        assertEquals(s1.getMessage(),"Singleton1-0");
-        assertEquals(s1.getMessage(),"Singleton1-1");
+        assertEquals(s1.getMessage(), "Singleton1-0");
+        assertEquals(s1.getMessage(), "Singleton1-1");
 
         Singleton2 s2 = ioc.instance(Singleton2.class);
-        assertEquals(s2.getMessage(),"Singleton2-0");
-        assertEquals(s2.getMessage(),"Singleton2-1");
+        assertEquals(s2.getMessage(), "Singleton2-0");
+        assertEquals(s2.getMessage(), "Singleton2-1");
     }
 
     @Test
-    public void testLifecycle(){
+    public void testLifecycle() {
         MainBeanLFC lfc = ioc.instance(MainBeanLFC.class);
-        assertEquals(lfc.getValue(),"ValueInit");
+        assertEquals(lfc.getValue(), "ValueInit");
     }
 
 

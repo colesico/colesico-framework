@@ -396,8 +396,10 @@ public class ProducerParser extends FrameworkAbstractParser {
             notifyPostProduce = listenersControlAnn.unwrap().postProduce();
             notifyPostConstruct = listenersControlAnn.unwrap().postConstruct();
         } else {
+            // For custom production, listeners can be called manually or
+            // there is no need to call them (for the case with services)
             notifyPostProduce = false;
-            notifyPostConstruct = postProduceAnn == null;
+            notifyPostConstruct = false;
         }
 
         // postConstructListeners
