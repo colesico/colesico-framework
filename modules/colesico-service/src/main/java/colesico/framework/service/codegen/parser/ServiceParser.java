@@ -19,6 +19,7 @@ package colesico.framework.service.codegen.parser;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
+import colesico.framework.ioc.listener.PostConstruct;
 import colesico.framework.ioc.scope.CustomScope;
 import colesico.framework.service.LocalMethod;
 import colesico.framework.service.PlainMethod;
@@ -112,13 +113,20 @@ public class ServiceParser extends FrameworkAbstractParser {
                 continue;
             }
 
+            // is plain ?
             boolean isPlain = isPlainMethod(method, classElement);
 
-            AnnotationAssist<LocalMethod> methodLocal = method.getAnnotation(LocalMethod.class);
-            boolean isLocal = methodLocal != null || classLocalAnn != null
+            // is local?
+            AnnotationAssist<LocalMethod> localAnn = method.getAnnotation(LocalMethod.class);
+            boolean isLocal = localAnn != null || classLocalAnn != null
                     || !method.unwrap().getModifiers().contains(Modifier.PUBLIC);
 
-            ProxyMethodElement proxyMethod = new ProxyMethodElement(method, isPlain, isLocal);
+            // is post construct listener?
+            AnnotationAssist<PostConstruct> pcListenerAnn = method.getAnnotation(PostConstruct.class);
+            boolean isPCListener = pcListenerAnn != null &&
+                    method.unwrap().getModifiers().contains(Modifier.PUBLIC);
+
+            ProxyMethodElement proxyMethod = new ProxyMethodElement(method, isPlain, isLocal, isPCListener);
             serviceElement.addProxyMethod(proxyMethod);
 
             context.getModulatorKit().notifyProxyMethod(proxyMethod);

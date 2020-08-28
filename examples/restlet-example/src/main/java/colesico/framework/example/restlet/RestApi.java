@@ -17,6 +17,7 @@
 package colesico.framework.example.restlet;
 
 import colesico.framework.http.HttpMethod;
+import colesico.framework.ioc.listener.PostConstruct;
 import colesico.framework.restlet.Restlet;
 import colesico.framework.restlet.teleapi.RestletResponseWriter;
 import colesico.framework.router.RequestMethod;
@@ -35,11 +36,18 @@ import static colesico.framework.httpserver.HttpServerAttribute.NON_BLOCKING;
 @Restlet
 public class RestApi {
 
+    private List<User> users;
+
+    @PostConstruct
+    public void init() {
+        users = Arrays.asList(new User(1L, "Ivan"), new User(2L, "John"));
+    }
+
     /**
      * GET http://localhost:8080/rest-api/list
      */
     public List<User> list() {
-        return Arrays.asList(new User(1L, "Ivan"), new User(2L, "John"));
+        return users;
     }
 
     /**

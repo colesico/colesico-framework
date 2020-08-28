@@ -22,6 +22,7 @@ import java.util.*;
 
 /**
  * Represent the method of a service proxy
+ *
  * @author Vladlen Larionov
  */
 public final class ProxyMethodElement {
@@ -47,6 +48,11 @@ public final class ProxyMethodElement {
      */
     private final boolean isLocal;
 
+    /**
+     * Method is post construct listener
+     */
+    private final boolean isCPListener;
+
     private final Map<String, List<InterceptionElement>> interceptionsByPhase;
 
     private InterceptionElement superMethodInterception;
@@ -56,10 +62,11 @@ public final class ProxyMethodElement {
      */
     private final Map<Class, Object> properties;
 
-    public ProxyMethodElement(MethodElement originMethod, boolean isPlain, boolean isLocal) {
+    public ProxyMethodElement(MethodElement originMethod, boolean isPlain, boolean isLocal, boolean isCPListener) {
         this.originMethod = originMethod;
         this.isPlain = isPlain;
         this.isLocal = isLocal;
+        this.isCPListener = isCPListener;
         this.interceptionsByPhase = new HashMap<>();
         this.properties = new HashMap();
     }
@@ -99,6 +106,10 @@ public final class ProxyMethodElement {
 
     public final boolean isLocal() {
         return isLocal;
+    }
+
+    public boolean isCPListener() {
+        return isCPListener;
     }
 
     public final List<InterceptionElement> getPhaseInterceptions(String interceptionPhase) {

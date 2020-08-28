@@ -33,6 +33,10 @@ import java.lang.annotation.*;
 @Documented
 public @interface ListenersControl {
 
+    // Code generation support names
+    String POST_PRODUCE_METHOD = "postProduce";
+    String POST_CONSTRUCT_METHOD = "postConstruct";
+
     /**
      * Invoke post produce method
      */

@@ -17,10 +17,19 @@
 package colesico.framework.example.config.simple;
 
 import colesico.framework.config.Config;
+import colesico.framework.ioc.listener.PostConstruct;
 
 @Config
 public class SimpleConfig {
+
+    private String value;
+
+    @PostConstruct
+    public void init(){
+        value = "Simple";
+    }
+
     public String getValue(){
-        return "Simple";
+        return value;
     }
 }
