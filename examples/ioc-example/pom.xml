@@ -40,7 +40,7 @@
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-ioc</artifactId>
             <version>${project.version}</version>
-            <!-- Exclude compile time dependencies -->
+            <!-- Exclude annotation processor dependencies -->
             <exclusions>
                 <exclusion>
                     <groupId>com.squareup</groupId>
