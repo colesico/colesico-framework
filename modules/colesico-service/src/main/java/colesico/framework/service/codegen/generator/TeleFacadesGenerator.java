@@ -195,7 +195,7 @@ public class TeleFacadesGenerator {
             cb.indent();
             cb.add(generateInvoker(teleMethod));
             // Get service instance:  Service service=serviceProv.get();
-            TypeName serviceTypeName = TypeName.get(teleFacade.getParentService().getOriginClass().getOriginType());
+            TypeName serviceTypeName = TypeName.get(service.getOriginClass().getOriginType());
             cb.addStatement("$T $N = $N.get()", serviceTypeName, TeleDriver.TARGET_PARAM, TeleFacade.TARGET_PROV_FIELD);
 
             // Call teleDriver

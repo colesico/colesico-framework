@@ -19,6 +19,10 @@
         <Bug pattern="NP_BOOLEAN_RETURN_NULL" />
     </Match>
     <Match>
+        <Class name="colesico.framework.telehttp.OriginFacade$4" />
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE" />
+    </Match>
+    <Match>
         <Class name="colesico.framework.webstatic.internal.StaticContentImpl" />
         <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE" />
     </Match>
