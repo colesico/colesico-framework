@@ -1,0 +1,29 @@
+name: colesico
+
+on:
+  [push]
+jobs:
+  build:
+    strategy:
+      matrix:
+        platform: [ubuntu-latest, windows-latest]
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+      name: Checkout project
+    - uses: actions/setup-java@v1
+      name: Configure Java
+      with:
+        java-version: 14
+        java-package: jdk
+        architecture: x64
+    - uses: actions/cache@v2
+      name: Cache Maven packages
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+    - name: Build
+      run: mvn --no-transfer-progress -q -B -DskipTests package
+    - name: Test
+      run: mvn --no-transfer-progress test
