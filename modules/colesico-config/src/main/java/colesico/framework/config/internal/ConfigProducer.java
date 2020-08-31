@@ -27,8 +27,11 @@ import javax.inject.Singleton;
 @Produce(PropertiesSource.class)
 public class ConfigProducer {
 
+    /**
+     * Default ConfigSource implementation
+     */
     @Singleton
-    public ConfigSource getDefaultConfigSource(PropertiesSource impl){
+    public ConfigSource getDefaultConfigSource(PropertiesSource impl) {
         return impl;
     }
 }

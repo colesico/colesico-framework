@@ -19,7 +19,8 @@ package colesico.framework.config;
 import java.lang.annotation.*;
 
 /**
- * Specifies that the configuration class field value should be obtained from configuration source, declared by @UseSource
+ * Specifies that the configuration class field value should be obtained from configuration source,
+ * declared by @UseSource (or @UseFileSource)
  *
  * @author Vladlen Larionov
  * @see UseSource

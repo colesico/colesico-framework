@@ -3,7 +3,7 @@ package colesico.framework.config;
 import java.lang.annotation.*;
 
 /**
- * Configuration source parameter (source connection params, self configuration , e.t.c)
+ * Configuration source parameter (configuration source connection param, self configuration , e.t.c)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

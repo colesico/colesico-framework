@@ -22,7 +22,8 @@ import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polysupplier;
 
 /**
- * Configuration models
+ * Prototype based configuration models
+ * @see ConfigPrototype
  */
 public enum ConfigModel {
 

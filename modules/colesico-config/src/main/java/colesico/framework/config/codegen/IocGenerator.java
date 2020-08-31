@@ -206,7 +206,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         }
 
         // close connection
-        cb.addStatement("$N.$N()", CONNECTION_VAR, ConfigSource.Connection.CLOSE_METHD);
+        cb.addStatement("$N.$N()", CONNECTION_VAR, ConfigSource.Connection.CLOSE_METHOD);
         cb.addStatement("return $N", CONF_PARAM);
         mb.addCode(cb.build());
     }

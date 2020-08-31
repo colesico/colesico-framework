@@ -20,7 +20,8 @@ import java.lang.annotation.*;
 
 /**
  * This annotation can be applied to configuration belongs to MESSAGE model
- * to specify that this configuration must be used when the "@Classed" annotation is not specified.
+ * to specify that this configuration must be used when the "@Classed"
+ * annotation not specified for the service being injected
  *
  * <p>
  *

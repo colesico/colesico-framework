@@ -20,10 +20,11 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- * Configuration source
- * Supplies an unified api to obtain configuration values from any source (file, database, http resource, e.t.c.)
+ * Configuration source.
+ * Supplies an unified api to obtain configuration values from any source (file, database, http resource, etc.)
  */
 public interface ConfigSource {
+
     /**
      * Default parameter name for config source.
      * This parameter name should be used by code generator when the only parameter
@@ -35,24 +36,28 @@ public interface ConfigSource {
 
     /**
      * Get connection to configuration source
-     *
-     * @return
-     */
+      */
     Connection connect(Map<String, String> params);
 
+    /**
+     * Represents config source connection
+     */
     interface Connection {
         String GET_VALUE_METHOD = "getValue";
-        String CLOSE_METHD = "close";
+        String CLOSE_METHOD = "close";
 
         /**
-         * Returns a configuration value by query
+         * Returns a configuration value of given type
          *
          * @param valueType actual value type to convert to it.
-         * @param <T>
+         * @param <T> config value type
          * @return null if value not found, value otherwise
          */
         <T> T getValue(Type valueType);
 
+        /**
+         * Close connection
+         */
         void close();
     }
 }

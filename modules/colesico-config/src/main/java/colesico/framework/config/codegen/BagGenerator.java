@@ -28,6 +28,10 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
 import java.util.List;
 
+/**
+ * Generates a Bag from config bean class.
+ * Bag contains only fields of config bean that to be read from config source.
+ */
 public class BagGenerator extends FrameworkAbstractGenerator {
 
     public BagGenerator(ProcessingEnvironment processingEnv) {

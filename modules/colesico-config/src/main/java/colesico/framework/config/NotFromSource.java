@@ -19,22 +19,12 @@ package colesico.framework.config;
 import java.lang.annotation.*;
 
 /**
- * Configuration bean declaration.
- * For prototype based configuration each configuration bean should extend the configuration prototype
- * and be annotated with this annotation.
- * <p>
- *
- * @author Vladlen Larionov
- * @see ConfigModel
- * @see ConfigPrototype
- * @see DefaultConfig
- * @see UseSource
- * <p>
+ * Excludes field from config source binding when {@link UseSource#bindAll()} option is specified.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
 @Inherited
 @Documented
-public @interface Config {
-}
+public @interface NotFromSource {
 
+}

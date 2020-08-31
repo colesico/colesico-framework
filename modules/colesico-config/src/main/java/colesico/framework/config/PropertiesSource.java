@@ -17,7 +17,6 @@
 package colesico.framework.config;
 
 import colesico.framework.assist.StrUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,10 +49,9 @@ public class PropertiesSource implements ConfigSource {
     /**
      * Properties name prefix
      */
-    public static final String PREFIX_OPTION = "prefix";
+    public static final String PREFIX_OPTION = UseFileSource.PREFIX_OPTION;
 
     protected static final Logger logger = LoggerFactory.getLogger(PropertiesSource.class);
-
 
     @Override
     public Connection connect(Map<String, String> params) {
@@ -204,7 +202,7 @@ public class PropertiesSource implements ConfigSource {
         }
 
         protected String getFieldName(Method setter) {
-            return StrUtils.firstCharToLowerCase(StringUtils.substring(setter.getName(), 3));
+            return StrUtils.firstCharToLowerCase(setter.getName().substring(3));
         }
 
     }

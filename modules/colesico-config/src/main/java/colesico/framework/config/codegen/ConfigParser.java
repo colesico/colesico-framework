@@ -186,8 +186,12 @@ public class ConfigParser extends FrameworkAbstractParser {
 
     private ConfigSourceElement parseSourceValues(ClassElement configImplementation, ConfigSourceElement confSourceElm) {
         for (FieldElement me : configImplementation.getFields()) {
-            AnnotationAssist<FromSource> sourceValueAnn = me.getAnnotation(FromSource.class);
-            if (confSourceElm.isBindAll() || (sourceValueAnn != null)) {
+            AnnotationAssist<FromSource> fromSrcAnn = me.getAnnotation(FromSource.class);
+            AnnotationAssist<NotFromSource> notFromSrcAnn = me.getAnnotation(NotFromSource.class);
+            if (fromSrcAnn != null && notFromSrcAnn != null) {
+                throw CodegenException.of().message("Simultaneous usage of @FromSource ana @NotFromSource").element(confSourceElm.getSourceType().asClassElement()).build();
+            }
+            if ((fromSrcAnn != null) || (confSourceElm.isBindAll() && (notFromSrcAnn == null))) {
                 confSourceElm.addSourceValue(new SourceValueElement(me));
             }
         }

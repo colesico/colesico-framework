@@ -15,6 +15,7 @@ public @interface UseFileSource {
     String FILE_OPTION = "file";
     String DIRECTORY_OPTION = "directory";
     String CLASSPATH_OPTION = "classpath";
+    String PREFIX_OPTION = "prefix";
 
     /**
      * Config source type. PropertiesSource supported out-of the-box.
@@ -28,10 +29,15 @@ public @interface UseFileSource {
      * Assumes that values for all fields are assigned from config source.
      * If false - the  @{@link FromSource} annotation should be used to assign the value to field.
      *
-     * @return
      * @see FromSource
      */
     boolean bindAll() default true;
+
+    /**
+     * Value name default prefix.
+     * Configuration variable name prefix which will be used  when retrieving a value from a configuration source.
+     */
+    String prefix() default "";
 
     /**
      * Config file name
@@ -39,7 +45,7 @@ public @interface UseFileSource {
     String file() default "";
 
     /**
-     * Config file  directory
+     * Config file directory
      */
     String directory() default "";
 

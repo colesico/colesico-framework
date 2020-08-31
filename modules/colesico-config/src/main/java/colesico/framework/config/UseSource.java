@@ -41,7 +41,6 @@ public @interface UseSource {
     /**
      * Config source type. PropertiesSource supported out-of the-box.
      *
-     * @return
      * @see PropertiesSource
      */
     Class<? extends ConfigSource> type() default ConfigSource.class;
@@ -50,8 +49,8 @@ public @interface UseSource {
      * Assumes that values for all fields are assigned from config source.
      * If false - the  @{@link FromSource} annotation should be used to assign the value to field.
      *
-     * @return
      * @see FromSource
+     * @see NotFromSource
      */
     boolean bindAll() default true;
 }
