@@ -16,27 +16,20 @@
 
 package colesico.framework.example.config.source;
 
-import colesico.framework.config.Config;
-import colesico.framework.config.PropertiesSource;
-import colesico.framework.config.SourceOption;
-import colesico.framework.config.UseSource;
-
-import static colesico.framework.config.UseFileSource.FILE_OPTION;
-import static colesico.framework.config.PropertiesSource.PREFIX_OPTION;
+import colesico.framework.config.*;
 
 /**
  * Custom properties file and params name prefix example.
  * See {@link PropertiesSource} for all possible customization params for this source type.
  */
 @Config
-@UseSource
-
-// Configuration source parameters
-@SourceOption(name = FILE_OPTION,value = "config.properties")
-@SourceOption(name = PREFIX_OPTION, value = "the_prefix")
+@UseFileSource(file = "config.properties", prefix = "the_prefix")
 public class SourcePrefixConfig {
 
     private String value;
+
+    @NotFromSource
+    private String emptyValue;
 
     public String getValue() {
         return value;
@@ -44,5 +37,13 @@ public class SourcePrefixConfig {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getEmptyValue() {
+        return emptyValue;
+    }
+
+    public void setEmptyValue(String emptyValue) {
+        this.emptyValue = emptyValue;
     }
 }

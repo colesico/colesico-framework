@@ -111,6 +111,9 @@ public class MainBean {
     public String getSourcePrefixConfigValue() {
         return sourcePrefixConfig.getValue();
     }
+    public String getSourcePrefixConfigEmptyValue() {
+        return sourcePrefixConfig.getEmptyValue();
+    }
 
     public String getSourceNestedConfigValue() {
         NestedValue nested = sourceNestedConfig.getNested();

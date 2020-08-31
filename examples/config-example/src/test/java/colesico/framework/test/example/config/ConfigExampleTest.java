@@ -40,48 +40,49 @@ public class ConfigExampleTest {
     }
 
     @Test
-    public void testSimpleConfig(){
-        assertEquals(service.getSimpleConfigValue(),"Simple");
+    public void testSimpleConfig() {
+        assertEquals(service.getSimpleConfigValue(), "Simple");
     }
 
     @Test
-    public void testSingleConfig(){
-        assertEquals(service.getSingleConfigValue(),"Single0;Single1");
+    public void testSingleConfig() {
+        assertEquals(service.getSingleConfigValue(), "Single0;Single1");
     }
 
     @Test
-    public void testPolyconfig(){
+    public void testPolyconfig() {
         assertTrue("Poly1;Poly2;".equals(service.getPolyconfigValues()) || "Poly2;Poly1;".equals(service.getPolyconfigValues()));
     }
 
     @Test
-    public void testMessageConfig(){
-        assertEquals(service.getMessageConfigValues(),"Message1;Message2");
+    public void testMessageConfig() {
+        assertEquals(service.getMessageConfigValues(), "Message1;Message2");
     }
 
     @Test
-    public void testSourceSimple(){
-        assertEquals(service.getSourceSimpleConfigValue(),"AppSourceValue;DefaultValue");
+    public void testSourceSimple() {
+        assertEquals(service.getSourceSimpleConfigValue(), "AppSourceValue;DefaultValue");
     }
 
     @Test
-    public void testSourceSingle(){
-        assertEquals(service.getSourceSingleConfigValue(),"ConfSourceValue");
+    public void testSourceSingle() {
+        assertEquals(service.getSourceSingleConfigValue(), "ConfSourceValue");
     }
 
     @Test
-    public void testSourcePrefix(){
-        assertEquals(service.getSourcePrefixConfigValue(),"PrefixedConfSourceValue");
+    public void testSourcePrefix() {
+        assertEquals(service.getSourcePrefixConfigValue(), "PrefixedConfSourceValue");
+        assertEquals(service.getSourcePrefixConfigEmptyValue(), null);
     }
 
     @Test
-    public void testSourceNested(){
-        assertEquals(service.getSourceNestedConfigValue(),"NestedValue");
+    public void testSourceNested() {
+        assertEquals(service.getSourceNestedConfigValue(), "NestedValue");
     }
 
     @Test
-    public void testClassedConfigs(){
-        assertEquals(service.getClassedConfigValue(),"SingleConfig;PolyConfig");
+    public void testClassedConfigs() {
+        assertEquals(service.getClassedConfigValue(), "SingleConfig;PolyConfig");
     }
 
 }

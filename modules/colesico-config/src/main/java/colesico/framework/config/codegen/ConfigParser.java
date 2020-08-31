@@ -167,6 +167,9 @@ public class ConfigParser extends FrameworkAbstractParser {
             if (StringUtils.isNotBlank(fileSourceAnn.unwrap().classpath())) {
                 result.put(CLASSPATH_OPTION, fileSourceAnn.unwrap().classpath());
             }
+            if (StringUtils.isNotBlank(fileSourceAnn.unwrap().prefix())) {
+                result.put(PREFIX_OPTION, fileSourceAnn.unwrap().prefix());
+            }
         }
 
         AnnotationAssist<SourceOptions> sourceOptionsAnn = configImpl.getAnnotation(SourceOptions.class);
