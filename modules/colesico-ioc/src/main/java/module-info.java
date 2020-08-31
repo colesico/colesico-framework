@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import colesico.framework.ioc.codegen.parser.ProducersProcessor;
 import colesico.framework.ioc.ioclet.Ioclet;
 
 module colesico.framework.ioc {
@@ -31,7 +30,7 @@ module colesico.framework.ioc {
     //requires slf4j.api;
     requires org.slf4j;
 
-    requires org.apache.commons.lang3;
+    requires static org.apache.commons.lang3;
 
     // API
     exports colesico.framework.assist;
@@ -51,9 +50,6 @@ module colesico.framework.ioc {
     exports colesico.framework.ioc.codegen.parser;
     exports colesico.framework.ioc.codegen.generator;
     exports colesico.framework.assist.codegen.model;
-
-
-    //provides javax.annotation.processing.Processor with ProducersProcessor;
 
     uses Ioclet;
 }

@@ -14,35 +14,13 @@
  * limitations under the License.
  */
 
-package colesico.framework.ioc.ioclet;
+package colesico.framework.hocon.internal;
 
+import colesico.framework.hocon.HoconSource;
+import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 
-/**
- * IoC container module that provides the factories to the IoC container.
- * <p>
- *
- * @author Vladlen Larionov
- */
-public interface Ioclet {
-    String GET_ID_METHOD = "getId";
-    String ADD_FACTORIES_METHOD = "addFactories";
-    String CATALOG_PARAM = "catalog";
-
-    /**
-     * Unique ioclet ID.
-     * Typically it is a full name of producer class on which the ioclet is based on.
-     *
-     * @return
-     * @see Producer
-     */
-    String getId();
-
-    /**
-     * This method implementation should register the factories
-     *
-     * @param catalog catalog instance
-     */
-    void addFactories(final Catalog catalog);
-
+@Producer
+@Produce(HoconSource.class)
+public class HoconProducer {
 }
