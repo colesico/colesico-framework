@@ -19,23 +19,16 @@ package colesico.framework.hocon;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.config.ConfigSource;
 import colesico.framework.config.UseFileSource;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigBeanFactory;
+import com.typesafe.config.ConfigFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.function.Function;
-
-import com.typesafe.config.*;
 
 import static colesico.framework.config.UseFileSource.*;
 
@@ -57,30 +50,20 @@ public class HoconSource implements ConfigSource {
     @Override
     public Connection connect(Map<String, String> params) {
         String fileName = params.getOrDefault(FILE_OPTION, "application.conf");
-
-        final String directory = params.getOrDefault(DIRECTORY_OPTION, "./config");
-        String fullPath = StrUtils.concatPath(directory, fileName, "/");
-
-        final File directoryFile = new File(fullPath);
-        Config config;
-        if (directoryFile.exists()) {
-            logger.debug("Read configuration from file: " + fullPath);
-            try {
-                config = ConfigFactory.parseFile(directoryFile);
-                return createConnection(config, params);
-            } catch (Exception e) {
-                String errorMsg = "Error reading config from file: " + fullPath;
-                logger.error(errorMsg);
-                throw new RuntimeException(errorMsg, e);
-            }
+        Config config = getConfigFromDirectory(params, fileName);
+        if (config == null) {
+            config = getConfigFromResource(params, fileName);
         }
+        // TODO: put to cache
+        String prefix = params.getOrDefault(PREFIX_OPTION, "");
+        return createConnection(config.getConfig(prefix));
+    }
 
+    private Config getConfigFromResource(Map<String, String> params, String fileName) {
         final String classpath = params.getOrDefault(CLASSPATH_OPTION, "META-INF");
-        fullPath = StrUtils.concatPath(classpath, fileName, "/");
-
+        String fullPath = StrUtils.concatPath(classpath, fileName, "/");
         try {
-            config = ConfigFactory.parseResources(fullPath);
-            return createConnection(config, params);
+            return ConfigFactory.parseResources(fullPath);
         } catch (Exception e) {
             String errorMsg = "Error reading config from resource: " + fullPath;
             logger.error(errorMsg);
@@ -88,31 +71,41 @@ public class HoconSource implements ConfigSource {
         }
     }
 
-    protected ClassLoader getClassLoader() {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        return classLoader;
+    private Config getConfigFromDirectory(Map<String, String> params, String fileName) {
+        final String directory = params.getOrDefault(DIRECTORY_OPTION, "./config");
+        String fullPath = StrUtils.concatPath(directory, fileName, "/");
+
+        final File directoryFile = new File(fullPath);
+
+        if (directoryFile.exists()) {
+            logger.debug("Read configuration from file: " + fullPath);
+            try {
+                return ConfigFactory.parseFile(directoryFile);
+            } catch (Exception e) {
+                String errorMsg = "Error reading config from file: " + fullPath;
+                logger.error(errorMsg);
+                throw new RuntimeException(errorMsg, e);
+            }
+        }
+
+        return null;
     }
 
-    protected Connection createConnection(Config config, Map<String, String> params) {
-        return new ConnectionImpl(config, params.get(PREFIX_OPTION));
+    protected Connection createConnection(Config config) {
+        return new ConnectionImpl(config);
     }
 
     protected static class ConnectionImpl implements Connection {
 
         private final Config config;
-        private final String prefix;
 
-        public ConnectionImpl(Config config, String prefix) {
+        public ConnectionImpl(Config config) {
             this.config = config;
-            this.prefix = prefix;
         }
 
         @Override
         public <T> T getValue(Type valueType) {
-            //T result = config.getAnyRef(valueType, prefix);
-            //return result;
-            //TODO:
-            return null;
+            return ConfigBeanFactory.create(config, (Class<T>) valueType);
         }
 
         @Override
