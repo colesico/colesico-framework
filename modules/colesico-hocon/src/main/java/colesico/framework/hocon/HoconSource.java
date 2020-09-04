@@ -52,14 +52,14 @@ public class HoconSource implements ConfigSource {
         String fileName = params.getOrDefault(FILE_OPTION, "application.conf");
         Config config = getConfigFromDirectory(params, fileName);
         if (config == null) {
-            config = getConfigFromResource(params, fileName);
+            config = getConfigFromClasspath(params, fileName);
         }
         // TODO: put to cache
         String prefix = params.getOrDefault(PREFIX_OPTION, "");
         return createConnection(config.getConfig(prefix));
     }
 
-    private Config getConfigFromResource(Map<String, String> params, String fileName) {
+    private Config getConfigFromClasspath(Map<String, String> params, String fileName) {
         final String classpath = params.getOrDefault(CLASSPATH_OPTION, "META-INF");
         String fullPath = StrUtils.concatPath(classpath, fileName, "/");
         try {
