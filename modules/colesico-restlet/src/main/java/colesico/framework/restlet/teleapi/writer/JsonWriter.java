@@ -28,7 +28,9 @@ public final class JsonWriter extends ObjectWriter {
     public void write(Object value, RestletTWContext context) {
         if (value == null) {
             getResponse().sendText("", JSON_CONTENT_TYPE, 204);
+            return;
         }
+        
         String json = jsonConverter.toJson(value);
         Integer code = context.getHttpCode();
         if (code==null){
