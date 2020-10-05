@@ -197,6 +197,7 @@
                 <module>examples/restlet-example</module>
                 <module>examples/routing-example</module>
                 <module>examples/config-example</module>
+                <module>examples/hocon-example</module>
                 <module>examples/ioc-example</module>
                 <module>examples/web-example</module>
                 <module>examples/eventbus-example</module>

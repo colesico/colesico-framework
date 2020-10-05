@@ -54,21 +54,8 @@ public class HoconSource implements ConfigSource {
         if (config == null) {
             config = getConfigFromClasspath(params, fileName);
         }
-        // TODO: put to cache
         String prefix = params.getOrDefault(PREFIX_OPTION, "");
         return createConnection(config.getConfig(prefix));
-    }
-
-    private Config getConfigFromClasspath(Map<String, String> params, String fileName) {
-        final String classpath = params.getOrDefault(CLASSPATH_OPTION, "META-INF");
-        String fullPath = StrUtils.concatPath(classpath, fileName, "/");
-        try {
-            return ConfigFactory.parseResources(fullPath);
-        } catch (Exception e) {
-            String errorMsg = "Error reading config from resource: " + fullPath;
-            logger.error(errorMsg);
-            throw new RuntimeException(errorMsg, e);
-        }
     }
 
     private Config getConfigFromDirectory(Map<String, String> params, String fileName) {
@@ -91,8 +78,20 @@ public class HoconSource implements ConfigSource {
         return null;
     }
 
+    private Config getConfigFromClasspath(Map<String, String> params, String fileName) {
+        final String classpath = params.getOrDefault(CLASSPATH_OPTION, "META-INF");
+        String fullPath = StrUtils.concatPath(classpath, fileName, "/");
+        try {
+            return ConfigFactory.parseResources(fullPath);
+        } catch (Exception e) {
+            String errorMsg = "Error reading config from resource: " + fullPath;
+            logger.error(errorMsg);
+            throw new RuntimeException(errorMsg, e);
+        }
+    }
+
     protected Connection createConnection(Config config) {
-        return new ConnectionImpl(config);
+        return new ConnectionImpl(config.resolve());
     }
 
     protected static class ConnectionImpl implements Connection {
