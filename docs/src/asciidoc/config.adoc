@@ -45,6 +45,7 @@ Config module supports different prototype-based configuration models:
   The client can inject that  bean by specifying the @Classed qualifier with the configuration implementation class
 
 == Configuration source
+[[sources]]
 
 The configuration source  is used to supply values to configuration beans.
 For example, it allows to assign values from *.properties or yaml files.

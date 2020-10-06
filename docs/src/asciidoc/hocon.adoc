@@ -1,0 +1,56 @@
+= HOCON integration module
+
+This module is used to provide ability of using HOCON config files as a
+<<config.adoc#sources,configuration sources>>
+
+== What is HOCON?
+
+See https://github.com/lightbend/config for details.
+
+== HOCON configuration source as a default configuration source
+
+To set up HOCON configuration source as a default configuration source define ConfigSource production substitution
+with HoconSource:
+
+[source,java]
+----
+
+
+@Producer
+public class HoconProducer {
+
+    @Substitute
+    public ConfigSource getConfigSource(HoconSource impl) {
+        return impl;
+    }
+}
+----
+
+== Usage
+
+Define configuration bean as follows:
+
+[source,java]
+----
+
+@Config
+@UseFileSource
+public class AppConfig {
+
+    private Integer val;
+
+    public Integer getVal() {
+        return val;
+    }
+
+    public void setVal(Integer val) {
+        this.val = val;
+    }
+}
+----
+
+Hocon configuration source will try to read hocon file from these locations
+ *./config/application.conf* local file,
+then (if not found) - from  *META-INF/application.conf* resource HOCON file.
+
+See hocon-example for details.
