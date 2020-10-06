@@ -40,8 +40,13 @@ public class HoconExampleTest {
     }
 
     @Test
-    public void testSimpleConfig() {
-       assertEquals(service.getConfig().toString(), "MyConfig{strValue='str', intValue=1, str2Value='str'}");
+    public void testMyConfig() {
+       assertEquals(service.getMyConfig().toString(), "MyConfig{strValue='str', intValue=1, str2Value='str'}");
+    }
+
+    @Test
+    public void testAppConfig() {
+        assertEquals(service.getAppConfig().getVal().intValue(), 1);
     }
 
 }

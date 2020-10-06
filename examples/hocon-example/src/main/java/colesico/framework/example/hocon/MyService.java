@@ -19,13 +19,19 @@ package colesico.framework.example.hocon;
 
 public class MyService {
 
-    private final MyConfig config;
+    private final MyConfig myConfig;
+    private final AppConfig appConfig;
 
-    public MyService(MyConfig config) {
-        this.config = config;
+    public MyService(MyConfig myConfig, AppConfig appConfig) {
+        this.myConfig = myConfig;
+        this.appConfig = appConfig;
     }
 
-    public MyConfig getConfig() {
-        return config;
+    public MyConfig getMyConfig() {
+        return myConfig;
+    }
+
+    public AppConfig getAppConfig() {
+        return appConfig;
     }
 }

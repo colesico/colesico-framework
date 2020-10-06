@@ -54,8 +54,12 @@ public class HoconSource implements ConfigSource {
         if (config == null) {
             config = getConfigFromClasspath(params, fileName);
         }
-        String prefix = params.getOrDefault(PREFIX_OPTION, "");
-        return createConnection(config.getConfig(prefix));
+        String prefix = params.getOrDefault(PREFIX_OPTION, null);
+        if (prefix != null) {
+            return createConnection(config.getConfig(prefix));
+        } else {
+            return createConnection(config);
+        }
     }
 
     private Config getConfigFromDirectory(Map<String, String> params, String fileName) {
