@@ -44,8 +44,8 @@ public final class VariedResponse {
         return new VariedResponse(null, null, binaryResponse);
     }
 
-    public static VariedResponse nav(Class<?> serviceClass, String teleMethodName) {
-        return new VariedResponse(NavigationResponse.of(serviceClass, teleMethodName), null, null);
+    public static VariedResponse nav(Class<?> serviceClass, String targetMethodName) {
+        return new VariedResponse(NavigationResponse.of(serviceClass, targetMethodName), null, null);
     }
 
     public static VariedResponse nav(String uri) {

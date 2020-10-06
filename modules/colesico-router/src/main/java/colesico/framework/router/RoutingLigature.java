@@ -39,8 +39,8 @@ public final class RoutingLigature {
         this.serviceClass = serviceClass;
     }
 
-    public void add(String route, TeleMethod teleMethodRef, String teleMethodName, Map<String, String> routeAttributes) {
-        RouteInfo routeInfo = new RouteInfo(route, teleMethodRef, teleMethodName, routeAttributes);
+    public void add(String route, TeleMethod teleMethodRef, String targetMethodName, Map<String, String> routeAttributes) {
+        RouteInfo routeInfo = new RouteInfo(route, teleMethodRef, targetMethodName, routeAttributes);
         RouteInfo oldRouteInfo = routesMap.put(route, routeInfo);
         if (oldRouteInfo != null) {
             throw new RouterException("Duplicate route: " + route + " -> " + routeInfo + " | " + oldRouteInfo);
@@ -58,17 +58,17 @@ public final class RoutingLigature {
     public static final class RouteInfo {
         private final String route;
         private final TeleMethod teleMethodRef;
-        private final String teleMethodName;
+        private final String targetMethodName;
         private final Map<String, String> routeAttributes;
 
         public RouteInfo(String route,
                          TeleMethod teleMethodRef,
-                         String teleMethodName,
+                         String targetMethodName,
                          Map<String, String> routeAttributes) {
 
             this.route = route;
             this.teleMethodRef = teleMethodRef;
-            this.teleMethodName = teleMethodName;
+            this.targetMethodName = targetMethodName;
             this.routeAttributes = routeAttributes;
         }
 
@@ -80,8 +80,8 @@ public final class RoutingLigature {
             return teleMethodRef;
         }
 
-        public String getTeleMethodName() {
-            return teleMethodName;
+        public String getTargetMethodName() {
+            return targetMethodName;
         }
 
         public Map<String, String> getRouteAttributes() {
@@ -92,7 +92,7 @@ public final class RoutingLigature {
         public String toString() {
             return "RouteInfo{" +
                     "route='" + route + '\'' +
-                    ", originMethod='" + teleMethodName + '\'' +
+                    ", originMethod='" + targetMethodName + '\'' +
                     '}';
         }
     }

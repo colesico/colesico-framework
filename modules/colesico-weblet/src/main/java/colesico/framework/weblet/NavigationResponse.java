@@ -24,8 +24,8 @@ import colesico.framework.router.assist.Navigation;
  */
 public final class NavigationResponse extends Navigation<NavigationResponse> {
 
-    public static NavigationResponse of(Class<?> serviceClass, String teleMethodName) {
-        return new NavigationResponse().service(serviceClass).method(teleMethodName);
+    public static NavigationResponse of(Class<?> serviceClass, String targetMethodName) {
+        return new NavigationResponse().service(serviceClass).method(targetMethodName);
     }
 
     public static NavigationResponse of(String uri) {

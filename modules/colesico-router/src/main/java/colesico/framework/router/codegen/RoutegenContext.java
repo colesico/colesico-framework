@@ -54,13 +54,13 @@ abstract public class RoutegenContext {
     }
 
     public final void addTeleMethod(TeleMethodElement teleMethod) {
-        String teleMethodName = teleMethod.getName();
+        String targetMethodName = teleMethod.getName();
         final String route = buildMethodRoute(teleMethod);
 
         RoutedTeleMethodElement rtme = teleMethods.find(rte -> rte.getRoute().equals(route));
         if (null != rtme) {
             throw CodegenException.of()
-                    .message("Duplicate router path: " + route + "->" + teleMethodName + "(...). Route already binded to " + rtme.getTeleMethod().getProxyMethod().getName() + "(...)")
+                    .message("Duplicate router path: " + route + "->" + targetMethodName + "(...). Route already binded to " + rtme.getTeleMethod().getProxyMethod().getName() + "(...)")
                     .element(teleMethod.getProxyMethod().getOriginMethod()).build();
         }
 

@@ -21,7 +21,6 @@ import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
 import colesico.framework.service.Compound;
 import colesico.framework.service.LocalParam;
-import colesico.framework.service.TeleMethodName;
 import colesico.framework.service.TeleView;
 import colesico.framework.service.codegen.model.*;
 
