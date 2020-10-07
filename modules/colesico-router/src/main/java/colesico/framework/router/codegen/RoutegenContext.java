@@ -60,15 +60,15 @@ abstract public class RoutegenContext {
         RoutedTeleMethodElement rtme = teleMethods.find(rte -> rte.getRoute().equals(route));
         if (null != rtme) {
             throw CodegenException.of()
-                    .message("Duplicate router path: " + route + "->" + targetMethodName + "(...). Route already binded to " + rtme.getTeleMethod().getProxyMethod().getName() + "(...)")
+                    .message("Duplicate router path: " + route + "->" + targetMethodName + "(...). Route already bound to " + rtme.getTeleMethod().getProxyMethod().getName() + "(...)")
                     .element(teleMethod.getProxyMethod().getOriginMethod()).build();
         }
 
-        Map<String, String> methodRouteArrts = parseRouteAttributes(teleMethod.getProxyMethod().getOriginMethod());
-        Map<String, String> classRouteArrts = parseRouteAttributes(teleMethod.getProxyMethod().getOriginMethod().getParentClass());
-        classRouteArrts.putAll(methodRouteArrts);
+        Map<String, String> methodRouteAttrs = parseRouteAttributes(teleMethod.getProxyMethod().getOriginMethod());
+        Map<String, String> classRouteAttrs = parseRouteAttributes(teleMethod.getProxyMethod().getOriginMethod().getParentClass());
+        classRouteAttrs.putAll(methodRouteAttrs);
 
-        RoutedTeleMethodElement routedTeleMethodElement = new RoutedTeleMethodElement(teleMethod, route, classRouteArrts);
+        RoutedTeleMethodElement routedTeleMethodElement = new RoutedTeleMethodElement(teleMethod, route, classRouteAttrs);
         teleMethods.add(routedTeleMethodElement);
     }
 
