@@ -3,7 +3,7 @@ package colesico.framework.dslvalidator.codegen.parser;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.dslvalidator.beanassist.ValidatorBuilderPrototype;
+import colesico.framework.dslvalidator.beanvalidation.ValidatorBuilderPrototype;
 import colesico.framework.dslvalidator.codegen.generator.ValidatorBuilderPrototypeGenerator;
 import colesico.framework.dslvalidator.codegen.model.ValidatedBeanElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -16,9 +16,9 @@ import javax.tools.Diagnostic;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-public class ValidatedBeanProcessor extends FrameworkAbstractProcessor {
+public class BeanValidationProcessor extends FrameworkAbstractProcessor {
 
-    private ValidatedBeanParser vbParser;
+    private BeanValidationParser vbParser;
     private ValidatorBuilderPrototypeGenerator vbpGenerator;
 
     @Override
@@ -28,7 +28,7 @@ public class ValidatedBeanProcessor extends FrameworkAbstractProcessor {
 
     @Override
     protected void onInit() {
-        vbParser = new ValidatedBeanParser(processingEnv);
+        vbParser = new BeanValidationParser(processingEnv);
         vbpGenerator = new ValidatorBuilderPrototypeGenerator(processingEnv);
     }
 

@@ -5,8 +5,8 @@ import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
-import colesico.framework.dslvalidator.beanassist.ValidatorBuilderPrototype;
-import colesico.framework.dslvalidator.beanassist.ValidatorBuilderPrototypes;
+import colesico.framework.dslvalidator.beanvalidation.ValidatorBuilderPrototype;
+import colesico.framework.dslvalidator.beanvalidation.ValidatorBuilderPrototypes;
 import colesico.framework.dslvalidator.codegen.model.ValidatedBeanElement;
 import colesico.framework.dslvalidator.codegen.model.ValidatorBuilderPrototypeElement;
 import org.apache.commons.lang3.StringUtils;
@@ -14,11 +14,11 @@ import org.apache.commons.lang3.StringUtils;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.type.DeclaredType;
 
-public class ValidatedBeanParser extends FrameworkAbstractParser {
+public class BeanValidationParser extends FrameworkAbstractParser {
 
     public static final String VALIDATOR_BUILDER_PROTOTYPE_SUFFIX = "VBP";
 
-    public ValidatedBeanParser(ProcessingEnvironment processingEnv) {
+    public BeanValidationParser(ProcessingEnvironment processingEnv) {
         super(processingEnv);
     }
 
