@@ -21,7 +21,7 @@ import colesico.framework.validation.ValidationIssue;
 import colesico.framework.validation.Validator;
 
 /**
- * Validation
+ * Validator is used to validate a values with the validation program.
  *
  * @author Vladlen Larionov
  */
@@ -40,9 +40,6 @@ public final class DSLValidator<V> implements Validator<V> {
 
     /**
      * Validates the value. Returns validation result.
-     *
-     * @param value
-     * @return
      */
     @Override
     public ValidationIssue validate(V value, Object... params) {
@@ -54,7 +51,6 @@ public final class DSLValidator<V> implements Validator<V> {
     /**
      * Validates the value. Throws exception if validation errors occurred
      *
-     * @param value
      * @throws ValidationException if some validation errors occurred
      */
     @Override

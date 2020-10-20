@@ -26,11 +26,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 abstract public class FlowControlBuilder {
+
     /**
-     * Defines validation algorithm
-     *
-     * @param commands
-     * @return
+     * Defines validation algorithm based on {@link GroupSequence }
      */
     protected final <V> DSLValidator<V> program(final Command<V>... commands) {
         GroupSequence<V> sequence = new GroupSequence<>();
@@ -40,6 +38,9 @@ abstract public class FlowControlBuilder {
         return new DSLValidator<>(sequence, null);
     }
 
+    /**
+     * Defines validation algorithm based on {@link ChainSequence }
+     */
     protected final <V> DSLValidator<V> program(final String subject, final Command<V>... commands) {
         ChainSequence<V> sequence = new ChainSequence<>();
         for (Command<V> cmd : commands) {
