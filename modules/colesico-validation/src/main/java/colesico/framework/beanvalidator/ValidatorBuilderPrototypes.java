@@ -1,4 +1,4 @@
-package colesico.framework.dslvalidator.beanvalidation;
+package colesico.framework.beanvalidator;
 
 import java.lang.annotation.*;
 

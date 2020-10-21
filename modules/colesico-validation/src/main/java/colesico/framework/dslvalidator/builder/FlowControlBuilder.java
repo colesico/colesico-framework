@@ -27,6 +27,10 @@ import java.util.function.Function;
 
 abstract public class FlowControlBuilder {
 
+    public static final String PROGRAM_METHOD = "program";
+    public static final String FIELD_METHOD = "field";
+    public static final String COMMANDS_METHOD = "commands";
+
     /**
      * Defines validation algorithm based on {@link GroupSequence }
      */
@@ -172,4 +176,10 @@ abstract public class FlowControlBuilder {
         return sequence;
     }
 
+    /**
+     * Helper to create generic commands array
+     */
+    public static <V> Command[] commands(Command<V>... cmd) {
+        return cmd;
+    }
 }

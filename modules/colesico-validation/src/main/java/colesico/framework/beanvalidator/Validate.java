@@ -1,9 +1,9 @@
-package colesico.framework.dslvalidator.beanvalidation;
+package colesico.framework.beanvalidator;
 
 import java.lang.annotation.*;
 
 /**
- * Specifies that the bean field needs to be validated.
+ * Specifies that the bean field has to be validated.
  *
  * In this case, the code generator creates a stub of the validation builder method for this field
  * and generates a code for including the validation of this field in the validation process.

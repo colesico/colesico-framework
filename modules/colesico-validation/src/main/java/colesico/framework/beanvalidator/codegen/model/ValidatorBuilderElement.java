@@ -1,16 +1,19 @@
-package colesico.framework.dslvalidator.codegen.model;
+package colesico.framework.beanvalidator.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValidatorBuilderPrototypeElement {
+/**
+ * Validator builder (builder prototype) element
+ */
+public class ValidatorBuilderElement {
 
     /**
      * Parent validated bean element
      */
-    private ValidatedBeanElement parentVB;
+    private ValidatedBeanElement parentBean;
 
     /**
      * Validator builder base package name
@@ -26,7 +29,7 @@ public class ValidatorBuilderPrototypeElement {
 
     private final List<ValidatedPropertyElement> properties = new ArrayList<>();
 
-    public ValidatorBuilderPrototypeElement(String targetPackageName, String targetClassName, ClassType extendsClass) {
+    public ValidatorBuilderElement(String targetPackageName, String targetClassName, ClassType extendsClass) {
         this.targetPackageName = targetPackageName;
         this.targetClassName = targetClassName;
         this.extendsClass = extendsClass;
@@ -34,19 +37,27 @@ public class ValidatorBuilderPrototypeElement {
 
     public void addProperty(ValidatedPropertyElement property) {
         properties.add(property);
-        property.setParentVBP(this);
+        property.setParentBuilder(this);
+    }
+
+    public String getBuildMethodName(){
+        return "build";
+    }
+
+    public String getCommandsMethodName(){
+        return "commands";
     }
 
     public List<ValidatedPropertyElement> getProperties() {
         return properties;
     }
 
-    public ValidatedBeanElement getParentVB() {
-        return parentVB;
+    public ValidatedBeanElement getParentBean() {
+        return parentBean;
     }
 
-    public void setParentVB(ValidatedBeanElement parentVB) {
-        this.parentVB = parentVB;
+    public void setParentBean(ValidatedBeanElement parentBean) {
+        this.parentBean = parentBean;
     }
 
     public String getTargetPackageName() {
@@ -59,5 +70,16 @@ public class ValidatorBuilderPrototypeElement {
 
     public ClassType getExtendsClass() {
         return extendsClass;
+    }
+
+    @Override
+    public String toString() {
+        return "ValidatorBuilderPrototypeElement{" +
+                "parentVB=" + parentBean +
+                ", targetPackageName='" + targetPackageName + '\'' +
+                ", targetClassName='" + targetClassName + '\'' +
+                ", extendsClass=" + extendsClass +
+                ", properties=" + properties +
+                '}';
     }
 }

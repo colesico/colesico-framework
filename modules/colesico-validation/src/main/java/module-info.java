@@ -17,6 +17,7 @@ module colesico.framework.validation {
     exports colesico.framework.dslvalidator;
     exports colesico.framework.dslvalidator.commands;
     exports colesico.framework.dslvalidator.builder;
+    exports colesico.framework.beanvalidator;
 
     exports colesico.framework.dslvalidator.t9n;
 

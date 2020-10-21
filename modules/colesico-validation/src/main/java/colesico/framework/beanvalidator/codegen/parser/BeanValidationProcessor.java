@@ -1,11 +1,11 @@
-package colesico.framework.dslvalidator.codegen.parser;
+package colesico.framework.beanvalidator.codegen.parser;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.dslvalidator.beanvalidation.ValidatorBuilderPrototype;
-import colesico.framework.dslvalidator.codegen.generator.ValidatorBuilderPrototypeGenerator;
-import colesico.framework.dslvalidator.codegen.model.ValidatedBeanElement;
+import colesico.framework.beanvalidator.ValidatorBuilderPrototype;
+import colesico.framework.beanvalidator.codegen.generator.ValidatorBuilderGenerator;
+import colesico.framework.beanvalidator.codegen.model.ValidatedBeanElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -19,7 +19,7 @@ import java.util.Set;
 public class BeanValidationProcessor extends FrameworkAbstractProcessor {
 
     private BeanValidationParser vbParser;
-    private ValidatorBuilderPrototypeGenerator vbpGenerator;
+    private ValidatorBuilderGenerator vbpGenerator;
 
     @Override
     protected Class<? extends Annotation>[] getSupportedAnnotations() {
@@ -29,14 +29,14 @@ public class BeanValidationProcessor extends FrameworkAbstractProcessor {
     @Override
     protected void onInit() {
         vbParser = new BeanValidationParser(processingEnv);
-        vbpGenerator = new ValidatorBuilderPrototypeGenerator(processingEnv);
+        vbpGenerator = new ValidatorBuilderGenerator(processingEnv);
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnv) {
         for (Element elm : roundEnv.getElementsAnnotatedWith(ValidatorBuilderPrototype.class)) {
-            if (!(elm.getKind() == ElementKind.INTERFACE)) {
-                throw CodegenException.of().element(elm).message("Not an interface").build();
+            if (!(elm.getKind() == ElementKind.CLASS)) {
+                throw CodegenException.of().element(elm).message("Validate bean is not a Class").build();
             }
             TypeElement beanClass;
             try {
