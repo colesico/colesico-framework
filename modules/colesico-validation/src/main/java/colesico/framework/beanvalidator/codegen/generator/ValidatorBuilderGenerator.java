@@ -2,6 +2,7 @@ package colesico.framework.beanvalidator.codegen.generator;
 
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
+import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.beanvalidator.codegen.model.ValidatedBeanElement;
 import colesico.framework.beanvalidator.codegen.model.ValidatedPropertyElement;
 import colesico.framework.beanvalidator.codegen.model.ValidatorBuilderElement;
@@ -12,7 +13,9 @@ import colesico.framework.dslvalidator.builder.FlowControlBuilder;
 import com.squareup.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
+import java.util.List;
 
 
 /**
@@ -105,6 +108,22 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         classBuilder.addMethod(mb.build());
     }
 
+    private void generateProxyConstructors(ValidatorBuilderElement builderElement) {
+
+        List<MethodElement> constructors = builderElement.getExtendsClass().asClassElement().getConstructorsFiltered(
+                c -> c.unwrap().getModifiers().contains(Modifier.PUBLIC)
+        );
+
+        for (MethodElement constructor : constructors) {
+            MethodSpec.Builder constructorBuilder = CodegenUtils.createProxyMethodBuilder(
+                    constructor, null, null, false
+            );
+            CodeBlock sucall = CodegenUtils.generateSuperMethodCall(constructor, null, null);
+            constructorBuilder.addCode(sucall);
+            classBuilder.addMethod(constructorBuilder.build());
+        }
+    }
+
     public void generate(ValidatedBeanElement beanElement) {
         for (ValidatorBuilderElement builderElement : beanElement.getBuilders()) {
 
@@ -116,6 +135,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
 
             classBuilder.superclass(TypeName.get(builderElement.getExtendsClass().unwrap()));
 
+            generateProxyConstructors(builderElement);
             generatePropertyValidationMethods(builderElement);
             generateCommandsMethod(builderElement);
             generateBuildMethod(builderElement);

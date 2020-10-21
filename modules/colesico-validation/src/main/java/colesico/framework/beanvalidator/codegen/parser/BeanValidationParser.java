@@ -1,6 +1,7 @@
 package colesico.framework.beanvalidator.codegen.parser;
 
 import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
@@ -12,6 +13,7 @@ import colesico.framework.beanvalidator.ValidatorBuilderPrototypes;
 import colesico.framework.beanvalidator.codegen.model.ValidatedBeanElement;
 import colesico.framework.beanvalidator.codegen.model.ValidatedPropertyElement;
 import colesico.framework.beanvalidator.codegen.model.ValidatorBuilderElement;
+import colesico.framework.dslvalidator.builder.ValidatorBuilder;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -49,9 +51,15 @@ public class BeanValidationParser extends FrameworkAbstractParser {
 
     protected void parseBuilder(ValidatedBeanElement beanElement, AnnotationAssist<ValidatorBuilderPrototype> builderAst) {
 
+        DeclaredType extendsClass = (DeclaredType) builderAst.getValueTypeMirror(a -> a.extendsClass());
+
         String packageName = builderAst.unwrap().packageName();
         if (StringUtils.isBlank(packageName)) {
-            packageName = beanElement.getOriginType().asClassElement().getPackageName();
+            if (!CodegenUtils.isAssignable(ValidatorBuilder.class, extendsClass, processingEnv)) {
+                packageName = (new ClassType(processingEnv, extendsClass)).asClassElement().getPackageName();
+            } else {
+                packageName = beanElement.getOriginType().asClassElement().getPackageName();
+            }
         }
 
         String className = builderAst.unwrap().className();
@@ -62,7 +70,7 @@ public class BeanValidationParser extends FrameworkAbstractParser {
         ValidatorBuilderElement builderElm = new ValidatorBuilderElement(
                 packageName,
                 className,
-                new ClassType(processingEnv, (DeclaredType) builderAst.getValueTypeMirror(a -> a.extendsClass()))
+                new ClassType(processingEnv, extendsClass)
         );
 
         beanElement.addBuilder(builderElm);
