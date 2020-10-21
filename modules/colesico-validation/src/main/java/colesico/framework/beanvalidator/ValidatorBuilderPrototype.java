@@ -1,5 +1,6 @@
 package colesico.framework.beanvalidator;
 
+import colesico.framework.dslvalidator.builder.FlowControlBuilder;
 import colesico.framework.dslvalidator.builder.ValidatorBuilder;
 
 import java.lang.annotation.*;
@@ -15,14 +16,19 @@ import java.lang.annotation.*;
 public @interface ValidatorBuilderPrototype {
 
     /**
-     * Validator builder  prototype package name
+     * Validator builder prototype package name
      */
     String packageName() default "";
+
+    /**
+     * Validator builder prototype package name from specified class
+     */
+    Class<?> packageFromClass() default Class.class;
 
     /**
      * Validator builder  prototype simple class name
      */
     String className() default "";
 
-    Class<? extends ValidatorBuilder> extendsClass() default ValidatorBuilder.class;
+    Class<? extends FlowControlBuilder> extendsClass() default ValidatorBuilder.class;
 }

@@ -52,10 +52,13 @@ public class BeanValidationParser extends FrameworkAbstractParser {
     protected void parseBuilder(ValidatedBeanElement beanElement, AnnotationAssist<ValidatorBuilderPrototype> builderAst) {
 
         DeclaredType extendsClass = (DeclaredType) builderAst.getValueTypeMirror(a -> a.extendsClass());
+        DeclaredType packageFromClass = (DeclaredType) builderAst.getValueTypeMirror(a -> a.packageFromClass());
 
         String packageName = builderAst.unwrap().packageName();
         if (StringUtils.isBlank(packageName)) {
-            if (!CodegenUtils.isAssignable(ValidatorBuilder.class, extendsClass, processingEnv)) {
+            if (!CodegenUtils.isAssignable(Class.class, packageFromClass, processingEnv)) {
+                packageName = (new ClassType(processingEnv, packageFromClass)).asClassElement().getPackageName();
+            } else if (!CodegenUtils.isAssignable(ValidatorBuilder.class, extendsClass, processingEnv)) {
                 packageName = (new ClassType(processingEnv, extendsClass)).asClassElement().getPackageName();
             } else {
                 packageName = beanElement.getOriginType().asClassElement().getPackageName();
