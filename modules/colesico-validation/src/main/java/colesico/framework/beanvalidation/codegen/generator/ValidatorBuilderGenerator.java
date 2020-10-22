@@ -1,11 +1,11 @@
-package colesico.framework.beanvalidator.codegen.generator;
+package colesico.framework.beanvalidation.codegen.generator;
 
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.assist.codegen.model.MethodElement;
-import colesico.framework.beanvalidator.codegen.model.ValidatedBeanElement;
-import colesico.framework.beanvalidator.codegen.model.ValidatedPropertyElement;
-import colesico.framework.beanvalidator.codegen.model.ValidatorBuilderElement;
+import colesico.framework.beanvalidation.codegen.model.ValidatedBeanElement;
+import colesico.framework.beanvalidation.codegen.model.ValidatedPropertyElement;
+import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.DSLValidator;
 import colesico.framework.dslvalidator.ValidationContext;
@@ -13,7 +13,6 @@ import colesico.framework.dslvalidator.builder.FlowControlBuilder;
 import com.squareup.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
 
 
     private void generateValidateMethod(ValidatedPropertyElement propertyElm) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(propertyElm.getValidateMethodName());
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(propertyElm.getMethodName());
         mb.addModifiers(Modifier.ABSTRACT, Modifier.PROTECTED);
         TypeName returnType = ParameterizedTypeName.get(ClassName.get(Command.class), TypeName.get(propertyElm.getPropertyType()));
         mb.returns(returnType);
@@ -42,7 +41,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
     }
 
     private void generateVerifyMethod(ValidatedPropertyElement propertyElm) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(propertyElm.getVerifyMethodName());
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(propertyElm.getMethodName());
         mb.addModifiers(Modifier.ABSTRACT, Modifier.PROTECTED);
         mb.returns(TypeName.VOID);
         TypeName paramType = ParameterizedTypeName.get(ClassName.get(ValidationContext.class), TypeName.get(propertyElm.getPropertyType()));
@@ -53,7 +52,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
 
     private void generatePropertyValidationMethods(ValidatorBuilderElement builderElement) {
         for (ValidatedPropertyElement propertyElement : builderElement.getProperties()) {
-            if (propertyElement.getVerifier()) {
+            if (propertyElement.getVerify()) {
                 generateVerifyMethod(propertyElement);
             } else {
                 generateValidateMethod(propertyElement);
@@ -75,13 +74,13 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         int i = 0;
         for (ValidatedPropertyElement propertyElement : builderElement.getProperties()) {
             // field("name1", v->v.getField1(),
-            cb.add("$N( $S, v->v.$N(), ", FlowControlBuilder.FIELD_METHOD, propertyElement.getPropertyName(), propertyElement.getPropertyGetterName());
-            if (propertyElement.getVerifier()) {
+            cb.add("$N( $S, v->v.$N(), ", FlowControlBuilder.FIELD_METHOD, propertyElement.getSubject(), propertyElement.getPropertyGetterName());
+            if (propertyElement.getVerify()) {
                 // this::verifyField1
-                cb.add("this::$N", propertyElement.getVerifyMethodName());
+                cb.add("this::$N", propertyElement.getMethodName());
             } else {
                 // validateField1()
-                cb.add("$N()", propertyElement.getValidateMethodName());
+                cb.add("$N()", propertyElement.getMethodName());
             }
             cb.add(")");
             if (++i < builderElement.getProperties().size()) {

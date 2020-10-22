@@ -1,4 +1,4 @@
-package colesico.framework.beanvalidator.codegen.model;
+package colesico.framework.beanvalidation.codegen.model;
 
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.model.FieldElement;
@@ -14,11 +14,17 @@ public class ValidatedPropertyElement {
 
     protected final FieldElement originField;
 
-    private final Boolean verifier;
+    protected final String subject;
 
-    public ValidatedPropertyElement(FieldElement originField, Boolean verifier) {
+    protected final String methodName;
+
+    private final Boolean verify;
+
+    public ValidatedPropertyElement(FieldElement originField, String subject, String methodName, Boolean verify) {
         this.originField = originField;
-        this.verifier = verifier;
+        this.subject = subject;
+        this.methodName = methodName;
+        this.verify = verify;
     }
 
     public final String getPropertyName() {
@@ -36,15 +42,24 @@ public class ValidatedPropertyElement {
     }
 
     public final String getPropertyGetterName() {
-          return "get"+StrUtils.firstCharToUpperCase(getPropertyName());
+        return "get" + StrUtils.firstCharToUpperCase(getPropertyName());
     }
 
-    public String getValidateMethodName(){
-        return "validate"+ StrUtils.firstCharToUpperCase(getPropertyName());
+    public String getSubject() {
+        return subject;
     }
 
-    public String getVerifyMethodName(){
-        return "verify"+ StrUtils.firstCharToUpperCase(getPropertyName());
+    public String getMethodName() {
+        if (methodName == null) {
+            String prefix;
+            if (verify) {
+                prefix = "verify";
+            } else {
+                prefix = "validate";
+            }
+            return prefix + StrUtils.firstCharToUpperCase(getPropertyName());
+        }
+        return methodName;
     }
 
     public ValidatorBuilderElement getParentBuilder() {
@@ -59,7 +74,7 @@ public class ValidatedPropertyElement {
         return originField;
     }
 
-    public Boolean getVerifier() {
-        return verifier;
+    public Boolean getVerify() {
+        return verify;
     }
 }

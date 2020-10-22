@@ -1,4 +1,4 @@
-package colesico.framework.beanvalidator.codegen.model;
+package colesico.framework.beanvalidation.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassType;
 

@@ -160,8 +160,11 @@ abstract public class FlowControlBuilder {
         return sequence;
     }
 
-    protected final <V> Command<V> ifNotNull(final Command<V>... commands) {
-        IfNotNullSequence<V> sequence = new IfNotNullSequence<>();
+    /**
+     * Executes sequence commands if context value is not null
+     */
+    protected final <V> Command<V> optional(final Command<V>... commands) {
+        OptionalSequence<V> sequence = new OptionalSequence<>();
         for (Command<V> cmd : commands) {
             sequence.addCommand(cmd);
         }

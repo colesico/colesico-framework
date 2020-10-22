@@ -1,11 +1,11 @@
-package colesico.framework.beanvalidator.codegen.parser;
+package colesico.framework.beanvalidation.codegen.parser;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.beanvalidator.ValidatorBuilderPrototype;
-import colesico.framework.beanvalidator.codegen.generator.ValidatorBuilderGenerator;
-import colesico.framework.beanvalidator.codegen.model.ValidatedBeanElement;
+import colesico.framework.beanvalidation.ValidatorBuilderPrototype;
+import colesico.framework.beanvalidation.codegen.generator.ValidatorBuilderGenerator;
+import colesico.framework.beanvalidation.codegen.model.ValidatedBeanElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.RoundEnvironment;

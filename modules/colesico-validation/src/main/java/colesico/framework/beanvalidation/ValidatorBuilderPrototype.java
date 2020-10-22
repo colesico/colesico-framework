@@ -1,4 +1,4 @@
-package colesico.framework.beanvalidator;
+package colesico.framework.beanvalidation;
 
 import colesico.framework.dslvalidator.builder.FlowControlBuilder;
 import colesico.framework.dslvalidator.builder.ValidatorBuilder;

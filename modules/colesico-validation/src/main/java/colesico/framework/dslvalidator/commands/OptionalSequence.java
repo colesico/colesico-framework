@@ -24,7 +24,7 @@ import colesico.framework.dslvalidator.ValidationContext;
  *
  * @author Vladlen Larionov
  */
-public final class IfNotNullSequence<V> extends AbstractSequence<V, V> {
+public final class OptionalSequence<V> extends AbstractSequence<V, V> {
     @Override
     public void execute(ValidationContext<V> context) {
         if (context.getValue() != null) {

@@ -1,4 +1,4 @@
-package colesico.framework.beanvalidator.codegen.parser;
+package colesico.framework.beanvalidation.codegen.parser;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
@@ -7,12 +7,13 @@ import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
-import colesico.framework.beanvalidator.Validate;
-import colesico.framework.beanvalidator.ValidatorBuilderPrototype;
-import colesico.framework.beanvalidator.ValidatorBuilderPrototypes;
-import colesico.framework.beanvalidator.codegen.model.ValidatedBeanElement;
-import colesico.framework.beanvalidator.codegen.model.ValidatedPropertyElement;
-import colesico.framework.beanvalidator.codegen.model.ValidatorBuilderElement;
+import colesico.framework.beanvalidation.Validate;
+import colesico.framework.beanvalidation.ValidatorBuilderPrototype;
+import colesico.framework.beanvalidation.ValidatorBuilderPrototypes;
+import colesico.framework.beanvalidation.codegen.model.ValidatedBeanElement;
+import colesico.framework.beanvalidation.codegen.model.ValidatedPropertyElement;
+import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
+import colesico.framework.dslvalidator.builder.FlowControlBuilder;
 import colesico.framework.dslvalidator.builder.ValidatorBuilder;
 import org.apache.commons.lang3.StringUtils;
 
@@ -44,7 +45,17 @@ public class BeanValidationParser extends FrameworkAbstractParser {
             if (validateAst == null) {
                 continue;
             }
-            ValidatedPropertyElement propertyElm = new ValidatedPropertyElement(fieldElm, validateAst.unwrap().asVerifier());
+            String subject = validateAst.unwrap().subject();
+            if (StringUtils.isEmpty(subject)) {
+                subject = fieldElm.getName();
+            }
+
+            String methodName = validateAst.unwrap().methodName();
+            if (StringUtils.isEmpty(methodName)) {
+                methodName = null;
+            }
+
+            ValidatedPropertyElement propertyElm = new ValidatedPropertyElement(fieldElm, subject, methodName, validateAst.unwrap().verify());
             builderElm.addProperty(propertyElm);
         }
     }
@@ -58,7 +69,9 @@ public class BeanValidationParser extends FrameworkAbstractParser {
         if (StringUtils.isBlank(packageName)) {
             if (!CodegenUtils.isAssignable(Class.class, packageFromClass, processingEnv)) {
                 packageName = (new ClassType(processingEnv, packageFromClass)).asClassElement().getPackageName();
-            } else if (!CodegenUtils.isAssignable(ValidatorBuilder.class, extendsClass, processingEnv)) {
+            } else if (!(CodegenUtils.isAssignable(ValidatorBuilder.class, extendsClass, processingEnv)
+                    || CodegenUtils.isAssignable(FlowControlBuilder.class, extendsClass, processingEnv)
+            )) {
                 packageName = (new ClassType(processingEnv, extendsClass)).asClassElement().getPackageName();
             } else {
                 packageName = beanElement.getOriginType().asClassElement().getPackageName();

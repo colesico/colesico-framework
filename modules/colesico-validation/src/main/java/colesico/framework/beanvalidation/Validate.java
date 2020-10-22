@@ -1,4 +1,4 @@
-package colesico.framework.beanvalidator;
+package colesico.framework.beanvalidation;
 
 import java.lang.annotation.*;
 
@@ -15,8 +15,19 @@ import java.lang.annotation.*;
 public @interface Validate {
 
     /**
+     * Validation subject overriding.
+     * By default subject is a name of validated property.
+     */
+    String subject() default "";
+    /**
      * If true - validation method will be generated with the verifier signature.
      * Use this flag to implement a  value direct check, rather than supply a validation command.
      */
-    boolean asVerifier() default false;
+    boolean verify() default false;
+
+    /**
+     * Name of the validation method in the validation builder.
+     * By default validation method name is constructed as follow: 'validate'|'verify' + [validated property name]
+     */
+    String methodName() default "";
 }
