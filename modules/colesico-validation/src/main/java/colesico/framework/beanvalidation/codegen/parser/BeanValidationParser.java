@@ -58,7 +58,9 @@ public class BeanValidationParser extends FrameworkAbstractParser {
 
             ValidateBeanElement validateBean = null;
             if (validateBeanAst != null) {
-                ClassType builder = new ClassType(processingEnv, (DeclaredType) validateBeanAst.getValueTypeMirror(a -> a.builder()));
+                // TOD:!!!
+                ClassType builder = null;
+                        //new ClassType(processingEnv, (DeclaredType) validateBeanAst.getValueTypeMirror(a -> a.builder()));
                 validateBean = new ValidateBeanElement(builder, validateBeanAst.unwrap().optional());
             }
 

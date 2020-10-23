@@ -30,4 +30,5 @@ public @interface ValidatorBuilderPrototype {
     String className() default "";
 
     Class<? extends BeanValidatorBuilder> extendsClass() default BeanValidatorBuilder.class;
+
 }

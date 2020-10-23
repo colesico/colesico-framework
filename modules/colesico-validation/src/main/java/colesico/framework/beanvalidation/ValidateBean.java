@@ -14,7 +14,7 @@ public @interface ValidateBean {
     /**
      * Bean validation builder to be used to validate property value
      */
-    Class<? extends BeanValidatorBuilder> builder();
+    String builder();
 
     /**
      * Property value may be null.
