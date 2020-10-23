@@ -3,11 +3,11 @@ package colesico.framework.beanvalidation.codegen.generator;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.assist.codegen.model.MethodElement;
+import colesico.framework.beanvalidation.BeanValidatorBuilder;
 import colesico.framework.beanvalidation.codegen.model.ValidatedBeanElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatedPropertyElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
 import colesico.framework.dslvalidator.Command;
-import colesico.framework.dslvalidator.DSLValidator;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.dslvalidator.builder.FlowControlBuilder;
 import com.squareup.javapoet.*;
@@ -18,7 +18,7 @@ import java.util.List;
 
 
 /**
- * Validator builder (builder prototype) generator
+ * Bean Validator Prototype Builder generator
  */
 public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
 
@@ -52,7 +52,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
 
     private void generatePropertyValidationMethods(ValidatorBuilderElement builderElement) {
         for (ValidatedPropertyElement propertyElement : builderElement.getProperties()) {
-            if (propertyElement.getVerify()) {
+            if (propertyElement.getVerifier()) {
                 generateVerifyMethod(propertyElement);
             } else {
                 generateValidateMethod(propertyElement);
@@ -63,19 +63,20 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
     private void generateCommandsMethod(ValidatorBuilderElement builderElement) {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(builderElement.getCommandsMethodName());
         mb.addModifiers(Modifier.PUBLIC);
+        mb.addAnnotation(Override.class);
         mb.returns(ArrayTypeName.of(ClassName.get(Command.class)));
 
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("return $T.<$T>$N(\n", ClassName.get(FlowControlBuilder.class),
+        cb.add("return this.<$T>$N(\n",
                 TypeName.get(builderElement.getParentBean().getOriginType().unwrap()),
-                FlowControlBuilder.COMMANDS_METHOD
+                BeanValidatorBuilder.COMMANDS_METHOD
         );
         cb.indent();
         int i = 0;
         for (ValidatedPropertyElement propertyElement : builderElement.getProperties()) {
             // field("name1", v->v.getField1(),
             cb.add("$N( $S, v->v.$N(), ", FlowControlBuilder.FIELD_METHOD, propertyElement.getSubject(), propertyElement.getPropertyGetterName());
-            if (propertyElement.getVerify()) {
+            if (propertyElement.getVerifier()) {
                 // this::verifyField1
                 cb.add("this::$N", propertyElement.getMethodName());
             } else {
@@ -96,16 +97,6 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    private void generateBuildMethod(ValidatorBuilderElement builderElement) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(builderElement.getBuildMethodName());
-        mb.addModifiers(Modifier.PUBLIC);
-        TypeName returnType = ParameterizedTypeName.get(ClassName.get(DSLValidator.class), TypeName.get(builderElement.getParentBean().getOriginType().unwrap()));
-        mb.returns(returnType);
-
-        mb.addStatement("return $N($N())", FlowControlBuilder.PROGRAM_METHOD, builderElement.getCommandsMethodName());
-
-        classBuilder.addMethod(mb.build());
-    }
 
     private void generateProxyConstructors(ValidatorBuilderElement builderElement) {
 
@@ -128,7 +119,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
 
             this.vbpElement = builderElement;
 
-            this.classBuilder = TypeSpec.classBuilder(builderElement.getTargetClassName());
+            this.classBuilder = TypeSpec.classBuilder(builderElement.getClassName());
 
             classBuilder.addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC);
 
@@ -137,10 +128,8 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
             generateProxyConstructors(builderElement);
             generatePropertyValidationMethods(builderElement);
             generateCommandsMethod(builderElement);
-            generateBuildMethod(builderElement);
 
-            CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), builderElement.getTargetPackageName(), builderElement.getParentBean().getOriginType().asTypeElement());
-
+            CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), builderElement.getPackageName(), builderElement.getParentBean().getOriginType().asTypeElement());
         }
     }
 }

@@ -80,4 +80,10 @@ public interface ValidatorMessages {
     String sizeShouldBeLessThan(Number val);
 
 
+    //
+    // Mandatory sequence
+    //
+    @Text(value = "Mandatory value is not specified")
+    @Ru(value = "Не задано обязательное значение")
+    String mandatoryValueIsNull();
 }

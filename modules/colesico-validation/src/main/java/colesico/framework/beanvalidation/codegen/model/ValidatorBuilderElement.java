@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Validator builder (builder prototype) element
+ * Bean Validator Builder Prototype element
  */
 public class ValidatorBuilderElement {
 
@@ -16,22 +16,22 @@ public class ValidatorBuilderElement {
     private ValidatedBeanElement parentBean;
 
     /**
-     * Validator builder base package name
+     * Validator builder prototype package name
      */
-    private final String targetPackageName;
+    private final String packageName;
 
     /**
-     * Validator builder base class name
+     * Validator builder prototype class name
      */
-    private final String targetClassName;
+    private final String className;
 
     private final ClassType extendsClass;
 
     private final List<ValidatedPropertyElement> properties = new ArrayList<>();
 
-    public ValidatorBuilderElement(String targetPackageName, String targetClassName, ClassType extendsClass) {
-        this.targetPackageName = targetPackageName;
-        this.targetClassName = targetClassName;
+    public ValidatorBuilderElement(String packageName, String className, ClassType extendsClass) {
+        this.packageName = packageName;
+        this.className = className;
         this.extendsClass = extendsClass;
     }
 
@@ -40,11 +40,11 @@ public class ValidatorBuilderElement {
         property.setParentBuilder(this);
     }
 
-    public String getBuildMethodName(){
+    public String getBuildMethodName() {
         return "build";
     }
 
-    public String getCommandsMethodName(){
+    public String getCommandsMethodName() {
         return "commands";
     }
 
@@ -60,12 +60,12 @@ public class ValidatorBuilderElement {
         this.parentBean = parentBean;
     }
 
-    public String getTargetPackageName() {
-        return targetPackageName;
+    public String getPackageName() {
+        return packageName;
     }
 
-    public String getTargetClassName() {
-        return targetClassName;
+    public String getClassName() {
+        return className;
     }
 
     public ClassType getExtendsClass() {
@@ -76,8 +76,8 @@ public class ValidatorBuilderElement {
     public String toString() {
         return "ValidatorBuilderPrototypeElement{" +
                 "parentVB=" + parentBean +
-                ", targetPackageName='" + targetPackageName + '\'' +
-                ", targetClassName='" + targetClassName + '\'' +
+                ", targetPackageName='" + packageName + '\'' +
+                ", targetClassName='" + className + '\'' +
                 ", extendsClass=" + extendsClass +
                 ", properties=" + properties +
                 '}';

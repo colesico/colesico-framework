@@ -18,7 +18,9 @@ package colesico.framework.dslvalidator.builder;
 
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.DSLValidator;
+import colesico.framework.dslvalidator.Sequence;
 import colesico.framework.dslvalidator.commands.*;
+import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 import colesico.framework.translation.Translatable;
 
 import java.util.List;
@@ -27,9 +29,15 @@ import java.util.function.Function;
 
 abstract public class FlowControlBuilder {
 
+    public static final String BUILD_METHOD = "build";
     public static final String PROGRAM_METHOD = "program";
     public static final String FIELD_METHOD = "field";
-    public static final String COMMANDS_METHOD = "commands";
+
+    protected final ValidatorMessages vrMessages;
+
+    public FlowControlBuilder(ValidatorMessages vrMessages) {
+        this.vrMessages = vrMessages;
+    }
 
     /**
      * Defines validation algorithm based on {@link GroupSequence }
@@ -40,6 +48,10 @@ abstract public class FlowControlBuilder {
             sequence.addCommand(cmd);
         }
         return new DSLValidator<>(sequence, null);
+    }
+
+    protected final <V> DSLValidator<V> program(Sequence<V, V> commands) {
+        return new DSLValidator<>(commands, null);
     }
 
     /**
@@ -106,10 +118,6 @@ abstract public class FlowControlBuilder {
      * Execute commands within that nested context.
      * In case of validation errors occur in the nested context, command execution is interrupted.
      *
-     * @param subject
-     * @param extractor
-     * @param commands
-     * @return
      * @see FieldSequence
      */
     protected final <V, N> Command<V> field(final String subject, final Function<V, N> extractor, final Command<N>... commands) {
@@ -123,9 +131,6 @@ abstract public class FlowControlBuilder {
     /**
      * In case of local  validation errors occur, command execution is interrupted.
      *
-     * @param subject
-     * @param index
-     * @param commands
      * @return
      */
     protected final <V extends List<E>, E> Command<V> item(final String subject, final int index, final Command<E>... commands) {
@@ -136,6 +141,9 @@ abstract public class FlowControlBuilder {
         return sequence;
     }
 
+    /**
+     * Map emtry
+     */
     protected final <V extends Map<K, E>, K, E> Command<V> entry(final String subject, final K key, final Command<E>... commands) {
         MapSequence<V, K, E> sequence = new MapSequence<>(subject, key);
         for (Command<E> cmd : commands) {
@@ -148,8 +156,6 @@ abstract public class FlowControlBuilder {
      * Iterates the elements of value from local context.
      * In case of  local validation errors occur, command execution is interrupted.
      *
-     * @param
-     * @return
      * @see IterableSequence
      */
     protected final <V extends Iterable<I>, I> Command<V> forEach(final Command<I>... commands) {
@@ -171,6 +177,18 @@ abstract public class FlowControlBuilder {
         return sequence;
     }
 
+    /**
+     * Executes sequence commands if context value is not null,
+     * otherwise throws validation error.
+     */
+    protected final <V> Command<V> mandatory(final Command<V>... commands) {
+        OptionalSequence<V> sequence = new OptionalSequence<>();
+        for (Command<V> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return sequence;
+    }
+
     protected final <V> Command<V> hookError(String errorCode, Translatable errorMsg, final Command<V>... commands) {
         HookErrorSequence<V> sequence = new HookErrorSequence<>(errorCode, errorMsg);
         for (Command<V> cmd : commands) {
@@ -182,7 +200,7 @@ abstract public class FlowControlBuilder {
     /**
      * Helper to create generic commands array
      */
-    public static <V> Command[] commands(Command<V>... cmd) {
+    protected <V> Command[] commands(Command<V>... cmd) {
         return cmd;
     }
 }

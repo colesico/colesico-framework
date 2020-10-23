@@ -18,6 +18,7 @@ package colesico.framework.dslvalidator.builder;
 
 
 import colesico.framework.dslvalidator.Command;
+import colesico.framework.dslvalidator.DSLValidator;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.dslvalidator.commands.*;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
@@ -27,12 +28,10 @@ import java.util.function.Predicate;
 
 abstract public class ValidatorBuilder extends FlowControlBuilder {
 
-    protected final ValidatorMessages vrMessages;
 
     public ValidatorBuilder(ValidatorMessages vrMessages) {
-        this.vrMessages = vrMessages;
+        super(vrMessages);
     }
-
 
     /**
      * Verify value exists (string is not blank, collection is not empty, etc)

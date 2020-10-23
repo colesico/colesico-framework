@@ -31,9 +31,9 @@ public final class DSLValidator<V> implements Validator<V> {
      * Root context subject
      */
     private final String subject;
-    private final Command program;
+    private final Command<V> program;
 
-    public DSLValidator(Command program, String subject) {
+    public DSLValidator(Command<V> program, String subject) {
         this.subject = subject;
         this.program = program;
     }
@@ -63,4 +63,11 @@ public final class DSLValidator<V> implements Validator<V> {
         }
     }
 
+    public Command<V> getProgram() {
+        return program;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
 }

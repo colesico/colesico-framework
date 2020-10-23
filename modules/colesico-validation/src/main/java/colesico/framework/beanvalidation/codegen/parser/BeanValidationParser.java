@@ -7,14 +7,13 @@ import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
+import colesico.framework.beanvalidation.BeanValidatorBuilder;
 import colesico.framework.beanvalidation.Validate;
 import colesico.framework.beanvalidation.ValidatorBuilderPrototype;
 import colesico.framework.beanvalidation.ValidatorBuilderPrototypes;
 import colesico.framework.beanvalidation.codegen.model.ValidatedBeanElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatedPropertyElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
-import colesico.framework.dslvalidator.builder.FlowControlBuilder;
-import colesico.framework.dslvalidator.builder.ValidatorBuilder;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -55,7 +54,7 @@ public class BeanValidationParser extends FrameworkAbstractParser {
                 methodName = null;
             }
 
-            ValidatedPropertyElement propertyElm = new ValidatedPropertyElement(fieldElm, subject, methodName, validateAst.unwrap().verify());
+            ValidatedPropertyElement propertyElm = new ValidatedPropertyElement(fieldElm, subject, methodName, validateAst.unwrap().verifier());
             builderElm.addProperty(propertyElm);
         }
     }
@@ -63,15 +62,13 @@ public class BeanValidationParser extends FrameworkAbstractParser {
     protected void parseBuilder(ValidatedBeanElement beanElement, AnnotationAssist<ValidatorBuilderPrototype> builderAst) {
 
         DeclaredType extendsClass = (DeclaredType) builderAst.getValueTypeMirror(a -> a.extendsClass());
-        DeclaredType packageFromClass = (DeclaredType) builderAst.getValueTypeMirror(a -> a.packageFromClass());
+        DeclaredType packageFromClass = (DeclaredType) builderAst.getValueTypeMirror(a -> a.packageClass());
 
         String packageName = builderAst.unwrap().packageName();
         if (StringUtils.isBlank(packageName)) {
             if (!CodegenUtils.isAssignable(Class.class, packageFromClass, processingEnv)) {
                 packageName = (new ClassType(processingEnv, packageFromClass)).asClassElement().getPackageName();
-            } else if (!(CodegenUtils.isAssignable(ValidatorBuilder.class, extendsClass, processingEnv)
-                    || CodegenUtils.isAssignable(FlowControlBuilder.class, extendsClass, processingEnv)
-            )) {
+            } else if (!CodegenUtils.isAssignable(BeanValidatorBuilder.class, extendsClass, processingEnv)) {
                 packageName = (new ClassType(processingEnv, extendsClass)).asClassElement().getPackageName();
             } else {
                 packageName = beanElement.getOriginType().asClassElement().getPackageName();

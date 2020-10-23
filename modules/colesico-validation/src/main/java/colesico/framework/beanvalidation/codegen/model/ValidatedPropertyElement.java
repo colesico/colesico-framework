@@ -18,13 +18,13 @@ public class ValidatedPropertyElement {
 
     protected final String methodName;
 
-    private final Boolean verify;
+    private final Boolean verifier;
 
-    public ValidatedPropertyElement(FieldElement originField, String subject, String methodName, Boolean verify) {
+    public ValidatedPropertyElement(FieldElement originField, String subject, String methodName, Boolean verifier) {
         this.originField = originField;
         this.subject = subject;
         this.methodName = methodName;
-        this.verify = verify;
+        this.verifier = verifier;
     }
 
     public final String getPropertyName() {
@@ -52,7 +52,7 @@ public class ValidatedPropertyElement {
     public String getMethodName() {
         if (methodName == null) {
             String prefix;
-            if (verify) {
+            if (verifier) {
                 prefix = "verify";
             } else {
                 prefix = "validate";
@@ -74,7 +74,7 @@ public class ValidatedPropertyElement {
         return originField;
     }
 
-    public Boolean getVerify() {
-        return verify;
+    public Boolean getVerifier() {
+        return verifier;
     }
 }
