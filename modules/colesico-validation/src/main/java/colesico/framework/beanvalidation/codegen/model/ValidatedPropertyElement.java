@@ -20,11 +20,14 @@ public class ValidatedPropertyElement {
 
     private final Boolean verifier;
 
-    public ValidatedPropertyElement(FieldElement originField, String subject, String methodName, Boolean verifier) {
+    private final ValidateBeanElement validateBean;
+
+    public ValidatedPropertyElement(FieldElement originField, String subject, String methodName, Boolean verifier, ValidateBeanElement validateBean) {
         this.originField = originField;
         this.subject = subject;
         this.methodName = methodName;
         this.verifier = verifier;
+        this.validateBean = validateBean;
     }
 
     public final String getPropertyName() {

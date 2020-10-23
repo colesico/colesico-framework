@@ -14,7 +14,7 @@ abstract public class BeanValidatorBuilder extends ValidatorBuilder {
     }
 
     /**
-     * Returns bean fields validation commands.
+     * Returns bean properties validation commands.
      */
     abstract public Command[] commands();
 

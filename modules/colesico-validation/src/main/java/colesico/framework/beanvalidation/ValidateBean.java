@@ -1,8 +1,5 @@
 package colesico.framework.beanvalidation;
 
-import colesico.framework.dslvalidator.builder.FlowControlBuilder;
-import colesico.framework.dslvalidator.builder.ValidatorBuilder;
-
 import java.lang.annotation.*;
 
 /**
@@ -12,16 +9,16 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Inherited
 @Documented
-public @interface ImportValidation {
+public @interface ValidateBean {
 
     /**
-     * Validation builder to be used to validate property value
+     * Bean validation builder to be used to validate property value
      */
-    Class<? extends ValidatorBuilder> builder();
+    Class<? extends BeanValidatorBuilder> builder();
 
     /**
      * Property value may be null.
      * If false - property value required.
      */
-    boolean optional = true;
+    boolean optional() default true;
 }

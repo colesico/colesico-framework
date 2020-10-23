@@ -7,10 +7,8 @@ import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
-import colesico.framework.beanvalidation.BeanValidatorBuilder;
-import colesico.framework.beanvalidation.Validate;
-import colesico.framework.beanvalidation.ValidatorBuilderPrototype;
-import colesico.framework.beanvalidation.ValidatorBuilderPrototypes;
+import colesico.framework.beanvalidation.*;
+import colesico.framework.beanvalidation.codegen.model.ValidateBeanElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatedBeanElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatedPropertyElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
@@ -40,20 +38,31 @@ public class BeanValidationParser extends FrameworkAbstractParser {
         for (FieldElement fieldElm : fieldList) {
             logger.debug("Process validated field: {} of type {}", fieldElm.getName(), fieldElm.unwrap().asType());
             AnnotationAssist<Validate> validateAst = fieldElm.getAnnotation(Validate.class);
-            if (validateAst == null) {
+            AnnotationAssist<ValidateBean> validateBeanAst = fieldElm.getAnnotation(ValidateBean.class);
+            if ((validateAst == null) && (validateBeanAst == null)) {
                 continue;
             }
-            String subject = validateAst.unwrap().subject();
+
+            String subject = validateAst == null ? null : validateAst.unwrap().subject();
+
             if (StringUtils.isEmpty(subject)) {
                 subject = fieldElm.getName();
             }
 
-            String methodName = validateAst.unwrap().methodName();
+            String methodName = validateAst == null ? null : validateAst.unwrap().methodName();
             if (StringUtils.isEmpty(methodName)) {
                 methodName = null;
             }
 
-            ValidatedPropertyElement propertyElm = new ValidatedPropertyElement(fieldElm, subject, methodName, validateAst.unwrap().verifier());
+            boolean verifier = validateAst == null ? false : validateAst.unwrap().verifier();
+
+            ValidateBeanElement validateBean = null;
+            if (validateBeanAst != null) {
+                ClassType builder = new ClassType(processingEnv, (DeclaredType) validateBeanAst.getValueTypeMirror(a -> a.builder()));
+                validateBean = new ValidateBeanElement(builder, validateBeanAst.unwrap().optional());
+            }
+
+            ValidatedPropertyElement propertyElm = new ValidatedPropertyElement(fieldElm, subject, methodName, verifier, validateBean);
             builderElm.addProperty(propertyElm);
         }
     }
@@ -76,7 +85,7 @@ public class BeanValidationParser extends FrameworkAbstractParser {
 
         String className = builderAst.unwrap().className();
         if (StringUtils.isBlank(className)) {
-            className =  beanElement.getOriginType().asClassElement().getSimpleName() + VALIDATOR_BUILDER_PROTOTYPE_SUFFIX;
+            className = beanElement.getOriginType().asClassElement().getSimpleName() + VALIDATOR_BUILDER_PROTOTYPE_SUFFIX;
         }
 
         ValidatorBuilderElement builderElm = new ValidatorBuilderElement(

@@ -4,12 +4,12 @@ import java.lang.annotation.*;
 
 /**
  * Specifies that the bean property has to be validated.
- *
- * In this case, the code generator creates a stub of the validation builder method for this field
+ * <p>
+ * In this case, the code generator creates a stub of the validation builder method for this property
  * and generates a code for including the validation of this field in the validation process.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
+@Target({ElementType.FIELD}) //TODO: support on getters
 @Inherited
 @Documented
 public @interface Validate {
