@@ -25,7 +25,7 @@ public @interface ValidatorBuilderPrototype {
     /**
      * Bean validator builder prototype simple class name.
      * If not specified the prototype class name will be constructed in this way:
-     * 'Abstract' + [validated property name] +'ValidatorBuilder':
+     * '[validated property name] +'ValidatorBuilderPrototype':
      */
     String className() default "";
 

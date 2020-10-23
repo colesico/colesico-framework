@@ -24,7 +24,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
 
 
     protected TypeSpec.Builder classBuilder;
-    protected ValidatorBuilderElement vbpElement;
+    protected ValidatorBuilderElement builderElement;
 
     public ValidatorBuilderGenerator(ProcessingEnvironment processingEnv) {
         super(processingEnv);
@@ -117,7 +117,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
     public void generate(ValidatedBeanElement beanElement) {
         for (ValidatorBuilderElement builderElement : beanElement.getBuilders()) {
 
-            this.vbpElement = builderElement;
+            this.builderElement = builderElement;
 
             this.classBuilder = TypeSpec.classBuilder(builderElement.getClassName());
 

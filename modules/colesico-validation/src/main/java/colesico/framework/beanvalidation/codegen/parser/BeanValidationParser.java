@@ -23,8 +23,7 @@ import java.util.List;
 
 public class BeanValidationParser extends FrameworkAbstractParser {
 
-    public static final String VALIDATOR_BUILDER_PROTOTYPE_SUFFIX = "ValidatorBuilder";
-    public static final String VALIDATOR_BUILDER_PROTOTYPE_PREFIX = "Abstract";
+    public static final String VALIDATOR_BUILDER_PROTOTYPE_SUFFIX = "ValidatorBuilderPrototype";
 
     public BeanValidationParser(ProcessingEnvironment processingEnv) {
         super(processingEnv);
@@ -77,7 +76,7 @@ public class BeanValidationParser extends FrameworkAbstractParser {
 
         String className = builderAst.unwrap().className();
         if (StringUtils.isBlank(className)) {
-            className = VALIDATOR_BUILDER_PROTOTYPE_PREFIX + beanElement.getOriginType().asClassElement().getSimpleName() + VALIDATOR_BUILDER_PROTOTYPE_SUFFIX;
+            className =  beanElement.getOriginType().asClassElement().getSimpleName() + VALIDATOR_BUILDER_PROTOTYPE_SUFFIX;
         }
 
         ValidatorBuilderElement builderElm = new ValidatorBuilderElement(
