@@ -40,7 +40,7 @@ public final class ChainSequence<V> extends AbstractSequence<V, V> {
         if (context.getValue() != null) {
             executeChain(context);
         } else {
-            context.addError(OptionalGroupSequence.class.getSimpleName(), msg.mandatoryValueIsNull());
+            context.addError(ChainSequence.class.getSimpleName(), msg.mandatoryValueIsNull());
         }
     }
 }

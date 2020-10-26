@@ -41,7 +41,7 @@ public final class GroupSequence<V> extends AbstractSequence<V, V> {
         if (context.getValue() != null) {
             executeGroup(context);
         } else {
-            context.addError(OptionalGroupSequence.class.getSimpleName(), msg.mandatoryValueIsNull());
+            context.addError(GroupSequence.class.getSimpleName(), msg.mandatoryValueIsNull());
         }
     }
 
