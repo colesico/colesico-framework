@@ -20,15 +20,15 @@ package colesico.framework.dslvalidator.commands;
 import colesico.framework.dslvalidator.ValidationContext;
 
 /**
- * Executes sequence commands if context value is not null
- *
- * @author Vladlen Larionov
+ * Executes group commands if context value is not null.
+ * @see GroupSequence
  */
-public final class OptionalSequence<V> extends AbstractSequence<V, V> {
+public final class OptionalGroupSequence<V> extends AbstractSequence<V, V> {
+
     @Override
     public void execute(ValidationContext<V> context) {
         if (context.getValue() != null) {
-            executeChain(context);
+            executeGroup(context);
         }
     }
 }

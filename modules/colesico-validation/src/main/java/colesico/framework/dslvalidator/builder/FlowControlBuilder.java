@@ -29,9 +29,9 @@ import java.util.function.Function;
 
 abstract public class FlowControlBuilder {
 
-    public static final String BUILD_METHOD = "build";
-    public static final String PROGRAM_METHOD = "program";
     public static final String FIELD_METHOD = "field";
+    public static final String GROUP_METHOD = "group";
+    public static final String OPTIONAL_GROUP_METHOD = "optionalGroup";
 
     protected final ValidatorMessages vrMessages;
 
@@ -43,7 +43,7 @@ abstract public class FlowControlBuilder {
      * Defines validation algorithm based on {@link GroupSequence }
      */
     protected final <V> DSLValidator<V> program(final Command<V>... commands) {
-        GroupSequence<V> sequence = new GroupSequence<>();
+        GroupSequence<V> sequence = new GroupSequence<>(vrMessages);
         for (Command<V> cmd : commands) {
             sequence.addCommand(cmd);
         }
@@ -58,23 +58,38 @@ abstract public class FlowControlBuilder {
      * Defines validation algorithm based on {@link ChainSequence }
      */
     protected final <V> DSLValidator<V> program(final String subject, final Command<V>... commands) {
-        ChainSequence<V> sequence = new ChainSequence<>();
+        ChainSequence<V> sequence = new ChainSequence<>(vrMessages);
         for (Command<V> cmd : commands) {
             sequence.addCommand(cmd);
         }
         return new DSLValidator<>(sequence, subject);
     }
 
+    protected final <V> DSLValidator<V> program(final String subject, Sequence<V, V> commands) {
+        return new DSLValidator<>(commands, subject);
+    }
+
     /**
-     * Executes commands within the local context.
+     * Executes group commands  within the local context if context value is not null,
+     * otherwise throws validation error.
      * In case of local validation errors occur, command execution is NOT interrupted.
      *
-     * @param commands
-     * @return
      * @see GroupSequence
      */
     protected final <V> Command<V> group(final Command<V>... commands) {
-        GroupSequence<V> sequence = new GroupSequence<>();
+        GroupSequence<V> sequence = new GroupSequence<>(vrMessages);
+        for (Command<V> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return sequence;
+    }
+
+    /**
+     * Executes group commands if context value is not null.
+     * In case of local validation errors occur, command execution is NOT interrupted.
+     */
+    protected final <V> Command<V> optionalGroup(final Command<V>... commands) {
+        OptionalGroupSequence<V> sequence = new OptionalGroupSequence<>();
         for (Command<V> cmd : commands) {
             sequence.addCommand(cmd);
         }
@@ -89,7 +104,18 @@ abstract public class FlowControlBuilder {
      * @return
      */
     protected final <V> Command<V> chain(final Command<V>... commands) {
-        ChainSequence<V> sequence = new ChainSequence<>();
+        ChainSequence<V> sequence = new ChainSequence<>(vrMessages);
+        for (Command<V> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return sequence;
+    }
+
+    /**
+     * Executes chain commands if context value is not null
+     */
+    protected final <V> Command<V> optionalChain(final Command<V>... commands) {
+        OptionalChainSequence<V> sequence = new OptionalChainSequence<>();
         for (Command<V> cmd : commands) {
             sequence.addCommand(cmd);
         }
@@ -161,29 +187,6 @@ abstract public class FlowControlBuilder {
     protected final <V extends Iterable<I>, I> Command<V> forEach(final Command<I>... commands) {
         IterableSequence<V, I> sequence = new IterableSequence<>();
         for (Command<I> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
-    }
-
-    /**
-     * Executes sequence commands if context value is not null
-     */
-    protected final <V> Command<V> optional(final Command<V>... commands) {
-        OptionalSequence<V> sequence = new OptionalSequence<>();
-        for (Command<V> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
-    }
-
-    /**
-     * Executes sequence commands if context value is not null,
-     * otherwise throws validation error.
-     */
-    protected final <V> Command<V> mandatory(final Command<V>... commands) {
-        OptionalSequence<V> sequence = new OptionalSequence<>();
-        for (Command<V> cmd : commands) {
             sequence.addCommand(cmd);
         }
         return sequence;

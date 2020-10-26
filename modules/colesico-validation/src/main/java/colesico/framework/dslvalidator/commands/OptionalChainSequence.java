@@ -18,26 +18,17 @@ package colesico.framework.dslvalidator.commands;
 
 
 import colesico.framework.dslvalidator.ValidationContext;
-import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 
 /**
- * Executes sequence commands if context value is not null.
- * If value is null throws validation error
+ * Executes chain commands if context value is not null.
+ *
+ * @see ChainSequence
  */
-public final class MandatorySequence<V> extends AbstractSequence<V, V> {
-
-    private final ValidatorMessages msg;
-
-    public MandatorySequence(ValidatorMessages msg) {
-        this.msg = msg;
-    }
-
+public final class OptionalChainSequence<V> extends AbstractSequence<V, V> {
     @Override
     public void execute(ValidationContext<V> context) {
         if (context.getValue() != null) {
             executeChain(context);
-        } else {
-            context.addError(MandatorySequence.class.getSimpleName(), msg.mandatoryValueIsNull());
         }
     }
 }

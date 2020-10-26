@@ -20,14 +20,17 @@ public class ValidatedPropertyElement {
 
     private final Boolean verifier;
 
-    private final ValidateBeanElement validateBean;
+    private final ValidateAsBeanElement validateAsBean;
 
-    public ValidatedPropertyElement(FieldElement originField, String subject, String methodName, Boolean verifier, ValidateBeanElement validateBean) {
+    public ValidatedPropertyElement(FieldElement originField, String subject, String methodName, Boolean verifier, ValidateAsBeanElement validateAsBean) {
         this.originField = originField;
         this.subject = subject;
         this.methodName = methodName;
         this.verifier = verifier;
-        this.validateBean = validateBean;
+        this.validateAsBean = validateAsBean;
+        if (validateAsBean != null) {
+            validateAsBean.setParentProperty(this);
+        }
     }
 
     public final String getPropertyName() {
@@ -79,5 +82,9 @@ public class ValidatedPropertyElement {
 
     public Boolean getVerifier() {
         return verifier;
+    }
+
+    public ValidateAsBeanElement getValidateAsBean() {
+        return validateAsBean;
     }
 }
