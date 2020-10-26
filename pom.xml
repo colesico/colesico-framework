@@ -94,7 +94,7 @@
 
         <!-- DB -->
         <!-- ver > 3.4.3 is not JPMS compatible. -->
-        <hikaricp.version>3.4.5</hikaricp.version>
+        <hikaricp.version>3.4.3</hikaricp.version>
         <jdbi3.version>3.17.0</jdbi3.version>
 
         <!-- Mix -->
