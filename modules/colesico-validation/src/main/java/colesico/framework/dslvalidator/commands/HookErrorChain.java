@@ -30,13 +30,13 @@ import java.util.Set;
  *
  * @param
  */
-public class HookErrorSequence<V> extends AbstractSequence<V, V> {
+public class HookErrorChain<V> extends AbstractSequence<V, V> {
 
     private final String errorCode;
     private final Translatable errorMessage;
     private final Object[] messageParams;
 
-    public HookErrorSequence(String errorCode, Translatable errorMessage, Object... messageParam) {
+    public HookErrorChain(String errorCode, Translatable errorMessage, Object... messageParam) {
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
         this.messageParams = messageParam;

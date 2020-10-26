@@ -17,32 +17,18 @@
 package colesico.framework.dslvalidator.commands;
 
 import colesico.framework.dslvalidator.ValidationContext;
-import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 
 /**
- * If context value is not null executes all sequence commands within the current context.
+ * Executes all  commands within the current context.
  * Commands execution is not interrupted when validation errors occur.
- * <p>
- * If current context value is null throws validation exception.
  *
- * @author Vladlen Larionov
  * @see ChainSequence
  */
 public final class GroupSequence<V> extends AbstractSequence<V, V> {
 
-    private final ValidatorMessages msg;
-
-    public GroupSequence(ValidatorMessages msg) {
-        this.msg = msg;
-    }
-
     @Override
     public void execute(ValidationContext<V> context) {
-        if (context.getValue() != null) {
-            executeGroup(context);
-        } else {
-            context.addError(GroupSequence.class.getSimpleName(), msg.mandatoryValueIsNull());
-        }
+        executeGroup(context);
     }
 
 }

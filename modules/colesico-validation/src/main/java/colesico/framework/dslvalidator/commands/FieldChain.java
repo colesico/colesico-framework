@@ -18,14 +18,15 @@ package colesico.framework.dslvalidator.commands;
 
 import colesico.framework.dslvalidator.ValidationContext;
 
-import java.util.List;
+import java.util.function.Function;
 
 /**
- * Perform command execution on a list element determined by index.
+ * Extract field value from current context value with extractor function
+ * and applies commands to that nested value within new nested context.
  *
  * @author Vladlen Larionov
  */
-public final class ListSequence<V extends List<E>, E> extends AbstractSequence<V, E> {
+public final class FieldChain<V, N> extends AbstractSequence<V, N> {
 
     /**
      * Nested context subject
@@ -33,21 +34,19 @@ public final class ListSequence<V extends List<E>, E> extends AbstractSequence<V
     private final String subject;
 
     /**
-     * Element index
+     * Extracts nested value from value
      */
-    private final int index;
+    private final Function<V, N> extractor;
 
-    public ListSequence(String subject, int index) {
+    public FieldChain(String subject, Function<V, N> extractor) {
         this.subject = subject;
-        this.index = index;
+        this.extractor = extractor;
     }
 
     @Override
     public void execute(ValidationContext<V> context) {
-        if (index < context.getValue().size()) {
-            E elementValue = context.getValue().get(index);
-            ValidationContext<E> nestedContext = ValidationContext.ofNested(context, subject, elementValue);
-            executeChain(nestedContext);
-        }
+        N nestedValue = extractor.apply(context.getValue());
+        ValidationContext<N> nestedContext = ValidationContext.ofNested(context, subject, nestedValue);
+        executeChain(nestedContext);
     }
 }

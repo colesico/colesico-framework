@@ -16,19 +16,36 @@
 
 package colesico.framework.dslvalidator.commands;
 
-
 import colesico.framework.dslvalidator.ValidationContext;
 
+import java.util.Map;
+
 /**
- * Executes chain commands if context value is not null.
+ * Perform command execution on a map entry  determined by key.
  *
- * @see ChainSequence
+ * @author Vladlen Larionov
  */
-public final class OptionalChainSequence<V> extends AbstractSequence<V, V> {
+public final class MapChain<V extends Map<K, E>, K, E> extends AbstractSequence<V, E> {
+
+    /**
+     * Nested context subject
+     */
+    private final String subject;
+
+    /**
+     * Element index
+     */
+    private final K key;
+
+    public MapChain(String subject, K key) {
+        this.subject = subject;
+        this.key = key;
+    }
+
     @Override
     public void execute(ValidationContext<V> context) {
-        if (context.getValue() != null) {
-            executeChain(context);
-        }
+        E entryValue = context.getValue().get(key);
+        ValidationContext<E> nestedContext = ValidationContext.ofNested(context, subject, entryValue);
+        executeChain(nestedContext);
     }
 }

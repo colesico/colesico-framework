@@ -18,14 +18,14 @@ package colesico.framework.dslvalidator.commands;
 
 import colesico.framework.dslvalidator.ValidationContext;
 
-import java.util.Map;
+import java.util.List;
 
 /**
- * Perform command execution on a map entry  determined by key.
+ * Perform command execution on a list element determined by index.
  *
  * @author Vladlen Larionov
  */
-public final class MapSequence<V extends Map<K, E>, K, E> extends AbstractSequence<V, E> {
+public final class ListChain<V extends List<E>, E> extends AbstractSequence<V, E> {
 
     /**
      * Nested context subject
@@ -35,17 +35,19 @@ public final class MapSequence<V extends Map<K, E>, K, E> extends AbstractSequen
     /**
      * Element index
      */
-    private final K key;
+    private final int index;
 
-    public MapSequence(String subject, K key) {
+    public ListChain(String subject, int index) {
         this.subject = subject;
-        this.key = key;
+        this.index = index;
     }
 
     @Override
     public void execute(ValidationContext<V> context) {
-        E entryValue = context.getValue().get(key);
-        ValidationContext<E> nestedContext = ValidationContext.ofNested(context, subject, entryValue);
-        executeChain(nestedContext);
+        if (index < context.getValue().size()) {
+            E elementValue = context.getValue().get(index);
+            ValidationContext<E> nestedContext = ValidationContext.ofNested(context, subject, elementValue);
+            executeChain(nestedContext);
+        }
     }
 }

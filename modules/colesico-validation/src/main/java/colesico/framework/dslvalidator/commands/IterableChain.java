@@ -24,7 +24,7 @@ import colesico.framework.dslvalidator.ValidationContext;
  *
  * @param <V>
  */
-public class IterableSequence<V extends Iterable<I>, I> extends AbstractSequence<V, I> {
+public class IterableChain<V extends Iterable<I>, I> extends AbstractSequence<V, I> {
 
     @Override
     public void execute(ValidationContext<V> context) {

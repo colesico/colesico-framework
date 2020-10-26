@@ -16,19 +16,27 @@
 
 package colesico.framework.dslvalidator.commands;
 
-
 import colesico.framework.dslvalidator.ValidationContext;
 
 /**
- * Executes group commands if context value is not null.
- * @see GroupSequence
+ * Executes sequence of commands within the new nested context with specified subject.
+ *
+ * @author Vladlen Larionov
  */
-public final class OptionalGroupSequence<V> extends AbstractSequence<V, V> {
+public final class SubjectChain<V> extends AbstractSequence<V, V> {
+
+    /**
+     * Nested context subject
+     */
+    private final String subject;
+
+    public SubjectChain(String subject) {
+        this.subject = subject;
+    }
 
     @Override
     public void execute(ValidationContext<V> context) {
-        if (context.getValue() != null) {
-            executeGroup(context);
-        }
+        ValidationContext<V> nestedContext = ValidationContext.ofNested(context, subject, context.getValue());
+        executeChain(nestedContext);
     }
 }
