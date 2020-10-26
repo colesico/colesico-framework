@@ -47,7 +47,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         if (propertyElm.getValidateAsBean() != null) {
             ValidateAsBeanElement vab = propertyElm.getValidateAsBean();
 
-            String groupCmd = vab.isOptional() ? FlowControlBuilder.OPTIONAL_METHOD : FlowControlBuilder.MANDATORY_METHOD;
+            String groupCmd = vab.isOptional() ? FlowControlBuilder.OPTIONAL_GROUP_METHOD : FlowControlBuilder.MANDATORY_GROUP_METHOD;
 
             // return optional(validatorBuilderField1().commands())
             // return mandatory(validatorBuilderField1().commands())

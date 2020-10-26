@@ -30,9 +30,8 @@ import java.util.function.Function;
 abstract public class FlowControlBuilder {
 
     public static final String FIELD_METHOD = "field";
-    public static final String GROUP_METHOD = "group";
-    public static final String OPTIONAL_METHOD = "optional";
-    public static final String MANDATORY_METHOD = "mandatory";
+    public static final String OPTIONAL_GROUP_METHOD = "optionalGroup";
+    public static final String MANDATORY_GROUP_METHOD = "mandatoryGroup";
 
     protected final ValidatorMessages vrMessages;
 
