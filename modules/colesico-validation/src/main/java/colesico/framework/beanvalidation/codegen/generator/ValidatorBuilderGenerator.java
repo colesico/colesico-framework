@@ -73,7 +73,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(vab.validationBuilderGetterName());
         mb.addModifiers(Modifier.ABSTRACT, Modifier.PROTECTED);
         mb.returns(ClassName.get(BeanValidatorBuilder.class));
-        mb.addJavadoc("Returns bean validation builder for $N", propertyElm.getPropertyName());
+        mb.addJavadoc("Returns bean validator builder for $N", propertyElm.getPropertyName());
         classBuilder.addMethod(mb.build());
     }
 
