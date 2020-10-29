@@ -4,7 +4,7 @@ import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.beanvalidation.BeanValidatorBuilder;
-import colesico.framework.beanvalidation.codegen.model.ValidateAsBeanElement;
+import colesico.framework.beanvalidation.codegen.model.ValidateWithBuilderElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatedBeanElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatedPropertyElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
@@ -35,7 +35,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
     private void generateValidateMethod(ValidatedPropertyElement propertyElm) {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(propertyElm.getMethodName());
 
-        if (propertyElm.getValidateAsBean() == null) {
+        if (propertyElm.getValidateWithBuilder() == null) {
             mb.addModifiers(Modifier.ABSTRACT);
         }
 
@@ -44,8 +44,8 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         mb.returns(returnType);
         mb.addJavadoc("Validate $N", propertyElm.getPropertyName());
 
-        if (propertyElm.getValidateAsBean() != null) {
-            ValidateAsBeanElement vab = propertyElm.getValidateAsBean();
+        if (propertyElm.getValidateWithBuilder() != null) {
+            ValidateWithBuilderElement vab = propertyElm.getValidateWithBuilder();
 
             String groupCmd = vab.isOptional() ? FlowControlBuilder.OPTIONAL_GROUP_METHOD : FlowControlBuilder.MANDATORY_GROUP_METHOD;
 
@@ -68,7 +68,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
     }
 
     private void generateBeanValidationBuilderGetter(ValidatedPropertyElement propertyElm) {
-        ValidateAsBeanElement vab = propertyElm.getValidateAsBean();
+        ValidateWithBuilderElement vab = propertyElm.getValidateWithBuilder();
 
         MethodSpec.Builder mb = MethodSpec.methodBuilder(vab.validationBuilderGetterName());
         mb.addModifiers(Modifier.ABSTRACT, Modifier.PROTECTED);
@@ -83,7 +83,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
                 generateVerifyMethod(propertyElm);
             } else {
                 generateValidateMethod(propertyElm);
-                if (propertyElm.getValidateAsBean() != null) {
+                if (propertyElm.getValidateWithBuilder() != null) {
                     generateBeanValidationBuilderGetter(propertyElm);
                 }
             }

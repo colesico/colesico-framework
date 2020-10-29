@@ -18,7 +18,7 @@ package colesico.framework.eventbus;
 import java.lang.annotation.*;
 
 /**
- * Indicates a service method as event listener
+ * Declares a service method as an event listener
  *
  * @author Vladlen Larionov
  */

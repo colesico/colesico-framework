@@ -2,13 +2,13 @@ package colesico.framework.beanvalidation.codegen.model;
 
 import colesico.framework.assist.StrUtils;
 
-public class ValidateAsBeanElement {
+public class ValidateWithBuilderElement {
 
     private ValidatedPropertyElement parentProperty;
 
     private final boolean optional;
 
-    public ValidateAsBeanElement(boolean optional) {
+    public ValidateWithBuilderElement(boolean optional) {
         this.optional = optional;
     }
 

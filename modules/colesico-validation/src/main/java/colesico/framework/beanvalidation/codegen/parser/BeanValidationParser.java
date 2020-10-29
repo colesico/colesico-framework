@@ -8,7 +8,7 @@ import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.beanvalidation.*;
-import colesico.framework.beanvalidation.codegen.model.ValidateAsBeanElement;
+import colesico.framework.beanvalidation.codegen.model.ValidateWithBuilderElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatedBeanElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatedPropertyElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
@@ -38,7 +38,7 @@ public class BeanValidationParser extends FrameworkAbstractParser {
         for (FieldElement fieldElm : fieldList) {
             logger.debug("Process validated field: {} of type {}", fieldElm.getName(), fieldElm.unwrap().asType());
             AnnotationAssist<Validate> validateAst = fieldElm.getAnnotation(Validate.class);
-            AnnotationAssist<ValidateAsBean> validateBeanAst = fieldElm.getAnnotation(ValidateAsBean.class);
+            AnnotationAssist<ValidateWithBuilder> validateBeanAst = fieldElm.getAnnotation(ValidateWithBuilder.class);
             if ((validateAst == null) && (validateBeanAst == null)) {
                 continue;
             }
@@ -56,9 +56,9 @@ public class BeanValidationParser extends FrameworkAbstractParser {
 
             boolean verifier = validateAst == null ? false : validateAst.unwrap().verifier();
 
-            ValidateAsBeanElement validateBean = null;
+            ValidateWithBuilderElement validateBean = null;
             if (validateBeanAst != null) {
-                validateBean = new ValidateAsBeanElement(validateBeanAst.unwrap().optional());
+                validateBean = new ValidateWithBuilderElement(validateBeanAst.unwrap().optional());
             }
 
             ValidatedPropertyElement propertyElm = new ValidatedPropertyElement(fieldElm, subject, methodName, verifier, validateBean);

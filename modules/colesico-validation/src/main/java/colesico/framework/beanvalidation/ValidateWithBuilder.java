@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Inherited
 @Documented
-public @interface ValidateAsBean {
+public @interface ValidateWithBuilder {
 
     /**
      * Property value may be null.
