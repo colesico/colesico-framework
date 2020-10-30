@@ -49,9 +49,9 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
 
             String groupCmd = vab.isOptional() ? FlowControlBuilder.OPTIONAL_GROUP_METHOD : FlowControlBuilder.MANDATORY_GROUP_METHOD;
 
-            // return optional(validatorBuilderField1().commands())
-            // return mandatory(validatorBuilderField1().commands())
-            mb.addStatement("return $N($N().$N())", groupCmd, vab.validationBuilderGetterName(), BeanValidatorBuilder.COMMANDS_METHOD);
+            // return optional(validatorBuilderField1.commands())
+            // return mandatory(validatorBuilderField1.commands())
+            mb.addStatement("return $N($N.$N())", groupCmd, vab.validatorFieldName(), BeanValidatorBuilder.COMMANDS_METHOD);
         }
 
         classBuilder.addMethod(mb.build());
@@ -67,15 +67,6 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    private void generateBeanValidationBuilderGetter(ValidatedPropertyElement propertyElm) {
-        ValidateWithBuilderElement vab = propertyElm.getValidateWithBuilder();
-
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(vab.validationBuilderGetterName());
-        mb.addModifiers(Modifier.ABSTRACT, Modifier.PROTECTED);
-        mb.returns(ClassName.get(BeanValidatorBuilder.class));
-        mb.addJavadoc("Returns bean validator builder for $N", propertyElm.getPropertyName());
-        classBuilder.addMethod(mb.build());
-    }
 
     private void generatePropertyValidationMethods(ValidatorBuilderElement builderElement) {
         for (ValidatedPropertyElement propertyElm : builderElement.getProperties()) {
@@ -83,9 +74,6 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
                 generateVerifyMethod(propertyElm);
             } else {
                 generateValidateMethod(propertyElm);
-                if (propertyElm.getValidateWithBuilder() != null) {
-                    generateBeanValidationBuilderGetter(propertyElm);
-                }
             }
         }
     }
@@ -140,26 +128,52 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
             );
             CodeBlock sucall = CodegenUtils.generateSuperMethodCall(constructor, null, null);
             constructorBuilder.addCode(sucall);
+
+            // Generate extra params
+            for (ValidatedPropertyElement vpe : builderElement.getProperties()) {
+                if (vpe.getValidateWithBuilder() == null) {
+                    continue;
+                }
+                TypeName builderType = ClassName.bestGuess(vpe.getValidateWithBuilder().getBuilderClass());
+                String builderVarName = vpe.getValidateWithBuilder().validatorFieldName();
+                constructorBuilder.addParameter(builderType, builderVarName, Modifier.FINAL);
+                constructorBuilder.addStatement("this.$N = $N", builderVarName, builderVarName);
+            }
+
             classBuilder.addMethod(constructorBuilder.build());
         }
     }
 
-    public void generate(ValidatedBeanElement beanElement) {
-        for (ValidatorBuilderElement builderElement : beanElement.getBuilders()) {
+    private void generateValidatorBuildersFields() {
+        for (ValidatedPropertyElement vpe : builderElement.getProperties()) {
+            if (vpe.getValidateWithBuilder() == null) {
+                continue;
+            }
+            TypeName builderType = ClassName.bestGuess(vpe.getValidateWithBuilder().getBuilderClass());
+            String builderVarName = vpe.getValidateWithBuilder().validatorFieldName();
+            FieldSpec.Builder fb = FieldSpec.builder(builderType, builderVarName, Modifier.PROTECTED, Modifier.FINAL);
+            fb.addJavadoc(" Bean validator builder for " + vpe.getPropertyName());
+            classBuilder.addField(fb.build());
+        }
+    }
 
-            this.builderElement = builderElement;
+    public void generate(ValidatedBeanElement beanElm) {
+        for (ValidatorBuilderElement builderElm : beanElm.getBuilders()) {
 
-            this.classBuilder = TypeSpec.classBuilder(builderElement.getClassName());
+            this.builderElement = builderElm;
+
+            this.classBuilder = TypeSpec.classBuilder(builderElm.getClassName());
 
             classBuilder.addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC);
 
-            classBuilder.superclass(TypeName.get(builderElement.getExtendsClass().unwrap()));
+            classBuilder.superclass(TypeName.get(builderElm.getExtendsClass().unwrap()));
 
-            generateProxyConstructors(builderElement);
-            generatePropertyValidationMethods(builderElement);
-            generateCommandsMethod(builderElement);
+            generateValidatorBuildersFields();
+            generateProxyConstructors(builderElm);
+            generatePropertyValidationMethods(builderElm);
+            generateCommandsMethod(builderElm);
 
-            CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), builderElement.getPackageName(), builderElement.getParentBean().getOriginType().asTypeElement());
+            CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), builderElm.getPackageName(), builderElm.getParentBean().getOriginType().asTypeElement());
         }
     }
 }

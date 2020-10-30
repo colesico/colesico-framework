@@ -54,9 +54,12 @@ public class BeanValidationProcessor extends FrameworkAbstractProcessor {
                 if (logger.isDebugEnabled()) {
                     e.printStackTrace();
                 }
+                // annotations are unclaimed and subsequent processors may be asked to process them again
                 return false;
             }
         }
+
+        // annotations are claimed and subsequent processors will not be asked to process them again
         return true;
     }
 }

@@ -1,14 +1,18 @@
 package colesico.framework.beanvalidation.codegen.model;
 
-import colesico.framework.assist.StrUtils;
-
 public class ValidateWithBuilderElement {
 
     private ValidatedPropertyElement parentProperty;
 
+    /**
+     * Validator builder full class name
+     */
+    private String builderClass;
+
     private final boolean optional;
 
-    public ValidateWithBuilderElement(boolean optional) {
+    public ValidateWithBuilderElement(String builderClass, boolean optional) {
+        this.builderClass = builderClass;
         this.optional = optional;
     }
 
@@ -16,8 +20,8 @@ public class ValidateWithBuilderElement {
         return optional;
     }
 
-    public String validationBuilderGetterName() {
-        return "validatorBuilder" + StrUtils.firstCharToUpperCase(parentProperty.getPropertyName());
+    public String validatorFieldName() {
+        return parentProperty.getPropertyName() + "BVB";
     }
 
     public ValidatedPropertyElement getParentProperty() {
@@ -28,5 +32,7 @@ public class ValidateWithBuilderElement {
         this.parentProperty = parentProperty;
     }
 
-
+    public String getBuilderClass() {
+        return builderClass;
+    }
 }
