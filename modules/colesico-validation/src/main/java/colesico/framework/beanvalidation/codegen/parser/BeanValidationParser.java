@@ -59,10 +59,13 @@ public class BeanValidationParser extends FrameworkAbstractParser {
 
             ValidateWithBuilderElement validateBean = null;
             if (validateWithBuilderAst != null) {
-                ClassElement fieldBean = fieldElm.asClassType().asClassElement();
-                List<AnnotationAssist<ValidatorBuilderPrototype>> builderProtsAst = getBuildersPrototypesAst(fieldBean);
-                ValidatorBuilderElement fieldBuilderElm = createBuilderElement(fieldBean, builderProtsAst.get(0));
-                String builderClassName = fieldBuilderElm.getPackageName() + '.' + fieldBuilderElm.getClassName();
+                String builderClassName = validateWithBuilderAst.unwrap().builderClass();
+                if (StringUtils.isEmpty(builderClassName)) {
+                    ClassElement fieldBean = fieldElm.asClassType().asClassElement();
+                    List<AnnotationAssist<ValidatorBuilderPrototype>> builderProtsAst = getBuildersPrototypesAst(fieldBean);
+                    ValidatorBuilderElement fieldBuilderElm = createBuilderElement(fieldBean, builderProtsAst.get(0));
+                    builderClassName = fieldBuilderElm.getPackageName() + '.' + fieldBuilderElm.getClassName();
+                }
                 validateBean = new ValidateWithBuilderElement(builderClassName, validateWithBuilderAst.unwrap().optional());
             }
 

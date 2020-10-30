@@ -21,7 +21,7 @@ public class ValidateWithBuilderElement {
     }
 
     public String validatorFieldName() {
-        return parentProperty.getPropertyName() + "BVB";
+        return parentProperty.getPropertyName() + "VB";
     }
 
     public ValidatedPropertyElement getParentProperty() {

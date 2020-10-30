@@ -152,7 +152,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
             TypeName builderType = ClassName.bestGuess(vpe.getValidateWithBuilder().getBuilderClass());
             String builderVarName = vpe.getValidateWithBuilder().validatorFieldName();
             FieldSpec.Builder fb = FieldSpec.builder(builderType, builderVarName, Modifier.PROTECTED, Modifier.FINAL);
-            fb.addJavadoc(" Bean validator builder for " + vpe.getPropertyName());
+            fb.addJavadoc(" Validator Builder for " + vpe.getPropertyName());
             classBuilder.addField(fb.build());
         }
     }
@@ -167,6 +167,8 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
             classBuilder.addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC);
 
             classBuilder.superclass(TypeName.get(builderElm.getExtendsClass().unwrap()));
+
+            classBuilder.addJavadoc("Validator Builder Prototype\nExtend this class to implement validation methods");
 
             generateValidatorBuildersFields();
             generateProxyConstructors(builderElm);

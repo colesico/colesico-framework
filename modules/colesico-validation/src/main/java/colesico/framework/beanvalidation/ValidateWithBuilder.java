@@ -12,6 +12,12 @@ import java.lang.annotation.*;
 public @interface ValidateWithBuilder {
 
     /**
+     * Validator builder class full name.
+     * If not specified will be used a builder prototype class name.
+     */
+    String builderClass() default "";
+
+    /**
      * Property value may be null.
      * If false - property value required.
      */
