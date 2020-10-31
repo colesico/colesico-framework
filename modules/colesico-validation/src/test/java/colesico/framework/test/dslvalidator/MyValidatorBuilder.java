@@ -32,7 +32,7 @@ public class MyValidatorBuilder extends ValidatorBuilder {
     }
 
     public Validator<MyDataBean> buildGroup() {
-        return program(
+        return validator(
                 field("ID", v -> v.getId(), required(), interval(0L, 1L, true)),
                 field("NAME", v -> v.getName(), required(), length(1, 2)),
                 field("VALUE", v -> v.getValue(), required(), length(1, 5))
@@ -40,7 +40,7 @@ public class MyValidatorBuilder extends ValidatorBuilder {
     }
 
     public Validator<MyDataBean> buildSubject() {
-        return program(
+        return validator(
                 "MY_BEAN",
                 required(),
                 field("ID", v -> v.getId(),

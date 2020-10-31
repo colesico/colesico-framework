@@ -22,10 +22,7 @@ abstract public class BeanValidatorBuilder extends ValidatorBuilder {
      * Builds bean validator
      */
     public <V> DSLValidator<V> build() {
-        return program(mandatoryGroup(commands()));
+        return validator(mandatoryGroup(commands()));
     }
 
-    public final <V> DSLValidator<V> buildOptional() {
-        return program(optionalGroup(commands()));
-    }
 }

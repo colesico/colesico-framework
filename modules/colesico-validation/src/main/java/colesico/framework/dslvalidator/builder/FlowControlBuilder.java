@@ -39,14 +39,14 @@ abstract public class FlowControlBuilder {
         this.vrMessages = vrMessages;
     }
 
-    protected final <V> DSLValidator<V> program(Sequence<V, V> commands) {
+    protected final <V> DSLValidator<V> validator(Sequence<V, V> commands) {
         return new DSLValidator<>(commands, null);
     }
 
     /**
      * Defines validation algorithm based on {@link GroupSequence }
      */
-    protected final <V> DSLValidator<V> program(final Command<V>... commands) {
+    protected final <V> DSLValidator<V> validator(final Command<V>... commands) {
         MandatoryGroup<V> sequence = new MandatoryGroup<>(vrMessages);
         for (Command<V> cmd : commands) {
             sequence.addCommand(cmd);
@@ -54,14 +54,14 @@ abstract public class FlowControlBuilder {
         return new DSLValidator<>(sequence, null);
     }
 
-    protected final <V> DSLValidator<V> program(final String subject, Sequence<V, V> commands) {
+    protected final <V> DSLValidator<V> validator(final String subject, Sequence<V, V> commands) {
         return new DSLValidator<>(commands, subject);
     }
 
     /**
      * Defines validation algorithm based on {@link ChainSequence }
      */
-    protected final <V> DSLValidator<V> program(final String subject, final Command<V>... commands) {
+    protected final <V> DSLValidator<V> validator(final String subject, final Command<V>... commands) {
         MandatoryChain<V> sequence = new MandatoryChain<>(vrMessages);
         for (Command<V> cmd : commands) {
             sequence.addCommand(cmd);
