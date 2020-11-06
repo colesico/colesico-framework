@@ -30,7 +30,7 @@ public class AppService {
     }
 
     public String sayHello(){
-        System.out.println("Bundle: "+((AbstractDictionary)standaloneDictionary).getBundle());
+        System.out.println("Bundle: "+standaloneDictionary.getBundle());
         return standaloneDictionary.hello();
     }
 

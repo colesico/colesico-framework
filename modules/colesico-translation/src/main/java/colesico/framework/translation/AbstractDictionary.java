@@ -20,7 +20,6 @@ abstract public class AbstractDictionary implements TranslationDictionary {
 
     public static final String TRANSLATE_OR_KEY_METHOD = "translateOrKey";
     public static final String TRANSLATION_KIT_FIELD = "translationKit";
-    public static final String BASE_PATH_FIELD = "basePath";
 
     protected final String basePath;
     protected final TranslationKit translationKit;

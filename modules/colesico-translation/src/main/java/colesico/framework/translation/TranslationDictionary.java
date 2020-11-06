@@ -18,6 +18,7 @@ package colesico.framework.translation;
 
 /**
  * Translation dictionary API
+ * Can be used for in user dictionary interfaces that can extends this interface.
  */
 public interface TranslationDictionary {
 

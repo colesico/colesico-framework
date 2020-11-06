@@ -17,15 +17,17 @@
 package colesico.framework.example.translation;
 
 import colesico.framework.translation.Dictionary;
+import colesico.framework.translation.TranslationDictionary;
 import colesico.framework.translation.assist.En;
 import colesico.framework.translation.assist.Ru;
 import colesico.framework.translation.assist.Text;
 
 /**
  * An appropriate properties file will be generated for this interface.
+ * Extends TranslationDictionary - is an optional, to ge access to dictionary API.
  */
 @Dictionary
-public interface AppDictionary {
+public interface AppDictionary extends TranslationDictionary {
 
     @En("Hello")  // For en language
     @Ru("Привет") // For ru lang
