@@ -20,6 +20,9 @@ import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
 import colesico.framework.security.assist.MACUtils;
 
+/**
+ * Configuration prototype to configure security principal reading/writing
+ */
 @ConfigPrototype(model = ConfigModel.SINGLE)
 abstract public class PrincipalHttpConfigPrototype {
 

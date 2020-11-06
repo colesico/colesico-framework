@@ -14,26 +14,59 @@
  * limitations under the License.
  */
 
-package colesico.framework.resource.internal;
+package colesico.framework.resource.rewriters;
 
+import colesico.framework.resource.PathRewriter;
+import colesico.framework.resource.RewritingPhase;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.inject.Singleton;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Singleton
-public class EvaluatingTool {
+/**
+ * Substitutes given properties names with its values
+ */
+public class PropertiesRewriter implements PathRewriter {
 
     public static final char PROPERTY_PREFIX = '$';
     public static final char PATH_SEPARATOR = '/';
 
     private final Map<String, String> propertiesMap = new HashMap<>();
 
-    public void addProperty(String name, String value) {
+    public static PropertiesRewriter of(String... nameValue) {
+        PropertiesRewriter rewriter = new PropertiesRewriter();
+        for (int i = 0; i < nameValue.length; i = i + 2) {
+            rewriter.property(nameValue[i], nameValue[i + 1]);
+        }
+        return rewriter;
+    }
+
+    @Override
+    public String rewrite(String path) {
+        List<String> pathItems = splitPath(path);
+        int n = pathItems.size();
+        for (int i = 0; i < n; i++) {
+            String pathItem = pathItems.get(i);
+            if ((!"".equals(pathItem)) && pathItem.charAt(0) == PROPERTY_PREFIX) {
+                pathItem = getValue(pathItem);
+            }
+            pathItems.set(i, pathItem);
+        }
+        return StringUtils.join(pathItems, PATH_SEPARATOR);
+    }
+
+    @Override
+    public RewritingPhase phase() {
+        return RewritingPhase.EVALUATE;
+    }
+
+    /**
+     * Add property
+     */
+    public PropertiesRewriter property(String name, String value) {
         if (name == null || "".equals(name)) {
             throw new RuntimeException("Property name is empty or null");
         }
@@ -46,16 +79,12 @@ public class EvaluatingTool {
             throw new RuntimeException("Property name '" + name + "' must starts with '" + PROPERTY_PREFIX + "'");
         }
 
-        /*
-        if ((value.charAt(0) == PATH_SEPARATOR) || (value.charAt(value.length() - 1) == PATH_SEPARATOR)) {
-            throw new RuntimeException("Value '" + value + "' must not starts or ends with '" + PATH_SEPARATOR + "'");
-        }
-        */
-
         String oldPath = propertiesMap.put(name, value);
         if (oldPath != null) {
             throw new RuntimeException("Duplicate property: " + name + "=" + value + " (" + oldPath + ")");
         }
+
+        return this;
     }
 
     public String getValue(String name) {
@@ -80,19 +109,6 @@ public class EvaluatingTool {
         }
         res.add(sb.toString());
         return res;
-    }
-
-    public String evaluate(String path) {
-        List<String> pathItems = splitPath(path);
-        int n = pathItems.size();
-        for (int i = 0; i < n; i++) {
-            String pathItem = pathItems.get(i);
-            if ((!"".equals(pathItem)) && pathItem.charAt(0) == PROPERTY_PREFIX) {
-                pathItem = getValue(pathItem);
-            }
-            pathItems.set(i, pathItem);
-        }
-        return StringUtils.join(pathItems, PATH_SEPARATOR);
     }
 
     public void dumpProperties(StringWriter writer) {

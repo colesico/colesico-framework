@@ -16,11 +16,8 @@
 package colesico.framework.resource.internal;
 
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.profile.ObjectiveQualifiers;
-import colesico.framework.resource.ResourceException;
-import colesico.framework.resource.ResourceKit;
-import colesico.framework.resource.ResourceNotFoundException;
-import colesico.framework.resource.ResourceOptionsPrototype;
+import colesico.framework.resource.*;
+import colesico.framework.resource.rewriters.PrefixRewriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.Enumeration;
+import java.util.*;
 
 /**
  * @author Vladlen Larionov
@@ -39,39 +36,33 @@ import java.util.Enumeration;
 public final class ResourceKitImpl implements ResourceKit {
 
     protected final Logger log = LoggerFactory.getLogger(ResourceKit.class);
-    private final LocalizingTool localizingTool;
-    private final RewritingTool rewritingTool;
-    private final EvaluatingTool evaluatingTool;
+
+    protected List<PathRewriter> rewriters = new ArrayList<>();
 
     @Inject
-    public ResourceKitImpl(LocalizingTool localizingTool,
-                           RewritingTool rewritingTool,
-                           EvaluatingTool evaluatingTool,
-                           Polysupplier<ResourceOptionsPrototype> configs) {
+    public ResourceKitImpl(Polysupplier<ResourceOptionsPrototype> configs) {
 
-        this.localizingTool = localizingTool;
-        this.rewritingTool = rewritingTool;
-        this.evaluatingTool = evaluatingTool;
-
-        final LocalizationDigestImpl localizationDigest = new LocalizationDigestImpl(localizingTool);
-        final RewritingDigestImpl rewritingDigest = new RewritingDigestImpl(rewritingTool);
-        final PropertyDigestImpl propertyDigest = new PropertyDigestImpl(evaluatingTool);
-
-        configs.forEach(c -> {
-            c.addLocalizations(localizationDigest);
-            c.addRewritings(rewritingDigest);
-            c.addProperties(propertyDigest);
+        final Map<RewritingPhase, List<PathRewriter>> rewritersMap = new HashMap<>();
+        configs.forEach(cfg -> {
+            List<PathRewriter> cfgRewList = cfg.getRewriters();
+            for (PathRewriter rew : cfgRewList) {
+                List<PathRewriter> phaseRewList = rewritersMap.computeIfAbsent(rew.phase(), ph -> new ArrayList<>());
+                phaseRewList.add(rew);
+            }
         }, null);
 
-        if (log.isDebugEnabled()) {
-            StringWriter writer = new StringWriter();
-            propertyDigest.getEvaluatingTool().dumpProperties(writer);
-            log.debug(writer.toString());
+        for (RewritingPhase ph : RewritingPhase.values()) {
+            List<PathRewriter> phaseRewList = rewritersMap.get(ph);
+            if (phaseRewList == null) {
+                continue;
+            }
+            rewriters.addAll(phaseRewList);
         }
+
     }
 
     @Override
-    public Enumeration<URL> getURLs(String resourcePath) {
+    public Enumeration<URL> getResourceURLs(String resourcePath) {
         try {
             Enumeration<URL> resources = getClassLoader().getResources(resourcePath);
             return resources;
@@ -81,7 +72,7 @@ public final class ResourceKitImpl implements ResourceKit {
     }
 
     @Override
-    public InputStream getStream(String resourcePath) {
+    public InputStream getResourceStream(String resourcePath) {
         InputStream in = getClassLoader().getResourceAsStream(resourcePath);
         if (in == null) {
             throw new ResourceNotFoundException(resourcePath);
@@ -90,23 +81,11 @@ public final class ResourceKitImpl implements ResourceKit {
     }
 
     @Override
-    public String localize(String resourcePath, L10NMode mode) {
-        return localizingTool.localize(resourcePath, mode);
-    }
-
-    @Override
-    public String localize(String resourcePath, L10NMode mode, ObjectiveQualifiers qualfiers) {
-        return localizingTool.localize(resourcePath, mode, qualfiers);
-    }
-
-    @Override
-    public final String rewrite(String resourcePath) {
-        return rewritingTool.rewrite(resourcePath);
-    }
-
-    @Override
-    public String evaluate(String resourcePath) {
-        return evaluatingTool.evaluate(resourcePath);
+    public final String rewrite(String path) {
+        for (PathRewriter rew : rewriters) {
+            path = rew.rewrite(path);
+        }
+        return path;
     }
 
     private ClassLoader getClassLoader() {

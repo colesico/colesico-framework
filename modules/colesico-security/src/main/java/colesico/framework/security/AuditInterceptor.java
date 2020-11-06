@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.profile.internal;
+package colesico.framework.security;
 
-import colesico.framework.profile.ProfileConfigPrototype;
-import colesico.framework.profile.QualifiersDefinition;
+import colesico.framework.service.InvocationContext;
 
-import javax.inject.Singleton;
+/**
+ * Is used to handle security audit interception
+ *
+ * @see SecurityAudit
+ * @see RequirePrincipal
+ */
+@FunctionalInterface
+public interface AuditInterceptor {
+    String AUDIT_METHOD = "audit";
 
-@Singleton
-public class ProfileConfigImpl extends ProfileConfigPrototype {
-
-    // L - language ; C - country; V - variant
-    private static final QualifiersDefinition QUALIFIERS_DEF = new QualifiersDefinition(new String[]{"L", "C", "V"});
-
-    @Override
-    public QualifiersDefinition getQualifiersDefinition() {
-        return QUALIFIERS_DEF;
-    }
-
+    Object audit(InvocationContext context);
 }

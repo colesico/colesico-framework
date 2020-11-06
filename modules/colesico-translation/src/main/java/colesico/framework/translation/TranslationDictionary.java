@@ -27,7 +27,7 @@ public interface TranslationDictionary {
 
     String translate(String key, String defaultValue, Object... params);
 
-    Bundle getBundle();
+    TranslationBundle getBundle();
 
     String getBasePath();
 }

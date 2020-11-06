@@ -29,11 +29,12 @@ public class TranslationExampleTest {
 
 
     @Test
-    public void testNo() {
+    public void testDe() {
         Ioc ioc = IocBuilder.create().build();
-        ProfileMockProducer.no();
+        ProfileMockProducer.de();
         Profile profile = ioc.instance(Profile.class);
-        assertEquals(profile.getLocale().getLanguage(), "no");
+        System.out.println("DE Profile: "+profile);
+        assertEquals(profile.getLocale().getLanguage(), "de");
 
         AppService srv = ioc.instance(AppService.class);
         assertEquals(srv.sayHello(), "HI");
@@ -44,6 +45,7 @@ public class TranslationExampleTest {
         Ioc ioc = IocBuilder.create().build();
         ProfileMockProducer.ru();
         Profile profile = ioc.instance(Profile.class);
+        System.out.println("RU Profile: "+profile);
         assertEquals(profile.getLocale().getLanguage(), "ru");
 
         AppService srv = ioc.instance(AppService.class);
@@ -55,6 +57,7 @@ public class TranslationExampleTest {
         Ioc ioc = IocBuilder.create().build();
         ProfileMockProducer.en();
         Profile profile = ioc.instance(Profile.class);
+        System.out.println("EN Profile: "+profile);
         assertEquals(profile.getLocale().getLanguage(), "en");
 
         AppService srv = ioc.instance(AppService.class);
@@ -66,6 +69,7 @@ public class TranslationExampleTest {
         Ioc ioc = IocBuilder.create().build();
         ProfileMockProducer.fr();
         Profile profile = ioc.instance(Profile.class);
+        System.out.println("FR Profile: "+profile);
         assertEquals(profile.getLocale().getLanguage(), "fr");
 
         AppService srv = ioc.instance(AppService.class);
@@ -77,6 +81,7 @@ public class TranslationExampleTest {
         Ioc ioc = IocBuilder.create().build();
         ProfileMockProducer.en();
         Profile profile = ioc.instance(Profile.class);
+        System.out.println("Bye Profile: "+profile);
         assertEquals(profile.getLocale().getLanguage(), "en");
 
         AppService srv = ioc.instance(AppService.class);

@@ -16,7 +16,7 @@
 
 package colesico.framework.pebble.internal;
 
-import colesico.framework.translation.Bundle;
+import colesico.framework.translation.TranslationBundle;
 import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.extension.Filter;
 import com.mitchellbosecke.pebble.template.EvaluationContext;
@@ -60,17 +60,17 @@ public final class T9nFilter implements Filter {
         }
         String strKey = (String) input;
 
-        Bundle dictionary;
+        TranslationBundle dictionary;
         List<String> textParams;
 
         Object param0 = args.get(String.valueOf(0));
         Object param1 = args.get(String.valueOf(1));
 
-        if (param0 instanceof Bundle) {
-            dictionary = (Bundle) param0;
+        if (param0 instanceof TranslationBundle) {
+            dictionary = (TranslationBundle) param0;
             textParams = (List<String>) param1;
         } else {
-            dictionary = (Bundle) evaluationContext.getVariable(T9nDictionaryParser.DEFAULT_DICT_NAME);
+            dictionary = (TranslationBundle) evaluationContext.getVariable(T9nDictionaryParser.DEFAULT_DICT_NAME);
             textParams = (List<String>) param0;
         }
 

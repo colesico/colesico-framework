@@ -16,10 +16,9 @@
 package colesico.framework.resource;
 
 /**
- *
- * @author Vladlen Larionov
+ * Basic resource exception
  */
-public class ResourceException extends RuntimeException{
+public class ResourceException extends RuntimeException {
 
     public ResourceException(String message) {
         super(message);

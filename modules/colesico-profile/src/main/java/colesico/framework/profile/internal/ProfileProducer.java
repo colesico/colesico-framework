@@ -19,18 +19,17 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.DefaultProfileKit;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileConfigPrototype;
 import colesico.framework.profile.ProfileKit;
 import colesico.framework.profile.teleapi.CommonProfileCreator;
 import colesico.framework.profile.teleapi.ProfileSerializer;
 
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.Locale;
 
 
 @Producer
 @Produce(DefaultProfileKit.class)
-@Produce(ProfileConfigImpl.class)
 @Produce(ProfileSerializerImpl.class)
 @Produce(CommonProfileCreatorImpl.class)
 public class ProfileProducer {
@@ -45,8 +44,8 @@ public class ProfileProducer {
         return kit.getProfile();
     }
 
-    public Locale getLocale(ProfileKit kit) {
-        Profile profile = kit.getProfile();
+    public Locale getLocale(Provider<Profile> profileProv) {
+        Profile profile = profileProv.get();
         return profile != null ? profile.getLocale() : Locale.getDefault();
     }
 
@@ -57,14 +56,6 @@ public class ProfileProducer {
 
     @Singleton
     public CommonProfileCreator getCommonProfileCreator(CommonProfileCreatorImpl impl) {
-        return impl;
-    }
-
-    /**
-     * Default profile config
-     */
-    @Singleton
-    public ProfileConfigPrototype getProfileConfig(ProfileConfigImpl impl) {
         return impl;
     }
 

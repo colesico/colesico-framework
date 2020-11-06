@@ -24,7 +24,6 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.restlet.RestletConfigPrototype;
 import colesico.framework.restlet.RestletErrorResponse;
 import colesico.framework.restlet.teleapi.*;
-import colesico.framework.security.AuthorityRequiredException;
 import colesico.framework.security.PrincipalRequiredException;
 import colesico.framework.service.ApplicationException;
 import colesico.framework.teleapi.DataPort;
@@ -138,8 +137,8 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
             handleValidationError(vex, 400, httpCtx);
         } catch (PrincipalRequiredException prex) {
             handleCommonError(prex, 401, httpCtx);
-        } catch (AuthorityRequiredException arex) {
-            handleCommonError(arex, 403, httpCtx);
+        } catch (SecurityException sex) {
+            handleCommonError(sex, 403, httpCtx);
         } finally {
             notifyResponseListener(httpCtx);
         }

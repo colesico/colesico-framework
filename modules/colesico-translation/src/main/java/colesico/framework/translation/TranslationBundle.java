@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-package colesico.framework.security;
-
-import colesico.framework.service.InvocationContext;
+package colesico.framework.translation;
 
 /**
- * Is used to handle security interception
- * @see RequirePrincipal
- * @see RequireAuthority
+ * Is used to retrieve string translations.
+ * Bundle should contains a translations only for the concrete locale
  */
-public interface SecurityInterceptor extends SecurityKit {
-    String INTERCEPT_REQUIRE_PRINCIPAL_METHOD="interceptRequirePrincipal";
-    String INTERCEPT_REQUIRE_AUTHORITY_METHOD="interceptRequireAuthority";
+public interface TranslationBundle {
 
-    Object interceptRequirePrincipal(InvocationContext context);
-    Object interceptRequireAuthority(InvocationContext context);
+    String GET_METHOD = "get";
+
+    /**
+     * Returns the string by its key or the default value if string was not found.
+     * Also performs the parameter substitution with MessageFormat.format(...)
+     */
+    //TODO: specify forrmater via config?
+    String get(String key, String defaultValue, Object... params);
+
 }

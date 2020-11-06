@@ -20,7 +20,7 @@ package colesico.framework.teleapi;
  * Remote data writer.
  * Writer is used to send responses to remote client.
  *
- * @param <V> the value to be write
+ * @param <V> the value type to be write
  * @param <C> the write context
  */
 public interface TeleWriter<V, C> {

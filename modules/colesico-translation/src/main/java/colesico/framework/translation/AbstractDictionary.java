@@ -44,7 +44,7 @@ abstract public class AbstractDictionary implements TranslationDictionary {
     }
 
     @Override
-    public final Bundle getBundle() {
+    public final TranslationBundle getBundle() {
         return translationKit.getBundle(basePath);
     }
 }

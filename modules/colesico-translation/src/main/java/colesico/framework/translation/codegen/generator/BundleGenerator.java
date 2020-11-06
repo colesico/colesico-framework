@@ -49,7 +49,7 @@ public class BundleGenerator {
         this.processingEnv = processingEnv;
     }
 
-    protected void generateDictionary(BundleElement bundleElement) {
+    protected void generateBundle(BundleElement bundleElement) {
         FileParser fp = new FileParser(bundleElement.getParentDictionary().getBasePath());
         String filePath = fp.path();
 
@@ -88,7 +88,7 @@ public class BundleGenerator {
         for (List<DictionaryElement> dictElements : dictionaryRegistry.getByPackageMap().values()) {
             for (DictionaryElement dictElm : dictElements) {
                 for (BundleElement bundleElem : dictElm.getBundlesByLocale().values()) {
-                    generateDictionary(bundleElem);
+                    generateBundle(bundleElem);
                 }
             }
         }

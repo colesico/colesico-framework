@@ -16,8 +16,7 @@
 package colesico.framework.resource;
 
 /**
- *
- * @author Vladlen Larionov
+ * Throws when resource not found
  */
 public class ResourceNotFoundException extends RuntimeException {
 

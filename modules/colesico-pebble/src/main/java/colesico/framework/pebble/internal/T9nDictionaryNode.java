@@ -16,7 +16,7 @@
 
 package colesico.framework.pebble.internal;
 
-import colesico.framework.translation.Bundle;
+import colesico.framework.translation.TranslationBundle;
 import colesico.framework.translation.TranslationKit;
 import com.mitchellbosecke.pebble.extension.NodeVisitor;
 import com.mitchellbosecke.pebble.node.AbstractRenderableNode;
@@ -44,7 +44,7 @@ public final class T9nDictionaryNode extends AbstractRenderableNode {
 
     @Override
     public void render(PebbleTemplateImpl pebbleTemplate, Writer writer, EvaluationContextImpl context) throws IOException {
-        Bundle dictionary = translationKit.getBundle(basePath);
+        TranslationBundle dictionary = translationKit.getBundle(basePath);
 
         // local variable
         context.getScopeChain().put(dictName, dictionary);

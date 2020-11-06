@@ -22,12 +22,8 @@ import colesico.framework.resource.ResourceKit;
 import javax.inject.Singleton;
 
 
-
 @Producer
 @Produce(ResourceKitImpl.class)
-@Produce(LocalizingTool.class)
-@Produce(RewritingTool.class)
-@Produce(EvaluatingTool.class)
 public class ResourceProducer {
 
     @Singleton

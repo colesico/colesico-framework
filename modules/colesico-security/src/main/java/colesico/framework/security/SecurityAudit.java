@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package colesico.framework.profile;
+package colesico.framework.security;
 
-import colesico.framework.config.ConfigModel;
-import colesico.framework.config.ConfigPrototype;
+import java.lang.annotation.*;
 
-@ConfigPrototype(model = ConfigModel.SINGLE)
-abstract public class ProfileConfigPrototype {
+/**
+ * Defines security auditors to check authorities on method invocation
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.TYPE})
+@Inherited
+@Documented
+public @interface SecurityAudit {
 
-    abstract public QualifiersDefinition getQualifiersDefinition();
-
+    /**
+     * Auditors to be invoked
+     */
+    Class<? extends AuditInterceptor>[] value();
 }

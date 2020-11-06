@@ -19,7 +19,7 @@ package colesico.framework.telehttp;
 import java.lang.annotation.*;
 
 /**
- * @author Vladlen Larionov
+ * Defines http parameter name  (query param name, http-header name, e.t.c.)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER,ElementType.FIELD})

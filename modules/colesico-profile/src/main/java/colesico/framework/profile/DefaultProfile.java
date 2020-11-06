@@ -16,32 +16,18 @@
 
 package colesico.framework.profile;
 
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
+import java.util.Objects;
 
 /**
- * Default profile implementation
+ * Profile default implementation
  */
 public class DefaultProfile implements Profile {
 
     private Locale locale;
-    private ObjectiveQualifiers qualifiers;
-    private final Map<Class<?>, Object> extensions = new HashMap<>();
 
     public DefaultProfile(Locale locale) {
         this.locale = locale;
-        createQualifiers();
-    }
-
-    private void createQualifiers() {
-        this.qualifiers = new ObjectiveQualifiers(new String[]{
-                StringUtils.isBlank(locale.getLanguage()) ? null : locale.getLanguage(),
-                StringUtils.isBlank(locale.getCountry()) ? null : locale.getCountry(),
-                StringUtils.isBlank(locale.getVariant()) ? null : locale.getVariant()
-        });
     }
 
     @Override
@@ -51,20 +37,25 @@ public class DefaultProfile implements Profile {
 
     public void setLocale(Locale locale) {
         this.locale = locale;
-        createQualifiers();
     }
 
     @Override
-    public ObjectiveQualifiers getQualifiers() {
-        return qualifiers;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DefaultProfile that = (DefaultProfile) o;
+        return Objects.equals(locale, that.locale);
     }
 
-    public void setExtension(Class<?> keyClass, Object value) {
-        extensions.put(keyClass, value);
+    @Override
+    public int hashCode() {
+        return Objects.hash(locale);
     }
 
-    public <T> T getExtension(Class<T> keyClass) {
-        return (T) extensions.get(keyClass);
+    @Override
+    public String toString() {
+        return "DefaultProfile{" +
+                "locale=" + locale +
+                '}';
     }
-
 }

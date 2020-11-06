@@ -19,7 +19,7 @@ package colesico.framework.telehttp;
 import java.lang.annotation.*;
 
 /**
- * @author Vladlen Larionov
+ * Defines parameter reading origin
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER, ElementType.METHOD, ElementType.FIELD})

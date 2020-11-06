@@ -17,12 +17,19 @@
 package colesico.framework.example.web.pebble;
 
 import colesico.framework.config.Config;
+import colesico.framework.resource.PathRewriter;
 import colesico.framework.resource.ResourceOptionsPrototype;
+import colesico.framework.resource.rewriters.PropertiesRewriter;
+
+import java.util.List;
 
 @Config
 public class ResourceConf extends ResourceOptionsPrototype {
+
     @Override
-    public void addProperties(PropertyDigest digest) {
-        digest.add("$tmplRoot","colesico/framework/example/web/pebble/tmpl");
+    public List<PathRewriter> getRewriters() {
+        return List.of(
+                PropertiesRewriter.of("$tmplRoot", "colesico/framework/example/web/pebble/tmpl")
+        );
     }
 }

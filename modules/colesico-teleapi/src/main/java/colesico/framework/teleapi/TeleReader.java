@@ -23,7 +23,7 @@ package colesico.framework.teleapi;
  * <p>
  * Reader is used to read param values from remote client.
  *
- * @param <V> the read value
+ * @param <V> the value  type to be read
  * @param <C> the reading context
  */
 public interface TeleReader<V, C> {

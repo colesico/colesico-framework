@@ -4,7 +4,7 @@ import colesico.framework.http.HttpRequest;
 import colesico.framework.router.RouterContext;
 
 /**
- * Basic tele-reading context for http interaction
+ * Basic tele-reading context for interaction via http
  */
 abstract public class HttpTRContext {
 

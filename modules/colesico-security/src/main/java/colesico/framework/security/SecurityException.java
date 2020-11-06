@@ -20,8 +20,6 @@ import colesico.framework.service.ApplicationException;
 
 /**
  * Security exceptions base class / Security common exception
- *
- * @author Vladlen Larionov
  */
 public class SecurityException extends ApplicationException {
 

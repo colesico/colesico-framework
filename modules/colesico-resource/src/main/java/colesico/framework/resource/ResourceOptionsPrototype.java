@@ -19,65 +19,18 @@ package colesico.framework.resource;
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
 
+import java.util.List;
+
 
 /**
  * Allow to specify application resources rewriting rules
- * and localization qualifiers
- *
- * @author Vladlen Larionov
  */
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
 abstract public class ResourceOptionsPrototype {
 
     /**
-     * Allows to specify path prefix rewritings: from path prefix -> to path prefix
-     *
-     * @return
+     * Return path rewriters
      */
-    public void addRewritings(RewritingDigest digest) {
-    }
+    abstract public List<PathRewriter> getRewriters();
 
-    /**
-     * Allows to add resource localizations
-     *
-     * @param digest
-     */
-    public void addLocalizations(LocalizationDigest digest) {
-    }
-
-    public void addProperties(PropertyDigest digest) {
-    }
-
-    public interface PropertyDigest {
-        PropertyDigest add(String name, String value);
-    }
-
-    /**
-     * Reciting rules
-     */
-    public interface RewritingDigest {
-        /**
-         * Add rewriting
-         * @param originPathPrefix origin path prefix or full path
-         * @param targetPathPrefix target path prefix of full path
-         */
-        RewritingDigest add(String originPathPrefix, String targetPathPrefix);
-    }
-
-    public interface LocalizationDigest {
-
-        /**
-         * Binds possible qualifiers values to specific resource path
-         *
-         * @param path              resource path to be localized
-         * @param qualifiersSpec qualifier values set in format qualName1=val1;qualName2=val2...
-         *                          Qualifier values order is unimportant.
-         * @see colesico.framework.profile.ProfileConfigPrototype
-         */
-        LocalizationDigest add(String path, String... qualifiersSpec);
-
-        default LocalizationDigest add(Class clazz, String... qualifiersSpec) {
-            return add(clazz.getCanonicalName().replace('.', '/'), qualifiersSpec);
-        }
-    }
 }

@@ -16,13 +16,11 @@
 
 package colesico.framework.security;
 
-import java.io.Serializable;
-
 /**
  * Principal interface.
  * Principal is used to identify a user. The specific implementation depends
- * on the needs of the application and is implemented in the application. Framework provides default implementation
- * {@link DefaultPrincipal}
+ * on the needs of the application and has to be implemented in the application.
+ * Framework provides default implementation {@link DefaultPrincipal}
  */
-public interface Principal extends Cloneable, Serializable {
+public interface Principal {
 }

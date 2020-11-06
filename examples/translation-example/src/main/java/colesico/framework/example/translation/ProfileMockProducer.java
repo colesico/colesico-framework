@@ -29,13 +29,13 @@ import java.util.Locale;
  */
 @Producer
 public class ProfileMockProducer {
-    private static final Profile noProfile = new DefaultProfile(new Locale("no", "NO", "NY"));
+    private static final Profile deProfile = new DefaultProfile(new Locale("de", "DE", "UNIX"));
     private static final Profile enProfile = new DefaultProfile(new Locale("en", "GB"));
     private static final Profile ruProfile = new DefaultProfile(new Locale("ru"));
     private static final Profile frProfile = new DefaultProfile(new Locale("fr", "FR"));
 
 
-    private static Profile curProfile = noProfile;
+    private static Profile curProfile = deProfile;
 
     public static void en() {
         curProfile = enProfile;
@@ -45,8 +45,8 @@ public class ProfileMockProducer {
         curProfile = ruProfile;
     }
 
-    public static void no() {
-        curProfile = noProfile;
+    public static void de() {
+        curProfile = deProfile;
     }
 
     public static void fr() {

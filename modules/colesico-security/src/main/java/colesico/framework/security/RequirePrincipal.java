@@ -19,9 +19,7 @@ package colesico.framework.security;
 import java.lang.annotation.*;
 
 /**
- * Annotate method to require valid principal
- *
- * @author Vladlen Larionov
+ * Annotate service method to require valid principal to be executed
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})

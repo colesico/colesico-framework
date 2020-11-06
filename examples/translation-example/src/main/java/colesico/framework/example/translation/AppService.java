@@ -16,6 +16,8 @@
 
 package colesico.framework.example.translation;
 
+import colesico.framework.translation.AbstractDictionary;
+
 import javax.inject.Singleton;
 
 @Singleton
@@ -28,6 +30,7 @@ public class AppService {
     }
 
     public String sayHello(){
+        System.out.println("Bundle: "+((AbstractDictionary)standaloneDictionary).getBundle());
         return standaloneDictionary.hello();
     }
 

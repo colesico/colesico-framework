@@ -77,7 +77,6 @@ public final class PrincipalWriter<C extends HttpTWContext> extends HttpTeleWrit
             expires.add(Calendar.DAY_OF_MONTH, -1);
         }
 
-        // Calc expiring
         HttpCookie cookie = new HttpCookie(COOKIE_NAME, principalValue);
 
         cookie.setExpires(expires.getTime())

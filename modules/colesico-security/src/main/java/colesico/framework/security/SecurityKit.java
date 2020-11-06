@@ -18,12 +18,10 @@ package colesico.framework.security;
 
 /**
  * Provides basic security service
- * @author Vladlen Larionov
  */
 public interface SecurityKit {
 
-    String REQUIRE_AUTHORITY_METHOD="requireAuthority";
-    String REQUIRE_PRINCIPAL_METHOD="requirePrincipal";
+    String REQUIRE_PRINCIPAL_METHOD = "requirePrincipal";
 
     /**
      * Returns active valid principal if it present.
@@ -33,14 +31,6 @@ public interface SecurityKit {
     <P extends Principal> P getPrincipal();
 
     void setPrincipal(Principal principal);
-
-    /**
-     * Check active principal for at least one valid authority.
-     *
-     * @param authorityId
-     * @return false if all are invalid
-     */
-    boolean hasAuthority(String... authorityId);
 
     /**
      * Checks the presence of active valid principal.
@@ -53,20 +43,4 @@ public interface SecurityKit {
         }
     }
 
-    /**
-     * For the active principal checks the presence of at least one valid authority.
-     * If there is not one - throws AuthorityRequiredException
-     *
-     * @param authorityId
-     */
-    default void requireAuthority(String... authorityId) {
-        Principal principal = getPrincipal();
-        if (principal == null) {
-            throw new AuthorityRequiredException(authorityId);
-        }
-
-        if (!hasAuthority(authorityId)) {
-            throw new AuthorityRequiredException(authorityId);
-        }
-    }
 }

@@ -20,6 +20,7 @@ import colesico.framework.translation.Translatable;
 import colesico.framework.translation.TranslationKit;
 
 public class TranslatableImpl implements Translatable {
+
     private final TranslationKit translationKit;
     private final String basePath;
     private final String key;

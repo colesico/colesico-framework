@@ -19,19 +19,16 @@ package colesico.framework.security;
 import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.scope.ThreadScope;
-import colesico.framework.service.InvocationContext;
 import colesico.framework.teleapi.DataPort;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
 /**
- * Default security kit implementation.
+ * Security kit default implementation.
  * Extend this class to customize principal control.
- *
- * @author Vladlen Larionov
  */
-public class DefaultSecurityKit implements SecurityInterceptor {
+public class DefaultSecurityKit implements SecurityKit {
 
     protected final ThreadScope threadScope;
     protected final Provider<DataPort> dataPortProv;
@@ -46,7 +43,6 @@ public class DefaultSecurityKit implements SecurityInterceptor {
      * Override this method to get more specific principal read control
      * This method is used to fine grained control of user principal: check validity, enrich with extra data, e.t.c.
      *
-     * @param port
      * @return Valid principal or null
      */
     protected Principal principalReadControl(DataPort<Object, Object> port) {
@@ -56,9 +52,6 @@ public class DefaultSecurityKit implements SecurityInterceptor {
     /**
      * Override this method to get more specific principal write control.
      * This method is used to fine grain write control of user principal.
-     *
-     * @param port
-     * @param principal
      */
     protected void principalWriteControl(DataPort<Object, Object> port, Principal principal) {
         port.write(Principal.class, principal, null);
@@ -66,12 +59,8 @@ public class DefaultSecurityKit implements SecurityInterceptor {
 
     /**
      * Override this method to get more specific authority control
-     *
-     * @param principal
-     * @param authorityId
-     * @return
      */
-    protected boolean hasAuthorityControl(Principal principal, String... authorityId) {
+    protected boolean hasAuthorityControl(Principal principal, String... authority) {
         return principal != null;
     }
 
@@ -90,6 +79,7 @@ public class DefaultSecurityKit implements SecurityInterceptor {
 
         // Store principal to cache and return
         threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(principal));
+
         return (P) principal;
     }
 
@@ -97,24 +87,6 @@ public class DefaultSecurityKit implements SecurityInterceptor {
     public final void setPrincipal(Principal principal) {
         DataPort port = dataPortProv.get();
         principalWriteControl(port, principal);
-    }
-
-    @Override
-    public final boolean hasAuthority(String... authorityId) {
-        Principal principal = getPrincipal();
-        return hasAuthorityControl(principal, authorityId);
-    }
-
-    @Override
-    public final Object interceptRequirePrincipal(InvocationContext context) {
-        requirePrincipal();
-        return context.proceed();
-    }
-
-    @Override
-    public final Object interceptRequireAuthority(InvocationContext context) {
-        requireAuthority((String[]) context.getInterception().getParameters());
-        return context.proceed();
     }
 
     public static final class PrincipalHolder {
