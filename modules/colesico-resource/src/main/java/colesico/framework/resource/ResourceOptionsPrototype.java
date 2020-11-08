@@ -18,19 +18,14 @@ package colesico.framework.resource;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
+import colesico.framework.resource.internal.RewriterRegistryImpl;
 
-import java.util.List;
-
-
-/**
- * Allow to specify application resources rewriting rules
- */
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
 abstract public class ResourceOptionsPrototype {
 
     /**
-     * Return path rewriters
+     * Setup path rewriters
      */
-    abstract public List<PathRewriter> getRewriters();
+    abstract public void setupRewriters(RewriterRegistry registry);
 
 }

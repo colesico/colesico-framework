@@ -17,7 +17,6 @@ package colesico.framework.resource.internal;
 
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.resource.*;
-import colesico.framework.resource.rewriters.PrefixRewriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +24,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.net.URL;
 import java.util.*;
 
@@ -42,17 +40,11 @@ public final class ResourceKitImpl implements ResourceKit {
     @Inject
     public ResourceKitImpl(Polysupplier<ResourceOptionsPrototype> configs) {
 
-        final Map<RewritingPhase, List<PathRewriter>> rewritersMap = new HashMap<>();
-        configs.forEach(cfg -> {
-            List<PathRewriter> cfgRewList = cfg.getRewriters();
-            for (PathRewriter rew : cfgRewList) {
-                List<PathRewriter> phaseRewList = rewritersMap.computeIfAbsent(rew.phase(), ph -> new ArrayList<>());
-                phaseRewList.add(rew);
-            }
-        }, null);
+        final RewriterRegistryImpl registry = new RewriterRegistryImpl();
+        configs.forEach(cfg -> cfg.setupRewriters(registry), null);
 
         for (RewritingPhase ph : RewritingPhase.values()) {
-            List<PathRewriter> phaseRewList = rewritersMap.get(ph);
+            List<PathRewriter> phaseRewList = registry.getPhaseRewriters(ph);
             if (phaseRewList == null) {
                 continue;
             }

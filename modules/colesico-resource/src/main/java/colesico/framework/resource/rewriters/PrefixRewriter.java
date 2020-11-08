@@ -18,25 +18,22 @@ package colesico.framework.resource.rewriters;
 
 import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.PathRewriter;
+import colesico.framework.resource.RewriterRegistry;
 import colesico.framework.resource.RewritingPhase;
 import colesico.framework.resource.assist.PathTrie;
 import org.apache.commons.lang3.StringUtils;
+
+import javax.inject.Singleton;
 
 /**
  * Rewrites the path by a partial prefix match.
  * E.g for the rewriting  '/etc/srv'->'/foo'   path '/etc/srv/generator/x' will be rewritten to '/foo/generator/x'
  */
+@Singleton
 public class PrefixRewriter implements PathRewriter {
 
     private final PathTrie<Rewriting> pathTrie = new PathTrie<>("/");
 
-    public static PrefixRewriter of(String... nameValue) {
-        PrefixRewriter rewriter = new PrefixRewriter();
-        for (int i = 0; i < nameValue.length; i = i + 2) {
-            rewriter.rewriting(nameValue[i], nameValue[i + 1]);
-        }
-        return rewriter;
-    }
 
     @Override
     public RewritingPhase phase() {
@@ -50,6 +47,13 @@ public class PrefixRewriter implements PathRewriter {
             return path;
         }
         return rewriting.getTargetPrefix() + StringUtils.substring(path, rewriting.getOriginPrefixLength());
+    }
+
+    /**
+     * Register rewriter in the rewriter register
+     */
+    public void register(RewriterRegistry registry) {
+        registry.registerIfAbsent(PrefixRewriter.class.getCanonicalName(), this, RewritingPhase.SUBSTITUTE);
     }
 
     /**

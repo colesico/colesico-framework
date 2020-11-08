@@ -13,16 +13,18 @@ public enum RewritingPhase {
     AFTER_EVALUATE,
 
     /**
-     * Phase to substitute/redirect path
-     */
-    BEFORE_SUBSTITUTE,
-    SUBSTITUTE,
-    AFTER_SUBSTITUTE,
-
-    /**
      * Perform localization rewritings
      */
     BEFORE_LOCALIZE,
     LOCALIZE,
-    AFTER_LOCALIZE
+    AFTER_LOCALIZE,
+
+    /**
+     * Phase to substitute/redirect path
+     */
+    BEFORE_SUBSTITUTE,
+    SUBSTITUTE,
+    AFTER_SUBSTITUTE
 }
+
+

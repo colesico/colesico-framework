@@ -19,17 +19,25 @@ package colesico.framework.example.web.pebble;
 import colesico.framework.config.Config;
 import colesico.framework.resource.PathRewriter;
 import colesico.framework.resource.ResourceOptionsPrototype;
+import colesico.framework.resource.RewriterRegistry;
 import colesico.framework.resource.rewriters.PropertiesRewriter;
 
+import javax.inject.Inject;
 import java.util.List;
 
 @Config
 public class ResourceConf extends ResourceOptionsPrototype {
 
+    private PropertiesRewriter rewriter;
+
+    @Inject
+    public ResourceConf(PropertiesRewriter rewriter) {
+        this.rewriter = rewriter;
+    }
+
     @Override
-    public List<PathRewriter> getRewriters() {
-        return List.of(
-                PropertiesRewriter.of("$tmplRoot", "colesico/framework/example/web/pebble/tmpl")
-        );
+    public void setupRewriters(RewriterRegistry registry) {
+        rewriter.register(registry);
+        rewriter.property("$tmplRoot", "colesico/framework/example/web/pebble/tmpl");
     }
 }

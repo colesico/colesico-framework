@@ -17,9 +17,11 @@
 package colesico.framework.resource.rewriters;
 
 import colesico.framework.resource.PathRewriter;
+import colesico.framework.resource.RewriterRegistry;
 import colesico.framework.resource.RewritingPhase;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.inject.Singleton;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,20 +31,13 @@ import java.util.Map;
 /**
  * Substitutes given properties names with its values
  */
+@Singleton
 public class PropertiesRewriter implements PathRewriter {
 
     public static final char PROPERTY_PREFIX = '$';
     public static final char PATH_SEPARATOR = '/';
 
     private final Map<String, String> propertiesMap = new HashMap<>();
-
-    public static PropertiesRewriter of(String... nameValue) {
-        PropertiesRewriter rewriter = new PropertiesRewriter();
-        for (int i = 0; i < nameValue.length; i = i + 2) {
-            rewriter.property(nameValue[i], nameValue[i + 1]);
-        }
-        return rewriter;
-    }
 
     @Override
     public String rewrite(String path) {
@@ -61,6 +56,13 @@ public class PropertiesRewriter implements PathRewriter {
     @Override
     public RewritingPhase phase() {
         return RewritingPhase.EVALUATE;
+    }
+
+    /**
+     * Register rewriter in the rewriter register
+     */
+    public void register(RewriterRegistry registry) {
+        registry.registerIfAbsent(PropertiesRewriter.class.getCanonicalName(), this, RewritingPhase.EVALUATE);
     }
 
     /**

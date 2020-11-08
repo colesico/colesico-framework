@@ -16,18 +16,24 @@
 
 package colesico.framework.test.resource;
 
-import colesico.framework.resource.PathRewriter;
 import colesico.framework.resource.ResourceOptionsPrototype;
+import colesico.framework.resource.RewriterRegistry;
 import colesico.framework.resource.rewriters.PropertiesRewriter;
 
-import java.util.List;
+import javax.inject.Inject;
 
 public class ResourcesOptions extends ResourceOptionsPrototype {
 
+    private PropertiesRewriter rewriter;
+
+    @Inject
+    public ResourcesOptions(PropertiesRewriter rewriter) {
+        this.rewriter = rewriter;
+    }
+
     @Override
-    public List<PathRewriter> getRewriters() {
-        return List.of(
-                new PropertiesRewriter().property("$alias", "foo/dummy")
-        );
+    public void setupRewriters(RewriterRegistry registry) {
+        rewriter.register(registry);
+        rewriter.property("$alias", "foo/dummy");
     }
 }
