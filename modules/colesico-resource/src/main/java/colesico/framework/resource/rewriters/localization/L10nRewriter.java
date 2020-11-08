@@ -9,6 +9,8 @@ import colesico.framework.resource.assist.FileParser;
 import colesico.framework.resource.assist.PathTrie;
 import colesico.framework.resource.assist.localization.Localizer;
 import colesico.framework.resource.assist.localization.SubjectQualifiers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -19,6 +21,8 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class L10nRewriter implements PathRewriter {
+
+    private static final Logger log = LoggerFactory.getLogger(L10nRewriter.class);
 
     private final PathTrie<L10NConfig> pathTrie = new PathTrie<>("/");
 
@@ -57,7 +61,7 @@ public class L10nRewriter implements PathRewriter {
             node.setValue(l10NConfig);
         } else {
             localizer = l10NConfig.getLocalizer();
-            if (!mode.equals(l10NConfig.getMode())){
+            if (!mode.equals(l10NConfig.getMode())) {
                 throw new ResourceException("Localization mode mismatch");
             }
         }
@@ -84,7 +88,6 @@ public class L10nRewriter implements PathRewriter {
         if (l10NConfig.getMode().equals(L10nMode.NONE)) {
             return path;
         }
-
 
         SubjectQualifiers qualifiers = l10NConfig.getLocalizer().localize(config.getObjectiveQualifiers(profileProv.get()));
 
@@ -127,6 +130,12 @@ public class L10nRewriter implements PathRewriter {
         }
 
         final String fileExt = fp.extension();
+
+
+            log.info("filePath: {}", filePath);
+            log.info("fileName: {}", fileName);
+            log.info("fileExt: {}", fileExt);
+
 
         final StringBuilder sb;
         if ("".equals(filePath)) {

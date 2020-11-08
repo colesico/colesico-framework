@@ -13,6 +13,7 @@ public class FileParser {
 
     public FileParser(String path) {
         pathPos = path.lastIndexOf(PATH_SEP);
+
         int ep = path.lastIndexOf(EXT_SEP);
         if (ep > pathPos) {
             extPos = ep;
@@ -32,6 +33,9 @@ public class FileParser {
     }
 
     public String path() {
+        if (pathPos < 0) {
+            return "";
+        }
         return StringUtils.substring(path, 0, pathPos);
     }
 }

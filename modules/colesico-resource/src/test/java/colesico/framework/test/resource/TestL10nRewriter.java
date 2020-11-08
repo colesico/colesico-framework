@@ -61,5 +61,17 @@ public class TestL10nRewriter {
         System.out.println("path=" + lpath);
         assertEquals(lpath, "root_RU/file.txt");
 
+        rewriter.l10n("file.txt", L10nMode.FILE, "C=RU");
+        lpath = rewriter.rewrite("file.txt");
+        assertEquals(lpath, "file_RU.txt");
+
+        rewriter.l10n("file2.txt", L10nMode.DIR, "C=RU");
+        lpath = rewriter.rewrite("file2.txt");
+        assertEquals(lpath, "_RU/file2.txt");
+
+        rewriter.l10n(".file3.txt", L10nMode.FILE, "C=RU");
+        lpath = rewriter.rewrite(".file3.txt");
+        assertEquals(lpath, ".file3_RU.txt");
+
     }
 }
