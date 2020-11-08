@@ -34,12 +34,6 @@ public class PrefixRewriter implements PathRewriter {
 
     private final PathTrie<Rewriting> pathTrie = new PathTrie<>("/");
 
-
-    @Override
-    public RewritingPhase phase() {
-        return RewritingPhase.EVALUATE;
-    }
-
     @Override
     public final String rewrite(String path) {
         Rewriting rewriting = pathTrie.find(path);

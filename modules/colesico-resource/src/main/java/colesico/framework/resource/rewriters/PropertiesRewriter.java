@@ -53,11 +53,6 @@ public class PropertiesRewriter implements PathRewriter {
         return StringUtils.join(pathItems, PATH_SEPARATOR);
     }
 
-    @Override
-    public RewritingPhase phase() {
-        return RewritingPhase.EVALUATE;
-    }
-
     /**
      * Register rewriter in the rewriter register
      */
