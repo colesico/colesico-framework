@@ -23,11 +23,15 @@ public final class HtmlResponse extends StringResponse {
 
     public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
 
-    private HtmlResponse(String content, String contentType) {
-        super(content, contentType);
+    private HtmlResponse(String content, String contentType, int httpCode) {
+        super(content, contentType, httpCode);
     }
 
     public static HtmlResponse of(String content) {
-        return new HtmlResponse(content, DEFAULT_CONTENT_TYPE);
+        return new HtmlResponse(content, DEFAULT_CONTENT_TYPE, DEFAULT_HTTP_CODE);
+    }
+
+    public static HtmlResponse of(String content, int httpCOde) {
+        return new HtmlResponse(content, DEFAULT_CONTENT_TYPE, httpCOde);
     }
 }

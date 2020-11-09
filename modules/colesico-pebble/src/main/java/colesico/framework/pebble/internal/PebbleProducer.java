@@ -20,26 +20,35 @@ package colesico.framework.pebble.internal;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.pebble.PebbleViewWriter;
+import colesico.framework.pebble.PebbleTemplater;
+import colesico.framework.weblet.HtmlRenderer;
 import colesico.framework.weblet.teleapi.writer.ViewWriter;
+
+import javax.inject.Singleton;
 
 
 /**
  * @author Vladlen Larionov
  */
 @Producer
-@Produce(PebbleViewWriter.class)
+@Produce(PebbleTemplater.class)
 @Produce(PebbleTemplateLoader.class)
 @Produce(FrameworkExtension.class)
 public class PebbleProducer {
 
-    @Classed(PebbleViewWriter.class)
-    public ViewWriter getPebbleViewWriter(PebbleViewWriter impl) {
+    @Classed(PebbleTemplater.class)
+    @Singleton
+    public ViewWriter getPebbleViewWriter(PebbleTemplater impl) {
         return impl;
     }
 
+    @Singleton
+    public ViewWriter getDefaultViewWriter(PebbleTemplater impl) {
+        return impl;
+    }
 
-    public ViewWriter getDefaultViewWriter(PebbleViewWriter impl) {
+    @Singleton
+    public HtmlRenderer getDefaultHtmlRenderer(PebbleTemplater impl) {
         return impl;
     }
 }

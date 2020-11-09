@@ -48,11 +48,6 @@
         <!-- Colesico web  -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-htmlrenderer</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-weblet</artifactId>
             <version>${project.version}</version>
         </dependency>

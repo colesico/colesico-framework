@@ -21,6 +21,8 @@ package colesico.framework.weblet;
  */
 abstract public class StringResponse {
 
+    public static final int DEFAULT_HTTP_CODE = 200;
+
     /**
      * String content
      */
@@ -31,9 +33,15 @@ abstract public class StringResponse {
      */
     protected final String contentType;
 
-    protected StringResponse(String content, String contentType) {
+    /**
+     * Http response code
+     */
+    protected final int httpCode;
+
+    protected StringResponse(String content, String contentType, int httpCode) {
         this.content = content;
         this.contentType = contentType;
+        this.httpCode = httpCode;
     }
 
     public final String getContent() {
@@ -44,4 +52,7 @@ abstract public class StringResponse {
         return contentType;
     }
 
+    public int getHttpCode() {
+        return httpCode;
+    }
 }

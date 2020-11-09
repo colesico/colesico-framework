@@ -23,16 +23,20 @@ public final class TextResponse extends StringResponse {
 
     public static final String DEFAULT_CONTENT_TYPE = "text/plain; charset=utf-8";
 
-    private TextResponse(String content, String contentType) {
-        super(content, contentType);
+    private TextResponse(String content, String contentType, int httpCode) {
+        super(content, contentType, httpCode);
+    }
+
+    public static TextResponse of(String content, String contentType, int httpCode) {
+        return new TextResponse(content, contentType, httpCode);
     }
 
     public static TextResponse of(String content, String contentType) {
-        return new TextResponse(content, contentType);
+        return new TextResponse(content, contentType, DEFAULT_HTTP_CODE);
     }
 
     public static TextResponse of(String content) {
-        return new TextResponse(content, DEFAULT_CONTENT_TYPE);
+        return new TextResponse(content, DEFAULT_CONTENT_TYPE, DEFAULT_HTTP_CODE);
     }
 
 }

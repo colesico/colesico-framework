@@ -42,6 +42,6 @@ public final class StringWriter extends WebletTeleWriter<StringResponse> {
         if (value == null || value.getContent() == null) {
             getResponse().sendText("", TextResponse.DEFAULT_CONTENT_TYPE, 204);
         }
-        getResponse().sendText(value.getContent(), value.getContentType(), 200);
+        getResponse().sendText(value.getContent(), value.getContentType(), value.getHttpCode());
     }
 }

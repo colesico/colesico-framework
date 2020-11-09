@@ -21,6 +21,7 @@ import colesico.framework.http.HttpResponse;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.pebble.internal.FrameworkExtension;
 import colesico.framework.pebble.internal.PebbleTemplateLoader;
+import colesico.framework.weblet.HtmlRenderer;
 import colesico.framework.weblet.HtmlResponse;
 import colesico.framework.weblet.ViewResponse;
 import colesico.framework.weblet.teleapi.WebletTWContext;
@@ -42,16 +43,16 @@ import java.util.Map;
  * @author Vladlen Larionov
  */
 @Singleton
-public class PebbleViewWriter extends ViewWriter {
+public class PebbleTemplater extends ViewWriter implements HtmlRenderer {
 
     public static final String MODEL_VAR = "vm";
 
     private final PebbleEngine pebbleEngine;
 
-    public PebbleViewWriter(Provider<HttpContext> httpContextProv,
-                            PebbleTemplateLoader tmplLoader,
-                            FrameworkExtension frameworkExtension,
-                            Polysupplier<PebbleOptionsPrototype> optionsSup) {
+    public PebbleTemplater(Provider<HttpContext> httpContextProv,
+                           PebbleTemplateLoader tmplLoader,
+                           FrameworkExtension frameworkExtension,
+                           Polysupplier<PebbleOptionsPrototype> optionsSup) {
         super(httpContextProv);
 
         PebbleEngine.Builder builder = new PebbleEngine.Builder()
@@ -89,8 +90,9 @@ public class PebbleViewWriter extends ViewWriter {
     /**
      * Helper class to produce html
      */
-    public HtmlResponse renderer(String templateName, Object model) {
+    @Override
+    public String renderer(String templateName, Object model) {
         Writer writer = evaluate(templateName, model);
-        return HtmlResponse.of(writer.toString());
+        return writer.toString();
     }
 }
