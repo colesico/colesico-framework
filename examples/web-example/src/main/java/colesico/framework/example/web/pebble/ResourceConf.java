@@ -17,21 +17,19 @@
 package colesico.framework.example.web.pebble;
 
 import colesico.framework.config.Config;
-import colesico.framework.resource.PathRewriter;
 import colesico.framework.resource.ResourceOptionsPrototype;
 import colesico.framework.resource.RewriterRegistry;
-import colesico.framework.resource.rewriters.PropertiesRewriter;
+import colesico.framework.resource.rewriters.PropertyRewriter;
 
 import javax.inject.Inject;
-import java.util.List;
 
 @Config
 public class ResourceConf extends ResourceOptionsPrototype {
 
-    private PropertiesRewriter rewriter;
+    private PropertyRewriter rewriter;
 
     @Inject
-    public ResourceConf(PropertiesRewriter rewriter) {
+    public ResourceConf(PropertyRewriter rewriter) {
         this.rewriter = rewriter;
     }
 

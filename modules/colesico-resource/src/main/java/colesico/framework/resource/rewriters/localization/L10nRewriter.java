@@ -38,8 +38,9 @@ public class L10nRewriter implements PathRewriter {
     /**
      * Register rewriter in the rewriter register
      */
-    public void register(RewriterRegistry registry) {
+    public L10nRewriter register(RewriterRegistry registry) {
         registry.registerIfAbsent(L10nRewriter.class.getCanonicalName(), this, RewritingPhase.LOCALIZE);
+        return this;
     }
 
     /**
@@ -132,9 +133,9 @@ public class L10nRewriter implements PathRewriter {
         final String fileExt = fp.extension();
 
 
-            log.info("filePath: {}", filePath);
-            log.info("fileName: {}", fileName);
-            log.info("fileExt: {}", fileExt);
+        log.info("filePath: {}", filePath);
+        log.info("fileName: {}", fileName);
+        log.info("fileExt: {}", fileExt);
 
 
         final StringBuilder sb;

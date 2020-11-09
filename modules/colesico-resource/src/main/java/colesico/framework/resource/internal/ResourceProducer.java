@@ -18,10 +18,10 @@ package colesico.framework.resource.internal;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.resource.ResourceKit;
+import colesico.framework.resource.rewriters.PropertyRewriter;
 import colesico.framework.resource.rewriters.localization.L10nRewriter;
 import colesico.framework.resource.rewriters.localization.L10nRewriterConfigPrototype;
 import colesico.framework.resource.rewriters.PrefixRewriter;
-import colesico.framework.resource.rewriters.PropertiesRewriter;
 
 import javax.inject.Singleton;
 
@@ -29,7 +29,7 @@ import javax.inject.Singleton;
 @Producer
 @Produce(ResourceKitImpl.class)
 @Produce(PrefixRewriter.class)
-@Produce(PropertiesRewriter.class)
+@Produce(PropertyRewriter.class)
 @Produce(L10nRewriter.class)
 public class ResourceProducer {
 

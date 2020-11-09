@@ -46,8 +46,9 @@ public class PrefixRewriter implements PathRewriter {
     /**
      * Register rewriter in the rewriter register
      */
-    public void register(RewriterRegistry registry) {
+    public PrefixRewriter register(RewriterRegistry registry) {
         registry.registerIfAbsent(PrefixRewriter.class.getCanonicalName(), this, RewritingPhase.SUBSTITUTE);
+        return this;
     }
 
     /**

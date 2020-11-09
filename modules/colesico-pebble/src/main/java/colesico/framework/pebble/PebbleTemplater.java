@@ -88,10 +88,10 @@ public class PebbleTemplater extends ViewWriter implements HtmlRenderer {
     }
 
     /**
-     * Helper class to produce html
+     * Renderer
      */
     @Override
-    public String renderer(String templateName, Object model) {
+    public String render(String templateName, Object model) {
         Writer writer = evaluate(templateName, model);
         return writer.toString();
     }
