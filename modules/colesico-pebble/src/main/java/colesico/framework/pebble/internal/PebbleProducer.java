@@ -22,6 +22,8 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.pebble.PebbleTemplater;
 import colesico.framework.weblet.HtmlRenderer;
+import colesico.framework.weblet.ViewResponse;
+import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.writer.ViewWriter;
 
 import javax.inject.Singleton;
@@ -36,14 +38,9 @@ import javax.inject.Singleton;
 @Produce(FrameworkExtension.class)
 public class PebbleProducer {
 
-    @Classed(PebbleTemplater.class)
     @Singleton
-    public ViewWriter getPebbleViewWriter(PebbleTemplater impl) {
-        return impl;
-    }
-
-    @Singleton
-    public ViewWriter getDefaultViewWriter(PebbleTemplater impl) {
+    @Classed(ViewResponse.class)
+    public WebletTeleWriter getDefaultViewWriter(PebbleTemplater impl) {
         return impl;
     }
 
