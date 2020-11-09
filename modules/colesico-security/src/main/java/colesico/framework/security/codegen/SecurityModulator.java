@@ -31,6 +31,7 @@ import colesico.framework.service.codegen.modulator.Modulator;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.TypeName;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.DeclaredType;
@@ -78,8 +79,8 @@ public class SecurityModulator extends Modulator {
             auditorIdx++;
 
             // Add auditor field
-            String fieldName = StrUtils.firstCharToLowerCase(sae.getAuditorClass().getName()) + auditorIdx;
-            FieldSpec fieldSpec = FieldSpec.builder(ClassName.get(SecurityKit.class), fieldName).addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
+            String fieldName = StrUtils.firstCharToLowerCase(sae.getAuditorClass().getSimpleName()) + auditorIdx;
+            FieldSpec fieldSpec = FieldSpec.builder(TypeName.get(sae.getAuditorClass().getOriginType()), fieldName).addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
             ProxyFieldElement fieldElement = new ProxyFieldElement(fieldSpec).inject();
             service.addField(fieldElement);
 

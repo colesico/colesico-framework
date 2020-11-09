@@ -17,6 +17,10 @@ public final class ViewResponse {
         this.httpCode = httpCode;
     }
 
+    public static ViewResponse of(String viewName) {
+        return new ViewResponse(viewName, null, DEFAULT_HTTP_CODE);
+    }
+
     public static ViewResponse of(String viewName, Object model) {
         return new ViewResponse(viewName, model, DEFAULT_HTTP_CODE);
     }

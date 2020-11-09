@@ -164,10 +164,10 @@ public class ServiceProxyGenerator {
                 }
 
                 constructorBuilder.addParameter(pb.build());
-                constructorBuilder.addStatement("this.$N=$N", fieldElm.getSpec().name, fieldElm.getSpec().name);
+                constructorBuilder.addStatement("this.$N = $N", fieldElm.getSpec().name, fieldElm.getSpec().name);
             } else {
                 String paramName = StrUtils.addPrefix(METHOD_PARAM_PREFIX, similarParam.getName());
-                constructorBuilder.addStatement("this.$N=$N", fieldElm.getSpec().name, paramName);
+                constructorBuilder.addStatement("this.$N = $N", fieldElm.getSpec().name, paramName);
             }
         }
 
@@ -200,7 +200,7 @@ public class ServiceProxyGenerator {
         List<ParameterElement> methodParams = proxyMethodElement.getParameters();
 
         if (!methodParams.isEmpty()) {
-            codeBlock.addStatement("$T[] p=" + Interceptor.INVOCATION_CONTEXT_PARAM + "." + InvocationContext.GET_PARAMETERS_METHOD + "()", ClassName.get(Object.class));
+            codeBlock.addStatement("$T[] p = " + Interceptor.INVOCATION_CONTEXT_PARAM + "." + InvocationContext.GET_PARAMETERS_METHOD + "()", ClassName.get(Object.class));
         }
 
         List paramItems = new ArrayList();
@@ -238,7 +238,7 @@ public class ServiceProxyGenerator {
         }
         String paramsArrayLiteral = "{" + String.join(",", paramNames) + "}";
 
-        proxyMethodBuilder.addStatement("final $T " + INV_CONTEXT_VARIABLE + "=new $T(this,$S,new $T[]$L," + INTERCEPTORS_CHAIN_VARIABLE + ")",
+        proxyMethodBuilder.addStatement("final $T " + INV_CONTEXT_VARIABLE + "= new $T(this,$S,new $T[]$L," + INTERCEPTORS_CHAIN_VARIABLE + ")",
                 ClassName.get(InvocationContext.class),
                 ClassName.get(InvocationContext.class),
                 methodElement.getName(),
