@@ -17,18 +17,14 @@
 package colesico.framework.weblet;
 
 /**
- * @author Vladlen Larionov
+ * Simple text response
  */
-public final class TextResponse implements StringResponse {
+public final class TextResponse extends StringResponse {
 
     public static final String DEFAULT_CONTENT_TYPE = "text/plain; charset=utf-8";
 
-    private final String content;
-    private final String contentType;
-
     private TextResponse(String content, String contentType) {
-        this.content = content;
-        this.contentType = contentType;
+        super(content, contentType);
     }
 
     public static TextResponse of(String content, String contentType) {
@@ -39,13 +35,4 @@ public final class TextResponse implements StringResponse {
         return new TextResponse(content, DEFAULT_CONTENT_TYPE);
     }
 
-    @Override
-    public String getContentType() {
-        return contentType;
-    }
-
-    @Override
-    public String getContent() {
-        return content;
-    }
 }

@@ -16,16 +16,21 @@
 
 package colesico.framework.pebble;
 
-import colesico.framework.htmlrenderer.HtmlRenderer;
+import colesico.framework.http.HttpContext;
+import colesico.framework.http.HttpResponse;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.pebble.internal.FrameworkExtension;
 import colesico.framework.pebble.internal.PebbleTemplateLoader;
 import colesico.framework.weblet.HtmlResponse;
+import colesico.framework.weblet.ViewResponse;
+import colesico.framework.weblet.teleapi.WebletTWContext;
+import colesico.framework.weblet.teleapi.writer.ViewWriter;
 import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -37,16 +42,17 @@ import java.util.Map;
  * @author Vladlen Larionov
  */
 @Singleton
-public class PebbleRenderer implements HtmlRenderer<String> {
+public class PebbleViewWriter extends ViewWriter {
 
     public static final String MODEL_VAR = "vm";
 
     private final PebbleEngine pebbleEngine;
 
-    @Inject
-    public PebbleRenderer(PebbleTemplateLoader tmplLoader,
-                          FrameworkExtension frameworkExtension,
-                          Polysupplier<PebbleOptionsPrototype> optionsSup) {
+    public PebbleViewWriter(Provider<HttpContext> httpContextProv,
+                            PebbleTemplateLoader tmplLoader,
+                            FrameworkExtension frameworkExtension,
+                            Polysupplier<PebbleOptionsPrototype> optionsSup) {
+        super(httpContextProv);
 
         PebbleEngine.Builder builder = new PebbleEngine.Builder()
                 .loader(tmplLoader)
@@ -58,12 +64,6 @@ public class PebbleRenderer implements HtmlRenderer<String> {
         optionsSup.forEach(options -> options.applyOptions(builder), null);
 
         pebbleEngine = builder.build();
-    }
-
-    @Override
-    public final <M> HtmlResponse render(String templatePath, M model) {
-        Writer writer = evaluate(templatePath, model);
-        return HtmlResponse.of(writer.toString());
     }
 
     public <M> Writer evaluate(String templatePath, M viewModel) {
@@ -79,4 +79,18 @@ public class PebbleRenderer implements HtmlRenderer<String> {
         }
     }
 
+    @Override
+    public void write(ViewResponse viewResponse, WebletTWContext context) {
+        Writer writer = evaluate(viewResponse.getVewName(), viewResponse.getModel());
+        HttpResponse httpResponse = httpContextProv.get().getResponse();
+        httpResponse.sendText(writer.toString(), HtmlResponse.DEFAULT_CONTENT_TYPE, 200);
+    }
+
+    /**
+     * Helper class to produce html
+     */
+    public HtmlResponse renderer(String templateName, Object model) {
+        Writer writer = evaluate(templateName, model);
+        return HtmlResponse.of(writer.toString());
+    }
 }

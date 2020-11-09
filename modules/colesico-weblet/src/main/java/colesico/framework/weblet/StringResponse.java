@@ -17,9 +17,31 @@
 package colesico.framework.weblet;
 
 /**
- * @author Vladlen Larionov
+ * String content based response
  */
-public interface StringResponse {
-    String getContentType();
-    String getContent();
+abstract public class StringResponse {
+
+    /**
+     * String content
+     */
+    protected final String content;
+
+    /**
+     * Response content type
+     */
+    protected final String contentType;
+
+    protected StringResponse(String content, String contentType) {
+        this.content = content;
+        this.contentType = contentType;
+    }
+
+    public final String getContent() {
+        return content;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
 }

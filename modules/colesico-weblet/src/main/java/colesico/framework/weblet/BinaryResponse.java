@@ -17,14 +17,16 @@
 package colesico.framework.weblet;
 
 /**
- * @author Vladlen Larionov
+ * Binary data to returned to client
  */
 public final class BinaryResponse {
 
     public static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
 
     protected final byte[] content;
+
     protected final String contentType;
+
     protected final String fileName;
 
     private BinaryResponse(byte[] content, String contentType, String fileName) {
@@ -45,15 +47,15 @@ public final class BinaryResponse {
         return new BinaryResponse(content, DEFAULT_CONTENT_TYPE, null);
     }
 
-    public String getContentType() {
-        return contentType;
-    }
-
     public byte[] getContent() {
         return content;
     }
 
     public String getFileName() {
         return fileName;
+    }
+
+    public String getContentType() {
+        return contentType;
     }
 }

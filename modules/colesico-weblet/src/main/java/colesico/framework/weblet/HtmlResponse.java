@@ -17,28 +17,17 @@
 package colesico.framework.weblet;
 
 /**
- * @author Vladlen Larionov
+ * Html text to returned to client
  */
-public final class HtmlResponse implements StringResponse {
-    public static final String HTML_CONTENT_TYPE = "text/html; charset=utf-8";
+public final class HtmlResponse extends StringResponse {
 
-    private final String content;
+    public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
 
-    private HtmlResponse(String content) {
-        this.content = content;
+    private HtmlResponse(String content, String contentType) {
+        super(content, contentType);
     }
 
-    public static HtmlResponse of(String content){
-        return new HtmlResponse(content);
-    }
-
-    @Override
-    public String getContentType() {
-        return HTML_CONTENT_TYPE;
-    }
-
-    @Override
-    public String getContent() {
-        return content;
+    public static HtmlResponse of(String content) {
+        return new HtmlResponse(content, DEFAULT_CONTENT_TYPE);
     }
 }

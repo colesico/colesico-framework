@@ -18,7 +18,7 @@ package colesico.framework.weblet.teleapi.writer;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.router.Router;
-import colesico.framework.weblet.NavigationResponse;
+import colesico.framework.weblet.RedirectResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WebletTWContext;
 
@@ -28,18 +28,18 @@ import javax.inject.Provider;
 /**
  * @author Vladlen Larionov
  */
-public final class NavigationWriter extends WebletTeleWriter<NavigationResponse> {
+public final class RedirectWriter extends WebletTeleWriter<RedirectResponse> {
 
     protected final Router router;
 
     @Inject
-    public NavigationWriter(Provider<HttpContext> httpContextProv, Router router) {
+    public RedirectWriter(Provider<HttpContext> httpContextProv, Router router) {
         super(httpContextProv);
         this.router = router;
     }
 
     @Override
-    public void write(NavigationResponse navResp, WebletTWContext wrContext) {
+    public void write(RedirectResponse navResp, WebletTWContext wrContext) {
         navResp.redirect(router, httpContextProv.get());
     }
 }

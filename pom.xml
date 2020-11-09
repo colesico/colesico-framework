@@ -162,7 +162,6 @@
                 <module>modules/colesico-httpserver</module>
                 <module>modules/colesico-weblet</module>
                 <module>modules/colesico-webstatic</module>
-                <module>modules/colesico-htmlrenderer</module>
 
                 <!--<module>modules/colesico-trimou</module>-->
                 <module>modules/colesico-pebble</module>

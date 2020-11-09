@@ -16,6 +16,9 @@ abstract public class HttpTeleWriter<V, C extends HttpTWContext> implements Tele
 
     protected final Provider<HttpContext> httpContextProv;
 
+    /**
+     * Constructor for injection
+     */
     public HttpTeleWriter(Provider<HttpContext> httpContextProv) {
         this.httpContextProv = httpContextProv;
     }

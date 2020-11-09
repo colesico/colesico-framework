@@ -14,15 +14,27 @@
  * limitations under the License.
  */
 
-package colesico.framework.weblet;
+package colesico.framework.weblet.teleapi;
 
-import colesico.framework.config.ConfigModel;
-import colesico.framework.config.ConfigPrototype;
+
+import colesico.framework.router.assist.Navigation;
 
 /**
- * @author Vladlen Larionov
+ * Performs inner forward
+ * !NOT IMPLEMENTED YET!
  */
-@ConfigPrototype(model = ConfigModel.SINGLE)
-abstract public class WebletConfigPrototype {
+public final class ForwardResponse extends Navigation<ForwardResponse> {
+
+    public static ForwardResponse of(Class<?> serviceClass, String targetMethodName) {
+        return new ForwardResponse().service(serviceClass).method(targetMethodName);
+    }
+
+    public static ForwardResponse of(String uri) {
+        return new ForwardResponse().uri(uri);
+    }
+
+    public static ForwardResponse of() {
+        return new ForwardResponse();
+    }
 
 }

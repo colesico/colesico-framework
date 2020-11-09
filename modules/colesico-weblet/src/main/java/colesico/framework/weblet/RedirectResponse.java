@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package colesico.framework.htmlrenderer;
+package colesico.framework.weblet;
+
+
+import colesico.framework.router.assist.Navigation;
 
 /**
- * @author Vladlen Larionov
+ * Performs http redirect
  */
-abstract public class ViewModel {
-    protected Notice notice;
+public final class RedirectResponse extends Navigation<RedirectResponse> {
 
-    public ViewModel() {
+    public static RedirectResponse of(Class<?> serviceClass, String targetMethodName) {
+        return new RedirectResponse().service(serviceClass).method(targetMethodName);
     }
 
-    public ViewModel(Notice notice) {
-        this.notice = notice;
+    public static RedirectResponse of(String uri) {
+        return new RedirectResponse().uri(uri);
     }
 
-    public Notice getNotice() {
-        return notice;
+    public static RedirectResponse of() {
+        return new RedirectResponse();
     }
 
-    public void setNotice(Notice notice) {
-        this.notice = notice;
-    }
 }
