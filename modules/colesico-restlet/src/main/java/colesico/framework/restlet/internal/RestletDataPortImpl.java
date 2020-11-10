@@ -110,35 +110,36 @@ public class RestletDataPortImpl implements RestletDataPort {
     }
 
     @Override
-    public <E extends Exception> void writeError(E exception) {
+    public <T extends Throwable> void writeError(final T throwable) {
 
-        RestletTeleWriter<E> specificWriter = ioc.instanceOrNull(new ClassedKey<>(RestletTeleWriter.class.getCanonicalName(), typeToClassName(exception.getClass())), null);
+        RestletTWContext context = new RestletTWContext();
+        RestletTeleWriter<T> throwableWriter = ioc.instanceOrNull(new ClassedKey<>(RestletTeleWriter.class.getCanonicalName(), typeToClassName(throwable.getClass())), null);
+
+        if (throwableWriter != null) {
+            throwableWriter.write(throwable, context);
+            return;
+        }
 
         // If no specific writer try to get root exception
         // and determine writer for it
-        if (specificWriter == null) {
-            Throwable rootError = ExceptionUtils.getRootCause(exception);
-            if (rootError != null) {
-                specificWriter = ioc.instanceOrNull(new ClassedKey<>(RestletTeleWriter.class.getCanonicalName(), typeToClassName(rootError.getClass())), null);
+        Throwable rootCause = ExceptionUtils.getRootCause(throwable);
+        if (rootCause != null) {
+            RestletTeleWriter rootCauseWriter = ioc.instanceOrNull(new ClassedKey<>(RestletTeleWriter.class.getCanonicalName(), typeToClassName(rootCause.getClass())), null);
+            if (rootCauseWriter != null) {
+                rootCauseWriter.write(rootCause, context);
+                return;
             }
-        }
-
-        RestletTWContext context = new RestletTWContext();
-
-        if (specificWriter != null) {
-            specificWriter.write(exception, context);
-            return;
         }
 
         // No specific writer,
         // Perform default writing
         RestletError error = new RestletError();
         error.setCode("ERROR");
-        error.setMessage(ExceptionUtils.getRootCauseMessage(exception));
-        error.setDetails(getMessages(exception));
-        RestletTeleWriter commonWriter = ioc.instance(ObjectWriter.class);
+        error.setMessage(ExceptionUtils.getRootCauseMessage(throwable));
+        error.setDetails(getMessages(throwable));
+        RestletTeleWriter objWriter = ioc.instance(ObjectWriter.class);
         context.setHttpCode(500);
-        commonWriter.write(error, context);
+        objWriter.write(error, context);
 
     }
 
