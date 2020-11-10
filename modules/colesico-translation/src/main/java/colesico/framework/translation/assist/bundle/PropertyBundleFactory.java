@@ -89,7 +89,7 @@ public class PropertyBundleFactory {
 
     }
 
-    protected String toResourcePath(String baseName, Locale locale) {
+    protected String toResourceName(String baseName, Locale locale) {
 
         String language = locale.getLanguage();
         String country = locale.getCountry();
@@ -112,12 +112,12 @@ public class PropertyBundleFactory {
     }
 
     protected Properties loadProperties(String baseName, Locale locale) {
-        String resourcePath = toResourcePath(baseName, locale);
-        log.debug("Load properties from resource: {}", resourcePath);
+        String resourceName = toResourceName(baseName, locale);
+        log.debug("Load properties from resource: {}", resourceName);
 
         Properties prop = new Properties();
 
-        InputStream in = getClass().getClassLoader().getResourceAsStream(resourcePath);
+        InputStream in = getClass().getClassLoader().getResourceAsStream(resourceName);
         if (in == null) {
             return null;
         }
@@ -125,14 +125,14 @@ public class PropertyBundleFactory {
             prop.load(isr);
             return prop;
         } catch (Exception ex) {
-            String errMsg = MessageFormat.format("Error loading translations file: {0}; Cause message: {1}", resourcePath, ExceptionUtils.getRootCauseMessage(ex));
+            String errMsg = MessageFormat.format("Error loading translations file: {0}; Cause message: {1}", resourceName, ExceptionUtils.getRootCauseMessage(ex));
             log.error(errMsg);
             throw new RuntimeException(errMsg, ex);
         } finally {
             try {
                 in.close();
             } catch (Exception ex) {
-                String errMsg = MessageFormat.format("Error closing properties file: {0}; Cause message: {1}", resourcePath, ExceptionUtils.getRootCauseMessage(ex));
+                String errMsg = MessageFormat.format("Error closing properties file: {0}; Cause message: {1}", resourceName, ExceptionUtils.getRootCauseMessage(ex));
                 log.error(errMsg);
                 throw new RuntimeException(errMsg, ex);
             }
