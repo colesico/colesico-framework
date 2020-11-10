@@ -17,19 +17,14 @@
 package colesico.framework.restlet.internal;
 
 import colesico.framework.http.HttpContext;
-import colesico.framework.http.HttpException;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.restlet.RestletConfigPrototype;
-import colesico.framework.restlet.RestletErrorResponse;
 import colesico.framework.restlet.teleapi.*;
-import colesico.framework.security.PrincipalRequiredException;
 import colesico.framework.service.ApplicationException;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.MethodInvoker;
-import colesico.framework.validation.ValidationException;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,9 +32,6 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Vladlen Larionov
@@ -50,7 +42,7 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
     public static final String X_REQUESTED_WITH_HEADER = "X-Requested-With";
     public static final String X_REQUESTED_WITH_HEADER_VAL = "XMLHttpRequest";
 
-    protected final Logger log = LoggerFactory.getLogger(RestletTeleDriver.class);
+    protected final Logger logger = LoggerFactory.getLogger(RestletTeleDriver.class);
 
     protected final RestletConfigPrototype config;
 
@@ -77,17 +69,41 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
     }
 
     @Override
-    public <S> void invoke(S service, MethodInvoker<S, RestletDataPort> invoker, RestletTIContext invCtx) {
+    public <S> void invoke(S service, MethodInvoker<S, RestletDataPort> invoker, RestletTIContext invocationContext) {
         // Set data port to be accessible
         threadScope.put(DataPort.SCOPE_KEY, dataPort);
         // Retrieve http context
-        HttpContext httpCtx = httpContextProv.get();
+        HttpContext httpContext = httpContextProv.get();
+        // Retrieve http request
+        HttpRequest httpRequest = httpContext.getRequest();
         try {
-            invokeImpl(service, invoker, invCtx, httpCtx);
+            // Request listener notification
+            notifyRequestListener(httpContext, service);
+
+            // CSRF protection
+            if (config.enableCSFRProtection()) {
+                guardCSFR(httpRequest);
+            }
+
+            // Invoke tele-method
+            invoker.invoke(service, dataPort);
+
         } catch (Exception ex) {
-            handleCommonError(ex, 500, httpCtx);
+            if (ex instanceof ApplicationException) {
+                logger.warn("Application exception: " + ExceptionUtils.getRootCauseMessage(ex));
+            } else {
+                logger.error("Unexpected error:" + ExceptionUtils.getRootCauseMessage(ex));
+            }
+            try {
+                dataPort.writeError(ex);
+            } catch (Exception e) {
+                logger.error("Writing exception error: {}", ExceptionUtils.getRootCauseMessage(e));
+            }
+        } finally {
+            notifyResponseListener(httpContext);
         }
     }
+
 
     protected void guardCSFR(HttpRequest httpRequest) {
         String xRequestedWith = httpRequest.getHeaders().get(X_REQUESTED_WITH_HEADER);
@@ -106,84 +122,6 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
         if (respListenerSup.isNotEmpty()) {
             respListenerSup.forEach(s -> s.onResponse(context, dataPort), null);
         }
-    }
-
-
-    protected <S> void invokeImpl(S service, MethodInvoker binder, RestletTIContext invCtx, final HttpContext httpCtx) {
-        HttpRequest httpRequest = httpCtx.getRequest();
-        try {
-            // Request listener notification
-            notifyRequestListener(httpCtx, service);
-
-            // CSRF protection
-            if (config.enableCSFRProtection()) {
-                guardCSFR(httpRequest);
-            }
-
-            // Invoke tele-method
-            binder.invoke(service, dataPort);
-
-        } catch (HttpException hex) {
-            if (hex.getCause() != null) {
-                if (hex.getCause() instanceof ValidationException) {
-                    handleValidationError((ValidationException) hex.getCause(), hex.getHttpCode(), httpCtx);
-                } else {
-                    handleCommonError(hex.getCause(), hex.getHttpCode(), httpCtx);
-                }
-            } else {
-                handleCommonError(hex, hex.getHttpCode(), httpCtx);
-            }
-        } catch (ValidationException vex) {
-            handleValidationError(vex, 400, httpCtx);
-        } catch (PrincipalRequiredException prex) {
-            handleCommonError(prex, 401, httpCtx);
-        } catch (SecurityException sex) {
-            handleCommonError(sex, 403, httpCtx);
-        } finally {
-            notifyResponseListener(httpCtx);
-        }
-    }
-
-    protected String getMessage(Throwable ex) {
-        Throwable e = ex;
-        List<String> messages = new ArrayList<>();
-
-        int depth = 0;
-        while (e != null) {
-            String message = e.getMessage();
-            if (message == null) {
-                message = e.getClass().getName();
-            }
-            messages.add(message);
-            if (e.getCause() == e) {
-                e = null;
-            } else {
-                if (depth++ < 8) {
-                    e = e.getCause();
-                } else {
-                    e = null;
-                }
-            }
-        }
-        return StringUtils.join(messages, "; ");
-    }
-
-    protected void handleCommonError(Throwable ex, int httpCode, HttpContext context) {
-        String errMsg = MessageFormat.format("Restlet error: {0}", ExceptionUtils.getRootCauseMessage(ex));
-        if (ex instanceof ApplicationException) {
-            log.warn(errMsg, ex);
-        } else {
-            log.error(errMsg, ex);
-        }
-        RestletErrorResponse response = new RestletErrorResponse(context.getRequest().getRequestURI(), httpCode, getMessage(ex));
-        dataPort.writeError(response, httpCode);
-    }
-
-    protected void handleValidationError(ValidationException ex, int httpCode, HttpContext context) {
-        String errMsg = MessageFormat.format("Restlet validation error: {0}", ExceptionUtils.getRootCauseMessage(ex));
-        log.warn(errMsg);
-        RestletErrorResponse response = new RestletErrorResponse(context.getRequest().getRequestURI(), httpCode, ex.getIssue());
-        dataPort.writeError(response, httpCode);
     }
 
 }
