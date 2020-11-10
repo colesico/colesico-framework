@@ -19,6 +19,8 @@ package colesico.framework.translation.internal;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.translation.TranslationKit;
+import colesico.framework.translation.assist.bundle.PropertyBundleCacheSoft;
+import colesico.framework.translation.assist.bundle.PropertyBundleFactory;
 
 import javax.inject.Singleton;
 
@@ -33,4 +35,7 @@ public class TranslationProducer {
         return impl;
     }
 
+    public PropertyBundleFactory getPropertyBundleFactory(){
+        return new PropertyBundleFactory(new PropertyBundleCacheSoft(0.3));
+    }
 }

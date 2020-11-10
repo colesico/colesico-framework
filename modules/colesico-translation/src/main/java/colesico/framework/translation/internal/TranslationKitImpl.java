@@ -58,12 +58,13 @@ public class TranslationKitImpl implements TranslationKit {
     protected final ThreadScope threadScope;
     protected final ResourceKit resourceKit;
 
-    protected final PropertyBundleFactory propertyBundleFactory = new PropertyBundleFactory(new PropertyBundleCacheSoft(0.3));
+    protected final PropertyBundleFactory propertyBundleFactory;
 
-    public TranslationKitImpl(Provider<Locale> localeProv, ThreadScope threadScope, ResourceKit resourceKit) {
+    public TranslationKitImpl(Provider<Locale> localeProv, ThreadScope threadScope, ResourceKit resourceKit, PropertyBundleFactory propertyBundleFactory) {
         this.localeProv = localeProv;
         this.threadScope = threadScope;
         this.resourceKit = resourceKit;
+        this.propertyBundleFactory = propertyBundleFactory;
     }
 
     @Override
