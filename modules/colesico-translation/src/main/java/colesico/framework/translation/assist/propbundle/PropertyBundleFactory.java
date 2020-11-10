@@ -1,4 +1,4 @@
-package colesico.framework.translation.assist.bundle;
+package colesico.framework.translation.assist.propbundle;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -19,10 +19,11 @@ public class PropertyBundleFactory {
     private static final Logger log = LoggerFactory.getLogger(PropertyBundleFactory.class);
 
     private final PropertyBundleCache cache;
+    private final ResourceNameRewriter resourceNameRewriter;
 
-
-    public PropertyBundleFactory(PropertyBundleCache cache) {
+    public PropertyBundleFactory(PropertyBundleCache cache, ResourceNameRewriter resourceNameRewriter) {
         this.cache = cache;
+        this.resourceNameRewriter = resourceNameRewriter;
     }
 
     public PropertyBundle getBundle(String baseName, Locale locale) {
@@ -113,6 +114,10 @@ public class PropertyBundleFactory {
 
     protected Properties loadProperties(String baseName, Locale locale) {
         String resourceName = toResourceName(baseName, locale);
+        if (resourceNameRewriter != null) {
+            resourceName = resourceNameRewriter.rewrite(resourceName);
+        }
+
         log.debug("Load properties from resource: {}", resourceName);
 
         Properties prop = new Properties();
@@ -125,7 +130,7 @@ public class PropertyBundleFactory {
             prop.load(isr);
             return prop;
         } catch (Exception ex) {
-            String errMsg = MessageFormat.format("Error loading translations file: {0}; Cause message: {1}", resourceName, ExceptionUtils.getRootCauseMessage(ex));
+            String errMsg = MessageFormat.format("Error loading properties file: {0}; Cause message: {1}", resourceName, ExceptionUtils.getRootCauseMessage(ex));
             log.error(errMsg);
             throw new RuntimeException(errMsg, ex);
         } finally {

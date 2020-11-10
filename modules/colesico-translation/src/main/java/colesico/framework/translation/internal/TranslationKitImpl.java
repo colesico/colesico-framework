@@ -22,27 +22,15 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.resource.ResourceKit;
 import colesico.framework.translation.TranslationBundle;
 import colesico.framework.translation.Translatable;
-import colesico.framework.translation.TranslationExceprion;
 import colesico.framework.translation.TranslationKit;
-import colesico.framework.translation.assist.bundle.PropertyBundle;
-import colesico.framework.translation.assist.bundle.PropertyBundleCacheSoft;
-import colesico.framework.translation.assist.bundle.PropertyBundleFactory;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import colesico.framework.translation.assist.propbundle.PropertyBundle;
+import colesico.framework.translation.assist.propbundle.PropertyBundleFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.text.MessageFormat;
 import java.util.Locale;
-import java.util.Properties;
-import java.util.ResourceBundle;
-
-import static java.util.ResourceBundle.Control.FORMAT_PROPERTIES;
 
 /**
  * @author Vladlen Larionov
@@ -56,14 +44,12 @@ public class TranslationKitImpl implements TranslationKit {
 
     protected final Provider<Locale> localeProv;
     protected final ThreadScope threadScope;
-    protected final ResourceKit resourceKit;
 
     protected final PropertyBundleFactory propertyBundleFactory;
 
-    public TranslationKitImpl(Provider<Locale> localeProv, ThreadScope threadScope, ResourceKit resourceKit, PropertyBundleFactory propertyBundleFactory) {
+    public TranslationKitImpl(Provider<Locale> localeProv, ThreadScope threadScope, PropertyBundleFactory propertyBundleFactory) {
         this.localeProv = localeProv;
         this.threadScope = threadScope;
-        this.resourceKit = resourceKit;
         this.propertyBundleFactory = propertyBundleFactory;
     }
 
@@ -82,7 +68,6 @@ public class TranslationKitImpl implements TranslationKit {
             return translationBundle;
         }
 
-        baseName = resourceKit.rewrite(baseName);
         PropertyBundle propertyBundle = propertyBundleFactory.getBundle(baseName, localeProv.get());
 
         translationBundle = new TranslationBundleImpl(propertyBundle);

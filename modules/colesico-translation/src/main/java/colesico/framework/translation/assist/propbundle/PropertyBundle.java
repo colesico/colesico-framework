@@ -1,4 +1,4 @@
-package colesico.framework.translation.assist.bundle;
+package colesico.framework.translation.assist.propbundle;
 
 import java.util.*;
 

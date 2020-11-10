@@ -17,7 +17,7 @@
 package colesico.framework.translation.internal;
 
 import colesico.framework.translation.TranslationBundle;
-import colesico.framework.translation.assist.bundle.PropertyBundle;
+import colesico.framework.translation.assist.propbundle.PropertyBundle;
 
 import java.text.MessageFormat;
 import java.util.List;
