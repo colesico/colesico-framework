@@ -27,7 +27,7 @@ module colesico.framework.restlet {
 
     requires org.apache.commons.lang3;
 
-    requires static com.google.gson;
+    requires com.google.gson;
 
     // API
     exports colesico.framework.restlet;
