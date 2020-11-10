@@ -108,16 +108,19 @@ public class PropertyBundleFactory {
             }
         }
 
-        return sb.append(".properties").toString();
+        String resourceName = sb.append(".properties").toString();
+
+        if (resourceNameRewriter != null) {
+            log.debug("Resource name before rewrite: {}", resourceName);
+            resourceName = resourceNameRewriter.rewrite(resourceName);
+        }
+
+        return resourceName;
 
     }
 
     protected Properties loadProperties(String baseName, Locale locale) {
         String resourceName = toResourceName(baseName, locale);
-        if (resourceNameRewriter != null) {
-            resourceName = resourceNameRewriter.rewrite(resourceName);
-        }
-
         log.debug("Load properties from resource: {}", resourceName);
 
         Properties prop = new Properties();

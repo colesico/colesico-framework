@@ -19,7 +19,6 @@ package colesico.framework.translation.internal;
 
 import colesico.framework.ioc.key.StringKey;
 import colesico.framework.ioc.scope.ThreadScope;
-import colesico.framework.resource.ResourceKit;
 import colesico.framework.translation.TranslationBundle;
 import colesico.framework.translation.Translatable;
 import colesico.framework.translation.TranslationKit;
@@ -45,12 +44,12 @@ public class TranslationKitImpl implements TranslationKit {
     protected final Provider<Locale> localeProv;
     protected final ThreadScope threadScope;
 
-    protected final PropertyBundleFactory propertyBundleFactory;
+    protected final PropertyBundleFactory propBundleFactory;
 
-    public TranslationKitImpl(Provider<Locale> localeProv, ThreadScope threadScope, PropertyBundleFactory propertyBundleFactory) {
+    public TranslationKitImpl(Provider<Locale> localeProv, ThreadScope threadScope, PropertyBundleFactory propBundleFactory) {
         this.localeProv = localeProv;
         this.threadScope = threadScope;
-        this.propertyBundleFactory = propertyBundleFactory;
+        this.propBundleFactory = propBundleFactory;
     }
 
     @Override
@@ -68,9 +67,9 @@ public class TranslationKitImpl implements TranslationKit {
             return translationBundle;
         }
 
-        PropertyBundle propertyBundle = propertyBundleFactory.getBundle(baseName, localeProv.get());
+        PropertyBundle propBundle = propBundleFactory.getBundle(baseName, localeProv.get());
 
-        translationBundle = new TranslationBundleImpl(propertyBundle);
+        translationBundle = new TranslationBundleImpl(propBundle);
 
         // Reference the bundle from thread scope to fast access in the same thread
         threadScope.put(scopeKey, translationBundle);
