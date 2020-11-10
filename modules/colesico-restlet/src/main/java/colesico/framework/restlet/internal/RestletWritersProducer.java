@@ -24,6 +24,7 @@ import colesico.framework.restlet.RestletException;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 import colesico.framework.restlet.teleapi.writer.*;
 import colesico.framework.security.Principal;
+import colesico.framework.security.PrincipalRequiredException;
 import colesico.framework.telehttp.writer.PrincipalWriter;
 import colesico.framework.telehttp.writer.ProfileWriter;
 
@@ -33,6 +34,7 @@ import javax.inject.Singleton;
 @Produce(RestletExceptionWriter.class)
 @Produce(PlainTextWriter.class)
 @Produce(JsonWriter.class)
+@Produce(PrincipalRequiredExceptionWriter.class)
 public class RestletWritersProducer {
 
     // Default object writer
@@ -58,4 +60,11 @@ public class RestletWritersProducer {
     public RestletTeleWriter getRestletExceptionWriter(RestletExceptionWriter impl) {
         return impl;
     }
+
+    @Singleton
+    @Classed(PrincipalRequiredException.class)
+    public RestletTeleWriter getPrincipalRequiredExceptionWriter(PrincipalRequiredExceptionWriter impl) {
+        return impl;
+    }
+
 }

@@ -23,9 +23,11 @@ abstract public class AbstractExceptionWriter<T extends Throwable> extends Restl
 
     abstract protected Object getDetails(T value, RestletTWContext context);
 
-    abstract protected String getErrorCode(T value, RestletTWContext context);
-
     abstract protected int getHttpCode(T value, RestletTWContext context);
+
+    protected String getErrorCode(T value, RestletTWContext context) {
+        return value.getClass().getCanonicalName();
+    }
 
     protected String getMessage(T value, RestletTWContext context) {
         return value.getMessage();

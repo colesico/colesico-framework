@@ -1,6 +1,6 @@
 package colesico.framework.restlet;
 
-public class RestletException extends RuntimeException {
+public final class RestletException extends RuntimeException {
     private final RestletError error;
     private final int httpCode;
 
