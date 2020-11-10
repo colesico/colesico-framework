@@ -32,7 +32,7 @@ import java.util.Map;
  * Substitutes given properties names with its values
  */
 @Singleton
-public class PropertyRewriter implements PathRewriter {
+public class ParamRewriter implements PathRewriter {
 
     public static final char PROPERTY_PREFIX = '$';
     public static final char PATH_SEPARATOR = '/';
@@ -56,15 +56,15 @@ public class PropertyRewriter implements PathRewriter {
     /**
      * Register rewriter in the rewriter register
      */
-    public PropertyRewriter register(RewriterRegistry registry) {
-        registry.registerIfAbsent(PropertyRewriter.class.getCanonicalName(), this, RewritingPhase.EVALUATE);
+    public ParamRewriter register(RewriterRegistry registry) {
+        registry.registerIfAbsent(ParamRewriter.class.getCanonicalName(), this, RewritingPhase.EVALUATE);
         return this;
     }
 
     /**
-     * Add property
+     * Add parameter
      */
-    public PropertyRewriter property(String name, String value) {
+    public ParamRewriter param(String name, String value) {
         if (name == null || "".equals(name)) {
             throw new RuntimeException("Property name is empty or null");
         }

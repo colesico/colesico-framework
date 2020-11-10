@@ -27,12 +27,12 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
-public class TestPropertyRewriter {
+public class TestParamRewriter {
 
     private Ioc ioc;
     private ResourceKit rkit;
 
-    Logger logger = LoggerFactory.getLogger(TestPropertyRewriter.class);
+    Logger logger = LoggerFactory.getLogger(TestParamRewriter.class);
 
 
     @BeforeClass
