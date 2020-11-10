@@ -44,6 +44,10 @@ abstract public class StringResponse {
         this.httpCode = httpCode;
     }
 
+    public WebletResponse wrap() {
+        return WebletResponse.of(this);
+    }
+    
     public final String getContent() {
         return content;
     }

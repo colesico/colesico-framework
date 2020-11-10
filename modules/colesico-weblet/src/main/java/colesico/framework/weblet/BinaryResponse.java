@@ -58,6 +58,10 @@ public final class BinaryResponse {
         return new BinaryResponse(content, DEFAULT_CONTENT_TYPE, null, DEFAULT_HTTP_CODE);
     }
 
+    public WebletResponse wrap() {
+        return WebletResponse.of(this);
+    }
+
     public byte[] getContent() {
         return content;
     }

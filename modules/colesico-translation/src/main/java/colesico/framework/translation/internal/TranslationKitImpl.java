@@ -39,6 +39,8 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
+import static java.util.ResourceBundle.Control.FORMAT_PROPERTIES;
+
 /**
  * @author Vladlen Larionov
  */
@@ -76,8 +78,9 @@ public class TranslationKitImpl implements TranslationKit {
         basePath = resourceKit.rewrite(basePath);
         ResourceBundle resourceBundle = ResourceBundle.getBundle(
                 basePath,
-                localeProv.get(),
-                ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES)
+                localeProv.get()
+                //,ResourceBundle.Control.getControl(FORMAT_PROPERTIES)
+                ,ResourceBundle.Control.getNoFallbackControl(FORMAT_PROPERTIES)
         );
 
         translationBundle = new TranslationBundleImpl(resourceBundle);

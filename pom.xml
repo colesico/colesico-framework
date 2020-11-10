@@ -165,9 +165,7 @@
 
                 <!--<module>modules/colesico-trimou</module>-->
                 <module>modules/colesico-pebble</module>
-
                 <module>modules/colesico-restlet</module>
-                <module>modules/colesico-widget</module>
                 <module>modules/colesico-undertow</module>
             </modules>
         </profile>

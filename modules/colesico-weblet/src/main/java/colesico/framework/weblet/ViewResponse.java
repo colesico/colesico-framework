@@ -29,6 +29,10 @@ public final class ViewResponse {
         return new ViewResponse(viewName, model, httpCode);
     }
 
+    public WebletResponse wrap() {
+        return WebletResponse.of(this);
+    }
+
     public String getVewName() {
         return vewName;
     }
