@@ -24,6 +24,9 @@ import colesico.framework.translation.TranslationBundle;
 import colesico.framework.translation.Translatable;
 import colesico.framework.translation.TranslationExceprion;
 import colesico.framework.translation.TranslationKit;
+import colesico.framework.translation.assist.bundle.PropertyBundle;
+import colesico.framework.translation.assist.bundle.PropertyBundleCacheSoft;
+import colesico.framework.translation.assist.bundle.PropertyBundleFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -52,38 +55,36 @@ public class TranslationKitImpl implements TranslationKit {
     protected final Logger logger = LoggerFactory.getLogger(TranslationKit.class);
 
     protected final Provider<Locale> localeProv;
-    protected final ResourceKit resourceKit;
     protected final ThreadScope threadScope;
+    protected final ResourceKit resourceKit;
 
-    public TranslationKitImpl(Provider<Locale> localeProv, ResourceKit resourceKit, ThreadScope threadScope) {
+    protected final PropertyBundleFactory propertyBundleFactory = new PropertyBundleFactory(new PropertyBundleCacheSoft(0.3));
+
+    public TranslationKitImpl(Provider<Locale> localeProv, ThreadScope threadScope, ResourceKit resourceKit) {
         this.localeProv = localeProv;
-        this.resourceKit = resourceKit;
         this.threadScope = threadScope;
+        this.resourceKit = resourceKit;
     }
 
     @Override
-    public Translatable getTranslatable(String basePath, String key) {
-        return new TranslatableImpl(this, basePath, key);
+    public Translatable getTranslatable(String baseName, String key) {
+        return new TranslatableImpl(this, baseName, key);
     }
 
     @Override
-    public TranslationBundle getBundle(String basePath) {
+    public TranslationBundle getBundle(String baseName) {
+
         // Check thread scope for bundle
-        final StringKey<TranslationBundle> scopeKey = new StringKey<>(SCOPE_KEY_PREFIX + basePath);
+        final StringKey<TranslationBundle> scopeKey = new StringKey<>(SCOPE_KEY_PREFIX + baseName);
         TranslationBundle translationBundle = threadScope.get(scopeKey);
         if (translationBundle != null) {
             return translationBundle;
         }
 
-        basePath = resourceKit.rewrite(basePath);
-        ResourceBundle resourceBundle = ResourceBundle.getBundle(
-                basePath,
-                localeProv.get()
-                //,ResourceBundle.Control.getControl(FORMAT_PROPERTIES)
-                ,ResourceBundle.Control.getNoFallbackControl(FORMAT_PROPERTIES)
-        );
+        baseName = resourceKit.rewrite(baseName);
+        PropertyBundle propertyBundle = propertyBundleFactory.getBundle(baseName, localeProv.get());
 
-        translationBundle = new TranslationBundleImpl(resourceBundle);
+        translationBundle = new TranslationBundleImpl(propertyBundle);
 
         // Reference the bundle from thread scope to fast access in the same thread
         threadScope.put(scopeKey, translationBundle);

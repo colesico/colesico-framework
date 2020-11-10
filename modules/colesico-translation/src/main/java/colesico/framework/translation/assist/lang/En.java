@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.translation.assist;
+package colesico.framework.translation.assist.lang;
 
 import colesico.framework.translation.Translation;
 
@@ -23,7 +23,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
 @Inherited
-@Translation("ru")
-public @interface Ru {
+@Translation("en")
+public @interface En {
     String value();
 }

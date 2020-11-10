@@ -22,17 +22,17 @@ import colesico.framework.translation.TranslationKit;
 public class TranslatableImpl implements Translatable {
 
     private final TranslationKit translationKit;
-    private final String basePath;
+    private final String baseName;
     private final String key;
 
-    public TranslatableImpl(TranslationKit translationKit, String basePath, String key) {
+    public TranslatableImpl(TranslationKit translationKit, String baseName, String key) {
         this.translationKit = translationKit;
-        this.basePath = basePath;
+        this.baseName = baseName;
         this.key = key;
     }
 
     @Override
     public String translate(Object... params) {
-        return translationKit.getBundle(basePath).get(key,key, params);
+        return translationKit.getBundle(baseName).get(key,key, params);
     }
 }

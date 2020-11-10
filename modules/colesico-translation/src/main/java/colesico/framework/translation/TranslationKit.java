@@ -27,15 +27,13 @@ public interface TranslationKit {
      * Returns appropriate translation bundle for the current locale.
      * This method should cache the bundle in the thread scope to allow fast multiple access within the thread.
      *
-     * @param basePath - resource path to *.properties file without extension and  localization qualifiers.
-     *                 This path is an analogue of baseName for ResourceBundle.getBundle(...)
-     * @return
+     * @param baseName - the same as for {@link java.util.ResourceBundle#getBundle(String)}
      */
-    TranslationBundle getBundle(String basePath);
+    TranslationBundle getBundle(String baseName);
 
     /**
      * Returns translatable text
      */
-    Translatable getTranslatable(String basePath, String key);
+    Translatable getTranslatable(String baseName, String key);
 
 }

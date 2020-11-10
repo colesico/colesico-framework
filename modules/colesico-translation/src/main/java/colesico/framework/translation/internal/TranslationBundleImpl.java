@@ -17,25 +17,25 @@
 package colesico.framework.translation.internal;
 
 import colesico.framework.translation.TranslationBundle;
+import colesico.framework.translation.assist.bundle.PropertyBundle;
 
 import java.text.MessageFormat;
-import java.util.Iterator;
-import java.util.ResourceBundle;
+import java.util.List;
 
 /**
- * Implementation based on underlying {@link ResourceBundle}
+ * Implementation based on underlying {@link PropertyBundle}
  */
 public final class TranslationBundleImpl implements TranslationBundle {
 
-    private final ResourceBundle resourceBundle;
+    private final PropertyBundle bundle;
 
-    public TranslationBundleImpl(ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
+    public TranslationBundleImpl(PropertyBundle bundle) {
+        this.bundle = bundle;
     }
 
     @Override
     public String get(final String key, final String defaultVal, final Object... params) {
-        final String translation = resourceBundle.getString(key);
+        final String translation = bundle.getString(key);
 
         if (translation == null) {
             return defaultVal;
@@ -50,11 +50,10 @@ public final class TranslationBundleImpl implements TranslationBundle {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(resourceBundle.getBaseBundleName()).append(":\n");
-        Iterator<String> it = resourceBundle.getKeys().asIterator();
-        while (it.hasNext()) {
-            String key = it.next();
-            sb.append(key).append('=').append(resourceBundle.getString(key)).append(";\n");
+        StringBuilder sb = new StringBuilder(bundle.getBaseName()).append(":\n");
+        List<String> keys = bundle.getKeys();
+        for (String key : keys) {
+            sb.append(key).append('=').append(bundle.getString(key)).append(";\n");
         }
         return sb.toString();
     }

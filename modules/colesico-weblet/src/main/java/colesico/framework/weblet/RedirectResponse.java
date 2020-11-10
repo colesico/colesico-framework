@@ -36,4 +36,7 @@ public final class RedirectResponse extends Navigation<RedirectResponse> {
         return new RedirectResponse();
     }
 
+    public WebletResponse wrap() {
+        return WebletResponse.of(this);
+    }
 }

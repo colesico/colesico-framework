@@ -18,9 +18,9 @@ package colesico.framework.example.translation;
 
 import colesico.framework.translation.Dictionary;
 import colesico.framework.translation.TranslationDictionary;
-import colesico.framework.translation.assist.En;
-import colesico.framework.translation.assist.Ru;
-import colesico.framework.translation.assist.Text;
+import colesico.framework.translation.assist.lang.En;
+import colesico.framework.translation.assist.lang.Ru;
+import colesico.framework.translation.assist.lang.Text;
 
 /**
  * An appropriate properties file will be generated for this interface.
