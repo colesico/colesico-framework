@@ -26,12 +26,14 @@ import java.io.Serializable;
 public class RestletError implements Serializable {
 
     /**
-     * Error code
+     * Error code represent unique error id
+     * to identify error an perform appropriate
+     * handling on client side
      */
-    protected String code;
+    protected String errorCode;
 
     /**
-     * Error message
+     * Human readable error message
      */
     protected String message;
 
@@ -43,18 +45,18 @@ public class RestletError implements Serializable {
     public RestletError() {
     }
 
-    public RestletError(String code, String message, Object details) {
-        this.code = code;
+    public RestletError(String errorCode, String message, Object details) {
+        this.errorCode = errorCode;
         this.message = message;
         this.details = details;
     }
 
-    public String getCode() {
-        return code;
+    public String getErrorCode() {
+        return errorCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
     }
 
     public String getMessage() {

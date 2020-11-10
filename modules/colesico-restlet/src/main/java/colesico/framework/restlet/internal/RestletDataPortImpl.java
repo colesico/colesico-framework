@@ -134,7 +134,7 @@ public class RestletDataPortImpl implements RestletDataPort {
         // No specific writer,
         // Perform default writing
         RestletError error = new RestletError();
-        error.setCode(throwable.getClass().getCanonicalName());
+        error.setErrorCode(throwable.getClass().getCanonicalName());
         error.setMessage(ExceptionUtils.getRootCauseMessage(throwable));
         error.setDetails(getMessages(throwable));
         RestletTeleWriter objWriter = ioc.instance(ObjectWriter.class);
