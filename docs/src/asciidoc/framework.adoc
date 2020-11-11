@@ -66,5 +66,5 @@ Colesico-framework consists of highly specialized micromodules.
 * <<restlet.adoc#,Colesico-restlet - Simplified RESTful Web services support>>
 * Colesico-pebble - Pebble templating engine  integration
 * Colesico-undertow - Undertow web server integration
-* Colesico-widget - Http page widgets support (Under development)
+
 
