@@ -20,7 +20,7 @@ public class PrincipalRequiredExceptionWriter extends AbstractExceptionWriter<Pr
     }
 
     @Override
-    protected int getHttpCode(PrincipalRequiredException value, RestletTWContext context) {
+    protected int getHttpStatus(PrincipalRequiredException value, RestletTWContext context) {
         return 401;
     }
 }

@@ -2,24 +2,28 @@ package colesico.framework.restlet;
 
 public final class RestletException extends RuntimeException {
     private final RestletError error;
-    private final int httpCode;
+
+    /**
+     * Http response status code
+     */
+    private final int httpStatus;
 
     public RestletException(RestletError error) {
         this.error = error;
-        httpCode = 500;
+        httpStatus = 500;
     }
 
-    public RestletException(RestletError error, int httpCode) {
+    public RestletException(RestletError error, int httpStatus) {
         this.error = error;
-        this.httpCode = httpCode;
+        this.httpStatus = httpStatus;
     }
 
     public RestletError getError() {
         return error;
     }
 
-    public int getHttpCode() {
-        return httpCode;
+    public int getHttpStatus() {
+        return httpStatus;
     }
 
     @Override

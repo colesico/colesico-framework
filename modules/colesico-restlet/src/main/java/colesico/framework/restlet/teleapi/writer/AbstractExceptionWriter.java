@@ -21,7 +21,12 @@ abstract public class AbstractExceptionWriter<T extends Throwable> extends Restl
 
     abstract protected Object getDetails(T value, RestletTWContext context);
 
-    abstract protected int getHttpCode(T value, RestletTWContext context);
+    /**
+     * HTTP response status code to sent to client
+     */
+    protected int getHttpStatus(T value, RestletTWContext context){
+        return 500;
+    }
 
     protected String getErrorCode(T value, RestletTWContext context) {
         return value.getClass().getCanonicalName();
@@ -37,7 +42,7 @@ abstract public class AbstractExceptionWriter<T extends Throwable> extends Restl
         error.setErrorCode(getErrorCode(value, context));
         error.setMessage(getMessage(value, context));
         error.setDetails(getDetails(value, context));
-        context.setHttpCode(getHttpCode(value, context));
+        context.setHttpCode(getHttpStatus(value, context));
         writer.write(error, context);
     }
 }

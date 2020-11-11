@@ -21,7 +21,7 @@ public class RestletExceptionWriter extends RestletTeleWriter<RestletException> 
     @Override
     public void write(RestletException value, RestletTWContext context) {
         if (context.getHttpCode() == null) {
-            context.setHttpCode(value.getHttpCode());
+            context.setHttpCode(value.getHttpStatus());
         }
         writer.write(value.getError(), context);
     }

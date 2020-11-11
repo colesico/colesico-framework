@@ -24,8 +24,11 @@ public class CustomExceptionWriter extends AbstractExceptionWriter<CustomExcepti
         return value.getPayload();
     }
 
+    /**
+     * Custom HTTP error code
+     */
     @Override
-    protected int getHttpCode(CustomException value, RestletTWContext context) {
-        return 505;
+    protected int getHttpStatus(CustomException value, RestletTWContext context) {
+        return 510;
     }
 }
