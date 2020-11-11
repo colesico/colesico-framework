@@ -185,7 +185,7 @@ public class L10nRewriter implements PathRewriter {
     /**
      * Localization config associated with path
      */
-    private class L10NConfig {
+    private static class L10NConfig {
 
         private Localizer localizer;
         private L10nMode mode;
