@@ -26,7 +26,7 @@ import java.lang.annotation.*;
  * @author Vladlen Larionov
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD,ElementType.TYPE}) //TYPE - for future releases
+@Target({ElementType.METHOD,ElementType.TYPE})
 @Inherited
 @Documented
 public @interface PlainMethod {

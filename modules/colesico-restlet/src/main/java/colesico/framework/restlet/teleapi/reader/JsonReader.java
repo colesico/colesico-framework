@@ -35,10 +35,15 @@ public final class JsonReader extends ObjectReader {
         // Should the value be read from input stream?
         Origin origin = context.getOriginFacade().getOrigin();
 
-        boolean useInputStream = (origin.equals(Origin.BODY) || origin.equals(Origin.AUTO))
-                && (requestMethod.equals(HTTP_METHOD_POST)
-                || requestMethod.equals(HTTP_METHOD_PUT)
-                || requestMethod.equals(HTTP_METHOD_PATCH));
+        boolean useInputStream = origin.equals(Origin.BODY) ||
+                (
+                        origin.equals(Origin.AUTO) &&
+                                (
+                                        requestMethod.equals(HTTP_METHOD_POST)
+                                                || requestMethod.equals(HTTP_METHOD_PUT)
+                                                || requestMethod.equals(HTTP_METHOD_PATCH)
+                                )
+                );
 
         if (useInputStream) {
             try (InputStream is = httpContext.getRequest().getInputStream()) {

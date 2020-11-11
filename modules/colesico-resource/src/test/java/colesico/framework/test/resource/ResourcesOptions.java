@@ -17,12 +17,23 @@
 package colesico.framework.test.resource;
 
 import colesico.framework.resource.ResourceOptionsPrototype;
+import colesico.framework.resource.RewriterRegistry;
+import colesico.framework.resource.rewriters.ParamRewriter;
+
+import javax.inject.Inject;
 
 public class ResourcesOptions extends ResourceOptionsPrototype {
 
-    @Override
-    public void addProperties(PropertyDigest digest) {
-        digest.add("$alias", "foo/dummy");
+    private ParamRewriter rewriter;
+
+    @Inject
+    public ResourcesOptions(ParamRewriter rewriter) {
+        this.rewriter = rewriter;
     }
 
+    @Override
+    public void setupRewriters(RewriterRegistry registry) {
+        rewriter.register(registry)
+                .param("$alias", "foo/dummy");
+    }
 }

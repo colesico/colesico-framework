@@ -17,7 +17,7 @@
 package colesico.framework.teleapi;
 
 /**
- * Represents method tele invocation facade
+ * Represents any method of tele-facade
  */
 @FunctionalInterface
 public interface TeleMethod {

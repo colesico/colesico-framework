@@ -20,6 +20,9 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.MessageDigest;
 
+/**
+ * Cryptography utils
+ */
 public class MACUtils {
 
     public static final String HmacMD5 = "HmacMD5";

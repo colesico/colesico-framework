@@ -17,7 +17,7 @@
 package colesico.framework.profile;
 
 /**
- * @author Vladlen Larionov
+ * Basic profile exception
  */
 public class ProfileException extends RuntimeException {
 

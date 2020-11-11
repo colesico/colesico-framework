@@ -46,8 +46,8 @@ public class DictionaryElement {
 
         AnnotationAssist<Dictionary> beanAnn = dictionaryInterface.getAnnotation(Dictionary.class);
         String bPath;
-        if (StringUtils.isNoneBlank(beanAnn.unwrap().basePath())) {
-            bPath = beanAnn.unwrap().basePath();
+        if (StringUtils.isNoneBlank(beanAnn.unwrap().baseName())) {
+            bPath = beanAnn.unwrap().baseName();
         } else {
             bPath = dictionaryInterface.getPackageName() + '.' + dictionaryInterface.getSimpleName();
             bPath = bPath.replace('.', '/');

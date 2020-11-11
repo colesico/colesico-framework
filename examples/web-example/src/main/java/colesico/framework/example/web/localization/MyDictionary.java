@@ -19,7 +19,7 @@ package colesico.framework.example.web.localization;
 import colesico.framework.translation.Dictionary;
 import colesico.framework.translation.TranslationKey;
 
-@Dictionary(basePath = MyDictionary.BUNDLE_PATH)
+@Dictionary(baseName = MyDictionary.BUNDLE_PATH)
 public interface MyDictionary {
 
     String BUNDLE_PATH="colesico/framework/example/web/localization/t9n/Strings";

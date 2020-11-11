@@ -27,7 +27,6 @@ import java.util.StringTokenizer;
 public class HttpUtils {
 
 
-
     public static Locale getAcceptedLanguage(String acceptLanguage) {
         if (StringUtils.isBlank(acceptLanguage)) {
             return null;

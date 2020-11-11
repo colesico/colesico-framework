@@ -17,35 +17,26 @@
 package colesico.framework.weblet;
 
 /**
- * @author Vladlen Larionov
+ * Simple text response
  */
-public final class TextResponse implements StringResponse {
+public final class TextResponse extends StringResponse {
 
     public static final String DEFAULT_CONTENT_TYPE = "text/plain; charset=utf-8";
 
-    private final String content;
-    private final String contentType;
+    private TextResponse(String content, String contentType, int httpCode) {
+        super(content, contentType, httpCode);
+    }
 
-    private TextResponse(String content, String contentType) {
-        this.content = content;
-        this.contentType = contentType;
+    public static TextResponse of(String content, String contentType, int httpCode) {
+        return new TextResponse(content, contentType, httpCode);
     }
 
     public static TextResponse of(String content, String contentType) {
-        return new TextResponse(content, contentType);
+        return new TextResponse(content, contentType, DEFAULT_HTTP_CODE);
     }
 
     public static TextResponse of(String content) {
-        return new TextResponse(content, DEFAULT_CONTENT_TYPE);
+        return new TextResponse(content, DEFAULT_CONTENT_TYPE, DEFAULT_HTTP_CODE);
     }
 
-    @Override
-    public String getContentType() {
-        return contentType;
-    }
-
-    @Override
-    public String getContent() {
-        return content;
-    }
 }

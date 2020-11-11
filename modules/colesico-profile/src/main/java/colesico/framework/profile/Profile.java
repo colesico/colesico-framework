@@ -16,28 +16,20 @@
 
 package colesico.framework.profile;
 
-import java.io.Serializable;
 import java.util.Locale;
 
 /**
- * Localization profile.
- * The specific implementation depends on the needs of the application and is implemented in the application.
+ * User localization profile.
+ * The specific implementation depends on the needs of the application and has to be implemented in the application.
  * Framework provides default implementation {@link DefaultProfile}
  */
 public interface Profile {
 
     String GET_LOCALE_METHOD = "getLocale";
-    String GET_QUALIFIERS_METHOD = "getQualifiers";
 
     /**
-     * Returns client locale.
-     *
-     * @return
+     * Returns user locale.
      */
     Locale getLocale();
 
-    /**
-     * Returns localization qualifier values
-     */
-    ObjectiveQualifiers getQualifiers();
 }

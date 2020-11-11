@@ -20,7 +20,6 @@ import java.lang.annotation.*;
 
 /**
  * Weblet declaration annotation
- * @author Vladlen Larionov
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})

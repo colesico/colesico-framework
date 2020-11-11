@@ -18,8 +18,6 @@ package colesico.framework.security;
 
 /**
  * An exception to be thrown in case of no current valid principal
- *
- * @author Vladlen Larionov
  */
 public class PrincipalRequiredException extends SecurityException {
 

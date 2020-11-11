@@ -44,9 +44,6 @@ public class Navigation<N extends Navigation> {
     protected final Map<String, String> queryParameters = new HashMap<>();
     protected final Map<String, String> routeParameters = new HashMap<>();
 
-    public Navigation() {
-    }
-
     public N uri(String uri) {
         this.uri = uri;
         return (N) this;
@@ -115,6 +112,9 @@ public class Navigation<N extends Navigation> {
         return (N) this;
     }
 
+    /**
+     * Set query parameters
+     */
     public N queryParamsMap(Map<String, Object> params) {
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             if (entry.getKey() != null) {
@@ -149,6 +149,9 @@ public class Navigation<N extends Navigation> {
         return (N) this;
     }
 
+    /**
+     * Set route parameters
+     */
     public N routeParamsMap(Map<String, Object> params) {
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             if (entry.getKey() != null) {
@@ -160,11 +163,18 @@ public class Navigation<N extends Navigation> {
         return (N) this;
     }
 
+    /**
+     * Set custom http redirect code.
+     * Default code 302
+     */
     public N httpCode(int httpCode) {
         this.httpCode = httpCode;
         return (N) this;
     }
 
+    /**
+     * Returns url to use in http redirect
+     */
     public String toLocation(Router router) {
         String targetURI;
         if (StringUtils.isNotBlank(this.uri)) {
@@ -188,10 +198,9 @@ public class Navigation<N extends Navigation> {
         return location;
     }
 
-    public static String buildURLPrefix(String requestScheme, String host, Integer port) {
-        return requestScheme + "://" + host + (port == 80 ? "" : ":" + port);
-    }
-
+    /**
+     * Performs HTTP redirect
+     */
     public void redirect(Router router, HttpContext context) {
         String location = toLocation(router);
         context.getResponse().sendRedirect(location, httpCode);
@@ -215,6 +224,10 @@ public class Navigation<N extends Navigation> {
     public static class NavigationException extends RuntimeException {
         public NavigationException(String message) {
             super(message);
+        }
+
+        public NavigationException(String message, Throwable cause) {
+            super(message, cause);
         }
     }
 

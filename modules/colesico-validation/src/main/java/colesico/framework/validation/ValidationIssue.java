@@ -35,7 +35,8 @@ public class ValidationIssue implements Serializable {
     private List<ValidationError> errors = new ArrayList<>();
 
     /**
-     * Nested issues if the subject is complex object
+     * Nested issues if the subject is complex object.
+     * Map Subject -> Issue
      */
     private Map<String, ValidationIssue> subissues = new HashMap<>();
 

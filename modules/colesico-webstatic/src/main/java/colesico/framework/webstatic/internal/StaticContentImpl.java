@@ -45,21 +45,23 @@ public class StaticContentImpl implements StaticContent {
     public StaticContentImpl(Provider<HttpContext> httpContextProv, ResourceKit resourceKit, String resourcesRoot) {
         this.httpContextProv = httpContextProv;
         this.resourceKit = resourceKit;
-        this.resourcesRoot = resourceKit.evaluate(resourcesRoot);
+        this.resourcesRoot = resourceKit.rewrite(resourcesRoot);
     }
 
     @Override
-    public void send(String resourceUri, ResourceKit.L10NMode mode) {
+    public void send(String resourceUri, boolean rewrite) {
 
         HttpContext httpContext = httpContextProv.get();
 
         String resourcePath = resourcesRoot + '/' + resourceUri;
-        resourcePath = resourceKit.localize(resourcePath, mode);
-        resourcePath = resourceKit.rewrite(resourcePath);
+
+        if (rewrite) {
+            resourcePath = resourceKit.rewrite(resourcePath);
+        }
 
         httpContext.getResponse().setContenType(MimeAssist.getContentType(resourcePath));
 
-        try (InputStream is = resourceKit.getStream(resourcePath);
+        try (InputStream is = resourceKit.getResourceStream(resourcePath);
              OutputStream os = httpContext.getResponse().getOutputStream()) {
             byte[] buf = new byte[SEND_BUFFER_SIZE];
             int c;
@@ -67,13 +69,12 @@ public class StaticContentImpl implements StaticContent {
                 os.write(buf, 0, c);
                 os.flush();
             }
-        } catch (ResourceNotFoundException rnfe){
-            log.warn("Static resource not found: "+resourcePath);
+        } catch (ResourceNotFoundException rnfe) {
+            log.warn("Static resource not found: " + resourcePath);
         } catch (Exception e) {
             throw new ResourceException("Read resource '" + resourceUri + "->" + resourcePath + "' error", e);
         }
     }
-
 
 
 }

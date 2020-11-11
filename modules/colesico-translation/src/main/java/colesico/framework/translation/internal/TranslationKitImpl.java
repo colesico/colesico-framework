@@ -19,22 +19,17 @@ package colesico.framework.translation.internal;
 
 import colesico.framework.ioc.key.StringKey;
 import colesico.framework.ioc.scope.ThreadScope;
-import colesico.framework.resource.ResourceKit;
-import colesico.framework.translation.Bundle;
+import colesico.framework.translation.TranslationBundle;
 import colesico.framework.translation.Translatable;
-import colesico.framework.translation.TranslationExceprion;
 import colesico.framework.translation.TranslationKit;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import colesico.framework.translation.assist.propbundle.PropertyBundle;
+import colesico.framework.translation.assist.propbundle.PropertyBundleFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.text.MessageFormat;
-import java.util.Properties;
+import java.util.Locale;
 
 /**
  * @author Vladlen Larionov
@@ -42,111 +37,45 @@ import java.util.Properties;
 @Singleton
 public class TranslationKitImpl implements TranslationKit {
 
-    public static final String BUNDLE_FILE_EXT = ".properties";
     public static final String SCOPE_KEY_PREFIX = "T9N/";
 
-    protected final Logger log = LoggerFactory.getLogger(TranslationKit.class);
+    protected final Logger logger = LoggerFactory.getLogger(TranslationKit.class);
 
-    protected final ResourceKit resourceKit;
+    protected final Provider<Locale> localeProv;
     protected final ThreadScope threadScope;
-    protected final BundleCache bundleCache;
 
+    protected final PropertyBundleFactory propBundleFactory;
 
-    public TranslationKitImpl(ResourceKit resourceKit, ThreadScope threadScope) {
-        this.resourceKit = resourceKit;
+    public TranslationKitImpl(Provider<Locale> localeProv, ThreadScope threadScope, PropertyBundleFactory propBundleFactory) {
+        this.localeProv = localeProv;
         this.threadScope = threadScope;
-        this.bundleCache = new BundleCacheSoft(0.15);
+        this.propBundleFactory = propBundleFactory;
     }
 
     @Override
-    public Translatable getTranslatable(String basePath, String key) {
-        return new TranslatableImpl(this, basePath, key);
+    public Translatable getTranslatable(String baseName, String key) {
+        return new TranslatableImpl(this, baseName, key);
     }
 
     @Override
-    public Bundle getBundle(final String basePath) {
+    public TranslationBundle getBundle(String baseName) {
+
         // Check thread scope for bundle
-        final StringKey<Bundle> scopeKey = new StringKey<>(SCOPE_KEY_PREFIX + basePath);
-        Bundle bundle = threadScope.get(scopeKey);
-        if (bundle != null) {
-            return bundle;
+        final StringKey<TranslationBundle> scopeKey = new StringKey<>(SCOPE_KEY_PREFIX + baseName);
+        TranslationBundle translationBundle = threadScope.get(scopeKey);
+        if (translationBundle != null) {
+            return translationBundle;
         }
 
-        bundle = getBundle(basePath, true);
+        PropertyBundle propBundle = propBundleFactory.getBundle(baseName, localeProv.get());
+
+        translationBundle = new TranslationBundleImpl(propBundle);
 
         // Reference the bundle from thread scope to fast access in the same thread
-        threadScope.put(scopeKey, bundle);
+        threadScope.put(scopeKey, translationBundle);
 
-        return bundle;
+        return translationBundle;
     }
 
-    /**
-     * Returns new bundle from resource file or  from cache
-     *
-     * @return
-     */
-    public Bundle getBundle(String basePath, boolean localize) {
-        String evaluatedPath = resourceKit.evaluate(basePath);
-        String actualPath;
-        boolean defaultBundle;
-        if (localize) {
-            String localizedPath = resourceKit.localize(evaluatedPath, ResourceKit.L10NMode.FILE);
-            actualPath = resourceKit.rewrite(localizedPath);
-            defaultBundle = StringUtils.equals(evaluatedPath, localizedPath);
-        } else {
-            actualPath = resourceKit.rewrite(evaluatedPath);
-            defaultBundle = true;
-        }
-
-        final BundleCache.Key cacheKey = new BundleCache.Key(actualPath);
-
-        Bundle bundle = bundleCache.get(cacheKey);
-
-        if (bundle != null) {
-            return bundle;
-        }
-
-        Properties translations = load(actualPath);
-        bundle = defaultBundle ? new DefaultBundle(translations) : new ChainBundle(translations, evaluatedPath, this);
-        bundleCache.set(cacheKey, bundle);
-        return bundle;
-    }
-
-
-    /**
-     * Loads translations from resource file.
-     *
-     * @param actualPath
-     * @return
-     */
-    protected Properties load(final String actualPath) {
-
-        String fullPath = actualPath + BUNDLE_FILE_EXT;
-        log.debug("Loading translations from: " + fullPath);
-
-        Properties prop = new Properties();
-        InputStream in = getClass().getClassLoader().getResourceAsStream(fullPath);
-        if (in == null) {
-            String errMsg = "Translations file not found:" + fullPath;
-            log.error(errMsg);
-            throw new TranslationExceprion(errMsg);
-        }
-        try (InputStreamReader isr = new InputStreamReader(in, StandardCharsets.UTF_8);) {
-            prop.load(isr);
-            return prop;
-        } catch (Exception ex) {
-            String errMsg = MessageFormat.format("Error loading translations file: {0}; Cause message: {1}", fullPath, ExceptionUtils.getRootCauseMessage(ex));
-            log.error(errMsg);
-            throw new TranslationExceprion(errMsg, ex);
-        } finally {
-            try {
-                in.close();
-            } catch (Exception ex) {
-                String errMsg = MessageFormat.format("Error closing translations file: {0}; Cause message: {1}", fullPath, ExceptionUtils.getRootCauseMessage(ex));
-                log.error(errMsg);
-                throw new TranslationExceprion(errMsg, ex);
-            }
-        }
-    }
 
 }

@@ -20,25 +20,26 @@ import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
+import colesico.framework.restlet.RestletException;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
-import colesico.framework.restlet.teleapi.writer.JsonWriter;
-import colesico.framework.restlet.teleapi.writer.ObjectWriter;
-import colesico.framework.restlet.teleapi.writer.PlainTextWriter;
-import colesico.framework.restlet.teleapi.writer.RestletWriterProxy;
+import colesico.framework.restlet.teleapi.writer.*;
 import colesico.framework.security.Principal;
+import colesico.framework.security.PrincipalRequiredException;
 import colesico.framework.telehttp.writer.PrincipalWriter;
 import colesico.framework.telehttp.writer.ProfileWriter;
 
 import javax.inject.Singleton;
 
 @Producer
+@Produce(RestletExceptionWriter.class)
 @Produce(PlainTextWriter.class)
 @Produce(JsonWriter.class)
+@Produce(PrincipalRequiredExceptionWriter.class)
 public class RestletWritersProducer {
 
     // Default object writer
     @Singleton
-    public ObjectWriter getObjectWriter(JsonWriter impl){
+    public ObjectWriter getObjectWriter(JsonWriter impl) {
         return impl;
     }
 
@@ -53,4 +54,17 @@ public class RestletWritersProducer {
     public RestletTeleWriter getProfileWriter(ProfileWriter impl) {
         return RestletWriterProxy.of(impl);
     }
+
+    @Singleton
+    @Classed(RestletException.class)
+    public RestletTeleWriter getRestletExceptionWriter(RestletExceptionWriter impl) {
+        return impl;
+    }
+
+    @Singleton
+    @Classed(PrincipalRequiredException.class)
+    public RestletTeleWriter getPrincipalRequiredExceptionWriter(PrincipalRequiredExceptionWriter impl) {
+        return impl;
+    }
+
 }

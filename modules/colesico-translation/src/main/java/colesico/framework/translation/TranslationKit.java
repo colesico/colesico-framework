@@ -18,36 +18,22 @@ package colesico.framework.translation;
 
 /**
  * Text translation service.
- *
- * @author Vladlen Larionov
  */
 public interface TranslationKit {
 
     String GET_BUNDLE_METHOD = "getBundle";
 
     /**
-     * Returns appropriate translations bundle for the current locale.
+     * Returns appropriate translation bundle for the current locale.
      * This method should cache the bundle in the thread scope to allow fast multiple access within the thread.
      *
-     * @param basePath - resource path to *.properties file without extension and  localization qualifiers.
-     *                 This path is an analogue of baseName for ResourceBundle.getBundle(...)
-     * @return
+     * @param baseName - the same as for {@link java.util.ResourceBundle#getBundle(String)}
      */
-    Bundle getBundle(String basePath);
-
-    Translatable getTranslatable(String basePath, String key);
+    TranslationBundle getBundle(String baseName);
 
     /**
-     * Base path helper
-     *
-     * @param clazz
-     * @return
+     * Returns translatable text
      */
-    static String toBasePath(Class<?> clazz) {
-        return clazz.getName().replace('.', '/');
-    }
+    Translatable getTranslatable(String baseName, String key);
 
-    static String toBasePath(Package pkg) {
-        return pkg.getName().replace('.', '/');
-    }
 }

@@ -16,6 +16,7 @@
 
 package colesico.framework.example.restlet;
 
+import colesico.framework.example.restlet.customexception.CustomException;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.ioc.listener.PostConstruct;
 import colesico.framework.restlet.Restlet;
@@ -74,6 +75,14 @@ public class RestApi {
     @RestletResponseWriter(PlainTextWriter.class)
     public String nonBlocking() {
         return "NonBlocking";
+    }
+
+
+    /**
+     * Custom exception example
+     */
+    public Boolean customException() {
+        throw new CustomException("Custom exception", List.of("Payload1", "Payload2"));
     }
 
 }

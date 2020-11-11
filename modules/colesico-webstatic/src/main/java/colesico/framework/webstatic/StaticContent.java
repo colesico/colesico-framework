@@ -17,38 +17,19 @@
 package colesico.framework.webstatic;
 
 
-import colesico.framework.resource.ResourceKit;
-import org.apache.commons.lang3.StringUtils;
-
 /**
- * Static static content sender
+ * Static content sender
  *
  * @author Vladlen Larionov
  */
 public interface StaticContent {
 
-    String L10N_MODE_PARAM = "l10n";
+    String REWRITE_PARAM = "rewrite";
 
-    void send(String resourceUri, ResourceKit.L10NMode mode);
+    void send(String resourceUri, boolean rewrite);
 
-    default void send(String resourceUri, String l10nMode) {
-        if (StringUtils.isBlank(l10nMode)) {
-            send(resourceUri, ResourceKit.L10NMode.NONE);
-        } else {
-            switch (l10nMode) {
-                case "dir":
-                    send(resourceUri, ResourceKit.L10NMode.DIR);
-                    break;
-                case "file":
-                    send(resourceUri, ResourceKit.L10NMode.FILE);
-                    break;
-                case "none":
-                    send(resourceUri, ResourceKit.L10NMode.NONE);
-                    break;
-                default:
-                    throw new RuntimeException("Unsupported localization mode: " + l10nMode);
-            }
-        }
+    default void send(String resourceUri, String rewrite) {
+        send(resourceUri, "true".equals(rewrite));
     }
 
     interface Builder {

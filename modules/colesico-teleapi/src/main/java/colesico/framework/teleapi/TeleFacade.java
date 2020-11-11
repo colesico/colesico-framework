@@ -19,7 +19,7 @@ package colesico.framework.teleapi;
 import javax.inject.Provider;
 
 /**
- * Unified facade for remote method calls
+ * Unified facade for tele-method invocations.
  *
  * @param <T> target to be invoked (usually a service)
  * @param <D> tele-driver that is serving tele-invocation
@@ -33,12 +33,14 @@ abstract public class TeleFacade<T, D extends TeleDriver, L> {
     public static final String GET_LIGATURE_METHOD = "getLigature";
 
     /**
-     * Tele-invocation driver
+     * Tele-driver
      */
     protected final D teleDriver;
 
     /**
-     * Target service provider
+     * Target provider.
+     * Target - this is an object whose method will be invoked.
+     * Typically this is a service object.
      */
     protected final Provider<T> targetProv;
 

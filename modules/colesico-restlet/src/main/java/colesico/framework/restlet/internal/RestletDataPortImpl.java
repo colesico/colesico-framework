@@ -17,31 +17,21 @@
 package colesico.framework.restlet.internal;
 
 import colesico.framework.http.HttpContext;
-import colesico.framework.http.HttpMethod;
-import colesico.framework.http.HttpResponse;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.ClassedKey;
-import colesico.framework.ioc.key.TypeKey;
-import colesico.framework.ioc.production.Supplier;
-import colesico.framework.restlet.RestletErrorResponse;
+import colesico.framework.restlet.RestletError;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.reader.ObjectReader;
-import colesico.framework.restlet.teleapi.writer.JsonWriter;
 import colesico.framework.restlet.teleapi.writer.ObjectWriter;
 import colesico.framework.router.RouterContext;
-import colesico.framework.teleapi.TeleReader;
-import colesico.framework.teleapi.TeleWriter;
-import colesico.framework.telehttp.Origin;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-
-import static colesico.framework.http.HttpMethod.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Singleton
 public class RestletDataPortImpl implements RestletDataPort {
@@ -75,9 +65,10 @@ public class RestletDataPortImpl implements RestletDataPort {
         }
 
         // Store value type to context
+        // so that type can be used by writers
         context.setValueType(valueType);
 
-        RestletTeleReader<V> reader = null;
+        RestletTeleReader<V> reader;
 
         if (context.getReaderClass() != null) {
             // Use specified reader
@@ -119,10 +110,61 @@ public class RestletDataPortImpl implements RestletDataPort {
     }
 
     @Override
-    public void writeError(RestletErrorResponse response, int httpCode) {
-        RestletTeleWriter writer = ioc.instance(ObjectWriter.class);
+    public <T extends Throwable> void writeError(final T throwable) {
+
         RestletTWContext context = new RestletTWContext();
-        context.setHttpCode(httpCode);
-        writer.write(response, context);
+        RestletTeleWriter<T> throwableWriter = ioc.instanceOrNull(new ClassedKey<>(RestletTeleWriter.class.getCanonicalName(), typeToClassName(throwable.getClass())), null);
+
+        if (throwableWriter != null) {
+            throwableWriter.write(throwable, context);
+            return;
+        }
+
+        // If no specific writer try to get root exception
+        // and determine writer for it
+        Throwable rootCause = ExceptionUtils.getRootCause(throwable);
+        if (rootCause != null) {
+            RestletTeleWriter rootCauseWriter = ioc.instanceOrNull(new ClassedKey<>(RestletTeleWriter.class.getCanonicalName(), typeToClassName(rootCause.getClass())), null);
+            if (rootCauseWriter != null) {
+                rootCauseWriter.write(rootCause, context);
+                return;
+            }
+        }
+
+        // No specific writer,
+        // Perform default writing
+        RestletError error = new RestletError();
+        error.setErrorCode(throwable.getClass().getCanonicalName());
+        error.setMessage(ExceptionUtils.getRootCauseMessage(throwable));
+        error.setDetails(getMessages(throwable));
+        RestletTeleWriter objWriter = ioc.instance(ObjectWriter.class);
+        context.setHttpCode(500);
+        objWriter.write(error, context);
+
     }
+
+    protected List<String> getMessages(Throwable ex) {
+        Throwable e = ex;
+        List<String> messages = new ArrayList<>();
+
+        int depth = 0;
+        while (e != null) {
+            String message = e.getMessage();
+            if (StringUtils.isBlank(message)) {
+                message = "no message";
+            }
+            messages.add(e.getClass().getCanonicalName() + ": " + message);
+            if (e.getCause() == e) {
+                e = null;
+            } else {
+                if (depth++ < 16) {
+                    e = e.getCause();
+                } else {
+                    e = null;
+                }
+            }
+        }
+        return messages;
+    }
+
 }

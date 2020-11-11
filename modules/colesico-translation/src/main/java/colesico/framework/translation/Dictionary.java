@@ -32,5 +32,5 @@ public @interface Dictionary {
     /**
      * Resource path to dictionary *.properties file without extension.
      */
-    String basePath() default "";
+    String baseName() default "";
 }

@@ -1,9 +1,9 @@
 package colesico.framework.teleapi;
 
 /**
- * Is used to retrieve target method parameters values from tele data port, invoke target method and puts back a result.
+ * Is used to retrieve target method parameters values from data port, invoke target method and puts back a result.
  *
- * @param <T> Target (service)  whose method will be invoked
+ * @param <T> Target whose method will be invoked (typically is a service object)
  * @param <P> Data port
  */
 @FunctionalInterface

@@ -27,11 +27,12 @@ public class AppService {
         this.standaloneDictionary = standaloneDictionary;
     }
 
-    public String sayHello(){
+    public String sayHello() {
+        System.out.println("Bundle: " + standaloneDictionary.getBundle());
         return standaloneDictionary.hello();
     }
 
-    public String sayBye(){
+    public String sayBye() {
         return standaloneDictionary.bye("Anonymous");
     }
 }

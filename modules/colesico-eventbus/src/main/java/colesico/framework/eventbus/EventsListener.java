@@ -19,6 +19,7 @@ package colesico.framework.eventbus;
 import javax.inject.Provider;
 
 abstract public class EventsListener<S> {
+
     public static final String GET_BINDINGS_METHOD = "getBindings";
     public static final String TARGET_PROV_FIELD = "targetProv";
 

@@ -18,10 +18,7 @@ package colesico.framework.security.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.security.DefaultSecurityKit;
-import colesico.framework.security.Principal;
-import colesico.framework.security.SecurityInterceptor;
-import colesico.framework.security.SecurityKit;
+import colesico.framework.security.*;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 
 import javax.inject.Singleton;
@@ -29,15 +26,11 @@ import javax.inject.Singleton;
 @Producer
 @Produce(DefaultSecurityKit.class)
 @Produce(PrincipalSerializerImpl.class)
+@Produce(RequirePrincipalAudit.class)
 public class SecurityProducer {
 
     @Singleton
     public SecurityKit getSecurityKit(DefaultSecurityKit impl) {
-        return impl;
-    }
-
-    @Singleton
-    public SecurityInterceptor getSecurityInterceptor(DefaultSecurityKit impl) {
         return impl;
     }
 
@@ -46,7 +39,7 @@ public class SecurityProducer {
     }
 
     @Singleton
-    public PrincipalSerializer getPrincipalTeleAssist(PrincipalSerializerImpl impl) {
+    public PrincipalSerializer getPrincipalSerializer(PrincipalSerializerImpl impl) {
         return impl;
     }
 

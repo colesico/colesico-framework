@@ -12,5 +12,8 @@ module colesico.framework.resource {
     // Exports
     exports colesico.framework.resource;
     exports colesico.framework.resource.assist;
+    exports colesico.framework.resource.assist.localization;
+    exports colesico.framework.resource.rewriters;
+    exports colesico.framework.resource.rewriters.localization;
     exports colesico.framework.resource.internal to colesico.framework.ioc;
 }

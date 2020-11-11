@@ -17,36 +17,49 @@
 package colesico.framework.weblet;
 
 /**
- * @author Vladlen Larionov
+ * Binary data to returned to client
  */
 public final class BinaryResponse {
 
     public static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
+    public static final int DEFAULT_HTTP_CODE = 200;
 
     protected final byte[] content;
+
     protected final String contentType;
+
     protected final String fileName;
 
-    private BinaryResponse(byte[] content, String contentType, String fileName) {
+    /**
+     * Http response code
+     */
+    protected final int httpCode;
+
+    private BinaryResponse(byte[] content, String contentType, String fileName, int httpCode) {
         this.content = content;
         this.contentType = contentType;
         this.fileName = fileName;
+        this.httpCode = httpCode;
+    }
+
+    public static BinaryResponse of(byte[] content, String contentType, String fileName, int httpCode) {
+        return new BinaryResponse(content, contentType, fileName, httpCode);
     }
 
     public static BinaryResponse of(byte[] content, String contentType, String fileName) {
-        return new BinaryResponse(content, contentType, fileName);
+        return new BinaryResponse(content, contentType, fileName, DEFAULT_HTTP_CODE);
     }
 
     public static BinaryResponse of(byte[] content, String contentType) {
-        return new BinaryResponse(content, contentType, null);
+        return new BinaryResponse(content, contentType, null, DEFAULT_HTTP_CODE);
     }
 
     public static BinaryResponse of(byte[] content) {
-        return new BinaryResponse(content, DEFAULT_CONTENT_TYPE, null);
+        return new BinaryResponse(content, DEFAULT_CONTENT_TYPE, null, DEFAULT_HTTP_CODE);
     }
 
-    public String getContentType() {
-        return contentType;
+    public WebletResponse wrap() {
+        return WebletResponse.of(this);
     }
 
     public byte[] getContent() {
@@ -55,5 +68,13 @@ public final class BinaryResponse {
 
     public String getFileName() {
         return fileName;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public int getHttpCode() {
+        return httpCode;
     }
 }

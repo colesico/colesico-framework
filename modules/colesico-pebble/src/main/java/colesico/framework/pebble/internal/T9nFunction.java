@@ -16,7 +16,7 @@
 
 package colesico.framework.pebble.internal;
 
-import colesico.framework.translation.Bundle;
+import colesico.framework.translation.TranslationBundle;
 import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.extension.Function;
 import com.mitchellbosecke.pebble.template.EvaluationContext;
@@ -44,7 +44,7 @@ public class T9nFunction implements Function {
     public Object execute(Map<String, Object> args, PebbleTemplate pebbleTemplate, EvaluationContext context, int lineNumber) {
 
         String strKey;
-        Bundle dictionary;
+        TranslationBundle dictionary;
         List<String> textParams;
 
         Object param0 = args.get(String.valueOf(0));
@@ -57,11 +57,11 @@ public class T9nFunction implements Function {
         Object param1 = args.get(String.valueOf(1));
         Object param2 = args.get(String.valueOf(2));
 
-        if (param1 instanceof Bundle) {
-            dictionary = (Bundle) param1;
+        if (param1 instanceof TranslationBundle) {
+            dictionary = (TranslationBundle) param1;
             textParams = (List<String>) param2;
         } else {
-            dictionary = (Bundle) context.getVariable(T9nDictionaryParser.DEFAULT_DICT_NAME);
+            dictionary = (TranslationBundle) context.getVariable(T9nDictionaryParser.DEFAULT_DICT_NAME);
             //if(dictionary ==null){
             //    GlobalContext globalContext = (GlobalContext) context.getVariable("_context");
             //    dictionary = (Bundle) globalContext.get(T9nDictionaryParser.DEFAULT_DICT_NAME);

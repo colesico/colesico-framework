@@ -22,13 +22,12 @@ import java.util.Objects;
 
 /**
  * Principal default implementation
- *
- * @author Vladlen Larionov
  */
 public final class DefaultPrincipal implements Principal {
 
-    private static final long serialVersionUID = 1L;
-
+    /**
+     * Principal ID
+     */
     private final String id;
 
     public DefaultPrincipal(String id) {
@@ -47,7 +46,7 @@ public final class DefaultPrincipal implements Principal {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DefaultPrincipal that = (DefaultPrincipal) o;
-        return id.equals(that.id);
+        return Objects.equals(id, that.id);
     }
 
     @Override
@@ -57,6 +56,8 @@ public final class DefaultPrincipal implements Principal {
 
     @Override
     public String toString() {
-        return "DefaultPrincipal{id=" + id + '}';
+        return "DefaultPrincipal{" +
+                "id='" + id + '\'' +
+                '}';
     }
 }

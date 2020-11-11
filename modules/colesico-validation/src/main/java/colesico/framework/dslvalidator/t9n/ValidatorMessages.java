@@ -17,8 +17,8 @@
 package colesico.framework.dslvalidator.t9n;
 
 import colesico.framework.translation.Dictionary;
-import colesico.framework.translation.assist.Ru;
-import colesico.framework.translation.assist.Text;
+import colesico.framework.translation.assist.lang.Ru;
+import colesico.framework.translation.assist.lang.Text;
 
 @Dictionary
 public interface ValidatorMessages {
@@ -80,4 +80,10 @@ public interface ValidatorMessages {
     String sizeShouldBeLessThan(Number val);
 
 
+    //
+    // Mandatory sequence
+    //
+    @Text(value = "Mandatory value is not specified")
+    @Ru(value = "Не задано обязательное значение")
+    String mandatoryValueIsNull();
 }

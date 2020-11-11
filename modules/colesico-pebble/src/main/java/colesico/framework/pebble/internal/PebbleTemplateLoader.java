@@ -55,7 +55,7 @@ public class PebbleTemplateLoader implements Loader<String> {
         String resourcePath = getResourcePath(templatePath);
         Reader reader = null;
         try {
-            Enumeration<URL> resources = resourceKit.getURLs(resourcePath);
+            Enumeration<URL> resources = resourceKit.getResourceURLs(resourcePath);
             while (resources.hasMoreElements()) {
                 URL resource = resources.nextElement();
                 if (reader != null) {
@@ -78,7 +78,7 @@ public class PebbleTemplateLoader implements Loader<String> {
     }
 
     protected String getResourcePath(String templatePath) {
-        String resourcePath = resourceKit.evaluate(templatePath);
+        String resourcePath = resourceKit.rewrite(templatePath);
 
         if (!StringUtils.endsWith(resourcePath, suffix)) {
             resourcePath = resourcePath + suffix;
@@ -117,7 +117,7 @@ public class PebbleTemplateLoader implements Loader<String> {
     @Override
     public boolean resourceExists(String templateName) {
         String resourcePath = getResourcePath(templateName);
-        Enumeration<URL> resources = resourceKit.getURLs(resourcePath);
+        Enumeration<URL> resources = resourceKit.getResourceURLs(resourcePath);
         return resources.hasMoreElements();
     }
 }

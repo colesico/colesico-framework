@@ -113,6 +113,9 @@ public class ClassElement extends ParserElement {
         return new ClassType(getProcessingEnv(), getOriginType());
     }
 
+    /**
+     * Return all class fields  (whether inherited or declared directly)
+     */
     public List<FieldElement> getFields() {
         List<FieldElement> result = new ArrayList<>();
         List<? extends Element> members = getElementUtils().getAllMembers(originElement);

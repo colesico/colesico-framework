@@ -24,6 +24,7 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.DefaultProfile;
 import colesico.framework.profile.Profile;
 import colesico.framework.resource.ResourceOptionsPrototype;
+import colesico.framework.resource.rewriters.ParamRewriter;
 
 import javax.inject.Singleton;
 import java.util.Locale;
@@ -41,7 +42,8 @@ public class TestProducer {
     @Singleton
     @Polyproduce
     public ResourceOptionsPrototype getResourceConfig() {
-        return new ResourcesOptions();
+        ParamRewriter rewriter = new ParamRewriter();
+        return new ResourcesOptions(rewriter);
     }
 }
 

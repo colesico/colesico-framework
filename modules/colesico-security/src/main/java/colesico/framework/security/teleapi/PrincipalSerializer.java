@@ -20,7 +20,7 @@ import colesico.framework.security.Principal;
 
 /**
  * Principal serializer for using in tele-api data port
- * @param <P>
+ * @param <P> principal implementation class
  */
 public interface PrincipalSerializer<P extends Principal> {
 

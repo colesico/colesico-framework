@@ -17,17 +17,17 @@
 package colesico.framework.telehttp;
 
 /**
- * Origin types to read a parameter value from them.
+ * Origin types to read the parameter value from them.
  * This enums defines default strategy for reading param values from http context
  */
 public enum Origin {
     /**
-     * From url path
+     * Read value from url path
      */
     ROUTE,
 
     /**
-     * From url query string
+     * Read value from url query string
      */
     QUERY,
 
@@ -52,7 +52,7 @@ public enum Origin {
     COOKIE,
 
     /**
-     * Strategy depends on data port implementation.
+     * Strategy depends on tele data port implementation.
      */
     AUTO
 }

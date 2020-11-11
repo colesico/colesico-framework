@@ -19,7 +19,7 @@ package colesico.framework.weblet.teleapi;
 import colesico.framework.telehttp.HttpTWContext;
 
 /**
- * Weblet tele-writing context stub
+ * Weblet tele-writing context
  *
  * @author Vladlen Larionov
  */

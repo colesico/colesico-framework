@@ -27,7 +27,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Facade to
+ * Default value reading facades for different origins
  */
 public interface OriginFacade {
 

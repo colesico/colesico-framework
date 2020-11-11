@@ -18,6 +18,8 @@ package colesico.framework.weblet.internal;
 
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.ClassedKey;
+import colesico.framework.weblet.Weblet;
+import colesico.framework.weblet.WebletResponse;
 import colesico.framework.weblet.teleapi.*;
 import colesico.framework.weblet.teleapi.WebletTeleReader;
 
@@ -57,15 +59,32 @@ public class WebletDataPortImpl implements WebletDataPort {
 
     @Override
     public <V> void write(Type valueType, V value, WebletTWContext context) {
-        if (context ==null){
+        if (context == null) {
             context = new WebletTWContext();
         }
-        WebletTeleWriter<V> writer;
+
+        boolean isWebletResponse = valueType.equals(WebletResponse.class);
+
+        // Obtain writer
+        WebletTeleWriter writer;
         if (context.getWriterClass() != null) {
             writer = ioc.instance(context.getWriterClass());
         } else {
-            writer = ioc.instance(new ClassedKey<>(WebletTeleWriter.class.getCanonicalName(), typeToClassName(valueType)), null);
+            Type responseType;
+            if (isWebletResponse) {
+                responseType = ((WebletResponse) value).unwrap().getClass();
+            } else {
+                responseType = valueType;
+            }
+            writer = ioc.instance(new ClassedKey<>(WebletTeleWriter.class.getCanonicalName(), typeToClassName(responseType)), null);
         }
-        writer.write(value, context);
+
+        // Write value
+        if (isWebletResponse) {
+            writer.write(((WebletResponse) value).unwrap(), context);
+        } else {
+            writer.write(value, context);
+        }
     }
+
 }

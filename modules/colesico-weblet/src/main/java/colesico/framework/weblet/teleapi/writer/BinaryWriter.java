@@ -53,6 +53,6 @@ public final class BinaryWriter extends WebletTeleWriter<BinaryResponse> {
         }
 
         ByteBuffer buffer = ByteBuffer.wrap(value.getContent());
-        response.sendData(buffer, value.getContentType(), 200);
+        response.sendData(buffer, value.getContentType(), value.getHttpCode());
     }
 }

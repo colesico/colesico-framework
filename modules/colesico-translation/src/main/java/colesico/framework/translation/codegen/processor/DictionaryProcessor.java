@@ -25,6 +25,7 @@ import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.translation.Dictionary;
 import colesico.framework.translation.Translation;
+import colesico.framework.translation.TranslationDictionary;
 import colesico.framework.translation.codegen.generator.BundleGenerator;
 import colesico.framework.translation.codegen.generator.DictionaryGenerator;
 import colesico.framework.translation.codegen.generator.IocGenerator;
@@ -34,6 +35,8 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.*;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -112,6 +115,10 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
         );
 
         for (MethodElement method : methods) {
+            TypeMirror methodClass = method.unwrap().getEnclosingElement().asType();
+            if (CodegenUtils.isAssignable(TranslationDictionary.class, methodClass, processingEnv)) {
+                continue;
+            }
             dictionaryBeanElement.addTranslationMethod(method);
 
             // Find translations

@@ -4,7 +4,7 @@ module colesico.framework.pebble {
 
     requires org.apache.commons.lang3;
 
-    requires transitive colesico.framework.htmlrenderer;
+    requires transitive colesico.framework.weblet;
 
     requires transitive io.pebbletemplates;
 

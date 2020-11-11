@@ -22,7 +22,6 @@ module colesico.framework.restlet {
     requires static com.squareup.javapoet;
 
     requires transitive colesico.framework.telehttp;
-    requires transitive colesico.framework.validation;
 
     requires org.slf4j;
 

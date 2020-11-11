@@ -16,7 +16,11 @@
 
 package colesico.framework.teleapi;
 
+/**
+ * Basic tele-exception. Should be extended by any exceptions regarded to tele-invocation handling process.
+ */
 public class TeleException extends RuntimeException {
+
     public TeleException(String message) {
         super(message);
     }

@@ -21,7 +21,7 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>3.9.2</version>
+        <version>4.0.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -46,11 +46,6 @@
         </dependency>
 
         <!-- Colesico web  -->
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-htmlrenderer</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-weblet</artifactId>

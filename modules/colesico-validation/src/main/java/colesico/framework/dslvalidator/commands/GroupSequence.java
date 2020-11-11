@@ -19,17 +19,16 @@ package colesico.framework.dslvalidator.commands;
 import colesico.framework.dslvalidator.ValidationContext;
 
 /**
- * Executes all sequence commands within the current context.
- * Commands execution is not interrupted when errors occur.
+ * Executes all  commands within the current context.
+ * Commands execution is not interrupted when validation errors occur.
  *
- * @author Vladlen Larionov
  * @see ChainSequence
  */
 public final class GroupSequence<V> extends AbstractSequence<V, V> {
 
     @Override
     public void execute(ValidationContext<V> context) {
-       executeGroup(context);
+        executeGroup(context);
     }
 
 }

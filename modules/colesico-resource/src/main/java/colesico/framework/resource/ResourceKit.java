@@ -15,67 +15,22 @@
  */
 package colesico.framework.resource;
 
-import colesico.framework.profile.ObjectiveQualifiers;
-
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 
 /**
  * Resources service  (localization, rewriting, etc.)
- *
- * @author Vladlen Larionov
  */
 public interface ResourceKit {
 
     /**
-     * Returns rewritten resource path if the rewriting was defined via config.
-     * It is possible to overwrite the path by a partial prefix match.
-     * E.g for the rewriting  '/etc/srv'->'/foo'   path '/etc/srv/generator/x' will be rewritten to '/foo/generator/x'
-     *
-     * @return
-     * @see ResourceOptionsPrototype
+     * Returns rewritten path
      */
-    String rewrite(String resourcePath);
+    String rewrite(String path);
 
-    /**
-     * Localize path according to  current profile
-     */
-    String localize(String resourcePath, L10NMode mode);
+    Enumeration<URL> getResourceURLs(String resourcePath);
 
-    /**
-     * Localize path according to  given qualifiers
-     */
-    String localize(String resourcePath, L10NMode mode, ObjectiveQualifiers qualfiers);
-
-    /**
-     * Evaluate  path with variables to concrete path
-     */
-    String evaluate(String resourcePath);
-
-    Enumeration<URL> getURLs(String resourcePath);
-
-    InputStream getStream(String resourcePath);
-
-    /**
-     * Resource localization mode
-     */
-    enum L10NMode {
-
-        /**
-         * Doesn't use localization
-         */
-        NONE,
-
-        /**
-         * Localize as file, e.g. path/file.ext -> path/file_ru_RU.ext
-         */
-        FILE,
-
-        /**
-         * Localize as directory, e.g. path/file.ext -> path_en_UK/file.ext
-         */
-        DIR
-    }
+    InputStream getResourceStream(String resourcePath);
 
 }
