@@ -25,6 +25,10 @@ public final class ViewResponse {
         return new ViewResponse(viewName, model, DEFAULT_HTTP_CODE);
     }
 
+    public static ViewResponse of(String viewName, int httpCode) {
+        return new ViewResponse(viewName, null, httpCode);
+    }
+
     public static ViewResponse of(String viewName, Object model, int httpCode) {
         return new ViewResponse(viewName, model, httpCode);
     }

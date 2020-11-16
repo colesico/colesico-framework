@@ -18,6 +18,7 @@ package colesico.framework.router.assist;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
+import colesico.framework.router.ActionResolution;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterException;
 import colesico.framework.service.ServiceProxy;
@@ -43,6 +44,18 @@ public class Navigation<N extends Navigation> {
     protected int httpCode = 302;
     protected final Map<String, String> queryParameters = new HashMap<>();
     protected final Map<String, String> routeParameters = new HashMap<>();
+
+    public static Navigation of() {
+        return new Navigation();
+    }
+
+    public static Navigation of(String uri) {
+        return new Navigation().uri(uri);
+    }
+
+    public static Navigation of(Class<?> serviceClass, String methodName) {
+        return new Navigation().service(serviceClass).method(methodName);
+    }
 
     public N uri(String uri) {
         this.uri = uri;
@@ -204,6 +217,15 @@ public class Navigation<N extends Navigation> {
     public void redirect(Router router, HttpContext context) {
         String location = toLocation(router);
         context.getResponse().sendRedirect(location, httpCode);
+    }
+
+    /**
+     * Performs router forward
+     */
+    public void forward(Router router) {
+        String location = toLocation(router);
+        ActionResolution resolution = router.resolveAction(httpMethod, location);
+        router.performAction(resolution);
     }
 
 

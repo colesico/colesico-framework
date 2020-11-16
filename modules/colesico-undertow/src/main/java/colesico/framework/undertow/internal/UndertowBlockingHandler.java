@@ -41,9 +41,7 @@ public class UndertowBlockingHandler extends RequestProcessor<HttpServerExchange
 
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
-
-        performAction(resolution, exchange);
+        performAction(resolution,exchange);
         exchange.endExchange();
-
     }
 }
