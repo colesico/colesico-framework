@@ -22,7 +22,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Vladlen Larionov
+ * Router API
+ * <p>
+ * Router allows to bind any action to given route and perform it
  */
 public interface Router {
 
@@ -33,7 +35,6 @@ public interface Router {
      * @param targetMethodName service tele method name or custom action method name
      * @param httpMethod       http request method
      * @param parameters       route parameters
-     * @return
      */
     List<String> getSlicedRoute(Class<?> targetClass, String targetMethodName, HttpMethod httpMethod, Map<String, String> parameters);
 
