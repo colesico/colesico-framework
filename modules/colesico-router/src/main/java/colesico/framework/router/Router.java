@@ -38,15 +38,16 @@ public interface Router {
     List<String> getSlicedRoute(Class<?> targetClass, String targetMethodName, HttpMethod httpMethod, Map<String, String> parameters);
 
     /**
-     * Resolve action from request uri and http method.
+     * Resolve action from request path and http method.
      * Returns resolution bean for tuning the processing of the request based on the
      * values of the attributes as well as the subsequent call of the tele-method -
      * the request handler
      */
-    ActionResolution resolveAction(HttpMethod requestHttpMethod, String requestUri);
+    ActionResolution resolveAction(HttpMethod requestMethod, String requestPath);
 
     /**
      * Calls handler associated with   (e.g. service method or custom handler)
      */
     void performAction(ActionResolution resolution);
+
 }

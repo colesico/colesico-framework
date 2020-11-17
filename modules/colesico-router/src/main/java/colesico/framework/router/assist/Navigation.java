@@ -17,7 +17,6 @@ package colesico.framework.router.assist;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
-import colesico.framework.http.HttpRequest;
 import colesico.framework.router.ActionResolution;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterException;
