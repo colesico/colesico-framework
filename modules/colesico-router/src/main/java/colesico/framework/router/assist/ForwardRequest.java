@@ -33,18 +33,19 @@ public class ForwardRequest implements HttpRequest {
             requestURI = uri.getPath();
             queryString = uri.getQuery();
 
-            // Parse params
             Map<String, MultiValue<String>> paramsMap = new HashMap<>();
-            // paramsMap.putAll(parentRequest.getQueryParameters().export());
-            String[] pairs = queryString.split("&");
-            for (String pair : pairs) {
-                int idx = pair.indexOf("=");
-                String paramName = URLDecoder.decode(pair.substring(0, idx), "UTF-8");
-                String paramVal = URLDecoder.decode(pair.substring(idx + 1), "UTF-8");
-                paramsMap.put(paramName, new MultiValue<>(List.of(paramVal)));
+            if (queryString != null) {
+                // Parse params
+                String[] pairs = queryString.split("&");
+                for (String pair : pairs) {
+                    int idx = pair.indexOf("=");
+                    String paramName = URLDecoder.decode(pair.substring(0, idx), "UTF-8");
+                    String paramVal = URLDecoder.decode(pair.substring(idx + 1), "UTF-8");
+                    paramsMap.put(paramName, new MultiValue<>(List.of(paramVal)));
+                }
+
             }
             queryParameters = new HttpValues<>(paramsMap);
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
