@@ -101,14 +101,14 @@ public class RouterImpl implements Router {
     }
 
     @Override
-    public ActionResolution resolveAction(HttpMethod requestMethod, String requestPath) {
-        RouteTrie.RouteResolution<RouteAction> routeResolution = routeTrie.resolveRoute(StrUtils.concatPath(requestMethod.getName(), requestPath, RouteTrie.SEGMENT_DELEMITER));
+    public ActionResolution resolveAction(HttpMethod requestMethod, String requestUri) {
+        RouteTrie.RouteResolution<RouteAction> routeResolution = routeTrie.resolveRoute(StrUtils.concatPath(requestMethod.getName(), requestUri, RouteTrie.SEGMENT_DELEMITER));
         if (routeResolution == null || routeResolution.getNode() == null || routeResolution.getNode().getValue() == null) {
-            throw new UnknownRouteException(requestMethod, requestPath);
+            throw new UnknownRouteException(requestMethod, requestUri);
         }
 
         return new ActionResolution(requestMethod,
-                requestPath,
+                requestUri,
                 routeResolution.getNode().getValue(),
                 routeResolution.getParams());
     }
