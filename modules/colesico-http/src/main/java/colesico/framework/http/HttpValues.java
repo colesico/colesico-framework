@@ -16,12 +16,10 @@
 
 package colesico.framework.http;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
- * @author Vladlen Larionov
+ * Represents http value
  */
 public final class HttpValues<K, V> {
 
@@ -57,6 +55,19 @@ public final class HttpValues<K, V> {
 
     public boolean isEmpty() {
         return valuesMap.isEmpty();
+    }
+
+    public Map<K, MultiValue<V>> export() {
+        Map<K, MultiValue<V>> result = new HashMap<>();
+        for (Map.Entry<K, MultiValue<V>> entry : valuesMap.entrySet()) {
+            Collection<V> cv = new ArrayList<>();
+            Iterator<V> itv = entry.getValue().iterator();
+            while (itv.hasNext()) {
+                cv.add(itv.next());
+            }
+            result.put(entry.getKey(), new MultiValue<>(cv));
+        }
+        return result;
     }
 
 }

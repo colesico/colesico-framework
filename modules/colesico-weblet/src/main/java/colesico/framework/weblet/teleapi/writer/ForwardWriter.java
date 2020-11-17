@@ -26,11 +26,11 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 /**
- * @author Vladlen Larionov
+ * Performs forward operation
  */
 public final class ForwardWriter extends WebletTeleWriter<RedirectResponse> {
 
-    protected final Router router;
+    private final Router router;
 
     @Inject
     public ForwardWriter(Provider<HttpContext> httpContextProv, Router router) {
@@ -40,6 +40,6 @@ public final class ForwardWriter extends WebletTeleWriter<RedirectResponse> {
 
     @Override
     public void write(RedirectResponse navResp, WebletTWContext wrContext) {
-        navResp.forward(router);
+        navResp.forward(router, httpContextProv.get());
     }
 }

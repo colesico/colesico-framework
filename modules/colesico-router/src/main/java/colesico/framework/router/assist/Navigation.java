@@ -222,22 +222,24 @@ public class Navigation<N extends Navigation> {
     /**
      * Performs router forward
      */
-    public void forward(Router router) {
+    public void forward(Router router, HttpContext context) {
         String location = toLocation(router);
-        ActionResolution resolution = router.resolveAction(httpMethod, location);
+        ForwardRequest request = new ForwardRequest(context.getRequest(), location);
+        context.setRequest(request);
+        ActionResolution resolution = router.resolveAction(httpMethod, request.getRequestURI());
         router.performAction(resolution);
     }
-
 
     protected StringBuilder buildParamsStr() {
         StringBuilder paramsStrBuilder = new StringBuilder();
         boolean next = false;
         for (Map.Entry<String, String> e : queryParameters.entrySet()) {
+            String paramNameEnc = URLEncoder.encode(e.getKey(), StandardCharsets.UTF_8);
             String paramValEnc = URLEncoder.encode(e.getValue(), StandardCharsets.UTF_8);
             if (next) {
                 paramsStrBuilder.append("&");
             }
-            paramsStrBuilder.append(e.getKey()).append("=").append(paramValEnc);
+            paramsStrBuilder.append(paramNameEnc).append("=").append(paramValEnc);
             next = true;
         }
         return paramsStrBuilder;
