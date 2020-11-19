@@ -16,13 +16,10 @@
 
 package colesico.framework.service.codegen.modulator;
 
-import colesico.framework.assist.codegen.model.VarElement;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleDriver;
 import com.squareup.javapoet.CodeBlock;
-
-import java.util.Deque;
 
 /**
  * @param <D> Tele-Driver implementation class
@@ -59,9 +56,9 @@ public abstract class TeleModulator<
     abstract protected M createTeleModulatorContext(ServiceElement serviceElm);
 
     /**
-     * Called to add tele-method to modulator context
+     * Called to process tele method after parsing completed
      */
-    abstract protected void addTeleMethodToContext(TeleMethodElement teleMethodElement, M teleModulatorContext);
+    abstract protected void processTeleMethod(TeleMethodElement teleMethodElement, M teleModulatorContext);
 
     abstract protected CodeBlock generateLigatureMethodBody(TeleFacadeElement teleFacade);
 
@@ -85,6 +82,7 @@ public abstract class TeleModulator<
         teleFacade.setProperty(getTeleModulatorContextClass(), telegenContext);
     }
 
+
     @Override
     public void onTeleMethodParsed(TeleMethodElement teleMethod) {
         super.onTeleMethodParsed(teleMethod);
@@ -93,10 +91,9 @@ public abstract class TeleModulator<
             return;
         }
         M teleModulatorContext = teleFacade.getProperty(getTeleModulatorContextClass());
-        addTeleMethodToContext(teleMethod, teleModulatorContext);
+        processTeleMethod(teleMethod, teleModulatorContext);
         teleMethod.setInvokingContext(generateInvokingContext(teleMethod));
         teleMethod.setWritingContext(generateWritingContext(teleMethod));
-
         for (TeleVarElement teleVar : teleMethod.getLinkedVariables()) {
             if (teleVar instanceof TeleParamElement) {
                 TeleParamElement teleParam = (TeleParamElement) teleVar;

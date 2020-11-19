@@ -65,7 +65,7 @@ abstract public class RoutesModulator<D extends TeleDriver<R, W, I, P>, P extend
     }
 
     @Override
-    protected void addTeleMethodToContext(TeleMethodElement teleMethodElement, RoutegenContext teleModulatorContext) {
+    protected void processTeleMethod(TeleMethodElement teleMethodElement, RoutegenContext teleModulatorContext) {
         teleModulatorContext.addTeleMethod(teleMethodElement);
     }
 

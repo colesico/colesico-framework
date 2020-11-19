@@ -141,7 +141,6 @@ public class ServiceParser extends FrameworkAbstractParser {
 
             addProxyMethods(service);
 
-            context.getModulatorKit().notifyBeforeParseTeleFacades(service);
             teleFacadesParser.parseTeleFacades(service);
 
             context.getModulatorKit().notifyServiceParsed(service);

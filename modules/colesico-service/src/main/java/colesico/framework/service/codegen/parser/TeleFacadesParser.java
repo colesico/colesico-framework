@@ -161,6 +161,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
      * Perform tele-facades parsing
      */
     public void parseTeleFacades(ServiceElement service) {
+        context.getModulatorKit().notifyBeforeParseTeleFacades(service);
         for (TeleFacadeElement teleFacade : service.getTeleFacades()) {
             parseTeleMethods(teleFacade);
             context.getModulatorKit().notifyTeleFacadeParsed(teleFacade);

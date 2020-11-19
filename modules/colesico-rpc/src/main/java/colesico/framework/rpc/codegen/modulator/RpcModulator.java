@@ -86,27 +86,27 @@ public class RpcModulator extends
 
     @Override
     public void onTeleParamLinked(TeleParamElement teleParam, Deque<VarElement> varStack) {
-        RpcServiceModulatorContext ctx = teleParam.getParentTeleMethod().getParentTeleFacade().getProperty(getTeleModulatorContextClass());
-        if (ctx != null) {
-            if (teleParam.getIsLocal()) {
-                throw CodegenException.of()
-                        .message("@" + LocalParam.class.getSimpleName() + " parameters not supported")
-                        .element(teleParam.getOriginVariable().unwrap())
-                        .build();
-            }
+        if (!teleParam.getParentTeleMethod().getParentTeleFacade().getTeleType().equals(getTeleType())) {
+            return;
         }
-        super.onTeleParamLinked(teleParam, varStack);
+        if (teleParam.getIsLocal()) {
+            throw CodegenException.of()
+                    .message("@" + LocalParam.class.getSimpleName() + " parameters not supported")
+                    .element(teleParam.getOriginVariable().unwrap())
+                    .build();
+        }
+       
     }
 
     @Override
     public void onTeleCompoundLinked(TeleCompElement teleComp) {
-        RpcServiceModulatorContext ctx = teleComp.getParentTeleMethod().getParentTeleFacade().getProperty(getTeleModulatorContextClass());
-        if (ctx != null) {
-            throw CodegenException.of()
-                    .message("@" + Compound.class.getSimpleName() + " parameters not supported")
-                    .element(teleComp.getOriginVariable())
-                    .build();
+        if (!teleComp.getParentTeleMethod().getParentTeleFacade().getTeleType().equals(getTeleType())) {
+            return;
         }
+        throw CodegenException.of()
+                .message("@" + Compound.class.getSimpleName() + " parameters not supported")
+                .element(teleComp.getOriginVariable())
+                .build();
     }
 
     @Override
@@ -131,7 +131,7 @@ public class RpcModulator extends
     }
 
     @Override
-    protected void addTeleMethodToContext(TeleMethodElement teleMethodElement, RpcServiceModulatorContext teleModulatorContext) {
+    protected void processTeleMethod(TeleMethodElement teleMethodElement, RpcServiceModulatorContext teleModulatorContext) {
 
         logger.debug("RPC API parser processing service method: " + teleMethodElement.getProxyMethod().getOriginMethod().unwrap().getSimpleName());
         for (RpcApiElement rpcApi : teleModulatorContext.getRpcImplementation().getAllRpcApi()) {
