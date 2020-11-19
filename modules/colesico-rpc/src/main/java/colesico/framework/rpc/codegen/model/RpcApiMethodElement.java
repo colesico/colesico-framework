@@ -29,12 +29,24 @@ public class RpcApiMethodElement {
         this.originMethod = originMethod;
     }
 
-    public String getRequestClassName() {
+    public String getRequestClassSimpleName() {
         return StrUtils.firstCharToUpperCase(originMethod.getName()) + RPC_REQUEST_CLASS_SUFFIX;
     }
 
-    public String getResponseClassName() {
+    public String getRequestClassName() {
+        return parentApi.getOriginInterface().getPackageName() + '.' +
+                parentApi.getSchemeClassName() + '.' +
+                StrUtils.firstCharToUpperCase(originMethod.getName()) + RPC_REQUEST_CLASS_SUFFIX;
+    }
+
+    public String getResponseClassSimpleName() {
         return StrUtils.firstCharToUpperCase(originMethod.getName()) + RPC_RESPONSE_CLASS_SUFFIX;
+    }
+
+    public String getResponseClassName() {
+        return parentApi.getOriginInterface().getPackageName() + '.' +
+                parentApi.getSchemeClassName() + '.' +
+                StrUtils.firstCharToUpperCase(originMethod.getName()) + RPC_RESPONSE_CLASS_SUFFIX;
     }
 
     public void addParameter(RpcApiParamElement param) {
@@ -42,7 +54,7 @@ public class RpcApiMethodElement {
         param.setParentMethod(this);
     }
 
-    public String rpcMethodName(){
+    public String rpcMethodName() {
         return originMethod.getName();
     }
 

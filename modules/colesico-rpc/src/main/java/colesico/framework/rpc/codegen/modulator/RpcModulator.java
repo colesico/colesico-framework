@@ -95,7 +95,7 @@ public class RpcModulator extends
                     .element(teleParam.getOriginVariable().unwrap())
                     .build();
         }
-       
+
     }
 
     @Override
@@ -222,11 +222,15 @@ public class RpcModulator extends
             cb.indent();
             for (RpcApiMethodElement rpcApiMethod : rpcApi.getRpcMethods()) {
                 // .addMethod("methodName", RpcLigature.method(...)
-                cb.add(".$N($S, $T.$N(null,null,null) )\n",
+                cb.add(".$N($S, $T.$N(this::$N, $T.class, $T.class) )\n",
                         RpcLigature.RpcApi.ADD_METHOD,
                         rpcApiMethod.rpcMethodName(),
                         ClassName.get(RpcLigature.class),
-                        RpcLigature.METHOD_METHOD);
+                        RpcLigature.METHOD_METHOD,
+                        rpcApiMethod.getTeleMethod().getBuilderName(),
+                        ClassName.bestGuess(rpcApiMethod.getRequestClassName()),
+                        ClassName.bestGuess(rpcApiMethod.getResponseClassName())
+                );
             }
             cb.unindent();
             cb.unindent();
@@ -243,14 +247,11 @@ public class RpcModulator extends
         CodeBlock.Builder cb = CodeBlock.builder();
 
         RpcApiMethodElement rpcApiMethod = teleParam.getParentTeleMethod().getProperty(RpcApiMethodElement.class);
-        String requestSchemeClassName = rpcApiMethod.getParentApi().getOriginInterface().getPackageName() + '.'
-                + rpcApiMethod.getParentApi().getSchemeClassName() + '.' + rpcApiMethod.getRequestClassName();
-
         RpcApiParamElement apiParam = teleParam.getProperty(RpcApiParamElement.class);
         // RpcTRContext.of(SchemeClass.RequestClass::getterMethod)
         cb.add("$T.$N($T::$N)", ClassName.get(RpcTRContext.class),
                 RpcTRContext.OF_METHOD,
-                ClassName.bestGuess(requestSchemeClassName),
+                ClassName.bestGuess(rpcApiMethod.getRequestClassName()),
                 apiParam.getterName()
         );
         return cb.build();

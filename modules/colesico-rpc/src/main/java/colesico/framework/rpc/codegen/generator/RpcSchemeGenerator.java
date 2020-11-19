@@ -42,7 +42,7 @@ public class RpcSchemeGenerator extends FrameworkAbstractGenerator {
     }
 
     private void generateRequestScheme(TypeSpec.Builder schemeBuilder, RpcApiMethodElement method) {
-        TypeSpec.Builder requestBuilder = TypeSpec.classBuilder(method.getRequestClassName());
+        TypeSpec.Builder requestBuilder = TypeSpec.classBuilder(method.getRequestClassSimpleName());
         requestBuilder.addJavadoc("RPC request for method " + method.getParentApi().getOriginInterface().getName() +
                 "->" + method.getOriginMethod().getName());
         requestBuilder.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
@@ -52,7 +52,7 @@ public class RpcSchemeGenerator extends FrameworkAbstractGenerator {
     }
 
     private void generateResponseScheme(TypeSpec.Builder schemeBuilder, RpcApiMethodElement method) {
-        TypeSpec.Builder responseBuilder = TypeSpec.classBuilder(method.getResponseClassName());
+        TypeSpec.Builder responseBuilder = TypeSpec.classBuilder(method.getResponseClassSimpleName());
         responseBuilder.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
         responseBuilder.superclass(ClassName.get(RpcResponse.class));
 
