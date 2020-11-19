@@ -68,7 +68,6 @@ public class TeleFacadesGenerator {
     }
 
     protected CodeBlock generateVarValue(TeleVarElement var, CodeBlock.Builder binderBuilder) {
-
         if (var.getIsLocal()) {
             return CodeBlock.builder().add("null").build();
         }

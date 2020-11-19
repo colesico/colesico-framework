@@ -97,7 +97,7 @@ public abstract class TeleModulator<
         teleMethod.setInvokingContext(generateInvokingContext(teleMethod));
         teleMethod.setWritingContext(generateWritingContext(teleMethod));
 
-        for (TeleVarElement teleVar : teleMethod.getParameters()) {
+        for (TeleVarElement teleVar : teleMethod.getLinkedVariables()) {
             if (teleVar instanceof TeleParamElement) {
                 TeleParamElement teleParam = (TeleParamElement) teleVar;
                 teleParam.setReadingContext(generateReadingContext(teleParam));

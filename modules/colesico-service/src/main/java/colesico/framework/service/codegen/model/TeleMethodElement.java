@@ -42,6 +42,8 @@ public final class TeleMethodElement {
      */
     private final List<TeleVarElement> parameters;
 
+    private final List<TeleVarElement> linkedVariables;
+
     //  writing result context
     private CodeBlock writingContext;
     // invoke service method context
@@ -57,6 +59,7 @@ public final class TeleMethodElement {
     public TeleMethodElement(ProxyMethodElement proxyMethod) {
         this.proxyMethod = proxyMethod;
         this.parameters = new ArrayList<>();
+        this.linkedVariables = new ArrayList<>();
         this.properties = new HashMap<>();
     }
 
@@ -83,6 +86,7 @@ public final class TeleMethodElement {
      */
     public void linkVariable(TeleVarElement var) {
         var.parentTeleMethod = this;
+        linkedVariables.add(var);
     }
 
     public String getName() {
@@ -90,7 +94,7 @@ public final class TeleMethodElement {
     }
 
     public String getBuilderName() {
-        return "get" + StrUtils.firstCharToUpperCase(proxyMethod.getName()) +"TM"+ index;
+        return "get" + StrUtils.firstCharToUpperCase(proxyMethod.getName()) + "TM" + index;
     }
 
     public ProxyMethodElement getProxyMethod() {
@@ -123,6 +127,10 @@ public final class TeleMethodElement {
 
     public Integer getIndex() {
         return index;
+    }
+
+    public List<TeleVarElement> getLinkedVariables() {
+        return linkedVariables;
     }
 
     @Override
