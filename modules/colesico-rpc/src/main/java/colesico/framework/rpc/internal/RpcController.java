@@ -4,10 +4,7 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
-import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.RpcException;
-import colesico.framework.rpc.UnknownRpcClassError;
-import colesico.framework.rpc.UnknownRpcMethodError;
 import colesico.framework.rpc.teleapi.*;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleFacade;
@@ -19,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,9 +38,9 @@ public class RpcController {
     protected final ThreadScope threadScope;
 
     /**
-     * Class names to methods map
+     * RPC Interface names to RPC API ref map
      */
-    protected final Map<String, Map<String, TeleMethod>> targetsMap = new HashMap<>();
+    protected final Map<String, RpcLigature.RpcApi> targetsMap = new HashMap<>();
 
     public RpcController(@Classed(Rpc.class) Polysupplier<TeleFacade> teleFacadesSupp,
                          Ioc ioc,
@@ -56,14 +54,12 @@ public class RpcController {
 
     public void dispatch(RpcExchange exchange) {
         RpcRequest request = null;
-        final RpcResponse response = new RpcResponse();
+        final RpcResponse response = null;
         try {
-            request = exchange.readRequest();
+            //request = exchange.readRequest();
             TeleMethod teleMethod = findTeleMethod(request);
             instantiateDataPort(request, response);
             teleMethod.invoke();
-        } catch (RpcException re) {
-            handleError(re.getError(), request, response);
         } catch (Exception e) {
             handleException(e, request, response);
         } finally {
@@ -72,43 +68,24 @@ public class RpcController {
     }
 
     protected void handleException(Exception e, RpcRequest request, RpcResponse response) {
-        String className = getTargetClass(request);
-        String methodName = getTargetMethod(request);
-        logger.error("RPC method '{}->{}' invocation error: {}" + className, methodName, ExceptionUtils.getRootCauseMessage(e));
-        RpcError error = new RpcError();
-        error.setMessage(ExceptionUtils.getRootCauseMessage(e));
-        response.setResult(error);
-    }
-
-    protected void handleError(RpcError error, RpcRequest request, RpcResponse response) {
-        String className = getTargetClass(request);
-        String methodName = getTargetMethod(request);
-        logger.error("RPC method '{}->{}' invocation error: {}", className, methodName, error.getMessage());
-        response.setResult(error);
+       // TODO:
     }
 
     protected void loadTargets(Polysupplier<TeleFacade> teleFacadeSupp) {
         logger.debug("Lookup RPC tele-facades... ");
 
         Iterator<TeleFacade> it = teleFacadeSupp.iterator(null);
+
         while (it.hasNext()) {
             TeleFacade teleFacade = it.next();
             logger.debug("Found RPC tele-facade: {}", teleFacade.getClass().getName());
             RpcLigature ligature = (RpcLigature) teleFacade.getLigature();
 
-            Map<String, TeleMethod> classMethods = targetsMap.get(ligature.getTargetClass());
-            if (classMethods == null) {
-                classMethods = new HashMap<>();
-                targetsMap.put(ligature.getTargetClass(), classMethods);
-            }
-
-            for (Map.Entry<String, TeleMethod> methodInfo : ligature.getTargetMethods().entrySet()) {
-                classMethods.put(methodInfo.getKey(), methodInfo.getValue());
-                if (logger.isDebugEnabled()) {
-                    logger.debug("RPC method "
-                            + ligature.getTargetClass() + "->" + methodInfo.getKey()
-                            + " has been registered)");
-
+            List<RpcLigature.RpcApi> rpcApiList = ligature.getAllRpcApi();
+            for (RpcLigature.RpcApi rpcApi : rpcApiList) {
+                RpcLigature.RpcApi prevApi = targetsMap.put(rpcApi.getRpcInterface(), rpcApi);
+                if (prevApi != null) {
+                    throw new RpcException("Duplicate RPC API implementation: " + rpcApi.getRpcInterface());
                 }
             }
         }
@@ -120,26 +97,9 @@ public class RpcController {
     }
 
     protected TeleMethod findTeleMethod(RpcRequest request) {
-        Map<String, TeleMethod> classMethods = targetsMap.get(request.getTargetClass());
-        if (classMethods == null) {
-            throw new RpcException(new UnknownRpcClassError("RPC tele-facade not found for class " + request.getTargetClass(), request.getTargetClass()));
-        }
-
-        TeleMethod teleMethod = classMethods.get(request.getTargetMethod());
-        if (teleMethod == null) {
-            throw new RpcException(new UnknownRpcMethodError("RPC tele-method '" + request.getTargetMethod() + "' not found for class " + request.getTargetClass(),
-                    request.getTargetClass(), request.getTargetMethod()));
-        }
-
-        return teleMethod;
+        // TODO:
+        return null;
     }
 
-    protected String getTargetClass(RpcRequest request) {
-        return request == null ? "?" : request.getTargetClass();
-    }
-
-    protected String getTargetMethod(RpcRequest request) {
-        return request == null ? "?" : request.getTargetMethod();
-    }
 
 }

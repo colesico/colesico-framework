@@ -50,13 +50,13 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
         AnnotationAssist<LocalParam> localParamAnn = var.getAnnotation(LocalParam.class);
 
         //================= Check compound or parameter
-        AnnotationAssist<Compound> compounddAnn = var.getAnnotation(Compound.class);
-        if (compounddAnn == null) {
+        AnnotationAssist<Compound> compoundAnn = var.getAnnotation(Compound.class);
+        if (compoundAnn == null) {
             // simple parameter
             TeleParamElement teleParam = new TeleParamElement(var, localParamAnn != null, paramIndex);
             teleMethod.linkVariable(teleParam);
             teleParam.setParentVariable(parentTeleVar);
-            context.getModulatorKit().notifyLinkTeleParam(teleParam, varStack);
+            context.getModulatorKit().notifyTeleParamLinked(teleParam, varStack);
             return teleParam;
         }
 
@@ -65,7 +65,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
 
         // Check recursive objects
         VarElement methodParam = varStack.peekLast(); // get element from stack tail  (last element of dequeue)
-        varStack.pop();     // temporaty remove var from stack head   (first element of deque)
+        varStack.pop();     // temporary remove var from stack head   (first element of deque)
         for (VarElement ve : varStack) {
             if (ve.getOriginType().toString().equals(var.getOriginType().toString())) {
                 TeleFacadeElement teleFacade = teleMethod.getParentTeleFacade();
@@ -85,6 +85,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
         TeleCompElement teleComp = new TeleCompElement(var, localParamAnn != null);
         teleComp.setParentVariable(parentTeleVar);
         teleMethod.linkVariable(teleComp);
+        context.getModulatorKit().notifyTeleCompoundLinked(teleComp);
 
         // ============ Process fields
 
@@ -121,7 +122,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
         return teleComp;
     }
 
-    protected void addTeleMethodParams(TeleMethodElement teleMethod) {
+    protected void parseTeleMethodParams(TeleMethodElement teleMethod) {
         MethodElement method = teleMethod.getProxyMethod().getOriginMethod();
         int paramIndex = 0;
         for (ParameterElement param : method.getParameters()) {
@@ -129,8 +130,8 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
             if (param.asClassType() == null) {
                 throw CodegenException.of()
                         .message("Unsupported parameter type for tele-method "
-                                + teleMethod.getParentTeleFacade().getParentService().getOriginClass().getName() + "."
-                                + teleMethod.getName() + "(..." + param.getOriginType().toString() + " " + param.getName() + "...)")
+                                + method.getParentClass().getName() + "."
+                                + method.getName() + "(..." + param.getOriginType().toString() + " " + param.getName() + "...)")
                         .element(param.unwrap())
                         .build();
             }
@@ -141,7 +142,7 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
         }
     }
 
-    protected void addTeleMethods(TeleFacadeElement teleFacade) {
+    protected void parseTeleMethods(TeleFacadeElement teleFacade) {
         ServiceElement service = teleFacade.getParentService();
         for (ProxyMethodElement proxyMethod : service.getProxyMethods()) {
             if (proxyMethod.isLocal()) {
@@ -150,14 +151,18 @@ public final class TeleFacadesParser extends FrameworkAbstractParser {
 
             TeleMethodElement teleMethod = new TeleMethodElement(proxyMethod);
             teleFacade.addTeleMethod(teleMethod);
-            context.getModulatorKit().notifyAddTeleMethod(teleMethod);
-            addTeleMethodParams(teleMethod);
+            context.getModulatorKit().notifyBeforeParseTeleMethod(teleMethod);
+            parseTeleMethodParams(teleMethod);
+            context.getModulatorKit().notifyTeleMethodParsed(teleMethod);
         }
     }
 
+    /**
+     * Perform tele-facades parsing
+     */
     public void parseTeleFacades(ServiceElement service) {
         for (TeleFacadeElement teleFacade : service.getTeleFacades()) {
-            addTeleMethods(teleFacade);
+            parseTeleMethods(teleFacade);
             context.getModulatorKit().notifyTeleFacadeParsed(teleFacade);
         }
     }

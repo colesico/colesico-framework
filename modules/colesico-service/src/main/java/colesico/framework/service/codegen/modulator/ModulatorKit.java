@@ -79,33 +79,45 @@ public class ModulatorKit {
         }
     }
 
-    public void notifyService(ServiceElement service) {
+    public void notifyBeforeParseService(ServiceElement service) {
         for (Modulator modulator : modulators) {
-            modulator.onService(service);
+            modulator.onBeforeParseService(service);
         }
     }
 
-    public void notifyProxyMethod(ProxyMethodElement proxyMethod) {
+    public void notifyProxyMethodCreated(ProxyMethodElement proxyMethod) {
         for (Modulator modulator : modulators) {
-            modulator.onProxyMethod(proxyMethod);
+            modulator.onProxyMethodCreated(proxyMethod);
         }
     }
 
-    public void notifyAddTeleFacade(ServiceElement service) {
+    public void notifyBeforeParseTeleFacades(ServiceElement service) {
         for (Modulator modulator : modulators) {
-            modulator.onAddTeleFacade(service);
+            modulator.onBeforeParseTeleFacades(service);
         }
     }
 
-    public void notifyAddTeleMethod(TeleMethodElement teleMethod) {
+    public void notifyBeforeParseTeleMethod(TeleMethodElement teleMethod) {
         for (Modulator modulator : modulators) {
-            modulator.onAddTeleMethod(teleMethod);
+            modulator.onBeforeParseTeleMethod(teleMethod);
         }
     }
 
-    public void notifyLinkTeleParam(TeleParamElement teleParam, Deque<VarElement> varStack) {
+    public void notifyTeleParamLinked(TeleParamElement teleParam, Deque<VarElement> varStack) {
         for (Modulator modulator : modulators) {
-            modulator.onLinkTeleParam(teleParam, varStack);
+            modulator.onTeleParamLinked(teleParam, varStack);
+        }
+    }
+
+    public void notifyTeleCompoundLinked(TeleCompElement teleComp){
+        for (Modulator modulator : modulators) {
+            modulator.onTeleCompoundLinked(teleComp);
+        }
+    }
+
+    public void notifyTeleMethodParsed(TeleMethodElement teleMethod) {
+        for (Modulator modulator : modulators) {
+            modulator.onTeleMethodParsed(teleMethod);
         }
     }
 
@@ -132,4 +144,5 @@ public class ModulatorKit {
             modulator.onGenerateIocProducer(generator, services);
         }
     }
+
 }

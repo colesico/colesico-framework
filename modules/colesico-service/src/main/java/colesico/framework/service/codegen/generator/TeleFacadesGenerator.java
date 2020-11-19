@@ -63,7 +63,7 @@ public class TeleFacadesGenerator {
                 Modifier.FINAL);
 
         mb.addParameter(ClassName.get(teleFacade.getTeleDriverClass()), TELE_DRIVER_FIELD, Modifier.FINAL);
-        mb.addStatement("super($N,$N)", TARGET_PROV_FIELD, TELE_DRIVER_FIELD);
+        mb.addStatement("super($N, $N)", TARGET_PROV_FIELD, TELE_DRIVER_FIELD);
         classBuilder.addMethod(mb.build());
     }
 
@@ -83,7 +83,7 @@ public class TeleFacadesGenerator {
             cb.add("$N.$N(", MethodInvoker.DATA_PORT_PARAM, DataPort.READ_METHOD);
             // ParamType.class or new TypeWrapper<ParamType<T>>...
             CodegenUtils.generateTypePick(paramType, cb);
-            cb.add(",");
+            cb.add(", ");
             cb.add(ctx);
             cb.add(")");
             return cb.build();
@@ -129,7 +129,7 @@ public class TeleFacadesGenerator {
                 TypeName.get(teleMethod.getParentTeleFacade().getParentService().getOriginClass().getOriginType()),
                 ClassName.get(teleMethod.getParentTeleFacade().getDataPortClass())
         );
-        cb.add("$T $N = ($N,$N) -> {\n", invokerType, TeleDriver.INVOKER_PARAM, MethodInvoker.TARGET_PARAM, MethodInvoker.DATA_PORT_PARAM);
+        cb.add("$T $N = ($N, $N) -> {\n", invokerType, TeleDriver.INVOKER_PARAM, MethodInvoker.TARGET_PARAM, MethodInvoker.DATA_PORT_PARAM);
         cb.indent();
 
         // ============= Generate params model retrieving
@@ -199,7 +199,7 @@ public class TeleFacadesGenerator {
             cb.addStatement("$T $N = $N.get()", serviceTypeName, TeleDriver.TARGET_PARAM, TeleFacade.TARGET_PROV_FIELD);
 
             // Call teleDriver
-            cb.add("$N.$N($N,$N,", TeleFacade.TELE_DRIVER_FIELD, TeleDriver.INVOKE_METHOD,
+            cb.add("$N.$N($N, $N, ", TeleFacade.TELE_DRIVER_FIELD, TeleDriver.INVOKE_METHOD,
                     TeleDriver.TARGET_PARAM,
                     TeleDriver.INVOKER_PARAM);
             CodeBlock invCtx = teleMethod.getInvokingContext();

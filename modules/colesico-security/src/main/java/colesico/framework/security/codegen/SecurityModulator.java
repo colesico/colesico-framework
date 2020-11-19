@@ -18,7 +18,6 @@ package colesico.framework.security.codegen;
 
 
 import colesico.framework.assist.StrUtils;
-import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
@@ -28,7 +27,6 @@ import colesico.framework.service.codegen.model.InterceptionPhases;
 import colesico.framework.service.codegen.model.ProxyFieldElement;
 import colesico.framework.service.codegen.model.ProxyMethodElement;
 import colesico.framework.service.codegen.modulator.Modulator;
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
@@ -45,8 +43,8 @@ import java.util.List;
 public class SecurityModulator extends Modulator {
 
     @Override
-    public void onProxyMethod(ProxyMethodElement proxyMethod) {
-        super.onProxyMethod(proxyMethod);
+    public void onProxyMethodCreated(ProxyMethodElement proxyMethod) {
+        super.onProxyMethodCreated(proxyMethod);
         final AnnotationAssist<RequirePrincipal> requirePrincipal = proxyMethod.getOriginMethod().getAnnotation(RequirePrincipal.class);
         final AnnotationAssist<SecurityAudit> securityAudit = proxyMethod.getOriginMethod().getAnnotation(SecurityAudit.class);
 

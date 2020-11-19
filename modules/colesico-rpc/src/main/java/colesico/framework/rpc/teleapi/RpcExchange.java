@@ -1,7 +1,11 @@
 package colesico.framework.rpc.teleapi;
 
-public interface RpcExchange {
-    RpcRequest readRequest();
+import java.lang.reflect.Type;
 
-    void writeResponse(RpcResponse response);
+public interface RpcExchange {
+
+    <Q extends RpcRequest> Q readRequest(Type requestType);
+
+    <R extends RpcResponse> void writeResponse(R response);
+
 }

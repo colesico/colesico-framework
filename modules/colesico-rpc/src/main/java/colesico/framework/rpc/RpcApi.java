@@ -20,8 +20,6 @@ import java.lang.annotation.*;
 
 /**
  * Remote procedure call interface definition for services
- *
- * @author Vladlen Larionov
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})

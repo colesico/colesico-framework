@@ -37,7 +37,8 @@ public final class TeleMethodElement {
     private final ProxyMethodElement proxyMethod;
 
     /**
-     * Tele-method parameters
+     * Tele-method parameters.
+     * This can be a method parameters itself or {@link colesico.framework.service.Compound} field
      */
     private final List<TeleVarElement> parameters;
 

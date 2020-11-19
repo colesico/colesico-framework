@@ -18,6 +18,9 @@ package colesico.framework.service.codegen.model;
 
 import colesico.framework.assist.codegen.model.VarElement;
 
+import java.util.HashMap;
+import java.util.Map;
+
 abstract public class TeleVarElement {
 
     protected TeleMethodElement parentTeleMethod;
@@ -29,9 +32,23 @@ abstract public class TeleVarElement {
      */
     final protected Boolean isLocal;
 
+    /**
+     * Element properties.
+     * Any values associated with this element
+     */
+    private Map<Class<?>, Object> properties = new HashMap<>();
+
     public TeleVarElement(VarElement originVariable, Boolean isLocal) {
         this.originVariable = originVariable;
         this.isLocal = isLocal;
+    }
+
+    public <C> C getProperty(Class<C> propertyClass) {
+        return (C) properties.get(propertyClass);
+    }
+
+    public void setProperty(Class<?> propertyClass, Object property) {
+        properties.put(propertyClass, property);
     }
 
     public TeleMethodElement getParentTeleMethod() {

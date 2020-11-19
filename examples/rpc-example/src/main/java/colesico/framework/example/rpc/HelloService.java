@@ -16,7 +16,7 @@
 
 package colesico.framework.example.rpc;
 
-import colesico.framework.example.rpc.api.ComposedDataBean;
+import colesico.framework.example.rpc.api.NameDataBean;
 import colesico.framework.example.rpc.api.DataBean;
 import colesico.framework.example.rpc.api.HelloServiceRemote;
 import colesico.framework.service.Compound;
@@ -26,7 +26,7 @@ import colesico.framework.service.Service;
 public class HelloService implements HelloServiceRemote {
 
     @Override
-    public String getMessage(Integer id, DataBean dataBean, @Compound  ComposedDataBean compound) {
+    public String getMessage(Integer id, DataBean dataBean, NameDataBean compound) {
         return HELLO_MESSAGE
                 +"-"+id+dataBean.getValue()
                 +"-"+compound.getData().getValue();

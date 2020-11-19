@@ -49,13 +49,13 @@ public class EventBusModulator extends Modulator {
     }
 
     @Override
-    public void onService(ServiceElement service) {
-        super.onService(service);
+    public void onBeforeParseService(ServiceElement service) {
+        super.onBeforeParseService(service);
     }
 
     @Override
-    public void onProxyMethod(ProxyMethodElement proxyMethod) {
-        super.onProxyMethod(proxyMethod);
+    public void onProxyMethodCreated(ProxyMethodElement proxyMethod) {
+        super.onProxyMethodCreated(proxyMethod);
 
         AnnotationAssist<OnEvent> handlerAnn = proxyMethod.getOriginMethod().getAnnotation(OnEvent.class);
         if (handlerAnn == null) {

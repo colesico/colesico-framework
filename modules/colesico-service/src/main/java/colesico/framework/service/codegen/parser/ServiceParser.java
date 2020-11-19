@@ -129,7 +129,7 @@ public class ServiceParser extends FrameworkAbstractParser {
             ProxyMethodElement proxyMethod = new ProxyMethodElement(method, isPlain, isLocal, isPCListener);
             serviceElement.addProxyMethod(proxyMethod);
 
-            context.getModulatorKit().notifyProxyMethod(proxyMethod);
+            context.getModulatorKit().notifyProxyMethodCreated(proxyMethod);
         }
     }
 
@@ -137,11 +137,11 @@ public class ServiceParser extends FrameworkAbstractParser {
         try {
             ClassElement serviceClassElement = ClassElement.fromElement(context.getProcessingEnv(), serviceTypeElement);
             ServiceElement service = new ServiceElement(serviceClassElement, getServiceScope(serviceClassElement));
-            context.getModulatorKit().notifyService(service);
+            context.getModulatorKit().notifyBeforeParseService(service);
 
             addProxyMethods(service);
 
-            context.getModulatorKit().notifyAddTeleFacade(service);
+            context.getModulatorKit().notifyBeforeParseTeleFacades(service);
             teleFacadesParser.parseTeleFacades(service);
 
             context.getModulatorKit().notifyServiceParsed(service);

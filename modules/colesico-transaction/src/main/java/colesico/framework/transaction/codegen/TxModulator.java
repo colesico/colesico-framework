@@ -37,8 +37,8 @@ public class TxModulator extends Modulator {
     public static final String TX_SHELL_FIELD_PREFIX = "txShell";
 
     @Override
-    public void onService(ServiceElement service) {
-        super.onService(service);
+    public void onBeforeParseService(ServiceElement service) {
+        super.onBeforeParseService(service);
         TxModulatorContext context = new TxModulatorContext();
         service.setProperty(context);
     }
@@ -69,8 +69,8 @@ public class TxModulator extends Modulator {
     }
 
     @Override
-    public void onProxyMethod(ProxyMethodElement proxyMethod) {
-        super.onProxyMethod(proxyMethod);
+    public void onProxyMethodCreated(ProxyMethodElement proxyMethod) {
+        super.onProxyMethodCreated(proxyMethod);
 
         AnnotationAssist<Transactional> txAnnotation = proxyMethod.getOriginMethod().getAnnotation(Transactional.class);
         if (txAnnotation == null) {

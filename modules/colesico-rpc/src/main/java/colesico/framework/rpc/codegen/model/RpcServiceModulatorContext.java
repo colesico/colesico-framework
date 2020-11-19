@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package colesico.framework.rpc.teleapi;
+package colesico.framework.rpc.codegen.model;
 
-/**
- * RPC tele-data reading context
- */
-@FunctionalInterface
-public interface RpcTRContext<R extends RpcRequest, V> {
-    V getValue(R request);
+public class RpcServiceModulatorContext {
 
-    String OF_METHOD="of";
+    private final RpcServiceElement rpcImplementation;
 
-    // Generic lambda helper
-    static <R extends RpcRequest, V> RpcTRContext<R, V> of(RpcTRContext<R, V> lambda) {
-        return lambda;
+    public RpcServiceModulatorContext(RpcServiceElement rpcImplementation) {
+        this.rpcImplementation = rpcImplementation;
     }
+
+    public RpcServiceElement getRpcImplementation() {
+        return rpcImplementation;
+    }
+
 }

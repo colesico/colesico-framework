@@ -60,22 +60,36 @@ abstract public class Modulator {
 
     }
 
-    public void onService(ServiceElement service) {
+    public void onBeforeParseService(ServiceElement service) {
         this.service = service;
     }
 
-    public void onProxyMethod(ProxyMethodElement proxyMethod) {
+    public void onProxyMethodCreated(ProxyMethodElement proxyMethod) {
         this.proxyMethod = proxyMethod;
     }
 
-    public void onAddTeleFacade(ServiceElement service) {
+    public void onBeforeParseTeleFacades(ServiceElement service) {
     }
 
-    public void onAddTeleMethod(TeleMethodElement teleMethod) {
+    public void onBeforeParseTeleMethod(TeleMethodElement teleMethod) {
 
     }
 
-    public void onLinkTeleParam(TeleParamElement teleParam, Deque<VarElement> varStack) {
+    /**
+     * @see TeleMethodElement#linkVariable(TeleVarElement)
+     */
+    public void onTeleParamLinked(TeleParamElement teleParam, Deque<VarElement> varStack) {
+
+    }
+
+    /**
+     * @see TeleMethodElement#linkVariable(TeleVarElement)
+     */
+    public void onTeleCompoundLinked(TeleCompElement teleComp) {
+
+    }
+
+    public void onTeleMethodParsed(TeleMethodElement teleMethod) {
 
     }
 

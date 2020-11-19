@@ -1,14 +1,10 @@
 package colesico.framework.example.rpc.api;
 
 
-import colesico.framework.rpc.RpcName;
-import colesico.framework.service.Compound;
+public class NameDataBean {
 
-public class ComposedDataBean {
     private String name;
 
-    @Compound
-    @RpcName("bean")
     private DataBean data;
 
     public String getName() {

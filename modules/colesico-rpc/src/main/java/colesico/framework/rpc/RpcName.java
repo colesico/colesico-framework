@@ -20,8 +20,6 @@ import java.lang.annotation.*;
 
 /**
  * Remote procedure call entity (parameter or method) name
- *
- * @author Vladlen Larionov
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})

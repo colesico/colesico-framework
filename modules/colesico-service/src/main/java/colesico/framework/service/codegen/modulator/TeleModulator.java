@@ -17,10 +17,7 @@
 package colesico.framework.service.codegen.modulator;
 
 import colesico.framework.assist.codegen.model.VarElement;
-import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.service.codegen.model.TeleFacadeElement;
-import colesico.framework.service.codegen.model.TeleMethodElement;
-import colesico.framework.service.codegen.model.TeleParamElement;
+import colesico.framework.service.codegen.model.*;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleDriver;
 import com.squareup.javapoet.CodeBlock;
@@ -62,15 +59,15 @@ public abstract class TeleModulator<
     abstract protected M createTeleModulatorContext(ServiceElement serviceElm);
 
     /**
-     * Called to add telemethod in context
+     * Called to add tele-method to modulator context
      */
     abstract protected void addTeleMethodToContext(TeleMethodElement teleMethodElement, M teleModulatorContext);
 
     abstract protected CodeBlock generateLigatureMethodBody(TeleFacadeElement teleFacade);
 
     @Override
-    public void onAddTeleFacade(ServiceElement serviceElm) {
-        super.onService(serviceElm);
+    public void onBeforeParseTeleFacades(ServiceElement serviceElm) {
+        super.onBeforeParseService(serviceElm);
 
         if (!isTeleFacadeSupported(serviceElm)) {
             return;
@@ -89,8 +86,8 @@ public abstract class TeleModulator<
     }
 
     @Override
-    public void onAddTeleMethod(TeleMethodElement teleMethod) {
-        super.onAddTeleMethod(teleMethod);
+    public void onTeleMethodParsed(TeleMethodElement teleMethod) {
+        super.onTeleMethodParsed(teleMethod);
         TeleFacadeElement teleFacade = teleMethod.getParentTeleFacade();
         if (!teleFacade.getTeleType().equals(getTeleType())) {
             return;
@@ -99,17 +96,13 @@ public abstract class TeleModulator<
         addTeleMethodToContext(teleMethod, teleModulatorContext);
         teleMethod.setInvokingContext(generateInvokingContext(teleMethod));
         teleMethod.setWritingContext(generateWritingContext(teleMethod));
-    }
 
-    @Override
-    public void onLinkTeleParam(TeleParamElement teleParam, Deque<VarElement> varStack) {
-        super.onLinkTeleParam(teleParam, varStack);
-        TeleMethodElement teleMethod = teleParam.getParentTeleMethod();
-        TeleFacadeElement teleFacade = teleMethod.getParentTeleFacade();
-        if (!teleFacade.getTeleType().equals(getTeleType())) {
-            return;
+        for (TeleVarElement teleVar : teleMethod.getParameters()) {
+            if (teleVar instanceof TeleParamElement) {
+                TeleParamElement teleParam = (TeleParamElement) teleVar;
+                teleParam.setReadingContext(generateReadingContext(teleParam));
+            }
         }
-        teleParam.setReadingContext(generateReadingContext(teleParam));
     }
 
     @Override

@@ -219,7 +219,7 @@ public class Navigation<N extends Navigation> {
     }
 
     /**
-     * Performs router forward
+     * Performs router action forwarding
      */
     public void forward(Router router, HttpContext context) {
         String location = toLocation(router);

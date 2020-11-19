@@ -8,7 +8,7 @@ public interface HelloServiceRemote {
 
     String HELLO_MESSAGE = "Hello";
 
-    String getMessage(@RpcName("id") Integer id, DataBean dataBean, ComposedDataBean compound);
+    String getMessage(@RpcName("uid") Integer id, DataBean dataBean, NameDataBean nameBean);
 
     @RpcName("getMsg")
     String getMessage2();

@@ -31,12 +31,13 @@ public class RpcDataPortImpl implements RpcDataPort {
         final Supplier<RpcTeleReader> supplier = ioc.supplierOrNull(readerKey);
         if (supplier != null) {
             final TeleReader<V, RpcTRContext> reader = supplier.get(null);
-            context.setRequest(request);
+           // context.setRequest(request);
             return reader.read(context);
         }
 
         // Common read
-        return (V) request.getParams().get(context.getParamName());
+        //return (V) request.getParams().get(context.getValueSupplier());
+        return null;
     }
 
     @Override
@@ -52,7 +53,7 @@ public class RpcDataPortImpl implements RpcDataPort {
         }
 
         // Common write
-        response.setResult(value);
+        //response.setResult(value);
     }
 
     protected String typeToClassName(Type valueType) {

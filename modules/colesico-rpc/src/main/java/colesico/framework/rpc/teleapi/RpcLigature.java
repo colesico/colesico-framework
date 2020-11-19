@@ -16,31 +16,95 @@
 
 package colesico.framework.rpc.teleapi;
 
+import colesico.framework.rpc.RpcException;
 import colesico.framework.teleapi.TeleMethod;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class RpcLigature {
-    public static final String ADD_METHOD = "add";
-    private final String targetClass;
+    public static final String ADD_API_METHOD = "addApi";
 
-    private final Map<String, TeleMethod> targetMethods = new HashMap<>();
+    /**
+     * Supported RPC APIs
+     */
+    private final List<RpcApi> rpcApiList = new ArrayList<>();
 
-    public RpcLigature(String className) {
-        this.targetClass = className;
+    public RpcLigature addApi(RpcApi rpcApi) {
+        rpcApiList.add(rpcApi);
+        return this;
     }
 
-    public String getTargetClass() {
-        return targetClass;
+    public List<RpcApi> getAllRpcApi() {
+        return rpcApiList;
     }
 
-    public Map<String, TeleMethod> getTargetMethods() {
-        return targetMethods;
+    public static final class RpcApi {
+        public static final String ADD_METHOD = "addMethod";
+        /**
+         * RPC interface name
+         */
+        private final String rpcInterface;
+
+        /**
+         * RPC service methods metadata
+         */
+        private final Map<String, RpcMethod> targetMethods = new HashMap<>();
+
+        /**
+         * Constructor
+         *
+         * @param rpcInterface RPC interface name
+         */
+        public RpcApi(String rpcInterface) {
+            this.rpcInterface = rpcInterface;
+        }
+
+        /**
+         * Returns RPC interface name
+         */
+        public String getRpcInterface() {
+            return rpcInterface;
+        }
+
+        public Map<String, RpcMethod> getTargetMethods() {
+            return targetMethods;
+        }
+
+        public RpcApi addMethod(String name, RpcMethod targetMethod) {
+            RpcMethod prev = targetMethods.put(name, targetMethod);
+            if (prev != null) {
+                throw new RpcException("Method with name '" + name + "' has already registered");
+            }
+            return this;
+        }
     }
 
-    public void add(String name, TeleMethod methodRef) {
-        targetMethods.put(name, methodRef);
-    }
+    public static final class RpcMethod {
+        private final TeleMethod teleMethod;
+        private final Class<? extends RpcRequest> requestClass;
+        private final Class<? extends RpcResponse> responseClass;
 
+        public RpcMethod(TeleMethod teleMethod, Class<? extends RpcRequest> requestClass, Class<? extends RpcResponse> responseClass) {
+            this.teleMethod = teleMethod;
+            this.requestClass = requestClass;
+            this.responseClass = responseClass;
+        }
+
+        public Class<? extends RpcRequest> getRequestClass() {
+            return requestClass;
+        }
+
+        public Class<? extends RpcResponse> getResponseClass() {
+            return responseClass;
+        }
+
+        public TeleMethod getTeleMethod() {
+            return teleMethod;
+        }
+    }
 }
