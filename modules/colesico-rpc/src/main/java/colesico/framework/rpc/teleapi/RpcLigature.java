@@ -18,8 +18,6 @@ package colesico.framework.rpc.teleapi;
 
 import colesico.framework.rpc.RpcException;
 import colesico.framework.teleapi.TeleMethod;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +26,8 @@ import java.util.Map;
 
 public final class RpcLigature {
     public static final String ADD_API_METHOD = "addApi";
+    public static final String API_METHOD = "api";
+    public static final String METHOD_METHOD = "method";
 
     /**
      * Supported RPC APIs
@@ -43,12 +43,22 @@ public final class RpcLigature {
         return rpcApiList;
     }
 
+    public static RpcApi api(String name) {
+        return new RpcApi(name);
+    }
+
+    public static RpcMethod method(TeleMethod teleMethod, Class<? extends RpcRequest> requestClass, Class<? extends RpcResponse> responseClass) {
+        return new RpcMethod(teleMethod, requestClass, responseClass);
+    }
+
     public static final class RpcApi {
         public static final String ADD_METHOD = "addMethod";
+
         /**
-         * RPC interface name
+         * RPC API name.
+         * An interface name annotated with @RpcApi
          */
-        private final String rpcInterface;
+        private final String name;
 
         /**
          * RPC service methods metadata
@@ -58,17 +68,17 @@ public final class RpcLigature {
         /**
          * Constructor
          *
-         * @param rpcInterface RPC interface name
+         * @param name RPC interface name
          */
-        public RpcApi(String rpcInterface) {
-            this.rpcInterface = rpcInterface;
+        public RpcApi(String name) {
+            this.name = name;
         }
 
         /**
          * Returns RPC interface name
          */
-        public String getRpcInterface() {
-            return rpcInterface;
+        public String getName() {
+            return name;
         }
 
         public Map<String, RpcMethod> getTargetMethods() {

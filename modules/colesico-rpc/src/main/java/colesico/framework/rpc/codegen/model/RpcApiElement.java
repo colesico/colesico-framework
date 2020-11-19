@@ -23,6 +23,10 @@ public class RpcApiElement {
         method.setParentApi(this);
     }
 
+    public String rpcApiName() {
+        return originInterface.getName();
+    }
+
     public String getSchemeClassName() {
         return originInterface.getSimpleName() + SCHEME_CLASS_SUFFIX;
     }

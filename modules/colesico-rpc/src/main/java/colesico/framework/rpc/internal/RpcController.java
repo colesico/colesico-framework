@@ -9,7 +9,6 @@ import colesico.framework.rpc.teleapi.*;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.TeleMethod;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,9 +82,9 @@ public class RpcController {
 
             List<RpcLigature.RpcApi> rpcApiList = ligature.getAllRpcApi();
             for (RpcLigature.RpcApi rpcApi : rpcApiList) {
-                RpcLigature.RpcApi prevApi = targetsMap.put(rpcApi.getRpcInterface(), rpcApi);
+                RpcLigature.RpcApi prevApi = targetsMap.put(rpcApi.getName(), rpcApi);
                 if (prevApi != null) {
-                    throw new RpcException("Duplicate RPC API implementation: " + rpcApi.getRpcInterface());
+                    throw new RpcException("Duplicate RPC API implementation: " + rpcApi.getName());
                 }
             }
         }

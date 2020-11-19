@@ -217,15 +217,16 @@ public class RpcModulator extends
             // .addApi(
             cb.add("\n.$N(\n", RpcLigature.ADD_API_METHOD);
             cb.indent();
-            // new RpcApi()
-            cb.add("new $T($S)\n", ClassName.get(RpcLigature.RpcApi.class), "!TODO!");
+            // RpcLigature.api("rpc.interface.name")
+            cb.add("$T.$N($S)\n", ClassName.get(RpcLigature.class), RpcLigature.API_METHOD, rpcApi.rpcApiName());
             cb.indent();
             for (RpcApiMethodElement rpcApiMethod : rpcApi.getRpcMethods()) {
-                // .addMethod("methodName", new RpcMethod(...)
-                cb.add(".$N($S, new $T(null,null,null) )\n",
+                // .addMethod("methodName", RpcLigature.method(...)
+                cb.add(".$N($S, $T.$N(null,null,null) )\n",
                         RpcLigature.RpcApi.ADD_METHOD,
                         rpcApiMethod.rpcMethodName(),
-                        ClassName.get(RpcLigature.RpcMethod.class));
+                        ClassName.get(RpcLigature.class),
+                        RpcLigature.METHOD_METHOD);
             }
             cb.unindent();
             cb.unindent();

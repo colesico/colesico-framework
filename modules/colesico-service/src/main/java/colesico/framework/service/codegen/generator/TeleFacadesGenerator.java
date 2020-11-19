@@ -152,7 +152,7 @@ public class TeleFacadesGenerator {
         // Create writer variable
         //   MyResult result =
         CodeBlock.Builder callMethodCb = CodeBlock.builder();
-        callMethodCb.add("\n // Invoke target service method\n");
+        callMethodCb.add("\n// Invoke target service method\n");
         if (!voidResult) {
             callMethodCb.add("$T $N = ", TypeName.get(returnType), TeleDriver.RESULT_PARAM);
         }
