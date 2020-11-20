@@ -45,7 +45,7 @@ public final class FloatReader<C extends HttpTRContext> extends HttpTeleReader<F
     @Override
     public Float read(C ctx) {
         try {
-            String val = ctx.getString(getRouterContext(), getRequest());
+            String val = getStringValue(ctx);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }

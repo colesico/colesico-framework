@@ -53,7 +53,7 @@ public final class JsonReader extends ObjectReader {
             }
         } else {
             try {
-                String strValue = context.getString(routerContextProv.get(), httpContext.getRequest());
+                String strValue = getStringValue(context);
                 if (StringUtils.isBlank(strValue)) {
                     return null;
                 }

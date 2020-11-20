@@ -48,7 +48,7 @@ public final class LocalDateTimeReader<C extends HttpTRContext> extends HttpTele
     @Override
     public LocalDateTime read(C ctx) {
         try {
-            String val = ctx.getString(getRouterContext(), getRequest());
+            String val = getStringValue(ctx);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }

@@ -45,7 +45,7 @@ public final class LongReader<C extends HttpTRContext> extends HttpTeleReader<Lo
     @Override
     public Long read(C ctx) {
         try {
-            String val = ctx.getString(getRouterContext(), getRequest());
+            String val = getStringValue(ctx);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }

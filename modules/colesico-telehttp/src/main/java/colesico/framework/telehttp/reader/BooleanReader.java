@@ -47,7 +47,7 @@ public final class BooleanReader<C extends HttpTRContext> extends HttpTeleReader
     @Override
     public Boolean read(C ctx) {
         try {
-            String str = ctx.getString(getRouterContext(), getRequest());
+            String str = getStringValue(ctx);
             if (StringUtils.isBlank(str)) {
                 return null;
             }

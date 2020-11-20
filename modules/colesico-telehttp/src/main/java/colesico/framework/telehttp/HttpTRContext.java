@@ -1,7 +1,6 @@
 package colesico.framework.telehttp;
 
-import colesico.framework.http.HttpRequest;
-import colesico.framework.router.RouterContext;
+import colesico.framework.http.HttpContext;
 
 /**
  * Basic tele-reading context for interaction via http
@@ -23,6 +22,11 @@ abstract public class HttpTRContext {
         this.originFacade = originFacade;
     }
 
+    public static HttpTRContext of(String name, OriginFacade originFacade) {
+        return new HttpTRContext(name, originFacade) {
+        };
+    }
+
     /**
      * Parameter name
      */
@@ -37,10 +41,4 @@ abstract public class HttpTRContext {
         return originFacade;
     }
 
-    /**
-     * Parameter value
-     */
-    public final String getString(RouterContext routerContext, HttpRequest httpRequest) {
-        return originFacade.getString(name, routerContext, httpRequest);
-    }
 }

@@ -39,7 +39,7 @@ public final class CharacterReader<C extends HttpTRContext> extends HttpTeleRead
 
     @Override
     public Character read(C ctx) {
-        String str = StringUtils.trim(ctx.getString(getRouterContext(), getRequest()));
+        String str = StringUtils.trim(getStringValue(ctx));
         return StringUtils.isNotEmpty(str) ? str.charAt(0) : null;
     }
 }

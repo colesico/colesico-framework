@@ -45,7 +45,7 @@ public final class ShortReader<C extends HttpTRContext> extends HttpTeleReader<S
     @Override
     public Short read(C ctx) {
         try {
-            String val = ctx.getString(getRouterContext(), getRequest());
+            String val = getStringValue(ctx);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }

@@ -45,7 +45,7 @@ public final class DoubleReader<C extends HttpTRContext> extends HttpTeleReader<
     @Override
     public Double read(C ctx) {
         try {
-            String val = ctx.getString(getRouterContext(), getRequest());
+            String val = getStringValue(ctx);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }

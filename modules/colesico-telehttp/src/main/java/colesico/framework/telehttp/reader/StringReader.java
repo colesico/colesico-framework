@@ -37,6 +37,6 @@ public final class StringReader<C extends HttpTRContext> extends HttpTeleReader<
 
     @Override
     public String read(C ctx) {
-        return ctx.getString(getRouterContext(), getRequest());
+        return getStringValue(ctx);
     }
 }
