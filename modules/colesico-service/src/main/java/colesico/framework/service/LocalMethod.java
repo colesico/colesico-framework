@@ -19,13 +19,11 @@ import java.lang.annotation.*;
 
 /**
  * Indicates that the method is not tele-method.
- *
+ * <p>
  * Local method will not present in any service tele-facades and can't be invoked remotely
- *
- * @author Vladlen Larionov
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE}) //TYPE - for future releases
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Inherited
 @Documented
 public @interface LocalMethod {

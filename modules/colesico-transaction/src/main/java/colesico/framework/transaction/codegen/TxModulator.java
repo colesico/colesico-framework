@@ -69,8 +69,8 @@ public class TxModulator extends Modulator {
     }
 
     @Override
-    public void onProxyMethodCreated(ProxyMethodElement proxyMethod) {
-        super.onProxyMethodCreated(proxyMethod);
+    public void onServiceMethodParsed(ServiceMethodElement proxyMethod) {
+        super.onServiceMethodParsed(proxyMethod);
 
         AnnotationAssist<Transactional> txAnnotation = proxyMethod.getOriginMethod().getAnnotation(Transactional.class);
         if (txAnnotation == null) {
@@ -87,11 +87,11 @@ public class TxModulator extends Modulator {
         String shellFieldName = TX_SHELL_FIELD_PREFIX + exIdx;
 
         FieldSpec txShellFs = FieldSpec.builder(ClassName.get(TransactionalShell.class), shellFieldName).addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
-        ProxyFieldElement txShellFe = new ProxyFieldElement(txShellFs).inject();
+        ServiceFieldElement txShellFe = new ServiceFieldElement(txShellFs).inject();
         if (StringUtils.isNotEmpty(txAnnotation.unwrap().shell())) {
             txShellFe.setNamed(txAnnotation.unwrap().shell());
         }
-        proxyMethod.getParentService().addField(txShellFe);
+        proxyMethod.getParentService().addCustomField(txShellFe);
 
         // Add interceptor
 

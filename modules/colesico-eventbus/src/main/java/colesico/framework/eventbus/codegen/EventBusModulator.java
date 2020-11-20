@@ -24,10 +24,10 @@ import colesico.framework.eventbus.EventsListener;
 import colesico.framework.eventbus.OnEvent;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.ioc.production.Polyproduce;
-import colesico.framework.service.codegen.model.ProxyMethodElement;
+import colesico.framework.service.codegen.model.ServiceMethodElement;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.modulator.Modulator;
-import colesico.framework.service.codegen.parser.ProcessorContext;
+import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
@@ -43,7 +43,7 @@ public class EventBusModulator extends Modulator {
     private ListenersFacadeGenerator facadeGenerator;
 
     @Override
-    public void onInit(ProcessorContext context) {
+    public void onInit(ServiceProcessorContext context) {
         super.onInit(context);
         facadeGenerator = new ListenersFacadeGenerator(context);
     }
@@ -54,8 +54,8 @@ public class EventBusModulator extends Modulator {
     }
 
     @Override
-    public void onProxyMethodCreated(ProxyMethodElement proxyMethod) {
-        super.onProxyMethodCreated(proxyMethod);
+    public void onServiceMethodParsed(ServiceMethodElement proxyMethod) {
+        super.onServiceMethodParsed(proxyMethod);
 
         AnnotationAssist<OnEvent> handlerAnn = proxyMethod.getOriginMethod().getAnnotation(OnEvent.class);
         if (handlerAnn == null) {
@@ -92,33 +92,30 @@ public class EventBusModulator extends Modulator {
 
 
     @Override
-    public void onGenerateIocProducer(ProducerGenerator generator, Set<ServiceElement> services) {
-        super.onGenerateIocProducer(generator, services);
+    public void onGenerateIocProducer(ProducerGenerator generator, ServiceElement service) {
+        super.onGenerateIocProducer(generator, service);
 
-        for (ServiceElement service : services) {
-
-            List<EventHandlerElement> handlers = getEventHandlers(service);
-            if (handlers.isEmpty()) {
-                continue;
-            }
-
-            String listnerFacadeClassName = service.getOriginClass().getPackageName() + '.' +
-                    facadeGenerator.getListenersFacadeClassName(service);
-
-            TypeName facadeType = ClassName.bestGuess(listnerFacadeClassName);
-            generator.addProduceAnnotation(facadeType);
-
-            String methodName = "get" + facadeGenerator.getListenersFacadeClassName(service);
-            MethodSpec.Builder mb = generator.addProduceMethod(methodName, ClassName.get(EventsListener.class));
-            mb.addAnnotation(Polyproduce.class);
-            mb.addParameter(facadeType, "impl", Modifier.FINAL);
-            mb.addStatement("return impl");
+        List<EventHandlerElement> handlers = getEventHandlers(service);
+        if (handlers.isEmpty()) {
+            return;
         }
+
+        String listnerFacadeClassName = service.getOriginClass().getPackageName() + '.' +
+                facadeGenerator.getListenersFacadeClassName(service);
+
+        TypeName facadeType = ClassName.bestGuess(listnerFacadeClassName);
+        generator.addProduceAnnotation(facadeType);
+
+        String methodName = "get" + facadeGenerator.getListenersFacadeClassName(service);
+        MethodSpec.Builder mb = generator.addProduceMethod(methodName, ClassName.get(EventsListener.class));
+        mb.addAnnotation(Polyproduce.class);
+        mb.addParameter(facadeType, "impl", Modifier.FINAL);
+        mb.addStatement("return impl");
     }
 
     protected List<EventHandlerElement> getEventHandlers(ServiceElement service) {
         List<EventHandlerElement> handlers = new ArrayList<>();
-        for (ProxyMethodElement pm : service.getProxyMethods()) {
+        for (ServiceMethodElement pm : service.getServiceMethods()) {
             EventHandlerElement el = pm.getProperty(EventHandlerElement.class);
             if (el != null) {
                 handlers.add(el);

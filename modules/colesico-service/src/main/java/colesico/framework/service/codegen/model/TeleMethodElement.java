@@ -25,30 +25,38 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Vladlen Larionov
+ * Tele-method representation
  */
 public final class TeleMethodElement {
 
+    /**
+     * Parent tele-facade ref
+     */
     protected TeleFacadeElement parentTeleFacade;
 
     /**
-     * Method of a service proxy. This can be used to access origin service method.
+     * Service method reference
      */
-    private final ProxyMethodElement proxyMethod;
+    private final ServiceMethodElement serviceMethod;
 
     /**
-     * Tele-method parameters.
-     * This can be a method parameters itself or {@link colesico.framework.service.Compound} field
+     * Tele-method parameters
      */
-    private final List<TeleVarElement> parameters;
+    private final List<TeleParamElement> parameters;
 
-    private final List<TeleVarElement> linkedVariables;
+    /**
+     * Method result writing context code
+     */
+    private CodeBlock writingContextCode;
 
-    //  writing result context
-    private CodeBlock writingContext;
-    // invoke service method context
-    private CodeBlock invokingContext;
+    /**
+     * Invocation context code
+     */
+    private CodeBlock invocationContextCode;
 
+    /**
+     * Common purpose props
+     */
     private final Map<Class, Object> properties;
 
     /**
@@ -56,10 +64,9 @@ public final class TeleMethodElement {
      */
     protected Integer index;
 
-    public TeleMethodElement(ProxyMethodElement proxyMethod) {
-        this.proxyMethod = proxyMethod;
+    public TeleMethodElement(ServiceMethodElement serviceMethod) {
+        this.serviceMethod = serviceMethod;
         this.parameters = new ArrayList<>();
-        this.linkedVariables = new ArrayList<>();
         this.properties = new HashMap<>();
     }
 
@@ -73,70 +80,56 @@ public final class TeleMethodElement {
 
     /**
      * Add parameter of tele-method
-     *
-     * @param param
      */
-    public void addParameter(TeleVarElement param) {
-        linkVariable(param);
+    public void addParameter(TeleParamElement param) {
         parameters.add(param);
-    }
-
-    /**
-     * Associate tele-var element with this tele-metod
-     */
-    public void linkVariable(TeleVarElement var) {
-        var.parentTeleMethod = this;
-        linkedVariables.add(var);
+        param.setParentTeleMethod(this);
     }
 
     public String getName() {
-        return proxyMethod.getName();
+        return serviceMethod.getName();
     }
 
     public String getBuilderName() {
-        return "get" + StrUtils.firstCharToUpperCase(proxyMethod.getName()) + "TM" + index;
+        return "get" + StrUtils.firstCharToUpperCase(serviceMethod.getName()) + "TM" + index;
     }
 
-    public ProxyMethodElement getProxyMethod() {
-        return proxyMethod;
+    public ServiceMethodElement getServiceMethod() {
+        return serviceMethod;
     }
 
     public TeleFacadeElement getParentTeleFacade() {
         return parentTeleFacade;
     }
 
-    public List<TeleVarElement> getParameters() {
+    public List<TeleParamElement> getParameters() {
         return parameters;
     }
 
-    public CodeBlock getWritingContext() {
-        return writingContext;
+    public CodeBlock getWritingContextCode() {
+        return writingContextCode;
     }
 
-    public void setWritingContext(CodeBlock writingContext) {
-        this.writingContext = writingContext;
+    public void setWritingContextCode(CodeBlock writingContextCode) {
+        this.writingContextCode = writingContextCode;
     }
 
-    public CodeBlock getInvokingContext() {
-        return invokingContext;
+    public CodeBlock getInvocationContextCode() {
+        return invocationContextCode;
     }
 
-    public void setInvokingContext(CodeBlock invokingContext) {
-        this.invokingContext = invokingContext;
+    public void setInvocationContextCode(CodeBlock invocationContextCode) {
+        this.invocationContextCode = invocationContextCode;
     }
 
     public Integer getIndex() {
         return index;
     }
 
-    public List<TeleVarElement> getLinkedVariables() {
-        return linkedVariables;
-    }
-
     @Override
     public String toString() {
         return "TeleMethodElement{" +
-                "proxyMethod=" + proxyMethod +
+                "proxyMethod=" + serviceMethod +
                 '}';
     }
 }

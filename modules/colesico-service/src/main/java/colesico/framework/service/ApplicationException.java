@@ -17,9 +17,8 @@
 package colesico.framework.service;
 
 /**
- * Application level error
- *
- * @author Vladlen Larionov
+ * Application level error.
+ * This is business exception should be thrown on business logic errors.
  */
 public class ApplicationException extends RuntimeException {
 

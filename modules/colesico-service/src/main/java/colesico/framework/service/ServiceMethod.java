@@ -19,13 +19,11 @@ import java.lang.annotation.*;
 
 /**
  * Indicates that the method is a service method.
- *
+ * <p>
  * This annotation (for example) can marks a protected methods that must be acts as public service methods
- *
- * @author Vladlen Larionov
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD,ElementType.TYPE}) //TYPE - for future releases
+@Target({ElementType.METHOD, ElementType.TYPE}) //TYPE - for future releases
 @Inherited
 @Documented
 public @interface ServiceMethod {

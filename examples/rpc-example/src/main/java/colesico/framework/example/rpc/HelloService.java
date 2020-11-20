@@ -19,7 +19,6 @@ package colesico.framework.example.rpc;
 import colesico.framework.example.rpc.api.NameDataBean;
 import colesico.framework.example.rpc.api.DataBean;
 import colesico.framework.example.rpc.api.HelloServiceRemote;
-import colesico.framework.service.Compound;
 import colesico.framework.service.Service;
 
 @Service

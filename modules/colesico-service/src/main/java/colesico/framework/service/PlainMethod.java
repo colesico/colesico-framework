@@ -22,8 +22,6 @@ import java.lang.annotation.*;
  *
  * The method will be used in the service as is, without generating
  * a proxy method that provides an auxiliary code for the automation of the original method
- *
- * @author Vladlen Larionov
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD,ElementType.TYPE})

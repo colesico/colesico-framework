@@ -20,8 +20,6 @@ import java.lang.annotation.*;
 
 /**
  * Used to define application service
- *
- * @author Vladlen Larionov
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

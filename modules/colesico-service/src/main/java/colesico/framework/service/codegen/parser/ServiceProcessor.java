@@ -18,11 +18,11 @@ package colesico.framework.service.codegen.parser;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
+import colesico.framework.assist.codegen.Genstamp;
 import colesico.framework.service.codegen.generator.IocGenerator;
-import colesico.framework.service.codegen.generator.ServiceProxyGenerator;
+import colesico.framework.service.codegen.generator.ServiceGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.modulator.ModulatorKit;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,9 +38,6 @@ import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
 
-import static colesico.framework.service.ServiceProxy.PROXY_CLASS_SUFFIX;
-import static colesico.framework.service.ServiceProxy.SERVICE_CLASS_SUFFIX;
-
 /**
  * Процессор аннотации осуществляющий обработку классов помеченных аннотацией @Service
  *
@@ -50,12 +47,12 @@ public class ServiceProcessor extends FrameworkAbstractProcessor {
 
     protected final Logger logger;
     protected final ModulatorKit modulatorKit;
-    protected ProcessorContext context;
+    protected ServiceProcessorContext context;
 
     public ServiceProcessor() {
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "debug");
         System.setProperty("org.slf4j.simpleLogger.log.colesico.framework", "debug");
-        logger = LoggerFactory.getLogger(ProcessorContext.class);
+        logger = LoggerFactory.getLogger(ServiceProcessorContext.class);
         logger.debug("Creating modulator kit...");
 
         modulatorKit = new ModulatorKit();
@@ -81,7 +78,7 @@ public class ServiceProcessor extends FrameworkAbstractProcessor {
     public synchronized void init(ProcessingEnvironment processingEnv) {
         try {
             super.init(processingEnv);
-            context = new ProcessorContext(modulatorKit, processingEnv);
+            context = new ServiceProcessorContext(modulatorKit, processingEnv);
             modulatorKit.notifyInit(context);
         } catch (Exception e) {
             String msg = ExceptionUtils.getRootCauseMessage(e);
@@ -100,23 +97,19 @@ public class ServiceProcessor extends FrameworkAbstractProcessor {
             processClasses(annotations, roundEnv);
             modulatorKit.notifyRoundStop();
             return true;
-        } catch (CodegenException ce) {
-            logger.error("Error processing service: " + ExceptionUtils.getRootCauseMessage(ce));
-            throw ce;
         } catch (Exception e) {
             String msg = ExceptionUtils.getRootCauseMessage(e);
             context.getMessager().printMessage(Kind.ERROR, msg);
             if (logger.isDebugEnabled()) {
                 e.printStackTrace();
             }
-            return true;
+            return false;
         }
     }
 
     protected void processClasses(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
         logger.debug("Start service processing...");
-        context.getProcessedServices().clear();
 
         Set<String> serviceTypsNames = new HashSet<>();
 
@@ -128,41 +121,40 @@ public class ServiceProcessor extends FrameworkAbstractProcessor {
                 TypeElement serviceType = null;
                 try {
                     serviceType = (TypeElement) elm;
-                    // @Service annotation are inherited from superclass so need to filter generated proxies by name.
-                    // But this is not correct in general, so  need to change in perspective.
-                    if (StringUtils.endsWith(serviceType.getSimpleName(), SERVICE_CLASS_SUFFIX + PROXY_CLASS_SUFFIX)) {
+
+                    // @Service annotation are inherited from superclass so need to filter generated proxies .
+                    if (serviceType.getAnnotation(Genstamp.class) != null) {
+                        logger.debug("Skip generated service parsing: " + serviceType.toString());
                         continue;
                     }
+
+                    // The services can be annotated  with many different types of annotation (@Service annotation aliases).
+                    // To avoid service multiple times parsing check the service been parsed
                     if (serviceTypsNames.contains(serviceType.toString())) {
-                        // There is no need to throw an error because the models can be annotated
-                        // with many different types of annotation (@Service annotation aliases)
                         logger.debug("Service has already been processed: " + serviceType.toString());
                         continue;
                     }
+
                     logger.debug("Parsing service: " + serviceType.toString());
                     ServiceParser parser = new ServiceParser(context);
                     ServiceElement serviceElement = parser.parse(serviceType);
-                    context.getProcessedServices().add(serviceElement);
                     serviceTypsNames.add(serviceType.asType().toString());
-                    ServiceProxyGenerator serviceGenerator = new ServiceProxyGenerator(context);
-                    serviceGenerator.generateService(serviceElement);
+
+                    logger.debug("Generate service proxy: " + serviceType.toString());
+                    ServiceGenerator serviceGenerator = new ServiceGenerator(context);
+                    serviceGenerator.generate(serviceElement);
+
+                    logger.debug("Generate IoC producer for: " + serviceType.toString());
+                    IocGenerator iocGenerator = new IocGenerator(context);
+                    iocGenerator.generate(serviceElement);
+
                 } catch (CodegenException ce) {
-                    String message = "Error processing class '" + serviceType.toString() + "': " + ce.getMessage();
+                    String message = "Error processing service class '" + serviceType.toString() + "': " + ce.getMessage();
                     logger.error(message);
                     ce.print(processingEnv, elm);
                     throw ce;
-                } catch (Exception e) {
-                    processingEnv.getMessager().printMessage(Kind.ERROR, "Processing class general error: '" + e.getMessage(), serviceType);
-                    if (logger.isDebugEnabled()) {
-                        e.printStackTrace();
-                    }
-                    throw e;
                 }
             }
-        }
-
-        if (!context.getProcessedServices().isEmpty()) {
-            new IocGenerator(context).generate();
         }
     }
 

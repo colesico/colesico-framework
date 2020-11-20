@@ -21,14 +21,14 @@ import colesico.framework.assist.codegen.model.MethodElement;
 import java.util.*;
 
 /**
- * Represent the method of a service proxy
+ * Represent the method of a service
  *
  * @author Vladlen Larionov
  */
-public final class ProxyMethodElement {
+public final class ServiceMethodElement {
 
     /**
-     * Origin service proxy reference
+     * Parent service
      */
     protected ServiceElement parentService;
 
@@ -38,12 +38,6 @@ public final class ProxyMethodElement {
     private final MethodElement originMethod;
 
     /**
-     * This flag can be used to verify that  the annotations that  regarding the
-     * service are used appropriately on the methods that will be proxied.
-     */
-    private final boolean isPlain;
-
-    /**
      * Indicates that the method is not tele-method
      */
     private final boolean isLocal;
@@ -51,7 +45,7 @@ public final class ProxyMethodElement {
     /**
      * Method is post construct listener
      */
-    private final boolean isCPListener;
+    private final boolean isPostConstructListener;
 
     private final Map<String, List<InterceptionElement>> interceptionsByPhase;
 
@@ -62,11 +56,10 @@ public final class ProxyMethodElement {
      */
     private final Map<Class, Object> properties;
 
-    public ProxyMethodElement(MethodElement originMethod, boolean isPlain, boolean isLocal, boolean isCPListener) {
+    public ServiceMethodElement(MethodElement originMethod, boolean isLocal, boolean isPostConstructListener) {
         this.originMethod = originMethod;
-        this.isPlain = isPlain;
         this.isLocal = isLocal;
-        this.isCPListener = isCPListener;
+        this.isPostConstructListener = isPostConstructListener;
         this.interceptionsByPhase = new HashMap<>();
         this.properties = new HashMap();
     }
@@ -100,16 +93,12 @@ public final class ProxyMethodElement {
         return originMethod;
     }
 
-    public final boolean isPlain() {
-        return isPlain;
-    }
-
     public final boolean isLocal() {
         return isLocal;
     }
 
-    public boolean isCPListener() {
-        return isCPListener;
+    public boolean isPostConstructListener() {
+        return isPostConstructListener;
     }
 
     public final List<InterceptionElement> getPhaseInterceptions(String interceptionPhase) {
@@ -126,7 +115,7 @@ public final class ProxyMethodElement {
 
     @Override
     public String toString() {
-        return "ProxyMethodElement{" +
+        return "ServiceMethodElement{" +
                 "originMethod=" + originMethod +
                 '}';
     }

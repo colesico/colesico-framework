@@ -24,8 +24,8 @@ import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.security.*;
 import colesico.framework.service.codegen.model.InterceptionElement;
 import colesico.framework.service.codegen.model.InterceptionPhases;
-import colesico.framework.service.codegen.model.ProxyFieldElement;
-import colesico.framework.service.codegen.model.ProxyMethodElement;
+import colesico.framework.service.codegen.model.ServiceFieldElement;
+import colesico.framework.service.codegen.model.ServiceMethodElement;
 import colesico.framework.service.codegen.modulator.Modulator;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
@@ -38,23 +38,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Vladlen Larionov
+ * Generates security audit interceptors
  */
 public class SecurityModulator extends Modulator {
 
     @Override
-    public void onProxyMethodCreated(ProxyMethodElement proxyMethod) {
-        super.onProxyMethodCreated(proxyMethod);
-        final AnnotationAssist<RequirePrincipal> requirePrincipal = proxyMethod.getOriginMethod().getAnnotation(RequirePrincipal.class);
-        final AnnotationAssist<SecurityAudit> securityAudit = proxyMethod.getOriginMethod().getAnnotation(SecurityAudit.class);
+    public void onServiceMethodParsed(ServiceMethodElement serviceMethod) {
+        super.onServiceMethodParsed(serviceMethod);
+        final AnnotationAssist<RequirePrincipal> requirePrincipal = serviceMethod.getOriginMethod().getAnnotation(RequirePrincipal.class);
+        final AnnotationAssist<SecurityAudit> securityAudit = serviceMethod.getOriginMethod().getAnnotation(SecurityAudit.class);
 
         if (requirePrincipal == null && securityAudit == null) {
             return;
-        }
-
-        if (proxyMethod.isPlain()) {
-            throw CodegenException.of().message("To use @" + RequirePrincipal.class.getSimpleName() + " or @"
-                    + SecurityAudit.class.getSimpleName() + " method should not be plain method").element(proxyMethod.getOriginMethod()).build();
         }
 
         List<SecurityAuditorElement> auditors = new ArrayList<>();
@@ -79,13 +74,13 @@ public class SecurityModulator extends Modulator {
             // Add auditor field
             String fieldName = StrUtils.firstCharToLowerCase(sae.getAuditorClass().getSimpleName()) + auditorIdx;
             FieldSpec fieldSpec = FieldSpec.builder(TypeName.get(sae.getAuditorClass().getOriginType()), fieldName).addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
-            ProxyFieldElement fieldElement = new ProxyFieldElement(fieldSpec).inject();
-            service.addField(fieldElement);
+            ServiceFieldElement fieldElement = new ServiceFieldElement(fieldSpec).inject();
+            service.addCustomField(fieldElement);
 
             // Add interceptor invocation code
             CodeBlock.Builder codeBlock = CodeBlock.builder();
             codeBlock.add("$N::$N", fieldName, AuditInterceptor.AUDIT_METHOD);
-            proxyMethod.addInterception(InterceptionPhases.AUTHORIZATION, new InterceptionElement(codeBlock.build()));
+            serviceMethod.addInterception(InterceptionPhases.AUTHORIZATION, new InterceptionElement(codeBlock.build()));
         }
     }
 }

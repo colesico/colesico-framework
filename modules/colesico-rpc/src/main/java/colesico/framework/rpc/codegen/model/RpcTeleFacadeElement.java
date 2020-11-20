@@ -16,16 +16,21 @@
 
 package colesico.framework.rpc.codegen.model;
 
-public class RpcServiceModulatorContext {
+import colesico.framework.service.codegen.model.TeleFacadeElement;
+import colesico.framework.teleapi.DataPort;
+import colesico.framework.teleapi.TeleDriver;
 
-    private final RpcServiceElement rpcImplementation;
+public class RpcTeleFacadeElement extends TeleFacadeElement {
 
-    public RpcServiceModulatorContext(RpcServiceElement rpcImplementation) {
-        this.rpcImplementation = rpcImplementation;
+    private final RpcServiceElement rpcService;
+
+    public RpcTeleFacadeElement(String teleType, Class<? extends TeleDriver> teleDriverClass, Class<? extends DataPort> dataPortClass, Class<?> ligatureClass, IocQualifier iocQualifier, RpcServiceElement rpcService) {
+        super(teleType, teleDriverClass, dataPortClass, ligatureClass, iocQualifier);
+        this.rpcService = rpcService;
     }
 
-    public RpcServiceElement getRpcImplementation() {
-        return rpcImplementation;
+    public RpcServiceElement getRpcService() {
+        return rpcService;
     }
 
 }

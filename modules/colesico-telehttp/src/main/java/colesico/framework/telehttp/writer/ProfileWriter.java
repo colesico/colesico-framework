@@ -35,7 +35,7 @@ import java.util.Calendar;
 public final class ProfileWriter<C extends HttpTWContext> extends HttpTeleWriter<Profile, C> {
 
     public static final String COOKIE_NAME = "profile";
-    public static final String HEADER_NAME = "Localization";
+    public static final String HEADER_NAME = "X-Localization";
 
     protected final ProfileHttpConfigPrototype config;
     protected final ProfileSerializer profileSerializer;

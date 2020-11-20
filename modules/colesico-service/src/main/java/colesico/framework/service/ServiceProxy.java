@@ -17,7 +17,7 @@ package colesico.framework.service;
 
 /**
  * Service base interface.
- * Automatically implemented by all classes marked with @Service annotation
+ * Automatically implemented by all service implementations
  *
  * @author Vladlen Larionov
  */

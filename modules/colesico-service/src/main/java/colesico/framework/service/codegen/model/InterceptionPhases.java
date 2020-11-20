@@ -20,47 +20,46 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Фазы прокси метода
+ * Interception phases
  */
 public final class InterceptionPhases {
     /**
-     * Начальная фаза общего назначения
+     * Common purpose initial phase
      */
     public static final String BOOTSTRAP = "BOOTSTRAP";
 
     /**
-     * Фаза логирования вызова метода
+     * Logging phase
      */
     public static final String LOGGING = "LOGGING";
 
     /**
-     * Фаза управления транзакцией
+     * Transaction control phase
      */
     public static final String TRANSACTION = "TRANSACTION";
 
     /**
-     * Фаза проверки доступа
+     * Authorization control phase
      */
     public static final String AUTHORIZATION = "AUTHORIZATION";
 
     /**
-     * Фаза валидации параметров
+     * Parameters validation phase
      */
     public static final String VALIDATION = "VALIDATION";
 
-
     /**
-     * Фаза кеширования результата метода
+     * Method invocation result caching phase
      */
     public static final String CACHING = "CACHING";
 
     /**
-     * Фаза инициализации ресурсов  (соеденения с БД идр)
+     * Resource initialization phase  (db connection)
      */
     public static final String RESOURCES = "RESOURCES";
 
     /**
-     * Фаза общего назначения перед вызовом супер метода
+     * Common purpose phase just before target method been invoked
      */
     public static final String PREPROCESS = "PREPROCESS";
 

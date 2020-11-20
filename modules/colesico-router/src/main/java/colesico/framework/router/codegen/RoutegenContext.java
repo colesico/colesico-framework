@@ -37,9 +37,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Vladlen Larionov
+ * Routes generation context
  */
-abstract public class RoutegenContext {
+public class RoutegenContext {
 
     protected static final String INDEX_SERVICE_PREFIX = "Index";
     protected static final String INDEX_METHOD_NAME = "index";
@@ -60,12 +60,12 @@ abstract public class RoutegenContext {
         RoutedTeleMethodElement rtme = teleMethods.find(rte -> rte.getRoute().equals(route));
         if (null != rtme) {
             throw CodegenException.of()
-                    .message("Duplicate router path: " + route + "->" + targetMethodName + "(...). Route already bound to " + rtme.getTeleMethod().getProxyMethod().getName() + "(...)")
-                    .element(teleMethod.getProxyMethod().getOriginMethod()).build();
+                    .message("Duplicate router path: " + route + "->" + targetMethodName + "(...). Route already bound to " + rtme.getTeleMethod().getServiceMethod().getName() + "(...)")
+                    .element(teleMethod.getServiceMethod().getOriginMethod()).build();
         }
 
-        Map<String, String> methodRouteAttrs = parseRouteAttributes(teleMethod.getProxyMethod().getOriginMethod());
-        Map<String, String> classRouteAttrs = parseRouteAttributes(teleMethod.getProxyMethod().getOriginMethod().getParentClass());
+        Map<String, String> methodRouteAttrs = parseRouteAttributes(teleMethod.getServiceMethod().getOriginMethod());
+        Map<String, String> classRouteAttrs = parseRouteAttributes(teleMethod.getServiceMethod().getOriginMethod().getParentClass());
         classRouteAttrs.putAll(methodRouteAttrs);
 
         RoutedTeleMethodElement routedTeleMethodElement = new RoutedTeleMethodElement(teleMethod, route, classRouteAttrs);
@@ -74,7 +74,7 @@ abstract public class RoutegenContext {
 
     protected String buildMethodRoute(TeleMethodElement teleMethod) {
 
-        AnnotationAssist<Route> routeAnn = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(Route.class);
+        AnnotationAssist<Route> routeAnn = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(Route.class);
         String methodRoute;
         if (routeAnn != null) {
             methodRoute = StringUtils.trim(routeAnn.unwrap().value());
@@ -101,7 +101,7 @@ abstract public class RoutegenContext {
         }
 
         HttpMethod httpMethod = HttpMethod.HTTP_METHOD_GET;
-        AnnotationAssist<RequestMethod> methodAnnotation = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(RequestMethod.class);
+        AnnotationAssist<RequestMethod> methodAnnotation = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(RequestMethod.class);
         if (methodAnnotation != null) {
             httpMethod = HttpMethod.of(methodAnnotation.unwrap().value());
         }

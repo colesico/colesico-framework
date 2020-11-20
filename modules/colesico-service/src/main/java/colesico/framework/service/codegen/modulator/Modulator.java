@@ -16,28 +16,24 @@
 package colesico.framework.service.codegen.modulator;
 
 
-import colesico.framework.assist.codegen.model.VarElement;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.codegen.model.*;
-import colesico.framework.service.codegen.parser.ProcessorContext;
+import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import colesico.framework.service.codegen.parser.RoundContext;
 
 import java.lang.annotation.Annotation;
-import java.util.Deque;
 import java.util.Set;
 
 /**
- * Service extra code generator
- *
- * @author Vladlen Larionov
+ * Service extra parser/code generator
  */
 abstract public class Modulator {
 
-    protected ProcessorContext processorContext;
+    protected ServiceProcessorContext processorContext;
     protected RoundContext roundContext;
 
     protected ServiceElement service;
-    protected ProxyMethodElement proxyMethod;
+    protected ServiceMethodElement proxyMethod;
 
     /**
      * Returns a set of annotation that are aliases for @Service
@@ -48,7 +44,7 @@ abstract public class Modulator {
         return null;
     }
 
-    public void onInit(ProcessorContext context) {
+    public void onInit(ServiceProcessorContext context) {
         this.processorContext = context;
     }
 
@@ -64,28 +60,18 @@ abstract public class Modulator {
         this.service = service;
     }
 
-    public void onProxyMethodCreated(ProxyMethodElement proxyMethod) {
+    public void onServiceMethodParsed(ServiceMethodElement proxyMethod) {
         this.proxyMethod = proxyMethod;
     }
 
-    public void onBeforeParseTeleFacades(ServiceElement service) {
+    public void onInitTeleFacade(ServiceElement service) {
     }
 
     public void onBeforeParseTeleMethod(TeleMethodElement teleMethod) {
 
     }
 
-    /**
-     * @see TeleMethodElement#linkVariable(TeleVarElement)
-     */
-    public void onTeleParamLinked(TeleParamElement teleParam, Deque<VarElement> varStack) {
-
-    }
-
-    /**
-     * @see TeleMethodElement#linkVariable(TeleVarElement)
-     */
-    public void onTeleCompoundLinked(TeleCompElement teleComp) {
+    public void onTeleParamParsed(TeleParamElement teleParam) {
 
     }
 
@@ -103,11 +89,11 @@ abstract public class Modulator {
 
     }
 
-    public void onGenerateIocProducer(ProducerGenerator generator, Set<ServiceElement> services) {
+    public void onGenerateIocProducer(ProducerGenerator generator, ServiceElement service) {
 
     }
 
-    public final ProcessorContext getProcessorContext() {
+    public final ServiceProcessorContext getProcessorContext() {
         return processorContext;
     }
 
@@ -119,7 +105,7 @@ abstract public class Modulator {
         return service;
     }
 
-    public ProxyMethodElement getProxyMethod() {
+    public ServiceMethodElement getProxyMethod() {
         return proxyMethod;
     }
 }

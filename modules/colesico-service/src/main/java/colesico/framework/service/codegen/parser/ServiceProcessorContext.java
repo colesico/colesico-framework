@@ -28,11 +28,13 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public final class ProcessorContext {
+/**
+ * Service processor context
+ */
+public final class ServiceProcessorContext {
 
     private final ProcessingEnvironment processingEnv;
 
@@ -40,18 +42,18 @@ public final class ProcessorContext {
 
     private final InterceptionPhases interceptionPhases;
 
-    private final Set<ServiceElement> processedServices = new HashSet<>();
-
-    private final Map<Class, Object> properties;
+    /**
+     * Custom purpose props
+     */
+    private final Map<Class, Object> properties = new HashMap<>();
 
     /**
      * Flag indicates to generate code for production
      */
     private final CodegenMode codegenMode;
 
-    public ProcessorContext(ModulatorKit modulatorKit, ProcessingEnvironment processingEnv) {
+    public ServiceProcessorContext(ModulatorKit modulatorKit, ProcessingEnvironment processingEnv) {
         this.processingEnv = processingEnv;
-        this.properties = new HashMap<>();
         this.modulatorKit = modulatorKit;
         this.interceptionPhases = new InterceptionPhases();
         this.codegenMode = CodegenMode.fromKey(processingEnv.getOptions().get(CodegenUtils.OPTION_CODEGEN));
@@ -73,12 +75,16 @@ public final class ProcessorContext {
         return processingEnv;
     }
 
-    public Elements getElementUtils() {
-        return processingEnv.getElementUtils();
+    public ModulatorKit getModulatorKit() {
+        return modulatorKit;
     }
 
-    public Types getTypeUtils() {
-        return processingEnv.getTypeUtils();
+    public InterceptionPhases getInterceptionPhases() {
+        return interceptionPhases;
+    }
+
+    public Elements getElementUtils() {
+        return processingEnv.getElementUtils();
     }
 
     public Messager getMessager() {
@@ -89,15 +95,8 @@ public final class ProcessorContext {
         return processingEnv.getFiler();
     }
 
-    public Set<ServiceElement> getProcessedServices() {
-        return processedServices;
+    public Types getTypeUtils() {
+        return processingEnv.getTypeUtils();
     }
 
-    public ModulatorKit getModulatorKit() {
-        return modulatorKit;
-    }
-
-    public InterceptionPhases getInterceptionPhases() {
-        return interceptionPhases;
-    }
 }

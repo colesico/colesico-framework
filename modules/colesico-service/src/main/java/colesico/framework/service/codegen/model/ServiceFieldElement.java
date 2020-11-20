@@ -20,28 +20,45 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
 
 /**
- * @author Vladlen Larionov
+ * Represents service proxy filed
  */
-public final class ProxyFieldElement {
+public final class ServiceFieldElement {
 
+    /**
+     * Parent service ref
+     */
     protected ServiceElement parentService;
 
+    /**
+     * Field spec
+     */
     private final FieldSpec spec;
 
+    /**
+     * Inject field as given type
+     */
     private TypeName injectAs;
+
+    /**
+     * Inject with @Named
+     */
     private String named;
+
+    /**
+     * Inject with @Classed
+     */
     private TypeName classed;
 
-    public ProxyFieldElement(FieldSpec spec) {
+    public ServiceFieldElement(FieldSpec spec) {
         this.spec = spec;
     }
 
-    public ProxyFieldElement inject() {
+    public ServiceFieldElement inject() {
         this.injectAs = spec.type;
         return this;
     }
 
-    public ProxyFieldElement setInjectAs(TypeName injectingTypenName) {
+    public ServiceFieldElement setInjectAs(TypeName injectingTypenName) {
         this.injectAs = injectingTypenName;
         return this;
     }
@@ -50,7 +67,7 @@ public final class ProxyFieldElement {
         return named;
     }
 
-    public ProxyFieldElement setNamed(String named) {
+    public ServiceFieldElement setNamed(String named) {
         this.named = named;
         return this;
     }
@@ -59,7 +76,7 @@ public final class ProxyFieldElement {
         return classed;
     }
 
-    public ProxyFieldElement setClassed(TypeName classed) {
+    public ServiceFieldElement setClassed(TypeName classed) {
         this.classed = classed;
         return this;
     }
@@ -86,9 +103,9 @@ public final class ProxyFieldElement {
 
     @Override
     public String toString() {
-        return "FieldElement{" +
+        return "ServiceFieldElement{" +
                 "spec=" + spec +
-                ", injectionClass=" + injectAs +
+                ", injectAs=" + injectAs +
                 ", named='" + named + '\'' +
                 ", classed=" + classed +
                 '}';

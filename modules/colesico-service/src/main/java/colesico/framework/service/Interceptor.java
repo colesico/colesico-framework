@@ -17,7 +17,7 @@
 package colesico.framework.service;
 
 /**
- * @author Vladlen Larionov
+ * Service method invocation interceptor
  */
 @FunctionalInterface
 public interface Interceptor<T, R> {
