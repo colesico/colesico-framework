@@ -54,11 +54,4 @@ abstract public class HttpTeleReader<V, C extends HttpTRContext> implements Tele
         return routerContextProv.get();
     }
 
-    /**
-     * Value read helper
-     */
-    public static <V> V read(String name, OriginFacade originFacade, HttpTeleReader<V, HttpTRContext> reader) {
-        return reader.read(HttpTRContext.of(name, originFacade));
-    }
-
 }
