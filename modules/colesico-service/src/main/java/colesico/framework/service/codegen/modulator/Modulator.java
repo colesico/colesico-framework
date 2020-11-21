@@ -37,8 +37,6 @@ abstract public class Modulator {
 
     /**
      * Returns a set of annotation that are aliases for @Service
-     *
-     * @return
      */
     public Set<Class<? extends Annotation>> serviceAnnotations() {
         return null;

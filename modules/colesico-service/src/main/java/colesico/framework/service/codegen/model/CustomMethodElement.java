@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents service proxy auxiliary method
+ * Represents service custom method
  */
 public final class CustomMethodElement {
 

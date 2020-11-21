@@ -20,7 +20,7 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
 
 /**
- * Represents service proxy filed
+ * Represents service custom filed
  */
 public final class ServiceFieldElement {
 

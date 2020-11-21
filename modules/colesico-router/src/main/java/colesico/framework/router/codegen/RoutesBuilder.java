@@ -37,9 +37,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Routes generation context
+ * Routes builder
+ * Used to construct routes while a service parsing
  */
-public class RoutegenContext {
+public class RoutesBuilder {
 
     protected static final String INDEX_SERVICE_PREFIX = "Index";
     protected static final String INDEX_METHOD_NAME = "index";
@@ -49,7 +50,7 @@ public class RoutegenContext {
 
     protected final String serviceRoute;
 
-    public RoutegenContext(ServiceElement service) {
+    public RoutesBuilder(ServiceElement service) {
         this.serviceRoute = buildServiceRoute(service);
     }
 
@@ -149,7 +150,7 @@ public class RoutegenContext {
         String route = StringUtils.trim(routeAnn.value());
         if (!route.startsWith(RouteTrie.SEGMENT_DELEMITER)) {
             throw CodegenException.of()
-                    .message("Wrong package route: " + route + ". Must starts with '" + RouteTrie.SEGMENT_DELEMITER + "'")
+                    .message("Wrong package route: " + route + ". must starts with '" + RouteTrie.SEGMENT_DELEMITER + "'")
                     .element(pkg)
                     .build();
         }

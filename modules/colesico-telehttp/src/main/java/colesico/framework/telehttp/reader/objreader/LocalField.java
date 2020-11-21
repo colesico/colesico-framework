@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.service.codegen.modulator;
+package colesico.framework.telehttp.reader.objreader;
 
-import colesico.framework.assist.CollectionUtils;
-import colesico.framework.service.Service;
-
-import java.lang.annotation.Annotation;
-import java.util.Set;
+import java.lang.annotation.*;
 
 /**
- * Default service modulator
+ * Object reader annotation.
+ * Specifies that the object field should be ignored by object reader
+ * @see ObjectReader
  */
-public class ServiceModulator extends Modulator {
-
-    @Override
-    public Set<Class<? extends Annotation>> serviceAnnotations() {
-        return CollectionUtils.annotationClassSet(Service.class);
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD})
+@Inherited
+@Documented
+public @interface LocalField {
+    String value();
 }

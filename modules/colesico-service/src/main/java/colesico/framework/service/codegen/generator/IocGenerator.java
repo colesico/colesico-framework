@@ -80,7 +80,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         producerGenerator.addProduceAnnotation(ClassName.bestGuess(teleFacadeElement.getFacadeClassName()));
 
         // Generate produce method
-        String methodName = "get" + TeleFacade.class.getSimpleName() + StrUtils.firstCharToUpperCase(teleFacadeElement.getTeleType());
+        String methodName = "get" + TeleFacade.class.getSimpleName() + StrUtils.firstCharToUpperCase(teleFacadeElement.getTeleType().getSimpleName());
         MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, TypeName.get(TeleFacade.class));
         mb.addParameter(ClassName.bestGuess(teleFacadeElement.getFacadeClassName()), IMPLEMENTATION_PARAM, Modifier.FINAL);
 

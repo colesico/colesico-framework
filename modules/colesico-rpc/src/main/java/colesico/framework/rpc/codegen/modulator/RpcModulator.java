@@ -40,8 +40,8 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
     private final Logger logger = LoggerFactory.getLogger(RpcModulator.class);
 
     @Override
-    protected String getTeleType() {
-        return Rpc.class.getSimpleName();
+    protected Class<?> getTeleType() {
+        return Rpc.class;
     }
 
     @Override

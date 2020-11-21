@@ -24,17 +24,34 @@ import com.squareup.javapoet.CodeBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+/**
+ * Tele-facades modulation support.
+ * must be extended by any concrete tele-facades modulators.
+ *
+ * @see TeleFacade
+ */
 public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulator {
 
     private final Logger log = LoggerFactory.getLogger(TeleModulator.class);
 
     public static final String LIGATURE_VAR = "ligature";
 
-    abstract protected String getTeleType();
+    /**
+     * Tele type id.
+     * Usually, it is the service alias annotation.
+     */
+    abstract protected Class<?>  getTeleType();
 
+    /**
+     * Checks that the modulator can handle given service to produce tele-facade
+     */
     abstract protected boolean isTeleFacadeSupported(ServiceElement serviceElm);
 
+    /**
+     * Returns custom tele-facade object for modulation process
+     *
+     * @see TeleFacade
+     */
     abstract protected T createTeleFacade(ServiceElement serviceElm);
 
     /**

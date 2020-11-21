@@ -43,7 +43,7 @@ public class TeleFacadeElement {
     /**
      * Tele-type id
      */
-    private final String teleType;
+    private final Class<?> teleType;
 
     /**
      * Tele-driver type
@@ -76,12 +76,12 @@ public class TeleFacadeElement {
 
     private final Map<Class, Object> properties;
 
-    public TeleFacadeElement(String teleType,
+    public TeleFacadeElement(Class<?> teleType,
                              Class<? extends TeleDriver> teleDriverClass,
                              Class<? extends DataPort> dataPortClass,
                              Class<?> ligatureClass,
                              IocQualifier iocQualifier) {
-        this.teleType = checkTeleType(teleType);
+        this.teleType = teleType;
         this.teleDriverClass = teleDriverClass;
         this.ligatureClass = ligatureClass;
         this.dataPortClass = dataPortClass;
@@ -89,14 +89,6 @@ public class TeleFacadeElement {
         this.properties = new HashMap();
         this.iocQualifier = iocQualifier;
     }
-
-    private String checkTeleType(String teleType) {
-        if (!teleType.matches("^[a-zA-Z]+$")) {
-            throw CodegenException.of().message("Tele-scope must contain only letters: " + teleType).build();
-        }
-        return teleType;
-    }
-
 
     public ServiceElement getParentService() {
         return parentService;
@@ -109,7 +101,7 @@ public class TeleFacadeElement {
      */
     public String getFacadeClassSimpleName() {
         String originClassName = parentService.getOriginClass().getSimpleName();
-        String teleTypeSuffix = StrUtils.firstCharToUpperCase(teleType);
+        String teleTypeSuffix = StrUtils.firstCharToUpperCase(teleType.getSimpleName());
 
         if (StringUtils.endsWith(originClassName, teleTypeSuffix)) {
             return originClassName + TeleFacade.TELE_FACADE_SUFFIX;
@@ -140,7 +132,7 @@ public class TeleFacadeElement {
         return teleMethods;
     }
 
-    public String getTeleType() {
+    public Class<?> getTeleType() {
         return teleType;
     }
 

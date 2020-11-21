@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Vladlen Larionov
+ * Router default implementation
  */
 public class RouterImpl implements Router {
 

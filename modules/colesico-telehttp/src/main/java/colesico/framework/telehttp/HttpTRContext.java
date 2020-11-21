@@ -1,7 +1,5 @@
 package colesico.framework.telehttp;
 
-import colesico.framework.http.HttpContext;
-
 /**
  * Basic tele-reading context for interaction via http
  */

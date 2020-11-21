@@ -5,7 +5,6 @@ import colesico.framework.teleapi.TeleMethod;
 import java.util.Map;
 
 /**
- * Route action.
  * Represents any action associated with given route
  */
 public final class RouteAction {

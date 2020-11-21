@@ -21,7 +21,7 @@ import colesico.framework.assist.codegen.model.MethodElement;
 import java.util.*;
 
 /**
- * Represent the method of a service
+ * Represents the service proxy method for origin service class method.
  *
  * @author Vladlen Larionov
  */

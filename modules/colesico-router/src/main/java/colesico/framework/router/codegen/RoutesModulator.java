@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-
 /**
  * Routes modulation support
  */
@@ -45,25 +44,25 @@ abstract public class RoutesModulator extends TeleModulator<RouterTeleFacadeElem
     abstract protected Class<? extends DataPort> getDataPortClass();
 
     @Override
-    protected void processTeleMethod(TeleMethodElement teleMethodElement) {
+    protected final void processTeleMethod(TeleMethodElement teleMethodElement) {
         ((RouterTeleFacadeElement) teleMethodElement.getParentTeleFacade())
-                .getContext()
+                .getRoutesBuilder()
                 .addTeleMethod(teleMethodElement);
     }
 
     @Override
-    protected RouterTeleFacadeElement createTeleFacade(ServiceElement serviceElm) {
+    protected final RouterTeleFacadeElement createTeleFacade(ServiceElement serviceElm) {
         return new RouterTeleFacadeElement(
                 getTeleType(),
                 getTeleDriverClass(),
                 getDataPortClass(),
                 RoutingLigature.class,
                 TeleFacadeElement.IocQualifier.ofClassed(Router.class),
-                new RoutegenContext(serviceElm)
+                new RoutesBuilder(serviceElm)
         );
     }
 
-    protected CodeBlock generateLigatureMethodBody(RouterTeleFacadeElement teleFacade) {
+    protected final CodeBlock generateLigatureMethodBody(RouterTeleFacadeElement teleFacade) {
         CodeBlock.Builder cb = CodeBlock.builder();
 
         cb.addStatement("$T $N = new $T($T.class)",
@@ -73,9 +72,9 @@ abstract public class RoutesModulator extends TeleModulator<RouterTeleFacadeElem
                 TypeName.get(teleFacade.getParentService().getOriginClass().getOriginType())
         );
 
-        RoutegenContext routegenContext = teleFacade.getContext();
+        RoutesBuilder routesBuilder = teleFacade.getRoutesBuilder();
 
-        for (RoutegenContext.RoutedTeleMethodElement routedTeleMethod : routegenContext.getTeleMethods()) {
+        for (RoutesBuilder.RoutedTeleMethodElement routedTeleMethod : routesBuilder.getTeleMethods()) {
             cb.add(generateRouteMapping(teleFacade, routedTeleMethod));
         }
 
@@ -83,7 +82,7 @@ abstract public class RoutesModulator extends TeleModulator<RouterTeleFacadeElem
         return cb.build();
     }
 
-    protected CodeBlock generateRouteMapping(TeleFacadeElement teleFacade, RoutegenContext.RoutedTeleMethodElement routedTeleMethod) {
+    protected final CodeBlock generateRouteMapping(TeleFacadeElement teleFacade, RoutesBuilder.RoutedTeleMethodElement routedTeleMethod) {
 
         CodeBlock.Builder cb = CodeBlock.builder();
 

@@ -24,7 +24,7 @@ public class RpcTeleFacadeElement extends TeleFacadeElement {
 
     private final RpcServiceElement rpcService;
 
-    public RpcTeleFacadeElement(String teleType, Class<? extends TeleDriver> teleDriverClass, Class<? extends DataPort> dataPortClass, Class<?> ligatureClass, IocQualifier iocQualifier, RpcServiceElement rpcService) {
+    public RpcTeleFacadeElement(Class<?> teleType, Class<? extends TeleDriver> teleDriverClass, Class<? extends DataPort> dataPortClass, Class<?> ligatureClass, IocQualifier iocQualifier, RpcServiceElement rpcService) {
         super(teleType, teleDriverClass, dataPortClass, ligatureClass, iocQualifier);
         this.rpcService = rpcService;
     }

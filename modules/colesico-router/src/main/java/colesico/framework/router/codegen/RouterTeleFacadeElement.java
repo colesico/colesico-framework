@@ -4,23 +4,26 @@ import colesico.framework.service.codegen.model.TeleFacadeElement;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleDriver;
 
-public class RouterTeleFacadeElement extends TeleFacadeElement {
+/**
+ * Custom tele facade
+ */
+public final class RouterTeleFacadeElement extends TeleFacadeElement {
 
-    private final RoutegenContext context;
+    private final RoutesBuilder routesBuilder;
 
-    public RouterTeleFacadeElement(String teleType,
+    public RouterTeleFacadeElement(Class<?> teleType,
                                    Class<? extends TeleDriver> teleDriverClass,
                                    Class<? extends DataPort> dataPortClass,
                                    Class<?> ligatureClass,
                                    IocQualifier iocQualifier,
-                                   RoutegenContext context) {
+                                   RoutesBuilder routesBuilder) {
 
         super(teleType, teleDriverClass, dataPortClass, ligatureClass, iocQualifier);
-        this.context = context;
+        this.routesBuilder = routesBuilder;
     }
 
-    public RoutegenContext getContext() {
-        return context;
+    public RoutesBuilder getRoutesBuilder() {
+        return routesBuilder;
     }
 }
 

@@ -3,6 +3,7 @@ package colesico.framework.telehttp.internal;
 import colesico.framework.telehttp.reader.*;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
+import colesico.framework.telehttp.reader.objreader.ObjectReader;
 
 @Producer
 @Produce(BooleanReader.class)
@@ -20,6 +21,7 @@ import colesico.framework.ioc.production.Producer;
 @Produce(LocalDateReader.class)
 @Produce(LocalTimeReader.class)
 @Produce(LocalDateTimeReader.class)
+@Produce(ObjectReader.class)
 @Produce(PrincipalReader.class)
 @Produce(ProfileReader.class)
 public class ReadersProducer {

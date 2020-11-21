@@ -38,11 +38,11 @@ import java.util.Set;
 /**
  * @author Vladlen Larionov
  */
-public class RestletModulator extends RoutesModulator {
+public final class RestletModulator extends RoutesModulator {
 
     @Override
-    protected String getTeleType() {
-        return Restlet.class.getSimpleName();
+    protected Class<?> getTeleType() {
+        return Restlet.class;
     }
 
     @Override

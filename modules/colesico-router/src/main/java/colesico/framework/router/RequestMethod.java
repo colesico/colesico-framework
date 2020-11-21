@@ -19,7 +19,7 @@ package colesico.framework.router;
 import java.lang.annotation.*;
 
 /**
- * Defines HTTP map method be used to calling routerext
+ * Defines HTTP method be used to calling route action method
  *
  * @author Vladlen Larionov
  */

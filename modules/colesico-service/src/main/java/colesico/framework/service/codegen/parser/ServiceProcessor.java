@@ -39,7 +39,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Процессор аннотации осуществляющий обработку классов помеченных аннотацией @Service
+ * Processes classes with the @Service annotation and others that considered to be an aliases.
+ * @see colesico.framework.service.codegen.modulator.Modulator#serviceAnnotations
  *
  * @author Vladlen Larionov
  */

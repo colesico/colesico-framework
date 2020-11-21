@@ -37,11 +37,11 @@ import java.util.Set;
 /**
  * @author Vladlen Larionov
  */
-public class WebletModulator extends RoutesModulator {
+public final class WebletModulator extends RoutesModulator {
 
     @Override
-    protected String getTeleType() {
-        return Weblet.class.getSimpleName();
+    protected Class<?> getTeleType() {
+        return Weblet.class;
     }
 
     @Override

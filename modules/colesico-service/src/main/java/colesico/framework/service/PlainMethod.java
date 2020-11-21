@@ -18,7 +18,7 @@ package colesico.framework.service;
 import java.lang.annotation.*;
 
 /**
- * Indicates that the method is not a service method.
+ * Indicates that the method is not a service automated method.
  *
  * The method will be used in the service as is, without generating
  * a proxy method that provides an auxiliary code for the automation of the original method

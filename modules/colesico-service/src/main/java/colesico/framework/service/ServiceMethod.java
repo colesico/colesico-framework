@@ -18,12 +18,12 @@ package colesico.framework.service;
 import java.lang.annotation.*;
 
 /**
- * Indicates that the method is a service method.
+ * Indicates that the method is a service automated method.
  * <p>
  * This annotation (for example) can marks a protected methods that must be acts as public service methods
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE}) //TYPE - for future releases
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Inherited
 @Documented
 public @interface ServiceMethod {
