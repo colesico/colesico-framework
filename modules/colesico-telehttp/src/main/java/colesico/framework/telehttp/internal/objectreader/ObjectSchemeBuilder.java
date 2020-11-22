@@ -4,6 +4,7 @@ import colesico.framework.assist.StrUtils;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTeleReader;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
@@ -12,14 +13,13 @@ import java.util.List;
 
 public class ObjectSchemeBuilder {
 
-    public <T> ObjectScheme<T> buildObjectScheme(Class<T> objectClass){
-        // TODO
+    public <T> ReadingScheme<T> buildObjectScheme(Class<T> objectClass) {
         return null;
     }
 
-    protected <T> ObjectScheme<T> buildObject(Class<T> objectClass, String namePrefix) {
+    protected <T> ReadingScheme<T> buildObjectScheme(Class<T> objectClass, String namePrefix) {
         try {
-            T compositionInstance = objectClass.getDeclaredConstructor().newInstance();
+            Constructor<T> constuctor = objectClass.getDeclaredConstructor();
             List<Method> setters = getSetters(objectClass);
             for (Method setter : setters) {
                 // Http param name
@@ -28,11 +28,11 @@ public class ObjectSchemeBuilder {
                 T value = null;
                 HttpTeleReader<T, HttpTRContext> reader = getReader(valueType);
                 if (reader != null) {
-                    value = reader.read(HttpTRContext.of(paramName,null ));
+                    value = reader.read(HttpTRContext.of(paramName, null));
                 } else {
-                   // value = buildObject(valueType, paramName);
+                    // value = buildObject(valueType, paramName);
                 }
-                setter.invoke(compositionInstance, value);
+                //setter.invoke(compositionInstance, value);
             }
             //return compositionInstance;
             return null;
@@ -42,7 +42,6 @@ public class ObjectSchemeBuilder {
     }
 
     protected <T> HttpTeleReader<T, HttpTRContext> getReader(Type valueType) {
-        // TODO:
         return null;
     }
 
