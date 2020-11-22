@@ -22,7 +22,7 @@ import java.lang.annotation.*;
  * Defines parameter reading origin
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.PARAMETER, ElementType.METHOD})
+@Target({ElementType.METHOD, ElementType.PARAMETER})
 @Inherited
 @Documented
 public @interface ParamOrigin {

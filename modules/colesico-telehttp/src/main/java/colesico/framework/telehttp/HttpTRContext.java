@@ -1,5 +1,7 @@
 package colesico.framework.telehttp;
 
+import java.lang.reflect.Type;
+
 /**
  * Basic tele-reading context for interaction via http
  */
@@ -9,6 +11,11 @@ abstract public class HttpTRContext {
      * Parameter name
      */
     private final String name;
+
+    /**
+     * Parameter type
+     */
+    private Type valueType;
 
     /**
      * Origin facade to read parameter from it
@@ -39,4 +46,11 @@ abstract public class HttpTRContext {
         return originFacade;
     }
 
+    public Type getValueType() {
+        return valueType;
+    }
+
+    public void setValueType(Type valueType) {
+        this.valueType = valueType;
+    }
 }

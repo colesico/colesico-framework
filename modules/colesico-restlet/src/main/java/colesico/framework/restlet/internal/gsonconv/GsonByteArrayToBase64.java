@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.restlet.teleapi.gson;
+package colesico.framework.restlet.internal.gsonconv;
 
 import com.google.gson.*;
 

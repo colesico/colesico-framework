@@ -65,7 +65,7 @@ public class RestletDataPortImpl implements RestletDataPort {
         }
 
         // Store value type to context
-        // so that type can be used by writers
+        // so that type can be used by readers
         context.setValueType(valueType);
 
         RestletTeleReader<V> reader;

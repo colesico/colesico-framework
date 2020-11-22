@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.reader.objreader;
+package colesico.framework.telehttp;
+
+import colesico.framework.telehttp.reader.ObjectReader;
 
 import java.lang.annotation.*;
 
 /**
- * Object reader annotation.
  * Specifies that the object field should be ignored by object reader
+ *
  * @see ObjectReader
  */
 @Retention(RetentionPolicy.RUNTIME)

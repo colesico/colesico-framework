@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package colesico.framework.restlet.teleapi.gson;
+package colesico.framework.restlet.internal.gsonconv;
 
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.restlet.teleapi.RestletJsonConverter;
+import colesico.framework.restlet.teleapi.RestletGsonOptionsPrototype;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

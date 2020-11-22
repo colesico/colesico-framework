@@ -13,8 +13,6 @@ public final class RestletTRContext extends HttpTRContext {
      */
     private final Class<? extends RestletTeleReader> readerClass;
 
-    private Type valueType;
-
     public RestletTRContext(String name, OriginFacade originFacade, Class<? extends RestletTeleReader> readerClass) {
         super(name, originFacade);
         this.readerClass = readerClass;
@@ -34,11 +32,4 @@ public final class RestletTRContext extends HttpTRContext {
         return readerClass;
     }
 
-    public Type getValueType() {
-        return valueType;
-    }
-
-    public void setValueType(Type valueType) {
-        this.valueType = valueType;
-    }
 }
