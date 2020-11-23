@@ -18,7 +18,8 @@ package colesico.framework.restlet.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.restlet.teleapi.reader.JsonReader;
-import colesico.framework.restlet.teleapi.reader.ObjectReader;
+import colesico.framework.restlet.teleapi.reader.RestletObjectReader;
+import colesico.framework.restlet.teleapi.reader.ValueReader;
 import colesico.framework.telehttp.reader.*;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
@@ -39,10 +40,16 @@ import java.util.OptionalLong;
 @Produce(JsonReader.class)
 public class RestletReadersProducer {
 
-    // Default Object reader impl
+    // Default general purpose reader impl
     @Singleton
-    public ObjectReader getObjectReader(JsonReader impl) {
+    public ValueReader getValueReader(JsonReader impl) {
         return impl;
+    }
+
+    // Http object reader proxy
+    @Singleton
+    public RestletObjectReader getObjectReader(ObjectReader impl) {
+        return new RestletObjectReader(impl);
     }
 
     @Singleton

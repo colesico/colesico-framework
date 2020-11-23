@@ -21,7 +21,7 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.ClassedKey;
 import colesico.framework.restlet.RestletError;
 import colesico.framework.restlet.teleapi.*;
-import colesico.framework.restlet.teleapi.reader.ObjectReader;
+import colesico.framework.restlet.teleapi.reader.ValueReader;
 import colesico.framework.restlet.teleapi.writer.ObjectWriter;
 import colesico.framework.router.RouterContext;
 import org.apache.commons.lang3.StringUtils;
@@ -79,7 +79,7 @@ public class RestletDataPortImpl implements RestletDataPort {
 
             // No accurate reader here so are reading data as object
             if (reader == null) {
-                reader = (RestletTeleReader<V>) ioc.instance(ObjectReader.class);
+                reader = (RestletTeleReader<V>) ioc.instance(ValueReader.class);
             }
         }
         return reader.read(context);

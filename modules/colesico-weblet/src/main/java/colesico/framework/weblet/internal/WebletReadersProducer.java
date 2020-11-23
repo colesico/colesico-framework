@@ -44,6 +44,12 @@ public class WebletReadersProducer {
     //
 
     @Singleton
+    @Classed(Object.class)
+    public WebletTeleReader getObjectReader(ObjectReader impl) {
+        return WebletReaderProxy.of(impl);
+    }
+
+    @Singleton
     @Classed(Boolean.class)
     public WebletTeleReader getBooleanReader(BooleanReader impl) {
         return WebletReaderProxy.of(impl);
