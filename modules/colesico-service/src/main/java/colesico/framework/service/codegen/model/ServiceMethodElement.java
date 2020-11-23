@@ -38,6 +38,13 @@ public final class ServiceMethodElement {
     private final MethodElement originMethod;
 
     /**
+     * Indicates that the method is plain-method.
+     * This flag can be used in modulators to check the correctness of applying annotations to plain methods.
+     * Plain methods can also be a tele-methods therefore, it is wrong just not include the plan methods in the list of service methods.
+     */
+    private final boolean isPlain;
+
+    /**
      * Indicates that the method is not tele-method
      */
     private final boolean isLocal;
@@ -56,8 +63,9 @@ public final class ServiceMethodElement {
      */
     private final Map<Class, Object> properties;
 
-    public ServiceMethodElement(MethodElement originMethod, boolean isLocal, boolean isPostConstructListener) {
+    public ServiceMethodElement(MethodElement originMethod, boolean isPlain, boolean isLocal, boolean isPostConstructListener) {
         this.originMethod = originMethod;
+        this.isPlain = isPlain;
         this.isLocal = isLocal;
         this.isPostConstructListener = isPostConstructListener;
         this.interceptionsByPhase = new HashMap<>();
@@ -95,6 +103,10 @@ public final class ServiceMethodElement {
 
     public final boolean isLocal() {
         return isLocal;
+    }
+
+    public boolean isPlain() {
+        return isPlain;
     }
 
     public boolean isPostConstructListener() {

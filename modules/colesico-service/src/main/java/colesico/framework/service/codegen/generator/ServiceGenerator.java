@@ -254,8 +254,14 @@ public class ServiceGenerator {
     protected void generateServiceMethods(ServiceElement serviceElm, TypeSpec.Builder serviceBuilder) {
         for (ServiceMethodElement method : serviceElm.getServiceMethods()) {
             logger.debug("Generate proxy method:" + method.getName() +
+                    "; isPlain=" + method.isPlain() +
                     "; isLocal=" + method.isLocal() +
                     "; isPCListener=" + method.isPostConstructListener());
+
+            if (method.isPlain()) {
+                logger.debug("Skip plain method: " + method.getName());
+                continue;
+            }
 
             MethodSpec.Builder methodBuilder = CodegenUtils.createProxyMethodBuilder(
                     method.getOriginMethod(), null, METHOD_PARAM_PREFIX, true

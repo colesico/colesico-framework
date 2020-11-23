@@ -112,10 +112,7 @@ public class ServiceParser extends FrameworkAbstractParser {
             }
 
             // is plain ?
-            if (isPlainMethod(method, classElement)) {
-                logger.debug("Skip plain method: {}", method.getName());
-                continue;
-            }
+            boolean isPlain = isPlainMethod(method, classElement);
 
             // is local?
             AnnotationAssist<LocalMethod> localAnn = method.getAnnotation(LocalMethod.class);
@@ -127,7 +124,7 @@ public class ServiceParser extends FrameworkAbstractParser {
             boolean isPCListener = pcListenerAnn != null &&
                     method.unwrap().getModifiers().contains(Modifier.PUBLIC);
 
-            ServiceMethodElement serviceMethod = new ServiceMethodElement(method, isLocal, isPCListener);
+            ServiceMethodElement serviceMethod = new ServiceMethodElement(method, isPlain, isLocal, isPCListener);
             serviceElement.addServiceMethod(serviceMethod);
 
             context.getModulatorKit().notifyServiceMethodParsed(serviceMethod);

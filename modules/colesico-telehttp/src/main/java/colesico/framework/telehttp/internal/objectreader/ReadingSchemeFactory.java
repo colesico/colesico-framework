@@ -37,12 +37,9 @@ public class ReadingSchemeFactory {
         try {
             Constructor<T> constructor = objectClass.getDeclaredConstructor();
             ReadingScheme<T> scheme = new ReadingScheme<>(constructor);
-            List<Field> fields = getAllFields(objectClass);
+            List<Field> fields = getFields(objectClass);
             for (Field field : fields) {
-                LocalField lf = field.getAnnotation(LocalField.class);
-                if (lf!=null){
-                    continue;
-                }
+
                 // Http param name
                 String paramName = getParamName(namePrefix, field);
                 Type fieldType = field.getGenericType();
@@ -78,11 +75,18 @@ public class ReadingSchemeFactory {
     }
 
     // Fields with inheritance
-    protected List<Field> getAllFields(Class clazz) {
+    protected List<Field> getFields(Class clazz) {
         List<Field> result = new ArrayList<>();
         Class<?> currentClass = clazz;
         while (currentClass.getSuperclass() != null) {
             for (Field field : currentClass.getDeclaredFields()) {
+                LocalField lf = field.getAnnotation(LocalField.class);
+                if (lf != null) {
+                    continue;
+                }
+                if (Modifier.isStatic(field.getModifiers())) {
+                    continue;
+                }
                 result.add(field);
             }
             currentClass = currentClass.getSuperclass();
@@ -106,7 +110,7 @@ public class ReadingSchemeFactory {
             }
             currentClass = currentClass.getSuperclass();
         }
-        return null;
+        throw new RuntimeException("Setter not found for field: " + clazz.getCanonicalName() + "." + fieldName);
     }
 
 
