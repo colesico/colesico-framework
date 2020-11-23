@@ -5,6 +5,7 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.ClassedKey;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTeleReader;
+import colesico.framework.telehttp.LocalField;
 import colesico.framework.telehttp.ParamName;
 
 import javax.inject.Singleton;
@@ -38,6 +39,10 @@ public class ReadingSchemeFactory {
             ReadingScheme<T> scheme = new ReadingScheme<>(constructor);
             List<Field> fields = getAllFields(objectClass);
             for (Field field : fields) {
+                LocalField lf = field.getAnnotation(LocalField.class);
+                if (lf!=null){
+                    continue;
+                }
                 // Http param name
                 String paramName = getParamName(namePrefix, field);
                 Type fieldType = field.getGenericType();
