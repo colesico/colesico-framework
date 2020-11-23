@@ -49,6 +49,7 @@ public class WebletDataPortImpl implements WebletDataPort {
         if (context == null) {
             context = new WebletTRContext();
         }
+        context.setValueType(valueType);
         WebletTeleReader reader;
         if (context.getReaderClass() != null) {
             // Get specified reader
