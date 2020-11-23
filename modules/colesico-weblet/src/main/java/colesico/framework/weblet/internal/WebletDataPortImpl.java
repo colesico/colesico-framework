@@ -55,7 +55,7 @@ public class WebletDataPortImpl implements WebletDataPort {
             reader = ioc.instance(context.getReaderClass());
         } else {
             // Get reader by value type
-            reader = ioc.instance(new ClassedKey<>(WebletTeleReader.class.getCanonicalName(), typeToClassName(valueType)), null);
+            reader = ioc.instanceOrNull(new ClassedKey<>(WebletTeleReader.class.getCanonicalName(), typeToClassName(valueType)), null);
             if (reader == null) {
                 // Get default reader
                 reader = ioc.instance(new ClassedKey<>(WebletTeleReader.class.getCanonicalName(), Object.class.getCanonicalName()), null);
