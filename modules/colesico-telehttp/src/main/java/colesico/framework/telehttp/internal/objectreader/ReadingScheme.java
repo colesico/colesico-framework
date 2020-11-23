@@ -9,23 +9,40 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Object reading scheme
+ */
 public final class ReadingScheme<T> {
 
     /**
      * Target class constructor
      */
-    private final Constructor<T> targetConstructor;
+    private final Constructor<T> constructor;
 
+    /**
+     * The fields that values can be read from remote client
+     */
     private final List<ValueField> valueFields = new ArrayList<>();
 
+    /**
+     * Fields that represents nested objects
+     */
     private final List<ObjectField> objectFields = new ArrayList<>();
 
-    public ReadingScheme(Constructor<T> targetConstructor) {
-        this.targetConstructor = targetConstructor;
+    public ReadingScheme(Constructor<T> cr) {
+        this.constructor = cr;
     }
 
-    public Constructor<T> getTargetConstructor() {
-        return targetConstructor;
+    public void addValueField(ValueField filed) {
+        valueFields.add(filed);
+    }
+
+    public void addObjectField(ObjectField field) {
+        objectFields.add(field);
+    }
+
+    public Constructor<T> getConstructor() {
+        return constructor;
     }
 
     public List<ValueField> getValueFields() {

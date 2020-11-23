@@ -20,13 +20,13 @@ public final class ObjectReaderImpl<C extends HttpTRContext> extends ObjectReade
 
     @Override
     public Object read(C context) {
-        ReadingScheme scheme = readingSchemeFactory.getObjectScheme((Class) context.getValueType());
+        ReadingScheme scheme = readingSchemeFactory.getScheme((Class) context.getValueType());
         return readObject(scheme, context);
     }
 
     private <T> T readObject(ReadingScheme<T> scheme, C context) {
         try {
-            T object = scheme.getTargetConstructor().newInstance();
+            T object = scheme.getConstructor().newInstance();
             // Process value fields
             for (ReadingScheme.ValueField valueFiled : scheme.getValueFields()) {
                 valueFiled.readValue(object, context.getName(), context.getOriginFacade());
