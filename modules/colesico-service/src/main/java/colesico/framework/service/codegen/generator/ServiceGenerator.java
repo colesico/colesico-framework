@@ -283,8 +283,8 @@ public class ServiceGenerator {
             }
 
             // Super method call
-            if (method.getSuperMethodInterception() != null) {
-                generateInterceptorBindings(method.getSuperMethodInterception(), methodBuilder);
+            if (method.getInterception() != null) {
+                generateInterceptorBindings(method.getInterception(), methodBuilder);
             } else {
                 InterceptionElement ihe = generateSuperMethodInterception(method.getOriginMethod());
                 generateInterceptorBindings(ihe, methodBuilder);
@@ -299,11 +299,11 @@ public class ServiceGenerator {
     private void generateInterceptorBindings(InterceptionElement interceptionElm, MethodSpec.Builder serviceMethodBuilder) {
         CodeBlock.Builder interceptorBindings = CodeBlock.builder();
         interceptorBindings.add(INTERCEPTORS_CHAIN_VARIABLE + ".add(");
-        interceptorBindings.add(interceptionElm.getInterceptor());
+        interceptorBindings.add(interceptionElm.getInterceptorCode());
         interceptorBindings.add(",");
 
-        if (interceptionElm.getParameters() != null) {
-            interceptorBindings.add(interceptionElm.getParameters());
+        if (interceptionElm.getParametersCode() != null) {
+            interceptorBindings.add(interceptionElm.getParametersCode());
         } else {
             interceptorBindings.add("null");
         }
