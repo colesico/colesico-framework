@@ -23,7 +23,7 @@
     <groupId>net.colesico.framework</groupId>
     <artifactId>colesico-framework</artifactId>
     <packaging>pom</packaging>
-    <version>4.1.0</version>
+    <version>4.1.1-SNAPSHOT</version>
     <name>Colesico Framework</name>
     <description>
         Lightweight application framework for Java 14+
