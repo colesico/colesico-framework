@@ -19,12 +19,10 @@ package colesico.framework.rpc;
 import java.lang.annotation.*;
 
 /**
- * Remote procedure call entity (parameter or method) name
- *
- * @author Vladlen Larionov
+ * Define custom rpc name
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Documented
 public @interface RpcName {
     String value();

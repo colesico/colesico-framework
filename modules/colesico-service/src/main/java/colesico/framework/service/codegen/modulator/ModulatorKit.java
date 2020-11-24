@@ -17,19 +17,21 @@
 package colesico.framework.service.codegen.modulator;
 
 import colesico.framework.assist.ServiceLocator;
-import colesico.framework.assist.codegen.model.VarElement;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.codegen.model.*;
-import colesico.framework.service.codegen.parser.ProcessorContext;
+import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import colesico.framework.service.codegen.parser.RoundContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
- * @author Vladlen Larionov
+ * Modulators management
  */
 public class ModulatorKit {
     protected final List<Modulator> modulators;
@@ -61,7 +63,7 @@ public class ModulatorKit {
         return serviceAnnotations;
     }
 
-    public void notifyInit(ProcessorContext context) {
+    public void notifyInit(ServiceProcessorContext context) {
         for (Modulator modulator : modulators) {
             modulator.onInit(context);
         }
@@ -79,33 +81,39 @@ public class ModulatorKit {
         }
     }
 
-    public void notifyService(ServiceElement service) {
+    public void notifyBeforeParseService(ServiceElement service) {
         for (Modulator modulator : modulators) {
-            modulator.onService(service);
+            modulator.onBeforeParseService(service);
         }
     }
 
-    public void notifyProxyMethod(ProxyMethodElement proxyMethod) {
+    public void notifyServiceMethodParsed(ServiceMethodElement proxyMethod) {
         for (Modulator modulator : modulators) {
-            modulator.onProxyMethod(proxyMethod);
+            modulator.onServiceMethodParsed(proxyMethod);
         }
     }
 
-    public void notifyAddTeleFacade(ServiceElement service) {
+    public void notifyInitTeleFacade(ServiceElement service) {
         for (Modulator modulator : modulators) {
-            modulator.onAddTeleFacade(service);
+            modulator.onInitTeleFacade(service);
         }
     }
 
-    public void notifyAddTeleMethod(TeleMethodElement teleMethod) {
+    public void notifyBeforeParseTeleMethod(TeleMethodElement teleMethod) {
         for (Modulator modulator : modulators) {
-            modulator.onAddTeleMethod(teleMethod);
+            modulator.onBeforeParseTeleMethod(teleMethod);
         }
     }
 
-    public void notifyLinkTeleParam(TeleParamElement teleParam, Deque<VarElement> varStack) {
+    public void notifyTeleParamParsed(TeleParamElement teleParam) {
         for (Modulator modulator : modulators) {
-            modulator.onLinkTeleParam(teleParam, varStack);
+            modulator.onTeleParamParsed(teleParam);
+        }
+    }
+
+    public void notifyTeleMethodParsed(TeleMethodElement teleMethod) {
+        for (Modulator modulator : modulators) {
+            modulator.onTeleMethodParsed(teleMethod);
         }
     }
 
@@ -127,9 +135,10 @@ public class ModulatorKit {
         }
     }
 
-    public void notifyGenerateIocProducer(ProducerGenerator generator,  Set<ServiceElement> services){
+    public void notifyGenerateIocProducer(ProducerGenerator generator, ServiceElement serviceElm) {
         for (Modulator modulator : modulators) {
-            modulator.onGenerateIocProducer(generator, services);
+            modulator.onGenerateIocProducer(generator, serviceElm);
         }
     }
+
 }

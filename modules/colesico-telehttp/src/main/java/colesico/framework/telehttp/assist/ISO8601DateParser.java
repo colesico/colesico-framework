@@ -21,11 +21,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- * ISO 8601 date parsing utility.  Designed for parsing the ISO subset used in
- * Dublin Core, RSS 1.0, and Atom.
- *
- * @author Vladlen Larionov
- * @version $Handling: ISO8601DateParser.java,v 1.2 2005/06/03 20:25:29 snoopdave Exp $
+ * ISO 8601 date parsing utility
  */
 public class ISO8601DateParser {
     // 2004-06-14T19:GMT20:30Z

@@ -35,7 +35,6 @@ module colesico.framework.restlet {
     exports colesico.framework.restlet.teleapi;
     exports colesico.framework.restlet.teleapi.reader;
     exports colesico.framework.restlet.teleapi.writer;
-    exports colesico.framework.restlet.teleapi.gson;
     exports colesico.framework.restlet.assist;
 
     // Internal

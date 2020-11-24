@@ -20,12 +20,15 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 /**
- *
+ * Service method interceptors chain
  */
 public final class InterceptorsChain<T, R> {
 
     private Queue<Interception> queue = new ArrayDeque();
 
+    /**
+     * Add interceptor to chain
+     */
     public <P> void add(Interceptor<T, R> interceptor, P parameters) {
         queue.add(new Interception(interceptor, parameters));
     }

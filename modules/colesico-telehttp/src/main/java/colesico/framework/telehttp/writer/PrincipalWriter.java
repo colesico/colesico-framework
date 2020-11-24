@@ -37,7 +37,7 @@ import java.util.Calendar;
 public final class PrincipalWriter<C extends HttpTWContext> extends HttpTeleWriter<Principal, C> {
 
     public static final String COOKIE_NAME = "principal";
-    public static final String HEADER_NAME = "Principal";
+    public static final String HEADER_NAME = "X-Principal";
     public static final String ITEM_DELIMITER = ":";
 
     protected final PrincipalHttpConfigPrototype config;

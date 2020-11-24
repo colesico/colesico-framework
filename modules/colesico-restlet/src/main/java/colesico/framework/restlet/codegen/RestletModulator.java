@@ -25,7 +25,6 @@ import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
 import colesico.framework.service.codegen.model.TeleParamElement;
-import colesico.framework.service.codegen.model.TeleVarElement;
 import colesico.framework.telehttp.Origin;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
 import com.squareup.javapoet.ClassName;
@@ -39,12 +38,11 @@ import java.util.Set;
 /**
  * @author Vladlen Larionov
  */
-public class RestletModulator extends
-        RoutesModulator<RestletTeleDriver, RestletDataPort, RestletTRContext, RestletTWContext, RestletTIContext> {
+public final class RestletModulator extends RoutesModulator {
 
     @Override
-    protected String getTeleType() {
-        return Restlet.class.getSimpleName();
+    protected Class<?> getTeleType() {
+        return Restlet.class;
     }
 
     @Override
@@ -77,11 +75,10 @@ public class RestletModulator extends
         cb.add("$S", paramName);
 
         // Param origin
-        TeleVarElement rootVar = TeleHttpCodegenUtils.getRootVar(teleParam);
-        Origin paramOrigin = TeleHttpCodegenUtils.getParamOrigin(teleParam, rootVar);
+        Origin paramOrigin = TeleHttpCodegenUtils.getParamOrigin(teleParam);
         cb.add(", $T.$N", ClassName.get(RestletOriginFacade.class), paramOrigin.name());
 
-        TypeName customReader = getCustomReaderClass(teleParam, rootVar);
+        TypeName customReader = getCustomReaderClass(teleParam);
         if (customReader == null) {
             cb.add(", null");
         } else {
@@ -108,7 +105,7 @@ public class RestletModulator extends
     }
 
     protected TypeName getCustomWriterClass(TeleMethodElement teleMethod) {
-        var wrAnn = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(RestletResponseWriter.class);
+        var wrAnn = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(RestletResponseWriter.class);
         if (wrAnn == null) {
             wrAnn = teleMethod.getParentTeleFacade().getParentService().getOriginClass().getAnnotation(RestletResponseWriter.class);
         }
@@ -119,11 +116,8 @@ public class RestletModulator extends
         return TypeName.get(readerClassMirror);
     }
 
-    protected TypeName getCustomReaderClass(TeleParamElement teleParam, TeleVarElement rootVar) {
-        var rdAnn = teleParam.getOriginVariable().getAnnotation(RestletParamReader.class);
-        if (rdAnn == null) {
-            rdAnn = rootVar.getOriginVariable().getAnnotation(RestletParamReader.class);
-        }
+    protected TypeName getCustomReaderClass(TeleParamElement teleParam) {
+        var rdAnn = teleParam.getOriginParam().getAnnotation(RestletParamReader.class);
         if (rdAnn == null) {
             return null;
         }

@@ -37,7 +37,7 @@ public interface DataPort<R, W> {
     String WRITE_METHOD = "write";
 
     /**
-     * Key for storing instance of TeleDataPort in process scope
+     * Key for storing instance of DataPort in process scope
      */
     Key<DataPort> SCOPE_KEY = new TypeKey<>(DataPort.class);
 
@@ -46,18 +46,15 @@ public interface DataPort<R, W> {
      *
      * @param valueType
      * @param context data reader context
-     * @param <V>
-     * @return
+     * @param <V> reading value type
      */
     <V> V read(Type valueType, R context);
 
     /**
      * Writes data to the remote response.
      *
-     * @param valueType
-     * @param value
      * @param context data writer context
-     * @param <V>
+     * @param <V> writing value type
      */
     <V> void write(Type valueType, V value, W context);
 

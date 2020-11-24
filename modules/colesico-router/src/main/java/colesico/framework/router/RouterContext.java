@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * @author Vladlen Larionov
+ * Intended to access the route parameter values
  */
 public final class RouterContext {
 

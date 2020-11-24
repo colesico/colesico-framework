@@ -13,6 +13,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 
 @Singleton
 public class KryoExchange implements RpcExchange {
@@ -33,7 +34,7 @@ public class KryoExchange implements RpcExchange {
         this.httpContextProv = httpContextProv;
     }
 
-    @Override
+    //@Override
     public RpcRequest readRequest() {
         HttpContext ctx = httpContextProv.get();
         RpcRequest request = deserialize(ctx.getRequest().getInputStream());
@@ -64,5 +65,15 @@ public class KryoExchange implements RpcExchange {
         } finally {
             kryoPool.free(kryo);
         }
+    }
+
+    @Override
+    public RequestResolution resolveRequest() {
+        return null;
+    }
+
+    @Override
+    public <Q extends RpcRequest> Q readRequest(Type requestType) {
+        return null;
     }
 }

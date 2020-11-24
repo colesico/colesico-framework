@@ -16,7 +16,7 @@ import java.io.InputStream;
 import static colesico.framework.http.HttpMethod.*;
 
 @Singleton
-public final class JsonReader extends ObjectReader {
+public final class JsonReader extends ValueReader {
 
     protected final RestletJsonConverter jsonConverter;
 
@@ -53,7 +53,7 @@ public final class JsonReader extends ObjectReader {
             }
         } else {
             try {
-                String strValue = context.getString(routerContextProv.get(), httpContext.getRequest());
+                String strValue = getStringValue(context);
                 if (StringUtils.isBlank(strValue)) {
                     return null;
                 }

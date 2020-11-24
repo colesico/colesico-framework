@@ -46,7 +46,7 @@ public final class OptionalLongReader<C extends HttpTRContext> extends HttpTeleR
     @Override
     public OptionalLong read(C ctx) {
         try {
-            String val = ctx.getString(this.getRouterContext(), this.getRequest());
+            String val = getStringValue(ctx);
             if (StringUtils.isBlank(val)) {
                 return null;
             }

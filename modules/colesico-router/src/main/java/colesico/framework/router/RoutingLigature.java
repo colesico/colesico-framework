@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * @author Vladlen Larionov
+ * Binds routes with route action methods  (tele-facade methods)
  */
 public final class RoutingLigature {
 

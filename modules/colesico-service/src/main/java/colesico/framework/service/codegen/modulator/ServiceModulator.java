@@ -22,6 +22,9 @@ import colesico.framework.service.Service;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
+/**
+ * Default service modulator
+ */
 public class ServiceModulator extends Modulator {
 
     @Override

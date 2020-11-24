@@ -18,14 +18,12 @@ package colesico.framework.service;
 import java.lang.annotation.*;
 
 /**
- * Indicates that the method is not tele-method.
- *
- * Local method will not present in any service tele-facades and can't be invoked remotely
- *
- * @author Vladlen Larionov
+ * Indicates that the method is not a tele-method.
+ * <p>
+ * Local method will not present in a service tele-facades and can't be invoked remotely
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE}) //TYPE - for future releases
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Inherited
 @Documented
 public @interface LocalMethod {

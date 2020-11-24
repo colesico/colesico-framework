@@ -24,26 +24,24 @@ import colesico.framework.ioc.scope.CustomScope;
 import colesico.framework.service.LocalMethod;
 import colesico.framework.service.PlainMethod;
 import colesico.framework.service.ServiceMethod;
-import colesico.framework.service.codegen.model.ProxyMethodElement;
+import colesico.framework.service.codegen.model.ServiceMethodElement;
 import colesico.framework.service.codegen.model.ServiceElement;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
-import javax.tools.Diagnostic;
 import java.util.List;
 
 public class ServiceParser extends FrameworkAbstractParser {
 
-    protected final ProcessorContext context;
+    protected final ServiceProcessorContext context;
 
-    protected final TeleFacadesParser teleFacadesParser;
+    protected final TeleFacadeParser teleFacadeParser;
 
-    public ServiceParser(ProcessorContext context) {
+    public ServiceParser(ServiceProcessorContext context) {
         super(context.getProcessingEnv());
         this.context = context;
-        this.teleFacadesParser = new TeleFacadesParser(context);
+        this.teleFacadeParser = new TeleFacadeParser(context);
     }
 
     protected ClassType getServiceScope(ClassElement serviceElement) {
@@ -101,7 +99,7 @@ public class ServiceParser extends FrameworkAbstractParser {
         return true;
     }
 
-    protected void addProxyMethods(ServiceElement serviceElement) {
+    protected void parseServiceMethods(ServiceElement serviceElement) {
         ClassElement classElement = serviceElement.getOriginClass();
         AnnotationAssist<LocalMethod> classLocalAnn = classElement.getAnnotation(LocalMethod.class);
 
@@ -109,7 +107,7 @@ public class ServiceParser extends FrameworkAbstractParser {
 
         for (MethodElement method : methods) {
             if (method.unwrap().getModifiers().contains(Modifier.STATIC)) {
-                // skip static methods
+                logger.debug("Skip static method: {}", method.getName());
                 continue;
             }
 
@@ -126,38 +124,25 @@ public class ServiceParser extends FrameworkAbstractParser {
             boolean isPCListener = pcListenerAnn != null &&
                     method.unwrap().getModifiers().contains(Modifier.PUBLIC);
 
-            ProxyMethodElement proxyMethod = new ProxyMethodElement(method, isPlain, isLocal, isPCListener);
-            serviceElement.addProxyMethod(proxyMethod);
+            ServiceMethodElement serviceMethod = new ServiceMethodElement(method, isPlain, isLocal, isPCListener);
+            serviceElement.addServiceMethod(serviceMethod);
 
-            context.getModulatorKit().notifyProxyMethod(proxyMethod);
+            context.getModulatorKit().notifyServiceMethodParsed(serviceMethod);
         }
     }
 
-    public ServiceElement parse(TypeElement serviceTypeElement) {
-        try {
-            ClassElement serviceClassElement = ClassElement.fromElement(context.getProcessingEnv(), serviceTypeElement);
-            ServiceElement service = new ServiceElement(serviceClassElement, getServiceScope(serviceClassElement));
-            context.getModulatorKit().notifyService(service);
+    public ServiceElement parse(TypeElement serviceType) {
 
-            addProxyMethods(service);
+        ClassElement serviceClass = ClassElement.fromElement(context.getProcessingEnv(), serviceType);
 
-            context.getModulatorKit().notifyAddTeleFacade(service);
-            teleFacadesParser.parseTeleFacades(service);
+        ServiceElement service = new ServiceElement(serviceClass, getServiceScope(serviceClass));
+        context.getModulatorKit().notifyBeforeParseService(service);
 
-            context.getModulatorKit().notifyServiceParsed(service);
-            return service;
-        } catch (CodegenException ce) {
-            ce.print(processingEnv, serviceTypeElement);
-            throw ce;
-        } catch (Exception e) {
-            String msg = ExceptionUtils.getRootCauseMessage(e);
-            logger.error("Error parsing service class: " + serviceTypeElement + "; message: " + msg);
-            processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, msg);
-            if (logger.isDebugEnabled()) {
-                e.printStackTrace();
-            }
-            throw new RuntimeException(e);
-        }
+        parseServiceMethods(service);
+        teleFacadeParser.parse(service);
+
+        context.getModulatorKit().notifyServiceParsed(service);
+        return service;
     }
 
 

@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Represents a service proxy
+ * Represents a service
  *
  * @author Vladlen Larionov
  */
@@ -42,64 +42,78 @@ public final class ServiceElement {
     private final ClassElement originClass;
 
     /**
-     * Service proxy interfaces
+     * Service auxiliary interfaces
      */
-    private final Elements<TypeName> interfaces;
+    private final Elements<TypeName> customInterfaces;
 
     /**
-     * Service proxy extra fields
+     * Service auxiliary fields
      */
-    private final Elements<ProxyFieldElement> fields;
+    private final Elements<ServiceFieldElement> customFields;
 
-    private final Elements<ProxyMethodElement> proxyMethods;
+    /**
+     * Service methods
+     */
+    private final Elements<ServiceMethodElement> serviceMethods;
 
+    /**
+     * Extra methods
+     */
     private final Elements<CustomMethodElement> customMethods;
 
+    /**
+     * Constructor extra code
+     */
     private final Elements<CodeBlock> constructorExtraCode;
 
-    private final Elements<TeleFacadeElement> teleFacades;
+    /**
+     * Service tele-facade if cpecified
+     */
+    private TeleFacadeElement teleFacade;
 
     /**
      * Common purpose properties
      */
     private final Map<Class, Object> properties;
 
+    /**
+     * Service custom scope
+     */
     private final ClassType customScopeType;
 
     public ServiceElement(ClassElement originClass, ClassType customScopeType) {
         this.originClass = originClass;
         this.customScopeType = customScopeType;
-        this.interfaces = new Elements<>();
-        this.proxyMethods = new Elements<>();
-        this.fields = new Elements<>();
+        this.customInterfaces = new Elements<>();
+        this.serviceMethods = new Elements<>();
+        this.customFields = new Elements<>();
         this.customMethods = new Elements<>();
         this.constructorExtraCode = new Elements<>();
-        this.teleFacades = new Elements<>();
         this.properties = new HashMap();
     }
 
-    public void addField(final ProxyFieldElement field) {
-        ProxyFieldElement mfe = fields.find(f -> f.getName().equals(field.getName()));
+    public void addCustomField(final ServiceFieldElement field) {
+        ServiceFieldElement mfe = customFields.find(f -> f.getName().equals(field.getName()));
         if (mfe != null) {
             if (mfe.getTypeName().equals(field.getTypeName())) {
                 return;
             }
             throw CodegenException.of().message("Duplicate field name:" + field.getName()).element(getOriginClass()).build();
         }
-        fields.add(field);
+        customFields.add(field);
         field.parentService = this;
     }
 
-    public void addInterface(TypeName interfaceTypeName) {
-        TypeName intf = interfaces.find(i -> i.toString().equals(interfaceTypeName.toString()));
+    public void addCustomInterface(TypeName interfaceTypeName) {
+        TypeName intf = customInterfaces.find(i -> i.toString().equals(interfaceTypeName.toString()));
         if (intf != null) {
             return;
         }
-        interfaces.add(interfaceTypeName);
+        customInterfaces.add(interfaceTypeName);
     }
 
-    public void addProxyMethod(final ProxyMethodElement proxyMethod) {
-        proxyMethods.add(proxyMethod);
+    public void addServiceMethod(final ServiceMethodElement proxyMethod) {
+        serviceMethods.add(proxyMethod);
         proxyMethod.parentService = this;
     }
 
@@ -112,33 +126,35 @@ public final class ServiceElement {
         customMethod.parentService = this;
     }
 
-    public void addTeleFacade(TeleFacadeElement teleFacade) {
-        TeleFacadeElement ta = teleFacades.find(t -> t.getTeleType().equals(teleFacade.getTeleType()));
-        if (ta != null) {
-            throw CodegenException.of().message("Duplicate tele-facade: " + teleFacade.getTeleType()).element(getOriginClass()).build();
+    public void setTeleFacade(TeleFacadeElement teleFacade) {
+        if (this.teleFacade != null) {
+            throw CodegenException.of()
+                    .message("Tele-facade has already been set: " + teleFacade.getTeleType())
+                    .element(getOriginClass())
+                    .build();
         }
         teleFacade.parentService = this;
-        teleFacades.add(teleFacade);
+        this.teleFacade = teleFacade;
     }
 
-    public void addConstuctorExtraCode(CodeBlock cb) {
+    public void addConstructorExtraCode(CodeBlock cb) {
         constructorExtraCode.add(cb);
     }
 
-    public Elements<TypeName> getInterfaces() {
-        return interfaces;
+    public Elements<TypeName> getCustomInterfaces() {
+        return customInterfaces;
     }
 
-    public Elements<ProxyFieldElement> getFields() {
-        return fields;
+    public Elements<ServiceFieldElement> getCustomFields() {
+        return customFields;
     }
 
     public Elements<CustomMethodElement> getCustomMethods() {
         return customMethods;
     }
 
-    public Elements<ProxyMethodElement> getProxyMethods() {
-        return proxyMethods;
+    public Elements<ServiceMethodElement> getServiceMethods() {
+        return serviceMethods;
     }
 
     public <T> T getProperty(Class<T> propertyClass) {
@@ -153,10 +169,9 @@ public final class ServiceElement {
         return constructorExtraCode;
     }
 
-    public Elements<TeleFacadeElement> getTeleFacades() {
-        return teleFacades;
+    public TeleFacadeElement getTeleFacade() {
+        return teleFacade;
     }
-
 
     public ClassType getCustomScopeType() {
         return customScopeType;
@@ -165,7 +180,6 @@ public final class ServiceElement {
     public ClassElement getOriginClass() {
         return originClass;
     }
-
 
     public String getProxyClassSimpleName() {
         String originClassName = originClass.getSimpleName();
@@ -178,7 +192,7 @@ public final class ServiceElement {
     }
 
     public String getProxyClassName() {
-        return originClass.getPackageName()+'.'+getProxyClassSimpleName();
+        return originClass.getPackageName() + '.' + getProxyClassSimpleName();
     }
 
     @Override

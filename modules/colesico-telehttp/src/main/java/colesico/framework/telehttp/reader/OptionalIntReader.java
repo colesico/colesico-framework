@@ -46,7 +46,7 @@ public final class OptionalIntReader<C extends HttpTRContext> extends HttpTeleRe
     @Override
     public OptionalInt read(C ctx) {
         try {
-            String val = ctx.getString(this.getRouterContext(), this.getRequest());
+            String val = getStringValue(ctx);
             if (StringUtils.isBlank(val)) {
                 return null;
             }

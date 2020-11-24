@@ -16,29 +16,84 @@
 
 package colesico.framework.service.codegen.model;
 
-import colesico.framework.assist.codegen.model.VarElement;
+import colesico.framework.assist.codegen.model.ParameterElement;
 import com.squareup.javapoet.CodeBlock;
 
-public final class TeleParamElement extends TeleVarElement {
+import java.util.HashMap;
+import java.util.Map;
 
-    private CodeBlock readingContext;
+/**
+ * Tele-method parameter
+ */
+public final class TeleParamElement {
 
+    /**
+     * Parent tele-method ref
+     */
+    protected TeleMethodElement parentTeleMethod;
+
+    /**
+     * Origin method param ref
+     */
+    protected final ParameterElement originParam;
+
+    /**
+     * Param reading context code
+     */
+    private CodeBlock readingContextCode;
+
+    /**
+     * Parameter index
+     */
     protected final Integer paramIndex;
 
-    public TeleParamElement(VarElement originVariable, Boolean isLocal, Integer paramIndex) {
-        super(originVariable, isLocal);
+    /**
+     * Custom purpose props
+     */
+    private Map<Class<?>, Object> properties = new HashMap<>();
+
+    public TeleParamElement(ParameterElement originParam, Integer paramIndex) {
+        this.originParam = originParam;
         this.paramIndex = paramIndex;
     }
 
-    public CodeBlock getReadingContext() {
-        return readingContext;
+    public <C> C getProperty(Class<C> propertyClass) {
+        return (C) properties.get(propertyClass);
     }
 
-    public void setReadingContext(CodeBlock readingContext) {
-        this.readingContext = readingContext;
+    public void setProperty(Class<?> propertyClass, Object property) {
+        properties.put(propertyClass, property);
+    }
+
+    public TeleMethodElement getParentTeleMethod() {
+        return parentTeleMethod;
+    }
+
+    public void setParentTeleMethod(TeleMethodElement parentTeleMethod) {
+        this.parentTeleMethod = parentTeleMethod;
+    }
+
+    public ParameterElement getOriginParam() {
+        return originParam;
+    }
+
+    public CodeBlock getReadingContextCode() {
+        return readingContextCode;
+    }
+
+    public void setReadingContextCode(CodeBlock readingContextCode) {
+        this.readingContextCode = readingContextCode;
     }
 
     public Integer getParamIndex() {
         return paramIndex;
+    }
+
+    @Override
+    public String toString() {
+        return "TeleParamElement{" +
+                "originParam=" + originParam +
+                ", paramIndex=" + paramIndex +
+                '}';
     }
 }

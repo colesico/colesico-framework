@@ -46,7 +46,7 @@ public final class DateReader<C extends HttpTRContext> extends HttpTeleReader<Da
     @Override
     public Date read(C ctx) {
         try {
-            String val = ctx.getString(getRouterContext(), getRequest());
+            String val = getStringValue(ctx);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }

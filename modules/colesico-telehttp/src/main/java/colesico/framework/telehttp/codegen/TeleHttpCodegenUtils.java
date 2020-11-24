@@ -1,10 +1,8 @@
 package colesico.framework.telehttp.codegen;
 
 import colesico.framework.assist.codegen.model.AnnotationAssist;
-import colesico.framework.service.codegen.model.TeleCompElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
 import colesico.framework.service.codegen.model.TeleParamElement;
-import colesico.framework.service.codegen.model.TeleVarElement;
 import colesico.framework.telehttp.Origin;
 import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.ParamOrigin;
@@ -17,53 +15,21 @@ import java.util.List;
 public class TeleHttpCodegenUtils {
 
     public static String getParamName(TeleParamElement teleParam) {
-        List<String> paramNamesChain = new ArrayList<>();
+        AnnotationAssist<ParamName> nameAnn = teleParam.getOriginParam().getAnnotation(ParamName.class);
+        if (nameAnn != null) {
+            return nameAnn.unwrap().value();
 
-        TeleVarElement curVar = teleParam;
-        TeleVarElement rootVar = teleParam;
-        while (curVar != null) {
-            String name;
-            AnnotationAssist<ParamName> nameAnn = curVar.getOriginVariable().getAnnotation(ParamName.class);
-            if (nameAnn != null) {
-                name = nameAnn.unwrap().value();
-            } else if (curVar instanceof TeleCompElement) {
-                name = null;
-            } else {
-                name = curVar.getOriginVariable().getName();
-            }
-
-            if (StringUtils.isNotBlank(name)) {
-                paramNamesChain.add(name);
-            }
-            rootVar = curVar;
-            curVar = curVar.getParentVariable();
         }
 
-        Collections.reverse(paramNamesChain);
-        String paramName = StringUtils.join(paramNamesChain, "");
-        return paramName;
+        return teleParam.getOriginParam().getName();
     }
 
-    public static TeleVarElement getRootVar(TeleParamElement teleParam) {
-        TeleVarElement curVar = teleParam;
-        TeleVarElement rootVar = teleParam;
-        while (curVar != null) {
-            rootVar = curVar;
-            curVar = curVar.getParentVariable();
-        }
-        return rootVar;
-    }
-
-    public static Origin getParamOrigin(TeleParamElement teleParam, TeleVarElement rootVar) {
+    public static Origin getParamOrigin(TeleParamElement teleParam) {
         TeleMethodElement teleMethod = teleParam.getParentTeleMethod();
         Origin paramOrigin = Origin.AUTO;
-        AnnotationAssist<ParamOrigin> originAnn = teleParam.getOriginVariable().getAnnotation(ParamOrigin.class);
+        AnnotationAssist<ParamOrigin> originAnn = teleParam.getOriginParam().getAnnotation(ParamOrigin.class);
         if (originAnn == null) {
-            originAnn = teleMethod.getProxyMethod().getOriginMethod().getAnnotation(ParamOrigin.class);
-            if (originAnn == null) {
-
-                originAnn = rootVar.getOriginVariable().getAnnotation(ParamOrigin.class);
-            }
+            originAnn = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(ParamOrigin.class);
         }
 
         if (originAnn != null) {

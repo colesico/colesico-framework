@@ -16,8 +16,7 @@
 package colesico.framework.router;
 
 /**
- *
- * @author Vladlen Larionov
+ * Basic router exception
  */
 public class RouterException extends RuntimeException{
 

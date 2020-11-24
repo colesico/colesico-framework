@@ -17,10 +17,12 @@
 package colesico.framework.router.internal;
 
 import colesico.framework.assist.StrUtils;
+import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.*;
+import colesico.framework.router.assist.ForwardRequest;
 import colesico.framework.router.assist.RouteTrie;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.TeleMethod;
@@ -28,12 +30,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 /**
- * @author Vladlen Larionov
+ * Router default implementation
  */
 public class RouterImpl implements Router {
 
@@ -98,13 +101,13 @@ public class RouterImpl implements Router {
     }
 
     @Override
-    public ActionResolution resolveAction(HttpMethod requestHttpMethod, String requestUri) {
-        RouteTrie.RouteResolution<RouteAction> routeResolution = routeTrie.resolveRoute(StrUtils.concatPath(requestHttpMethod.getName(), requestUri, RouteTrie.SEGMENT_DELEMITER));
+    public ActionResolution resolveAction(HttpMethod requestMethod, String requestUri) {
+        RouteTrie.RouteResolution<RouteAction> routeResolution = routeTrie.resolveRoute(StrUtils.concatPath(requestMethod.getName(), requestUri, RouteTrie.SEGMENT_DELEMITER));
         if (routeResolution == null || routeResolution.getNode() == null || routeResolution.getNode().getValue() == null) {
-            throw new UnknownRouteException(requestHttpMethod, requestUri);
+            throw new UnknownRouteException(requestMethod, requestUri);
         }
 
-        return new ActionResolution(requestHttpMethod,
+        return new ActionResolution(requestMethod,
                 requestUri,
                 routeResolution.getNode().getValue(),
                 routeResolution.getParams());
@@ -123,6 +126,5 @@ public class RouterImpl implements Router {
 
         teleMethod.invoke();
     }
-
 
 }

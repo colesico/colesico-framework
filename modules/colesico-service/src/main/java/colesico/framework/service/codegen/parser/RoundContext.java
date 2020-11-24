@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author Vladlen Larionov
+ * Service processing round context
  */
 public final class RoundContext {
     private final Set<? extends TypeElement> annotations;

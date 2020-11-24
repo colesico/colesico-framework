@@ -17,7 +17,7 @@
 package colesico.framework.service;
 
 /**
- * @author Vladlen Larionov
+ * Service method invocation interception context
  */
 public final class InvocationContext<T, R> {
 
@@ -26,9 +26,24 @@ public final class InvocationContext<T, R> {
     public static final String GET_PARAMETERS_METHOD = "getParameters";
     public static final String PROCEED_METHOD = "proceed";
 
+    /**
+     * Target service
+     */
     private final T target;
+
+    /**
+     * Target service method name
+     */
     private final String methodName;
+
+    /**
+     * Method parameters
+     */
     private final Object[] parameters;
+
+    /**
+     * Interceptors to be invoked to intercept method invocation
+     */
     private final InterceptorsChain<T,R> interceptors;
 
     private InterceptorsChain.Interception<T,R,Object> interception;
@@ -51,8 +66,6 @@ public final class InvocationContext<T, R> {
 
     /**
      * Executing method name
-     *
-     * @return
      */
     public String getMethodName() {
         return methodName;
@@ -60,8 +73,6 @@ public final class InvocationContext<T, R> {
 
     /**
      * Method parameters values
-     *
-     * @return
      */
     public Object[] getParameters() {
         return parameters;

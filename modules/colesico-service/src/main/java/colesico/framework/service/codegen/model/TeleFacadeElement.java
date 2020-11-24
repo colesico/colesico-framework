@@ -30,18 +30,45 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Vladlen Larionov
+ * Tele-facade representation
+ * This class can be extended to use with concrete tele-type modulator
  */
-public final class TeleFacadeElement {
+public class TeleFacadeElement {
 
+    /**
+     * Parent service ref
+     */
     protected ServiceElement parentService;
 
-    private final String teleType;
+    /**
+     * Tele-type id
+     */
+    private final Class<?> teleType;
+
+    /**
+     * Tele-driver type
+     */
     private final Class<? extends TeleDriver> teleDriverClass;
+
+    /**
+     * Data port type
+     */
     private final Class<? extends DataPort> dataPortClass;
+
+    /**
+     * Ligature class
+     */
     private final Class<?> ligatureClass;
+
+    /**
+     * Tele methods.
+     * This list can be different with the methods of service due to  {@link colesico.framework.service.LocalMethod}
+     */
     private final Elements<TeleMethodElement> teleMethods;
 
+    /**
+     * Ligature method code
+     */
     private CodeBlock ligatureMethodBody;
 
     // IoC Qualifier for  producer method
@@ -49,12 +76,12 @@ public final class TeleFacadeElement {
 
     private final Map<Class, Object> properties;
 
-    public TeleFacadeElement(String teleType,
+    public TeleFacadeElement(Class<?> teleType,
                              Class<? extends TeleDriver> teleDriverClass,
                              Class<? extends DataPort> dataPortClass,
                              Class<?> ligatureClass,
                              IocQualifier iocQualifier) {
-        this.teleType = checkTeleType(teleType);
+        this.teleType = teleType;
         this.teleDriverClass = teleDriverClass;
         this.ligatureClass = ligatureClass;
         this.dataPortClass = dataPortClass;
@@ -63,26 +90,18 @@ public final class TeleFacadeElement {
         this.iocQualifier = iocQualifier;
     }
 
-    private String checkTeleType(String teleType) {
-        if (!teleType.matches("^[a-zA-Z]+$")) {
-            throw CodegenException.of().message("Tele-scope must contain only letters: " + teleType).build();
-        }
-        return teleType;
-    }
-
-
     public ServiceElement getParentService() {
         return parentService;
     }
 
     /**
-     * Returns telefacade class simple name
+     * Returns tele-facade class simple name
      *
      * @return
      */
     public String getFacadeClassSimpleName() {
         String originClassName = parentService.getOriginClass().getSimpleName();
-        String teleTypeSuffix = StrUtils.firstCharToUpperCase(teleType);
+        String teleTypeSuffix = StrUtils.firstCharToUpperCase(teleType.getSimpleName());
 
         if (StringUtils.endsWith(originClassName, teleTypeSuffix)) {
             return originClassName + TeleFacade.TELE_FACADE_SUFFIX;
@@ -92,7 +111,7 @@ public final class TeleFacadeElement {
     }
 
     /**
-     * Returns telefacade class full name
+     * Returns tele-facade class full name
      *
      * @return
      */
@@ -102,7 +121,7 @@ public final class TeleFacadeElement {
 
     public void addTeleMethod(TeleMethodElement teleMethod) {
         if (teleMethods.find((tm) -> tm.getName().equals(teleMethod.getName())) != null) {
-            throw CodegenException.of().message("Duplicate tele-method name: " + teleMethod.getName()).element(teleMethod.getProxyMethod().getOriginMethod()).build();
+            throw CodegenException.of().message("Duplicate tele-method name: " + teleMethod.getName()).element(teleMethod.getServiceMethod().getOriginMethod()).build();
         }
         teleMethods.add(teleMethod);
         teleMethod.parentTeleFacade = this;
@@ -113,7 +132,7 @@ public final class TeleFacadeElement {
         return teleMethods;
     }
 
-    public String getTeleType() {
+    public Class<?> getTeleType() {
         return teleType;
     }
 

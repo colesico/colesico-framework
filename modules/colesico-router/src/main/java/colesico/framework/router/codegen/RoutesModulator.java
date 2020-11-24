@@ -32,44 +32,37 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-
 /**
- * @author Vladlen Larionov
+ * Routes modulation support
  */
-abstract public class RoutesModulator<D extends TeleDriver<R, W, I, P>, P extends DataPort<R, W>, R, W, I>
-        extends TeleModulator<D, P, R, W, I, RoutegenContext, RoutingLigature, Router> {
-
-    protected static final String ROUTES_MAPPER_CLASS_SUFFIX = "Routes";
+abstract public class RoutesModulator extends TeleModulator<RouterTeleFacadeElement> {
 
     protected final Logger logger = LoggerFactory.getLogger(RoutesModulator.class);
 
+    abstract protected Class<? extends TeleDriver> getTeleDriverClass();
+
+    abstract protected Class<? extends DataPort> getDataPortClass();
+
     @Override
-    protected Class<RoutegenContext> getTeleModulatorContextClass() {
-        return RoutegenContext.class;
+    protected final void processTeleMethod(TeleMethodElement teleMethodElement) {
+        ((RouterTeleFacadeElement) teleMethodElement.getParentTeleFacade())
+                .getRoutesBuilder()
+                .addTeleMethod(teleMethodElement);
     }
 
     @Override
-    protected RoutegenContext createTeleModulatorContext(ServiceElement serviceElm) {
-        return new RoutegenContext(serviceElm) {
-        };
+    protected final RouterTeleFacadeElement createTeleFacade(ServiceElement serviceElm) {
+        return new RouterTeleFacadeElement(
+                getTeleType(),
+                getTeleDriverClass(),
+                getDataPortClass(),
+                RoutingLigature.class,
+                TeleFacadeElement.IocQualifier.ofClassed(Router.class),
+                new RoutesBuilder(serviceElm)
+        );
     }
 
-    @Override
-    protected Class<RoutingLigature> getLigatureClass() {
-        return RoutingLigature.class;
-    }
-
-    @Override
-    protected Class<Router> getQualifierClass() {
-        return Router.class;
-    }
-
-    @Override
-    protected void addTeleMethodToContext(TeleMethodElement teleMethodElement, RoutegenContext teleModulatorContext) {
-        teleModulatorContext.addTeleMethod(teleMethodElement);
-    }
-
-    protected CodeBlock generateLigatureMethodBody(TeleFacadeElement teleFacade) {
+    protected final CodeBlock generateLigatureMethodBody(RouterTeleFacadeElement teleFacade) {
         CodeBlock.Builder cb = CodeBlock.builder();
 
         cb.addStatement("$T $N = new $T($T.class)",
@@ -79,9 +72,9 @@ abstract public class RoutesModulator<D extends TeleDriver<R, W, I, P>, P extend
                 TypeName.get(teleFacade.getParentService().getOriginClass().getOriginType())
         );
 
-        RoutegenContext routegenContext = teleFacade.getProperty(RoutegenContext.class);
+        RoutesBuilder routesBuilder = teleFacade.getRoutesBuilder();
 
-        for (RoutegenContext.RoutedTeleMethodElement routedTeleMethod : routegenContext.getTeleMethods()) {
+        for (RoutesBuilder.RoutedTeleMethodElement routedTeleMethod : routesBuilder.getTeleMethods()) {
             cb.add(generateRouteMapping(teleFacade, routedTeleMethod));
         }
 
@@ -89,7 +82,7 @@ abstract public class RoutesModulator<D extends TeleDriver<R, W, I, P>, P extend
         return cb.build();
     }
 
-    protected CodeBlock generateRouteMapping(TeleFacadeElement teleFacade, RoutegenContext.RoutedTeleMethodElement routedTeleMethod) {
+    protected final CodeBlock generateRouteMapping(TeleFacadeElement teleFacade, RoutesBuilder.RoutedTeleMethodElement routedTeleMethod) {
 
         CodeBlock.Builder cb = CodeBlock.builder();
 

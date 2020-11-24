@@ -27,8 +27,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.MessageFormat;
-
 /**
  * Basic abstract http request processor.
  * This class to be used for http server implementations.
@@ -52,39 +50,34 @@ abstract public class RequestProcessor<C> {
 
     abstract protected HttpResponse createHttpResponse(C context);
 
-    public ActionResolution resolveAction(HttpMethod requestHttpMethod, String requestUri, C context) {
+    protected ActionResolution resolveAction(HttpMethod requestHttpMethod, String requestUri, C context) {
         try {
             return router.resolveAction(requestHttpMethod, requestUri);
-        } catch (Exception ex) {
-            handleException(ex, createHttpContext(context));
+        } catch (Exception e) {
+            // Init http context and perform error handling
+            threadScope.init();
+            try {
+                final HttpContext httpContext = initHttpContext(context);
+                handleException(e, httpContext);
+            } finally {
+                threadScope.destroy();
+            }
             return null;
         }
     }
 
-    public void performAction(ActionResolution resolution, C context) {
-
-        HttpContext httpContext = createHttpContext(context);
-
-        // Put contexts to process scope
+    protected void performAction(ActionResolution resolution, C context) {
+        // Init http context
         threadScope.init();
-        threadScope.put(HttpContext.SCOPE_KEY, httpContext);
-
+        final HttpContext httpContext = initHttpContext(context);
         try {
+            // Perform router action
             router.performAction(resolution);
-        } catch (Exception ex) {
-            handleException(ex, httpContext);
+        } catch (Exception e) {
+            handleException(e, httpContext);
         } finally {
             threadScope.destroy();
         }
-    }
-
-    protected HttpContext createHttpContext(C context) {
-        // Create contexts
-        HttpRequest httpRequest = createHttpRequest(context);
-        HttpResponse httpResponse = createHttpResponse(context);
-        HttpContext httpContext = new HttpContext(httpRequest, httpResponse);
-
-        return httpContext;
     }
 
     protected void handleException(Exception ex, HttpContext httpContext) {
@@ -95,4 +88,19 @@ abstract public class RequestProcessor<C> {
             log.error("Handling exception error: {}", ExceptionUtils.getRootCauseMessage(ex2));
         }
     }
+
+    /**
+     * Creates http context instance and puts it to thread scope
+     */
+    protected HttpContext initHttpContext(C context) {
+        // Create contexts
+        HttpRequest httpRequest = createHttpRequest(context);
+        HttpResponse httpResponse = createHttpResponse(context);
+        HttpContext httpContext = new HttpContext(httpRequest, httpResponse);
+        // Put context to thread scope
+        threadScope.put(HttpContext.SCOPE_KEY, httpContext);
+        return httpContext;
+    }
+
+
 }

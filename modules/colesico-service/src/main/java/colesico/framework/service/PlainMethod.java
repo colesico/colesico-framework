@@ -18,12 +18,11 @@ package colesico.framework.service;
 import java.lang.annotation.*;
 
 /**
- * Indicates that the method is not a service method.
+ * Indicates that the method is not a service automated method.
+ * However, the method will be included in the tele-facade, since no @LocalMethod annotation specified
  *
  * The method will be used in the service as is, without generating
  * a proxy method that provides an auxiliary code for the automation of the original method
- *
- * @author Vladlen Larionov
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD,ElementType.TYPE})

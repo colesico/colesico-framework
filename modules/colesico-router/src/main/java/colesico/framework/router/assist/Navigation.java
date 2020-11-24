@@ -17,7 +17,7 @@ package colesico.framework.router.assist;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
-import colesico.framework.http.HttpRequest;
+import colesico.framework.router.ActionResolution;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterException;
 import colesico.framework.service.ServiceProxy;
@@ -43,6 +43,18 @@ public class Navigation<N extends Navigation> {
     protected int httpCode = 302;
     protected final Map<String, String> queryParameters = new HashMap<>();
     protected final Map<String, String> routeParameters = new HashMap<>();
+
+    public static Navigation of() {
+        return new Navigation();
+    }
+
+    public static Navigation of(String uri) {
+        return new Navigation().uri(uri);
+    }
+
+    public static Navigation of(Class<?> serviceClass, String methodName) {
+        return new Navigation().service(serviceClass).method(methodName);
+    }
 
     public N uri(String uri) {
         this.uri = uri;
@@ -206,16 +218,27 @@ public class Navigation<N extends Navigation> {
         context.getResponse().sendRedirect(location, httpCode);
     }
 
+    /**
+     * Performs router action forwarding
+     */
+    public void forward(Router router, HttpContext context) {
+        String location = toLocation(router);
+        ForwardRequest request = new ForwardRequest(context.getRequest(), location);
+        context.setRequest(request);
+        ActionResolution resolution = router.resolveAction(httpMethod, request.getRequestURI());
+        router.performAction(resolution);
+    }
 
     protected StringBuilder buildParamsStr() {
         StringBuilder paramsStrBuilder = new StringBuilder();
         boolean next = false;
         for (Map.Entry<String, String> e : queryParameters.entrySet()) {
+            String paramNameEnc = URLEncoder.encode(e.getKey(), StandardCharsets.UTF_8);
             String paramValEnc = URLEncoder.encode(e.getValue(), StandardCharsets.UTF_8);
             if (next) {
                 paramsStrBuilder.append("&");
             }
-            paramsStrBuilder.append(e.getKey()).append("=").append(paramValEnc);
+            paramsStrBuilder.append(paramNameEnc).append("=").append(paramValEnc);
             next = true;
         }
         return paramsStrBuilder;

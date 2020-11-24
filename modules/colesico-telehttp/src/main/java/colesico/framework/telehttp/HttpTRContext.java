@@ -1,7 +1,6 @@
 package colesico.framework.telehttp;
 
-import colesico.framework.http.HttpRequest;
-import colesico.framework.router.RouterContext;
+import java.lang.reflect.Type;
 
 /**
  * Basic tele-reading context for interaction via http
@@ -14,6 +13,11 @@ abstract public class HttpTRContext {
     private final String name;
 
     /**
+     * Parameter type
+     */
+    private Type valueType;
+
+    /**
      * Origin facade to read parameter from it
      */
     private final OriginFacade originFacade;
@@ -21,6 +25,11 @@ abstract public class HttpTRContext {
     public HttpTRContext(String name, OriginFacade originFacade) {
         this.name = name;
         this.originFacade = originFacade;
+    }
+
+    public static HttpTRContext of(String name, OriginFacade originFacade) {
+        return new HttpTRContext(name, originFacade) {
+        };
     }
 
     /**
@@ -37,10 +46,11 @@ abstract public class HttpTRContext {
         return originFacade;
     }
 
-    /**
-     * Parameter value
-     */
-    public final String getString(RouterContext routerContext, HttpRequest httpRequest) {
-        return originFacade.getString(name, routerContext, httpRequest);
+    public Type getValueType() {
+        return valueType;
+    }
+
+    public void setValueType(Type valueType) {
+        this.valueType = valueType;
     }
 }

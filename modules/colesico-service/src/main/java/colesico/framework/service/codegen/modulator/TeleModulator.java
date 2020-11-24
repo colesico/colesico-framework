@@ -16,100 +16,75 @@
 
 package colesico.framework.service.codegen.modulator;
 
-import colesico.framework.assist.codegen.model.VarElement;
-import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.service.codegen.model.TeleFacadeElement;
-import colesico.framework.service.codegen.model.TeleMethodElement;
-import colesico.framework.service.codegen.model.TeleParamElement;
+import colesico.framework.service.codegen.model.*;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleDriver;
+import colesico.framework.teleapi.TeleFacade;
 import com.squareup.javapoet.CodeBlock;
-
-import java.util.Deque;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * @param <D> Tele-Driver implementation class
- * @param <P> Data Port implementation class
- * @param <R> Data reading context
- * @param <W> Data writing context
- * @param <I> Tele-Invocation context
- * @param <M> Tele-Modulator codegen context
- * @param <L> Ligature impl class
- * @param <Q> Ioc Qualifier class for Tele-Facade producer method
+ * Tele-facades modulation support.
+ * must be extended by any concrete tele-facades modulators.
+ *
+ * @see TeleFacade
  */
-public abstract class TeleModulator<
-        D extends TeleDriver<R, W, I, P>,
-        P extends DataPort<R, W>,
-        R, W, I, M,
-        L, Q> extends Modulator {
+public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulator {
+
+    private final Logger log = LoggerFactory.getLogger(TeleModulator.class);
 
     public static final String LIGATURE_VAR = "ligature";
 
-    abstract protected String getTeleType();
-
-    abstract protected boolean isTeleFacadeSupported(ServiceElement serviceElm);
-
-    abstract protected Class<D> getTeleDriverClass();
-
-    abstract protected Class<P> getDataPortClass();
-
-    abstract protected Class<L> getLigatureClass();
-
-    abstract protected Class<Q> getQualifierClass();
-
-    abstract protected Class<M> getTeleModulatorContextClass();
-
-    abstract protected M createTeleModulatorContext(ServiceElement serviceElm);
+    /**
+     * Tele type id.
+     * Usually, it is the service alias annotation.
+     */
+    abstract protected Class<?>  getTeleType();
 
     /**
-     * Called to add telemethod in context
+     * Checks that the modulator can handle given service to produce tele-facade
      */
-    abstract protected void addTeleMethodToContext(TeleMethodElement teleMethodElement, M teleModulatorContext);
+    abstract protected boolean isTeleFacadeSupported(ServiceElement serviceElm);
 
-    abstract protected CodeBlock generateLigatureMethodBody(TeleFacadeElement teleFacade);
+    /**
+     * Returns custom tele-facade object for modulation process
+     *
+     * @see TeleFacade
+     */
+    abstract protected T createTeleFacade(ServiceElement serviceElm);
+
+    /**
+     * Called to process tele method after parsing completed
+     */
+    abstract protected void processTeleMethod(TeleMethodElement teleMethodElement);
+
+    abstract protected CodeBlock generateLigatureMethodBody(T teleFacade);
 
     @Override
-    public void onAddTeleFacade(ServiceElement serviceElm) {
-        super.onService(serviceElm);
-
+    public void onInitTeleFacade(ServiceElement serviceElm) {
+        super.onInitTeleFacade(serviceElm);
         if (!isTeleFacadeSupported(serviceElm)) {
             return;
         }
-
-        TeleFacadeElement teleFacade = new TeleFacadeElement(
-                getTeleType(),
-                getTeleDriverClass(),
-                getDataPortClass(),
-                getLigatureClass(),
-                TeleFacadeElement.IocQualifier.ofClassed(getQualifierClass()));
-        serviceElm.addTeleFacade(teleFacade);
-
-        M telegenContext = createTeleModulatorContext(serviceElm);
-        teleFacade.setProperty(getTeleModulatorContextClass(), telegenContext);
+        log.debug("Init tele-facade from modulator: {}", this.getClass().getCanonicalName());
+        T teleFacade = createTeleFacade(serviceElm);
+        serviceElm.setTeleFacade(teleFacade);
     }
 
     @Override
-    public void onAddTeleMethod(TeleMethodElement teleMethod) {
-        super.onAddTeleMethod(teleMethod);
+    public void onTeleMethodParsed(TeleMethodElement teleMethod) {
+        super.onTeleMethodParsed(teleMethod);
         TeleFacadeElement teleFacade = teleMethod.getParentTeleFacade();
         if (!teleFacade.getTeleType().equals(getTeleType())) {
             return;
         }
-        M teleModulatorContext = teleFacade.getProperty(getTeleModulatorContextClass());
-        addTeleMethodToContext(teleMethod, teleModulatorContext);
-        teleMethod.setInvokingContext(generateInvokingContext(teleMethod));
-        teleMethod.setWritingContext(generateWritingContext(teleMethod));
-    }
-
-    @Override
-    public void onLinkTeleParam(TeleParamElement teleParam, Deque<VarElement> varStack) {
-        super.onLinkTeleParam(teleParam, varStack);
-        TeleMethodElement teleMethod = teleParam.getParentTeleMethod();
-        TeleFacadeElement teleFacade = teleMethod.getParentTeleFacade();
-        if (!teleFacade.getTeleType().equals(getTeleType())) {
-            return;
+        processTeleMethod(teleMethod);
+        teleMethod.setInvocationContextCode(generateInvokingContext(teleMethod));
+        teleMethod.setWritingContextCode(generateWritingContext(teleMethod));
+        for (TeleParamElement teleParam : teleMethod.getParameters()) {
+            teleParam.setReadingContextCode(generateReadingContext(teleParam));
         }
-        teleParam.setReadingContext(generateReadingContext(teleParam));
     }
 
     @Override
@@ -118,7 +93,7 @@ public abstract class TeleModulator<
         if (!teleFacade.getTeleType().equals(getTeleType())) {
             return;
         }
-        teleFacade.setLigatureMethodBody(generateLigatureMethodBody(teleFacade));
+        teleFacade.setLigatureMethodBody(generateLigatureMethodBody((T) teleFacade));
     }
 
     protected CodeBlock generateInvokingContext(TeleMethodElement teleMethod) {

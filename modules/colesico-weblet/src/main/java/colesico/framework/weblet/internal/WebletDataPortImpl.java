@@ -18,6 +18,7 @@ package colesico.framework.weblet.internal;
 
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.ClassedKey;
+import colesico.framework.telehttp.reader.ObjectReader;
 import colesico.framework.weblet.Weblet;
 import colesico.framework.weblet.WebletResponse;
 import colesico.framework.weblet.teleapi.*;
@@ -48,13 +49,20 @@ public class WebletDataPortImpl implements WebletDataPort {
         if (context == null) {
             context = new WebletTRContext();
         }
-        WebletTeleReader<V> reader;
+        context.setValueType(valueType);
+        WebletTeleReader reader;
         if (context.getReaderClass() != null) {
+            // Get specified reader
             reader = ioc.instance(context.getReaderClass());
         } else {
-            reader = ioc.instance(new ClassedKey<>(WebletTeleReader.class.getCanonicalName(), typeToClassName(valueType)), null);
+            // Get reader by value type
+            reader = ioc.instanceOrNull(new ClassedKey<>(WebletTeleReader.class.getCanonicalName(), typeToClassName(valueType)), null);
+            if (reader == null) {
+                // Get default reader
+                reader = ioc.instance(new ClassedKey<>(WebletTeleReader.class.getCanonicalName(), Object.class.getCanonicalName()), null);
+            }
         }
-        return reader.read(context);
+        return (V) reader.read(context);
     }
 
     @Override
@@ -68,6 +76,7 @@ public class WebletDataPortImpl implements WebletDataPort {
         // Obtain writer
         WebletTeleWriter writer;
         if (context.getWriterClass() != null) {
+            // Get specified reader
             writer = ioc.instance(context.getWriterClass());
         } else {
             Type responseType;
@@ -76,6 +85,7 @@ public class WebletDataPortImpl implements WebletDataPort {
             } else {
                 responseType = valueType;
             }
+            // Get reader by response type
             writer = ioc.instance(new ClassedKey<>(WebletTeleWriter.class.getCanonicalName(), typeToClassName(responseType)), null);
         }
 

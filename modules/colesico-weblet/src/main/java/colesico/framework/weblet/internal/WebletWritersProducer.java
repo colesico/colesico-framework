@@ -33,6 +33,7 @@ import javax.inject.Singleton;
 @Producer
 @Produce(StringWriter.class)
 @Produce(RedirectWriter.class)
+@Produce(ForwardWriter.class)
 @Produce(BinaryWriter.class)
 public class WebletWritersProducer {
 
@@ -56,7 +57,13 @@ public class WebletWritersProducer {
 
     @Singleton
     @Classed(RedirectResponse.class)
-    public WebletTeleWriter getNavigationResponseWriter(RedirectWriter impl) {
+    public WebletTeleWriter getRedirectResponseWriter(RedirectWriter impl) {
+        return impl;
+    }
+
+    @Singleton
+    @Classed(ForwardResponse.class)
+    public WebletTeleWriter getForwardResponseWriter(RedirectWriter impl) {
         return impl;
     }
 

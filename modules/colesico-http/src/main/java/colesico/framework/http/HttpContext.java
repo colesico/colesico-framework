@@ -19,17 +19,16 @@ import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
 
 /**
- * Http request tread local metadata. It contains data relating to the current http request processing
- *
- * @author Vladlen Larionov
+ * Contains data relating to the current http request processing.
+ * This context must be placed to thread scope to be accessible for other framework components
  */
 public final class HttpContext {
 
     // Thread scope key to hold this context
-    public static final Key<HttpContext> SCOPE_KEY=new TypeKey<>(HttpContext.class);
+    public static final Key<HttpContext> SCOPE_KEY = new TypeKey<>(HttpContext.class);
 
-    private final HttpRequest request;
-    private final HttpResponse response;
+    private HttpRequest request;
+    private HttpResponse response;
 
     public HttpContext(HttpRequest request, HttpResponse response) {
         this.request = request;
@@ -43,5 +42,21 @@ public final class HttpContext {
 
     public HttpResponse getResponse() {
         return response;
+    }
+
+    /**
+     * Replaces context request with given one.Returns previous request.
+     * This method can be used for example for forward operations
+     */
+    public HttpRequest setRequest(HttpRequest request) {
+        HttpRequest prev = this.request;
+        this.request = request;
+        return prev;
+    }
+
+    public HttpResponse setResponse(HttpResponse response) {
+        HttpResponse prev = this.response;
+        this.response = response;
+        return prev;
     }
 }

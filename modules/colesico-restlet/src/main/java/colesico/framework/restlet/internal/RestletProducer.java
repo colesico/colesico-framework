@@ -21,7 +21,7 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.restlet.RestletConfigPrototype;
 import colesico.framework.restlet.assist.LogRestletListener;
 import colesico.framework.restlet.teleapi.*;
-import colesico.framework.restlet.teleapi.gson.GsonConverter;
+import colesico.framework.restlet.internal.gsonconv.GsonConverter;
 
 import javax.inject.Singleton;
 

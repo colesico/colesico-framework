@@ -39,10 +39,14 @@ import java.util.OptionalLong;
 @Produce(HttpFileReader.class)
 public class WebletReadersProducer {
 
+    //
+    // Basic readers
+    //
+
     @Singleton
-    @Classed(HttpFile.class)
-    public WebletTeleReader getHttpFileReader(HttpFileReader impl) {
-        return impl;
+    @Classed(Object.class)
+    public WebletTeleReader getObjectReader(ObjectReader impl) {
+        return WebletReaderProxy.of(impl);
     }
 
     @Singleton
@@ -135,6 +139,10 @@ public class WebletReadersProducer {
         return WebletReaderProxy.of(impl);
     }
 
+    //
+    // Extra readers
+    //
+
     @Singleton
     @Classed(Profile.class)
     public WebletTeleReader getProfileReader(ProfileReader impl) {
@@ -145,6 +153,12 @@ public class WebletReadersProducer {
     @Classed(Principal.class)
     public WebletTeleReader getPrincipalReader(PrincipalReader impl) {
         return WebletReaderProxy.of(impl);
+    }
+
+    @Singleton
+    @Classed(HttpFile.class)
+    public WebletTeleReader getHttpFileReader(HttpFileReader impl) {
+        return impl;
     }
 
 }

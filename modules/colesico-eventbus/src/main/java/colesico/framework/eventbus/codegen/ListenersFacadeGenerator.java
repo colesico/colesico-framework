@@ -20,7 +20,7 @@ import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.eventbus.EventBinding;
 import colesico.framework.eventbus.EventsListener;
 import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.service.codegen.parser.ProcessorContext;
+import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import com.squareup.javapoet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,9 +38,9 @@ public class ListenersFacadeGenerator {
     public static final String TARGET_VAR = "target";
 
     private final Logger logger = LoggerFactory.getLogger(ListenersFacadeGenerator.class);
-    private final ProcessorContext context;
+    private final ServiceProcessorContext context;
 
-    public ListenersFacadeGenerator(ProcessorContext context) {
+    public ListenersFacadeGenerator(ServiceProcessorContext context) {
         this.context = context;
     }
 

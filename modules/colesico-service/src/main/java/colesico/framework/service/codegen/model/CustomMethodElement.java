@@ -22,11 +22,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Vladlen Larionov
+ * Represents service custom method
  */
 public final class CustomMethodElement {
 
+    /**
+     * Parent service ref
+     */
     protected ServiceElement parentService;
+
+    /**
+     * Method spec
+     */
     private final MethodSpec spec;
 
     /**

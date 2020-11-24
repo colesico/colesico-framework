@@ -22,7 +22,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Vladlen Larionov
+ * Router API
+ * <p>
+ * Router allows to bind any action to given route and perform it
  */
 public interface Router {
 
@@ -33,7 +35,6 @@ public interface Router {
      * @param targetMethodName service tele method name or custom action method name
      * @param httpMethod       http request method
      * @param parameters       route parameters
-     * @return
      */
     List<String> getSlicedRoute(Class<?> targetClass, String targetMethodName, HttpMethod httpMethod, Map<String, String> parameters);
 
@@ -42,11 +43,14 @@ public interface Router {
      * Returns resolution bean for tuning the processing of the request based on the
      * values of the attributes as well as the subsequent call of the tele-method -
      * the request handler
+     *
+     * @param requestUri request url part from hostname(port) to query string (before '?' char)
      */
-    ActionResolution resolveAction(HttpMethod requestHttpMethod, String requestUri);
+    ActionResolution resolveAction(HttpMethod requestMethod, String requestUri);
 
     /**
      * Calls handler associated with   (e.g. service method or custom handler)
      */
     void performAction(ActionResolution resolution);
+
 }

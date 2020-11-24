@@ -10,6 +10,7 @@ import javax.inject.Provider;
 
 /**
  * Basic tele-reader for reading param vales from remote client via http
+ *
  * @param <V> the value type to be read
  * @param <C> reading context
  */
@@ -32,6 +33,13 @@ abstract public class HttpTeleReader<V, C extends HttpTRContext> implements Tele
     public HttpTeleReader(HttpTeleReader reader) {
         this.routerContextProv = reader.routerContextProv;
         this.httpContextProv = reader.routerContextProv;
+    }
+
+    /**
+     * Return param string value
+     */
+    protected final String getStringValue(C context) {
+        return context.getOriginFacade().getString(context.getName(), getRouterContext(), getRequest());
     }
 
     protected final HttpRequest getRequest() {
