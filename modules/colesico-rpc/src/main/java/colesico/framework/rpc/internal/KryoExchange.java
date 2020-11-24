@@ -68,6 +68,11 @@ public class KryoExchange implements RpcExchange {
     }
 
     @Override
+    public RequestResolution resolveRequest() {
+        return null;
+    }
+
+    @Override
     public <Q extends RpcRequest> Q readRequest(Type requestType) {
         return null;
     }

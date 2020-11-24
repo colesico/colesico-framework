@@ -54,7 +54,11 @@ public class RpcSchemeGenerator extends FrameworkAbstractGenerator {
     private void generateResponseScheme(TypeSpec.Builder schemeBuilder, RpcApiMethodElement method) {
         TypeSpec.Builder responseBuilder = TypeSpec.classBuilder(method.getResponseClassSimpleName());
         responseBuilder.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
-        responseBuilder.superclass(ClassName.get(RpcResponse.class));
+
+        //TODO: handle void type
+        ParameterizedTypeName responseType = ParameterizedTypeName.get(ClassName.get(RpcResponse.class),
+                TypeName.get(method.getOriginMethod().getReturnType()));
+        responseBuilder.superclass(responseType);
 
         schemeBuilder.addType(responseBuilder.build());
     }
@@ -72,6 +76,10 @@ public class RpcSchemeGenerator extends FrameworkAbstractGenerator {
 
         TypeSpec.Builder schemeBuilder = TypeSpec.classBuilder(classSimpleName);
         schemeBuilder.addModifiers(Modifier.PUBLIC);
+
+        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "RPC interface: " + rpcApiElm.getOriginInterface().getName());
+        schemeBuilder.addAnnotation(genstamp);
+
 
         generateMethodsSchemas(schemeBuilder, rpcApiElm);
 

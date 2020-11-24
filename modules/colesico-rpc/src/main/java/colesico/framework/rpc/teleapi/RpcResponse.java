@@ -5,8 +5,11 @@ import colesico.framework.rpc.RpcError;
 /**
  * RPC response basis
  */
-abstract public class RpcResponse {
-    private RpcError error;
+abstract public class RpcResponse<R> {
+
+    protected RpcError error;
+
+    protected R result;
 
     public RpcError getError() {
         return error;
@@ -14,5 +17,13 @@ abstract public class RpcResponse {
 
     public void setError(RpcError error) {
         this.error = error;
+    }
+
+    public R getResult() {
+        return result;
+    }
+
+    public void setResult(R result) {
+        this.result = result;
     }
 }

@@ -14,8 +14,8 @@ public class RpcApiMethodElement {
 
     private RpcApiElement parentApi;
 
-    public static final String RPC_REQUEST_CLASS_SUFFIX = "RpcRequest";
-    public static final String RPC_RESPONSE_CLASS_SUFFIX = "RpcResponse";
+    public static final String RPC_REQUEST_CLASS_SUFFIX = "Request";
+    public static final String RPC_RESPONSE_CLASS_SUFFIX = "Response";
 
     private final MethodElement originMethod;
     private final List<RpcApiParamElement> parameters = new ArrayList<>();

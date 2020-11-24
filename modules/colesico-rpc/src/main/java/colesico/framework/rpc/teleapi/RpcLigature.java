@@ -39,10 +39,15 @@ public final class RpcLigature {
         return this;
     }
 
-    public List<RpcApi> getAllRpcApi() {
+    public List<RpcApi> getRpcApiList() {
         return rpcApiList;
     }
 
+    /**
+     * Register new RPC API
+     * @param name RPC API name. By default this is an RPC API interface name
+     * @return
+     */
     public static RpcApi api(String name) {
         return new RpcApi(name);
     }
@@ -51,6 +56,9 @@ public final class RpcLigature {
         return new RpcMethod(teleMethod, requestClass, responseClass);
     }
 
+    /**
+     * RPC API ligature
+     */
     public static final class RpcApi {
         public static final String ADD_METHOD = "addMethod";
 
@@ -85,6 +93,12 @@ public final class RpcLigature {
             return targetMethods;
         }
 
+        /**
+         * Register RPC method.
+         * @param name RPC method name. By default it is a APC API interface method name
+         * @param targetMethod
+         * @return
+         */
         public RpcApi addMethod(String name, RpcMethod targetMethod) {
             RpcMethod prev = targetMethods.put(name, targetMethod);
             if (prev != null) {
@@ -94,23 +108,26 @@ public final class RpcLigature {
         }
     }
 
+    /**
+     * RPC Method ligature
+     */
     public static final class RpcMethod {
         private final TeleMethod teleMethod;
-        private final Class<? extends RpcRequest> requestClass;
-        private final Class<? extends RpcResponse> responseClass;
+        private final Class<? extends RpcRequest> requestType;
+        private final Class<? extends RpcResponse> responseType;
 
-        public RpcMethod(TeleMethod teleMethod, Class<? extends RpcRequest> requestClass, Class<? extends RpcResponse> responseClass) {
+        public RpcMethod(TeleMethod teleMethod, Class<? extends RpcRequest> requestType, Class<? extends RpcResponse> responseType) {
             this.teleMethod = teleMethod;
-            this.requestClass = requestClass;
-            this.responseClass = responseClass;
+            this.requestType = requestType;
+            this.responseType = responseType;
         }
 
-        public Class<? extends RpcRequest> getRequestClass() {
-            return requestClass;
+        public Class<? extends RpcRequest> getRequestType() {
+            return requestType;
         }
 
-        public Class<? extends RpcResponse> getResponseClass() {
-            return responseClass;
+        public Class<? extends RpcResponse> getResponseType() {
+            return responseType;
         }
 
         public TeleMethod getTeleMethod() {

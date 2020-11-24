@@ -35,8 +35,6 @@ import java.util.stream.Collectors;
 
 public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
 
-    public static final String PARAM_NAME_PREFIX = "arg";
-
     private final Logger logger = LoggerFactory.getLogger(RpcModulator.class);
 
     @Override

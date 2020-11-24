@@ -20,6 +20,7 @@ package colesico.framework.rpc.teleapi;
  * RPC tele-tata writing context stub
  */
 public final class RpcTWContext {
+
     private RpcResponse response;
 
     public RpcResponse getResponse() {
@@ -28,5 +29,12 @@ public final class RpcTWContext {
 
     public void setResponse(RpcResponse response) {
         this.response = response;
+    }
+
+    private RpcTWContext() {
+    }
+
+    public static RpcTWContext of() {
+        return new RpcTWContext();
     }
 }
