@@ -8,8 +8,8 @@ public interface HelloServiceRemote {
 
     String HELLO_MESSAGE = "Hello";
 
-    String getMessage(@RpcName("uid") Integer id, DataBean dataBean, NameDataBean nameBean);
+    String getMessage(Integer id, DataBean dataBean, NameDataBean nameBean);
 
-    @RpcName("getMsg")
-    String getMessage2();
+    @RpcName("getDB")
+    DataBean getDataBean();
 }

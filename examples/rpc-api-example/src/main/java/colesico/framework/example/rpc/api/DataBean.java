@@ -10,4 +10,11 @@ public class DataBean {
     public void setValue(String value) {
         this.value = value;
     }
+
+    public DataBean() {
+    }
+
+    public DataBean(String value) {
+        this.value = value;
+    }
 }

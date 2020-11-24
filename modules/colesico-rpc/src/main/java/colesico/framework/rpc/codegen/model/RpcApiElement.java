@@ -1,6 +1,7 @@
 package colesico.framework.rpc.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassElement;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,15 @@ public class RpcApiElement {
     private final ClassElement originInterface;
     private final List<RpcApiMethodElement> rpcMethods = new ArrayList<>();
 
-    public RpcApiElement(ClassElement originInterface) {
+    /**
+     * Custom RPC name
+     * @see colesico.framework.rpc.RpcName
+     */
+    private final String rpcName;
+
+    public RpcApiElement(ClassElement originInterface, String rpcName) {
         this.originInterface = originInterface;
+        this.rpcName = rpcName;
     }
 
     public void addMethod(RpcApiMethodElement method) {
@@ -24,7 +32,11 @@ public class RpcApiElement {
     }
 
     public String rpcApiName() {
-        return originInterface.getName();
+        if (StringUtils.isBlank(rpcName)) {
+            return originInterface.getName();
+        } else {
+            return rpcName;
+        }
     }
 
     public String getSchemeClassName() {

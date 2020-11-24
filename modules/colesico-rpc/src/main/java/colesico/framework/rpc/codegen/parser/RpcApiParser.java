@@ -4,6 +4,7 @@ import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.assist.codegen.model.ParameterElement;
+import colesico.framework.rpc.RpcName;
 import colesico.framework.rpc.codegen.model.RpcApiElement;
 import colesico.framework.rpc.codegen.model.RpcApiMethodElement;
 import colesico.framework.rpc.codegen.model.RpcApiParamElement;
@@ -27,11 +28,13 @@ public class RpcApiParser extends FrameworkAbstractParser {
     }
 
     public RpcApiElement parse(ClassElement originIface) {
-        RpcApiElement rpcApiElm = new RpcApiElement(originIface);
+        RpcName rpcApiName = originIface.unwrap().getAnnotation(RpcName.class);
+        RpcApiElement rpcApiElm = new RpcApiElement(originIface, rpcApiName == null ? null : rpcApiName.value());
 
         List<MethodElement> methods = originIface.getMethods();
         for (MethodElement method : methods) {
-            RpcApiMethodElement me = new RpcApiMethodElement(method);
+            RpcName rpcMethodName = method.unwrap().getAnnotation(RpcName.class);
+            RpcApiMethodElement me = new RpcApiMethodElement(method, rpcMethodName == null ? null : rpcMethodName.value());
             rpcApiElm.addMethod(me);
             parseParams(me);
         }
