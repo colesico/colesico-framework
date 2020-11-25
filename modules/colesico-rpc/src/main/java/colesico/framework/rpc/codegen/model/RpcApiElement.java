@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class RpcApiElement {
     public static final String SCHEME_CLASS_SUFFIX = "RpcScheme";
+    public static final String CLIENT_CLASS_SUFFIX = "RpcClient";
 
     private final ClassElement originInterface;
     private final List<RpcApiMethodElement> rpcMethods = new ArrayList<>();
@@ -41,6 +42,10 @@ public class RpcApiElement {
 
     public String getSchemeClassName() {
         return originInterface.getSimpleName() + SCHEME_CLASS_SUFFIX;
+    }
+
+    public String getClientClassName() {
+        return originInterface.getSimpleName() + CLIENT_CLASS_SUFFIX;
     }
 
     public ClassElement getOriginInterface() {

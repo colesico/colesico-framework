@@ -11,7 +11,7 @@ import javax.inject.Inject;
 @Config
 public class RpcRouterOptions extends RouterOptions {
 
-    public static final String DISPATCHER_ROUTE = "/rpc";
+    public static final String RPC_CONTROLLER_ROUTE = "/rpc";
 
     private final RpcController controller;
     private final RpcExchange exchange;
@@ -25,7 +25,7 @@ public class RpcRouterOptions extends RouterOptions {
     @Override
     public void applyOptions(RouterBuilder builder) {
         builder.addCustomAction(HttpMethod.HTTP_METHOD_POST,
-                DISPATCHER_ROUTE,
+                RPC_CONTROLLER_ROUTE,
                 RpcRouterOptions.class,
                 () -> controller.dispatch(exchange),
                 "dispatch",
