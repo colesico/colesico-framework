@@ -15,5 +15,6 @@ module colesico.framework.rpc {
 
 
     exports colesico.framework.rpc;
+    exports colesico.framework.rpc.client;
     exports colesico.framework.rpc.teleapi;
 }

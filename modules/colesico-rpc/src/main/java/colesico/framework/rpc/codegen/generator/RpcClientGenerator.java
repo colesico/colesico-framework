@@ -5,7 +5,7 @@ import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.rpc.codegen.model.RpcApiElement;
 import colesico.framework.rpc.codegen.model.RpcApiMethodElement;
 import colesico.framework.rpc.codegen.model.RpcApiParamElement;
-import colesico.framework.rpc.teleapi.RpcClient;
+import colesico.framework.rpc.client.RpcClient;
 import colesico.framework.rpc.teleapi.RpcResponse;
 import com.squareup.javapoet.*;
 
