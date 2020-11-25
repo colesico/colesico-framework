@@ -14,12 +14,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.lang.model.element.Modifier;
 
-public class RpcClientGenerator extends FrameworkAbstractGenerator {
+public class ClientGenerator extends FrameworkAbstractGenerator {
 
     public static final String RPC_CLIENT_FIELD = "rpcClient";
     public static final String RESPONSE_VAR = "response";
 
-    public RpcClientGenerator(ProcessingEnvironment processingEnv) {
+    public ClientGenerator(ProcessingEnvironment processingEnv) {
         super(processingEnv);
     }
 
@@ -39,7 +39,7 @@ public class RpcClientGenerator extends FrameworkAbstractGenerator {
 
             TypeName requestTypeName = ClassName.bestGuess(methodElm.getRequestClassName());
 
-            // RpcScheme.RpcRequest request = new RpcScheme.RpcRequest()
+            // RpcEnvelope.RpcRequest request = new RpcEnvelope.RpcRequest()
             mb.addStatement("$T $N = new $T()",
                     requestTypeName,
                     RpcClient.REQUEST_PARAM,

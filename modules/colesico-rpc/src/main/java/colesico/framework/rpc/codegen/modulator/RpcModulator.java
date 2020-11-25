@@ -206,7 +206,7 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
 
         RpcApiMethodElement rpcApiMethod = teleParam.getParentTeleMethod().getProperty(RpcApiMethodElement.class);
         RpcApiParamElement apiParam = teleParam.getProperty(RpcApiParamElement.class);
-        // RpcTRContext.of(SchemeClass.RequestClass::getterMethod)
+        // RpcTRContext.of(EnvelopeClass.RequestClass::getterMethod)
         cb.add("$T.$N($T::$N)", ClassName.get(RpcTRContext.class),
                 RpcTRContext.OF_METHOD,
                 ClassName.bestGuess(rpcApiMethod.getRequestClassName()),

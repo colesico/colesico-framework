@@ -12,11 +12,13 @@ import com.squareup.javapoet.*;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
 
-public class RpcSchemeGenerator extends FrameworkAbstractGenerator {
+public class EnvelopeGenerator extends FrameworkAbstractGenerator {
 
+    private final EnvelopeGeneratorPluginKit pluginKit;
 
-    public RpcSchemeGenerator(ProcessingEnvironment processingEnv) {
+    public EnvelopeGenerator(ProcessingEnvironment processingEnv) {
         super(processingEnv);
+        this.pluginKit = new EnvelopeGeneratorPluginKit();
     }
 
     private void generateParams(TypeSpec.Builder requestBuilder, RpcApiMethodElement method) {
@@ -41,17 +43,18 @@ public class RpcSchemeGenerator extends FrameworkAbstractGenerator {
         }
     }
 
-    private void generateRequestScheme(TypeSpec.Builder schemeBuilder, RpcApiMethodElement method) {
+    private void generateRequestEnvelope(TypeSpec.Builder envelopeBuilder, RpcApiMethodElement method) {
         TypeSpec.Builder requestBuilder = TypeSpec.classBuilder(method.getRequestClassSimpleName());
         requestBuilder.addJavadoc("RPC request for method " + method.getParentApi().getOriginInterface().getName() +
                 "->" + method.getOriginMethod().getName());
         requestBuilder.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
         requestBuilder.superclass(ClassName.get(RpcRequest.class));
         generateParams(requestBuilder, method);
-        schemeBuilder.addType(requestBuilder.build());
+        pluginKit.notifyGenerateRequestEnvelope(requestBuilder, method);
+        envelopeBuilder.addType(requestBuilder.build());
     }
 
-    private void generateResponseScheme(TypeSpec.Builder schemeBuilder, RpcApiMethodElement method) {
+    private void generateResponseEnvelope(TypeSpec.Builder envelopeBuilder, RpcApiMethodElement method) {
         TypeSpec.Builder responseBuilder = TypeSpec.classBuilder(method.getResponseClassSimpleName());
         responseBuilder.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
 
@@ -60,30 +63,31 @@ public class RpcSchemeGenerator extends FrameworkAbstractGenerator {
                 TypeName.get(method.getOriginMethod().getReturnType()));
         responseBuilder.superclass(responseType);
 
-        schemeBuilder.addType(responseBuilder.build());
+        pluginKit.notifyGenerateResponseEnvelope(responseBuilder, method);
+        envelopeBuilder.addType(responseBuilder.build());
     }
 
-    private void generateMethodsSchemas(TypeSpec.Builder schemeBuilder, RpcApiElement rpcApiElm) {
+    private void generateMethodsSchemas(TypeSpec.Builder envelopeBuilder, RpcApiElement rpcApiElm) {
         for (RpcApiMethodElement method : rpcApiElm.getRpcMethods()) {
-            generateRequestScheme(schemeBuilder, method);
-            generateResponseScheme(schemeBuilder, method);
+            generateRequestEnvelope(envelopeBuilder, method);
+            generateResponseEnvelope(envelopeBuilder, method);
         }
     }
 
     public void generate(RpcApiElement rpcApiElm) {
-        String classSimpleName = rpcApiElm.getSchemeClassName();
+        String classSimpleName = rpcApiElm.getEnvelopePackClassName();
         String packageName = rpcApiElm.getOriginInterface().getPackageName();
 
-        TypeSpec.Builder schemeBuilder = TypeSpec.classBuilder(classSimpleName);
-        schemeBuilder.addModifiers(Modifier.PUBLIC);
+        TypeSpec.Builder envelopeBuilder = TypeSpec.classBuilder(classSimpleName);
+        envelopeBuilder.addModifiers(Modifier.PUBLIC);
 
         AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "RPC interface: " + rpcApiElm.getOriginInterface().getName());
-        schemeBuilder.addAnnotation(genstamp);
+        envelopeBuilder.addAnnotation(genstamp);
 
 
-        generateMethodsSchemas(schemeBuilder, rpcApiElm);
+        generateMethodsSchemas(envelopeBuilder, rpcApiElm);
 
-        final TypeSpec typeSpec = schemeBuilder.build();
+        final TypeSpec typeSpec = envelopeBuilder.build();
         CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, rpcApiElm.getOriginInterface().unwrap());
 
     }
