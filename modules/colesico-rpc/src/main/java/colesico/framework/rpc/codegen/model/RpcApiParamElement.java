@@ -28,15 +28,15 @@ public class RpcApiParamElement {
     }
 
     public String getterName() {
-        return "getRpcParam" + paramIndex;
+        return "getParam" + paramIndex;
     }
 
     public String setterName() {
-        return "setRpcParam" + paramIndex;
+        return "setParam" + paramIndex;
     }
 
     public String fieldName() {
-        return "rpcParam" + paramIndex;
+        return "param" + paramIndex;
     }
 
     public TypeMirror getParamType() {

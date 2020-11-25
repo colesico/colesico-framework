@@ -4,11 +4,13 @@ import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.rpc.codegen.model.RpcApiElement;
 import colesico.framework.rpc.codegen.model.RpcApiMethodElement;
+import colesico.framework.rpc.codegen.model.RpcApiParamElement;
 import colesico.framework.rpc.teleapi.RpcClient;
 import colesico.framework.rpc.teleapi.RpcResponse;
 import com.squareup.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.lang.model.element.Modifier;
 
@@ -19,6 +21,16 @@ public class RpcClientGenerator extends FrameworkAbstractGenerator {
 
     public RpcClientGenerator(ProcessingEnvironment processingEnv) {
         super(processingEnv);
+    }
+
+    protected void generateParamAssignment(MethodSpec.Builder mb, RpcApiMethodElement methodElm) {
+        for (RpcApiParamElement param : methodElm.getParameters()) {
+            mb.addStatement("$N.$N($N)",
+                    RpcClient.REQUEST_PARAM,
+                    param.setterName(),
+                    param.getOriginParam().getName()
+            );
+        }
     }
 
     protected void generateMethods(TypeSpec.Builder clientBuilder, RpcApiElement rpcApiElm) {
@@ -34,12 +46,14 @@ public class RpcClientGenerator extends FrameworkAbstractGenerator {
                     requestTypeName
             );
 
+            generateParamAssignment(mb, methodElm);
+
             // RpcResponse<T> response = rpcClient.call(request)
             mb.addStatement("$T $N = $N.$N($N)",
                     ParameterizedTypeName.get(ClassName.get(RpcResponse.class), TypeName.get(methodElm.getOriginMethod().getReturnType())),
                     RESPONSE_VAR,
                     RPC_CLIENT_FIELD,
-                    RpcClient.CALL_METHOD,
+                    RpcClient.SERVE_METHOD,
                     RpcClient.REQUEST_PARAM
             );
 
@@ -59,7 +73,9 @@ public class RpcClientGenerator extends FrameworkAbstractGenerator {
 
         // Constructor
         MethodSpec.Builder cb = MethodSpec.constructorBuilder();
+        cb.addAnnotation(Inject.class);
         cb.addParameter(TypeName.get(RpcClient.class), RPC_CLIENT_FIELD);
+
 
         cb.addStatement("this.$N = $N", RPC_CLIENT_FIELD, RPC_CLIENT_FIELD);
         clientBuilder.addMethod(cb.build());
