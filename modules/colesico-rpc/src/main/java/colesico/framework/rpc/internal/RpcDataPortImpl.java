@@ -5,8 +5,8 @@ import colesico.framework.ioc.key.ClassedKey;
 import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.RpcException;
 import colesico.framework.rpc.teleapi.*;
-import colesico.framework.rpc.teleapi.reader.RpcTeleReader;
-import colesico.framework.rpc.teleapi.reader.RpcTeleWriter;
+import colesico.framework.rpc.teleapi.RpcTeleReader;
+import colesico.framework.rpc.teleapi.RpcTeleWriter;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.lang.reflect.Type;

@@ -1,4 +1,4 @@
-package colesico.framework.rpc.teleapi.reader;
+package colesico.framework.rpc.teleapi;
 
 import colesico.framework.rpc.teleapi.RpcTWContext;
 import colesico.framework.teleapi.TeleWriter;
