@@ -11,14 +11,15 @@ import com.squareup.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
+import java.util.List;
 
 public class EnvelopeGenerator extends FrameworkAbstractGenerator {
 
-    private final EnvelopeGeneratorPluginKit pluginKit;
+    private final EnvelopeExtensionKit extKit;
 
     public EnvelopeGenerator(ProcessingEnvironment processingEnv) {
         super(processingEnv);
-        this.pluginKit = new EnvelopeGeneratorPluginKit();
+        this.extKit = new EnvelopeExtensionKit();
     }
 
     private void generateParams(TypeSpec.Builder requestBuilder, RpcApiMethodElement method) {
@@ -43,6 +44,11 @@ public class EnvelopeGenerator extends FrameworkAbstractGenerator {
         }
     }
 
+    private void generateEnvelopeExtensions(TypeSpec.Builder requestBuilder, List<Class<?>> extensions) {
+        //Парсить интерфейс и достовать дополнительные поля
+          
+    }
+
     private void generateRequestEnvelope(TypeSpec.Builder envelopeBuilder, RpcApiMethodElement method) {
         TypeSpec.Builder requestBuilder = TypeSpec.classBuilder(method.getRequestClassSimpleName());
         requestBuilder.addJavadoc("RPC request for method " + method.getParentApi().getOriginInterface().getName() +
@@ -50,7 +56,9 @@ public class EnvelopeGenerator extends FrameworkAbstractGenerator {
         requestBuilder.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
         requestBuilder.superclass(ClassName.get(RpcRequest.class));
         generateParams(requestBuilder, method);
-        pluginKit.notifyGenerateRequestEnvelope(requestBuilder, method);
+
+        generateEnvelopeExtensions(requestBuilder, extKit.getRequestExtensions());
+
         envelopeBuilder.addType(requestBuilder.build());
     }
 
@@ -58,12 +66,12 @@ public class EnvelopeGenerator extends FrameworkAbstractGenerator {
         TypeSpec.Builder responseBuilder = TypeSpec.classBuilder(method.getResponseClassSimpleName());
         responseBuilder.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
 
-        //TODO: handle void type
         ParameterizedTypeName responseType = ParameterizedTypeName.get(ClassName.get(RpcResponse.class),
                 TypeName.get(method.getOriginMethod().getReturnType()));
         responseBuilder.superclass(responseType);
 
-        pluginKit.notifyGenerateResponseEnvelope(responseBuilder, method);
+        generateEnvelopeExtensions(responseBuilder, extKit.getRequestExtensions());
+
         envelopeBuilder.addType(responseBuilder.build());
     }
 
