@@ -10,6 +10,8 @@ public interface RpcExchange {
 
     <R extends RpcResponse> void writeResponse(R response);
 
+    void writeException(Throwable t);
+
     final class RequestResolution {
         private final String apiName;
         private final String methodName;

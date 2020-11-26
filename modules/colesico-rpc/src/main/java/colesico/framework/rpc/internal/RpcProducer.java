@@ -12,7 +12,7 @@ import colesico.framework.teleapi.DataPort;
 import javax.inject.Singleton;
 
 @Producer
-@Produce(RpcController.class)
+@Produce(RpcDispatcher.class)
 @Produce(RpcTeleDriverImpl.class)
 @Produce(KryoExchange.class)
 

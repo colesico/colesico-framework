@@ -76,4 +76,9 @@ public class KryoExchange implements RpcExchange {
     public <Q extends RpcRequest> Q readRequest(Type requestType) {
         return null;
     }
+
+    @Override
+    public void writeException(Throwable t) {
+
+    }
 }
