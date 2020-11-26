@@ -1,17 +1,15 @@
 package colesico.framework.rpc.http;
 
-import colesico.framework.rpc.client.RpcClient;
+import colesico.framework.rpc.teleapi.RpcClient;
 import colesico.framework.rpc.teleapi.RpcRequest;
 import colesico.framework.rpc.teleapi.RpcResponse;
 
-import java.io.InputStream;
 import java.net.Authenticator;
 import java.net.InetSocketAddress;
 import java.net.ProxySelector;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
 abstract public class HttpRpcClient implements RpcClient {
 

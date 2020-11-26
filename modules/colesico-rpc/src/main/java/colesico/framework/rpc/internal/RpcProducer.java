@@ -2,14 +2,10 @@ package colesico.framework.rpc.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.ioc.scope.ThreadScope;
-import colesico.framework.ioc.scope.Unscoped;
-import colesico.framework.rpc.kryo.KryoExchange;
-import colesico.framework.rpc.kryo.KryoSerializer;
-import colesico.framework.rpc.teleapi.RpcDataPort;
+import colesico.framework.rpc.internal.kryo.KryoExchange;
+import colesico.framework.rpc.internal.kryo.KryoSerializer;
 import colesico.framework.rpc.teleapi.RpcExchange;
 import colesico.framework.rpc.teleapi.RpcTeleDriver;
-import colesico.framework.teleapi.DataPort;
 
 import javax.inject.Singleton;
 

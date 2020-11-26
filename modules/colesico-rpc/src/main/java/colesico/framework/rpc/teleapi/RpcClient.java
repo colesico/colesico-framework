@@ -1,4 +1,4 @@
-package colesico.framework.rpc.client;
+package colesico.framework.rpc.teleapi;
 
 import colesico.framework.rpc.teleapi.RpcRequest;
 import colesico.framework.rpc.teleapi.RpcResponse;

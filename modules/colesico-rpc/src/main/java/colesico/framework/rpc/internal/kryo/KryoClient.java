@@ -1,6 +1,6 @@
-package colesico.framework.rpc.kryo;
+package colesico.framework.rpc.internal.kryo;
 
-import colesico.framework.rpc.client.RpcClient;
+import colesico.framework.rpc.teleapi.RpcClient;
 import colesico.framework.rpc.teleapi.RpcRequest;
 import colesico.framework.rpc.teleapi.RpcResponse;
 
