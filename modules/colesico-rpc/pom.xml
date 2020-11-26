@@ -69,7 +69,7 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- Kryo for library-->
+        <!-- Kryo serializer library-->
         <dependency>
             <groupId>com.esotericsoftware.kryo</groupId>
             <artifactId>kryo5</artifactId>

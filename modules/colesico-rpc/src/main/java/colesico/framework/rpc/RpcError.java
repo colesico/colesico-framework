@@ -7,6 +7,18 @@ public class RpcError {
     private String exceptionType;
     private String message;
 
+    public RpcError() {
+    }
+
+    private RpcError(String exceptionType, String message) {
+        this.exceptionType = exceptionType;
+        this.message = message;
+    }
+
+    public static RpcError of(String exceptionType, String message) {
+        return new RpcError(exceptionType, message);
+    }
+
     public String getMessage() {
         return message;
     }

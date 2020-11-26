@@ -5,6 +5,8 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.rpc.teleapi.*;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.MethodInvoker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -12,6 +14,8 @@ import javax.inject.Singleton;
 
 @Singleton
 public class RpcTeleDriverImpl implements RpcTeleDriver {
+
+    private static final Logger logger = LoggerFactory.getLogger(RpcTeleDriverImpl.class);
 
     private final Ioc ioc;
     private final RpcExchange exchange;
@@ -31,7 +35,7 @@ public class RpcTeleDriverImpl implements RpcTeleDriver {
     @Override
     public <T> void invoke(T service, MethodInvoker<T, RpcDataPort> invoker, RpcTIContext invCtx) {
 
-        RpcRequest request = null;
+        RpcRequest request;
         RpcResponse response = null;
         RpcDataPort dataPort = null;
         try {
@@ -46,6 +50,9 @@ public class RpcTeleDriverImpl implements RpcTeleDriver {
             // Invoke target service method
             invoker.invoke(service, dataPort);
         } catch (Throwable t) {
+            if (logger.isDebugEnabled()) {
+                logger.error("Error invoking rpc method: {}", service.getClass());
+            }
             dataPort.writeError(t);
         } finally {
             exchange.writeResponse(response);

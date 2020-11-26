@@ -10,6 +10,9 @@ public interface RpcExchange {
 
     <R extends RpcResponse> void writeResponse(R response);
 
+    /**
+     * To write general exception
+     */
     void writeException(Throwable t);
 
     final class RequestResolution {
