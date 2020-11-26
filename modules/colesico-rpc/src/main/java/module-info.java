@@ -1,8 +1,10 @@
 module colesico.framework.rpc {
 
-
     // Inherited in client projects
     requires transitive colesico.framework.service;
+    requires transitive  colesico.framework.security;
+    requires transitive colesico.framework.profile;
+
     requires colesico.framework.http;
     requires colesico.framework.router;
 
@@ -11,7 +13,7 @@ module colesico.framework.rpc {
     requires org.apache.commons.lang3;
     requires org.slf4j;
     requires com.esotericsoftware.kryo.kryo5;
-    requires colesico.framework.security;
+
 
 
     exports colesico.framework.rpc;

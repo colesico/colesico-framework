@@ -215,4 +215,14 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
         return cb.build();
     }
 
+    @Override
+    protected CodeBlock generateInvocationContext(TeleMethodElement teleMethod) {
+        RpcApiMethodElement rpcApiMethod = teleMethod.getProperty(RpcApiMethodElement.class);
+        CodeBlock.Builder cb = CodeBlock.builder();
+        cb.add("new $T($T.class, $T.class)", ClassName.get(RpcTIContext.class),
+                ClassName.bestGuess(rpcApiMethod.getRequestClassName()),
+                ClassName.bestGuess(rpcApiMethod.getResponseClassName())
+        );
+        return cb.build();
+    }
 }

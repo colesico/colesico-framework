@@ -62,7 +62,12 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
-
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-profile</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- Kryo for library-->
         <dependency>

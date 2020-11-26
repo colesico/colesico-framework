@@ -1,5 +1,6 @@
 package colesico.framework.rpc.codegen.generator;
 
+import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.rpc.codegen.model.RpcApiElement;
@@ -11,6 +12,7 @@ import com.squareup.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class EnvelopeGenerator extends FrameworkAbstractGenerator {
@@ -45,8 +47,38 @@ public class EnvelopeGenerator extends FrameworkAbstractGenerator {
     }
 
     private void generateEnvelopeExtensions(TypeSpec.Builder requestBuilder, List<Class<?>> extensions) {
-        //Парсить интерфейс и достовать дополнительные поля
-          
+        for (Class<?> extension : extensions) {
+            requestBuilder.addSuperinterface(ClassName.get(extension));
+            for (Method method : extension.getDeclaredMethods()) {
+                if (method.getName().startsWith("get") && method.getParameterTypes().length == 0) {
+                    String fieldName = StrUtils.firstCharToLowerCase(method.getName().substring(3));
+                    FieldSpec.Builder fb = FieldSpec.builder(ClassName.get(method.getReturnType()), fieldName, Modifier.PRIVATE);
+                    fb.addJavadoc("Envelope extension " + extension.getCanonicalName());
+                    requestBuilder.addField(fb.build());
+
+                    MethodSpec.Builder gb = MethodSpec.methodBuilder(method.getName());
+                    gb.addAnnotation(Override.class);
+                    gb.addModifiers(Modifier.PUBLIC);
+                    gb.returns(ClassName.get(method.getReturnType()));
+                    gb.addStatement("return $N", fieldName);
+                    requestBuilder.addMethod(gb.build());
+                    continue;
+                }
+
+                if (method.getName().startsWith("set")
+                        && method.getParameterTypes().length == 1
+                        && method.getReturnType() == void.class) {
+                    String fieldName = StrUtils.firstCharToLowerCase(method.getName().substring(3));
+                    MethodSpec.Builder sb = MethodSpec.methodBuilder(method.getName());
+                    sb.addAnnotation(Override.class);
+                    sb.addModifiers(Modifier.PUBLIC);
+                    sb.returns(TypeName.VOID);
+                    sb.addParameter(ClassName.get(method.getParameterTypes()[0]), method.getName());
+                    sb.addStatement("this.$N = $N", fieldName, fieldName);
+                    requestBuilder.addMethod(sb.build());
+                }
+            }
+        }
     }
 
     private void generateRequestEnvelope(TypeSpec.Builder envelopeBuilder, RpcApiMethodElement method) {

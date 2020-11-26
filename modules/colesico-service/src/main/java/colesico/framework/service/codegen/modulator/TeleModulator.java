@@ -17,8 +17,6 @@
 package colesico.framework.service.codegen.modulator;
 
 import colesico.framework.service.codegen.model.*;
-import colesico.framework.teleapi.DataPort;
-import colesico.framework.teleapi.TeleDriver;
 import colesico.framework.teleapi.TeleFacade;
 import com.squareup.javapoet.CodeBlock;
 import org.slf4j.Logger;
@@ -80,7 +78,7 @@ public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulat
             return;
         }
         processTeleMethod(teleMethod);
-        teleMethod.setInvocationContextCode(generateInvokingContext(teleMethod));
+        teleMethod.setInvocationContextCode(generateInvocationContext(teleMethod));
         teleMethod.setWritingContextCode(generateWritingContext(teleMethod));
         for (TeleParamElement teleParam : teleMethod.getParameters()) {
             teleParam.setReadingContextCode(generateReadingContext(teleParam));
@@ -96,7 +94,7 @@ public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulat
         teleFacade.setLigatureMethodBody(generateLigatureMethodBody((T) teleFacade));
     }
 
-    protected CodeBlock generateInvokingContext(TeleMethodElement teleMethod) {
+    protected CodeBlock generateInvocationContext(TeleMethodElement teleMethod) {
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("null");
         return cb.build();
