@@ -8,13 +8,12 @@ module colesico.framework.rpc {
     requires colesico.framework.http;
     requires colesico.framework.router;
 
-    requires com.squareup.javapoet;
-    requires java.compiler;
-    requires org.apache.commons.lang3;
     requires org.slf4j;
+    requires java.net.http;
+    requires static com.squareup.javapoet;
+    requires static java.compiler;
+    requires org.apache.commons.lang3;
     requires com.esotericsoftware.kryo.kryo5;
-
-
 
     exports colesico.framework.rpc;
     exports colesico.framework.rpc.client;
