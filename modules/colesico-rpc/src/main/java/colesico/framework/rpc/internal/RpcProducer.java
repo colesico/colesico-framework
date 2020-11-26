@@ -5,6 +5,7 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.rpc.kryo.KryoExchange;
+import colesico.framework.rpc.kryo.KryoSerializer;
 import colesico.framework.rpc.teleapi.RpcDataPort;
 import colesico.framework.rpc.teleapi.RpcExchange;
 import colesico.framework.rpc.teleapi.RpcTeleDriver;
@@ -16,6 +17,7 @@ import javax.inject.Singleton;
 @Produce(RpcDispatcher.class)
 @Produce(RpcTeleDriverImpl.class)
 @Produce(KryoExchange.class)
+@Produce(KryoSerializer.class)
 
 //@Produce(PrincipalReader.class)
 //@Produce(PrincipalWriter.class)

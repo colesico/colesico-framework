@@ -48,13 +48,16 @@ public class ClientGenerator extends FrameworkAbstractGenerator {
 
             generateParamAssignment(mb, methodElm);
 
-            // RpcResponse<T> response = rpcClient.call(request)
-            mb.addStatement("$T $N = $N.$N($N)",
+            // RpcResponse<T> response = rpcClient.serve("api","method", request, RpcResponse.class)
+            mb.addStatement("$T $N = $N.$N($S, $S, $N, $T.class)",
                     ParameterizedTypeName.get(ClassName.get(RpcResponse.class), TypeName.get(methodElm.getOriginMethod().getReturnType())),
                     RESPONSE_VAR,
                     RPC_CLIENT_FIELD,
                     RpcClient.SERVE_METHOD,
-                    RpcClient.REQUEST_PARAM
+                    methodElm.getParentApi().rpcApiName(),
+                    methodElm.rpcMethodName(),
+                    RpcClient.REQUEST_PARAM,
+                    ClassName.bestGuess(methodElm.getResponseClassName())
             );
 
             mb.addStatement("return $N.$N()",

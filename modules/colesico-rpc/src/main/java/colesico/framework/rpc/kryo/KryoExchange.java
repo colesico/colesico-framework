@@ -25,18 +25,12 @@ public class KryoExchange implements RpcExchange {
 
     String RESPONSE_CONTENT_TYPE = "application/octet-stream";
 
-    private Provider<HttpContext> httpContextProv;
+    private final Provider<HttpContext> httpContextProv;
+    private final KryoSerializer serializer;
 
-    private Pool<Kryo> kryoPool = new Pool<>(true, false, 8) {
-        protected Kryo create() {
-            Kryo kryo = new Kryo();
-            kryo.setRegistrationRequired(false);
-            return kryo;
-        }
-    };
-
-    public KryoExchange(Provider<HttpContext> httpContextProv) {
+    public KryoExchange(Provider<HttpContext> httpContextProv, KryoSerializer serializer) {
         this.httpContextProv = httpContextProv;
+        this.serializer = serializer;
     }
 
     @Override
@@ -50,7 +44,7 @@ public class KryoExchange implements RpcExchange {
     @Override
     public <Q extends RpcRequest> Q readRequest(Type requestType) {
         HttpContext ctx = httpContextProv.get();
-        Q request = deserialize(ctx.getRequest().getInputStream(), (Class<Q>) requestType);
+        Q request = serializer.deserialize(ctx.getRequest().getInputStream(), (Class<Q>) requestType);
         return request;
     }
 
@@ -58,7 +52,7 @@ public class KryoExchange implements RpcExchange {
     public void writeResponse(RpcResponse response) {
         HttpContext ctx = httpContextProv.get();
         ctx.getResponse().setContenType(RESPONSE_CONTENT_TYPE);
-        serialize(response, ctx.getResponse().getOutputStream());
+        serializer.serialize(response, ctx.getResponse().getOutputStream());
     }
 
     @Override
@@ -73,26 +67,7 @@ public class KryoExchange implements RpcExchange {
         response.setContenType(RESPONSE_CONTENT_TYPE);
         response.setHeader(KryoClient.RPC_ERROR_HEADER, cause.getClass().getName());
 
-        serialize(error, response.getOutputStream());
-    }
-
-    private <T> void serialize(T obj, OutputStream os) {
-        Kryo kryo = kryoPool.obtain();
-        try (Output output = new Output(os)) {
-            kryo.writeObject(output, obj);
-        } finally {
-            kryoPool.free(kryo);
-        }
-    }
-
-    private <T> T deserialize(InputStream is, Class<T> type) {
-        Kryo kryo = kryoPool.obtain();
-        try (Input input = new Input(is)) {
-            T res = kryo.readObject(input, type);
-            return res;
-        } finally {
-            kryoPool.free(kryo);
-        }
+        serializer.serialize(error, response.getOutputStream());
     }
 
 }
