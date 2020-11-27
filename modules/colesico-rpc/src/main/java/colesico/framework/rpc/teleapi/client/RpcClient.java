@@ -9,7 +9,7 @@ import colesico.framework.rpc.teleapi.RpcResponse;
 public interface RpcClient {
 
     String REQUEST_PARAM = "request";
-    String SERVE_METHOD = "serve";
+    String CALL_METHOD = "call";
 
     /**
      * Adds extra parameters and call target

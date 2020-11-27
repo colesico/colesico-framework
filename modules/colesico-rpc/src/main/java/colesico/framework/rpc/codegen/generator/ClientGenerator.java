@@ -53,7 +53,7 @@ public class ClientGenerator extends FrameworkAbstractGenerator {
                     ParameterizedTypeName.get(ClassName.get(RpcResponse.class), TypeName.get(methodElm.getOriginMethod().getReturnType())),
                     RESPONSE_VAR,
                     RPC_CLIENT_FIELD,
-                    RpcClient.SERVE_METHOD,
+                    RpcClient.CALL_METHOD,
                     methodElm.getParentApi().rpcApiName(),
                     methodElm.rpcMethodName(),
                     RpcClient.REQUEST_PARAM,
