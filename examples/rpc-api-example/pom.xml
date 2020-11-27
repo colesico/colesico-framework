@@ -29,7 +29,7 @@
     <artifactId>rpc-api-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - RPC Example API</name>
+    <name>Colesico example - RPC API Example</name>
 
     <dependencies>
         <!-- Colesico web bundle -->

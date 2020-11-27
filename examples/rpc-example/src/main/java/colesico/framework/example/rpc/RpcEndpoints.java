@@ -1,4 +1,4 @@
-package colesico.framework.test.example.rpc;
+package colesico.framework.example.rpc;
 
 import colesico.framework.config.Config;
 import colesico.framework.example.rpc.api.HelloServiceRemote;

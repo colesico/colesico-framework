@@ -32,14 +32,8 @@
     <name>Colesico example - RPC (Remote Procedure Call)</name>
 
     <dependencies>
-        <!-- Colesico web bundle -->
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-bundle-web</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
-        <!-- Colesico web bundle -->
+        <!-- Colesico rpc bundle -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-rpc</artifactId>
@@ -76,6 +70,7 @@
     </dependencies>
 
     <build>
+        <finalName>rpc-example</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -118,9 +113,9 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <excludeScope>provided</excludeScope>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <includeScope>runtime</includeScope>
                             <excludeArtifactIds>javapoet</excludeArtifactIds>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
