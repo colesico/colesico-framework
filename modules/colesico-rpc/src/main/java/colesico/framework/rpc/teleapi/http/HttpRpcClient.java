@@ -36,7 +36,6 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
 
     @Override
     protected InputStream callRpcServer(String endpoint, String rpcApiName, String rpcMethodName, byte[] data) {
-        logger.debug("Call RPC server to endpoint " + endpoint);
         try {
             HttpRequest.BodyPublisher publisher = HttpRequest.BodyPublishers.ofByteArray(data);
 
