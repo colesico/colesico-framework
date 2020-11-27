@@ -16,7 +16,9 @@
 
 package colesico.framework.example.rpc;
 
+import colesico.framework.example.rpc.api.DataBean;
 import colesico.framework.example.rpc.api.HelloServiceRemote;
+import colesico.framework.example.rpc.api.NameBean;
 import colesico.framework.httpserver.HttpServer;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
@@ -31,6 +33,11 @@ public class Main {
         ioc.instance(HttpServer.class).start();
 
         HelloServiceRemote remoteSrv = ioc.instance(HelloServiceRemote.class);
-        System.out.println("DataBean.value=" + remoteSrv.getDataBean().getValue());
+        DataBean db = remoteSrv.getDataBean();
+        System.out.println("DataBean.value=" + db.getValue());
+        String message = remoteSrv.getMessage(7, db,
+                new NameBean("Ivan",
+                        new DataBean("Hi")));
+        System.out.println("Message=" + message);
     }
 }

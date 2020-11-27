@@ -1,11 +1,19 @@
 package colesico.framework.example.rpc.api;
 
 
-public class NameDataBean {
+public class NameBean {
 
     private String name;
 
     private DataBean data;
+
+    public NameBean() {
+    }
+
+    public NameBean(String name, DataBean data) {
+        this.name = name;
+        this.data = data;
+    }
 
     public String getName() {
         return name;
@@ -21,5 +29,10 @@ public class NameDataBean {
 
     public void setData(DataBean data) {
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return name + "-" + data.toString();
     }
 }

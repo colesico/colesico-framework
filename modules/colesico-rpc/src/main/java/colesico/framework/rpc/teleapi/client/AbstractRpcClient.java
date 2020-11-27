@@ -42,14 +42,14 @@ abstract public class AbstractRpcClient implements RpcClient {
 
     @Override
     public <R> RpcResponse<R> call(String rpcApiName, String rpcMethodName, RpcRequest request, Class<? extends RpcResponse<R>> responseType) {
-        logger.debug("RPC client calls api: {}  method: {}", rpcApiName, rpcMethodName);
+        logger.debug("RPC client calls api: {} method: {}", rpcApiName, rpcMethodName);
         ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
         serialize(request, os);
 
         String endpoint = resolveEndpoint(rpcApiName);
         logger.debug("Resolved endpoint {}", endpoint);
         byte[] requestData = os.toByteArray();
-        logger.debug("Request data size: {}", requestData.length);
+        logger.debug("Request data size: {} bytes", requestData.length);
         InputStream responseStream = callRpcServer(endpoint, rpcApiName, rpcMethodName, requestData);
 
         RpcResponse<R> rpcResponse = deserialize(responseStream, responseType);
