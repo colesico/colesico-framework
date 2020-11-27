@@ -1,7 +1,7 @@
 package colesico.framework.example.rpc.api;
 
 
-public class NameBean {
+public final class NameBean {
 
     private String name;
 
