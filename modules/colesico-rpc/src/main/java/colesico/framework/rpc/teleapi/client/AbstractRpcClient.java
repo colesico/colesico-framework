@@ -38,16 +38,16 @@ abstract public class AbstractRpcClient implements RpcClient {
 
     abstract protected <T> T deserialize(InputStream is, Class<T> type);
 
-    abstract protected InputStream callRpcServer(String endpoint, byte[] data);
+    abstract protected InputStream callRpcServer(String endpoint, String rpcApiName, String rpcMethodName, byte[] data);
 
     @Override
-    public <R> RpcResponse<R> serve(String apiName, String methodName, RpcRequest request, Class<? extends RpcResponse<R>> responseType) {
+    public <R> RpcResponse<R> serve(String rpcApiName, String rpcMethodName, RpcRequest request, Class<? extends RpcResponse<R>> responseType) {
 
         ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
         serialize(request, os);
 
-        String endpoint = resolveEndpoint(apiName);
-        InputStream responseStream = callRpcServer(endpoint, os.toByteArray());
+        String endpoint = resolveEndpoint(rpcApiName);
+        InputStream responseStream = callRpcServer(endpoint, rpcApiName, rpcMethodName, os.toByteArray());
 
         RpcResponse<R> rpcResponse = deserialize(responseStream, responseType);
 

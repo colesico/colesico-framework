@@ -6,7 +6,10 @@ import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.teleapi.RpcExchange;
 import colesico.framework.rpc.teleapi.RpcRequest;
 import colesico.framework.rpc.teleapi.RpcResponse;
+import colesico.framework.rpc.teleapi.client.RpcClient;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Provider;
 import java.io.InputStream;
@@ -15,6 +18,8 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 abstract public class HttpRpcExchange implements RpcExchange {
+
+    protected final Logger logger = LoggerFactory.getLogger(RpcExchange.class);
 
     private final Provider<HttpContext> httpContextProv;
 

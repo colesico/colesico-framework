@@ -8,9 +8,11 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 
 abstract public class HttpRpcClient extends AbstractRpcClient {
 
@@ -33,7 +35,7 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
     }
 
     @Override
-    protected InputStream callRpcServer(String endpoint, byte[] data) {
+    protected InputStream callRpcServer(String endpoint, String rpcApiName, String rpcMethodName, byte[] data) {
         logger.debug("Call RPC server to endpoint " + endpoint);
         try {
             HttpRequest.BodyPublisher publisher = HttpRequest.BodyPublishers.ofByteArray(data);
@@ -41,6 +43,8 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
             HttpRequest httpRequest = HttpRequest.newBuilder()
                     .uri(URI.create(endpoint))
                     .header(CONTENT_TYPE_HEADER, RPC_CONTENT_TYPE)
+                    .header(RPC_API_HEADER, URLEncoder.encode(rpcApiName, StandardCharsets.UTF_8))
+                    .header(RPC_METHOD_HEADER, URLEncoder.encode(rpcMethodName, StandardCharsets.UTF_8))
                     .POST(publisher)
                     .build();
 
