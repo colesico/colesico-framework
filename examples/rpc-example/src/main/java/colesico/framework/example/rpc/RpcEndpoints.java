@@ -7,7 +7,7 @@ import colesico.framework.rpc.teleapi.client.RpcEndpointsPrototype;
 @Config
 public class RpcEndpoints extends RpcEndpointsPrototype {
     @Override
-    public void addEndpoints(EndpointsRegistry endpointsRegistry) {
-        endpointsRegistry.addEndpoint(HelloServiceRemote.class,"http://localhost:8080/rpc");
+    public void addEndpoints(EndpointsRegistry registry) {
+        registry.addEndpoint(HelloServiceRemote.class,"http://localhost:8080/rpc");
     }
 }
