@@ -18,6 +18,8 @@ package colesico.framework.undertow.internal;
 
 import colesico.framework.undertow.UndertowConfigPrototype;
 import io.undertow.Undertow;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 
@@ -29,16 +31,11 @@ import javax.inject.Singleton;
 
 @Singleton
 public final class UndertowConfigImpl extends UndertowConfigPrototype {
+    private static Logger log = LoggerFactory.getLogger(UndertowConfigImpl.class);
 
     @Override
     public void applyOptions(Undertow.Builder builder) {
         builder.addHttpListener(8080, "localhost");
-
-        /*
-        // maximum number of query parameters
-        builder.setServerOption(UndertowOptions.MAX_PARAMETERS, 100);
-        // maximum number of headers
-        builder.setServerOption(UndertowOptions.MAX_HEADERS, 25);
-        */
+        log.info("Set default undertow http listener to localhost:8080");
     }
 }
