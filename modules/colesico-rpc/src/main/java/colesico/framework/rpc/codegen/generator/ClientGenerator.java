@@ -77,15 +77,15 @@ public class ClientGenerator extends FrameworkAbstractGenerator {
         // Constructor
         MethodSpec.Builder cb = MethodSpec.constructorBuilder();
         cb.addAnnotation(Inject.class);
+        cb.addModifiers(Modifier.PUBLIC);
         cb.addParameter(TypeName.get(RpcClient.class), RPC_CLIENT_FIELD);
-
 
         cb.addStatement("this.$N = $N", RPC_CLIENT_FIELD, RPC_CLIENT_FIELD);
         clientBuilder.addMethod(cb.build());
     }
 
     public void generate(RpcApiElement rpcApiElm) {
-        String classSimpleName = rpcApiElm.getClientClassName();
+        String classSimpleName = rpcApiElm.getClientClassSimpleName();
         String packageName = rpcApiElm.getOriginInterface().getPackageName();
 
         TypeSpec.Builder clientBuilder = TypeSpec.classBuilder(classSimpleName);

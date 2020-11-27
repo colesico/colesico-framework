@@ -23,6 +23,8 @@ import io.undertow.server.handlers.form.EagerFormParsingHandler;
 import io.undertow.server.handlers.form.FormEncodedDataDefinition;
 import io.undertow.server.handlers.form.FormParserFactory;
 import io.undertow.server.handlers.form.MultiPartParserDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -35,6 +37,8 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class UndertowHttpServer implements HttpServer {
+
+    protected final Logger logger = LoggerFactory.getLogger(UndertowHttpServer.class);
 
     public static final String ENCODING = "UTF-8";
 

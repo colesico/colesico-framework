@@ -3,6 +3,7 @@ package colesico.framework.rpc.teleapi.http;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.rpc.RpcException;
 import colesico.framework.rpc.teleapi.client.AbstractRpcClient;
+import colesico.framework.rpc.teleapi.client.RpcEndpointsPrototype;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.InputStream;
@@ -21,7 +22,8 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
 
     protected final HttpClient httpClient;
 
-    public HttpRpcClient(Polysupplier<HttpRpcClientOptionsPrototype> options) {
+    public HttpRpcClient(Polysupplier<RpcEndpointsPrototype> endpointsConf, Polysupplier<HttpRpcClientOptionsPrototype> options) {
+        super(endpointsConf);
         final HttpClient.Builder httpClientBuilder = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_2);
 
@@ -31,7 +33,8 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
     }
 
     @Override
-    protected InputStream invokeServer(String endpoint, byte[] data) {
+    protected InputStream callRpcServer(String endpoint, byte[] data) {
+        logger.debug("Call RPC server to endpoint " + endpoint);
         try {
             HttpRequest.BodyPublisher publisher = HttpRequest.BodyPublishers.ofByteArray(data);
 
@@ -44,7 +47,7 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
             HttpResponse<InputStream> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofInputStream());
             return response.body();
         } catch (Exception e) {
-            throw new RpcException("PRC Server invocation error :" + ExceptionUtils.getRootCauseMessage(e), e);
+            throw new RpcException("PRC Server invocation error: " + ExceptionUtils.getRootCauseMessage(e), e);
         }
     }
 }

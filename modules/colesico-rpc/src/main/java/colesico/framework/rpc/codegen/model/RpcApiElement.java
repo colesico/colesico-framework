@@ -18,6 +18,7 @@ public class RpcApiElement {
 
     /**
      * Custom RPC name
+     *
      * @see colesico.framework.rpc.RpcName
      */
     private final String rpcName;
@@ -44,8 +45,12 @@ public class RpcApiElement {
         return originInterface.getSimpleName() + ENVELOPE_PACK_CLASS_SUFFIX;
     }
 
-    public String getClientClassName() {
+    public String getClientClassSimpleName() {
         return originInterface.getSimpleName() + CLIENT_CLASS_SUFFIX;
+    }
+
+    public String getClientClassName() {
+        return originInterface.getPackageName() + '.' + originInterface.getSimpleName() + CLIENT_CLASS_SUFFIX;
     }
 
     public ClassElement getOriginInterface() {
