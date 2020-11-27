@@ -179,8 +179,8 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
             cb.add("$T.$N($S)\n", ClassName.get(RpcLigature.class), RpcLigature.API_METHOD, rpcApi.rpcApiName());
             cb.indent();
             for (RpcApiMethodElement rpcApiMethod : rpcApi.getRpcMethods()) {
-                // .addMethod("methodName", this::teleMethod
-                cb.add(".$N($S, this::$N)\n",
+                // .addMethod("methodName", teleMethodFactory()
+                cb.add(".$N($S, $N())\n",
                         RpcLigature.RpcApi.ADD_METHOD,
                         rpcApiMethod.rpcMethodName(),
                         rpcApiMethod.getTeleMethod().getBuilderName()

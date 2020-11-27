@@ -27,9 +27,9 @@ public class RpcDispatcher {
     protected final Logger logger = LoggerFactory.getLogger(RpcDispatcher.class);
 
     /**
-     * RPC Interface names to RPC API ref map
+     * RPC API name to tele-methods map
      */
-    protected final Map<String, RpcLigature.RpcApi> rpcApiMap = new HashMap<>();
+    protected final Map<String, Map<String, TeleMethod>> rpcApiMap = new HashMap<>();
 
     public RpcDispatcher(@Classed(Rpc.class) Polysupplier<TeleFacade> teleFacadesSupp) {
         loadLigature(teleFacadesSupp);
@@ -51,12 +51,12 @@ public class RpcDispatcher {
     }
 
     protected TeleMethod getTeleMethod(RpcExchange.RequestResolution requestResolution) {
-        RpcLigature.RpcApi rpcApi = rpcApiMap.get(requestResolution.getApiName());
-        if (rpcApi == null) {
+        Map<String, TeleMethod> apiMethods = rpcApiMap.get(requestResolution.getApiName());
+        if (apiMethods == null) {
             throw new RpcException("RPC API not found: " + requestResolution.getApiName());
         }
 
-        TeleMethod teleMethod = rpcApi.getTeleMethods().get(requestResolution.getMethodName());
+        TeleMethod teleMethod = apiMethods.get(requestResolution.getMethodName());
         if (teleMethod == null) {
             throw new RpcException("RPC tele method not found: " + requestResolution.getApiName());
         }
@@ -76,8 +76,8 @@ public class RpcDispatcher {
 
             List<RpcLigature.RpcApi> rpcApiList = ligature.getRpcApiList();
             for (RpcLigature.RpcApi rpcApi : rpcApiList) {
-                RpcLigature.RpcApi prevApi = rpcApiMap.put(rpcApi.getName(), rpcApi);
-                if (prevApi != null) {
+                Map<String, TeleMethod> prevMethods = rpcApiMap.put(rpcApi.getName(), rpcApi.getTeleMethods());
+                if (prevMethods != null) {
                     throw new RpcException("Duplicate RPC API implementation: " + rpcApi.getName());
                 }
             }
