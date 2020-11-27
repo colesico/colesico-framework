@@ -49,7 +49,7 @@ public class RpcApiTest {
         httpServer.stop();
     }
 
-    @Test
+   // @Test
     public void test1() {
         logger.info("Test DataBean retrieving");
         HelloServiceRemote remoteSrv = ioc.instance(HelloServiceRemote.class);
