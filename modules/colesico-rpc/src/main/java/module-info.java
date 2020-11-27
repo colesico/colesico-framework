@@ -16,6 +16,9 @@ module colesico.framework.rpc {
     requires com.esotericsoftware.kryo.kryo5;
 
     exports colesico.framework.rpc;
-    exports colesico.framework.rpc.http;
     exports colesico.framework.rpc.teleapi;
+    exports colesico.framework.rpc.teleapi.client;
+    exports colesico.framework.rpc.teleapi.http;
+    exports colesico.framework.rpc.teleapi.reader;
+    exports colesico.framework.rpc.teleapi.writer;
 }

@@ -1,4 +1,4 @@
-package colesico.framework.rpc.http;
+package colesico.framework.rpc.teleapi.http;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpResponse;
@@ -15,8 +15,6 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 abstract public class HttpRpcExchange implements RpcExchange {
-
-    String RESPONSE_CONTENT_TYPE = "application/octet-stream";
 
     private final Provider<HttpContext> httpContextProv;
 
@@ -46,7 +44,7 @@ abstract public class HttpRpcExchange implements RpcExchange {
     @Override
     public void writeResponse(RpcResponse response) {
         HttpContext ctx = httpContextProv.get();
-        ctx.getResponse().setContenType(RESPONSE_CONTENT_TYPE);
+        ctx.getResponse().setContenType(HttpRpcClient.RPC_CONTENT_TYPE);
         serialize(response, ctx.getResponse().getOutputStream());
     }
 
@@ -59,7 +57,7 @@ abstract public class HttpRpcExchange implements RpcExchange {
         RpcError error = RpcError.of(t.getClass().getCanonicalName(), cause.getMessage());
 
         HttpResponse response = httpContextProv.get().getResponse();
-        response.setContenType(RESPONSE_CONTENT_TYPE);
+        response.setContenType(HttpRpcClient.RPC_CONTENT_TYPE);
         response.setHeader(HttpRpcClient.RPC_ERROR_HEADER, cause.getClass().getName());
 
         serialize(error, response.getOutputStream());
