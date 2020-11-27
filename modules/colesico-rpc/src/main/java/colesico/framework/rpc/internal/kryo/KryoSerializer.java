@@ -1,9 +1,13 @@
 package colesico.framework.rpc.internal.kryo;
 
+import colesico.framework.rpc.teleapi.client.RpcClient;
 import com.esotericsoftware.kryo.kryo5.Kryo;
 import com.esotericsoftware.kryo.kryo5.io.Input;
 import com.esotericsoftware.kryo.kryo5.io.Output;
 import com.esotericsoftware.kryo.kryo5.util.Pool;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.io.InputStream;
@@ -11,6 +15,8 @@ import java.io.OutputStream;
 
 @Singleton
 public class KryoSerializer {
+
+    protected final Logger logger = LoggerFactory.getLogger(KryoSerializer.class);
 
     private Pool<Kryo> kryoPool = new Pool<>(true, false, 8) {
         protected Kryo create() {
@@ -24,6 +30,9 @@ public class KryoSerializer {
         Kryo kryo = kryoPool.obtain();
         try (Output output = new Output(os)) {
             kryo.writeObject(output, obj);
+        } catch (Exception e) {
+            logger.error("Serialization error: {}", ExceptionUtils.getRootCauseMessage(e));
+            throw new RuntimeException(e);
         } finally {
             kryoPool.free(kryo);
         }
@@ -34,6 +43,9 @@ public class KryoSerializer {
         try (Input input = new Input(is)) {
             T res = kryo.readObject(input, type);
             return res;
+        } catch (Exception e) {
+            logger.error("Deserialization error: {}", ExceptionUtils.getRootCauseMessage(e));
+            throw new RuntimeException(e);
         } finally {
             kryoPool.free(kryo);
         }

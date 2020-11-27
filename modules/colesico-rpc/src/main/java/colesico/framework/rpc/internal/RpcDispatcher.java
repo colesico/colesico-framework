@@ -38,8 +38,9 @@ public class RpcDispatcher {
     public void dispatch(RpcExchange exchange) {
         try {
             // Resolve RPC tele-method method
-            RpcExchange.RequestResolution requestResolution = exchange.resolveRequest();
-            TeleMethod teleMethod = getTeleMethod(requestResolution);
+            RpcExchange.RequestResolution resolution = exchange.resolveRequest();
+            logger.debug("RPC request resolution: {}", resolution);
+            TeleMethod teleMethod = getTeleMethod(resolution);
 
             // Invoke
             teleMethod.invoke();

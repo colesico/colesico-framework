@@ -31,5 +31,12 @@ public interface RpcExchange {
         public String getMethodName() {
             return methodName;
         }
+
+        @Override
+        public String toString() {
+            return "{ apiName='" + apiName + '\'' +
+                    "; methodName='" + methodName + '\'' +
+                    '}';
+        }
     }
 }
