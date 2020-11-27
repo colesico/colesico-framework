@@ -28,6 +28,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import static org.testng.AssertJUnit.assertEquals;
+
 public class RpcApiTest {
     private Ioc ioc;
     private HttpServer httpServer;
@@ -47,11 +49,13 @@ public class RpcApiTest {
         httpServer.stop();
     }
 
-    //@Test
+    @Test
     public void test1() {
         logger.info("Test DataBean retrieving");
         HelloServiceRemote remoteSrv = ioc.instance(HelloServiceRemote.class);
-        System.out.println("DataBean.value=" + remoteSrv.getDataBean().getValue());
+        String val = remoteSrv.getDataBean().getValue();
+        System.out.println("DataBean.value=" + val);
+        assertEquals(HelloServiceRemote.HELLO_MESSAGE, val);
     }
 
 }
