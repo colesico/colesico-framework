@@ -6,6 +6,9 @@ import colesico.framework.rpc.teleapi.RpcEnvelope;
 import colesico.framework.rpc.teleapi.RpcTRContext;
 import colesico.framework.rpc.teleapi.RpcTeleReader;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class RpcProfileReader implements RpcTeleReader<Profile> {
 
     protected final ProfileSerializer profileSerializer;

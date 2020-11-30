@@ -17,5 +17,5 @@ public interface RpcEnvelope {
      */
     byte[] getProfile();
 
-    void setProfile(byte profile);
+    void setProfile(byte[] profile);
 }
