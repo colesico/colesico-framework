@@ -12,6 +12,7 @@ import com.squareup.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -52,14 +53,14 @@ public class EnvelopeGenerator extends FrameworkAbstractGenerator {
             for (Method method : extension.getDeclaredMethods()) {
                 if (method.getName().startsWith("get") && method.getParameterTypes().length == 0) {
                     String fieldName = StrUtils.firstCharToLowerCase(method.getName().substring(3));
-                    FieldSpec.Builder fb = FieldSpec.builder(ClassName.get(method.getReturnType()), fieldName, Modifier.PRIVATE);
+                    FieldSpec.Builder fb = FieldSpec.builder(TypeName.get(method.getReturnType()), fieldName, Modifier.PRIVATE);
                     fb.addJavadoc("Envelope extension " + extension.getCanonicalName());
                     requestBuilder.addField(fb.build());
 
                     MethodSpec.Builder gb = MethodSpec.methodBuilder(method.getName());
                     gb.addAnnotation(Override.class);
                     gb.addModifiers(Modifier.PUBLIC);
-                    gb.returns(ClassName.get(method.getReturnType()));
+                    gb.returns(TypeName.get(method.getReturnType()));
                     gb.addStatement("return $N", fieldName);
                     requestBuilder.addMethod(gb.build());
                     continue;
@@ -73,7 +74,7 @@ public class EnvelopeGenerator extends FrameworkAbstractGenerator {
                     sb.addAnnotation(Override.class);
                     sb.addModifiers(Modifier.PUBLIC);
                     sb.returns(TypeName.VOID);
-                    sb.addParameter(ClassName.get(method.getParameterTypes()[0]), method.getName());
+                    sb.addParameter(TypeName.get(method.getParameterTypes()[0]), method.getName());
                     sb.addStatement("this.$N = $N", fieldName, fieldName);
                     requestBuilder.addMethod(sb.build());
                 }

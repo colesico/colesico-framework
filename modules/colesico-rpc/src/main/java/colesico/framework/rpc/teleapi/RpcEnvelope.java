@@ -1,18 +1,21 @@
 package colesico.framework.rpc.teleapi;
 
-import colesico.framework.profile.Profile;
-import colesico.framework.security.Principal;
-
 /**
  * Default envelope extension
  */
 public interface RpcEnvelope {
 
-    Principal getPrincipal();
+    /**
+     * Serialized principal
+     */
+    byte[] getPrincipal();
 
-    void setPrincipal(Principal principal);
+    void setPrincipal(byte[] principal);
 
-    Profile getProfile();
+    /**
+     * Serialized profile
+     */
+    byte[] getProfile();
 
-    void setProfile(Profile profile);
+    void setProfile(byte profile);
 }
