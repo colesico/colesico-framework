@@ -1,6 +1,5 @@
 package colesico.framework.rpc.internal.kryo;
 
-import colesico.framework.rpc.teleapi.client.RpcClient;
 import com.esotericsoftware.kryo.kryo5.Kryo;
 import com.esotericsoftware.kryo.kryo5.io.Input;
 import com.esotericsoftware.kryo.kryo5.io.Output;

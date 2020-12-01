@@ -1,6 +1,6 @@
 package colesico.framework.rpc.teleapi.writer;
 
-import colesico.framework.rpc.teleapi.RpcEnvelope;
+import colesico.framework.rpc.teleapi.BasicEnvelope;
 import colesico.framework.rpc.teleapi.RpcTWContext;
 import colesico.framework.rpc.teleapi.RpcTeleWriter;
 import colesico.framework.security.Principal;
@@ -19,7 +19,7 @@ public class RpcPrincipalWriter implements RpcTeleWriter<Principal> {
 
     @Override
     public void write(Principal value, RpcTWContext context) {
-        RpcEnvelope env = (RpcEnvelope) context.getResponse();
+        BasicEnvelope env = (BasicEnvelope) context.getResponse();
         env.setPrincipal(principalSerializer.serialize(value));
     }
 }

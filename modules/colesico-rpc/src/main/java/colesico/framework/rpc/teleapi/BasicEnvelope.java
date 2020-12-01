@@ -1,9 +1,10 @@
 package colesico.framework.rpc.teleapi;
 
 /**
- * Default envelope extension
+ * Basic rpc request and response extension
+ * Used to provide ability to pass principal and profile objects
  */
-public interface RpcEnvelope {
+public interface BasicEnvelope {
 
     /**
      * Serialized principal

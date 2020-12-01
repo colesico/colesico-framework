@@ -1,6 +1,6 @@
 package colesico.framework.rpc.teleapi.reader;
 
-import colesico.framework.rpc.teleapi.RpcEnvelope;
+import colesico.framework.rpc.teleapi.BasicEnvelope;
 import colesico.framework.rpc.teleapi.RpcTRContext;
 import colesico.framework.rpc.teleapi.RpcTeleReader;
 import colesico.framework.security.Principal;
@@ -19,7 +19,7 @@ public class RpcPrincipalReader implements RpcTeleReader<Principal> {
 
     @Override
     public Principal read(RpcTRContext context) {
-        RpcEnvelope env = (RpcEnvelope) context.getRequest();
+        BasicEnvelope env = (BasicEnvelope) context.getRequest();
         Principal principal = principalSerializer.deserialize(env.getPrincipal());
         return principal;
     }

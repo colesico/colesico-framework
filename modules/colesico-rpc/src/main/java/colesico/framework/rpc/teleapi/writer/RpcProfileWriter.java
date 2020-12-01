@@ -2,7 +2,7 @@ package colesico.framework.rpc.teleapi.writer;
 
 import colesico.framework.profile.Profile;
 import colesico.framework.profile.teleapi.ProfileSerializer;
-import colesico.framework.rpc.teleapi.RpcEnvelope;
+import colesico.framework.rpc.teleapi.BasicEnvelope;
 import colesico.framework.rpc.teleapi.RpcTWContext;
 import colesico.framework.rpc.teleapi.RpcTeleWriter;
 
@@ -19,7 +19,7 @@ public class RpcProfileWriter  implements RpcTeleWriter<Profile> {
 
     @Override
     public void write(Profile value, RpcTWContext context) {
-        RpcEnvelope env = (RpcEnvelope) context.getResponse();
+        BasicEnvelope env = (BasicEnvelope) context.getResponse();
         env.setProfile(profileSerializer.serialize(value));
     }
 }

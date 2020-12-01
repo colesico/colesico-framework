@@ -4,6 +4,7 @@ import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.rpc.RpcException;
 import colesico.framework.rpc.teleapi.client.AbstractRpcClient;
 import colesico.framework.rpc.teleapi.client.RpcEndpointsPrototype;
+import colesico.framework.rpc.teleapi.client.RpcRequestHandler;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.InputStream;
@@ -24,8 +25,10 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
 
     protected final HttpClient httpClient;
 
-    public HttpRpcClient(Polysupplier<RpcEndpointsPrototype> endpointsConf, Polysupplier<HttpRpcClientOptionsPrototype> options) {
-        super(endpointsConf);
+    public HttpRpcClient(Polysupplier<RpcEndpointsPrototype> endpointsConf,
+                         Polysupplier<HttpRpcClientOptionsPrototype> options,
+                         Polysupplier<RpcRequestHandler> reqHandlers) {
+        super(endpointsConf, reqHandlers);
         final HttpClient.Builder httpClientBuilder = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_2);
 
@@ -35,7 +38,7 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
     }
 
     @Override
-    protected InputStream callRpcServer(String endpoint, String rpcApiName, String rpcMethodName, byte[] data) {
+    protected InputStream callEndpoint(String endpoint, String rpcApiName, String rpcMethodName, byte[] data) {
         try {
             HttpRequest.BodyPublisher publisher = HttpRequest.BodyPublishers.ofByteArray(data);
 

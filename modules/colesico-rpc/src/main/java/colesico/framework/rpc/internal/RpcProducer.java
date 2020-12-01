@@ -11,6 +11,7 @@ import colesico.framework.rpc.teleapi.RpcExchange;
 import colesico.framework.rpc.teleapi.RpcTeleDriver;
 import colesico.framework.rpc.teleapi.RpcTeleReader;
 import colesico.framework.rpc.teleapi.RpcTeleWriter;
+import colesico.framework.rpc.teleapi.client.RpcRequestHandler;
 import colesico.framework.rpc.teleapi.client.RpcClient;
 import colesico.framework.rpc.teleapi.reader.RpcPrincipalReader;
 import colesico.framework.rpc.teleapi.reader.RpcProfileReader;
@@ -33,6 +34,8 @@ import javax.inject.Singleton;
 
 @Produce(RpcProfileReader.class)
 @Produce(RpcProfileWriter.class)
+
+@Produce(BasicRequestHandler.class)
 public class RpcProducer {
 
     @Singleton
@@ -50,17 +53,11 @@ public class RpcProducer {
         return impl;
     }
 
-    // Readers and writers
+    // Readers
 
     @Singleton
     @Classed(Principal.class)
     public RpcTeleReader getPrincipalReader(RpcPrincipalReader impl) {
-        return impl;
-    }
-
-    @Singleton
-    @Classed(Principal.class)
-    public RpcTeleWriter getPrincipalWriter(RpcPrincipalWriter impl) {
         return impl;
     }
 
@@ -70,9 +67,24 @@ public class RpcProducer {
         return impl;
     }
 
+    // Writers
+
+    @Singleton
+    @Classed(Principal.class)
+    public RpcTeleWriter getPrincipalWriter(RpcPrincipalWriter impl) {
+        return impl;
+    }
+
     @Singleton
     @Classed(Profile.class)
     public RpcTeleWriter getProfileWriter(RpcProfileWriter impl) {
+        return impl;
+    }
+
+    // Request handlers
+
+    @Singleton
+    public RpcRequestHandler<?> getBasicRpcRequestHandler(BasicRequestHandler impl) {
         return impl;
     }
 

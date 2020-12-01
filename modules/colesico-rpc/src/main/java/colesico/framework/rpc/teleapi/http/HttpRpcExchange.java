@@ -6,7 +6,6 @@ import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.teleapi.RpcExchange;
 import colesico.framework.rpc.teleapi.RpcRequest;
 import colesico.framework.rpc.teleapi.RpcResponse;
-import colesico.framework.rpc.teleapi.client.RpcClient;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

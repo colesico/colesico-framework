@@ -2,7 +2,7 @@ package colesico.framework.rpc.teleapi.reader;
 
 import colesico.framework.profile.Profile;
 import colesico.framework.profile.teleapi.ProfileSerializer;
-import colesico.framework.rpc.teleapi.RpcEnvelope;
+import colesico.framework.rpc.teleapi.BasicEnvelope;
 import colesico.framework.rpc.teleapi.RpcTRContext;
 import colesico.framework.rpc.teleapi.RpcTeleReader;
 
@@ -19,7 +19,7 @@ public class RpcProfileReader implements RpcTeleReader<Profile> {
 
     @Override
     public Profile read(RpcTRContext context) {
-        RpcEnvelope env = (RpcEnvelope) context.getRequest();
+        BasicEnvelope env = (BasicEnvelope) context.getRequest();
         Profile profile = profileSerializer.deserialize(env.getProfile());
         return profile;
     }

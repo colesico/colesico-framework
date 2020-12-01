@@ -12,7 +12,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,8 +26,12 @@ abstract public class AbstractRpcClient implements RpcClient {
 
     private final EndpointsRegistryImpl endpoints = new EndpointsRegistryImpl();
 
-    public AbstractRpcClient(Polysupplier<RpcEndpointsPrototype> endpointsConf) {
+    private final List<RpcRequestHandler> requestHandlers = new ArrayList<>();
+
+    public AbstractRpcClient(Polysupplier<RpcEndpointsPrototype> endpointsConf,
+                             Polysupplier<RpcRequestHandler> reqHandlers) {
         endpointsConf.forEach(c -> c.addEndpoints(endpoints), null);
+        reqHandlers.forEach(c -> this.requestHandlers.add(c), null);
 
         if (logger.isDebugEnabled()) {
             StringWriter writer = new StringWriter();
@@ -38,21 +44,35 @@ abstract public class AbstractRpcClient implements RpcClient {
 
     abstract protected <T> T deserialize(InputStream is, Class<T> type);
 
-    abstract protected InputStream callRpcServer(String endpoint, String rpcApiName, String rpcMethodName, byte[] data);
+    abstract protected InputStream callEndpoint(String endpoint, String rpcApiName, String rpcMethodName, byte[] data);
 
     @Override
     public <R> RpcResponse<R> call(String rpcApiName, String rpcMethodName, RpcRequest request, Class<? extends RpcResponse<R>> responseType) {
         logger.debug("RPC client calls api: {} method: {}", rpcApiName, rpcMethodName);
+
+        // Invoke request handlers
+        for (RpcRequestHandler reqHandler : requestHandlers) {
+            reqHandler.onRequest(request);
+        }
+
+        // Serialize request
         ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
         serialize(request, os);
-
-        String endpoint = resolveEndpoint(rpcApiName);
-        logger.debug("Resolved endpoint {}", endpoint);
         byte[] requestData = os.toByteArray();
         logger.debug("Request data size: {} bytes", requestData.length);
-        InputStream responseStream = callRpcServer(endpoint, rpcApiName, rpcMethodName, requestData);
 
+        // Resolve endpoint
+        String endpoint = resolveEndpoint(rpcApiName);
+        logger.debug("Resolved endpoint {}", endpoint);
+
+        // Call endpoint
+        InputStream responseStream = callEndpoint(endpoint, rpcApiName, rpcMethodName, requestData);
+
+        // Deserialize response
         RpcResponse<R> rpcResponse = deserialize(responseStream, responseType);
+
+        // Invoke response handlers
+        // TODO:
 
         return rpcResponse;
     }
