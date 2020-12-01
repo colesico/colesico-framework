@@ -9,7 +9,7 @@ To create RPC interface and associate it with the service, first to declare a Ja
 This interface and all additional classes (dto) must be declared in a separate library artefact.
 Then that library artifact is included to artifact with the services, and the service implement the RPC interface.
 
-.HelloServiceRemote.java in srv-lib.jar
+.HelloServiceRemote.java in srv-client.jar
 [source,java]
 ----
 @RpcApi
@@ -19,7 +19,7 @@ public interface HelloServiceRemote {
 
 ----
 
-.HelloService.java in srv.jar
+.HelloService.java in srv-impl.jar that have a dependency on srv-client.jar
 [source,java]
 ----
 @Service
@@ -61,9 +61,10 @@ For the services,  will be created corresponding  RPC tele-facade.
 
 To use the RPC client, just inject an object of the RPC interface type into the service.
 
-.MasterService.java
+.MasterService.java in srv-consumer.jar that have a dependency on srv-client.jar
 [source,java]
 ----
+@Service
 public class MasterService {
 
     // RPC client for service HelloService
@@ -79,7 +80,7 @@ public class MasterService {
 
 To specify the RPC target endpoint create a configuration bean that extends RpcEndpointsPrototype
 
-.RpcEndpoints.java
+.RpcEndpoints.java in srv-consumer.jar
 [source,java]
 ----
 @Config
@@ -91,3 +92,8 @@ public class RpcEndpoints extends RpcEndpointsPrototype {
 }
 
 ----
+
+== Examples
+
+See full source code in the framework source code section
+#examples/rpc-api-example#  and #examples/rpc-example#

@@ -48,7 +48,7 @@ Colesico-framework consists of highly specialized micromodules.
 * Colesico-asynctask - Async tasks background execution (task queue, schedule)
 * <<slf4j.adoc#,Colesico-slf4j - Slf4j integration>>
 * <<hocon.adoc#,Colesico-HOCON - HOCON configs integration>>
-* <<rpc.adoc#,Colesico-RPC - Lightweight RPC (remote procedure call) support >>
+* <<rpc.adoc#,Colesico-RPC - Lightweight RPC (remote procedure call) for services >>
 
 === Database interaction modules
 
