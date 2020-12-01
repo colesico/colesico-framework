@@ -1,10 +1,10 @@
-package colesico.framework.rpc.teleapi.http;
+package colesico.framework.rpc.transport.http;
 
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.rpc.RpcException;
-import colesico.framework.rpc.teleapi.client.AbstractRpcClient;
-import colesico.framework.rpc.teleapi.client.RpcEndpointsPrototype;
-import colesico.framework.rpc.teleapi.client.RpcRequestHandler;
+import colesico.framework.rpc.clientapi.AbstractRpcClient;
+import colesico.framework.rpc.clientapi.RpcEndpointsPrototype;
+import colesico.framework.rpc.clientapi.RpcRequestHandler;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.InputStream;

@@ -1,4 +1,4 @@
-package colesico.framework.rpc.teleapi.client;
+package colesico.framework.rpc.clientapi;
 
 /**
  * RPC request handler called before request been sent.

@@ -3,7 +3,7 @@ package colesico.framework.rpc.internal;
 import colesico.framework.profile.Profile;
 import colesico.framework.profile.teleapi.ProfileSerializer;
 import colesico.framework.rpc.teleapi.BasicEnvelope;
-import colesico.framework.rpc.teleapi.client.RpcRequestHandler;
+import colesico.framework.rpc.clientapi.RpcRequestHandler;
 import colesico.framework.security.Principal;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 

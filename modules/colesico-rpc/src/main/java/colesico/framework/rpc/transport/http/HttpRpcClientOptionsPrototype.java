@@ -1,4 +1,4 @@
-package colesico.framework.rpc.teleapi.http;
+package colesico.framework.rpc.transport.http;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;

@@ -1,4 +1,4 @@
-package colesico.framework.rpc.teleapi.client;
+package colesico.framework.rpc.clientapi;
 
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.rpc.RpcException;

@@ -1,10 +1,10 @@
 package colesico.framework.rpc.internal.kryo;
 
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.rpc.teleapi.client.RpcEndpointsPrototype;
-import colesico.framework.rpc.teleapi.client.RpcRequestHandler;
-import colesico.framework.rpc.teleapi.http.HttpRpcClient;
-import colesico.framework.rpc.teleapi.http.HttpRpcClientOptionsPrototype;
+import colesico.framework.rpc.clientapi.RpcEndpointsPrototype;
+import colesico.framework.rpc.clientapi.RpcRequestHandler;
+import colesico.framework.rpc.transport.http.HttpRpcClient;
+import colesico.framework.rpc.transport.http.HttpRpcClientOptionsPrototype;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

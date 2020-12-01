@@ -17,8 +17,8 @@ module colesico.framework.rpc {
 
     exports colesico.framework.rpc;
     exports colesico.framework.rpc.teleapi;
-    exports colesico.framework.rpc.teleapi.client;
-    exports colesico.framework.rpc.teleapi.http;
+    exports colesico.framework.rpc.clientapi;
+    exports colesico.framework.rpc.transport.http;
     exports colesico.framework.rpc.teleapi.reader;
     exports colesico.framework.rpc.teleapi.writer;
 }
