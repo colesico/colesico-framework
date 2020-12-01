@@ -51,7 +51,7 @@ public class RpcProducer {
     }
 
     // Readers and writers
-    
+
     @Singleton
     @Classed(Principal.class)
     public RpcTeleReader getPrincipalReader(RpcPrincipalReader impl) {

@@ -10,7 +10,8 @@ It is inspired by Spring and EJB frameworks but uses more simplified approach to
 
 The purpose of this framework is to provide simpler and lightweight alternative.
 
-Colesico Framework does not almost use the reflection at runtime. The approach used is the generation of extra auxiliary code at compile time  using the annotation processors.
+Colesico Framework does not almost use the reflection at runtime.
+The approach used is the generation of extra auxiliary code at compile time using the annotation processors.
 
 Colesico framework is also an analog of such frameworks as Quarkus and Micronaut but is lighter and faster.
 
@@ -22,7 +23,7 @@ The best way to start learning something is to study by examples :)
 * <<examples/restlet.adoc#,RESTful service example >>
 
 See other examples in the
- https://github.com/colesico/colesico-framework/tree/master/examples[source code]
+https://github.com/colesico/colesico-framework/tree/master/examples[source code]
 
 == Framework modules
 
@@ -47,6 +48,7 @@ Colesico-framework consists of highly specialized micromodules.
 * Colesico-asynctask - Async tasks background execution (task queue, schedule)
 * <<slf4j.adoc#,Colesico-slf4j - Slf4j integration>>
 * <<hocon.adoc#,Colesico-HOCON - HOCON configs integration>>
+* <<rpc.adoc#,Colesico-RPC - Lightweight RPC (remote procedure call) support >>
 
 === Database interaction modules
 
@@ -64,7 +66,7 @@ Colesico-framework consists of highly specialized micromodules.
 * Colesico-weblet - HTTP requests handling support (servlets analogue)
 * Colesico-webstatic - Static files (*.js, *.css etc) sharing helper
 * <<restlet.adoc#,Colesico-restlet - Simplified RESTful Web services support>>
-* Colesico-pebble - Pebble templating engine  integration
+* Colesico-pebble - Pebble templating engine integration
 * Colesico-undertow - Undertow web server integration
 
 

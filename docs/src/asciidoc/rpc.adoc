@@ -1,0 +1,93 @@
+= RPC module
+
+RPC (remote procedure call) module provides a lightweight rpc implementation for framework <<service.adoc#,services>>.
+The module provides both client and server parts.
+
+== RPC interface
+
+To create RPC interface and associate it with the service, first to declare a Java plain interface and annotate it with the @RpcApi annotation.
+This interface and all additional classes (dto) must be declared in a separate library artefact.
+Then that library artifact is included to artifact with the services, and the service implement the RPC interface.
+
+.HelloServiceRemote.java in srv-lib.jar
+[source,java]
+----
+@RpcApi
+public interface HelloServiceRemote {
+     DataBean getDataBean();
+}
+
+----
+
+.HelloService.java in srv.jar
+[source,java]
+----
+@Service
+public class HelloService implements HelloServiceRemote {
+     ...
+}
+
+----
+
+== RPC annotation processor
+
+Automation of the RPC interaction is provided by the annotation processor on  both the interface and the service artefacts.
+On the side of the artifact with interfaces, the annotation processor generates the client code and additional classes for the RPC interaction (request and response envelopes)
+For the services,  will be created corresponding  RPC tele-facade.
+
+.pom.xml
+[source,xml]
+----
+...
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <configuration>
+        <annotationProcessorPaths>
+            ...
+            <!-- RPC annotation processor -->
+            <dependency>
+                <groupId>net.colesico.framework</groupId>
+                <artifactId>colesico-rpc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </annotationProcessorPaths>
+    </configuration>
+</plugin>
+...
+----
+
+== RPC Client
+
+To use the RPC client, just inject an object of the RPC interface type into the service.
+
+.MasterService.java
+[source,java]
+----
+public class MasterService {
+
+    // RPC client for service HelloService
+     private final HelloServiceRemote hsrv;
+
+     @Inject
+     public MasterService(HelloServiceRemote hsrv){
+         this.hsrv=hsrv;
+     }
+}
+
+----
+
+To specify the RPC target endpoint create a configuration bean that extends RpcEndpointsPrototype
+
+.RpcEndpoints.java
+[source,java]
+----
+@Config
+public class RpcEndpoints extends RpcEndpointsPrototype {
+    @Override
+    public void addEndpoints(EndpointsRegistry registry) {
+        registry.addEndpoint(HelloServiceRemote.class,"http://localhost:8080/rpc");
+    }
+}
+
+----
