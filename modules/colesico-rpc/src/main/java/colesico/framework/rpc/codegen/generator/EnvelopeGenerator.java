@@ -74,7 +74,7 @@ public class EnvelopeGenerator extends FrameworkAbstractGenerator {
                     sb.addAnnotation(Override.class);
                     sb.addModifiers(Modifier.PUBLIC);
                     sb.returns(TypeName.VOID);
-                    sb.addParameter(TypeName.get(method.getParameterTypes()[0]), method.getName());
+                    sb.addParameter(TypeName.get(method.getParameterTypes()[0]), fieldName);
                     sb.addStatement("this.$N = $N", fieldName, fieldName);
                     requestBuilder.addMethod(sb.build());
                 }

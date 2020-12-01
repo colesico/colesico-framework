@@ -19,7 +19,7 @@ public class KryoClient extends HttpRpcClient {
     @Inject
     public KryoClient(Polysupplier<RpcEndpointsPrototype> endpointsConf,
                       Polysupplier<HttpRpcClientOptionsPrototype> options,
-                      Polysupplier<RpcRequestHandler> reqHandlers,
+                      Polysupplier<RpcRequestHandler<?>> reqHandlers,
                       KryoSerializer serializer) {
         super(endpointsConf, options, reqHandlers);
         this.serializer = serializer;
