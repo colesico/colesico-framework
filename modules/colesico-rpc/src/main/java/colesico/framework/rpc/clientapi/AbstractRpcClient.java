@@ -95,19 +95,11 @@ abstract public class AbstractRpcClient implements RpcClient {
     protected RuntimeException createException(RpcError err) {
         RpcErrorHandler errHandler = errorHandlers.get(err.getClass());
 
-        if (errHandler!=null){
+        if (errHandler != null) {
             return errHandler.createException(err);
         }
 
-        try {
-            Class exClass = Class.forName(err.getExceptionType());
-            RuntimeException ex = (RuntimeException) exClass
-                    .getDeclaredConstructor(String.class)
-                    .newInstance(err.getMessage());
-            return ex;
-        } catch (Exception e) {
-            return new RpcException(err.getMessage());
-        }
+        throw new RpcException("Undefined error handler for " + err);
     }
 
     protected String resolveEndpoint(String rpcApiName) {

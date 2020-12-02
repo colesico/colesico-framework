@@ -69,6 +69,6 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
 
     private RpcError parseErrorHeader(String val) {
         // TODO: parse
-        return null;
+        throw new UnsupportedOperationException("Error header parsing not implemented");
     }
 }

@@ -43,4 +43,12 @@ public class RpcError {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    @Override
+    public String toString() {
+        return "RpcError{" +
+                "exceptionType='" + exceptionType + '\'' +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }
