@@ -2,6 +2,7 @@ package colesico.framework.rpc.internal;
 
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polysupplier;
+import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.RpcException;
 import colesico.framework.rpc.teleapi.Rpc;
 import colesico.framework.rpc.teleapi.RpcExchange;
@@ -36,32 +37,44 @@ public class RpcDispatcher {
     }
 
     public void dispatch(RpcExchange exchange) {
-        try {
-            // Resolve RPC tele-method method
-            RpcExchange.RequestResolution resolution = exchange.resolveRequest();
-            logger.debug("RPC request resolution: {}", resolution);
-            TeleMethod teleMethod = getTeleMethod(resolution);
 
+        TeleMethod teleMethod = resolveTeleMethod(exchange);
+
+        if (teleMethod != null) {
             // Invoke
             teleMethod.invoke();
-        } catch (Throwable e) {
-            logger.error("RPC dispatching exception: {}", ExceptionUtils.getRootCauseMessage(e));
-            exchange.writeException(e);
         }
     }
 
-    protected TeleMethod getTeleMethod(RpcExchange.RequestResolution requestResolution) {
-        Map<String, TeleMethod> apiMethods = rpcApiMap.get(requestResolution.getApiName());
-        if (apiMethods == null) {
-            throw new RpcException("RPC API not found: " + requestResolution.getApiName());
-        }
+    // Resolve tele method
+    protected TeleMethod resolveTeleMethod(RpcExchange exchange) {
+        try {
+            RpcExchange.Operation operation = exchange.resolveOperation();
+            logger.debug("RPC operation: {}", operation);
 
-        TeleMethod teleMethod = apiMethods.get(requestResolution.getMethodName());
-        if (teleMethod == null) {
-            throw new RpcException("RPC tele method not found: " + requestResolution.getApiName());
-        }
+            Map<String, TeleMethod> apiMethods = rpcApiMap.get(operation.getApiName());
+            if (apiMethods == null) {
+                String errMsg = "RPC API not found: " + operation.getApiName();
+                logger.error(errMsg);
+                exchange.sendError(RpcError.of(errMsg));
+                return null;
+            }
 
-        return teleMethod;
+            TeleMethod teleMethod = apiMethods.get(operation.getMethodName());
+            if (teleMethod == null) {
+                String errMsg = "RPC method not found: " + operation.getMethodName();
+                logger.error(errMsg);
+                exchange.sendError(RpcError.of(errMsg));
+                return null;
+            }
+
+            return teleMethod;
+        } catch (Throwable t) {
+            String errMsg = "RPC resolve operation error: " + ExceptionUtils.getRootCauseMessage(t);
+            logger.error(errMsg);
+            exchange.sendError(RpcError.of(t.getClass(), errMsg));
+            return null;
+        }
     }
 
     protected void loadLigature(Polysupplier<TeleFacade> teleFacadeSupp) {

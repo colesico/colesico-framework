@@ -1,25 +1,35 @@
 package colesico.framework.rpc.teleapi;
 
+import colesico.framework.rpc.RpcError;
+import colesico.framework.rpc.RpcException;
+
 import java.lang.reflect.Type;
 
 public interface RpcExchange {
 
-    RequestResolution resolveRequest();
+    /**
+     * Returns operation from request
+     */
+    Operation resolveOperation();
 
     <Q extends RpcRequest> Q readRequest(Type requestType);
 
     <R extends RpcResponse> void writeResponse(R response);
 
     /**
-     * To write general exception
+     * Send common error.
+     * On client side this error must be represented as an {@link colesico.framework.rpc.RpcException}
      */
-    void writeException(Throwable t);
+    void sendError(RpcError error);
 
-    final class RequestResolution {
+    /**
+     * Rpc api and method name to be invoked
+     */
+    final class Operation {
         private final String apiName;
         private final String methodName;
 
-        public RequestResolution(String apiName, String methodName) {
+        public Operation(String apiName, String methodName) {
             this.apiName = apiName;
             this.methodName = methodName;
         }
@@ -34,8 +44,9 @@ public interface RpcExchange {
 
         @Override
         public String toString() {
-            return "{ apiName='" + apiName + '\'' +
-                    "; methodName='" + methodName + '\'' +
+            return "Operation{" +
+                    "apiName='" + apiName + '\'' +
+                    ", methodName='" + methodName + '\'' +
                     '}';
         }
     }

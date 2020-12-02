@@ -99,9 +99,7 @@ public class RpcDataPortImpl implements RpcDataPort {
 
         // No specific writer,
         // Perform default writing
-        RpcError error = new RpcError();
-        error.setExceptionType(throwable.getClass().getCanonicalName());
-        error.setMessage(ExceptionUtils.getRootCauseMessage(throwable));
+        RpcError error = RpcError.of(throwable.getClass(), ExceptionUtils.getRootCauseMessage(throwable));
 
         context.getResponse().setError(error);
     }

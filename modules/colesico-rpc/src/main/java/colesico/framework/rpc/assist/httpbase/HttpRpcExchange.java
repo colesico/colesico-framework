@@ -1,4 +1,4 @@
-package colesico.framework.rpc.transport.http;
+package colesico.framework.rpc.assist.httpbase;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpResponse;
@@ -6,7 +6,6 @@ import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.teleapi.RpcExchange;
 import colesico.framework.rpc.teleapi.RpcRequest;
 import colesico.framework.rpc.teleapi.RpcResponse;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,9 +30,9 @@ abstract public class HttpRpcExchange implements RpcExchange {
     abstract protected <T> T deserialize(InputStream is, Class<T> type);
 
     @Override
-    public RequestResolution resolveRequest() {
+    public Operation resolveOperation() {
         Map<String, String> headers = httpContextProv.get().getRequest().getHeaders();
-        RequestResolution resolution = new RequestResolution(headers.get(HttpRpcClient.RPC_API_HEADER),
+        Operation resolution = new Operation(headers.get(HttpRpcClient.RPC_API_HEADER),
                 headers.get(HttpRpcClient.RPC_METHOD_HEADER));
         return resolution;
     }
@@ -53,17 +52,9 @@ abstract public class HttpRpcExchange implements RpcExchange {
     }
 
     @Override
-    public void writeException(Throwable t) {
-        Throwable cause = ExceptionUtils.getRootCause(t);
-        if (cause == null) {
-            cause = t;
-        }
-        RpcError error = RpcError.of(t.getClass().getCanonicalName(), cause.getMessage());
-
+    public void sendError(RpcError error) {
         HttpResponse response = httpContextProv.get().getResponse();
         response.setContenType(HttpRpcClient.RPC_CONTENT_TYPE);
-        response.setHeader(HttpRpcClient.RPC_ERROR_HEADER, cause.getClass().getName());
-
-        serialize(error, response.getOutputStream());
+        response.setHeader(HttpRpcClient.RPC_ERROR_HEADER, error.getExceptionType() + ':' + error.getMessage());
     }
 }

@@ -1,4 +1,4 @@
-package colesico.framework.rpc.transport.http;
+package colesico.framework.rpc.assist.httpbase;
 
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.rpc.RpcException;
