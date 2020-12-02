@@ -1,9 +1,11 @@
 package colesico.framework.rpc.assist.httpbase;
 
 import colesico.framework.ioc.production.Polysupplier;
+import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.RpcException;
 import colesico.framework.rpc.clientapi.AbstractRpcClient;
 import colesico.framework.rpc.clientapi.RpcEndpointsPrototype;
+import colesico.framework.rpc.clientapi.RpcErrorHandler;
 import colesico.framework.rpc.clientapi.RpcRequestHandler;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -14,6 +16,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 abstract public class HttpRpcClient extends AbstractRpcClient {
 
@@ -27,8 +30,9 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
 
     public HttpRpcClient(Polysupplier<RpcEndpointsPrototype> endpointsConf,
                          Polysupplier<HttpRpcClientOptionsPrototype> options,
-                         Polysupplier<RpcRequestHandler<?>> reqHandlers) {
-        super(endpointsConf, reqHandlers);
+                         Polysupplier<RpcRequestHandler<?>> requestHnd,
+                         Polysupplier<RpcErrorHandler<?>> errorHnd) {
+        super(endpointsConf, requestHnd,errorHnd);
         final HttpClient.Builder httpClientBuilder = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_2);
 
@@ -38,7 +42,7 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
     }
 
     @Override
-    protected InputStream callEndpoint(String endpoint, String rpcApiName, String rpcMethodName, byte[] data) {
+    protected EndpointResponse callEndpoint(String endpoint, String rpcApiName, String rpcMethodName, byte[] data) {
         try {
             HttpRequest.BodyPublisher publisher = HttpRequest.BodyPublishers.ofByteArray(data);
 
@@ -51,9 +55,20 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
                     .build();
 
             HttpResponse<InputStream> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofInputStream());
-            return response.body();
+
+            Optional<String> errorHeader = response.headers().firstValue(RPC_ERROR_HEADER);
+            if (errorHeader.isPresent()) {
+                return EndpointResponse.error(parseErrorHeader(errorHeader.get()));
+            }
+
+            return EndpointResponse.success(response.body());
         } catch (Exception e) {
             throw new RpcException("PRC Server invocation error: " + ExceptionUtils.getRootCauseMessage(e), e);
         }
+    }
+
+    private RpcError parseErrorHeader(String val) {
+        // TODO: parse
+        return null;
     }
 }

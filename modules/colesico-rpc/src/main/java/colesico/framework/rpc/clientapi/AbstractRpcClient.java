@@ -1,6 +1,7 @@
 package colesico.framework.rpc.clientapi;
 
 import colesico.framework.ioc.production.Polysupplier;
+import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.RpcException;
 import colesico.framework.rpc.RpcName;
 import colesico.framework.rpc.teleapi.RpcRequest;
@@ -28,10 +29,16 @@ abstract public class AbstractRpcClient implements RpcClient {
 
     private final List<RpcRequestHandler<?>> requestHandlers = new ArrayList<>();
 
+    private final Map<Class<? extends RpcError>, RpcErrorHandler> errorHandlers = new HashMap<>();
+
     public AbstractRpcClient(Polysupplier<RpcEndpointsPrototype> endpointsConf,
-                             Polysupplier<RpcRequestHandler<?>> reqHandlers) {
+                             Polysupplier<RpcRequestHandler<?>> requestHnd,
+                             Polysupplier<RpcErrorHandler<?>> errorHnd) {
+
         endpointsConf.forEach(c -> c.addEndpoints(endpoints), null);
-        reqHandlers.forEach(c -> this.requestHandlers.add(c), null);
+        requestHnd.forEach(c -> this.requestHandlers.add(c), null);
+
+        errorHnd.forEach(h -> errorHandlers.put(h.getSupportedType(), h), null);
 
         if (logger.isDebugEnabled()) {
             StringWriter writer = new StringWriter();
@@ -44,7 +51,7 @@ abstract public class AbstractRpcClient implements RpcClient {
 
     abstract protected <T> T deserialize(InputStream is, Class<T> type);
 
-    abstract protected InputStream callEndpoint(String endpoint, String rpcApiName, String rpcMethodName, byte[] data);
+    abstract protected EndpointResponse callEndpoint(String endpoint, String rpcApiName, String rpcMethodName, byte[] data);
 
     @Override
     public <R> RpcResponse<R> call(String rpcApiName, String rpcMethodName, RpcRequest request, Class<? extends RpcResponse<R>> responseType) {
@@ -66,15 +73,41 @@ abstract public class AbstractRpcClient implements RpcClient {
         logger.debug("Resolved endpoint {}", endpoint);
 
         // Call endpoint
-        InputStream responseStream = callEndpoint(endpoint, rpcApiName, rpcMethodName, requestData);
+        EndpointResponse endpointResp = callEndpoint(endpoint, rpcApiName, rpcMethodName, requestData);
+
+        if (endpointResp.getError() != null) {
+            throw createException(endpointResp.getError());
+        }
+
+        InputStream responseStream = endpointResp.getInputStream();
 
         // Deserialize response
         RpcResponse<R> rpcResponse = deserialize(responseStream, responseType);
 
-        // Invoke response handlers
-        // TODO:
+        // Handle error
+        if (rpcResponse.getError() != null) {
+            throw createException(endpointResp.getError());
+        }
 
         return rpcResponse;
+    }
+
+    protected RuntimeException createException(RpcError err) {
+        RpcErrorHandler errHandler = errorHandlers.get(err.getClass());
+
+        if (errHandler!=null){
+            return errHandler.createException(err);
+        }
+
+        try {
+            Class exClass = Class.forName(err.getExceptionType());
+            RuntimeException ex = (RuntimeException) exClass
+                    .getDeclaredConstructor(String.class)
+                    .newInstance(err.getMessage());
+            return ex;
+        } catch (Exception e) {
+            return new RpcException(err.getMessage());
+        }
     }
 
     protected String resolveEndpoint(String rpcApiName) {
@@ -116,6 +149,32 @@ abstract public class AbstractRpcClient implements RpcClient {
             for (Map.Entry<String, String> en : endpointsMap.entrySet()) {
                 writer.append("RPC endpoint: ").append(en.getKey()).append(" -> ").append(en.getValue());
             }
+        }
+    }
+
+    public static class EndpointResponse {
+        private final InputStream inputStream;
+        private final RpcError error;
+
+        private EndpointResponse(InputStream inputStream, RpcError error) {
+            this.inputStream = inputStream;
+            this.error = error;
+        }
+
+        public static EndpointResponse error(RpcError err) {
+            return new EndpointResponse(null, err);
+        }
+
+        public static EndpointResponse success(InputStream inputStream) {
+            return new EndpointResponse(inputStream, null);
+        }
+
+        public InputStream getInputStream() {
+            return inputStream;
+        }
+
+        public RpcError getError() {
+            return error;
         }
     }
 }
