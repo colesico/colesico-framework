@@ -1,34 +1,31 @@
 package colesico.framework.rpc.internal.teleapi;
 
-import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.key.ClassedKey;
 import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.RpcException;
 import colesico.framework.rpc.teleapi.*;
-import colesico.framework.rpc.teleapi.RpcTeleReader;
-import colesico.framework.rpc.teleapi.RpcTeleWriter;
+import colesico.framework.teleapi.TeleFactory;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.lang.reflect.Type;
 
 public class RpcDataPortImpl implements RpcDataPort {
 
-    protected final Ioc ioc;
+    protected final TeleFactory teleFactory;
 
     protected final RpcRequest request;
     protected final RpcResponse response;
 
-    public RpcDataPortImpl(Ioc ioc, RpcRequest request, RpcResponse response) {
+    public RpcDataPortImpl(TeleFactory teleFactory, RpcRequest request, RpcResponse response) {
         this.request = request;
         this.response = response;
-        this.ioc = ioc;
+        this.teleFactory = teleFactory;
     }
 
     @Override
     public <V> V read(Type valueType, RpcTRContext context) {
 
         // Try to get accurate reader
-        RpcTeleReader<V> reader = ioc.instanceOrNull(new ClassedKey<>(RpcTeleReader.class.getCanonicalName(), typeToClassName(valueType)), null);
+        RpcTeleReader<V> reader = teleFactory.findReader(RpcTeleReader.class, valueType);
         if (reader != null) {
             // Ctx can be null for reading by type  (Principal reading, etc.)
             if (context == null) {
@@ -58,7 +55,7 @@ public class RpcDataPortImpl implements RpcDataPort {
     public <V> void write(Type valueType, V value, RpcTWContext context) {
 
         // Try to get accurate writer
-        RpcTeleWriter<V> writer = ioc.instanceOrNull(new ClassedKey<>(RpcTeleWriter.class.getCanonicalName(), typeToClassName(valueType)), null);
+        RpcTeleWriter<V> writer = teleFactory.findWriter(RpcTeleWriter.class, valueType);
         if (writer != null) {
             if (context == null) {
                 context = RpcTWContext.withResponse(response);
@@ -79,7 +76,7 @@ public class RpcDataPortImpl implements RpcDataPort {
         // Create default writing context
         RpcTWContext context = RpcTWContext.withResponse(response);
 
-        RpcTeleWriter<T> throwableWriter = ioc.instanceOrNull(new ClassedKey<>(RpcTeleWriter.class.getCanonicalName(), typeToClassName(throwable.getClass())), null);
+        RpcTeleWriter<T> throwableWriter = teleFactory.findWriter(RpcTeleWriter.class, throwable.getClass());
 
         if (throwableWriter != null) {
             throwableWriter.write(throwable, context);
@@ -90,7 +87,7 @@ public class RpcDataPortImpl implements RpcDataPort {
         // and determine writer for it
         Throwable rootCause = ExceptionUtils.getRootCause(throwable);
         if (rootCause != null) {
-            RpcTeleWriter rootCauseWriter = ioc.instanceOrNull(new ClassedKey<>(RpcTeleWriter.class.getCanonicalName(), typeToClassName(rootCause.getClass())), null);
+            RpcTeleWriter rootCauseWriter = teleFactory.findWriter(RpcTeleWriter.class, rootCause.getClass());
             if (rootCauseWriter != null) {
                 rootCauseWriter.write(rootCause, context);
                 return;
@@ -102,14 +99,6 @@ public class RpcDataPortImpl implements RpcDataPort {
         RpcError error = RpcError.of(throwable.getClass(), ExceptionUtils.getRootCauseMessage(throwable));
 
         context.getResponse().setError(error);
-    }
-
-    protected String typeToClassName(Type valueType) {
-        if (valueType instanceof Class) {
-            return ((Class) valueType).getCanonicalName();
-        } else {
-            return valueType.getTypeName();
-        }
     }
 
 }
