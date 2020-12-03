@@ -16,13 +16,9 @@
 
 package colesico.framework.weblet.internal;
 
-import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.key.ClassedKey;
-import colesico.framework.telehttp.reader.ObjectReader;
-import colesico.framework.weblet.Weblet;
+import colesico.framework.teleapi.TeleFactory;
 import colesico.framework.weblet.WebletResponse;
 import colesico.framework.weblet.teleapi.*;
-import colesico.framework.weblet.teleapi.WebletTeleReader;
 
 import javax.inject.Singleton;
 import java.lang.reflect.Type;
@@ -30,18 +26,10 @@ import java.lang.reflect.Type;
 @Singleton
 public class WebletDataPortImpl implements WebletDataPort {
 
-    protected final Ioc ioc;
+    protected final TeleFactory teleFactory;
 
-    public WebletDataPortImpl(Ioc ioc) {
-        this.ioc = ioc;
-    }
-
-    protected String typeToClassName(Type valueType) {
-        if (valueType instanceof Class) {
-            return ((Class) valueType).getCanonicalName();
-        } else {
-            return valueType.getTypeName();
-        }
+    public WebletDataPortImpl(TeleFactory teleFactory) {
+        this.teleFactory = teleFactory;
     }
 
     @Override
@@ -53,13 +41,13 @@ public class WebletDataPortImpl implements WebletDataPort {
         WebletTeleReader reader;
         if (context.getReaderClass() != null) {
             // Get specified reader
-            reader = ioc.instance(context.getReaderClass());
+            reader = teleFactory.getReader(context.getReaderClass());
         } else {
             // Get reader by value type
-            reader = ioc.instanceOrNull(new ClassedKey<>(WebletTeleReader.class.getCanonicalName(), typeToClassName(valueType)), null);
+            reader = teleFactory.findReader(WebletTeleReader.class, valueType);
             if (reader == null) {
                 // Get default reader
-                reader = ioc.instance(new ClassedKey<>(WebletTeleReader.class.getCanonicalName(), Object.class.getCanonicalName()), null);
+                reader = teleFactory.getReader(WebletTeleReader.class, Object.class);
             }
         }
         return (V) reader.read(context);
@@ -77,7 +65,7 @@ public class WebletDataPortImpl implements WebletDataPort {
         WebletTeleWriter writer;
         if (context.getWriterClass() != null) {
             // Get specified reader
-            writer = ioc.instance(context.getWriterClass());
+            writer = teleFactory.getWriter(context.getWriterClass());
         } else {
             Type responseType;
             if (isWebletResponse) {
@@ -86,7 +74,7 @@ public class WebletDataPortImpl implements WebletDataPort {
                 responseType = valueType;
             }
             // Get reader by response type
-            writer = ioc.instance(new ClassedKey<>(WebletTeleWriter.class.getCanonicalName(), typeToClassName(responseType)), null);
+            writer = teleFactory.getWriter(WebletTeleWriter.class, responseType);
         }
 
         // Write value

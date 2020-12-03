@@ -16,17 +16,21 @@
 
 package colesico.framework.teleapi.internal;
 
+import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleException;
+import colesico.framework.teleapi.TeleFactory;
 
 /**
- * Default tele api producer
+ * Tele api producer
  */
 @Producer
+@Produce(TeleFactory.class)
 public class TeleApiProducer {
+
     protected static final String NO_DATA_PORT_MSG = "TeleAPI: Data port for the active thread is not provided";
 
     /**
