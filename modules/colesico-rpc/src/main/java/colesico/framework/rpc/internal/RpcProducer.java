@@ -4,6 +4,9 @@ import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
+import colesico.framework.rpc.RpcError;
+import colesico.framework.rpc.clientapi.RpcErrorHandler;
+import colesico.framework.rpc.clientapi.RpcErrorHandlerFactory;
 import colesico.framework.rpc.clientapi.handler.BasicRequestHandler;
 import colesico.framework.rpc.clientapi.handler.BasicRpcErrorHandler;
 import colesico.framework.rpc.rpcgear.kryo.KryoClient;
@@ -26,6 +29,7 @@ import colesico.framework.security.Principal;
 import javax.inject.Singleton;
 
 @Producer
+@Produce(RpcErrorHandlerFactory.class)
 @Produce(RpcDispatcher.class)
 @Produce(RpcTeleDriverImpl.class)
 
@@ -40,7 +44,7 @@ import javax.inject.Singleton;
 @Produce(RpcProfileWriter.class)
 
 @Produce(BasicRequestHandler.class)
-@Produce(value = BasicRpcErrorHandler.class, polyproduce = true)
+@Produce(BasicRpcErrorHandler.class)
 public class RpcProducer {
 
     @Singleton
@@ -93,4 +97,11 @@ public class RpcProducer {
         return impl;
     }
 
+    // Error handlers
+
+    @Singleton
+    @Classed(RpcError.class)
+    public RpcErrorHandler getRpcErrorHandler(BasicRpcErrorHandler impl) {
+        return impl;
+    }
 }

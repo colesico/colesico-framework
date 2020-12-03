@@ -3,10 +3,7 @@ package colesico.framework.rpc.rpcgear.httpbase;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.RpcException;
-import colesico.framework.rpc.clientapi.AbstractRpcClient;
-import colesico.framework.rpc.clientapi.RpcEndpointsPrototype;
-import colesico.framework.rpc.clientapi.RpcErrorHandler;
-import colesico.framework.rpc.clientapi.RpcRequestHandler;
+import colesico.framework.rpc.clientapi.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -35,8 +32,8 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
     public HttpRpcClient(Polysupplier<RpcEndpointsPrototype> endpointsConf,
                          Polysupplier<HttpRpcClientOptionsPrototype> options,
                          Polysupplier<RpcRequestHandler<?>> requestHnd,
-                         Polysupplier<RpcErrorHandler<?>> errorHnd) {
-        super(endpointsConf, requestHnd, errorHnd);
+                         RpcErrorHandlerFactory errorHndFac) {
+        super(endpointsConf, requestHnd, errorHndFac);
         final HttpClient.Builder httpClientBuilder = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_2);
 

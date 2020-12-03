@@ -5,11 +5,6 @@ import colesico.framework.rpc.RpcError;
 public interface RpcErrorHandler<E extends RpcError> {
 
     /**
-     * Supported rpc error type
-     */
-    Class<E> getErrorClass();
-
-    /**
      * Create exception from error
      */
     RuntimeException createException(E error);

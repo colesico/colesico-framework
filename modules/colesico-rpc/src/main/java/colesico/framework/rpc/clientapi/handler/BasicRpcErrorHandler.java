@@ -10,11 +10,6 @@ import javax.inject.Singleton;
 public class BasicRpcErrorHandler implements RpcErrorHandler<RpcError> {
 
     @Override
-    public Class<RpcError> getErrorClass() {
-        return RpcError.class;
-    }
-
-    @Override
     public RuntimeException createException(RpcError error) {
         try {
             Class exClass = Class.forName(error.getExceptionType());

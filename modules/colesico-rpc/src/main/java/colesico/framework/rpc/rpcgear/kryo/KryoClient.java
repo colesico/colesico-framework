@@ -3,6 +3,7 @@ package colesico.framework.rpc.rpcgear.kryo;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.rpc.clientapi.RpcEndpointsPrototype;
 import colesico.framework.rpc.clientapi.RpcErrorHandler;
+import colesico.framework.rpc.clientapi.RpcErrorHandlerFactory;
 import colesico.framework.rpc.clientapi.RpcRequestHandler;
 import colesico.framework.rpc.rpcgear.httpbase.HttpRpcClient;
 import colesico.framework.rpc.rpcgear.httpbase.HttpRpcClientOptionsPrototype;
@@ -21,9 +22,9 @@ public class KryoClient extends HttpRpcClient {
     public KryoClient(Polysupplier<RpcEndpointsPrototype> endpointsConf,
                       Polysupplier<HttpRpcClientOptionsPrototype> options,
                       Polysupplier<RpcRequestHandler<?>> requestHnd,
-                      Polysupplier<RpcErrorHandler<?>> errorHnd,
+                      RpcErrorHandlerFactory errorHndFac,
                       KryoSerializer serializer) {
-        super(endpointsConf, options, requestHnd, errorHnd);
+        super(endpointsConf, options, requestHnd, errorHndFac);
         this.serializer = serializer;
     }
 

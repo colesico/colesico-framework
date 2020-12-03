@@ -29,16 +29,16 @@ abstract public class AbstractRpcClient implements RpcClient {
 
     private final List<RpcRequestHandler<?>> requestHandlers = new ArrayList<>();
 
-    private final Map<Class<? extends RpcError>, RpcErrorHandler> errorHandlers = new HashMap<>();
+    private final RpcErrorHandlerFactory errorHandlerFactory;
 
     public AbstractRpcClient(Polysupplier<RpcEndpointsPrototype> endpointsConf,
                              Polysupplier<RpcRequestHandler<?>> requestHnd,
-                             Polysupplier<RpcErrorHandler<?>> errorHnd) {
+                             RpcErrorHandlerFactory errorHndFac) {
 
         endpointsConf.forEach(c -> c.addEndpoints(endpoints), null);
         requestHnd.forEach(c -> this.requestHandlers.add(c), null);
 
-        errorHnd.forEach(h -> errorHandlers.put(h.getErrorClass(), h), null);
+        this.errorHandlerFactory = errorHndFac;
 
         if (logger.isDebugEnabled()) {
             StringWriter writer = new StringWriter();
@@ -93,7 +93,7 @@ abstract public class AbstractRpcClient implements RpcClient {
     }
 
     protected RuntimeException createException(RpcError err) {
-        RpcErrorHandler errHandler = errorHandlers.get(err.getClass());
+        RpcErrorHandler errHandler = errorHandlerFactory.getErrorHandler(err.getClass());
 
         if (errHandler != null) {
             return errHandler.createException(err);
