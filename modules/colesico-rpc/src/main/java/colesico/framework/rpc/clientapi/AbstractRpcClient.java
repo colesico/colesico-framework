@@ -38,7 +38,7 @@ abstract public class AbstractRpcClient implements RpcClient {
         endpointsConf.forEach(c -> c.addEndpoints(endpoints), null);
         requestHnd.forEach(c -> this.requestHandlers.add(c), null);
 
-        errorHnd.forEach(h -> errorHandlers.put(h.getSupportedType(), h), null);
+        errorHnd.forEach(h -> errorHandlers.put(h.getErrorClass(), h), null);
 
         if (logger.isDebugEnabled()) {
             StringWriter writer = new StringWriter();

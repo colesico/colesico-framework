@@ -1,4 +1,4 @@
-package colesico.framework.rpc.internal;
+package colesico.framework.rpc.internal.teleapi;
 
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.scope.ThreadScope;
@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton

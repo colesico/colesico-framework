@@ -1,4 +1,4 @@
-package colesico.framework.rpc.internal;
+package colesico.framework.rpc.internal.teleapi;
 
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.ClassedKey;

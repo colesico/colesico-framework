@@ -1,4 +1,4 @@
-package colesico.framework.rpc.internal;
+package colesico.framework.rpc.internal.router;
 
 import colesico.framework.config.Config;
 import colesico.framework.http.HttpMethod;

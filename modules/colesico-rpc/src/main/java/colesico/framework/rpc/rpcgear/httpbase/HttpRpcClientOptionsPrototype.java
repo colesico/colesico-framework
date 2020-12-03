@@ -1,4 +1,4 @@
-package colesico.framework.rpc.assist.httpbase;
+package colesico.framework.rpc.rpcgear.httpbase;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;

@@ -1,10 +1,12 @@
 package colesico.framework.rpc.teleapi;
 
 import colesico.framework.rpc.RpcError;
-import colesico.framework.rpc.RpcException;
 
 import java.lang.reflect.Type;
 
+/**
+ * Facade for interaction within given transport
+ */
 public interface RpcExchange {
 
     /**

@@ -1,7 +1,7 @@
-package colesico.framework.rpc.internal.kryo;
+package colesico.framework.rpc.rpcgear.kryo;
 
 import colesico.framework.http.HttpContext;
-import colesico.framework.rpc.assist.httpbase.HttpRpcExchange;
+import colesico.framework.rpc.rpcgear.httpbase.HttpRpcExchange;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;

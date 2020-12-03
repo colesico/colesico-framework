@@ -1,4 +1,4 @@
-package colesico.framework.rpc.assist.httpbase;
+package colesico.framework.rpc.rpcgear.httpbase;
 
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.rpc.RpcError;
@@ -7,6 +7,7 @@ import colesico.framework.rpc.clientapi.AbstractRpcClient;
 import colesico.framework.rpc.clientapi.RpcEndpointsPrototype;
 import colesico.framework.rpc.clientapi.RpcErrorHandler;
 import colesico.framework.rpc.clientapi.RpcRequestHandler;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.InputStream;
@@ -18,6 +19,9 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
+/**
+ * Http based client
+ */
 abstract public class HttpRpcClient extends AbstractRpcClient {
 
     public static final String RPC_API_HEADER = "X-RPC-API";
@@ -32,7 +36,7 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
                          Polysupplier<HttpRpcClientOptionsPrototype> options,
                          Polysupplier<RpcRequestHandler<?>> requestHnd,
                          Polysupplier<RpcErrorHandler<?>> errorHnd) {
-        super(endpointsConf, requestHnd,errorHnd);
+        super(endpointsConf, requestHnd, errorHnd);
         final HttpClient.Builder httpClientBuilder = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_2);
 
@@ -67,8 +71,23 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
         }
     }
 
-    private RpcError parseErrorHeader(String val) {
-        // TODO: parse
-        throw new UnsupportedOperationException("Error header parsing not implemented");
+    private RpcError parseErrorHeader(String errStr) {
+        if (StringUtils.isEmpty(errStr)) {
+            return null;
+        }
+
+        int sepIdx = errStr.indexOf(':');
+
+        String exceptionType = errStr.substring(0, sepIdx);
+        if ("".equals(exceptionType)) {
+            exceptionType = null;
+        }
+
+        String message = errStr.substring(sepIdx + 1);
+        if ("".equals(message)) {
+            message = null;
+        }
+
+        return RpcError.of(exceptionType, message);
     }
 }

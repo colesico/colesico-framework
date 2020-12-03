@@ -1,4 +1,4 @@
-package colesico.framework.rpc.assist.httpbase;
+package colesico.framework.rpc.rpcgear.httpbase;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpResponse;
@@ -6,6 +6,7 @@ import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.teleapi.RpcExchange;
 import colesico.framework.rpc.teleapi.RpcRequest;
 import colesico.framework.rpc.teleapi.RpcResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +16,9 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.Map;
 
+/**
+ * Http based exchange
+ */
 abstract public class HttpRpcExchange implements RpcExchange {
 
     protected final Logger logger = LoggerFactory.getLogger(RpcExchange.class);
@@ -55,6 +59,8 @@ abstract public class HttpRpcExchange implements RpcExchange {
     public void sendError(RpcError error) {
         HttpResponse response = httpContextProv.get().getResponse();
         response.setContenType(HttpRpcClient.RPC_CONTENT_TYPE);
-        response.setHeader(HttpRpcClient.RPC_ERROR_HEADER, error.getExceptionType() + ':' + error.getMessage());
+        String exceptionType = StringUtils.isBlank(error.getExceptionType()) ? "" : error.getExceptionType();
+        String message = StringUtils.isBlank(error.getMessage()) ? "" : error.getMessage();
+        response.setHeader(HttpRpcClient.RPC_ERROR_HEADER, exceptionType + ':' + message);
     }
 }

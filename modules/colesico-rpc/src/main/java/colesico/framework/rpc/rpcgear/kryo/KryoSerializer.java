@@ -1,4 +1,4 @@
-package colesico.framework.rpc.internal.kryo;
+package colesico.framework.rpc.rpcgear.kryo;
 
 import com.esotericsoftware.kryo.kryo5.Kryo;
 import com.esotericsoftware.kryo.kryo5.io.Input;

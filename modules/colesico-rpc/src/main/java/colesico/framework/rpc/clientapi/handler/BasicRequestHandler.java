@@ -1,4 +1,4 @@
-package colesico.framework.rpc.internal;
+package colesico.framework.rpc.clientapi.handler;
 
 import colesico.framework.profile.Profile;
 import colesico.framework.profile.teleapi.ProfileSerializer;

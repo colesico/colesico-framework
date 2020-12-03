@@ -1,4 +1,4 @@
-package colesico.framework.rpc.internal;
+package colesico.framework.rpc.clientapi.handler;
 
 import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.RpcException;
@@ -10,7 +10,7 @@ import javax.inject.Singleton;
 public class BasicRpcErrorHandler implements RpcErrorHandler<RpcError> {
 
     @Override
-    public Class<RpcError> getSupportedType() {
+    public Class<RpcError> getErrorClass() {
         return RpcError.class;
     }
 
