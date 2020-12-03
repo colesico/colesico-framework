@@ -22,6 +22,7 @@ public final class TeleFactory {
 
     /**
      * Returns reader by its exact class
+     * Throws an exception if reader not found  in the IoC context
      */
     public <R extends TeleReader> R getReader(Class<R> readerClass) {
         return ioc.instance(readerClass);
