@@ -17,6 +17,7 @@
 package colesico.framework.test.example.rpc;
 
 
+import colesico.framework.example.rpc.api.HelloServiceRemote;
 import colesico.framework.httpserver.HttpServer;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
@@ -27,44 +28,34 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.net.http.HttpClient;
-
-import static org.testng.Assert.assertEquals;
+import static org.testng.AssertJUnit.assertEquals;
 
 public class RpcApiTest {
     private Ioc ioc;
     private HttpServer httpServer;
-    private HttpClient httpClient;
     private Logger logger = LoggerFactory.getLogger(RpcApiTest.class);
 
     @BeforeClass
     public void init() {
-
         TestCondition.enable();
         ioc = IocBuilder.create().build();
-
+        logger.info("Start http server");
         httpServer = ioc.instance(HttpServer.class).start();
-
-        httpClient = HttpClient.newHttpClient();
-        logger.info("Ready for rpc tests");
-
-
     }
 
     @AfterClass
     public void destroy() {
-        // httpServer.stop();
+        logger.info("Stop http server");
+        httpServer.stop();
     }
 
     @Test
-    public void test1() throws Exception {
-        /*
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8085/hello-weblet/say-hello")).build();
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(HelloWeblet.SAY_HELLO_TEXT, response.body());
-        */
-
+    public void test1() {
+        logger.info("Test DataBean retrieving");
+        HelloServiceRemote remoteSrv = ioc.instance(HelloServiceRemote.class);
+        String val = remoteSrv.getDataBean().getValue();
+        System.out.println("DataBean.value=" + val);
+        assertEquals(HelloServiceRemote.HELLO_MESSAGE, val);
     }
-
 
 }

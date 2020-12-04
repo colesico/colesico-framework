@@ -46,6 +46,12 @@ public final class RpcTRContext<R extends RpcRequest, V> {
         return new RpcTRContext<>(reader);
     }
 
+    public static <R extends RpcRequest, V> RpcTRContext<R, V> withRequest(R request) {
+        RpcTRContext<R, V> r = new RpcTRContext<>(null);
+        r.setRequest(request);
+        return r;
+    }
+
     @FunctionalInterface
     public interface ValueGetter<R extends RpcRequest, V> {
         V get(R request);

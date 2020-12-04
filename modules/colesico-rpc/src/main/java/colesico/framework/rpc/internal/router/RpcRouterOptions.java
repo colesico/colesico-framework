@@ -1,4 +1,4 @@
-package colesico.framework.rpc.internal;
+package colesico.framework.rpc.internal.router;
 
 import colesico.framework.config.Config;
 import colesico.framework.http.HttpMethod;
@@ -11,23 +11,23 @@ import javax.inject.Inject;
 @Config
 public class RpcRouterOptions extends RouterOptions {
 
-    public static final String DISPATCHER_ROUTE = "/rpc";
+    public static final String RPC_DISPATCHER_ROUTE = "/rpc";
 
-    private final RpcController controller;
+    private final RpcDispatcher dispatcher;
     private final RpcExchange exchange;
 
     @Inject
-    public RpcRouterOptions(RpcController controller, RpcExchange exchange) {
-        this.controller = controller;
+    public RpcRouterOptions(RpcDispatcher dispatcher, RpcExchange exchange) {
+        this.dispatcher = dispatcher;
         this.exchange = exchange;
     }
 
     @Override
     public void applyOptions(RouterBuilder builder) {
         builder.addCustomAction(HttpMethod.HTTP_METHOD_POST,
-                DISPATCHER_ROUTE,
+                RPC_DISPATCHER_ROUTE,
                 RpcRouterOptions.class,
-                () -> controller.dispatch(exchange),
+                () -> dispatcher.dispatch(exchange),
                 "dispatch",
                 null);
     }

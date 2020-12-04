@@ -18,6 +18,7 @@ package colesico.framework.weblet.teleapi.writer;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.router.Router;
+import colesico.framework.weblet.ForwardResponse;
 import colesico.framework.weblet.RedirectResponse;
 import colesico.framework.weblet.teleapi.WebletTWContext;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
@@ -28,7 +29,7 @@ import javax.inject.Provider;
 /**
  * Performs forward operation
  */
-public final class ForwardWriter extends WebletTeleWriter<RedirectResponse> {
+public final class ForwardWriter extends WebletTeleWriter<ForwardResponse> {
 
     private final Router router;
 
@@ -39,7 +40,7 @@ public final class ForwardWriter extends WebletTeleWriter<RedirectResponse> {
     }
 
     @Override
-    public void write(RedirectResponse navResp, WebletTWContext wrContext) {
-        navResp.forward(router, httpContextProv.get());
+    public void write(ForwardResponse fwResp, WebletTWContext context) {
+        fwResp.forward(router, httpContextProv.get());
     }
 }

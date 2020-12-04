@@ -23,6 +23,9 @@ import colesico.framework.router.RouterContext;
 
 import javax.inject.Provider;
 
+/**
+ * Weblet reader base class
+ */
 abstract public class WebletTeleReader<V> extends HttpTeleReader<V, WebletTRContext> {
 
     public WebletTeleReader(Provider<RouterContext> routerContextProv, Provider<HttpContext> httpContextProv) {

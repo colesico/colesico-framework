@@ -33,19 +33,13 @@ public class ProfileSerializerImpl implements ProfileSerializer<DefaultProfile> 
 
     @Override
     public byte[] serialize(DefaultProfile profile) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(profile.getLocale().getLanguage());
-        sb.append('|');
-        sb.append(profile.getLocale().getCountry());
-        return sb.toString().getBytes(StandardCharsets.UTF_8);
+        return profile.getLocale().toLanguageTag().getBytes(StandardCharsets.UTF_8);
     }
 
     @Override
     public DefaultProfile deserialize(byte[] profileBytes) {
         String localeStr = new String(profileBytes, StandardCharsets.UTF_8);
-        String[] localeItems = StringUtils.split(localeStr, "|");
-        Locale locale = new Locale(localeItems[0], localeItems[1]);
-        return new DefaultProfile(locale);
+        return new DefaultProfile(Locale.forLanguageTag(localeStr));
     }
 
 }

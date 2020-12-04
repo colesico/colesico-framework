@@ -45,8 +45,8 @@ public interface DataPort<R, W> {
      * Read value from remote request.
      *
      * @param valueType
-     * @param context data reader context
-     * @param <V> reading value type
+     * @param context   data reader context
+     * @param <V>       reading value type
      */
     <V> V read(Type valueType, R context);
 
@@ -54,8 +54,12 @@ public interface DataPort<R, W> {
      * Writes data to the remote response.
      *
      * @param context data writer context
-     * @param <V> writing value type
+     * @param <V>     writing value type
      */
     <V> void write(Type valueType, V value, W context);
+
+    default <T extends Throwable> void writeError(T throwable) {
+        throw new UnsupportedOperationException("Error writing is not supported for data port: " + this.getClass().getCanonicalName());
+    }
 
 }

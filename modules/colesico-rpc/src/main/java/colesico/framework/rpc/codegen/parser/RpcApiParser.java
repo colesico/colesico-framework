@@ -1,5 +1,6 @@
 package colesico.framework.rpc.codegen.parser;
 
+import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.MethodElement;
@@ -10,6 +11,8 @@ import colesico.framework.rpc.codegen.model.RpcApiMethodElement;
 import colesico.framework.rpc.codegen.model.RpcApiParamElement;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import java.util.List;
 
 public class RpcApiParser extends FrameworkAbstractParser {
@@ -33,6 +36,10 @@ public class RpcApiParser extends FrameworkAbstractParser {
 
         List<MethodElement> methods = originIface.getMethods();
         for (MethodElement method : methods) {
+            if (method.unwrap().getReturnType().getKind() != TypeKind.DECLARED) {
+                throw CodegenException.of().message("Unsupported return type: " + method.unwrap().getReturnType())
+                        .element(method.unwrap()).build();
+            }
             RpcName rpcMethodName = method.unwrap().getAnnotation(RpcName.class);
             RpcApiMethodElement me = new RpcApiMethodElement(method, rpcMethodName == null ? null : rpcMethodName.value());
             rpcApiElm.addMethod(me);

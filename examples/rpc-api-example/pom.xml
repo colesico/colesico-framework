@@ -21,7 +21,7 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>4.1.0</version>
+        <version>4.1.1</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -29,7 +29,7 @@
     <artifactId>rpc-api-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - RPC Example API</name>
+    <name>Colesico example - RPC API Example</name>
 
     <dependencies>
         <!-- Colesico web bundle -->

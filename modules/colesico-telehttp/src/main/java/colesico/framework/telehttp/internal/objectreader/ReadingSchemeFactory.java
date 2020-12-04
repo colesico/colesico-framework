@@ -1,8 +1,7 @@
 package colesico.framework.telehttp.internal.objectreader;
 
 import colesico.framework.assist.StrUtils;
-import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.key.ClassedKey;
+import colesico.framework.teleapi.TeleFactory;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTeleReader;
 import colesico.framework.telehttp.LocalField;
@@ -18,12 +17,12 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 public class ReadingSchemeFactory {
 
-    private final Ioc ioc;
+    private final TeleFactory teleFactory;
 
     private final Map<Class<?>, ReadingScheme<?>> cache = new ConcurrentHashMap<>();
 
-    public ReadingSchemeFactory(Ioc ioc) {
-        this.ioc = ioc;
+    public ReadingSchemeFactory(TeleFactory teleFactory) {
+        this.teleFactory = teleFactory;
     }
 
     public <T> ReadingScheme<T> getScheme(Class<T> objectClass) {
@@ -62,7 +61,7 @@ public class ReadingSchemeFactory {
     }
 
     protected <T> HttpTeleReader<T, HttpTRContext> getReader(Type valueType) {
-        HttpTeleReader reader = ioc.instance(new ClassedKey<>(HttpTeleReader.class.getCanonicalName(), typeToClassName(valueType)), null);
+        HttpTeleReader reader = teleFactory.getReader(HttpTeleReader.class, valueType);
         return reader;
     }
 
@@ -113,12 +112,4 @@ public class ReadingSchemeFactory {
         throw new RuntimeException("Setter not found for field: " + clazz.getCanonicalName() + "." + fieldName);
     }
 
-
-    protected String typeToClassName(Type valueType) {
-        if (valueType instanceof Class) {
-            return ((Class) valueType).getCanonicalName();
-        } else {
-            return valueType.getTypeName();
-        }
-    }
 }

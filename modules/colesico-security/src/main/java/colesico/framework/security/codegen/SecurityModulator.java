@@ -54,7 +54,7 @@ public class SecurityModulator extends Modulator {
 
         if (serviceMethod.isPlain()) {
             throw CodegenException.of().message("To use @" + RequirePrincipal.class.getSimpleName() + " or @"
-                    + SecurityAudit.class.getSimpleName() + " method should not be a plain method").element(proxyMethod.getOriginMethod()).build();
+                    + SecurityAudit.class.getSimpleName() + " method should not be a plain method").element(this.serviceMethod.getOriginMethod()).build();
         }
 
         List<SecurityAuditorElement> auditors = new ArrayList<>();

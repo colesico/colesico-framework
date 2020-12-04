@@ -3,10 +3,10 @@ package colesico.framework.rpc.codegen.parser;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.ioc.codegen.model.IocletElement;
-import colesico.framework.ioc.production.Producer;
 import colesico.framework.rpc.RpcApi;
-import colesico.framework.rpc.codegen.generator.RpcSchemeGenerator;
+import colesico.framework.rpc.codegen.generator.ClientGenerator;
+import colesico.framework.rpc.codegen.generator.ClientProducerGenerator;
+import colesico.framework.rpc.codegen.generator.EnvelopeGenerator;
 import colesico.framework.rpc.codegen.model.RpcApiElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -21,12 +21,16 @@ import java.util.Set;
 public class RpcApiProcessor extends FrameworkAbstractProcessor {
 
     private RpcApiParser rpcApiParser;
-    private RpcSchemeGenerator rpcSchemeGenerator;
+    private EnvelopeGenerator envelopeGenerator;
+    private ClientGenerator clientGenerator;
+    private ClientProducerGenerator clientProducerGenerator;
 
     @Override
     protected void onInit() {
         rpcApiParser = new RpcApiParser(processingEnv);
-        rpcSchemeGenerator = new RpcSchemeGenerator(processingEnv);
+        envelopeGenerator = new EnvelopeGenerator(processingEnv);
+        clientGenerator = new ClientGenerator(processingEnv);
+        clientProducerGenerator = new ClientProducerGenerator(processingEnv);
     }
 
     @Override
@@ -47,7 +51,9 @@ public class RpcApiProcessor extends FrameworkAbstractProcessor {
             try {
                 producerElement = (TypeElement) elm;
                 RpcApiElement parsedElement = rpcApiParser.parse(ClassElement.fromElement(processingEnv, producerElement));
-                rpcSchemeGenerator.generate(parsedElement);
+                envelopeGenerator.generate(parsedElement);
+                clientGenerator.generate(parsedElement);
+                clientProducerGenerator.generate(parsedElement);
             } catch (CodegenException ce) {
                 String message = "Error processing RPC API interface '" + elm.toString() + "': " + ce.getMessage();
                 logger.debug(message);

@@ -19,24 +19,24 @@ package colesico.framework.service.codegen.model;
 import com.squareup.javapoet.CodeBlock;
 
 public class InterceptionElement {
-    private final CodeBlock interceptor;
-    private final CodeBlock parameters;
+    private final CodeBlock interceptorCode;
+    private final CodeBlock parametersCode;
 
-    public InterceptionElement(CodeBlock interceptor, CodeBlock parameters) {
-        this.interceptor = interceptor;
-        this.parameters = parameters;
+    public InterceptionElement(CodeBlock interceptorCode, CodeBlock parametersCode) {
+        this.interceptorCode = interceptorCode;
+        this.parametersCode = parametersCode;
     }
 
-    public InterceptionElement(CodeBlock interceptor) {
-        this.interceptor = interceptor;
-        this.parameters = null;
+    public InterceptionElement(CodeBlock interceptorCode) {
+        this.interceptorCode = interceptorCode;
+        this.parametersCode = null;
     }
 
-    public CodeBlock getInterceptor() {
-        return interceptor;
+    public CodeBlock getInterceptorCode() {
+        return interceptorCode;
     }
 
-    public CodeBlock getParameters() {
-        return parameters;
+    public CodeBlock getParametersCode() {
+        return parametersCode;
     }
 }

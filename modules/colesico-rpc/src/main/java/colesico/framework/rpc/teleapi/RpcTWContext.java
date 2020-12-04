@@ -37,4 +37,10 @@ public final class RpcTWContext {
     public static RpcTWContext of() {
         return new RpcTWContext();
     }
+
+    public static RpcTWContext withResponse(RpcResponse response) {
+        RpcTWContext ctx = new RpcTWContext();
+        ctx.setResponse(response);
+        return ctx;
+    }
 }

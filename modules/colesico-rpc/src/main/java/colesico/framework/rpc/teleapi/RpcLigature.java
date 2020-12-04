@@ -27,7 +27,6 @@ import java.util.Map;
 public final class RpcLigature {
     public static final String ADD_API_METHOD = "addApi";
     public static final String API_METHOD = "api";
-    public static final String METHOD_METHOD = "method";
 
     /**
      * Supported RPC APIs
@@ -45,15 +44,12 @@ public final class RpcLigature {
 
     /**
      * Register new RPC API
+     *
      * @param name RPC API name. By default this is an RPC API interface name
      * @return
      */
     public static RpcApi api(String name) {
         return new RpcApi(name);
-    }
-
-    public static RpcMethod method(TeleMethod teleMethod, Class<? extends RpcRequest> requestClass, Class<? extends RpcResponse> responseClass) {
-        return new RpcMethod(teleMethod, requestClass, responseClass);
     }
 
     /**
@@ -69,9 +65,9 @@ public final class RpcLigature {
         private final String name;
 
         /**
-         * RPC service methods metadata
+         * Map RPC method name to tele-method.
          */
-        private final Map<String, RpcMethod> targetMethods = new HashMap<>();
+        private final Map<String, TeleMethod> teleMethods = new HashMap<>();
 
         /**
          * Constructor
@@ -89,18 +85,17 @@ public final class RpcLigature {
             return name;
         }
 
-        public Map<String, RpcMethod> getTargetMethods() {
-            return targetMethods;
+        public Map<String, TeleMethod> getTeleMethods() {
+            return teleMethods;
         }
 
         /**
          * Register RPC method.
+         *
          * @param name RPC method name. By default it is a APC API interface method name
-         * @param targetMethod
-         * @return
          */
-        public RpcApi addMethod(String name, RpcMethod targetMethod) {
-            RpcMethod prev = targetMethods.put(name, targetMethod);
+        public RpcApi addMethod(String name, TeleMethod teleMethod) {
+            TeleMethod prev = teleMethods.put(name, teleMethod);
             if (prev != null) {
                 throw new RpcException("Method with name '" + name + "' has already registered");
             }
@@ -108,30 +103,4 @@ public final class RpcLigature {
         }
     }
 
-    /**
-     * RPC Method ligature
-     */
-    public static final class RpcMethod {
-        private final TeleMethod teleMethod;
-        private final Class<? extends RpcRequest> requestType;
-        private final Class<? extends RpcResponse> responseType;
-
-        public RpcMethod(TeleMethod teleMethod, Class<? extends RpcRequest> requestType, Class<? extends RpcResponse> responseType) {
-            this.teleMethod = teleMethod;
-            this.requestType = requestType;
-            this.responseType = responseType;
-        }
-
-        public Class<? extends RpcRequest> getRequestType() {
-            return requestType;
-        }
-
-        public Class<? extends RpcResponse> getResponseType() {
-            return responseType;
-        }
-
-        public TeleMethod getTeleMethod() {
-            return teleMethod;
-        }
-    }
 }

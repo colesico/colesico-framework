@@ -10,13 +10,15 @@ import java.util.List;
  * RPC API  interface representation
  */
 public class RpcApiElement {
-    public static final String SCHEME_CLASS_SUFFIX = "RpcScheme";
+    public static final String ENVELOPE_PACK_CLASS_SUFFIX = "RpcEnvelopes";
+    public static final String CLIENT_CLASS_SUFFIX = "RpcClient";
 
     private final ClassElement originInterface;
     private final List<RpcApiMethodElement> rpcMethods = new ArrayList<>();
 
     /**
      * Custom RPC name
+     *
      * @see colesico.framework.rpc.RpcName
      */
     private final String rpcName;
@@ -39,8 +41,16 @@ public class RpcApiElement {
         }
     }
 
-    public String getSchemeClassName() {
-        return originInterface.getSimpleName() + SCHEME_CLASS_SUFFIX;
+    public String getEnvelopePackClassName() {
+        return originInterface.getSimpleName() + ENVELOPE_PACK_CLASS_SUFFIX;
+    }
+
+    public String getClientClassSimpleName() {
+        return originInterface.getSimpleName() + CLIENT_CLASS_SUFFIX;
+    }
+
+    public String getClientClassName() {
+        return originInterface.getPackageName() + '.' + originInterface.getSimpleName() + CLIENT_CLASS_SUFFIX;
     }
 
     public ClassElement getOriginInterface() {

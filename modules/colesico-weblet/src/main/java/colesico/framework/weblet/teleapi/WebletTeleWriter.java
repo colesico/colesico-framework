@@ -21,6 +21,9 @@ import colesico.framework.telehttp.HttpTeleWriter;
 
 import javax.inject.Provider;
 
+/**
+ * Weblet writer base class
+ */
 abstract public class WebletTeleWriter<V> extends HttpTeleWriter<V, WebletTWContext> {
     public WebletTeleWriter(Provider<HttpContext> httpContextProv) {
         super(httpContextProv);

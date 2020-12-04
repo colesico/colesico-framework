@@ -7,6 +7,8 @@ import colesico.framework.rpc.RpcError;
  */
 abstract public class RpcResponse<R> {
 
+    public static final String GET_RESULT_METHOD = "getResult";
+
     protected RpcError error;
 
     protected R result;

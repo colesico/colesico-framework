@@ -19,5 +19,5 @@ package colesico.framework.rpc.teleapi;
 import colesico.framework.teleapi.DataPort;
 
 public interface RpcDataPort extends DataPort<RpcTRContext, RpcTWContext> {
-    <T extends Throwable> void writeError(T throwable);
+
 }

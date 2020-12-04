@@ -56,7 +56,10 @@ public final class ServiceMethodElement {
 
     private final Map<String, List<InterceptionElement>> interceptionsByPhase;
 
-    private InterceptionElement superMethodInterception;
+    /**
+     * Target service method interception
+     */
+    private InterceptionElement interception;
 
     /**
      * Common purpose properties
@@ -85,12 +88,12 @@ public final class ServiceMethodElement {
         phaseInterceptions.add(interception);
     }
 
-    public InterceptionElement getSuperMethodInterception() {
-        return superMethodInterception;
+    public InterceptionElement getInterception() {
+        return interception;
     }
 
-    public void setSuperMethodInterception(InterceptionElement interception) {
-        this.superMethodInterception = interception;
+    public void setInterception(InterceptionElement interception) {
+        this.interception = interception;
     }
 
     public final String getName() {

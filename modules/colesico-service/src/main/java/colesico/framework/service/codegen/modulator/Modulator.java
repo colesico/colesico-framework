@@ -33,7 +33,7 @@ abstract public class Modulator {
     protected RoundContext roundContext;
 
     protected ServiceElement service;
-    protected ServiceMethodElement proxyMethod;
+    protected ServiceMethodElement serviceMethod;
 
     /**
      * Returns a set of annotation that are aliases for @Service
@@ -59,7 +59,7 @@ abstract public class Modulator {
     }
 
     public void onServiceMethodParsed(ServiceMethodElement proxyMethod) {
-        this.proxyMethod = proxyMethod;
+        this.serviceMethod = proxyMethod;
     }
 
     public void onInitTeleFacade(ServiceElement service) {
@@ -103,7 +103,7 @@ abstract public class Modulator {
         return service;
     }
 
-    public ServiceMethodElement getProxyMethod() {
-        return proxyMethod;
+    public ServiceMethodElement getServiceMethod() {
+        return serviceMethod;
     }
 }

@@ -20,4 +20,19 @@ package colesico.framework.rpc.teleapi;
  * RPC tele-invocation context stub
  */
 public final class RpcTIContext {
+    private final Class<? extends RpcRequest> requestType;
+    private final Class<? extends RpcResponse> responseType;
+
+    public RpcTIContext(Class<? extends RpcRequest> requestType, Class<? extends RpcResponse> responseType) {
+        this.requestType = requestType;
+        this.responseType = responseType;
+    }
+
+    public Class<? extends RpcRequest> getRequestType() {
+        return requestType;
+    }
+
+    public Class<? extends RpcResponse> getResponseType() {
+        return responseType;
+    }
 }

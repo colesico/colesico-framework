@@ -179,15 +179,11 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
             cb.add("$T.$N($S)\n", ClassName.get(RpcLigature.class), RpcLigature.API_METHOD, rpcApi.rpcApiName());
             cb.indent();
             for (RpcApiMethodElement rpcApiMethod : rpcApi.getRpcMethods()) {
-                // .addMethod("methodName", RpcLigature.method(...)
-                cb.add(".$N($S, $T.$N(this::$N, $T.class, $T.class) )\n",
+                // .addMethod("methodName", teleMethodFactory()
+                cb.add(".$N($S, $N())\n",
                         RpcLigature.RpcApi.ADD_METHOD,
                         rpcApiMethod.rpcMethodName(),
-                        ClassName.get(RpcLigature.class),
-                        RpcLigature.METHOD_METHOD,
-                        rpcApiMethod.getTeleMethod().getBuilderName(),
-                        ClassName.bestGuess(rpcApiMethod.getRequestClassName()),
-                        ClassName.bestGuess(rpcApiMethod.getResponseClassName())
+                        rpcApiMethod.getTeleMethod().getBuilderName()
                 );
             }
             cb.unindent();
@@ -206,7 +202,7 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
 
         RpcApiMethodElement rpcApiMethod = teleParam.getParentTeleMethod().getProperty(RpcApiMethodElement.class);
         RpcApiParamElement apiParam = teleParam.getProperty(RpcApiParamElement.class);
-        // RpcTRContext.of(SchemeClass.RequestClass::getterMethod)
+        // RpcTRContext.of(EnvelopeClass.RequestClass::getterMethod)
         cb.add("$T.$N($T::$N)", ClassName.get(RpcTRContext.class),
                 RpcTRContext.OF_METHOD,
                 ClassName.bestGuess(rpcApiMethod.getRequestClassName()),
@@ -215,4 +211,14 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
         return cb.build();
     }
 
+    @Override
+    protected CodeBlock generateInvocationContext(TeleMethodElement teleMethod) {
+        RpcApiMethodElement rpcApiMethod = teleMethod.getProperty(RpcApiMethodElement.class);
+        CodeBlock.Builder cb = CodeBlock.builder();
+        cb.add("new $T($T.class, $T.class)", ClassName.get(RpcTIContext.class),
+                ClassName.bestGuess(rpcApiMethod.getRequestClassName()),
+                ClassName.bestGuess(rpcApiMethod.getResponseClassName())
+        );
+        return cb.build();
+    }
 }

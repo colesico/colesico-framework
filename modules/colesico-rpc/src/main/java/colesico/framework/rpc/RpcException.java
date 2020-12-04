@@ -3,7 +3,7 @@ package colesico.framework.rpc;
 /**
  * Basic rpc exception
  */
-public final class RpcException extends RuntimeException {
+public class RpcException extends RuntimeException {
 
     public RpcException(String message) {
         super(message);

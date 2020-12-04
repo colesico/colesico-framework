@@ -17,13 +17,12 @@
 package colesico.framework.restlet.internal;
 
 import colesico.framework.http.HttpContext;
-import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.key.ClassedKey;
 import colesico.framework.restlet.RestletError;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.reader.ValueReader;
 import colesico.framework.restlet.teleapi.writer.ObjectWriter;
 import colesico.framework.router.RouterContext;
+import colesico.framework.teleapi.TeleFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -36,25 +35,17 @@ import java.util.List;
 @Singleton
 public class RestletDataPortImpl implements RestletDataPort {
 
-    protected final Ioc ioc;
+    protected final TeleFactory teleFactory;
     protected final Provider<HttpContext> httpContextProv;
     protected final Provider<RouterContext> routerContextProv;
 
     protected final RestletJsonConverter jsonConverter;
 
-    public RestletDataPortImpl(Ioc ioc, Provider<HttpContext> httpContextProv, Provider<RouterContext> routerContextProv, RestletJsonConverter jsonConverter) {
-        this.ioc = ioc;
+    public RestletDataPortImpl(TeleFactory teleFactory, Provider<HttpContext> httpContextProv, Provider<RouterContext> routerContextProv, RestletJsonConverter jsonConverter) {
+        this.teleFactory = teleFactory;
         this.httpContextProv = httpContextProv;
         this.routerContextProv = routerContextProv;
         this.jsonConverter = jsonConverter;
-    }
-
-    protected String typeToClassName(Type valueType) {
-        if (valueType instanceof Class) {
-            return ((Class) valueType).getCanonicalName();
-        } else {
-            return valueType.getTypeName();
-        }
     }
 
     @Override
@@ -72,14 +63,14 @@ public class RestletDataPortImpl implements RestletDataPort {
 
         if (context.getReaderClass() != null) {
             // Use specified reader
-            reader = ioc.instance(context.getReaderClass());
+            reader = teleFactory.getReader(context.getReaderClass());
         } else {
             // Use reader by param type
-            reader = ioc.instanceOrNull(new ClassedKey<>(RestletTeleReader.class.getCanonicalName(), typeToClassName(valueType)), null);
+            reader = teleFactory.findReader(RestletTeleReader.class, valueType);
 
             // No accurate reader here so are reading data as object
             if (reader == null) {
-                reader = (RestletTeleReader<V>) ioc.instance(ValueReader.class);
+                reader = (RestletTeleReader<V>) teleFactory.getReader(ValueReader.class);
             }
         }
         return reader.read(context);
@@ -95,15 +86,15 @@ public class RestletDataPortImpl implements RestletDataPort {
 
         if (context.getWriterClass() != null) {
             // Specified writer
-            writer = ioc.instance(context.getWriterClass());
+            writer = teleFactory.getWriter(context.getWriterClass());
         } else {
             // By type writer
-            writer = ioc.instanceOrNull(new ClassedKey<>(RestletTeleWriter.class.getCanonicalName(), typeToClassName(valueType)), null);
+            writer = teleFactory.findWriter(RestletTeleWriter.class, valueType);
         }
 
         if (writer == null) {
             // Default object writer
-            writer = (RestletTeleWriter<V>) ioc.instance(ObjectWriter.class);
+            writer = (RestletTeleWriter<V>) teleFactory.getWriter(ObjectWriter.class);
         }
 
         writer.write(value, context);
@@ -113,7 +104,7 @@ public class RestletDataPortImpl implements RestletDataPort {
     public <T extends Throwable> void writeError(final T throwable) {
 
         RestletTWContext context = new RestletTWContext();
-        RestletTeleWriter<T> throwableWriter = ioc.instanceOrNull(new ClassedKey<>(RestletTeleWriter.class.getCanonicalName(), typeToClassName(throwable.getClass())), null);
+        RestletTeleWriter<T> throwableWriter = teleFactory.findWriter(RestletTeleWriter.class, throwable.getClass());
 
         if (throwableWriter != null) {
             throwableWriter.write(throwable, context);
@@ -124,7 +115,7 @@ public class RestletDataPortImpl implements RestletDataPort {
         // and determine writer for it
         Throwable rootCause = ExceptionUtils.getRootCause(throwable);
         if (rootCause != null) {
-            RestletTeleWriter rootCauseWriter = ioc.instanceOrNull(new ClassedKey<>(RestletTeleWriter.class.getCanonicalName(), typeToClassName(rootCause.getClass())), null);
+            RestletTeleWriter rootCauseWriter = teleFactory.findWriter(RestletTeleWriter.class, rootCause.getClass());
             if (rootCauseWriter != null) {
                 rootCauseWriter.write(rootCause, context);
                 return;
@@ -137,7 +128,7 @@ public class RestletDataPortImpl implements RestletDataPort {
         error.setErrorCode(throwable.getClass().getCanonicalName());
         error.setMessage(ExceptionUtils.getRootCauseMessage(throwable));
         error.setDetails(getMessages(throwable));
-        RestletTeleWriter objWriter = ioc.instance(ObjectWriter.class);
+        RestletTeleWriter objWriter = teleFactory.getWriter(ObjectWriter.class);
         context.setHttpCode(500);
         objWriter.write(error, context);
 

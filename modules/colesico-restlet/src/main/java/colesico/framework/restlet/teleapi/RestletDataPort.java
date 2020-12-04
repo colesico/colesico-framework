@@ -19,5 +19,5 @@ package colesico.framework.restlet.teleapi;
 import colesico.framework.teleapi.DataPort;
 
 public interface RestletDataPort extends DataPort<RestletTRContext, RestletTWContext> {
-    <T extends Throwable> void writeError(T throwable);
+
 }
