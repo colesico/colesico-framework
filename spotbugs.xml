@@ -38,5 +38,9 @@
         <Class name="colesico.framework.weblet.teleapi.writer.StringWriter" />
         <Bug pattern="NP_NULL_ON_SOME_PATH" />
     </Match>
+    <Match>
+        <Class name="colesico.framework.rpc.clientapi.handler.BasicRpcErrorHandler" />
+        <Bug pattern="REC_CATCH_EXCEPTION" />
+    </Match>
 
 </FindBugsFilter>

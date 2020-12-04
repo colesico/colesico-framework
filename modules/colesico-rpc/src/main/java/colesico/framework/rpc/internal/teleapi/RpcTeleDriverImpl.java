@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.lang.reflect.InvocationTargetException;
 
 @Singleton
 public class RpcTeleDriverImpl implements RpcTeleDriver {
@@ -34,18 +35,15 @@ public class RpcTeleDriverImpl implements RpcTeleDriver {
     @Override
     public <T> void invoke(T service, MethodInvoker<T, RpcDataPort> invoker, RpcTIContext invCtx) {
 
-        RpcRequest request;
-        RpcResponse response = null;
-        RpcDataPort dataPort = null;
+        // Create request and response
+        RpcRequest request = exchange.readRequest(invCtx.getRequestType());
+        RpcResponse response = createResponse(invCtx.getResponseType());
+
+        // Instantiate data port
+        RpcDataPort dataPort = new RpcDataPortImpl(teleFactory, request, response);
+        threadScope.put(DataPort.SCOPE_KEY, dataPort);
+
         try {
-            // Create request and response
-            request = exchange.readRequest(invCtx.getRequestType());
-            response = invCtx.getResponseType().getDeclaredConstructor().newInstance();
-
-            // Instantiate data port
-            dataPort = new RpcDataPortImpl(teleFactory, request, response);
-            threadScope.put(DataPort.SCOPE_KEY, dataPort);
-
             // Invoke target service method
             invoker.invoke(service, dataPort);
         } catch (Throwable t) {
@@ -55,6 +53,14 @@ public class RpcTeleDriverImpl implements RpcTeleDriver {
             dataPort.writeError(t);
         } finally {
             exchange.writeResponse(response);
+        }
+    }
+
+    private RpcResponse createResponse(Class<? extends RpcResponse> respClass) {
+        try {
+            return respClass.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
