@@ -63,7 +63,7 @@ public class WebletWritersProducer {
 
     @Singleton
     @Classed(ForwardResponse.class)
-    public WebletTeleWriter getForwardResponseWriter(RedirectWriter impl) {
+    public WebletTeleWriter getForwardResponseWriter(ForwardWriter impl) {
         return impl;
     }
 

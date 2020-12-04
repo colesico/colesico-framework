@@ -2,7 +2,6 @@ package colesico.framework.rpc.rpcgear.kryo;
 
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.rpc.clientapi.RpcEndpointsPrototype;
-import colesico.framework.rpc.clientapi.RpcErrorHandler;
 import colesico.framework.rpc.clientapi.RpcErrorHandlerFactory;
 import colesico.framework.rpc.clientapi.RpcRequestHandler;
 import colesico.framework.rpc.rpcgear.httpbase.HttpRpcClient;
