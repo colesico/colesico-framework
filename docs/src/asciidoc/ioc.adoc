@@ -169,7 +169,7 @@ public class MyProducer {
 There are two ways to work with implementations:
 
 . Through the producer's producing method
-. Using @Supertypes annotation  (or @Produce.supertypes)
+. Using @Supertypes annotation  (or @Produce.targetType)
 
 [source,java]
 ----
@@ -184,7 +184,7 @@ public class MyProducer {
 }
 ----
 
-or
+or with targetType feature:
 
 [source,java]
 ----
@@ -193,6 +193,12 @@ or
 public class MyProducer {
 }
 ----
+This producer will produce MyInterface object implemented by MyImplementation class.
+In this case the object can be obtained from the container by MyInterface type only:
+i.e. ioc.instance(MyInterface.class).
+
+Attempt to use ioc.instance(MyImplementation.class) will cause UnsatisfiedInjectionException.
+To allow that obtaining add MyImplementation.class itself to targetType list.
 
 == Polyproducing
 
