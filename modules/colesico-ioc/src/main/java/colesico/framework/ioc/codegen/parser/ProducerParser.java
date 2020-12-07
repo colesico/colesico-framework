@@ -46,6 +46,8 @@ import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -319,8 +321,8 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         // Supertypes
-        TypeMirror[] supertypes = produceAnn.getValueTypeMirrors(a->a.supertypes());
-        for (TypeMirror st:supertypes){
+        TypeMirror[] supertypes = produceAnn.getValueTypeMirrors(a -> a.supertypes());
+        for (TypeMirror st : supertypes) {
             factory.addSupertype(new ClassType(processingEnv, (DeclaredType) st));
         }
 
@@ -471,7 +473,7 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         // Supertypes
         AnnotationAssist<Supertypes> supertypesAnn = method.getAnnotation(Supertypes.class);
-        if (supertypesAnn!=null) {
+        if (supertypesAnn != null) {
             TypeMirror[] supertypes = supertypesAnn.getValueTypeMirrors(a -> a.value());
             for (TypeMirror st : supertypes) {
                 factory.addSupertype(new ClassType(processingEnv, (DeclaredType) st));
@@ -493,7 +495,9 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         for (MethodElement method : methods) {
             logger.debug("Found custom factory method: " + method.getName());
-            iocletElement.addFactory(createCustomFactoryElement(method));
+            CustomFactoryElement factoryElm = createCustomFactoryElement(method);
+            iocletElement.addFactory(factoryElm);
+            checkSupertypes(factoryElm);
         }
     }
 
@@ -514,7 +518,9 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         for (AnnotationAssist<Produce> produce : produceList) {
-            iocletElement.addFactory(createDefaultFactoryElement(iocletElement, produce));
+            DefaultFactoryElement factElm = createDefaultFactoryElement(iocletElement, produce);
+            iocletElement.addFactory(factElm);
+            checkSupertypes(factElm);
         }
     }
 
@@ -526,6 +532,18 @@ public class ProducerParser extends FrameworkAbstractParser {
                     "; Timestamp=" + genstampAnn.timestamp() +
                     "; HashId=" + genstampAnn.hashId() +
                     "}");
+        }
+    }
+
+    protected void checkSupertypes(FactoryElement facElm) {
+        Types typeUtils = getTypeUtils();
+        for (ClassType supType : facElm.getSupertypes()) {
+            if (!typeUtils.isAssignable(facElm.getSuppliedType().unwrap(), supType.unwrap())) {
+                throw CodegenException.of()
+                        .message("Not an instance class subtype: "+facElm.getSuppliedType().getName()+" extends/implements "+supType.unwrap().toString())
+                        .element(facElm.getOriginElement())
+                        .build();
+            }
         }
     }
 
@@ -556,6 +574,7 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         parseProducingMethods(iocletElement);
         paresProducingAnnotations(iocletElement);
+
         return iocletElement;
     }
 }

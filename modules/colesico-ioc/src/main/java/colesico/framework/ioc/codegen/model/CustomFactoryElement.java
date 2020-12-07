@@ -19,6 +19,7 @@ package colesico.framework.ioc.codegen.model;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
 
+import javax.lang.model.element.Element;
 import java.util.List;
 
 /**
@@ -63,6 +64,11 @@ public class CustomFactoryElement extends FactoryElement {
 
     public SubstitutionElement getSubstitution() {
         return substitution;
+    }
+
+    @Override
+    public Element getOriginElement() {
+        return producerMethod.unwrap();
     }
 
     @Override

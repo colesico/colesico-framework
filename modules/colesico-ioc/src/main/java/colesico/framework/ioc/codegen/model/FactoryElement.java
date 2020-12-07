@@ -19,6 +19,7 @@ package colesico.framework.ioc.codegen.model;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
 
+import javax.lang.model.element.Element;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +80,8 @@ abstract public class FactoryElement {
         this.notifyPostConstruct = notifyPostConstruct;
         this.postConstructListeners = postConstructListeners;
     }
+
+    abstract public Element getOriginElement();
 
     public void addParameter(InjectableElement paramElm) {
         this.parameters.add(paramElm);

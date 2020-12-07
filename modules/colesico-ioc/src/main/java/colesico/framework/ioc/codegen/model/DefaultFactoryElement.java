@@ -21,6 +21,7 @@ import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.ioc.production.Produce;
 
+import javax.lang.model.element.Element;
 import java.util.List;
 
 /**
@@ -58,6 +59,12 @@ public class DefaultFactoryElement extends FactoryElement {
                 postConstructListeners);
         this.constructor = constructor;
         this.produce = produce;
+    }
+
+    @Override
+    public Element getOriginElement() {
+        // TODO
+        return null;
     }
 
     public MethodElement getConstructor() {
