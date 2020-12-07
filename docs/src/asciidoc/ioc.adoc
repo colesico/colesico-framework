@@ -169,7 +169,7 @@ public class MyProducer {
 There are two ways to work with implementations:
 
 . Through the producer's producing method
-. Using @Supertypes annotation  (or @Produce.targetType)
+. Using @TargetType annotation  (or @Produce.targetType)
 
 [source,java]
 ----
