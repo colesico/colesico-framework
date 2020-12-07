@@ -19,6 +19,7 @@ package colesico.framework.ioc.codegen.generator;
 import colesico.framework.assist.LazySingleton;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
+import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.ioc.codegen.model.FactoryElement;
 import colesico.framework.ioc.codegen.model.IocletElement;
 import colesico.framework.ioc.conditional.Substitution;
@@ -31,6 +32,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Vladlen Larionov
@@ -127,32 +130,43 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
         mb.addParameter(ClassName.get(Catalog.class), Ioclet.CATALOG_PARAM, Modifier.FINAL);
         mb.addAnnotation(Override.class);
         for (FactoryElement factoryElm : iocletElement.getFactories()) {
-            CodeBlock.Builder cb = CodeBlock.builder();
-            // if (catalog.accept(
-            cb.add("if($N.$N(", Ioclet.CATALOG_PARAM, Catalog.ACCEPT_METHOD);
 
-            // new Key(), condition, substitute, polyproduce
-            cb.add(keyGenerator.forFactory(factoryElm));
-            if (factoryElm.getCondition() != null) {
-                cb.add(", new $T()", TypeName.get(factoryElm.getCondition().getConditionClass().unwrap()));
-            } else {
-                cb.add(", null");
+            // All supplied types by given factory: type itself and supertypes
+            List<ClassType> suppliedTypeList = new ArrayList<>();
+            suppliedTypeList.add(factoryElm.getSuppliedType());
+            suppliedTypeList.addAll(factoryElm.getSupertypes());
+
+            // Loop for all factory supplied types  (supplied type itself and supertypes)
+            for (ClassType suppliedType : suppliedTypeList) {
+                CodeBlock.Builder cb = CodeBlock.builder();
+                // if (catalog.accept(
+                cb.add("if($N.$N(", Ioclet.CATALOG_PARAM, Catalog.ACCEPT_METHOD);
+
+                // new Key(), condition, substitute, polyproduce
+                cb.add(keyGenerator.forFactory(factoryElm, suppliedType));
+                if (factoryElm.getCondition() != null) {
+                    cb.add(", new $T()", TypeName.get(factoryElm.getCondition().getConditionClass().unwrap()));
+                } else {
+                    cb.add(", null");
+                }
+                // Substitution
+                if (factoryElm.getSubstitution() != null) {
+                    cb.add(", $T.$N", ClassName.get(Substitution.class), factoryElm.getSubstitution().getSubstitutionType().name());
+                } else {
+                    cb.add(", null");
+                }
+                // Polyproduce
+                cb.add(", $L", factoryElm.getPolyproduce());
+
+                cb.add(")){\n");
+
+                // catalog.add(factoryX())
+                cb.indent();
+                cb.addStatement("$N.$N($N())", Ioclet.CATALOG_PARAM, Catalog.ADD_METHOD, factoryElm.getFactoryMethodName());
+                cb.unindent();
+                cb.add("}\n\n");
+                mb.addCode(cb.build());
             }
-            if (factoryElm.getSubstitution() != null) {
-                cb.add(", $T.$N", ClassName.get(Substitution.class), factoryElm.getSubstitution().getSubstitutionType().name());
-            } else {
-                cb.add(", null");
-            }
-            cb.add(", $L", factoryElm.getPolyproduce());
-
-            cb.add(")){\n");
-
-            // catalog.add(factoryX())
-            cb.indent();
-            cb.addStatement("$N.$N($N())", Ioclet.CATALOG_PARAM, Catalog.ADD_METHOD, factoryElm.getFactoryMethodName());
-            cb.unindent();
-            cb.add("}\n\n");
-            mb.addCode(cb.build());
         }
         classBuilder.addMethod(mb.build());
     }

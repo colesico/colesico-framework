@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.ioc.implement;
+package colesico.framework.ioc.production;
 
-public class MainBeanIMP {
-    private final BeanInterface bean;
-    private final ServiceInterface service;
+import java.lang.annotation.*;
 
-    public MainBeanIMP(BeanInterface bean, ServiceInterface service) {
-        this.bean = bean;
-        this.service = service;
-    }
-
-    public String getBeanValue(){
-        return bean.getValue();
-    }
-    public String getServiceValue(){
-        return service.getValue();
-    }
+/**
+ * Applies to the instance producing method.
+ * For this instance, defines a list of superclasses or interfaces of the instance class,
+ * for which this instance will serve as an implementation that can be obtained from IoC container
+ * by use that supertype
+ *
+ * @see Produce#supertypes()
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD})
+@Inherited
+@Documented
+public @interface Supertypes {
+    Class<?>[] value();
 }

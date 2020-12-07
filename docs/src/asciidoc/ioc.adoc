@@ -164,6 +164,36 @@ public class MyProducer {
 }
 ----
 
+== Implementations support
+
+There are two ways to work with implementations:
+
+. Through the producer's producing method
+. Using @Supertypes annotation  (or @Produce.supertypes)
+
+[source,java]
+----
+@Producer
+@Produce(MyInterface.class)
+@Produce(MyImplementation.class)
+public class MyProducer {
+
+    public MyInterface getMyImpl(MyImplementation impl){
+        return impl;
+    }
+}
+----
+
+or
+
+[source,java]
+----
+@Producer
+@Produce(value = MyImplementation.class, supertypes = MyInterface.class)
+public class MyProducer {
+}
+----
+
 == Polyproducing
 
 @Polyproduce annotation allows to specify that the IoC container may supply multiple instances for the dependency.

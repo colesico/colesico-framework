@@ -235,12 +235,18 @@ public class ProducerParser extends FrameworkAbstractParser {
             throw CodegenException.of().message("Unable to find injectable constructor for class: " + suppliedMirror.toString()).build();
         }
 
+        // Scope
+
         ScopeElement scope = obtainScope(suppliedType.asClassElement());
         if (scope == null) {
             scope = new ScopeElement(ScopeElement.ScopeKind.UNSCOPED, null);
         }
 
+        // Polyproduce
+
         final boolean polyproduce = produceAnn.unwrap().polyproduce();
+
+        // Named
 
         String named = StringUtils.isEmpty(produceAnn.unwrap().named()) ? null : produceAnn.unwrap().named();
         if (named == null) {
@@ -250,6 +256,8 @@ public class ProducerParser extends FrameworkAbstractParser {
                 named = namedAnn.unwrap().value();
             }
         }
+
+        // CLassed
 
         ClassType classed = null;
         TypeMirror classifier = produceAnn.getValueTypeMirror(Produce::classed);
@@ -264,6 +272,8 @@ public class ProducerParser extends FrameworkAbstractParser {
             }
         }
 
+        // Listeners
+
         final boolean notifyPostProduce = produceAnn.unwrap().postProduce();
 
         final boolean notifyPostConstruct = produceAnn.unwrap().postConstruct();
@@ -277,6 +287,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         // Condition
+
         ConditionElement condition = null;
         TypeMirror conditionClass = produceAnn.getValueTypeMirror(Produce::requires);
         if (!CodegenUtils.isAssignable(Condition.class, conditionClass, processingEnv)) {
@@ -305,6 +316,12 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         for (ParameterElement param : constructor.getParameters()) {
             factory.addParameter(createInjectableElement(factory, param));
+        }
+
+        // Supertypes
+        TypeMirror[] supertypes = produceAnn.getValueTypeMirrors(a->a.supertypes());
+        for (TypeMirror st:supertypes){
+            factory.addSupertype(new ClassType(processingEnv, (DeclaredType) st));
         }
 
         return factory;
@@ -450,6 +467,15 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         for (ParameterElement param : method.getParameters()) {
             factory.addParameter(createInjectableElement(factory, param));
+        }
+
+        // Supertypes
+        AnnotationAssist<Supertypes> supertypesAnn = method.getAnnotation(Supertypes.class);
+        if (supertypesAnn!=null) {
+            TypeMirror[] supertypes = supertypesAnn.getValueTypeMirrors(a -> a.value());
+            for (TypeMirror st : supertypes) {
+                factory.addSupertype(new ClassType(processingEnv, (DeclaredType) st));
+            }
         }
 
         logger.debug("Custom factory element has been created: " + factory);

@@ -47,6 +47,12 @@ abstract public class FactoryElement {
 
     protected int factoryIndex = -1;
 
+    /**
+     * Supertypes lise
+     * {@link colesico.framework.ioc.production.Supertypes}
+     */
+    protected final List<ClassType> supertypes = new ArrayList<>();
+
     public FactoryElement(ClassType suppliedType,
                           String factoryMethodBaseName,
                           ScopeElement scope,
@@ -76,6 +82,10 @@ abstract public class FactoryElement {
 
     public void addParameter(InjectableElement paramElm) {
         this.parameters.add(paramElm);
+    }
+
+    public void addSupertype(ClassType st) {
+        supertypes.add(st);
     }
 
     public final String getFactoryMethodName() {
@@ -140,6 +150,10 @@ abstract public class FactoryElement {
 
     public int getFactoryIndex() {
         return factoryIndex;
+    }
+
+    public List<ClassType> getSupertypes() {
+        return supertypes;
     }
 
     @Override

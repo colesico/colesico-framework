@@ -103,22 +103,25 @@ public class KeyGenerator extends FrameworkAbstractGenerator {
     }
 
     /**
-     * Code for use at factory registration stage
+     * Code for use at factory registration stage and scoped factory
      *
      * @param factory
      * @return
      * @see Ioclet#addFactories
      */
-    public CodeBlock forFactory(FactoryElement factory) {
+    public CodeBlock forFactory(FactoryElement factory, ClassType suppliedType) {
+        if (suppliedType==null){
+            suppliedType =factory.getSuppliedType();
+        }
         if (factory.getPostProduce() != null) {
-            return generatePPLKeyStringBased(factory.getSuppliedType(),
+            return generatePPLKeyStringBased(suppliedType,
                     factory.getPostProduce().getWithNamed(), factory.getPostProduce().getWithClassed());
         } else if (factory.getClassed() != null) {
-            return generateClassedKeyStringBased(factory.getSuppliedType(), factory.getClassed());
+            return generateClassedKeyStringBased(suppliedType, factory.getClassed());
         } else if (factory.getNamed() != null) {
-            return generateNamedKeyStringBased(factory.getSuppliedType(), factory.getNamed());
+            return generateNamedKeyStringBased(suppliedType, factory.getNamed());
         } else {
-            return generateTypeKeyStringBased(factory.getSuppliedType());
+            return generateTypeKeyStringBased(suppliedType);
         }
     }
 

@@ -22,8 +22,14 @@ import colesico.framework.ioc.production.Producer;
 
 // Declare producer
 @Producer
+
 // Declare default producing
 @Produce(BeanImpl.class)
+
+// Specify default producing for ServiceInterface
+@Produce(value = ServiceImpl.class, supertypes = ServiceInterface.class)
+
+// Main bean producing
 @Produce(MainBeanIMP.class)
 public class ImplProducer {
 
