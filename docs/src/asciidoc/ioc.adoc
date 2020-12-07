@@ -164,7 +164,7 @@ public class MyProducer {
 }
 ----
 
-== Implementations support
+== Implementations
 
 There are two ways to work with implementations:
 

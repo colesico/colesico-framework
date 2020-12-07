@@ -31,7 +31,7 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
 
     public HttpRpcClient(Polysupplier<RpcEndpointsPrototype> endpointsConf,
                          Polysupplier<HttpRpcClientOptionsPrototype> options,
-                         Polysupplier<RpcRequestHandler<?>> requestHnd,
+                         Polysupplier<RpcRequestHandler> requestHnd,
                          RpcErrorHandlerFactory errorHndFac) {
         super(endpointsConf, requestHnd, errorHndFac);
         final HttpClient.Builder httpClientBuilder = HttpClient.newBuilder()

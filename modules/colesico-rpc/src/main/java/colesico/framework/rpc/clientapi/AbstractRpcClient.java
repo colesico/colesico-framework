@@ -27,12 +27,12 @@ abstract public class AbstractRpcClient implements RpcClient {
 
     private final EndpointsRegistryImpl endpoints = new EndpointsRegistryImpl();
 
-    private final List<RpcRequestHandler<?>> requestHandlers = new ArrayList<>();
+    private final List<RpcRequestHandler> requestHandlers = new ArrayList<>();
 
     private final RpcErrorHandlerFactory errorHandlerFactory;
 
     public AbstractRpcClient(Polysupplier<RpcEndpointsPrototype> endpointsConf,
-                             Polysupplier<RpcRequestHandler<?>> requestHnd,
+                             Polysupplier<RpcRequestHandler> requestHnd,
                              RpcErrorHandlerFactory errorHndFac) {
 
         endpointsConf.forEach(c -> c.addEndpoints(endpoints), null);

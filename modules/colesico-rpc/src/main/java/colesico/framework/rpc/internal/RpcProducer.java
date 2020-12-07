@@ -43,7 +43,7 @@ import javax.inject.Singleton;
 @Produce(RpcProfileReader.class)
 @Produce(RpcProfileWriter.class)
 
-@Produce(BasicRequestHandler.class)
+@Produce(value = BasicRequestHandler.class, supertypes = RpcRequestHandler.class)
 @Produce(BasicRpcErrorHandler.class)
 public class RpcProducer {
 
@@ -87,13 +87,6 @@ public class RpcProducer {
     @Singleton
     @Classed(Profile.class)
     public RpcTeleWriter getProfileWriter(RpcProfileWriter impl) {
-        return impl;
-    }
-
-    // Request handlers
-
-    @Singleton
-    public RpcRequestHandler<?> getBasicRpcRequestHandler(BasicRequestHandler impl) {
         return impl;
     }
 
