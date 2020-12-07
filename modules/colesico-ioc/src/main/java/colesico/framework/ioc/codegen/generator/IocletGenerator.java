@@ -133,8 +133,10 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
 
             // All supplied types by given factory: type itself and supertypes
             List<ClassType> suppliedTypeList = new ArrayList<>();
-            suppliedTypeList.add(factoryElm.getSuppliedType());
-            suppliedTypeList.addAll(factoryElm.getSupertypes());
+            suppliedTypeList.addAll(factoryElm.getTargetTypes());
+            if (suppliedTypeList.isEmpty()) {
+                suppliedTypeList.add(factoryElm.getSuppliedType());
+            }
 
             // Loop for all factory supplied types  (supplied type itself and supertypes)
             for (ClassType suppliedType : suppliedTypeList) {

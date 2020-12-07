@@ -189,7 +189,7 @@ or
 [source,java]
 ----
 @Producer
-@Produce(value = MyImplementation.class, supertypes = MyInterface.class)
+@Produce(value = MyImplementation.class, targetType = MyInterface.class)
 public class MyProducer {
 }
 ----

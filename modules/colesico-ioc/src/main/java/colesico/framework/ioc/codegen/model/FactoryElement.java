@@ -18,6 +18,7 @@ package colesico.framework.ioc.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
+import colesico.framework.ioc.production.TargetType;
 
 import javax.lang.model.element.Element;
 import java.util.ArrayList;
@@ -50,9 +51,9 @@ abstract public class FactoryElement {
 
     /**
      * Supertypes lise
-     * {@link colesico.framework.ioc.production.Supertypes}
+     * {@link TargetType}
      */
-    protected final List<ClassType> supertypes = new ArrayList<>();
+    protected final List<ClassType> targetTypes = new ArrayList<>();
 
     public FactoryElement(ClassType suppliedType,
                           String factoryMethodBaseName,
@@ -88,7 +89,7 @@ abstract public class FactoryElement {
     }
 
     public void addSupertype(ClassType st) {
-        supertypes.add(st);
+        targetTypes.add(st);
     }
 
     public final String getFactoryMethodName() {
@@ -155,8 +156,8 @@ abstract public class FactoryElement {
         return factoryIndex;
     }
 
-    public List<ClassType> getSupertypes() {
-        return supertypes;
+    public List<ClassType> getTargetTypes() {
+        return targetTypes;
     }
 
     @Override
