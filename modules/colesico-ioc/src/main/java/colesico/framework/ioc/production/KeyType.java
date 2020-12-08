@@ -22,14 +22,14 @@ import java.lang.annotation.*;
  * Applies to the instance producing method.
  * For this instance, defines a list of superclasses or interfaces of the instance class (or instance class itself),
  * for which this instance will serve as an implementation that can be obtained from IoC container
- * by use this target type
+ * by use this key type
  *
- * @see Produce#targetType()
+ * @see Produce#keyType()
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 @Inherited
 @Documented
-public @interface TargetType {
+public @interface KeyType {
     Class<?>[] value();
 }

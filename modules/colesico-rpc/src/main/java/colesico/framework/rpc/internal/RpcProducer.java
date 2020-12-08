@@ -43,7 +43,7 @@ import javax.inject.Singleton;
 @Produce(RpcProfileReader.class)
 @Produce(RpcProfileWriter.class)
 
-@Produce(value = BasicRequestHandler.class, targetType = RpcRequestHandler.class, polyproduce = true)
+@Produce(value = BasicRequestHandler.class, keyType = RpcRequestHandler.class, polyproduce = true)
 @Produce(BasicRpcErrorHandler.class)
 public class RpcProducer {
 

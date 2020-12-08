@@ -169,7 +169,7 @@ public class MyProducer {
 There are two ways to work with implementations:
 
 . Through the producer's producing method
-. Using @TargetType annotation  (or @Produce.targetType)
+. Using @KeyType annotation  (or @Produce.keyType)
 
 [source,java]
 ----
@@ -183,12 +183,12 @@ public class MyProducer {
 }
 ----
 
-or with targetType feature:
+or with keyType feature:
 
 [source,java]
 ----
 @Producer
-@Produce(value = MyImplementation.class, targetType = MyInterface.class)
+@Produce(value = MyImplementation.class, keyType = MyInterface.class)
 public class MyProducer {
 }
 ----
@@ -197,7 +197,7 @@ In this case the object can be obtained from the container by MyInterface type o
 i.e. ioc.instance(MyInterface.class).
 
 Attempt to use ioc.instance(MyImplementation.class) will cause UnsatisfiedInjectionException.
-To allow that obtaining add MyImplementation.class itself to targetType list.
+To allow that obtaining add MyImplementation.class itself to keyType list.
 
 == Polyproducing
 

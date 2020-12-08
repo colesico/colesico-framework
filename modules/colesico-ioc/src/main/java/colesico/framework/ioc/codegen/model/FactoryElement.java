@@ -18,7 +18,8 @@ package colesico.framework.ioc.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
-import colesico.framework.ioc.production.TargetType;
+import colesico.framework.ioc.listener.ListenersControl;
+import colesico.framework.ioc.production.KeyType;
 
 import javax.lang.model.element.Element;
 import java.util.ArrayList;
@@ -34,13 +35,32 @@ abstract public class FactoryElement {
     protected final ScopeElement scope;
     protected final ConditionElement condition;
     protected final SubstitutionElement substitution;
+
+    /**
+     * {@link colesico.framework.ioc.production.Polyproduce}
+     */
     protected final Boolean polyproduce;
 
     protected final PPLDefinitionElement postProduce;
+
+    /**
+     * {@link javax.inject.Named}
+     */
     protected final String named;
+
+    /**
+     * {@link colesico.framework.ioc.production.Classed}
+     */
     protected final ClassType classed;
 
+    /**
+     * {@link ListenersControl#postProduce()}
+     */
     protected final boolean notifyPostProduce;
+
+    /**
+     * {@link ListenersControl#postProduce()}
+     */
     protected final boolean notifyPostConstruct;
 
     protected final List<MethodElement> postConstructListeners;
@@ -50,10 +70,9 @@ abstract public class FactoryElement {
     protected int factoryIndex = -1;
 
     /**
-     * Supertypes lise
-     * {@link TargetType}
+     * {@link KeyType}
      */
-    protected final List<ClassType> targetTypes = new ArrayList<>();
+    protected final List<ClassType> keyTypes = new ArrayList<>();
 
     public FactoryElement(ClassType suppliedType,
                           String factoryMethodBaseName,
@@ -89,7 +108,7 @@ abstract public class FactoryElement {
     }
 
     public void addSupertype(ClassType st) {
-        targetTypes.add(st);
+        keyTypes.add(st);
     }
 
     public final String getFactoryMethodName() {
@@ -156,8 +175,8 @@ abstract public class FactoryElement {
         return factoryIndex;
     }
 
-    public List<ClassType> getTargetTypes() {
-        return targetTypes;
+    public List<ClassType> getKeyTypes() {
+        return keyTypes;
     }
 
     @Override

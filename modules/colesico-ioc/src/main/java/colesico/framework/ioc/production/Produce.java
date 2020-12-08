@@ -90,8 +90,8 @@ public @interface Produce {
     /**
      * Instance class itself, superclasses or interfaces with which this instance will be associated.
      * This instance will acts as an implementation for these classes or interfaces.
-     * @see TargetType
+     * @see KeyType
      */
-    Class<?>[] targetType() default {};
+    Class<?>[] keyType() default {};
 
 }
