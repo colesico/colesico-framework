@@ -1,1 +1,0 @@
-The colesico framework mix bundle.
