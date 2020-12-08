@@ -25,49 +25,50 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>colesico-bundle-rest</artifactId>
+    <artifactId>colesico-bundle-srv</artifactId>
 
     <packaging>jar</packaging>
 
-    <name>Colesico Bundle REST</name>
+    <name>Colesico Bundle Services</name>
     <description>
-        Colesico framework bundle joins framework modules for rest service development
+        Colesico framework bundle for services
     </description>
 
     <properties>
     </properties>
 
     <dependencies>
-        <!-- Colesico basic -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-bundle-base</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <!-- Colesico rest  -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-http</artifactId>
+            <artifactId>colesico-bundle-l10n</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-router</artifactId>
+            <artifactId>colesico-slf4j</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-teleapi</artifactId>
+            <artifactId>colesico-hocon</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-restlet</artifactId>
+            <artifactId>colesico-validation</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-eventbus</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -83,7 +84,7 @@
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
-                        <phase/>
+			            <phase/>
                     </execution>
                 </executions>
             </plugin>

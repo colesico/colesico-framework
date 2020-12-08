@@ -41,7 +41,7 @@
         <!-- Colesico basic -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-bundle-rest</artifactId>
+            <artifactId>colesico-restlet</artifactId>
             <version>${project.version}</version>
         </dependency>
 

@@ -177,9 +177,9 @@
             <modules>
                 <!-- Bundles -->
                 <module>bundles/colesico-bundle-base</module>
+                <module>bundles/colesico-bundle-srv</module>
                 <module>bundles/colesico-bundle-sql</module>
                 <module>bundles/colesico-bundle-l10n</module>
-                <module>bundles/colesico-bundle-rest</module>
                 <module>bundles/colesico-bundle-web</module>
             </modules>
         </profile>
