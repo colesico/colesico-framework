@@ -1,4 +1,4 @@
-package colesico.framework.rpc.internal.teleapi;
+package colesico.framework.rpc.internal;
 
 import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.RpcException;

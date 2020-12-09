@@ -1,4 +1,4 @@
-package colesico.framework.rpc.internal.router;
+package colesico.framework.rpc.internal;
 
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polysupplier;

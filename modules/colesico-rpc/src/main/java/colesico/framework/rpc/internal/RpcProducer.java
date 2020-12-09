@@ -12,8 +12,6 @@ import colesico.framework.rpc.clientapi.handler.BasicRpcErrorHandler;
 import colesico.framework.rpc.rpcgear.kryo.KryoClient;
 import colesico.framework.rpc.rpcgear.kryo.KryoExchange;
 import colesico.framework.rpc.rpcgear.kryo.KryoSerializer;
-import colesico.framework.rpc.internal.router.RpcDispatcher;
-import colesico.framework.rpc.internal.teleapi.RpcTeleDriverImpl;
 import colesico.framework.rpc.teleapi.RpcExchange;
 import colesico.framework.rpc.teleapi.RpcTeleDriver;
 import colesico.framework.rpc.teleapi.RpcTeleReader;

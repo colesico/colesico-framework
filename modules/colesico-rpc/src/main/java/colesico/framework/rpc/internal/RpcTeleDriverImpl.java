@@ -1,4 +1,4 @@
-package colesico.framework.rpc.internal.teleapi;
+package colesico.framework.rpc.internal;
 
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.rpc.teleapi.*;
@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.lang.reflect.InvocationTargetException;
 
 @Singleton
 public class RpcTeleDriverImpl implements RpcTeleDriver {
