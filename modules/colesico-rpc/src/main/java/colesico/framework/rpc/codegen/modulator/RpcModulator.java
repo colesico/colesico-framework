@@ -200,7 +200,7 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
     protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
         CodeBlock.Builder cb = CodeBlock.builder();
 
-        RpcApiMethodElement rpcApiMethod = teleParam.getParentTeleMethod().getProperty(RpcApiMethodElement.class);
+        RpcApiMethodElement rpcApiMethod = getRpcApiMethod(teleParam.getParentTeleMethod());
         RpcApiParamElement apiParam = teleParam.getProperty(RpcApiParamElement.class);
         // RpcTRContext.of(EnvelopeClass.RequestClass::getterMethod)
         cb.add("$T.$N($T::$N)", ClassName.get(RpcTRContext.class),
@@ -213,12 +213,23 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
 
     @Override
     protected CodeBlock generateInvocationContext(TeleMethodElement teleMethod) {
-        RpcApiMethodElement rpcApiMethod = teleMethod.getProperty(RpcApiMethodElement.class);
+        RpcApiMethodElement rpcApiMethod = getRpcApiMethod(teleMethod);
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("new $T($T.class, $T.class)", ClassName.get(RpcTIContext.class),
                 ClassName.bestGuess(rpcApiMethod.getRequestClassName()),
                 ClassName.bestGuess(rpcApiMethod.getResponseClassName())
         );
         return cb.build();
+    }
+
+    protected RpcApiMethodElement getRpcApiMethod(TeleMethodElement teleMethod) {
+        RpcApiMethodElement rpcApiMethod = teleMethod.getProperty(RpcApiMethodElement.class);
+        if (rpcApiMethod == null) {
+            throw CodegenException.of()
+                    .message("Unknown RPC API method for Service method " + teleMethod.getName())
+                    .element(teleMethod.getServiceMethod().getOriginMethod().unwrap())
+                    .build();
+        }
+        return rpcApiMethod;
     }
 }

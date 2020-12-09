@@ -37,7 +37,7 @@ public class RpcApiParser extends FrameworkAbstractParser {
         List<MethodElement> methods = originIface.getMethods();
         for (MethodElement method : methods) {
             if (method.unwrap().getReturnType().getKind() != TypeKind.DECLARED) {
-                throw CodegenException.of().message("Unsupported return type: " + method.unwrap().getReturnType())
+                throw CodegenException.of().message("Unsupported return type: " + method.unwrap().getReturnType() + ". Declared types support only")
                         .element(method.unwrap()).build();
             }
             RpcName rpcMethodName = method.unwrap().getAnnotation(RpcName.class);
