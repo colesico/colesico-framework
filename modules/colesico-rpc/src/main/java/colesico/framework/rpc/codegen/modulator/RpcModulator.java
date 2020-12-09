@@ -226,7 +226,9 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
         RpcApiMethodElement rpcApiMethod = teleMethod.getProperty(RpcApiMethodElement.class);
         if (rpcApiMethod == null) {
             throw CodegenException.of()
-                    .message("Unknown RPC API method for Service method " + teleMethod.getName())
+                    .message("Unknown RPC API method for service method "+
+                            teleMethod.getParentTeleFacade().getParentService().getOriginClass().getName()+
+                            "->" + teleMethod.getName()+"(...)")
                     .element(teleMethod.getServiceMethod().getOriginMethod().unwrap())
                     .build();
         }
