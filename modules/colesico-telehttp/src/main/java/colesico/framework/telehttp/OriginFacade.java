@@ -90,17 +90,7 @@ public interface OriginFacade {
 
         @Override
         public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
-            try (InputStream inputStream = httpRequest.getInputStream()) {
-                ByteArrayOutputStream result = new ByteArrayOutputStream();
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = inputStream.read(buffer)) != -1) {
-                    result.write(buffer, 0, length);
-                }
-                return result.toString(StandardCharsets.UTF_8);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            throw new UnsupportedOperationException("Obtaining named parameter '"+name+"' from body is not supported");
         }
 
         @Override
@@ -176,7 +166,6 @@ public interface OriginFacade {
                     if (routerContext.getParameters().containsKey(name)) {
                         return routerContext.getParameters().get(name);
                     }
-                    return BODY.getString(name, routerContext, httpRequest);
                 default:
                     return value;
             }
