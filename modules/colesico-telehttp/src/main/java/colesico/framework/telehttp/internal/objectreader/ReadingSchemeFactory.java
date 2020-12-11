@@ -43,7 +43,7 @@ public class ReadingSchemeFactory {
                 String paramName = getParamName(namePrefix, field);
                 Type fieldType = field.getGenericType();
                 Method setter = getSetter(objectClass, fieldType, field.getName());
-                HttpTeleReader<T, HttpTRContext> reader = getReader(fieldType);
+                HttpTeleReader<T, HttpTRContext> reader = findReader(fieldType);
 
                 if (reader != null) {
                     ReadingScheme.ValueField valueField = new ReadingScheme.ValueField(paramName, setter, reader);
@@ -60,8 +60,8 @@ public class ReadingSchemeFactory {
         }
     }
 
-    protected <T> HttpTeleReader<T, HttpTRContext> getReader(Type valueType) {
-        HttpTeleReader reader = teleFactory.getReader(HttpTeleReader.class, valueType);
+    protected <T> HttpTeleReader<T, HttpTRContext> findReader(Type valueType) {
+        HttpTeleReader reader = teleFactory.findReader(HttpTeleReader.class, valueType);
         return reader;
     }
 
