@@ -55,7 +55,7 @@ public class RestApi {
      * GET http://localhost:8080/rest-api/find?id=1
      */
     @Route("find")
-    public User get(Long id) {
+    public User get(long id) {
         return new User(id, "Katherine");
     }
 
@@ -63,7 +63,7 @@ public class RestApi {
      * POST  http://localhost:8080/rest-api/save +  data {"id":1,"name":"Anne"}
      */
     @RequestMethod(HttpMethod.POST)
-    public Long save(User user) {
+    public long save(User user) {
         return user.getId();
     }
 

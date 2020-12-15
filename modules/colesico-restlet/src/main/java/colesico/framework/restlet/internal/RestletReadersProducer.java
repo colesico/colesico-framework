@@ -59,6 +59,12 @@ public class RestletReadersProducer {
     }
 
     @Singleton
+    @Classed(boolean.class)
+    public RestletTeleReader getBoolReader(BooleanReader impl) {
+        return RestletReaderProxy.of(impl);
+    }
+
+    @Singleton
     @Classed(String.class)
     public RestletTeleReader getStringReader(StringReader impl) {
         return RestletReaderProxy.of(impl);
@@ -71,14 +77,32 @@ public class RestletReadersProducer {
     }
 
     @Singleton
+    @Classed(byte.class)
+    public RestletTeleReader getBtReader(ByteReader impl) {
+        return RestletReaderProxy.of(impl);
+    }
+
+    @Singleton
     @Classed(Short.class)
     public RestletTeleReader getShortReader(ShortReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
+    @Classed(short.class)
+    public RestletTeleReader getShtReader(ShortReader impl) {
+        return RestletReaderProxy.of(impl);
+    }
+
+    @Singleton
     @Classed(Integer.class)
     public RestletTeleReader getIntegerReader(IntegerReader impl) {
+        return RestletReaderProxy.of(impl);
+    }
+
+    @Singleton
+    @Classed(int.class)
+    public RestletTeleReader getIntReader(IntegerReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
@@ -95,6 +119,12 @@ public class RestletReadersProducer {
     }
 
     @Singleton
+    @Classed(long.class)
+    public RestletTeleReader getLngReader(LongReader impl) {
+        return RestletReaderProxy.of(impl);
+    }
+
+    @Singleton
     @Classed(OptionalLong.class)
     public RestletTeleReader getOptionalLongReader(OptionalLongReader impl) {
         return RestletReaderProxy.of(impl);
@@ -107,8 +137,20 @@ public class RestletReadersProducer {
     }
 
     @Singleton
+    @Classed(float.class)
+    public RestletTeleReader getFltReader(FloatReader impl) {
+        return RestletReaderProxy.of(impl);
+    }
+
+    @Singleton
     @Classed(Double.class)
     public RestletTeleReader getDoubleReader(DoubleReader impl) {
+        return RestletReaderProxy.of(impl);
+    }
+
+    @Singleton
+    @Classed(double.class)
+    public RestletTeleReader getDblReader(DoubleReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
