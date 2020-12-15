@@ -22,6 +22,7 @@ import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.ioc.production.Produce;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
 import java.util.List;
 
 /**
@@ -38,7 +39,7 @@ public class DefaultFactoryElement extends FactoryElement {
                                  ConditionElement condition,
                                  Boolean polyproduce,
                                  String named,
-                                 ClassType classed,
+                                 ClassifierType classed,
                                  boolean notifyPostProduce,
                                  boolean notifyPostConstruct,
                                  List<MethodElement> postConstructListeners,

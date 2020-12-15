@@ -22,6 +22,7 @@ import colesico.framework.ioc.listener.ListenersControl;
 import colesico.framework.ioc.production.KeyType;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +52,7 @@ abstract public class FactoryElement {
     /**
      * {@link colesico.framework.ioc.production.Classed}
      */
-    protected final ClassType classed;
+    protected final ClassifierType classed;
 
     /**
      * {@link ListenersControl#postProduce()}
@@ -82,7 +83,7 @@ abstract public class FactoryElement {
                           Boolean polyproduce,
                           PPLDefinitionElement postProduce,
                           String named,
-                          ClassType classed,
+                          ClassifierType classed,
                           boolean notifyPostProduce,
                           boolean notifyPostConstruct,
                           List<MethodElement> postConstructListeners
@@ -147,7 +148,7 @@ abstract public class FactoryElement {
         return named;
     }
 
-    public ClassType getClassed() {
+    public ClassifierType getClassed() {
         return classed;
     }
 

@@ -42,7 +42,7 @@ public class InjectableElement {
     private final String named;
 
     //  @Classed value as class names
-    private final ClassType classed;
+    private final ClassifierType classed;
 
     public InjectableElement(FactoryElement parentFactory,
                              ParameterElement originParameter,
@@ -51,7 +51,7 @@ public class InjectableElement {
                              MessageKind messageKind,
                              Boolean optional,
                              String named,
-                             ClassType classed) {
+                             ClassifierType classed) {
 
         this.parentFactory = parentFactory;
         this.originParameter = originParameter;
@@ -91,7 +91,7 @@ public class InjectableElement {
         return named;
     }
 
-    public ClassType getClassed() {
+    public ClassifierType getClassed() {
         return classed;
     }
 

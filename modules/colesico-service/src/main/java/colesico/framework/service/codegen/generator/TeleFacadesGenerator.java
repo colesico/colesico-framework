@@ -70,7 +70,7 @@ public class TeleFacadesGenerator {
 
     protected CodeBlock generateParamValue(TeleParamElement teleParam) {
         // detect param type considering generics
-        TypeMirror paramType = teleParam.getOriginParam().asClassType().unwrap();
+        TypeMirror paramType = teleParam.getOriginParam().getOriginType();
 
         CodeBlock ctx = teleParam.getReadingContextCode();
         // Generates code like this: dataPot.read(ParamType.class, new Context(...));

@@ -34,15 +34,6 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
         MethodElement method = teleMethod.getServiceMethod().getOriginMethod();
         int paramIndex = 0;
         for (ParameterElement param : method.getParameters()) {
-            if (param.asClassType() == null) {
-                throw CodegenException.of()
-                        .message("Unsupported parameter type for tele-method "
-                                + method.getParentClass().getName() + "."
-                                + method.getName() + "(..." + param.getOriginType().toString() + " " + param.getName() + "...)")
-                        .element(param.unwrap())
-                        .build();
-            }
-
             TeleParamElement teleParam = new TeleParamElement(param, paramIndex);
             teleMethod.addParameter(teleParam);
             context.getModulatorKit().notifyTeleParamParsed(teleParam);

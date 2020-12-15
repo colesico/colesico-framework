@@ -12,7 +12,6 @@ import colesico.framework.rpc.codegen.model.RpcApiParamElement;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
 import java.util.List;
 
 public class RpcApiParser extends FrameworkAbstractParser {
@@ -36,8 +35,9 @@ public class RpcApiParser extends FrameworkAbstractParser {
 
         List<MethodElement> methods = originIface.getMethods();
         for (MethodElement method : methods) {
-            if (method.unwrap().getReturnType().getKind() != TypeKind.DECLARED) {
-                throw CodegenException.of().message("Unsupported return type: " + method.unwrap().getReturnType() + ". Declared types support only")
+            TypeKind retTypeKind = method.unwrap().getReturnType().getKind();
+            if (!(retTypeKind == TypeKind.DECLARED || retTypeKind == TypeKind.ARRAY)) {
+                throw CodegenException.of().message("Unsupported return type: " + method.unwrap().getReturnType() + ". Declared or array types support only")
                         .element(method.unwrap()).build();
             }
             RpcName rpcMethodName = method.unwrap().getAnnotation(RpcName.class);
