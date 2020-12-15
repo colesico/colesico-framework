@@ -21,8 +21,6 @@ package colesico.framework.security;
  */
 public interface SecurityKit {
 
-    String REQUIRE_PRINCIPAL_METHOD = "requirePrincipal";
-
     /**
      * Returns active valid principal if it present.
      *
