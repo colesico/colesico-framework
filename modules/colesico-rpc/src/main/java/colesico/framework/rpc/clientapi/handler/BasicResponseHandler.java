@@ -29,13 +29,21 @@ public class BasicResponseHandler implements RpcResponseHandler<BasicEnvelope> {
     @Override
     public void onResponse(BasicEnvelope response) {
         if (response.getPrincipal() != null) {
-            Principal principal = principalSerializer.deserialize(response.getPrincipal());
-            securityKit.setPrincipal(principal);
+            if (response.getPrincipal().length == 0) {
+                securityKit.setPrincipal(null);
+            } else {
+                Principal principal = principalSerializer.deserialize(response.getPrincipal());
+                securityKit.setPrincipal(principal);
+            }
         }
 
         if (response.getProfile() != null) {
-            Profile profile = profileSerializer.deserialize(response.getProfile());
-            profileKit.setProfile(profile);
+            if (response.getProfile().length == 0) {
+                profileKit.setProfile(null);
+            } else {
+                Profile profile = profileSerializer.deserialize(response.getProfile());
+                profileKit.setProfile(profile);
+            }
         }
     }
 }

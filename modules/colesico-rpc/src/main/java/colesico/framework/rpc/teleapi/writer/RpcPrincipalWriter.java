@@ -20,6 +20,10 @@ public class RpcPrincipalWriter implements RpcTeleWriter<Principal> {
     @Override
     public void write(Principal value, RpcTWContext context) {
         BasicEnvelope env = (BasicEnvelope) context.getResponse();
-        env.setPrincipal(principalSerializer.serialize(value));
+        if (value != null) {
+            env.setPrincipal(principalSerializer.serialize(value));
+        } else {
+            env.setPrincipal(new byte[0]);
+        }
     }
 }
