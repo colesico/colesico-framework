@@ -40,20 +40,23 @@ public class DefaultSecurityKit implements SecurityKit {
     }
 
     /**
+     * Read principal from data port
      * Override this method to get more specific principal read control
      * This method is used to fine grained control of user principal: check validity, enrich with extra data, e.t.c.
      *
      * @return Valid principal or null
      */
-    protected Principal principalReadControl(DataPort<Object, Object> port) {
+    protected Principal readPrincipal() {
+        DataPort<Object, Object> port = dataPortProv.get();
         return port.read(Principal.class, null);
     }
 
     /**
+     * Write principal to data port.
      * Override this method to get more specific principal write control.
-     * This method is used to fine grain write control of user principal.
      */
-    protected void principalWriteControl(DataPort<Object, Object> port, Principal principal) {
+    protected void writePrincipal(Principal principal) {
+        DataPort port = dataPortProv.get();
         port.write(Principal.class, principal, null);
     }
 
@@ -66,9 +69,8 @@ public class DefaultSecurityKit implements SecurityKit {
         }
 
         // No principal in cache. Retrieve principal from client
-        DataPort<Object, Object> port = dataPortProv.get();
 
-        Principal principal = principalReadControl(port);
+        Principal principal = readPrincipal();
 
         // Store principal to cache and return
         threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(principal));
@@ -78,8 +80,7 @@ public class DefaultSecurityKit implements SecurityKit {
 
     @Override
     public final void setPrincipal(Principal principal) {
-        DataPort port = dataPortProv.get();
-        principalWriteControl(port, principal);
+        writePrincipal(principal);
     }
 
     public static final class PrincipalHolder {

@@ -38,11 +38,21 @@ public class DefaultProfileKit implements ProfileKit {
         this.dataPortProv = dataPortProv;
     }
 
-    protected Profile profileReadControl(DataPort<Object, Object> port) {
+    /**
+     * Reads profile from data port.
+     * Override this method to get more fine grained reading control
+     */
+    protected Profile readProfile() {
+        DataPort<Object, Object> port = dataPortProv.get();
         return port.read(Profile.class, null);
     }
 
-    protected void profileWriteControl(DataPort port, Profile profile) {
+    /**
+     * Writes profile to data port
+     * Override this method to get more fine grained writing control
+     */
+    protected void writeProfile(Profile profile) {
+        DataPort port = dataPortProv.get();
         port.write(Profile.class, profile, null);
     }
 
@@ -54,8 +64,7 @@ public class DefaultProfileKit implements ProfileKit {
             return (P) holder.getProfile();
         }
 
-        DataPort port = dataPortProv.get();
-        Profile profile = profileReadControl(port);
+        Profile profile = readProfile();
 
         // Cache the profile
         threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
@@ -64,8 +73,7 @@ public class DefaultProfileKit implements ProfileKit {
 
     @Override
     public final void setProfile(Profile profile) {
-        DataPort port = dataPortProv.get();
-        profileWriteControl(port, profile);
+        writeProfile(profile);
     }
 
     public static final class ProfileHolder {
