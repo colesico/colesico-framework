@@ -5,9 +5,9 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.rpc.RpcError;
-import colesico.framework.rpc.clientapi.RpcErrorHandler;
-import colesico.framework.rpc.clientapi.RpcErrorHandlerFactory;
+import colesico.framework.rpc.clientapi.*;
 import colesico.framework.rpc.clientapi.handler.BasicRequestHandler;
+import colesico.framework.rpc.clientapi.handler.BasicResponseHandler;
 import colesico.framework.rpc.clientapi.handler.BasicRpcErrorHandler;
 import colesico.framework.rpc.rpcgear.kryo.KryoClient;
 import colesico.framework.rpc.rpcgear.kryo.KryoExchange;
@@ -16,8 +16,6 @@ import colesico.framework.rpc.teleapi.RpcExchange;
 import colesico.framework.rpc.teleapi.RpcTeleDriver;
 import colesico.framework.rpc.teleapi.RpcTeleReader;
 import colesico.framework.rpc.teleapi.RpcTeleWriter;
-import colesico.framework.rpc.clientapi.RpcRequestHandler;
-import colesico.framework.rpc.clientapi.RpcClient;
 import colesico.framework.rpc.teleapi.reader.RpcPrincipalReader;
 import colesico.framework.rpc.teleapi.reader.RpcProfileReader;
 import colesico.framework.rpc.teleapi.writer.RpcPrincipalWriter;
@@ -31,18 +29,23 @@ import javax.inject.Singleton;
 @Produce(RpcDispatcher.class)
 @Produce(RpcTeleDriverImpl.class)
 
-@Produce(KryoSerializer.class)
-@Produce(KryoClient.class)
-@Produce(KryoExchange.class)
-
+// Readers and writers
 @Produce(RpcPrincipalReader.class)
 @Produce(RpcPrincipalWriter.class)
 
 @Produce(RpcProfileReader.class)
 @Produce(RpcProfileWriter.class)
 
+// Request/Response/Error handlers
 @Produce(value = BasicRequestHandler.class, keyType = RpcRequestHandler.class, polyproduce = true)
+@Produce(value = BasicResponseHandler.class, keyType = RpcResponseHandler.class, polyproduce = true)
 @Produce(BasicRpcErrorHandler.class)
+
+// Kryo gear
+@Produce(KryoSerializer.class)
+@Produce(KryoClient.class)
+@Produce(KryoExchange.class)
+
 public class RpcProducer {
 
     @Singleton

@@ -15,7 +15,7 @@ public class RpcErrorHandlerFactory {
         this.ioc = ioc;
     }
 
-    public <E extends RpcError> RpcErrorHandler<E> getErrorHandler(Class<E> error) {
-        return ioc.instance(new ClassedKey<>(RpcErrorHandler.class.getCanonicalName(), error.getCanonicalName()), null);
+    public <E extends RpcError> RpcErrorHandler<E> getErrorHandler(Class<E> errorClass) {
+        return ioc.instance(new ClassedKey<>(RpcErrorHandler.class.getCanonicalName(), errorClass.getCanonicalName()), null);
     }
 }

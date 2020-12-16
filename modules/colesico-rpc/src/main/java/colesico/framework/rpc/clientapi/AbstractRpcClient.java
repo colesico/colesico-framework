@@ -28,15 +28,18 @@ abstract public class AbstractRpcClient implements RpcClient {
     private final EndpointsRegistryImpl endpoints = new EndpointsRegistryImpl();
 
     private final List<RpcRequestHandler> requestHandlers = new ArrayList<>();
+    private final List<RpcResponseHandler> responseHandlers = new ArrayList<>();
 
     private final RpcErrorHandlerFactory errorHandlerFactory;
 
     public AbstractRpcClient(Polysupplier<RpcEndpointsPrototype> endpointsConf,
                              Polysupplier<RpcRequestHandler> requestHnd,
+                             Polysupplier<RpcResponseHandler> responseHnd,
                              RpcErrorHandlerFactory errorHndFac) {
 
         endpointsConf.forEach(c -> c.addEndpoints(endpoints), null);
         requestHnd.forEach(c -> this.requestHandlers.add(c), null);
+        responseHnd.forEach(c -> this.responseHandlers.add(c), null);
 
         this.errorHandlerFactory = errorHndFac;
 
@@ -82,14 +85,19 @@ abstract public class AbstractRpcClient implements RpcClient {
         InputStream responseStream = endpointResp.getInputStream();
 
         // Deserialize response
-        RpcResponse<R> rpcResponse = deserialize(responseStream, responseType);
+        RpcResponse<R> response = deserialize(responseStream, responseType);
 
         // Handle error
-        if (rpcResponse.getError() != null) {
+        if (response.getError() != null) {
             throw createException(endpointResp.getError());
         }
 
-        return rpcResponse;
+        // Invoke response handlers
+        for (RpcResponseHandler respHandler : responseHandlers) {
+            respHandler.onResponse(response);
+        }
+
+        return response;
     }
 
     protected RuntimeException createException(RpcError err) {

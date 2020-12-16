@@ -57,13 +57,6 @@ public class DefaultSecurityKit implements SecurityKit {
         port.write(Principal.class, principal, null);
     }
 
-    /**
-     * Override this method to get more specific authority control
-     */
-    protected boolean hasAuthorityControl(Principal principal, String... authority) {
-        return principal != null;
-    }
-
     @Override
     public final <P extends Principal> P getPrincipal() {
         // Check thread cache at first
