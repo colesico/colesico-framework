@@ -23,6 +23,7 @@ import colesico.framework.teleapi.DataPort;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.Objects;
 
 /**
  * Security kit default implementation.
@@ -40,24 +41,22 @@ public class DefaultSecurityKit implements SecurityKit {
     }
 
     /**
-     * Read principal from data port
-     * Override this method to get more specific principal read control
-     * This method is used to fine grained control of user principal: check validity, enrich with extra data, e.t.c.
+     * Controls the principal read from the data port.
+     * Override this method to get more specific control.
+     * This method is used to fine grained control of principal: check validity, enrich with extra data, e.t.c.
      *
      * @return Valid principal or null
      */
-    protected Principal readPrincipal() {
-        DataPort<Object, Object> port = dataPortProv.get();
-        return port.read(Principal.class, null);
+    protected Principal principalInputControl(Principal principal) {
+        return principal;
     }
 
     /**
-     * Write principal to data port.
-     * Override this method to get more specific principal write control.
+     * Controls the principal before write to the data port.
+     * Override this method to get more specific control.
      */
-    protected void writePrincipal(Principal principal) {
-        DataPort port = dataPortProv.get();
-        port.write(Principal.class, principal, null);
+    protected Principal principalOutputControl(Principal principal) {
+        return principal;
     }
 
     @Override
@@ -68,11 +67,21 @@ public class DefaultSecurityKit implements SecurityKit {
             return (P) holder.getPrincipal();
         }
 
-        // No principal in cache. Retrieve principal from client
+        // No principal in cache. Retrieve principal from data port
 
-        Principal principal = readPrincipal();
+        DataPort<Object, Object> port = dataPortProv.get();
+        Principal principal = port.read(Principal.class, null);
 
-        // Store principal to cache and return
+        // If principal provided, go control it
+        if (principal != null) {
+            Principal p = principalInputControl(principal);
+            if (!Objects.equals(principal, p)) {
+                port.write(Principal.class, p, null);
+            }
+            principal = p;
+        }
+
+        // Store principal to cache
         threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(principal));
 
         return (P) principal;
@@ -80,7 +89,12 @@ public class DefaultSecurityKit implements SecurityKit {
 
     @Override
     public final void setPrincipal(Principal principal) {
-        writePrincipal(principal);
+        DataPort port = dataPortProv.get();
+        if (principal != null) {
+            principal = principalOutputControl(principal);
+        }
+
+        port.write(Principal.class, principal, null);
     }
 
     public static final class PrincipalHolder {
