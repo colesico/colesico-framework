@@ -6,6 +6,7 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.clientapi.*;
+import colesico.framework.rpc.clientapi.handler.ApplicationErrorHandler;
 import colesico.framework.rpc.clientapi.handler.BasicRequestHandler;
 import colesico.framework.rpc.clientapi.handler.BasicResponseHandler;
 import colesico.framework.rpc.clientapi.handler.BasicRpcErrorHandler;
@@ -18,9 +19,11 @@ import colesico.framework.rpc.teleapi.RpcTeleReader;
 import colesico.framework.rpc.teleapi.RpcTeleWriter;
 import colesico.framework.rpc.teleapi.reader.RpcPrincipalReader;
 import colesico.framework.rpc.teleapi.reader.RpcProfileReader;
+import colesico.framework.rpc.teleapi.writer.ApplicationExceptionWriter;
 import colesico.framework.rpc.teleapi.writer.RpcPrincipalWriter;
 import colesico.framework.rpc.teleapi.writer.RpcProfileWriter;
 import colesico.framework.security.Principal;
+import colesico.framework.service.ApplicationException;
 
 import javax.inject.Singleton;
 
@@ -36,10 +39,13 @@ import javax.inject.Singleton;
 @Produce(RpcProfileReader.class)
 @Produce(RpcProfileWriter.class)
 
+@Produce(ApplicationExceptionWriter.class)
+
 // Request/Response/Error handlers
 @Produce(value = BasicRequestHandler.class, keyType = RpcRequestHandler.class, polyproduce = true)
 @Produce(value = BasicResponseHandler.class, keyType = RpcResponseHandler.class, polyproduce = true)
 @Produce(BasicRpcErrorHandler.class)
+@Produce(ApplicationErrorHandler.class)
 
 // Kryo gear
 @Produce(KryoSerializer.class)
@@ -91,6 +97,12 @@ public class RpcProducer {
         return impl;
     }
 
+    @Singleton
+    @Classed(ApplicationException.class)
+    public RpcTeleWriter getApplicationExceptionWriter(ApplicationExceptionWriter impl) {
+        return impl;
+    }
+
     // Error handlers
 
     @Singleton
@@ -98,4 +110,11 @@ public class RpcProducer {
     public RpcErrorHandler getRpcErrorHandler(BasicRpcErrorHandler impl) {
         return impl;
     }
+
+    @Singleton
+    @Classed(ApplicationExceptionWriter.ApplicationError.class)
+    public RpcErrorHandler getApplicationErrorHandler(ApplicationErrorHandler impl) {
+        return impl;
+    }
+
 }

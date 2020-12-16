@@ -8,7 +8,8 @@ public class RpcError {
     public RpcError() {
     }
 
-    private RpcError(String exceptionType, String message) {
+    public RpcError(String exceptionType, String message) {
+        this.exceptionType = exceptionType;
         this.message = message;
     }
 
