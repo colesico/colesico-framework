@@ -22,13 +22,20 @@ package colesico.framework.security;
 public interface SecurityKit {
 
     /**
-     * Returns active valid principal if it present.
-     *
-     * @return null if principal is invalid or absent.
+     * Returns active valid principal if it present or null if absent.
+     * Can throws an exception in case the principal is inconsistent
      */
     <P extends Principal> P getPrincipal();
 
+    /**
+     * Sets current principal and writes it to the data-port
+     */
     void setPrincipal(Principal principal);
+
+    /**
+     * Invokes given closure as specified principal
+     */
+    <T> T invokeAs(Invocable<T> invocable, Principal principal);
 
     /**
      * Checks the presence of active valid principal.
@@ -39,6 +46,11 @@ public interface SecurityKit {
         if (principal == null) {
             throw new PrincipalRequiredException();
         }
+    }
+
+    @FunctionalInterface
+    interface Invocable<T> {
+        T invoke();
     }
 
 }

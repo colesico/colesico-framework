@@ -95,6 +95,18 @@ public class DefaultSecurityKit implements SecurityKit {
         }
 
         port.write(Principal.class, principal, null);
+        threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(principal));
+    }
+
+    @Override
+    public <T> T invokeAs(Invocable<T> invocable, Principal principal) {
+        PrincipalHolder holder = threadScope.get(PrincipalHolder.SCOPE_KEY);
+        threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(principal));
+        try {
+            return invocable.invoke();
+        } finally {
+            threadScope.put(PrincipalHolder.SCOPE_KEY, holder);
+        }
     }
 
     public static final class PrincipalHolder {
