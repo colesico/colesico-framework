@@ -19,8 +19,13 @@ public class RpcProfileReader implements RpcTeleReader<Profile> {
 
     @Override
     public Profile read(RpcTRContext context) {
-        BasicEnvelope env = (BasicEnvelope) context.getRequest();
-        Profile profile = profileSerializer.deserialize(env.getProfile());
+        Profile profile;
+        if (context.getValueGetter() != null) {
+            profile = (Profile) context.getValueGetter().get(context.getRequest());
+        } else {
+            BasicEnvelope env = (BasicEnvelope) context.getRequest();
+            profile = profileSerializer.deserialize(env.getProfile());
+        }
         return profile;
     }
 }

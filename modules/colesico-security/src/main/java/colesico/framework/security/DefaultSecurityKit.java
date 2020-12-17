@@ -40,6 +40,10 @@ public class DefaultSecurityKit implements SecurityKit {
         this.dataPortProv = dataPortProv;
     }
 
+    protected boolean isInputControlRequired(Principal principal) {
+        return true;
+    }
+
     /**
      * Controls the principal read from the data port.
      * Override this method to get more specific control.
@@ -47,17 +51,22 @@ public class DefaultSecurityKit implements SecurityKit {
      *
      * @return Valid principal or null
      */
-    protected Principal principalInputControl(Principal principal) {
+    protected Principal controlInputPrincipal(Principal principal) {
         return principal;
+    }
+
+    protected boolean isOutputControlRequired(Principal principal) {
+        return true;
     }
 
     /**
      * Controls the principal before write to the data port.
      * Override this method to get more specific control.
      */
-    protected Principal principalOutputControl(Principal principal) {
+    protected Principal controlOutputPrincipal(Principal principal) {
         return principal;
     }
+
 
     @Override
     public final <P extends Principal> P getPrincipal() {
@@ -65,6 +74,10 @@ public class DefaultSecurityKit implements SecurityKit {
         PrincipalHolder holder = threadScope.get(PrincipalHolder.SCOPE_KEY);
         if (holder != null) {
             return (P) holder.getPrincipal();
+        } else {
+            // Create temporary empty principal holder
+            // for possible subsequent recursive getPrincipal() invocations
+            threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(null));
         }
 
         // No principal in cache. Retrieve principal from data port
@@ -72,9 +85,9 @@ public class DefaultSecurityKit implements SecurityKit {
         DataPort<Object, Object> port = dataPortProv.get();
         Principal principal = port.read(Principal.class, null);
 
-        // If principal provided, go control it
-        if (principal != null) {
-            Principal p = principalInputControl(principal);
+        // Is control needed?
+        if ((principal != null) && isInputControlRequired(principal)) {
+            Principal p = controlInputPrincipal(principal);
             if (!Objects.equals(principal, p)) {
                 port.write(Principal.class, p, null);
             }
@@ -90,8 +103,8 @@ public class DefaultSecurityKit implements SecurityKit {
     @Override
     public final void setPrincipal(Principal principal) {
         DataPort port = dataPortProv.get();
-        if (principal != null) {
-            principal = principalOutputControl(principal);
+        if ((principal != null) && isOutputControlRequired(principal)) {
+            principal = controlOutputPrincipal(principal);
         }
 
         port.write(Principal.class, principal, null);
