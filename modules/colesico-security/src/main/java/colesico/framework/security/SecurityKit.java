@@ -22,13 +22,17 @@ package colesico.framework.security;
 public interface SecurityKit {
 
     /**
-     * Returns active valid principal if it present or null if absent.
-     * Can throws an exception in case the principal is inconsistent
+     * Returns the valid principal associated with the current process if the principal is present or null if absent.
+     * Method must retrieve the principal from any source (eg from the data port)
+     * then validate, enrich (if needed) and cache it for a subsequent quick return within the current thread.
+     * Can throws an exception in case the principal is inconsistent.
      */
     <P extends Principal> P getPrincipal();
 
     /**
-     * Sets current principal and writes it to the data-port
+     * Associate the principal with the current process.
+     * The method can store the principal to any source (eg write it to the data port to
+     * store it on remote client) in order to return it on subsequent requests.
      */
     void setPrincipal(Principal principal);
 

@@ -23,7 +23,6 @@ import colesico.framework.teleapi.DataPort;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Objects;
 
 /**
  * Security kit default implementation.
@@ -41,7 +40,7 @@ public class DefaultSecurityKit implements SecurityKit {
     }
 
     protected boolean isInputControlRequired(Principal principal) {
-        return true;
+        return false;
     }
 
     /**
@@ -51,12 +50,12 @@ public class DefaultSecurityKit implements SecurityKit {
      *
      * @return Valid principal or null
      */
-    protected Principal controlInputPrincipal(Principal principal) {
-        return principal;
+    protected InputControlResult controlInputPrincipal(Principal principal) {
+        throw new UnsupportedOperationException("No default implementation");
     }
 
     protected boolean isOutputControlRequired(Principal principal) {
-        return true;
+        return false;
     }
 
     /**
@@ -64,12 +63,12 @@ public class DefaultSecurityKit implements SecurityKit {
      * Override this method to get more specific control.
      */
     protected Principal controlOutputPrincipal(Principal principal) {
-        return principal;
+        throw new UnsupportedOperationException("No default implementation");
     }
 
 
     @Override
-    public final <P extends Principal> P getPrincipal() {
+    public <P extends Principal> P getPrincipal() {
         // Check thread cache at first
         PrincipalHolder holder = threadScope.get(PrincipalHolder.SCOPE_KEY);
         if (holder != null) {
@@ -86,12 +85,12 @@ public class DefaultSecurityKit implements SecurityKit {
         Principal principal = port.read(Principal.class, null);
 
         // Is control needed?
-        if ((principal != null) && isInputControlRequired(principal)) {
-            Principal p = controlInputPrincipal(principal);
-            if (!Objects.equals(principal, p)) {
-                port.write(Principal.class, p, null);
+        if (isInputControlRequired(principal)) {
+            InputControlResult res = controlInputPrincipal(principal);
+            principal = res.getPrincipal();
+            if (res.isUpdateOnClient()) {
+                port.write(Principal.class, principal, null);
             }
-            principal = p;
         }
 
         // Store principal to cache
@@ -101,9 +100,9 @@ public class DefaultSecurityKit implements SecurityKit {
     }
 
     @Override
-    public final void setPrincipal(Principal principal) {
+    public void setPrincipal(Principal principal) {
         DataPort port = dataPortProv.get();
-        if ((principal != null) && isOutputControlRequired(principal)) {
+        if (isOutputControlRequired(principal)) {
             principal = controlOutputPrincipal(principal);
         }
 
@@ -133,6 +132,44 @@ public class DefaultSecurityKit implements SecurityKit {
         public Principal getPrincipal() {
             return principal;
         }
+    }
+
+    public static final class InputControlResult {
+
+        /**
+         * Actual principal to be used
+         */
+        private Principal principal = null;
+
+        /**
+         * Whether or not to update the principal on the client
+         */
+        private boolean updateOnClient = false;
+
+        public InputControlResult() {
+        }
+
+        public InputControlResult(Principal principal, boolean updateOnClient) {
+            this.principal = principal;
+            this.updateOnClient = updateOnClient;
+        }
+
+        public Principal getPrincipal() {
+            return principal;
+        }
+
+        public void setPrincipal(Principal principal) {
+            this.principal = principal;
+        }
+
+        public boolean isUpdateOnClient() {
+            return updateOnClient;
+        }
+
+        public void setUpdateOnClient(boolean updateOnClient) {
+            this.updateOnClient = updateOnClient;
+        }
+
     }
 
 }

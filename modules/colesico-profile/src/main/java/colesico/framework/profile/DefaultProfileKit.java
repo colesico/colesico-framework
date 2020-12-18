@@ -22,7 +22,6 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.teleapi.DataPort;
 
 import javax.inject.Provider;
-import java.util.Objects;
 
 /**
  * Profile kit default implementation.
@@ -40,7 +39,7 @@ public class DefaultProfileKit implements ProfileKit {
     }
 
     protected boolean isInputControlRequired(Profile profile) {
-        return true;
+        return false;
     }
 
     /**
@@ -50,12 +49,12 @@ public class DefaultProfileKit implements ProfileKit {
      *
      * @return Valid profile or null
      */
-    protected Profile controlInputProfile(Profile profile) {
-        return profile;
+    protected InputControlResult controlInputProfile(Profile profile) {
+        throw new UnsupportedOperationException("Default control not implemented");
     }
 
     protected boolean isOutputControlRequired(Profile profile) {
-        return true;
+        return false;
     }
 
     /**
@@ -63,7 +62,7 @@ public class DefaultProfileKit implements ProfileKit {
      * Override this method to get more specific control.
      */
     protected Profile controlOutputProfile(Profile profile) {
-        return profile;
+        throw new UnsupportedOperationException("Default control not implemented");
     }
 
     @Override
@@ -84,12 +83,13 @@ public class DefaultProfileKit implements ProfileKit {
         Profile profile = port.read(Profile.class, null);
 
         // Is control needed?
-        if ((profile != null) && isInputControlRequired(profile)) {
-            Profile p = controlInputProfile(profile);
-            if (!Objects.equals(profile, p)) {
-                port.write(Profile.class, p, null);
+
+        if (isInputControlRequired(profile)) {
+            InputControlResult res = controlInputProfile(profile);
+            profile = res.getProfile();
+            if (res.isUpdateOnClient()) {
+                port.write(Profile.class, profile, null);
             }
-            profile = p;
         }
 
         // Store profile to cache
@@ -101,7 +101,7 @@ public class DefaultProfileKit implements ProfileKit {
     @Override
     public final void setProfile(Profile profile) {
         DataPort port = dataPortProv.get();
-        if ((profile != null) && isOutputControlRequired(profile)) {
+        if (isOutputControlRequired(profile)) {
             profile = controlOutputProfile(profile);
         }
 
@@ -121,5 +121,43 @@ public class DefaultProfileKit implements ProfileKit {
         public Profile getProfile() {
             return profile;
         }
+    }
+
+    public static final class InputControlResult {
+
+        /**
+         * Actual profile to be used
+         */
+        private Profile profile = null;
+
+        /**
+         * Whether or not to update the profile on the client
+         */
+        private boolean updateOnClient = false;
+
+        public InputControlResult() {
+        }
+
+        public InputControlResult(Profile profile, boolean updateOnClient) {
+            this.profile = profile;
+            this.updateOnClient = updateOnClient;
+        }
+
+        public Profile getProfile() {
+            return profile;
+        }
+
+        public void setProfile(Profile profile) {
+            this.profile = profile;
+        }
+
+        public boolean isUpdateOnClient() {
+            return updateOnClient;
+        }
+
+        public void setUpdateOnClient(boolean updateOnClient) {
+            this.updateOnClient = updateOnClient;
+        }
+
     }
 }
