@@ -22,6 +22,7 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.teleapi.DataPort;
 
 import javax.inject.Provider;
+import java.util.Objects;
 
 /**
  * Profile kit default implementation.
@@ -38,22 +39,31 @@ public class DefaultProfileKit implements ProfileKit {
         this.dataPortProv = dataPortProv;
     }
 
-    /**
-     * Reads profile from data port.
-     * Override this method to get more fine grained reading control
-     */
-    protected Profile readProfile() {
-        DataPort<Object, Object> port = dataPortProv.get();
-        return port.read(Profile.class, null);
+    protected boolean isInputControlRequired(Profile profile) {
+        return true;
     }
 
     /**
-     * Writes profile to data port
-     * Override this method to get more fine grained writing control
+     * Controls the profile read from the data port.
+     * Override this method to get more specific control.
+     * This method is used to fine grained control of profile: check validity, enrich with extra data, e.t.c.
+     *
+     * @return Valid profile or null
      */
-    protected void writeProfile(Profile profile) {
-        DataPort port = dataPortProv.get();
-        port.write(Profile.class, profile, null);
+    protected Profile controlInputProfile(Profile profile) {
+        return profile;
+    }
+
+    protected boolean isOutputControlRequired(Profile profile) {
+        return true;
+    }
+
+    /**
+     * Controls the profile before write to the data port.
+     * Override this method to get more specific control.
+     */
+    protected Profile controlOutputProfile(Profile profile) {
+        return profile;
     }
 
     @Override
@@ -62,18 +72,41 @@ public class DefaultProfileKit implements ProfileKit {
         ProfileHolder holder = threadScope.get(ProfileHolder.SCOPE_KEY);
         if (holder != null) {
             return (P) holder.getProfile();
+        } else {
+            // Create temporary empty profile holder
+            // for possible subsequent recursive getProfile() invocations
+            threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(null));
         }
 
-        Profile profile = readProfile();
+        // No profile in cache. Retrieve profile from data port
 
-        // Cache the profile
+        DataPort<Object, Object> port = dataPortProv.get();
+        Profile profile = port.read(Profile.class, null);
+
+        // Is control needed?
+        if ((profile != null) && isInputControlRequired(profile)) {
+            Profile p = controlInputProfile(profile);
+            if (!Objects.equals(profile, p)) {
+                port.write(Profile.class, p, null);
+            }
+            profile = p;
+        }
+
+        // Store profile to cache
         threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
+
         return (P) profile;
     }
 
     @Override
     public final void setProfile(Profile profile) {
-        writeProfile(profile);
+        DataPort port = dataPortProv.get();
+        if ((profile != null) && isOutputControlRequired(profile)) {
+            profile = controlOutputProfile(profile);
+        }
+
+        port.write(Profile.class, profile, null);
+        threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
     }
 
     public static final class ProfileHolder {
