@@ -154,6 +154,11 @@ public class DefaultSecurityKit implements SecurityKit {
             this.updateOnClient = updateOnClient;
         }
 
+        public InputControlResult(Principal principal) {
+            this.principal = principal;
+            this.updateOnClient = true;
+        }
+
         public Principal getPrincipal() {
             return principal;
         }

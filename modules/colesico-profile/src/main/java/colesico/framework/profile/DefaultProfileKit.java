@@ -143,6 +143,11 @@ public class DefaultProfileKit implements ProfileKit {
             this.updateOnClient = updateOnClient;
         }
 
+        public InputControlResult(Profile profile) {
+            this.profile = profile;
+            this.updateOnClient = true;
+        }
+
         public Profile getProfile() {
             return profile;
         }
