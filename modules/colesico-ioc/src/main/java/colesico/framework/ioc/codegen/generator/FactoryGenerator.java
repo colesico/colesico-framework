@@ -96,19 +96,19 @@ public class FactoryGenerator extends FrameworkAbstractGenerator {
             String factoryFieldName = getFactoryVarName(parameter);
             generateField(factoryBuilder, getFactoryTypeName(parameter), factoryFieldName);
             methodBody.addStatement("this.$N = $N.$N($L)",
-                factoryFieldName,
-                Factory.IOC_PARAM,
-                factoryMethodName,
-                keyGenerator.forInjection(parameter));
+                    factoryFieldName,
+                    Factory.IOC_PARAM,
+                    factoryMethodName,
+                    keyGenerator.forInjection(parameter));
         }
 
         // Scope prov field
         if (factoryElement.getScope().getKind() == ScopeElement.ScopeKind.CUSTOM) {
             methodBody.addStatement("this.$N = $N.$N($L)",
-                ScopedFactory.SCOPE_FACTORY_FIELD,
-                Factory.IOC_PARAM,
-                AdvancedIoc.FACTORY_METHOD,
-                keyGenerator.forScope(factoryElement.getScope().getCustomScopeClass()));
+                    ScopedFactory.SCOPE_FACTORY_FIELD,
+                    Factory.IOC_PARAM,
+                    AdvancedIoc.FACTORY_METHOD,
+                    keyGenerator.forScope(factoryElement.getScope().getCustomScopeClass()));
         }
 
         // Dynamic binding
@@ -123,8 +123,8 @@ public class FactoryGenerator extends FrameworkAbstractGenerator {
             generateField(factoryBuilder, factoryTypeName, POST_PRODUCE_FACTORY_FIELD);
             methodBody.add("// Obtain post produce listener factory:\n");
             methodBody.addStatement("this.$N = $N.$N($L)",
-                POST_PRODUCE_FACTORY_FIELD, Factory.IOC_PARAM, AdvancedIoc.FACTORY_METHOD,
-                keyGenerator.forPostProduceListener(factoryElement.getSuppliedType(), factoryElement.getNamed(), factoryElement.getClassed())
+                    POST_PRODUCE_FACTORY_FIELD, Factory.IOC_PARAM, AdvancedIoc.FACTORY_METHOD,
+                    keyGenerator.forPostProduceListener(factoryElement.getSuppliedType(), factoryElement.getNamed(), factoryElement.getClassed())
             );
         }
 
@@ -136,7 +136,7 @@ public class FactoryGenerator extends FrameworkAbstractGenerator {
         if (factoryElement instanceof CustomFactoryElement) {
             CustomFactoryElement cfe = (CustomFactoryElement) factoryElement;
             cb.add("$N.$N().$N(", PRODUCER_FIELD, LazySingleton.GET_METHOD,
-                cfe.getProducerMethod().getName());
+                    cfe.getProducerMethod().getName());
         } else {
             cb.add("new $T(", TypeName.get(factoryElement.getSuppliedType().getErasure()));
         }
@@ -150,10 +150,10 @@ public class FactoryGenerator extends FrameworkAbstractGenerator {
                 case INJECTION_POINT:
                     messageSource = param.getOriginParameter().getName() + "Msg";
                     producingBuilder.addStatement("final $T $N = new $T($T.class)",
-                        ClassName.get(InjectionPoint.class),
-                        messageSource,
-                        ClassName.get(InjectionPoint.class),
-                        TypeName.get(param.getParentFactory().getSuppliedType().getErasure()));
+                            ClassName.get(InjectionPoint.class),
+                            messageSource,
+                            ClassName.get(InjectionPoint.class),
+                            TypeName.get(param.getParentFactory().getSuppliedType().getErasure()));
 
                     break;
                 case OUTER_MESSAGE:
@@ -203,10 +203,10 @@ public class FactoryGenerator extends FrameworkAbstractGenerator {
         if (factoryElement.isNotifyPostProduce()) {
             producingBuilder.add("// Post produce listener invocation:\n");
             producingBuilder.addStatement("$N = $N.$N($N)",
-                INSTANCE_VAR,
-                POST_PRODUCE_FACTORY_FIELD,
-                Factory.GET_METHOD,
-                INSTANCE_VAR);
+                    INSTANCE_VAR,
+                    POST_PRODUCE_FACTORY_FIELD,
+                    Factory.GET_METHOD,
+                    INSTANCE_VAR);
         }
     }
 
@@ -240,8 +240,8 @@ public class FactoryGenerator extends FrameworkAbstractGenerator {
             producingBuilder.add("} catch ($T t) {\n", ClassName.get(Throwable.class));
             producingBuilder.indent();
             producingBuilder.addStatement("throw new $T(t, $T.class)",
-                ClassName.get(InstanceProducingException.class),
-                TypeName.get(factoryElement.getSuppliedType().getErasure()));
+                    ClassName.get(InstanceProducingException.class),
+                    TypeName.get(factoryElement.getSuppliedType().getErasure()));
             producingBuilder.unindent();
             producingBuilder.add("}\n");
         } else {
@@ -265,17 +265,20 @@ public class FactoryGenerator extends FrameworkAbstractGenerator {
     protected TypeSpec generateSingletonFactory(FactoryElement factoryElement) {
         TypeSpec.Builder factoryBuilder = TypeSpec.anonymousClassBuilder("");
         factoryBuilder.superclass(ParameterizedTypeName.get(ClassName.get(SingletonFactory.class),
-            TypeName.get(factoryElement.getSuppliedType().unwrap())));
+                TypeName.get(factoryElement.getSuppliedType().unwrap())));
         generateSetupMethod(factoryBuilder, factoryElement);
         generateProducingMethod(factoryBuilder, factoryElement, SingletonFactory.CREATE_METHOD);
         return factoryBuilder.build();
     }
 
     protected TypeSpec generateScopedFactory(FactoryElement factoryElement) {
-        TypeSpec.Builder classBuilder = TypeSpec.anonymousClassBuilder("$L", keyGenerator.forFactory(factoryElement));
+        // Anonymous class constructor arguments  - ioc key to obtain instance from IoC container.
+        // For example new ClassedKey(...)
+        TypeSpec.Builder classBuilder = TypeSpec.anonymousClassBuilder("$L", keyGenerator.forFactory(factoryElement, null));
+
         classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(ScopedFactory.class),
-            TypeName.get(factoryElement.getSuppliedType().unwrap()),
-            TypeName.get(factoryElement.getScope().getCustomScopeClass().unwrap())));
+                TypeName.get(factoryElement.getSuppliedType().unwrap()),
+                TypeName.get(factoryElement.getScope().getCustomScopeClass().unwrap())));
         generateSetupMethod(classBuilder, factoryElement);
         generateProducingMethod(classBuilder, factoryElement, ScopedFactory.FABRICATE_METHOD);
         return classBuilder.build();
@@ -284,7 +287,7 @@ public class FactoryGenerator extends FrameworkAbstractGenerator {
     protected TypeSpec generateUnscopedFactory(FactoryElement factoryElement) {
         TypeSpec.Builder factoryBuilder = TypeSpec.anonymousClassBuilder("");
         factoryBuilder.superclass(ParameterizedTypeName.get(ClassName.get(Factory.class),
-            TypeName.get(factoryElement.getSuppliedType().unwrap())));
+                TypeName.get(factoryElement.getSuppliedType().unwrap())));
         generateSetupMethod(factoryBuilder, factoryElement);
         generateProducingMethod(factoryBuilder, factoryElement, Factory.GET_METHOD);
         return factoryBuilder.build();

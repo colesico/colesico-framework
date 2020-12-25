@@ -87,4 +87,11 @@ public @interface Produce {
      */
     boolean postConstruct() default true;
 
+    /**
+     * Instance class itself, superclasses or interfaces with which this instance will be associated.
+     * This instance will acts as an implementation for these classes or interfaces.
+     * @see KeyType
+     */
+    Class<?>[] keyType() default {};
+
 }

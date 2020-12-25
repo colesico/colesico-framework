@@ -29,11 +29,17 @@ import javax.inject.Singleton;
 @Produce(RequirePrincipalAudit.class)
 public class SecurityProducer {
 
+    /**
+     * Default security kit producer
+     */
     @Singleton
     public SecurityKit getSecurityKit(DefaultSecurityKit impl) {
         return impl;
     }
 
+    /**
+     * Current principal producer
+     */
     public Principal getPrincipal(SecurityKit kit) {
         return kit.getPrincipal();
     }

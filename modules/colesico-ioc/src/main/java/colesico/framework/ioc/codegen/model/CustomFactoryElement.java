@@ -19,6 +19,8 @@ package colesico.framework.ioc.codegen.model;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
 
+import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
 import java.util.List;
 
 /**
@@ -36,7 +38,7 @@ public class CustomFactoryElement extends FactoryElement {
                                 Boolean polyproduce,
                                 PPLDefinitionElement postProduce,
                                 String named,
-                                ClassType classed,
+                                ClassifierType classed,
                                 boolean notifyPostProduce,
                                 boolean notifyPostConstruct,
                                 List<MethodElement> postConstructListeners,
@@ -63,6 +65,11 @@ public class CustomFactoryElement extends FactoryElement {
 
     public SubstitutionElement getSubstitution() {
         return substitution;
+    }
+
+    @Override
+    public Element getOriginElement() {
+        return producerMethod.unwrap();
     }
 
     @Override

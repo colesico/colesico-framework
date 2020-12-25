@@ -18,12 +18,17 @@ package colesico.framework.example.ioc.implement;
 
 public class MainBeanIMP {
     private final BeanInterface bean;
+    private final ServiceInterface service;
 
-    public MainBeanIMP(BeanInterface bean) {
+    public MainBeanIMP(BeanInterface bean, ServiceInterface service) {
         this.bean = bean;
+        this.service = service;
     }
 
-    public String getValue(){
+    public String getBeanValue(){
         return bean.getValue();
+    }
+    public String getServiceValue(){
+        return service.getValue();
     }
 }

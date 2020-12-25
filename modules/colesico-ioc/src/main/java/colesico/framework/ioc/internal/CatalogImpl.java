@@ -77,7 +77,7 @@ public class CatalogImpl implements Catalog {
 
                 if (curEntry.getSubstitution().getRank() < prevEntry.getSubstitution().getRank()) {
                     curEntry.setAction(EntryAction.NONE);
-                    return true;
+                    return false;
                 }
 
                 throw new AmbiguousDependencyException("Ambiguous substitution definition for key: " + key);

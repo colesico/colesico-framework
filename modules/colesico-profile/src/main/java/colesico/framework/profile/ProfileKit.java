@@ -25,16 +25,18 @@ import colesico.framework.profile.teleapi.CommonProfileCreator;
 public interface ProfileKit {
 
     /**
-     * This method should provide current user valid profile.
-     * The method should provide the ability to quickly re-read the profile within the thread.
-     * If it is impassible to determine current user profile method returns common profile {@link CommonProfileCreator}
+     * Returns the valid profile associated with the current process if the profile is present.
+     * If it is impossible to determine current user profile method returns common profile {@link CommonProfileCreator}
+     * Method must retrieve the profile from any source (eg from the data port)
+     * then validate, enrich (if needed) and cache it for a subsequent quick return within the current thread.
+     * Can throws an exception in case the profile is inconsistent.
      */
     <P extends Profile> P getProfile();
 
     /**
-     * Setup curent user profile
-     *
-     * @param profile
+     * Associate the profile with the current process.
+     * The method can store the principal to any source (eg write it to the data port to
+     * store it on remote client) in order to return it on subsequent requests.
      */
     void setProfile(Profile profile);
 

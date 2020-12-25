@@ -21,16 +21,25 @@ package colesico.framework.security;
  */
 public interface SecurityKit {
 
-    String REQUIRE_PRINCIPAL_METHOD = "requirePrincipal";
-
     /**
-     * Returns active valid principal if it present.
-     *
-     * @return null if principal is invalid or absent.
+     * Returns the valid principal associated with the current process if the principal is present or null if absent.
+     * Method must retrieve the principal from any source (eg from the data port)
+     * then validate, enrich (if needed) and cache it for a subsequent quick return within the current thread.
+     * Can throws an exception in case the principal is inconsistent.
      */
     <P extends Principal> P getPrincipal();
 
+    /**
+     * Associate the principal with the current process.
+     * The method can store the principal to any source (eg write it to the data port to
+     * store it on remote client) in order to return it on subsequent requests.
+     */
     void setPrincipal(Principal principal);
+
+    /**
+     * Invokes given closure as specified principal
+     */
+    <T> T invokeAs(Invocable<T> invocable, Principal principal);
 
     /**
      * Checks the presence of active valid principal.
@@ -41,6 +50,11 @@ public interface SecurityKit {
         if (principal == null) {
             throw new PrincipalRequiredException();
         }
+    }
+
+    @FunctionalInterface
+    interface Invocable<T> {
+        T invoke();
     }
 
 }

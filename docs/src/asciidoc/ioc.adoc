@@ -164,6 +164,41 @@ public class MyProducer {
 }
 ----
 
+== Implementations
+
+There are two ways to work with implementations:
+
+. Through the producer's producing method
+. Using @KeyType annotation  (or @Produce.keyType)
+
+[source,java]
+----
+@Producer
+@Produce(MyImplementation.class)
+public class MyProducer {
+
+    public MyInterface getMyImpl(MyImplementation impl){
+        return impl;
+    }
+}
+----
+
+or with keyType feature:
+
+[source,java]
+----
+@Producer
+@Produce(value = MyImplementation.class, keyType = MyInterface.class)
+public class MyProducer {
+}
+----
+This producer will produce MyInterface object implemented by MyImplementation class.
+In this case the object can be obtained from the container by MyInterface type only:
+i.e. ioc.instance(MyInterface.class).
+
+Attempt to use ioc.instance(MyImplementation.class) will cause UnsatisfiedInjectionException.
+To allow that obtaining add MyImplementation.class itself to keyType list.
+
 == Polyproducing
 
 @Polyproduce annotation allows to specify that the IoC container may supply multiple instances for the dependency.

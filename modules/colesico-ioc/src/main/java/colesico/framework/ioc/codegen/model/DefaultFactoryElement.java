@@ -21,6 +21,8 @@ import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.ioc.production.Produce;
 
+import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
 import java.util.List;
 
 /**
@@ -37,7 +39,7 @@ public class DefaultFactoryElement extends FactoryElement {
                                  ConditionElement condition,
                                  Boolean polyproduce,
                                  String named,
-                                 ClassType classed,
+                                 ClassifierType classed,
                                  boolean notifyPostProduce,
                                  boolean notifyPostConstruct,
                                  List<MethodElement> postConstructListeners,
@@ -58,6 +60,12 @@ public class DefaultFactoryElement extends FactoryElement {
                 postConstructListeners);
         this.constructor = constructor;
         this.produce = produce;
+    }
+
+    @Override
+    public Element getOriginElement() {
+        // TODO
+        return null;
     }
 
     public MethodElement getConstructor() {

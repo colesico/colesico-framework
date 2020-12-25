@@ -39,54 +39,86 @@ public class DefaultSecurityKit implements SecurityKit {
         this.dataPortProv = dataPortProv;
     }
 
+    protected boolean isInputControlRequired(Principal principal) {
+        return false;
+    }
+
     /**
-     * Override this method to get more specific principal read control
-     * This method is used to fine grained control of user principal: check validity, enrich with extra data, e.t.c.
+     * Controls the principal read from the data port.
+     * Override this method to get more specific control.
+     * This method is used to fine grained control of principal: check validity, enrich with extra data, e.t.c.
      *
      * @return Valid principal or null
      */
-    protected Principal principalReadControl(DataPort<Object, Object> port) {
-        return port.read(Principal.class, null);
+    protected InputControlResult controlInputPrincipal(Principal principal) {
+        throw new UnsupportedOperationException("No default implementation");
+    }
+
+    protected boolean isOutputControlRequired(Principal principal) {
+        return false;
     }
 
     /**
-     * Override this method to get more specific principal write control.
-     * This method is used to fine grain write control of user principal.
+     * Controls the principal before write to the data port.
+     * Override this method to get more specific control.
      */
-    protected void principalWriteControl(DataPort<Object, Object> port, Principal principal) {
-        port.write(Principal.class, principal, null);
+    protected Principal controlOutputPrincipal(Principal principal) {
+        throw new UnsupportedOperationException("No default implementation");
     }
 
-    /**
-     * Override this method to get more specific authority control
-     */
-    protected boolean hasAuthorityControl(Principal principal, String... authority) {
-        return principal != null;
-    }
 
     @Override
-    public final <P extends Principal> P getPrincipal() {
+    public <P extends Principal> P getPrincipal() {
         // Check thread cache at first
         PrincipalHolder holder = threadScope.get(PrincipalHolder.SCOPE_KEY);
         if (holder != null) {
             return (P) holder.getPrincipal();
+        } else {
+            // Create temporary empty principal holder
+            // for possible subsequent recursive getPrincipal() invocations
+            threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(null));
         }
 
-        // No principal in cache. Retrieve principal from client
+        // No principal in cache. Retrieve principal from data port
+
         DataPort<Object, Object> port = dataPortProv.get();
+        Principal principal = port.read(Principal.class, null);
 
-        Principal principal = principalReadControl(port);
+        // Is control needed?
+        if (isInputControlRequired(principal)) {
+            InputControlResult res = controlInputPrincipal(principal);
+            principal = res.getPrincipal();
+            if (res.isUpdateOnClient()) {
+                port.write(Principal.class, principal, null);
+            }
+        }
 
-        // Store principal to cache and return
+        // Store principal to cache
         threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(principal));
 
         return (P) principal;
     }
 
     @Override
-    public final void setPrincipal(Principal principal) {
+    public void setPrincipal(Principal principal) {
         DataPort port = dataPortProv.get();
-        principalWriteControl(port, principal);
+        if (isOutputControlRequired(principal)) {
+            principal = controlOutputPrincipal(principal);
+        }
+
+        port.write(Principal.class, principal, null);
+        threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(principal));
+    }
+
+    @Override
+    public <T> T invokeAs(Invocable<T> invocable, Principal principal) {
+        PrincipalHolder holder = threadScope.get(PrincipalHolder.SCOPE_KEY);
+        threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(principal));
+        try {
+            return invocable.invoke();
+        } finally {
+            threadScope.put(PrincipalHolder.SCOPE_KEY, holder);
+        }
     }
 
     public static final class PrincipalHolder {
@@ -100,6 +132,54 @@ public class DefaultSecurityKit implements SecurityKit {
         public Principal getPrincipal() {
             return principal;
         }
+    }
+
+    public static final class InputControlResult {
+
+        /**
+         * Actual principal to be used
+         */
+        private Principal principal = null;
+
+        /**
+         * Whether or not to update the principal on the client
+         */
+        private boolean updateOnClient = false;
+
+        /**
+         * For serialization
+         */
+        public InputControlResult() {
+        }
+
+        /**
+         * For static factories
+         */
+        private InputControlResult(Principal principal, boolean updateOnClient) {
+            this.principal = principal;
+            this.updateOnClient = updateOnClient;
+        }
+
+        public static InputControlResult of(Principal principal, boolean updateOnClient) {
+            return new InputControlResult(principal, updateOnClient);
+        }
+
+        public Principal getPrincipal() {
+            return principal;
+        }
+
+        public void setPrincipal(Principal principal) {
+            this.principal = principal;
+        }
+
+        public boolean isUpdateOnClient() {
+            return updateOnClient;
+        }
+
+        public void setUpdateOnClient(boolean updateOnClient) {
+            this.updateOnClient = updateOnClient;
+        }
+
     }
 
 }

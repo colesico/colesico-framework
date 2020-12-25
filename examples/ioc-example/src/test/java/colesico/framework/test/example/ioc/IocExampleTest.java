@@ -54,7 +54,8 @@ public class IocExampleTest {
     @Test
     public void testImplement() {
         MainBeanIMP mainBean = ioc.instance(MainBeanIMP.class);
-        assertEquals(mainBean.getValue(), "BeanImpl");
+        assertEquals(mainBean.getBeanValue(), "BeanImpl");
+        assertEquals(mainBean.getServiceValue(), "ServiceImpl");
     }
 
     @Test

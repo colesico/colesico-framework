@@ -21,34 +21,41 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>4.1.1</version>
+        <version>4.2.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>colesico-bundle-mix</artifactId>
+    <artifactId>colesico-bundle-srv</artifactId>
 
     <packaging>jar</packaging>
 
-    <name>Colesico Bundle Miscellaneous</name>
+    <name>Colesico Bundle Services</name>
     <description>
-        Colesico framework bundle joins miscellaneous useful framework modules
+        Colesico framework bundle for services
     </description>
 
     <properties>
     </properties>
 
     <dependencies>
-        <!-- Colesico basic -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-bundle-base</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <!-- Colesico mix -->
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-bundle-l10n</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-slf4j</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-hocon</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -67,7 +74,6 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>

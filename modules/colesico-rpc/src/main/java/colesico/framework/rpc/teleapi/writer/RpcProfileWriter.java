@@ -9,7 +9,7 @@ import colesico.framework.rpc.teleapi.RpcTeleWriter;
 import javax.inject.Singleton;
 
 @Singleton
-public class RpcProfileWriter  implements RpcTeleWriter<Profile> {
+public class RpcProfileWriter implements RpcTeleWriter<Profile> {
 
     protected final ProfileSerializer profileSerializer;
 
@@ -20,6 +20,10 @@ public class RpcProfileWriter  implements RpcTeleWriter<Profile> {
     @Override
     public void write(Profile value, RpcTWContext context) {
         BasicEnvelope env = (BasicEnvelope) context.getResponse();
-        env.setProfile(profileSerializer.serialize(value));
+        if (value != null) {
+            env.setProfile(profileSerializer.serialize(value));
+        } else {
+            env.setProfile(new byte[0]);
+        }
     }
 }

@@ -16,7 +16,6 @@
 
 package colesico.framework.ioc.codegen.model;
 
-import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.ioc.listener.PostProduce;
 
 /**
@@ -27,9 +26,9 @@ public class PPLDefinitionElement {
 
     private final String withNamed;
 
-    private final ClassType withClassed;
+    private final ClassifierType withClassed;
 
-    public PPLDefinitionElement(String withNamed, ClassType withClassed) {
+    public PPLDefinitionElement(String withNamed, ClassifierType withClassed) {
         this.withNamed = withNamed;
         this.withClassed = withClassed;
     }
@@ -38,7 +37,7 @@ public class PPLDefinitionElement {
         return withNamed;
     }
 
-    public ClassType getWithClassed() {
+    public ClassifierType getWithClassed() {
         return withClassed;
     }
 }

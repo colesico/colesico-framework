@@ -19,8 +19,13 @@ public class RpcPrincipalReader implements RpcTeleReader<Principal> {
 
     @Override
     public Principal read(RpcTRContext context) {
-        BasicEnvelope env = (BasicEnvelope) context.getRequest();
-        Principal principal = principalSerializer.deserialize(env.getPrincipal());
+        Principal principal;
+        if (context.getValueGetter() != null) {
+            principal = (Principal) context.getValueGetter().get(context.getRequest());
+        } else {
+            BasicEnvelope env = (BasicEnvelope) context.getRequest();
+            principal = principalSerializer.deserialize(env.getPrincipal());
+        }
         return principal;
     }
 }

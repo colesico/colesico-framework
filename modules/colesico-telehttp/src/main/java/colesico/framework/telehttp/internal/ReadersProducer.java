@@ -49,6 +49,12 @@ public class ReadersProducer {
     }
 
     @Singleton
+    @Classed(boolean.class)
+    public HttpTeleReader getBoolReader(BooleanReader impl) {
+        return impl;
+    }
+
+    @Singleton
     @Classed(String.class)
     public HttpTeleReader getStringReader(StringReader impl) {
         return impl;
@@ -61,8 +67,21 @@ public class ReadersProducer {
     }
 
     @Singleton
+    @Classed(char.class)
+    public HttpTeleReader getCharReader(CharacterReader impl) {
+        return impl;
+    }
+
+
+    @Singleton
     @Classed(Byte.class)
     public HttpTeleReader getByteReader(ByteReader impl) {
+        return impl;
+    }
+
+    @Singleton
+    @Classed(byte.class)
+    public HttpTeleReader getBtReader(ByteReader impl) {
         return impl;
     }
 
@@ -73,8 +92,20 @@ public class ReadersProducer {
     }
 
     @Singleton
+    @Classed(short.class)
+    public HttpTeleReader getShtReader(ShortReader impl) {
+        return impl;
+    }
+
+    @Singleton
     @Classed(Integer.class)
     public HttpTeleReader getIntegerReader(IntegerReader impl) {
+        return impl;
+    }
+
+    @Singleton
+    @Classed(int.class)
+    public HttpTeleReader getIntReader(IntegerReader impl) {
         return impl;
     }
 
@@ -91,6 +122,12 @@ public class ReadersProducer {
     }
 
     @Singleton
+    @Classed(long.class)
+    public HttpTeleReader getLngReader(LongReader impl) {
+        return impl;
+    }
+
+    @Singleton
     @Classed(OptionalLong.class)
     public HttpTeleReader getOptionalLongReader(OptionalLongReader impl) {
         return impl;
@@ -103,8 +140,20 @@ public class ReadersProducer {
     }
 
     @Singleton
+    @Classed(float.class)
+    public HttpTeleReader getFltReader(FloatReader impl) {
+        return impl;
+    }
+
+    @Singleton
     @Classed(Double.class)
     public HttpTeleReader getDoubleReader(DoubleReader impl) {
+        return impl;
+    }
+
+    @Singleton
+    @Classed(double.class)
+    public HttpTeleReader getDblReader(DoubleReader impl) {
         return impl;
     }
 

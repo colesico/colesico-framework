@@ -22,4 +22,6 @@ module colesico.framework.rpc {
     exports colesico.framework.rpc.rpcgear.kryo;
     exports colesico.framework.rpc.teleapi.reader;
     exports colesico.framework.rpc.teleapi.writer;
+
+    exports colesico.framework.rpc.internal to colesico.framework.ioc, colesico.framework.config;
 }

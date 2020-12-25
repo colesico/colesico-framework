@@ -18,7 +18,11 @@ package colesico.framework.ioc.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
+import colesico.framework.ioc.listener.ListenersControl;
+import colesico.framework.ioc.production.KeyType;
 
+import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,13 +36,32 @@ abstract public class FactoryElement {
     protected final ScopeElement scope;
     protected final ConditionElement condition;
     protected final SubstitutionElement substitution;
+
+    /**
+     * {@link colesico.framework.ioc.production.Polyproduce}
+     */
     protected final Boolean polyproduce;
 
     protected final PPLDefinitionElement postProduce;
-    protected final String named;
-    protected final ClassType classed;
 
+    /**
+     * {@link javax.inject.Named}
+     */
+    protected final String named;
+
+    /**
+     * {@link colesico.framework.ioc.production.Classed}
+     */
+    protected final ClassifierType classed;
+
+    /**
+     * {@link ListenersControl#postProduce()}
+     */
     protected final boolean notifyPostProduce;
+
+    /**
+     * {@link ListenersControl#postProduce()}
+     */
     protected final boolean notifyPostConstruct;
 
     protected final List<MethodElement> postConstructListeners;
@@ -46,6 +69,11 @@ abstract public class FactoryElement {
     protected final List<InjectableElement> parameters = new ArrayList<>();
 
     protected int factoryIndex = -1;
+
+    /**
+     * {@link KeyType}
+     */
+    protected final List<ClassType> keyTypes = new ArrayList<>();
 
     public FactoryElement(ClassType suppliedType,
                           String factoryMethodBaseName,
@@ -55,7 +83,7 @@ abstract public class FactoryElement {
                           Boolean polyproduce,
                           PPLDefinitionElement postProduce,
                           String named,
-                          ClassType classed,
+                          ClassifierType classed,
                           boolean notifyPostProduce,
                           boolean notifyPostConstruct,
                           List<MethodElement> postConstructListeners
@@ -74,8 +102,14 @@ abstract public class FactoryElement {
         this.postConstructListeners = postConstructListeners;
     }
 
+    abstract public Element getOriginElement();
+
     public void addParameter(InjectableElement paramElm) {
         this.parameters.add(paramElm);
+    }
+
+    public void addSupertype(ClassType st) {
+        keyTypes.add(st);
     }
 
     public final String getFactoryMethodName() {
@@ -114,7 +148,7 @@ abstract public class FactoryElement {
         return named;
     }
 
-    public ClassType getClassed() {
+    public ClassifierType getClassed() {
         return classed;
     }
 
@@ -140,6 +174,10 @@ abstract public class FactoryElement {
 
     public int getFactoryIndex() {
         return factoryIndex;
+    }
+
+    public List<ClassType> getKeyTypes() {
+        return keyTypes;
     }
 
     @Override

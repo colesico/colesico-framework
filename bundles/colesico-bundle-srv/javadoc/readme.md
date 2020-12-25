@@ -1,0 +1,1 @@
+The colesico framework base bundle.

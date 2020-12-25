@@ -46,6 +46,7 @@ import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -196,14 +197,14 @@ public class ProducerParser extends FrameworkAbstractParser {
             named = null;
         }
 
-        ClassType classed;
+        ClassifierType classed;
         AnnotationAssist<Classed> classedAnn = parameter.getAnnotation(Classed.class);
         if (classedAnn != null) {
             if (injectionKind == InjectableElement.InjectionKind.MESSAGE) {
                 throw CodegenException.of().message("@Classed message injection").element(parameter.unwrap()).build();
             }
             TypeMirror classifier = classedAnn.getValueTypeMirror(Classed::value);
-            classed = new ClassType(getProcessingEnv(), (DeclaredType) classifier);
+            classed = new ClassifierType(getProcessingEnv(), classifier);
             // TODO: check  injectionKind
         } else {
             classed = null;
@@ -235,12 +236,18 @@ public class ProducerParser extends FrameworkAbstractParser {
             throw CodegenException.of().message("Unable to find injectable constructor for class: " + suppliedMirror.toString()).build();
         }
 
+        // Scope
+
         ScopeElement scope = obtainScope(suppliedType.asClassElement());
         if (scope == null) {
             scope = new ScopeElement(ScopeElement.ScopeKind.UNSCOPED, null);
         }
 
+        // Polyproduce
+
         final boolean polyproduce = produceAnn.unwrap().polyproduce();
+
+        // Named
 
         String named = StringUtils.isEmpty(produceAnn.unwrap().named()) ? null : produceAnn.unwrap().named();
         if (named == null) {
@@ -251,18 +258,22 @@ public class ProducerParser extends FrameworkAbstractParser {
             }
         }
 
-        ClassType classed = null;
+        // Classed
+
+        ClassifierType classed = null;
         TypeMirror classifier = produceAnn.getValueTypeMirror(Produce::classed);
         if (!CodegenUtils.isAssignable(Class.class, classifier, processingEnv)) {
-            classed = new ClassType(processingEnv, (DeclaredType) classifier);
+            classed = new ClassifierType(processingEnv, classifier);
         } else {
             // Get @Classed from class definition
             AnnotationAssist<Classed> classedAnn = suppliedType.asClassElement().getAnnotation(Classed.class);
             if (classedAnn != null) {
                 classifier = classedAnn.getValueTypeMirror(Classed::value);
-                classed = new ClassType(processingEnv, (DeclaredType) classifier);
+                classed = new ClassifierType(processingEnv, classifier);
             }
         }
+
+        // Listeners
 
         final boolean notifyPostProduce = produceAnn.unwrap().postProduce();
 
@@ -277,6 +288,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         // Condition
+
         ConditionElement condition = null;
         TypeMirror conditionClass = produceAnn.getValueTypeMirror(Produce::requires);
         if (!CodegenUtils.isAssignable(Condition.class, conditionClass, processingEnv)) {
@@ -307,6 +319,12 @@ public class ProducerParser extends FrameworkAbstractParser {
             factory.addParameter(createInjectableElement(factory, param));
         }
 
+        // Supertypes
+        TypeMirror[] supertypes = produceAnn.getValueTypeMirrors(a -> a.keyType());
+        for (TypeMirror st : supertypes) {
+            factory.addSupertype(new ClassType(processingEnv, (DeclaredType) st));
+        }
+
         return factory;
     }
 
@@ -328,9 +346,9 @@ public class ProducerParser extends FrameworkAbstractParser {
         final PPLDefinitionElement postProduce;
         if (postProduceAnn != null) {
             TypeMirror classifier = postProduceAnn.getValueTypeMirror(PostProduce::withClassed);
-            ClassType withClassed = null;
+            ClassifierType withClassed = null;
             if (!CodegenUtils.isAssignable(Class.class, classifier, processingEnv)) {
-                withClassed = new ClassType(processingEnv, (DeclaredType) classifier);
+                withClassed = new ClassifierType(processingEnv, classifier);
             }
             String withNamed = StringUtils.isNotBlank(postProduceAnn.unwrap().withNamed()) ? postProduceAnn.unwrap().withNamed() : null;
             postProduce = new PPLDefinitionElement(withNamed, withClassed);
@@ -372,18 +390,18 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         // Classed
         AnnotationAssist<Classed> methodClassedAnn = method.getAnnotation(Classed.class);
-        ClassType classed = null;
+        ClassifierType classed = null;
         TypeMirror classifier;
         if (methodClassedAnn != null) {
             classifier = methodClassedAnn.getValueTypeMirror(Classed::value);
-            classed = new ClassType(processingEnv, (DeclaredType) classifier);
+            classed = new ClassifierType(processingEnv, classifier);
         } else {
             if (postProduce == null) {
                 // Get @Classed from class definition
                 AnnotationAssist<Classed> classClassedAnn = suppliedType.asClassElement().getAnnotation(Classed.class);
                 if (classClassedAnn != null) {
                     classifier = classClassedAnn.getValueTypeMirror(Classed::value);
-                    classed = new ClassType(processingEnv, (DeclaredType) classifier);
+                    classed = new ClassifierType(processingEnv, classifier);
                 }
             }
         }
@@ -452,6 +470,15 @@ public class ProducerParser extends FrameworkAbstractParser {
             factory.addParameter(createInjectableElement(factory, param));
         }
 
+        // Supertypes
+        AnnotationAssist<KeyType> supertypesAnn = method.getAnnotation(KeyType.class);
+        if (supertypesAnn != null) {
+            TypeMirror[] supertypes = supertypesAnn.getValueTypeMirrors(a -> a.value());
+            for (TypeMirror st : supertypes) {
+                factory.addSupertype(new ClassType(processingEnv, (DeclaredType) st));
+            }
+        }
+
         logger.debug("Custom factory element has been created: " + factory);
 
         return factory;
@@ -467,7 +494,9 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         for (MethodElement method : methods) {
             logger.debug("Found custom factory method: " + method.getName());
-            iocletElement.addFactory(createCustomFactoryElement(method));
+            CustomFactoryElement factoryElm = createCustomFactoryElement(method);
+            iocletElement.addFactory(factoryElm);
+            checkSupertypes(factoryElm);
         }
     }
 
@@ -488,7 +517,9 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         for (AnnotationAssist<Produce> produce : produceList) {
-            iocletElement.addFactory(createDefaultFactoryElement(iocletElement, produce));
+            DefaultFactoryElement factElm = createDefaultFactoryElement(iocletElement, produce);
+            iocletElement.addFactory(factElm);
+            checkSupertypes(factElm);
         }
     }
 
@@ -500,6 +531,18 @@ public class ProducerParser extends FrameworkAbstractParser {
                     "; Timestamp=" + genstampAnn.timestamp() +
                     "; HashId=" + genstampAnn.hashId() +
                     "}");
+        }
+    }
+
+    protected void checkSupertypes(FactoryElement facElm) {
+        Types typeUtils = getTypeUtils();
+        for (ClassType supType : facElm.getKeyTypes()) {
+            if (!typeUtils.isAssignable(facElm.getSuppliedType().unwrap(), supType.unwrap())) {
+                throw CodegenException.of()
+                        .message("Not an instance class subtype: " + facElm.getSuppliedType().getName() + " extends/implements " + supType.unwrap().toString())
+                        .element(facElm.getOriginElement())
+                        .build();
+            }
         }
     }
 
@@ -530,6 +573,7 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         parseProducingMethods(iocletElement);
         paresProducingAnnotations(iocletElement);
+
         return iocletElement;
     }
 }

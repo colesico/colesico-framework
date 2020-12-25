@@ -18,6 +18,7 @@ package colesico.framework.ioc.codegen.generator;
 
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.ioc.codegen.model.ClassifierType;
 import colesico.framework.ioc.codegen.model.FactoryElement;
 import colesico.framework.ioc.codegen.model.InjectableElement;
 import colesico.framework.ioc.ioclet.AdvancedIoc;
@@ -59,14 +60,14 @@ public class KeyGenerator extends FrameworkAbstractGenerator {
         return codeBlock.build();
     }
 
-    private CodeBlock generateClassedKeyClassBased(ClassType instanceType, ClassType classifier) {
+    private CodeBlock generateClassedKeyClassBased(ClassType instanceType, ClassifierType classifier) {
         CodeBlock.Builder codeBlock = CodeBlock.builder();
         codeBlock.add("new $T($T.class,$T.class)",
                 ClassName.get(ClassedKey.class), TypeName.get(instanceType.getErasure()), TypeName.get(classifier.getErasure()));
         return codeBlock.build();
     }
 
-    private CodeBlock generateClassedKeyStringBased(ClassType instanceType, ClassType classifier) {
+    private CodeBlock generateClassedKeyStringBased(ClassType instanceType, ClassifierType classifier) {
         CodeBlock.Builder codeBlock = CodeBlock.builder();
         codeBlock.add("new $T($S,$S)",
                 ClassName.get(ClassedKey.class), instanceType.getName(), classifier.getErasure().toString()
@@ -74,7 +75,7 @@ public class KeyGenerator extends FrameworkAbstractGenerator {
         return codeBlock.build();
     }
 
-    private CodeBlock generatePPLKeyStringBased(ClassType instanceType, String withNamed, ClassType withClassed) {
+    private CodeBlock generatePPLKeyStringBased(ClassType instanceType, String withNamed, ClassifierType withClassed) {
         CodeBlock.Builder codeBlock = CodeBlock.builder();
         if (withClassed != null) {
             codeBlock.add("new $T($S,$S,$S)",
@@ -88,7 +89,7 @@ public class KeyGenerator extends FrameworkAbstractGenerator {
         return codeBlock.build();
     }
 
-    private CodeBlock generatePPLKeyClassBased(ClassType instanceType, String withNamed, ClassType withClassed) {
+    private CodeBlock generatePPLKeyClassBased(ClassType instanceType, String withNamed, ClassifierType withClassed) {
         CodeBlock.Builder codeBlock = CodeBlock.builder();
         if (withClassed != null) {
             codeBlock.add("new $T($T.class,$S,$T.class)",
@@ -103,22 +104,25 @@ public class KeyGenerator extends FrameworkAbstractGenerator {
     }
 
     /**
-     * Code for use at factory registration stage
+     * Code for use at factory registration stage and scoped factory
      *
      * @param factory
      * @return
      * @see Ioclet#addFactories
      */
-    public CodeBlock forFactory(FactoryElement factory) {
+    public CodeBlock forFactory(FactoryElement factory, ClassType suppliedType) {
+        if (suppliedType==null){
+            suppliedType =factory.getSuppliedType();
+        }
         if (factory.getPostProduce() != null) {
-            return generatePPLKeyStringBased(factory.getSuppliedType(),
+            return generatePPLKeyStringBased(suppliedType,
                     factory.getPostProduce().getWithNamed(), factory.getPostProduce().getWithClassed());
         } else if (factory.getClassed() != null) {
-            return generateClassedKeyStringBased(factory.getSuppliedType(), factory.getClassed());
+            return generateClassedKeyStringBased(suppliedType, factory.getClassed());
         } else if (factory.getNamed() != null) {
-            return generateNamedKeyStringBased(factory.getSuppliedType(), factory.getNamed());
+            return generateNamedKeyStringBased(suppliedType, factory.getNamed());
         } else {
-            return generateTypeKeyStringBased(factory.getSuppliedType());
+            return generateTypeKeyStringBased(suppliedType);
         }
     }
 
@@ -146,7 +150,7 @@ public class KeyGenerator extends FrameworkAbstractGenerator {
      * @param instanceType
      * @return
      */
-    public CodeBlock forPostProduceListener(ClassType instanceType, String withNamed, ClassType withClassed) {
+    public CodeBlock forPostProduceListener(ClassType instanceType, String withNamed, ClassifierType withClassed) {
         return generatePPLKeyClassBased(instanceType, withNamed, withClassed);
     }
 
