@@ -146,17 +146,22 @@ public class DefaultSecurityKit implements SecurityKit {
          */
         private boolean updateOnClient = false;
 
+        /**
+         * For serialization
+         */
         public InputControlResult() {
         }
 
-        public InputControlResult(Principal principal, boolean updateOnClient) {
+        /**
+         * For static factories
+         */
+        private InputControlResult(Principal principal, boolean updateOnClient) {
             this.principal = principal;
             this.updateOnClient = updateOnClient;
         }
 
-        public InputControlResult(Principal principal) {
-            this.principal = principal;
-            this.updateOnClient = true;
+        public static InputControlResult of(Principal principal, boolean updateOnClient) {
+            return new InputControlResult(principal, updateOnClient);
         }
 
         public Principal getPrincipal() {
