@@ -161,7 +161,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
             AnnotationAssist<Column> columnAnnElm = new AnnotationAssist<>(processingEnv, columnAnn);
 
             String name;
-            if (columnAnnElm.unwrap().name().equals(Column.FIELD)) {
+            if (columnAnnElm.unwrap().name().equals(Column.FIELD_REF)) {
                 name = StrUtils.toSeparatorNotation(field.getName(), '_');
             } else {
                 name = columnAnnElm.unwrap().name();
@@ -189,9 +189,9 @@ public class RecordKitParser extends FrameworkAbstractParser {
             String selectAs = StringUtils.trim(columnAnnElm.unwrap().selectAs());
 
             // insertAs
-            if (!Column.NOP.equals(insertAs)) {
-                if (insertAs.equals(Column.UPDATE)) {
-                    if (!Column.NOP.equals(updateAs)) {
+            if (!Column.NOP_REF.equals(insertAs)) {
+                if (insertAs.equals(Column.UPDATE_AS_REF)) {
+                    if (!Column.NOP_REF.equals(updateAs)) {
                         columnElement.setInsertAs(updateAs);
                     }
                 } else {
@@ -200,9 +200,9 @@ public class RecordKitParser extends FrameworkAbstractParser {
             }
 
             // updateAs
-            if (!Column.NOP.equals(updateAs)) {
-                if (updateAs.equals(Column.INSERT)) {
-                    if (!Column.NOP.equals(insertAs)) {
+            if (!Column.NOP_REF.equals(updateAs)) {
+                if (updateAs.equals(Column.INSERT_AS_REF)) {
+                    if (!Column.NOP_REF.equals(insertAs)) {
                         columnElement.setUpdateAs(insertAs);
                     }
                 } else {
@@ -211,12 +211,12 @@ public class RecordKitParser extends FrameworkAbstractParser {
             }
 
             // selectAs
-            if (!Column.NOP.equals(selectAs)) {
+            if (!Column.NOP_REF.equals(selectAs)) {
                 columnElement.setSelectAs(selectAs);
             }
 
             // definition
-            if (!Column.NOP.equals(columnAnnElm.unwrap().definition())) {
+            if (!Column.NOP_REF.equals(columnAnnElm.unwrap().definition())) {
                 if (StringUtils.isEmpty(columnAnnElm.unwrap().definition())) {
                     columnElement.setDefinition("[COLUMN DEFINITION]");
                 } else {

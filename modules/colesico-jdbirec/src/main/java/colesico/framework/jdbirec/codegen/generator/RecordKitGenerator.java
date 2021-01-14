@@ -386,11 +386,11 @@ public class RecordKitGenerator {
             String selectAs = column.getSelectAs();
             String tableName = column.getParentComposition().getTableName();
             if (StringUtils.isBlank(tableName)) {
-                selectAs = selectAs.replaceAll("@column\\((.+)\\)", "$1");
-                selectAs = StringUtils.replace(selectAs, "@column", column.getName());
+                selectAs = selectAs.replaceAll(Column.COLUMN_REF + "\\((.+)\\)", "$1");
+                selectAs = StringUtils.replace(selectAs, Column.COLUMN_REF, column.getName());
             } else {
-                selectAs = selectAs.replaceAll("@column\\((.+)\\)", tableName + ".$1");
-                selectAs = StringUtils.replace(selectAs, "@column", tableName + '.' + column.getName());
+                selectAs = selectAs.replaceAll(Column.COLUMN_REF + "\\((.+)\\)", tableName + ".$1");
+                selectAs = StringUtils.replace(selectAs, Column.COLUMN_REF, tableName + '.' + column.getName());
             }
             if (!(selectAs.equalsIgnoreCase(column.getName())
                     || selectAs.endsWith('.' + column.getName())
@@ -438,7 +438,7 @@ public class RecordKitGenerator {
                 continue;
             }
 
-            if (column.getInsertAs().equals(Column.FIELD)) {
+            if (column.getInsertAs().equals(Column.FIELD_REF)) {
                 String paramName = generateChain(null, column.getParentComposition(), column, FieldElement::getName);
                 columnValues.add(":" + paramName);
             } else {
@@ -464,7 +464,7 @@ public class RecordKitGenerator {
                 continue;
             }
 
-            if (column.getUpdateAs().equals(Column.FIELD)) {
+            if (column.getUpdateAs().equals(Column.FIELD_REF)) {
                 String paramName = generateChain(null, column.getParentComposition(), column, FieldElement::getName);
                 assigns.add(column.getName() + " = :" + paramName);
             } else {

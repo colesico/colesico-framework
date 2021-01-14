@@ -31,17 +31,17 @@ import java.sql.ResultSet;
 @Inherited
 public @interface Column {
 
-    String FIELD = "@field";
-    String INSERT = "@insert";
-    String UPDATE = "@update";
-    String COLUMN = "@column";
-    String NOP="@nop";
+    String FIELD_REF = "@field";
+    String COLUMN_REF = "@column";
+    String INSERT_AS_REF = "@insertAs";
+    String UPDATE_AS_REF = "@updateAs";
+     String NOP_REF ="@nop";
 
     /**
      * Column name.
      * \@filed means auto generated name from field value
      */
-    String name() default FIELD;
+    String name() default FIELD_REF;
 
     /**
      * Value mediator to transmit field value to sql format and back
@@ -54,7 +54,7 @@ public @interface Column {
      * \@update - the same as updateAs
      * \@nop -  no insertion
      */
-    String insertAs() default FIELD;
+    String insertAs() default FIELD_REF;
 
     /**
      * Possible values:
@@ -62,7 +62,7 @@ public @interface Column {
      * \@insert - the same as insertAs
      * \@nop -  don't update
      */
-    String updateAs() default INSERT;
+    String updateAs() default INSERT_AS_REF;
 
     /**
      * Column value for selecting.
@@ -72,7 +72,7 @@ public @interface Column {
      * <p>
      * \@nop -  Don't select
      */
-    String selectAs() default COLUMN;
+    String selectAs() default COLUMN_REF;
 
     /**
      * Column definition for create table sql.
