@@ -7,6 +7,8 @@ package colesico.framework.introspection;
  */
 public interface MetaConstructor<C> extends MetaElement {
 
+    MetaParameter[] getParameters();
+
     C instantiate(Object... args);
 
     @Override

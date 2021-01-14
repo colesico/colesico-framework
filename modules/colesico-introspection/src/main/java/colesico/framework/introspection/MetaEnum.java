@@ -2,9 +2,14 @@ package colesico.framework.introspection;
 
 /**
  * Enum introspection
- * @param <C> target enum
+ *
+ * @param <E> target enum
  */
-public interface MetaEnum<C> extends MetaInterface<C> {
+public interface MetaEnum<E> extends MetaInterface<E> {
+
+    MetaEnumConstant<E>[] getConstants();
+
+    E getEnumeration();
 
     @Override
     default Kind getKind() {

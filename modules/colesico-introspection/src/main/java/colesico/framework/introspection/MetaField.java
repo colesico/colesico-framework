@@ -21,7 +21,7 @@ public interface MetaField<C, T> extends MetaElement {
 
     @FunctionalInterface
     interface Getter<C, T> {
-        C get(C instance, T value);
+        T get(C instance);
     }
 
     @FunctionalInterface

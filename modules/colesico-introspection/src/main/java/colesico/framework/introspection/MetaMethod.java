@@ -20,7 +20,7 @@ public interface MetaMethod<C, R> extends MetaElement {
     }
 
     @FunctionalInterface
-    interface invoker<C> {
-        C invoke(C instance, Object... args);
+    interface Invoker<C,R> {
+        R invoke(C instance, Object... args);
     }
 }

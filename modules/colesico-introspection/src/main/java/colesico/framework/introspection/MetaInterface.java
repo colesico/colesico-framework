@@ -1,7 +1,7 @@
 package colesico.framework.introspection;
 
 /**
- * Interface representation
+ * Interface introspection
  *
  * @param <C> target type
  */

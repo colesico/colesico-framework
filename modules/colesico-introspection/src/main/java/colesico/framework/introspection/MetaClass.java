@@ -7,7 +7,7 @@ package colesico.framework.introspection;
  */
 public interface MetaClass<C> extends MetaInterface<C> {
 
-    MetaConstructor<C> getConstructors();
+    MetaConstructor<C>[] getConstructors();
 
     @Override
     default Kind getKind() {
