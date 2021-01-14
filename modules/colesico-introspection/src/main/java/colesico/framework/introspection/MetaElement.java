@@ -1,7 +1,7 @@
 package colesico.framework.introspection;
 
 /**
- * Basic introspected element
+ * Introspection basic element
  */
 public interface MetaElement {
 

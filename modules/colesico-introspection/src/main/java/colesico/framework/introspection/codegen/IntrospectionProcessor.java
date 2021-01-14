@@ -19,7 +19,7 @@ package colesico.framework.introspection.codegen;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.introspection.Introspected;
+import colesico.framework.introspection.Introspect;
 import colesico.framework.introspection.codegen.model.IntrospectedElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -44,7 +44,7 @@ public class IntrospectionProcessor extends FrameworkAbstractProcessor {
 
     @Override
     protected Class<? extends Annotation>[] getSupportedAnnotations() {
-        return new Class[]{Introspected.class};
+        return new Class[]{Introspect.class};
     }
 
     @Override
@@ -55,7 +55,7 @@ public class IntrospectionProcessor extends FrameworkAbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         logger.debug("Start introspection processing...");
-        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Introspected.class);
+        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Introspect.class);
         for (Element elm : elements) {
             if (elm.getKind() != ElementKind.CLASS && elm.getKind() != ElementKind.INTERFACE) {
                 continue;
