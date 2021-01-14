@@ -19,6 +19,7 @@ package colesico.framework.config.codegen;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
+import colesico.framework.introspection.Introspected;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
@@ -72,6 +73,7 @@ public class BagGenerator extends FrameworkAbstractGenerator {
         String packageName = confElement.getImplementation().getPackageName();
 
         TypeSpec.Builder bagBuilder = TypeSpec.classBuilder(classSimpleName);
+        bagBuilder.addAnnotation(Introspected.class);
         bagBuilder.addModifiers(Modifier.PUBLIC);
         bagBuilder.addAnnotation(CodegenUtils.generateGenstamp(BagGenerator.class.getName(), null, null));
 
