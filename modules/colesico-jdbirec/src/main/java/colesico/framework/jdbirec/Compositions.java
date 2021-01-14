@@ -20,7 +20,7 @@ import java.lang.annotation.*;
 
 
 /**
- * Fields compositions container
+ * \@Composition container
  */
 @Documented
 @Target(ElementType.FIELD)

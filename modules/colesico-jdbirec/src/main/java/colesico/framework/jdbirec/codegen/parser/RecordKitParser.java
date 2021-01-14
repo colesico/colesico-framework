@@ -38,9 +38,6 @@ import java.util.*;
 
 public class RecordKitParser extends FrameworkAbstractParser {
 
-    public static final String OP_NOP = "@nop";
-    public static final String OU_UPDATE = "@update";
-    public static final String OP_INSERT = "@insert";
     /**
      * Parsing record
      */
@@ -164,7 +161,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
             AnnotationAssist<Column> columnAnnElm = new AnnotationAssist<>(processingEnv, columnAnn);
 
             String name;
-            if (columnAnnElm.unwrap().name().equals("@field")) {
+            if (columnAnnElm.unwrap().name().equals(Column.FIELD)) {
                 name = StrUtils.toSeparatorNotation(field.getName(), '_');
             } else {
                 name = columnAnnElm.unwrap().name();
@@ -192,9 +189,9 @@ public class RecordKitParser extends FrameworkAbstractParser {
             String selectAs = StringUtils.trim(columnAnnElm.unwrap().selectAs());
 
             // insertAs
-            if (!OP_NOP.equals(insertAs)) {
-                if (insertAs.equals(OU_UPDATE)) {
-                    if (!OP_NOP.equals(updateAs)) {
+            if (!Column.NOP.equals(insertAs)) {
+                if (insertAs.equals(Column.UPDATE)) {
+                    if (!Column.NOP.equals(updateAs)) {
                         columnElement.setInsertAs(updateAs);
                     }
                 } else {
@@ -203,9 +200,9 @@ public class RecordKitParser extends FrameworkAbstractParser {
             }
 
             // updateAs
-            if (!OP_NOP.equals(updateAs)) {
-                if (updateAs.equals(OP_INSERT)) {
-                    if (!OP_NOP.equals(insertAs)) {
+            if (!Column.NOP.equals(updateAs)) {
+                if (updateAs.equals(Column.INSERT)) {
+                    if (!Column.NOP.equals(insertAs)) {
                         columnElement.setUpdateAs(insertAs);
                     }
                 } else {
@@ -214,12 +211,12 @@ public class RecordKitParser extends FrameworkAbstractParser {
             }
 
             // selectAs
-            if (!OP_NOP.equals(selectAs)) {
+            if (!Column.NOP.equals(selectAs)) {
                 columnElement.setSelectAs(selectAs);
             }
 
             // definition
-            if (!OP_NOP.equals(columnAnnElm.unwrap().definition())) {
+            if (!Column.NOP.equals(columnAnnElm.unwrap().definition())) {
                 if (StringUtils.isEmpty(columnAnnElm.unwrap().definition())) {
                     columnElement.setDefinition("[COLUMN DEFINITION]");
                 } else {

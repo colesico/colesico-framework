@@ -20,10 +20,7 @@ import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.FieldElement;
-import colesico.framework.jdbirec.FieldMediator;
-import colesico.framework.jdbirec.AbstractRecordKit;
-import colesico.framework.jdbirec.RecordKitFactory;
-import colesico.framework.jdbirec.RecordView;
+import colesico.framework.jdbirec.*;
 import colesico.framework.jdbirec.codegen.model.ColumnElement;
 import colesico.framework.jdbirec.codegen.model.CompositionElement;
 import colesico.framework.jdbirec.codegen.model.RecordKitElement;
@@ -319,7 +316,7 @@ public class RecordKitGenerator {
     }
 
 
-    protected void generatImportMethod() {
+    protected void generateImportMethod() {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(AbstractRecordKit.IMPORT_RECORD_METHOD);
         mb.addModifiers(Modifier.PUBLIC);
         mb.addAnnotation(Override.class);
@@ -441,7 +438,7 @@ public class RecordKitGenerator {
                 continue;
             }
 
-            if (column.getInsertAs().equals("@field")) {
+            if (column.getInsertAs().equals(Column.FIELD)) {
                 String paramName = generateChain(null, column.getParentComposition(), column, FieldElement::getName);
                 columnValues.add(":" + paramName);
             } else {
@@ -467,7 +464,7 @@ public class RecordKitGenerator {
                 continue;
             }
 
-            if (column.getUpdateAs().equals("@field")) {
+            if (column.getUpdateAs().equals(Column.FIELD)) {
                 String paramName = generateChain(null, column.getParentComposition(), column, FieldElement::getName);
                 assigns.add(column.getName() + " = :" + paramName);
             } else {
@@ -522,7 +519,7 @@ public class RecordKitGenerator {
         classBuilder.addSuperinterface(TypeName.get(recordKitElement.getRecordKitClass().asClassType().unwrap()));
 
         generateExportMethod();
-        generatImportMethod();
+        generateImportMethod();
         generateGetTableName();
         generateGetJoinTables();
         generateGetRecordToken();
