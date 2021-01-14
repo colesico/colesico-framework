@@ -40,7 +40,7 @@
     </properties>
 
     <dependencies>
-        <!-- Colesico -->
+        <!-- Colesico assist for annotation processing support. Can be excluded at runtime-->
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-ioc</artifactId>
