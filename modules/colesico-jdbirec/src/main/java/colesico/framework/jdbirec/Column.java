@@ -35,7 +35,7 @@ public @interface Column {
     String COLUMN_REF = "@column";
     String INSERT_AS_REF = "@insertAs";
     String UPDATE_AS_REF = "@updateAs";
-     String NOP_REF ="@nop";
+    String NOP_REF = "@nop";
 
     /**
      * Column name.
@@ -51,7 +51,7 @@ public @interface Column {
     /**
      * Column value for insert and update sql.
      * \@field  - insert field value
-     * \@update - the same as updateAs
+     * \@updateAs - the same as updateAs
      * \@nop -  no insertion
      */
     String insertAs() default FIELD_REF;
@@ -59,7 +59,7 @@ public @interface Column {
     /**
      * Possible values:
      * \@field  - insert field value
-     * \@insert - the same as insertAs
+     * \@insertAs - the same as insertAs
      * \@nop -  don't update
      */
     String updateAs() default INSERT_AS_REF;
