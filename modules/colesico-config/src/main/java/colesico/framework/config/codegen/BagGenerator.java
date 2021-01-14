@@ -73,9 +73,11 @@ public class BagGenerator extends FrameworkAbstractGenerator {
         String packageName = confElement.getImplementation().getPackageName();
 
         TypeSpec.Builder bagBuilder = TypeSpec.classBuilder(classSimpleName);
-        bagBuilder.addAnnotation(Introspected.class);
-        bagBuilder.addModifiers(Modifier.PUBLIC);
+
         bagBuilder.addAnnotation(CodegenUtils.generateGenstamp(BagGenerator.class.getName(), null, null));
+        bagBuilder.addAnnotation(Introspected.class);
+
+        bagBuilder.addModifiers(Modifier.PUBLIC);
 
         generateBagConstructor(bagBuilder);
         generateBagProperties(bagBuilder, confElement);
