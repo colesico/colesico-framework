@@ -130,6 +130,7 @@
                 <module>modules/colesico-ioc</module>
 
                 <!-- Service -->
+                <module>modules/colesico-introspection</module>
                 <module>modules/colesico-config</module>
                 <module>modules/colesico-hocon</module>
                 <module>modules/colesico-resource</module>

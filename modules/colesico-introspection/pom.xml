@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2014-2020 Vladlen V. Larionov and others as noted.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.colesico.framework</groupId>
+        <artifactId>colesico-framework</artifactId>
+        <version>4.2.1-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>colesico-introspection</artifactId>
+
+    <packaging>jar</packaging>
+    <name>Colesico Introspection Module</name>
+    <description>
+        Colesico framework introspection module.
+        Introspection is designed as a reflection alternative for working with classes at runtime.
+        Introspection provides a subset of the reflection functionality.
+        Introspection is focused on working with java beans at runtime, object method invocations, field access.
+    </description>
+    <url>https://github.com/colesico/colesico-framework</url>
+
+    <properties>
+    </properties>
+
+    <dependencies>
+        <!-- Colesico -->
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-ioc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration combine.children="append">
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>net.colesico.framework</groupId>
+                            <artifactId>colesico-ioc</artifactId>
+                            <version>${project.version}</version>
+                        </path>
+                        <!-- Enable compile debug log -->
+                        <dependency>
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>slf4j-simple</artifactId>
+                            <version>${slf4j.version}</version>
+                        </dependency>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
