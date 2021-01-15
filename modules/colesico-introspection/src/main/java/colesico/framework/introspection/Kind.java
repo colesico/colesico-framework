@@ -11,5 +11,6 @@ public enum Kind {
     CONSTRUCTOR,
     METHOD,
     FIELD,
+    ENUM_CONSTANT,
     PARAMETER
 }
