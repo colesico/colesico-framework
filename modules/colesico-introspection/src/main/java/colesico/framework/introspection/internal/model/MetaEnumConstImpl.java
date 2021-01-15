@@ -1,6 +1,5 @@
 package colesico.framework.introspection.internal.model;
 
-import colesico.framework.introspection.MetaEnum;
 import colesico.framework.introspection.MetaEnumConstant;
 
 public final class MetaEnumConstImpl<E> extends MetaElementImpl implements MetaEnumConstant<E> {
@@ -9,7 +8,7 @@ public final class MetaEnumConstImpl<E> extends MetaElementImpl implements MetaE
 
     @Override
     public E getValue() {
-        return getter.get(((MetaEnum<E>) container).getEnumeration());
+        return getter.get();
     }
 
     public Getter<E> getGetter() {

@@ -11,6 +11,6 @@ public interface MetaEnumConstant<E> extends MetaElement {
 
     @FunctionalInterface
     interface Getter<E> {
-        E get(E enumeration);
+        E get();
     }
 }

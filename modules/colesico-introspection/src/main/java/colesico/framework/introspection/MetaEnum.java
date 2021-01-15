@@ -9,8 +9,6 @@ public interface MetaEnum<E> extends MetaInterface<E> {
 
     MetaEnumConstant<E>[] getConstants();
 
-    E getEnumeration();
-
     @Override
     default Kind getKind() {
         return Kind.ENUM;
