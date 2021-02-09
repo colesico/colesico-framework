@@ -36,7 +36,7 @@ public final class ValidationContext<V> {
     private final String subject;
 
     // Value to be validated
-    private final V value;
+    private V value;
 
     // Validation parameters - any values that can be used by validators.
     private Object[] params;
@@ -117,6 +117,10 @@ public final class ValidationContext<V> {
      */
     public V getValue() {
         return value;
+    }
+
+    public void setValue(V value) {
+        this.value = value;
     }
 
     public Object[] getParams() {

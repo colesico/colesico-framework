@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @author Vladlen Larionov
  */
-public final class ListChain<V extends List<E>, E> extends AbstractSequence<V, E> {
+public final class ItemChain<V extends List<E>, E> extends AbstractSequence<V, E> {
 
     /**
      * Nested context subject
@@ -37,7 +37,7 @@ public final class ListChain<V extends List<E>, E> extends AbstractSequence<V, E
      */
     private final int index;
 
-    public ListChain(String subject, int index) {
+    public ItemChain(String subject, int index) {
         this.subject = subject;
         this.index = index;
     }

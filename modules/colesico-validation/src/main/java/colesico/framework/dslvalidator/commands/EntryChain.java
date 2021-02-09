@@ -25,7 +25,7 @@ import java.util.Map;
  *
  * @author Vladlen Larionov
  */
-public final class MapChain<V extends Map<K, E>, K, E> extends AbstractSequence<V, E> {
+public final class EntryChain<V extends Map<K, E>, K, E> extends AbstractSequence<V, E> {
 
     /**
      * Nested context subject
@@ -37,7 +37,7 @@ public final class MapChain<V extends Map<K, E>, K, E> extends AbstractSequence<
      */
     private final K key;
 
-    public MapChain(String subject, K key) {
+    public EntryChain(String subject, K key) {
         this.subject = subject;
         this.key = key;
     }
