@@ -22,6 +22,7 @@ import java.util.Map;
 
 /**
  * Perform command execution on a map entry  determined by key.
+ * Assumes entry value is null if the map value is null .
  *
  * @author Vladlen Larionov
  */
@@ -44,7 +45,13 @@ public final class EntryChain<V extends Map<K, E>, K, E> extends AbstractSequenc
 
     @Override
     public void execute(ValidationContext<V> context) {
-        E entryValue = context.getValue().get(key);
+        V currentValue = context.getValue();
+        E entryValue;
+        if (currentValue == null) {
+            entryValue = null;
+        } else {
+            entryValue = currentValue.get(key);
+        }
         ValidationContext<E> nestedContext = ValidationContext.ofNested(context, subject, entryValue);
         executeChain(nestedContext);
     }

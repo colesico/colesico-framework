@@ -23,6 +23,8 @@ import java.util.function.Function;
 /**
  * Extract field value from current context value with extractor function
  * and applies commands to that nested value within new nested context.
+ * <p>
+ * If current context value is null provides null value to subcontext without without involving an extractor
  *
  * @author Vladlen Larionov
  */
@@ -45,7 +47,13 @@ public final class FieldChain<V, N> extends AbstractSequence<V, N> {
 
     @Override
     public void execute(ValidationContext<V> context) {
-        N nestedValue = extractor.apply(context.getValue());
+        V currentValue = context.getValue();
+        N nestedValue;
+        if (currentValue != null) {
+            nestedValue = extractor.apply(context.getValue());
+        } else {
+            nestedValue = null;
+        }
         ValidationContext<N> nestedContext = ValidationContext.ofNested(context, subject, nestedValue);
         executeChain(nestedContext);
     }
