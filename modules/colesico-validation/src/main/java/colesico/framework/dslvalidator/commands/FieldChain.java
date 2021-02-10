@@ -50,7 +50,7 @@ public final class FieldChain<V, N> extends AbstractSequence<V, N> {
         V currentValue = context.getValue();
         N nestedValue;
         if (currentValue != null) {
-            nestedValue = extractor.apply(context.getValue());
+            nestedValue = extractor.apply(currentValue);
         } else {
             nestedValue = null;
         }
