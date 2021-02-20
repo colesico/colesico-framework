@@ -273,6 +273,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
 
                 ClassType compositionType = field.asClassType();
                 CompositionElement composition = new CompositionElement(recordKitElement, compositionType, field);
+                superComposition.addSubComposition(composition);
 
                 String columnsPrefix = superComposition.getColumnsPrefix() + StringUtils.trim(compositionAst.unwrap().columnsPrefix());
                 composition.setColumnsPrefix(columnsPrefix);
@@ -316,7 +317,6 @@ public class RecordKitParser extends FrameworkAbstractParser {
                     composition.setKeyColumn(columnsPrefix + compositionAst.unwrap().keyColumn());
                 }
 
-                superComposition.addSubComposition(composition);
                 parseComposition(composition);
                 break;
             }
