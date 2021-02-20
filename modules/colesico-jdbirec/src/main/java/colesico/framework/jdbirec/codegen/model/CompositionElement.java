@@ -17,18 +17,29 @@
 package colesico.framework.jdbirec.codegen.model;
 
 import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.Composition;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Composition model
+ */
 public class CompositionElement {
 
+    /**
+     * Parent kit ref
+     */
     private final RecordKitElement parentRecordKit;
+
+    /**
+     * Parent composition ref
+     */
+    private CompositionElement parentComposition;
 
     /**
      * Composition class type
@@ -40,28 +51,24 @@ public class CompositionElement {
      */
     private final FieldElement originField;
 
-    /**
-     * Parent composition ref
-     */
-    private CompositionElement parentComposition;
 
     /**
      * Columns list imported from composition class
      *
      * @see Composition#columns()
      */
-    private String[] importedColumns;
+    private final List<ColumnBindingElement> columnBindings = new ArrayList<>();
 
     /**
      * @see Composition#keyColumn()
      */
     private String keyColumn;
 
+    private String columnsPrefix = "";
+
     private final Set<ColumnElement> columns = new LinkedHashSet<>();
 
     private final Set<CompositionElement> subCompositions = new LinkedHashSet<>();
-
-    private String namePrefix = "";
 
     /**
      * Composition table name.
@@ -75,6 +82,10 @@ public class CompositionElement {
         this.originField = originField;
     }
 
+    /**
+     * Checks that the given column contains in this composition or nested.
+     * This used to eliminate column duplication
+     */
     public boolean hasColumn(ColumnElement columnElement) {
         if (columns.contains(columnElement)) {
             return true;
@@ -107,8 +118,16 @@ public class CompositionElement {
         columnElm.setParentComposition(this);
     }
 
+    public void bindColumn(ColumnBindingElement binding) {
+        columnBindings.add(binding);
+    }
+
     public RecordKitElement getParentRecordKit() {
         return parentRecordKit;
+    }
+
+    public CompositionElement getParentComposition() {
+        return parentComposition;
     }
 
     public ClassType getOriginType() {
@@ -119,28 +138,16 @@ public class CompositionElement {
         return originField;
     }
 
-    public CompositionElement getParentComposition() {
-        return parentComposition;
-    }
-
-    public void setParentComposition(CompositionElement parentComposition) {
-        this.parentComposition = parentComposition;
-    }
-
-    public String[] getImportedColumns() {
-        return importedColumns;
-    }
-
-    public void setImportedColumns(String[] importedColumns) {
-        this.importedColumns = importedColumns;
+    public List<ColumnBindingElement> getColumnBindings() {
+        return columnBindings;
     }
 
     public String getKeyColumn() {
         return keyColumn;
     }
 
-    public void setKeyColumn(String keyColumn) {
-        this.keyColumn = keyColumn;
+    public String getColumnsPrefix() {
+        return columnsPrefix;
     }
 
     public Set<ColumnElement> getColumns() {
@@ -155,16 +162,20 @@ public class CompositionElement {
         return tableName;
     }
 
+    public void setParentComposition(CompositionElement parentComposition) {
+        this.parentComposition = parentComposition;
+    }
+
+    public void setKeyColumn(String keyColumn) {
+        this.keyColumn = keyColumn;
+    }
+
+    public void setColumnsPrefix(String columnsPrefix) {
+        this.columnsPrefix = columnsPrefix;
+    }
+
     public void setTableName(String tableName) {
         this.tableName = tableName;
-    }
-
-    public String getNamePrefix() {
-        return namePrefix;
-    }
-
-    public void setNamePrefix(String namePrefix) {
-        this.namePrefix = namePrefix;
     }
 
     @Override

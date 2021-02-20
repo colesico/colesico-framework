@@ -17,41 +17,30 @@
 package colesico.framework.jdbirec;
 
 import java.lang.annotation.*;
-
+import java.sql.ResultSet;
 
 /**
- * Fields composition marker.  (analogue of JPA @Embedded)
+ * Defines composition column to be imported from composition
  */
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Repeatable(Compositions.class)
 @Inherited
-public @interface Composition {
+public @interface ColumnBinding {
 
     /**
-     * Composition columns name prefix.
-     * This value is used to set the general prefix for names of the composition columns
+     * Name of the column to import from the composition
      */
-    String columnsPrefix() default "";
+    String column();
 
     /**
-     * Columns to be used from composition class and nested classes.
-     * If specified, imports only listed columns.
-     * If not specified imports all not virtual columns.
+     * Column name overriding
      */
-    ColumnBinding[] columns() default {};
-
-    //TODO: columns usage flag: AUTO (default), ALL
+    String name() default "";
 
     /**
-     * If specified creates composition object only if key column value is not null
+     * Meditor class overriding
      */
-    String keyColumn() default "";
+    Class<? extends FieldMediator> mediator() default FieldMediator.class;
 
-    /**
-     * @return
-     * @see RecordKitConfig#views()
-     */
-    String[] views() default {RecordView.ALL_VIEWS};
 }

@@ -20,6 +20,8 @@ import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.Column;
 
+import java.util.Objects;
+
 public class ColumnElement {
 
     /**
@@ -156,19 +158,16 @@ public class ColumnElement {
         this.updateAs = updateAs;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-
         ColumnElement that = (ColumnElement) o;
-
         return name.equals(that.name);
     }
 
+    @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + name.hashCode();
-        return result;
+        return Objects.hash(name);
     }
 }

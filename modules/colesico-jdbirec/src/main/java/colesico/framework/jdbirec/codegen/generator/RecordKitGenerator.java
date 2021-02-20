@@ -57,10 +57,10 @@ public class RecordKitGenerator {
 
     protected String getRecordKitInstanceClassName() {
         if (RecordView.DEFAULT_VIEW.equals(recordKitElement.getView())) {
-            return recordKitElement.getRecordKitClass().getSimpleName() + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
+            return recordKitElement.getOriginClass().getSimpleName() + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
         } else {
             String viewPart = StrUtils.firstCharToUpperCase(recordKitElement.getView());
-            return recordKitElement.getRecordKitClass().getSimpleName() + viewPart + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
+            return recordKitElement.getOriginClass().getSimpleName() + viewPart + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
         }
     }
 
@@ -132,14 +132,15 @@ public class RecordKitGenerator {
             compositionVar = AbstractRecordKit.RECORD_PARAM;
         } else {
             compositionVar = varNames.getNextVarName(composition.getOriginField().getName());
-            // SubCompositionType comp=parentComp.getSubComposition()
             cb.add("\n");
             cb.add("// Composition: " + composition.getOriginType().unwrap() + "\n\n");
+            // SubCompositionType comp=parentComp.getSubComposition()
             cb.addStatement("$T $N = $N.$N()",
                     TypeName.get(composition.getOriginType().unwrap()),
                     compositionVar,
                     parentCompositionVar,
                     toGetterName(composition.getOriginField()));
+            // if (comp == null) { comp = new SubCompositionType()}
             cb.add("if ($N == null) { $N = new $T(); }\n", compositionVar, compositionVar, TypeName.get(composition.getOriginType().unwrap()));
         }
 
@@ -155,7 +156,7 @@ public class RecordKitGenerator {
                 cb.add("$N.$N()", compositionVar, fieldGetterName);
                 cb.add(");\n");
             } else {
-                // mediator.exportField(comp.getField1()
+                // mediator.exportField(comp.getField1(),"param1",fr)
                 String mediatorField = mediatorFields.addField(column.getMediator().unwrap());
                 cb.add("$N.$N(", mediatorField, FieldMediator.EXPORT_METHOD);
                 cb.add("$N.$N()", compositionVar, fieldGetterName);
@@ -512,11 +513,11 @@ public class RecordKitGenerator {
         classBuilder.addModifiers(Modifier.PUBLIC);
 
         TypeName baseTypeName = ParameterizedTypeName.get(
-                ClassName.bestGuess(recordKitElement.getExtend().asClassElement().getName()),
+                ClassName.bestGuess(recordKitElement.getExtendClass().asClassElement().getName()),
                 TypeName.get(recordKitElement.getRecordType().unwrap()));
 
         classBuilder.superclass(baseTypeName);
-        classBuilder.addSuperinterface(TypeName.get(recordKitElement.getRecordKitClass().asClassType().unwrap()));
+        classBuilder.addSuperinterface(TypeName.get(recordKitElement.getOriginClass().asClassType().unwrap()));
 
         generateExportMethod();
         generateImportMethod();
@@ -533,8 +534,8 @@ public class RecordKitGenerator {
         generateMediatorFields();
         generateConstructor();
 
-        String packageName = recordKitElement.getRecordKitClass().getPackageName();
-        CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), packageName, recordKitElement.getRecordKitClass().unwrap());
+        String packageName = recordKitElement.getOriginClass().getPackageName();
+        CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), packageName, recordKitElement.getOriginClass().unwrap());
     }
 
     public void generate(ViewSetElement views) {

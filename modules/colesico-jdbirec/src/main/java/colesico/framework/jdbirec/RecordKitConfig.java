@@ -28,14 +28,14 @@ import java.lang.annotation.*;
 public @interface RecordKitConfig {
 
     /**
-     * Table name for record
+     * Master table name for record
      *
      * @return
      */
     String table() default "";
 
     /**
-     * Table alias to use in sql queries
+     * Master table alias to use in sql queries
      */
     String tableAlias() default "";
 
@@ -47,7 +47,7 @@ public @interface RecordKitConfig {
     String[] views() default {RecordView.DEFAULT_VIEW};
 
     /**
-     * Base class to be extended with generated record kit
+     * Base class to be extended by this record kit generated implementation
      */
     Class<? extends RecordKit> extend() default AbstractRecordKit.class;
 
