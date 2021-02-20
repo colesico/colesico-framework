@@ -20,18 +20,23 @@ import java.lang.annotation.*;
 import java.sql.ResultSet;
 
 /**
- * Defines composition column to be imported from composition
+ * Defines composition column to be bound from composition
  */
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface ColumnBinding {
+public @interface ColumnRef {
 
     /**
-     * Name of the column to import from the composition
+     * Name of the column to import from the composition or nested compositions
      */
-    String column();
+    String value() default "";
+
+    /**
+     * value alias
+     */
+    String column() default "";
 
     /**
      * Column name overriding

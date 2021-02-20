@@ -57,7 +57,7 @@ public class CompositionElement {
      *
      * @see Composition#columns()
      */
-    private final List<ColumnBindingElement> columnBindings = new ArrayList<>();
+    private final List<ColumnRefElement> columnReferences = new ArrayList<>();
 
     /**
      * @see Composition#keyColumn()
@@ -118,8 +118,8 @@ public class CompositionElement {
         columnElm.setParentComposition(this);
     }
 
-    public void bindColumn(ColumnBindingElement binding) {
-        columnBindings.add(binding);
+    public void referColumn(ColumnRefElement cr) {
+        columnReferences.add(cr);
     }
 
     public RecordKitElement getParentRecordKit() {
@@ -138,8 +138,8 @@ public class CompositionElement {
         return originField;
     }
 
-    public List<ColumnBindingElement> getColumnBindings() {
-        return columnBindings;
+    public List<ColumnRefElement> getColumnReferences() {
+        return columnReferences;
     }
 
     public String getKeyColumn() {

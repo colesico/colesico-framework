@@ -72,15 +72,10 @@ public class RecordKitParser extends FrameworkAbstractParser {
         return false;
     }
 
-    protected ColumnBindingElement findColumnBinding(CompositionElement compositionElement, String columnName) {
-        // TODO
-        return null;
-    }
-
     /**
      * Builds access path string:  filed1.field2.name
      */
-    protected String buildAccessPath(CompositionElement comp, String name) {
+    protected String buildPath(CompositionElement comp, String name) {
         Deque<String> namesStack = new ArrayDeque<>();
 
         namesStack.push(name);
@@ -94,55 +89,25 @@ public class RecordKitParser extends FrameworkAbstractParser {
         return StringUtils.join(namesStack, ".");
     }
 
-    /**
-     * Not null if given access path  (defined by composition and local name) is accepted by
-     * compositions chain {@link Composition#columns()}
-     */
-    protected String acceptPath(final CompositionElement composition, String columnName, boolean isVirtual) {
-        // Verified access path
-        String accessPath = buildAccessPath(composition, columnName);
-        logger.debug("Check access chain: " + accessPath);
-
-        // Build all access path set
-        Set<String> acceptedPathSet = new HashSet<>();
-        CompositionElement curComp = composition;
+    protected ColumnRefElement findColumnReference(CompositionElement comp, String columnName) {
+        String columnPath = buildPath(comp, columnName);
+        CompositionElement curComp = comp;
+        List<CompositionElement> chain = new ArrayList<>();
         while (curComp != null) {
-            String path;
-            if (composition.getColumnBindings().isEmpty()) {
-                for (ColumnBindingElement cre : composition.getColumnBindings()) {
-                    //logger.debug("Add accepted chain: "+lcName);
-                    path = buildAccessPath(composition, cre.getName());
-                    acceptedPathSet.add(path);
-                }
-            } else {
-                for (ColumnBindingElement cre : composition.getColumnBindings()) {
-                    //logger.debug("Add accepted chain: "+lcName);
-                    path = buildAccessPath(composition, cre.getName());
-                    acceptedPathSet.add(path);
-                }
-            }
+            chain.add(curComp);
             curComp = curComp.getParentComposition();
         }
 
-        if (logger.isDebugEnabled()) {
-            StringBuilder sb = new StringBuilder("Accepted chains: ");
-            for (String acceptedChain : acceptedPathSet) {
-                sb.append(acceptedChain).append("; ");
-            }
-            logger.debug(sb.toString());
-        }
+        // Binding lookup mast starts from root composition
+        Collections.reverse(chain);
 
-        if (acceptedPathSet.isEmpty()) {
-            if (isVirtual) {
-                return null;
-            } else {
-                return accessPath;
-            }
-        }
-
-        for (String acceptedPath : acceptedPathSet) {
-            if (StringUtils.startsWith(acceptedPath, accessPath)) {
-                return acceptedPath;
+        for (CompositionElement ce : chain) {
+            if (!ce.getColumnReferences().isEmpty()) {
+                for (ColumnRefElement cbe : ce.getColumnReferences()) {
+                    if (cbe.getColumn().equals(columnPath)) {
+                        return cbe;
+                    }
+                }
             }
         }
 
@@ -182,13 +147,13 @@ public class RecordKitParser extends FrameworkAbstractParser {
                 name = StringUtils.trim(columnAst.unwrap().name());
             }
 
-            ColumnBindingElement binding = findColumnBinding(composition, name);
+            ColumnRefElement ref = findColumnReference(composition, name);
 
-            if (binding == null) {
+            if (ref == null) {
                 if (columnAst.unwrap().virtual()) {
                     continue;
                 }
-                if (!composition.getColumnBindings().isEmpty()) {
+                if (!composition.getColumnReferences().isEmpty()) {
                     return;
                 }
             }
@@ -196,8 +161,8 @@ public class RecordKitParser extends FrameworkAbstractParser {
             // Build final column name
 
             String fullName;
-            if (binding != null && binding.getName() != null) {
-                fullName = binding.getName();
+            if (ref != null && ref.getName() != null) {
+                fullName = ref.getName();
             } else {
                 fullName = name;
             }
@@ -211,8 +176,8 @@ public class RecordKitParser extends FrameworkAbstractParser {
 
             // Mediator type
 
-            if (binding != null && binding.getMediator() != null) {
-                columnElement.setMediator(binding.getMediator());
+            if (ref != null && ref.getMediator() != null) {
+                columnElement.setMediator(ref.getMediator());
             } else {
                 TypeMirror mediatorType = columnAst.getValueTypeMirror(Column::mediator);
                 if (!CodegenUtils.isAssignable(FieldMediator.class, mediatorType, processingEnv)) {
@@ -284,10 +249,10 @@ public class RecordKitParser extends FrameworkAbstractParser {
         return compositions;
     }
 
-    protected void parseComposition(final CompositionElement composition) {
-        logger.debug("Parse record composition: " + composition);
+    protected void parseComposition(final CompositionElement superComposition) {
+        logger.debug("Parse record composition: " + superComposition);
 
-        List<FieldElement> fields = composition.getOriginType().asClassElement().getFieldsFiltered(
+        List<FieldElement> fields = superComposition.getOriginType().asClassElement().getFieldsFiltered(
                 f -> !f.unwrap().getModifiers().contains(Modifier.STATIC)
         );
 
@@ -302,60 +267,62 @@ public class RecordKitParser extends FrameworkAbstractParser {
                 AnnotationAssist<Composition> compositionAst = new AnnotationAssist<>(processingEnv, compositionAnn);
 
                 // Check view
-                if (!isInView(composition.getParentRecordKit().getView(), compositionAst.unwrap().views())) {
+                if (!isInView(superComposition.getParentRecordKit().getView(), compositionAst.unwrap().views())) {
                     continue;
                 }
 
                 ClassType compositionType = field.asClassType();
-                CompositionElement subComposition = new CompositionElement(recordKitElement, compositionType, field);
+                CompositionElement composition = new CompositionElement(recordKitElement, compositionType, field);
 
-                String columnsPrefix = composition.getColumnsPrefix() + StringUtils.trim(compositionAst.unwrap().columnsPrefix());
-                subComposition.setColumnsPrefix(columnsPrefix);
+                String columnsPrefix = superComposition.getColumnsPrefix() + StringUtils.trim(compositionAst.unwrap().columnsPrefix());
+                composition.setColumnsPrefix(columnsPrefix);
 
                 String tableName;
 
                 // Check subcomposition is a joint composition
-                JointRecord jointRecord = composition.getParentRecordKit().getJointRecords().get(compositionType);
+                JointRecord jointRecord = superComposition.getParentRecordKit().getJointRecords().get(compositionType);
                 if (jointRecord != null) {
                     tableName = jointRecord.getTableName();
                 } else {
-                    tableName = composition.getTableName();
+                    tableName = superComposition.getTableName();
                 }
 
-                subComposition.setTableName(tableName);
+                composition.setTableName(tableName);
 
                 // Parse column bindings
                 if (compositionAst.unwrap().columns().length > 0) {
-                    for (ColumnBinding cb : compositionAst.unwrap().columns()) {
-                        AnnotationAssist<ColumnBinding> cba = new AnnotationAssist<>(processingEnv, cb);
+                    for (ColumnRef cr : compositionAst.unwrap().columns()) {
+                        AnnotationAssist<ColumnRef> cra = new AnnotationAssist<>(processingEnv, cr);
 
-                        ColumnBindingElement cbe = new ColumnBindingElement(cb.column());
+                        String columnName = StringUtils.isNotBlank(cr.value()) ? cr.value() : cr.column();
+                        String columnPath = buildPath(composition, columnName);
+                        ColumnRefElement cre = new ColumnRefElement(columnPath);
                         // name overriding
-                        if (StringUtils.isNoneBlank(cb.name())) {
-                            cbe.setName(cb.name());
+                        if (StringUtils.isNoneBlank(cr.name())) {
+                            cre.setName(cr.name());
                         }
 
                         // mediator overriding
-                        TypeMirror mediatorType = cba.getValueTypeMirror(ColumnBinding::mediator);
+                        TypeMirror mediatorType = cra.getValueTypeMirror(ColumnRef::mediator);
                         if (!CodegenUtils.isAssignable(FieldMediator.class, mediatorType, processingEnv)) {
-                            cbe.setMediator(new ClassType(processingEnv, (DeclaredType) mediatorType));
+                            cre.setMediator(new ClassType(processingEnv, (DeclaredType) mediatorType));
                         }
 
-                        subComposition.bindColumn(cbe);
+                        composition.referColumn(cre);
                     }
                 }
 
                 if (StringUtils.isNoneBlank(compositionAst.unwrap().keyColumn())) {
-                    subComposition.setKeyColumn(columnsPrefix + compositionAst.unwrap().keyColumn());
+                    composition.setKeyColumn(columnsPrefix + compositionAst.unwrap().keyColumn());
                 }
 
-                composition.addSubComposition(subComposition);
-                parseComposition(subComposition);
+                superComposition.addSubComposition(composition);
+                parseComposition(composition);
                 break;
             }
 
             // Parse columns
-            parseColumns(composition, field);
+            parseColumns(superComposition, field);
         }
     }
 
