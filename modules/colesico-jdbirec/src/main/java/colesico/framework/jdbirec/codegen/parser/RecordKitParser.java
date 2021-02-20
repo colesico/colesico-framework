@@ -89,7 +89,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
         return StringUtils.join(namesStack, ".");
     }
 
-    protected ColumnRefElement findColumnReference(CompositionElement comp, String columnName) {
+    protected ColumnBindingElement findColumnBinding(CompositionElement comp, String columnName) {
         String columnPath = buildPath(comp, columnName);
         CompositionElement curComp = comp;
         List<CompositionElement> chain = new ArrayList<>();
@@ -102,8 +102,8 @@ public class RecordKitParser extends FrameworkAbstractParser {
         Collections.reverse(chain);
 
         for (CompositionElement ce : chain) {
-            if (!ce.getColumnReferences().isEmpty()) {
-                for (ColumnRefElement cbe : ce.getColumnReferences()) {
+            if (!ce.getBoundColumns().isEmpty()) {
+                for (ColumnBindingElement cbe : ce.getBoundColumns()) {
                     if (cbe.getColumn().equals(columnPath)) {
                         return cbe;
                     }
@@ -147,13 +147,13 @@ public class RecordKitParser extends FrameworkAbstractParser {
                 name = StringUtils.trim(columnAst.unwrap().name());
             }
 
-            ColumnRefElement ref = findColumnReference(composition, name);
+            ColumnBindingElement binding = findColumnBinding(composition, name);
 
-            if (ref == null) {
+            if (binding == null) {
                 if (columnAst.unwrap().virtual()) {
                     continue;
                 }
-                if (!composition.getColumnReferences().isEmpty()) {
+                if (!composition.getBoundColumns().isEmpty()) {
                     return;
                 }
             }
@@ -161,8 +161,8 @@ public class RecordKitParser extends FrameworkAbstractParser {
             // Build final column name
 
             String fullName;
-            if (ref != null && ref.getName() != null) {
-                fullName = ref.getName();
+            if (binding != null && binding.getName() != null) {
+                fullName = binding.getName();
             } else {
                 fullName = name;
             }
@@ -176,8 +176,8 @@ public class RecordKitParser extends FrameworkAbstractParser {
 
             // Mediator type
 
-            if (ref != null && ref.getMediator() != null) {
-                columnElement.setMediator(ref.getMediator());
+            if (binding != null && binding.getMediator() != null) {
+                columnElement.setMediator(binding.getMediator());
             } else {
                 TypeMirror mediatorType = columnAst.getValueTypeMirror(Column::mediator);
                 if (!CodegenUtils.isAssignable(FieldMediator.class, mediatorType, processingEnv)) {
@@ -292,24 +292,24 @@ public class RecordKitParser extends FrameworkAbstractParser {
 
                 // Parse column bindings
                 if (compositionAst.unwrap().columns().length > 0) {
-                    for (ColumnRef cr : compositionAst.unwrap().columns()) {
-                        AnnotationAssist<ColumnRef> cra = new AnnotationAssist<>(processingEnv, cr);
+                    for (BindColumn bc : compositionAst.unwrap().columns()) {
+                        AnnotationAssist<BindColumn> bca = new AnnotationAssist<>(processingEnv, bc);
 
-                        String columnName = StringUtils.isNotBlank(cr.value()) ? cr.value() : cr.column();
+                        String columnName = StringUtils.isNotBlank(bc.value()) ? bc.value() : bc.column();
                         String columnPath = buildPath(composition, columnName);
-                        ColumnRefElement cre = new ColumnRefElement(columnPath);
+                        ColumnBindingElement cbe = new ColumnBindingElement(columnPath);
                         // name overriding
-                        if (StringUtils.isNoneBlank(cr.name())) {
-                            cre.setName(cr.name());
+                        if (StringUtils.isNoneBlank(bc.name())) {
+                            cbe.setName(bc.name());
                         }
 
                         // mediator overriding
-                        TypeMirror mediatorType = cra.getValueTypeMirror(ColumnRef::mediator);
+                        TypeMirror mediatorType = bca.getValueTypeMirror(BindColumn::mediator);
                         if (!CodegenUtils.isAssignable(FieldMediator.class, mediatorType, processingEnv)) {
-                            cre.setMediator(new ClassType(processingEnv, (DeclaredType) mediatorType));
+                            cbe.setMediator(new ClassType(processingEnv, (DeclaredType) mediatorType));
                         }
 
-                        composition.referColumn(cre);
+                        composition.bindColumn(cbe);
                     }
                 }
 

@@ -26,7 +26,7 @@ import java.sql.ResultSet;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface ColumnRef {
+public @interface BindColumn {
 
     /**
      * Name of the column to import from the composition or nested compositions

@@ -40,7 +40,7 @@ public @interface Composition {
      * If specified, imports only listed columns.
      * If not specified imports all not virtual columns.
      */
-    ColumnRef[] columns() default {};
+    BindColumn[] columns() default {};
 
     //TODO: columns usage flag: AUTO (default), ALL
 

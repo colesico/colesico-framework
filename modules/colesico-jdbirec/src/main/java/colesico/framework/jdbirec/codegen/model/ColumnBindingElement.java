@@ -2,7 +2,7 @@ package colesico.framework.jdbirec.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassType;
 
-public class ColumnRefElement {
+public class ColumnBindingElement {
 
     /**
      * Composition column name
@@ -19,7 +19,7 @@ public class ColumnRefElement {
      */
     private ClassType mediator;
 
-    public ColumnRefElement(String column) {
+    public ColumnBindingElement(String column) {
         this.column = column;
     }
 
