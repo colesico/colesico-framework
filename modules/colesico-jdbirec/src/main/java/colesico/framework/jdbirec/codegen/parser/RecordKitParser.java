@@ -78,7 +78,9 @@ public class RecordKitParser extends FrameworkAbstractParser {
     protected String buildPath(CompositionElement comp, String name) {
         Deque<String> namesStack = new ArrayDeque<>();
 
-        namesStack.push(name);
+        if (name != null) {
+            namesStack.push(name);
+        }
 
         CompositionElement current = comp;
         while (current.getOriginField() != null) {
@@ -102,11 +104,11 @@ public class RecordKitParser extends FrameworkAbstractParser {
         Collections.reverse(chain);
 
         for (CompositionElement ce : chain) {
-            if (!ce.getBoundColumns().isEmpty()) {
-                for (ColumnBindingElement cbe : ce.getBoundColumns()) {
-                    if (cbe.getColumn().equals(columnPath)) {
-                        return cbe;
-                    }
+            logger.debug("Composition chain element bound columns: " + ce.getBoundColumns().size() + ": ce");
+            for (ColumnBindingElement cbe : ce.getBoundColumns()) {
+                logger.debug("findColumnBinding: " + columnPath + " ? " + cbe);
+                if (cbe.getColumn().equals(columnPath)) {
+                    return cbe;
                 }
             }
         }
@@ -130,6 +132,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
     }
 
     protected void parseColumns(final CompositionElement composition, FieldElement field) {
+        logger.debug("Parse columns on field: " + field + "; composition: " + composition);
         final List<Column> columnAnnList = getColumns(field);
         for (Column columnAnn : columnAnnList) {
 
@@ -150,12 +153,17 @@ public class RecordKitParser extends FrameworkAbstractParser {
             ColumnBindingElement binding = findColumnBinding(composition, name);
 
             if (binding == null) {
+                // If column is a virtual and binding not found - skip column
                 if (columnAst.unwrap().virtual()) {
                     continue;
                 }
+                // Composition have declared binding and this column has not binding
                 if (!composition.getBoundColumns().isEmpty()) {
-                    return;
+                    continue;
                 }
+            } else {
+                // set associated flag
+                binding.setAssociated(true);
             }
 
             // Build final column name
@@ -260,6 +268,9 @@ public class RecordKitParser extends FrameworkAbstractParser {
         for (FieldElement field : fields) {
             logger.debug("Parse record field: {} of type {}", field.getName(), field.unwrap().asType());
 
+            // Parse columns
+            parseColumns(superComposition, field);
+
             // Parse compositions
             final List<Composition> compositionAnnList = getCompositions(field);
             for (Composition compositionAnn : compositionAnnList) {
@@ -298,6 +309,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
                         String columnName = StringUtils.isNotBlank(bc.value()) ? bc.value() : bc.column();
                         String columnPath = buildPath(composition, columnName);
                         ColumnBindingElement cbe = new ColumnBindingElement(columnPath);
+
                         // name overriding
                         if (StringUtils.isNoneBlank(bc.name())) {
                             cbe.setName(bc.name());
@@ -318,11 +330,28 @@ public class RecordKitParser extends FrameworkAbstractParser {
                 }
 
                 parseComposition(composition);
-                break;
+                break; // break compositions ???
             }
 
-            // Parse columns
-            parseColumns(superComposition, field);
+        } // for fields
+
+        // check
+        checkColumnBindingsAssociated(superComposition);
+    }
+
+    /**
+     * Check column bindings was really associated with a columns
+     */
+    protected void checkColumnBindingsAssociated(final CompositionElement composition) {
+        for (ColumnBindingElement cbe : composition.getBoundColumns()) {
+            if (!cbe.isAssociated()) {
+                String path = buildPath(composition, null);
+                throw CodegenException.of()
+                        .message("Composition '" + recordKitElement.getRecordType().unwrap() + "." + path + "' column binding does not associated to a column: " + cbe.getColumn())
+                        .element(composition.getOriginField().unwrap())
+                        .build();
+            }
+
         }
     }
 

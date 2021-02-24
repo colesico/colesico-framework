@@ -19,6 +19,11 @@ public class ColumnBindingElement {
      */
     private ClassType mediator;
 
+    /**
+     * Indicate that this binding element was associated with a column element
+     */
+    private boolean associated = false;
+
     public ColumnBindingElement(String column) {
         this.column = column;
     }
@@ -41,5 +46,23 @@ public class ColumnBindingElement {
 
     public void setMediator(ClassType mediator) {
         this.mediator = mediator;
+    }
+
+    public boolean isAssociated() {
+        return associated;
+    }
+
+    public void setAssociated(boolean associated) {
+        this.associated = associated;
+    }
+
+    @Override
+    public String toString() {
+        return "ColumnBindingElement{" +
+                "column='" + column + '\'' +
+                ", name='" + name + '\'' +
+                ", mediator=" + mediator +
+                ", associated=" + associated +
+                '}';
     }
 }
