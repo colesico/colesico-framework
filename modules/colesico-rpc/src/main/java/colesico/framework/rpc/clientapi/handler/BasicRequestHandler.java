@@ -29,9 +29,17 @@ public class BasicRequestHandler implements RpcRequestHandler<BasicEnvelope> {
     @Override
     public void onRequest(BasicEnvelope request) {
         Principal principal = principalProv.get();
-        request.setPrincipal(principalSerializer.serialize(principal));
+        if (principal != null) {
+            request.setPrincipal(principalSerializer.serialize(principal));
+        } else {
+            request.setPrincipal(null);
+        }
 
         Profile profile = profileProv.get();
-        request.setProfile(profileSerializer.serialize(profile));
+        if (profile != null) {
+            request.setProfile(profileSerializer.serialize(profile));
+        } else {
+            request.setProfile(null);
+        }
     }
 }
