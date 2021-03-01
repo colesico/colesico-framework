@@ -16,17 +16,17 @@
 
 package colesico.framework.restlet.internal;
 
-import colesico.framework.ioc.production.Produce;
-import colesico.framework.restlet.teleapi.reader.JsonReader;
-import colesico.framework.restlet.teleapi.reader.RestletObjectReader;
-import colesico.framework.restlet.teleapi.reader.ValueReader;
-import colesico.framework.telehttp.reader.*;
 import colesico.framework.ioc.production.Classed;
+import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
-import colesico.framework.restlet.teleapi.reader.RestletReaderProxy;
 import colesico.framework.restlet.teleapi.RestletTeleReader;
+import colesico.framework.restlet.teleapi.reader.JsonReader;
+import colesico.framework.restlet.teleapi.reader.RestletObjectReader;
+import colesico.framework.restlet.teleapi.reader.RestletReaderProxy;
+import colesico.framework.restlet.teleapi.reader.ValueReader;
 import colesico.framework.security.Principal;
+import colesico.framework.telehttp.reader.*;
 
 import javax.inject.Singleton;
 import java.time.LocalDate;
@@ -38,18 +38,13 @@ import java.util.OptionalLong;
 
 @Producer
 @Produce(JsonReader.class)
+@Produce(RestletObjectReader.class)
 public class RestletReadersProducer {
 
     // Default general purpose reader impl
     @Singleton
     public ValueReader getValueReader(JsonReader impl) {
         return impl;
-    }
-
-    // Http object reader proxy
-    @Singleton
-    public RestletObjectReader getObjectReader(ObjectReader impl) {
-        return new RestletObjectReader(impl);
     }
 
     @Singleton

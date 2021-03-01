@@ -5,7 +5,7 @@ import colesico.framework.telehttp.ProfileHttpConfigPrototype;
 import colesico.framework.telehttp.assist.CSRFProtector;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.telehttp.internal.objectreader.ReadingSchemeFactory;
+import colesico.framework.telehttp.reader.objectreader.ReadingSchemeFactory;
 
 import javax.inject.Singleton;
 import java.nio.charset.StandardCharsets;

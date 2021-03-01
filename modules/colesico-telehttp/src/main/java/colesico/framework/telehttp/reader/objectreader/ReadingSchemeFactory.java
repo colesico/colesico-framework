@@ -1,4 +1,4 @@
-package colesico.framework.telehttp.internal.objectreader;
+package colesico.framework.telehttp.reader.objectreader;
 
 import colesico.framework.assist.StrUtils;
 import colesico.framework.teleapi.TeleFactory;
@@ -18,11 +18,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ReadingSchemeFactory {
 
     private final TeleFactory teleFactory;
-
     private final Map<Class<?>, ReadingScheme<?>> cache = new ConcurrentHashMap<>();
 
     public ReadingSchemeFactory(TeleFactory teleFactory) {
         this.teleFactory = teleFactory;
+    }
+
+    protected Class<? extends HttpTeleReader> getReaderType() {
+        return HttpTeleReader.class;
     }
 
     public <T> ReadingScheme<T> getScheme(Class<T> objectClass) {
@@ -60,8 +63,8 @@ public class ReadingSchemeFactory {
         }
     }
 
-    protected <T> HttpTeleReader<T, HttpTRContext> findReader(Type valueType) {
-        HttpTeleReader reader = teleFactory.findReader(HttpTeleReader.class, valueType);
+    protected HttpTeleReader findReader(Type valueType) {
+        HttpTeleReader reader = teleFactory.findReader(getReaderType(), valueType);
         return reader;
     }
 

@@ -1,4 +1,4 @@
-package colesico.framework.telehttp.internal.objectreader;
+package colesico.framework.telehttp.reader.objectreader;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.router.RouterContext;
@@ -9,11 +9,13 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
-public final class ObjectReaderImpl<C extends HttpTRContext> extends ObjectReader<C> {
+public class DefaultObjectReader<C extends HttpTRContext> extends ObjectReader<C> {
 
-    private final ReadingSchemeFactory readingSchemeFactory;
+    protected final ReadingSchemeFactory readingSchemeFactory;
 
-    public ObjectReaderImpl(Provider<RouterContext> routerContextProv, Provider<HttpContext> httpContextProv, ReadingSchemeFactory readingSchemeFactory) {
+    public DefaultObjectReader(Provider<RouterContext> routerContextProv,
+                               Provider<HttpContext> httpContextProv,
+                               ReadingSchemeFactory readingSchemeFactory) {
         super(routerContextProv, httpContextProv);
         this.readingSchemeFactory = readingSchemeFactory;
     }
