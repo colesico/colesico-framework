@@ -11,7 +11,6 @@ module colesico.framework.telehttp {
 
     exports colesico.framework.telehttp;
     exports colesico.framework.telehttp.reader;
-    exports colesico.framework.telehttp.reader.objectreader;
     exports colesico.framework.telehttp.writer;
     exports colesico.framework.telehttp.assist;
     exports colesico.framework.telehttp.codegen;

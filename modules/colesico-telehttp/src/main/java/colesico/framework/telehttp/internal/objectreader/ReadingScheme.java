@@ -1,4 +1,4 @@
-package colesico.framework.telehttp.reader.objectreader;
+package colesico.framework.telehttp.internal.objectreader;
 
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTeleReader;
