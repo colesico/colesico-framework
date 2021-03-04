@@ -35,4 +35,4 @@
 #
 # and run:
 
-mvn clean deploy -P modules,bundles,release
+mvn -e clean deploy -P modules,bundles,release
