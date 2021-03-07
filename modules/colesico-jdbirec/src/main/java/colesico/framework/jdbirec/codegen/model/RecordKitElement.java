@@ -25,22 +25,48 @@ import java.util.List;
 import java.util.Map;
 
 public class RecordKitElement {
-
+    /**
+     * View name associated with this kit
+     */
     private final String view;
-    private final ClassElement recordKitClass;
+
+    /**
+     * Origin record kit interface
+     */
+    private final ClassElement originClass;
+
+    /**
+     * Record type
+     */
     private final ClassType recordType;
-    private final ClassType extend;
+
+    /**
+     * Master table name associated with record of given type
+     */
     private final String tableName;
+
+    /**
+     * Table aliases to reference within sql queries
+     */
     private Map<String, String> tableAliases = new HashMap<>();
+
+    /**
+     * Records to be used in the joins
+     */
     private Map<ClassType, JointRecord> jointRecords = new HashMap<>();
+
+    /**
+     * Class that extended by this kit implementation  (default is AbstractRecordKit)
+     */
+    private ClassType extendClass;
 
     private final CompositionElement rootComposition;
 
-    public RecordKitElement(String view, ClassElement recordKitClass, ClassType recordType, ClassType extend, String tableName) {
+    public RecordKitElement(String view, ClassElement originClass, ClassType recordType, ClassType extend, String tableName) {
         this.view = view;
-        this.recordKitClass = recordKitClass;
+        this.originClass = originClass;
         this.recordType = recordType;
-        this.extend = extend;
+        this.extendClass = extend;
         this.tableName = tableName;
         this.rootComposition = new CompositionElement(this, recordType, null);
     }
@@ -71,8 +97,8 @@ public class RecordKitElement {
         return tableName;
     }
 
-    public ClassType getExtend() {
-        return extend;
+    public ClassType getExtendClass() {
+        return extendClass;
     }
 
     public String getView() {
@@ -87,8 +113,8 @@ public class RecordKitElement {
         tableAliases.put(alias, table);
     }
 
-    public ClassElement getRecordKitClass() {
-        return recordKitClass;
+    public ClassElement getOriginClass() {
+        return originClass;
     }
 
     public Map<ClassType, JointRecord> getJointRecords() {

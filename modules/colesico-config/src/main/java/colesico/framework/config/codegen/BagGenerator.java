@@ -19,6 +19,7 @@ package colesico.framework.config.codegen;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
+import colesico.framework.introspection.Introspect;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
@@ -38,27 +39,33 @@ public class BagGenerator extends FrameworkAbstractGenerator {
         super(processingEnv);
     }
 
-    private void generateBagProperties(TypeSpec.Builder mirrorBuilder, ConfigElement confElement) {
+    private void generateBagProperties(TypeSpec.Builder bagBuilder, ConfigElement confElement) {
         for (SourceValueElement sve : confElement.getSource().getSourceValues()) {
 
             String fieldName = sve.getOriginField().getName();
             TypeName fieldTypeName = TypeName.get(sve.getOriginField().getOriginType());
             FieldSpec.Builder fb = FieldSpec.builder(fieldTypeName, fieldName, Modifier.PRIVATE);
-            mirrorBuilder.addField(fb.build());
+            bagBuilder.addField(fb.build());
 
             MethodSpec.Builder sb = MethodSpec.methodBuilder("set" + StrUtils.firstCharToUpperCase(fieldName));
             sb.addModifiers(Modifier.PUBLIC);
             sb.returns(TypeName.VOID);
             sb.addParameter(fieldTypeName, fieldName);
             sb.addStatement("this.$N = $N", fieldName, fieldName);
-            mirrorBuilder.addMethod(sb.build());
+            bagBuilder.addMethod(sb.build());
 
             MethodSpec.Builder gb = MethodSpec.methodBuilder("get" + StrUtils.firstCharToUpperCase(fieldName));
             gb.addModifiers(Modifier.PUBLIC);
             gb.returns(fieldTypeName);
             gb.addStatement("return this.$N", fieldName);
-            mirrorBuilder.addMethod(gb.build());
+            bagBuilder.addMethod(gb.build());
         }
+    }
+
+    private void generateBagConstructor(TypeSpec.Builder bagBuilder) {
+        MethodSpec.Builder mb = MethodSpec.constructorBuilder();
+        mb.addModifiers(Modifier.PUBLIC);
+        bagBuilder.addMethod(mb.build());
     }
 
     public void generateConfigBag(ConfigElement confElement) {
@@ -66,9 +73,13 @@ public class BagGenerator extends FrameworkAbstractGenerator {
         String packageName = confElement.getImplementation().getPackageName();
 
         TypeSpec.Builder bagBuilder = TypeSpec.classBuilder(classSimpleName);
-        bagBuilder.addModifiers(Modifier.PUBLIC);
-        bagBuilder.addAnnotation(CodegenUtils.generateGenstamp(BagGenerator.class.getName(), null, null));
 
+        bagBuilder.addAnnotation(CodegenUtils.generateGenstamp(BagGenerator.class.getName(), null, null));
+        bagBuilder.addAnnotation(Introspect.class);
+
+        bagBuilder.addModifiers(Modifier.PUBLIC);
+
+        generateBagConstructor(bagBuilder);
         generateBagProperties(bagBuilder, confElement);
 
         final TypeSpec typeSpec = bagBuilder.build();

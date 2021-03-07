@@ -23,7 +23,7 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>4.2.0</version>
+        <version>4.3.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -40,7 +40,7 @@
     </properties>
 
     <dependencies>
-        <!-- Colesico -->
+        <!-- Colesico assist for annotation processing support. Can be excluded at runtime-->
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-ioc</artifactId>

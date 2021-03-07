@@ -31,26 +31,21 @@ public @interface Composition {
 
     /**
      * Composition columns name prefix.
-     * This value is used to set the general prefix for names the composition columns.
+     * This value is used to set the general prefix for names of the composition columns
      */
     String columnsPrefix() default "";
 
     /**
-     * Columns to be imported from composition class  and subcomposition classes.
-     * Imports only listed columns.
-     * If not specified imports all not optional columns.
-     * Column names are relative to the current composition chain.
-     * It is possible to specify non direct columns i.e.: subCompField.column_1
-     * Also possible to rename target column with = operator:  column_1=column_2
-     *
-     * @return
+     * Columns to be used from composition class and nested classes.
+     * If specified, imports only listed columns.
+     * If not specified imports all not virtual columns.
      */
-    String[] columns() default {};
+    BindColumn[] columns() default {};
+
+    //TODO: columns usage flag: AUTO (default), ALL
 
     /**
      * If specified creates composition object only if key column value is not null
-     *
-     * @return
      */
     String keyColumn() default "";
 

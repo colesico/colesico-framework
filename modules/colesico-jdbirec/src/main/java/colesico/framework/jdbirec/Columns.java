@@ -18,6 +18,9 @@ package colesico.framework.jdbirec;
 
 import java.lang.annotation.*;
 
+/**
+ * \@Columns container
+ */
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

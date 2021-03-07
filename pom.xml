@@ -23,10 +23,10 @@
     <groupId>net.colesico.framework</groupId>
     <artifactId>colesico-framework</artifactId>
     <packaging>pom</packaging>
-    <version>4.2.0</version>
+    <version>4.3.0</version>
     <name>Colesico Framework</name>
     <description>
-        Lightweight application framework for Java 14+
+        Lightweight application framework for Java 11+
     </description>
 
     <licenses>
@@ -63,7 +63,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>14</java.version>
+        <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss.SSSZ</maven.build.timestamp.format>
@@ -130,6 +130,7 @@
                 <module>modules/colesico-ioc</module>
 
                 <!-- Service -->
+                <module>modules/colesico-introspection</module>
                 <module>modules/colesico-config</module>
                 <module>modules/colesico-hocon</module>
                 <module>modules/colesico-resource</module>

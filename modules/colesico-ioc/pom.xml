@@ -23,7 +23,7 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>4.2.0</version>
+        <version>4.3.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -47,14 +47,14 @@
             <version>${slf4j.version}</version>
         </dependency>
 
-        <!-- Commons-Lang -->
+        <!-- Commons-Lang for annotation processing. Can be excluded at runtime -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang3.version}</version>
         </dependency>
 
-        <!-- Java poet -->
+        <!-- Java poet for code generation at annotation processing. Can be excluded at runtime -->
         <dependency>
             <groupId>com.squareup</groupId>
             <artifactId>javapoet</artifactId>

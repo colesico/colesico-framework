@@ -19,7 +19,7 @@ public class MandatoryChain<V> extends AbstractSequence<V, V> {
     @Override
     public void execute(ValidationContext<V> context) {
         if (context.getValue() != null) {
-            executeGroup(context);
+            executeChain(context);
         } else {
             context.addError(MandatoryChain.class.getSimpleName(), msg.mandatoryValueIsNull());
         }

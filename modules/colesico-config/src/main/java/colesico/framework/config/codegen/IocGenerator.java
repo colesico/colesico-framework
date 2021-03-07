@@ -48,7 +48,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
     public static final String CONF_PARAM = "config";
     public static final String CONFIG_SOURCE_PARAM = "configSource";
     public static final String CONNECTION_VAR = "conn";
-    public static final String BAG_VAR = "configBag";
+    public static final String BAG_VAR = "configData";
 
     private Logger logger = LoggerFactory.getLogger(IocGenerator.class);
 

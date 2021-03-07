@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class ConfigSourceElement {
 
-    public static final String BAG_CLASS_SUFFIX = "Bag";
+    public static final String BAG_CLASS_SUFFIX = "Data";
 
     private final ConfigElement parentConfig;
     private final ClassType sourceType;

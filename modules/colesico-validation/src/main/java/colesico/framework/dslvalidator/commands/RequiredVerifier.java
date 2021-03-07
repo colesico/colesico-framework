@@ -21,6 +21,7 @@ import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 import org.apache.commons.lang3.StringUtils;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
 
@@ -71,7 +72,7 @@ public final class RequiredVerifier<V> implements Command<V> {
         }
 
         if (context.getValue().getClass().isArray()) {
-            if (((Object[]) context.getValue()).length == 0) {
+            if (Array.getLength(context.getValue()) == 0) {
                 addError(context);
             }
         }

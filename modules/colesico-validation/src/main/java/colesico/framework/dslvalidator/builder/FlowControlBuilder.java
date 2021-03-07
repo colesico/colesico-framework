@@ -25,6 +25,7 @@ import colesico.framework.translation.Translatable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 abstract public class FlowControlBuilder {
@@ -172,12 +173,25 @@ abstract public class FlowControlBuilder {
     }
 
     /**
+     * Nested Chain
+     *
+     * @see NestedChain
+     */
+    protected final <V, N> Command<V> nested(final String subject, final Function<Optional<V>, Optional<N>> extractor, final Command<N>... commands) {
+        NestedChain<V, N> sequence = new NestedChain<>(subject, extractor);
+        for (Command<N> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return sequence;
+    }
+
+    /**
      * In case of local  validation errors occur, command execution is interrupted.
      *
      * @return
      */
     protected final <V extends List<E>, E> Command<V> item(final String subject, final int index, final Command<E>... commands) {
-        ListChain<V, E> sequence = new ListChain<>(subject, index);
+        ItemChain<V, E> sequence = new ItemChain<>(subject, index);
         for (Command<E> cmd : commands) {
             sequence.addCommand(cmd);
         }
@@ -188,7 +202,7 @@ abstract public class FlowControlBuilder {
      * Map emtry
      */
     protected final <V extends Map<K, E>, K, E> Command<V> entry(final String subject, final K key, final Command<E>... commands) {
-        MapChain<V, K, E> sequence = new MapChain<>(subject, key);
+        EntryChain<V, K, E> sequence = new EntryChain<>(subject, key);
         for (Command<E> cmd : commands) {
             sequence.addCommand(cmd);
         }

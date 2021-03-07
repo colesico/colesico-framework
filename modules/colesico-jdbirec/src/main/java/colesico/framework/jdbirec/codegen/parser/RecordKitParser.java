@@ -38,9 +38,6 @@ import java.util.*;
 
 public class RecordKitParser extends FrameworkAbstractParser {
 
-    public static final String OP_NOP = "@nop";
-    public static final String OU_UPDATE = "@update";
-    public static final String OP_INSERT = "@insert";
     /**
      * Parsing record
      */
@@ -50,15 +47,9 @@ public class RecordKitParser extends FrameworkAbstractParser {
         super(processingEnv);
     }
 
-    protected String rewriteName(String acceptedChain, String defaultName) {
-        int pos = StringUtils.indexOf(acceptedChain, '=');
-        if (pos < 0) {
-            return defaultName;
-        } else {
-            return StringUtils.trim(StringUtils.substring(acceptedChain, pos + 1));
-        }
-    }
-
+    /**
+     * CHeck view name should be class name compatible to generate class name suffix
+     */
     protected void checkViewNames(final String[] views, Element parentElement) {
         for (String p : views) {
             if (!p.matches("[A-Za-z0-9]+")) {
@@ -67,6 +58,9 @@ public class RecordKitParser extends FrameworkAbstractParser {
         }
     }
 
+    /**
+     * Check that the given views matches current view
+     */
     protected boolean isInView(String currentView, String[] views) {
         for (String p : views) {
             if (currentView.equals(p)) {
@@ -78,11 +72,14 @@ public class RecordKitParser extends FrameworkAbstractParser {
         return false;
     }
 
-    protected String buildAccessChain(CompositionElement comp, String localName) {
+    /**
+     * Builds access path string:  filed1.field2.name
+     */
+    protected String buildPath(CompositionElement comp, String name) {
         Deque<String> namesStack = new ArrayDeque<>();
 
-        if (localName != null) {
-            namesStack.push(localName);
+        if (name != null) {
+            namesStack.push(name);
         }
 
         CompositionElement current = comp;
@@ -94,43 +91,25 @@ public class RecordKitParser extends FrameworkAbstractParser {
         return StringUtils.join(namesStack, ".");
     }
 
-    protected String acceptChain(final CompositionElement composition, String localName, boolean isOption) {
-        String accessChain = buildAccessChain(composition, localName);
-        logger.debug("Check access chain: " + accessChain);
+    protected ColumnBindingElement findColumnBinding(CompositionElement comp, String columnName) {
+        String columnPath = buildPath(comp, columnName);
+        CompositionElement curComp = comp;
+        List<CompositionElement> chain = new ArrayList<>();
+        while (curComp != null) {
+            chain.add(curComp);
+            curComp = curComp.getParentComposition();
+        }
 
-        // Build all access chains set
-        Set<String> acceptedChains = new HashSet<>();
-        CompositionElement current = composition;
-        while (current != null) {
-            if (composition.getImportedColumns() != null) {
-                for (String lcName : composition.getImportedColumns()) {
-                    //logger.debug("Add accepted chain: "+lcName);
-                    String chain = buildAccessChain(composition, lcName);
-                    acceptedChains.add(chain);
+        // Binding lookup mast starts from root composition
+        Collections.reverse(chain);
+
+        for (CompositionElement ce : chain) {
+            logger.debug("Composition chain element bound columns: " + ce.getBoundColumns().size() + ": ce");
+            for (ColumnBindingElement cbe : ce.getBoundColumns()) {
+                logger.debug("findColumnBinding: " + columnPath + " ? " + cbe);
+                if (cbe.getColumn().equals(columnPath)) {
+                    return cbe;
                 }
-            }
-            current = current.getParentComposition();
-        }
-
-        if (logger.isDebugEnabled()) {
-            StringBuilder sb = new StringBuilder("Accepted chains: ");
-            for (String acceptedChain : acceptedChains) {
-                sb.append(acceptedChain).append("; ");
-            }
-            logger.debug(sb.toString());
-        }
-
-        if (acceptedChains.isEmpty()) {
-            if (isOption) {
-                return null;
-            } else {
-                return accessChain;
-            }
-        }
-
-        for (String acceptedChain : acceptedChains) {
-            if (StringUtils.startsWith(acceptedChain, accessChain)) {
-                return acceptedChain;
             }
         }
 
@@ -152,49 +131,76 @@ public class RecordKitParser extends FrameworkAbstractParser {
         return columns;
     }
 
-    protected void parseColumn(final CompositionElement composition, FieldElement field) {
-        final List<Column> columns = getColumns(field);
-        for (Column columnAnn : columns) {
+    protected void parseColumns(final CompositionElement composition, FieldElement field) {
+        logger.debug("Parse columns on field: " + field + "; composition: " + composition);
+        final List<Column> columnAnnList = getColumns(field);
+        for (Column columnAnn : columnAnnList) {
 
             // Check view
             if (!isInView(composition.getParentRecordKit().getView(), columnAnn.views())) {
                 continue;
             }
 
-            AnnotationAssist<Column> columnAnnElm = new AnnotationAssist<>(processingEnv, columnAnn);
+            AnnotationAssist<Column> columnAst = new AnnotationAssist<>(processingEnv, columnAnn);
 
             String name;
-            if (columnAnnElm.unwrap().name().equals("@field")) {
+            if (columnAst.unwrap().name().equals(Column.FIELD_REF)) {
                 name = StrUtils.toSeparatorNotation(field.getName(), '_');
             } else {
-                name = columnAnnElm.unwrap().name();
+                name = StringUtils.trim(columnAst.unwrap().name());
             }
 
-            String acceptedChain = acceptChain(composition, name, columnAnnElm.unwrap().virtual());
-            if (acceptedChain == null) {
-                continue;
+            ColumnBindingElement binding = findColumnBinding(composition, name);
+
+            if (binding == null) {
+                // If column is a virtual and binding not found - skip column
+                if (columnAst.unwrap().virtual()) {
+                    continue;
+                }
+                // Composition have declared binding and this column has not binding
+                if (!composition.getBoundColumns().isEmpty()) {
+                    continue;
+                }
+            } else {
+                // set associated flag
+                binding.setAssociated(true);
             }
 
-            String columnName = StringUtils.trim(composition.getNamePrefix() + rewriteName(acceptedChain, name));
-            ColumnElement columnElement = new ColumnElement(field, columnName);
+            // Build final column name
+
+            String fullName;
+            if (binding != null && binding.getName() != null) {
+                fullName = binding.getName();
+            } else {
+                fullName = name;
+            }
+            fullName = composition.getColumnsPrefix() + fullName;
+
+            ColumnElement columnElement = new ColumnElement(field, fullName);
             composition.addColumn(columnElement);
 
-            columnElement.setImportable(columnAnnElm.unwrap().importable());
-            columnElement.setExportable(columnAnnElm.unwrap().exportable());
+            columnElement.setImportable(columnAst.unwrap().importable());
+            columnElement.setExportable(columnAst.unwrap().exportable());
 
-            TypeMirror mediatorType = columnAnnElm.getValueTypeMirror(Column::mediator);
-            if (!CodegenUtils.isAssignable(FieldMediator.class, mediatorType, processingEnv)) {
-                columnElement.setMediator(new ClassType(processingEnv, (DeclaredType) mediatorType));
+            // Mediator type
+
+            if (binding != null && binding.getMediator() != null) {
+                columnElement.setMediator(binding.getMediator());
+            } else {
+                TypeMirror mediatorType = columnAst.getValueTypeMirror(Column::mediator);
+                if (!CodegenUtils.isAssignable(FieldMediator.class, mediatorType, processingEnv)) {
+                    columnElement.setMediator(new ClassType(processingEnv, (DeclaredType) mediatorType));
+                }
             }
 
-            String insertAs = StringUtils.trim(columnAnnElm.unwrap().insertAs());
-            String updateAs = StringUtils.trim(columnAnnElm.unwrap().updateAs());
-            String selectAs = StringUtils.trim(columnAnnElm.unwrap().selectAs());
+            String insertAs = StringUtils.trim(columnAst.unwrap().insertAs());
+            String updateAs = StringUtils.trim(columnAst.unwrap().updateAs());
 
             // insertAs
-            if (!OP_NOP.equals(insertAs)) {
-                if (insertAs.equals(OU_UPDATE)) {
-                    if (!OP_NOP.equals(updateAs)) {
+
+            if (!Column.NOP_REF.equals(insertAs)) {
+                if (insertAs.equals(Column.UPDATE_AS_REF)) {
+                    if (!Column.NOP_REF.equals(updateAs)) {
                         columnElement.setInsertAs(updateAs);
                     }
                 } else {
@@ -203,9 +209,10 @@ public class RecordKitParser extends FrameworkAbstractParser {
             }
 
             // updateAs
-            if (!OP_NOP.equals(updateAs)) {
-                if (updateAs.equals(OP_INSERT)) {
-                    if (!OP_NOP.equals(insertAs)) {
+
+            if (!Column.NOP_REF.equals(updateAs)) {
+                if (updateAs.equals(Column.INSERT_AS_REF)) {
+                    if (!Column.NOP_REF.equals(insertAs)) {
                         columnElement.setUpdateAs(insertAs);
                     }
                 } else {
@@ -213,99 +220,148 @@ public class RecordKitParser extends FrameworkAbstractParser {
                 }
             }
 
+            String selectAs = StringUtils.trim(columnAst.unwrap().selectAs());
+
             // selectAs
-            if (!OP_NOP.equals(selectAs)) {
+
+            if (!Column.NOP_REF.equals(selectAs)) {
                 columnElement.setSelectAs(selectAs);
             }
 
             // definition
-            if (!OP_NOP.equals(columnAnnElm.unwrap().definition())) {
-                if (StringUtils.isEmpty(columnAnnElm.unwrap().definition())) {
+
+            String definition = StringUtils.trim(columnAst.unwrap().definition());
+            if (!Column.NOP_REF.equals(definition)) {
+                if (StringUtils.isEmpty(definition)) {
                     columnElement.setDefinition("[COLUMN DEFINITION]");
                 } else {
-                    columnElement.setDefinition(columnAnnElm.unwrap().definition());
+                    columnElement.setDefinition(definition);
                 }
             }
 
         }
-
     }
 
     private List<Composition> getCompositions(FieldElement field) {
         final List<Composition> compositions = new ArrayList<>();
 
-        AnnotationAssist<Composition> compositionAnnElm = field.getAnnotation(Composition.class);
-        if (compositionAnnElm != null) {
-            compositions.add(compositionAnnElm.unwrap());
+        AnnotationAssist<Composition> compositionAst = field.getAnnotation(Composition.class);
+        if (compositionAst != null) {
+            compositions.add(compositionAst.unwrap());
         } else {
-            AnnotationAssist<Compositions> compositionsAnnElm = field.getAnnotation(Compositions.class);
-            if (compositionsAnnElm != null) {
-                compositions.addAll(Arrays.asList(compositionsAnnElm.unwrap().value()));
+            AnnotationAssist<Compositions> compositionsAst = field.getAnnotation(Compositions.class);
+            if (compositionsAst != null) {
+                compositions.addAll(Arrays.asList(compositionsAst.unwrap().value()));
             }
         }
         return compositions;
     }
 
-    protected void parseComposition(final CompositionElement composition) {
-        logger.debug("Parse record composition: " + composition);
+    protected void parseComposition(final CompositionElement superComposition) {
+        logger.debug("Parse record composition: " + superComposition);
 
-        List<FieldElement> fields = composition.getOriginType().asClassElement().getFieldsFiltered(
+        List<FieldElement> fields = superComposition.getOriginType().asClassElement().getFieldsFiltered(
                 f -> !f.unwrap().getModifiers().contains(Modifier.STATIC)
         );
 
+        // Process record fields
         for (FieldElement field : fields) {
-            logger.debug("Process record field: {} of type {}", field.getName(), field.unwrap().asType());
-            final List<Composition> compositions = getCompositions(field);
-            for (Composition compAnn : compositions) {
+            logger.debug("Parse record field: {} of type {}", field.getName(), field.unwrap().asType());
 
-                AnnotationAssist<Composition> compositionAnn = new AnnotationAssist<>(processingEnv, compAnn);
+            // Parse columns
+            parseColumns(superComposition, field);
+
+            // Parse compositions
+            final List<Composition> compositionAnnList = getCompositions(field);
+            for (Composition compositionAnn : compositionAnnList) {
+
+                AnnotationAssist<Composition> compositionAst = new AnnotationAssist<>(processingEnv, compositionAnn);
 
                 // Check view
-                if (!isInView(composition.getParentRecordKit().getView(), compositionAnn.unwrap().views())) {
-                    continue;
-                }
-
-                // Filter compositions that contains only not acceptable fields
-                if (acceptChain(composition, field.getName(), false) == null) {
+                if (!isInView(superComposition.getParentRecordKit().getView(), compositionAst.unwrap().views())) {
                     continue;
                 }
 
                 ClassType compositionType = field.asClassType();
-                CompositionElement subComposition = new CompositionElement(recordKitElement, compositionType, field);
+                CompositionElement composition = new CompositionElement(recordKitElement, compositionType, field);
+                superComposition.addSubComposition(composition);
 
-                subComposition.setNamePrefix(composition.getNamePrefix() + compositionAnn.unwrap().columnsPrefix());
+                String columnsPrefix = superComposition.getColumnsPrefix() + StringUtils.trim(compositionAst.unwrap().columnsPrefix());
+                composition.setColumnsPrefix(columnsPrefix);
 
                 String tableName;
 
-                JointRecord jointRecord = composition.getParentRecordKit().getJointRecords().get(compositionType);
+                // Check subcomposition is a joint composition
+                JointRecord jointRecord = superComposition.getParentRecordKit().getJointRecords().get(compositionType);
                 if (jointRecord != null) {
                     tableName = jointRecord.getTableName();
                 } else {
-                    tableName = composition.getTableName();
+                    tableName = superComposition.getTableName();
                 }
 
-                subComposition.setTableName(tableName);
+                composition.setTableName(tableName);
 
-                if (compositionAnn.unwrap().columns().length > 0) {
-                    subComposition.setImportedColumns(compositionAnn.unwrap().columns());
+                // Parse column bindings
+                if (compositionAst.unwrap().columns().length > 0) {
+                    for (BindColumn bc : compositionAst.unwrap().columns()) {
+                        AnnotationAssist<BindColumn> bca = new AnnotationAssist<>(processingEnv, bc);
+
+                        String columnName = StringUtils.isNotBlank(bc.value()) ? bc.value() : bc.column();
+                        String columnPath = buildPath(composition, columnName);
+                        ColumnBindingElement cbe = new ColumnBindingElement(columnPath);
+
+                        // name overriding
+                        if (StringUtils.isNoneBlank(bc.name())) {
+                            cbe.setName(bc.name());
+                        }
+
+                        // mediator overriding
+                        TypeMirror mediatorType = bca.getValueTypeMirror(BindColumn::mediator);
+                        if (!CodegenUtils.isAssignable(FieldMediator.class, mediatorType, processingEnv)) {
+                            cbe.setMediator(new ClassType(processingEnv, (DeclaredType) mediatorType));
+                        }
+
+                        composition.bindColumn(cbe);
+                    }
                 }
 
-                if (StringUtils.isNoneBlank(compositionAnn.unwrap().keyColumn())) {
-                    subComposition.setKeyColumn(compositionAnn.unwrap().keyColumn());
+                if (StringUtils.isNoneBlank(compositionAst.unwrap().keyColumn())) {
+                    composition.setKeyColumn(columnsPrefix + compositionAst.unwrap().keyColumn());
                 }
 
-                composition.addSubComposition(subComposition);
-                parseComposition(subComposition);
-                break;
+                parseComposition(composition);
+                break; // break compositions ???
             }
-            parseColumn(composition, field);
+
+        } // for fields
+
+        // check
+        checkColumnBindingsAssociated(superComposition);
+    }
+
+    /**
+     * Check column bindings was really associated with a columns
+     */
+    protected void checkColumnBindingsAssociated(final CompositionElement composition) {
+        for (ColumnBindingElement cbe : composition.getBoundColumns()) {
+            if (!cbe.isAssociated()) {
+                String path = buildPath(composition, null);
+                throw CodegenException.of()
+                        .message("Composition '" + recordKitElement.getRecordType().unwrap() + "." + path + "' column binding does not associated to a column: " + cbe.getColumn())
+                        .element(composition.getOriginField().unwrap())
+                        .build();
+            }
+
         }
     }
 
-    protected ClassType getRecordTypeFromKit(ClassElement recordKitClass) {
+    /**
+     * Extract record type from record kit interface  (generic parameter)
+     */
+    protected ClassType getRecordTypeFromKit(ClassElement recordKitInterface) {
 
         ClassType superClass = null;
-        List<ClassType> interfaces = recordKitClass.getInterfaces();
+        List<ClassType> interfaces = recordKitInterface.getInterfaces();
         for (ClassType iface : interfaces) {
             if (iface.getErasure().toString().equals(RecordKit.class.getCanonicalName())) {
                 superClass = iface;
@@ -314,11 +370,11 @@ public class RecordKitParser extends FrameworkAbstractParser {
         }
 
         if (superClass == null) {
-            throw CodegenException.of().element(recordKitClass.unwrap()).message("Not extends " + RecordKit.class.getName()).build();
+            throw CodegenException.of().element(recordKitInterface.unwrap()).message("Not extends " + RecordKit.class.getName()).build();
         }
 
         if (superClass.unwrap().getTypeArguments().size() != 1) {
-            throw CodegenException.of().element(recordKitClass.unwrap()).message("Unable to extract record type").build();
+            throw CodegenException.of().element(recordKitInterface.unwrap()).message("Unable to extract record type").build();
         }
 
         TypeMirror recordMirror = superClass.unwrap().getTypeArguments().get(0);
@@ -327,16 +383,22 @@ public class RecordKitParser extends FrameworkAbstractParser {
         return recordType;
     }
 
-    protected RecordKitElement parseRecordView(ClassElement recordKitClass, String view) {
+    /**
+     * Parse given record view
+     */
+    protected RecordKitElement parseRecordView(ClassElement recordKitInterface, String view) {
 
-        ClassType recordType = getRecordTypeFromKit(recordKitClass);
+        ClassType recordType = getRecordTypeFromKit(recordKitInterface);
 
-        AnnotationAssist<RecordKitConfig> configAnn = recordKitClass.getAnnotation(RecordKitConfig.class);
+        AnnotationAssist<RecordKitConfig> configAnn = recordKitInterface.getAnnotation(RecordKitConfig.class);
         String tableName = configAnn.unwrap().table();
         TypeMirror extendMirror = configAnn.getValueTypeMirror(RecordKitConfig::extend);
         ClassType extendType = new ClassType(processingEnv, (DeclaredType) extendMirror);
-        recordKitElement = new RecordKitElement(view, recordKitClass, recordType, extendType, tableName);
+        recordKitElement = new RecordKitElement(view, recordKitInterface, recordType, extendType, tableName);
 
+        /**
+         * Add master table alias if specified
+         */
         if (StringUtils.isNotBlank(configAnn.unwrap().tableAlias())) {
             recordKitElement.addTableAlias(configAnn.unwrap().tableAlias(), configAnn.unwrap().table());
         }
@@ -355,28 +417,33 @@ public class RecordKitParser extends FrameworkAbstractParser {
             recordKitElement.addTableAlias(jointConfigAnn.unwrap().tableAlias(), jointTableName);
         }
 
+        // Parse record compositions and columns
         parseComposition(recordKitElement.getRootComposition());
         return recordKitElement;
     }
 
     public ViewSetElement parse(ClassElement recordKitClass) {
-        logger.debug("Parse record kit: " + recordKitClass);
+        logger.debug("Parse record kit interface: " + recordKitClass);
 
         AnnotationAssist<RecordKitConfig> configAnn = recordKitClass.getAnnotation(RecordKitConfig.class);
+        // Get declared views
         String[] views = configAnn.unwrap().views();
+        // View name should be class name compatible
         checkViewNames(views, recordKitClass.unwrap());
 
+        // Build view list
         List<String> viewsList = new ArrayList<>();
-        for (String prof : views) {
-            if (!RecordView.ALL_VIEWS.equals(prof)) {
-                viewsList.add(prof);
+        for (String view : views) {
+            if (!RecordView.ALL_VIEWS.equals(view)) {
+                viewsList.add(view);
             }
         }
 
+        // Parse each view
         ViewSetElement viewSetElm = new ViewSetElement();
         for (String view : viewsList) {
-            RecordKitElement recordElm = parseRecordView(recordKitClass, view);
-            viewSetElm.addRecordKit(view, recordElm);
+            RecordKitElement kitElm = parseRecordView(recordKitClass, view);
+            viewSetElm.addRecordKit(view, kitElm);
         }
 
         return viewSetElm;

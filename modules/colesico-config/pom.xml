@@ -23,7 +23,7 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>4.2.0</version>
+        <version>4.3.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -44,6 +44,11 @@
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-ioc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-introspection</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

@@ -20,10 +20,7 @@ import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.FieldElement;
-import colesico.framework.jdbirec.FieldMediator;
-import colesico.framework.jdbirec.AbstractRecordKit;
-import colesico.framework.jdbirec.RecordKitFactory;
-import colesico.framework.jdbirec.RecordView;
+import colesico.framework.jdbirec.*;
 import colesico.framework.jdbirec.codegen.model.ColumnElement;
 import colesico.framework.jdbirec.codegen.model.CompositionElement;
 import colesico.framework.jdbirec.codegen.model.RecordKitElement;
@@ -60,10 +57,10 @@ public class RecordKitGenerator {
 
     protected String getRecordKitInstanceClassName() {
         if (RecordView.DEFAULT_VIEW.equals(recordKitElement.getView())) {
-            return recordKitElement.getRecordKitClass().getSimpleName() + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
+            return recordKitElement.getOriginClass().getSimpleName() + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
         } else {
             String viewPart = StrUtils.firstCharToUpperCase(recordKitElement.getView());
-            return recordKitElement.getRecordKitClass().getSimpleName() + viewPart + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
+            return recordKitElement.getOriginClass().getSimpleName() + viewPart + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
         }
     }
 
@@ -135,14 +132,15 @@ public class RecordKitGenerator {
             compositionVar = AbstractRecordKit.RECORD_PARAM;
         } else {
             compositionVar = varNames.getNextVarName(composition.getOriginField().getName());
-            // SubCompositionType comp=parentComp.getSubComposition()
             cb.add("\n");
             cb.add("// Composition: " + composition.getOriginType().unwrap() + "\n\n");
+            // SubCompositionType comp=parentComp.getSubComposition()
             cb.addStatement("$T $N = $N.$N()",
                     TypeName.get(composition.getOriginType().unwrap()),
                     compositionVar,
                     parentCompositionVar,
                     toGetterName(composition.getOriginField()));
+            // if (comp == null) { comp = new SubCompositionType()}
             cb.add("if ($N == null) { $N = new $T(); }\n", compositionVar, compositionVar, TypeName.get(composition.getOriginType().unwrap()));
         }
 
@@ -158,7 +156,7 @@ public class RecordKitGenerator {
                 cb.add("$N.$N()", compositionVar, fieldGetterName);
                 cb.add(");\n");
             } else {
-                // mediator.exportField(comp.getField1()
+                // mediator.exportField(comp.getField1(),"param1",fr)
                 String mediatorField = mediatorFields.addField(column.getMediator().unwrap());
                 cb.add("$N.$N(", mediatorField, FieldMediator.EXPORT_METHOD);
                 cb.add("$N.$N()", compositionVar, fieldGetterName);
@@ -319,7 +317,7 @@ public class RecordKitGenerator {
     }
 
 
-    protected void generatImportMethod() {
+    protected void generateImportMethod() {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(AbstractRecordKit.IMPORT_RECORD_METHOD);
         mb.addModifiers(Modifier.PUBLIC);
         mb.addAnnotation(Override.class);
@@ -389,11 +387,11 @@ public class RecordKitGenerator {
             String selectAs = column.getSelectAs();
             String tableName = column.getParentComposition().getTableName();
             if (StringUtils.isBlank(tableName)) {
-                selectAs = selectAs.replaceAll("@column\\((.+)\\)", "$1");
-                selectAs = StringUtils.replace(selectAs, "@column", column.getName());
+                selectAs = selectAs.replaceAll(Column.COLUMN_REF + "\\((.+)\\)", "$1");
+                selectAs = StringUtils.replace(selectAs, Column.COLUMN_REF, column.getName());
             } else {
-                selectAs = selectAs.replaceAll("@column\\((.+)\\)", tableName + ".$1");
-                selectAs = StringUtils.replace(selectAs, "@column", tableName + '.' + column.getName());
+                selectAs = selectAs.replaceAll(Column.COLUMN_REF + "\\((.+)\\)", tableName + ".$1");
+                selectAs = StringUtils.replace(selectAs, Column.COLUMN_REF, tableName + '.' + column.getName());
             }
             if (!(selectAs.equalsIgnoreCase(column.getName())
                     || selectAs.endsWith('.' + column.getName())
@@ -441,7 +439,7 @@ public class RecordKitGenerator {
                 continue;
             }
 
-            if (column.getInsertAs().equals("@field")) {
+            if (column.getInsertAs().equals(Column.FIELD_REF)) {
                 String paramName = generateChain(null, column.getParentComposition(), column, FieldElement::getName);
                 columnValues.add(":" + paramName);
             } else {
@@ -467,7 +465,7 @@ public class RecordKitGenerator {
                 continue;
             }
 
-            if (column.getUpdateAs().equals("@field")) {
+            if (column.getUpdateAs().equals(Column.FIELD_REF)) {
                 String paramName = generateChain(null, column.getParentComposition(), column, FieldElement::getName);
                 assigns.add(column.getName() + " = :" + paramName);
             } else {
@@ -515,14 +513,14 @@ public class RecordKitGenerator {
         classBuilder.addModifiers(Modifier.PUBLIC);
 
         TypeName baseTypeName = ParameterizedTypeName.get(
-                ClassName.bestGuess(recordKitElement.getExtend().asClassElement().getName()),
+                ClassName.bestGuess(recordKitElement.getExtendClass().asClassElement().getName()),
                 TypeName.get(recordKitElement.getRecordType().unwrap()));
 
         classBuilder.superclass(baseTypeName);
-        classBuilder.addSuperinterface(TypeName.get(recordKitElement.getRecordKitClass().asClassType().unwrap()));
+        classBuilder.addSuperinterface(TypeName.get(recordKitElement.getOriginClass().asClassType().unwrap()));
 
         generateExportMethod();
-        generatImportMethod();
+        generateImportMethod();
         generateGetTableName();
         generateGetJoinTables();
         generateGetRecordToken();
@@ -536,8 +534,8 @@ public class RecordKitGenerator {
         generateMediatorFields();
         generateConstructor();
 
-        String packageName = recordKitElement.getRecordKitClass().getPackageName();
-        CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), packageName, recordKitElement.getRecordKitClass().unwrap());
+        String packageName = recordKitElement.getOriginClass().getPackageName();
+        CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), packageName, recordKitElement.getOriginClass().unwrap());
     }
 
     public void generate(ViewSetElement views) {

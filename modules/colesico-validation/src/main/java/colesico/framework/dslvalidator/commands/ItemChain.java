@@ -22,10 +22,11 @@ import java.util.List;
 
 /**
  * Perform command execution on a list element determined by index.
+ * Assumes element value is null if the list value is null or the index is outside the list
  *
  * @author Vladlen Larionov
  */
-public final class ListChain<V extends List<E>, E> extends AbstractSequence<V, E> {
+public final class ItemChain<V extends List<E>, E> extends AbstractSequence<V, E> {
 
     /**
      * Nested context subject
@@ -37,17 +38,21 @@ public final class ListChain<V extends List<E>, E> extends AbstractSequence<V, E
      */
     private final int index;
 
-    public ListChain(String subject, int index) {
+    public ItemChain(String subject, int index) {
         this.subject = subject;
         this.index = index;
     }
 
     @Override
     public void execute(ValidationContext<V> context) {
-        if (index < context.getValue().size()) {
-            E elementValue = context.getValue().get(index);
-            ValidationContext<E> nestedContext = ValidationContext.ofNested(context, subject, elementValue);
-            executeChain(nestedContext);
+        V currentValue = context.getValue();
+        E elementValue;
+        if (currentValue == null || index >= currentValue.size() || index < 0) {
+            elementValue = null;
+        } else {
+            elementValue = currentValue.get(index);
         }
+        ValidationContext<E> nestedContext = ValidationContext.ofNested(context, subject, elementValue);
+        executeChain(nestedContext);
     }
 }
