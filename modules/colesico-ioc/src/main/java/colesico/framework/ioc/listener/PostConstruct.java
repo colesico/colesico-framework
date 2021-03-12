@@ -19,7 +19,7 @@ package colesico.framework.ioc.listener;
 import java.lang.annotation.*;
 
 @Documented
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 @Inherited
 public @interface PostConstruct {
