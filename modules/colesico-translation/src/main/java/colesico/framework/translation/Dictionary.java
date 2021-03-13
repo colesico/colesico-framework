@@ -23,7 +23,7 @@ import java.lang.annotation.*;
  * generate implementation of message methods that perform the translation.
  * In addition the [translation].properties files will be created for each locale if the @Translation annotations is present
  */
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
