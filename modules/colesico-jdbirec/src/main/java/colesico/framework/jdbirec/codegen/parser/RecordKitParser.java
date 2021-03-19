@@ -104,7 +104,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
         Collections.reverse(chain);
 
         for (CompositionElement ce : chain) {
-            logger.debug("Composition chain element bound columns: " + ce.getBoundColumns().size() + ": ce");
+            logger.debug("Composition chain element bound columns: " + ce.getBoundColumns().size() + ":" + ce);
             for (ColumnBindingElement cbe : ce.getBoundColumns()) {
                 logger.debug("findColumnBinding: " + columnPath + " ? " + cbe);
                 if (cbe.getColumn().equals(columnPath)) {
@@ -151,16 +151,24 @@ public class RecordKitParser extends FrameworkAbstractParser {
             }
 
             ColumnBindingElement binding = findColumnBinding(composition, name);
+            logger.debug("Binding for column: "+name+": "+binding);
 
             if (binding == null) {
                 // If column is a virtual and binding not found - skip column
                 if (columnAst.unwrap().virtual()) {
                     continue;
                 }
-                // Composition have declared binding and this column has not binding
-                if (!composition.getBoundColumns().isEmpty()) {
+                // Composition chain have declared binding and this column has not binding
+                CompositionElement curComp = composition;
+                boolean hasBindings = false;
+                while (curComp != null) {
+                    hasBindings = hasBindings || !curComp.getBoundColumns().isEmpty();
+                    curComp = curComp.getParentComposition();
+                }
+                if (hasBindings) {
                     continue;
                 }
+
             } else {
                 // set associated flag
                 binding.setAssociated(true);
