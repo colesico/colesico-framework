@@ -27,9 +27,21 @@ public interface ValidatorMessages {
     @Ru("Требуется значение")
     String valueRequired();
 
+    @Text("Invalid value")
+    @Ru("Неверное значение")
+    String invalidValue();
+
+    @Text("Invalid value format")
+    @Ru("Неверный формат значения")
+    String invalidValueFormat();
+
     @Text("Invalid date format")
     @Ru("Неверный формат даты")
     String invalidDateFormat();
+
+    @Text("Invalid number format")
+    @Ru("Неверный числовой формат")
+    String invalidNumberFormat();
 
     //
     // LengthVerifier
