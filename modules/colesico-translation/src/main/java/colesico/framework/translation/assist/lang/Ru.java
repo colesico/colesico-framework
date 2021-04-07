@@ -20,7 +20,7 @@ import colesico.framework.translation.Translation;
 
 import java.lang.annotation.*;
 
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 @Inherited
 @Translation("ru")

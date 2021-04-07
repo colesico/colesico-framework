@@ -21,7 +21,7 @@ import java.lang.annotation.*;
 /**
  * Should be applied to annotation that acts as a text translation for specified locale
  */
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.ANNOTATION_TYPE)
 @Inherited
 @Documented

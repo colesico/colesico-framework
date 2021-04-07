@@ -34,7 +34,7 @@ import java.lang.annotation.*;
  * @see Producer
  * @see PostConstruct
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 @Documented
 @Inherited

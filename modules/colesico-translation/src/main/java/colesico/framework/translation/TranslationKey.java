@@ -18,7 +18,7 @@ package colesico.framework.translation;
 
 import java.lang.annotation.*;
 
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 @Inherited
 @Documented

@@ -112,7 +112,12 @@ public class CompositionElement {
 
     public void addColumn(ColumnElement columnElm) {
         if (parentRecordKit.hasColumn(columnElm)) {
-            throw CodegenException.of().message("Duplicate column: " + columnElm.getName()).element(columnElm.getOriginField()).build();
+            throw CodegenException.of()
+                    .message("Duplicate column '" + columnElm.getName() + "' on field '" +
+                            this.getOriginType() + '.' +
+                            columnElm.getOriginField().getName() + "'." +
+                            " Parent composition: " + (this.getParentComposition() != null ? this.getParentComposition() : "null"))
+                    .element(columnElm.getOriginField()).build();
         }
         columns.add(columnElm);
         columnElm.setParentComposition(this);

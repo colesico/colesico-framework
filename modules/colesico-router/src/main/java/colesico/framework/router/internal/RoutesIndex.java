@@ -28,6 +28,7 @@ import java.util.Map;
 
 /**
  * Routes index to serve obtaining route by its id  (service class + tele-method name)
+ *
  * @author Vladlen Larionov
  */
 public class RoutesIndex {
@@ -43,6 +44,11 @@ public class RoutesIndex {
         }
     }
 
+    /**
+     * @param routeId
+     * @param parameters route params
+     * @return
+     */
     public List<String> getSlicedRoute(String routeId, Map<String, String> parameters) {
         RouteTrie.Node node = nodesMap.get(routeId);
         if (node == null) {
@@ -57,7 +63,10 @@ public class RoutesIndex {
             if (node.isParameter()) {
                 segmentName = parameters.get(node.getName());
                 if (segmentName == null) {
-                    throw new RouterException("Undetermined value of route parameter :"+node.getName()+" for routeId: "+routeId);
+                    if (!node.getName().equals(RouteTrie.SUFFIX_PARAM_NAME)) {
+                        throw new RouterException("Undetermined value of route parameter :" + node.getName() + " for routeId: " + routeId);
+                    }
+                    segmentName = "";
                 }
             } else {
                 segmentName = node.getName();
