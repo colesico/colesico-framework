@@ -85,6 +85,10 @@ public class Origin {
         return name;
     }
 
+    public boolean is(Origin o) {
+        return equals(o);
+    }
+
     @Override
     public String toString() {
         return "Origin." + name;

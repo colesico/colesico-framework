@@ -63,6 +63,10 @@ public class HttpMethod {
         return name;
     }
 
+    public boolean is(HttpMethod hm) {
+        return equals(hm);
+    }
+
     @Override
     public String toString() {
         return "HttpMethod." + name;
