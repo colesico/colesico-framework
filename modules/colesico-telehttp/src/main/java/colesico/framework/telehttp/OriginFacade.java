@@ -29,12 +29,12 @@ import java.nio.charset.StandardCharsets;
 /**
  * Default value reading facades for different origins
  */
-public interface OriginFacade {
+abstract public class OriginFacade {
 
-    OriginFacade ROUTE = new OriginFacade() {
+    public static final OriginFacade ROUTE = new OriginFacade() {
         @Override
         public Origin getOrigin() {
-            return Origin.ROUTE;
+            return Origin.ORIGIN_ROUTE;
         }
 
         @Override
@@ -42,84 +42,60 @@ public interface OriginFacade {
             return routerContext.getParameters().get(name);
         }
 
-        @Override
-        public String toString() {
-            return "ROUTE";
-        }
     };
 
-    OriginFacade QUERY = new OriginFacade() {
+    public static final OriginFacade QUERY = new OriginFacade() {
         @Override
         public Origin getOrigin() {
-            return Origin.QUERY;
+            return Origin.ORIGIN_QUERY;
         }
 
         @Override
         public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
             return httpRequest.getQueryParameters().get(name);
         }
-
-        @Override
-        public String toString() {
-            return "QUERY";
-        }
     };
 
-    OriginFacade POST = new OriginFacade() {
+    public static final OriginFacade POST = new OriginFacade() {
         @Override
         public Origin getOrigin() {
-            return Origin.POST;
+            return Origin.ORIGIN_POST;
         }
 
         @Override
         public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
             return httpRequest.getPostParameters().get(name);
         }
-
-        @Override
-        public String toString() {
-            return "POST";
-        }
     };
 
-    OriginFacade BODY = new OriginFacade() {
+    public static final OriginFacade BODY = new OriginFacade() {
         @Override
         public Origin getOrigin() {
-            return Origin.BODY;
+            return Origin.ORIGIN_BODY;
         }
 
         @Override
         public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
-            throw new UnsupportedOperationException("Obtaining named parameter '"+name+"' from body is not supported");
-        }
-
-        @Override
-        public String toString() {
-            return "BODY";
+            throw new UnsupportedOperationException("Obtaining named parameter '" + name + "' from body is not supported");
         }
     };
 
-    OriginFacade HEADER = new OriginFacade() {
+    public static final OriginFacade HEADER = new OriginFacade() {
         @Override
         public Origin getOrigin() {
-            return Origin.HEADER;
+            return Origin.ORIGIN_HEADER;
         }
 
         @Override
         public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
             return httpRequest.getHeaders().get(name);
         }
-
-        @Override
-        public String toString() {
-            return "HEADER";
-        }
     };
 
-    OriginFacade COOKIE = new OriginFacade() {
+    public static final OriginFacade COOKIE = new OriginFacade() {
         @Override
         public Origin getOrigin() {
-            return Origin.COOKIE;
+            return Origin.ORIGIN_COOKIE;
         }
 
         @Override
@@ -127,21 +103,16 @@ public interface OriginFacade {
             HttpCookie cookie = httpRequest.getCookies().get(name);
             return cookie == null ? null : cookie.getValue();
         }
-
-        @Override
-        public String toString() {
-            return "COOKIE";
-        }
     };
 
     /**
      * This is AUTO default impl. Should be implemented for the concrete data port.
      */
-    OriginFacade AUTO = new OriginFacade() {
+    public static final OriginFacade AUTO = new OriginFacade() {
 
         @Override
         public Origin getOrigin() {
-            return Origin.AUTO;
+            return Origin.ORIGIN_AUTO;
         }
 
         @Override
@@ -170,14 +141,15 @@ public interface OriginFacade {
                     return value;
             }
         }
-
-        @Override
-        public String toString() {
-            return "AUTO";
-        }
     };
 
-    Origin getOrigin();
+    abstract public Origin getOrigin();
 
-    String getString(String name, RouterContext routerContext, HttpRequest httpRequest);
+    abstract public String getString(String name, RouterContext routerContext, HttpRequest httpRequest);
+
+    @Override
+    public String toString() {
+        return getOrigin().getName();
+    }
+
 }

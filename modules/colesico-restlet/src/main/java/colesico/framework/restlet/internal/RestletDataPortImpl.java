@@ -25,6 +25,8 @@ import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -35,11 +37,12 @@ import java.util.List;
 @Singleton
 public class RestletDataPortImpl implements RestletDataPort {
 
-    protected final TeleFactory teleFactory;
-    protected final Provider<HttpContext> httpContextProv;
-    protected final Provider<RouterContext> routerContextProv;
+    private final Logger logger = LoggerFactory.getLogger(RestletDataPort.class);
+    private final TeleFactory teleFactory;
+    private final Provider<HttpContext> httpContextProv;
+    private final Provider<RouterContext> routerContextProv;
 
-    protected final RestletJsonConverter jsonConverter;
+    private final RestletJsonConverter jsonConverter;
 
     public RestletDataPortImpl(TeleFactory teleFactory, Provider<HttpContext> httpContextProv, Provider<RouterContext> routerContextProv, RestletJsonConverter jsonConverter) {
         this.teleFactory = teleFactory;
@@ -134,7 +137,7 @@ public class RestletDataPortImpl implements RestletDataPort {
 
     }
 
-    protected List<String> getMessages(Throwable ex) {
+    private List<String> getMessages(Throwable ex) {
         Throwable e = ex;
         List<String> messages = new ArrayList<>();
 

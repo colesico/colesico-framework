@@ -35,9 +35,9 @@ public final class JsonReader extends ValueReader {
         // Should the value be read from input stream?
         Origin origin = context.getOriginFacade().getOrigin();
 
-        boolean useInputStream = origin.equals(Origin.BODY) ||
+        boolean useInputStream = origin.equals(Origin.ORIGIN_BODY) ||
                 (
-                        origin.equals(Origin.AUTO) &&
+                        origin.equals(Origin.ORIGIN_AUTO) &&
                                 (
                                         requestMethod.equals(HTTP_METHOD_POST)
                                                 || requestMethod.equals(HTTP_METHOD_PUT)

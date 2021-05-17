@@ -42,4 +42,11 @@ public final class RestletReaderProxy<V> extends RestletTeleReader<V> {
     public static <V> RestletReaderProxy of(HttpTeleReader<V, HttpTRContext> reader) {
         return new RestletReaderProxy(reader);
     }
+
+    @Override
+    public String toString() {
+        return "RestletReaderProxy{" +
+                "reader=" + reader +
+                '}';
+    }
 }

@@ -26,14 +26,14 @@ public class TeleHttpCodegenUtils {
 
     public static Origin getParamOrigin(TeleParamElement teleParam) {
         TeleMethodElement teleMethod = teleParam.getParentTeleMethod();
-        Origin paramOrigin = Origin.AUTO;
+        Origin paramOrigin = Origin.ORIGIN_AUTO;
         AnnotationAssist<ParamOrigin> originAnn = teleParam.getOriginParam().getAnnotation(ParamOrigin.class);
         if (originAnn == null) {
             originAnn = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(ParamOrigin.class);
         }
 
         if (originAnn != null) {
-            paramOrigin = originAnn.unwrap().value();
+            paramOrigin = Origin.of(originAnn.unwrap().value());
         }
         return paramOrigin;
     }

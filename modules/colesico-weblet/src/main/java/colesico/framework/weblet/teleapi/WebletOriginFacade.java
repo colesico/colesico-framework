@@ -7,6 +7,6 @@ import colesico.framework.telehttp.OriginFacade;
 /**
  * Weblet specific AUTO origin facade
  */
-public interface WebletOriginFacade extends OriginFacade {
+abstract public class WebletOriginFacade extends OriginFacade {
 
 }

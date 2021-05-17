@@ -67,7 +67,7 @@ public final class WebletModulator extends RoutesModulator {
 
     @Override
     protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
-            
+
         String paramName = TeleHttpCodegenUtils.getParamName(teleParam);
 
         CodeBlock.Builder cb = CodeBlock.builder();
@@ -77,7 +77,7 @@ public final class WebletModulator extends RoutesModulator {
         // Param origin
 
         Origin paramOrigin = TeleHttpCodegenUtils.getParamOrigin(teleParam);
-        cb.add(", $T.$N", ClassName.get(WebletOriginFacade.class), paramOrigin.name());
+        cb.add(", $T.$N", ClassName.get(WebletOriginFacade.class), paramOrigin.getName());
 
         TypeName customReader = getCustomReaderClass(teleParam);
         if (customReader == null) {

@@ -16,43 +16,90 @@
 
 package colesico.framework.telehttp;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Objects;
+
 /**
- * Origin types to read the parameter value from them.
- * This enums defines default strategy for reading param values from http context
+ * Origin type and basic dictionary.
+ * Origin defines strategy for reading param value from http context
  */
-public enum Origin {
+public class Origin {
     /**
-     * Read value from url path
+     * Read value from request url path
      */
-    ROUTE,
+    public static final String ROUTE = "ROUTE";
 
     /**
      * Read value from url query string
      */
-    QUERY,
+    public static final String QUERY = "QUERY";
 
     /**
      * From request body post params
      */
-    POST,
+    public static final String POST = "POST";
 
     /**
      * From request body
      */
-    BODY,
+    public static final String BODY = "BODY";
 
     /**
      * From http header
      */
-    HEADER,
+    public static final String HEADER = "HEADER";
 
     /**
      * From cookie value
      */
-    COOKIE,
+    public static final String COOKIE = "COOKIE";
 
     /**
      * Strategy depends on tele data port implementation.
      */
-    AUTO
+    public static final String AUTO = "AUTO";
+
+    public static final Origin ORIGIN_ROUTE = of(ROUTE);
+    public static final Origin ORIGIN_QUERY = of(QUERY);
+    public static final Origin ORIGIN_POST = of(POST);
+    public static final Origin ORIGIN_BODY = of(BODY);
+    public static final Origin ORIGIN_HEADER = of(HEADER);
+    public static final Origin ORIGIN_COOKIE = of(COOKIE);
+    public static final Origin ORIGIN_AUTO = of(AUTO);
+
+    public static Origin of(String name) {
+        return new Origin(name);
+    }
+
+    private final String name;
+
+    protected Origin(String name) {
+        if (StringUtils.isBlank(name)) {
+            throw new RuntimeException("Origin name is blank");
+        }
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return "Origin." + name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Origin origin = (Origin) o;
+        return name.equals(origin.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
 }
