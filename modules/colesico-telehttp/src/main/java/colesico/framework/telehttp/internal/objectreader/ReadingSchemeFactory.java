@@ -2,12 +2,10 @@ package colesico.framework.telehttp.internal.objectreader;
 
 import colesico.framework.assist.StrUtils;
 import colesico.framework.teleapi.TeleFactory;
-import colesico.framework.telehttp.HttpTRContext;
-import colesico.framework.telehttp.HttpTeleReader;
-import colesico.framework.telehttp.LocalField;
-import colesico.framework.telehttp.ParamName;
+import colesico.framework.telehttp.*;
 
 import javax.inject.Singleton;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +44,12 @@ public class ReadingSchemeFactory {
                 String paramName = getParamName(namePrefix, field);
                 Type fieldType = field.getGenericType();
                 Method setter = getSetter(objectClass, fieldType, field.getName());
-                HttpTeleReader<T, HttpTRContext> reader = findReader(fieldType);
+
+                // Find appropriate reader
+                HttpTeleReader<T, HttpTRContext> reader = getReader(field);
+                if (reader == null) {
+                    reader = findReader(fieldType);
+                }
 
                 if (reader != null) {
                     ReadingScheme.ValueField valueField = new ReadingScheme.ValueField(paramName, setter, reader);
@@ -61,6 +64,17 @@ public class ReadingSchemeFactory {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // Get explicit reader
+    protected HttpTeleReader getReader(Field field) {
+        Annotation[] annotations = field.getAnnotations();
+        for (Annotation ann : annotations) {
+            if (ann.getClass().getAnnotation(ParamReaderSpecifier.class) != null) {
+                // TODO: extract reader class
+            }
+        }
+        return null;
     }
 
     protected HttpTeleReader findReader(Type valueType) {

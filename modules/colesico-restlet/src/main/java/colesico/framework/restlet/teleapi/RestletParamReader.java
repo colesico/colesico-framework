@@ -1,5 +1,7 @@
 package colesico.framework.restlet.teleapi;
 
+import colesico.framework.telehttp.ParamReaderSpecifier;
+
 import java.lang.annotation.*;
 
 
@@ -7,9 +9,11 @@ import java.lang.annotation.*;
  * Specifies custom reader for tele-param
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.PARAMETER,ElementType.FIELD})
+// ElementType.FIELD - for object reader
+@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @Inherited
 @Documented
+@ParamReaderSpecifier
 public @interface RestletParamReader {
     Class<? extends RestletTeleReader> value();
 }

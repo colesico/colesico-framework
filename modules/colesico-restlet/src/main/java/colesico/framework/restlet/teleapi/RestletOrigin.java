@@ -8,7 +8,7 @@ public class RestletOrigin extends Origin {
      * Read param value from request object field.
      * The request object is read from the request body in json notation
      */
-    public static final String FIELD = "FIELD";
+    public static final String FIELD = "FIELDS";
 
     public static final Origin ORIGIN_FIELD = of(FIELD);
 

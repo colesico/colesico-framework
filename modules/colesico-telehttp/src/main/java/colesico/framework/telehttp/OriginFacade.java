@@ -21,22 +21,12 @@ import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.router.RouterContext;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-
 /**
  * Default value reading facades for different origins
  */
-abstract public class OriginFacade {
+abstract public class OriginFacade<V,R> {
 
-    public static final OriginFacade ROUTE = new OriginFacade() {
-        @Override
-        public Origin getOrigin() {
-            return Origin.ORIGIN_ROUTE;
-        }
-
+    public static final OriginFacade ROUTE = new OriginFacade(Origin.ORIGIN_ROUTE) {
         @Override
         public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
             return routerContext.getParameters().get(name);
@@ -44,60 +34,35 @@ abstract public class OriginFacade {
 
     };
 
-    public static final OriginFacade QUERY = new OriginFacade() {
-        @Override
-        public Origin getOrigin() {
-            return Origin.ORIGIN_QUERY;
-        }
-
+    public static final OriginFacade QUERY = new OriginFacade(Origin.ORIGIN_QUERY) {
         @Override
         public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
             return httpRequest.getQueryParameters().get(name);
         }
     };
 
-    public static final OriginFacade POST = new OriginFacade() {
-        @Override
-        public Origin getOrigin() {
-            return Origin.ORIGIN_POST;
-        }
-
+    public static final OriginFacade POST = new OriginFacade(Origin.ORIGIN_POST) {
         @Override
         public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
             return httpRequest.getPostParameters().get(name);
         }
     };
 
-    public static final OriginFacade BODY = new OriginFacade() {
-        @Override
-        public Origin getOrigin() {
-            return Origin.ORIGIN_BODY;
-        }
-
+    public static final OriginFacade BODY = new OriginFacade(Origin.ORIGIN_BODY) {
         @Override
         public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
             throw new UnsupportedOperationException("Obtaining named parameter '" + name + "' from body is not supported");
         }
     };
 
-    public static final OriginFacade HEADER = new OriginFacade() {
-        @Override
-        public Origin getOrigin() {
-            return Origin.ORIGIN_HEADER;
-        }
-
+    public static final OriginFacade HEADER = new OriginFacade(Origin.ORIGIN_HEADER) {
         @Override
         public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
             return httpRequest.getHeaders().get(name);
         }
     };
 
-    public static final OriginFacade COOKIE = new OriginFacade() {
-        @Override
-        public Origin getOrigin() {
-            return Origin.ORIGIN_COOKIE;
-        }
-
+    public static final OriginFacade COOKIE = new OriginFacade(Origin.ORIGIN_COOKIE) {
         @Override
         public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
             HttpCookie cookie = httpRequest.getCookies().get(name);
@@ -108,13 +73,7 @@ abstract public class OriginFacade {
     /**
      * This is AUTO default impl. Should be implemented for the concrete data port.
      */
-    public static final OriginFacade AUTO = new OriginFacade() {
-
-        @Override
-        public Origin getOrigin() {
-            return Origin.ORIGIN_AUTO;
-        }
-
+    public static final OriginFacade AUTO = new OriginFacade(Origin.ORIGIN_AUTO) {
         @Override
         public String getString(String name, RouterContext routerContext, HttpRequest httpRequest) {
             String value = null;
@@ -143,7 +102,15 @@ abstract public class OriginFacade {
         }
     };
 
-    abstract public Origin getOrigin();
+    public OriginFacade(Origin origin) {
+        this.origin = origin;
+    }
+
+    private final Origin origin;
+
+    public final Origin getOrigin() {
+        return origin;
+    }
 
     abstract public String getString(String name, RouterContext routerContext, HttpRequest httpRequest);
 
