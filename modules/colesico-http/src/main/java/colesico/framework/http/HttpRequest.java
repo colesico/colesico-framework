@@ -54,12 +54,12 @@ public interface HttpRequest {
     /**
      * Returns read-only http headers
      */
-    Map<String, String> getHeaders();
+    HttpValues<String, String> getHeaders();
 
     /**
      * Returns read-only cookies
      */
-    Map<String, HttpCookie> getCookies();
+    HttpValues<String, HttpCookie> getCookies();
 
     /**
      * Returns read-only query string parameters

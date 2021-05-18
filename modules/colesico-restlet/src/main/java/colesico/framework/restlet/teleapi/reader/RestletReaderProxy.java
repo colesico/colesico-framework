@@ -25,12 +25,11 @@ import colesico.framework.telehttp.HttpTeleReader;
  * Proxy to use any http readers as restlet reader
  */
 
-public final class RestletReaderProxy<V> extends RestletTeleReader<V> {
+public final class RestletReaderProxy<V> implements RestletTeleReader<V> {
 
     private final HttpTeleReader<V, HttpTRContext> reader;
 
     private RestletReaderProxy(HttpTeleReader<V, HttpTRContext> reader) {
-        super(reader);
         this.reader = reader;
     }
 

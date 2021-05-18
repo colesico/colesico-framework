@@ -2,10 +2,11 @@ package colesico.framework.restlet.teleapi.reader;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
+import colesico.framework.http.HttpRequest;
 import colesico.framework.restlet.teleapi.RestletJsonConverter;
 import colesico.framework.restlet.teleapi.RestletTRContext;
-import colesico.framework.router.RouterContext;
 import colesico.framework.telehttp.Origin;
+import colesico.framework.telehttp.OriginFactory;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -16,44 +17,48 @@ import java.io.InputStream;
 import static colesico.framework.http.HttpMethod.*;
 
 @Singleton
-public final class JsonReader extends ValueReader {
+public final class JsonReader implements ValueReader {
 
-    protected final RestletJsonConverter jsonConverter;
+    private final RestletJsonConverter jsonConverter;
+    private final Provider<HttpContext> httpContextProv;
+    private final OriginFactory originFactory;
 
     @Inject
-    public JsonReader(Provider<RouterContext> routerContextProv, Provider<HttpContext> httpContextProv, RestletJsonConverter jsonConverter) {
-        super(routerContextProv, httpContextProv);
+    public JsonReader(RestletJsonConverter jsonConverter, Provider<HttpContext> httpContextProv, OriginFactory originFactory) {
         this.jsonConverter = jsonConverter;
+        this.httpContextProv = httpContextProv;
+        this.originFactory = originFactory;
     }
 
     @Override
     public Object read(RestletTRContext context) {
+        HttpRequest request = httpContextProv.get().getRequest();
 
-        HttpContext httpContext = httpContextProv.get();
-        HttpMethod requestMethod = httpContext.getRequest().getRequestMethod();
+        HttpMethod requestMethod = request.getRequestMethod();
 
         // Should the value be read from input stream?
-        Origin origin = context.getOriginFacade().getOrigin();
+        String originName = context.getOriginName();
 
-        boolean useInputStream = origin.is(Origin.ORIGIN_BODY) ||
+        boolean useInputStream = originName.equals(Origin.BODY) ||
                 (
-                        origin.is(Origin.ORIGIN_AUTO) &&
+                        originName.equals(Origin.AUTO) &&
                                 (
-                                        requestMethod.is(HTTP_METHOD_POST)
-                                                || requestMethod.is(HTTP_METHOD_PUT)
-                                                || requestMethod.is(HTTP_METHOD_PATCH)
+                                        requestMethod.is(POST)
+                                                || requestMethod.is(PUT)
+                                                || requestMethod.is(PATCH)
                                 )
                 );
 
         if (useInputStream) {
-            try (InputStream is = httpContext.getRequest().getInputStream()) {
+            try (InputStream is = request.getInputStream()) {
                 return jsonConverter.fromJson(is, context.getValueType());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         } else {
             try {
-                String strValue = getStringValue(context);
+                Origin<String, String> origin = (Origin<String, String>) originFactory.getOrigin(context.getOriginName());
+                String strValue = origin.getValue(context.getName());
                 if (StringUtils.isBlank(strValue)) {
                     return null;
                 }

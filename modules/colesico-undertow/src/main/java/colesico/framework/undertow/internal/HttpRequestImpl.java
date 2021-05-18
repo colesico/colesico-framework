@@ -21,6 +21,7 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.Cookie;
 import io.undertow.server.handlers.form.FormData;
 import io.undertow.server.handlers.form.FormDataParser;
+import io.undertow.util.HeaderMap;
 import io.undertow.util.HeaderValues;
 import io.undertow.util.HttpString;
 import org.apache.commons.lang3.StringUtils;
@@ -39,8 +40,8 @@ public final class HttpRequestImpl implements HttpRequest {
     private final HttpServerExchange exchange;
     private FormData formData = null;
 
-    private Map<String, String> headers = null;
-    private Map<String, HttpCookie> cookies = null;
+    private HttpValues<String, String> headers = null;
+    private HttpValues<String, HttpCookie> cookies = null;
     private HttpValues<String, String> queryParams = null;
     private HttpValues<String, String> postParams = null;
     private HttpValues<String, HttpFile> postFiles = null;
@@ -59,30 +60,45 @@ public final class HttpRequestImpl implements HttpRequest {
         return formData;
     }
 
-    private Map<String, String> createHeadersMap() {
-        Map headersMap = new HashMap<>();
-        Collection<HttpString> headerNames = exchange.getRequestHeaders().getHeaderNames();
-        for (HttpString headerName : headerNames) {
-            headersMap.put(headerName.toString(), exchange.getRequestHeaders().getFirst(headerName));
+    private HttpValues<String, String> createHeaders() {
+        Map<String, MultiValue<String>> headers = new HashMap<>();
+        Iterator<HeaderValues> hit = exchange.getRequestHeaders().iterator();
+        while (hit.hasNext()) {
+            HeaderValues h = hit.next();
+            Iterator<String> vit = h.iterator();
+            Set<String> values = new LinkedHashSet<>();
+            while (vit.hasNext()) {
+                values.add(vit.next());
+            }
+            headers.put(h.getHeaderName().toString(), new MultiValue<>(values));
         }
-        return Collections.unmodifiableMap(headersMap);
+        return new HttpValues<>(headers);
     }
 
-    private Map<String, HttpCookie> createCookiesMap() {
-        Map<String, HttpCookie> cookiesMap = new HashMap<>();
-        for (Map.Entry<String, Cookie> e : exchange.getRequestCookies().entrySet()) {
-            Cookie cookie = e.getValue();
+    private HttpValues<String, HttpCookie> createCookies() {
+        Map<String, Set<HttpCookie>> cookiesSt = new HashMap<>();
+        Iterator<Cookie> cit = exchange.requestCookies().iterator();
+        while (cit.hasNext()) {
+            Cookie c = cit.next();
             HttpCookie httpCookie = new HttpCookie()
-                    .setName(cookie.getName())
-                    .setValue(cookie.getValue())
-                    .setDomain(cookie.getDomain())
-                    .setPath(cookie.getPath())
-                    .setExpires(cookie.getExpires())
-                    .setSecure(cookie.isSecure())
-                    .setHttpOnly(cookie.isHttpOnly());
-            cookiesMap.put(e.getKey(), httpCookie);
+                    .setName(c.getName())
+                    .setValue(c.getValue())
+                    .setDomain(c.getDomain())
+                    .setPath(c.getPath())
+                    .setExpires(c.getExpires())
+                    .setSecure(c.isSecure())
+                    .setHttpOnly(c.isHttpOnly());
+
+            Set<HttpCookie> values = cookiesSt.computeIfAbsent(c.getName(), k -> new LinkedHashSet<>());
+            values.add(httpCookie);
         }
-        return Collections.unmodifiableMap(cookiesMap);
+
+        Map<String, MultiValue<HttpCookie>> cookiesMv = new HashMap<>();
+        for (Map.Entry<String, Set<HttpCookie>> e : cookiesSt.entrySet()) {
+            cookiesMv.put(e.getKey(), new MultiValue<>(e.getValue()));
+        }
+
+        return new HttpValues<>(cookiesMv);
     }
 
     private HttpValues<String, String> createQueryParams() {
@@ -153,17 +169,17 @@ public final class HttpRequestImpl implements HttpRequest {
     }
 
     @Override
-    public Map<String, String> getHeaders() {
+    public HttpValues<String, String> getHeaders() {
         if (headers == null) {
-            headers = createHeadersMap();
+            headers = createHeaders();
         }
         return headers;
     }
 
     @Override
-    public Map<String, HttpCookie> getCookies() {
+    public HttpValues<String, HttpCookie> getCookies() {
         if (cookies == null) {
-            cookies = createCookiesMap();
+            cookies = createCookies();
         }
         return cookies;
     }

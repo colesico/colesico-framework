@@ -16,16 +16,14 @@
 
 package colesico.framework.telehttp.reader;
 
-import colesico.framework.http.HttpContext;
-import colesico.framework.telehttp.HttpTRContext;
-import colesico.framework.telehttp.HttpTeleReader;
-import colesico.framework.telehttp.t9n.Messages;
-import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleException;
+import colesico.framework.telehttp.HttpTRContext;
+import colesico.framework.telehttp.OriginFactory;
+import colesico.framework.telehttp.OriginReader;
+import colesico.framework.telehttp.t9n.Messages;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,21 +32,21 @@ import java.time.format.DateTimeFormatter;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class LocalDateTimeReader<C extends HttpTRContext> extends HttpTeleReader<LocalDateTime, C> {
+public final class LocalDateTimeReader<C extends HttpTRContext> extends OriginReader<LocalDateTime, C> {
 
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     private final Messages messages;
 
     @Inject
-    public LocalDateTimeReader(Provider<RouterContext> routerContextProv, Provider<HttpContext> httpContextProv, Messages messages) {
-        super(routerContextProv, httpContextProv);
+    public LocalDateTimeReader(OriginFactory originFactory, Messages messages) {
+        super(originFactory);
         this.messages = messages;
     }
 
     @Override
     public LocalDateTime read(C ctx) {
         try {
-            String val = getStringValue(ctx);
+            String val = readString(ctx);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }

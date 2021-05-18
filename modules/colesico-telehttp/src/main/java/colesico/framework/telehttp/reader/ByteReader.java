@@ -16,38 +16,34 @@
 
 package colesico.framework.telehttp.reader;
 
-import colesico.framework.http.HttpContext;
-import colesico.framework.telehttp.HttpTRContext;
-import colesico.framework.telehttp.HttpTeleReader;
-import colesico.framework.telehttp.t9n.Messages;
-import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleException;
+import colesico.framework.telehttp.HttpTRContext;
+import colesico.framework.telehttp.OriginFactory;
+import colesico.framework.telehttp.OriginReader;
+import colesico.framework.telehttp.t9n.Messages;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 /**
  * @author Vladlen Larionov
  */
 @Singleton
-public final class ByteReader<C extends HttpTRContext> extends HttpTeleReader<Byte,C> {
+public final class ByteReader<C extends HttpTRContext> extends OriginReader<Byte,C> {
 
     private final Messages messages;
 
     @Inject
-    public ByteReader(Provider<RouterContext> routerContextProv,
-                      Provider<HttpContext> httpContextProv,
-                      Messages messages) {
-        super(routerContextProv, httpContextProv);
+    public ByteReader(OriginFactory originFactory, Messages messages) {
+        super(originFactory);
         this.messages = messages;
     }
 
     @Override
     public Byte read(C ctx) {
         try {
-            String val = getStringValue(ctx);
+            String val = readString(ctx);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }

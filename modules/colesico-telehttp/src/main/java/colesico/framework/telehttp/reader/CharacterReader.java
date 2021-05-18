@@ -16,30 +16,28 @@
 
 package colesico.framework.telehttp.reader;
 
-import colesico.framework.http.HttpContext;
 import colesico.framework.telehttp.HttpTRContext;
-import colesico.framework.telehttp.HttpTeleReader;
-import colesico.framework.router.RouterContext;
+import colesico.framework.telehttp.OriginFactory;
+import colesico.framework.telehttp.OriginReader;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 /**
  * @author Vladlen Larionov
  */
 @Singleton
-public final class CharacterReader<C extends HttpTRContext> extends HttpTeleReader<Character, C> {
+public final class CharacterReader<C extends HttpTRContext> extends OriginReader<Character, C> {
 
     @Inject
-    public CharacterReader(Provider<RouterContext> routerContextProv, Provider<HttpContext> httpContextProv) {
-        super(routerContextProv, httpContextProv);
+    public CharacterReader(OriginFactory originFactory) {
+        super(originFactory);
     }
 
     @Override
     public Character read(C ctx) {
-        String str = StringUtils.trim(getStringValue(ctx));
+        String str = StringUtils.trim(readString(ctx));
         return StringUtils.isNotEmpty(str) ? str.charAt(0) : null;
     }
 }

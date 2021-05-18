@@ -1,11 +1,9 @@
 package colesico.framework.telehttp.internal.objectreader;
 
-import colesico.framework.http.HttpContext;
-import colesico.framework.router.RouterContext;
 import colesico.framework.telehttp.HttpTRContext;
+import colesico.framework.telehttp.OriginFactory;
 import colesico.framework.telehttp.reader.ObjectReader;
 
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
@@ -13,10 +11,8 @@ public class DefaultObjectReader<C extends HttpTRContext> extends ObjectReader<C
 
     protected final ReadingSchemeFactory readingSchemeFactory;
 
-    public DefaultObjectReader(Provider<RouterContext> routerContextProv,
-                               Provider<HttpContext> httpContextProv,
-                               ReadingSchemeFactory readingSchemeFactory) {
-        super(routerContextProv, httpContextProv);
+    public DefaultObjectReader(OriginFactory originFactory, ReadingSchemeFactory readingSchemeFactory) {
+        super(originFactory);
         this.readingSchemeFactory = readingSchemeFactory;
     }
 
@@ -31,7 +27,7 @@ public class DefaultObjectReader<C extends HttpTRContext> extends ObjectReader<C
             T object = scheme.getConstructor().newInstance();
             // Process value fields
             for (ReadingScheme.ValueField valueFiled : scheme.getValueFields()) {
-                valueFiled.readValue(object, context.getName(), context.getOriginFacade());
+                valueFiled.readValue(object, context.getName(), context.getOriginName());
             }
             // Process nested objects
             for (ReadingScheme.ObjectField objField : scheme.getObjectFields()) {

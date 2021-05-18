@@ -81,12 +81,12 @@ public class ForwardRequest implements HttpRequest {
     }
 
     @Override
-    public Map<String, String> getHeaders() {
+    public HttpValues<String, String> getHeaders() {
         return parentRequest.getHeaders();
     }
 
     @Override
-    public Map<String, HttpCookie> getCookies() {
+    public HttpValues<String, HttpCookie> getCookies() {
         return parentRequest.getCookies();
     }
 

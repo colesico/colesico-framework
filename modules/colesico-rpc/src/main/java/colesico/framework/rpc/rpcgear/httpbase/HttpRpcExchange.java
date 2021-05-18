@@ -2,6 +2,7 @@ package colesico.framework.rpc.rpcgear.httpbase;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpResponse;
+import colesico.framework.http.HttpValues;
 import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.teleapi.RpcExchange;
 import colesico.framework.rpc.teleapi.RpcRequest;
@@ -35,7 +36,7 @@ abstract public class HttpRpcExchange implements RpcExchange {
 
     @Override
     public Operation resolveOperation() {
-        Map<String, String> headers = httpContextProv.get().getRequest().getHeaders();
+        HttpValues<String, String> headers = httpContextProv.get().getRequest().getHeaders();
         Operation resolution = new Operation(headers.get(HttpRpcClient.RPC_API_HEADER),
                 headers.get(HttpRpcClient.RPC_METHOD_HEADER));
         return resolution;

@@ -76,8 +76,8 @@ public final class WebletModulator extends RoutesModulator {
 
         // Param origin
 
-        Origin paramOrigin = TeleHttpCodegenUtils.getParamOrigin(teleParam);
-        cb.add(", $T.$N", ClassName.get(WebletOriginFacade.class), paramOrigin.getName());
+        String paramOrigin = TeleHttpCodegenUtils.getParamOrigin(teleParam);
+        cb.add(", $S", paramOrigin);
 
         TypeName customReader = getCustomReaderClass(teleParam);
         if (customReader == null) {

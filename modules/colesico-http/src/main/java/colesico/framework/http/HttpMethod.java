@@ -63,8 +63,8 @@ public class HttpMethod {
         return name;
     }
 
-    public boolean is(HttpMethod hm) {
-        return equals(hm);
+    public boolean is(String name) {
+        return this.name.equals(name);
     }
 
     @Override

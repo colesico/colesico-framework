@@ -16,25 +16,8 @@
 
 package colesico.framework.restlet.teleapi;
 
-import colesico.framework.http.HttpContext;
-import colesico.framework.router.RouterContext;
 import colesico.framework.telehttp.HttpTeleReader;
 
-import javax.inject.Provider;
+public interface RestletTeleReader<V> extends HttpTeleReader<V, RestletTRContext> {
 
-abstract public class RestletTeleReader<V> extends HttpTeleReader<V, RestletTRContext> {
-
-    /**
-     * For injection
-     */
-    public RestletTeleReader(Provider<RouterContext> routerContextProv, Provider<HttpContext> httpContextProv) {
-        super(routerContextProv, httpContextProv);
-    }
-
-    /**
-     * For proxy
-     */
-    public RestletTeleReader(HttpTeleReader reader) {
-        super(reader);
-    }
 }

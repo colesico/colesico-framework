@@ -75,8 +75,8 @@ public final class RestletModulator extends RoutesModulator {
         cb.add("$S", paramName);
 
         // Param origin
-        Origin paramOrigin = TeleHttpCodegenUtils.getParamOrigin(teleParam);
-        cb.add(", $T.$N", ClassName.get(RestletOriginFacade.class), paramOrigin.getName());
+        String paramOrigin = TeleHttpCodegenUtils.getParamOrigin(teleParam);
+        cb.add(", $S", paramOrigin);
 
         TypeName customReader = getCustomReaderClass(teleParam);
         if (customReader == null) {

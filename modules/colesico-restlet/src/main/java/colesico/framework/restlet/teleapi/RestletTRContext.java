@@ -1,9 +1,6 @@
 package colesico.framework.restlet.teleapi;
 
 import colesico.framework.telehttp.HttpTRContext;
-import colesico.framework.telehttp.OriginFacade;
-
-import java.lang.reflect.Type;
 
 public final class RestletTRContext extends HttpTRContext {
 
@@ -13,13 +10,13 @@ public final class RestletTRContext extends HttpTRContext {
      */
     private final Class<? extends RestletTeleReader> readerClass;
 
-    public RestletTRContext(String name, OriginFacade originFacade, Class<? extends RestletTeleReader> readerClass) {
-        super(name, originFacade);
+    public RestletTRContext(String name, String originName, Class<? extends RestletTeleReader> readerClass) {
+        super(name, originName);
         this.readerClass = readerClass;
     }
 
-    public RestletTRContext(String name, OriginFacade originFacade) {
-        super(name, originFacade);
+    public RestletTRContext(String name, String originName) {
+        super(name, originName);
         this.readerClass = null;
     }
 

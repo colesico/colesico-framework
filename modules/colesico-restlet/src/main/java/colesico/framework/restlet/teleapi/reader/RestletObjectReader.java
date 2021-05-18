@@ -12,12 +12,11 @@ import javax.inject.Singleton;
  * @see colesico.framework.telehttp.reader.ObjectReader
  */
 @Singleton
-public final class RestletObjectReader extends RestletTeleReader<Object> {
+public final class RestletObjectReader implements RestletTeleReader<Object> {
 
     private final ObjectReader reader;
 
     public RestletObjectReader(ObjectReader reader) {
-        super(reader);
         this.reader = reader;
     }
 

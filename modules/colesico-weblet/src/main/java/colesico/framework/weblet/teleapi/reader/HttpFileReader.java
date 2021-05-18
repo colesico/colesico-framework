@@ -16,14 +16,13 @@
 
 package colesico.framework.weblet.teleapi.reader;
 
-import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpFile;
 import colesico.framework.http.HttpRequest;
-import colesico.framework.router.RouterContext;
+import colesico.framework.telehttp.Origin;
+import colesico.framework.telehttp.OriginFactory;
 import colesico.framework.weblet.teleapi.WebletTRContext;
 import colesico.framework.weblet.teleapi.WebletTeleReader;
 
-import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
@@ -32,19 +31,16 @@ import javax.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class HttpFileReader extends WebletTeleReader<HttpFile> {
+public final class HttpFileReader implements WebletTeleReader<HttpFile> {
 
-    protected final Provider<HttpContext> httpContextProv;
+    private final Provider<HttpRequest> requestProv;
 
-    @Inject
-    public HttpFileReader(Provider<RouterContext> routerContextProv, Provider<HttpContext> httpContextProv, Provider<HttpContext> httpContextProv1) {
-        super(routerContextProv, httpContextProv);
-        this.httpContextProv = httpContextProv1;
+    public HttpFileReader(Provider<HttpRequest> requestProv) {
+        this.requestProv = requestProv;
     }
 
     @Override
     public HttpFile read(WebletTRContext context) {
-        HttpRequest request = httpContextProv.get().getRequest();
-        return request.getPostFiles().get(context.getName());
+        return requestProv.get().getPostFiles().get(context.getName());
     }
 }

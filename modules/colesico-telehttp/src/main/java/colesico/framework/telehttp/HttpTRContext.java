@@ -18,17 +18,17 @@ abstract public class HttpTRContext {
     private Type valueType;
 
     /**
-     * Origin facade to read parameter from it
+     * Origin name to read parameter from it
      */
-    private final OriginFacade originFacade;
+    private final String originName;
 
-    public HttpTRContext(String name, OriginFacade originFacade) {
+    public HttpTRContext(String name, String originName) {
         this.name = name;
-        this.originFacade = originFacade;
+        this.originName = originName;
     }
 
-    public static HttpTRContext of(String name, OriginFacade originFacade) {
-        return new HttpTRContext(name, originFacade) {
+    public static HttpTRContext of(String name, String originName) {
+        return new HttpTRContext(name, originName) {
         };
     }
 
@@ -40,10 +40,10 @@ abstract public class HttpTRContext {
     }
 
     /**
-     * Origin facade
+     * Origin class
      */
-    public OriginFacade getOriginFacade() {
-        return originFacade;
+    public String getOriginName() {
+        return originName;
     }
 
     public Type getValueType() {

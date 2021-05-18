@@ -16,94 +16,53 @@
 
 package colesico.framework.telehttp;
 
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Objects;
+import colesico.framework.telehttp.origin.*;
 
 /**
  * Origin type and basic dictionary.
  * Origin defines strategy for reading param value from http context
  */
-public class Origin {
+public interface Origin<K, V> {
     /**
      * Read value from request url path
      */
-    public static final String ROUTE = "ROUTE";
+    String ROUTE = "ROUTE";
 
     /**
      * Read value from url query string
      */
-    public static final String QUERY = "QUERY";
+    String QUERY = "QUERY";
 
     /**
      * From request body post params
      */
-    public static final String POST = "POST";
+    String POST = "POST";
+
+    /**
+     * Post request file
+     */
+    String FILE = "FILE";
 
     /**
      * From request body
      */
-    public static final String BODY = "BODY";
+    String BODY = "BODY";
 
     /**
      * From http header
      */
-    public static final String HEADER = "HEADER";
+    String HEADER = "HEADER";
 
     /**
      * From cookie value
      */
-    public static final String COOKIE = "COOKIE";
+    String COOKIE = "COOKIE";
 
     /**
      * Strategy depends on tele data port implementation.
      */
-    public static final String AUTO = "AUTO";
+    String AUTO = "AUTO";
 
-    public static final Origin ORIGIN_ROUTE = of(ROUTE);
-    public static final Origin ORIGIN_QUERY = of(QUERY);
-    public static final Origin ORIGIN_POST = of(POST);
-    public static final Origin ORIGIN_BODY = of(BODY);
-    public static final Origin ORIGIN_HEADER = of(HEADER);
-    public static final Origin ORIGIN_COOKIE = of(COOKIE);
-    public static final Origin ORIGIN_AUTO = of(AUTO);
+    V getValue(K key);
 
-    public static Origin of(String name) {
-        return new Origin(name);
-    }
-
-    private final String name;
-
-    protected Origin(String name) {
-        if (StringUtils.isBlank(name)) {
-            throw new RuntimeException("Origin name is blank");
-        }
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean is(Origin o) {
-        return equals(o);
-    }
-
-    @Override
-    public String toString() {
-        return "Origin." + name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Origin origin = (Origin) o;
-        return name.equals(origin.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
-    }
 }
