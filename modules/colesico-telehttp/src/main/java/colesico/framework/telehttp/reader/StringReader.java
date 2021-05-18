@@ -18,7 +18,7 @@ package colesico.framework.telehttp.reader;
 
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.OriginFactory;
-import colesico.framework.telehttp.OriginReader;
+import colesico.framework.telehttp.OriginTeleReader;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -27,7 +27,7 @@ import javax.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class StringReader<C extends HttpTRContext> extends OriginReader<String, C> {
+public final class StringReader<C extends HttpTRContext> extends OriginTeleReader<String, C> {
 
     @Inject
     public StringReader(OriginFactory originFactory) {

@@ -2,7 +2,7 @@ package colesico.framework.telehttp.reader;
 
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.OriginFactory;
-import colesico.framework.telehttp.OriginReader;
+import colesico.framework.telehttp.OriginTeleReader;
 
 import javax.inject.Inject;
 
@@ -11,7 +11,7 @@ import javax.inject.Inject;
  * Object fields values are reading with appropriate http-readers if the field type can be reade by tye reader.
  * Otherwise field read as nested custom object
  */
-abstract public class ObjectReader<C extends HttpTRContext> extends OriginReader<Object, C> {
+abstract public class ObjectReader<C extends HttpTRContext> extends OriginTeleReader<Object, C> {
 
     @Inject
     public ObjectReader(OriginFactory originFactory) {

@@ -19,7 +19,7 @@ package colesico.framework.telehttp.reader;
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.OriginFactory;
-import colesico.framework.telehttp.OriginReader;
+import colesico.framework.telehttp.OriginTeleReader;
 import colesico.framework.telehttp.assist.ISO8601DateParser;
 import colesico.framework.telehttp.t9n.Messages;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +32,7 @@ import java.util.Date;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class DateReader<C extends HttpTRContext> extends OriginReader<Date, C> {
+public final class DateReader<C extends HttpTRContext> extends OriginTeleReader<Date, C> {
     private final Messages messages;
 
     @Inject

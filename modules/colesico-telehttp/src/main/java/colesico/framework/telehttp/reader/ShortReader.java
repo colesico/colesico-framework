@@ -19,7 +19,7 @@ package colesico.framework.telehttp.reader;
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.OriginFactory;
-import colesico.framework.telehttp.OriginReader;
+import colesico.framework.telehttp.OriginTeleReader;
 import colesico.framework.telehttp.t9n.Messages;
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,7 +30,7 @@ import javax.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class ShortReader<C extends HttpTRContext> extends OriginReader<Short, C> {
+public final class ShortReader<C extends HttpTRContext> extends OriginTeleReader<Short, C> {
 
     private final Messages messages;
 

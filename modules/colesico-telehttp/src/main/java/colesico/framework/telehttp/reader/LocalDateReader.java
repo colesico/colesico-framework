@@ -19,7 +19,7 @@ package colesico.framework.telehttp.reader;
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.OriginFactory;
-import colesico.framework.telehttp.OriginReader;
+import colesico.framework.telehttp.OriginTeleReader;
 import colesico.framework.telehttp.t9n.Messages;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,7 +32,7 @@ import java.time.format.DateTimeFormatter;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class LocalDateReader<C extends HttpTRContext> extends OriginReader<LocalDate, C> {
+public final class LocalDateReader<C extends HttpTRContext> extends OriginTeleReader<LocalDate, C> {
 
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final Messages messages;
