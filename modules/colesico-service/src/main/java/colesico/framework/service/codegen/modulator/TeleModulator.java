@@ -38,7 +38,7 @@ public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulat
      * Tele type id.
      * Usually, it is the service alias annotation.
      */
-    abstract protected Class<?>  getTeleType();
+    abstract protected Class<?> getTeleType();
 
     /**
      * Checks that the modulator can handle given service to produce tele-facade
@@ -53,9 +53,20 @@ public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulat
     abstract protected T createTeleFacade(ServiceElement serviceElm);
 
     /**
-     * Called to process tele method after parsing completed
+     * Called to process tele method after parsing completed.
+     * Override this method to custom processing.
      */
-    abstract protected void processTeleMethod(TeleMethodElement teleMethodElement);
+    protected void processTeleMethod(TeleMethodElement teleMethodElement) {
+
+    }
+
+    /**
+     * Called to process tele facade after parsing completed.
+     * Override this method to custom processing.
+     */
+    protected void processTeleFacade(TeleFacadeElement teleMethodElement) {
+
+    }
 
     abstract protected CodeBlock generateLigatureMethodBody(T teleFacade);
 
@@ -91,6 +102,7 @@ public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulat
         if (!teleFacade.getTeleType().equals(getTeleType())) {
             return;
         }
+        processTeleFacade(teleFacade);
         teleFacade.setLigatureMethodBody(generateLigatureMethodBody((T) teleFacade));
     }
 

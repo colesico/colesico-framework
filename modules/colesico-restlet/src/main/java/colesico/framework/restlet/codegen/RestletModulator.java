@@ -22,9 +22,12 @@ import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.restlet.Restlet;
 import colesico.framework.restlet.codegen.model.JsonFieldElement;
+import colesico.framework.restlet.codegen.model.JsonRequestElement;
+import colesico.framework.restlet.codegen.model.JsonRequestPackElement;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.jsonrequest.JsonField;
 import colesico.framework.restlet.teleapi.reader.JsonFieldReader;
+import colesico.framework.router.codegen.RouterTeleFacadeElement;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
@@ -71,6 +74,17 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     /**
+     * Assign json request pack element to telefacade
+     */
+    @Override
+    protected RouterTeleFacadeElement createTeleFacade(ServiceElement serviceElm) {
+        RouterTeleFacadeElement teleFacade = super.createTeleFacade(serviceElm);
+        JsonRequestPackElement jrPak = new JsonRequestPackElement(teleFacade);
+        teleFacade.setProperty(JsonRequestPackElement.class, jrPak);
+        return teleFacade;
+    }
+
+    /**
      * Generate parameters wrapper class
      *
      * @param teleMethodElement
@@ -79,7 +93,30 @@ public final class RestletModulator extends RoutesModulator {
     protected void processTeleMethod(TeleMethodElement teleMethodElement) {
         super.processTeleMethod(teleMethodElement);
 
-        //TypeSpec.Builder requestBuilder = TypeSpec.classBuilder(method.getRequestClassSimpleName());
+        var jsonPack = teleMethodElement.getParentTeleFacade().getProperty(JsonRequestPackElement.class);
+        JsonRequestElement jsonRequest = null;
+
+        final var jsonMethodAnn = teleMethodElement.getServiceMethod().getOriginMethod().getAnnotation(JsonField.class);
+        if (jsonMethodAnn != null) {
+            jsonRequest = new JsonRequestElement(teleMethodElement);
+            jsonPack.addRequest(jsonRequest);
+        }
+
+        for (TeleParamElement teleParam : teleMethodElement.getParameters()) {
+            var jsonParamAnn = teleParam.getOriginParam().getAnnotation(JsonField.class);
+            if (jsonMethodAnn != null || jsonParamAnn != null) {
+
+                if (jsonRequest == null) {
+                    jsonRequest = new JsonRequestElement(teleMethodElement);
+                    jsonPack.addRequest(jsonRequest);
+                }
+
+                JsonFieldElement jsonField = new JsonFieldElement(teleParam);
+                jsonRequest.addField(jsonField);
+                teleParam.setProperty(JsonFieldElement.class, jsonField);
+            }
+        }
+
 
     }
 
@@ -143,11 +180,8 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     protected TypeName getCustomReaderClass(TeleParamElement teleParam) {
-        var jsonEntryAnn = teleParam.getOriginParam().getAnnotation(JsonField.class);
-        if (jsonEntryAnn == null) {
-            jsonEntryAnn = teleParam.getParentTeleMethod().getServiceMethod().getOriginMethod().getAnnotation(JsonField.class);
-        }
-        if (jsonEntryAnn != null) {
+
+        if (teleParam.getProperty(JsonFieldElement.class) != null) {
             return TypeName.get(CodegenUtils.classToTypeMirror(JsonFieldReader.class, getProcessorContext().getElementUtils()));
         }
 
