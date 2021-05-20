@@ -8,10 +8,12 @@ import java.lang.reflect.Type;
 abstract public class HttpTRContext {
 
     /**
-     * Http value entity name.
+     * Http param name.
      * This can be a header or cookie or query param etc. name
+     *
+     * @see ParamName
      */
-    private final String name;
+    private final String paramName;
 
     /**
      * Target value type
@@ -23,12 +25,12 @@ abstract public class HttpTRContext {
      */
     private final String originName;
 
-    public HttpTRContext(String name, String originName) {
-        this.name = name;
+    public HttpTRContext(String paramName, String originName) {
+        this.paramName = paramName;
         this.originName = originName;
     }
 
-    public static HttpTRContext of(String name, String originName) {
+    public static HttpTRContext instance(String name, String originName) {
         return new HttpTRContext(name, originName) {
         };
     }
@@ -36,8 +38,8 @@ abstract public class HttpTRContext {
     /**
      * Http value name
      */
-    public final String getName() {
-        return name;
+    public final String getParamName() {
+        return paramName;
     }
 
     /**

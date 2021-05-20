@@ -1,13 +1,13 @@
-package colesico.framework.restlet.teleapi.jsonmap;
+package colesico.framework.restlet.teleapi.jsonrequest;
 
 import java.lang.annotation.*;
 
 /**
- * Specifies read parameter from json map  by parameter name
+ * Specifies read parameter from body json attribute
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.PARAMETER})
 @Inherited
 @Documented
-public @interface JsonEntry {
+public @interface JsonField {
 }

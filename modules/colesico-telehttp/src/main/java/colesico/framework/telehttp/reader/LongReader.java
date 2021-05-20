@@ -49,7 +49,7 @@ public final class LongReader<C extends HttpTRContext> extends OriginTeleReader<
             }
             return Long.parseLong(val);
         } catch (Exception ex) {
-            throw new TeleException(messages.invalidNumberFormat(ctx.getName()));
+            throw new TeleException(messages.invalidNumberFormat(ctx.getParamName()));
         }
     }
 }

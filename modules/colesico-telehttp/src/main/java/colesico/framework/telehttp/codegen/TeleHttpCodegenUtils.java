@@ -19,17 +19,17 @@ public class TeleHttpCodegenUtils {
         return teleParam.getOriginParam().getName();
     }
 
-    public static String getParamOrigin(TeleParamElement teleParam) {
+    public static String getOriginName(TeleParamElement teleParam) {
         TeleMethodElement teleMethod = teleParam.getParentTeleMethod();
-        String paramOrigin = Origin.AUTO;
+        String originName = Origin.AUTO;
         AnnotationAssist<ParamOrigin> originAnn = teleParam.getOriginParam().getAnnotation(ParamOrigin.class);
         if (originAnn == null) {
             originAnn = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(ParamOrigin.class);
         }
 
         if (originAnn != null) {
-            paramOrigin = originAnn.unwrap().value();
+            originName = originAnn.unwrap().value();
         }
-        return paramOrigin;
+        return originName;
     }
 }

@@ -49,7 +49,7 @@ public final class BooleanReader<C extends HttpTRContext> extends OriginTeleRead
             }
             return Boolean.parseBoolean(str);
         } catch (Exception ex) {
-            throw new TeleException(messages.invalidBooleanFormat(ctx.getName()));
+            throw new TeleException(messages.invalidBooleanFormat(ctx.getParamName()));
         }
     }
 }

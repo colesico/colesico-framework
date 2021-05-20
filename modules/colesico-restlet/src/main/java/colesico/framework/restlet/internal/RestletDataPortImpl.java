@@ -55,7 +55,7 @@ public class RestletDataPortImpl implements RestletDataPort {
     @SuppressWarnings("unchecked")
     public <V> V read(Type valueType, RestletTRContext context) {
         if (context == null) {
-            context = new RestletTRContext();
+            context = RestletTRContext.of();
         }
 
         // Store value type to context
@@ -66,7 +66,7 @@ public class RestletDataPortImpl implements RestletDataPort {
 
         if (context.getReaderClass() != null) {
             // Use specified reader
-            reader = teleFactory.getReader(context.getReaderClass());
+            reader = (RestletTeleReader<V>) teleFactory.getReader(context.getReaderClass());
         } else {
             // Use reader by param type
             reader = teleFactory.findReader(RestletTeleReader.class, valueType);

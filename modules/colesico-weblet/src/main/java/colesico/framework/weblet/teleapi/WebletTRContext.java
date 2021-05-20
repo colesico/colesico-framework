@@ -17,6 +17,7 @@
 package colesico.framework.weblet.teleapi;
 
 import colesico.framework.telehttp.HttpTRContext;
+import colesico.framework.telehttp.Origin;
 
 /**
  * Weblet tele-reading context
@@ -31,13 +32,18 @@ public final class WebletTRContext extends HttpTRContext {
      */
     private final Class<? extends WebletTeleReader> readerClass;
 
-    public WebletTRContext(String name, String originName, Class<? extends WebletTeleReader> readerClass) {
-        super(name, originName);
+    public WebletTRContext(String paramName, String originName, Class<? extends WebletTeleReader> readerClass) {
+        super(paramName, originName);
         this.readerClass = readerClass;
     }
 
-    public WebletTRContext(String name, String originName) {
-        super(name, originName);
+    public WebletTRContext(String paramName, String originName) {
+        super(paramName, originName);
+        this.readerClass = null;
+    }
+
+    public WebletTRContext(String paramName) {
+        super(paramName, Origin.AUTO);
         this.readerClass = null;
     }
 

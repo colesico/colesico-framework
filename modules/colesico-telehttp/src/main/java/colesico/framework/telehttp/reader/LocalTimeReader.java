@@ -52,7 +52,7 @@ public final class LocalTimeReader<C extends HttpTRContext> extends OriginTeleRe
             }
             return LocalTime.parse(val, dtf);
         } catch (Exception ex) {
-            throw new TeleException(messages.invalidDateFormat(ctx.getName()));
+            throw new TeleException(messages.invalidDateFormat(ctx.getParamName()));
         }
     }
 }

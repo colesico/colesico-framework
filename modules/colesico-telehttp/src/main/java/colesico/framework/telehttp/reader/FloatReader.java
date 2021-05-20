@@ -49,7 +49,7 @@ public final class FloatReader<C extends HttpTRContext> extends OriginTeleReader
             }
             return Float.parseFloat(val);
         } catch (Exception ex) {
-            throw new TeleException(messages.invalidNumberFormat(ctx.getName()));
+            throw new TeleException(messages.invalidNumberFormat(ctx.getParamName()));
         }
     }
 }

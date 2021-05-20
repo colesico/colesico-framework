@@ -54,7 +54,7 @@ public final class OptionalLongReader<C extends HttpTRContext> extends OriginTel
                 return OptionalLong.of(Long.parseLong(val));
             }
         } catch (Exception var3) {
-            throw new TeleException(messages.invalidNumberFormat(ctx.getName()));
+            throw new TeleException(messages.invalidNumberFormat(ctx.getParamName()));
         }
     }
 }

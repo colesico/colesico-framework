@@ -49,7 +49,7 @@ public final class ByteReader<C extends HttpTRContext> extends OriginTeleReader<
             }
             return Byte.parseByte(val);
         } catch (Exception ex) {
-            throw new TeleException(messages.invalidNumberFormat(ctx.getName()));
+            throw new TeleException(messages.invalidNumberFormat(ctx.getParamName()));
         }
     }
 }

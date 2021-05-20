@@ -12,7 +12,6 @@ import com.squareup.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -116,7 +115,7 @@ public class EnvelopeGenerator extends FrameworkAbstractGenerator {
     }
 
     public void generate(RpcApiElement rpcApiElm) {
-        String classSimpleName = rpcApiElm.getEnvelopePackClassName();
+        String classSimpleName = rpcApiElm.getEnvelopePackClassSimpleName();
         String packageName = rpcApiElm.getOriginInterface().getPackageName();
 
         TypeSpec.Builder envelopeBuilder = TypeSpec.classBuilder(classSimpleName);

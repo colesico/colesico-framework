@@ -39,6 +39,6 @@ public final class HttpFileReader implements WebletTeleReader<HttpFile> {
 
     @Override
     public HttpFile read(WebletTRContext context) {
-        return requestProv.get().getPostFiles().get(context.getName());
+        return requestProv.get().getPostFiles().get(context.getParamName());
     }
 }

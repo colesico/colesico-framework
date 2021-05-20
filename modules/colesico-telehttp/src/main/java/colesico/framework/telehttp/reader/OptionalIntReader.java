@@ -53,7 +53,7 @@ public final class OptionalIntReader<C extends HttpTRContext> extends OriginTele
                 return OptionalInt.of(Integer.parseInt(val));
             }
         } catch (Exception var3) {
-            throw new TeleException(messages.invalidNumberFormat(ctx.getName()));
+            throw new TeleException(messages.invalidNumberFormat(ctx.getParamName()));
         }
     }
 }

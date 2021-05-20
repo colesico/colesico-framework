@@ -27,7 +27,7 @@ public class DefaultObjectReader<C extends HttpTRContext> extends ObjectReader<C
             T object = scheme.getConstructor().newInstance();
             // Process value fields
             for (ReadingScheme.ValueField valueFiled : scheme.getValueFields()) {
-                valueFiled.readValue(object, context.getName(), context.getOriginName());
+                valueFiled.readValue(object, context.getParamName(), context.getOriginName());
             }
             // Process nested objects
             for (ReadingScheme.ObjectField objField : scheme.getObjectFields()) {

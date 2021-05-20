@@ -2,7 +2,6 @@ package colesico.framework.telehttp.internal.objectreader;
 
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTeleReader;
-import colesico.framework.telehttp.Origin;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -109,7 +108,7 @@ public final class ReadingScheme<T> {
          * Reads tele-value and set the field value
          */
         public void readValue(Object target, String namePrefix, String originName) throws Exception {
-            Object value = reader.read(HttpTRContext.of(namePrefix + paramName, originName));
+            Object value = reader.read(HttpTRContext.instance(namePrefix + paramName, originName));
             setter.invoke(target, value);
         }
     }

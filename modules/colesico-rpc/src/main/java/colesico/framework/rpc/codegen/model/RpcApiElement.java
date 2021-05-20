@@ -41,7 +41,7 @@ public class RpcApiElement {
         }
     }
 
-    public String getEnvelopePackClassName() {
+    public String getEnvelopePackClassSimpleName() {
         return originInterface.getSimpleName() + ENVELOPE_PACK_CLASS_SUFFIX;
     }
 

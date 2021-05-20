@@ -35,7 +35,7 @@ import java.util.OptionalLong;
 
 @Producer
 @Produce(JsonReader.class)
-@Produce(JsonEntryReader.class)
+@Produce(JsonFieldReader.class)
 @Produce(RestletObjectReader.class)
 public class RestletReadersProducer {
 

@@ -72,17 +72,17 @@ public final class WebletModulator extends RoutesModulator {
 
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("new $T(", ClassName.get(WebletTRContext.class));
+
+        String originName = TeleHttpCodegenUtils.getOriginName(teleParam);
+        TypeName customReader = getCustomReaderClass(teleParam);
+
         cb.add("$S", paramName);
 
-        // Param origin
+        if (!originName.equals(Origin.AUTO) || customReader != null) {
+            cb.add(", $S", originName);
+        }
 
-        String paramOrigin = TeleHttpCodegenUtils.getParamOrigin(teleParam);
-        cb.add(", $S", paramOrigin);
-
-        TypeName customReader = getCustomReaderClass(teleParam);
-        if (customReader == null) {
-            cb.add(", null");
-        } else {
+        if (customReader != null) {
             cb.add(", $T.class", customReader);
         }
 
@@ -96,9 +96,7 @@ public final class WebletModulator extends RoutesModulator {
         cb.add("new $T(", ClassName.get(WebletTWContext.class));
 
         TypeName customWriter = getCustomWriterClass(teleMethod);
-        if (customWriter == null) {
-            cb.add("null");
-        } else {
+        if (customWriter != null) {
             cb.add("$T.class", customWriter);
         }
         cb.add(")");

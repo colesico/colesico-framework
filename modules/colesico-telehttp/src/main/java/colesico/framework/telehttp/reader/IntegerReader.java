@@ -49,7 +49,7 @@ public final class IntegerReader<C extends HttpTRContext> extends OriginTeleRead
             }
             return Integer.parseInt(val);
         } catch (Exception ex) {
-            throw new TeleException(messages.invalidNumberFormat(ctx.getName()));
+            throw new TeleException(messages.invalidNumberFormat(ctx.getParamName()));
         }
     }
 }

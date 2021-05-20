@@ -23,7 +23,7 @@ import colesico.framework.restlet.RestletConfigPrototype;
 import colesico.framework.restlet.assist.LogRestletListener;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.internal.gsonconv.GsonConverter;
-import colesico.framework.restlet.teleapi.jsonmap.JsonMapContext;
+import colesico.framework.restlet.teleapi.jsonrequest.JsonRequest;
 
 import javax.inject.Singleton;
 
@@ -68,7 +68,7 @@ public class RestletProducer {
         return new RestletConfigImpl();
     }
 
-    public JsonMapContext getJsonMapContext(ThreadScope scope) {
-        return scope.get(JsonMapContext.SCOPE_KEY);
+    public JsonRequest getJsonMapContext(ThreadScope scope) {
+        return scope.get(JsonRequest.SCOPE_KEY);
     }
 }

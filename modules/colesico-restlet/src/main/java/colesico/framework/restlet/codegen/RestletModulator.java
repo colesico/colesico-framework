@@ -21,13 +21,15 @@ import colesico.framework.assist.CollectionUtils;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.restlet.Restlet;
+import colesico.framework.restlet.codegen.model.JsonFieldElement;
 import colesico.framework.restlet.teleapi.*;
-import colesico.framework.restlet.teleapi.jsonmap.JsonEntry;
-import colesico.framework.restlet.teleapi.reader.JsonEntryReader;
+import colesico.framework.restlet.teleapi.jsonrequest.JsonField;
+import colesico.framework.restlet.teleapi.reader.JsonFieldReader;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
 import colesico.framework.service.codegen.model.TeleParamElement;
+import colesico.framework.telehttp.Origin;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -88,19 +90,27 @@ public final class RestletModulator extends RoutesModulator {
         CodeBlock.Builder cb = CodeBlock.builder();
 
         // new RestletTRContext(paramName
-        cb.add("new $T(", ClassName.get(RestletTRContext.class));
+        cb.add("$T.$N(", ClassName.get(RestletTRContext.class), RestletTRContext.OF_METHOD);
+
+        String originName = TeleHttpCodegenUtils.getOriginName(teleParam);
+        TypeName customReader = getCustomReaderClass(teleParam);
+        JsonFieldElement jsonField = teleParam.getProperty(JsonFieldElement.class);
+
         cb.add("$S", paramName);
 
-        // Param origin name
-        String paramOrigin = TeleHttpCodegenUtils.getParamOrigin(teleParam);
-        cb.add(", $S", paramOrigin);
+        if (!originName.equals(Origin.AUTO) || customReader != null || jsonField != null) {
+            cb.add(", $S", originName);
+        }
 
-        // Custom reader
-        TypeName customReader = getCustomReaderClass(teleParam);
-        if (customReader == null) {
-            cb.add(", null");
-        } else {
+        if (customReader != null || jsonField != null) {
             cb.add(", $T.class", customReader);
+        }
+
+        if (jsonField != null) {
+            cb.add(", $T::$N",
+                    ClassName.bestGuess(jsonField.getParentRequest().getJsonRequestClassName()),
+                    jsonField.getterName()
+            );
         }
 
         cb.add(")");
@@ -113,9 +123,7 @@ public final class RestletModulator extends RoutesModulator {
         cb.add("new $T(", ClassName.get(RestletTWContext.class));
 
         TypeName writerClass = getCustomWriterClass(teleMethod);
-        if (writerClass == null) {
-            cb.add("null");
-        } else {
+        if (writerClass != null) {
             cb.add("$T.class", writerClass);
         }
         cb.add(")");
@@ -135,12 +143,12 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     protected TypeName getCustomReaderClass(TeleParamElement teleParam) {
-        var jsonEntryAnn = teleParam.getOriginParam().getAnnotation(JsonEntry.class);
+        var jsonEntryAnn = teleParam.getOriginParam().getAnnotation(JsonField.class);
         if (jsonEntryAnn == null) {
-            jsonEntryAnn = teleParam.getParentTeleMethod().getServiceMethod().getOriginMethod().getAnnotation(JsonEntry.class);
+            jsonEntryAnn = teleParam.getParentTeleMethod().getServiceMethod().getOriginMethod().getAnnotation(JsonField.class);
         }
         if (jsonEntryAnn != null) {
-            return TypeName.get(CodegenUtils.classToTypeMirror(JsonEntryReader.class, getProcessorContext().getElementUtils()));
+            return TypeName.get(CodegenUtils.classToTypeMirror(JsonFieldReader.class, getProcessorContext().getElementUtils()));
         }
 
         var rdAnn = teleParam.getOriginParam().getAnnotation(RestletParamReader.class);
@@ -153,5 +161,6 @@ public final class RestletModulator extends RoutesModulator {
         TypeMirror readerClassMirror = rdAnn.getValueTypeMirror(a -> a.value());
         return TypeName.get(readerClassMirror);
     }
+
 
 }
