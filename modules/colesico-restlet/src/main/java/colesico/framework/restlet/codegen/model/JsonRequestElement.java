@@ -40,10 +40,14 @@ public class JsonRequestElement {
         return originMethod;
     }
 
+    public String getJsonRequestClassSimpleName() {
+        return StrUtils.firstCharToUpperCase(originMethod.getName()) + JSON_REQUEST_CLASS_SUFFIX;
+    }
+
     public String getJsonRequestClassName() {
         return parentPack.getOriginTeleFacade().getParentService().getOriginClass().getPackageName() + '.' +
                 parentPack.getJsonPackClassSimpleName() + '.' +
-                StrUtils.firstCharToUpperCase(originMethod.getName()) + JSON_REQUEST_CLASS_SUFFIX;
+                getJsonRequestClassSimpleName();
     }
 
 }

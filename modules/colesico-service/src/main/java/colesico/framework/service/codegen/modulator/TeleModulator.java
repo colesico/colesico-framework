@@ -64,7 +64,7 @@ public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulat
      * Called to process tele facade after parsing completed.
      * Override this method to custom processing.
      */
-    protected void processTeleFacade(TeleFacadeElement teleMethodElement) {
+    protected void processTeleFacade(TeleFacadeElement teleFacadeElement) {
 
     }
 
