@@ -18,14 +18,16 @@ package colesico.framework.restlet.codegen;
 
 
 import colesico.framework.assist.CollectionUtils;
+import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.restlet.Restlet;
 import colesico.framework.restlet.teleapi.*;
+import colesico.framework.restlet.teleapi.jsonmap.JsonEntry;
+import colesico.framework.restlet.teleapi.reader.JsonEntryReader;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
 import colesico.framework.service.codegen.model.TeleParamElement;
-import colesico.framework.telehttp.Origin;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -66,18 +68,34 @@ public final class RestletModulator extends RoutesModulator {
         return CollectionUtils.annotationClassSet(Restlet.class);
     }
 
+    /**
+     * Generate parameters wrapper class
+     *
+     * @param teleMethodElement
+     */
+    @Override
+    protected void processTeleMethod(TeleMethodElement teleMethodElement) {
+        super.processTeleMethod(teleMethodElement);
+
+        //TypeSpec.Builder requestBuilder = TypeSpec.classBuilder(method.getRequestClassSimpleName());
+
+    }
+
     @Override
     protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
         String paramName = TeleHttpCodegenUtils.getParamName(teleParam);
 
         CodeBlock.Builder cb = CodeBlock.builder();
+
+        // new RestletTRContext(paramName
         cb.add("new $T(", ClassName.get(RestletTRContext.class));
         cb.add("$S", paramName);
 
-        // Param origin
+        // Param origin name
         String paramOrigin = TeleHttpCodegenUtils.getParamOrigin(teleParam);
         cb.add(", $S", paramOrigin);
 
+        // Custom reader
         TypeName customReader = getCustomReaderClass(teleParam);
         if (customReader == null) {
             cb.add(", null");
@@ -117,7 +135,18 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     protected TypeName getCustomReaderClass(TeleParamElement teleParam) {
+        var jsonEntryAnn = teleParam.getOriginParam().getAnnotation(JsonEntry.class);
+        if (jsonEntryAnn == null) {
+            jsonEntryAnn = teleParam.getParentTeleMethod().getServiceMethod().getOriginMethod().getAnnotation(JsonEntry.class);
+        }
+        if (jsonEntryAnn != null) {
+            return TypeName.get(CodegenUtils.classToTypeMirror(JsonEntryReader.class, getProcessorContext().getElementUtils()));
+        }
+
         var rdAnn = teleParam.getOriginParam().getAnnotation(RestletParamReader.class);
+        if (rdAnn == null) {
+            rdAnn = teleParam.getParentTeleMethod().getServiceMethod().getOriginMethod().getAnnotation(RestletParamReader.class);
+        }
         if (rdAnn == null) {
             return null;
         }

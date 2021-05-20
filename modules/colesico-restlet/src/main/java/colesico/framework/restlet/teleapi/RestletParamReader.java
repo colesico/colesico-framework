@@ -9,7 +9,7 @@ import java.lang.annotation.*;
  * Specifies custom reader for tele-param
  */
 @Retention(RetentionPolicy.RUNTIME)
-// ElementType.FIELD - for object reader
+// ElementType.FIELD - for object reader. not implemented
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @Inherited
 @Documented

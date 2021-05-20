@@ -21,10 +21,7 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.restlet.teleapi.RestletTeleReader;
-import colesico.framework.restlet.teleapi.reader.JsonReader;
-import colesico.framework.restlet.teleapi.reader.RestletObjectReader;
-import colesico.framework.restlet.teleapi.reader.RestletReaderProxy;
-import colesico.framework.restlet.teleapi.reader.ValueReader;
+import colesico.framework.restlet.teleapi.reader.*;
 import colesico.framework.security.Principal;
 import colesico.framework.telehttp.reader.*;
 
@@ -38,6 +35,7 @@ import java.util.OptionalLong;
 
 @Producer
 @Produce(JsonReader.class)
+@Produce(JsonEntryReader.class)
 @Produce(RestletObjectReader.class)
 public class RestletReadersProducer {
 

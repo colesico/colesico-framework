@@ -122,6 +122,9 @@ public final class WebletModulator extends RoutesModulator {
         if (rdAnn == null) {
             return null;
         }
+        if (rdAnn == null) {
+            rdAnn = teleParam.getParentTeleMethod().getServiceMethod().getOriginMethod().getAnnotation(WebletParamReader.class);
+        }
         TypeMirror readerClassMirror = rdAnn.getValueTypeMirror(a -> a.value());
         return TypeName.get(readerClassMirror);
     }

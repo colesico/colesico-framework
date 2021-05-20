@@ -18,8 +18,6 @@ package colesico.framework.weblet.teleapi.reader;
 
 import colesico.framework.http.HttpFile;
 import colesico.framework.http.HttpRequest;
-import colesico.framework.telehttp.Origin;
-import colesico.framework.telehttp.OriginFactory;
 import colesico.framework.weblet.teleapi.WebletTRContext;
 import colesico.framework.weblet.teleapi.WebletTeleReader;
 

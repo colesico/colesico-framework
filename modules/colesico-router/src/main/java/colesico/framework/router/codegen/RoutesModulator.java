@@ -44,7 +44,7 @@ abstract public class RoutesModulator extends TeleModulator<RouterTeleFacadeElem
     abstract protected Class<? extends DataPort> getDataPortClass();
 
     @Override
-    protected final void processTeleMethod(TeleMethodElement teleMethodElement) {
+    protected void processTeleMethod(TeleMethodElement teleMethodElement) {
         ((RouterTeleFacadeElement) teleMethodElement.getParentTeleFacade())
                 .getRoutesBuilder()
                 .addTeleMethod(teleMethodElement);

@@ -8,17 +8,18 @@ import java.lang.reflect.Type;
 abstract public class HttpTRContext {
 
     /**
-     * Parameter name
+     * Http value entity name.
+     * This can be a header or cookie or query param etc. name
      */
     private final String name;
 
     /**
-     * Parameter type
+     * Target value type
      */
     private Type valueType;
 
     /**
-     * Origin name to read parameter from it
+     * Origin name to read value from it
      */
     private final String originName;
 
@@ -33,14 +34,14 @@ abstract public class HttpTRContext {
     }
 
     /**
-     * Parameter name
+     * Http value name
      */
     public final String getName() {
         return name;
     }
 
     /**
-     * Origin class
+     * Origin name
      */
     public String getOriginName() {
         return originName;
