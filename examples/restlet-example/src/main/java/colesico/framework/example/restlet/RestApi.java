@@ -26,6 +26,9 @@ import colesico.framework.router.RequestMethod;
 import colesico.framework.router.Route;
 import colesico.framework.router.RouteAttribute;
 import colesico.framework.restlet.teleapi.writer.PlainTextWriter;
+import colesico.framework.telehttp.Origin;
+import colesico.framework.telehttp.ParamName;
+import colesico.framework.telehttp.ParamOrigin;
 
 import java.util.Arrays;
 import java.util.List;
@@ -87,7 +90,15 @@ public class RestApi {
         throw new CustomException("Custom exception", List.of("Payload1", "Payload2"));
     }
 
-    public Map<String, Object> jsonFields(@JsonField Long id, @JsonField String name, Integer num) {
-        return Map.of("id", id, "name", name, "num", num);
+    /**
+     * JsonField example
+     *
+     * @see JsonField
+     */
+    @RequestMethod(HttpMethod.POST)
+    public Map<String, Object> jsonFields(@JsonField(name = "id") Long idValue,
+                                          @JsonField String name,
+                                          @ParamOrigin(Origin.QUERY) Integer num) {
+        return Map.of("id", idValue, "name", name, "num", num);
     }
 }

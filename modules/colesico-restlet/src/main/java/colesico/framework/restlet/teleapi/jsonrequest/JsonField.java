@@ -10,4 +10,9 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 public @interface JsonField {
+    /**
+     * Json field name.
+     * If not specified, the name of the tele-method parameter will be used
+     */
+    String name() default "";
 }

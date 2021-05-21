@@ -134,6 +134,11 @@ public final class RestletModulator extends RoutesModulator {
     protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
         String paramName = TeleHttpCodegenUtils.getParamName(teleParam);
 
+        JsonFieldElement jfe = teleParam.getProperty(JsonFieldElement.class);
+        if (jfe != null) {
+            paramName = jfe.getName();
+        }
+
         CodeBlock.Builder cb = CodeBlock.builder();
 
         // new RestletTRContext(paramName
