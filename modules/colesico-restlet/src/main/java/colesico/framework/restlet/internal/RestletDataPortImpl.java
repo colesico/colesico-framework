@@ -16,17 +16,16 @@
 
 package colesico.framework.restlet.internal;
 
-import colesico.framework.http.HttpContext;
 import colesico.framework.restlet.RestletError;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.reader.ValueReader;
 import colesico.framework.restlet.teleapi.writer.ObjectWriter;
-import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -35,24 +34,19 @@ import java.util.List;
 @Singleton
 public class RestletDataPortImpl implements RestletDataPort {
 
-    protected final TeleFactory teleFactory;
-    protected final Provider<HttpContext> httpContextProv;
-    protected final Provider<RouterContext> routerContextProv;
+    private final Logger logger = LoggerFactory.getLogger(RestletDataPort.class);
+    private final TeleFactory teleFactory;
 
-    protected final RestletJsonConverter jsonConverter;
 
-    public RestletDataPortImpl(TeleFactory teleFactory, Provider<HttpContext> httpContextProv, Provider<RouterContext> routerContextProv, RestletJsonConverter jsonConverter) {
+    public RestletDataPortImpl(TeleFactory teleFactory) {
         this.teleFactory = teleFactory;
-        this.httpContextProv = httpContextProv;
-        this.routerContextProv = routerContextProv;
-        this.jsonConverter = jsonConverter;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <V> V read(Type valueType, RestletTRContext context) {
         if (context == null) {
-            context = new RestletTRContext();
+            context = RestletTRContext.of();
         }
 
         // Store value type to context
@@ -63,7 +57,7 @@ public class RestletDataPortImpl implements RestletDataPort {
 
         if (context.getReaderClass() != null) {
             // Use specified reader
-            reader = teleFactory.getReader(context.getReaderClass());
+            reader = (RestletTeleReader<V>) teleFactory.getReader(context.getReaderClass());
         } else {
             // Use reader by param type
             reader = teleFactory.findReader(RestletTeleReader.class, valueType);
@@ -127,14 +121,14 @@ public class RestletDataPortImpl implements RestletDataPort {
         RestletError error = new RestletError();
         error.setErrorCode(throwable.getClass().getCanonicalName());
         error.setMessage(ExceptionUtils.getRootCauseMessage(throwable));
-        error.setDetails(getMessages(throwable));
+        error.setDetails(getErrorMessages(throwable));
         RestletTeleWriter objWriter = teleFactory.getWriter(ObjectWriter.class);
         context.setHttpCode(500);
         objWriter.write(error, context);
 
     }
 
-    protected List<String> getMessages(Throwable ex) {
+    private List<String> getErrorMessages(Throwable ex) {
         Throwable e = ex;
         List<String> messages = new ArrayList<>();
 

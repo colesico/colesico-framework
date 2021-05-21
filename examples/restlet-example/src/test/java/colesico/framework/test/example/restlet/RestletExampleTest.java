@@ -35,6 +35,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Map;
 
 import static org.testng.AssertJUnit.assertEquals;
 
@@ -50,7 +51,7 @@ public class RestletExampleTest {
         TestCondition.enable();
         ioc = IocBuilder.create().build();
         httpServer = ioc.instance(HttpServer.class).start();
-        httpClient =  HttpClient.newBuilder().build();
+        httpClient = HttpClient.newBuilder().build();
     }
 
     @AfterClass
@@ -61,13 +62,13 @@ public class RestletExampleTest {
     private String requestGET(String url) throws Exception {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
-               // .header("X-Requested-With", "XMLHttpRequest")
+                // .header("X-Requested-With", "XMLHttpRequest")
                 .build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         return response.body();
     }
 
-    private String requestPOST(String url, String jsonRequest ) throws Exception {
+    private String requestPOST(String url, String jsonRequest) throws Exception {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 //.header("X-Requested-With", "XMLHttpRequest")
@@ -97,7 +98,7 @@ public class RestletExampleTest {
         User user = new User();
         user.setId(2L);
         user.setName("AName");
-        Long id = gson.fromJson(requestPOST("http://localhost:8085/rest-api/save",gson.toJson(user)), Long.class);
+        Long id = gson.fromJson(requestPOST("http://localhost:8085/rest-api/save", gson.toJson(user)), Long.class);
         assertEquals(id.longValue(), 2L);
     }
 
@@ -105,5 +106,13 @@ public class RestletExampleTest {
     public void testNonBlocking() throws Exception {
         String result = requestGET("http://localhost:8085/rest-api/non-blocking");
         //assertEquals("NonBlocking",result);
+    }
+
+    @Test
+    public void testJsonFields() throws Exception {
+        String resultStr = requestPOST("http://localhost:8085/rest-api/json-fields?val=test", "{id:1,name:Vladlen}");
+        Map resultMap = gson.fromJson(resultStr, Map.class);
+        assertEquals("Vladlen", resultMap.get("name"));
+        assertEquals("test", resultMap.get("val"));
     }
 }

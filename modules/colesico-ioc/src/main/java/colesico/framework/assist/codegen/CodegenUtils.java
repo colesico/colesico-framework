@@ -256,12 +256,20 @@ public class CodegenUtils {
     }
 
     /**
+     * Converts Class to TypeMirror
+     */
+    public static TypeMirror classToTypeMirror(Class clazz, Elements elementUtils) {
+        TypeMirror clazzMirror = elementUtils.getTypeElement(clazz.getCanonicalName()).asType();
+        return clazzMirror;
+    }
+
+    /**
      * Test class type is assignable to mirror type
      */
     public static boolean isAssignable(Class clazz, TypeMirror typeMirror, ProcessingEnvironment env) {
         Elements elementUtils = env.getElementUtils();
         Types typeUtils = env.getTypeUtils();
-        TypeMirror clazzMirror = elementUtils.getTypeElement(clazz.getCanonicalName()).asType();
+        TypeMirror clazzMirror = classToTypeMirror(clazz, elementUtils);
         return typeUtils.isAssignable(clazzMirror, typeMirror);
     }
 

@@ -16,16 +16,14 @@
 
 package colesico.framework.telehttp.reader;
 
-import colesico.framework.http.HttpContext;
-import colesico.framework.telehttp.HttpTRContext;
-import colesico.framework.telehttp.HttpTeleReader;
-import colesico.framework.telehttp.t9n.Messages;
-import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleException;
+import colesico.framework.telehttp.HttpTRContext;
+import colesico.framework.telehttp.OriginFactory;
+import colesico.framework.telehttp.OriginTeleReader;
+import colesico.framework.telehttp.t9n.Messages;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -34,27 +32,27 @@ import java.time.format.DateTimeFormatter;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class LocalDateReader<C extends HttpTRContext> extends HttpTeleReader<LocalDate, C> {
+public final class LocalDateReader<C extends HttpTRContext> extends OriginTeleReader<LocalDate, C> {
 
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final Messages messages;
 
     @Inject
-    public LocalDateReader(Provider<RouterContext> routerContextProv, Provider<HttpContext> httpContextProv, Messages messages) {
-        super(routerContextProv, httpContextProv);
+    public LocalDateReader(OriginFactory originFactory, Messages messages) {
+        super(originFactory);
         this.messages = messages;
     }
 
     @Override
     public LocalDate read(C ctx) {
         try {
-            String val = getStringValue(ctx);
+            String val = readString(ctx);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }
             return LocalDate.parse(val, dtf);
         } catch (Exception ex) {
-            throw new TeleException(messages.invalidDateFormat(ctx.getName()));
+            throw new TeleException(messages.invalidDateFormat(ctx.getParamName()));
         }
     }
 }

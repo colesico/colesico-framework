@@ -19,17 +19,15 @@ package colesico.framework.telehttp.reader;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpRequest;
+import colesico.framework.profile.Profile;
+import colesico.framework.profile.teleapi.CommonProfileCreator;
+import colesico.framework.profile.teleapi.ProfileSerializer;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTeleReader;
 import colesico.framework.telehttp.assist.HttpUtils;
 import colesico.framework.telehttp.writer.ProfileWriter;
-import colesico.framework.profile.Profile;
-import colesico.framework.profile.teleapi.CommonProfileCreator;
-import colesico.framework.profile.teleapi.ProfileSerializer;
-import colesico.framework.router.RouterContext;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.Base64;
@@ -39,19 +37,18 @@ import java.util.Locale;
  * Default profile reader
  */
 @Singleton
-public class ProfileReader<C extends HttpTRContext> extends HttpTeleReader<Profile, C> {
-
+public class ProfileReader<C extends HttpTRContext> implements HttpTeleReader<Profile, C> {
 
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
 
     protected final ProfileSerializer profileSerializer;
     protected final CommonProfileCreator commonProfileCreator;
+    protected final Provider<HttpContext> httpContextProv;
 
-    @Inject
-    public ProfileReader(Provider<RouterContext> routerContextProv, Provider<HttpContext> httpContextProv, ProfileSerializer profileSerializer, CommonProfileCreator commonProfileCreator, Provider<HttpContext> httpContextProv1) {
-        super(routerContextProv, httpContextProv);
+    public ProfileReader(ProfileSerializer profileSerializer, CommonProfileCreator commonProfileCreator, Provider<HttpContext> httpContextProv) {
         this.profileSerializer = profileSerializer;
         this.commonProfileCreator = commonProfileCreator;
+        this.httpContextProv = httpContextProv;
     }
 
     protected Profile getCustomProfile(HttpRequest request) {
@@ -61,10 +58,14 @@ public class ProfileReader<C extends HttpTRContext> extends HttpTeleReader<Profi
         if (StringUtils.isBlank(profileValue)) {
             // Retrieve profile from http cookie
             HttpCookie cookie = request.getCookies().get(ProfileWriter.COOKIE_NAME);
-            profileValue = cookie != null ? cookie.getValue() : null;
-            if (StringUtils.isBlank(profileValue)) {
+            if (cookie == null) {
                 return null;
             }
+            profileValue = cookie.getValue();
+        }
+
+        if (StringUtils.isBlank(profileValue)) {
+            return null;
         }
 
         Base64.Decoder decoder = Base64.getDecoder();

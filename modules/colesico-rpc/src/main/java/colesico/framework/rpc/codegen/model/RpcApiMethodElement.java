@@ -44,8 +44,8 @@ public class RpcApiMethodElement {
 
     public String getRequestClassName() {
         return parentApi.getOriginInterface().getPackageName() + '.' +
-                parentApi.getEnvelopePackClassName() + '.' +
-                StrUtils.firstCharToUpperCase(originMethod.getName()) + RPC_REQUEST_CLASS_SUFFIX;
+                parentApi.getEnvelopePackClassSimpleName() + '.' +
+                getRequestClassSimpleName();
     }
 
     public String getResponseClassSimpleName() {
@@ -54,7 +54,7 @@ public class RpcApiMethodElement {
 
     public String getResponseClassName() {
         return parentApi.getOriginInterface().getPackageName() + '.' +
-                parentApi.getEnvelopePackClassName() + '.' +
+                parentApi.getEnvelopePackClassSimpleName() + '.' +
                 StrUtils.firstCharToUpperCase(originMethod.getName()) + RPC_RESPONSE_CLASS_SUFFIX;
     }
 

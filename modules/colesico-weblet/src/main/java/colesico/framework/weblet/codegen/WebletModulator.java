@@ -45,8 +45,8 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected boolean isTeleFacadeSupported(ServiceElement serviceElm) {
-        AnnotationAssist teleAnn = serviceElm.getOriginClass().getAnnotation(Weblet.class);
+    protected boolean isTeleFacadeSupported(ServiceElement service) {
+        AnnotationAssist teleAnn = service.getOriginClass().getAnnotation(Weblet.class);
         return teleAnn != null;
     }
 
@@ -67,22 +67,22 @@ public final class WebletModulator extends RoutesModulator {
 
     @Override
     protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
-            
+
         String paramName = TeleHttpCodegenUtils.getParamName(teleParam);
 
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("new $T(", ClassName.get(WebletTRContext.class));
+
+        String originName = TeleHttpCodegenUtils.getOriginName(teleParam);
+        TypeName customReader = getCustomReaderClass(teleParam);
+
         cb.add("$S", paramName);
 
-        // Param origin
+        if (!originName.equals(Origin.AUTO) || customReader != null) {
+            cb.add(", $S", originName);
+        }
 
-        Origin paramOrigin = TeleHttpCodegenUtils.getParamOrigin(teleParam);
-        cb.add(", $T.$N", ClassName.get(WebletOriginFacade.class), paramOrigin.name());
-
-        TypeName customReader = getCustomReaderClass(teleParam);
-        if (customReader == null) {
-            cb.add(", null");
-        } else {
+        if (customReader != null) {
             cb.add(", $T.class", customReader);
         }
 
@@ -96,9 +96,7 @@ public final class WebletModulator extends RoutesModulator {
         cb.add("new $T(", ClassName.get(WebletTWContext.class));
 
         TypeName customWriter = getCustomWriterClass(teleMethod);
-        if (customWriter == null) {
-            cb.add("null");
-        } else {
+        if (customWriter != null) {
             cb.add("$T.class", customWriter);
         }
         cb.add(")");
@@ -121,6 +119,9 @@ public final class WebletModulator extends RoutesModulator {
         var rdAnn = teleParam.getOriginParam().getAnnotation(WebletParamReader.class);
         if (rdAnn == null) {
             return null;
+        }
+        if (rdAnn == null) {
+            rdAnn = teleParam.getParentTeleMethod().getServiceMethod().getOriginMethod().getAnnotation(WebletParamReader.class);
         }
         TypeMirror readerClassMirror = rdAnn.getValueTypeMirror(a -> a.value());
         return TypeName.get(readerClassMirror);

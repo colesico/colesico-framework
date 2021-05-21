@@ -16,42 +16,40 @@
 
 package colesico.framework.telehttp.reader;
 
-import colesico.framework.http.HttpContext;
-import colesico.framework.telehttp.HttpTRContext;
-import colesico.framework.telehttp.HttpTeleReader;
-import colesico.framework.telehttp.t9n.Messages;
-import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleException;
+import colesico.framework.telehttp.HttpTRContext;
+import colesico.framework.telehttp.OriginFactory;
+import colesico.framework.telehttp.OriginTeleReader;
+import colesico.framework.telehttp.t9n.Messages;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 /**
  * @author Vladlen Larionov
  */
 @Singleton
-public final class FloatReader<C extends HttpTRContext> extends HttpTeleReader<Float, C> {
+public final class FloatReader<C extends HttpTRContext> extends OriginTeleReader<Float, C> {
 
     private final Messages messages;
 
     @Inject
-    public FloatReader(Provider<RouterContext> routerContextProv, Provider<HttpContext> httpContextProv, Messages messages) {
-        super(routerContextProv, httpContextProv);
+    public FloatReader(OriginFactory originFactory, Messages messages) {
+        super(originFactory);
         this.messages = messages;
     }
 
     @Override
     public Float read(C ctx) {
         try {
-            String val = getStringValue(ctx);
+            String val = readString(ctx);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }
             return Float.parseFloat(val);
         } catch (Exception ex) {
-            throw new TeleException(messages.invalidNumberFormat(ctx.getName()));
+            throw new TeleException(messages.invalidNumberFormat(ctx.getParamName()));
         }
     }
 }

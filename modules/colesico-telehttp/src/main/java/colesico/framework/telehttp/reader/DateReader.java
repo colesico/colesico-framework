@@ -16,17 +16,15 @@
 
 package colesico.framework.telehttp.reader;
 
-import colesico.framework.http.HttpContext;
+import colesico.framework.teleapi.TeleException;
 import colesico.framework.telehttp.HttpTRContext;
-import colesico.framework.telehttp.HttpTeleReader;
+import colesico.framework.telehttp.OriginFactory;
+import colesico.framework.telehttp.OriginTeleReader;
 import colesico.framework.telehttp.assist.ISO8601DateParser;
 import colesico.framework.telehttp.t9n.Messages;
-import colesico.framework.router.RouterContext;
-import colesico.framework.teleapi.TeleException;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.Date;
 
@@ -34,25 +32,25 @@ import java.util.Date;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class DateReader<C extends HttpTRContext> extends HttpTeleReader<Date, C> {
+public final class DateReader<C extends HttpTRContext> extends OriginTeleReader<Date, C> {
     private final Messages messages;
 
     @Inject
-    public DateReader(Provider<RouterContext> routerContextProv, Provider<HttpContext> httpContextProv, Messages messages) {
-        super(routerContextProv, httpContextProv);
+    public DateReader(OriginFactory originFactory, Messages messages) {
+        super(originFactory);
         this.messages = messages;
     }
 
     @Override
     public Date read(C ctx) {
         try {
-            String val = getStringValue(ctx);
+            String val = readString(ctx);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }
             return ISO8601DateParser.parse(val);
         } catch (Exception ex) {
-            throw new TeleException(messages.invalidDateFormat(ctx.getName()));
+            throw new TeleException(messages.invalidDateFormat(ctx.getParamName()));
         }
     }
 }

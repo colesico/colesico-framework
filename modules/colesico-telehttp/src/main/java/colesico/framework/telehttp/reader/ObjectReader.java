@@ -1,25 +1,20 @@
 package colesico.framework.telehttp.reader;
 
-import colesico.framework.http.HttpContext;
-import colesico.framework.router.RouterContext;
 import colesico.framework.telehttp.HttpTRContext;
-import colesico.framework.telehttp.HttpTeleReader;
+import colesico.framework.telehttp.OriginFactory;
+import colesico.framework.telehttp.OriginTeleReader;
 
-import javax.inject.Provider;
+import javax.inject.Inject;
 
 /**
  * Performs custom object reading using reflection.
  * Object fields values are reading with appropriate http-readers if the field type can be reade by tye reader.
  * Otherwise field read as nested custom object
  */
-abstract public class ObjectReader<C extends HttpTRContext> extends HttpTeleReader<Object, C> {
+abstract public class ObjectReader<C extends HttpTRContext> extends OriginTeleReader<Object, C> {
 
-
-    public ObjectReader(Provider<RouterContext> routerContextProv, Provider<HttpContext> httpContextProv) {
-        super(routerContextProv, httpContextProv);
-    }
-
-    public ObjectReader(HttpTeleReader reader) {
-        super(reader);
+    @Inject
+    public ObjectReader(OriginFactory originFactory) {
+        super(originFactory);
     }
 }

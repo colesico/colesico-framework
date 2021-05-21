@@ -19,14 +19,11 @@ package colesico.framework.telehttp.reader;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpRequest;
-import colesico.framework.telehttp.HttpTRContext;
-import colesico.framework.telehttp.HttpTeleReader;
-import colesico.framework.telehttp.PrincipalHttpConfigPrototype;
-import colesico.framework.telehttp.writer.PrincipalWriter;
-import colesico.framework.router.RouterContext;
 import colesico.framework.security.Principal;
 import colesico.framework.security.assist.MACUtils;
 import colesico.framework.security.teleapi.PrincipalSerializer;
+import colesico.framework.telehttp.*;
+import colesico.framework.telehttp.writer.PrincipalWriter;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -36,31 +33,36 @@ import java.util.Base64;
 import java.util.StringTokenizer;
 
 @Singleton
-public class PrincipalReader<C extends HttpTRContext> extends HttpTeleReader<Principal, C> {
+public class PrincipalReader<C extends HttpTRContext> implements HttpTeleReader<Principal, C> {
 
     protected final PrincipalHttpConfigPrototype config;
     protected final PrincipalSerializer principalSerializer;
+    protected final Provider<HttpContext> httpContextProv;
 
     @Inject
-    public PrincipalReader(Provider<RouterContext> routerContextProv, Provider<HttpContext> httpContextProv, PrincipalHttpConfigPrototype config, PrincipalSerializer principalSerializer, Provider<HttpContext> httpContextProv1) {
-        super(routerContextProv, httpContextProv);
+    public PrincipalReader(PrincipalHttpConfigPrototype config, PrincipalSerializer principalSerializer, Provider<HttpContext> httpContextProv) {
         this.config = config;
         this.principalSerializer = principalSerializer;
+        this.httpContextProv = httpContextProv;
     }
 
     @Override
     public Principal read(C context) {
-        HttpRequest request = httpContextProv.get().getRequest();
 
+        HttpRequest request = httpContextProv.get().getRequest();
         // Retrieve principal from http header
         String principalValue = request.getHeaders().get(PrincipalWriter.HEADER_NAME);
         if (StringUtils.isBlank(principalValue)) {
             // Retrieve principal from http cookie
             HttpCookie cookie = request.getCookies().get(PrincipalWriter.COOKIE_NAME);
-            principalValue = cookie != null ? cookie.getValue() : null;
-            if (StringUtils.isBlank(principalValue)) {
+            if (cookie == null) {
                 return null;
             }
+            principalValue = cookie.getValue();
+        }
+
+        if (StringUtils.isBlank(principalValue)) {
+            return null;
         }
 
         StringTokenizer tokenizer = new StringTokenizer(principalValue, PrincipalWriter.ITEM_DELIMITER);

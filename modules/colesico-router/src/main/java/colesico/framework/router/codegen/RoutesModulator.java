@@ -44,14 +44,14 @@ abstract public class RoutesModulator extends TeleModulator<RouterTeleFacadeElem
     abstract protected Class<? extends DataPort> getDataPortClass();
 
     @Override
-    protected final void processTeleMethod(TeleMethodElement teleMethodElement) {
+    protected void processTeleMethod(TeleMethodElement teleMethodElement) {
         ((RouterTeleFacadeElement) teleMethodElement.getParentTeleFacade())
                 .getRoutesBuilder()
                 .addTeleMethod(teleMethodElement);
     }
 
     @Override
-    protected final RouterTeleFacadeElement createTeleFacade(ServiceElement serviceElm) {
+    protected RouterTeleFacadeElement createTeleFacade(ServiceElement serviceElm) {
         return new RouterTeleFacadeElement(
                 getTeleType(),
                 getTeleDriverClass(),
@@ -62,7 +62,7 @@ abstract public class RoutesModulator extends TeleModulator<RouterTeleFacadeElem
         );
     }
 
-    protected final CodeBlock generateLigatureMethodBody(RouterTeleFacadeElement teleFacade) {
+    protected CodeBlock generateLigatureMethodBody(RouterTeleFacadeElement teleFacade) {
         CodeBlock.Builder cb = CodeBlock.builder();
 
         cb.addStatement("$T $N = new $T($T.class)",
@@ -82,7 +82,7 @@ abstract public class RoutesModulator extends TeleModulator<RouterTeleFacadeElem
         return cb.build();
     }
 
-    protected final CodeBlock generateRouteMapping(TeleFacadeElement teleFacade, RoutesBuilder.RoutedTeleMethodElement routedTeleMethod) {
+    protected CodeBlock generateRouteMapping(TeleFacadeElement teleFacade, RoutesBuilder.RoutedTeleMethodElement routedTeleMethod) {
 
         CodeBlock.Builder cb = CodeBlock.builder();
 

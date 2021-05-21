@@ -16,15 +16,15 @@
 package colesico.framework.http;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.util.Objects;
 
 /**
  * Http method type and dictionary
  *
  * @author Vladlen Larionov
  */
-public final class HttpMethod {
+public class HttpMethod {
 
     public static final String GET = "GET";
     public static final String POST = "POST";
@@ -36,15 +36,15 @@ public final class HttpMethod {
     public static final String CONNECT = "CONNECT";
     public static final String OPTIONS = "OPTIONS";
 
-    public static final HttpMethod HTTP_METHOD_GET = new HttpMethod(GET);
-    public static final HttpMethod HTTP_METHOD_POST = new HttpMethod(POST);
-    public static final HttpMethod HTTP_METHOD_PUT = new HttpMethod(PUT);
-    public static final HttpMethod HTTP_METHOD_DELETE = new HttpMethod(DELETE);
-    public static final HttpMethod HTTP_METHOD_HEAD = new HttpMethod(HEAD);
-    public static final HttpMethod HTTP_METHOD_TRACE = new HttpMethod(TRACE);
-    public static final HttpMethod HTTP_METHOD_PATCH = new HttpMethod(PATCH);
-    public static final HttpMethod HTTP_METHOD_CONNECT = new HttpMethod(CONNECT);
-    public static final HttpMethod HTTP_METHOD_OPTIONS = new HttpMethod(OPTIONS);
+    public static final HttpMethod HTTP_METHOD_GET = of(GET);
+    public static final HttpMethod HTTP_METHOD_POST = of(POST);
+    public static final HttpMethod HTTP_METHOD_PUT = of(PUT);
+    public static final HttpMethod HTTP_METHOD_DELETE = of(DELETE);
+    public static final HttpMethod HTTP_METHOD_HEAD = of(HEAD);
+    public static final HttpMethod HTTP_METHOD_TRACE = of(TRACE);
+    public static final HttpMethod HTTP_METHOD_PATCH = of(PATCH);
+    public static final HttpMethod HTTP_METHOD_CONNECT = of(CONNECT);
+    public static final HttpMethod HTTP_METHOD_OPTIONS = of(OPTIONS);
 
     public static HttpMethod of(String name) {
         return new HttpMethod(name);
@@ -52,7 +52,7 @@ public final class HttpMethod {
 
     private final String name;
 
-    private HttpMethod(String name) {
+    protected HttpMethod(String name) {
         if (StringUtils.isBlank(name)) {
             throw new RuntimeException("HTTP method name is blank");
         }
@@ -63,28 +63,25 @@ public final class HttpMethod {
         return name;
     }
 
+    public boolean is(String name) {
+        return this.name.equals(name);
+    }
+
     @Override
     public String toString() {
-        return "HttpMethod."+name;
+        return "HttpMethod." + name;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
-
         HttpMethod that = (HttpMethod) o;
-
-        return new EqualsBuilder()
-            .append(name, that.name)
-            .isEquals();
+        return name.equals(that.name);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-            .append(name)
-            .toHashCode();
+        return Objects.hash(name);
     }
 }

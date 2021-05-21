@@ -16,16 +16,14 @@
 
 package colesico.framework.telehttp.reader;
 
-import colesico.framework.http.HttpContext;
-import colesico.framework.telehttp.HttpTRContext;
-import colesico.framework.telehttp.HttpTeleReader;
-import colesico.framework.telehttp.t9n.Messages;
-import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleException;
+import colesico.framework.telehttp.HttpTRContext;
+import colesico.framework.telehttp.OriginFactory;
+import colesico.framework.telehttp.OriginTeleReader;
+import colesico.framework.telehttp.t9n.Messages;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.OptionalLong;
 
@@ -33,20 +31,20 @@ import java.util.OptionalLong;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class OptionalLongReader<C extends HttpTRContext> extends HttpTeleReader<OptionalLong,C> {
+public final class OptionalLongReader<C extends HttpTRContext> extends OriginTeleReader<OptionalLong,C> {
 
     private final Messages messages;
 
     @Inject
-    public OptionalLongReader(Provider<RouterContext> routerContextProv, Provider<HttpContext> httpContextProv, Messages messages) {
-        super(routerContextProv, httpContextProv);
+    public OptionalLongReader(OriginFactory originFactory, Messages messages) {
+        super(originFactory);
         this.messages = messages;
     }
 
     @Override
     public OptionalLong read(C ctx) {
         try {
-            String val = getStringValue(ctx);
+            String val = readString(ctx);
             if (StringUtils.isBlank(val)) {
                 return null;
             }
@@ -56,7 +54,7 @@ public final class OptionalLongReader<C extends HttpTRContext> extends HttpTeleR
                 return OptionalLong.of(Long.parseLong(val));
             }
         } catch (Exception var3) {
-            throw new TeleException(messages.invalidNumberFormat(ctx.getName()));
+            throw new TeleException(messages.invalidNumberFormat(ctx.getParamName()));
         }
     }
 }

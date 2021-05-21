@@ -1,5 +1,6 @@
 package colesico.framework.telehttp.internal;
 
+import colesico.framework.telehttp.OriginFactory;
 import colesico.framework.telehttp.PrincipalHttpConfigPrototype;
 import colesico.framework.telehttp.ProfileHttpConfigPrototype;
 import colesico.framework.telehttp.assist.CSRFProtector;
@@ -13,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 @Producer
 @Produce(CSRFProtector.class)
 @Produce(ReadingSchemeFactory.class)
+@Produce(OriginFactory.class)
 public class TeleHttpProducer {
 
     // Default config

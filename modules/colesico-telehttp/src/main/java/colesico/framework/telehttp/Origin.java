@@ -16,43 +16,53 @@
 
 package colesico.framework.telehttp;
 
+import colesico.framework.telehttp.origin.*;
+
 /**
- * Origin types to read the parameter value from them.
- * This enums defines default strategy for reading param values from http context
+ * Origin type and basic dictionary.
+ * Origin defines strategy for reading param value from http context
  */
-public enum Origin {
+public interface Origin<K, V> {
     /**
-     * Read value from url path
+     * Read value from request url path
      */
-    ROUTE,
+    String ROUTE = "ROUTE";
 
     /**
      * Read value from url query string
      */
-    QUERY,
+    String QUERY = "QUERY";
 
     /**
      * From request body post params
      */
-    POST,
+    String POST = "POST";
+
+    /**
+     * Post request file
+     */
+    String FILE = "FILE";
 
     /**
      * From request body
      */
-    BODY,
+    String BODY = "BODY";
 
     /**
      * From http header
      */
-    HEADER,
+    String HEADER = "HEADER";
 
     /**
      * From cookie value
      */
-    COOKIE,
+    String COOKIE = "COOKIE";
 
     /**
      * Strategy depends on tele data port implementation.
      */
-    AUTO
+    String AUTO = "AUTO";
+
+    V getValue(K key);
+
 }

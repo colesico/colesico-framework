@@ -26,5 +26,5 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 public @interface ParamOrigin {
-    Origin value();
+    String value();
 }

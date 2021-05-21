@@ -6,11 +6,6 @@ import colesico.framework.service.codegen.model.TeleParamElement;
 import colesico.framework.telehttp.Origin;
 import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.ParamOrigin;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class TeleHttpCodegenUtils {
 
@@ -24,17 +19,17 @@ public class TeleHttpCodegenUtils {
         return teleParam.getOriginParam().getName();
     }
 
-    public static Origin getParamOrigin(TeleParamElement teleParam) {
+    public static String getOriginName(TeleParamElement teleParam) {
         TeleMethodElement teleMethod = teleParam.getParentTeleMethod();
-        Origin paramOrigin = Origin.AUTO;
+        String originName = Origin.AUTO;
         AnnotationAssist<ParamOrigin> originAnn = teleParam.getOriginParam().getAnnotation(ParamOrigin.class);
         if (originAnn == null) {
             originAnn = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(ParamOrigin.class);
         }
 
         if (originAnn != null) {
-            paramOrigin = originAnn.unwrap().value();
+            originName = originAnn.unwrap().value();
         }
-        return paramOrigin;
+        return originName;
     }
 }

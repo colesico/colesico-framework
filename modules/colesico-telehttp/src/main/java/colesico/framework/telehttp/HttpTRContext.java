@@ -8,42 +8,45 @@ import java.lang.reflect.Type;
 abstract public class HttpTRContext {
 
     /**
-     * Parameter name
+     * Http param name.
+     * This can be a header or cookie or query param etc. name
+     *
+     * @see ParamName
      */
-    private final String name;
+    private final String paramName;
 
     /**
-     * Parameter type
+     * Target value type
      */
     private Type valueType;
 
     /**
-     * Origin facade to read parameter from it
+     * Origin name to read value from it
      */
-    private final OriginFacade originFacade;
+    private final String originName;
 
-    public HttpTRContext(String name, OriginFacade originFacade) {
-        this.name = name;
-        this.originFacade = originFacade;
+    public HttpTRContext(String paramName, String originName) {
+        this.paramName = paramName;
+        this.originName = originName;
     }
 
-    public static HttpTRContext of(String name, OriginFacade originFacade) {
-        return new HttpTRContext(name, originFacade) {
+    public static HttpTRContext instance(String name, String originName) {
+        return new HttpTRContext(name, originName) {
         };
     }
 
     /**
-     * Parameter name
+     * Http value name
      */
-    public final String getName() {
-        return name;
+    public final String getParamName() {
+        return paramName;
     }
 
     /**
-     * Origin facade
+     * Origin name
      */
-    public OriginFacade getOriginFacade() {
-        return originFacade;
+    public String getOriginName() {
+        return originName;
     }
 
     public Type getValueType() {
