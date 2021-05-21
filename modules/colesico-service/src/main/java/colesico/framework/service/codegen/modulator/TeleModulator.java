@@ -43,7 +43,7 @@ public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulat
     /**
      * Checks that the modulator can handle given service to produce tele-facade
      */
-    abstract protected boolean isTeleFacadeSupported(ServiceElement serviceElm);
+    abstract protected boolean isTeleFacadeSupported(ServiceElement service);
 
     /**
      * Returns custom tele-facade object for modulation process
@@ -56,7 +56,7 @@ public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulat
      * Called to process tele method after parsing completed.
      * Override this method to custom processing.
      */
-    protected void processTeleMethod(TeleMethodElement teleMethodElement) {
+    protected void processTeleMethod(TeleMethodElement teleMethod) {
 
     }
 
@@ -64,7 +64,7 @@ public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulat
      * Called to process tele facade after parsing completed.
      * Override this method to custom processing.
      */
-    protected void processTeleFacade(TeleFacadeElement teleFacadeElement) {
+    protected void processTeleFacade(TeleFacadeElement teleFacade) {
 
     }
 

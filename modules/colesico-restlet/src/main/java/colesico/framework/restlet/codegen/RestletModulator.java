@@ -52,8 +52,8 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     @Override
-    protected boolean isTeleFacadeSupported(ServiceElement serviceElm) {
-        AnnotationAssist teleAnn = serviceElm.getOriginClass().getAnnotation(Restlet.class);
+    protected boolean isTeleFacadeSupported(ServiceElement service) {
+        AnnotationAssist teleAnn = service.getOriginClass().getAnnotation(Restlet.class);
         return teleAnn != null;
     }
 
@@ -99,6 +99,7 @@ public final class RestletModulator extends RoutesModulator {
         if (jsonMethodAnn != null) {
             jsonRequest = new JsonRequestElement(teleMethodElement);
             jsonPack.addRequest(jsonRequest);
+            teleMethodElement.setProperty(JsonRequestElement.class, jsonRequest);
         }
 
         for (TeleParamElement teleParam : teleMethodElement.getParameters()) {
@@ -108,6 +109,7 @@ public final class RestletModulator extends RoutesModulator {
                 if (jsonRequest == null) {
                     jsonRequest = new JsonRequestElement(teleMethodElement);
                     jsonPack.addRequest(jsonRequest);
+                    teleMethodElement.setProperty(JsonRequestElement.class, jsonRequest);
                 }
 
                 JsonFieldElement jsonField = new JsonFieldElement(teleParam);
@@ -133,7 +135,6 @@ public final class RestletModulator extends RoutesModulator {
     @Override
     protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
         String paramName = TeleHttpCodegenUtils.getParamName(teleParam);
-
         JsonFieldElement jfe = teleParam.getProperty(JsonFieldElement.class);
         if (jfe != null) {
             paramName = jfe.getName();
@@ -145,6 +146,10 @@ public final class RestletModulator extends RoutesModulator {
         cb.add("$T.$N(", ClassName.get(RestletTRContext.class), RestletTRContext.OF_METHOD);
 
         String originName = TeleHttpCodegenUtils.getOriginName(teleParam);
+        if (jfe != null) {
+            originName = Origin.BODY;
+        }
+
         TypeName customReader = getCustomReaderClass(teleParam);
         JsonFieldElement jsonField = teleParam.getProperty(JsonFieldElement.class);
 
@@ -179,6 +184,20 @@ public final class RestletModulator extends RoutesModulator {
             cb.add("$T.class", writerClass);
         }
         cb.add(")");
+        return cb.build();
+    }
+
+    @Override
+    protected CodeBlock generateInvocationContext(TeleMethodElement teleMethod) {
+        CodeBlock.Builder cb = CodeBlock.builder();
+        JsonRequestElement jsonRequest = teleMethod.getProperty(JsonRequestElement.class);
+        if (jsonRequest != null) {
+            cb.add("$T.$N(", ClassName.get(RestletTIContext.class), RestletTIContext.OF_METHOD);
+            cb.add("$T.class", ClassName.bestGuess(jsonRequest.getJsonRequestClassName()));
+            cb.add(")");
+        } else {
+            cb.add("null");
+        }
         return cb.build();
     }
 

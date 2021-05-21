@@ -43,8 +43,8 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
     }
 
     @Override
-    protected boolean isTeleFacadeSupported(ServiceElement serviceElm) {
-        List<ClassType> allInterfaces = serviceElm.getOriginClass().getInterfaces();
+    protected boolean isTeleFacadeSupported(ServiceElement service) {
+        List<ClassType> allInterfaces = service.getOriginClass().getInterfaces();
         for (ClassType iface : allInterfaces) {
             if (null != iface.asTypeElement().getAnnotation(RpcApi.class)) {
                 return true;

@@ -45,8 +45,8 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected boolean isTeleFacadeSupported(ServiceElement serviceElm) {
-        AnnotationAssist teleAnn = serviceElm.getOriginClass().getAnnotation(Weblet.class);
+    protected boolean isTeleFacadeSupported(ServiceElement service) {
+        AnnotationAssist teleAnn = service.getOriginClass().getAnnotation(Weblet.class);
         return teleAnn != null;
     }
 
