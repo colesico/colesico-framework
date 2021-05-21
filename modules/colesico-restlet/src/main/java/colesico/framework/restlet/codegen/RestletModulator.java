@@ -23,10 +23,9 @@ import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.restlet.Restlet;
 import colesico.framework.restlet.codegen.model.JsonFieldElement;
 import colesico.framework.restlet.codegen.model.JsonRequestElement;
-import colesico.framework.restlet.codegen.model.JsonRequestPackElement;
+import colesico.framework.restlet.codegen.model.JsonPackElement;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.jsonrequest.JsonField;
-import colesico.framework.restlet.teleapi.jsonrequest.JsonRequest;
 import colesico.framework.restlet.teleapi.reader.JsonFieldReader;
 import colesico.framework.router.codegen.RouterTeleFacadeElement;
 import colesico.framework.router.codegen.RoutesModulator;
@@ -36,12 +35,8 @@ import colesico.framework.service.codegen.model.TeleMethodElement;
 import colesico.framework.service.codegen.model.TeleParamElement;
 import colesico.framework.telehttp.Origin;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.*;
 
-import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 import java.lang.annotation.Annotation;
 import java.util.Set;
@@ -83,8 +78,8 @@ public final class RestletModulator extends RoutesModulator {
     @Override
     protected RouterTeleFacadeElement createTeleFacade(ServiceElement serviceElm) {
         RouterTeleFacadeElement teleFacade = super.createTeleFacade(serviceElm);
-        JsonRequestPackElement jrPak = new JsonRequestPackElement(teleFacade);
-        teleFacade.setProperty(JsonRequestPackElement.class, jrPak);
+        JsonPackElement jrPak = new JsonPackElement(teleFacade);
+        teleFacade.setProperty(JsonPackElement.class, jrPak);
         return teleFacade;
     }
 
@@ -97,7 +92,7 @@ public final class RestletModulator extends RoutesModulator {
     protected void processTeleMethod(TeleMethodElement teleMethodElement) {
         super.processTeleMethod(teleMethodElement);
 
-        var jsonPack = teleMethodElement.getParentTeleFacade().getProperty(JsonRequestPackElement.class);
+        var jsonPack = teleMethodElement.getParentTeleFacade().getProperty(JsonPackElement.class);
         JsonRequestElement jsonRequest = null;
 
         final var jsonMethodAnn = teleMethodElement.getServiceMethod().getOriginMethod().getAnnotation(JsonField.class);
@@ -126,22 +121,13 @@ public final class RestletModulator extends RoutesModulator {
     @Override
     protected void processTeleFacade(TeleFacadeElement teleFacadeElement) {
         super.processTeleFacade(teleFacadeElement);
-        var jsonPack = teleFacadeElement.getProperty(JsonRequestPackElement.class);
+        var jsonPack = teleFacadeElement.getProperty(JsonPackElement.class);
         if (jsonPack.getRequests().isEmpty()) {
             return;
         }
 
-        TypeSpec.Builder pb = TypeSpec.classBuilder(jsonPack.getJsonPackClassSimpleName());
-        pb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-
-        for (JsonRequestElement jsonRequest : jsonPack.getRequests()) {
-            TypeSpec.Builder rb = TypeSpec.classBuilder(jsonRequest.getJsonRequestClassSimpleName());
-            rb.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
-            rb.addSuperinterface(ClassName.get(JsonRequest.class));
-
-            //TODO: fields
-            pb.addType(rb.build());
-        }
+        JsonPackGenerator jsonPackGenerator = new JsonPackGenerator(getProcessorContext().getProcessingEnv());
+        jsonPackGenerator.generate(jsonPack);
     }
 
     @Override

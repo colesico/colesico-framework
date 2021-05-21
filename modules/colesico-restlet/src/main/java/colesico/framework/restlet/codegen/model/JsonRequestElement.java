@@ -9,7 +9,7 @@ import java.util.List;
 public class JsonRequestElement {
     public static final String JSON_REQUEST_CLASS_SUFFIX = "JsonRequest";
 
-    private JsonRequestPackElement parentPack;
+    private JsonPackElement parentPack;
 
     private final TeleMethodElement originMethod;
 
@@ -28,11 +28,11 @@ public class JsonRequestElement {
         return fields;
     }
 
-    public JsonRequestPackElement getParentPack() {
+    public JsonPackElement getParentPack() {
         return parentPack;
     }
 
-    public void setParentPack(JsonRequestPackElement parentPack) {
+    public void setParentPack(JsonPackElement parentPack) {
         this.parentPack = parentPack;
     }
 

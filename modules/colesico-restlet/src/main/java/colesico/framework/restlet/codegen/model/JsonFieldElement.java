@@ -13,8 +13,16 @@ public class JsonFieldElement {
         this.originParam = originParam;
     }
 
+    public String getName() {
+        return originParam.getOriginParam().getName();
+    }
+
     public String getterName() {
-        return "get" + StrUtils.firstCharToUpperCase(originParam.getOriginParam().getName());
+        return "get" + StrUtils.firstCharToUpperCase(getName());
+    }
+
+    public String setterName() {
+        return "set" + StrUtils.firstCharToUpperCase(getName());
     }
 
     public JsonRequestElement getParentRequest() {

@@ -21,6 +21,7 @@ import colesico.framework.http.HttpMethod;
 import colesico.framework.ioc.listener.PostConstruct;
 import colesico.framework.restlet.Restlet;
 import colesico.framework.restlet.teleapi.RestletResponseWriter;
+import colesico.framework.restlet.teleapi.jsonrequest.JsonField;
 import colesico.framework.router.RequestMethod;
 import colesico.framework.router.Route;
 import colesico.framework.router.RouteAttribute;
@@ -28,6 +29,7 @@ import colesico.framework.restlet.teleapi.writer.PlainTextWriter;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static colesico.framework.httpserver.HttpServerAttribute.NON_BLOCKING;
 
@@ -85,4 +87,7 @@ public class RestApi {
         throw new CustomException("Custom exception", List.of("Payload1", "Payload2"));
     }
 
+    public Map<String, Object> jsonFields(@JsonField Long id, @JsonField String name, Integer num) {
+        return Map.of("id", id, "name", name, "num", num);
+    }
 }
