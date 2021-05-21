@@ -10,14 +10,14 @@ public final class RestletTIContext extends HttpTIContext {
 
     public static final String OF_METHOD = "of";
 
-    private final Class<? extends JsonRequest> jsonRequestClass;
+    private final Class<? extends JsonRequest> jsonRequestType;
 
     private RestletTIContext(Class<? extends JsonRequest> jsonRequestClass) {
-        this.jsonRequestClass = jsonRequestClass;
+        this.jsonRequestType = jsonRequestClass;
     }
 
-    public Class<? extends JsonRequest> getJsonRequestClass() {
-        return jsonRequestClass;
+    public Class<? extends JsonRequest> getJsonRequestType() {
+        return jsonRequestType;
     }
 
     public static RestletTIContext of(Class<? extends JsonRequest> jsonRequestClass) {

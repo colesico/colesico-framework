@@ -22,6 +22,7 @@ import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.restlet.RestletConfigPrototype;
 import colesico.framework.restlet.teleapi.*;
+import colesico.framework.restlet.teleapi.jsonrequest.JsonRequest;
 import colesico.framework.service.ApplicationException;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.MethodInvoker;
@@ -32,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.io.InputStream;
 
 /**
  * @author Vladlen Larionov
@@ -49,27 +51,29 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
     protected final ThreadScope threadScope;
     protected final Provider<HttpContext> httpContextProv;
     protected final RestletDataPort dataPort;
+    protected final JsonRequestFactory jsonRequestFactory;
     protected final Polysupplier<RestletRequestListener> reqListenerSup;
     protected final Polysupplier<RestletResponseListener> respListenerSup;
-
 
     @Inject
     public RestletTeleDriverImpl(RestletConfigPrototype config,
                                  ThreadScope threadScope,
                                  Provider<HttpContext> httpContextProv,
                                  RestletDataPort dataPort,
+                                 JsonRequestFactory jsonRequestFactory,
                                  Polysupplier<RestletRequestListener> reqListenerSup,
                                  Polysupplier<RestletResponseListener> respListenerSup) {
         this.config = config;
         this.threadScope = threadScope;
         this.httpContextProv = httpContextProv;
         this.dataPort = dataPort;
+        this.jsonRequestFactory = jsonRequestFactory;
         this.reqListenerSup = reqListenerSup;
         this.respListenerSup = respListenerSup;
     }
 
     @Override
-    public <S> void invoke(S service, MethodInvoker<S, RestletDataPort> invoker, RestletTIContext invocationContext) {
+    public <S> void invoke(S service, MethodInvoker<S, RestletDataPort> invoker, RestletTIContext invContext) {
         // Set data port to be accessible
         threadScope.put(DataPort.SCOPE_KEY, dataPort);
         // Retrieve http context
@@ -83,6 +87,12 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
             // CSRF protection
             if (config.enableCSFRProtection()) {
                 guardCSFR(httpRequest);
+            }
+
+            // Init json request if defined
+            if (invContext != null && invContext.getJsonRequestType() != null) {
+                JsonRequest jr = jsonRequestFactory.getJsonRequest(invContext.getJsonRequestType());
+                threadScope.put(JsonRequest.SCOPE_KEY, jr);
             }
 
             // Invoke tele-method
@@ -123,5 +133,6 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
             respListenerSup.forEach(s -> s.onResponse(context, dataPort), null);
         }
     }
+
 
 }

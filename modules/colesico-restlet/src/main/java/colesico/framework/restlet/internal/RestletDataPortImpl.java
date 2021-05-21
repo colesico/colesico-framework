@@ -16,19 +16,16 @@
 
 package colesico.framework.restlet.internal;
 
-import colesico.framework.http.HttpContext;
 import colesico.framework.restlet.RestletError;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.reader.ValueReader;
 import colesico.framework.restlet.teleapi.writer.ObjectWriter;
-import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.TeleFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -39,16 +36,10 @@ public class RestletDataPortImpl implements RestletDataPort {
 
     private final Logger logger = LoggerFactory.getLogger(RestletDataPort.class);
     private final TeleFactory teleFactory;
-    private final Provider<HttpContext> httpContextProv;
-    private final Provider<RouterContext> routerContextProv;
 
-    private final RestletJsonConverter jsonConverter;
 
-    public RestletDataPortImpl(TeleFactory teleFactory, Provider<HttpContext> httpContextProv, Provider<RouterContext> routerContextProv, RestletJsonConverter jsonConverter) {
+    public RestletDataPortImpl(TeleFactory teleFactory) {
         this.teleFactory = teleFactory;
-        this.httpContextProv = httpContextProv;
-        this.routerContextProv = routerContextProv;
-        this.jsonConverter = jsonConverter;
     }
 
     @Override
@@ -130,14 +121,14 @@ public class RestletDataPortImpl implements RestletDataPort {
         RestletError error = new RestletError();
         error.setErrorCode(throwable.getClass().getCanonicalName());
         error.setMessage(ExceptionUtils.getRootCauseMessage(throwable));
-        error.setDetails(getMessages(throwable));
+        error.setDetails(getErrorMessages(throwable));
         RestletTeleWriter objWriter = teleFactory.getWriter(ObjectWriter.class);
         context.setHttpCode(500);
         objWriter.write(error, context);
 
     }
 
-    private List<String> getMessages(Throwable ex) {
+    private List<String> getErrorMessages(Throwable ex) {
         Throwable e = ex;
         List<String> messages = new ArrayList<>();
 

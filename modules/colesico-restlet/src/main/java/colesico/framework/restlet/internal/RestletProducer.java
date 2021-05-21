@@ -32,6 +32,7 @@ import javax.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Producer
+@Produce(JsonRequestFactory.class)
 @Produce(RestletDataPortImpl.class)
 @Produce(RestletTeleDriverImpl.class)
 @Produce(GsonConverter.class)
