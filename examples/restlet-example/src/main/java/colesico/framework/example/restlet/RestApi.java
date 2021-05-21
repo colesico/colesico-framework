@@ -31,6 +31,7 @@ import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.ParamOrigin;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -92,13 +93,13 @@ public class RestApi {
 
     /**
      * JsonField example
-     *
+     * POST: http://localhost:8080/rest-api/json-fields?val=test + data {"id":1,"name":"Vladlen"}
      * @see JsonField
      */
     @RequestMethod(HttpMethod.POST)
     public Map<String, Object> jsonFields(@JsonField(name = "id") Long idValue,
                                           @JsonField String name,
-                                          @ParamOrigin(Origin.QUERY) Integer num) {
-        return Map.of("id", idValue, "name", name, "num", num);
+                                          @ParamOrigin(Origin.QUERY) String val) {
+        return Map.of("id", idValue, "name", name, "val", val);
     }
 }
