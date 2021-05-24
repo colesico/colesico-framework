@@ -6,7 +6,6 @@ import colesico.framework.telehttp.Origin;
 import colesico.framework.telehttp.origin.*;
 
 @Producer
-@Produce(value = AutoOrigin.class, keyType = Origin.class, named = Origin.AUTO)
 @Produce(value = BodyOrigin.class, keyType = Origin.class, named = Origin.BODY)
 @Produce(value = CookieOrigin.class, keyType = Origin.class, named = Origin.COOKIE)
 @Produce(value = HeaderOrigin.class, keyType = Origin.class, named = Origin.HEADER)

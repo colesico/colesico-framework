@@ -19,9 +19,9 @@ public class TeleHttpCodegenUtils {
         return teleParam.getOriginParam().getName();
     }
 
-    public static String getOriginName(TeleParamElement teleParam) {
+    public static String getOriginName(TeleParamElement teleParam, String defaultOrigin) {
         TeleMethodElement teleMethod = teleParam.getParentTeleMethod();
-        String originName = Origin.AUTO;
+        String originName = defaultOrigin;
         AnnotationAssist<ParamOrigin> originAnn = teleParam.getOriginParam().getAnnotation(ParamOrigin.class);
         if (originAnn == null) {
             originAnn = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(ParamOrigin.class);

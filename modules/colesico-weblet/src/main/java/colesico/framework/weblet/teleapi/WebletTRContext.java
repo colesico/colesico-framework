@@ -43,7 +43,7 @@ public final class WebletTRContext extends HttpTRContext {
     }
 
     public WebletTRContext(String paramName) {
-        super(paramName, Origin.AUTO);
+        super(paramName, WebletOrigin.AUTO);
         this.readerClass = null;
     }
 
