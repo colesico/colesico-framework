@@ -1,9 +1,12 @@
 package colesico.framework.restlet.teleapi.reader;
 
+import colesico.framework.restlet.RestletError;
+import colesico.framework.restlet.RestletException;
 import colesico.framework.restlet.teleapi.RestletTRContext;
 import colesico.framework.restlet.teleapi.jsonrequest.JsonField;
-import colesico.framework.restlet.teleapi.origin.JsonFieldOrigin;
+import colesico.framework.restlet.teleapi.jsonrequest.JsonRequest;
 
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 /**
@@ -12,15 +15,24 @@ import javax.inject.Singleton;
 @Singleton
 public final class JsonFieldReader implements ValueReader {
 
-    private final JsonFieldOrigin origin;
+    private final Provider<JsonRequest> jsonRequestProv;
 
-    public JsonFieldReader(JsonFieldOrigin origin) {
-        this.origin = origin;
+    public JsonFieldReader(Provider<JsonRequest> jsonRequestProv) {
+        this.jsonRequestProv = jsonRequestProv;
     }
 
     @Override
     public Object read(RestletTRContext context) {
-        return origin.getValue(context.getJsonFieldGetter());
-    }
+        JsonRequest jr = jsonRequestProv.get();
+        if (jr == null) {
+            throw new RestletException(new RestletError("JsonRequestNotFound", "Json request not found", null));
+        }
 
+        RestletTRContext.JsonFieldGetter<JsonRequest, Object> getter = context.getJsonFieldGetter();
+        if (getter == null) {
+            throw new RestletException(new RestletError("JsonFieldGetterNotFound", "Json field getter not found", null));
+        }
+
+        return getter.get(jr);
+    }
 }

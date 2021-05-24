@@ -24,7 +24,6 @@ import colesico.framework.restlet.assist.LogRestletListener;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.internal.gsonconv.GsonConverter;
 import colesico.framework.restlet.teleapi.jsonrequest.JsonRequest;
-import colesico.framework.restlet.teleapi.origin.JsonFieldOrigin;
 import colesico.framework.restlet.teleapi.origin.RestletAutoOrigin;
 import colesico.framework.telehttp.Origin;
 
@@ -42,7 +41,6 @@ import javax.inject.Singleton;
 @Produce(GsonConverter.class)
 @Produce(LogRestletListener.class)
 @Produce(JsonRequestFactory.class)
-@Produce(JsonFieldOrigin.class)
 public class RestletProducer {
 
     @Singleton
@@ -77,12 +75,6 @@ public class RestletProducer {
 
     public JsonRequest getJsonMapContext(ThreadScope scope) {
         return scope.get(JsonRequest.SCOPE_KEY);
-    }
-
-    @Singleton
-    @Named(RestletOrigin.JSON_FIELD)
-    public Origin getJsonFieldOrigin(JsonFieldOrigin impl) {
-        return impl;
     }
 
     @Singleton

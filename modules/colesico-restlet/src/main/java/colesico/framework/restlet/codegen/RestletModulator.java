@@ -148,7 +148,7 @@ public final class RestletModulator extends RoutesModulator {
 
         String originName = null;
         if (jfe != null) {
-            originName = RestletOrigin.JSON_FIELD;
+            originName = RestletOrigin.BODY;
         } else {
             originName = TeleHttpCodegenUtils.getOriginName(teleParam, RestletOrigin.AUTO);
         }

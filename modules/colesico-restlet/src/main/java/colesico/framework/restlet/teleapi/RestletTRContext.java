@@ -1,6 +1,5 @@
 package colesico.framework.restlet.teleapi;
 
-import colesico.framework.restlet.teleapi.origin.RestletAutoOrigin;
 import colesico.framework.telehttp.HttpTRContext;
 
 /**
