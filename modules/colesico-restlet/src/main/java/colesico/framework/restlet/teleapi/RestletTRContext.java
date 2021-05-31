@@ -1,9 +1,12 @@
 package colesico.framework.restlet.teleapi;
 
 import colesico.framework.telehttp.HttpTRContext;
-import colesico.framework.telehttp.Origin;
 
-public final class RestletTRContext<M, V> extends HttpTRContext {
+/**
+ * @param <R> Json request type
+ * @param <V> Json request value type
+ */
+public final class RestletTRContext<R, V> extends HttpTRContext {
 
     public static final String OF_METHOD = "of";
 
@@ -14,48 +17,48 @@ public final class RestletTRContext<M, V> extends HttpTRContext {
     private final Class<? extends RestletTeleReader> readerClass;
 
     /**
-     * Json map entry getter
+     * Json request field getter
      *
      * @see colesico.framework.restlet.teleapi.jsonrequest.JsonField
      */
-    private final JsonFieldGetter<M, V> fieldGetter;
+    private final JsonFieldGetter<R, V> jsonFieldGetter;
 
-    private RestletTRContext(String paramName, String originName, Class<? extends RestletTeleReader> readerClass, JsonFieldGetter<M, V> fieldGetter) {
+    private RestletTRContext(String paramName, String originName, Class<? extends RestletTeleReader> readerClass, JsonFieldGetter<R, V> jsonFieldGetter) {
         super(paramName, originName);
         this.readerClass = readerClass;
-        this.fieldGetter = fieldGetter;
+        this.jsonFieldGetter = jsonFieldGetter;
     }
 
     public Class<? extends RestletTeleReader> getReaderClass() {
         return readerClass;
     }
 
-    public JsonFieldGetter<M, V> getFieldGetter() {
-        return fieldGetter;
+    public JsonFieldGetter<R, V> getJsonFieldGetter() {
+        return jsonFieldGetter;
     }
 
-    public static <M, V> RestletTRContext<M, V> of(String paramName, String originName, Class<? extends RestletTeleReader> readerClass, JsonFieldGetter<M, V> fieldGetter) {
+    public static <R, V> RestletTRContext<R, V> of(String paramName, String originName, Class<? extends RestletTeleReader> readerClass, JsonFieldGetter<R, V> fieldGetter) {
         return new RestletTRContext<>(paramName, originName, readerClass, fieldGetter);
     }
 
-    public static <M, V> RestletTRContext<M, V> of(String paramName, String originName, Class<? extends RestletTeleReader> readerClass) {
+    public static <R, V> RestletTRContext<R, V> of(String paramName, String originName, Class<? extends RestletTeleReader> readerClass) {
         return new RestletTRContext<>(paramName, originName, readerClass, null);
     }
 
-    public static <M, V> RestletTRContext<M, V> of(String paramName, String originName) {
+    public static <R, V> RestletTRContext<R, V> of(String paramName, String originName) {
         return new RestletTRContext<>(paramName, originName, null, null);
     }
 
-    public static <M, V> RestletTRContext<M, V> of(String paramName) {
-        return new RestletTRContext<>(paramName, Origin.AUTO, null, null);
+    public static <R, V> RestletTRContext<R, V> of(String paramName) {
+        return new RestletTRContext<>(paramName, RestletOrigin.AUTO, null, null);
     }
 
-    public static <M, V> RestletTRContext<M, V> of() {
-        return new RestletTRContext<>(null, Origin.AUTO, null, null);
+    public static <R, V> RestletTRContext<R, V> of() {
+        return new RestletTRContext<>(null, RestletOrigin.AUTO, null, null);
     }
 
     @FunctionalInterface
-    public interface JsonFieldGetter<M, V> {
-        V get(M jsonMap);
+    public interface JsonFieldGetter<R, V> {
+        V get(R jsonRequest);
     }
 }

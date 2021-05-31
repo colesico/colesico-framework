@@ -28,12 +28,11 @@ public final class JsonFieldReader implements ValueReader {
             throw new RestletException(new RestletError("JsonRequestNotFound", "Json request not found", null));
         }
 
-        RestletTRContext.JsonFieldGetter getter = context.getFieldGetter();
+        RestletTRContext.JsonFieldGetter<JsonRequest, Object> getter = context.getJsonFieldGetter();
         if (getter == null) {
             throw new RestletException(new RestletError("JsonFieldGetterNotFound", "Json field getter not found", null));
         }
 
         return getter.get(jr);
     }
-
 }

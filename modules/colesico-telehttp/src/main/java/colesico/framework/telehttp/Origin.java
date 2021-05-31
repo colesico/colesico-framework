@@ -16,8 +16,6 @@
 
 package colesico.framework.telehttp;
 
-import colesico.framework.telehttp.origin.*;
-
 /**
  * Origin type and basic dictionary.
  * Origin defines strategy for reading param value from http context
@@ -57,11 +55,6 @@ public interface Origin<K, V> {
      * From cookie value
      */
     String COOKIE = "COOKIE";
-
-    /**
-     * Strategy depends on tele data port implementation.
-     */
-    String AUTO = "AUTO";
 
     V getValue(K key);
 

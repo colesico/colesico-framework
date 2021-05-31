@@ -26,6 +26,7 @@ import colesico.framework.restlet.codegen.model.JsonRequestElement;
 import colesico.framework.restlet.codegen.model.JsonPackElement;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.jsonrequest.JsonField;
+import colesico.framework.restlet.teleapi.origin.RestletAutoOrigin;
 import colesico.framework.restlet.teleapi.reader.JsonFieldReader;
 import colesico.framework.router.codegen.RouterTeleFacadeElement;
 import colesico.framework.router.codegen.RoutesModulator;
@@ -145,9 +146,11 @@ public final class RestletModulator extends RoutesModulator {
         // new RestletTRContext(paramName
         cb.add("$T.$N(", ClassName.get(RestletTRContext.class), RestletTRContext.OF_METHOD);
 
-        String originName = TeleHttpCodegenUtils.getOriginName(teleParam);
+        String originName = null;
         if (jfe != null) {
-            originName = Origin.BODY;
+            originName = RestletOrigin.BODY;
+        } else {
+            originName = TeleHttpCodegenUtils.getOriginName(teleParam, RestletOrigin.AUTO);
         }
 
         TypeName customReader = getCustomReaderClass(teleParam);
@@ -155,7 +158,7 @@ public final class RestletModulator extends RoutesModulator {
 
         cb.add("$S", paramName);
 
-        if (!originName.equals(Origin.AUTO) || customReader != null || jsonField != null) {
+        if (!originName.equals(RestletOrigin.AUTO) || customReader != null || jsonField != null) {
             cb.add(", $S", originName);
         }
 

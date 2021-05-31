@@ -18,8 +18,11 @@ package colesico.framework.weblet.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
+import colesico.framework.telehttp.Origin;
 import colesico.framework.weblet.teleapi.*;
+import colesico.framework.weblet.teleapi.origin.WebletAutoOrigin;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 
@@ -27,6 +30,7 @@ import javax.inject.Singleton;
 @Produce(WebletDataPortImpl.class)
 @Produce(WebletTeleDriverImpl.class)
 @Produce(AuthenticatorImpl.class)
+@Produce(WebletAutoOrigin.class)
 public class WebletProducer {
 
     @Singleton
@@ -42,6 +46,13 @@ public class WebletProducer {
     // Default Authenticator
     @Singleton
     public Authenticator getAuthenticator(AuthenticatorImpl impl) {
+        return impl;
+    }
+
+
+    @Singleton
+    @Named(WebletOrigin.AUTO)
+    public Origin getWebletAutoOrigin(WebletAutoOrigin impl) {
         return impl;
     }
 

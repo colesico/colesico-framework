@@ -31,6 +31,7 @@ module colesico.framework.weblet {
     exports colesico.framework.weblet;
     exports colesico.framework.weblet.assist;
     exports colesico.framework.weblet.teleapi;
+    exports colesico.framework.weblet.teleapi.origin;
     exports colesico.framework.weblet.teleapi.writer;
     exports colesico.framework.weblet.teleapi.reader;
 

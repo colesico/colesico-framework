@@ -4,6 +4,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.restlet.teleapi.RestletJsonConverter;
+import colesico.framework.restlet.teleapi.RestletOrigin;
 import colesico.framework.restlet.teleapi.RestletTRContext;
 import colesico.framework.telehttp.Origin;
 import colesico.framework.telehttp.OriginFactory;
@@ -36,16 +37,18 @@ public final class JsonReader implements ValueReader {
 
         HttpMethod requestMethod = request.getRequestMethod();
 
-        // Should the value be read from input stream?
+        // Should the value be read from request input stream?
         String originName = context.getOriginName();
 
-        boolean useInputStream = originName.equals(Origin.BODY) ||
+        boolean useInputStream = originName.equals(RestletOrigin.BODY) ||
                 (
-                        originName.equals(Origin.AUTO) &&
+                        originName.equals(RestletOrigin.AUTO)
+                                &&
                                 (
                                         requestMethod.is(POST)
-                                                || requestMethod.is(PUT)
                                                 || requestMethod.is(PATCH)
+                                                || requestMethod.is(DELETE)
+                                                || requestMethod.is(PUT)
                                 )
                 );
 

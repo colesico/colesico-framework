@@ -26,6 +26,7 @@ import colesico.framework.telehttp.Origin;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
 import colesico.framework.weblet.Weblet;
 import colesico.framework.weblet.teleapi.*;
+import colesico.framework.weblet.teleapi.origin.WebletAutoOrigin;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.TypeName;
@@ -73,12 +74,13 @@ public final class WebletModulator extends RoutesModulator {
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("new $T(", ClassName.get(WebletTRContext.class));
 
-        String originName = TeleHttpCodegenUtils.getOriginName(teleParam);
+        String originName = TeleHttpCodegenUtils.getOriginName(teleParam, WebletOrigin.AUTO);
+
         TypeName customReader = getCustomReaderClass(teleParam);
 
         cb.add("$S", paramName);
 
-        if (!originName.equals(Origin.AUTO) || customReader != null) {
+        if (!originName.equals(WebletOrigin.AUTO) || customReader != null) {
             cb.add(", $S", originName);
         }
 
