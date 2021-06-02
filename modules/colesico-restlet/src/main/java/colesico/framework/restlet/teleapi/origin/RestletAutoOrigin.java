@@ -9,7 +9,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
-public class RestletAutoOrigin implements RestletOrigin<String, String> {
+public class RestletAutoOrigin implements RestletOrigin {
 
     private final Provider<HttpContext> httpContextProv;
     private final Provider<RouterContext> routerContextProv;
@@ -20,14 +20,14 @@ public class RestletAutoOrigin implements RestletOrigin<String, String> {
     }
 
     @Override
-    public String getValue(String key) {
+    public String getString(String name) {
         HttpRequest httpRequest = httpContextProv.get().getRequest();
-        if (httpRequest.getQueryParameters().hasKey(key)) {
-            return httpRequest.getQueryParameters().get(key);
+        if (httpRequest.getQueryParameters().hasKey(name)) {
+            return httpRequest.getQueryParameters().get(name);
         }
         RouterContext routerContext = routerContextProv.get();
 
         // return param value  or null
-        return routerContext.getParameters().get(key);
+        return routerContext.getParameters().get(name);
     }
 }

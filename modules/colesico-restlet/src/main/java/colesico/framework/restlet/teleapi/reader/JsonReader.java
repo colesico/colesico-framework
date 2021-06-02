@@ -3,12 +3,15 @@ package colesico.framework.restlet.teleapi.reader;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
+import colesico.framework.restlet.RestletError;
+import colesico.framework.restlet.RestletException;
 import colesico.framework.restlet.teleapi.RestletJsonConverter;
 import colesico.framework.restlet.teleapi.RestletOrigin;
 import colesico.framework.restlet.teleapi.RestletTRContext;
 import colesico.framework.telehttp.Origin;
 import colesico.framework.telehttp.OriginFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -56,18 +59,18 @@ public final class JsonReader implements ValueReader {
             try (InputStream is = request.getInputStream()) {
                 return jsonConverter.fromJson(is, context.getValueType());
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new RestletException(new RestletError("ReadJsonError", ExceptionUtils.getRootCauseMessage(e), null));
             }
         } else {
             try {
-                Origin<String, String> origin = (Origin<String, String>) originFactory.getOrigin(context.getOriginName());
-                String strValue = origin.getValue(context.getParamName());
+                Origin origin = originFactory.getOrigin(context.getOriginName());
+                String strValue = origin.getString(context.getParamName());
                 if (StringUtils.isBlank(strValue)) {
                     return null;
                 }
                 return jsonConverter.fromJson(strValue, context.getValueType());
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new RestletException(new RestletError("ReadJsonError", ExceptionUtils.getRootCauseMessage(e), null));
             }
         }
     }

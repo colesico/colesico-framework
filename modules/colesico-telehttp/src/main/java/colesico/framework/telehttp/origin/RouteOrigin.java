@@ -7,7 +7,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
-public class RouteOrigin implements Origin<String, String> {
+public class RouteOrigin implements Origin {
 
     private final Provider<RouterContext> routerContextProv;
 
@@ -16,7 +16,7 @@ public class RouteOrigin implements Origin<String, String> {
     }
 
     @Override
-    public String getValue(String key) {
-        return routerContextProv.get().getParameters().get(key);
+    public String getString(String name) {
+        return routerContextProv.get().getParameters().get(name);
     }
 }

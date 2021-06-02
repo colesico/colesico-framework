@@ -183,4 +183,10 @@ public class RestletReadersProducer {
         return RestletReaderProxy.of(impl);
     }
 
+    @Singleton
+    @Classed(HttpFileReader.class)
+    public RestletTeleReader getHttpFileReader(HttpFileReader impl) {
+        return RestletReaderProxy.of(impl);
+    }
+
 }

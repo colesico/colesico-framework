@@ -10,7 +10,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
-public class WebletAutoOrigin implements WebletOrigin<String, String> {
+public class WebletAutoOrigin implements WebletOrigin {
 
     private final Provider<HttpContext> httpContextProv;
     private final Provider<RouterContext> routerContextProv;
@@ -21,30 +21,30 @@ public class WebletAutoOrigin implements WebletOrigin<String, String> {
     }
 
     @Override
-    public String getValue(String key) {
+    public String getString(String name) {
         String value = null;
         HttpRequest httpRequest = httpContextProv.get().getRequest();
         switch (httpRequest.getRequestMethod().getName()) {
             case HttpMethod.GET:
             case HttpMethod.HEAD:
-                if (httpRequest.getQueryParameters().hasKey(key)) {
-                    return httpRequest.getQueryParameters().get(key);
+                if (httpRequest.getQueryParameters().hasKey(name)) {
+                    return httpRequest.getQueryParameters().get(name);
                 }
                 // return param value or null
-                return routerContextProv.get().getParameters().get(key);
+                return routerContextProv.get().getParameters().get(name);
             case HttpMethod.POST:
             case HttpMethod.PATCH:
             case HttpMethod.DELETE:
             case HttpMethod.PUT:
-                if (httpRequest.getPostParameters().hasKey(key)) {
-                    return httpRequest.getPostParameters().get(key);
+                if (httpRequest.getPostParameters().hasKey(name)) {
+                    return httpRequest.getPostParameters().get(name);
                 }
-                if (httpRequest.getQueryParameters().hasKey(key)) {
-                    return httpRequest.getQueryParameters().get(key);
+                if (httpRequest.getQueryParameters().hasKey(name)) {
+                    return httpRequest.getQueryParameters().get(name);
                 }
                 RouterContext routerContext = routerContextProv.get();
                 // return param value or null
-                routerContext.getParameters().get(key);
+                routerContext.getParameters().get(name);
             default:
                 return value;
         }

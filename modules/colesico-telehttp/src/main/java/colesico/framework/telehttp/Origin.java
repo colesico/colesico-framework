@@ -18,16 +18,27 @@ package colesico.framework.telehttp;
 
 /**
  * Origin type and basic dictionary.
- * Origin defines strategy for reading param value from http context
+ * Origin defines strategy for reading string value from http context
  */
-public interface Origin<K, V> {
+public interface Origin {
+
     /**
-     * Read value from request url path
+     * From http header
+     */
+    String HEADER = "HEADER";
+
+    /**
+     * From cookie
+     */
+    String COOKIE = "COOKIE";
+
+    /**
+     * From request url path
      */
     String ROUTE = "ROUTE";
 
     /**
-     * Read value from url query string
+     * From url query string
      */
     String QUERY = "QUERY";
 
@@ -37,25 +48,9 @@ public interface Origin<K, V> {
     String POST = "POST";
 
     /**
-     * Post request file
-     */
-    String FILE = "FILE";
-
-    /**
      * From request body
      */
     String BODY = "BODY";
 
-    /**
-     * From http header
-     */
-    String HEADER = "HEADER";
-
-    /**
-     * From cookie value
-     */
-    String COOKIE = "COOKIE";
-
-    V getValue(K key);
-
+    String getString(String name);
 }
