@@ -16,15 +16,13 @@
 
 package colesico.framework.weblet.internal;
 
-import colesico.framework.http.HttpFile;
-import colesico.framework.telehttp.reader.*;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.security.Principal;
+import colesico.framework.telehttp.reader.*;
 import colesico.framework.weblet.teleapi.WebletTeleReader;
-import colesico.framework.weblet.teleapi.reader.HttpFileReader;
 import colesico.framework.weblet.teleapi.reader.WebletReaderProxy;
 
 import javax.inject.Singleton;
@@ -36,7 +34,6 @@ import java.util.OptionalInt;
 import java.util.OptionalLong;
 
 @Producer
-@Produce(HttpFileReader.class)
 public class WebletReadersProducer {
 
     //
@@ -204,9 +201,9 @@ public class WebletReadersProducer {
     }
 
     @Singleton
-    @Classed(HttpFile.class)
+    @Classed(HttpFileReader.class)
     public WebletTeleReader getHttpFileReader(HttpFileReader impl) {
-        return impl;
+        return WebletReaderProxy.of(impl);
     }
 
 }

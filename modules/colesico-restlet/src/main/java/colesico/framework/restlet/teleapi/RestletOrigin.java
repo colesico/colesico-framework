@@ -2,7 +2,7 @@ package colesico.framework.restlet.teleapi;
 
 import colesico.framework.telehttp.Origin;
 
-public interface RestletOrigin<K, V> extends Origin<K, V> {
+public interface RestletOrigin extends Origin {
 
     /**
      * Auto origin

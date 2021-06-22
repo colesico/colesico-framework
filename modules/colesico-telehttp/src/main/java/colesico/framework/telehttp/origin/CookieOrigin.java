@@ -8,7 +8,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
-public class CookieOrigin implements Origin<String, String> {
+public class CookieOrigin implements Origin {
 
     private final Provider<HttpContext> httpContextProv;
 
@@ -17,8 +17,8 @@ public class CookieOrigin implements Origin<String, String> {
     }
 
     @Override
-    public String getValue(String key) {
-        HttpCookie cookie = httpContextProv.get().getRequest().getCookies().get(key);
+    public String getString(String name) {
+        HttpCookie cookie = httpContextProv.get().getRequest().getCookies().get(name);
         return cookie == null ? null : cookie.getValue();
     }
 }

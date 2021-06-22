@@ -7,7 +7,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
-public class QueryOrigin implements Origin<String,String> {
+public class QueryOrigin implements Origin {
 
     private final Provider<HttpContext> httpContextProv;
 
@@ -16,7 +16,7 @@ public class QueryOrigin implements Origin<String,String> {
     }
 
     @Override
-    public String getValue(String key) {
-        return httpContextProv.get().getRequest().getQueryParameters().get(key);
+    public String getString(String name) {
+        return httpContextProv.get().getRequest().getQueryParameters().get(name);
     }
 }

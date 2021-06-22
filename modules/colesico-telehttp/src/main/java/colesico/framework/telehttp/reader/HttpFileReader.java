@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package colesico.framework.weblet.teleapi.reader;
+package colesico.framework.telehttp.reader;
 
 import colesico.framework.http.HttpFile;
 import colesico.framework.http.HttpRequest;
-import colesico.framework.weblet.teleapi.WebletTRContext;
-import colesico.framework.weblet.teleapi.WebletTeleReader;
+import colesico.framework.telehttp.HttpTRContext;
+import colesico.framework.telehttp.HttpTeleReader;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -29,7 +29,7 @@ import javax.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class HttpFileReader implements WebletTeleReader<HttpFile> {
+public final class HttpFileReader<C extends HttpTRContext> implements HttpTeleReader<HttpFile, C> {
 
     private final Provider<HttpRequest> requestProv;
 
@@ -38,7 +38,7 @@ public final class HttpFileReader implements WebletTeleReader<HttpFile> {
     }
 
     @Override
-    public HttpFile read(WebletTRContext context) {
+    public HttpFile read(C context) {
         return requestProv.get().getPostFiles().get(context.getParamName());
     }
 }
