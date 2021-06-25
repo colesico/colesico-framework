@@ -109,7 +109,7 @@ public class TaskServiceImpl implements TaskService, TaskSubmitter, TaskSchedule
 
     private void checkRunning() {
         if (!running) {
-            throw new IllegalStateException("Background tasks service is not started");
+            throw new IllegalStateException("Async tasks service is not started");
         }
     }
 
