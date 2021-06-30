@@ -18,6 +18,11 @@ public @interface UseFileSource {
     String PREFIX_OPTION = "prefix";
 
     /**
+     * Default config directory
+     */
+    String CONFIG_DIRECTORY="./config";
+
+    /**
      * Config source type. PropertiesSource supported out-of the-box.
      *
      * @return
