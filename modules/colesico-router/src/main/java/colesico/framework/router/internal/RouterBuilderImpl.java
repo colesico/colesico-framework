@@ -32,13 +32,13 @@ public class RouterBuilderImpl implements RouterBuilder {
     @Override
     public void addCustomAction(HttpMethod httpMethod,
                                 String route,
+                                TeleMethod teleMethod,
                                 Class<?> targetClass,
-                                TeleMethod targetMethodRef,
-                                String targetMethodName,
+                                String targetMethod,
                                 Map<String, String> routeAttributes) {
 
-        customRouteActions.add(new CustomRouteAction(httpMethod, route, targetClass, targetMethodRef,
-                targetMethodName, routeAttributes));
+        customRouteActions.add(new CustomRouteAction(httpMethod, route, teleMethod, targetClass,
+                targetMethod, routeAttributes));
     }
 
     @Override
@@ -48,9 +48,9 @@ public class RouterBuilderImpl implements RouterBuilder {
         for (CustomRouteAction cra : customRouteActions) {
             router.addCustomAction(cra.getHttpMethod(),
                     cra.getRoute(),
+                    cra.getTeleMethod(),
                     cra.getTargetClass(),
-                    cra.getTargetMethodRef(),
-                    cra.getTargetMethodName(),
+                    cra.getTargetMethod(),
                     cra.getRouteAttributes());
         }
         return router;
@@ -59,22 +59,22 @@ public class RouterBuilderImpl implements RouterBuilder {
     private static final class CustomRouteAction {
         private final HttpMethod httpMethod;
         private final String route;
+        private final TeleMethod teleMethod;
         private final Class<?> targetClass;
-        private final TeleMethod targetMethodRef;
-        private final String targetMethodName;
+        private final String targetMethod;
         private final Map<String, String> routeAttributes;
 
         public CustomRouteAction(HttpMethod httpMethod,
                                  String route,
+                                 TeleMethod teleMethod,
                                  Class<?> targetClass,
-                                 TeleMethod targetMethodRef,
-                                 String targetMethodName,
+                                 String targetMethod,
                                  Map<String, String> routeAttributes) {
             this.httpMethod = httpMethod;
             this.route = route;
             this.targetClass = targetClass;
-            this.targetMethodRef = targetMethodRef;
-            this.targetMethodName = targetMethodName;
+            this.teleMethod = teleMethod;
+            this.targetMethod = targetMethod;
             this.routeAttributes = routeAttributes;
         }
 
@@ -90,12 +90,12 @@ public class RouterBuilderImpl implements RouterBuilder {
             return targetClass;
         }
 
-        public TeleMethod getTargetMethodRef() {
-            return targetMethodRef;
+        public TeleMethod getTeleMethod() {
+            return teleMethod;
         }
 
-        public String getTargetMethodName() {
-            return targetMethodName;
+        public String getTargetMethod() {
+            return targetMethod;
         }
 
         public Map<String, String> getRouteAttributes() {

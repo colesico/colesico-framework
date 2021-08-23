@@ -29,26 +29,27 @@ public final class RoutingLigature {
 
     public static final String ADD_METHOD = "add";
     public static final String ROUTE_PARAM = "route";
-    public static final String TELE_METHOD_REF_PARAM = "teleMethodRef";
-    public static final String ORIGIN_METHOD_PARAM = "originMethod";
+    public static final String TELE_METHOD_PARAM = "teleMethod";
+    public static final String TARGET_METHOD_PARAM = "targetMethod";
 
-    private final Class<?> serviceClass;
+    private final Class<?> targetClass;
+
     private final Map<String, RouteInfo> routesMap = new TreeMap<>();
 
-    public RoutingLigature(Class<?> serviceClass) {
-        this.serviceClass = serviceClass;
+    public RoutingLigature(Class<?> targetClass) {
+        this.targetClass = targetClass;
     }
 
-    public void add(String route, TeleMethod teleMethodRef, String targetMethodName, Map<String, String> routeAttributes) {
-        RouteInfo routeInfo = new RouteInfo(route, teleMethodRef, targetMethodName, routeAttributes);
+    public void add(String route, TeleMethod teleMethod, String targetMethod, Map<String, String> routeAttributes) {
+        RouteInfo routeInfo = new RouteInfo(route, teleMethod, targetMethod, routeAttributes);
         RouteInfo oldRouteInfo = routesMap.put(route, routeInfo);
         if (oldRouteInfo != null) {
             throw new RouterException("Duplicate route: " + route + " -> " + routeInfo + " | " + oldRouteInfo);
         }
     }
 
-    public Class<?> getServiceClass() {
-        return serviceClass;
+    public Class<?> getTargetClass() {
+        return targetClass;
     }
 
     public Collection<RouteInfo> getRoutesInfo() {
@@ -56,19 +57,35 @@ public final class RoutingLigature {
     }
 
     public static final class RouteInfo {
+
+        /**
+         * Route with http method
+         */
         private final String route;
-        private final TeleMethod teleMethodRef;
-        private final String targetMethodName;
+
+        /**
+         * Action handler method
+         */
+        private final TeleMethod teleMethod;
+
+        /**
+         * Target action handler method name
+         */
+        private final String targetMethod;
+
+        /**
+         * Route attributes see {@link RouteAttribute}
+         */
         private final Map<String, String> routeAttributes;
 
         public RouteInfo(String route,
-                         TeleMethod teleMethodRef,
-                         String targetMethodName,
+                         TeleMethod teleMethod,
+                         String targetMethod,
                          Map<String, String> routeAttributes) {
 
             this.route = route;
-            this.teleMethodRef = teleMethodRef;
-            this.targetMethodName = targetMethodName;
+            this.teleMethod = teleMethod;
+            this.targetMethod = targetMethod;
             this.routeAttributes = routeAttributes;
         }
 
@@ -76,12 +93,12 @@ public final class RoutingLigature {
             return route;
         }
 
-        public TeleMethod getTeleMethodRef() {
-            return teleMethodRef;
+        public TeleMethod getTeleMethod() {
+            return teleMethod;
         }
 
-        public String getTargetMethodName() {
-            return targetMethodName;
+        public String getTargetMethod() {
+            return targetMethod;
         }
 
         public Map<String, String> getRouteAttributes() {
@@ -92,7 +109,7 @@ public final class RoutingLigature {
         public String toString() {
             return "RouteInfo{" +
                     "route='" + route + '\'' +
-                    ", originMethod='" + targetMethodName + '\'' +
+                    ", targetMethod='" + targetMethod + '\'' +
                     '}';
         }
     }
