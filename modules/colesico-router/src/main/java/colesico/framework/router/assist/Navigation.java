@@ -38,7 +38,7 @@ public class Navigation<N extends Navigation> {
 
     protected String uri;
     protected Class<?> serviceClass;
-    protected String methodName;
+    protected String targetMethod;
     protected HttpMethod httpMethod = HttpMethod.HTTP_METHOD_GET;
     protected int httpCode = 302;
     protected final Map<String, String> queryParameters = new HashMap<>();
@@ -72,7 +72,7 @@ public class Navigation<N extends Navigation> {
     }
 
     public N method(String methodName) {
-        this.methodName = methodName;
+        this.targetMethod = methodName;
         return (N) this;
     }
 
@@ -191,10 +191,10 @@ public class Navigation<N extends Navigation> {
         String targetURI;
         if (StringUtils.isNotBlank(this.uri)) {
             targetURI = uri;
-        } else if (this.serviceClass != null && this.methodName != null) {
-            List<String> slicedRoute = router.getSlicedRoute(this.serviceClass, this.methodName, this.httpMethod, this.routeParameters);
+        } else if (this.serviceClass != null && this.targetMethod != null) {
+            List<String> slicedRoute = router.getSlicedRoute(this.serviceClass, this.targetMethod, this.httpMethod, this.routeParameters);
             if (slicedRoute == null) {
-                throw new NavigationException("Unknown uri for service '" + serviceClass.getName() + "' and method name '" + methodName + "'");
+                throw new NavigationException("Unknown uri for service '" + serviceClass.getName() + "' and method name '" + targetMethod + "'");
             }
             slicedRoute.remove(0);
             targetURI = RouteTrie.SEGMENT_DELEMITER + StringUtils.join(slicedRoute, RouteTrie.SEGMENT_DELEMITER);

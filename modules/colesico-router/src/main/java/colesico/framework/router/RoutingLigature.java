@@ -31,6 +31,7 @@ public final class RoutingLigature {
     public static final String ROUTE_PARAM = "route";
     public static final String TELE_METHOD_PARAM = "teleMethod";
     public static final String TARGET_METHOD_PARAM = "targetMethod";
+    public static final String ATTRIBUTES_PARAM = "attributes";
 
     private final Class<?> targetClass;
 
@@ -40,8 +41,16 @@ public final class RoutingLigature {
         this.targetClass = targetClass;
     }
 
-    public void add(String route, TeleMethod teleMethod, String targetMethod, Map<String, String> routeAttributes) {
-        RouteInfo routeInfo = new RouteInfo(route, teleMethod, targetMethod, routeAttributes);
+    /**
+     * Add route to ligature
+     *
+     * @param route        route definition with http method (ex: GET/my/foo )
+     * @param teleMethod   action handler
+     * @param targetMethod handler method name
+     * @param attributes   route attributes (see {@link RouteAttribute})
+     */
+    public void add(String route, TeleMethod teleMethod, String targetMethod, Map<String, String> attributes) {
+        RouteInfo routeInfo = new RouteInfo(route, teleMethod, targetMethod, attributes);
         RouteInfo oldRouteInfo = routesMap.put(route, routeInfo);
         if (oldRouteInfo != null) {
             throw new RouterException("Duplicate route: " + route + " -> " + routeInfo + " | " + oldRouteInfo);
@@ -74,19 +83,21 @@ public final class RoutingLigature {
         private final String targetMethod;
 
         /**
-         * Route attributes see {@link RouteAttribute}
+         * Route attributes
+         *
+         * @see RouteAttribute
          */
-        private final Map<String, String> routeAttributes;
+        private final Map<String, String> attributes;
 
         public RouteInfo(String route,
                          TeleMethod teleMethod,
                          String targetMethod,
-                         Map<String, String> routeAttributes) {
+                         Map<String, String> attributes) {
 
             this.route = route;
             this.teleMethod = teleMethod;
             this.targetMethod = targetMethod;
-            this.routeAttributes = routeAttributes;
+            this.attributes = attributes;
         }
 
         public String getRoute() {
@@ -101,8 +112,8 @@ public final class RoutingLigature {
             return targetMethod;
         }
 
-        public Map<String, String> getRouteAttributes() {
-            return routeAttributes;
+        public Map<String, String> getAttributes() {
+            return attributes;
         }
 
         @Override

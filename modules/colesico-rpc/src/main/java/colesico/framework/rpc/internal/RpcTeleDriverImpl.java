@@ -46,9 +46,7 @@ public class RpcTeleDriverImpl implements RpcTeleDriver {
             // Invoke target service method
             invoker.invoke(service, dataPort);
         } catch (Throwable t) {
-            if (logger.isDebugEnabled()) {
-                logger.error("Error invoking rpc method: {}", service.getClass());
-            }
+            logger.error("Error invoking rpc method: {}", service.getClass());
             dataPort.writeError(t);
         } finally {
             exchange.writeResponse(response);

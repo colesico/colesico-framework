@@ -69,7 +69,7 @@ public class RouterImpl implements Router {
                 }
                 RouteTrie.Node<RouteAction> node = routeTrie.addRoute(
                         routeInfo.getRoute(),
-                        new RouteAction(routeInfo.getTeleMethod(), routeInfo.getRouteAttributes())
+                        new RouteAction(routeInfo.getTeleMethod(), routeInfo.getAttributes())
                 );
 
                 HttpMethod httpMethod = HttpMethod.of(node.getRoot().getName());
@@ -89,13 +89,13 @@ public class RouterImpl implements Router {
         }
     }
 
-    protected String toRouteId(Class<?> targetClass, String targetMethodName, HttpMethod httpMethod) {
-        return targetClass.getName() + ':' + targetMethodName + ':' + httpMethod.getName();
+    protected String toRouteId(Class<?> targetClass, String targetMethod, HttpMethod httpMethod) {
+        return targetClass.getName() + ':' + targetMethod + ':' + httpMethod.getName();
     }
 
     @Override
-    public List<String> getSlicedRoute(Class<?> targetClass, String targetMethodName, HttpMethod httpMethod, Map<String, String> parameters) {
-        return routesIndex.getSlicedRoute(toRouteId(targetClass, targetMethodName, httpMethod), parameters);
+    public List<String> getSlicedRoute(Class<?> targetClass, String targetMethod, HttpMethod httpMethod, Map<String, String> parameters) {
+        return routesIndex.getSlicedRoute(toRouteId(targetClass, targetMethod, httpMethod), parameters);
     }
 
     @Override

@@ -24,8 +24,8 @@ import colesico.framework.router.assist.Navigation;
  */
 public final class ForwardResponse extends Navigation<ForwardResponse> {
 
-    public static ForwardResponse of(Class<?> serviceClass, String targetMethodName) {
-        return new ForwardResponse().service(serviceClass).method(targetMethodName);
+    public static ForwardResponse of(Class<?> serviceClass, String methodName) {
+        return new ForwardResponse().service(serviceClass).method(methodName);
     }
 
     public static ForwardResponse of(String uri) {
