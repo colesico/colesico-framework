@@ -45,6 +45,7 @@ public interface Router {
      * the request handler
      *
      * @param requestUri request url part from hostname(port) to query string (before '?' char)
+     * @throws UnknownRouteException if request uri not match any route
      */
     ActionResolution resolveAction(HttpMethod requestMethod, String requestUri);
 

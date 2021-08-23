@@ -45,7 +45,8 @@ public final class HttpContext {
     }
 
     /**
-     * Replaces context request with given one.Returns previous request.
+     * Replaces context request with given one.
+     * Returns previous request.
      * This method can be used for example for forward operations
      */
     public HttpRequest setRequest(HttpRequest request) {

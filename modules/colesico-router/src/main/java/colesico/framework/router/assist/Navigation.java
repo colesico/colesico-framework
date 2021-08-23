@@ -185,7 +185,7 @@ public class Navigation<N extends Navigation> {
     }
 
     /**
-     * Returns url to use in http redirect
+     * Returns url to use in http redirect/forward
      */
     public String toLocation(Router router) {
         String targetURI;

@@ -30,6 +30,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Basic abstract http request processor.
  * This class to be used for http server implementations.
+ *
+ * @param <C> Context to build http response and request from it
  */
 abstract public class RequestProcessor<C> {
 
@@ -50,9 +52,18 @@ abstract public class RequestProcessor<C> {
 
     abstract protected HttpResponse createHttpResponse(C context);
 
-    protected ActionResolution resolveAction(HttpMethod requestHttpMethod, String requestUri, C context) {
+    /**
+     * Resolve given request uri to action resolution
+     * The method isolates and handles the possible exception with an {@link ErrorHandler}.
+     * Invoker of this method should not attempt to catch exceptions from this method,
+     * but rather hang upon on a non-null {@link ActionResolution} result.
+     *
+     * @return appropriate action resolution of null if any error occurred
+     * (including {@link colesico.framework.router.UnknownRouteException})
+     */
+    protected ActionResolution resolveAction(HttpMethod requestMethod, String requestUri, C context) {
         try {
-            return router.resolveAction(requestHttpMethod, requestUri);
+            return router.resolveAction(requestMethod, requestUri);
         } catch (Exception e) {
             // Init http context and perform error handling
             threadScope.init();
@@ -66,6 +77,10 @@ abstract public class RequestProcessor<C> {
         }
     }
 
+    /**
+     * Performs action referenced by action resolution.
+     * The method isolates and handles the possible exception with an {@link ErrorHandler}.
+     */
     protected void performAction(ActionResolution resolution, C context) {
         // Init http context
         threadScope.init();

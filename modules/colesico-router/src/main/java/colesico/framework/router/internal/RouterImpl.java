@@ -104,7 +104,11 @@ public class RouterImpl implements Router {
     @Override
     public ActionResolution resolveAction(HttpMethod requestMethod, String requestUri) {
         RouteTrie.RouteResolution<RouteAction> routeResolution = routeTrie.resolveRoute(StrUtils.concatPath(requestMethod.getName(), requestUri, RouteTrie.SEGMENT_DELEMITER));
-        if (routeResolution == null || routeResolution.getNode() == null || routeResolution.getNode().getValue() == null) {
+
+        if (routeResolution == null
+                || routeResolution.getNode() == null
+                || routeResolution.getNode().getValue() == null
+                || routeResolution.getNode().getValue().getTeleMethod() == null) {
             throw new UnknownRouteException(requestMethod, requestUri);
         }
 
@@ -116,15 +120,10 @@ public class RouterImpl implements Router {
 
     @Override
     public void performAction(ActionResolution resolution) {
-        TeleMethod teleMethod = resolution.getRouteAction().getTeleMethod();
-
-        if (teleMethod == null) {
-            throw new UnknownRouteException(resolution.getRequestMethod(), resolution.getRequestUri());
-        }
-
         RouterContext routerContext = new RouterContext(resolution.getRequestUri(), resolution.getRouteParameters());
         threadScope.put(RouterContext.SCOPE_KEY, routerContext);
 
+        TeleMethod teleMethod = resolution.getRouteAction().getTeleMethod();
         teleMethod.invoke();
     }
 
