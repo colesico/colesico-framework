@@ -28,7 +28,7 @@ public final class RpcTRContext<R extends RpcRequest, V> extends TRContext {
     public static final String OF_METHOD = "of";
 
     private R request;
-    
+
     private final ValueGetter<R, V> valueGetter;
 
     private RpcTRContext(Type valueType, ValueGetter<R, V> valueGetter) {
