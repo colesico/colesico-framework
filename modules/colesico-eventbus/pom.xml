@@ -22,7 +22,7 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>4.6.0</version>
+        <version>4.6.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
