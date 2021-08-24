@@ -27,7 +27,7 @@ public class RpcRouterOptions extends RouterOptions {
         builder.addCustomAction(HttpMethod.HTTP_METHOD_POST,
                 RPC_DISPATCHER_ROUTE,
                 () -> dispatcher.dispatch(exchange),
-                RpcRouterOptions.class,
+                RpcDispatcher.class,
                 "dispatch",
                 null);
     }
