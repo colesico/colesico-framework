@@ -93,7 +93,7 @@
         <logback.verion>1.2.5</logback.verion>
 
         <!-- DB -->
-        <!-- ver > 3.4.3 is not JPMS compatible. -->
+        <!--  v3.4.3  -->
         <hikaricp.version>5.0.0</hikaricp.version>
         <jdbi3.version>3.21.0</jdbi3.version>
 
