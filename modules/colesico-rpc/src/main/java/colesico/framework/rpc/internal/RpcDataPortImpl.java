@@ -22,46 +22,48 @@ public class RpcDataPortImpl implements RpcDataPort {
     }
 
     @Override
-    public <V> V read(Type valueType, RpcTRContext context) {
+    public <V> V read(Type valueType) {
+        return read(RpcTRContext.of(valueType));
+    }
+
+    @Override
+    public <V> V read(RpcTRContext context) {
 
         // Try to get accurate reader
-        RpcTeleReader<V> reader = teleFactory.findReader(RpcTeleReader.class, valueType);
+        RpcTeleReader<V> reader = teleFactory.findReader(RpcTeleReader.class, context.getValueType());
         if (reader != null) {
             // Ctx can be null for reading by type  (Principal reading, etc.)
-            if (context == null) {
-                context = RpcTRContext.withRequest(request);
-            } else {
-                context.setRequest(request);
-            }
+            context.setRequest(request);
             return reader.read(context);
         }
 
         // Common read
 
         if (context == null) {
-            throw new RpcException("RPC value reading context required for reading type: " + valueType.getTypeName());
+            throw new RpcException("RPC value reading context required for reading type: " + context.getValueType().getTypeName());
         }
 
         RpcTRContext.ValueGetter<RpcRequest, V> valueGetter = context.getValueGetter();
 
         if (valueGetter == null) {
-            throw new RpcException("RPC value getter required reading type: " + valueType.getTypeName());
+            throw new RpcException("RPC value getter required reading type: " + context.getValueType().getTypeName());
         }
 
         return valueGetter.get(request);
     }
 
     @Override
-    public <V> void write(Type valueType, V value, RpcTWContext context) {
+    public <V> void write(V value, Type valueType) {
+        write(value, RpcTWContext.of(valueType));
+    }
+
+    @Override
+    public <V> void write(V value, RpcTWContext context) {
 
         // Try to get accurate writer
-        RpcTeleWriter<V> writer = teleFactory.findWriter(RpcTeleWriter.class, valueType);
+        RpcTeleWriter<V> writer = teleFactory.findWriter(RpcTeleWriter.class, context.getValueType());
         if (writer != null) {
-            if (context == null) {
-                context = RpcTWContext.withResponse(response);
-            } else {
-                context.setResponse(response);
-            }
+            context.setResponse(response);
             writer.write(value, context);
             return;
         }
@@ -74,7 +76,7 @@ public class RpcDataPortImpl implements RpcDataPort {
     public <T extends Throwable> void writeError(T throwable) {
 
         // Create default writing context
-        RpcTWContext context = RpcTWContext.withResponse(response);
+        RpcTWContext context = RpcTWContext.of(throwable.getClass(), response);
 
         RpcTeleWriter<T> throwableWriter = teleFactory.findWriter(RpcTeleWriter.class, throwable.getClass());
 

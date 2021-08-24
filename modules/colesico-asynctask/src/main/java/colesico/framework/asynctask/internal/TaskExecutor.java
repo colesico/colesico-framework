@@ -28,9 +28,12 @@ abstract public class TaskExecutor {
 
     protected final <P> Runnable createTask(final P taskPayload) {
         final long enqueueTime = System.currentTimeMillis();
+        logger.debug("New task queued: {}", taskPayload);
         return () -> {
-            final long queueingDuration = System.currentTimeMillis() - enqueueTime;
-            logger.debug("Task queuing duration {}", queueingDuration);
+            if (logger.isDebugEnabled()) {
+                final long queueingDuration = System.currentTimeMillis() - enqueueTime;
+                logger.debug("Task ready to be executed. Duration being in queue {}", queueingDuration);
+            }
             TaskPerformer performer = getConfig().getTaskPerformer();
             if (performer != null) {
                 performer.perform(taskPayload);

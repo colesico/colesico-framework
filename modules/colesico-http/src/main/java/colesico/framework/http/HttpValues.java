@@ -19,7 +19,7 @@ package colesico.framework.http;
 import java.util.*;
 
 /**
- * Represents http value
+ * Represents http values map
  */
 public final class HttpValues<K, V> {
 
@@ -33,6 +33,10 @@ public final class HttpValues<K, V> {
         return valuesMap.containsKey(key);
     }
 
+    /**
+     * Returns first value associated with given key or null.
+     * To retrieve all values associated with given key use {@link HttpValues#getAll(K)}
+     */
     public V get(K key) {
         MultiValue<V> multiValue = valuesMap.get(key);
         if (multiValue == null) {
@@ -45,6 +49,9 @@ public final class HttpValues<K, V> {
         return Collections.unmodifiableSet(valuesMap.keySet());
     }
 
+    /**
+     * Returns all values associated with given key or null.
+     */
     public MultiValue<V> getAll(K key) {
         return valuesMap.get(key);
     }

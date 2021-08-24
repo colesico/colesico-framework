@@ -62,7 +62,7 @@ public class HoconSource implements ConfigSource {
     }
 
     private Config getConfigFromDirectory(Map<String, String> params, String fileName) {
-        final String directory = params.getOrDefault(DIRECTORY_OPTION, "./config");
+        final String directory = params.getOrDefault(DIRECTORY_OPTION, CONFIG_DIRECTORY);
         String fullPath = StrUtils.concatPath(directory, fileName, "/");
 
         final File directoryFile = new File(fullPath);

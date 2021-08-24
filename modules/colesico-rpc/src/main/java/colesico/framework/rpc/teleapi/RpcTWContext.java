@@ -16,31 +16,37 @@
 
 package colesico.framework.rpc.teleapi;
 
+import colesico.framework.teleapi.TWContext;
+
+import java.lang.reflect.Type;
+
 /**
  * RPC tele-tata writing context stub
  */
-public final class RpcTWContext {
+public final class RpcTWContext extends TWContext {
 
     private RpcResponse response;
 
+    public RpcTWContext(Type valueType, RpcResponse response) {
+        super(valueType);
+        this.response = response;
+    }
+
+    public static RpcTWContext of(Type valueType) {
+        return new RpcTWContext(valueType, null);
+    }
+
+    public static RpcTWContext of(Type valueType, RpcResponse response) {
+        return new RpcTWContext(valueType, response);
+    }
+
     public RpcResponse getResponse() {
         return response;
+
     }
 
     public void setResponse(RpcResponse response) {
         this.response = response;
     }
 
-    private RpcTWContext() {
-    }
-
-    public static RpcTWContext of() {
-        return new RpcTWContext();
-    }
-
-    public static RpcTWContext withResponse(RpcResponse response) {
-        RpcTWContext ctx = new RpcTWContext();
-        ctx.setResponse(response);
-        return ctx;
-    }
 }

@@ -1,11 +1,13 @@
 package colesico.framework.telehttp;
 
+import colesico.framework.teleapi.TRContext;
+
 import java.lang.reflect.Type;
 
 /**
  * Basic tele-reading context for interaction via http
  */
-abstract public class HttpTRContext {
+abstract public class HttpTRContext extends TRContext {
 
     /**
      * Http param name.
@@ -16,22 +18,18 @@ abstract public class HttpTRContext {
     private final String paramName;
 
     /**
-     * Target value type
-     */
-    private Type valueType;
-
-    /**
      * Origin name to read value from it
      */
     private final String originName;
 
-    public HttpTRContext(String paramName, String originName) {
+    protected HttpTRContext(Type valueType, String paramName, String originName) {
+        super(valueType);
         this.paramName = paramName;
         this.originName = originName;
     }
 
-    public static HttpTRContext instance(String name, String originName) {
-        return new HttpTRContext(name, originName) {
+    public static HttpTRContext instance(Type valueType, String paramName, String originName) {
+        return new HttpTRContext(valueType, paramName, originName) {
         };
     }
 
@@ -49,11 +47,4 @@ abstract public class HttpTRContext {
         return originName;
     }
 
-    public Type getValueType() {
-        return valueType;
-    }
-
-    public void setValueType(Type valueType) {
-        this.valueType = valueType;
-    }
 }

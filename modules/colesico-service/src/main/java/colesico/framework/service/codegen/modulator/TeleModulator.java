@@ -16,11 +16,14 @@
 
 package colesico.framework.service.codegen.modulator;
 
+import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.teleapi.TeleFacade;
 import com.squareup.javapoet.CodeBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.lang.model.type.TypeMirror;
 
 /**
  * Tele-facades modulation support.
@@ -112,15 +115,27 @@ public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulat
         return cb.build();
     }
 
+    protected void generateResultType(TeleMethodElement teleMethod, CodeBlock.Builder cb) {
+        TypeMirror returnType = teleMethod.getServiceMethod().getOriginMethod().getReturnType();
+        CodegenUtils.generateTypePick(returnType, cb);
+    }
+
     protected CodeBlock generateWritingContext(TeleMethodElement teleMethod) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("null");
+        generateResultType(teleMethod, cb);
         return cb.build();
+    }
+
+    protected void generateParamType(TeleParamElement teleParam, CodeBlock.Builder cb) {
+        // Detect param type considering generics
+        TypeMirror paramType = teleParam.getOriginParam().getOriginType();
+        // ParamType.class or  for generics: new TypeWrapper<TheType>(){}.unwrap()
+        CodegenUtils.generateTypePick(paramType, cb);
     }
 
     protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("null");
+        generateParamType(teleParam, cb);
         return cb.build();
     }
 }

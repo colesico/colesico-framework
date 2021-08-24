@@ -56,15 +56,22 @@ public class PropertiesSource implements ConfigSource {
     @Override
     public Connection connect(Map<String, String> params) {
         String fileName = params.getOrDefault(FILE_OPTION, "application.properties");
+        Connection conn = getConnectionFromDirectory(params, fileName);
+        if (conn == null) {
+            conn = getConnectionFromClasspath(params, fileName);
+        }
+        return conn;
+    }
 
-        final String directory = params.getOrDefault(DIRECTORY_OPTION, "./config");
+    private Connection getConnectionFromDirectory(Map<String, String> params, String fileName) {
+        final String directory = params.getOrDefault(DIRECTORY_OPTION, CONFIG_DIRECTORY);
         String fullPath = StrUtils.concatPath(directory, fileName, "/");
-
-        final Properties props = new Properties();
         final File directoryFile = new File(fullPath);
+
         if (directoryFile.exists()) {
             logger.debug("Read configuration from file: " + fullPath);
             try (FileInputStream is = new FileInputStream(fullPath)) {
+                final Properties props = new Properties();
                 props.load(is);
                 return createConnection(props, params);
             } catch (Exception e) {
@@ -74,18 +81,24 @@ public class PropertiesSource implements ConfigSource {
             }
         }
 
+        return null;
+    }
+
+    private Connection getConnectionFromClasspath(Map<String, String> params, String fileName) {
         final String classpath = params.getOrDefault(CLASSPATH_OPTION, "META-INF");
-        fullPath = StrUtils.concatPath(classpath, fileName, "/");
+        String fullPath = StrUtils.concatPath(classpath, fileName, "/");
 
         try (InputStream is = getClassLoader().getResourceAsStream(fullPath)) {
             if (is != null) {
+                logger.debug("Read configuration from resource: " + fullPath);
+                final Properties props = new Properties();
                 props.load(is);
                 return createConnection(props, params);
             } else {
-                throw new RuntimeException("File not found: " + fullPath);
+                throw new RuntimeException("Resource file not found: " + fullPath);
             }
         } catch (Exception e) {
-            String errorMsg = "Error reading config from  resource: " + fullPath;
+            String errorMsg = "Error reading config from resource: " + fullPath;
             logger.error(errorMsg);
             throw new RuntimeException(errorMsg, e);
         }

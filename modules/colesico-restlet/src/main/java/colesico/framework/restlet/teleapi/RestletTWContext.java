@@ -2,7 +2,11 @@ package colesico.framework.restlet.teleapi;
 
 import colesico.framework.telehttp.HttpTWContext;
 
+import java.lang.reflect.Type;
+
 public final class RestletTWContext extends HttpTWContext {
+
+    public static final String OF_METHOD = "of";
 
     /**
      * Custom writer class or null.
@@ -15,12 +19,22 @@ public final class RestletTWContext extends HttpTWContext {
      */
     private Integer httpCode;
 
-    public RestletTWContext(Class<? extends RestletTeleWriter> writerClass) {
+    private RestletTWContext(Type valueType, Class<? extends RestletTeleWriter> writerClass, Integer httpCode) {
+        super(valueType);
         this.writerClass = writerClass;
+        this.httpCode = httpCode;
     }
 
-    public RestletTWContext() {
-        writerClass = null;
+    public static RestletTWContext of(Type valueType) {
+        return new RestletTWContext(valueType, null, null);
+    }
+
+    public static RestletTWContext of(Type valueType, Class<? extends RestletTeleWriter> writerClass) {
+        return new RestletTWContext(valueType, writerClass, null);
+    }
+
+    public static RestletTWContext of(Type valueType, Class<? extends RestletTeleWriter> writerClass, Integer httpCode) {
+        return new RestletTWContext(valueType, writerClass, httpCode);
     }
 
     public Class<? extends RestletTeleWriter> getWriterClass() {

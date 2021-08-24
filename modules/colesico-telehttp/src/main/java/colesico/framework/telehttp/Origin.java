@@ -17,7 +17,7 @@
 package colesico.framework.telehttp;
 
 /**
- * Origin type and basic dictionary.
+ * Origin API and basic dictionary.
  * Origin defines strategy for reading string value from http context
  */
 public interface Origin {

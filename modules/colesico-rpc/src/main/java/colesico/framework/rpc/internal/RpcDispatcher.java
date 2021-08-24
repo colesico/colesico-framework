@@ -46,7 +46,11 @@ public class RpcDispatcher {
         }
     }
 
-    // Resolve tele method
+    /**
+     * Resolve tele method
+     *
+     * @return tele method or null if mappings not found
+     */
     protected TeleMethod resolveTeleMethod(RpcExchange exchange) {
         try {
             RpcExchange.Operation operation = exchange.resolveOperation();

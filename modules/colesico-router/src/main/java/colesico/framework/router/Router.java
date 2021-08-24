@@ -31,12 +31,12 @@ public interface Router {
     /**
      * Returns route parts associated with given handler
      *
-     * @param targetClass      service class or custom action class
-     * @param targetMethodName service tele method name or custom action method name
-     * @param httpMethod       http request method
-     * @param parameters       route parameters
+     * @param targetClass  service class or custom action class
+     * @param targetMethod service  method name or custom action method name
+     * @param httpMethod   http request method
+     * @param parameters   route parameters
      */
-    List<String> getSlicedRoute(Class<?> targetClass, String targetMethodName, HttpMethod httpMethod, Map<String, String> parameters);
+    List<String> getSlicedRoute(Class<?> targetClass, String targetMethod, HttpMethod httpMethod, Map<String, String> parameters);
 
     /**
      * Resolve action from request uri and http method.
@@ -45,6 +45,7 @@ public interface Router {
      * the request handler
      *
      * @param requestUri request url part from hostname(port) to query string (before '?' char)
+     * @throws UnknownRouteException if request uri not match any route
      */
     ActionResolution resolveAction(HttpMethod requestMethod, String requestUri);
 

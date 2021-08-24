@@ -16,18 +16,32 @@
 
 package colesico.framework.rpc.teleapi;
 
+import colesico.framework.teleapi.TRContext;
+
+import java.lang.reflect.Type;
+
 /**
  * RPC tele-data reading context
  */
-public final class RpcTRContext<R extends RpcRequest, V> {
+public final class RpcTRContext<R extends RpcRequest, V> extends TRContext {
 
     public static final String OF_METHOD = "of";
 
     private R request;
+
     private final ValueGetter<R, V> valueGetter;
 
-    private RpcTRContext(ValueGetter<R, V> valueGetter) {
+    private RpcTRContext(Type valueType, ValueGetter<R, V> valueGetter) {
+        super(valueType);
         this.valueGetter = valueGetter;
+    }
+
+    public static <R extends RpcRequest, V> RpcTRContext<R, V> of(Type valueType, ValueGetter<R, V> valueGetter) {
+        return new RpcTRContext<>(valueType, valueGetter);
+    }
+
+    public static <R extends RpcRequest, V> RpcTRContext<R, V> of(Type valueType) {
+        return new RpcTRContext<>(valueType, null);
     }
 
     public R getRequest() {
@@ -42,15 +56,6 @@ public final class RpcTRContext<R extends RpcRequest, V> {
         return valueGetter;
     }
 
-    public static <R extends RpcRequest, V> RpcTRContext<R, V> of(ValueGetter<R, V> reader) {
-        return new RpcTRContext<>(reader);
-    }
-
-    public static <R extends RpcRequest, V> RpcTRContext<R, V> withRequest(R request) {
-        RpcTRContext<R, V> r = new RpcTRContext<>(null);
-        r.setRequest(request);
-        return r;
-    }
 
     @FunctionalInterface
     public interface ValueGetter<R extends RpcRequest, V> {

@@ -45,7 +45,7 @@ public class RouterProducer {
         return builder.build();
     }
 
-    public RouterContext getActionContext(ThreadScope threadScope) {
+    public RouterContext getRouterContext(ThreadScope threadScope) {
         return threadScope.get(RouterContext.SCOPE_KEY);
     }
 

@@ -64,6 +64,7 @@ public class UndertowHttpHandler extends RequestProcessor<HttpServerExchange> im
         // Retrieve action resolution
         HttpMethod requestMethod = HttpMethod.of(exchange.getRequestMethod().toString());
         String requestUri = StringUtils.substringBefore(exchange.getRequestURI(), "?");
+        // 
         ActionResolution actionResolution = resolveAction(requestMethod, requestUri, exchange);
 
         if (actionResolution != null) {

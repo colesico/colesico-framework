@@ -19,6 +19,8 @@ package colesico.framework.weblet.teleapi;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.Origin;
 
+import java.lang.reflect.Type;
+
 /**
  * Weblet tele-reading context
  *
@@ -26,30 +28,33 @@ import colesico.framework.telehttp.Origin;
  */
 public final class WebletTRContext extends HttpTRContext {
 
+    public static final String OF_METHOD = "of";
+
     /**
      * Custom reader class or null.
      * If null - default reader will be used to read the parameter
      */
     private final Class<? extends WebletTeleReader> readerClass;
 
-    public WebletTRContext(String paramName, String originName, Class<? extends WebletTeleReader> readerClass) {
-        super(paramName, originName);
+    private WebletTRContext(Type valueType, String paramName, String originName, Class<? extends WebletTeleReader> readerClass) {
+        super(valueType, paramName, originName);
         this.readerClass = readerClass;
     }
 
-    public WebletTRContext(String paramName, String originName) {
-        super(paramName, originName);
-        this.readerClass = null;
+    public static WebletTRContext of(Type valueType) {
+        return new WebletTRContext(valueType, null, null, null);
     }
 
-    public WebletTRContext(String paramName) {
-        super(paramName, WebletOrigin.AUTO);
-        this.readerClass = null;
+    public static WebletTRContext of(Type valueType, String paramName, String originName) {
+        return new WebletTRContext(valueType, paramName, originName, null);
     }
 
-    public WebletTRContext() {
-        super(null, null);
-        this.readerClass = null;
+    public static WebletTRContext of(Type valueType, String paramName) {
+        return new WebletTRContext(valueType, paramName, WebletOrigin.AUTO, null);
+    }
+
+    public static WebletTRContext of(Type valueType, String paramName, String originName, Class<? extends WebletTeleReader> readerClass) {
+        return new WebletTRContext(valueType, paramName, originName, readerClass);
     }
 
     public Class<? extends WebletTeleReader> getReaderClass() {

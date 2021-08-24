@@ -32,19 +32,21 @@ public class WebletDataPortImpl implements WebletDataPort {
         this.teleFactory = teleFactory;
     }
 
+
     @Override
-    public <V> V read(Type valueType, WebletTRContext context) {
-        if (context == null) {
-            context = new WebletTRContext();
-        }
-        context.setValueType(valueType);
+    public <V> V read(Type valueType) {
+        return read(WebletTRContext.of(valueType));
+    }
+
+    @Override
+    public <V> V read(WebletTRContext context) {
         WebletTeleReader reader;
         if (context.getReaderClass() != null) {
             // Get specified reader
             reader = teleFactory.getReader(context.getReaderClass());
         } else {
             // Get reader by value type
-            reader = teleFactory.findReader(WebletTeleReader.class, valueType);
+            reader = teleFactory.findReader(WebletTeleReader.class, context.getValueType());
             if (reader == null) {
                 // Get default reader
                 reader = teleFactory.getReader(WebletTeleReader.class, Object.class);
@@ -54,12 +56,14 @@ public class WebletDataPortImpl implements WebletDataPort {
     }
 
     @Override
-    public <V> void write(Type valueType, V value, WebletTWContext context) {
-        if (context == null) {
-            context = new WebletTWContext();
-        }
+    public <V> void write(V value, Type valueType) {
+        write(value, WebletTWContext.of(valueType));
+    }
 
-        boolean isWebletResponse = valueType.equals(WebletResponse.class);
+    @Override
+    public <V> void write(V value, WebletTWContext context) {
+
+        boolean isWebletResponse = context.getValueType().equals(WebletResponse.class);
 
         // Obtain writer
         WebletTeleWriter writer;
@@ -71,7 +75,7 @@ public class WebletDataPortImpl implements WebletDataPort {
             if (isWebletResponse) {
                 responseType = ((WebletResponse) value).unwrap().getClass();
             } else {
-                responseType = valueType;
+                responseType = context.getValueType();
             }
             // Get reader by response type
             writer = teleFactory.getWriter(WebletTeleWriter.class, responseType);

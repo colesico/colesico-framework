@@ -146,17 +146,20 @@ public final class RestletModulator extends RoutesModulator {
         // new RestletTRContext(paramName
         cb.add("$T.$N(", ClassName.get(RestletTRContext.class), RestletTRContext.OF_METHOD);
 
-        String originName = null;
+        generateParamType(teleParam, cb);
+
+
+        TypeName customReader = getCustomReaderClass(teleParam);
+        JsonFieldElement jsonField = teleParam.getProperty(JsonFieldElement.class);
+
+        cb.add(", $S", paramName);
+
+        String originName;
         if (jfe != null) {
             originName = RestletOrigin.BODY;
         } else {
             originName = TeleHttpCodegenUtils.getOriginName(teleParam, RestletOrigin.AUTO);
         }
-
-        TypeName customReader = getCustomReaderClass(teleParam);
-        JsonFieldElement jsonField = teleParam.getProperty(JsonFieldElement.class);
-
-        cb.add("$S", paramName);
 
         if (!originName.equals(RestletOrigin.AUTO) || customReader != null || jsonField != null) {
             cb.add(", $S", originName);
@@ -180,11 +183,13 @@ public final class RestletModulator extends RoutesModulator {
     @Override
     protected CodeBlock generateWritingContext(TeleMethodElement teleMethod) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("new $T(", ClassName.get(RestletTWContext.class));
+        cb.add("$T.$N(", ClassName.get(RestletTWContext.class), RestletTWContext.OF_METHOD);
+
+        generateResultType(teleMethod, cb);
 
         TypeName writerClass = getCustomWriterClass(teleMethod);
         if (writerClass != null) {
-            cb.add("$T.class", writerClass);
+            cb.add(", $T.class", writerClass);
         }
         cb.add(")");
         return cb.build();
