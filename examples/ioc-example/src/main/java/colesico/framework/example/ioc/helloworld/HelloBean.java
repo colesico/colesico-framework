@@ -16,6 +16,10 @@
 
 package colesico.framework.example.ioc.helloworld;
 
+/**
+ * This bean will be automatically created by the IoC container
+ * when it is injected into {@link MainBeanHWD}
+ */
 public class HelloBean {
 
     public String sayHello(){
