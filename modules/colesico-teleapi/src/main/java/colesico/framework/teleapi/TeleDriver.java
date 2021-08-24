@@ -18,12 +18,13 @@ package colesico.framework.teleapi;
 
 /**
  * Controls invocation process considering tele-driver environment (protocol etc.), performs error handling, etc.
+ *
  * @param <R> Data reading context
  * @param <W> Data writing context
  * @param <I> Target (service) invocation context
  * @param <P> Data port
  */
-public interface TeleDriver<R, W, I, P extends DataPort<R, W>> {
+public interface TeleDriver<R extends TRContext, W extends TWContext, I, P extends DataPort<R, W>> {
 
     String INVOKE_METHOD = "invoke";
     String INVOKER_PARAM = "invoker";
@@ -32,6 +33,7 @@ public interface TeleDriver<R, W, I, P extends DataPort<R, W>> {
 
     /**
      * Performs target method tele-invocation
+     *
      * @param target
      * @param invoker
      * @param context

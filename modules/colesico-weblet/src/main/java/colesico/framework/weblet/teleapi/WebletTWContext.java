@@ -18,6 +18,8 @@ package colesico.framework.weblet.teleapi;
 
 import colesico.framework.telehttp.HttpTWContext;
 
+import java.lang.reflect.Type;
+
 /**
  * Weblet tele-writing context
  *
@@ -25,18 +27,25 @@ import colesico.framework.telehttp.HttpTWContext;
  */
 public final class WebletTWContext extends HttpTWContext {
 
+    public static final String OF_METHOD = "of";
+
     /**
      * Custom writer class or null.
      * If null - default writer will be used
      */
     private final Class<? extends WebletTeleWriter> writerClass;
 
-    public WebletTWContext(Class<? extends WebletTeleWriter> writerClass) {
+    private WebletTWContext(Type valueType, Class<? extends WebletTeleWriter> writerClass) {
+        super(valueType);
         this.writerClass = writerClass;
     }
 
-    public WebletTWContext() {
-        this.writerClass = null;
+    public static WebletTWContext of(Type valueType) {
+        return new WebletTWContext(valueType, null);
+    }
+
+    public static WebletTWContext of(Type valueType, Class<? extends WebletTeleWriter> writerClass) {
+        return new WebletTWContext(valueType, writerClass);
     }
 
     public Class<? extends WebletTeleWriter> getWriterClass() {

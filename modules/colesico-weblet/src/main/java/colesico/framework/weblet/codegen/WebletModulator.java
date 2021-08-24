@@ -72,7 +72,10 @@ public final class WebletModulator extends RoutesModulator {
         String paramName = TeleHttpCodegenUtils.getParamName(teleParam);
 
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("new $T(", ClassName.get(WebletTRContext.class));
+        cb.add("$T.$N(", ClassName.get(WebletTRContext.class), WebletTRContext.OF_METHOD);
+
+        generateParamType(teleParam, cb);
+        cb.add(",");
 
         String originName = TeleHttpCodegenUtils.getOriginName(teleParam, WebletOrigin.AUTO);
 
@@ -95,11 +98,13 @@ public final class WebletModulator extends RoutesModulator {
     @Override
     protected CodeBlock generateWritingContext(TeleMethodElement teleMethod) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("new $T(", ClassName.get(WebletTWContext.class));
+        cb.add("$T.$N(", ClassName.get(WebletTWContext.class), WebletTWContext.OF_METHOD);
+
+        generateResultType(teleMethod, cb);
 
         TypeName customWriter = getCustomWriterClass(teleMethod);
         if (customWriter != null) {
-            cb.add("$T.class", customWriter);
+            cb.add(", $T.class", customWriter);
         }
         cb.add(")");
         return cb.build();

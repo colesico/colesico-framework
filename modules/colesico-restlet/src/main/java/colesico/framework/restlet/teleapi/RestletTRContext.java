@@ -2,6 +2,8 @@ package colesico.framework.restlet.teleapi;
 
 import colesico.framework.telehttp.HttpTRContext;
 
+import java.lang.reflect.Type;
+
 /**
  * @param <R> Json request type
  * @param <V> Json request value type
@@ -23,8 +25,8 @@ public final class RestletTRContext<R, V> extends HttpTRContext {
      */
     private final JsonFieldGetter<R, V> jsonFieldGetter;
 
-    private RestletTRContext(String paramName, String originName, Class<? extends RestletTeleReader> readerClass, JsonFieldGetter<R, V> jsonFieldGetter) {
-        super(paramName, originName);
+    private RestletTRContext(Type valueType, String paramName, String originName, Class<? extends RestletTeleReader> readerClass, JsonFieldGetter<R, V> jsonFieldGetter) {
+        super(valueType, paramName, originName);
         this.readerClass = readerClass;
         this.jsonFieldGetter = jsonFieldGetter;
     }
@@ -37,24 +39,24 @@ public final class RestletTRContext<R, V> extends HttpTRContext {
         return jsonFieldGetter;
     }
 
-    public static <R, V> RestletTRContext<R, V> of(String paramName, String originName, Class<? extends RestletTeleReader> readerClass, JsonFieldGetter<R, V> fieldGetter) {
-        return new RestletTRContext<>(paramName, originName, readerClass, fieldGetter);
+    public static <R, V> RestletTRContext<R, V> of(Type valueType, String paramName, String originName, Class<? extends RestletTeleReader> readerClass, JsonFieldGetter<R, V> fieldGetter) {
+        return new RestletTRContext<>(valueType, paramName, originName, readerClass, fieldGetter);
     }
 
-    public static <R, V> RestletTRContext<R, V> of(String paramName, String originName, Class<? extends RestletTeleReader> readerClass) {
-        return new RestletTRContext<>(paramName, originName, readerClass, null);
+    public static <R, V> RestletTRContext<R, V> of(Type valueType, String paramName, String originName, Class<? extends RestletTeleReader> readerClass) {
+        return new RestletTRContext<>(valueType, paramName, originName, readerClass, null);
     }
 
-    public static <R, V> RestletTRContext<R, V> of(String paramName, String originName) {
-        return new RestletTRContext<>(paramName, originName, null, null);
+    public static <R, V> RestletTRContext<R, V> of(Type valueType, String paramName, String originName) {
+        return new RestletTRContext<>(valueType, paramName, originName, null, null);
     }
 
-    public static <R, V> RestletTRContext<R, V> of(String paramName) {
-        return new RestletTRContext<>(paramName, RestletOrigin.AUTO, null, null);
+    public static <R, V> RestletTRContext<R, V> of(Type valueType, String paramName) {
+        return new RestletTRContext<>(valueType, paramName, RestletOrigin.AUTO, null, null);
     }
 
-    public static <R, V> RestletTRContext<R, V> of() {
-        return new RestletTRContext<>(null, RestletOrigin.AUTO, null, null);
+    public static <R, V> RestletTRContext<R, V> of(Type valueType) {
+        return new RestletTRContext<>(valueType, null, RestletOrigin.AUTO, null, null);
     }
 
     @FunctionalInterface

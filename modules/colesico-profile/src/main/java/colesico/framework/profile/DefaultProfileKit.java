@@ -20,6 +20,8 @@ import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.teleapi.DataPort;
+import colesico.framework.teleapi.TRContext;
+import colesico.framework.teleapi.TWContext;
 
 import javax.inject.Provider;
 
@@ -79,8 +81,8 @@ public class DefaultProfileKit implements ProfileKit {
 
         // No profile in cache. Retrieve profile from data port
 
-        DataPort<Object, Object> port = dataPortProv.get();
-        Profile profile = port.read(Profile.class, null);
+        DataPort<TRContext, TWContext> port = dataPortProv.get();
+        Profile profile = port.read(Profile.class);
 
         // Is control needed?
 
@@ -88,7 +90,7 @@ public class DefaultProfileKit implements ProfileKit {
             InputControlResult res = controlInputProfile(profile);
             profile = res.getProfile();
             if (res.isUpdateOnClient()) {
-                port.write(Profile.class, profile, null);
+                port.write(profile, Profile.class);
             }
         }
 
@@ -105,7 +107,7 @@ public class DefaultProfileKit implements ProfileKit {
             profile = controlOutputProfile(profile);
         }
 
-        port.write(Profile.class, profile, null);
+        port.write(profile, Profile.class);
         threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
     }
 

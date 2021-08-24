@@ -31,7 +31,7 @@ import java.lang.reflect.Type;
  * @param <R> Data reading context
  * @param <W> Data writing context
  */
-public interface DataPort<R, W> {
+public interface DataPort<R extends TRContext, W extends TWContext> {
 
     String READ_METHOD = "read";
     String WRITE_METHOD = "write";
@@ -44,11 +44,16 @@ public interface DataPort<R, W> {
     /**
      * Read value from remote request.
      *
-     * @param valueType
-     * @param context   data reader context
-     * @param <V>       reading value type
+     * @param context data reader context
+     * @param <V>     reading value type
      */
-    <V> V read(Type valueType, R context);
+    <V> V read(R context);
+
+    /**
+     * Read value from remote request.
+     * Internally must create appropriate reading context and forward to {@link DataPort#read(R)}
+     */
+    <V> V read(Type valueType);
 
     /**
      * Writes data to the remote response.
@@ -56,7 +61,12 @@ public interface DataPort<R, W> {
      * @param context data writer context
      * @param <V>     writing value type
      */
-    <V> void write(Type valueType, V value, W context);
+    <V> void write(V value, W context);
+
+    /**
+     * Internally must create appropriate reading context and forward to {@link DataPort#write(Object, Type)}
+     */
+    <V> void write(V value, Type valueType);
 
     default <T extends Throwable> void writeError(T throwable) {
         throw new UnsupportedOperationException("Error writing is not supported for data port: " + this.getClass().getCanonicalName());

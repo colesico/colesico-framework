@@ -68,17 +68,11 @@ public class TeleFacadesGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    protected CodeBlock generateParamValue(TeleParamElement teleParam) {
-        // detect param type considering generics
-        TypeMirror paramType = teleParam.getOriginParam().getOriginType();
-
+    protected CodeBlock generateReadParamValue(TeleParamElement teleParam) {
         CodeBlock ctx = teleParam.getReadingContextCode();
-        // Generates code like this: dataPot.read(ParamType.class, new Context(...));
+        // Generates code like this: dataPot.read(new Context(...));
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("$N.$N(", MethodInvoker.DATA_PORT_PARAM, DataPort.READ_METHOD);
-        // ParamType.class or new TypeWrapper<ParamType<T>>...
-        CodegenUtils.generateTypePick(paramType, cb);
-        cb.add(", ");
         cb.add(ctx);
         cb.add(")");
         return cb.build();
@@ -101,7 +95,7 @@ public class TeleFacadesGenerator {
         // ============= Generate params model retrieving
         ArrayCodegen serviceMethodArgs = new ArrayCodegen();
         for (TeleParamElement param : teleMethod.getParameters()) {
-            CodeBlock value = generateParamValue(param);
+            CodeBlock value = generateReadParamValue(param);
             String paramName = param.getOriginParam().getName() + PARAM_SUFFIX;
             serviceMethodArgs.add("$N", paramName);
             cb.add("\n// Assign tele-method parameter value from remote client\n");
@@ -128,15 +122,10 @@ public class TeleFacadesGenerator {
         callMethodCb.add(MethodInvoker.TARGET_PARAM + "." + teleMethod.getServiceMethod().getName() + "(" + serviceMethodArgs.toFormat() + ");\n", serviceMethodArgs.toValues());
         cb.add(callMethodCb.build());
 
-        // Send result to client via data port
-        //    dataPort.write(MyResp.class,result,new Ctx());
-        // or  for generics: dataPort.write(new TypeWrapper<MyResp>(){}.unwrap(),result,new Ctx());
+        // Send result to client via data port dataPort.write(result,new Context());
         if (!voidResult) {
             cb.add("\n// Send result to remote client\n");
-            cb.add("$N.$N(", MethodInvoker.DATA_PORT_PARAM, DataPort.WRITE_METHOD);
-            CodegenUtils.generateTypePick(returnType, cb);
-            cb.add(", ");
-            cb.add("$N, ", TeleDriver.RESULT_PARAM);
+            cb.add("$N.$N($N,", MethodInvoker.DATA_PORT_PARAM, DataPort.WRITE_METHOD,TeleDriver.RESULT_PARAM);
             CodeBlock writeCtx = teleMethod.getWritingContextCode();
             cb.add(writeCtx);
             cb.add(");\n");

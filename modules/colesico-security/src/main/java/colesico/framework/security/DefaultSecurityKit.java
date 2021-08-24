@@ -20,6 +20,8 @@ import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.teleapi.DataPort;
+import colesico.framework.teleapi.TRContext;
+import colesico.framework.teleapi.TWContext;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -81,15 +83,15 @@ public class DefaultSecurityKit implements SecurityKit {
 
         // No principal in cache. Retrieve principal from data port
 
-        DataPort<Object, Object> port = dataPortProv.get();
-        Principal principal = port.read(Principal.class, null);
+        DataPort<TRContext, TWContext> port = dataPortProv.get();
+        Principal principal = port.read(Principal.class);
 
         // Is control needed?
         if (isInputControlRequired(principal)) {
             InputControlResult res = controlInputPrincipal(principal);
             principal = res.getPrincipal();
             if (res.isUpdateOnClient()) {
-                port.write(Principal.class, principal, null);
+                port.write(principal, Principal.class);
             }
         }
 
@@ -106,7 +108,7 @@ public class DefaultSecurityKit implements SecurityKit {
             principal = controlOutputPrincipal(principal);
         }
 
-        port.write(Principal.class, principal, null);
+        port.write(principal, Principal.class);
         threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(principal));
     }
 

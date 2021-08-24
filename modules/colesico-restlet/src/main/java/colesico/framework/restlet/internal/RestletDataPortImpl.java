@@ -44,14 +44,13 @@ public class RestletDataPortImpl implements RestletDataPort {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <V> V read(Type valueType, RestletTRContext context) {
-        if (context == null) {
-            context = RestletTRContext.of();
-        }
+    public <V> V read(Type valueType) {
+        return read(RestletTRContext.of(valueType));
+    }
 
-        // Store value type to context
-        // so that type can be used by readers
-        context.setValueType(valueType);
+    @Override
+    @SuppressWarnings("unchecked")
+    public <V> V read(RestletTRContext context) {
 
         RestletTeleReader<V> reader;
 
@@ -60,7 +59,7 @@ public class RestletDataPortImpl implements RestletDataPort {
             reader = (RestletTeleReader<V>) teleFactory.getReader(context.getReaderClass());
         } else {
             // Use reader by param type
-            reader = teleFactory.findReader(RestletTeleReader.class, valueType);
+            reader = teleFactory.findReader(RestletTeleReader.class, context.getValueType());
 
             // No accurate reader here so are reading data as object
             if (reader == null) {
@@ -71,11 +70,12 @@ public class RestletDataPortImpl implements RestletDataPort {
     }
 
     @Override
-    public <V> void write(Type valueType, V value, RestletTWContext context) {
-        if (context == null) {
-            context = new RestletTWContext();
-        }
+    public <V> void write(V value, Type valueType) {
+        write(value, RestletTWContext.of(valueType));
+    }
 
+    @Override
+    public <V> void write(V value, RestletTWContext context) {
         RestletTeleWriter<V> writer;
 
         if (context.getWriterClass() != null) {
@@ -83,7 +83,7 @@ public class RestletDataPortImpl implements RestletDataPort {
             writer = teleFactory.getWriter(context.getWriterClass());
         } else {
             // By type writer
-            writer = teleFactory.findWriter(RestletTeleWriter.class, valueType);
+            writer = teleFactory.findWriter(RestletTeleWriter.class, context.getValueType());
         }
 
         if (writer == null) {
@@ -97,9 +97,8 @@ public class RestletDataPortImpl implements RestletDataPort {
     @Override
     public <T extends Throwable> void writeError(final T throwable) {
 
-        RestletTWContext context = new RestletTWContext();
+        RestletTWContext context = RestletTWContext.of(throwable.getClass());
         RestletTeleWriter<T> throwableWriter = teleFactory.findWriter(RestletTeleWriter.class, throwable.getClass());
-
         if (throwableWriter != null) {
             throwableWriter.write(throwable, context);
             return;
