@@ -90,28 +90,7 @@ public class HttpResponseImpl implements HttpResponse {
 
     @Override
     public void setCookie(HttpCookie cookie) {
-        //responded = true;
-        Cookie c = new CookieImpl(cookie.getName(), cookie.getValue());
-        c.setDomain(cookie.getDomain());
-        c.setPath(cookie.getPath());
-        c.setExpires(cookie.getExpires());
-        if (cookie.getSecure() != null && cookie.getSecure()) {
-            c.setSecure(true);
-        }
-        if (cookie.getHttpOnly() != null && cookie.getHttpOnly()) {
-            c.setHttpOnly(true);
-        }
-        if (cookie.getSameSite() != null) {
-            switch (cookie.getSameSite()) {
-                case STRICT:
-                    c.setSameSiteMode("strict");
-                    break;
-                case LAX:
-                    c.setSameSiteMode("lax");
-                    break;
-            }
-        }
-        exchange.setResponseCookie(c);
+        exchange.setResponseCookie(((UndertowCookie) cookie).getUndertowCookie());
     }
 
     @Override

@@ -80,15 +80,7 @@ public final class HttpRequestImpl implements HttpRequest {
         Iterator<Cookie> cit = exchange.requestCookies().iterator();
         while (cit.hasNext()) {
             Cookie c = cit.next();
-            HttpCookie httpCookie = new HttpCookie()
-                    .setName(c.getName())
-                    .setValue(c.getValue())
-                    .setDomain(c.getDomain())
-                    .setPath(c.getPath())
-                    .setExpires(c.getExpires())
-                    .setSecure(c.isSecure())
-                    .setHttpOnly(c.isHttpOnly());
-
+            HttpCookie httpCookie = new UndertowCookie(c);
             Set<HttpCookie> values = cookiesSt.computeIfAbsent(c.getName(), k -> new LinkedHashSet<>());
             values.add(httpCookie);
         }
@@ -151,7 +143,6 @@ public final class HttpRequestImpl implements HttpRequest {
 
         }
     }
-
 
     @Override
     public HttpMethod getRequestMethod() {

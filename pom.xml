@@ -164,9 +164,9 @@
                 <module>modules/colesico-weblet</module>
                 <module>modules/colesico-webstatic</module>
 
-                <!--<module>modules/colesico-trimou</module>-->
                 <module>modules/colesico-pebble</module>
                 <module>modules/colesico-restlet</module>
+                <module>modules/colesico-openapi</module>
                 <module>modules/colesico-undertow</module>
             </modules>
         </profile>

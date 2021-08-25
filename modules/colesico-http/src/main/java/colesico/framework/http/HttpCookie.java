@@ -20,113 +20,45 @@ import java.util.Date;
 /**
  * @author Vladlen Larionov
  */
-public final class HttpCookie {
+public interface HttpCookie {
 
-    protected String name;
-    protected String value;
-    protected Date expires;
-    protected String path;
-    protected String domain;
-    protected Boolean secure;
-    protected Boolean httpOnly;
-    protected SameSite sameSite;
+    String DEFAULT_PATH = "/";
 
-    public HttpCookie() {
-    }
+    String getName();
 
-    public HttpCookie(String name, String value) {
-        this.name = name;
-        this.value = value;
-        this.path = "/";
-    }
+    String getValue();
 
+    String getDomain();
 
-    public String getName() {
-        return name;
-    }
+    String getPath();
 
-    public HttpCookie setName(String name) {
-        this.name = name;
-        return this;
-    }
+    Integer getMaxAge();
 
-    public String getValue() {
-        return value;
-    }
+    Date getExpires();
 
-    public HttpCookie setValue(String value) {
-        this.value = value;
-        return this;
-    }
+    Boolean getSecure();
 
-    public String getPath() {
-        return path;
-    }
+    SameSite getSameSite();
 
-    public HttpCookie setPath(String path) {
-        this.path = path;
-        return this;
-    }
+    Boolean getHttpOnly();
 
-    public String getDomain() {
-        return domain;
-    }
+    HttpCookie setValue(String value);
 
-    public HttpCookie setDomain(String domain) {
-        this.domain = domain;
-        return this;
-    }
+    HttpCookie setDomain(String domain);
 
-    public Date getExpires() {
-        return expires;
-    }
+    HttpCookie setPath(String path);
 
-    public HttpCookie setExpires(Date expires) {
-        this.expires = expires;
-        return this;
-    }
+    HttpCookie setMaxAge(Integer age);
 
-    public Boolean getSecure() {
-        return secure;
-    }
+    HttpCookie setExpires(Date expires);
 
-    public HttpCookie setSecure(Boolean secure) {
-        this.secure = secure;
-        return this;
-    }
+    HttpCookie setSecure(Boolean secure);
 
-    public Boolean getHttpOnly() {
-        return httpOnly;
-    }
+    HttpCookie setHttpOnly(Boolean httpOnly);
 
-    public HttpCookie setHttpOnly(Boolean httpOnly) {
-        this.httpOnly = httpOnly;
-        return this;
-    }
+    HttpCookie setSameSite(SameSite sameSite);
 
-    public SameSite getSameSite() {
-        return sameSite;
-    }
-
-    public void setSameSite(SameSite sameSite) {
-        this.sameSite = sameSite;
-    }
-
-    @Override
-    public String toString() {
-        return "HttpCookie{" +
-                "name='" + name + '\'' +
-                ", model='" + value + '\'' +
-                ", expires=" + expires +
-                ", path='" + path + '\'' +
-                ", domain='" + domain + '\'' +
-                ", secure=" + secure +
-                ", httpOnly=" + httpOnly +
-                ", sameSite=" + sameSite +
-                '}';
-    }
-
-    public  enum SameSite{
+    enum SameSite {
         STRICT, LAX
     }
 }

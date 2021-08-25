@@ -38,12 +38,7 @@
     </properties>
 
     <dependencies>
-        <!-- Colesico basic -->
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-restlet</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+        <!-- Colesico base -->
 
         <!-- Colesico web  -->
         <dependency>
@@ -51,16 +46,31 @@
             <artifactId>colesico-weblet</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-webstatic</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-pebble</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-restlet</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-openapi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

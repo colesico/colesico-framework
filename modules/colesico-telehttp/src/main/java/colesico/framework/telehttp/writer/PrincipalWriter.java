@@ -16,6 +16,7 @@
 
 package colesico.framework.telehttp.writer;
 
+import colesico.framework.http.CookieFactory;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
@@ -43,13 +44,14 @@ public final class PrincipalWriter<C extends HttpTWContext> extends HttpTeleWrit
     protected final PrincipalHttpConfigPrototype config;
     protected final Provider<HttpContext> httpContextProv;
     protected final PrincipalSerializer principalSerializer;
+    protected final CookieFactory cookieFactory;
 
-    @Inject
-    public PrincipalWriter(Provider<HttpContext> httpContextProv, PrincipalHttpConfigPrototype config, Provider<HttpContext> httpContextProv1, PrincipalSerializer principalSerializer) {
+    public PrincipalWriter(Provider<HttpContext> httpContextProv, PrincipalHttpConfigPrototype config, Provider<HttpContext> httpContextProv1, PrincipalSerializer principalSerializer, CookieFactory cookieFactory) {
         super(httpContextProv);
         this.config = config;
         this.httpContextProv = httpContextProv1;
         this.principalSerializer = principalSerializer;
+        this.cookieFactory = cookieFactory;
     }
 
     @Override
@@ -77,7 +79,7 @@ public final class PrincipalWriter<C extends HttpTWContext> extends HttpTeleWrit
             expires.add(Calendar.DAY_OF_MONTH, -1);
         }
 
-        HttpCookie cookie = new HttpCookie(COOKIE_NAME, principalValue);
+        HttpCookie cookie = cookieFactory.create(COOKIE_NAME, principalValue);
 
         cookie.setExpires(expires.getTime())
                 .setHttpOnly(true)
