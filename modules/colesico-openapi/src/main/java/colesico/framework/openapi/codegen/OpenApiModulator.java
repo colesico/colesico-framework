@@ -17,12 +17,12 @@
 package colesico.framework.openapi.codegen;
 
 
-import colesico.framework.service.codegen.modulator.Modulator;
+import colesico.framework.telescheme.codegen.SchemeModulator;
 
 /**
  * Modulates Swagger definition
  */
-public final class OpenApiModulator extends Modulator {
+public final class OpenApiModulator extends SchemeModulator {
 
 
 }

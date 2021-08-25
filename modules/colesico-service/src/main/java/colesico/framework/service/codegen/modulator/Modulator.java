@@ -42,6 +42,14 @@ abstract public class Modulator {
         return null;
     }
 
+    /**
+     * When this modulator should receive events before or after the
+     * specified modulator or it doesn't matter
+     */
+    public ListenOrder listenOrder(Class<? extends Modulator> thatModulator) {
+        return ListenOrder.NO_MATTER;
+    }
+
     public void onInit(ServiceProcessorContext context) {
         this.processorContext = context;
     }
@@ -105,5 +113,9 @@ abstract public class Modulator {
 
     public ServiceMethodElement getServiceMethod() {
         return serviceMethod;
+    }
+
+    public enum ListenOrder {
+        BEFORE, AFTER, NO_MATTER;
     }
 }

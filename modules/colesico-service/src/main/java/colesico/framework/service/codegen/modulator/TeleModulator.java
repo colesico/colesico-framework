@@ -92,11 +92,11 @@ public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulat
             return;
         }
         processTeleMethod(teleMethod);
-        teleMethod.setInvocationContextCode(generateInvocationContext(teleMethod));
-        teleMethod.setWritingContextCode(generateWritingContext(teleMethod));
         for (TeleParamElement teleParam : teleMethod.getParameters()) {
             teleParam.setReadingContextCode(generateReadingContext(teleParam));
         }
+        teleMethod.setInvocationContextCode(generateInvocationContext(teleMethod));
+        teleMethod.setWritingContextCode(generateWritingContext(teleMethod));
     }
 
     @Override
