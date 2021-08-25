@@ -18,6 +18,8 @@ package colesico.framework.http;
 import java.util.Date;
 
 /**
+ * Common http cookie.
+ *
  * @author Vladlen Larionov
  */
 public interface HttpCookie {

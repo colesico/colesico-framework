@@ -21,21 +21,18 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.Cookie;
 import io.undertow.server.handlers.form.FormData;
 import io.undertow.server.handlers.form.FormDataParser;
-import io.undertow.util.HeaderMap;
 import io.undertow.util.HeaderValues;
-import io.undertow.util.HttpString;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Stream;
 
 /**
  * @author Vladlen Larionov
  */
-public final class HttpRequestImpl implements HttpRequest {
+public final class UndertowHttpRequest implements HttpRequest {
 
     private final HttpServerExchange exchange;
     private FormData formData = null;
@@ -48,7 +45,7 @@ public final class HttpRequestImpl implements HttpRequest {
 
     private InputStream inputStream = null;
 
-    public HttpRequestImpl(HttpServerExchange exchange) {
+    public UndertowHttpRequest(HttpServerExchange exchange) {
         this.exchange = exchange;
     }
 
@@ -126,7 +123,7 @@ public final class HttpRequestImpl implements HttpRequest {
                 if (value.isFileItem()) {
                     HeaderValues hv = value.getHeaders().get("Content-Type");
                     String contentType = hv != null ? hv.getFirst() : "";
-                    HttpFile httpFile = new HttpFileImpl(value.getFileName(), contentType, value.getFileItem().getFile());
+                    HttpFile httpFile = new UndertowHttpFile(value.getFileName(), contentType, value.getFileItem().getFile());
                     foundFiles.add(httpFile);
                 } else {
                     foundParams.add(value.getValue());
@@ -284,49 +281,6 @@ public final class HttpRequestImpl implements HttpRequest {
 
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private static class HttpFileImpl implements HttpFile {
-        private final String fileName;
-        private final String contentType;
-        private final Path filePath;
-
-        public HttpFileImpl(String fileName, String contentType, Path filePath) {
-            this.fileName = fileName;
-            this.contentType = contentType;
-            this.filePath = filePath;
-        }
-
-        @Override
-        public void release() {
-            try {
-                boolean res = filePath.toFile().delete();
-                if (!res) {
-                    throw new RuntimeException("Cant's release uploaded file");
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        public String getFileName() {
-            return fileName;
-        }
-
-        @Override
-        public String getContentType() {
-            return contentType;
-        }
-
-        @Override
-        public InputStream getInputStream() {
-            try {
-                return new FileInputStream(filePath.toFile());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
         }
     }
 

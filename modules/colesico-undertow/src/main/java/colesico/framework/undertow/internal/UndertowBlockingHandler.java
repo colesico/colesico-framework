@@ -31,12 +31,12 @@ public class UndertowBlockingHandler extends RequestProcessor<HttpServerExchange
 
     @Override
     protected HttpRequest createHttpRequest(HttpServerExchange exchange) {
-        return new HttpRequestImpl(exchange);
+        return new UndertowHttpRequest(exchange);
     }
 
     @Override
     protected HttpResponse createHttpResponse(HttpServerExchange exchange) {
-        return new HttpResponseImpl(exchange);
+        return new UndertowHttpResponse(exchange);
     }
 
     @Override

@@ -27,12 +27,12 @@ import java.util.UUID;
 /**
  * @author Vladlen Larionov
  */
-public class HttpResponseDebug extends HttpResponseImpl {
+public class UndertowHttpResponseDebug extends UndertowHttpResponse {
 
-    protected static final Logger log = LoggerFactory.getLogger(HttpResponseDebug.class);
+    protected static final Logger log = LoggerFactory.getLogger(UndertowHttpResponseDebug.class);
     protected final String responseId;
 
-    public HttpResponseDebug(HttpServerExchange exchange) {
+    public UndertowHttpResponseDebug(HttpServerExchange exchange) {
         super(exchange);
         this.responseId = UUID.randomUUID().toString();
     }

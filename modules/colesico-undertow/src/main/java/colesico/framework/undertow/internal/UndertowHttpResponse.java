@@ -34,11 +34,11 @@ import java.util.Map;
 /**
  * @author Vladlen Larionov
  */
-public class HttpResponseImpl implements HttpResponse {
+public class UndertowHttpResponse implements HttpResponse {
 
     protected final HttpServerExchange exchange;
 
-    public HttpResponseImpl(HttpServerExchange exchange) {
+    public UndertowHttpResponse(HttpServerExchange exchange) {
         this.exchange = exchange;
     }
 
