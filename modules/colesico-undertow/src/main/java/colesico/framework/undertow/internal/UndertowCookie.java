@@ -9,7 +9,7 @@ public class UndertowCookie implements HttpCookie {
 
     public static final String STRICT_MODE = "strict";
     public static final String LAX_MODE = "lax";
-    
+
     private Cookie undertowCookie;
 
     public UndertowCookie(Cookie undertowCookie) {
@@ -131,4 +131,8 @@ public class UndertowCookie implements HttpCookie {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "UndertowCookie{" + undertowCookie + '}';
+    }
 }

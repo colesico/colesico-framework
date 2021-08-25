@@ -121,9 +121,7 @@ public final class UndertowHttpRequest implements HttpRequest {
 
             for (FormData.FormValue value : values) {
                 if (value.isFileItem()) {
-                    HeaderValues hv = value.getHeaders().get("Content-Type");
-                    String contentType = hv != null ? hv.getFirst() : "";
-                    HttpFile httpFile = new UndertowHttpFile(value.getFileName(), contentType, value.getFileItem().getFile());
+                    HttpFile httpFile = new UndertowHttpFile(value);
                     foundFiles.add(httpFile);
                 } else {
                     foundParams.add(value.getValue());

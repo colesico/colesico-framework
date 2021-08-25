@@ -127,9 +127,9 @@ public class UndertowHttpResponse implements HttpResponse {
                     out.append("header: " + header.getHeaderName() + "=" + value + "\n");
                 }
             }
-            Map<String, Cookie> cookies = exchange.getResponseCookies();
+            Iterable<Cookie> cookies = exchange.responseCookies();
             if (cookies != null) {
-                for (Cookie cookie : cookies.values()) {
+                for (Cookie cookie : cookies) {
                     out.append("cookie: " + cookie.getName() + "=" + cookie.getValue() + "; domain=" + cookie.getDomain() + "; path=" + cookie.getPath() + "\n");
                 }
             }
