@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import colesico.framework.openapi.codegen.OpenApiModulatorTele;
 import colesico.framework.service.codegen.modulator.Modulator;
 
 module colesico.framework.openapi {
@@ -22,6 +23,9 @@ module colesico.framework.openapi {
     requires static com.squareup.javapoet;
 
     requires transitive colesico.framework.telehttp;
+    requires transitive colesico.framework.restlet;
+    requires transitive io.swagger.v3.oas.models;
+    requires transitive io.swagger.v3.oas.annotations;
 
     requires org.slf4j;
 
@@ -29,10 +33,14 @@ module colesico.framework.openapi {
 
     requires com.google.gson;
 
+
     // API
+    exports colesico.framework.telescheme;
+    opens colesico.framework.telescheme;
+
     exports colesico.framework.openapi;
     opens colesico.framework.openapi;
-    
+
     exports colesico.framework.openapi.assist;
     opens colesico.framework.openadpi.assist;
 
@@ -43,8 +51,8 @@ module colesico.framework.openapi {
     exports colesico.framework.openapi.codegen;
 
     // Resources
-    
 
-    provides Modulator with colesico.framework.openapi.codegen.OpenApiModulator;
+
+    provides Modulator with OpenApiModulatorTele;
 
 }

@@ -67,7 +67,7 @@ public final class ServiceElement {
     private final Elements<CodeBlock> constructorExtraCode;
 
     /**
-     * Service tele-facade if cpecified
+     * Service tele-facade if specified
      */
     private TeleFacadeElement teleFacade;
 

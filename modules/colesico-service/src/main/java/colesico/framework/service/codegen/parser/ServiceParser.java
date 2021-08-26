@@ -136,12 +136,12 @@ public class ServiceParser extends FrameworkAbstractParser {
         ClassElement serviceClass = ClassElement.fromElement(context.getProcessingEnv(), serviceType);
 
         ServiceElement service = new ServiceElement(serviceClass, getServiceScope(serviceClass));
-        context.getModulatorKit().notifyBeforeParseService(service);
 
+        context.getModulatorKit().notifyBeforeParseService(service);
         parseServiceMethods(service);
         teleFacadeParser.parse(service);
-
         context.getModulatorKit().notifyServiceParsed(service);
+
         return service;
     }
 

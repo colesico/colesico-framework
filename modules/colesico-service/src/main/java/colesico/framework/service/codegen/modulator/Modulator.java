@@ -66,11 +66,14 @@ abstract public class Modulator {
         this.service = service;
     }
 
-    public void onServiceMethodParsed(ServiceMethodElement proxyMethod) {
-        this.serviceMethod = proxyMethod;
+    public void onServiceMethodParsed(ServiceMethodElement serviceMethod) {
+        this.serviceMethod = serviceMethod;
     }
 
     public void onInitTeleFacade(ServiceElement service) {
+    }
+
+    public void onBeforeParseTeleFacade(TeleFacadeElement teleFacade) {
     }
 
     public void onBeforeParseTeleMethod(TeleMethodElement teleMethod) {

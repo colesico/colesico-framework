@@ -65,6 +65,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
         if (teleFacade == null) {
             return;
         }
+        context.getModulatorKit().notifyBeforeParseTeleFacade(teleFacade);
         parseTeleMethods(teleFacade);
         context.getModulatorKit().notifyTeleFacadeParsed(teleFacade);
     }

@@ -45,6 +45,8 @@ public class ModulatorKit {
         modulators.clear();
         serviceAnnotations.clear();
 
+        // Lookup modulators with ServiceLocator
+
         ServiceLocator<Modulator> locator = ServiceLocator.of(this.getClass(), Modulator.class, getClass().getClassLoader());
         for (Modulator ext : locator.getProviders()) {
             modulators.add(ext);
@@ -56,6 +58,7 @@ public class ModulatorKit {
         }
 
         // Sort by event listening order
+
         modulators.sort((m1, m2) -> {
             switch (m1.listenOrder(m2.getClass())) {
                 case BEFORE:
@@ -103,15 +106,21 @@ public class ModulatorKit {
         }
     }
 
-    public void notifyServiceMethodParsed(ServiceMethodElement proxyMethod) {
+    public void notifyServiceMethodParsed(ServiceMethodElement serviceMethod) {
         for (Modulator modulator : modulators) {
-            modulator.onServiceMethodParsed(proxyMethod);
+            modulator.onServiceMethodParsed(serviceMethod);
         }
     }
 
     public void notifyInitTeleFacade(ServiceElement service) {
         for (Modulator modulator : modulators) {
             modulator.onInitTeleFacade(service);
+        }
+    }
+
+    public void notifyBeforeParseTeleFacade(TeleFacadeElement teleFacade) {
+        for (Modulator modulator : modulators) {
+            modulator.onBeforeParseTeleFacade(teleFacade);
         }
     }
 

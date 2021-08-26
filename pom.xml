@@ -106,6 +106,8 @@
         <undertow.version>2.2.10.Final</undertow.version>
         <kryo.version>5.2.0</kryo.version>
 
+        <swagger.version>2.1.10</swagger.version>
+
         <javax.inject.version>1</javax.inject.version>
 
         <!-- Tests -->
