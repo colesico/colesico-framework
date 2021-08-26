@@ -31,7 +31,7 @@ import io.swagger.v3.oas.models.Operation;
 /**
  * Modulates Swagger definition
  */
-public final class OpenApiModulatorTele extends TeleSchemeModulator {
+public final class OpenApiModulator extends TeleSchemeModulator {
 
     public static final String OPENAPI_VAR ="openapi";
     public static final String PATHS_VAR ="paths";

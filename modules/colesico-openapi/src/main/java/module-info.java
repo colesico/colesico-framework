@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import colesico.framework.openapi.codegen.OpenApiModulatorTele;
+import colesico.framework.openapi.codegen.OpenApiModulator;
 import colesico.framework.service.codegen.modulator.Modulator;
 
 module colesico.framework.openapi {
@@ -53,6 +53,6 @@ module colesico.framework.openapi {
     // Resources
 
 
-    provides Modulator with OpenApiModulatorTele;
+    provides Modulator with OpenApiModulator;
 
 }
