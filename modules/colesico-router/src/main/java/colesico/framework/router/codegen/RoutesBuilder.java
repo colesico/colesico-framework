@@ -69,8 +69,9 @@ public class RoutesBuilder {
         Map<String, String> classRouteAttrs = parseRouteAttributes(teleMethod.getServiceMethod().getOriginMethod().getParentClass());
         classRouteAttrs.putAll(methodRouteAttrs);
 
-        RoutedTeleMethodElement routedTeleMethodElement = new RoutedTeleMethodElement(teleMethod, route, classRouteAttrs);
-        teleMethods.add(routedTeleMethodElement);
+        RoutedTeleMethodElement routedTeleMethod = new RoutedTeleMethodElement(teleMethod, route, classRouteAttrs);
+        teleMethods.add(routedTeleMethod);
+        teleMethod.setProperty(RoutedTeleMethodElement.class, routedTeleMethod);
     }
 
     protected String buildMethodRoute(TeleMethodElement teleMethod) {
@@ -198,6 +199,16 @@ public class RoutesBuilder {
 
         public Map<String, String> getRouteAttributes() {
             return routeAttributes;
+        }
+
+        public String getHttpMethodName() {
+            int i = route.indexOf(RouteTrie.SEGMENT_DELEMITER);
+            return route.substring(0, i);
+        }
+
+        public String getRoutePath() {
+            int i = route.indexOf(RouteTrie.SEGMENT_DELEMITER);
+            return '/'+route.substring(i + 1);
         }
     }
 

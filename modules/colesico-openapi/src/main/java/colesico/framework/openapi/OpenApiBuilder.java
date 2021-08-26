@@ -9,15 +9,26 @@ import io.swagger.v3.oas.models.Paths;
 
 abstract public class OpenApiBuilder extends TeleSchemeBuilder<OpenAPI> {
 
-    protected OpenAPI initOpenApi() {
-        OpenAPI openAPI = new OpenAPI();
-        openAPI.setPaths(new Paths());
+    public static final String CREATE_OPEN_API_METHOD="createOpenApi";
+    public static final String CREATE_OPERATION_METHOD="createOperation";
+    public static final String ADD_OPERATION_METHOD="addOperation";
 
-        return openAPI;
+
+    protected OpenAPI createOpenApi() {
+        OpenAPI openApi = new OpenAPI();
+        openApi.setPaths(new Paths());
+
+        return openApi;
     }
 
-    protected void addOperation(OpenAPI openAPI, String path, String httpMethod, Operation operation) {
-        Paths pathMap = openAPI.getPaths();
+    protected Operation createOperation(String operationId){
+        Operation operation = new Operation();
+        operation.setOperationId(operationId);
+        return operation;
+    }
+
+    protected void addOperation(OpenAPI openApi, String path, String httpMethod, Operation operation) {
+        Paths pathMap = openApi.getPaths();
         PathItem pathItem = pathMap.get(path);
         if (pathItem == null) {
             pathItem = new PathItem();

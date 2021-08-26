@@ -5,7 +5,7 @@ package colesico.framework.telescheme;
  */
 abstract public class TeleSchemeBuilder<S> {
 
-    public static final String SCHEME_BUILDER_SUFFIX = "Scheme";
+    public static final String SCHEME_BUILDER_SUFFIX = "Builder";
     public static final String BUILD_METHOD = "build";
 
     /**
