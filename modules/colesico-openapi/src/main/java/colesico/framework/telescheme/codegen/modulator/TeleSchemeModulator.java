@@ -5,31 +5,47 @@ import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleFacadeElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
 import colesico.framework.service.codegen.modulator.Modulator;
-import colesico.framework.telescheme.codegen.generator.TeleSchemeGenerator;
-import colesico.framework.telescheme.codegen.model.TeleSchemeElement;
+import colesico.framework.telescheme.TeleSchemeBuilder;
+import colesico.framework.telescheme.codegen.generator.TeleSchemeBuilderGenerator;
+import colesico.framework.telescheme.codegen.model.TeleSchemeBuilderElement;
 import com.squareup.javapoet.CodeBlock;
 
 abstract public class TeleSchemeModulator extends Modulator {
 
     abstract protected boolean isTeleFacadeSupported(TeleFacadeElement teleFacade);
 
-    abstract protected Class<?> getTeleFacadeSchemeType();
+    /**
+     * Tele-facade scheme type
+     */
+    abstract protected Class<?> getTeleSchemeType();
 
-    abstract protected Class<?> getTeleMethodSchemeType();
+    /**
+     * Tele-method scheme type
+     */
+    abstract protected Class<?> getOperationSchemeType();
 
-    abstract protected CodeBlock generateTeleFacadeScheme(TeleFacadeElement teleFacade);
+    abstract protected CodeBlock generateScheme(TeleFacadeElement teleFacade);
 
     /**
      * Called to process tele method after parsing completed.
      * Override this method to custom processing.
      */
-    abstract protected CodeBlock generateTeleMethodScheme(TeleMethodElement teleMethod);
+    abstract protected CodeBlock generateOperationScheme(TeleMethodElement teleMethod);
 
-    protected TeleSchemeElement getTeleScheme() {
+    /**
+     * Returns not null value to override scheme builder base class that be extended by generated tele scheme builder.
+     * Default base class - {@link TeleSchemeBuilder <?>}
+     */
+    protected Class<? extends TeleSchemeBuilder> getBuilderBaseClass(){
+        return null;
+    }
+
+
+    protected TeleSchemeBuilderElement getTeleScheme() {
         if (service.getTeleFacade() == null) {
             return null;
         }
-        return service.getTeleFacade().getProperty(TeleSchemeElement.class);
+        return service.getTeleFacade().getProperty(TeleSchemeBuilderElement.class);
     }
 
     @Override
@@ -38,8 +54,8 @@ abstract public class TeleSchemeModulator extends Modulator {
         if (!isTeleFacadeSupported(teleFacade)) {
             return;
         }
-        TeleSchemeElement facadeScheme = new TeleSchemeElement(teleFacade, getTeleFacadeSchemeType());
-        teleFacade.setProperty(TeleSchemeElement.class, facadeScheme);
+        TeleSchemeBuilderElement facadeScheme = new TeleSchemeBuilderElement(teleFacade, getTeleSchemeType(), getBuilderBaseClass());
+        teleFacade.setProperty(TeleSchemeBuilderElement.class, facadeScheme);
     }
 
     @Override
@@ -49,7 +65,7 @@ abstract public class TeleSchemeModulator extends Modulator {
             return;
         }
 
-        CodeBlock ms = generateTeleMethodScheme(teleMethod);
+        CodeBlock ms = generateOperationScheme(teleMethod);
         //TODO
     }
 
@@ -60,25 +76,25 @@ abstract public class TeleSchemeModulator extends Modulator {
             return;
         }
 
-        CodeBlock fs = generateTeleFacadeScheme(teleFacade);
-        getTeleScheme().setSchemeCode(fs);
+        CodeBlock fs = generateScheme(teleFacade);
+        getTeleScheme().setBuildCode(fs);
     }
 
     @Override
     public void onServiceGenerated(ServiceElement service) {
         super.onServiceGenerated(service);
-        TeleSchemeElement teleScheme = getTeleScheme();
+        TeleSchemeBuilderElement teleScheme = getTeleScheme();
         if (teleScheme == null) {
             return;
         }
-        TeleSchemeGenerator teleSchemeGenerator = new TeleSchemeGenerator(getProcessorContext().getProcessingEnv());
-        teleSchemeGenerator.generate(teleScheme);
+        TeleSchemeBuilderGenerator teleSchemeBuilderGenerator = new TeleSchemeBuilderGenerator(getProcessorContext().getProcessingEnv());
+        teleSchemeBuilderGenerator.generate(teleScheme);
     }
 
     @Override
     public void onGenerateIocProducer(ProducerGenerator generator, ServiceElement service) {
         super.onGenerateIocProducer(generator, service);
-        TeleSchemeElement teleScheme = getTeleScheme();
+        TeleSchemeBuilderElement teleScheme = getTeleScheme();
         if (teleScheme == null) {
             return;
         }

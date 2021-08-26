@@ -1,8 +1,11 @@
 package colesico.framework.telescheme;
 
-abstract public class TeleScheme<S> {
+/**
+ * Base scheme class
+ */
+abstract public class TeleSchemeBuilder<S> {
 
-    public static final String TELE_SCHEME_SUFFIX = "Scheme";
+    public static final String SCHEME_BUILDER_SUFFIX = "Scheme";
     public static final String BUILD_METHOD = "build";
 
     /**

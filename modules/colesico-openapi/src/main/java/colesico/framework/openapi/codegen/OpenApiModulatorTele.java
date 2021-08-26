@@ -33,7 +33,9 @@ import io.swagger.v3.oas.models.Operation;
  */
 public final class OpenApiModulatorTele extends TeleSchemeModulator {
 
-    public static final String FACADE_SCHEME_VAR="facadeScheme";
+    public static final String OPENAPI_VAR ="openapi";
+    public static final String PATHS_VAR ="paths";
+    public static final String PATH_ITEM_VAR ="pathItem";
 
     @Override
     public ListenOrder listenOrder(Class<? extends Modulator> thatModulator) {
@@ -52,25 +54,27 @@ public final class OpenApiModulatorTele extends TeleSchemeModulator {
     }
 
     @Override
-    protected Class<?> getTeleFacadeSchemeType() {
+    protected Class<?> getTeleSchemeType() {
         return OpenAPI.class;
     }
 
     @Override
-    protected Class<?> getTeleMethodSchemeType() {
+    protected Class<?> getOperationSchemeType() {
         return Operation.class;
     }
 
     @Override
-    protected CodeBlock generateTeleFacadeScheme(TeleFacadeElement teleFacade) {
+    protected CodeBlock generateScheme(TeleFacadeElement teleFacade) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.addStatement("$T $N = new $T()", ClassName.get(OpenAPI.class),FACADE_SCHEME_VAR,ClassName.get(OpenAPI.class));
-        cb.addStatement("return $N",FACADE_SCHEME_VAR);
+        cb.addStatement("$T $N = new $T()", ClassName.get(OpenAPI.class), OPENAPI_VAR,ClassName.get(OpenAPI.class));
+
+        //Paths
+        cb.addStatement("return $N", OPENAPI_VAR);
         return cb.build();
     }
 
     @Override
-    protected CodeBlock generateTeleMethodScheme(TeleMethodElement teleMethod) {
+    protected CodeBlock generateOperationScheme(TeleMethodElement teleMethod) {
         CodeBlock.Builder cb = CodeBlock.builder();
         return cb.build();
     }

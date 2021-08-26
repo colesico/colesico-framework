@@ -4,8 +4,8 @@ import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleFacadeElement;
-import colesico.framework.telescheme.TeleScheme;
-import colesico.framework.telescheme.codegen.model.TeleSchemeElement;
+import colesico.framework.telescheme.TeleSchemeBuilder;
+import colesico.framework.telescheme.codegen.model.TeleSchemeBuilderElement;
 import com.squareup.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -17,8 +17,8 @@ import javax.lang.model.element.Modifier;
 import static colesico.framework.teleapi.TeleFacade.TARGET_PROV_FIELD;
 import static colesico.framework.teleapi.TeleFacade.TELE_DRIVER_FIELD;
 
-public class TeleSchemeGenerator extends FrameworkAbstractGenerator {
-    public TeleSchemeGenerator(ProcessingEnvironment processingEnv) {
+public class TeleSchemeBuilderGenerator extends FrameworkAbstractGenerator {
+    public TeleSchemeBuilderGenerator(ProcessingEnvironment processingEnv) {
         super(processingEnv);
     }
 
@@ -36,37 +36,41 @@ public class TeleSchemeGenerator extends FrameworkAbstractGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    protected void generateBuildMethod(TeleSchemeElement teleScheme, TypeSpec.Builder classBuilder) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(TeleScheme.BUILD_METHOD);
+    protected void generateBuildMethod(TeleSchemeBuilderElement teleScheme, TypeSpec.Builder classBuilder) {
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(TeleSchemeBuilder.BUILD_METHOD);
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         mb.returns(ClassName.get(teleScheme.getSchemeType()));
-        mb.addCode(teleScheme.getSchemeCode());
+        mb.addCode(teleScheme.getBuildCode());
         classBuilder.addMethod(mb.build());
     }
 
-    protected void createTeleSchemeClass(TeleSchemeElement teleScheme, TypeSpec.Builder classBuilder) {
+    protected void createTeleSchemeClass(TeleSchemeBuilderElement teleScheme, TypeSpec.Builder classBuilder) {
         final TypeSpec typeSpec = classBuilder.build();
-        String packageName = teleScheme.getParentFacade().getParentService().getOriginClass().getPackageName();
-        ServiceElement service = teleScheme.getParentFacade().getParentService();
+        String packageName = teleScheme.getParentTeleFacade().getParentService().getOriginClass().getPackageName();
+        ServiceElement service = teleScheme.getParentTeleFacade().getParentService();
         CodegenUtils.createJavaFile(getProcessingEnv(), typeSpec, packageName, service.getOriginClass().unwrap());
     }
 
-    public void generate(TeleSchemeElement teleScheme) {
+    public void generate(TeleSchemeBuilderElement teleScheme) {
 
         TypeSpec.Builder classBuilder = TypeSpec.classBuilder(teleScheme.getFacadeSchemeClassSimpleName());
         classBuilder.addModifiers(Modifier.PUBLIC);
         classBuilder.addModifiers(Modifier.FINAL);
 
         AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null,
-                "Service: " + teleScheme.getParentFacade().getParentService().getOriginClass().unwrap().getQualifiedName().toString());
+                "Service: " + teleScheme.getParentTeleFacade().getParentService().getOriginClass().unwrap().getQualifiedName().toString());
         classBuilder.addAnnotation(genstamp);
 
         classBuilder.addAnnotation(ClassName.get(Singleton.class));
 
-        classBuilder.superclass(ParameterizedTypeName.get(
-                ClassName.get(TeleScheme.class),
-                ClassName.get(teleScheme.getSchemeType())
-        ));
+        if (teleScheme.getBuilderBaseClass() == null) {
+            classBuilder.superclass(ParameterizedTypeName.get(
+                    ClassName.get(TeleSchemeBuilder.class),
+                    ClassName.get(teleScheme.getSchemeType())
+            ));
+        } else {
+            classBuilder.superclass(ClassName.get(teleScheme.getBuilderBaseClass()));
+        }
 
         // generateConstructor(teleFacade, classBuilder);
 
