@@ -1,15 +1,15 @@
 package colesico.framework.telescheme;
 
 /**
- * Base scheme class
+ * Base scheme builder API
  */
-abstract public class TeleSchemeBuilder<S> {
+public interface TeleSchemeBuilder<S> {
 
-    public static final String SCHEME_BUILDER_SUFFIX = "Builder";
-    public static final String BUILD_METHOD = "build";
+    String SCHEME_BUILDER_SUFFIX = "Builder";
+    String BUILD_METHOD = "build";
 
     /**
      * Build scheme
      */
-    abstract public S build();
+    S build();
 }

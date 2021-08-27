@@ -39,6 +39,9 @@ module colesico.framework.restlet {
     exports colesico.framework.restlet.teleapi.writer;
     exports colesico.framework.restlet.assist;
 
+    exports colesico.framework.restlet.codegen.model;
+    exports colesico.framework.restlet.codegen.assist;
+
     // Internal
     exports colesico.framework.restlet.internal to colesico.framework.ioc;
 
@@ -48,6 +51,7 @@ module colesico.framework.restlet {
     // Resources
     opens colesico.framework.restlet.t9n to colesico.framework.localization;
     opens colesico.framework.restlet.assist;
+
 
     provides Modulator with colesico.framework.restlet.codegen.RestletModulator;
 

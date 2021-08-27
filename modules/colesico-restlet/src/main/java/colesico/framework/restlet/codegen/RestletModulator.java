@@ -18,24 +18,21 @@ package colesico.framework.restlet.codegen;
 
 
 import colesico.framework.assist.CollectionUtils;
-import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.restlet.Restlet;
+import colesico.framework.restlet.codegen.assist.RestletCodegenUtils;
 import colesico.framework.restlet.codegen.model.JsonFieldElement;
 import colesico.framework.restlet.codegen.model.JsonRequestElement;
 import colesico.framework.restlet.codegen.model.JsonPackElement;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.jsonrequest.JsonField;
-import colesico.framework.restlet.teleapi.origin.RestletAutoOrigin;
-import colesico.framework.restlet.teleapi.reader.JsonFieldReader;
 import colesico.framework.router.codegen.RouterTeleFacadeElement;
 import colesico.framework.router.codegen.RoutesModulator;
+import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleFacadeElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
 import colesico.framework.service.codegen.model.TeleParamElement;
-import colesico.framework.telehttp.Origin;
-import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.type.TypeMirror;
@@ -135,32 +132,22 @@ public final class RestletModulator extends RoutesModulator {
 
     @Override
     protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
-        String paramName = TeleHttpCodegenUtils.getParamName(teleParam);
-        JsonFieldElement jfe = teleParam.getProperty(JsonFieldElement.class);
-        if (jfe != null) {
-            paramName = jfe.getName();
-        }
+        String paramName = RestletCodegenUtils.getParamName(teleParam);
 
         CodeBlock.Builder cb = CodeBlock.builder();
 
         // new RestletTRContext(paramName
         cb.add("$T.$N(", ClassName.get(RestletTRContext.class), RestletTRContext.OF_METHOD);
 
-        generateParamType(teleParam, cb);
-
-
-        TypeName customReader = getCustomReaderClass(teleParam);
-        JsonFieldElement jsonField = teleParam.getProperty(JsonFieldElement.class);
+        ServiceCodegenUtils.generateTeleParamType(teleParam, cb);
 
         cb.add(", $S", paramName);
 
-        String originName;
-        if (jfe != null) {
-            originName = RestletOrigin.BODY;
-        } else {
-            originName = TeleHttpCodegenUtils.getOriginName(teleParam, RestletOrigin.AUTO);
-        }
+        String originName = RestletCodegenUtils.getOriginName(teleParam);
 
+        JsonFieldElement jsonField = teleParam.getProperty(JsonFieldElement.class);
+
+        TypeName customReader = RestletCodegenUtils.getCustomReaderClass(teleParam, getProcessorContext().getElementUtils());
         if (!originName.equals(RestletOrigin.AUTO) || customReader != null || jsonField != null) {
             cb.add(", $S", originName);
         }
@@ -185,7 +172,7 @@ public final class RestletModulator extends RoutesModulator {
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("$T.$N(", ClassName.get(RestletTWContext.class), RestletTWContext.OF_METHOD);
 
-        generateResultType(teleMethod, cb);
+        ServiceCodegenUtils.generateTeleResultType(teleMethod, cb);
 
         TypeName writerClass = getCustomWriterClass(teleMethod);
         if (writerClass != null) {
@@ -218,23 +205,6 @@ public final class RestletModulator extends RoutesModulator {
             return null;
         }
         TypeMirror readerClassMirror = wrAnn.getValueTypeMirror(a -> a.value());
-        return TypeName.get(readerClassMirror);
-    }
-
-    protected TypeName getCustomReaderClass(TeleParamElement teleParam) {
-
-        if (teleParam.getProperty(JsonFieldElement.class) != null) {
-            return TypeName.get(CodegenUtils.classToTypeMirror(JsonFieldReader.class, getProcessorContext().getElementUtils()));
-        }
-
-        var rdAnn = teleParam.getOriginParam().getAnnotation(RestletParamReader.class);
-        if (rdAnn == null) {
-            rdAnn = teleParam.getParentTeleMethod().getServiceMethod().getOriginMethod().getAnnotation(RestletParamReader.class);
-        }
-        if (rdAnn == null) {
-            return null;
-        }
-        TypeMirror readerClassMirror = rdAnn.getValueTypeMirror(a -> a.value());
         return TypeName.get(readerClassMirror);
     }
 

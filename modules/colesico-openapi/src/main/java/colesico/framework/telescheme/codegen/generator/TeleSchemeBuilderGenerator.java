@@ -64,7 +64,7 @@ public class TeleSchemeBuilderGenerator extends FrameworkAbstractGenerator {
         classBuilder.addAnnotation(ClassName.get(Singleton.class));
 
         if (teleScheme.getBuilderBaseClass() == null) {
-            classBuilder.superclass(ParameterizedTypeName.get(
+            classBuilder.addSuperinterface(ParameterizedTypeName.get(
                     ClassName.get(TeleSchemeBuilder.class),
                     ClassName.get(teleScheme.getSchemeType())
             ));

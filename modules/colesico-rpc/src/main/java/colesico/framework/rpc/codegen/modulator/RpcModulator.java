@@ -22,6 +22,7 @@ import colesico.framework.rpc.RpcApi;
 import colesico.framework.rpc.codegen.model.*;
 import colesico.framework.rpc.codegen.parser.RpcApiParser;
 import colesico.framework.rpc.teleapi.*;
+import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.modulator.TeleModulator;
 import com.squareup.javapoet.ClassName;
@@ -204,7 +205,7 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
         RpcApiParamElement apiParam = teleParam.getProperty(RpcApiParamElement.class);
         // RpcTRContext.of(EnvelopeClass.RequestClass::getterMethod)
         cb.add("$T.$N(", ClassName.get(RpcTRContext.class), RpcTRContext.OF_METHOD);
-        generateParamType(teleParam, cb);
+        ServiceCodegenUtils.generateTeleParamType(teleParam, cb);
         cb.add(", $T::$N)", ClassName.bestGuess(rpcApiMethod.getRequestClassName()), apiParam.getterName());
         return cb.build();
     }

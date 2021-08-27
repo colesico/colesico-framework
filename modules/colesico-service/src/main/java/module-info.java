@@ -33,6 +33,7 @@ module colesico.framework.service {
     exports colesico.framework.service;
 
     // Code generation
+    exports colesico.framework.service.codegen.assist;
     exports colesico.framework.service.codegen.model;
     exports colesico.framework.service.codegen.parser;
     exports colesico.framework.service.codegen.modulator;
