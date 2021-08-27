@@ -133,7 +133,7 @@ public final class OpenApiModulator extends TeleSchemeModulator {
     protected void generateInputParams(CodeBlock.Builder cb, TeleMethodElement teleMethod) {
         for (TeleParamElement teleParam : teleMethod.getParameters()) {
             // inputParam = createInputParam(openApi, operation,
-            cb.add("$N = $N($N,$N,",
+            cb.add("$N = $N($N, $N, ",
                     INPUT_PARAM_VAR,
                     OpenApiBuilder.CREATE_INPUT_PARAM_METHOD,
                     OPENAPI_VAR,
@@ -157,10 +157,12 @@ public final class OpenApiModulator extends TeleSchemeModulator {
             }
 
             JsonFieldElement jsonField = teleParam.getProperty(JsonFieldElement.class);
-            if (jsonField!=null){
-                cb.add(", true");
+            if (jsonField != null) {
+                cb.add(", $T.class",
+                        ClassName.bestGuess(jsonField.getParentRequest().getJsonRequestClassName())
+                );
             } else {
-                cb.add(", false");
+                cb.add(", null");
             }
 
             cb.add(");\n");

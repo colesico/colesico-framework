@@ -28,7 +28,7 @@ public class RestletCodegenUtils {
         String originName;
         JsonFieldElement jfe = teleParam.getProperty(JsonFieldElement.class);
         if (jfe != null) {
-            originName = RestletOrigin.BODY;
+            originName = RestletOrigin.JSON_FIELD;
         } else {
             originName = TeleHttpCodegenUtils.getOriginName(teleParam, RestletOrigin.AUTO);
         }

@@ -74,7 +74,7 @@ abstract public class OpenApiBuilder implements TeleSchemeBuilder<OpenAPI> {
                                           String paramName,
                                           String originName,
                                           Class<? extends RestletTeleReader> readerClass,
-                                          Boolean jsonField) {
+                                          Type jsonRequestType) {
         //TODO:
         return null;
 

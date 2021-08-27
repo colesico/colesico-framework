@@ -52,5 +52,12 @@ public interface Origin {
      */
     String BODY = "BODY";
 
+    /**
+     * Return string value from the http request entity
+     *
+     * @param name value name  (e.g. query param name, cookie name, header name, e.t.c)
+     * @return string value
+     * @see colesico.framework.http.HttpRequest
+     */
     String getString(String name);
 }
