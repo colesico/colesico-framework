@@ -65,12 +65,13 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!--
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-openapi</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        -->
     </dependencies>
 
     <build>

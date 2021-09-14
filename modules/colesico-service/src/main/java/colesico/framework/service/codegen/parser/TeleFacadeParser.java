@@ -18,6 +18,7 @@ package colesico.framework.service.codegen.parser;
 
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
+import colesico.framework.service.Compound;
 import colesico.framework.service.codegen.model.*;
 
 public final class TeleFacadeParser extends FrameworkAbstractParser {
@@ -29,14 +30,32 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
         this.context = context;
     }
 
+    private TeleCompoundElement parseTeleCompound(TeleMethodElement teleMethod, VarElement param) {
+        TeleCompoundElement teleCom = new TeleCompoundElement(param);
+
+        return teleCom;
+    }
+
     protected void parseTeleMethodParams(TeleMethodElement teleMethod) {
         MethodElement method = teleMethod.getServiceMethod().getOriginMethod();
         int paramIndex = 0;
         for (ParameterElement param : method.getParameters()) {
-            TeleParameterElement teleParam = new TeleParameterElement(param, paramIndex);
-            teleMethod.addParameter(teleParam);
-            context.getModulatorKit().notifyTeleParamParsed(teleParam);
-            paramIndex++;
+
+            // Check compound
+            AnnotationAssist<Compound> compoundAnn = null;
+            if (teleMethod.getParentTeleFacade().getCompoundSupport()) {
+                compoundAnn = param.getAnnotation(Compound.class);
+            }
+
+            if (compoundAnn == null) {
+                TeleParameterElement teleParam = new TeleParameterElement(param, paramIndex);
+                teleMethod.addParameter(teleParam);
+                context.getModulatorKit().notifyTeleParamParsed(teleParam);
+                paramIndex++;
+            } else {
+                TeleCompoundElement teleComp = parseTeleCompound(teleMethod, param);
+                teleMethod.addParameter(teleComp);
+            }
         }
     }
 
