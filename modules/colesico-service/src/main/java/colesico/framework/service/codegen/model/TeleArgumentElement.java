@@ -16,6 +16,11 @@ abstract public class TeleArgumentElement {
     protected TeleMethodElement parentTeleMethod;
 
     /**
+     * Parent compound if exists
+     */
+    protected TeleCompoundElement parentCompound;
+
+    /**
      * Origin element ref  (method param or comp field)
      */
     protected final VarElement originElement;
@@ -47,5 +52,13 @@ abstract public class TeleArgumentElement {
 
     public void setParentTeleMethod(TeleMethodElement parentTeleMethod) {
         this.parentTeleMethod = parentTeleMethod;
+    }
+
+    public TeleCompoundElement getParentCompound() {
+        return parentCompound;
+    }
+
+    public void setParentCompound(TeleCompoundElement parentCompound) {
+        this.parentCompound = parentCompound;
     }
 }
