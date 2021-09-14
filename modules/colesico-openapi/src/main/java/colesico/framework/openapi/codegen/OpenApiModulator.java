@@ -28,7 +28,8 @@ import colesico.framework.router.codegen.RoutesBuilder;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.TeleFacadeElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
-import colesico.framework.service.codegen.model.TeleParamElement;
+import colesico.framework.service.codegen.model.TeleParameterElement;
+import colesico.framework.service.codegen.model.TeleArgumentElement;
 import colesico.framework.service.codegen.modulator.Modulator;
 import colesico.framework.telescheme.TeleSchemeBuilder;
 import colesico.framework.telescheme.codegen.modulator.TeleSchemeModulator;
@@ -131,7 +132,9 @@ public final class OpenApiModulator extends TeleSchemeModulator {
     }
 
     protected void generateInputParams(CodeBlock.Builder cb, TeleMethodElement teleMethod) {
-        for (TeleParamElement teleParam : teleMethod.getParameters()) {
+        for (TeleArgumentElement teleVar : teleMethod.getParameters()) {
+            //TODO: handle compounds
+            TeleParameterElement teleParam = (TeleParameterElement) teleVar;
             // inputParam = createInputParam(openApi, operation,
             cb.add("$N = $N($N, $N, ",
                     INPUT_PARAM_VAR,
@@ -141,7 +144,7 @@ public final class OpenApiModulator extends TeleSchemeModulator {
 
             // ValueClass.class, paramName, originName, readerClass, jsonField
 
-            ServiceCodegenUtils.generateTeleParamType(teleParam, cb);
+            ServiceCodegenUtils.generateTeleArgumentType(teleParam, cb);
 
             String paramName = RestletCodegenUtils.getParamName(teleParam);
             cb.add(", $S", paramName);

@@ -29,10 +29,7 @@ import colesico.framework.restlet.teleapi.jsonrequest.JsonField;
 import colesico.framework.router.codegen.RouterTeleFacadeElement;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
-import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.service.codegen.model.TeleFacadeElement;
-import colesico.framework.service.codegen.model.TeleMethodElement;
-import colesico.framework.service.codegen.model.TeleParamElement;
+import colesico.framework.service.codegen.model.*;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.type.TypeMirror;
@@ -100,8 +97,13 @@ public final class RestletModulator extends RoutesModulator {
             teleMethodElement.setProperty(JsonRequestElement.class, jsonRequest);
         }
 
-        for (TeleParamElement teleParam : teleMethodElement.getParameters()) {
-            var jsonParamAnn = teleParam.getOriginParam().getAnnotation(JsonField.class);
+        for (TeleArgumentElement teleArg : teleMethodElement.getParameters()) {
+            // Check compound
+            if (teleArg instanceof TeleCompoundElement){
+                continue;
+            }
+            TeleParameterElement teleParam = (TeleParameterElement) teleArg;
+            var jsonParamAnn = teleParam.getOriginElement().getAnnotation(JsonField.class);
             if (jsonMethodAnn != null || jsonParamAnn != null) {
 
                 if (jsonRequest == null) {
@@ -131,7 +133,7 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     @Override
-    protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
+    protected CodeBlock generateReadingContext(TeleParameterElement teleParam) {
         String paramName = RestletCodegenUtils.getParamName(teleParam);
 
         CodeBlock.Builder cb = CodeBlock.builder();
@@ -139,7 +141,7 @@ public final class RestletModulator extends RoutesModulator {
         // new RestletTRContext(paramName
         cb.add("$T.$N(", ClassName.get(RestletTRContext.class), RestletTRContext.OF_METHOD);
 
-        ServiceCodegenUtils.generateTeleParamType(teleParam, cb);
+        ServiceCodegenUtils.generateTeleArgumentType(teleParam, cb);
 
         cb.add(", $S", paramName);
 

@@ -103,14 +103,14 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
                         );
                 if (overrides) {
 
-                    // Bind method
+                    // Rpc method
                     rpcApiMethod.setTeleMethod(teleMethodElm);
                     teleMethodElm.setProperty(RpcApiMethodElement.class, rpcApiMethod);
 
-                    // Bind params
+                    // Rpc params
                     List<RpcApiParamElement> rpcApiParams = rpcApiMethod.getParameters();
-                    // method params or compound fields
-                    List<TeleParamElement> teleParams = teleMethodElm.getParameters();
+                    // Method params
+                    List<TeleArgumentElement> teleParams = teleMethodElm.getParameters();
 
                     if (rpcApiParams.size() != teleParams.size()) {
                         throw CodegenException.of()
@@ -120,15 +120,21 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
                     }
 
                     for (int i = 0; i < teleParams.size(); i++) {
-                        TeleParamElement teleParam = teleParams.get(i);
+                        if (teleParams.get(i) instanceof TeleCompoundElement) {
+                            throw CodegenException.of()
+                                    .message("Compound parameters not supported")
+                                    .element(teleParams.get(i).getOriginElement().unwrap())
+                                    .build();
+                        }
+                        TeleParameterElement teleParam = (TeleParameterElement) teleParams.get(i);
                         RpcApiParamElement apiParam = rpcApiParams.get(i);
                         if (!getProcessorContext().getTypeUtils().isAssignable(
-                                teleParam.getOriginParam().unwrap().asType(),
+                                teleParam.getOriginElement().unwrap().asType(),
                                 apiParam.getOriginParam().unwrap().asType()
                         )) {
                             throw CodegenException.of()
-                                    .message("RPC API parameter type mismatch for " + teleParam.getOriginParam().getName() +
-                                            "; service param " + teleParam.getOriginParam().unwrap().asType() + " -> api param " +
+                                    .message("RPC API parameter type mismatch for " + teleParam.getOriginElement().getName() +
+                                            "; service param " + teleParam.getOriginElement().unwrap().asType() + " -> api param " +
                                             apiParam.getOriginParam().unwrap().asType())
                                     .element(teleMethodElm.getServiceMethod().getOriginMethod().unwrap())
                                     .build();
@@ -198,14 +204,14 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
     }
 
     @Override
-    protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
+    protected CodeBlock generateReadingContext(TeleParameterElement teleParam) {
         CodeBlock.Builder cb = CodeBlock.builder();
 
         RpcApiMethodElement rpcApiMethod = getRpcApiMethod(teleParam.getParentTeleMethod());
         RpcApiParamElement apiParam = teleParam.getProperty(RpcApiParamElement.class);
         // RpcTRContext.of(EnvelopeClass.RequestClass::getterMethod)
         cb.add("$T.$N(", ClassName.get(RpcTRContext.class), RpcTRContext.OF_METHOD);
-        ServiceCodegenUtils.generateTeleParamType(teleParam, cb);
+        ServiceCodegenUtils.generateTeleArgumentType(teleParam, cb);
         cb.add(", $T::$N)", ClassName.bestGuess(rpcApiMethod.getRequestClassName()), apiParam.getterName());
         return cb.build();
     }

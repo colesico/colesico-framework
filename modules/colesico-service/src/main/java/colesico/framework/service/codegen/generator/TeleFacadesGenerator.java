@@ -20,10 +20,7 @@ package colesico.framework.service.codegen.generator;
 import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.MethodElement;
-import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.service.codegen.model.TeleFacadeElement;
-import colesico.framework.service.codegen.model.TeleMethodElement;
-import colesico.framework.service.codegen.model.TeleParamElement;
+import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import colesico.framework.teleapi.*;
 import com.squareup.javapoet.*;
@@ -68,7 +65,7 @@ public class TeleFacadesGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    protected CodeBlock generateReadParamValue(TeleParamElement teleParam) {
+    protected CodeBlock generateReadParamValue(TeleParameterElement teleParam) {
         CodeBlock ctx = teleParam.getReadingContextCode();
         // Generates code like this: dataPot.read(new Context(...));
         CodeBlock.Builder cb = CodeBlock.builder();
@@ -94,12 +91,13 @@ public class TeleFacadesGenerator {
 
         // ============= Generate params model retrieving
         ArrayCodegen serviceMethodArgs = new ArrayCodegen();
-        for (TeleParamElement param : teleMethod.getParameters()) {
-            CodeBlock value = generateReadParamValue(param);
-            String paramName = param.getOriginParam().getName() + PARAM_SUFFIX;
+        for (TeleArgumentElement teleVar : teleMethod.getParameters()) {
+            TeleParameterElement teleParam = (TeleParameterElement) teleVar;
+            CodeBlock value = generateReadParamValue(teleParam);
+            String paramName = teleParam.getOriginElement().getName() + PARAM_SUFFIX;
             serviceMethodArgs.add("$N", paramName);
             cb.add("\n// Assign tele-method parameter value from remote client\n");
-            cb.add("$T $N = ", TypeName.get(param.getOriginParam().getOriginType()), paramName);
+            cb.add("$T $N = ", TypeName.get(teleParam.getOriginElement().getOriginType()), paramName);
             cb.add(value);
             cb.add(";\n");
         }

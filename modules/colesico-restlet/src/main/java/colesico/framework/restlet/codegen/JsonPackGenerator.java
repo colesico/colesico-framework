@@ -26,7 +26,7 @@ public class JsonPackGenerator extends FrameworkAbstractGenerator {
             rb.addSuperinterface(ClassName.get(JsonRequest.class));
 
             for (JsonFieldElement jsonField : jsonRequest.getFields()) {
-                TypeName filedTypeName = TypeName.get(jsonField.getOriginParam().getOriginParam().getOriginType());
+                TypeName filedTypeName = TypeName.get(jsonField.getOriginParam().getOriginElement().getOriginType());
                 String filedName = jsonField.getName();
                 FieldSpec.Builder fb = FieldSpec.builder(filedTypeName, filedName, Modifier.PRIVATE);
                 rb.addField(fb.build());

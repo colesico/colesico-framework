@@ -23,6 +23,8 @@ import com.squareup.javapoet.CodeBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 /**
  * Tele-facades modulation support.
  * must be extended by any concrete tele-facades modulators.
@@ -82,6 +84,17 @@ public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulat
         serviceElm.setTeleFacade(teleFacade);
     }
 
+    private final void generateParamsReadingContextCode(List<TeleArgumentElement> arguments) {
+        for (TeleArgumentElement teleArg : arguments) {
+            if (teleArg instanceof TeleParameterElement) {
+                TeleParameterElement teleParam = (TeleParameterElement) teleArg;
+                teleParam.setReadingContextCode(generateReadingContext(teleParam));
+            } else {
+                generateParamsReadingContextCode(((TeleCompoundElement) teleArg).getFields());
+            }
+        }
+    }
+
     @Override
     public void onTeleMethodParsed(TeleMethodElement teleMethod) {
         super.onTeleMethodParsed(teleMethod);
@@ -90,9 +103,7 @@ public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulat
             return;
         }
         processTeleMethod(teleMethod);
-        for (TeleParamElement teleParam : teleMethod.getParameters()) {
-            teleParam.setReadingContextCode(generateReadingContext(teleParam));
-        }
+        generateParamsReadingContextCode(teleMethod.getParameters());
         teleMethod.setInvocationContextCode(generateInvocationContext(teleMethod));
         teleMethod.setWritingContextCode(generateWritingContext(teleMethod));
     }
@@ -119,9 +130,9 @@ public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulat
         return cb.build();
     }
 
-    protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
+    protected CodeBlock generateReadingContext(TeleParameterElement teleParam) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        ServiceCodegenUtils.generateTeleParamType(teleParam, cb);
+        ServiceCodegenUtils.generateTeleArgumentType(teleParam, cb);
         return cb.build();
     }
 }

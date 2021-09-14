@@ -42,7 +42,7 @@ public final class TeleMethodElement {
     /**
      * Tele-method parameters
      */
-    private final List<TeleParamElement> parameters;
+    private final List<TeleArgumentElement> parameters;
 
     /**
      * Method result writing context code
@@ -81,7 +81,7 @@ public final class TeleMethodElement {
     /**
      * Add parameter of tele-method
      */
-    public void addParameter(TeleParamElement param) {
+    public void addParameter(TeleArgumentElement param) {
         parameters.add(param);
         param.setParentTeleMethod(this);
     }
@@ -102,7 +102,7 @@ public final class TeleMethodElement {
         return parentTeleFacade;
     }
 
-    public List<TeleParamElement> getParameters() {
+    public List<TeleArgumentElement> getParameters() {
         return parameters;
     }
 

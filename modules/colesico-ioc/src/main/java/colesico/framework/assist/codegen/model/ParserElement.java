@@ -16,15 +16,21 @@
 
 package colesico.framework.assist.codegen.model;
 
+import colesico.framework.assist.StrUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.PackageElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 abstract public class ParserElement extends Assist {
 
@@ -32,9 +38,30 @@ abstract public class ParserElement extends Assist {
         super(processingEnv);
     }
 
+    /**
+     * Return origin java parser element
+     */
     abstract public Element unwrap();
 
     abstract public TypeMirror getOriginType();
+
+    public String getName() {
+        return unwrap().getSimpleName().toString();
+    }
+
+    public ClassType asClassType() {
+        if (getOriginType().getKind() == TypeKind.DECLARED) {
+            return new ClassType(getProcessingEnv(), (DeclaredType) getOriginType());
+        }
+        return null;
+    }
+
+    public String getNameWithPrefix(String prefix) {
+        if (StringUtils.isEmpty(prefix)) {
+            return getName();
+        }
+        return StrUtils.addPrefix(prefix, getName());
+    }
 
     public ModuleElement getModule() {
         return getElementUtils().getModuleOf(unwrap());
@@ -104,4 +131,20 @@ abstract public class ParserElement extends Assist {
         }
         return false;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ParameterElement that = (ParameterElement) o;
+
+        return Objects.equals(unwrap(), that.unwrap());
+    }
+
+    @Override
+    public int hashCode() {
+        return unwrap() != null ? unwrap().hashCode() : 0;
+    }
+
 }

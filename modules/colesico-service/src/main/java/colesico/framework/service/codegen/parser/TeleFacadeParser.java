@@ -16,7 +16,6 @@
 
 package colesico.framework.service.codegen.parser;
 
-import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
 import colesico.framework.service.codegen.model.*;
@@ -34,7 +33,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
         MethodElement method = teleMethod.getServiceMethod().getOriginMethod();
         int paramIndex = 0;
         for (ParameterElement param : method.getParameters()) {
-            TeleParamElement teleParam = new TeleParamElement(param, paramIndex);
+            TeleParameterElement teleParam = new TeleParameterElement(param, paramIndex);
             teleMethod.addParameter(teleParam);
             context.getModulatorKit().notifyTeleParamParsed(teleParam);
             paramIndex++;
