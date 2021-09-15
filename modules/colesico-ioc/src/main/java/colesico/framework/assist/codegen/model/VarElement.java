@@ -19,6 +19,7 @@ package colesico.framework.assist.codegen.model;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
+import java.util.Objects;
 
 abstract public class VarElement extends ParserElement {
 
@@ -41,4 +42,17 @@ abstract public class VarElement extends ParserElement {
         return originType;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        VarElement that = (VarElement) o;
+        return originElement.equals(that.originElement) && originType.equals(that.originType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), originElement, originType);
+    }
 }

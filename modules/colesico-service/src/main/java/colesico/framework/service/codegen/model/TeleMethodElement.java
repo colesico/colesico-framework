@@ -40,7 +40,7 @@ public final class TeleMethodElement {
     private final ServiceMethodElement serviceMethod;
 
     /**
-     * Tele-method parameters
+     * Tele-method direct parameters and compounds
      */
     private final List<TeleArgumentElement> parameters;
 
@@ -64,6 +64,11 @@ public final class TeleMethodElement {
      */
     protected Integer index;
 
+    /**
+     * Parsed param index
+     */
+    protected Integer paramIndex = -1;
+
     public TeleMethodElement(ServiceMethodElement serviceMethod) {
         this.serviceMethod = serviceMethod;
         this.parameters = new ArrayList<>();
@@ -81,9 +86,9 @@ public final class TeleMethodElement {
     /**
      * Add parameter of tele-method
      */
-    public void addParameter(TeleArgumentElement param) {
-        parameters.add(param);
-        param.setParentTeleMethod(this);
+    public void addParameter(TeleArgumentElement arg) {
+        parameters.add(arg);
+        arg.setParentTeleMethod(this);
     }
 
     public String getName() {
@@ -92,6 +97,10 @@ public final class TeleMethodElement {
 
     public String getBuilderName() {
         return "get" + StrUtils.firstCharToUpperCase(serviceMethod.getName()) + "TM" + index;
+    }
+
+    public Integer nextParamIndex() {
+        return ++paramIndex;
     }
 
     public ServiceMethodElement getServiceMethod() {

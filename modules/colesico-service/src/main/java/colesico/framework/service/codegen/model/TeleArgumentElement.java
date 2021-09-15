@@ -3,7 +3,9 @@ package colesico.framework.service.codegen.model;
 import colesico.framework.assist.codegen.model.VarElement;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Represents tele method parameter or  field or compound parameter field
@@ -60,5 +62,18 @@ abstract public class TeleArgumentElement {
 
     public void setParentCompound(TeleCompoundElement parentCompound) {
         this.parentCompound = parentCompound;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TeleArgumentElement that = (TeleArgumentElement) o;
+        return originElement.equals(that.originElement);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(originElement);
     }
 }

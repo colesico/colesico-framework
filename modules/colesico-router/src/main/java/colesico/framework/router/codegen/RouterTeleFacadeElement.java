@@ -20,6 +20,8 @@ public final class RouterTeleFacadeElement extends TeleFacadeElement {
 
         super(teleType, teleDriverClass, dataPortClass, ligatureClass, iocQualifier);
         this.routesBuilder = routesBuilder;
+        // Enable compound support
+        this.setCompoundSupport(true);
     }
 
     public RoutesBuilder getRoutesBuilder() {
