@@ -16,8 +16,6 @@
 
 package colesico.framework.telehttp;
 
-import colesico.framework.telehttp.reader.ObjectReader;
-
 import java.lang.annotation.*;
 
 /**
