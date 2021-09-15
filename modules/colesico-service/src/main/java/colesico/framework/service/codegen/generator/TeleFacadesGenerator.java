@@ -43,7 +43,7 @@ import static colesico.framework.teleapi.TeleFacade.TELE_DRIVER_FIELD;
  */
 public class TeleFacadesGenerator {
 
-    public static final String PARAM_SUFFIX = "Arg";
+    public static final String PARAM_SUFFIX = "Param";
     protected final Logger logger = LoggerFactory.getLogger(TeleFacadesGenerator.class);
 
     protected final ServiceProcessorContext context;

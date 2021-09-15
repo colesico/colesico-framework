@@ -83,7 +83,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
             AnnotationAssist<LocalField> localFieldAnn = arg.getAnnotation(LocalField.class);
 
             // Skip local fields for compounds
-            if (parentCompound == null && localFieldAnn != null) {
+            if (parentCompound != null && localFieldAnn != null) {
                 continue;
             }
 
@@ -115,7 +115,6 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
 
     protected void parseTeleMethodParams(TeleMethodElement teleMethod) {
         MethodElement method = teleMethod.getServiceMethod().getOriginMethod();
-        int paramIndex = 0;
         parseTeleArguments(teleMethod, null, method.getParameters());
     }
 
