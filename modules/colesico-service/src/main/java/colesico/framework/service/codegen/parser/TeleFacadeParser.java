@@ -82,8 +82,8 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
         for (VarElement arg : arguments) {
             AnnotationAssist<LocalField> localFieldAnn = arg.getAnnotation(LocalField.class);
 
-            // Skip local fields
-            if (localFieldAnn != null ){
+            // Skip local fields for compounds
+            if (parentCompound == null && localFieldAnn != null) {
                 continue;
             }
 
