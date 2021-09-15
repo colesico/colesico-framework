@@ -20,6 +20,7 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
 import colesico.framework.service.Compound;
+import colesico.framework.service.LocalField;
 import colesico.framework.service.codegen.model.*;
 
 import javax.lang.model.element.Modifier;
@@ -79,6 +80,13 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
 
     private void parseTeleArguments(TeleMethodElement teleMethod, TeleCompoundElement parentCompound, List<? extends VarElement> arguments) {
         for (VarElement arg : arguments) {
+            AnnotationAssist<LocalField> localFieldAnn = arg.getAnnotation(LocalField.class);
+
+            // Skip local fields
+            if (localFieldAnn != null ){
+                continue;
+            }
+
             AnnotationAssist<Compound> compoundAnn = arg.getAnnotation(Compound.class);
 
             if (compoundAnn == null) {

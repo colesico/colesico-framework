@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp;
+package colesico.framework.service;
 
 import java.lang.annotation.*;
 
 /**
- * Specifies that the object field should be ignored by object reader
+ * Specifies that the object field should not be recognized as compound param
  *
- * @see ObjectReader
+ * @see Compound
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
