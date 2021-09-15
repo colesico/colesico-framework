@@ -22,7 +22,7 @@ import colesico.framework.assist.codegen.model.*;
 import colesico.framework.service.Compound;
 import colesico.framework.service.codegen.model.*;
 
-import java.lang.reflect.Modifier;
+import javax.lang.model.element.Modifier;
 import java.util.Iterator;
 import java.util.List;
 
@@ -84,7 +84,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
             if (compoundAnn == null) {
                 TeleParameterElement teleParam = new TeleParameterElement(arg, teleMethod.nextParamIndex());
                 teleParam.setParentTeleMethod(teleMethod);
-                if (parentCompound==null) {
+                if (parentCompound == null) {
                     teleMethod.addParameter(teleParam);
                 } else {
                     parentCompound.addField(teleParam);
