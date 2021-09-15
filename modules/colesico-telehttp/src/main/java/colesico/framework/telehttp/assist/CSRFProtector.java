@@ -36,6 +36,8 @@ public class CSRFProtector<V> {
 
     protected final CookieFactory cookieFactory;
 
+    private static final Random random = new Random();
+
     public CSRFProtector(CookieFactory cookieFactory) {
         this.cookieFactory = cookieFactory;
     }
@@ -103,8 +105,6 @@ public class CSRFProtector<V> {
     }
 
     public String sendToken(HttpResponse response) {
-        //SplittableRandom random = new SplittableRandom();
-        Random random = new Random();
         byte[] tokenBytes = new byte[32];
         random.nextBytes(tokenBytes);
         String tokenStr = Base64.getEncoder().encodeToString(tokenBytes);

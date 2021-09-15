@@ -105,8 +105,8 @@ public final class OpenApiModulator extends TeleSchemeModulator {
     protected void generateOperations(CodeBlock.Builder cb, TeleFacadeElement teleFacade) {
         cb.addStatement("$T $N", ClassName.get(Operation.class), OPERATION_VAR);
         cb.addStatement("$T $N", ClassName.get(InputParam.class), INPUT_PARAM_VAR);
-        RouterTeleFacadeElement routedTeleFacade = (RouterTeleFacadeElement) teleFacade;
-        RoutesBuilder routesBuilder = routedTeleFacade.getRoutesBuilder();
+        // RouterTeleFacadeElement routedTeleFacade = (RouterTeleFacadeElement) teleFacade;
+        // RoutesBuilder routesBuilder = routedTeleFacade.getRoutesBuilder();
 
         for (TeleMethodElement teleMethod : teleFacade.getTeleMethods()) {
             RoutesBuilder.RoutedTeleMethodElement routedTeleMethod = teleMethod.getProperty(RoutesBuilder.RoutedTeleMethodElement.class);

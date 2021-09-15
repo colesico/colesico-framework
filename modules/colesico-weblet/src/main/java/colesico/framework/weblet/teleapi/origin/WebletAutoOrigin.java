@@ -30,7 +30,6 @@ public class WebletAutoOrigin implements WebletOrigin {
                 if (httpRequest.getQueryParameters().hasKey(name)) {
                     return httpRequest.getQueryParameters().get(name);
                 }
-                // return param value or null
                 return routerContextProv.get().getParameters().get(name);
             case HttpMethod.POST:
             case HttpMethod.PATCH:
@@ -43,8 +42,7 @@ public class WebletAutoOrigin implements WebletOrigin {
                     return httpRequest.getQueryParameters().get(name);
                 }
                 RouterContext routerContext = routerContextProv.get();
-                // return param value or null
-                routerContext.getParameters().get(name);
+                return routerContext.getParameters().get(name);
             default:
                 return value;
         }

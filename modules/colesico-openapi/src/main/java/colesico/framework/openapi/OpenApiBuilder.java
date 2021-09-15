@@ -63,6 +63,11 @@ abstract public class OpenApiBuilder implements TeleSchemeBuilder<OpenAPI> {
             case HttpMethod.OPTIONS:
                 pathItem.setOptions(operation);
                 break;
+            case HttpMethod.HEAD:
+                pathItem.setHead(operation);
+                break;
+            default:
+                throw new RuntimeException("Unsupported http method");
 
         }
         return operation;

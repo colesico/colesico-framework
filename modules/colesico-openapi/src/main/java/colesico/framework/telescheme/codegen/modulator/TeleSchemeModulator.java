@@ -65,7 +65,7 @@ abstract public class TeleSchemeModulator extends Modulator {
             return;
         }
 
-        CodeBlock ms = generateOperationScheme(teleMethod);
+        //CodeBlock ms = generateOperationScheme(teleMethod);
         //TODO
     }
 
