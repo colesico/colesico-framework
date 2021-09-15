@@ -18,6 +18,7 @@ package colesico.framework.restlet.codegen;
 
 
 import colesico.framework.assist.CollectionUtils;
+import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.restlet.Restlet;
 import colesico.framework.restlet.codegen.assist.RestletCodegenUtils;
@@ -98,12 +99,22 @@ public final class RestletModulator extends RoutesModulator {
         }
 
         for (TeleArgumentElement teleArg : teleMethodElement.getParameters()) {
-            // Check compound
-            if (teleArg instanceof TeleCompoundElement){
+
+            var jsonParamAnn = teleArg.getOriginElement().getAnnotation(JsonField.class);
+
+            // Skip compound
+            if (teleArg instanceof TeleCompoundElement) {
+                if (jsonParamAnn != null) {
+                    throw CodegenException.of()
+                            .message("Compounds are not supported for json fields")
+                            .element(teleArg.getOriginElement().unwrap())
+                            .build();
+                }
                 continue;
             }
+
             TeleParameterElement teleParam = (TeleParameterElement) teleArg;
-            var jsonParamAnn = teleParam.getOriginElement().getAnnotation(JsonField.class);
+
             if (jsonMethodAnn != null || jsonParamAnn != null) {
 
                 if (jsonRequest == null) {
