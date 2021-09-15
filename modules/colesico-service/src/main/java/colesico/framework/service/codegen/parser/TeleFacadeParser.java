@@ -44,20 +44,23 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
 
         TeleCompoundElement teleComp = new TeleCompoundElement(arg);
         teleComp.setParentTeleMethod(teleMethod);
+
         if (parentCompound == null) {
             teleMethod.addParameter(teleComp);
         } else {
             // Check recursive objects
-            Iterator<TeleCompoundElement> it = parentCompound.getIterator();
+            Iterator<TeleCompoundElement> it = (Iterator<TeleCompoundElement>) parentCompound.getIterator();
             while (it.hasNext()) {
                 TeleCompoundElement curComp = it.next();
                 if (curComp.equals(teleComp)) {
                     TeleFacadeElement teleFacade = teleMethod.getParentTeleFacade();
-                    throw CodegenException.of().message("Recursive compound for: " +
-                                    parentCompound.getOriginElement().getOriginType() + "->" + arg.getName() +
-                                    " in: " +
-                                    teleFacade.getParentService().getOriginClass().getOriginType().toString() +
-                                    "->" + teleMethod.getServiceMethod().getName() + "(..." + arg + "...) ")
+                    throw CodegenException.of().message("Recursive compound for: "
+                                    + teleComp.getOriginElement().getOriginType()
+                                    + " "
+                                    + teleComp.getOriginElement().getName()
+                                    + " in: "
+                                    + teleFacade.getParentService().getOriginClass().getOriginType()
+                                    + "->" + teleMethod.getServiceMethod().getName())
                             .element(arg)
                             .build();
                 }
@@ -76,19 +79,23 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
 
     private void parseTeleArguments(TeleMethodElement teleMethod, TeleCompoundElement parentCompound, List<? extends VarElement> arguments) {
         for (VarElement arg : arguments) {
-
             AnnotationAssist<Compound> compoundAnn = arg.getAnnotation(Compound.class);
 
             if (compoundAnn == null) {
                 TeleParameterElement teleParam = new TeleParameterElement(arg, teleMethod.nextParamIndex());
-                teleParam.setParentCompound(parentCompound);
-                teleMethod.addParameter(teleParam);
+                teleParam.setParentTeleMethod(teleMethod);
+                if (parentCompound==null) {
+                    teleMethod.addParameter(teleParam);
+                } else {
+                    parentCompound.addField(teleParam);
+                    teleParam.setParentCompound(parentCompound);
+                }
                 context.getModulatorKit().notifyTeleParamParsed(teleParam);
             } else {
                 // Check compound support
                 if (!teleMethod.getParentTeleFacade().getCompoundSupport()) {
                     throw CodegenException.of()
-                            .message("Compound parameters not supported by tele-facade " + teleMethod.getParentTeleFacade().getTeleType())
+                            .message("Compound parameters not supported by tele-facade " + teleMethod.getParentTeleFacade().getTeleType().getCanonicalName())
                             .element(arg.unwrap())
                             .build();
                 }

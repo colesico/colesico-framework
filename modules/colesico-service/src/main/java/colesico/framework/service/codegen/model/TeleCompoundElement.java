@@ -14,43 +14,12 @@ public class TeleCompoundElement extends TeleArgumentElement {
         super(originVariable);
     }
 
-    /**
-     * To iterate from current compound to root compound
-     */
-    public Iterator<TeleCompoundElement> getIterator() {
-        return new CompoundIterator(this);
-    }
-
     public void addField(TeleArgumentElement field) {
         fields.add(field);
+        field.setParentCompound(this);
     }
 
     public List<TeleArgumentElement> getFields() {
         return fields;
     }
-
-    static class CompoundIterator implements Iterator<TeleCompoundElement> {
-
-        private TeleCompoundElement currentCompound;
-
-        public CompoundIterator(TeleCompoundElement currentCompound) {
-            this.currentCompound = currentCompound;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return currentCompound != null;
-        }
-
-        @Override
-        public TeleCompoundElement next() {
-            TeleCompoundElement prev = currentCompound;
-            if (currentCompound != null) {
-                currentCompound = currentCompound.getParentCompound();
-            }
-            return prev;
-        }
-    }
-
-
 }

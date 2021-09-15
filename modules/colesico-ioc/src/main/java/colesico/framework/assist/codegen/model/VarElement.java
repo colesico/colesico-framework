@@ -55,4 +55,12 @@ abstract public class VarElement extends ParserElement {
     public int hashCode() {
         return Objects.hash(super.hashCode(), originElement, originType);
     }
+
+    @Override
+    public String toString() {
+        return "VarElement{" +
+                "originElement=" + originElement +
+                ", originType=" + originType +
+                '}';
+    }
 }

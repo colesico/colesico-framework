@@ -17,6 +17,7 @@
 package colesico.framework.service.codegen.generator;
 
 
+import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.MethodElement;
@@ -46,6 +47,7 @@ public class TeleFacadesGenerator {
     protected final Logger logger = LoggerFactory.getLogger(TeleFacadesGenerator.class);
 
     protected final ServiceProcessorContext context;
+    protected final VarNameSequence varNames = new VarNameSequence();
 
     public TeleFacadesGenerator(ServiceProcessorContext context) {
         this.context = context;
@@ -65,13 +67,41 @@ public class TeleFacadesGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    protected CodeBlock generateReadParamValue(TeleParameterElement teleParam) {
-        CodeBlock ctx = teleParam.getReadingContextCode();
-        // Generates code like this: dataPot.read(new Context(...));
+    protected CodeBlock generateArgumentValue(TeleArgumentElement teleArg, CodeBlock.Builder invokerBuilder) {
+
+        // ==== Generate simple param
+
+        if (teleArg instanceof TeleParameterElement) {
+            CodeBlock ctx = ((TeleParameterElement) teleArg).getReadingContextCode();
+            // dataPot.read(new Context(...));
+            CodeBlock.Builder cb = CodeBlock.builder();
+            cb.add("$N.$N(", MethodInvoker.DATA_PORT_PARAM, DataPort.READ_METHOD);
+            cb.add(ctx);
+            cb.add(")");
+            return cb.build();
+        }
+
+        // ==== Generate compound
+
+        final String argVar = varNames.getNextTempVariable(teleArg.getOriginElement().getName());
+        invokerBuilder.add("\n// Init compound\n");
+        TypeMirror paramType = teleArg.getOriginElement().asClassType().unwrap();
+        invokerBuilder.addStatement("$T $N = new $T()",
+                TypeName.get(paramType),
+                argVar, TypeName.get(teleArg.getOriginElement().getOriginType()));
+
+        // Generate compound fields
+
+        for (TeleArgumentElement field : ((TeleCompoundElement) teleArg).getFields()) {
+            CodeBlock value = generateArgumentValue(field, invokerBuilder);
+            String setterName = "set" + StrUtils.firstCharToUpperCase(field.getOriginElement().getName());
+            invokerBuilder.add("$N.$N(", argVar, setterName);
+            invokerBuilder.add(value);
+            invokerBuilder.add(");\n");
+        }
+        invokerBuilder.add("\n");
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("$N.$N(", MethodInvoker.DATA_PORT_PARAM, DataPort.READ_METHOD);
-        cb.add(ctx);
-        cb.add(")");
+        cb.add(argVar);
         return cb.build();
     }
 
@@ -89,15 +119,14 @@ public class TeleFacadesGenerator {
         cb.add("$T $N = ($N, $N) -> {\n", invokerType, TeleDriver.INVOKER_PARAM, MethodInvoker.TARGET_PARAM, MethodInvoker.DATA_PORT_PARAM);
         cb.indent();
 
-        // ============= Generate params model retrieving
+        // ============= Generate params retrieving
         ArrayCodegen serviceMethodArgs = new ArrayCodegen();
-        for (TeleArgumentElement teleVar : teleMethod.getParameters()) {
-            TeleParameterElement teleParam = (TeleParameterElement) teleVar;
-            CodeBlock value = generateReadParamValue(teleParam);
-            String paramName = teleParam.getOriginElement().getName() + PARAM_SUFFIX;
+        for (TeleArgumentElement teleArg : teleMethod.getParameters()) {
+            CodeBlock value = generateArgumentValue(teleArg, cb);
+            String paramName = teleArg.getOriginElement().getName() + PARAM_SUFFIX;
             serviceMethodArgs.add("$N", paramName);
             cb.add("\n// Assign tele-method parameter value from remote client\n");
-            cb.add("$T $N = ", TypeName.get(teleParam.getOriginElement().getOriginType()), paramName);
+            cb.add("$T $N = ", TypeName.get(teleArg.getOriginElement().getOriginType()), paramName);
             cb.add(value);
             cb.add(";\n");
         }
@@ -123,7 +152,7 @@ public class TeleFacadesGenerator {
         // Send result to client via data port dataPort.write(result,new Context());
         if (!voidResult) {
             cb.add("\n// Send result to remote client\n");
-            cb.add("$N.$N($N,", MethodInvoker.DATA_PORT_PARAM, DataPort.WRITE_METHOD,TeleDriver.RESULT_PARAM);
+            cb.add("$N.$N($N,", MethodInvoker.DATA_PORT_PARAM, DataPort.WRITE_METHOD, TeleDriver.RESULT_PARAM);
             CodeBlock writeCtx = teleMethod.getWritingContextCode();
             cb.add(writeCtx);
             cb.add(");\n");

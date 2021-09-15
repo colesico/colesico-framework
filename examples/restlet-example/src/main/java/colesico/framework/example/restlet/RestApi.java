@@ -26,6 +26,7 @@ import colesico.framework.router.RequestMethod;
 import colesico.framework.router.Route;
 import colesico.framework.router.RouteAttribute;
 import colesico.framework.restlet.teleapi.writer.PlainTextWriter;
+import colesico.framework.service.Compound;
 import colesico.framework.telehttp.Origin;
 import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.ParamOrigin;
@@ -83,7 +84,6 @@ public class RestApi {
         return "NonBlocking";
     }
 
-
     /**
      * Custom exception example
      */
@@ -101,5 +101,13 @@ public class RestApi {
                                           @JsonField String name,
                                           @ParamOrigin(Origin.QUERY) String val) {
         return Map.of("id", idValue, "name", name, "val", val);
+    }
+
+    /**
+     * Compound params example
+     * GET http://localhost:8080/rest-api/compound-params?id=1&name=Ivan
+     */
+    public Long compoundParams(@Compound @ParamName("usr-") User user){
+        return user.getId();
     }
 }

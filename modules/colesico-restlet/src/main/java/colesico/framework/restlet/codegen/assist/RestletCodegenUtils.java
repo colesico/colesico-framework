@@ -9,6 +9,7 @@ import colesico.framework.service.codegen.model.TeleParameterElement;
 import colesico.framework.service.codegen.model.TeleArgumentElement;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
 import com.squareup.javapoet.TypeName;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
@@ -19,7 +20,9 @@ public class RestletCodegenUtils {
         String paramName = TeleHttpCodegenUtils.getParamName(teleArg);
         JsonFieldElement jfe = teleArg.getProperty(JsonFieldElement.class);
         if (jfe != null) {
-            paramName = jfe.getName();
+            if (StringUtils.isNotBlank(jfe.getName())) {
+                paramName = jfe.getName();
+            }
         }
         return paramName;
     }

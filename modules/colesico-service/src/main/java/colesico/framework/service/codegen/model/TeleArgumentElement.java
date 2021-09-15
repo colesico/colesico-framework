@@ -44,6 +44,13 @@ abstract public class TeleArgumentElement {
         properties.put(propertyClass, property);
     }
 
+    /**
+     * To iterate from current argument to root compound
+     */
+    public Iterator<? extends TeleArgumentElement> getIterator() {
+        return new ArgumentIterator(this);
+    }
+
     public VarElement getOriginElement() {
         return originElement;
     }
@@ -76,4 +83,28 @@ abstract public class TeleArgumentElement {
     public int hashCode() {
         return Objects.hash(originElement);
     }
+
+    static class ArgumentIterator implements Iterator<TeleArgumentElement> {
+
+        private TeleArgumentElement currentArgument;
+
+        public ArgumentIterator(TeleArgumentElement currentArgument) {
+            this.currentArgument = currentArgument;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return currentArgument != null;
+        }
+
+        @Override
+        public TeleArgumentElement next() {
+            TeleArgumentElement prev = currentArgument;
+            if (currentArgument != null) {
+                currentArgument = currentArgument.getParentCompound();
+            }
+            return prev;
+        }
+    }
+
 }
