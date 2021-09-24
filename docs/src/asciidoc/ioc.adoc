@@ -6,7 +6,7 @@
 
 == What is Colesico-IoC
 
-Colesico-IoC is a simple, lightweight and fast dependency injection container for Java 11+.
+Colesico-IoC is a simple, lightweight and fast dependency injection container for Java 17+.
 
 == Key features
 
