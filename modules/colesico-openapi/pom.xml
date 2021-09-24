@@ -32,7 +32,9 @@
 
     <name>Colesico OpenApi Module</name>
     <description>
-        Colesico framework OpenAPI/Swagger integration
+        Colesico framework OpenAPI/Swagger integration.
+        ! The module is under development !
+        ! Usage is for testing purposes only !
     </description>
     
     <url>https://github.com/colesico/colesico-framework</url>
