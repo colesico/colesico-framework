@@ -18,6 +18,7 @@ package colesico.framework.jdbi;
 
 import colesico.framework.config.Config;
 import colesico.framework.hikaricp.HikariProperties;
+import colesico.framework.ioc.conditional.Requires;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polysupplier;
 
@@ -27,18 +28,19 @@ import javax.sql.DataSource;
 /**
  * Default jdbi config.
  * To override this config use {@link  colesico.framework.ioc.conditional.Substitute}
+ * or {@link JdbiConditions#disableDefaultConfig()}
  */
 @Config
+@Requires(JdbiConditions.DefaultConfig.class)
 public final class DefaultJdbiConfig extends AbstractJdbiConfig {
 
     @Inject
     public DefaultJdbiConfig(
-
-            // Jdbi will use hikaricp data source configured with hikari.properties file
-            @Classed(HikariProperties.class) DataSource dataSource,
+            // Jdbi will use default data source
+            DataSource dataSource,
 
             // Optional configurations will be applied to the jdbi instance.
-            @Classed(DefaultJdbiConfig.class) Polysupplier<JdbiOptionsPrototype> options) {
+            Polysupplier<JdbiOptionsPrototype> options) {
 
         super(dataSource, options);
     }

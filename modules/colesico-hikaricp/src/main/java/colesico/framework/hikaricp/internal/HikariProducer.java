@@ -16,8 +16,10 @@
 
 package colesico.framework.hikaricp.internal;
 
+import colesico.framework.hikaricp.HikariCPConditions;
 import colesico.framework.hikaricp.HikariConfigPrototype;
 import colesico.framework.hikaricp.HikariProperties;
+import colesico.framework.ioc.conditional.Requires;
 import colesico.framework.ioc.message.Message;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
@@ -39,8 +41,6 @@ public class HikariProducer {
     /**
      * HikariDataSource factory
      * Creates HikariCP data source configured with config
-     *
-     * @return
      */
     @Classed(HikariConfigPrototype.class)
     @Unscoped
@@ -56,16 +56,14 @@ public class HikariProducer {
     }
 
     /**
-     * Produces HikariDataSource for default HikariCP configuration
-     * defined in file ./directory/hikari.properties or resource META-INF/hikari.properties
-     *
-     * @param factory
-     * @return
+     * Produces HikariDataSource as default DataSource.
+     * Configuration from file ./config/hikari.properties or resource META-INF/hikari.properties
      */
+    @Requires(HikariCPConditions.DefaultDataSource.class)
     @Singleton
-    @Classed(HikariProperties.class)
-    public DataSource defaultHikariDataSource(@Classed(HikariConfigPrototype.class) Supplier<DataSource> factory) {
-        return factory.get(new HikariProperties(){});
+    public DataSource getDefaultDataSource(@Classed(HikariConfigPrototype.class) Supplier<DataSource> factory) {
+        return factory.get(new HikariProperties() {
+        });
     }
 
 }

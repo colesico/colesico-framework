@@ -56,11 +56,6 @@
             <artifactId>colesico-jdbc</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-jdbi</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
     <build>

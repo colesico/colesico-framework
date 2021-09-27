@@ -19,6 +19,7 @@ package colesico.framework.test.example.jdbc;
 import colesico.framework.example.jdbc.AppService;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
+import colesico.framework.jdbc.JdbcConditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
