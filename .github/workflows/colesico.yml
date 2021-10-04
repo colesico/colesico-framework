@@ -7,14 +7,14 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest, windows-latest]
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
       name: Checkout project
     - uses: actions/setup-java@v1
       name: Configure Java
       with:
-        java-version: 14
+        java-version: 17
         java-package: jdk
         architecture: x64
     - uses: actions/cache@v2
