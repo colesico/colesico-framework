@@ -37,7 +37,7 @@ public class JdbcTransactionalShell extends AbstractTransactionalShell<JdbcTrans
     /**
      * To generate Transaction.Id
      */
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
     protected final DataSource dataSource;
 

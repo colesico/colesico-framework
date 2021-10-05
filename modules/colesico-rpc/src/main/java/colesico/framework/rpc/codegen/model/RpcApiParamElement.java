@@ -1,7 +1,7 @@
 package colesico.framework.rpc.codegen.model;
 
 import colesico.framework.assist.codegen.model.ParameterElement;
-import colesico.framework.service.codegen.model.TeleParamElement;
+import colesico.framework.service.codegen.model.TeleParameterElement;
 
 import javax.lang.model.type.TypeMirror;
 
@@ -20,7 +20,7 @@ public class RpcApiParamElement {
     /**
      * Bound tele param
      */
-    private TeleParamElement teleParam;
+    private TeleParameterElement teleParam;
 
     public RpcApiParamElement(ParameterElement originParam, Integer paramIndex) {
         this.originParam = originParam;
@@ -55,11 +55,11 @@ public class RpcApiParamElement {
         this.parentMethod = parentMethod;
     }
 
-    public TeleParamElement getTeleParam() {
+    public TeleParameterElement getTeleParam() {
         return teleParam;
     }
 
-    public void setTeleParam(TeleParamElement teleParam) {
+    public void setTeleParam(TeleParameterElement teleParam) {
         this.teleParam = teleParam;
     }
 

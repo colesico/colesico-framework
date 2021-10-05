@@ -48,14 +48,15 @@ public class WebletTeleDriverImpl implements WebletTeleDriver {
     protected final Provider<Authenticator> authenticatorProv;
     protected final Provider<HttpContext> httpContextProv;
     protected final Provider<RouterContext> routerContextProv;
+    protected final CSRFProtector csrfProtector;
 
-    @Inject
-    public WebletTeleDriverImpl(ThreadScope threadScope, WebletDataPortImpl dataPort, Provider<Authenticator> authenticatorProv, Provider<HttpContext> httpContextProv, Provider<RouterContext> routerContextProv) {
+    public WebletTeleDriverImpl(ThreadScope threadScope, WebletDataPortImpl dataPort, Provider<Authenticator> authenticatorProv, Provider<HttpContext> httpContextProv, Provider<RouterContext> routerContextProv, CSRFProtector csrfProtector) {
         this.threadScope = threadScope;
         this.dataPort = dataPort;
         this.authenticatorProv = authenticatorProv;
         this.httpContextProv = httpContextProv;
         this.routerContextProv = routerContextProv;
+        this.csrfProtector = csrfProtector;
     }
 
     @Override
@@ -63,7 +64,7 @@ public class WebletTeleDriverImpl implements WebletTeleDriver {
         try {
             threadScope.put(DataPort.SCOPE_KEY, dataPort);
             HttpRequest request = httpContextProv.get().getRequest();
-            CSRFProtector.check(request);
+            csrfProtector.check(request);
             invoker.invoke(target, dataPort);
         } catch (PrincipalRequiredException pre) {
             if (authenticatorProv.get().authenticate()) {

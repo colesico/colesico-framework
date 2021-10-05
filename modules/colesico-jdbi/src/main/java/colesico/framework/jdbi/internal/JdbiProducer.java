@@ -16,15 +16,21 @@
 
 package colesico.framework.jdbi.internal;
 
+import colesico.framework.ioc.conditional.Requires;
 import colesico.framework.ioc.message.Message;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
+import colesico.framework.jdbi.DefaultJdbiConfig;
+import colesico.framework.jdbi.JdbiConditions;
 import colesico.framework.jdbi.JdbiConfigPrototype;
 import colesico.framework.jdbi.JdbiTransactionalShell;
 import colesico.framework.transaction.TransactionalShell;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
+
+import javax.inject.Singleton;
+import java.sql.Connection;
 
 @Producer
 public class JdbiProducer {
@@ -32,9 +38,6 @@ public class JdbiProducer {
     /**
      * Jdbi factory
      * Creates Jdbi instance configured with settings
-     *
-     * @param config
-     * @return
      */
     @Unscoped
     @Classed(JdbiConfigPrototype.class)
@@ -53,6 +56,24 @@ public class JdbiProducer {
     @Unscoped
     public Handle getHandle(TransactionalShell txShell) {
         return ((JdbiTransactionalShell) txShell).getHandle();
+    }
+
+    /**
+     * Default transactional shell producing
+     */
+    @Requires(JdbiConditions.DefaultTransactionalShell.class)
+    @Singleton
+    public TransactionalShell getDefaultTransactionalShell(@Classed(DefaultJdbiConfig.class) Jdbi jdbi) {
+        return new JdbiTransactionalShell(jdbi);
+    }
+
+    /**
+     * Produce connection from jdbc tx shell as default connection
+     */
+    @Requires(JdbiConditions.DefaultConnection.class)
+    @Unscoped
+    public Connection getDefaultConnection(TransactionalShell txShell) {
+        return ((JdbiTransactionalShell) txShell).getHandle().getConnection();
     }
 
 }

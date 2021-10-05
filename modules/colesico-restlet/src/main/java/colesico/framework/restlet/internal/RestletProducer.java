@@ -25,6 +25,7 @@ import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.internal.gsonconv.GsonConverter;
 import colesico.framework.restlet.teleapi.jsonrequest.JsonRequest;
 import colesico.framework.restlet.teleapi.origin.RestletAutoOrigin;
+import colesico.framework.restlet.teleapi.origin.RestletJsonFieldOrigin;
 import colesico.framework.telehttp.Origin;
 
 import javax.inject.Named;
@@ -38,6 +39,7 @@ import javax.inject.Singleton;
 @Produce(RestletDataPortImpl.class)
 @Produce(RestletTeleDriverImpl.class)
 @Produce(RestletAutoOrigin.class)
+@Produce(RestletJsonFieldOrigin.class)
 @Produce(GsonConverter.class)
 @Produce(LogRestletListener.class)
 @Produce(JsonRequestFactory.class)

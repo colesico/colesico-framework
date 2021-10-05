@@ -42,6 +42,14 @@ abstract public class Modulator {
         return null;
     }
 
+    /**
+     * When this modulator should receive events before or after the
+     * specified modulator or it doesn't matter
+     */
+    public ListenOrder listenOrder(Class<? extends Modulator> thatModulator) {
+        return ListenOrder.NO_MATTER;
+    }
+
     public void onInit(ServiceProcessorContext context) {
         this.processorContext = context;
     }
@@ -58,18 +66,21 @@ abstract public class Modulator {
         this.service = service;
     }
 
-    public void onServiceMethodParsed(ServiceMethodElement proxyMethod) {
-        this.serviceMethod = proxyMethod;
+    public void onServiceMethodParsed(ServiceMethodElement serviceMethod) {
+        this.serviceMethod = serviceMethod;
     }
 
     public void onInitTeleFacade(ServiceElement service) {
+    }
+
+    public void onBeforeParseTeleFacade(TeleFacadeElement teleFacade) {
     }
 
     public void onBeforeParseTeleMethod(TeleMethodElement teleMethod) {
 
     }
 
-    public void onTeleParamParsed(TeleParamElement teleParam) {
+    public void onTeleParamParsed(TeleParameterElement teleParam) {
 
     }
 
@@ -105,5 +116,9 @@ abstract public class Modulator {
 
     public ServiceMethodElement getServiceMethod() {
         return serviceMethod;
+    }
+
+    public enum ListenOrder {
+        BEFORE, AFTER, NO_MATTER;
     }
 }

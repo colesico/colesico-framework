@@ -9,6 +9,7 @@ module colesico.framework.jdbc {
 
     // API
     exports colesico.framework.jdbc;
+    exports colesico.framework.jdbc.assist;
 
     // Internals
     exports colesico.framework.jdbc.internal to colesico.framework.ioc;

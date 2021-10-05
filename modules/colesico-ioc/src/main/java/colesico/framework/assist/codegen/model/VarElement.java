@@ -16,33 +16,51 @@
 
 package colesico.framework.assist.codegen.model;
 
-import colesico.framework.assist.StrUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeKind;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
+import java.util.Objects;
 
 abstract public class VarElement extends ParserElement {
 
-    public VarElement(ProcessingEnvironment processingEnv) {
+    protected final VariableElement originElement;
+    protected final TypeMirror originType;
+
+    public VarElement(ProcessingEnvironment processingEnv, VariableElement originElement, TypeMirror originType) {
         super(processingEnv);
+        this.originElement = originElement;
+        this.originType = originType;
     }
 
-    abstract public String getName();
-
-    public String getNameWithPrefix(String prefix) {
-        if (StringUtils.isEmpty(prefix)) {
-            return getName();
-        }
-        return StrUtils.addPrefix(prefix, getName());
+    @Override
+    public VariableElement unwrap() {
+        return originElement;
     }
 
-    public ClassType asClassType() {
-        if (getOriginType().getKind() == TypeKind.DECLARED) {
-            return new ClassType(getProcessingEnv(), (DeclaredType) getOriginType());
-        }
-        return null;
+    @Override
+    public TypeMirror getOriginType() {
+        return originType;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        VarElement that = (VarElement) o;
+        return originElement.equals(that.originElement) && originType.equals(that.originType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), originElement, originType);
+    }
+
+    @Override
+    public String toString() {
+        return "VarElement{" +
+                "originElement=" + originElement +
+                ", originType=" + originType +
+                '}';
+    }
 }

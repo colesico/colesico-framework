@@ -42,5 +42,18 @@
         <Class name="colesico.framework.rpc.clientapi.handler.BasicRpcErrorHandler" />
         <Bug pattern="REC_CATCH_EXCEPTION" />
     </Match>
+    <Match>
+        <Class name="colesico.framework.jdbc.JdbcTransactionalShell" />
+        <Bug pattern="DMI_RANDOM_USED_ONLY_ONCE" />
+    </Match>
+    <Match>
+        <Class name="colesico.framework.jdbi.JdbiTransactionalShell" />
+        <Bug pattern="DMI_RANDOM_USED_ONLY_ONCE" />
+    </Match>
+    <Match>
+        <Class name="colesico.framework.telehttp.assist.CSRFProtector" />
+        <Bug pattern="DMI_RANDOM_USED_ONLY_ONCE" />
+    </Match>
+
 
 </FindBugsFilter>

@@ -19,69 +19,22 @@ package colesico.framework.assist.codegen.model;
 import colesico.framework.assist.codegen.CodegenException;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import java.util.Objects;
 
 public class FieldElement extends VarElement {
 
     protected final ClassElement parentClass;
-    protected final VariableElement originElement;
 
     public FieldElement(ProcessingEnvironment processingEnv, ClassElement parentClass, VariableElement fieldElement) {
-        super(processingEnv);
-
-        if (!fieldElement.getKind().isField()) {
-            throw CodegenException.of().message("Unsupported element kind:" + fieldElement.getKind()).element(fieldElement).build();
+        super(processingEnv, fieldElement, parentClass.getMemberType(fieldElement));
+        if (!originElement.getKind().isField()) {
+            throw CodegenException.of().message("Unsupported element kind:" + originElement.getKind()).element(originElement).build();
         }
-
         this.parentClass = parentClass;
-        this.originElement = fieldElement;
-    }
-
-    @Override
-    public VariableElement unwrap() {
-        return originElement;
     }
 
     public ClassElement getParentClass() {
         return parentClass;
-    }
-
-    @Override
-    public String getName() {
-        return originElement.getSimpleName().toString();
-    }
-
-    @Override
-    public TypeMirror getOriginType() {
-        return parentClass.getMemberType(originElement);
-    }
-
-    @Override
-    public ClassType asClassType() {
-        if (getOriginType().getKind() != TypeKind.DECLARED) {
-            return null;
-        }
-        return new ClassType(getProcessingEnv(), (DeclaredType) getOriginType());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        FieldElement that = (FieldElement) o;
-
-        return Objects.equals(originElement, that.originElement);
-    }
-
-    @Override
-    public int hashCode() {
-        return originElement != null ? originElement.hashCode() : 0;
     }
 
     @Override

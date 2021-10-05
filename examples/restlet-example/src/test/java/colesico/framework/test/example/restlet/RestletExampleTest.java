@@ -115,4 +115,10 @@ public class RestletExampleTest {
         assertEquals("Vladlen", resultMap.get("name"));
         assertEquals("test", resultMap.get("val"));
     }
+
+    @Test
+    public void testCompoundParam() throws Exception {
+        String resultStr = requestGET("http://localhost:8085/rest-api/compound-params?usr-id=100&usr-name=Ivan");
+        assertEquals("100", resultStr);
+    }
 }

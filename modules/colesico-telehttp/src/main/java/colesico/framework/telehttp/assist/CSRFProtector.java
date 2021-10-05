@@ -16,15 +16,10 @@
 
 package colesico.framework.telehttp.assist;
 
-import colesico.framework.http.HttpCookie;
-import colesico.framework.http.HttpMethod;
-import colesico.framework.http.HttpRequest;
-import colesico.framework.http.HttpResponse;
+import colesico.framework.http.*;
 import colesico.framework.service.ApplicationException;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -39,19 +34,12 @@ public class CSRFProtector<V> {
     public static final String CSRF_HEADER = "X-CSRF-Token";
     public static final String CSRF_COOKIE = "XSRF-Token";
 
-    protected final Provider<HttpResponse> responseProv;
+    protected final CookieFactory cookieFactory;
 
-    @Inject
-    public CSRFProtector(Provider<HttpResponse> responseProv) {
-        this.responseProv = responseProv;
-    }
+    private static final Random random = new Random();
 
-    public String sendToken() {
-        return sendToken(responseProv.get());
-    }
-
-    public V test(V v) {
-        return v;
+    public CSRFProtector(CookieFactory cookieFactory) {
+        this.cookieFactory = cookieFactory;
     }
 
     protected static String getRequestedHostName(HttpRequest request) {
@@ -72,12 +60,9 @@ public class CSRFProtector<V> {
     }
 
     /**
-     * CSRF protectedion
-     *
-     * @param request
-     * @return
+     * CSRF protection
      */
-    public static void check(HttpRequest request) {
+    public void check(HttpRequest request) {
 
         // Skip GET requests for referer check
         if (HttpMethod.HTTP_METHOD_GET.equals(request.getRequestMethod())) {
@@ -119,13 +104,11 @@ public class CSRFProtector<V> {
         }
     }
 
-    public static String sendToken(HttpResponse response) {
-        //SplittableRandom random = new SplittableRandom();
-        Random random = new Random();
+    public String sendToken(HttpResponse response) {
         byte[] tokenBytes = new byte[32];
         random.nextBytes(tokenBytes);
         String tokenStr = Base64.getEncoder().encodeToString(tokenBytes);
-        HttpCookie cookie = new HttpCookie(CSRF_COOKIE, tokenStr);
+        HttpCookie cookie = cookieFactory.create(CSRF_COOKIE, tokenStr);
         response.setCookie(cookie);
         return tokenStr;
     }

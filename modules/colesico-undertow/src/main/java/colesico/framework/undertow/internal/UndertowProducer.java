@@ -17,13 +17,13 @@
 
 package colesico.framework.undertow.internal;
 
+import colesico.framework.http.CookieFactory;
 import colesico.framework.httpserver.HttpServer;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.undertow.UndertowConfigPrototype;
 
 import javax.inject.Singleton;
-
 
 
 /**
@@ -34,6 +34,7 @@ import javax.inject.Singleton;
 @Produce(UndertowBlockingHandler.class)
 @Produce(UndertowConfigImpl.class)
 @Produce(UndertowHttpServer.class)
+@Produce(value = UndertowCookieFactory.class, keyType = CookieFactory.class)
 public class UndertowProducer {
 
     @Singleton

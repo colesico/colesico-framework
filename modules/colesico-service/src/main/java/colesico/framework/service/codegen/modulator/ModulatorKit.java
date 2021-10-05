@@ -25,10 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Modulators management
@@ -48,6 +45,8 @@ public class ModulatorKit {
         modulators.clear();
         serviceAnnotations.clear();
 
+        // Lookup modulators with ServiceLocator
+
         ServiceLocator<Modulator> locator = ServiceLocator.of(this.getClass(), Modulator.class, getClass().getClassLoader());
         for (Modulator ext : locator.getProviders()) {
             modulators.add(ext);
@@ -57,6 +56,26 @@ public class ModulatorKit {
             }
             logger.debug("Found modulator: " + ext.getClass().getName());
         }
+
+        // Sort by event listening order
+
+        modulators.sort((m1, m2) -> {
+            switch (m1.listenOrder(m2.getClass())) {
+                case BEFORE:
+                    return -1;
+                case AFTER:
+                    return 1;
+                default:
+                    switch (m2.listenOrder(m1.getClass())) {
+                        case BEFORE:
+                            return 1;
+                        case AFTER:
+                            return -1;
+                        default:
+                            return 0;
+                    }
+            }
+        });
     }
 
     public Set<Class<? extends Annotation>> getServiceAnnotations() {
@@ -87,9 +106,9 @@ public class ModulatorKit {
         }
     }
 
-    public void notifyServiceMethodParsed(ServiceMethodElement proxyMethod) {
+    public void notifyServiceMethodParsed(ServiceMethodElement serviceMethod) {
         for (Modulator modulator : modulators) {
-            modulator.onServiceMethodParsed(proxyMethod);
+            modulator.onServiceMethodParsed(serviceMethod);
         }
     }
 
@@ -99,13 +118,19 @@ public class ModulatorKit {
         }
     }
 
+    public void notifyBeforeParseTeleFacade(TeleFacadeElement teleFacade) {
+        for (Modulator modulator : modulators) {
+            modulator.onBeforeParseTeleFacade(teleFacade);
+        }
+    }
+
     public void notifyBeforeParseTeleMethod(TeleMethodElement teleMethod) {
         for (Modulator modulator : modulators) {
             modulator.onBeforeParseTeleMethod(teleMethod);
         }
     }
 
-    public void notifyTeleParamParsed(TeleParamElement teleParam) {
+    public void notifyTeleParamParsed(TeleParameterElement teleParam) {
         for (Modulator modulator : modulators) {
             modulator.onTeleParamParsed(teleParam);
         }

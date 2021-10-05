@@ -2,27 +2,46 @@ package colesico.framework.telehttp.codegen;
 
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.service.codegen.model.TeleMethodElement;
-import colesico.framework.service.codegen.model.TeleParamElement;
-import colesico.framework.telehttp.Origin;
+import colesico.framework.service.codegen.model.TeleArgumentElement;
+import colesico.framework.service.codegen.model.TeleParameterElement;
 import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.ParamOrigin;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class TeleHttpCodegenUtils {
 
-    public static String getParamName(TeleParamElement teleParam) {
-        AnnotationAssist<ParamName> nameAnn = teleParam.getOriginParam().getAnnotation(ParamName.class);
-        if (nameAnn != null) {
-            return nameAnn.unwrap().value();
+    public static String getParamName(TeleArgumentElement teleArg) {
 
+        List<String> namesChain = new ArrayList<>();
+        Iterator<TeleArgumentElement> it = (Iterator<TeleArgumentElement>) teleArg.getIterator();
+        while (it.hasNext()) {
+            String paramName;
+            TeleArgumentElement curArg = it.next();
+            AnnotationAssist<ParamName> nameAnn = curArg.getOriginElement().getAnnotation(ParamName.class);
+            if (nameAnn != null) {
+                paramName = nameAnn.unwrap().value();
+            } else {
+                if (curArg instanceof TeleParameterElement) {
+                    paramName = curArg.getOriginElement().getName();
+                } else {
+                    paramName="";
+                }
+            }
+            namesChain.add(paramName);
         }
-
-        return teleParam.getOriginParam().getName();
+        Collections.reverse(namesChain);
+        return StringUtils.join(namesChain.toArray());
     }
 
-    public static String getOriginName(TeleParamElement teleParam, String defaultOrigin) {
-        TeleMethodElement teleMethod = teleParam.getParentTeleMethod();
+    public static String getOriginName(TeleArgumentElement teleArg, String defaultOrigin) {
+        TeleMethodElement teleMethod = teleArg.getParentTeleMethod();
         String originName = defaultOrigin;
-        AnnotationAssist<ParamOrigin> originAnn = teleParam.getOriginParam().getAnnotation(ParamOrigin.class);
+        AnnotationAssist<ParamOrigin> originAnn = teleArg.getOriginElement().getAnnotation(ParamOrigin.class);
         if (originAnn == null) {
             originAnn = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(ParamOrigin.class);
         }

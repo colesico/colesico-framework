@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package colesico.framework.telehttp;
-
-import colesico.framework.telehttp.reader.ObjectReader;
+package colesico.framework.service;
 
 import java.lang.annotation.*;
 
 /**
- * Specifies that the object field should be ignored by object reader
+ * Indicates that the method parameter (or field) is not just simple parameter
+ * but a composition of params. Each field of parameter class  marked with this annotation
+ * is a separate parameter or subcompound. Class must have nonarg constructor and setters for each field.
  *
- * @see ObjectReader
+ * @see LocalField
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
+@Target({ElementType.PARAMETER})
 @Inherited
 @Documented
-public @interface LocalField {
+public @interface Compound {
 }

@@ -29,6 +29,10 @@ public class RpcDataPortImpl implements RpcDataPort {
     @Override
     public <V> V read(RpcTRContext context) {
 
+        if (context == null) {
+            throw new RpcException("RPC value reading context required for reading value ");
+        }
+
         // Try to get accurate reader
         RpcTeleReader<V> reader = teleFactory.findReader(RpcTeleReader.class, context.getValueType());
         if (reader != null) {
@@ -38,10 +42,6 @@ public class RpcDataPortImpl implements RpcDataPort {
         }
 
         // Common read
-
-        if (context == null) {
-            throw new RpcException("RPC value reading context required for reading type: " + context.getValueType().getTypeName());
-        }
 
         RpcTRContext.ValueGetter<RpcRequest, V> valueGetter = context.getValueGetter();
 

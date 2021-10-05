@@ -16,26 +16,13 @@
 
 package colesico.framework.service.codegen.model;
 
-import colesico.framework.assist.codegen.model.ParameterElement;
+import colesico.framework.assist.codegen.model.VarElement;
 import com.squareup.javapoet.CodeBlock;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Tele-method parameter
  */
-public final class TeleParamElement {
-
-    /**
-     * Parent tele-method ref
-     */
-    protected TeleMethodElement parentTeleMethod;
-
-    /**
-     * Origin method param ref
-     */
-    protected final ParameterElement originParam;
+public final class TeleParameterElement extends TeleArgumentElement {
 
     /**
      * Param reading context code
@@ -47,34 +34,9 @@ public final class TeleParamElement {
      */
     protected final Integer paramIndex;
 
-    /**
-     * Custom purpose props
-     */
-    private Map<Class<?>, Object> properties = new HashMap<>();
-
-    public TeleParamElement(ParameterElement originParam, Integer paramIndex) {
-        this.originParam = originParam;
+    public TeleParameterElement(VarElement originVariable, Integer paramIndex) {
+        super(originVariable);
         this.paramIndex = paramIndex;
-    }
-
-    public <C> C getProperty(Class<C> propertyClass) {
-        return (C) properties.get(propertyClass);
-    }
-
-    public void setProperty(Class<?> propertyClass, Object property) {
-        properties.put(propertyClass, property);
-    }
-
-    public TeleMethodElement getParentTeleMethod() {
-        return parentTeleMethod;
-    }
-
-    public void setParentTeleMethod(TeleMethodElement parentTeleMethod) {
-        this.parentTeleMethod = parentTeleMethod;
-    }
-
-    public ParameterElement getOriginParam() {
-        return originParam;
     }
 
     public CodeBlock getReadingContextCode() {
@@ -92,7 +54,7 @@ public final class TeleParamElement {
     @Override
     public String toString() {
         return "TeleParamElement{" +
-                "originParam=" + originParam +
+                "originParam=" + originElement +
                 ", paramIndex=" + paramIndex +
                 '}';
     }

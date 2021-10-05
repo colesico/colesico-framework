@@ -19,14 +19,13 @@ package colesico.framework.weblet.codegen;
 import colesico.framework.assist.CollectionUtils;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.router.codegen.RoutesModulator;
+import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
-import colesico.framework.service.codegen.model.TeleParamElement;
-import colesico.framework.telehttp.Origin;
+import colesico.framework.service.codegen.model.TeleParameterElement;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
 import colesico.framework.weblet.Weblet;
 import colesico.framework.weblet.teleapi.*;
-import colesico.framework.weblet.teleapi.origin.WebletAutoOrigin;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.TypeName;
@@ -67,14 +66,14 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected CodeBlock generateReadingContext(TeleParamElement teleParam) {
+    protected CodeBlock generateReadingContext(TeleParameterElement teleParam) {
 
         String paramName = TeleHttpCodegenUtils.getParamName(teleParam);
 
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("$T.$N(", ClassName.get(WebletTRContext.class), WebletTRContext.OF_METHOD);
 
-        generateParamType(teleParam, cb);
+        ServiceCodegenUtils.generateTeleArgumentType(teleParam, cb);
         cb.add(",");
 
         String originName = TeleHttpCodegenUtils.getOriginName(teleParam, WebletOrigin.AUTO);
@@ -100,7 +99,7 @@ public final class WebletModulator extends RoutesModulator {
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("$T.$N(", ClassName.get(WebletTWContext.class), WebletTWContext.OF_METHOD);
 
-        generateResultType(teleMethod, cb);
+        ServiceCodegenUtils.generateTeleResultType(teleMethod, cb);
 
         TypeName customWriter = getCustomWriterClass(teleMethod);
         if (customWriter != null) {
@@ -122,8 +121,8 @@ public final class WebletModulator extends RoutesModulator {
         return TypeName.get(readerClassMirror);
     }
 
-    protected TypeName getCustomReaderClass(TeleParamElement teleParam) {
-        var rdAnn = teleParam.getOriginParam().getAnnotation(WebletParamReader.class);
+    protected TypeName getCustomReaderClass(TeleParameterElement teleParam) {
+        var rdAnn = teleParam.getOriginElement().getAnnotation(WebletParamReader.class);
         if (rdAnn == null) {
             return null;
         }

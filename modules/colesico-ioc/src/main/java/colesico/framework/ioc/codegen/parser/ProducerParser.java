@@ -142,7 +142,14 @@ public class ProducerParser extends FrameworkAbstractParser {
     protected InjectableElement createInjectableElement(final FactoryElement parentFactory, final ParameterElement parameter) {
         logger.debug("Create injectable element for: " + parameter);
         if (parameter.asClassType() == null) {
-            throw CodegenException.of().message("Unsupported type kind for parameter " + parameter.getName()).element(parameter.unwrap()).build();
+            throw CodegenException.of()
+                    .message("Unsupported type kind for parameter " + parameter.getName()
+                            + "; Type: " + parameter.getOriginType()
+                            + "; Type kind: " + parameter.unwrap().getKind()
+
+                    )
+                    .element(parameter.unwrap())
+                    .build();
         }
 
         AnnotationAssist<Message> messageAnn = parameter.getAnnotation(Message.class);

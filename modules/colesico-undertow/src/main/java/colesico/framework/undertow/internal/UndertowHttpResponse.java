@@ -34,11 +34,11 @@ import java.util.Map;
 /**
  * @author Vladlen Larionov
  */
-public class HttpResponseImpl implements HttpResponse {
+public class UndertowHttpResponse implements HttpResponse {
 
     protected final HttpServerExchange exchange;
 
-    public HttpResponseImpl(HttpServerExchange exchange) {
+    public UndertowHttpResponse(HttpServerExchange exchange) {
         this.exchange = exchange;
     }
 
@@ -90,28 +90,7 @@ public class HttpResponseImpl implements HttpResponse {
 
     @Override
     public void setCookie(HttpCookie cookie) {
-        //responded = true;
-        Cookie c = new CookieImpl(cookie.getName(), cookie.getValue());
-        c.setDomain(cookie.getDomain());
-        c.setPath(cookie.getPath());
-        c.setExpires(cookie.getExpires());
-        if (cookie.getSecure() != null && cookie.getSecure()) {
-            c.setSecure(true);
-        }
-        if (cookie.getHttpOnly() != null && cookie.getHttpOnly()) {
-            c.setHttpOnly(true);
-        }
-        if (cookie.getSameSite() != null) {
-            switch (cookie.getSameSite()) {
-                case STRICT:
-                    c.setSameSiteMode("strict");
-                    break;
-                case LAX:
-                    c.setSameSiteMode("lax");
-                    break;
-            }
-        }
-        exchange.setResponseCookie(c);
+        exchange.setResponseCookie(((UndertowCookie) cookie).getUndertowCookie());
     }
 
     @Override
@@ -148,9 +127,9 @@ public class HttpResponseImpl implements HttpResponse {
                     out.append("header: " + header.getHeaderName() + "=" + value + "\n");
                 }
             }
-            Map<String, Cookie> cookies = exchange.getResponseCookies();
+            Iterable<Cookie> cookies = exchange.responseCookies();
             if (cookies != null) {
-                for (Cookie cookie : cookies.values()) {
+                for (Cookie cookie : cookies) {
                     out.append("cookie: " + cookie.getName() + "=" + cookie.getValue() + "; domain=" + cookie.getDomain() + "; path=" + cookie.getPath() + "\n");
                 }
             }

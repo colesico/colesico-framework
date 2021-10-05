@@ -50,7 +50,7 @@ public class RouterImpl implements Router {
     }
 
     protected void loadRoutesMapping(Polysupplier<TeleFacade> teleFacadeSupp) {
-        log.debug("Lookup routing tele-facades... ");
+        log.debug("Lookup http router tele-facades... ");
 
         routeTrie = new RouteTrie<>(null);
         routesIndex = new RoutesIndex();
@@ -58,7 +58,7 @@ public class RouterImpl implements Router {
         Iterator<TeleFacade> it = teleFacadeSupp.iterator(null);
         while (it.hasNext()) {
             TeleFacade teleFacade = it.next();
-            log.debug("Found routing tele-facade: " + teleFacade.getClass().getName());
+            log.debug("Found http router tele-facade: " + teleFacade.getClass().getName());
             RoutingLigature ligature = (RoutingLigature) teleFacade.getLigature();
 
             for (RoutingLigature.RouteInfo routeInfo : ligature.getRoutesInfo()) {

@@ -16,6 +16,7 @@
 
 package colesico.framework.example.jdbc;
 
+import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
@@ -27,7 +28,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 
 /**
- * Typical jdbc producer
+ * Typical jdbc producer for custom DS
  */
 @Producer
 public class JdbcProducer {
@@ -37,24 +38,9 @@ public class JdbcProducer {
      * DataSource is a HikariCP data source configured by custom-custom-hikari.properties file
      */
     @Singleton
+    @Substitute
     public TransactionalShell getTransactionalShell(@Classed(CustomHikariProperties.class) DataSource ds) {
         return new JdbcTransactionalShell(ds);
-    }
-
-    /**
-     * Define connection providing from transactional shell
-     */
-    @Unscoped
-    public Connection getConnection(TransactionalShell txShell) {
-        return ((JdbcTransactionalShell) txShell).getConnection();
-    }
-
-    /**
-     * Optionally define the data source providing
-     */
-    @Unscoped
-    public DataSource getDataSource(TransactionalShell txShell) {
-        return ((JdbcTransactionalShell) txShell).getDataSource();
     }
 
 }

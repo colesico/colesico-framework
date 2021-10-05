@@ -26,56 +26,14 @@ import java.util.Objects;
 public class ParameterElement extends VarElement {
 
     protected final MethodElement parentMethod;
-    protected final VariableElement originElement;
-    protected final TypeMirror originType;
 
     public ParameterElement(ProcessingEnvironment processingEnv, MethodElement parentMethod, VariableElement parameterElement, TypeMirror parameterType) {
-        super(processingEnv);
+        super(processingEnv, parameterElement, parameterType);
         this.parentMethod = parentMethod;
-        this.originElement = parameterElement;
-        this.originType = parameterType;
-    }
-
-    @Override
-    public VariableElement unwrap() {
-        return originElement;
-    }
-
-    @Override
-    public String getName() {
-        return originElement.getSimpleName().toString();
-    }
-
-    @Override
-    public TypeMirror getOriginType() {
-        return originType;
-    }
-
-    @Override
-    public ClassType asClassType() {
-        if (originType.getKind() != TypeKind.DECLARED) {
-            return null;
-        }
-        return new ClassType(getProcessingEnv(), (DeclaredType) originType);
     }
 
     public MethodElement getParentMethod() {
         return parentMethod;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ParameterElement that = (ParameterElement) o;
-
-        return Objects.equals(originElement, that.originElement);
-    }
-
-    @Override
-    public int hashCode() {
-        return originElement != null ? originElement.hashCode() : 0;
     }
 
     @Override

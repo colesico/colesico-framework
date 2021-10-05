@@ -21,7 +21,7 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>4.6.0</version>
+        <version>5.0.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -54,11 +54,6 @@
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-jdbc</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-jdbi</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

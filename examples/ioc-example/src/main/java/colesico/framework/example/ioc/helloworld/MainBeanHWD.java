@@ -16,10 +16,20 @@
 
 package colesico.framework.example.ioc.helloworld;
 
+/**
+ * This bin can be obtained from the IoC container:
+ * <code>
+ * MainBeanHWD mainBean = ioc.instance(MainBeanHWD.class);
+ * </code>
+ */
 public class MainBeanHWD {
 
     private final HelloBean helloService;
 
+    /**
+     * Annotation {@link javax.inject.Inject}
+     * is not needed because the constructor is the only one
+     */
     public MainBeanHWD(HelloBean helloService) {
         this.helloService = helloService;
     }

@@ -3,13 +3,14 @@ package colesico.framework.restlet.teleapi.jsonrequest;
 import java.lang.annotation.*;
 
 /**
- * Specifies read parameter from body json attribute
+ * Specifies read parameter  from http request body json field
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.PARAMETER})
 @Inherited
 @Documented
 public @interface JsonField {
+
     /**
      * Json field name.
      * If not specified, the name of the tele-method parameter will be used

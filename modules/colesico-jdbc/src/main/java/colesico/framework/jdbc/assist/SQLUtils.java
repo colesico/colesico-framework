@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.jdbc;
+package colesico.framework.jdbc.assist;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

@@ -39,6 +39,9 @@ public interface HttpRequest {
      */
     String getHost();
 
+    /**
+     * Requested port
+     */
     Integer getPort();
 
     /**

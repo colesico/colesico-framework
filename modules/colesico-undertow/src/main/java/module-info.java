@@ -12,6 +12,6 @@ module colesico.framework.undertow {
 
 
     exports colesico.framework.undertow;
-    exports colesico.framework.undertow.internal to colesico.framework.ioc;
+    exports colesico.framework.undertow.internal;
 
 }

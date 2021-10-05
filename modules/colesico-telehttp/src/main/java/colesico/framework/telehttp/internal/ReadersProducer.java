@@ -3,11 +3,9 @@ package colesico.framework.telehttp.internal;
 import colesico.framework.http.HttpFile;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.telehttp.HttpTeleReader;
-import colesico.framework.telehttp.internal.objectreader.DefaultObjectReader;
 import colesico.framework.telehttp.reader.*;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.telehttp.reader.ObjectReader;
 
 import javax.inject.Singleton;
 import java.time.LocalDate;
@@ -33,16 +31,10 @@ import java.util.OptionalLong;
 @Produce(LocalDateReader.class)
 @Produce(LocalTimeReader.class)
 @Produce(LocalDateTimeReader.class)
-@Produce(DefaultObjectReader.class)
 @Produce(PrincipalReader.class)
 @Produce(ProfileReader.class)
 @Produce(HttpFileReader.class)
 public class ReadersProducer {
-
-    @Singleton
-    public ObjectReader getObjectReader(DefaultObjectReader impl) {
-        return impl;
-    }
 
     @Singleton
     @Classed(Boolean.class)
