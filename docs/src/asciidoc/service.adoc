@@ -24,7 +24,7 @@ public class MyService {
 }
 ----
 
-Services are integrated in the IoC  (Dependency Injection module).
+Services are integrated to the IoC  (Dependency Injection module).
 There is no need to declare an IoC producer to use service beans in the context
 of dependency injection. Service is singleton by default. But their scope can be
 redefined using the appropriate annotations (@ThreadScoped , etc)
@@ -48,6 +48,4 @@ without injection bean to itself.
 The following annotations are used to configure a remote methods call:
 
 * @LocalMethod - exclude method from remote call
-* @LocalParam - exclude method parameter or Compound bean field from remote call
 * @Compount - to declare bean as a set of separate parameters  (each bean field - separate parameter)
-* @TeleView - to control compound bean fields accessability to remote invocation

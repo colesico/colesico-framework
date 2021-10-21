@@ -32,23 +32,46 @@ public class MyService {
 }
 ----
 
-== Setup
-
-
-1) Configure data source
+== Setup default data source
 
 To configure default datasource create hikari.properties file.
 
 .config/hikari.properties or META-INF/hikari.properties
 [source,properties]
 ----
+ataSourceClassName=org.postgresql.ds.PGSimpleDataSource
+username=user
+password=password
+jdbcUrl=jdbc:postgresql://...
+----
+
+See details https://github.com/brettwooldridge/HikariCP#gear-configuration-knobs-baby[HikariCP docs]
+
+== Setup second  data source
+
+1) Create custom config class and override getFileName method
+
+.CustomHikariProperties.java
+[source,java]
+----
+@Config
+public class SecondHikariProperties extends HikariProperties {
+    @Override
+    protected String getFileName() {
+        return "second-hikari.properties";
+    }
+}
+----
+2) Fill in config file second-hikari.properties
+
+.config/second-hikari.properties or META-INF/second-hikari.properties
+[source,properties]
+----
 driverClassName=...
 jdbcUrl=jdbc:...
 ----
 
-2) Create jdbc producer
-
-Create IoC producer to produce JDBC transactional shell, connection and data source:
+3) Create IoC producer to produce JDBC transactional shell, connection and data source:
 
 .JdbcProducer.java
 [source,java]
@@ -58,26 +81,28 @@ public class JdbcProducer {
 
     /**
      * Define transactional shell to control transactions.
-     * DataSource is a HikariCP data source configured by hikari.properties file
      */
     @Singleton
-    public TransactionalShell getTransactionalShell(@Classed(HikariProperties.class) DataSource ds) {
+    @Named("second")
+    public TransactionalShell getTransactionalShell(@Classed(SecondHikariProperties.class) DataSource ds) {
         return new JdbcTransactionalShell(ds);
     }
 
     /**
-     * Produce connection providing from transactional shell
+     * Produce connection providing from second transactional shell
      */
     @Unscoped
-    public Connection getConnection(TransactionalShell txShell) {
+    @Named("second")
+    public Connection getConnection(@Named("second") TransactionalShell txShell) {
         return ((JdbcTransactionalShell) txShell).getConnection();
     }
 
     /**
-     * Optionally produce the data source from TxShell
+     * Optionally produce the data source from second TxShell
      */
     @Unscoped
-    public DataSource getDataSource(TransactionalShell txShell) {
+    @Named("second")
+    public DataSource getDataSource(@Named("second") TransactionalShell txShell) {
         return ((JdbcTransactionalShell) txShell).getDataSource();
     }
 
@@ -86,6 +111,6 @@ public class JdbcProducer {
 
 == Examples
 
-See full source code in the framework source code section #examples/jdbi-example#
+See full source code in the framework source code section #examples/jdbc-example#
 
 
