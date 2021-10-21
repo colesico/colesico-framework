@@ -28,12 +28,13 @@ public MyService(DataSource ds){
 TIP: HikariCP module defines the default data source for IoC.
 To prevent this use HikariCPConditions.disableDefaultDataSource()
 
-== Extra properties files
+== Extra property files
 
 In the case of working with several data sources, use different hikari properties files.
 
 Define an extra config class with getFileName() method overriding:
 
+.ExtraHikariProperties.java
 [source,java]
 ----
 

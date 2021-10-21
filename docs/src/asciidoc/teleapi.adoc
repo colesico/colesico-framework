@@ -10,4 +10,4 @@ For example http request processing (weblet, restlet modules) uses this module t
 remote method invocations.
 
 TeleAPI does not directly provide any remote method call implementation.
-Implementation is provided by specific modules (weblet, restlet, rcp, e.t.c.)
+Implementation is provided by specific modules (weblet, restlet, rpc, e.t.c.)
