@@ -72,15 +72,14 @@ To use multiple jdbi instances use a custom configuration for each extra jdbi ha
 .ExtraHikariProperties.java
 [source,java]
 ----
-
 @Config
 public class ExtraHikariProperties extends HikariProperties {
+
     @Override
     protected String getFileName() {
         return "extra-hikari.properties";
     }
 }
-
 ----
 
 2) Fill in extra-hikari.properties:
@@ -104,9 +103,9 @@ This config will be used to provide the DataSource and apply JdbiOptions to the 
 public class ExtraJdbiConfig extends AbstractJdbiConfig {
 
     @Inject
-    public CustomJdbiConfig(
+    public ExtraJdbiConfig(
 
-            // Jdbi will use user defined extra hikaricp data source
+            // Jdbi will use  extra hikaricp data source
             @Classed(ExtraHikariProperties.class) DataSource dataSource,
 
             // Optional configurations will be applied to the jdbi instance.
@@ -115,6 +114,7 @@ public class ExtraJdbiConfig extends AbstractJdbiConfig {
         super(dataSource, options);
     }
 }
+
 ----
 
 4) Define appropriate producer to produce TransactionalSnell and Handle bound to extra jdbi instance
@@ -122,14 +122,19 @@ public class ExtraJdbiConfig extends AbstractJdbiConfig {
 .ExtraJdbiProducer.java
 [source,java]
 ----
+/**
+ * To produce extra jdbi handle instance and tx shell
+ */
 @Producer
 public class ExtraJdbiProducer {
+
+    public static final String EXTRA="extra";
 
     /**
      * Produce extra transactional shell to control transactions.
      */
     @Singleton
-    @Named("extra")
+    @Named(EXTRA)
     public TransactionalShell getTxShell(@Classed(ExtraJdbiConfig.class) Jdbi jdbi) {
         return new JdbiTransactionalShell(jdbi);
     }
@@ -138,11 +143,10 @@ public class ExtraJdbiProducer {
      * Produce extra handle providing from extra transactional shell
      */
     @Unscoped
-    @Named("extra")
-    public Handle getHandle(@Named("extra") TransactionalShell txShell) {
+    @Named(EXTRA)
+    public Handle getHandle(@Named(EXTRA) TransactionalShell txShell) {
         return ((JdbiTransactionalShell) txShell).getHandle();
     }
-
 }
 ----
 
