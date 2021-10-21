@@ -40,7 +40,7 @@ Define a custom config with getFileName() method overriding:
 public class CustomHikariProperties extends HikariProperties {
     @Override
     protected String getFileName() {
-        return "custom-hikari.properties";
+        return "extra-hikari.properties";
     }
 }
 

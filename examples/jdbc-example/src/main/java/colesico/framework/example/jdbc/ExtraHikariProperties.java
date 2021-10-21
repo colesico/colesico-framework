@@ -20,12 +20,13 @@ import colesico.framework.config.Config;
 import colesico.framework.hikaricp.HikariProperties;
 
 /**
- * Custom hikari configuration example
+ * Extra hikari configuration example
  */
 @Config
-public class CustomHikariProperties extends HikariProperties {
+public class ExtraHikariProperties extends HikariProperties {
+
     @Override
     protected String getFileName() {
-        return "custom-hikari.properties";
+        return "extra-hikari.properties";
     }
 }

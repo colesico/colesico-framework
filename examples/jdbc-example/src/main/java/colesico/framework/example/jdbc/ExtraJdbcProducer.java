@@ -16,31 +16,49 @@
 
 package colesico.framework.example.jdbc;
 
-import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.jdbc.JdbcTransactionalShell;
 import colesico.framework.transaction.TransactionalShell;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.sql.DataSource;
 import java.sql.Connection;
 
 /**
- * Typical jdbc producer for custom DS
+ * Typical jdbc producer for extra DS
  */
 @Producer
-public class JdbcProducer {
+public class ExtraJdbcProducer {
+
+    public static final String EXTRA = "extra";
 
     /**
-     * Define transactional shell to control transactions.
-     * DataSource is a HikariCP data source configured by custom-custom-hikari.properties file
+     * Define extra transactional shell to control transactions.
      */
     @Singleton
-    @Substitute
-    public TransactionalShell getTransactionalShell(@Classed(CustomHikariProperties.class) DataSource ds) {
+    @Named(EXTRA)
+    public TransactionalShell getTransactionalShell(@Classed(ExtraHikariProperties.class) DataSource ds) {
         return new JdbcTransactionalShell(ds);
     }
 
+    /**
+     * Produce extra connection providing from extra transactional shell
+     */
+    @Unscoped
+    @Named(EXTRA)
+    public Connection getConnection(@Named(EXTRA) TransactionalShell txShell) {
+        return ((JdbcTransactionalShell) txShell).getConnection();
+    }
+
+    /**
+     * Optionally produce extra data source from extra TxShell
+     */
+    @Unscoped
+    @Named(EXTRA)
+    public DataSource getDataSource(@Named(EXTRA) TransactionalShell txShell) {
+        return ((JdbcTransactionalShell) txShell).getDataSource();
+    }
 }

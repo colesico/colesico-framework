@@ -20,6 +20,7 @@ import colesico.framework.service.Service;
 import colesico.framework.transaction.Transactional;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,18 +30,41 @@ import java.sql.ResultSet;
 public class AppService {
 
     /**
-     * JDBI handle provider
+     * JDBC default connection provider
      */
-    private final Provider<Connection> connectionProv;
+    private final Provider<Connection> defaultConnProv;
+
+    /**
+     * JDBC extra connection provider
+     */
+    private final Provider<Connection> extraConnProv;
 
     @Inject
-    public AppService(Provider<Connection> connectionProv) {
-        this.connectionProv = connectionProv;
+    public AppService(Provider<Connection> defaultConnProv,
+                      @Named(ExtraJdbcProducer.EXTRA) Provider<Connection> extraConnProv) {
+        this.defaultConnProv = defaultConnProv;
+        this.extraConnProv = extraConnProv;
+    }
+
+    @Transactional(shell = ExtraJdbcProducer.EXTRA)
+    public String readExtraValue(Integer key) {
+        try (PreparedStatement stmt = extraConnProv.get().prepareStatement("select avalue from avalues where akey=?")) {
+            stmt.setInt(1, key);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString(1);
+                } else {
+                    return null;
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Transactional
     public String readValue(Integer key) {
-        try (PreparedStatement stmt = connectionProv.get().prepareStatement("select avalue from avalues where akey=?")) {
+        try (PreparedStatement stmt = defaultConnProv.get().prepareStatement("select avalue from avalues where akey=?")) {
             stmt.setInt(1, key);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {

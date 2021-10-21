@@ -34,7 +34,7 @@ public class MyService {
 
 == Setup default data source
 
-To configure default datasource create hikari.properties file.
+To configure default datasource just create hikari.properties file.
 
 .config/hikari.properties or META-INF/hikari.properties
 [source,properties]
@@ -47,65 +47,71 @@ jdbcUrl=jdbc:postgresql://...
 
 See details https://github.com/brettwooldridge/HikariCP#gear-configuration-knobs-baby[HikariCP docs]
 
-== Setup second  data source
+== Setup multiple data sources
 
-1) Create custom config class and override getFileName method
+For each additional data source, make the following:
 
-.CustomHikariProperties.java
+1) Create additional config class and override getFileName method
+
+.ExtraHikariProperties.java
 [source,java]
 ----
 @Config
-public class SecondHikariProperties extends HikariProperties {
+public class ExtraHikariProperties extends HikariProperties {
     @Override
     protected String getFileName() {
-        return "second-hikari.properties";
+        return "extra-hikari.properties";
     }
 }
 ----
-2) Fill in config file second-hikari.properties
+2) Fill in config file extra-hikari.properties
 
-.config/second-hikari.properties or META-INF/second-hikari.properties
+.config/extra-hikari.properties or META-INF/extra-hikari.properties
 [source,properties]
 ----
 driverClassName=...
 jdbcUrl=jdbc:...
 ----
 
-3) Create IoC producer to produce JDBC transactional shell, connection and data source:
+3) Create IoC producer to produce extra JDBC transactional shell, connection and data source:
 
-.JdbcProducer.java
+.ExtraJdbcProducer.java
 [source,java]
 ----
+/**
+ * Typical jdbc producer for extra DS
+ */
 @Producer
-public class JdbcProducer {
+public class ExtraJdbcProducer {
+
+    public static final String EXTRA = "extra";
 
     /**
-     * Define transactional shell to control transactions.
+     * Define extra transactional shell to control transactions.
      */
     @Singleton
-    @Named("second")
-    public TransactionalShell getTransactionalShell(@Classed(SecondHikariProperties.class) DataSource ds) {
+    @Named(EXTRA)
+    public TransactionalShell getTransactionalShell(@Classed(ExtraHikariProperties.class) DataSource ds) {
         return new JdbcTransactionalShell(ds);
     }
 
     /**
-     * Produce connection providing from second transactional shell
+     * Produce extra connection providing from extra transactional shell
      */
     @Unscoped
-    @Named("second")
-    public Connection getConnection(@Named("second") TransactionalShell txShell) {
+    @Named(EXTRA)
+    public Connection getConnection(@Named(EXTRA) TransactionalShell txShell) {
         return ((JdbcTransactionalShell) txShell).getConnection();
     }
 
     /**
-     * Optionally produce the data source from second TxShell
+     * Optionally produce extra data source from extra TxShell
      */
     @Unscoped
-    @Named("second")
-    public DataSource getDataSource(@Named("second") TransactionalShell txShell) {
+    @Named(EXTRA)
+    public DataSource getDataSource(@Named(EXTRA) TransactionalShell txShell) {
         return ((JdbcTransactionalShell) txShell).getDataSource();
     }
-
 }
 ----
 
