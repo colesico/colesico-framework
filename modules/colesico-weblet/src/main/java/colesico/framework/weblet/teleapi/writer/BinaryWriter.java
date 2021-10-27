@@ -39,7 +39,7 @@ public final class BinaryWriter extends WebletTeleWriter<BinaryResponse> {
     }
 
     @Override
-    public void write(BinaryResponse value, WebletTWContext wrContext) {
+    public void write(BinaryResponse value, WebletTWContext ctx) {
 
         HttpResponse response = getResponse();
 
@@ -53,6 +53,6 @@ public final class BinaryWriter extends WebletTeleWriter<BinaryResponse> {
         }
 
         ByteBuffer buffer = ByteBuffer.wrap(value.getContent());
-        response.sendData(buffer, value.getContentType(), value.getHttpCode());
+        response.sendData(buffer, value.getContentType(), value.getStatusCode());
     }
 }

@@ -3,49 +3,47 @@ package colesico.framework.weblet;
 /**
  * Returns  model that be presented to given view
  */
-public final class ViewResponse {
+public final class ViewResponse extends ContentResponse {
 
-    public static final int DEFAULT_HTTP_CODE = 200;
-
-    private final String vewName;
+    private final String viewName;
     private final Object model;
-    protected final int httpCode;
 
-    private ViewResponse(String vewName, Object model, int httpCode) {
-        this.vewName = vewName;
+    private ViewResponse(String viewName, Object model, String contentType, int statusCode) {
+        super(contentType, statusCode);
+        this.viewName = viewName;
         this.model = model;
-        this.httpCode = httpCode;
     }
 
     public static ViewResponse of(String viewName) {
-        return new ViewResponse(viewName, null, DEFAULT_HTTP_CODE);
+        return new ViewResponse(viewName, null, null, DEFAULT_STATUS_CODE);
     }
 
     public static ViewResponse of(String viewName, Object model) {
-        return new ViewResponse(viewName, model, DEFAULT_HTTP_CODE);
+        return new ViewResponse(viewName, model, null, DEFAULT_STATUS_CODE);
     }
 
-    public static ViewResponse of(String viewName, int httpCode) {
-        return new ViewResponse(viewName, null, httpCode);
+    public static ViewResponse of(String viewName, int statusCode) {
+        return new ViewResponse(viewName, null, null, statusCode);
     }
 
-    public static ViewResponse of(String viewName, Object model, int httpCode) {
-        return new ViewResponse(viewName, model, httpCode);
+    public static ViewResponse of(String viewName, Object model, int statusCode) {
+        return new ViewResponse(viewName, model, null, statusCode);
+    }
+
+    public static ViewResponse of(String viewName, Object model, String contentType, int statusCode) {
+        return new ViewResponse(viewName, model, contentType, statusCode);
     }
 
     public WebletResponse wrap() {
         return WebletResponse.of(this);
     }
 
-    public String getVewName() {
-        return vewName;
+    public String getViewName() {
+        return viewName;
     }
 
     public Object getModel() {
         return model;
     }
 
-    public int getHttpCode() {
-        return httpCode;
-    }
 }

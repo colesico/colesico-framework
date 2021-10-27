@@ -40,7 +40,7 @@ public class Navigation<N extends Navigation> {
     protected Class<?> serviceClass;
     protected String targetMethod;
     protected HttpMethod httpMethod = HttpMethod.HTTP_METHOD_GET;
-    protected int httpCode = 302;
+    protected int statusCode = 302;
     protected final Map<String, String> queryParameters = new HashMap<>();
     protected final Map<String, String> routeParameters = new HashMap<>();
 
@@ -176,11 +176,11 @@ public class Navigation<N extends Navigation> {
     }
 
     /**
-     * Set custom http redirect code.
+     * Set custom http redirect status code.
      * Default code 302
      */
-    public N httpCode(int httpCode) {
-        this.httpCode = httpCode;
+    public N statusCode(int code) {
+        this.statusCode = code;
         return (N) this;
     }
 
@@ -215,7 +215,7 @@ public class Navigation<N extends Navigation> {
      */
     public void redirect(Router router, HttpContext context) {
         String location = toLocation(router);
-        context.getResponse().sendRedirect(location, httpCode);
+        context.getResponse().sendRedirect(location, statusCode);
     }
 
     /**

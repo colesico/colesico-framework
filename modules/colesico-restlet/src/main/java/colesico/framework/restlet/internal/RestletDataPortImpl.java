@@ -122,7 +122,7 @@ public class RestletDataPortImpl implements RestletDataPort {
         error.setMessage(ExceptionUtils.getRootCauseMessage(throwable));
         error.setDetails(getErrorMessages(throwable));
         RestletTeleWriter objWriter = teleFactory.getWriter(ObjectWriter.class);
-        context.setHttpCode(500);
+        context.setStatusCode(500);
         objWriter.write(error, context);
 
     }

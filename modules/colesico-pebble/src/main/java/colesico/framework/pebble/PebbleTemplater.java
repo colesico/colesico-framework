@@ -30,7 +30,6 @@ import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 
-import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
@@ -82,7 +81,7 @@ public class PebbleTemplater extends ViewWriter implements HtmlRenderer {
 
     @Override
     public void write(ViewResponse viewResponse, WebletTWContext context) {
-        Writer writer = evaluate(viewResponse.getVewName(), viewResponse.getModel());
+        Writer writer = evaluate(viewResponse.getViewName(), viewResponse.getModel());
         HttpResponse httpResponse = httpContextProv.get().getResponse();
         httpResponse.sendText(writer.toString(), HtmlResponse.DEFAULT_CONTENT_TYPE, 200);
     }

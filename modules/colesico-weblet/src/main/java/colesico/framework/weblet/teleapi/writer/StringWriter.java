@@ -38,10 +38,10 @@ public final class StringWriter extends WebletTeleWriter<StringResponse> {
     }
 
     @Override
-    public void write(StringResponse value, WebletTWContext wrContext) {
+    public void write(StringResponse value, WebletTWContext ctx) {
         if (value == null || value.getContent() == null) {
             getResponse().sendText("", TextResponse.DEFAULT_CONTENT_TYPE, 204);
         }
-        getResponse().sendText(value.getContent(), value.getContentType(), value.getHttpCode());
+        getResponse().sendText(value.getContent(), value.getContentType(), value.getStatusCode());
     }
 }
