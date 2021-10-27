@@ -24,7 +24,7 @@ import colesico.framework.profile.teleapi.CommonProfileCreator;
 import colesico.framework.profile.teleapi.ProfileSerializer;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTeleReader;
-import colesico.framework.telehttp.assist.HttpUtils;
+import colesico.framework.telehttp.assist.TeleHttpUtils;
 import colesico.framework.telehttp.writer.ProfileWriter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -77,7 +77,7 @@ public class ProfileReader<C extends HttpTRContext> implements HttpTeleReader<Pr
 
     protected Profile getCommonProfile(HttpRequest request) {
         String accLangs = request.getHeaders().get(ACCEPT_LANGUAGE_HEADER);
-        Locale locale = HttpUtils.getAcceptedLanguage(accLangs);
+        Locale locale = TeleHttpUtils.getAcceptedLanguage(accLangs);
         if (locale == null) {
             locale = Locale.getDefault();
         }

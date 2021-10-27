@@ -17,6 +17,8 @@
 package colesico.framework.weblet.teleapi.writer;
 
 import colesico.framework.http.HttpContext;
+import colesico.framework.http.HttpResponse;
+import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.weblet.StringResponse;
 import colesico.framework.weblet.TextResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
@@ -42,6 +44,9 @@ public final class StringWriter extends WebletTeleWriter<StringResponse> {
         if (value == null || value.getContent() == null) {
             getResponse().sendText("", TextResponse.DEFAULT_CONTENT_TYPE, 204);
         }
-        getResponse().sendText(value.getContent(), value.getContentType(), value.getStatusCode());
+        HttpResponse response = getResponse();
+        HttpUtils.setHeaders(response, value.getHeaders());
+        HttpUtils.setCookies(response, value.getCookies());
+        response.sendText(value.getContent(), value.getContentType(), value.getStatusCode());
     }
 }

@@ -19,6 +19,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpResponse;
+import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.router.ActionResolution;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterException;
@@ -235,18 +236,8 @@ public class Navigation<N extends Navigation> {
     public void redirect(Router router, HttpContext context) {
         String location = toLocation(router);
         HttpResponse response = context.getResponse();
-
-        // Set cookies
-        for (HttpCookie cookie : cookies) {
-            response.setCookie(cookie);
-        }
-
-        // Set headers
-        for (Map.Entry<String, List<String>> h : headers.entrySet()) {
-            for (String v : h.getValue()) {
-                response.setHeader(h.getKey(), v);
-            }
-        }
+        HttpUtils.setHeaders(response,headers);
+        HttpUtils.setCookies(response,cookies);
         response.sendRedirect(location, statusCode);
     }
 

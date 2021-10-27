@@ -39,7 +39,7 @@ public final class RedirectWriter extends WebletTeleWriter<RedirectResponse> {
     }
 
     @Override
-    public void write(RedirectResponse resp, WebletTWContext ctx) {
-        resp.redirect(router, httpContextProv.get());
+    public void write(RedirectResponse value, WebletTWContext ctx) {
+        value.redirect(router, httpContextProv.get());
     }
 }

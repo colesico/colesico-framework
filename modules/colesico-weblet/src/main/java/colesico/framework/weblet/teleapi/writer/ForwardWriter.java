@@ -40,7 +40,7 @@ public final class ForwardWriter extends WebletTeleWriter<ForwardResponse> {
     }
 
     @Override
-    public void write(ForwardResponse resp, WebletTWContext ctx) {
-        resp.forward(router, httpContextProv.get());
+    public void write(ForwardResponse value, WebletTWContext ctx) {
+        value.forward(router, httpContextProv.get());
     }
 }
