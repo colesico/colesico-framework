@@ -44,6 +44,9 @@ public final class BinaryWriter extends WebletTeleWriter<BinaryResponse> {
 
         HttpResponse response = getResponse();
 
+        HttpUtils.setHeaders(response, value.getHeaders());
+        HttpUtils.setCookies(response, value.getCookies());
+
         if (value == null || value.getContent() == null || value.getContent().length == 0) {
             response.sendData(ByteBuffer.allocate(0), BinaryResponse.DEFAULT_CONTENT_TYPE, 204);
         }
@@ -54,8 +57,6 @@ public final class BinaryWriter extends WebletTeleWriter<BinaryResponse> {
         }
 
         ByteBuffer buffer = ByteBuffer.wrap(value.getContent());
-        HttpUtils.setHeaders(response, value.getHeaders());
-        HttpUtils.setCookies(response, value.getCookies());
         response.sendData(buffer, value.getContentType(), value.getStatusCode());
     }
 }

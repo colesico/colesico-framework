@@ -41,12 +41,15 @@ public final class StringWriter extends WebletTeleWriter<StringResponse> {
 
     @Override
     public void write(StringResponse value, WebletTWContext ctx) {
-        if (value == null || value.getContent() == null) {
-            getResponse().sendText("", TextResponse.DEFAULT_CONTENT_TYPE, 204);
-        }
         HttpResponse response = getResponse();
+
         HttpUtils.setHeaders(response, value.getHeaders());
         HttpUtils.setCookies(response, value.getCookies());
+
+        if (value == null || value.getContent() == null) {
+            response.sendText("", TextResponse.DEFAULT_CONTENT_TYPE, 204);
+        }
+
         response.sendText(value.getContent(), value.getContentType(), value.getStatusCode());
     }
 }
