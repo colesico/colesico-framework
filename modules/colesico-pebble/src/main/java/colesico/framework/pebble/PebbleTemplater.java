@@ -84,6 +84,7 @@ public class PebbleTemplater extends ViewWriter implements HtmlRenderer {
     @Override
     public void write(ViewResponse viewResponse, WebletTWContext context) {
         Writer writer = evaluate(viewResponse.getViewName(), viewResponse.getModel());
+
         HttpResponse httpResponse = httpContextProv.get().getResponse();
 
         HttpUtils.setHeaders(httpResponse, viewResponse.getHeaders());
@@ -94,12 +95,7 @@ public class PebbleTemplater extends ViewWriter implements HtmlRenderer {
             contentType = HtmlResponse.DEFAULT_CONTENT_TYPE;
         }
 
-        int statusCode = viewResponse.getStatusCode();
-        if (statusCode == 0) {
-            statusCode = 200;
-        }
-
-        httpResponse.sendText(writer.toString(), contentType, statusCode);
+        httpResponse.sendText(writer.toString(), contentType, viewResponse.getStatusCode());
     }
 
     /**
