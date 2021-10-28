@@ -348,22 +348,24 @@ public class ProducerParser extends FrameworkAbstractParser {
         // factoryMethodBaseName
         final String factoryMethodBaseName = method.getName();
 
-        // Post produce listener
+        // Detect post produce listener
+        final PostProduceElement postProduce;
         AnnotationAssist<PostProduce> postProduceAnn = method.getAnnotation(PostProduce.class);
-        final PPLDefinitionElement postProduce;
         if (postProduceAnn != null) {
+            // Process withClassed
             TypeMirror classifier = postProduceAnn.getValueTypeMirror(PostProduce::withClassed);
             ClassifierType withClassed = null;
             if (!CodegenUtils.isAssignable(Class.class, classifier, processingEnv)) {
                 withClassed = new ClassifierType(processingEnv, classifier);
             }
+            // Process withNamed
             String withNamed = StringUtils.isNotBlank(postProduceAnn.unwrap().withNamed()) ? postProduceAnn.unwrap().withNamed() : null;
-            postProduce = new PPLDefinitionElement(withNamed, withClassed);
+            postProduce = new PostProduceElement(withNamed, withClassed);
         } else {
             postProduce = null;
         }
 
-        // scope
+        // Detect scope
         ScopeElement scope;
         if (postProduce == null) {
             scope = obtainScope(method);
@@ -374,6 +376,7 @@ public class ProducerParser extends FrameworkAbstractParser {
                 }
             }
         } else {
+            //  Post produce listener  always is the singleton
             scope = new ScopeElement(ScopeElement.ScopeKind.SINGLETON, null);
         }
 
