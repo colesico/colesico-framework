@@ -21,7 +21,6 @@ import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
 import colesico.framework.config.*;
-import colesico.framework.ioc.codegen.model.ScopeElement;
 import colesico.framework.ioc.conditional.Requires;
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.conditional.Substitution;
@@ -67,6 +66,35 @@ public class ConfigParser extends FrameworkAbstractParser {
         logger.debug("Unable to determine configuration prototype for: " + config.getName());
 
         return null;
+    }
+
+    private ConfigScopedElement obtainConfigScope(ClassElement config) {
+
+        ClassType scoped;
+
+        AnnotationAssist<Unscoped> unscAnn = config.getAnnotation(Unscoped.class);
+        if (unscAnn != null) {
+            scoped = new ClassType(getProcessingEnv(), (DeclaredType) CodegenUtils.classToTypeMirror(Unscoped.class, getElementUtils()));
+            return new ConfigScopedElement(scoped, true);
+        }
+
+        AnnotationAssist<Singleton> singAnn = config.getAnnotation(Singleton.class);
+        if (singAnn != null) {
+            scoped = new ClassType(getProcessingEnv(), (DeclaredType) CodegenUtils.classToTypeMirror(Singleton.class, getElementUtils()));
+            return new ConfigScopedElement(scoped, true);
+        }
+
+        // Find custom scope declaration
+        for (AnnotationType am : config.getAnnotationTypes()) {
+            AnnotationAssist<CustomScope> customScope = am.asElement().getAnnotation(CustomScope.class);
+            if (customScope != null) {
+                scoped = new ClassType(getProcessingEnv(), (DeclaredType) am.unwrap());
+                return new ConfigScopedElement(scoped, true);
+            }
+        }
+
+        scoped = new ClassType(getProcessingEnv(), (DeclaredType) CodegenUtils.classToTypeMirror(Singleton.class, getElementUtils()));
+        return new ConfigScopedElement(scoped, false);
     }
 
     private ConfigElement parseConfigElement(ClassElement config) {
@@ -129,29 +157,7 @@ public class ConfigParser extends FrameworkAbstractParser {
         }
 
         // Detect scope
-
-        ClassType scope = null;
-
-        // Default scope for single config if no prototype defined
-        if (configPrototype == null) {
-            scope = new ClassType(getProcessingEnv(), (DeclaredType) CodegenUtils.classToTypeMirror(Singleton.class, getElementUtils()));
-
-            // Check if exists explicitly scope definition
-            AnnotationAssist<Unscoped> unscAnn = config.getAnnotation(Unscoped.class);
-            AnnotationAssist<Singleton> singAnn = config.getAnnotation(Singleton.class);
-            if (unscAnn != null || singAnn != null) {
-                scope = null;
-            } else {
-                // Find custom scope declaration
-                for (AnnotationType am : config.getAnnotationTypes()) {
-                    AnnotationAssist<CustomScope> customScope = am.asElement().getAnnotation(CustomScope.class);
-                    if (customScope != null) {
-                        scope = null;
-                        break;
-                    }
-                }
-            }
-        }
+        ConfigScopedElement scope = obtainConfigScope(config);
 
         ConfigElement configElement = new ConfigElement(config, configPrototype, condition, substitution, model, scope, target, defaultMessage, classed, named);
 

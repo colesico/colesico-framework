@@ -60,7 +60,7 @@ public class ConfigElement {
      * @see colesico.framework.ioc.scope.Unscoped
      * @see colesico.framework.ioc.scope.CustomScope
      */
-    private final ClassType scope;
+    private final ConfigScopedElement scoped;
 
     /**
      * Configurable target for this configuration
@@ -92,7 +92,7 @@ public class ConfigElement {
                          ClassType condition,
                          Substitution substitution,
                          ConfigModel model,
-                         ClassType scope,
+                         ConfigScopedElement scoped,
                          ClassElement target,
                          boolean defaultMessage,
                          TypeMirror classedQualifier,
@@ -103,7 +103,7 @@ public class ConfigElement {
         this.condition = condition;
         this.substitution = substitution;
         this.model = model;
-        this.scope = scope;
+        this.scoped = scoped;
         this.target = target;
         this.defaultMessage = defaultMessage;
         this.classedQualifier = classedQualifier;
@@ -130,8 +130,8 @@ public class ConfigElement {
         return model;
     }
 
-    public ClassType getScope() {
-        return scope;
+    public ConfigScopedElement getScoped() {
+        return scoped;
     }
 
     public ClassElement getTarget() {

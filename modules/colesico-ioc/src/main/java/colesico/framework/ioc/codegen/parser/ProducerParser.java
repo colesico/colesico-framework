@@ -119,7 +119,7 @@ public class ProducerParser extends FrameworkAbstractParser {
     }
 
     protected ScopeElement obtainScopeProduceAnn(AnnotationAssist<Produce> produceAnn) {
-        TypeMirror scopeMirror = produceAnn.getValueTypeMirror(Produce::scope);
+        TypeMirror scopeMirror = produceAnn.getValueTypeMirror(Produce::scoped);
         if (CodegenUtils.isAssignable(Annotation.class, scopeMirror, processingEnv)) {
             return null;
         }

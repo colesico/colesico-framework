@@ -38,7 +38,7 @@ public @interface Produce {
     String POLYPRODUCE_METHOD = "polyproduce";
     String NAMED_METHOD = "named";
     String CLASSED_METHOD = "classed";
-    String SCOPE_METHOD = "scope";
+    String SCOPED_METHOD = "scoped";
     String POST_PRODUCE_METHOD = "postProduce";
     String POST_CONSTRUCT_METHOD = "postConstruct";
     String KEY_TYPE_METHOD = "keyType";
@@ -78,12 +78,13 @@ public @interface Produce {
     Class<?> classed() default Class.class;
 
     /**
-     * Override class based scope declaration
+     * Override class based scoped declaration
      *
      * @see javax.inject.Singleton
      * @see colesico.framework.ioc.scope.ThreadScoped
+     * @see Unscoped
      */
-    Class<? extends Annotation> scope() default Annotation.class;
+    Class<? extends Annotation> scoped() default Annotation.class;
 
     /**
      * Whether or not to invoke post produce listener after instance been produced (but before instance @PostConstruct).

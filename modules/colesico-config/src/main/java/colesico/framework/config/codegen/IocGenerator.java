@@ -78,8 +78,9 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
     protected void generateProduceSingleConfigPrototype(ProducerGenerator prodGen, ConfigElement config) {
         MethodSpec.Builder mb = createProducingOnPrototypeMethodBuilder(prodGen, config);
-        AnnotationSpec.Builder singletonAnn = AnnotationSpec.builder(Singleton.class);
-        mb.addAnnotation(singletonAnn.build());
+        ClassName scopedAnnType = ClassName.get(config.getScoped().getScopedAnnotation().asTypeElement());
+        AnnotationSpec.Builder scopedAnn = AnnotationSpec.builder(scopedAnnType);
+        mb.addAnnotation(scopedAnn.build());
 
         if (config.getClassedQualifier() != null) {
             AnnotationSpec.Builder ann = AnnotationSpec.builder(Classed.class);
@@ -94,8 +95,11 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
     private void generateProducePolyvariantConfigPrototype(ProducerGenerator prodGen, ConfigElement config) {
         MethodSpec.Builder mb = createProducingOnPrototypeMethodBuilder(prodGen, config);
-        AnnotationSpec.Builder singletonAnn = AnnotationSpec.builder(Singleton.class);
-        mb.addAnnotation(singletonAnn.build());
+
+        ClassName scopedAnnType = ClassName.get(config.getScoped().getScopedAnnotation().asTypeElement());
+        AnnotationSpec.Builder scopedAnn = AnnotationSpec.builder(scopedAnnType);
+        mb.addAnnotation(scopedAnn.build());
+
         AnnotationSpec.Builder polyAnn = AnnotationSpec.builder(Polyproduce.class);
         mb.addAnnotation(polyAnn.build());
 
@@ -115,13 +119,15 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         MethodSpec.Builder mb = prodGen.addProduceMethod("get" + targetElm.getSimpleName().toString() + "With" + config.getOriginClass().getSimpleName(),
                 ClassName.bestGuess(targetElm.getQualifiedName().toString()));
 
+        ClassName scopedAnnType = ClassName.get(config.getScoped().getScopedAnnotation().asTypeElement());
+        AnnotationSpec.Builder scopedAnn = AnnotationSpec.builder(scopedAnnType);
+        mb.addAnnotation(scopedAnn.build());
+
         if (!config.getDefaultMessage()) {
             AnnotationSpec.Builder classedAnn = AnnotationSpec.builder(Classed.class);
             classedAnn.addMember("value", "$T.class", TypeName.get(config.getOriginClass().getOriginType()));
             mb.addAnnotation(classedAnn.build());
         }
-
-        mb.addAnnotation(Singleton.class);
 
         //Parameter @Classed(AConfig.class) Supplier<Service> target
         ParameterSpec.Builder targetBuilder = ParameterSpec.builder(
@@ -227,10 +233,10 @@ public class IocGenerator extends FrameworkAbstractGenerator {
             prodGen.addSubstitutionAnnotation(config.getSubstitution());
         }
 
-        // Generates the configuration implementation producing  via annotation @Produce
+        // Generates the config itself producing  via annotation @Produce
         AnnotationSpec.Builder produceAnn = prodGen.addProduceAnnotation(TypeName.get(config.getOriginClass().getOriginType()));
-        if (config.getScope() != null) {
-            produceAnn.addMember(Produce.SCOPE_METHOD, "$T.class", TypeName.get(config.getScope().unwrap()));
+        if (!config.getScoped().isSpecifiedExplicitly()) {
+            produceAnn.addMember(Produce.SCOPED_METHOD, "$T.class", TypeName.get(config.getScoped().getScopedAnnotation().unwrap()));
         }
 
         if (config.getPrototype() != null) {
