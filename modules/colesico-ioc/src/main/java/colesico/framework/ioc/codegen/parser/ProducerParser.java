@@ -47,6 +47,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,7 +84,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         return constructor;
     }
 
-    protected ScopeElement obtainScope(ParserElement element) {
+    protected ScopeElement obtainScopeFromElementAnn(ParserElement element) {
 
         AnnotationAssist<Singleton> singleton = element.getAnnotation(Singleton.class);
         if (singleton != null) {
@@ -115,6 +116,34 @@ public class ProducerParser extends FrameworkAbstractParser {
             }
         }
         return result;
+    }
+
+    protected ScopeElement obtainScopeProduceAnn(AnnotationAssist<Produce> produceAnn) {
+        TypeMirror scopeMirror = produceAnn.getValueTypeMirror(Produce::scope);
+        if (CodegenUtils.isAssignable(Annotation.class, scopeMirror, processingEnv)) {
+            return null;
+        }
+
+        if (CodegenUtils.isAssignable(Singleton.class, scopeMirror, processingEnv)) {
+            return new ScopeElement(ScopeElement.ScopeKind.SINGLETON, null);
+        }
+
+        if (CodegenUtils.isAssignable(Unscoped.class, scopeMirror, processingEnv)) {
+            return new ScopeElement(ScopeElement.ScopeKind.UNSCOPED, null);
+        }
+
+        ClassType scopeAnn = new ClassType(getProcessingEnv(), (DeclaredType) scopeMirror);
+        AnnotationAssist<CustomScope> customScope = scopeAnn.asClassElement().getAnnotation(CustomScope.class);
+        if (customScope != null) {
+            TypeMirror scopeClass = customScope.getValueTypeMirror(CustomScope::value);
+            return new ScopeElement(ScopeElement.ScopeKind.CUSTOM, new ClassType(getProcessingEnv(), (DeclaredType) scopeClass));
+        }
+
+        throw CodegenException.of()
+                .message("Invalid scope class: " + scopeMirror.toString())
+                .element(((DeclaredType) scopeMirror).asElement())
+                .build();
+
     }
 
     private List<MethodElement> parsePostConstructListeners(ClassType suppliedType) {
@@ -243,11 +272,13 @@ public class ProducerParser extends FrameworkAbstractParser {
             throw CodegenException.of().message("Unable to find injectable constructor for class: " + suppliedMirror.toString()).build();
         }
 
-        // Scope
-
-        ScopeElement scope = obtainScope(suppliedType.asClassElement());
+        // Detect scope
+        ScopeElement scope = obtainScopeProduceAnn(produceAnn);
         if (scope == null) {
-            scope = new ScopeElement(ScopeElement.ScopeKind.UNSCOPED, null);
+            scope = obtainScopeFromElementAnn(suppliedType.asClassElement());
+            if (scope == null) {
+                scope = new ScopeElement(ScopeElement.ScopeKind.UNSCOPED, null);
+            }
         }
 
         // Polyproduce
@@ -368,9 +399,9 @@ public class ProducerParser extends FrameworkAbstractParser {
         // Detect scope
         ScopeElement scope;
         if (postProduce == null) {
-            scope = obtainScope(method);
+            scope = obtainScopeFromElementAnn(method);
             if (scope == null) {
-                scope = obtainScope(suppliedType.asClassElement());
+                scope = obtainScopeFromElementAnn(suppliedType.asClassElement());
                 if (scope == null) {
                     scope = new ScopeElement(ScopeElement.ScopeKind.UNSCOPED, null);
                 }

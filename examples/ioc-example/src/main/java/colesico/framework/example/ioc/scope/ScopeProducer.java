@@ -14,19 +14,24 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.ioc.singleton;
+package colesico.framework.example.ioc.scope;
 
+import colesico.framework.ioc.production.Produce;
+import colesico.framework.ioc.production.Producer;
+import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.ioc.scope.ThreadScoped;
+
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
-/**
- * Here is Singleton definition directly on class
- */
-@Singleton
-public class Singleton1 {
+@Producer
+@Produce(Singleton1.class)
+@Produce(value = Singleton3.class, scope = Singleton.class)
+@Produce(value = ThreadScoped1.class, scope = ThreadScoped.class)
+public class ScopeProducer {
 
-    private int counter = 0;
-
-    public String getMessage() {
-        return "Singleton1-" + (counter++);
+    @Singleton
+    public Singleton2 getSingleton2() {
+        return new Singleton2();
     }
 }

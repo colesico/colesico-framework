@@ -77,6 +77,14 @@ public @interface Produce {
     Class<?> classed() default Class.class;
 
     /**
+     * Override class based scope declaration
+     *
+     * @see javax.inject.Singleton
+     * @see colesico.framework.ioc.scope.ThreadScoped
+     */
+    Class<? extends Annotation> scope() default Annotation.class;
+
+    /**
      * Whether or not to invoke post produce listener after instance been produced (but before instance @PostConstruct).
      * This  can be used to handle just created instance before it will be returned from IoC container
      */
@@ -90,6 +98,7 @@ public @interface Produce {
     /**
      * Instance class itself, superclasses or interfaces with which this instance will be associated.
      * This instance will acts as an implementation for these classes or interfaces.
+     *
      * @see KeyType
      */
     Class<?>[] keyType() default {};

@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.ioc.singleton;
-
-import colesico.framework.ioc.production.Produce;
-import colesico.framework.ioc.production.Producer;
+package colesico.framework.example.ioc.scope;
 
 import javax.inject.Singleton;
 
-@Producer
-@Produce(Singleton1.class)
-public class SingletonProducer {
+/**
+ * Here is Singleton definition directly on class
+ */
+@Singleton
+public class Singleton1 {
 
-    @Singleton
-    public Singleton2 getSingleton2() {
-        return new Singleton2();
+    private int counter = 0;
+
+    public String getMessage() {
+        return "Singleton1-" + (counter++);
     }
 }
