@@ -56,18 +56,18 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         super(processingEnv);
     }
 
-    protected MethodSpec.Builder createProducingOnPrototypeMethodBuilder(final ProducerGenerator prodGen, final ConfigElement confElement) {
-        String methodName = "get" + confElement.getImplementation().getSimpleName();
-        MethodSpec.Builder mb = prodGen.addProduceMethod(methodName, TypeName.get(confElement.getPrototype().getOriginType()));
+    protected MethodSpec.Builder createProducingOnPrototypeMethodBuilder(final ProducerGenerator prodGen, final ConfigElement config) {
+        String methodName = "get" + config.getOriginClass().getSimpleName();
+        MethodSpec.Builder mb = prodGen.addProduceMethod(methodName, TypeName.get(config.getPrototype().getOriginType()));
         // Config impl param
-        ParameterSpec.Builder pb = ParameterSpec.builder(TypeName.get(confElement.getImplementation().getOriginType()), CONF_PARAM, Modifier.FINAL);
-        if (confElement.getClassedQualifier() != null) {
+        ParameterSpec.Builder pb = ParameterSpec.builder(TypeName.get(config.getOriginClass().getOriginType()), CONF_PARAM, Modifier.FINAL);
+        if (config.getClassedQualifier() != null) {
             AnnotationSpec.Builder classedAnn = AnnotationSpec.builder(Classed.class);
-            classedAnn.addMember("value", "$T.class", TypeName.get(confElement.getClassedQualifier()));
+            classedAnn.addMember("value", "$T.class", TypeName.get(config.getClassedQualifier()));
             pb.addAnnotation(classedAnn.build());
-        } else if (confElement.getNamedQualifier() != null) {
+        } else if (config.getNamedQualifier() != null) {
             AnnotationSpec.Builder namedAnn = AnnotationSpec.builder(Named.class);
-            namedAnn.addMember("value", "$S", confElement.getNamedQualifier());
+            namedAnn.addMember("value", "$S", config.getNamedQualifier());
             pb.addAnnotation(namedAnn.build());
         }
         mb.addParameter(pb.build());
@@ -76,48 +76,48 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         return mb;
     }
 
-    protected void generateProduceSingleConfigPrototype(ProducerGenerator prodGen, ConfigElement confElement) {
-        MethodSpec.Builder mb = createProducingOnPrototypeMethodBuilder(prodGen, confElement);
+    protected void generateProduceSingleConfigPrototype(ProducerGenerator prodGen, ConfigElement config) {
+        MethodSpec.Builder mb = createProducingOnPrototypeMethodBuilder(prodGen, config);
         AnnotationSpec.Builder singletonAnn = AnnotationSpec.builder(Singleton.class);
         mb.addAnnotation(singletonAnn.build());
 
-        if (confElement.getClassedQualifier() != null) {
+        if (config.getClassedQualifier() != null) {
             AnnotationSpec.Builder ann = AnnotationSpec.builder(Classed.class);
-            ann.addMember("value", "$T.class", TypeName.get(confElement.getClassedQualifier()));
+            ann.addMember("value", "$T.class", TypeName.get(config.getClassedQualifier()));
             mb.addAnnotation(ann.build());
-        } else if (confElement.getNamedQualifier() != null) {
+        } else if (config.getNamedQualifier() != null) {
             AnnotationSpec.Builder ann = AnnotationSpec.builder(Named.class);
-            ann.addMember("value", "$S", confElement.getNamedQualifier());
+            ann.addMember("value", "$S", config.getNamedQualifier());
             mb.addAnnotation(ann.build());
         }
     }
 
-    private void generateProducePolyvariantConfigPrototype(ProducerGenerator prodGen, ConfigElement confElement) {
-        MethodSpec.Builder mb = createProducingOnPrototypeMethodBuilder(prodGen, confElement);
+    private void generateProducePolyvariantConfigPrototype(ProducerGenerator prodGen, ConfigElement config) {
+        MethodSpec.Builder mb = createProducingOnPrototypeMethodBuilder(prodGen, config);
         AnnotationSpec.Builder singletonAnn = AnnotationSpec.builder(Singleton.class);
         mb.addAnnotation(singletonAnn.build());
         AnnotationSpec.Builder polyAnn = AnnotationSpec.builder(Polyproduce.class);
         mb.addAnnotation(polyAnn.build());
 
-        if (confElement.getClassedQualifier() != null) {
+        if (config.getClassedQualifier() != null) {
             AnnotationSpec.Builder ann = AnnotationSpec.builder(Classed.class);
-            ann.addMember("value", "$T.class", TypeName.get(confElement.getClassedQualifier()));
+            ann.addMember("value", "$T.class", TypeName.get(config.getClassedQualifier()));
             mb.addAnnotation(ann.build());
-        } else if (confElement.getNamedQualifier() != null) {
+        } else if (config.getNamedQualifier() != null) {
             AnnotationSpec.Builder ann = AnnotationSpec.builder(Named.class);
-            ann.addMember("value", "$S", confElement.getNamedQualifier());
+            ann.addMember("value", "$S", config.getNamedQualifier());
             mb.addAnnotation(ann.build());
         }
     }
 
-    private void generateProduceMessageConfigurable(ProducerGenerator prodGen, ConfigElement confElement) {
-        TypeElement targetElm = confElement.getTarget().unwrap();
-        MethodSpec.Builder mb = prodGen.addProduceMethod("get" + targetElm.getSimpleName().toString() + "With" + confElement.getImplementation().getSimpleName(),
+    private void generateProduceMessageConfigurable(ProducerGenerator prodGen, ConfigElement config) {
+        TypeElement targetElm = config.getTarget().unwrap();
+        MethodSpec.Builder mb = prodGen.addProduceMethod("get" + targetElm.getSimpleName().toString() + "With" + config.getOriginClass().getSimpleName(),
                 ClassName.bestGuess(targetElm.getQualifiedName().toString()));
 
-        if (!confElement.getDefaultMessage()) {
+        if (!config.getDefaultMessage()) {
             AnnotationSpec.Builder classedAnn = AnnotationSpec.builder(Classed.class);
-            classedAnn.addMember("value", "$T.class", TypeName.get(confElement.getImplementation().getOriginType()));
+            classedAnn.addMember("value", "$T.class", TypeName.get(config.getOriginClass().getOriginType()));
             mb.addAnnotation(classedAnn.build());
         }
 
@@ -125,18 +125,18 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
         //Parameter @Classed(AConfig.class) Supplier<Service> target
         ParameterSpec.Builder targetBuilder = ParameterSpec.builder(
-                ParameterizedTypeName.get(ClassName.get(Supplier.class), TypeName.get(confElement.getTarget().getOriginType())),
+                ParameterizedTypeName.get(ClassName.get(Supplier.class), TypeName.get(config.getTarget().getOriginType())),
                 FACTORY_PARAM,
                 Modifier.FINAL
         );
         AnnotationSpec.Builder targetAnnBuilder = AnnotationSpec.builder(Classed.class);
-        targetAnnBuilder.addMember("value", "$T.class", TypeName.get(confElement.getPrototype().getOriginType()));
+        targetAnnBuilder.addMember("value", "$T.class", TypeName.get(config.getPrototype().getOriginType()));
         targetBuilder.addAnnotation(targetAnnBuilder.build());
         mb.addParameter(targetBuilder.build());
 
         //Parameter ConfImpl config
         ParameterSpec.Builder configBuilder = ParameterSpec.builder(
-                TypeName.get(confElement.getImplementation().getOriginType()),
+                TypeName.get(config.getOriginClass().getOriginType()),
                 CONF_PARAM,
                 Modifier.FINAL
         );
@@ -149,22 +149,22 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         );
     }
 
-    private void generateInitSourceValues(ConfigElement confElement, ProducerGenerator prodGen) {
-        String postProduceMethodName = "init" + confElement.getImplementation().getSimpleName();
+    private void generateInitSourceValues(ConfigElement config, ProducerGenerator prodGen) {
+        String postProduceMethodName = "init" + config.getOriginClass().getSimpleName();
         MethodSpec.Builder mb = prodGen.addMethod(postProduceMethodName, Modifier.PUBLIC);
         mb.addAnnotation(PostProduce.class);
 
-        ParameterSpec.Builder confParam = ParameterSpec.builder(TypeName.get(confElement.getImplementation().asClassType().unwrap()), CONF_PARAM, Modifier.FINAL);
+        ParameterSpec.Builder confParam = ParameterSpec.builder(TypeName.get(config.getOriginClass().asClassType().unwrap()), CONF_PARAM, Modifier.FINAL);
         confParam.addAnnotation(Message.class);
         mb.addParameter(confParam.build());
 
-        mb.addParameter(TypeName.get(confElement.getSource().getSourceType().unwrap()), CONFIG_SOURCE_PARAM, Modifier.FINAL);
+        mb.addParameter(TypeName.get(config.getSource().getSourceType().unwrap()), CONFIG_SOURCE_PARAM, Modifier.FINAL);
 
-        mb.returns(TypeName.get(confElement.getImplementation().asClassType().unwrap()));
+        mb.returns(TypeName.get(config.getOriginClass().asClassType().unwrap()));
         CodeBlock.Builder cb = CodeBlock.builder();
 
         ArrayCodegen paramsCodegen = new ArrayCodegen();
-        for (Map.Entry<String, String> param : confElement.getSource().getOptions().entrySet()) {
+        for (Map.Entry<String, String> param : config.getSource().getOptions().entrySet()) {
             paramsCodegen.add("$S", param.getKey());
             paramsCodegen.add("$S", param.getValue());
         }
@@ -181,7 +181,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         cb.add("));\n");
 
         // final BagType bag = conn.getValue(BagType.class)
-        TypeName bagType = ClassName.bestGuess(confElement.getImplementation().getPackageName() + "." + confElement.getSource().getBagClassSimpleName());
+        TypeName bagType = ClassName.bestGuess(config.getOriginClass().getPackageName() + "." + config.getSource().getBagClassSimpleName());
         cb.addStatement("final $T $N = $N.$N($T.class)",
                 bagType,
                 BAG_VAR,
@@ -192,7 +192,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
         cb.addStatement("if ( $N == null ){ return $N; }", BAG_VAR, CONF_PARAM);
 
-        for (SourceValueElement sv : confElement.getSource().getSourceValues()) {
+        for (SourceValueElement sv : config.getSource().getSourceValues()) {
             String fieldName = sv.getOriginField().getName();
             // if (bag.getField()!=null {config.setField(bag.getField())}
             cb.addStatement("if ( $N.$N() != null ){ $N.$N($N.$N()); }",
@@ -211,56 +211,59 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         mb.addCode(cb.build());
     }
 
-    private void generateProducerClass(ConfigElement confElement) {
-        String classSimpleName = confElement.getImplementation().getSimpleName();
-        String packageName = confElement.getImplementation().getPackageName();
+    private void generateProducerClass(ConfigElement config) {
+        String classSimpleName = config.getOriginClass().getSimpleName();
+        String packageName = config.getOriginClass().getPackageName();
 
         ProducerGenerator prodGen = new ProducerGenerator(packageName, classSimpleName, this.getClass(), getProcessingEnv());
 
         // Condition
-        if (confElement.getCondition() != null) {
-            prodGen.addConditionAnnotation(TypeName.get(confElement.getCondition().unwrap()));
+        if (config.getCondition() != null) {
+            prodGen.addConditionAnnotation(TypeName.get(config.getCondition().unwrap()));
         }
 
         // Substitution
-        if (confElement.getSubstitution() != null) {
-            prodGen.addSubstitutionAnnotation(confElement.getSubstitution());
+        if (config.getSubstitution() != null) {
+            prodGen.addSubstitutionAnnotation(config.getSubstitution());
         }
 
         // Generates the configuration implementation producing  via annotation @Produce
-        AnnotationSpec.Builder produceAnn = prodGen.addProduceAnnotation(TypeName.get(confElement.getImplementation().getOriginType()));
+        AnnotationSpec.Builder produceAnn = prodGen.addProduceAnnotation(TypeName.get(config.getOriginClass().getOriginType()));
+        if (config.getScope() != null) {
+            produceAnn.addMember(Produce.SCOPE_METHOD, "$T.class", TypeName.get(config.getScope().unwrap()));
+        }
 
-        if (confElement.getPrototype() != null) {
+        if (config.getPrototype() != null) {
             //Generates config prototype producing methods based on configuration implementation, etc.
-            switch (confElement.getModel()) {
+            switch (config.getModel()) {
                 case SINGLE: {
-                    generateProduceSingleConfigPrototype(prodGen, confElement);
+                    generateProduceSingleConfigPrototype(prodGen, config);
                     break;
                 }
                 case POLYVARIANT: {
-                    generateProducePolyvariantConfigPrototype(prodGen, confElement);
+                    generateProducePolyvariantConfigPrototype(prodGen, config);
                     break;
                 }
                 case MESSAGE: {
-                    generateProduceMessageConfigurable(prodGen, confElement);
+                    generateProduceMessageConfigurable(prodGen, config);
                     break;
                 }
             }
         }
 
         // Init configuration source values
-        if (confElement.getSource() != null) {
+        if (config.getSource() != null) {
             produceAnn.addMember(Produce.POST_PRODUCE_METHOD, "true");
-            generateInitSourceValues(confElement, prodGen);
+            generateInitSourceValues(config, prodGen);
         }
 
-        prodGen.generate(confElement.getImplementation().unwrap());
+        prodGen.generate(config.getOriginClass().unwrap());
     }
 
-    public void generate(List<ConfigElement> configElements) {
-        for (ConfigElement confElement : configElements) {
-            logger.debug("Generate config producing for: " + confElement.toString());
-            generateProducerClass(confElement);
+    public void generate(List<ConfigElement> configs) {
+        for (ConfigElement config : configs) {
+            logger.debug("Generate config producing for: " + config.toString());
+            generateProducerClass(config);
         }
     }
 }
