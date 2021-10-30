@@ -78,9 +78,6 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
     protected void generateProduceSingleConfigPrototype(ProducerGenerator prodGen, ConfigElement config) {
         MethodSpec.Builder mb = createProducingOnPrototypeMethodBuilder(prodGen, config);
-        ClassName scopedAnnType = ClassName.get(config.getScoped().getScopedAnnotation().asTypeElement());
-        AnnotationSpec.Builder scopedAnn = AnnotationSpec.builder(scopedAnnType);
-        mb.addAnnotation(scopedAnn.build());
 
         if (config.getClassedQualifier() != null) {
             AnnotationSpec.Builder ann = AnnotationSpec.builder(Classed.class);
@@ -95,10 +92,6 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
     private void generateProducePolyvariantConfigPrototype(ProducerGenerator prodGen, ConfigElement config) {
         MethodSpec.Builder mb = createProducingOnPrototypeMethodBuilder(prodGen, config);
-
-        ClassName scopedAnnType = ClassName.get(config.getScoped().getScopedAnnotation().asTypeElement());
-        AnnotationSpec.Builder scopedAnn = AnnotationSpec.builder(scopedAnnType);
-        mb.addAnnotation(scopedAnn.build());
 
         AnnotationSpec.Builder polyAnn = AnnotationSpec.builder(Polyproduce.class);
         mb.addAnnotation(polyAnn.build());
@@ -118,10 +111,6 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         TypeElement targetElm = config.getTarget().unwrap();
         MethodSpec.Builder mb = prodGen.addProduceMethod("get" + targetElm.getSimpleName().toString() + "With" + config.getOriginClass().getSimpleName(),
                 ClassName.bestGuess(targetElm.getQualifiedName().toString()));
-
-        ClassName scopedAnnType = ClassName.get(config.getScoped().getScopedAnnotation().asTypeElement());
-        AnnotationSpec.Builder scopedAnn = AnnotationSpec.builder(scopedAnnType);
-        mb.addAnnotation(scopedAnn.build());
 
         if (!config.getDefaultMessage()) {
             AnnotationSpec.Builder classedAnn = AnnotationSpec.builder(Classed.class);
