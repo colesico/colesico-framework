@@ -20,7 +20,6 @@ import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
 
 import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
 import java.util.List;
 
 /**
@@ -36,7 +35,7 @@ public class CustomFactoryElement extends FactoryElement {
                                 ConditionElement condition,
                                 SubstitutionElement substitution,
                                 Boolean polyproduce,
-                                PPLDefinitionElement postProduce,
+                                PostProduceElement postProduce,
                                 String named,
                                 ClassifierType classed,
                                 boolean notifyPostProduce,

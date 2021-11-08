@@ -24,9 +24,10 @@ import colesico.framework.example.ioc.logger.MainBeanLOG;
 import colesico.framework.example.ioc.message.MainBeanMSG;
 import colesico.framework.example.ioc.multiplugin.MainBeanMLP;
 import colesico.framework.example.ioc.named.MainBeanNMD;
+import colesico.framework.example.ioc.scope.Singleton3;
 import colesico.framework.example.ioc.substitute.MainBeanREP;
-import colesico.framework.example.ioc.singleton.Singleton1;
-import colesico.framework.example.ioc.singleton.Singleton2;
+import colesico.framework.example.ioc.scope.Singleton1;
+import colesico.framework.example.ioc.scope.Singleton2;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import org.testng.annotations.BeforeClass;
@@ -91,14 +92,21 @@ public class IocExampleTest {
     }
 
     @Test
-    public void testSingleton() {
+    public void testScope() {
         Singleton1 s1 = ioc.instance(Singleton1.class);
         assertEquals(s1.getMessage(), "Singleton1-0");
+        s1 = ioc.instance(Singleton1.class);
         assertEquals(s1.getMessage(), "Singleton1-1");
 
         Singleton2 s2 = ioc.instance(Singleton2.class);
         assertEquals(s2.getMessage(), "Singleton2-0");
+        s2 = ioc.instance(Singleton2.class);
         assertEquals(s2.getMessage(), "Singleton2-1");
+
+        Singleton3 s3 = ioc.instance(Singleton3.class);
+        assertEquals(s3.getMessage(), "Singleton3-0");
+        s3 = ioc.instance(Singleton3.class);
+        assertEquals(s3.getMessage(), "Singleton3-1");
     }
 
     @Test

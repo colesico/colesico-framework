@@ -30,9 +30,9 @@ import javax.lang.model.type.TypeMirror;
 public class ConfigElement {
 
     /**
-     * Configuration implementation class
+     * Configuration origin class element (annotated with {@link colesico.framework.config.Config})
      */
-    private final ClassElement implementation;
+    private final ClassElement originClass;
 
     /**
      * Configuration prototype class
@@ -53,6 +53,14 @@ public class ConfigElement {
      * Type of configuration
      */
     private final ConfigModel model;
+
+    /**
+     * Scoped annotation type
+     * @see javax.inject.Singleton
+     * @see colesico.framework.ioc.scope.Unscoped
+     * @see colesico.framework.ioc.scope.CustomScope
+     */
+    private final ConfigScopedElement scoped;
 
     /**
      * Configurable target for this configuration
@@ -79,29 +87,31 @@ public class ConfigElement {
      */
     private final String namedQualifier;
 
-    public ConfigElement(ClassElement implementation,
+    public ConfigElement(ClassElement originClass,
                          ClassElement prototype,
                          ClassType condition,
                          Substitution substitution,
                          ConfigModel model,
+                         ConfigScopedElement scoped,
                          ClassElement target,
                          boolean defaultMessage,
                          TypeMirror classedQualifier,
                          String namedQualifier) {
 
-        this.implementation = implementation;
+        this.originClass = originClass;
         this.prototype = prototype;
         this.condition = condition;
         this.substitution = substitution;
         this.model = model;
+        this.scoped = scoped;
         this.target = target;
         this.defaultMessage = defaultMessage;
         this.classedQualifier = classedQualifier;
         this.namedQualifier = namedQualifier;
     }
 
-    public ClassElement getImplementation() {
-        return implementation;
+    public ClassElement getOriginClass() {
+        return originClass;
     }
 
     public ClassElement getPrototype() {
@@ -118,6 +128,10 @@ public class ConfigElement {
 
     public ConfigModel getModel() {
         return model;
+    }
+
+    public ConfigScopedElement getScoped() {
+        return scoped;
     }
 
     public ClassElement getTarget() {
@@ -147,7 +161,7 @@ public class ConfigElement {
     @Override
     public String toString() {
         return "ConfigElement{" +
-                "implementation=" + implementation +
+                "implementation=" + originClass +
                 ", prototype=" + prototype +
                 ", condition=" + condition +
                 ", substitution=" + substitution +

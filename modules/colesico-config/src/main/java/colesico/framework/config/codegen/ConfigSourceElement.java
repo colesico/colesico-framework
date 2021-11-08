@@ -61,7 +61,7 @@ public class ConfigSourceElement {
     }
 
     public String getBagClassSimpleName() {
-        return parentConfig.getImplementation().getSimpleName() + BAG_CLASS_SUFFIX;
+        return parentConfig.getOriginClass().getSimpleName() + BAG_CLASS_SUFFIX;
     }
 
 }

@@ -17,12 +17,12 @@ public final class RestletTWContext extends HttpTWContext {
     /**
      * Http code to return to client
      */
-    private Integer httpCode;
+    private Integer statusCode;
 
-    private RestletTWContext(Type valueType, Class<? extends RestletTeleWriter> writerClass, Integer httpCode) {
+    private RestletTWContext(Type valueType, Class<? extends RestletTeleWriter> writerClass, Integer statusCode) {
         super(valueType);
         this.writerClass = writerClass;
-        this.httpCode = httpCode;
+        this.statusCode = statusCode;
     }
 
     public static RestletTWContext of(Type valueType) {
@@ -33,19 +33,19 @@ public final class RestletTWContext extends HttpTWContext {
         return new RestletTWContext(valueType, writerClass, null);
     }
 
-    public static RestletTWContext of(Type valueType, Class<? extends RestletTeleWriter> writerClass, Integer httpCode) {
-        return new RestletTWContext(valueType, writerClass, httpCode);
+    public static RestletTWContext of(Type valueType, Class<? extends RestletTeleWriter> writerClass, Integer statusCode) {
+        return new RestletTWContext(valueType, writerClass, statusCode);
     }
 
     public Class<? extends RestletTeleWriter> getWriterClass() {
         return writerClass;
     }
 
-    public Integer getHttpCode() {
-        return httpCode;
+    public Integer getStatusCode() {
+        return statusCode;
     }
 
-    public void setHttpCode(Integer httpCode) {
-        this.httpCode = httpCode;
+    public void setStatusCode(Integer statusCode) {
+        this.statusCode = statusCode;
     }
 }

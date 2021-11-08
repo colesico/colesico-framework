@@ -29,20 +29,27 @@ Module has build-in support for an external configuration value sources:
 * @UseFileSource - defines file-based config source. It is shortcut, internally
   framework converts it to @UseSource and @SourceOption(name = ..., value = "...")
 
+== Simple configuration
+
+To create simple configuration bean just define a pojo class and annotate it with @Config
+annotation. The framework will generate extra code to be able to get an instance of this bean from the IoC container.
+By default, the scope of this instance is a singleton.
+
 == Prototype-based configuration
 
 Config module supports different prototype-based configuration models:
 
 * Single. This type of configuration is used to define some global configuration that is the only configuration instance
-  per application (per IoC container).  The configuration in this model may be obtained from IoC container by configuration
+  per application (per IoC container, local singleton).  The configuration in this model may be obtained from IoC container by configuration
   prototype class name.  Named or Classed IoC qualifiers can be additionally used on config implementation to differentiate
   config singletons.
 * Polyvariant. This type of configuration is used to define some  optional configurations or additional configurations
   that should be "aggregated"  to fully configure the "service". I.e. it is the multiple configurations instances per
   application, that may be obtained from injector with  Polyprovider of configuration prototype class name.
-  Named or Classed IoC qualifiers can be additionally used on config implementation to differentiate polyvariant sets.
-* Message. Configuration of tis model is not used directly via injection. To get this configuration the bean should receive configuration instance via IOC Message.
-  The client can inject that  bean by specifying the @Classed qualifier with the configuration implementation class
+  Each of these instances is a singleton.  Named or Classed IoC qualifiers can be additionally used on config implementation to differentiate polyvariant sets.
+* Message. Configuration of this model is not used directly via injection. To get this configuration the bean should receive configuration instance via IoC Message.
+  The client can inject that  bean by specifying the @Classed qualifier with the configuration implementation class.
+  Instance of that configuration class is also a singleton.
 
 == Configuration source
 [[sources]]

@@ -19,21 +19,21 @@ package colesico.framework.config.codegen;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
-import colesico.framework.assist.codegen.model.AnnotationAssist;
-import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.assist.codegen.model.ClassType;
-import colesico.framework.assist.codegen.model.FieldElement;
+import colesico.framework.assist.codegen.model.*;
 import colesico.framework.config.*;
 import colesico.framework.ioc.conditional.Requires;
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Classed;
+import colesico.framework.ioc.scope.CustomScope;
+import colesico.framework.ioc.scope.Unscoped;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
@@ -53,8 +53,8 @@ public class ConfigParser extends FrameworkAbstractParser {
         super(processingEnv);
     }
 
-    private ClassElement getConfigPrototypeClass(ClassElement configImplementation) {
-        TypeElement superClass = configImplementation.unwrap();
+    private ClassElement getConfigPrototypeClass(ClassElement config) {
+        TypeElement superClass = config.unwrap();
         do {
             superClass = (TypeElement) ((DeclaredType) superClass.getSuperclass()).asElement();
             ConfigPrototype cpAnn = superClass.getAnnotation(ConfigPrototype.class);
@@ -63,14 +63,43 @@ public class ConfigParser extends FrameworkAbstractParser {
             }
         } while (!superClass.getSimpleName().toString().equals("Object"));
 
-        logger.debug("Unable to determine configuration prototype for: " + configImplementation.getName());
+        logger.debug("Unable to determine configuration prototype for: " + config.getName());
 
         return null;
     }
 
-    private ConfigElement createConfigElement(ClassElement configImpl) {
+    private ConfigScopedElement obtainConfigScope(ClassElement config) {
 
-        ClassElement configPrototype = getConfigPrototypeClass(configImpl);
+        ClassType scoped;
+
+        AnnotationAssist<Unscoped> unscAnn = config.getAnnotation(Unscoped.class);
+        if (unscAnn != null) {
+            scoped = new ClassType(getProcessingEnv(), (DeclaredType) CodegenUtils.classToTypeMirror(Unscoped.class, getElementUtils()));
+            return new ConfigScopedElement(scoped, true);
+        }
+
+        AnnotationAssist<Singleton> singAnn = config.getAnnotation(Singleton.class);
+        if (singAnn != null) {
+            scoped = new ClassType(getProcessingEnv(), (DeclaredType) CodegenUtils.classToTypeMirror(Singleton.class, getElementUtils()));
+            return new ConfigScopedElement(scoped, true);
+        }
+
+        // Find custom scope declaration
+        for (AnnotationType am : config.getAnnotationTypes()) {
+            AnnotationAssist<CustomScope> customScope = am.asElement().getAnnotation(CustomScope.class);
+            if (customScope != null) {
+                scoped = new ClassType(getProcessingEnv(), (DeclaredType) am.unwrap());
+                return new ConfigScopedElement(scoped, true);
+            }
+        }
+
+        scoped = new ClassType(getProcessingEnv(), (DeclaredType) CodegenUtils.classToTypeMirror(Singleton.class, getElementUtils()));
+        return new ConfigScopedElement(scoped, false);
+    }
+
+    private ConfigElement parseConfigElement(ClassElement config) {
+
+        ClassElement configPrototype = getConfigPrototypeClass(config);
 
         ConfigModel model;
         ClassElement target;
@@ -88,7 +117,7 @@ public class ConfigParser extends FrameworkAbstractParser {
             model = ConfigModel.SINGLE;
         }
 
-        AnnotationAssist<DefaultConfig> defaultAnn = configImpl.getAnnotation(DefaultConfig.class);
+        AnnotationAssist<DefaultConfig> defaultAnn = config.getAnnotation(DefaultConfig.class);
         boolean defaultMessage;
         if (defaultAnn != null) {
             if (!ConfigModel.MESSAGE.equals(model)) {
@@ -101,7 +130,7 @@ public class ConfigParser extends FrameworkAbstractParser {
         }
 
         // Classed
-        AnnotationAssist<Classed> classedAnn = configImpl.getAnnotation(Classed.class);
+        AnnotationAssist<Classed> classedAnn = config.getAnnotation(Classed.class);
         TypeMirror classed;
         if (classedAnn != null) {
             classed = classedAnn.getValueTypeMirror(Classed::value);
@@ -110,28 +139,31 @@ public class ConfigParser extends FrameworkAbstractParser {
         }
 
         // Named
-        AnnotationAssist<Named> namedAnn = configImpl.getAnnotation(Named.class);
+        AnnotationAssist<Named> namedAnn = config.getAnnotation(Named.class);
         String named = namedAnn == null ? null : namedAnn.unwrap().value();
 
         // Condition
-        AnnotationAssist<Requires> reqAnn = configImpl.getAnnotation(Requires.class);
+        AnnotationAssist<Requires> reqAnn = config.getAnnotation(Requires.class);
         ClassType condition = null;
         if (reqAnn != null) {
             condition = new ClassType(getProcessingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(a -> a.value()));
         }
 
         // Substitution
-        AnnotationAssist<Substitute> subsAnn = configImpl.getAnnotation(Substitute.class);
+        AnnotationAssist<Substitute> subsAnn = config.getAnnotation(Substitute.class);
         Substitution substitution = null;
         if (subsAnn != null) {
             substitution = subsAnn.unwrap().value();
         }
 
-        ConfigElement configElement = new ConfigElement(configImpl, configPrototype, condition, substitution, model, target, defaultMessage, classed, named);
+        // Detect scope
+        ConfigScopedElement scope = obtainConfigScope(config);
+
+        ConfigElement configElement = new ConfigElement(config, configPrototype, condition, substitution, model, scope, target, defaultMessage, classed, named);
 
         // Config source
-        AnnotationAssist<UseSource> useSourceAnn = configImpl.getAnnotation(UseSource.class);
-        AnnotationAssist<UseFileSource> useFileSourceAnn = configImpl.getAnnotation(UseFileSource.class);
+        AnnotationAssist<UseSource> useSourceAnn = config.getAnnotation(UseSource.class);
+        AnnotationAssist<UseFileSource> useFileSourceAnn = config.getAnnotation(UseFileSource.class);
         ConfigSourceElement sourceElm = null;
         if (useSourceAnn != null || useFileSourceAnn != null) {
             TypeMirror sourceType;
@@ -144,10 +176,10 @@ public class ConfigParser extends FrameworkAbstractParser {
                 bindAll = useFileSourceAnn.unwrap().bindAll();
             }
             ClassType sourceClassType = new ClassType(processingEnv, (DeclaredType) sourceType);
-            Map<String, String> options = parseSourceOptions(configImpl);
+            Map<String, String> options = parseSourceOptions(config);
             sourceElm = new ConfigSourceElement(configElement, sourceClassType, options, bindAll);
             configElement.setSource(sourceElm);
-            parseSourceValues(configImpl, sourceElm);
+            parseSourceValues(config, sourceElm);
         }
 
         return configElement;
@@ -202,8 +234,8 @@ public class ConfigParser extends FrameworkAbstractParser {
     }
 
     public ConfigElement parse(ClassElement configImplElement) {
-        ConfigElement configElement = createConfigElement(configImplElement);
-        logger.debug("Configuration " + configElement.getImplementation().getName() + " has been parsed");
+        ConfigElement configElement = parseConfigElement(configImplElement);
+        logger.debug("Configuration " + configElement.getOriginClass().getName() + " has been parsed");
         return configElement;
     }
 

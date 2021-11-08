@@ -25,7 +25,6 @@ import java.lang.annotation.*;
  * Declares the instance default producing.
  *
  * @author Vladlen Larionov
- * @see Unscoped
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -34,13 +33,15 @@ import java.lang.annotation.*;
 @Repeatable(Produces.class)
 public @interface Produce {
 
+    String VALUE_METHOD = "value";
+    String REQUIRES_METHOD = "requires";
+    String POLYPRODUCE_METHOD = "polyproduce";
+    String NAMED_METHOD = "named";
+    String CLASSED_METHOD = "classed";
+    String SCOPED_METHOD = "scoped";
     String POST_PRODUCE_METHOD = "postProduce";
     String POST_CONSTRUCT_METHOD = "postConstruct";
-    String CLASSED_METHOD = "classed";
-    String NAMED_METHOD = "named";
-    String POLYPRODUCE_METHOD = "polyproduce";
-    String VALUE_METHOD = "value";
-
+    String KEY_TYPE_METHOD = "keyType";
 
     /**
      * Class of instance to be produced
@@ -77,6 +78,15 @@ public @interface Produce {
     Class<?> classed() default Class.class;
 
     /**
+     * Override class based scoped declaration
+     *
+     * @see javax.inject.Singleton
+     * @see colesico.framework.ioc.scope.ThreadScoped
+     * @see Unscoped
+     */
+    Class<? extends Annotation> scoped() default Annotation.class;
+
+    /**
      * Whether or not to invoke post produce listener after instance been produced (but before instance @PostConstruct).
      * This  can be used to handle just created instance before it will be returned from IoC container
      */
@@ -90,6 +100,7 @@ public @interface Produce {
     /**
      * Instance class itself, superclasses or interfaces with which this instance will be associated.
      * This instance will acts as an implementation for these classes or interfaces.
+     *
      * @see KeyType
      */
     Class<?>[] keyType() default {};

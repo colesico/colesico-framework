@@ -31,7 +31,7 @@ public final class JdbiConditions {
 
     public static final class DefaultTransactionalShell implements Condition {
 
-        public static boolean enabled = true;
+        private static boolean enabled = true;
 
         @Override
         public boolean isMet(ConditionContext context) {
@@ -41,7 +41,7 @@ public final class JdbiConditions {
 
     public static final class DefaultConnection implements Condition {
 
-        public static boolean enabled = true;
+        private static boolean enabled = true;
 
         @Override
         public boolean isMet(ConditionContext context) {
@@ -51,7 +51,7 @@ public final class JdbiConditions {
 
     public static final class DefaultConfig implements Condition {
 
-        public static boolean enabled = true;
+        private static boolean enabled = true;
 
         @Override
         public boolean isMet(ConditionContext context) {

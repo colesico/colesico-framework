@@ -18,6 +18,7 @@ package colesico.framework.pebble;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpResponse;
+import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.pebble.internal.FrameworkExtension;
 import colesico.framework.pebble.internal.PebbleTemplateLoader;
@@ -29,8 +30,8 @@ import colesico.framework.weblet.teleapi.writer.ViewWriter;
 import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
+import org.apache.commons.lang3.StringUtils;
 
-import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
@@ -82,9 +83,19 @@ public class PebbleTemplater extends ViewWriter implements HtmlRenderer {
 
     @Override
     public void write(ViewResponse viewResponse, WebletTWContext context) {
-        Writer writer = evaluate(viewResponse.getVewName(), viewResponse.getModel());
+        Writer writer = evaluate(viewResponse.getViewName(), viewResponse.getModel());
+
         HttpResponse httpResponse = httpContextProv.get().getResponse();
-        httpResponse.sendText(writer.toString(), HtmlResponse.DEFAULT_CONTENT_TYPE, 200);
+
+        HttpUtils.setHeaders(httpResponse, viewResponse.getHeaders());
+        HttpUtils.setCookies(httpResponse, viewResponse.getCookies());
+
+        String contentType = viewResponse.getContentType();
+        if (StringUtils.isEmpty(contentType)) {
+            contentType = HtmlResponse.DEFAULT_CONTENT_TYPE;
+        }
+
+        httpResponse.sendText(writer.toString(), contentType, viewResponse.getStatusCode());
     }
 
     /**

@@ -24,7 +24,6 @@ import colesico.framework.pebble.PebbleTemplater;
 import colesico.framework.weblet.HtmlRenderer;
 import colesico.framework.weblet.ViewResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
-import colesico.framework.weblet.teleapi.writer.ViewWriter;
 
 import javax.inject.Singleton;
 

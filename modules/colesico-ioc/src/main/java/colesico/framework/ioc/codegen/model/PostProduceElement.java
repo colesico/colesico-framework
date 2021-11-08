@@ -22,13 +22,13 @@ import colesico.framework.ioc.listener.PostProduce;
  * Post produce listener element
  * @see PostProduce
  */
-public class PPLDefinitionElement {
+public class PostProduceElement {
 
     private final String withNamed;
 
     private final ClassifierType withClassed;
 
-    public PPLDefinitionElement(String withNamed, ClassifierType withClassed) {
+    public PostProduceElement(String withNamed, ClassifierType withClassed) {
         this.withNamed = withNamed;
         this.withClassed = withClassed;
     }

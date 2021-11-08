@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.ioc.singleton;
+package colesico.framework.example.ioc.scope;
 
 /**
  * This is implicit singleton. Singleton definition will be defined in producer

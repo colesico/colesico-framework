@@ -20,19 +20,19 @@ package colesico.framework.http;
  * @author Vladlen Larionov
  */
 public class HttpException extends RuntimeException {
-    private final int httpCode;
+    private final int statusCode;
 
-    public HttpException(Throwable cause, int httpCode) {
+    public HttpException(Throwable cause, int statusCode) {
         super(cause);
-        this.httpCode = httpCode;
+        this.statusCode = statusCode;
     }
 
-    public HttpException(String message, int httpCode) {
+    public HttpException(String message, int statusCode) {
         super(message);
-        this.httpCode = httpCode;
+        this.statusCode = statusCode;
     }
 
-    public int getHttpCode() {
-        return httpCode;
+    public int getStatusCode() {
+        return statusCode;
     }
 }

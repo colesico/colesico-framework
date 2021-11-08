@@ -32,60 +32,91 @@ public class MyService {
 }
 ----
 
-== Setup
+== Setup default data source
 
-
-1) Configure data source
-
-To configure default datasource create hikari.properties file.
+To configure default datasource just create hikari.properties file.
 
 .config/hikari.properties or META-INF/hikari.properties
+[source,properties]
+----
+ataSourceClassName=org.postgresql.ds.PGSimpleDataSource
+username=user
+password=password
+jdbcUrl=jdbc:postgresql://...
+----
+
+See details https://github.com/brettwooldridge/HikariCP#gear-configuration-knobs-baby[HikariCP docs]
+
+== Setup multiple data sources
+
+For each additional data source, make the following:
+
+1) Create additional config class and override getFileName method
+
+.ExtraHikariProperties.java
+[source,java]
+----
+@Config
+public class ExtraHikariProperties extends HikariProperties {
+    @Override
+    protected String getFileName() {
+        return "extra-hikari.properties";
+    }
+}
+----
+2) Fill in config file extra-hikari.properties
+
+.config/extra-hikari.properties or META-INF/extra-hikari.properties
 [source,properties]
 ----
 driverClassName=...
 jdbcUrl=jdbc:...
 ----
 
-2) Create jdbc producer
+3) Create IoC producer to produce extra JDBC transactional shell, connection and data source:
 
-Create IoC producer to produce JDBC transactional shell, connection and data source:
-
-.JdbcProducer.java
+.ExtraJdbcProducer.java
 [source,java]
 ----
+/**
+ * Typical jdbc producer for extra DS
+ */
 @Producer
-public class JdbcProducer {
+public class ExtraJdbcProducer {
+
+    public static final String EXTRA = "extra";
 
     /**
-     * Define transactional shell to control transactions.
-     * DataSource is a HikariCP data source configured by hikari.properties file
+     * Define extra transactional shell to control transactions.
      */
     @Singleton
-    public TransactionalShell getTransactionalShell(@Classed(HikariProperties.class) DataSource ds) {
+    @Named(EXTRA)
+    public TransactionalShell getTransactionalShell(@Classed(ExtraHikariProperties.class) DataSource ds) {
         return new JdbcTransactionalShell(ds);
     }
 
     /**
-     * Produce connection providing from transactional shell
+     * Produce extra connection providing from extra transactional shell
      */
     @Unscoped
-    public Connection getConnection(TransactionalShell txShell) {
+    @Named(EXTRA)
+    public Connection getConnection(@Named(EXTRA) TransactionalShell txShell) {
         return ((JdbcTransactionalShell) txShell).getConnection();
     }
 
     /**
-     * Optionally produce the data source from TxShell
+     * Optionally produce extra data source from extra TxShell
      */
     @Unscoped
-    public DataSource getDataSource(TransactionalShell txShell) {
+    @Named(EXTRA)
+    public DataSource getDataSource(@Named(EXTRA) TransactionalShell txShell) {
         return ((JdbcTransactionalShell) txShell).getDataSource();
     }
-
 }
 ----
 
 == Examples
 
-See full source code in the framework source code section #examples/jdbi-example#
+See full source code in the framework source code section #examples/jdbc-example#
 
 

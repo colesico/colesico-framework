@@ -19,43 +19,34 @@ package colesico.framework.weblet;
 /**
  * Binary data to returned to client
  */
-public final class BinaryResponse {
+public final class BinaryResponse extends ContentResponse {
 
     public static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
-    public static final int DEFAULT_HTTP_CODE = 200;
 
     protected final byte[] content;
 
-    protected final String contentType;
-
     protected final String fileName;
 
-    /**
-     * Http response code
-     */
-    protected final int httpCode;
-
-    private BinaryResponse(byte[] content, String contentType, String fileName, int httpCode) {
+    private BinaryResponse(byte[] content, String contentType, String fileName, int statusCode) {
+        super(contentType, statusCode);
         this.content = content;
-        this.contentType = contentType;
         this.fileName = fileName;
-        this.httpCode = httpCode;
     }
 
-    public static BinaryResponse of(byte[] content, String contentType, String fileName, int httpCode) {
-        return new BinaryResponse(content, contentType, fileName, httpCode);
+    public static BinaryResponse of(byte[] content, String contentType, String fileName, int statusCode) {
+        return new BinaryResponse(content, contentType, fileName, statusCode);
     }
 
     public static BinaryResponse of(byte[] content, String contentType, String fileName) {
-        return new BinaryResponse(content, contentType, fileName, DEFAULT_HTTP_CODE);
+        return new BinaryResponse(content, contentType, fileName, DEFAULT_STATUS_CODE);
     }
 
     public static BinaryResponse of(byte[] content, String contentType) {
-        return new BinaryResponse(content, contentType, null, DEFAULT_HTTP_CODE);
+        return new BinaryResponse(content, contentType, null, DEFAULT_STATUS_CODE);
     }
 
     public static BinaryResponse of(byte[] content) {
-        return new BinaryResponse(content, DEFAULT_CONTENT_TYPE, null, DEFAULT_HTTP_CODE);
+        return new BinaryResponse(content, DEFAULT_CONTENT_TYPE, null, DEFAULT_STATUS_CODE);
     }
 
     public WebletResponse wrap() {
@@ -68,13 +59,5 @@ public final class BinaryResponse {
 
     public String getFileName() {
         return fileName;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public int getHttpCode() {
-        return httpCode;
     }
 }

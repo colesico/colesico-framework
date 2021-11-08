@@ -41,5 +41,6 @@ public class JdbiExampleTest {
         logger.info("Run JDBI test");
         AppService service = ioc.instance(AppService.class);
         assertEquals(service.readValue(1),"a-value");
+        assertEquals(service.readExtraValue(2),"b-value");
     }
 }

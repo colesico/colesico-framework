@@ -42,7 +42,7 @@ abstract public class AbstractExceptionWriter<T extends Throwable> extends Restl
         error.setErrorCode(getErrorCode(value, context));
         error.setMessage(getMessage(value, context));
         error.setDetails(getDetails(value, context));
-        context.setHttpCode(getHttpStatus(value, context));
+        context.setStatusCode(getHttpStatus(value, context));
         writer.write(error, context);
     }
 }

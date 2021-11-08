@@ -16,7 +16,10 @@
 package colesico.framework.router.assist;
 
 import colesico.framework.http.HttpContext;
+import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpMethod;
+import colesico.framework.http.HttpResponse;
+import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.router.ActionResolution;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterException;
@@ -25,9 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Navigation helper
@@ -40,9 +41,11 @@ public class Navigation<N extends Navigation> {
     protected Class<?> serviceClass;
     protected String targetMethod;
     protected HttpMethod httpMethod = HttpMethod.HTTP_METHOD_GET;
-    protected int httpCode = 302;
+    protected int statusCode = 302;
     protected final Map<String, String> queryParameters = new HashMap<>();
     protected final Map<String, String> routeParameters = new HashMap<>();
+    protected final Map<String, List<String>> headers = new HashMap<>();
+    protected final Set<HttpCookie> cookies = new HashSet<>();
 
     public static Navigation of() {
         return new Navigation();
@@ -176,11 +179,28 @@ public class Navigation<N extends Navigation> {
     }
 
     /**
-     * Set custom http redirect code.
+     * Set custom http redirect status code.
      * Default code 302
      */
-    public N httpCode(int httpCode) {
-        this.httpCode = httpCode;
+    public N statusCode(int code) {
+        this.statusCode = code;
+        return (N) this;
+    }
+
+    /**
+     * Set HTTP header
+     */
+    public N header(String name, String vale) {
+        List<String> hValues = headers.computeIfAbsent(name, n -> new ArrayList<>());
+        hValues.add(vale);
+        return (N) this;
+    }
+
+    /**
+     * Set HTTP cookie
+     */
+    public N cookie(HttpCookie cookie) {
+        cookies.add(cookie);
         return (N) this;
     }
 
@@ -215,7 +235,10 @@ public class Navigation<N extends Navigation> {
      */
     public void redirect(Router router, HttpContext context) {
         String location = toLocation(router);
-        context.getResponse().sendRedirect(location, httpCode);
+        HttpResponse response = context.getResponse();
+        HttpUtils.setHeaders(response,headers);
+        HttpUtils.setCookies(response,cookies);
+        response.sendRedirect(location, statusCode);
     }
 
     /**

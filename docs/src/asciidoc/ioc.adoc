@@ -240,10 +240,14 @@ The framework out-of-the-box supports the following scopes of instances:
 
 * @Singleton - so-called local singleton.
 One instance of class per Ioc container.
-* @ThreadScoped - one instance  per thread
+* @ThreadScoped - one instance  per thread.
+* @Unscoped - no scope defined for instance.
 
+To define the instance scope you must specify a scope annotation(@Singleton и др) either on the instance class or on the producer provider-method.
 
-To define the instance scope you must specify an scope annotation(@Singleton и др) either on the instance class or on the producer provider-method.
+=== Singleton
+
+This scope supports one instance  per IoC container (local singleton).
 
 Example:
 
@@ -266,14 +270,21 @@ public class MyProducer{
 }
 ----
 
-In this example the Instances of both classes MyBean1 and MyBean2 are singletones.
+In this example the Instances of both classes MyBean1 and MyBean2 are singletons.
 
 === Thread scope
 
+This scope supports one instance per thread.
 When the thread scope is used with threads from a thread pool,
 before using it in a thread retrieved from the pool,
 it is  mandatory need call ThreadScope.init() on the scope instance
 and  call ThreadScope.destroy() before returning the thread to the pool.
+
+=== Unscoped
+
+An instance of the class associated with @Unscoped annotation
+will be created each time it is requested from the IoC container.
+This is default "scope" when no scope explicitly defined.
 
 == Injectable constructors
 

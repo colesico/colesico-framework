@@ -1,7 +1,6 @@
 package colesico.framework.restlet.teleapi.writer;
 
 import colesico.framework.http.HttpContext;
-import colesico.framework.http.HttpResponse;
 import colesico.framework.restlet.teleapi.RestletJsonConverter;
 import colesico.framework.restlet.teleapi.RestletTWContext;
 
@@ -32,7 +31,7 @@ public final class JsonWriter extends ObjectWriter {
         }
 
         String json = jsonConverter.toJson(value);
-        Integer code = context.getHttpCode();
+        Integer code = context.getStatusCode();
         if (code==null){
             code = 200;
         }

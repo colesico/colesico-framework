@@ -70,7 +70,7 @@ public class BagGenerator extends FrameworkAbstractGenerator {
 
     public void generateConfigBag(ConfigElement confElement) {
         String classSimpleName = confElement.getSource().getBagClassSimpleName();
-        String packageName = confElement.getImplementation().getPackageName();
+        String packageName = confElement.getOriginClass().getPackageName();
 
         TypeSpec.Builder bagBuilder = TypeSpec.classBuilder(classSimpleName);
 
@@ -83,7 +83,7 @@ public class BagGenerator extends FrameworkAbstractGenerator {
         generateBagProperties(bagBuilder, confElement);
 
         final TypeSpec typeSpec = bagBuilder.build();
-        CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, confElement.getImplementation().unwrap());
+        CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, confElement.getOriginClass().unwrap());
     }
 
     public void generate(List<ConfigElement> configElements) {
