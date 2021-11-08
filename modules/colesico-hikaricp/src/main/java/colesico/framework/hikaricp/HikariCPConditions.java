@@ -17,7 +17,7 @@ public final class HikariCPConditions {
 
     public static final class DefaultDataSource implements Condition {
 
-        public static boolean enabled = true;
+        private static boolean enabled = true;
 
         @Override
         public boolean isMet(ConditionContext context) {
