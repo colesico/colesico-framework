@@ -93,7 +93,15 @@ abstract public class FlowControlBuilder {
      * In case of local validation errors occur, command execution is NOT interrupted.
      */
     protected final <V> Command<V> optionalGroup(final Command<V>... commands) {
-        OptionalGroup<V> sequence = new OptionalGroup<>();
+        OptionalGroup<V> sequence = new OptionalGroup<>(c -> c.getValue() != null);
+        for (Command<V> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return sequence;
+    }
+
+    protected final <V> Command<V> conditionalGroup(Predicate<ValidationContext> condition, final Command<V>... commands) {
+        OptionalGroup<V> sequence = new OptionalGroup<>(condition);
         for (Command<V> cmd : commands) {
             sequence.addCommand(cmd);
         }
@@ -102,14 +110,6 @@ abstract public class FlowControlBuilder {
 
     protected final <V> Command<V> mandatoryGroup(final Command<V>... commands) {
         MandatoryGroup<V> sequence = new MandatoryGroup<>(vrMessages);
-        for (Command<V> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
-    }
-
-    protected final <V> Command<V> conditionalGroup(Predicate<ValidationContext> condition, final Command<V>... commands) {
-        ConditionalGroup<V> sequence = new ConditionalGroup<>(condition);
         for (Command<V> cmd : commands) {
             sequence.addCommand(cmd);
         }
@@ -135,18 +135,7 @@ abstract public class FlowControlBuilder {
      * @see OptionalChain
      */
     protected final <V> Command<V> optionalChain(final Command<V>... commands) {
-        OptionalChain<V> sequence = new OptionalChain<>();
-        for (Command<V> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
-    }
-
-    /**
-     * @see MandatoryChain
-     */
-    protected final <V> Command<V> mandatoryChain(final Command<V>... commands) {
-        MandatoryChain<V> sequence = new MandatoryChain<>(vrMessages);
+        OptionalChain<V> sequence = new OptionalChain<>(c -> c.getValue() != null);
         for (Command<V> cmd : commands) {
             sequence.addCommand(cmd);
         }
@@ -154,7 +143,19 @@ abstract public class FlowControlBuilder {
     }
 
     protected final <V> Command<V> conditionalChain(Predicate<ValidationContext> condition, final Command<V>... commands) {
-        ConditionalChain<V> sequence = new ConditionalChain<>(condition);
+        OptionalChain<V> sequence = new OptionalChain<>(condition);
+        for (Command<V> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return sequence;
+    }
+
+
+    /**
+     * @see MandatoryChain
+     */
+    protected final <V> Command<V> mandatoryChain(final Command<V>... commands) {
+        MandatoryChain<V> sequence = new MandatoryChain<>(vrMessages);
         for (Command<V> cmd : commands) {
             sequence.addCommand(cmd);
         }
