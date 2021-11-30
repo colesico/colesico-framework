@@ -9,11 +9,11 @@ import java.util.function.Predicate;
  *
  * @see GroupSequence
  */
-public class OptionalGroup<V> extends AbstractSequence<V, V> {
+public class ConditionalGroup<V> extends AbstractSequence<V, V> {
 
     private final Predicate<ValidationContext> condition;
 
-    public OptionalGroup(Predicate<ValidationContext> condition) {
+    public ConditionalGroup(Predicate<ValidationContext> condition) {
         this.condition = condition;
     }
 

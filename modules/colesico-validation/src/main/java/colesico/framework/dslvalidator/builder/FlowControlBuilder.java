@@ -27,7 +27,6 @@ import colesico.framework.translation.Translatable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -93,7 +92,7 @@ abstract public class FlowControlBuilder {
      * In case of local validation errors occur, command execution is NOT interrupted.
      */
     protected final <V> Command<V> optionalGroup(final Command<V>... commands) {
-        OptionalGroup<V> sequence = new OptionalGroup<>(c -> c.getValue() != null);
+        ConditionalGroup<V> sequence = new ConditionalGroup<>(c -> c.getValue() != null);
         for (Command<V> cmd : commands) {
             sequence.addCommand(cmd);
         }
@@ -101,7 +100,7 @@ abstract public class FlowControlBuilder {
     }
 
     protected final <V> Command<V> conditionalGroup(Predicate<ValidationContext> condition, final Command<V>... commands) {
-        OptionalGroup<V> sequence = new OptionalGroup<>(condition);
+        ConditionalGroup<V> sequence = new ConditionalGroup<>(condition);
         for (Command<V> cmd : commands) {
             sequence.addCommand(cmd);
         }
@@ -132,10 +131,10 @@ abstract public class FlowControlBuilder {
     }
 
     /**
-     * @see OptionalChain
+     * @see ConditionalChain
      */
     protected final <V> Command<V> optionalChain(final Command<V>... commands) {
-        OptionalChain<V> sequence = new OptionalChain<>(c -> c.getValue() != null);
+        ConditionalChain<V> sequence = new ConditionalChain<>(c -> c.getValue() != null);
         for (Command<V> cmd : commands) {
             sequence.addCommand(cmd);
         }
@@ -143,7 +142,7 @@ abstract public class FlowControlBuilder {
     }
 
     protected final <V> Command<V> conditionalChain(Predicate<ValidationContext> condition, final Command<V>... commands) {
-        OptionalChain<V> sequence = new OptionalChain<>(condition);
+        ConditionalChain<V> sequence = new ConditionalChain<>(condition);
         for (Command<V> cmd : commands) {
             sequence.addCommand(cmd);
         }

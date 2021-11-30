@@ -9,11 +9,11 @@ import java.util.function.Predicate;
  *
  * @see ChainSequence
  */
-public class OptionalChain<V> extends AbstractSequence<V, V> {
+public class ConditionalChain<V> extends AbstractSequence<V, V> {
 
     private final Predicate<ValidationContext> condition;
 
-    public OptionalChain(Predicate<ValidationContext> condition) {
+    public ConditionalChain(Predicate<ValidationContext> condition) {
         this.condition = condition;
     }
 
