@@ -5,7 +5,7 @@ import colesico.framework.dslvalidator.ValidationContext;
 import java.util.function.Predicate;
 
 /**
- * Executes group commands if context value is not null.
+ * Executes group commands if condition is met.
  *
  * @see GroupSequence
  */
