@@ -127,6 +127,21 @@ public final class ValidationContext<V> {
         return params;
     }
 
+    public <T> T getParam(int index) {
+        if (params != null && index < params.length) {
+            return (T) params[index];
+        }
+        return null;
+    }
+
+    public <T> T getRootParam(int index) {
+        return getRootContext().getParam(index);
+    }
+
+    public Object[] getRootParams() {
+        return getRootContext().getParams();
+    }
+
     public void setParams(Object[] params) {
         this.params = params;
     }

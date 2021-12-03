@@ -19,6 +19,7 @@ package colesico.framework.dslvalidator.builder;
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.DSLValidator;
 import colesico.framework.dslvalidator.Sequence;
+import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.dslvalidator.commands.*;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 import colesico.framework.translation.Translatable;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 abstract public class FlowControlBuilder {
 
@@ -90,7 +92,15 @@ abstract public class FlowControlBuilder {
      * In case of local validation errors occur, command execution is NOT interrupted.
      */
     protected final <V> Command<V> optionalGroup(final Command<V>... commands) {
-        OptionalGroup<V> sequence = new OptionalGroup<>();
+        ConditionalGroup<V> sequence = new ConditionalGroup<>(c -> c.getValue() != null);
+        for (Command<V> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return sequence;
+    }
+
+    protected final <V> Command<V> conditionalGroup(Predicate<ValidationContext> condition, final Command<V>... commands) {
+        ConditionalGroup<V> sequence = new ConditionalGroup<>(condition);
         for (Command<V> cmd : commands) {
             sequence.addCommand(cmd);
         }
@@ -121,15 +131,24 @@ abstract public class FlowControlBuilder {
     }
 
     /**
-     * @see OptionalChain
+     * @see ConditionalChain
      */
     protected final <V> Command<V> optionalChain(final Command<V>... commands) {
-        OptionalChain<V> sequence = new OptionalChain<>();
+        ConditionalChain<V> sequence = new ConditionalChain<>(c -> c.getValue() != null);
         for (Command<V> cmd : commands) {
             sequence.addCommand(cmd);
         }
         return sequence;
     }
+
+    protected final <V> Command<V> conditionalChain(Predicate<ValidationContext> condition, final Command<V>... commands) {
+        ConditionalChain<V> sequence = new ConditionalChain<>(condition);
+        for (Command<V> cmd : commands) {
+            sequence.addCommand(cmd);
+        }
+        return sequence;
+    }
+
 
     /**
      * @see MandatoryChain
@@ -141,7 +160,6 @@ abstract public class FlowControlBuilder {
         }
         return sequence;
     }
-
 
     /**
      * Executes commands within the new nested context with specified subject.
