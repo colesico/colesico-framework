@@ -16,7 +16,7 @@
 
 package colesico.framework.weblet.internal;
 
-import colesico.framework.teleapi.TeleFactory;
+import colesico.framework.teleapi.TRWFactory;
 import colesico.framework.weblet.WebletResponse;
 import colesico.framework.weblet.teleapi.*;
 
@@ -26,10 +26,10 @@ import java.lang.reflect.Type;
 @Singleton
 public class WebletDataPortImpl implements WebletDataPort {
 
-    protected final TeleFactory teleFactory;
+    protected final TRWFactory trwFactory;
 
-    public WebletDataPortImpl(TeleFactory teleFactory) {
-        this.teleFactory = teleFactory;
+    public WebletDataPortImpl(TRWFactory trwFactory) {
+        this.trwFactory = trwFactory;
     }
 
 
@@ -43,13 +43,13 @@ public class WebletDataPortImpl implements WebletDataPort {
         WebletTeleReader reader;
         if (context.getReaderClass() != null) {
             // Get specified reader
-            reader = teleFactory.getReader(context.getReaderClass());
+            reader = trwFactory.getReader(context.getReaderClass());
         } else {
             // Get reader by value type
-            reader = teleFactory.findReader(WebletTeleReader.class, context.getValueType());
+            reader = trwFactory.findReader(WebletTeleReader.class, context.getValueType());
             if (reader == null) {
                 // Get default reader
-                reader = teleFactory.getReader(WebletTeleReader.class, Object.class);
+                reader = trwFactory.getReader(WebletTeleReader.class, Object.class);
             }
         }
         return (V) reader.read(context);
@@ -69,7 +69,7 @@ public class WebletDataPortImpl implements WebletDataPort {
         WebletTeleWriter writer;
         if (context.getWriterClass() != null) {
             // Get specified reader
-            writer = teleFactory.getWriter(context.getWriterClass());
+            writer = trwFactory.getWriter(context.getWriterClass());
         } else {
             Type responseType;
             if (isWebletResponse) {
@@ -78,7 +78,7 @@ public class WebletDataPortImpl implements WebletDataPort {
                 responseType = context.getValueType();
             }
             // Get reader by response type
-            writer = teleFactory.getWriter(WebletTeleWriter.class, responseType);
+            writer = trwFactory.getWriter(WebletTeleWriter.class, responseType);
         }
 
         // Write value

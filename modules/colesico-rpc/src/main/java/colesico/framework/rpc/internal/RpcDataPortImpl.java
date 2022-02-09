@@ -3,22 +3,22 @@ package colesico.framework.rpc.internal;
 import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.RpcException;
 import colesico.framework.rpc.teleapi.*;
-import colesico.framework.teleapi.TeleFactory;
+import colesico.framework.teleapi.TRWFactory;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.lang.reflect.Type;
 
 public class RpcDataPortImpl implements RpcDataPort {
 
-    protected final TeleFactory teleFactory;
+    protected final TRWFactory trwFactory;
 
     protected final RpcRequest request;
     protected final RpcResponse response;
 
-    public RpcDataPortImpl(TeleFactory teleFactory, RpcRequest request, RpcResponse response) {
+    public RpcDataPortImpl(TRWFactory trwFactory, RpcRequest request, RpcResponse response) {
         this.request = request;
         this.response = response;
-        this.teleFactory = teleFactory;
+        this.trwFactory = trwFactory;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class RpcDataPortImpl implements RpcDataPort {
         }
 
         // Try to get accurate reader
-        RpcTeleReader<V> reader = teleFactory.findReader(RpcTeleReader.class, context.getValueType());
+        RpcTeleReader<V> reader = trwFactory.findReader(RpcTeleReader.class, context.getValueType());
         if (reader != null) {
             // Ctx can be null for reading by type  (Principal reading, etc.)
             context.setRequest(request);
@@ -61,7 +61,7 @@ public class RpcDataPortImpl implements RpcDataPort {
     public <V> void write(V value, RpcTWContext context) {
 
         // Try to get accurate writer
-        RpcTeleWriter<V> writer = teleFactory.findWriter(RpcTeleWriter.class, context.getValueType());
+        RpcTeleWriter<V> writer = trwFactory.findWriter(RpcTeleWriter.class, context.getValueType());
         if (writer != null) {
             context.setResponse(response);
             writer.write(value, context);
@@ -78,7 +78,7 @@ public class RpcDataPortImpl implements RpcDataPort {
         // Create default writing context
         RpcTWContext context = RpcTWContext.of(throwable.getClass(), response);
 
-        RpcTeleWriter<T> throwableWriter = teleFactory.findWriter(RpcTeleWriter.class, throwable.getClass());
+        RpcTeleWriter<T> throwableWriter = trwFactory.findWriter(RpcTeleWriter.class, throwable.getClass());
 
         if (throwableWriter != null) {
             throwableWriter.write(throwable, context);
@@ -89,7 +89,7 @@ public class RpcDataPortImpl implements RpcDataPort {
         // and determine writer for it
         Throwable rootCause = ExceptionUtils.getRootCause(throwable);
         if (rootCause != null) {
-            RpcTeleWriter rootCauseWriter = teleFactory.findWriter(RpcTeleWriter.class, rootCause.getClass());
+            RpcTeleWriter rootCauseWriter = trwFactory.findWriter(RpcTeleWriter.class, rootCause.getClass());
             if (rootCauseWriter != null) {
                 rootCauseWriter.write(rootCause, context);
                 return;

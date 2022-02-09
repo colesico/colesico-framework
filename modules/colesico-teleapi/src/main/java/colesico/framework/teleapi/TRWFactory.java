@@ -11,12 +11,12 @@ import java.lang.reflect.Type;
  * Tele-readers and writers factory
  */
 @Singleton
-public final class TeleFactory {
+public final class TRWFactory {
 
     private final Ioc ioc;
 
     @Inject
-    public TeleFactory(Ioc ioc) {
+    public TRWFactory(Ioc ioc) {
         this.ioc = ioc;
     }
 
