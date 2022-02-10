@@ -101,7 +101,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
                 context.getModulatorKit().notifyTeleParamParsed(teleParam);
             } else {
                 // Check compound support
-                if (!teleMethod.getParentTeleFacade().getCompoundSupport()) {
+                if (!teleMethod.getParentTeleFacade().getCompoundParams()) {
                     throw CodegenException.of()
                             .message("Compound parameters not supported by tele-facade " + teleMethod.getParentTeleFacade().getTeleType().getCanonicalName())
                             .element(arg.unwrap())

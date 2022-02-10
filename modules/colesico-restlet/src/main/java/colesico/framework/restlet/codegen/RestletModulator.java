@@ -98,7 +98,7 @@ public final class RestletModulator extends RoutesModulator {
             teleMethodElement.setProperty(JsonRequestElement.class, jsonRequest);
         }
 
-        for (TeleArgumentElement teleArg : teleMethodElement.getParameters()) {
+        for (TeleVarElement teleArg : teleMethodElement.getParameters()) {
 
             var jsonParamAnn = teleArg.getOriginElement().getAnnotation(JsonField.class);
 
@@ -144,7 +144,8 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     @Override
-    protected CodeBlock generateReadingContext(TeleParameterElement teleParam) {
+    protected TRContextElement createReadingContext(TeleParameterElement teleParam) {
+
         String paramName = RestletCodegenUtils.getParamName(teleParam);
 
         CodeBlock.Builder cb = CodeBlock.builder();
@@ -177,11 +178,12 @@ public final class RestletModulator extends RoutesModulator {
         }
 
         cb.add(")");
-        return cb.build();
+
+        return new TRContextElement(teleParam, cb.build());
     }
 
     @Override
-    protected CodeBlock generateWritingContext(TeleMethodElement teleMethod) {
+    protected TWContextElement createWritingContext(TeleMethodElement teleMethod) {
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("$T.$N(", ClassName.get(RestletTWContext.class), RestletTWContext.OF_METHOD);
 
@@ -192,11 +194,11 @@ public final class RestletModulator extends RoutesModulator {
             cb.add(", $T.class", writerClass);
         }
         cb.add(")");
-        return cb.build();
+        return new TWContextElement(teleMethod, cb.build());
     }
 
     @Override
-    protected CodeBlock generateInvocationContext(TeleMethodElement teleMethod) {
+    protected TIContextElement createInvocationContext(TeleMethodElement teleMethod) {
         CodeBlock.Builder cb = CodeBlock.builder();
         JsonRequestElement jsonRequest = teleMethod.getProperty(JsonRequestElement.class);
         if (jsonRequest != null) {
@@ -206,7 +208,7 @@ public final class RestletModulator extends RoutesModulator {
         } else {
             cb.add("null");
         }
-        return cb.build();
+        return new TIContextElement(teleMethod, cb.build());
     }
 
     protected TypeName getCustomWriterClass(TeleMethodElement teleMethod) {

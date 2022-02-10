@@ -22,12 +22,9 @@ import com.squareup.javapoet.CodeBlock;
 /**
  * Tele-method parameter
  */
-public final class TeleParameterElement extends TeleArgumentElement {
+public final class TeleParameterElement extends TeleVarElement {
 
-    /**
-     * Param reading context code
-     */
-    private CodeBlock readingContextCode;
+    protected TRContextElement readingContext;
 
     /**
      * Parameter index
@@ -39,12 +36,12 @@ public final class TeleParameterElement extends TeleArgumentElement {
         this.paramIndex = paramIndex;
     }
 
-    public CodeBlock getReadingContextCode() {
-        return readingContextCode;
+    public TRContextElement getReadingContext() {
+        return readingContext;
     }
 
-    public void setReadingContextCode(CodeBlock readingContextCode) {
-        this.readingContextCode = readingContextCode;
+    public void setReadingContext(TRContextElement readingContext) {
+        this.readingContext = readingContext;
     }
 
     public Integer getParamIndex() {

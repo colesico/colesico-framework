@@ -84,11 +84,11 @@ public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulat
         serviceElm.setTeleFacade(teleFacade);
     }
 
-    private final void generateParamsReadingContextCode(List<TeleArgumentElement> arguments) {
-        for (TeleArgumentElement teleArg : arguments) {
+    private final void generateParamsReadingContextCode(List<TeleVarElement> arguments) {
+        for (TeleVarElement teleArg : arguments) {
             if (teleArg instanceof TeleParameterElement) {
                 TeleParameterElement teleParam = (TeleParameterElement) teleArg;
-                teleParam.setReadingContextCode(generateReadingContext(teleParam));
+                teleParam.setReadingContext(createReadingContext(teleParam));
             } else {
                 generateParamsReadingContextCode(((TeleCompoundElement) teleArg).getFields());
             }
@@ -104,8 +104,8 @@ public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulat
         }
         processTeleMethod(teleMethod);
         generateParamsReadingContextCode(teleMethod.getParameters());
-        teleMethod.setInvocationContextCode(generateInvocationContext(teleMethod));
-        teleMethod.setWritingContextCode(generateWritingContext(teleMethod));
+        teleMethod.setInvocationContext(createInvocationContext(teleMethod));
+        teleMethod.setWritingContext(createWritingContext(teleMethod));
     }
 
     @Override
@@ -118,21 +118,21 @@ public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulat
         teleFacade.setLigatureMethodBody(generateLigatureMethodBody((T) teleFacade));
     }
 
-    protected CodeBlock generateInvocationContext(TeleMethodElement teleMethod) {
+    protected TIContextElement createInvocationContext(TeleMethodElement teleMethod) {
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("null");
-        return cb.build();
+        return new TIContextElement(teleMethod, cb.build());
     }
 
-    protected CodeBlock generateWritingContext(TeleMethodElement teleMethod) {
+    protected TWContextElement createWritingContext(TeleMethodElement teleMethod) {
         CodeBlock.Builder cb = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleResultType(teleMethod, cb);
-        return cb.build();
+        return new TWContextElement(teleMethod, cb.build());
     }
 
-    protected CodeBlock generateReadingContext(TeleParameterElement teleParam) {
+    protected TRContextElement createReadingContext(TeleParameterElement teleParam) {
         CodeBlock.Builder cb = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleArgumentType(teleParam, cb);
-        return cb.build();
+        return new TRContextElement(teleParam, cb.build());
     }
 }

@@ -23,13 +23,12 @@ import colesico.framework.restlet.Restlet;
 import colesico.framework.restlet.codegen.RestletModulator;
 import colesico.framework.restlet.codegen.assist.RestletCodegenUtils;
 import colesico.framework.restlet.codegen.model.JsonFieldElement;
-import colesico.framework.router.codegen.RouterTeleFacadeElement;
 import colesico.framework.router.codegen.RoutesBuilder;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.TeleFacadeElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
 import colesico.framework.service.codegen.model.TeleParameterElement;
-import colesico.framework.service.codegen.model.TeleArgumentElement;
+import colesico.framework.service.codegen.model.TeleVarElement;
 import colesico.framework.service.codegen.modulator.Modulator;
 import colesico.framework.telescheme.TeleSchemeBuilder;
 import colesico.framework.telescheme.codegen.modulator.TeleSchemeModulator;
@@ -132,7 +131,7 @@ public final class OpenApiModulator extends TeleSchemeModulator {
     }
 
     protected void generateInputParams(CodeBlock.Builder cb, TeleMethodElement teleMethod) {
-        for (TeleArgumentElement teleVar : teleMethod.getParameters()) {
+        for (TeleVarElement teleVar : teleMethod.getParameters()) {
             //TODO: handle compounds
             TeleParameterElement teleParam = (TeleParameterElement) teleVar;
             // inputParam = createInputParam(openApi, operation,

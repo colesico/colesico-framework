@@ -110,7 +110,7 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
                     // Rpc params
                     List<RpcApiParamElement> rpcApiParams = rpcApiMethod.getParameters();
                     // Method params
-                    List<TeleArgumentElement> teleParams = teleMethodElm.getParameters();
+                    List<TeleVarElement> teleParams = teleMethodElm.getParameters();
 
                     if (rpcApiParams.size() != teleParams.size()) {
                         throw CodegenException.of()
@@ -204,27 +204,26 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
     }
 
     @Override
-    protected CodeBlock generateReadingContext(TeleParameterElement teleParam) {
+    protected TRContextElement createReadingContext(TeleParameterElement teleParam) {
         CodeBlock.Builder cb = CodeBlock.builder();
-
         RpcApiMethodElement rpcApiMethod = getRpcApiMethod(teleParam.getParentTeleMethod());
         RpcApiParamElement apiParam = teleParam.getProperty(RpcApiParamElement.class);
         // RpcTRContext.of(EnvelopeClass.RequestClass::getterMethod)
         cb.add("$T.$N(", ClassName.get(RpcTRContext.class), RpcTRContext.OF_METHOD);
         ServiceCodegenUtils.generateTeleArgumentType(teleParam, cb);
         cb.add(", $T::$N)", ClassName.bestGuess(rpcApiMethod.getRequestClassName()), apiParam.getterName());
-        return cb.build();
+        return new TRContextElement(teleParam, cb.build());
     }
 
     @Override
-    protected CodeBlock generateInvocationContext(TeleMethodElement teleMethod) {
+    protected TIContextElement createInvocationContext(TeleMethodElement teleMethod) {
         RpcApiMethodElement rpcApiMethod = getRpcApiMethod(teleMethod);
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("new $T($T.class, $T.class)", ClassName.get(RpcTIContext.class),
                 ClassName.bestGuess(rpcApiMethod.getRequestClassName()),
                 ClassName.bestGuess(rpcApiMethod.getResponseClassName())
         );
-        return cb.build();
+        return new TIContextElement(teleMethod, cb.build());
     }
 
     protected RpcApiMethodElement getRpcApiMethod(TeleMethodElement teleMethod) {

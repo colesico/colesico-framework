@@ -2,7 +2,7 @@ package colesico.framework.telehttp.codegen;
 
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.service.codegen.model.TeleMethodElement;
-import colesico.framework.service.codegen.model.TeleArgumentElement;
+import colesico.framework.service.codegen.model.TeleVarElement;
 import colesico.framework.service.codegen.model.TeleParameterElement;
 import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.ParamOrigin;
@@ -15,13 +15,13 @@ import java.util.List;
 
 public class TeleHttpCodegenUtils {
 
-    public static String getParamName(TeleArgumentElement teleArg) {
+    public static String getParamName(TeleVarElement teleArg) {
 
         List<String> namesChain = new ArrayList<>();
-        Iterator<TeleArgumentElement> it = (Iterator<TeleArgumentElement>) teleArg.getIterator();
+        Iterator<TeleVarElement> it = (Iterator<TeleVarElement>) teleArg.getIterator();
         while (it.hasNext()) {
             String paramName;
-            TeleArgumentElement curArg = it.next();
+            TeleVarElement curArg = it.next();
             AnnotationAssist<ParamName> nameAnn = curArg.getOriginElement().getAnnotation(ParamName.class);
             if (nameAnn != null) {
                 paramName = nameAnn.unwrap().value();
@@ -38,7 +38,7 @@ public class TeleHttpCodegenUtils {
         return StringUtils.join(namesChain.toArray());
     }
 
-    public static String getOriginName(TeleArgumentElement teleArg, String defaultOrigin) {
+    public static String getOriginName(TeleVarElement teleArg, String defaultOrigin) {
         TeleMethodElement teleMethod = teleArg.getParentTeleMethod();
         String originName = defaultOrigin;
         AnnotationAssist<ParamOrigin> originAnn = teleArg.getOriginElement().getAnnotation(ParamOrigin.class);

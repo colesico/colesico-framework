@@ -42,17 +42,17 @@ public final class TeleMethodElement {
     /**
      * Tele-method direct parameters and compounds
      */
-    private final List<TeleArgumentElement> parameters;
+    private final List<TeleVarElement> parameters;
 
     /**
-     * Method result writing context code
+     * Method result writing context
      */
-    private CodeBlock writingContextCode;
+    private TWContextElement writingContext;
 
     /**
      * Invocation context code
      */
-    private CodeBlock invocationContextCode;
+    private TIContextElement invocationContext;
 
     /**
      * Common purpose props
@@ -86,7 +86,7 @@ public final class TeleMethodElement {
     /**
      * Add parameter of tele-method
      */
-    public void addParameter(TeleArgumentElement arg) {
+    public void addParameter(TeleVarElement arg) {
         parameters.add(arg);
         arg.setParentTeleMethod(this);
     }
@@ -111,24 +111,24 @@ public final class TeleMethodElement {
         return parentTeleFacade;
     }
 
-    public List<TeleArgumentElement> getParameters() {
+    public List<TeleVarElement> getParameters() {
         return parameters;
     }
 
-    public CodeBlock getWritingContextCode() {
-        return writingContextCode;
+    public TWContextElement getWritingContext() {
+        return writingContext;
     }
 
-    public void setWritingContextCode(CodeBlock writingContextCode) {
-        this.writingContextCode = writingContextCode;
+    public void setWritingContext(TWContextElement writingContext) {
+        this.writingContext = writingContext;
     }
 
-    public CodeBlock getInvocationContextCode() {
-        return invocationContextCode;
+    public TIContextElement getInvocationContext() {
+        return invocationContext;
     }
 
-    public void setInvocationContextCode(CodeBlock invocationContextCode) {
-        this.invocationContextCode = invocationContextCode;
+    public void setInvocationContext(TIContextElement invocationContext) {
+        this.invocationContext = invocationContext;
     }
 
     public Integer getIndex() {

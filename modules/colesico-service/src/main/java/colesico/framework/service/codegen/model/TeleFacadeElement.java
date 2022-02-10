@@ -26,7 +26,6 @@ import colesico.framework.teleapi.TeleFacade;
 import com.squareup.javapoet.CodeBlock;
 import org.apache.commons.lang3.StringUtils;
 
-import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,13 +71,15 @@ public class TeleFacadeElement {
      */
     private CodeBlock ligatureMethodBody;
 
-    // IoC Qualifier for  producer method
+    /**
+     * IoC Qualifier for  producer method
+     */
     private final IocQualifier iocQualifier;
 
     /**
-     * Support for compound params
+     * Compound params support enabled
      */
-    private Boolean compoundSupport = false;
+    private Boolean compoundParams = false;
 
     private final Map<Class, Object> properties;
 
@@ -102,8 +103,6 @@ public class TeleFacadeElement {
 
     /**
      * Returns tele-facade class simple name
-     *
-     * @return
      */
     public String getFacadeClassSimpleName() {
         String originClassName = parentService.getOriginClass().getSimpleName();
@@ -177,12 +176,12 @@ public class TeleFacadeElement {
         return iocQualifier;
     }
 
-    public Boolean getCompoundSupport() {
-        return compoundSupport;
+    public Boolean getCompoundParams() {
+        return compoundParams;
     }
 
-    public void setCompoundSupport(Boolean compoundSupport) {
-        this.compoundSupport = compoundSupport;
+    public void setCompoundParams(Boolean compoundParams) {
+        this.compoundParams = compoundParams;
     }
 
     public static final class IocQualifier {
