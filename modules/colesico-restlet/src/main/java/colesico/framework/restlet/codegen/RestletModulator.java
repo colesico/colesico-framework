@@ -20,6 +20,7 @@ package colesico.framework.restlet.codegen;
 import colesico.framework.assist.CollectionUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
+import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.restlet.Restlet;
 import colesico.framework.restlet.codegen.assist.RestletCodegenUtils;
 import colesico.framework.restlet.codegen.model.JsonFieldElement;
@@ -31,8 +32,11 @@ import colesico.framework.router.codegen.RouterTeleFacadeElement;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.*;
+import colesico.framework.telehttp.codegen.HttpTRContextElement;
+import colesico.framework.telehttp.codegen.HttpTWContextElement;
 import com.squareup.javapoet.*;
 
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import java.lang.annotation.Annotation;
 import java.util.Set;
@@ -161,13 +165,16 @@ public final class RestletModulator extends RoutesModulator {
 
         JsonFieldElement jsonField = teleParam.getProperty(JsonFieldElement.class);
 
-        TypeName customReader = RestletCodegenUtils.getCustomReaderClass(teleParam, getProcessorContext().getElementUtils());
+        TypeMirror customReader = RestletCodegenUtils.getCustomReaderClass(teleParam, getProcessorContext().getElementUtils());
+        ClassType customReaderCT = null;
+
         if (!originName.equals(RestletOrigin.AUTO) || customReader != null || jsonField != null) {
             cb.add(", $S", originName);
         }
 
         if (customReader != null || jsonField != null) {
-            cb.add(", $T.class", customReader);
+            cb.add(", $T.class", TypeName.get(customReader));
+            customReaderCT = new ClassType(getProcessorContext().getProcessingEnv(), (DeclaredType) customReader);
         }
 
         if (jsonField != null) {
@@ -179,7 +186,7 @@ public final class RestletModulator extends RoutesModulator {
 
         cb.add(")");
 
-        return new TRContextElement(teleParam, cb.build());
+        return new HttpTRContextElement(teleParam, cb.build(), paramName, originName, customReaderCT);
     }
 
     @Override
@@ -189,12 +196,14 @@ public final class RestletModulator extends RoutesModulator {
 
         ServiceCodegenUtils.generateTeleResultType(teleMethod, cb);
 
-        TypeName writerClass = getCustomWriterClass(teleMethod);
-        if (writerClass != null) {
-            cb.add(", $T.class", writerClass);
+        TypeMirror customWriter = getCustomWriterClass(teleMethod);
+        ClassType customWriterCT = null;
+        if (customWriter != null) {
+            cb.add(", $T.class", TypeName.get(customWriter));
+            customWriterCT = new ClassType(getProcessorContext().getProcessingEnv(), (DeclaredType) customWriter);
         }
         cb.add(")");
-        return new TWContextElement(teleMethod, cb.build());
+        return new HttpTWContextElement(teleMethod, cb.build(), customWriterCT);
     }
 
     @Override
@@ -211,7 +220,7 @@ public final class RestletModulator extends RoutesModulator {
         return new TIContextElement(teleMethod, cb.build());
     }
 
-    protected TypeName getCustomWriterClass(TeleMethodElement teleMethod) {
+    protected TypeMirror getCustomWriterClass(TeleMethodElement teleMethod) {
         var wrAnn = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(RestletResponseWriter.class);
         if (wrAnn == null) {
             wrAnn = teleMethod.getParentTeleFacade().getParentService().getOriginClass().getAnnotation(RestletResponseWriter.class);
@@ -219,8 +228,7 @@ public final class RestletModulator extends RoutesModulator {
         if (wrAnn == null) {
             return null;
         }
-        TypeMirror readerClassMirror = wrAnn.getValueTypeMirror(a -> a.value());
-        return TypeName.get(readerClassMirror);
+        return wrAnn.getValueTypeMirror(a -> a.value());
     }
 
 

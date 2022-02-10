@@ -88,11 +88,11 @@ public final class WebletModulator extends RoutesModulator {
             cb.add(", $S", originName);
         }
 
-        ClassType customReaderType = null;
+        ClassType customReaderCT = null;
 
         if (customReader != null) {
             cb.add(", $T.class", TypeName.get(customReader));
-            customReaderType = new ClassType(getProcessorContext().getProcessingEnv(), (DeclaredType) customReader);
+            customReaderCT = new ClassType(getProcessorContext().getProcessingEnv(), (DeclaredType) customReader);
         }
 
         cb.add(")");
@@ -101,7 +101,7 @@ public final class WebletModulator extends RoutesModulator {
                 cb.build(),
                 paramName,
                 originName,
-                customReaderType
+                customReaderCT
         );
     }
 
@@ -113,13 +113,13 @@ public final class WebletModulator extends RoutesModulator {
         ServiceCodegenUtils.generateTeleResultType(teleMethod, cb);
 
         TypeMirror customWriter = getCustomWriterClass(teleMethod);
-        ClassType customWriterType = null;
+        ClassType customWriterCT = null;
         if (customWriter != null) {
             cb.add(", $T.class", TypeName.get(customWriter));
-            customWriterType = new ClassType(getProcessorContext().getProcessingEnv(), (DeclaredType) customWriter);
+            customWriterCT = new ClassType(getProcessorContext().getProcessingEnv(), (DeclaredType) customWriter);
         }
         cb.add(")");
-        return new HttpTWContextElement(teleMethod, cb.build(), customWriterType);
+        return new HttpTWContextElement(teleMethod, cb.build(), customWriterCT);
     }
 
     protected TypeMirror getCustomWriterClass(TeleMethodElement teleMethod) {

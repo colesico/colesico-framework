@@ -38,6 +38,8 @@ import com.squareup.javapoet.TypeName;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 
+import javax.lang.model.type.TypeMirror;
+
 /**
  * Modulates Swagger definition
  */
@@ -151,9 +153,9 @@ public final class OpenApiModulator extends TeleSchemeModulator {
             String originName = RestletCodegenUtils.getOriginName(teleParam);
             cb.add(", $S", originName);
 
-            TypeName customReader = RestletCodegenUtils.getCustomReaderClass(teleParam, getProcessorContext().getElementUtils());
+            TypeMirror customReader = RestletCodegenUtils.getCustomReaderClass(teleParam, getProcessorContext().getElementUtils());
             if (customReader != null) {
-                cb.add(", $T.class", customReader);
+                cb.add(", $T.class", TypeName.get(customReader));
             } else {
                 cb.add(", null");
             }

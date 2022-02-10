@@ -38,10 +38,10 @@ public class RestletCodegenUtils {
         return originName;
     }
 
-    public static TypeName getCustomReaderClass(TeleParameterElement teleParam, Elements elementUtils) {
+    public static TypeMirror getCustomReaderClass(TeleParameterElement teleParam, Elements elementUtils) {
 
         if (teleParam.getProperty(JsonFieldElement.class) != null) {
-            return TypeName.get(CodegenUtils.classToTypeMirror(JsonFieldReader.class, elementUtils));
+            return CodegenUtils.classToTypeMirror(JsonFieldReader.class, elementUtils);
         }
 
         var rdAnn = teleParam.getOriginElement().getAnnotation(RestletParamReader.class);
@@ -51,8 +51,7 @@ public class RestletCodegenUtils {
         if (rdAnn == null) {
             return null;
         }
-        TypeMirror readerClassMirror = rdAnn.getValueTypeMirror(a -> a.value());
-        return TypeName.get(readerClassMirror);
+        return rdAnn.getValueTypeMirror(a -> a.value());
     }
 
 }
