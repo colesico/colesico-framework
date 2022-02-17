@@ -32,16 +32,25 @@
     <name>Colesico example - Restlet</name>
 
     <dependencies>
+
         <!-- Colesico common services bundle -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-bundle-web</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <!-- Colesico undertow integration -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-undertow</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Open API -->
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-openapi</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -84,6 +93,11 @@
                         <path>
                             <groupId>net.colesico.framework</groupId>
                             <artifactId>colesico-bundle-web</artifactId>
+                            <version>${project.version}</version>
+                        </path>
+                        <path>
+                            <groupId>net.colesico.framework</groupId>
+                            <artifactId>colesico-openapi</artifactId>
                             <version>${project.version}</version>
                         </path>
                         <!-- To disable compile debug log remove or comment this dependency-->

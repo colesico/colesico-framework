@@ -24,7 +24,7 @@ import colesico.framework.rpc.codegen.parser.RpcApiParser;
 import colesico.framework.rpc.teleapi.*;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.*;
-import colesico.framework.service.codegen.modulator.TeleModulator;
+import colesico.framework.service.codegen.modulator.TeleFacadeModulator;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import org.slf4j.Logger;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
+public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
 
     private final Logger logger = LoggerFactory.getLogger(RpcModulator.class);
 

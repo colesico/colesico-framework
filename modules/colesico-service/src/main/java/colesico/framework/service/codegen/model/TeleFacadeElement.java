@@ -81,6 +81,11 @@ public class TeleFacadeElement {
      */
     private Boolean compoundParams = false;
 
+    private final Map<Class, TeleSchemeElement> teleSchemes;
+
+    /**
+     * Common purpose properties
+     */
     private final Map<Class, Object> properties;
 
     public TeleFacadeElement(Class<?> teleType,
@@ -93,8 +98,11 @@ public class TeleFacadeElement {
         this.ligatureClass = ligatureClass;
         this.dataPortClass = dataPortClass;
         this.teleMethods = new Elements<>();
-        this.properties = new HashMap();
         this.iocQualifier = iocQualifier;
+
+        this.teleSchemes = new HashMap<>();
+        this.properties = new HashMap<>();
+
     }
 
     public ServiceElement getParentService() {
@@ -139,6 +147,14 @@ public class TeleFacadeElement {
 
     public Class<?> getTeleType() {
         return teleType;
+    }
+
+    public <B> TeleSchemeElement<B> getTeleScheme(Class<B> schemeType) {
+        return teleSchemes.get(schemeType);
+    }
+
+    public <B> void setTeleScheme(Class<B> schemeType, TeleSchemeElement<B> schemeBuilder) {
+        teleSchemes.put(schemeType, schemeBuilder);
     }
 
     public <C> C getProperty(Class<C> propertyClass) {

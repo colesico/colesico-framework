@@ -31,9 +31,9 @@ import java.util.List;
  *
  * @see TeleFacade
  */
-public abstract class TeleModulator<T extends TeleFacadeElement> extends Modulator {
+public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends Modulator {
 
-    private final Logger log = LoggerFactory.getLogger(TeleModulator.class);
+    private final Logger log = LoggerFactory.getLogger(TeleFacadeModulator.class);
 
     public static final String LIGATURE_VAR = "ligature";
 

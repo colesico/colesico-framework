@@ -21,7 +21,7 @@ import colesico.framework.router.RoutingLigature;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.TeleFacadeElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
-import colesico.framework.service.codegen.modulator.TeleModulator;
+import colesico.framework.service.codegen.modulator.TeleFacadeModulator;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleDriver;
 import com.squareup.javapoet.ClassName;
@@ -35,7 +35,7 @@ import java.util.Map;
 /**
  * Routes modulation support
  */
-abstract public class RoutesModulator extends TeleModulator<RouterTeleFacadeElement> {
+abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFacadeElement> {
 
     protected final Logger logger = LoggerFactory.getLogger(RoutesModulator.class);
 

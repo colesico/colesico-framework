@@ -2,7 +2,7 @@ package colesico.framework.openapi;
 
 import colesico.framework.http.HttpMethod;
 import colesico.framework.restlet.teleapi.RestletTeleReader;
-import colesico.framework.telescheme.TeleSchemeBuilder;
+import colesico.framework.teleapi.TeleScheme;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
@@ -13,33 +13,41 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.stream.Collectors;
 
-abstract public class OpenApiBuilder implements TeleSchemeBuilder<OpenAPI> {
+abstract public class OpenApiScheme implements TeleScheme<OpenAPI> {
 
-    public static final String CREATE_OPEN_API_METHOD = "createOpenApi";
-    public static final String CREATE_OPERATION_METHOD = "createOperation";
-    public static final String CREATE_INPUT_PARAM_METHOD = "createInputParam";
+    public static final String CREATE_API_METHOD = "api";
+    public static final String CREATE_OPERATION_METHOD = "operation";
+    public static final String CREATE_PARAM_METHOD = "param";
+    public static final String API_VAR = "api";
+    public static final String OPERATION_VAR = "operation";
+    public static final String PARAM_VAR = "param";
 
-    protected OpenAPI createOpenApi(String name) {
-        OpenAPI openApi = new OpenAPI();
-        openApi.setPaths(new Paths());
+    /**
+     * Create api
+     */
+    protected OpenAPI api(String name) {
+        // Create  api object
+        OpenAPI api = new OpenAPI();
+        api.setPaths(new Paths());
         Tag tag = new Tag();
         tag.setName(name);
-        openApi.addTagsItem(tag);
-
-        return openApi;
+        api.addTagsItem(tag);
+        return api;
     }
 
-    protected Operation createOperation(OpenAPI openApi, String operationId, String path, String httpMethod) {
+    /**
+     * Create operation
+     */
+    protected Operation operation(OpenAPI api, String operationId, String path, String httpMethod) {
 
         // Create operation object
-
         Operation operation = new Operation();
         operation.setOperationId(operationId);
-        List<String> tagNames = openApi.getTags().stream().map(t -> t.getName()).collect(Collectors.toList());
+        List<String> tagNames = api.getTags().stream().map(t -> t.getName()).collect(Collectors.toList());
         operation.setTags(tagNames);
 
         // Add or create PathItem object
-        Paths pathMap = openApi.getPaths();
+        Paths pathMap = api.getPaths();
         PathItem pathItem = pathMap.get(path);
         if (pathItem == null) {
             pathItem = new PathItem();
@@ -73,13 +81,14 @@ abstract public class OpenApiBuilder implements TeleSchemeBuilder<OpenAPI> {
         return operation;
     }
 
-    protected InputParam createInputParam(OpenAPI openAPI,
-                                          Operation operation,
-                                          Type valueType,
-                                          String paramName,
-                                          String originName,
-                                          Class<? extends RestletTeleReader> readerClass,
-                                          Type jsonRequestType) {
+    /**
+     * Start build param
+     */
+    protected InputParam param(Type valueType,
+                               String paramName,
+                               String originName,
+                               Class<? extends RestletTeleReader> readerClass,
+                               Type jsonRequestType) {
         //TODO:
         return null;
 

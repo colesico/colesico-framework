@@ -35,9 +35,6 @@ module colesico.framework.openapi {
 
 
     // API
-    exports colesico.framework.telescheme;
-    opens colesico.framework.telescheme;
-
     exports colesico.framework.openapi;
     opens colesico.framework.openapi;
 
