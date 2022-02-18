@@ -53,7 +53,7 @@ public class TeleSchemeGenerator extends FrameworkAbstractGenerator {
 
     public void generate(TeleSchemeElement schemeBuilder) {
 
-        TypeSpec.Builder classBuilder = TypeSpec.classBuilder(schemeBuilder.getSchemeBuilderClassSimpleName());
+        TypeSpec.Builder classBuilder = TypeSpec.classBuilder(schemeBuilder.getTeleSchemeClassSimpleName());
         classBuilder.addModifiers(Modifier.PUBLIC);
         classBuilder.addModifiers(Modifier.FINAL);
 

@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * Tele-scheme element
+ *
  * @see TeleScheme
  */
 public class TeleSchemeElement<S> {
@@ -18,6 +19,7 @@ public class TeleSchemeElement<S> {
 
     /**
      * Scheme implementation type
+     *
      * @see TeleScheme
      */
     private final Class<S> schemeType;
@@ -39,17 +41,12 @@ public class TeleSchemeElement<S> {
     }
 
     /**
-     * Returns tele-facade scheme builder class simple name
+     * Returns tele-scheme implementation class simple name
      */
-    public String getSchemeBuilderClassSimpleName() {
+    public String getTeleSchemeClassSimpleName() {
         String originClassName = parentTeleFacade.getParentService().getOriginClass().getSimpleName();
         String schemeTypeSuffix = StrUtils.firstCharToUpperCase(schemeType.getSimpleName());
-
-        if (StringUtils.endsWith(originClassName, schemeTypeSuffix)) {
-            return originClassName + TeleScheme.SCHEME_BUILDER_SUFFIX;
-        } else {
-            return originClassName + schemeTypeSuffix + TeleScheme.SCHEME_BUILDER_SUFFIX;
-        }
+        return originClassName + schemeTypeSuffix+TeleScheme.SCHEME_IMPL_SUFFIX;
     }
 
     public TeleFacadeElement getParentTeleFacade() {

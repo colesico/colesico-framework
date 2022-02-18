@@ -78,8 +78,15 @@ public class TeleFacadeElement {
 
     /**
      * Compound params support enabled
+     * @see colesico.framework.service.Compound
      */
     private Boolean compoundParams = false;
+
+    /**
+     * Batch params support enabled
+     * @see colesico.framework.service.BatchField
+     */
+    private Boolean batchParams = false;
 
     private final Map<Class, TeleSchemeElement> teleSchemes;
 
@@ -198,6 +205,14 @@ public class TeleFacadeElement {
 
     public void setCompoundParams(Boolean compoundParams) {
         this.compoundParams = compoundParams;
+    }
+
+    public Boolean getBatchParams() {
+        return batchParams;
+    }
+
+    public void setBatchParams(Boolean batchParams) {
+        this.batchParams = batchParams;
     }
 
     public static final class IocQualifier {

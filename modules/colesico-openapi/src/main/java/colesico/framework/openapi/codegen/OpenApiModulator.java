@@ -94,9 +94,6 @@ public final class OpenApiModulator extends TeleSchemeModulator {
         cb.addStatement("$T $N", ClassName.get(Operation.class), OpenApiScheme.OPERATION_VAR);
         cb.addStatement("$T $N", ClassName.get(InputParam.class), OpenApiScheme.PARAM_VAR);
 
-        // RouterTeleFacadeElement routedTeleFacade = (RouterTeleFacadeElement) teleFacade;
-        // RoutesBuilder routesBuilder = routedTeleFacade.getRoutesBuilder();
-
         for (TeleMethodElement teleMethod : teleFacade.getTeleMethods()) {
             RoutesBuilder.RoutedTeleMethodElement routedTeleMethod = teleMethod.getProperty(RoutesBuilder.RoutedTeleMethodElement.class);
             if (routedTeleMethod == null) {
@@ -106,7 +103,7 @@ public final class OpenApiModulator extends TeleSchemeModulator {
             String path = routedTeleMethod.getRoutePath();
             String httpMethod = routedTeleMethod.getHttpMethodName();
 
-            // operation = createOperation(openApi, methodName, path, httpMethod)
+            // operation = operation(api, methodName, path, httpMethod)
             cb.addStatement("$N = $N($N,$S,$S,$S)",
                     OpenApiScheme.OPERATION_VAR,
                     OpenApiScheme.CREATE_OPERATION_METHOD,

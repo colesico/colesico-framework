@@ -8,7 +8,7 @@ package colesico.framework.teleapi;
  */
 public interface TeleScheme<S> {
 
-    String SCHEME_BUILDER_SUFFIX = "Scheme";
+    String SCHEME_IMPL_SUFFIX = "Scheme";
     String BUILD_METHOD = "build";
 
     /**
