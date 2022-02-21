@@ -67,7 +67,7 @@ public class TeleFacadesGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    protected CodeBlock generateArgumentValue(TeleVarElement teleArg, CodeBlock.Builder invokerBuilder) {
+    protected CodeBlock generateArgumentValue(TeleInputElement teleArg, CodeBlock.Builder invokerBuilder) {
 
         // ==== Generate simple param
 
@@ -83,25 +83,25 @@ public class TeleFacadesGenerator {
 
         // ==== Generate compound
 
-        final String argVar = varNames.getNextTempVariable(teleArg.getOriginElement().getName());
+        final String inpVar = varNames.getNextTempVariable(teleArg.getOriginElement().getName());
         invokerBuilder.add("\n// Init compound\n");
         TypeMirror paramType = teleArg.getOriginElement().asClassType().unwrap();
         invokerBuilder.addStatement("$T $N = new $T()",
                 TypeName.get(paramType),
-                argVar, TypeName.get(teleArg.getOriginElement().getOriginType()));
+                inpVar, TypeName.get(teleArg.getOriginElement().getOriginType()));
 
         // Generate compound fields
 
-        for (TeleVarElement field : ((TeleCompoundElement) teleArg).getFields()) {
+        for (TeleInputElement field : ((TeleCompoundElement) teleArg).getFields()) {
             CodeBlock value = generateArgumentValue(field, invokerBuilder);
             String setterName = "set" + StrUtils.firstCharToUpperCase(field.getOriginElement().getName());
-            invokerBuilder.add("$N.$N(", argVar, setterName);
+            invokerBuilder.add("$N.$N(", inpVar, setterName);
             invokerBuilder.add(value);
             invokerBuilder.add(");\n");
         }
         invokerBuilder.add("\n");
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add(argVar);
+        cb.add(inpVar);
         return cb.build();
     }
 
@@ -121,7 +121,7 @@ public class TeleFacadesGenerator {
 
         // ============= Generate params retrieving
         ArrayCodegen serviceMethodArgs = new ArrayCodegen();
-        for (TeleVarElement teleArg : teleMethod.getParameters()) {
+        for (TeleInputElement teleArg : teleMethod.getParameters()) {
             CodeBlock value = generateArgumentValue(teleArg, cb);
             String paramName = teleArg.getOriginElement().getName() + PARAM_SUFFIX;
             serviceMethodArgs.add("$N", paramName);

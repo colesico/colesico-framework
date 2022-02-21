@@ -9,20 +9,20 @@ import java.util.List;
  * Represents tele method compound parameter
  * @see colesico.framework.service.Compound
  */
-public class TeleCompoundElement extends TeleVarElement {
+public class TeleCompoundElement extends TeleInputElement {
 
-    private final List<TeleVarElement> fields = new ArrayList<>();
+    private final List<TeleInputElement> fields = new ArrayList<>();
 
     public TeleCompoundElement(VarElement originVariable) {
         super(originVariable);
     }
 
-    public void addField(TeleVarElement field) {
+    public void addField(TeleInputElement field) {
         fields.add(field);
         field.setParentCompound(this);
     }
 
-    public List<TeleVarElement> getFields() {
+    public List<TeleInputElement> getFields() {
         return fields;
     }
 }

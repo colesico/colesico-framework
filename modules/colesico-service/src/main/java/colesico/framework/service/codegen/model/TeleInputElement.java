@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Represents tele method parameter or field or compound parameter field
+ * Represents tele method parameter or compound or batch field
  */
-abstract public class TeleVarElement {
+abstract public class TeleInputElement {
 
     /**
      * Parent tele-method ref
@@ -32,7 +32,7 @@ abstract public class TeleVarElement {
      */
     private final Map<Class<?>, Object> properties = new HashMap<>();
 
-    public TeleVarElement(VarElement originArg) {
+    public TeleInputElement(VarElement originArg) {
         this.originElement = originArg;
     }
 
@@ -47,7 +47,7 @@ abstract public class TeleVarElement {
     /**
      * To iterate from current argument to root compound
      */
-    public Iterator<? extends TeleVarElement> getIterator() {
+    public Iterator<? extends TeleInputElement> getIterator() {
         return new ArgumentIterator(this);
     }
 
@@ -75,7 +75,7 @@ abstract public class TeleVarElement {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TeleVarElement that = (TeleVarElement) o;
+        TeleInputElement that = (TeleInputElement) o;
         return originElement.equals(that.originElement);
     }
 
@@ -84,11 +84,11 @@ abstract public class TeleVarElement {
         return Objects.hash(originElement);
     }
 
-    static class ArgumentIterator implements Iterator<TeleVarElement> {
+    static class ArgumentIterator implements Iterator<TeleInputElement> {
 
-        private TeleVarElement currentArgument;
+        private TeleInputElement currentArgument;
 
-        public ArgumentIterator(TeleVarElement currentArgument) {
+        public ArgumentIterator(TeleInputElement currentArgument) {
             this.currentArgument = currentArgument;
         }
 
@@ -98,8 +98,8 @@ abstract public class TeleVarElement {
         }
 
         @Override
-        public TeleVarElement next() {
-            TeleVarElement prev = currentArgument;
+        public TeleInputElement next() {
+            TeleInputElement prev = currentArgument;
             if (currentArgument != null) {
                 currentArgument = currentArgument.getParentCompound();
             }

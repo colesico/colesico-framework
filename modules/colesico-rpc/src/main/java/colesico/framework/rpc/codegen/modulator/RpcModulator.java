@@ -110,7 +110,7 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
                     // Rpc params
                     List<RpcApiParamElement> rpcApiParams = rpcApiMethod.getParameters();
                     // Method params
-                    List<TeleVarElement> teleParams = teleMethodElm.getParameters();
+                    List<TeleInputElement> teleParams = teleMethodElm.getParameters();
 
                     if (rpcApiParams.size() != teleParams.size()) {
                         throw CodegenException.of()

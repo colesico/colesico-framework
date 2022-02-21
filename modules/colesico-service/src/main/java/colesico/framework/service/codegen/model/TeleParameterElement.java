@@ -17,23 +17,16 @@
 package colesico.framework.service.codegen.model;
 
 import colesico.framework.assist.codegen.model.VarElement;
-import com.squareup.javapoet.CodeBlock;
 
 /**
  * Tele-method parameter
  */
-public final class TeleParameterElement extends TeleVarElement {
+public final class TeleParameterElement extends TeleInputElement {
 
     protected TRContextElement readingContext;
 
-    /**
-     * Parameter index
-     */
-    protected final Integer paramIndex;
-
-    public TeleParameterElement(VarElement originVariable, Integer paramIndex) {
+    public TeleParameterElement(VarElement originVariable) {
         super(originVariable);
-        this.paramIndex = paramIndex;
     }
 
     public TRContextElement getReadingContext() {
@@ -44,15 +37,10 @@ public final class TeleParameterElement extends TeleVarElement {
         this.readingContext = readingContext;
     }
 
-    public Integer getParamIndex() {
-        return paramIndex;
-    }
-
     @Override
     public String toString() {
         return "TeleParamElement{" +
                 "originParam=" + originElement +
-                ", paramIndex=" + paramIndex +
                 '}';
     }
 }

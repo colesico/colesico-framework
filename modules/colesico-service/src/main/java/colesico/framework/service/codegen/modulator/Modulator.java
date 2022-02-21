@@ -80,7 +80,7 @@ abstract public class Modulator {
 
     }
 
-    public void onTeleParamParsed(TeleParameterElement teleParam) {
+    public void onTeleInputParsed(TeleInputElement teleInput) {
 
     }
 

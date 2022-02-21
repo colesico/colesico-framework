@@ -84,13 +84,13 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
         serviceElm.setTeleFacade(teleFacade);
     }
 
-    private final void generateParamsReadingContextCode(List<TeleVarElement> arguments) {
-        for (TeleVarElement teleArg : arguments) {
-            if (teleArg instanceof TeleParameterElement) {
-                TeleParameterElement teleParam = (TeleParameterElement) teleArg;
+    private final void generateParamsReadingContextCode(List<TeleInputElement> inputs) {
+        for (TeleInputElement inp : inputs) {
+            if (inp instanceof TeleParameterElement) {
+                TeleParameterElement teleParam = (TeleParameterElement) inp;
                 teleParam.setReadingContext(createReadingContext(teleParam));
             } else {
-                generateParamsReadingContextCode(((TeleCompoundElement) teleArg).getFields());
+                generateParamsReadingContextCode(((TeleCompoundElement) inp).getFields());
             }
         }
     }

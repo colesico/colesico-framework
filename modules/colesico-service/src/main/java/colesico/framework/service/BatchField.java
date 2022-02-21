@@ -26,4 +26,8 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 public @interface BatchField {
+    /**
+     * Batch name
+     */
+    String value() default "";
 }

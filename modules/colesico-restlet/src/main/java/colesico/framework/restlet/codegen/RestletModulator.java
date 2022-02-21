@@ -102,7 +102,7 @@ public final class RestletModulator extends RoutesModulator {
             teleMethodElement.setProperty(JsonRequestElement.class, jsonRequest);
         }
 
-        for (TeleVarElement teleArg : teleMethodElement.getParameters()) {
+        for (TeleInputElement teleArg : teleMethodElement.getParameters()) {
 
             var jsonParamAnn = teleArg.getOriginElement().getAnnotation(JsonField.class);
 

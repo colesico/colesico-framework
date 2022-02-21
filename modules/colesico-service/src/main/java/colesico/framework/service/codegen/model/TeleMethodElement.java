@@ -17,7 +17,7 @@
 package colesico.framework.service.codegen.model;
 
 import colesico.framework.assist.StrUtils;
-import com.squareup.javapoet.CodeBlock;
+import colesico.framework.assist.codegen.CodegenException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +42,7 @@ public final class TeleMethodElement {
     /**
      * Tele-method direct parameters and compounds
      */
-    private final List<TeleVarElement> parameters;
+    private final List<TeleInputElement> parameters;
 
     /**
      * Method result writing context
@@ -64,15 +64,13 @@ public final class TeleMethodElement {
      */
     protected Integer index;
 
-    /**
-     * Parsed param index
-     */
-    protected Integer paramIndex = -1;
+    protected final Map<String, TeleBatchElement> batches;
 
     public TeleMethodElement(ServiceMethodElement serviceMethod) {
         this.serviceMethod = serviceMethod;
         this.parameters = new ArrayList<>();
         this.properties = new HashMap<>();
+        this.batches = new HashMap<>();
     }
 
     public <C> C getProperty(Class<C> propertyClass) {
@@ -86,9 +84,18 @@ public final class TeleMethodElement {
     /**
      * Add parameter of tele-method
      */
-    public void addParameter(TeleVarElement arg) {
-        parameters.add(arg);
-        arg.setParentTeleMethod(this);
+    public void addParameter(TeleInputElement inp) {
+        parameters.add(inp);
+        inp.setParentTeleMethod(this);
+    }
+
+    public TeleBatchElement getOrCreateBatch(String name) {
+        TeleBatchElement batch = batches.get(name);
+        if (batch == null) {
+            batch = new TeleBatchElement(this, name);
+            batches.put(name, batch);
+        }
+        return batch;
     }
 
     public String getName() {
@@ -99,10 +106,6 @@ public final class TeleMethodElement {
         return "get" + StrUtils.firstCharToUpperCase(serviceMethod.getName()) + "TM" + index;
     }
 
-    public Integer nextParamIndex() {
-        return ++paramIndex;
-    }
-
     public ServiceMethodElement getServiceMethod() {
         return serviceMethod;
     }
@@ -111,7 +114,7 @@ public final class TeleMethodElement {
         return parentTeleFacade;
     }
 
-    public List<TeleVarElement> getParameters() {
+    public List<TeleInputElement> getParameters() {
         return parameters;
     }
 
@@ -133,6 +136,10 @@ public final class TeleMethodElement {
 
     public Integer getIndex() {
         return index;
+    }
+
+    public Map<String, TeleBatchElement> getBatches() {
+        return batches;
     }
 
     @Override

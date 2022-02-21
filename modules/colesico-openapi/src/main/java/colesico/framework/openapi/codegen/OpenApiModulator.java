@@ -28,7 +28,7 @@ import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.TeleFacadeElement;
 import colesico.framework.service.codegen.model.TeleMethodElement;
 import colesico.framework.service.codegen.model.TeleParameterElement;
-import colesico.framework.service.codegen.model.TeleVarElement;
+import colesico.framework.service.codegen.model.TeleInputElement;
 import colesico.framework.service.codegen.modulator.Modulator;
 import colesico.framework.teleapi.TeleScheme;
 import colesico.framework.service.codegen.modulator.TeleSchemeModulator;
@@ -118,7 +118,7 @@ public final class OpenApiModulator extends TeleSchemeModulator {
     }
 
     protected void generateInputParams(CodeBlock.Builder cb, TeleMethodElement teleMethod) {
-        for (TeleVarElement teleVar : teleMethod.getParameters()) {
+        for (TeleInputElement teleVar : teleMethod.getParameters()) {
             //TODO: handle compounds
             TeleParameterElement teleParam = (TeleParameterElement) teleVar;
             // param = param(openApi, operation,

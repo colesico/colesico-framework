@@ -6,9 +6,8 @@ import colesico.framework.restlet.teleapi.RestletOrigin;
 import colesico.framework.restlet.teleapi.RestletParamReader;
 import colesico.framework.restlet.teleapi.reader.JsonFieldReader;
 import colesico.framework.service.codegen.model.TeleParameterElement;
-import colesico.framework.service.codegen.model.TeleVarElement;
+import colesico.framework.service.codegen.model.TeleInputElement;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
-import com.squareup.javapoet.TypeName;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.type.TypeMirror;
@@ -16,7 +15,7 @@ import javax.lang.model.util.Elements;
 
 public class RestletCodegenUtils {
 
-    public static String getParamName(TeleVarElement teleArg) {
+    public static String getParamName(TeleInputElement teleArg) {
         String paramName = TeleHttpCodegenUtils.getParamName(teleArg);
         JsonFieldElement jfe = teleArg.getProperty(JsonFieldElement.class);
         if (jfe != null) {
@@ -27,7 +26,7 @@ public class RestletCodegenUtils {
         return paramName;
     }
 
-    public static String getOriginName(TeleVarElement teleArg) {
+    public static String getOriginName(TeleInputElement teleArg) {
         String originName;
         JsonFieldElement jfe = teleArg.getProperty(JsonFieldElement.class);
         if (jfe != null) {

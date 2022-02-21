@@ -2,13 +2,12 @@ package colesico.framework.service.codegen.model;
 
 import colesico.framework.assist.codegen.model.VarElement;
 
-public class TeleBatchFieldElement extends TeleVarElement{
+public class TeleBatchFieldElement extends TeleInputElement {
 
     private TeleBatchElement parentBatch;
 
-    public TeleBatchFieldElement(VarElement originArg, TeleBatchElement parentBatch) {
+    public TeleBatchFieldElement(VarElement originArg) {
         super(originArg);
-        this.parentBatch = parentBatch;
     }
 
     public TeleBatchElement getParentBatch() {

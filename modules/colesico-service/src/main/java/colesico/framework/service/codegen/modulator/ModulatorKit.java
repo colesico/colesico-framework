@@ -130,9 +130,9 @@ public class ModulatorKit {
         }
     }
 
-    public void notifyTeleParamParsed(TeleParameterElement teleParam) {
+    public void notifyTeleInputParsed(TeleInputElement teleInput) {
         for (Modulator modulator : modulators) {
-            modulator.onTeleParamParsed(teleParam);
+            modulator.onTeleInputParsed(teleInput);
         }
     }
 
