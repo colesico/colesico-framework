@@ -40,9 +40,19 @@ public final class TeleMethodElement {
     private final ServiceMethodElement serviceMethod;
 
     /**
-     * Tele-method direct parameters and compounds
+     * Direct parameters, batch parameters and compounds
      */
     private final List<TeleInputElement> parameters;
+
+    /**
+     * Parameter batches
+     */
+    protected final Map<String, TeleBatchElement> batches;
+
+    /**
+     * Tele-method index in tele-facade
+     */
+    protected Integer index;
 
     /**
      * Method result writing context
@@ -58,13 +68,6 @@ public final class TeleMethodElement {
      * Common purpose props
      */
     private final Map<Class, Object> properties;
-
-    /**
-     * Tele-method index in tele-facade
-     */
-    protected Integer index;
-
-    protected final Map<String, TeleBatchElement> batches;
 
     public TeleMethodElement(ServiceMethodElement serviceMethod) {
         this.serviceMethod = serviceMethod;
@@ -86,7 +89,6 @@ public final class TeleMethodElement {
      */
     public void addParameter(TeleInputElement inp) {
         parameters.add(inp);
-        inp.setParentTeleMethod(this);
     }
 
     public TeleBatchElement getOrCreateBatch(String name) {
@@ -94,10 +96,14 @@ public final class TeleMethodElement {
         if (batch == null) {
             batch = new TeleBatchElement(this, name);
             batches.put(name, batch);
+            parentTeleFacade.getBatchPack().addBatch(batch);
         }
         return batch;
     }
 
+    /**
+     * Return origin service method name
+     */
     public String getName() {
         return serviceMethod.getName();
     }

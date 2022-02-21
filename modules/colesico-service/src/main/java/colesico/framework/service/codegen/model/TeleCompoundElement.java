@@ -13,8 +13,8 @@ public class TeleCompoundElement extends TeleInputElement {
 
     private final List<TeleInputElement> fields = new ArrayList<>();
 
-    public TeleCompoundElement(VarElement originVariable) {
-        super(originVariable);
+    public TeleCompoundElement(TeleMethodElement parentTeleMethod, VarElement originElement) {
+        super(parentTeleMethod, originElement);
     }
 
     public void addField(TeleInputElement field) {

@@ -23,6 +23,7 @@ import colesico.framework.service.BatchField;
 import colesico.framework.service.Compound;
 import colesico.framework.service.LocalField;
 import colesico.framework.service.codegen.model.*;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.element.Modifier;
 import java.util.Iterator;
@@ -44,22 +45,21 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
                     .build();
         }
 
-        TeleCompoundElement teleComp = new TeleCompoundElement(variable);
-        teleComp.setParentTeleMethod(teleMethod);
+        TeleCompoundElement compound = new TeleCompoundElement(teleMethod, variable);
 
         if (parentCompound == null) {
-            teleMethod.addParameter(teleComp);
+            teleMethod.addParameter(compound);
         } else {
             // Check recursive objects
             Iterator<TeleCompoundElement> it = (Iterator<TeleCompoundElement>) parentCompound.getIterator();
             while (it.hasNext()) {
                 TeleCompoundElement curComp = it.next();
-                if (curComp.equals(teleComp)) {
+                if (curComp.equals(compound)) {
                     TeleFacadeElement teleFacade = teleMethod.getParentTeleFacade();
                     throw CodegenException.of().message("Recursive compound for: "
-                                    + teleComp.getOriginElement().getOriginType()
+                                    + compound.getOriginElement().getOriginType()
                                     + " "
-                                    + teleComp.getOriginElement().getName()
+                                    + compound.getOriginElement().getName()
                                     + " in: "
                                     + teleFacade.getParentService().getOriginClass().getOriginType()
                                     + "->" + teleMethod.getServiceMethod().getName())
@@ -67,7 +67,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
                             .build();
                 }
             }
-            teleComp.setParentCompound(parentCompound);
+            compound.setParentCompound(parentCompound);
         }
 
         // Parse compound fields
@@ -76,17 +76,23 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
                         && !f.unwrap().getModifiers().contains(Modifier.STATIC)
         );
 
-        parseVariables(teleMethod, teleComp, fields);
+        parseVariables(teleMethod, compound, fields);
 
-        context.getModulatorKit().notifyTeleInputParsed(teleComp);
+        context.getModulatorKit().notifyTeleInputParsed(compound);
     }
 
-    private void parseBatch(TeleMethodElement teleMethod, TeleCompoundElement parentCompound, VarElement variable) {
+    private void parseBatchField(TeleMethodElement teleMethod, TeleCompoundElement parentCompound, VarElement variable) {
         AnnotationAssist<BatchField> batchAnn = variable.getAnnotation(BatchField.class);
-        TeleBatchElement batch = teleMethod.getOrCreateBatch(batchAnn.unwrap().value());
-        TeleBatchFieldElement batchField = new TeleBatchFieldElement(variable);
+        String fieldName = batchAnn.unwrap().value();
+        if (StringUtils.isBlank(fieldName)) {
+            fieldName = variable.getName();
+        }
+
+        TeleBatchFieldElement batchField = new TeleBatchFieldElement(teleMethod, variable, fieldName);
+
+        //TODO: Batch name from BatchName annotation
+        TeleBatchElement batch = teleMethod.getOrCreateBatch("");
         batch.addField(batchField);
-        batchField.setParentTeleMethod(teleMethod);
         if (parentCompound == null) {
             teleMethod.addParameter(batchField);
         } else {
@@ -97,14 +103,13 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
 
     private void parseParameter(TeleMethodElement teleMethod, TeleCompoundElement parentCompound, VarElement variable) {
         // Process simple param
-        TeleParameterElement teleParam = new TeleParameterElement(variable);
-        teleParam.setParentTeleMethod(teleMethod);
+        TeleParameterElement parameter = new TeleParameterElement(teleMethod, variable);
         if (parentCompound == null) {
-            teleMethod.addParameter(teleParam);
+            teleMethod.addParameter(parameter);
         } else {
-            parentCompound.addField(teleParam);
+            parentCompound.addField(parameter);
         }
-        context.getModulatorKit().notifyTeleInputParsed(teleParam);
+        context.getModulatorKit().notifyTeleInputParsed(parameter);
     }
 
     private void parseVariables(TeleMethodElement teleMethod, TeleCompoundElement parentCompound, List<? extends VarElement> variables) {
@@ -130,7 +135,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
                                 .element(variable.unwrap())
                                 .build();
                     } else {
-                        parseBatch(teleMethod, parentCompound, variable);
+                        parseBatchField(teleMethod, parentCompound, variable);
                     }
                 }
 

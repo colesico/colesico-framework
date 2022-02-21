@@ -15,7 +15,7 @@ abstract public class TeleInputElement {
     /**
      * Parent tele-method ref
      */
-    protected TeleMethodElement parentTeleMethod;
+    protected final TeleMethodElement parentTeleMethod;
 
     /**
      * Parent compound if exists
@@ -32,8 +32,9 @@ abstract public class TeleInputElement {
      */
     private final Map<Class<?>, Object> properties = new HashMap<>();
 
-    public TeleInputElement(VarElement originArg) {
-        this.originElement = originArg;
+    public TeleInputElement(TeleMethodElement parentTeleMethod, VarElement originElement) {
+        this.parentTeleMethod = parentTeleMethod;
+        this.originElement = originElement;
     }
 
     public <C> C getProperty(Class<C> propertyClass) {
@@ -57,10 +58,6 @@ abstract public class TeleInputElement {
 
     public TeleMethodElement getParentTeleMethod() {
         return parentTeleMethod;
-    }
-
-    public void setParentTeleMethod(TeleMethodElement parentTeleMethod) {
-        this.parentTeleMethod = parentTeleMethod;
     }
 
     public TeleCompoundElement getParentCompound() {

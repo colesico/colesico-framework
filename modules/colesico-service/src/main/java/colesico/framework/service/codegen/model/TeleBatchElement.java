@@ -1,13 +1,21 @@
 package colesico.framework.service.codegen.model;
 
+import colesico.framework.assist.StrUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Represent batch parameter
+ *
  * @see colesico.framework.service.BatchField
  */
 public class TeleBatchElement {
+
+    /**
+     * Batch pack ref
+     */
+    protected TeleBatchPackElement parentPack;
 
     /**
      * Parent tele-method ref
@@ -33,6 +41,10 @@ public class TeleBatchElement {
         field.setParentBatch(this);
     }
 
+    public String getBatchClassSimpleName() {
+        return StrUtils.firstCharToUpperCase(parentTeleMethod.getName()) + StrUtils.firstCharToUpperCase(name);
+    }
+
     public TeleMethodElement getParentTeleMethod() {
         return parentTeleMethod;
     }
@@ -51,5 +63,13 @@ public class TeleBatchElement {
 
     public void setReadingContext(TRContextElement readingContext) {
         this.readingContext = readingContext;
+    }
+
+    public TeleBatchPackElement getParentPack() {
+        return parentPack;
+    }
+
+    public void setParentPack(TeleBatchPackElement parentPack) {
+        this.parentPack = parentPack;
     }
 }

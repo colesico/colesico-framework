@@ -25,8 +25,8 @@ public final class TeleParameterElement extends TeleInputElement {
 
     protected TRContextElement readingContext;
 
-    public TeleParameterElement(VarElement originVariable) {
-        super(originVariable);
+    public TeleParameterElement(TeleMethodElement parentTeleMethod, VarElement originElement) {
+        super(parentTeleMethod, originElement);
     }
 
     public TRContextElement getReadingContext() {
