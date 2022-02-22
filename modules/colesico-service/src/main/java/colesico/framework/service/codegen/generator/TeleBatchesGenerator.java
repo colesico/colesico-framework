@@ -19,6 +19,10 @@ public class TeleBatchesGenerator extends FrameworkAbstractGenerator {
     }
 
     public void generate(TeleBatchPackElement batchPack) {
+        if (batchPack.isEmpty()) {
+            return;
+        }
+
         TypeSpec.Builder pb = TypeSpec.classBuilder(batchPack.getBatchPackClassSimpleName());
         pb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 

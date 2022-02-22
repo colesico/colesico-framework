@@ -49,8 +49,11 @@ public class TeleFacadesGenerator {
     protected final ServiceProcessorContext context;
     protected final VarNameSequence varNames = new VarNameSequence();
 
+    protected final TeleBatchesGenerator batchesGenerator;
+
     public TeleFacadesGenerator(ServiceProcessorContext context) {
         this.context = context;
+        this.batchesGenerator = new TeleBatchesGenerator(context.getProcessingEnv());
     }
 
     protected void generateConstructor(TeleFacadeElement teleFacade, TypeSpec.Builder classBuilder) {
@@ -78,6 +81,15 @@ public class TeleFacadesGenerator {
             cb.add("$N.$N(", MethodInvoker.DATA_PORT_PARAM, DataPort.READ_METHOD);
             cb.add(ctx);
             cb.add(")");
+            return cb.build();
+        }
+
+        // ==== Generate batch filed param
+
+        if (teleArg instanceof TeleBatchFieldElement) {
+            // batch.getFiled();
+            CodeBlock.Builder cb = CodeBlock.builder();
+            cb.add("null;");
             return cb.build();
         }
 
@@ -234,6 +246,8 @@ public class TeleFacadesGenerator {
         generateGetLigatureMethod(teleFacade, classBuilder);
 
         createTeleFacade(service, teleFacade, classBuilder);
+
+        batchesGenerator.generate(teleFacade.getBatchPack());
     }
 
 }

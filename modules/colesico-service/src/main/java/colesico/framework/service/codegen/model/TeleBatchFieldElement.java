@@ -14,7 +14,12 @@ public class TeleBatchFieldElement extends TeleInputElement {
 
     public TeleBatchFieldElement(TeleMethodElement parentTeleMethod, VarElement originElement, String name) {
         super(parentTeleMethod, originElement);
+        checkFieldName(name);
         this.name = name;
+    }
+
+    private void checkFieldName(String name) {
+        //TODO
     }
 
     public String getterName() {

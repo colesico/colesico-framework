@@ -14,6 +14,10 @@ public class TeleBatchPackElement {
         this.originTeleFacade = originTeleFacade;
     }
 
+    public boolean isEmpty() {
+        return batches.isEmpty();
+    }
+
     public void addBatch(TeleBatchElement batch) {
         batches.add(batch);
         batch.setParentPack(this);

@@ -26,6 +26,7 @@ import colesico.framework.router.RequestMethod;
 import colesico.framework.router.Route;
 import colesico.framework.router.RouteAttribute;
 import colesico.framework.restlet.teleapi.writer.PlainTextWriter;
+import colesico.framework.service.BatchField;
 import colesico.framework.service.Compound;
 import colesico.framework.telehttp.Origin;
 import colesico.framework.telehttp.ParamName;
@@ -94,6 +95,7 @@ public class RestApi {
     /**
      * JsonField example
      * POST: http://localhost:8080/rest-api/json-fields?val=test + data {"id":1,"name":"Vladlen"}
+     *
      * @see JsonField
      */
     @RequestMethod(HttpMethod.POST)
@@ -103,11 +105,19 @@ public class RestApi {
         return Map.of("id", idValue, "name", name, "val", val);
     }
 
+    @RequestMethod(HttpMethod.POST)
+    @BatchField
+    public Map<String, Object> batchFields(@BatchField("id") Long idValue,
+                                           String name,
+                                           @ParamOrigin(Origin.QUERY) String val) {
+        return Map.of("id", idValue, "name", name, "val", val);
+    }
+
     /**
      * Compound params example
      * GET http://localhost:8080/rest-api/compound-params?id=1&name=Ivan
      */
-    public Long compoundParams(@Compound @ParamName("usr-") User user){
+    public Long compoundParams(@Compound @ParamName("usr-") User user) {
         return user.getId();
     }
 }

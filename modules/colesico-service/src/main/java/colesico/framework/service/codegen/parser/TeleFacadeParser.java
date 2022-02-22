@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.lang.model.element.Modifier;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 public final class TeleFacadeParser extends FrameworkAbstractParser {
 
@@ -81,17 +82,31 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
         context.getModulatorKit().notifyTeleInputParsed(compound);
     }
 
-    private void parseBatchField(TeleMethodElement teleMethod, TeleCompoundElement parentCompound, VarElement variable) {
-        AnnotationAssist<BatchField> batchAnn = variable.getAnnotation(BatchField.class);
-        String fieldName = batchAnn.unwrap().value();
+    private void parseBatchField(TeleMethodElement teleMethod,
+                                 TeleCompoundElement parentCompound,
+                                 VarElement variable,
+                                 AnnotationAssist<BatchField> paramBatchAnn,
+                                 AnnotationAssist<BatchField> methodBatchAnn) {
+
+        String fieldName = "";
+        String batchName = "";
+
+        if (paramBatchAnn != null) {
+            fieldName = paramBatchAnn.unwrap().value();
+            batchName = paramBatchAnn.unwrap().batch();
+        }
+
         if (StringUtils.isBlank(fieldName)) {
             fieldName = variable.getName();
         }
 
+        if (StringUtils.isBlank(batchName) && methodBatchAnn != null) {
+            batchName = methodBatchAnn.unwrap().batch();
+        }
+
         TeleBatchFieldElement batchField = new TeleBatchFieldElement(teleMethod, variable, fieldName);
 
-        //TODO: Batch name from BatchName annotation
-        TeleBatchElement batch = teleMethod.getOrCreateBatch("");
+        TeleBatchElement batch = teleMethod.getOrCreateBatch(batchName);
         batch.addField(batchField);
         if (parentCompound == null) {
             teleMethod.addParameter(batchField);
@@ -123,23 +138,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
 
             AnnotationAssist<Compound> compoundAnn = variable.getAnnotation(Compound.class);
 
-            if (compoundAnn == null) {
-                AnnotationAssist<BatchField> batchAnn = variable.getAnnotation(BatchField.class);
-                if (batchAnn == null) {
-                    parseParameter(teleMethod, parentCompound, variable);
-                } else {
-                    // Check batch support
-                    if (!teleMethod.getParentTeleFacade().getBatchParams()) {
-                        throw CodegenException.of()
-                                .message("Batch parameters not supported by tele-facade " + teleMethod.getParentTeleFacade().getTeleType().getCanonicalName())
-                                .element(variable.unwrap())
-                                .build();
-                    } else {
-                        parseBatchField(teleMethod, parentCompound, variable);
-                    }
-                }
-
-            } else {
+            if (compoundAnn != null) {
                 // Check compound support
                 if (!teleMethod.getParentTeleFacade().getCompoundParams()) {
                     throw CodegenException.of()
@@ -148,6 +147,22 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
                             .build();
                 }
                 parseCompound(teleMethod, parentCompound, variable);
+            } else {
+                AnnotationAssist<BatchField> paramBatchAnn = variable.getAnnotation(BatchField.class);
+                AnnotationAssist<BatchField> methodBatchAnn = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(BatchField.class);
+                if (paramBatchAnn != null || methodBatchAnn != null) {
+                    // Check batch support
+                    if (!teleMethod.getParentTeleFacade().getBatchParams()) {
+                        throw CodegenException.of()
+                                .message("Batch parameters not supported by tele-facade " + teleMethod.getParentTeleFacade().getTeleType().getCanonicalName())
+                                .element(variable.unwrap())
+                                .build();
+                    } else {
+                        parseBatchField(teleMethod, parentCompound, variable, paramBatchAnn, methodBatchAnn);
+                    }
+                } else {
+                    parseParameter(teleMethod, parentCompound, variable);
+                }
             }
         }
     }

@@ -80,6 +80,8 @@ public final class RestletModulator extends RoutesModulator {
         RouterTeleFacadeElement teleFacade = super.createTeleFacade(serviceElm);
         JsonPackElement jrPak = new JsonPackElement(teleFacade);
         teleFacade.setProperty(JsonPackElement.class, jrPak);
+        // Enable batch params
+        teleFacade.setBatchParams(true);
         return teleFacade;
     }
 
@@ -111,6 +113,17 @@ public final class RestletModulator extends RoutesModulator {
                 if (jsonParamAnn != null) {
                     throw CodegenException.of()
                             .message("Compounds are not supported for json fields")
+                            .element(teleArg.getOriginElement().unwrap())
+                            .build();
+                }
+                continue;
+            }
+
+            // Skip batches
+            if (teleArg instanceof TeleBatchFieldElement) {
+                if (jsonParamAnn != null) {
+                    throw CodegenException.of()
+                            .message("Batches are not supported for json fields")
                             .element(teleArg.getOriginElement().unwrap())
                             .build();
                 }
