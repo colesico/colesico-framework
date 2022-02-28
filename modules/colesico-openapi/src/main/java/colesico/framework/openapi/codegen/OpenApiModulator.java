@@ -25,10 +25,10 @@ import colesico.framework.restlet.codegen.assist.RestletCodegenUtils;
 import colesico.framework.restlet.codegen.model.JsonFieldElement;
 import colesico.framework.router.codegen.RoutesBuilder;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
-import colesico.framework.service.codegen.model.TeleFacadeElement;
-import colesico.framework.service.codegen.model.TeleMethodElement;
-import colesico.framework.service.codegen.model.TeleParameterElement;
-import colesico.framework.service.codegen.model.TeleInputElement;
+import colesico.framework.service.codegen.model.teleapi.TeleEntryElement;
+import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
+import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
+import colesico.framework.service.codegen.model.teleapi.TeleParameterElement;
 import colesico.framework.service.codegen.modulator.Modulator;
 import colesico.framework.teleapi.TeleScheme;
 import colesico.framework.service.codegen.modulator.TeleSchemeModulator;
@@ -118,9 +118,9 @@ public final class OpenApiModulator extends TeleSchemeModulator {
     }
 
     protected void generateInputParams(CodeBlock.Builder cb, TeleMethodElement teleMethod) {
-        for (TeleInputElement teleVar : teleMethod.getParameters()) {
+        for (TeleEntryElement entry : teleMethod.getParameters()) {
             //TODO: handle compounds
-            TeleParameterElement teleParam = (TeleParameterElement) teleVar;
+            TeleParameterElement teleParam = (TeleParameterElement) entry;
             // param = param(openApi, operation,
             cb.add("$N = $N($N, $N, ",
                     OpenApiScheme.PARAM_VAR,
@@ -130,7 +130,7 @@ public final class OpenApiModulator extends TeleSchemeModulator {
 
             // ValueClass.class, paramName, originName, readerClass, jsonField
 
-            ServiceCodegenUtils.generateTeleArgumentType(teleParam, cb);
+            ServiceCodegenUtils.generateTeleEntryType(teleParam, cb);
 
             String paramName = RestletCodegenUtils.getParamName(teleParam);
             cb.add(", $S", paramName);

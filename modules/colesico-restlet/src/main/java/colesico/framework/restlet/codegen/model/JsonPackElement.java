@@ -1,6 +1,6 @@
 package colesico.framework.restlet.codegen.model;
 
-import colesico.framework.service.codegen.model.TeleFacadeElement;
+import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 
 import java.util.ArrayList;
 import java.util.List;

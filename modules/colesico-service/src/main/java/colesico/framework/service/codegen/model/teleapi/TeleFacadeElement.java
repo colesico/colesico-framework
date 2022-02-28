@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package colesico.framework.service.codegen.model;
+package colesico.framework.service.codegen.model.teleapi;
 
 
 import colesico.framework.assist.Elements;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleDriver;
 import colesico.framework.teleapi.TeleFacade;
@@ -227,6 +228,10 @@ public class TeleFacadeElement {
 
     public TeleBatchPackElement getBatchPack() {
         return batchPack;
+    }
+
+    public void setParentService(ServiceElement parentService) {
+        this.parentService = parentService;
     }
 
     public static final class IocQualifier {

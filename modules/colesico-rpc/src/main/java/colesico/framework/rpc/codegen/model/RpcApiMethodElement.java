@@ -2,7 +2,7 @@ package colesico.framework.rpc.codegen.model;
 
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.model.MethodElement;
-import colesico.framework.service.codegen.model.TeleMethodElement;
+import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;

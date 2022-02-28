@@ -18,6 +18,7 @@ package colesico.framework.service.codegen.modulator;
 
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.*;
+import colesico.framework.service.codegen.model.teleapi.*;
 import colesico.framework.teleapi.TeleFacade;
 import com.squareup.javapoet.CodeBlock;
 import org.slf4j.Logger;
@@ -84,19 +85,23 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
         serviceElm.setTeleFacade(teleFacade);
     }
 
-    private final void createParamReadingContexts(List<TeleInputElement> inputs) {
-        for (TeleInputElement inp : inputs) {
+    private final void createParamReadingContexts(List<TeleEntryElement> entries) {
+        for (TeleMethodRelatedElement entry : entries) {
             // Skip batch fields
-            if (inp instanceof TeleBatchFieldElement) {
+            if (entry instanceof TeleBatchFieldElement) {
+                TeleBatchFieldElement batchField = (TeleBatchFieldElement) entry;
+                if (batchField.getParentBatch().getReadingContext() == null) {
+                    batchField.getParentBatch().setReadingContext(createReadingContext(batchField.getParentBatch()));
+                }
                 continue;
             }
 
-            if (inp instanceof TeleCompoundElement) {
-                createParamReadingContexts(((TeleCompoundElement) inp).getFields());
+            if (entry instanceof TeleCompoundElement) {
+                createParamReadingContexts(((TeleCompoundElement) entry).getFields());
                 continue;
             }
 
-            TeleParameterElement teleParam = (TeleParameterElement) inp;
+            TeleParameterElement teleParam = (TeleParameterElement) entry;
             teleParam.setReadingContext(createReadingContext(teleParam));
 
         }
@@ -139,7 +144,13 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
 
     protected TRContextElement createReadingContext(TeleParameterElement teleParam) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        ServiceCodegenUtils.generateTeleArgumentType(teleParam, cb);
+        ServiceCodegenUtils.generateTeleEntryType(teleParam, cb);
         return new TRContextElement(teleParam, cb.build());
+    }
+
+    protected TRContextElement createReadingContext(TeleBatchElement teleBatch) {
+        CodeBlock.Builder cb = CodeBlock.builder();
+        ServiceCodegenUtils.generateTeleBatchType(teleBatch, cb);
+        return new TRContextElement(teleBatch, cb.build());
     }
 }

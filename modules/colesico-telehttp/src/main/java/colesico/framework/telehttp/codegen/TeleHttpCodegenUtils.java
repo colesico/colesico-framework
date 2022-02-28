@@ -1,9 +1,9 @@
 package colesico.framework.telehttp.codegen;
 
 import colesico.framework.assist.codegen.model.AnnotationAssist;
-import colesico.framework.service.codegen.model.TeleMethodElement;
-import colesico.framework.service.codegen.model.TeleInputElement;
-import colesico.framework.service.codegen.model.TeleParameterElement;
+import colesico.framework.service.codegen.model.teleapi.TeleEntryElement;
+import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
+import colesico.framework.service.codegen.model.teleapi.TeleParameterElement;
 import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.ParamOrigin;
 import org.apache.commons.lang3.StringUtils;
@@ -15,13 +15,13 @@ import java.util.List;
 
 public class TeleHttpCodegenUtils {
 
-    public static String getParamName(TeleInputElement teleArg) {
+    public static String getParamName(TeleEntryElement entry) {
 
         List<String> namesChain = new ArrayList<>();
-        Iterator<TeleInputElement> it = (Iterator<TeleInputElement>) teleArg.getIterator();
+        Iterator<TeleEntryElement> it = entry.getIterator();
         while (it.hasNext()) {
             String paramName;
-            TeleInputElement curArg = it.next();
+            TeleEntryElement curArg = it.next();
             AnnotationAssist<ParamName> nameAnn = curArg.getOriginElement().getAnnotation(ParamName.class);
             if (nameAnn != null) {
                 paramName = nameAnn.unwrap().value();
@@ -29,7 +29,7 @@ public class TeleHttpCodegenUtils {
                 if (curArg instanceof TeleParameterElement) {
                     paramName = curArg.getOriginElement().getName();
                 } else {
-                    paramName="";
+                    paramName = "";
                 }
             }
             namesChain.add(paramName);
@@ -38,7 +38,7 @@ public class TeleHttpCodegenUtils {
         return StringUtils.join(namesChain.toArray());
     }
 
-    public static String getOriginName(TeleInputElement teleArg, String defaultOrigin) {
+    public static String getOriginName(TeleEntryElement teleArg, String defaultOrigin) {
         TeleMethodElement teleMethod = teleArg.getParentTeleMethod();
         String originName = defaultOrigin;
         AnnotationAssist<ParamOrigin> originAnn = teleArg.getOriginElement().getAnnotation(ParamOrigin.class);

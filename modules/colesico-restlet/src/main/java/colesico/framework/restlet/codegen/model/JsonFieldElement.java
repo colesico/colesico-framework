@@ -2,7 +2,7 @@ package colesico.framework.restlet.codegen.model;
 
 import colesico.framework.assist.StrUtils;
 import colesico.framework.restlet.teleapi.jsonrequest.JsonField;
-import colesico.framework.service.codegen.model.TeleParameterElement;
+import colesico.framework.service.codegen.model.teleapi.TeleParameterElement;
 import colesico.framework.telehttp.ParamName;
 import org.apache.commons.lang3.StringUtils;
 

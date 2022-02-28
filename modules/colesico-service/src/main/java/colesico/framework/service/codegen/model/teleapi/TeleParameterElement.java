@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package colesico.framework.service.codegen.model;
+package colesico.framework.service.codegen.model.teleapi;
 
 import colesico.framework.assist.codegen.model.VarElement;
 
 /**
- * Tele-method parameter
+ * Tele-method  parameter that can be directly read from data port
  */
-public final class TeleParameterElement extends TeleInputElement {
+public final class TeleParameterElement extends TeleEntryElement implements TeleInputElement {
 
     protected TRContextElement readingContext;
 

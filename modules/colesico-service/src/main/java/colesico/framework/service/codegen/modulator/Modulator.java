@@ -18,6 +18,9 @@ package colesico.framework.service.codegen.modulator;
 
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.codegen.model.*;
+import colesico.framework.service.codegen.model.teleapi.TeleMethodRelatedElement;
+import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
+import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import colesico.framework.service.codegen.parser.RoundContext;
 
@@ -80,7 +83,7 @@ abstract public class Modulator {
 
     }
 
-    public void onTeleInputParsed(TeleInputElement teleInput) {
+    public void onTeleEntryParsed(TeleMethodRelatedElement teleEntry) {
 
     }
 

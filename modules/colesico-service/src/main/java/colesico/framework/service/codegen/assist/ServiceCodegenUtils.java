@@ -1,9 +1,13 @@
 package colesico.framework.service.codegen.assist;
 
 import colesico.framework.assist.codegen.CodegenUtils;
-import colesico.framework.service.codegen.model.TeleInputElement;
-import colesico.framework.service.codegen.model.TeleMethodElement;
+import colesico.framework.service.codegen.model.teleapi.TeleBatchElement;
+import colesico.framework.service.codegen.model.teleapi.TeleBatchFieldElement;
+import colesico.framework.service.codegen.model.teleapi.TeleMethodRelatedElement;
+import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.TypeName;
 
 import javax.lang.model.type.TypeMirror;
 
@@ -14,10 +18,15 @@ public final class ServiceCodegenUtils {
         CodegenUtils.generateTypePick(returnType, cb);
     }
 
-    public static void generateTeleArgumentType(TeleInputElement teleArg, CodeBlock.Builder cb) {
+    public static void generateTeleEntryType(TeleMethodRelatedElement teleEntry, CodeBlock.Builder cb) {
         // Detect param type considering generics
-        TypeMirror paramType = teleArg.getOriginElement().getOriginType();
+        TypeMirror paramType = teleEntry.getOriginElement().getOriginType();
         // ParamType.class or  for generics: new TypeWrapper<TheType>(){}.unwrap()
         CodegenUtils.generateTypePick(paramType, cb);
+    }
+
+    public static void generateTeleBatchType(TeleBatchElement teleBatch, CodeBlock.Builder cb) {
+        TypeName batchTypeName = ClassName.bestGuess(teleBatch.getBatchClassName());
+        cb.add("$T.class", batchTypeName);
     }
 }

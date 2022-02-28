@@ -32,6 +32,7 @@ import colesico.framework.router.codegen.RouterTeleFacadeElement;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.*;
+import colesico.framework.service.codegen.model.teleapi.*;
 import colesico.framework.telehttp.codegen.HttpTRContextElement;
 import colesico.framework.telehttp.codegen.HttpTWContextElement;
 import com.squareup.javapoet.*;
@@ -104,7 +105,7 @@ public final class RestletModulator extends RoutesModulator {
             teleMethodElement.setProperty(JsonRequestElement.class, jsonRequest);
         }
 
-        for (TeleInputElement teleArg : teleMethodElement.getParameters()) {
+        for (TeleMethodRelatedElement teleArg : teleMethodElement.getParameters()) {
 
             var jsonParamAnn = teleArg.getOriginElement().getAnnotation(JsonField.class);
 
@@ -170,7 +171,7 @@ public final class RestletModulator extends RoutesModulator {
         // new RestletTRContext(paramName
         cb.add("$T.$N(", ClassName.get(RestletTRContext.class), RestletTRContext.OF_METHOD);
 
-        ServiceCodegenUtils.generateTeleArgumentType(teleParam, cb);
+        ServiceCodegenUtils.generateTeleEntryType(teleParam, cb);
 
         cb.add(", $S", paramName);
 

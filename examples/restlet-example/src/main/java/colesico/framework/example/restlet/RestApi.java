@@ -106,9 +106,8 @@ public class RestApi {
     }
 
     @RequestMethod(HttpMethod.POST)
-    @BatchField
     public Map<String, Object> batchFields(@BatchField("id") Long idValue,
-                                           String name,
+                                           @BatchField String name,
                                            @ParamOrigin(Origin.QUERY) String val) {
         return Map.of("id", idValue, "name", name, "val", val);
     }

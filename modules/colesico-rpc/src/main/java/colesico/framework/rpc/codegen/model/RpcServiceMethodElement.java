@@ -17,7 +17,7 @@
 package colesico.framework.rpc.codegen.model;
 
 import colesico.framework.assist.codegen.model.MethodElement;
-import colesico.framework.service.codegen.model.TeleMethodElement;
+import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
 
 public class RpcServiceMethodElement {
 

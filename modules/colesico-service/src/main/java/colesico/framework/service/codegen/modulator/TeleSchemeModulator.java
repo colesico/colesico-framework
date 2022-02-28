@@ -3,9 +3,9 @@ package colesico.framework.service.codegen.modulator;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.codegen.generator.TeleSchemeGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.service.codegen.model.TeleFacadeElement;
+import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.teleapi.TeleScheme;
-import colesico.framework.service.codegen.model.TeleSchemeElement;
+import colesico.framework.service.codegen.model.teleapi.TeleSchemeElement;
 
 abstract public class TeleSchemeModulator extends Modulator {
 

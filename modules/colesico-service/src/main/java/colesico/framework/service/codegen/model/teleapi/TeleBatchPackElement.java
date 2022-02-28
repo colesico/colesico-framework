@@ -1,17 +1,18 @@
-package colesico.framework.service.codegen.model;
+package colesico.framework.service.codegen.model.teleapi;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TeleBatchPackElement {
+
     public static final String BATCH_PACK_CLASS_SUFFIX = "BatchPack";
 
-    private final TeleFacadeElement originTeleFacade;
+    private final TeleFacadeElement parentTeleFacade;
 
     private List<TeleBatchElement> batches = new ArrayList<>();
 
-    public TeleBatchPackElement(TeleFacadeElement originTeleFacade) {
-        this.originTeleFacade = originTeleFacade;
+    public TeleBatchPackElement(TeleFacadeElement parentTeleFacade) {
+        this.parentTeleFacade = parentTeleFacade;
     }
 
     public boolean isEmpty() {
@@ -23,8 +24,8 @@ public class TeleBatchPackElement {
         batch.setParentPack(this);
     }
 
-    public TeleFacadeElement getOriginTeleFacade() {
-        return originTeleFacade;
+    public TeleFacadeElement getParentTeleFacade() {
+        return parentTeleFacade;
     }
 
     public List<TeleBatchElement> getBatches() {
@@ -32,6 +33,6 @@ public class TeleBatchPackElement {
     }
 
     public String getBatchPackClassSimpleName() {
-        return originTeleFacade.getParentService().getOriginClass().getSimpleName() + BATCH_PACK_CLASS_SUFFIX;
+        return parentTeleFacade.getParentService().getOriginClass().getSimpleName() + BATCH_PACK_CLASS_SUFFIX;
     }
 }

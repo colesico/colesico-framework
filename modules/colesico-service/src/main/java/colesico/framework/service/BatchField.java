@@ -27,6 +27,8 @@ import java.lang.annotation.*;
 @Documented
 public @interface BatchField {
 
+    String DEFAULT_BATCH = "request";
+
     /**
      * Field name
      */
@@ -35,5 +37,5 @@ public @interface BatchField {
     /**
      * Batch name
      */
-    String batch() default "";
+    String batch() default DEFAULT_BATCH;
 }

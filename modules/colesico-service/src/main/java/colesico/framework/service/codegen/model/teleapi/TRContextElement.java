@@ -1,4 +1,4 @@
-package colesico.framework.service.codegen.model;
+package colesico.framework.service.codegen.model.teleapi;
 
 import com.squareup.javapoet.CodeBlock;
 
@@ -8,22 +8,22 @@ import com.squareup.javapoet.CodeBlock;
 public class TRContextElement {
 
     /**
-     * Parent tele-param ref
+     * Parent tele-input ref
      */
-    private final TeleParameterElement parentParameter;
+    private final TeleInputElement parentInput;
 
     /**
      * Reading context creation code
      */
     private final CodeBlock creationCode;
 
-    public TRContextElement(TeleParameterElement parentParameter, CodeBlock creationCode) {
-        this.parentParameter = parentParameter;
+    public TRContextElement(TeleInputElement parentInput, CodeBlock creationCode) {
+        this.parentInput = parentInput;
         this.creationCode = creationCode;
     }
 
-    public TeleParameterElement getParentParameter() {
-        return parentParameter;
+    public TeleInputElement getParentInput() {
+        return parentInput;
     }
 
     public CodeBlock getCreationCode() {

@@ -23,12 +23,12 @@ import colesico.framework.service.BatchField;
 import colesico.framework.service.Compound;
 import colesico.framework.service.LocalField;
 import colesico.framework.service.codegen.model.*;
+import colesico.framework.service.codegen.model.teleapi.*;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.element.Modifier;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 public final class TeleFacadeParser extends FrameworkAbstractParser {
 
@@ -52,9 +52,9 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
             teleMethod.addParameter(compound);
         } else {
             // Check recursive objects
-            Iterator<TeleCompoundElement> it = (Iterator<TeleCompoundElement>) parentCompound.getIterator();
+            Iterator<TeleEntryElement> it = parentCompound.getIterator();
             while (it.hasNext()) {
-                TeleCompoundElement curComp = it.next();
+                TeleEntryElement curComp = it.next();
                 if (curComp.equals(compound)) {
                     TeleFacadeElement teleFacade = teleMethod.getParentTeleFacade();
                     throw CodegenException.of().message("Recursive compound for: "
@@ -89,7 +89,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
                                  AnnotationAssist<BatchField> methodBatchAnn) {
 
         String fieldName = "";
-        String batchName = "";
+        String batchName = BatchField.DEFAULT_BATCH;
 
         if (paramBatchAnn != null) {
             fieldName = paramBatchAnn.unwrap().value();
@@ -100,7 +100,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
             fieldName = variable.getName();
         }
 
-        if (StringUtils.isBlank(batchName) && methodBatchAnn != null) {
+        if (batchName.equals(BatchField.DEFAULT_BATCH) && methodBatchAnn != null) {
             batchName = methodBatchAnn.unwrap().batch();
         }
 

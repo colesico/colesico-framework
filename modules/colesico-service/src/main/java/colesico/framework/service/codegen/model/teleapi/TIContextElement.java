@@ -1,8 +1,11 @@
-package colesico.framework.service.codegen.model;
+package colesico.framework.service.codegen.model.teleapi;
 
 import com.squareup.javapoet.CodeBlock;
 
-public class TWContextElement {
+/**
+ * Represents tele-invocation context
+ */
+public class TIContextElement {
 
     /**
      * Parent tele-method ref
@@ -10,11 +13,11 @@ public class TWContextElement {
     protected final TeleMethodElement parentTeleMethod;
 
     /**
-     * Method result writing context creation code
+     * Invocation context creation code
      */
     private final CodeBlock creationCode;
 
-    public TWContextElement(TeleMethodElement parentTeleMethod, CodeBlock creationCode) {
+    public TIContextElement(TeleMethodElement parentTeleMethod, CodeBlock creationCode) {
         this.parentTeleMethod = parentTeleMethod;
         this.creationCode = creationCode;
     }

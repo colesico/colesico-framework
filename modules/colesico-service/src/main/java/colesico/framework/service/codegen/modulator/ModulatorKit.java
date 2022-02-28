@@ -19,6 +19,9 @@ package colesico.framework.service.codegen.modulator;
 import colesico.framework.assist.ServiceLocator;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.codegen.model.*;
+import colesico.framework.service.codegen.model.teleapi.TeleMethodRelatedElement;
+import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
+import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import colesico.framework.service.codegen.parser.RoundContext;
 import org.slf4j.Logger;
@@ -130,9 +133,9 @@ public class ModulatorKit {
         }
     }
 
-    public void notifyTeleInputParsed(TeleInputElement teleInput) {
+    public void notifyTeleInputParsed(TeleMethodRelatedElement teleEntry) {
         for (Modulator modulator : modulators) {
-            modulator.onTeleInputParsed(teleInput);
+            modulator.onTeleEntryParsed(teleEntry);
         }
     }
 

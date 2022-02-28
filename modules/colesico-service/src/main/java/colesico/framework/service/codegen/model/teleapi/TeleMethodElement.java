@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package colesico.framework.service.codegen.model;
+package colesico.framework.service.codegen.model.teleapi;
 
 import colesico.framework.assist.StrUtils;
-import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.service.codegen.model.ServiceMethodElement;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +42,7 @@ public final class TeleMethodElement {
     /**
      * Direct parameters, batch parameters and compounds
      */
-    private final List<TeleInputElement> parameters;
+    private final List<TeleEntryElement> parameters;
 
     /**
      * Parameter batches
@@ -87,8 +87,8 @@ public final class TeleMethodElement {
     /**
      * Add parameter of tele-method
      */
-    public void addParameter(TeleInputElement inp) {
-        parameters.add(inp);
+    public void addParameter(TeleEntryElement entry) {
+        parameters.add(entry);
     }
 
     public TeleBatchElement getOrCreateBatch(String name) {
@@ -120,7 +120,7 @@ public final class TeleMethodElement {
         return parentTeleFacade;
     }
 
-    public List<TeleInputElement> getParameters() {
+    public List<TeleEntryElement> getParameters() {
         return parameters;
     }
 

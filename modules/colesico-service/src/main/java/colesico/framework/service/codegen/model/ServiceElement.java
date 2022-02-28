@@ -21,6 +21,7 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.service.ServiceProxy;
+import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.TypeName;
 import org.apache.commons.lang3.StringUtils;
@@ -133,7 +134,7 @@ public final class ServiceElement {
                     .element(getOriginClass())
                     .build();
         }
-        teleFacade.parentService = this;
+        teleFacade.setParentService(this);
         this.teleFacade = teleFacade;
     }
 

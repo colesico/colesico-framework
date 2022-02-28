@@ -1,4 +1,4 @@
-package colesico.framework.service.codegen.model;
+package colesico.framework.service.codegen.model.teleapi;
 
 import colesico.framework.assist.codegen.model.VarElement;
 
@@ -6,23 +6,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents tele method compound parameter
+ * Represents tele compound
+ *
  * @see colesico.framework.service.Compound
  */
-public class TeleCompoundElement extends TeleInputElement {
+public class TeleCompoundElement extends TeleEntryElement {
 
-    private final List<TeleInputElement> fields = new ArrayList<>();
+    /**
+     * Compound fields
+     */
+    private final List<TeleEntryElement> fields = new ArrayList<>();
 
     public TeleCompoundElement(TeleMethodElement parentTeleMethod, VarElement originElement) {
         super(parentTeleMethod, originElement);
     }
 
-    public void addField(TeleInputElement field) {
+    public void addField(TeleEntryElement field) {
         fields.add(field);
         field.setParentCompound(this);
     }
 
-    public List<TeleInputElement> getFields() {
+    public List<TeleEntryElement> getFields() {
         return fields;
     }
 }

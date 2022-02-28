@@ -24,6 +24,7 @@ import colesico.framework.rpc.codegen.parser.RpcApiParser;
 import colesico.framework.rpc.teleapi.*;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.*;
+import colesico.framework.service.codegen.model.teleapi.*;
 import colesico.framework.service.codegen.modulator.TeleFacadeModulator;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -110,7 +111,7 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
                     // Rpc params
                     List<RpcApiParamElement> rpcApiParams = rpcApiMethod.getParameters();
                     // Method params
-                    List<TeleInputElement> teleParams = teleMethodElm.getParameters();
+                    List<TeleEntryElement> teleParams = teleMethodElm.getParameters();
 
                     if (rpcApiParams.size() != teleParams.size()) {
                         throw CodegenException.of()
@@ -210,7 +211,7 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
         RpcApiParamElement apiParam = teleParam.getProperty(RpcApiParamElement.class);
         // RpcTRContext.of(EnvelopeClass.RequestClass::getterMethod)
         cb.add("$T.$N(", ClassName.get(RpcTRContext.class), RpcTRContext.OF_METHOD);
-        ServiceCodegenUtils.generateTeleArgumentType(teleParam, cb);
+        ServiceCodegenUtils.generateTeleEntryType(teleParam, cb);
         cb.add(", $T::$N)", ClassName.bestGuess(rpcApiMethod.getRequestClassName()), apiParam.getterName());
         return new TRContextElement(teleParam, cb.build());
     }

@@ -3,9 +3,9 @@ package colesico.framework.service.codegen.generator;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.service.codegen.model.TeleFacadeElement;
+import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.teleapi.TeleScheme;
-import colesico.framework.service.codegen.model.TeleSchemeElement;
+import colesico.framework.service.codegen.model.teleapi.TeleSchemeElement;
 import com.squareup.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;

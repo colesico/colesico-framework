@@ -1,6 +1,6 @@
 package colesico.framework.router.codegen;
 
-import colesico.framework.service.codegen.model.TeleFacadeElement;
+import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleDriver;
 

@@ -1,8 +1,8 @@
 package colesico.framework.telehttp.codegen;
 
 import colesico.framework.assist.codegen.model.ClassType;
-import colesico.framework.service.codegen.model.TRContextElement;
-import colesico.framework.service.codegen.model.TeleParameterElement;
+import colesico.framework.service.codegen.model.teleapi.TRContextElement;
+import colesico.framework.service.codegen.model.teleapi.TeleParameterElement;
 import com.squareup.javapoet.CodeBlock;
 
 public class HttpTRContextElement extends TRContextElement {

@@ -24,7 +24,7 @@ import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polyproduce;
 import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.service.codegen.model.TeleFacadeElement;
+import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import colesico.framework.teleapi.TeleFacade;
 import com.squareup.javapoet.*;

@@ -2,9 +2,9 @@ package colesico.framework.service.codegen.generator;
 
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
-import colesico.framework.service.codegen.model.TeleBatchElement;
-import colesico.framework.service.codegen.model.TeleBatchFieldElement;
-import colesico.framework.service.codegen.model.TeleBatchPackElement;
+import colesico.framework.service.codegen.model.teleapi.TeleBatchElement;
+import colesico.framework.service.codegen.model.teleapi.TeleBatchFieldElement;
+import colesico.framework.service.codegen.model.teleapi.TeleBatchPackElement;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
@@ -53,7 +53,7 @@ public class TeleBatchesGenerator extends FrameworkAbstractGenerator {
             pb.addType(rb.build());
         }
 
-        String packageName = batchPack.getOriginTeleFacade().getParentService().getOriginClass().getPackageName();
-        CodegenUtils.createJavaFile(processingEnv, pb.build(), packageName, batchPack.getOriginTeleFacade().getParentService().getOriginClass().unwrap());
+        String packageName = batchPack.getParentTeleFacade().getParentService().getOriginClass().getPackageName();
+        CodegenUtils.createJavaFile(processingEnv, pb.build(), packageName, batchPack.getParentTeleFacade().getParentService().getOriginClass().unwrap());
     }
 }

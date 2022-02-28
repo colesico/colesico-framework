@@ -1,4 +1,4 @@
-package colesico.framework.service.codegen.model;
+package colesico.framework.service.codegen.model.teleapi;
 
 import colesico.framework.assist.StrUtils;
 
@@ -6,21 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represent batch parameter
+ * Represent parameter batch
  *
  * @see colesico.framework.service.BatchField
  */
-public class TeleBatchElement {
+public class TeleBatchElement extends TeleMethodRelatedElement implements TeleInputElement {
+
+    private static final String BATCH_VAR_SUFFIX = "Batch";
+
+    protected TRContextElement readingContext;
 
     /**
      * Batch pack ref
      */
     protected TeleBatchPackElement parentPack;
-
-    /**
-     * Parent tele-method ref
-     */
-    protected final TeleMethodElement parentTeleMethod;
 
     /**
      * Batch name
@@ -29,10 +28,8 @@ public class TeleBatchElement {
 
     protected final List<TeleBatchFieldElement> fields = new ArrayList<>();
 
-    protected TRContextElement readingContext;
-
     public TeleBatchElement(TeleMethodElement parentTeleMethod, String name) {
-        this.parentTeleMethod = parentTeleMethod;
+        super(parentTeleMethod, null);
         this.name = name;
     }
 
@@ -45,8 +42,25 @@ public class TeleBatchElement {
         return StrUtils.firstCharToUpperCase(parentTeleMethod.getName()) + StrUtils.firstCharToUpperCase(name);
     }
 
-    public TeleMethodElement getParentTeleMethod() {
-        return parentTeleMethod;
+    public String getBatchClassName() {
+        return parentPack.getParentTeleFacade().getParentService().getOriginClass().getPackageName() + '.' +
+                parentPack.getBatchPackClassSimpleName() + '.' +
+                getBatchClassSimpleName();
+    }
+
+    /**
+     * Batch variable name
+     */
+    public String getBatchVarName() {
+        return StrUtils.firstCharToLowerCase(name) + BATCH_VAR_SUFFIX;
+    }
+
+    public TeleBatchPackElement getParentPack() {
+        return parentPack;
+    }
+
+    public void setParentPack(TeleBatchPackElement parentPack) {
+        this.parentPack = parentPack;
     }
 
     public String getName() {
@@ -57,19 +71,13 @@ public class TeleBatchElement {
         return fields;
     }
 
+    @Override
     public TRContextElement getReadingContext() {
         return readingContext;
     }
 
+    @Override
     public void setReadingContext(TRContextElement readingContext) {
         this.readingContext = readingContext;
-    }
-
-    public TeleBatchPackElement getParentPack() {
-        return parentPack;
-    }
-
-    public void setParentPack(TeleBatchPackElement parentPack) {
-        this.parentPack = parentPack;
     }
 }

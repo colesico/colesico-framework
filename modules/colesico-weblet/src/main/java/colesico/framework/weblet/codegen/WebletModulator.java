@@ -22,6 +22,10 @@ import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.*;
+import colesico.framework.service.codegen.model.teleapi.TRContextElement;
+import colesico.framework.service.codegen.model.teleapi.TWContextElement;
+import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
+import colesico.framework.service.codegen.model.teleapi.TeleParameterElement;
 import colesico.framework.telehttp.codegen.HttpTRContextElement;
 import colesico.framework.telehttp.codegen.HttpTWContextElement;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
@@ -75,7 +79,7 @@ public final class WebletModulator extends RoutesModulator {
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("$T.$N(", ClassName.get(WebletTRContext.class), WebletTRContext.OF_METHOD);
 
-        ServiceCodegenUtils.generateTeleArgumentType(teleParam, cb);
+        ServiceCodegenUtils.generateTeleEntryType(teleParam, cb);
         cb.add(",");
 
         String originName = TeleHttpCodegenUtils.getOriginName(teleParam, WebletOrigin.AUTO);
