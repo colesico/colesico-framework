@@ -23,19 +23,18 @@ import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.restlet.Restlet;
 import colesico.framework.restlet.codegen.assist.RestletCodegenUtils;
-import colesico.framework.restlet.codegen.model.JsonFieldElement;
-import colesico.framework.restlet.codegen.model.JsonRequestElement;
-import colesico.framework.restlet.codegen.model.JsonPackElement;
 import colesico.framework.restlet.teleapi.*;
-import colesico.framework.restlet.teleapi.jsonrequest.JsonField;
 import colesico.framework.router.codegen.RouterTeleFacadeElement;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
-import colesico.framework.service.codegen.model.*;
+import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.teleapi.*;
+import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.codegen.HttpTRContextElement;
 import colesico.framework.telehttp.codegen.HttpTWContextElement;
-import com.squareup.javapoet.*;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.TypeName;
 
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
@@ -79,86 +78,9 @@ public final class RestletModulator extends RoutesModulator {
     @Override
     protected RouterTeleFacadeElement createTeleFacade(ServiceElement serviceElm) {
         RouterTeleFacadeElement teleFacade = super.createTeleFacade(serviceElm);
-        JsonPackElement jrPak = new JsonPackElement(teleFacade);
-        teleFacade.setProperty(JsonPackElement.class, jrPak);
         // Enable batch params
         teleFacade.setBatchParams(true);
         return teleFacade;
-    }
-
-    /**
-     * Generate parameters wrapper class
-     *
-     * @param teleMethodElement
-     */
-    @Override
-    protected void processTeleMethod(TeleMethodElement teleMethodElement) {
-        super.processTeleMethod(teleMethodElement);
-
-        var jsonPack = teleMethodElement.getParentTeleFacade().getProperty(JsonPackElement.class);
-        JsonRequestElement jsonRequest = null;
-
-        final var jsonMethodAnn = teleMethodElement.getServiceMethod().getOriginMethod().getAnnotation(JsonField.class);
-        if (jsonMethodAnn != null) {
-            jsonRequest = new JsonRequestElement(teleMethodElement);
-            jsonPack.addRequest(jsonRequest);
-            teleMethodElement.setProperty(JsonRequestElement.class, jsonRequest);
-        }
-
-        for (TeleMethodRelatedElement teleArg : teleMethodElement.getParameters()) {
-
-            var jsonParamAnn = teleArg.getOriginElement().getAnnotation(JsonField.class);
-
-            // Skip compound
-            if (teleArg instanceof TeleCompoundElement) {
-                if (jsonParamAnn != null) {
-                    throw CodegenException.of()
-                            .message("Compounds are not supported for json fields")
-                            .element(teleArg.getOriginElement().unwrap())
-                            .build();
-                }
-                continue;
-            }
-
-            // Skip batches
-            if (teleArg instanceof TeleBatchFieldElement) {
-                if (jsonParamAnn != null) {
-                    throw CodegenException.of()
-                            .message("Batches are not supported for json fields")
-                            .element(teleArg.getOriginElement().unwrap())
-                            .build();
-                }
-                continue;
-            }
-
-            TeleParameterElement teleParam = (TeleParameterElement) teleArg;
-
-            if (jsonMethodAnn != null || jsonParamAnn != null) {
-
-                if (jsonRequest == null) {
-                    jsonRequest = new JsonRequestElement(teleMethodElement);
-                    jsonPack.addRequest(jsonRequest);
-                    teleMethodElement.setProperty(JsonRequestElement.class, jsonRequest);
-                }
-
-                JsonFieldElement jsonField = new JsonFieldElement(teleParam);
-                jsonRequest.addField(jsonField);
-                teleParam.setProperty(JsonFieldElement.class, jsonField);
-            }
-        }
-
-    }
-
-    @Override
-    protected void processTeleFacade(TeleFacadeElement teleFacadeElement) {
-        super.processTeleFacade(teleFacadeElement);
-        var jsonPack = teleFacadeElement.getProperty(JsonPackElement.class);
-        if (jsonPack.getRequests().isEmpty()) {
-            return;
-        }
-
-        JsonPackGenerator jsonPackGenerator = new JsonPackGenerator(getProcessorContext().getProcessingEnv());
-        jsonPackGenerator.generate(jsonPack);
     }
 
     @Override
@@ -177,25 +99,16 @@ public final class RestletModulator extends RoutesModulator {
 
         String originName = RestletCodegenUtils.getOriginName(teleParam);
 
-        JsonFieldElement jsonField = teleParam.getProperty(JsonFieldElement.class);
-
         TypeMirror customReader = RestletCodegenUtils.getCustomReaderClass(teleParam, getProcessorContext().getElementUtils());
         ClassType customReaderCT = null;
 
-        if (!originName.equals(RestletOrigin.AUTO) || customReader != null || jsonField != null) {
+        if (!originName.equals(RestletOrigin.AUTO) || customReader != null) {
             cb.add(", $S", originName);
         }
 
-        if (customReader != null || jsonField != null) {
+        if (customReader != null) {
             cb.add(", $T.class", TypeName.get(customReader));
             customReaderCT = new ClassType(getProcessorContext().getProcessingEnv(), (DeclaredType) customReader);
-        }
-
-        if (jsonField != null) {
-            cb.add(", $T::$N",
-                    ClassName.bestGuess(jsonField.getParentRequest().getJsonRequestClassName()),
-                    jsonField.getterName()
-            );
         }
 
         cb.add(")");
@@ -220,20 +133,6 @@ public final class RestletModulator extends RoutesModulator {
         return new HttpTWContextElement(teleMethod, cb.build(), customWriterCT);
     }
 
-    @Override
-    protected TIContextElement createInvocationContext(TeleMethodElement teleMethod) {
-        CodeBlock.Builder cb = CodeBlock.builder();
-        JsonRequestElement jsonRequest = teleMethod.getProperty(JsonRequestElement.class);
-        if (jsonRequest != null) {
-            cb.add("$T.$N(", ClassName.get(RestletTIContext.class), RestletTIContext.OF_METHOD);
-            cb.add("$T.class", ClassName.bestGuess(jsonRequest.getJsonRequestClassName()));
-            cb.add(")");
-        } else {
-            cb.add("null");
-        }
-        return new TIContextElement(teleMethod, cb.build());
-    }
-
     protected TypeMirror getCustomWriterClass(TeleMethodElement teleMethod) {
         var wrAnn = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(RestletResponseWriter.class);
         if (wrAnn == null) {
@@ -245,5 +144,15 @@ public final class RestletModulator extends RoutesModulator {
         return wrAnn.getValueTypeMirror(a -> a.value());
     }
 
-
+    @Override
+    public void onTeleEntryParsed(TeleMethodRelatedElement teleEntry) {
+        super.onTeleEntryParsed(teleEntry);
+        if (teleEntry instanceof TeleBatchFieldElement) {
+            AnnotationAssist<ParamName> paramNameAnn = teleEntry.getOriginElement().getAnnotation(ParamName.class);
+            if (paramNameAnn == null) {
+                return;
+            }
+            ((TeleBatchFieldElement) teleEntry).setName(paramNameAnn.unwrap().value());
+        }
+    }
 }

@@ -22,7 +22,6 @@ import colesico.framework.openapi.OpenApiScheme;
 import colesico.framework.restlet.Restlet;
 import colesico.framework.restlet.codegen.RestletModulator;
 import colesico.framework.restlet.codegen.assist.RestletCodegenUtils;
-import colesico.framework.restlet.codegen.model.JsonFieldElement;
 import colesico.framework.router.codegen.RoutesBuilder;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.teleapi.TeleEntryElement;
@@ -141,15 +140,6 @@ public final class OpenApiModulator extends TeleSchemeModulator {
             TypeMirror customReader = RestletCodegenUtils.getCustomReaderClass(teleParam, getProcessorContext().getElementUtils());
             if (customReader != null) {
                 cb.add(", $T.class", TypeName.get(customReader));
-            } else {
-                cb.add(", null");
-            }
-
-            JsonFieldElement jsonField = teleParam.getProperty(JsonFieldElement.class);
-            if (jsonField != null) {
-                cb.add(", $T.class",
-                        ClassName.bestGuess(jsonField.getParentRequest().getJsonRequestClassName())
-                );
             } else {
                 cb.add(", null");
             }

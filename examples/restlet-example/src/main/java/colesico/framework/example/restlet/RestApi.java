@@ -21,7 +21,6 @@ import colesico.framework.http.HttpMethod;
 import colesico.framework.ioc.listener.PostConstruct;
 import colesico.framework.restlet.Restlet;
 import colesico.framework.restlet.teleapi.RestletResponseWriter;
-import colesico.framework.restlet.teleapi.jsonrequest.JsonField;
 import colesico.framework.router.RequestMethod;
 import colesico.framework.router.Route;
 import colesico.framework.router.RouteAttribute;
@@ -33,7 +32,6 @@ import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.ParamOrigin;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -96,19 +94,12 @@ public class RestApi {
      * JsonField example
      * POST: http://localhost:8080/rest-api/json-fields?val=test + data {"id":1,"name":"Vladlen"}
      *
-     * @see JsonField
+     * @see BatchField
      */
     @RequestMethod(HttpMethod.POST)
-    public Map<String, Object> jsonFields(@JsonField(name = "id") Long idValue,
-                                          @JsonField String name,
+    public Map<String, Object> jsonFields(@BatchField("id") Long idValue,
+                                          @BatchField String name,
                                           @ParamOrigin(Origin.QUERY) String val) {
-        return Map.of("id", idValue, "name", name, "val", val);
-    }
-
-    @RequestMethod(HttpMethod.POST)
-    public Map<String, Object> batchFields(@BatchField("id") Long idValue,
-                                           @BatchField String name,
-                                           @ParamOrigin(Origin.QUERY) String val) {
         return Map.of("id", idValue, "name", name, "val", val);
     }
 

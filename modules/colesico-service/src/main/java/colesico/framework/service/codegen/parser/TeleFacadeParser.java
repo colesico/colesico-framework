@@ -79,7 +79,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
 
         parseVariables(teleMethod, compound, fields);
 
-        context.getModulatorKit().notifyTeleInputParsed(compound);
+        context.getModulatorKit().notifyTeleEntryParsed(compound);
     }
 
     private void parseBatchField(TeleMethodElement teleMethod,
@@ -113,7 +113,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
         } else {
             parentCompound.addField(batchField);
         }
-        context.getModulatorKit().notifyTeleInputParsed(batchField);
+        context.getModulatorKit().notifyTeleEntryParsed(batchField);
     }
 
     private void parseParameter(TeleMethodElement teleMethod, TeleCompoundElement parentCompound, VarElement variable) {
@@ -124,7 +124,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
         } else {
             parentCompound.addField(parameter);
         }
-        context.getModulatorKit().notifyTeleInputParsed(parameter);
+        context.getModulatorKit().notifyTeleEntryParsed(parameter);
     }
 
     private void parseVariables(TeleMethodElement teleMethod, TeleCompoundElement parentCompound, List<? extends VarElement> variables) {
