@@ -1,10 +1,7 @@
 package colesico.framework.service.codegen.assist;
 
 import colesico.framework.assist.codegen.CodegenUtils;
-import colesico.framework.service.codegen.model.teleapi.TeleBatchElement;
-import colesico.framework.service.codegen.model.teleapi.TeleBatchFieldElement;
-import colesico.framework.service.codegen.model.teleapi.TeleMethodRelatedElement;
-import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
+import colesico.framework.service.codegen.model.teleapi.*;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.TypeName;
@@ -18,7 +15,7 @@ public final class ServiceCodegenUtils {
         CodegenUtils.generateTypePick(returnType, cb);
     }
 
-    public static void generateTeleEntryType(TeleMethodRelatedElement teleEntry, CodeBlock.Builder cb) {
+    public static void generateTeleEntryType(TeleEntryElement teleEntry, CodeBlock.Builder cb) {
         // Detect param type considering generics
         TypeMirror paramType = teleEntry.getOriginElement().getOriginType();
         // ParamType.class or  for generics: new TypeWrapper<TheType>(){}.unwrap()

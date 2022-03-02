@@ -93,7 +93,7 @@ public class TeleFacadesGenerator {
         return cb.build();
     }
 
-    protected CodeBlock generateParamRetrieving(TeleMethodRelatedElement entry, CodeBlock.Builder invokerBuilder) {
+    protected CodeBlock generateParamRetrieving(TeleEntryElement entry, CodeBlock.Builder invokerBuilder) {
 
         // ==== For simple param
 
@@ -119,25 +119,25 @@ public class TeleFacadesGenerator {
 
         // ==== For compound
 
-        final String inpVar = varNames.getNextTempVariable(entry.getOriginElement().getName());
+        final String compVar = varNames.getNextTempVariable(entry.getOriginElement().getName());
         invokerBuilder.add("\n// Init compound\n");
         TypeMirror paramType = entry.getOriginElement().asClassType().unwrap();
         invokerBuilder.addStatement("$T $N = new $T()",
                 TypeName.get(paramType),
-                inpVar, TypeName.get(entry.getOriginElement().getOriginType()));
+                compVar, TypeName.get(entry.getOriginElement().getOriginType()));
 
         // Generate compound fields
 
         for (TeleEntryElement field : ((TeleCompoundElement) entry).getFields()) {
             CodeBlock value = generateParamRetrieving(field, invokerBuilder);
             String setterName = "set" + StrUtils.firstCharToUpperCase(field.getOriginElement().getName());
-            invokerBuilder.add("$N.$N(", inpVar, setterName);
+            invokerBuilder.add("$N.$N(", compVar, setterName);
             invokerBuilder.add(value);
             invokerBuilder.add(");\n");
         }
         invokerBuilder.add("\n");
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add(inpVar);
+        cb.add(compVar);
         return cb.build();
     }
 
@@ -160,12 +160,12 @@ public class TeleFacadesGenerator {
 
         // ============= Generate params retrieving
         ArrayCodegen serviceMethodArgs = new ArrayCodegen();
-        for (TeleMethodRelatedElement inp : teleMethod.getParameters()) {
-            CodeBlock value = generateParamRetrieving(inp, cb);
-            String paramName = inp.getOriginElement().getName() + PARAM_SUFFIX;
+        for (TeleEntryElement entry : teleMethod.getParameters()) {
+            CodeBlock value = generateParamRetrieving(entry, cb);
+            String paramName = entry.getOriginElement().getName() + PARAM_SUFFIX;
             serviceMethodArgs.add("$N", paramName);
             cb.add("\n// Assign tele-method parameter value from remote client or batch\n");
-            cb.add("$T $N = ", TypeName.get(inp.getOriginElement().getOriginType()), paramName);
+            cb.add("$T $N = ", TypeName.get(entry.getOriginElement().getOriginType()), paramName);
             cb.add(value);
             cb.add(";\n");
         }

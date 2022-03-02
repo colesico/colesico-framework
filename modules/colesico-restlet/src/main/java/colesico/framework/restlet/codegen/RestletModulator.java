@@ -90,7 +90,7 @@ public final class RestletModulator extends RoutesModulator {
 
         CodeBlock.Builder cb = CodeBlock.builder();
 
-        // new RestletTRContext(paramName
+        // new RestletTRContext(
         cb.add("$T.$N(", ClassName.get(RestletTRContext.class), RestletTRContext.OF_METHOD);
 
         ServiceCodegenUtils.generateTeleEntryType(teleParam, cb);
@@ -145,7 +145,7 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     @Override
-    public void onTeleEntryParsed(TeleMethodRelatedElement teleEntry) {
+    public void onTeleEntryParsed(TeleEntryElement teleEntry) {
         super.onTeleEntryParsed(teleEntry);
         if (teleEntry instanceof TeleBatchFieldElement) {
             AnnotationAssist<ParamName> paramNameAnn = teleEntry.getOriginElement().getAnnotation(ParamName.class);

@@ -86,7 +86,7 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
     }
 
     private final void createParamReadingContexts(List<TeleEntryElement> entries) {
-        for (TeleMethodRelatedElement entry : entries) {
+        for (TeleEntryElement entry : entries) {
             // Skip batch fields
             if (entry instanceof TeleBatchFieldElement) {
                 TeleBatchFieldElement batchField = (TeleBatchFieldElement) entry;
