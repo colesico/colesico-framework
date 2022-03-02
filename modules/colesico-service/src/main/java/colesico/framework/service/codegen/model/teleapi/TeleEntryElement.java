@@ -33,7 +33,7 @@ abstract public class TeleEntryElement extends TeleMethodRelatedElement {
         this.parentCompound = parentCompound;
     }
 
-    class CompoundNodeIterator implements Iterator<TeleEntryElement> {
+    public static class CompoundNodeIterator implements Iterator<TeleEntryElement> {
 
         private TeleEntryElement currentCompound;
 
