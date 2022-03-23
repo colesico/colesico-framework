@@ -4,7 +4,7 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.rpc.teleapi.*;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.MethodInvoker;
-import colesico.framework.teleapi.TeleFactory;
+import colesico.framework.teleapi.TRWFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +16,7 @@ public class RpcTeleDriverImpl implements RpcTeleDriver {
 
     private static final Logger logger = LoggerFactory.getLogger(RpcTeleDriverImpl.class);
 
-    private final TeleFactory teleFactory;
+    private final TRWFactory trwFactory;
     private final RpcExchange exchange;
 
     /**
@@ -25,8 +25,8 @@ public class RpcTeleDriverImpl implements RpcTeleDriver {
     protected final ThreadScope threadScope;
 
     @Inject
-    public RpcTeleDriverImpl(TeleFactory ioc, RpcExchange exchange, ThreadScope threadScope) {
-        this.teleFactory = ioc;
+    public RpcTeleDriverImpl(TRWFactory ioc, RpcExchange exchange, ThreadScope threadScope) {
+        this.trwFactory = ioc;
         this.exchange = exchange;
         this.threadScope = threadScope;
     }
@@ -39,7 +39,7 @@ public class RpcTeleDriverImpl implements RpcTeleDriver {
         RpcResponse response = createResponse(invCtx.getResponseType());
 
         // Instantiate data port
-        RpcDataPort dataPort = new RpcDataPortImpl(teleFactory, request, response);
+        RpcDataPort dataPort = new RpcDataPortImpl(trwFactory, request, response);
         threadScope.put(DataPort.SCOPE_KEY, dataPort);
 
         try {

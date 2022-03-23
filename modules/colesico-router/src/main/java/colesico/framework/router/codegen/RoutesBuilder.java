@@ -29,7 +29,7 @@ import colesico.framework.router.RouteAttribute;
 import colesico.framework.router.RouteAttributes;
 import colesico.framework.router.assist.RouteTrie;
 import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.service.codegen.model.TeleMethodElement;
+import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.element.PackageElement;

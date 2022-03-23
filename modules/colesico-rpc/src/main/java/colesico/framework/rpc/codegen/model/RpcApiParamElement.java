@@ -1,7 +1,7 @@
 package colesico.framework.rpc.codegen.model;
 
 import colesico.framework.assist.codegen.model.ParameterElement;
-import colesico.framework.service.codegen.model.TeleParameterElement;
+import colesico.framework.service.codegen.model.teleapi.TeleParameterElement;
 
 import javax.lang.model.type.TypeMirror;
 

@@ -9,8 +9,4 @@ public interface RestletOrigin extends Origin {
      */
     String AUTO = "RESTLET_AUTO";
 
-    /**
-     * From body json field
-     */
-    String JSON_FIELD = "JSON_FIELD";
 }

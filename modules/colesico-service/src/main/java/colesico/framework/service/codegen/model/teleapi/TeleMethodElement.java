@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package colesico.framework.service.codegen.model;
+package colesico.framework.service.codegen.model.teleapi;
 
 import colesico.framework.assist.StrUtils;
-import com.squareup.javapoet.CodeBlock;
+import colesico.framework.service.codegen.model.ServiceMethodElement;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,24 +40,14 @@ public final class TeleMethodElement {
     private final ServiceMethodElement serviceMethod;
 
     /**
-     * Tele-method direct parameters and compounds
+     * Direct parameters, batch parameters and compounds
      */
-    private final List<TeleArgumentElement> parameters;
+    private final List<TeleEntryElement> parameters;
 
     /**
-     * Method result writing context code
+     * Parameter batches
      */
-    private CodeBlock writingContextCode;
-
-    /**
-     * Invocation context code
-     */
-    private CodeBlock invocationContextCode;
-
-    /**
-     * Common purpose props
-     */
-    private final Map<Class, Object> properties;
+    protected final Map<String, TeleBatchElement> batches;
 
     /**
      * Tele-method index in tele-facade
@@ -65,14 +55,25 @@ public final class TeleMethodElement {
     protected Integer index;
 
     /**
-     * Parsed param index
+     * Method result writing context
      */
-    protected Integer paramIndex = -1;
+    private TWContextElement writingContext;
+
+    /**
+     * Invocation context code
+     */
+    private TIContextElement invocationContext;
+
+    /**
+     * Common purpose props
+     */
+    private final Map<Class, Object> properties;
 
     public TeleMethodElement(ServiceMethodElement serviceMethod) {
         this.serviceMethod = serviceMethod;
         this.parameters = new ArrayList<>();
         this.properties = new HashMap<>();
+        this.batches = new HashMap<>();
     }
 
     public <C> C getProperty(Class<C> propertyClass) {
@@ -86,21 +87,29 @@ public final class TeleMethodElement {
     /**
      * Add parameter of tele-method
      */
-    public void addParameter(TeleArgumentElement arg) {
-        parameters.add(arg);
-        arg.setParentTeleMethod(this);
+    public void addParameter(TeleEntryElement entry) {
+        parameters.add(entry);
     }
 
+    public TeleBatchElement getOrCreateBatch(String name) {
+        TeleBatchElement batch = batches.get(name);
+        if (batch == null) {
+            batch = new TeleBatchElement(this, name);
+            batches.put(name, batch);
+            parentTeleFacade.getBatchPack().addBatch(batch);
+        }
+        return batch;
+    }
+
+    /**
+     * Return origin service method name
+     */
     public String getName() {
         return serviceMethod.getName();
     }
 
     public String getBuilderName() {
         return "get" + StrUtils.firstCharToUpperCase(serviceMethod.getName()) + "TM" + index;
-    }
-
-    public Integer nextParamIndex() {
-        return ++paramIndex;
     }
 
     public ServiceMethodElement getServiceMethod() {
@@ -111,28 +120,32 @@ public final class TeleMethodElement {
         return parentTeleFacade;
     }
 
-    public List<TeleArgumentElement> getParameters() {
+    public List<TeleEntryElement> getParameters() {
         return parameters;
     }
 
-    public CodeBlock getWritingContextCode() {
-        return writingContextCode;
+    public TWContextElement getWritingContext() {
+        return writingContext;
     }
 
-    public void setWritingContextCode(CodeBlock writingContextCode) {
-        this.writingContextCode = writingContextCode;
+    public void setWritingContext(TWContextElement writingContext) {
+        this.writingContext = writingContext;
     }
 
-    public CodeBlock getInvocationContextCode() {
-        return invocationContextCode;
+    public TIContextElement getInvocationContext() {
+        return invocationContext;
     }
 
-    public void setInvocationContextCode(CodeBlock invocationContextCode) {
-        this.invocationContextCode = invocationContextCode;
+    public void setInvocationContext(TIContextElement invocationContext) {
+        this.invocationContext = invocationContext;
     }
 
     public Integer getIndex() {
         return index;
+    }
+
+    public Map<String, TeleBatchElement> getBatches() {
+        return batches;
     }
 
     @Override

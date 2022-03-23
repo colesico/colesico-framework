@@ -22,7 +22,6 @@ import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.restlet.RestletConfigPrototype;
 import colesico.framework.restlet.teleapi.*;
-import colesico.framework.restlet.teleapi.jsonrequest.JsonRequest;
 import colesico.framework.service.ApplicationException;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.MethodInvoker;
@@ -51,7 +50,6 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
     protected final ThreadScope threadScope;
     protected final Provider<HttpContext> httpContextProv;
     protected final RestletDataPort dataPort;
-    protected final JsonRequestFactory jsonRequestFactory;
     protected final Polysupplier<RestletRequestListener> reqListenerSup;
     protected final Polysupplier<RestletResponseListener> respListenerSup;
 
@@ -60,14 +58,12 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
                                  ThreadScope threadScope,
                                  Provider<HttpContext> httpContextProv,
                                  RestletDataPort dataPort,
-                                 JsonRequestFactory jsonRequestFactory,
                                  Polysupplier<RestletRequestListener> reqListenerSup,
                                  Polysupplier<RestletResponseListener> respListenerSup) {
         this.config = config;
         this.threadScope = threadScope;
         this.httpContextProv = httpContextProv;
         this.dataPort = dataPort;
-        this.jsonRequestFactory = jsonRequestFactory;
         this.reqListenerSup = reqListenerSup;
         this.respListenerSup = respListenerSup;
     }
@@ -87,12 +83,6 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
             // CSRF protection
             if (config.enableCSFRProtection()) {
                 guardCSFR(httpRequest);
-            }
-
-            // Init json request if defined
-            if (invContext != null && invContext.getJsonRequestType() != null) {
-                JsonRequest jr = jsonRequestFactory.getJsonRequest(invContext.getJsonRequestType());
-                threadScope.put(JsonRequest.SCOPE_KEY, jr);
             }
 
             // Invoke tele-method

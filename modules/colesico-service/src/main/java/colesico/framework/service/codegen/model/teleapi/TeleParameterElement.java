@@ -14,48 +14,33 @@
  * limitations under the License.
  */
 
-package colesico.framework.service.codegen.model;
+package colesico.framework.service.codegen.model.teleapi;
 
 import colesico.framework.assist.codegen.model.VarElement;
-import com.squareup.javapoet.CodeBlock;
 
 /**
- * Tele-method parameter
+ * Tele-method  parameter that can be directly read from data port
  */
-public final class TeleParameterElement extends TeleArgumentElement {
+public final class TeleParameterElement extends TeleEntryElement implements TeleInputElement {
 
-    /**
-     * Param reading context code
-     */
-    private CodeBlock readingContextCode;
+    protected TRContextElement readingContext;
 
-    /**
-     * Parameter index
-     */
-    protected final Integer paramIndex;
-
-    public TeleParameterElement(VarElement originVariable, Integer paramIndex) {
-        super(originVariable);
-        this.paramIndex = paramIndex;
+    public TeleParameterElement(TeleMethodElement parentTeleMethod, VarElement originElement) {
+        super(parentTeleMethod, originElement);
     }
 
-    public CodeBlock getReadingContextCode() {
-        return readingContextCode;
+    public TRContextElement getReadingContext() {
+        return readingContext;
     }
 
-    public void setReadingContextCode(CodeBlock readingContextCode) {
-        this.readingContextCode = readingContextCode;
-    }
-
-    public Integer getParamIndex() {
-        return paramIndex;
+    public void setReadingContext(TRContextElement readingContext) {
+        this.readingContext = readingContext;
     }
 
     @Override
     public String toString() {
         return "TeleParamElement{" +
                 "originParam=" + originElement +
-                ", paramIndex=" + paramIndex +
                 '}';
     }
 }

@@ -20,7 +20,7 @@ import colesico.framework.restlet.RestletError;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.reader.ValueReader;
 import colesico.framework.restlet.teleapi.writer.ObjectWriter;
-import colesico.framework.teleapi.TeleFactory;
+import colesico.framework.teleapi.TRWFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -35,11 +35,11 @@ import java.util.List;
 public class RestletDataPortImpl implements RestletDataPort {
 
     private final Logger logger = LoggerFactory.getLogger(RestletDataPort.class);
-    private final TeleFactory teleFactory;
+    private final TRWFactory trwFactory;
 
 
-    public RestletDataPortImpl(TeleFactory teleFactory) {
-        this.teleFactory = teleFactory;
+    public RestletDataPortImpl(TRWFactory trwFactory) {
+        this.trwFactory = trwFactory;
     }
 
     @Override
@@ -56,14 +56,14 @@ public class RestletDataPortImpl implements RestletDataPort {
 
         if (context.getReaderClass() != null) {
             // Use specified reader
-            reader = (RestletTeleReader<V>) teleFactory.getReader(context.getReaderClass());
+            reader = (RestletTeleReader<V>) trwFactory.getReader(context.getReaderClass());
         } else {
             // Use reader by param type
-            reader = teleFactory.findReader(RestletTeleReader.class, context.getValueType());
+            reader = trwFactory.findReader(RestletTeleReader.class, context.getValueType());
 
             // No accurate reader here so are reading data as object
             if (reader == null) {
-                reader = (RestletTeleReader<V>) teleFactory.getReader(ValueReader.class);
+                reader = (RestletTeleReader<V>) trwFactory.getReader(ValueReader.class);
             }
         }
         return reader.read(context);
@@ -80,15 +80,15 @@ public class RestletDataPortImpl implements RestletDataPort {
 
         if (context.getWriterClass() != null) {
             // Specified writer
-            writer = teleFactory.getWriter(context.getWriterClass());
+            writer = trwFactory.getWriter(context.getWriterClass());
         } else {
             // By type writer
-            writer = teleFactory.findWriter(RestletTeleWriter.class, context.getValueType());
+            writer = trwFactory.findWriter(RestletTeleWriter.class, context.getValueType());
         }
 
         if (writer == null) {
             // Default object writer
-            writer = (RestletTeleWriter<V>) teleFactory.getWriter(ObjectWriter.class);
+            writer = (RestletTeleWriter<V>) trwFactory.getWriter(ObjectWriter.class);
         }
 
         writer.write(value, context);
@@ -98,7 +98,7 @@ public class RestletDataPortImpl implements RestletDataPort {
     public <T extends Throwable> void writeError(final T throwable) {
 
         RestletTWContext context = RestletTWContext.of(throwable.getClass());
-        RestletTeleWriter<T> throwableWriter = teleFactory.findWriter(RestletTeleWriter.class, throwable.getClass());
+        RestletTeleWriter<T> throwableWriter = trwFactory.findWriter(RestletTeleWriter.class, throwable.getClass());
         if (throwableWriter != null) {
             throwableWriter.write(throwable, context);
             return;
@@ -108,7 +108,7 @@ public class RestletDataPortImpl implements RestletDataPort {
         // and determine writer for it
         Throwable rootCause = ExceptionUtils.getRootCause(throwable);
         if (rootCause != null) {
-            RestletTeleWriter rootCauseWriter = teleFactory.findWriter(RestletTeleWriter.class, rootCause.getClass());
+            RestletTeleWriter rootCauseWriter = trwFactory.findWriter(RestletTeleWriter.class, rootCause.getClass());
             if (rootCauseWriter != null) {
                 rootCauseWriter.write(rootCause, context);
                 return;
@@ -121,7 +121,7 @@ public class RestletDataPortImpl implements RestletDataPort {
         error.setErrorCode(throwable.getClass().getCanonicalName());
         error.setMessage(ExceptionUtils.getRootCauseMessage(throwable));
         error.setDetails(getErrorMessages(throwable));
-        RestletTeleWriter objWriter = teleFactory.getWriter(ObjectWriter.class);
+        RestletTeleWriter objWriter = trwFactory.getWriter(ObjectWriter.class);
         context.setStatusCode(500);
         objWriter.write(error, context);
 

@@ -21,7 +21,7 @@
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
-        <version>5.1.1</version>
+        <version>5.2.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -32,16 +32,25 @@
     <name>Colesico example - Restlet</name>
 
     <dependencies>
+
         <!-- Colesico common services bundle -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-bundle-web</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <!-- Colesico undertow integration -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-undertow</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Open API -->
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-openapi</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -86,6 +95,13 @@
                             <artifactId>colesico-bundle-web</artifactId>
                             <version>${project.version}</version>
                         </path>
+                        <!--
+                        <path>
+                            <groupId>net.colesico.framework</groupId>
+                            <artifactId>colesico-openapi</artifactId>
+                            <version>${project.version}</version>
+                        </path>
+                        -->
                         <!-- To disable compile debug log remove or comment this dependency-->
                         <dependency>
                             <groupId>org.slf4j</groupId>

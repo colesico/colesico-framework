@@ -18,14 +18,11 @@ package colesico.framework.restlet.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.restlet.RestletConfigPrototype;
 import colesico.framework.restlet.assist.LogRestletListener;
-import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.internal.gsonconv.GsonConverter;
-import colesico.framework.restlet.teleapi.jsonrequest.JsonRequest;
+import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.origin.RestletAutoOrigin;
-import colesico.framework.restlet.teleapi.origin.RestletJsonFieldOrigin;
 import colesico.framework.telehttp.Origin;
 
 import javax.inject.Named;
@@ -39,10 +36,8 @@ import javax.inject.Singleton;
 @Produce(RestletDataPortImpl.class)
 @Produce(RestletTeleDriverImpl.class)
 @Produce(RestletAutoOrigin.class)
-@Produce(RestletJsonFieldOrigin.class)
 @Produce(GsonConverter.class)
 @Produce(LogRestletListener.class)
-@Produce(JsonRequestFactory.class)
 public class RestletProducer {
 
     @Singleton
@@ -73,10 +68,6 @@ public class RestletProducer {
     @Singleton
     public RestletConfigPrototype getDefaultRestletConfig() {
         return new RestletConfigImpl();
-    }
-
-    public JsonRequest getJsonMapContext(ThreadScope scope) {
-        return scope.get(JsonRequest.SCOPE_KEY);
     }
 
     @Singleton

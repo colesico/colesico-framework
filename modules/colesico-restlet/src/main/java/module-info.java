@@ -34,12 +34,10 @@ module colesico.framework.restlet {
     opens colesico.framework.restlet;
     exports colesico.framework.restlet.teleapi;
     exports colesico.framework.restlet.teleapi.origin;
-    exports colesico.framework.restlet.teleapi.jsonrequest;
     exports colesico.framework.restlet.teleapi.reader;
     exports colesico.framework.restlet.teleapi.writer;
     exports colesico.framework.restlet.assist;
 
-    exports colesico.framework.restlet.codegen.model;
     exports colesico.framework.restlet.codegen.assist;
 
     // Internal

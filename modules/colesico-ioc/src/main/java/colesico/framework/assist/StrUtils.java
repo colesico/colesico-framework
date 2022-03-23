@@ -38,12 +38,18 @@ public class StrUtils {
     }
 
     public static String firstCharToLowerCase(String str) {
+        if (StringUtils.isBlank(str)) {
+            return str;
+        }
         char[] chars = str.toCharArray();
         chars[0] = Character.toLowerCase(chars[0]);
         return new String(chars);
     }
 
     public static String firstCharToUpperCase(String str) {
+        if (StringUtils.isBlank(str)) {
+            return str;
+        }
         char[] chars = str.toCharArray();
         chars[0] = Character.toUpperCase(chars[0]);
         return new String(chars);
@@ -51,6 +57,7 @@ public class StrUtils {
 
     /**
      * Convert CamelCase to cebab-case or snake_case notation
+     *
      * @param str
      * @param separator
      * @return
@@ -72,6 +79,7 @@ public class StrUtils {
 
     /**
      * Convert snake_kase or kebab-case to CamelCase notation
+     *
      * @param str
      * @param separator
      * @return
@@ -120,7 +128,7 @@ public class StrUtils {
 
         // remove result trailing separator
         while (result.endsWith(separator)) {
-            result = result.substring(0,result.length() - 1);
+            result = result.substring(0, result.length() - 1);
         }
 
         return result;

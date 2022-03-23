@@ -24,7 +24,8 @@ import colesico.framework.rpc.codegen.parser.RpcApiParser;
 import colesico.framework.rpc.teleapi.*;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.*;
-import colesico.framework.service.codegen.modulator.TeleModulator;
+import colesico.framework.service.codegen.model.teleapi.*;
+import colesico.framework.service.codegen.modulator.TeleFacadeModulator;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import org.slf4j.Logger;
@@ -34,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
+public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
 
     private final Logger logger = LoggerFactory.getLogger(RpcModulator.class);
 
@@ -110,7 +111,7 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
                     // Rpc params
                     List<RpcApiParamElement> rpcApiParams = rpcApiMethod.getParameters();
                     // Method params
-                    List<TeleArgumentElement> teleParams = teleMethodElm.getParameters();
+                    List<TeleEntryElement> teleParams = teleMethodElm.getParameters();
 
                     if (rpcApiParams.size() != teleParams.size()) {
                         throw CodegenException.of()
@@ -204,27 +205,26 @@ public class RpcModulator extends TeleModulator<RpcTeleFacadeElement> {
     }
 
     @Override
-    protected CodeBlock generateReadingContext(TeleParameterElement teleParam) {
+    protected TRContextElement createReadingContext(TeleParameterElement teleParam) {
         CodeBlock.Builder cb = CodeBlock.builder();
-
         RpcApiMethodElement rpcApiMethod = getRpcApiMethod(teleParam.getParentTeleMethod());
         RpcApiParamElement apiParam = teleParam.getProperty(RpcApiParamElement.class);
         // RpcTRContext.of(EnvelopeClass.RequestClass::getterMethod)
         cb.add("$T.$N(", ClassName.get(RpcTRContext.class), RpcTRContext.OF_METHOD);
-        ServiceCodegenUtils.generateTeleArgumentType(teleParam, cb);
+        ServiceCodegenUtils.generateTeleEntryType(teleParam, cb);
         cb.add(", $T::$N)", ClassName.bestGuess(rpcApiMethod.getRequestClassName()), apiParam.getterName());
-        return cb.build();
+        return new TRContextElement(teleParam, cb.build());
     }
 
     @Override
-    protected CodeBlock generateInvocationContext(TeleMethodElement teleMethod) {
+    protected TIContextElement createInvocationContext(TeleMethodElement teleMethod) {
         RpcApiMethodElement rpcApiMethod = getRpcApiMethod(teleMethod);
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("new $T($T.class, $T.class)", ClassName.get(RpcTIContext.class),
                 ClassName.bestGuess(rpcApiMethod.getRequestClassName()),
                 ClassName.bestGuess(rpcApiMethod.getResponseClassName())
         );
-        return cb.build();
+        return new TIContextElement(teleMethod, cb.build());
     }
 
     protected RpcApiMethodElement getRpcApiMethod(TeleMethodElement teleMethod) {

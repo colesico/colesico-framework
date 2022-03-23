@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.service.codegen.model;
+package colesico.framework.service.codegen.model.teleapi;
 
 
 import colesico.framework.assist.Elements;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleDriver;
 import colesico.framework.teleapi.TeleFacade;
 import com.squareup.javapoet.CodeBlock;
 import org.apache.commons.lang3.StringUtils;
 
-import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,14 +72,38 @@ public class TeleFacadeElement {
      */
     private CodeBlock ligatureMethodBody;
 
-    // IoC Qualifier for  producer method
+    /**
+     * IoC Qualifier for  producer method
+     */
     private final IocQualifier iocQualifier;
 
     /**
-     * Support for compound params
+     * Compound params support enabled
+     *
+     * @see colesico.framework.service.Compound
      */
-    private Boolean compoundSupport = false;
+    private Boolean compoundParams = false;
 
+    /**
+     * Batch params support enabled
+     *
+     * @see colesico.framework.service.BatchField
+     */
+    private Boolean batchParams = false;
+
+    /**
+     * Tele-facade associated batches
+     */
+    private final TeleBatchPackElement batchPack;
+
+    /**
+     * Tele schemas for the facade
+     */
+    private final Map<Class, TeleSchemeElement> teleSchemes;
+
+    /**
+     * Common purpose properties
+     */
     private final Map<Class, Object> properties;
 
     public TeleFacadeElement(Class<?> teleType,
@@ -92,8 +116,11 @@ public class TeleFacadeElement {
         this.ligatureClass = ligatureClass;
         this.dataPortClass = dataPortClass;
         this.teleMethods = new Elements<>();
-        this.properties = new HashMap();
         this.iocQualifier = iocQualifier;
+
+        this.teleSchemes = new HashMap<>();
+        this.properties = new HashMap<>();
+        this.batchPack = new TeleBatchPackElement(this);
     }
 
     public ServiceElement getParentService() {
@@ -102,8 +129,6 @@ public class TeleFacadeElement {
 
     /**
      * Returns tele-facade class simple name
-     *
-     * @return
      */
     public String getFacadeClassSimpleName() {
         String originClassName = parentService.getOriginClass().getSimpleName();
@@ -142,6 +167,14 @@ public class TeleFacadeElement {
         return teleType;
     }
 
+    public <B> TeleSchemeElement<B> getTeleScheme(Class<B> schemeType) {
+        return teleSchemes.get(schemeType);
+    }
+
+    public <B> void setTeleScheme(Class<B> schemeType, TeleSchemeElement<B> schemeBuilder) {
+        teleSchemes.put(schemeType, schemeBuilder);
+    }
+
     public <C> C getProperty(Class<C> propertyClass) {
         return (C) properties.get(propertyClass);
     }
@@ -177,12 +210,28 @@ public class TeleFacadeElement {
         return iocQualifier;
     }
 
-    public Boolean getCompoundSupport() {
-        return compoundSupport;
+    public Boolean getCompoundParams() {
+        return compoundParams;
     }
 
-    public void setCompoundSupport(Boolean compoundSupport) {
-        this.compoundSupport = compoundSupport;
+    public void setCompoundParams(Boolean compoundParams) {
+        this.compoundParams = compoundParams;
+    }
+
+    public Boolean getBatchParams() {
+        return batchParams;
+    }
+
+    public void setBatchParams(Boolean batchParams) {
+        this.batchParams = batchParams;
+    }
+
+    public TeleBatchPackElement getBatchPack() {
+        return batchPack;
+    }
+
+    public void setParentService(ServiceElement parentService) {
+        this.parentService = parentService;
     }
 
     public static final class IocQualifier {
