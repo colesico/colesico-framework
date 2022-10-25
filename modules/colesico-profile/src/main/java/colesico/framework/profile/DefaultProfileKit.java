@@ -40,10 +40,6 @@ public class DefaultProfileKit implements ProfileKit {
         this.dataPortProv = dataPortProv;
     }
 
-    protected boolean isInputControlRequired(Profile profile) {
-        return false;
-    }
-
     /**
      * Controls the profile read from the data port.
      * Override this method to get more specific control.
@@ -53,10 +49,6 @@ public class DefaultProfileKit implements ProfileKit {
      */
     protected InputControlResult controlInputProfile(Profile profile) {
         throw new UnsupportedOperationException("Default control not implemented");
-    }
-
-    protected boolean isOutputControlRequired(Profile profile) {
-        return false;
     }
 
     /**
@@ -72,7 +64,7 @@ public class DefaultProfileKit implements ProfileKit {
         // Check thread cache at first
         ProfileHolder holder = threadScope.get(ProfileHolder.SCOPE_KEY);
         if (holder != null) {
-            return (P) holder.getProfile();
+            return (P) holder.profile();
         } else {
             // Create temporary empty profile holder
             // for possible subsequent recursive getProfile() invocations
@@ -84,14 +76,11 @@ public class DefaultProfileKit implements ProfileKit {
         DataPort<TRContext, TWContext> port = dataPortProv.get();
         Profile profile = port.read(Profile.class);
 
-        // Is control needed?
-
-        if (isInputControlRequired(profile)) {
-            InputControlResult res = controlInputProfile(profile);
-            profile = res.getProfile();
-            if (res.isUpdateOnClient()) {
-                port.write(profile, Profile.class);
-            }
+        // Control profile
+        InputControlResult result = controlInputProfile(profile);
+        profile = result.profile;
+        if (!result.accepted) {
+            port.write(profile, Profile.class);
         }
 
         // Store profile to cache
@@ -103,68 +92,24 @@ public class DefaultProfileKit implements ProfileKit {
     @Override
     public final void setProfile(Profile profile) {
         DataPort port = dataPortProv.get();
-        if (isOutputControlRequired(profile)) {
-            profile = controlOutputProfile(profile);
-        }
-
+        profile = controlOutputProfile(profile);
         port.write(profile, Profile.class);
         threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
     }
 
-    public static final class ProfileHolder {
+    public record ProfileHolder(Profile profile) {
         public static final Key<DefaultProfileKit.ProfileHolder> SCOPE_KEY = new TypeKey<>(ProfileHolder.class);
+    }
 
-        private final Profile profile;
+    public record InputControlResult(Profile profile, boolean accepted) {
 
-        public ProfileHolder(Profile profile) {
-            this.profile = profile;
+        public static InputControlResult reset(Profile profile) {
+            return new InputControlResult(profile, false);
         }
 
-        public Profile getProfile() {
-            return profile;
+        public static InputControlResult accept(Profile profile) {
+            return new InputControlResult(profile, true);
         }
     }
 
-    public static final class InputControlResult {
-
-        /**
-         * Actual profile to be used
-         */
-        private Profile profile = null;
-
-        /**
-         * Whether or not to update the profile on the client
-         */
-        private boolean updateOnClient = false;
-
-        public InputControlResult() {
-        }
-
-        public InputControlResult(Profile profile, boolean updateOnClient) {
-            this.profile = profile;
-            this.updateOnClient = updateOnClient;
-        }
-
-        public InputControlResult(Profile profile) {
-            this.profile = profile;
-            this.updateOnClient = true;
-        }
-
-        public Profile getProfile() {
-            return profile;
-        }
-
-        public void setProfile(Profile profile) {
-            this.profile = profile;
-        }
-
-        public boolean isUpdateOnClient() {
-            return updateOnClient;
-        }
-
-        public void setUpdateOnClient(boolean updateOnClient) {
-            this.updateOnClient = updateOnClient;
-        }
-
-    }
 }

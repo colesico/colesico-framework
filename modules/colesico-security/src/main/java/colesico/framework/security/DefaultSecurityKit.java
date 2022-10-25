@@ -41,10 +41,6 @@ public class DefaultSecurityKit implements SecurityKit {
         this.dataPortProv = dataPortProv;
     }
 
-    protected boolean isInputControlRequired(Principal principal) {
-        return false;
-    }
-
     /**
      * Controls the principal read from the data port.
      * Override this method to get more specific control.
@@ -53,11 +49,7 @@ public class DefaultSecurityKit implements SecurityKit {
      * @return Valid principal or null
      */
     protected InputControlResult controlInputPrincipal(Principal principal) {
-        throw new UnsupportedOperationException("No default implementation");
-    }
-
-    protected boolean isOutputControlRequired(Principal principal) {
-        return false;
+        return InputControlResult.accept(principal);
     }
 
     /**
@@ -65,16 +57,15 @@ public class DefaultSecurityKit implements SecurityKit {
      * Override this method to get more specific control.
      */
     protected Principal controlOutputPrincipal(Principal principal) {
-        throw new UnsupportedOperationException("No default implementation");
+        return principal;
     }
-
 
     @Override
     public <P extends Principal> P getPrincipal() {
         // Check thread cache at first
         PrincipalHolder holder = threadScope.get(PrincipalHolder.SCOPE_KEY);
         if (holder != null) {
-            return (P) holder.getPrincipal();
+            return (P) holder.principal();
         } else {
             // Create temporary empty principal holder
             // for possible subsequent recursive getPrincipal() invocations
@@ -86,13 +77,13 @@ public class DefaultSecurityKit implements SecurityKit {
         DataPort<TRContext, TWContext> port = dataPortProv.get();
         Principal principal = port.read(Principal.class);
 
-        // Is control needed?
-        if (isInputControlRequired(principal)) {
-            InputControlResult res = controlInputPrincipal(principal);
-            principal = res.getPrincipal();
-            if (res.isUpdateOnClient()) {
-                port.write(principal, Principal.class);
-            }
+        // Control principal
+        InputControlResult result = controlInputPrincipal(principal);
+        principal = result.principal;
+
+        // Update principal on client
+        if (!result.accepted) {
+            port.write(principal, Principal.class);
         }
 
         // Store principal to cache
@@ -104,10 +95,7 @@ public class DefaultSecurityKit implements SecurityKit {
     @Override
     public void setPrincipal(Principal principal) {
         DataPort port = dataPortProv.get();
-        if (isOutputControlRequired(principal)) {
-            principal = controlOutputPrincipal(principal);
-        }
-
+        principal = controlOutputPrincipal(principal);
         port.write(principal, Principal.class);
         threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(principal));
     }
@@ -123,65 +111,19 @@ public class DefaultSecurityKit implements SecurityKit {
         }
     }
 
-    public static final class PrincipalHolder {
-        public static final Key<PrincipalHolder> SCOPE_KEY = new TypeKey<>(PrincipalHolder.class);
-        private final Principal principal;
+    public record InputControlResult(Principal principal, boolean accepted) {
 
-        public PrincipalHolder(Principal principal) {
-            this.principal = principal;
+        public static InputControlResult reset(Principal principal) {
+            return new InputControlResult(principal, false);
         }
 
-        public Principal getPrincipal() {
-            return principal;
+        public static InputControlResult accept(Principal principal) {
+            return new InputControlResult(principal, true);
         }
     }
 
-    public static final class InputControlResult {
-
-        /**
-         * Actual principal to be used
-         */
-        private Principal principal = null;
-
-        /**
-         * Whether or not to update the principal on the client
-         */
-        private boolean updateOnClient = false;
-
-        /**
-         * For serialization
-         */
-        public InputControlResult() {
-        }
-
-        /**
-         * For static factories
-         */
-        private InputControlResult(Principal principal, boolean updateOnClient) {
-            this.principal = principal;
-            this.updateOnClient = updateOnClient;
-        }
-
-        public static InputControlResult of(Principal principal, boolean updateOnClient) {
-            return new InputControlResult(principal, updateOnClient);
-        }
-
-        public Principal getPrincipal() {
-            return principal;
-        }
-
-        public void setPrincipal(Principal principal) {
-            this.principal = principal;
-        }
-
-        public boolean isUpdateOnClient() {
-            return updateOnClient;
-        }
-
-        public void setUpdateOnClient(boolean updateOnClient) {
-            this.updateOnClient = updateOnClient;
-        }
-
+    public record PrincipalHolder(Principal principal) {
+        public static final Key<PrincipalHolder> SCOPE_KEY = new TypeKey<>(PrincipalHolder.class);
     }
 
 }
