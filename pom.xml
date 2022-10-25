@@ -69,20 +69,20 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- Maven plugins -->
-        <maven-compiler-plugin.version>3.10.0</maven-compiler-plugin.version>
-        <maven-dependency-plugin.version>3.2.0</maven-dependency-plugin.version>
+        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+        <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
         <asciidoctor-maven-plugin.version>2.2.2</asciidoctor-maven-plugin.version>
-        <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
-        <maven-jar-plugin.version>3.2.2</maven-jar-plugin.version>
-        <versions-maven-plugin.version>2.9.0</versions-maven-plugin.version>
+        <maven-resources-plugin.version>3.3.0</maven-resources-plugin.version>
+        <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
+        <versions-maven-plugin.version>2.13.0</versions-maven-plugin.version>
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <!-- Do not change javadoc version without tests! -->
-        <maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
-        <org.ow2.asm.version>9.2</org.ow2.asm.version>
+        <maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
+        <org.ow2.asm.version>9.4</org.ow2.asm.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.12</nexus-staging-maven-plugin.version>
-        <spotbugs-maven-plugin.version>4.5.3.0</spotbugs-maven-plugin.version>
-        <!-- 1.4.15 -->
+        <spotbugs-maven-plugin.version>4.7.2.1</spotbugs-maven-plugin.version>
+        <!-- 1.4.19 -->
         <xstream.version>1.4.19</xstream.version>
 
         <!-- Other -->
@@ -90,32 +90,32 @@
         <commons-io.version>2.11.0</commons-io.version>
 
         <!-- Logging -->
-        <slf4j.version>1.7.32</slf4j.version>
-        <logback.verion>1.2.10</logback.verion>
+        <slf4j.version>1.7.36</slf4j.version>
+        <logback.verion>1.2.11</logback.verion>
 
         <!-- DB -->
         <hikaricp.version>5.0.1</hikaricp.version>
-        <jdbi3.version>3.27.2</jdbi3.version>
+        <jdbi3.version>3.34.0</jdbi3.version>
 
         <!-- Mix -->
-        <typesafe-config.version>1.4.1</typesafe-config.version>
-        <pebble.version>3.1.5</pebble.version>
-        <gson.version>2.9.0</gson.version>
+        <typesafe-config.version>1.4.2</typesafe-config.version>
+        <pebble.version>3.1.6</pebble.version>
+        <gson.version>2.9.1</gson.version>
 
         <javapoet.version>1.13.0</javapoet.version>
-        <undertow.version>2.2.16.Final</undertow.version>
+        <undertow.version>2.3.0.Final</undertow.version>
         <kryo.version>5.3.0</kryo.version>
 
-        <swagger.version>2.1.10</swagger.version>
+        <swagger.version>2.2.4</swagger.version>
 
         <javax.inject.version>1</javax.inject.version>
 
         <!-- Tests -->
-        <org-testng.version>7.5</org-testng.version>
-        <h2database.version>1.4.200</h2database.version>
+        <org-testng.version>7.6.1</org-testng.version>
+        <h2database.version>2.1.214</h2database.version>
 
         <!-- Code analyze -->
-        <spotbugs.version>4.5.3</spotbugs.version>
+        <spotbugs.version>4.7.3</spotbugs.version>
     </properties>
 
     <modules>

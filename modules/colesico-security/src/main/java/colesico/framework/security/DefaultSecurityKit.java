@@ -52,7 +52,7 @@ public class DefaultSecurityKit implements SecurityKit {
      *
      * @return Valid principal or null
      */
-    protected InputControlResult controlInputPrincipal(Principal principal) {
+    protected Principal controlInputPrincipal(Principal principal) {
         throw new UnsupportedOperationException("No default implementation");
     }
 
@@ -88,11 +88,7 @@ public class DefaultSecurityKit implements SecurityKit {
 
         // Is control needed?
         if (isInputControlRequired(principal)) {
-            InputControlResult res = controlInputPrincipal(principal);
-            principal = res.getPrincipal();
-            if (res.isUpdateOnClient()) {
-                port.write(principal, Principal.class);
-            }
+            principal = controlInputPrincipal(principal);
         }
 
         // Store principal to cache
@@ -134,54 +130,6 @@ public class DefaultSecurityKit implements SecurityKit {
         public Principal getPrincipal() {
             return principal;
         }
-    }
-
-    public static final class InputControlResult {
-
-        /**
-         * Actual principal to be used
-         */
-        private Principal principal = null;
-
-        /**
-         * Whether or not to update the principal on the client
-         */
-        private boolean updateOnClient = false;
-
-        /**
-         * For serialization
-         */
-        public InputControlResult() {
-        }
-
-        /**
-         * For static factories
-         */
-        private InputControlResult(Principal principal, boolean updateOnClient) {
-            this.principal = principal;
-            this.updateOnClient = updateOnClient;
-        }
-
-        public static InputControlResult of(Principal principal, boolean updateOnClient) {
-            return new InputControlResult(principal, updateOnClient);
-        }
-
-        public Principal getPrincipal() {
-            return principal;
-        }
-
-        public void setPrincipal(Principal principal) {
-            this.principal = principal;
-        }
-
-        public boolean isUpdateOnClient() {
-            return updateOnClient;
-        }
-
-        public void setUpdateOnClient(boolean updateOnClient) {
-            this.updateOnClient = updateOnClient;
-        }
-
     }
 
 }
