@@ -23,7 +23,7 @@
     <groupId>net.colesico.framework</groupId>
     <artifactId>colesico-framework</artifactId>
     <packaging>pom</packaging>
-    <version>5.2.1-SNAPSHOT</version>
+    <version>5.2.1</version>
     <name>Colesico Framework</name>
     <description>
         Lightweight application framework for Java 11+
@@ -82,8 +82,9 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.12</nexus-staging-maven-plugin.version>
         <spotbugs-maven-plugin.version>4.7.2.1</spotbugs-maven-plugin.version>
-        <!-- 1.4.19 -->
-        <xstream.version>1.4.19</xstream.version>
+
+        <!-- Nexus plugin dependency -->
+        <xstream.version>1.4.15</xstream.version>
 
         <!-- Other -->
         <commons-lang3.version>3.12.0</commons-lang3.version>
