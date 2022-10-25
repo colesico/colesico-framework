@@ -52,7 +52,7 @@ public class DefaultSecurityKit implements SecurityKit {
      *
      * @return Valid principal or null
      */
-    protected Principal controlInputPrincipal(Principal principal) {
+    protected InputControlResult controlInputPrincipal(Principal principal) {
         throw new UnsupportedOperationException("No default implementation");
     }
 
@@ -74,7 +74,7 @@ public class DefaultSecurityKit implements SecurityKit {
         // Check thread cache at first
         PrincipalHolder holder = threadScope.get(PrincipalHolder.SCOPE_KEY);
         if (holder != null) {
-            return (P) holder.getPrincipal();
+            return (P) holder.principal();
         } else {
             // Create temporary empty principal holder
             // for possible subsequent recursive getPrincipal() invocations
@@ -88,7 +88,11 @@ public class DefaultSecurityKit implements SecurityKit {
 
         // Is control needed?
         if (isInputControlRequired(principal)) {
-            principal = controlInputPrincipal(principal);
+            InputControlResult result = controlInputPrincipal(principal);
+            principal = result.principal();
+            if (!result.accepted()) {
+                port.write(principal, Principal.class);
+            }
         }
 
         // Store principal to cache
@@ -119,17 +123,19 @@ public class DefaultSecurityKit implements SecurityKit {
         }
     }
 
-    public static final class PrincipalHolder {
-        public static final Key<PrincipalHolder> SCOPE_KEY = new TypeKey<>(PrincipalHolder.class);
-        private final Principal principal;
+    public record InputControlResult(Principal principal, boolean accepted) {
 
-        public PrincipalHolder(Principal principal) {
-            this.principal = principal;
+        public static InputControlResult update(Principal principal) {
+                return new InputControlResult(principal, false);
+            }
+
+            public static InputControlResult accept(Principal principal) {
+                return new InputControlResult(principal, true);
+            }
         }
 
-        public Principal getPrincipal() {
-            return principal;
-        }
+    public record PrincipalHolder(Principal principal) {
+            public static final Key<PrincipalHolder> SCOPE_KEY = new TypeKey<>(PrincipalHolder.class);
     }
 
 }
