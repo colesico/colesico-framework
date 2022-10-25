@@ -79,10 +79,10 @@ public class DefaultSecurityKit implements SecurityKit {
 
         // Control principal
         InputControlResult result = controlInputPrincipal(principal);
-        principal = result.principal();
+        principal = result.principal;
 
         // Update principal on client
-        if (!result.accepted()) {
+        if (!result.accepted) {
             port.write(principal, Principal.class);
         }
 
