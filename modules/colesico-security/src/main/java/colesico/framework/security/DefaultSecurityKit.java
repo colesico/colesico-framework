@@ -41,10 +41,6 @@ public class DefaultSecurityKit implements SecurityKit {
         this.dataPortProv = dataPortProv;
     }
 
-    protected boolean isInputControlRequired(Principal principal) {
-        return false;
-    }
-
     /**
      * Controls the principal read from the data port.
      * Override this method to get more specific control.
@@ -53,11 +49,7 @@ public class DefaultSecurityKit implements SecurityKit {
      * @return Valid principal or null
      */
     protected InputControlResult controlInputPrincipal(Principal principal) {
-        throw new UnsupportedOperationException("No default implementation");
-    }
-
-    protected boolean isOutputControlRequired(Principal principal) {
-        return false;
+        return InputControlResult.accept(principal);
     }
 
     /**
@@ -65,9 +57,8 @@ public class DefaultSecurityKit implements SecurityKit {
      * Override this method to get more specific control.
      */
     protected Principal controlOutputPrincipal(Principal principal) {
-        throw new UnsupportedOperationException("No default implementation");
+        return principal;
     }
-
 
     @Override
     public <P extends Principal> P getPrincipal() {
@@ -86,13 +77,13 @@ public class DefaultSecurityKit implements SecurityKit {
         DataPort<TRContext, TWContext> port = dataPortProv.get();
         Principal principal = port.read(Principal.class);
 
-        // Is control needed?
-        if (isInputControlRequired(principal)) {
-            InputControlResult result = controlInputPrincipal(principal);
-            principal = result.principal();
-            if (!result.accepted()) {
-                port.write(principal, Principal.class);
-            }
+        // Control principal
+        InputControlResult result = controlInputPrincipal(principal);
+        principal = result.principal();
+
+        // Update principal on client
+        if (!result.accepted()) {
+            port.write(principal, Principal.class);
         }
 
         // Store principal to cache
@@ -104,10 +95,7 @@ public class DefaultSecurityKit implements SecurityKit {
     @Override
     public void setPrincipal(Principal principal) {
         DataPort port = dataPortProv.get();
-        if (isOutputControlRequired(principal)) {
-            principal = controlOutputPrincipal(principal);
-        }
-
+        principal = controlOutputPrincipal(principal);
         port.write(principal, Principal.class);
         threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(principal));
     }
@@ -125,17 +113,17 @@ public class DefaultSecurityKit implements SecurityKit {
 
     public record InputControlResult(Principal principal, boolean accepted) {
 
-        public static InputControlResult update(Principal principal) {
-                return new InputControlResult(principal, false);
-            }
-
-            public static InputControlResult accept(Principal principal) {
-                return new InputControlResult(principal, true);
-            }
+        public static InputControlResult reset(Principal principal) {
+            return new InputControlResult(principal, false);
         }
 
+        public static InputControlResult accept(Principal principal) {
+            return new InputControlResult(principal, true);
+        }
+    }
+
     public record PrincipalHolder(Principal principal) {
-            public static final Key<PrincipalHolder> SCOPE_KEY = new TypeKey<>(PrincipalHolder.class);
+        public static final Key<PrincipalHolder> SCOPE_KEY = new TypeKey<>(PrincipalHolder.class);
     }
 
 }
