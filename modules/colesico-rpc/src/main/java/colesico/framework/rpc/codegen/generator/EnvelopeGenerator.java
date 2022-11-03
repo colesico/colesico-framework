@@ -99,11 +99,14 @@ public class EnvelopeGenerator extends FrameworkAbstractGenerator {
         TypeSpec.Builder responseBuilder = TypeSpec.classBuilder(method.getResponseClassSimpleName());
         responseBuilder.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
 
+        ParameterizedTypeName responseType;
         if (method.getOriginMethod().getReturnType().getKind() != TypeKind.VOID) {
-            ParameterizedTypeName responseType = ParameterizedTypeName.get(ClassName.get(RpcResponse.class),
+            responseType = ParameterizedTypeName.get(ClassName.get(RpcResponse.class),
                     TypeName.get(method.getOriginMethod().getReturnType()));
-            responseBuilder.superclass(responseType);
+        } else {
+            responseType = ParameterizedTypeName.get(ClassName.get(RpcResponse.class), ClassName.get(Object.class));
         }
+        responseBuilder.superclass(responseType);
 
         generateEnvelopeExtensions(responseBuilder, extKit.getResponseExtensions());
 

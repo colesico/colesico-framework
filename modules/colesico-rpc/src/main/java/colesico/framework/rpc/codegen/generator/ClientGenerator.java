@@ -13,6 +13,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.TypeKind;
 
 public class ClientGenerator extends FrameworkAbstractGenerator {
 
@@ -48,9 +49,16 @@ public class ClientGenerator extends FrameworkAbstractGenerator {
 
             generateParamAssignment(mb, methodElm);
 
+            TypeName returnTypeName;
+            boolean notVoidReturn = methodElm.getOriginMethod().getReturnType().getKind() != TypeKind.VOID;
+            if (notVoidReturn) {
+                returnTypeName = ParameterizedTypeName.get(ClassName.get(RpcResponse.class), TypeName.get(methodElm.getOriginMethod().getReturnType()));
+            } else {
+                returnTypeName = ParameterizedTypeName.get(ClassName.get(RpcResponse.class), ClassName.get(Object.class));
+            }
             // RpcResponse<T> response = rpcClient.call("namespace","api","method", request, RpcResponse.class)
             mb.addStatement("$T $N = $N.$N($S, $S, $S, $N, $T.class)",
-                    ParameterizedTypeName.get(ClassName.get(RpcResponse.class), TypeName.get(methodElm.getOriginMethod().getReturnType())),
+                    returnTypeName,
                     RESPONSE_VAR,
                     RPC_CLIENT_FIELD,
                     RpcClient.CALL_METHOD,
@@ -61,11 +69,12 @@ public class ClientGenerator extends FrameworkAbstractGenerator {
                     ClassName.bestGuess(methodElm.getResponseClassName())
             );
 
-            mb.addStatement("return $N.$N()",
-                    RESPONSE_VAR,
-                    RpcResponse.GET_RESULT_METHOD
-            );
-
+            if (notVoidReturn) {
+                mb.addStatement("return $N.$N()",
+                        RESPONSE_VAR,
+                        RpcResponse.GET_RESULT_METHOD
+                );
+            }
             clientBuilder.addMethod(mb.build());
         }
     }
