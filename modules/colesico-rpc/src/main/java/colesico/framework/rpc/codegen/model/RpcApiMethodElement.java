@@ -37,9 +37,9 @@ public class RpcApiMethodElement {
     /**
      * Method index within class or interface
      */
-    private final int index;
+    protected int index = 0;
 
-    public RpcApiMethodElement(MethodElement originMethod, int index, String rpcName) {
+    public RpcApiMethodElement(MethodElement originMethod, String rpcName) {
         this.originMethod = originMethod;
         this.rpcName = rpcName;
         this.index = index;

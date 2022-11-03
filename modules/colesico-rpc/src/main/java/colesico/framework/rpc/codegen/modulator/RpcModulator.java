@@ -130,8 +130,8 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
                         TeleParameterElement teleParam = (TeleParameterElement) teleParams.get(i);
                         RpcApiParamElement apiParam = rpcApiParams.get(i);
                         if (!getProcessorContext().getTypeUtils().isAssignable(
-                                teleParam.getOriginElement().unwrap().asType(),
-                                apiParam.getOriginParam().unwrap().asType()
+                                teleParam.getOriginElement().getOriginType(),
+                                apiParam.getOriginParam().getOriginType()
                         )) {
                             throw CodegenException.of()
                                     .message("RPC API parameter type mismatch for " + teleParam.getOriginElement().getName() +

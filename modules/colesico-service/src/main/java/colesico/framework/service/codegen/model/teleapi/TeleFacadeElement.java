@@ -151,9 +151,6 @@ public class TeleFacadeElement {
     }
 
     public void addTeleMethod(TeleMethodElement teleMethod) {
-        if (teleMethods.find((tm) -> tm.getName().equals(teleMethod.getName())) != null) {
-            throw CodegenException.of().message("Duplicate tele-method name: " + teleMethod.getName()).element(teleMethod.getServiceMethod().getOriginMethod()).build();
-        }
         teleMethods.add(teleMethod);
         teleMethod.parentTeleFacade = this;
         teleMethod.index = teleMethods.size();

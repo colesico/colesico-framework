@@ -37,6 +37,7 @@ public class RpcApiElement {
 
     public void addMethod(RpcApiMethodElement method) {
         rpcMethods.add(method);
+        method.index = rpcMethods.size();
         method.setParentApi(this);
     }
 
