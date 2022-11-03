@@ -34,13 +34,19 @@ public class RpcApiMethodElement {
      */
     private final String rpcName;
 
-    public RpcApiMethodElement(MethodElement originMethod, String rpcName) {
+    /**
+     * Method index within class or interface
+     */
+    private final int index;
+
+    public RpcApiMethodElement(MethodElement originMethod, int index, String rpcName) {
         this.originMethod = originMethod;
         this.rpcName = rpcName;
+        this.index = index;
     }
 
     public String getRequestClassSimpleName() {
-        return StrUtils.firstCharToUpperCase(originMethod.getName()) + RPC_REQUEST_CLASS_SUFFIX;
+        return StrUtils.firstCharToUpperCase(originMethod.getName()) + RPC_REQUEST_CLASS_SUFFIX+index;
     }
 
     public String getRequestClassName() {
@@ -50,13 +56,13 @@ public class RpcApiMethodElement {
     }
 
     public String getResponseClassSimpleName() {
-        return StrUtils.firstCharToUpperCase(originMethod.getName()) + RPC_RESPONSE_CLASS_SUFFIX;
+        return StrUtils.firstCharToUpperCase(originMethod.getName()) + RPC_RESPONSE_CLASS_SUFFIX+index;
     }
 
     public String getResponseClassName() {
         return parentApi.getOriginInterface().getPackageName() + '.' +
                 parentApi.getEnvelopePackClassSimpleName() + '.' +
-                StrUtils.firstCharToUpperCase(originMethod.getName()) + RPC_RESPONSE_CLASS_SUFFIX;
+                getResponseClassSimpleName();
     }
 
     public void addParameter(RpcApiParamElement param) {

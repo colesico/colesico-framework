@@ -37,6 +37,7 @@ public class RpcApiParser extends FrameworkAbstractParser {
         RpcApiElement rpcApiElm = new RpcApiElement(originIface, rpcApiNamespace, rpcApiName);
 
         List<MethodElement> methods = originIface.getMethods();
+        int index = 0;
         for (MethodElement method : methods) {
             TypeKind retTypeKind = method.getReturnType().getKind();
             if (!(retTypeKind == TypeKind.DECLARED
@@ -47,7 +48,9 @@ public class RpcApiParser extends FrameworkAbstractParser {
                         .element(method.unwrap()).build();
             }
             RpcMethod rpcMethodAnn = method.unwrap().getAnnotation(RpcMethod.class);
-            RpcApiMethodElement me = new RpcApiMethodElement(method, rpcMethodAnn == null ? null : rpcMethodAnn.name());
+            RpcApiMethodElement me = new RpcApiMethodElement(method,
+                    index++,
+                    rpcMethodAnn == null ? null : rpcMethodAnn.name());
             rpcApiElm.addMethod(me);
             parseParams(me);
         }
