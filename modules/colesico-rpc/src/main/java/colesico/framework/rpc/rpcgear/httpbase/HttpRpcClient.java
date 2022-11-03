@@ -1,6 +1,8 @@
 package colesico.framework.rpc.rpcgear.httpbase;
 
+import colesico.framework.assist.StrUtils;
 import colesico.framework.ioc.production.Polysupplier;
+import colesico.framework.rpc.RpcApi;
 import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.RpcException;
 import colesico.framework.rpc.clientapi.*;
@@ -48,6 +50,10 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
     protected EndpointResponse callEndpoint(String endpoint, String rpcNamespace, String rpcApiName, String rpcMethodName, byte[] data) {
         try {
             HttpRequest.BodyPublisher publisher = HttpRequest.BodyPublishers.ofByteArray(data);
+
+            if (StrUtils.isEmpty(rpcNamespace)){
+                rpcNamespace = RpcApi.DEFAULT_NAMESPACE;
+            }
 
             HttpRequest httpRequest = HttpRequest.newBuilder()
                     .uri(URI.create(endpoint))
