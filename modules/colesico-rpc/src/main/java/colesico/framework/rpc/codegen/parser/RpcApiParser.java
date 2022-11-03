@@ -38,8 +38,11 @@ public class RpcApiParser extends FrameworkAbstractParser {
 
         List<MethodElement> methods = originIface.getMethods();
         for (MethodElement method : methods) {
-            TypeKind retTypeKind = method.unwrap().getReturnType().getKind();
-            if (!(retTypeKind == TypeKind.DECLARED || retTypeKind == TypeKind.ARRAY)) {
+            TypeKind retTypeKind = method.getReturnType().getKind();
+            if (!(retTypeKind == TypeKind.DECLARED
+                    || retTypeKind == TypeKind.ARRAY
+                    || retTypeKind == TypeKind.VOID
+            )) {
                 throw CodegenException.of().message("Unsupported return type: " + method.unwrap().getReturnType() + ". Declared or array types support only")
                         .element(method.unwrap()).build();
             }

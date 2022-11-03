@@ -12,6 +12,7 @@ import com.squareup.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.TypeKind;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -98,11 +99,13 @@ public class EnvelopeGenerator extends FrameworkAbstractGenerator {
         TypeSpec.Builder responseBuilder = TypeSpec.classBuilder(method.getResponseClassSimpleName());
         responseBuilder.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
 
-        ParameterizedTypeName responseType = ParameterizedTypeName.get(ClassName.get(RpcResponse.class),
-                TypeName.get(method.getOriginMethod().getReturnType()));
-        responseBuilder.superclass(responseType);
+        if (method.getOriginMethod().getReturnType().getKind() != TypeKind.VOID) {
+            ParameterizedTypeName responseType = ParameterizedTypeName.get(ClassName.get(RpcResponse.class),
+                    TypeName.get(method.getOriginMethod().getReturnType()));
+            responseBuilder.superclass(responseType);
+        }
 
-        generateEnvelopeExtensions(responseBuilder, extKit.getRequestExtensions());
+        generateEnvelopeExtensions(responseBuilder, extKit.getResponseExtensions());
 
         envelopeBuilder.addType(responseBuilder.build());
     }
