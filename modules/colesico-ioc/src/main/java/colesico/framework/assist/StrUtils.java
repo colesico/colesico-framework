@@ -28,6 +28,10 @@ import java.util.StringTokenizer;
  */
 public class StrUtils {
 
+    public static boolean isEmpty(String str){
+        return str == null || str.length()==0;
+    }
+
     public static List<String> split(String str, String separator) {
         List<String> strParts = new ArrayList<>();
         StringTokenizer strTokenizer = new StringTokenizer(str, separator);

@@ -25,31 +25,16 @@ public interface RpcExchange {
     void sendError(RpcError error);
 
     /**
-     * Rpc api and method name to be invoked
-     */
-    final class Operation {
-        private final String apiName;
-        private final String methodName;
-
-        public Operation(String apiName, String methodName) {
-            this.apiName = apiName;
-            this.methodName = methodName;
-        }
-
-        public String getApiName() {
-            return apiName;
-        }
-
-        public String getMethodName() {
-            return methodName;
-        }
+         * Rpc api and method name to be invoked
+         */
+        record Operation(String apiName, String methodName) {
 
         @Override
-        public String toString() {
-            return "Operation{" +
-                    "apiName='" + apiName + '\'' +
-                    ", methodName='" + methodName + '\'' +
-                    '}';
+            public String toString() {
+                return "Operation{" +
+                        "apiName='" + apiName + '\'' +
+                        ", methodName='" + methodName + '\'' +
+                        '}';
+            }
         }
-    }
 }

@@ -1,9 +1,10 @@
 package colesico.framework.rpc.clientapi;
 
 import colesico.framework.ioc.production.Polysupplier;
+import colesico.framework.rpc.RpcApi;
 import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.RpcException;
-import colesico.framework.rpc.RpcName;
+import colesico.framework.rpc.RpcMethod;
 import colesico.framework.rpc.teleapi.RpcRequest;
 import colesico.framework.rpc.teleapi.RpcResponse;
 import org.slf4j.Logger;
@@ -124,20 +125,20 @@ abstract public class AbstractRpcClient implements RpcClient {
         private final Map<String, String> endpointsMap = new HashMap<>();
 
         @Override
-        public void addEndpoint(String apcApiName, String endpoint) {
-            String prev = endpointsMap.put(apcApiName, endpoint);
+        public void addEndpoint(String rpcApiName, String endpoint) {
+            String prev = endpointsMap.put(rpcApiName, endpoint);
             if (prev != null) {
-                throw new RpcException("RPC API " + apcApiName + " endpoint already defined: " + prev);
+                throw new RpcException("RPC API " + rpcApiName + " endpoint already defined: " + prev);
             }
         }
 
         @Override
-        public void addEndpoint(Class<?> apcApiClass, String endpoint) {
-            RpcName rpcName = apcApiClass.getAnnotation(RpcName.class);
-            if (rpcName != null) {
-                addEndpoint(rpcName.value(), endpoint);
+        public void addEndpoint(Class<?> rpcApiClass, String endpoint) {
+            String rpcApiName = rpcApiClass.getAnnotation(RpcApi.class).rpcName();
+            if (rpcApiName != null) {
+                addEndpoint(rpcApiName, endpoint);
             } else {
-                addEndpoint(apcApiClass.getCanonicalName(), endpoint);
+                addEndpoint(rpcApiClass.getCanonicalName(), endpoint);
             }
         }
 

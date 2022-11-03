@@ -25,4 +25,17 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Documented
 public @interface RpcApi {
+
+    String DEFAULT_NAMESPACE = "rpc";
+
+    /**
+     * RpcName shortcut.
+     * If not defined assumed as rpc api interface canonical name
+     */
+    String rpcName() default "";
+
+    /**
+     * Rpc api namespace
+     */
+    String namespace() default DEFAULT_NAMESPACE;
 }

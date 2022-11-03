@@ -56,17 +56,17 @@ public class RpcDispatcher {
             RpcExchange.Operation operation = exchange.resolveOperation();
             logger.debug("RPC operation: {}", operation);
 
-            Map<String, TeleMethod> apiMethods = rpcApiMap.get(operation.getApiName());
+            Map<String, TeleMethod> apiMethods = rpcApiMap.get(operation.apiName());
             if (apiMethods == null) {
-                String errMsg = "RPC API not found: " + operation.getApiName();
+                String errMsg = "RPC API not found: " + operation.apiName();
                 logger.error(errMsg);
                 exchange.sendError(RpcError.of(errMsg));
                 return null;
             }
 
-            TeleMethod teleMethod = apiMethods.get(operation.getMethodName());
+            TeleMethod teleMethod = apiMethods.get(operation.methodName());
             if (teleMethod == null) {
-                String errMsg = "RPC method not found: " + operation.getMethodName();
+                String errMsg = "RPC method not found: " + operation.methodName();
                 logger.error(errMsg);
                 exchange.sendError(RpcError.of(errMsg));
                 return null;
@@ -93,9 +93,9 @@ public class RpcDispatcher {
 
             List<RpcLigature.RpcApi> rpcApiList = ligature.getRpcApiList();
             for (RpcLigature.RpcApi rpcApi : rpcApiList) {
-                Map<String, TeleMethod> prevMethods = rpcApiMap.put(rpcApi.getName(), rpcApi.getTeleMethods());
+                Map<String, TeleMethod> prevMethods = rpcApiMap.put(rpcApi.getRpcName(), rpcApi.getTeleMethods());
                 if (prevMethods != null) {
-                    throw new RpcException("Duplicate RPC API implementation: " + rpcApi.getName());
+                    throw new RpcException("Duplicate RPC API implementation: " + rpcApi.getRpcName());
                 }
             }
         }

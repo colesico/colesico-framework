@@ -17,6 +17,7 @@
 package colesico.framework.rpc.teleapi;
 
 import colesico.framework.rpc.RpcException;
+import colesico.framework.rpc.RpcMethod;
 import colesico.framework.teleapi.TeleMethod;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public final class RpcLigature {
     public static final String API_METHOD = "api";
 
     /**
-     * Supported RPC APIs
+     * Supported RPC APIs (namespace -> api)
      */
     private final List<RpcApi> rpcApiList = new ArrayList<>();
 
@@ -45,11 +46,14 @@ public final class RpcLigature {
     /**
      * Register new RPC API
      *
-     * @param name RPC API name. By default this is an RPC API interface name
-     * @return
+     * @param rpcName API RPC name. By default this is an RPC interface name
      */
-    public static RpcApi api(String name) {
-        return new RpcApi(name);
+    public static RpcApi api(String namespace, String rpcName) {
+        return new RpcApi(namespace, rpcName);
+    }
+
+    public static RpcApi api(String rpcName) {
+        return new RpcApi(null, rpcName);
     }
 
     /**
@@ -58,11 +62,13 @@ public final class RpcLigature {
     public static final class RpcApi {
         public static final String ADD_METHOD = "addMethod";
 
+        private final String namespace;
+
         /**
-         * RPC API name.
-         * An interface name annotated with @RpcApi
+         * API rpc name.
+         * An interface name annotated with {@link RpcMethod}
          */
-        private final String name;
+        private final String rpcName;
 
         /**
          * Map RPC method name to tele-method.
@@ -72,17 +78,23 @@ public final class RpcLigature {
         /**
          * Constructor
          *
-         * @param name RPC interface name
+         * @param namespace API namespace
+         * @param rpcName   RPC interface name
          */
-        public RpcApi(String name) {
-            this.name = name;
+        public RpcApi(String namespace, String rpcName) {
+            this.namespace = namespace;
+            this.rpcName = rpcName;
+        }
+
+        public String getNamespace() {
+            return namespace;
         }
 
         /**
          * Returns RPC interface name
          */
-        public String getName() {
-            return name;
+        public String getRpcName() {
+            return rpcName;
         }
 
         public Map<String, TeleMethod> getTeleMethods() {

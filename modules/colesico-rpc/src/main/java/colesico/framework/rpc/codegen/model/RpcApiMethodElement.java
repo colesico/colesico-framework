@@ -2,6 +2,7 @@ package colesico.framework.rpc.codegen.model;
 
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.model.MethodElement;
+import colesico.framework.rpc.RpcMethod;
 import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,7 +30,7 @@ public class RpcApiMethodElement {
     /**
      * Custom RPC name
      *
-     * @see colesico.framework.rpc.RpcName
+     * @see RpcMethod
      */
     private final String rpcName;
 

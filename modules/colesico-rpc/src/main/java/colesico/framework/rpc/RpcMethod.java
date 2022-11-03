@@ -19,11 +19,11 @@ package colesico.framework.rpc;
 import java.lang.annotation.*;
 
 /**
- * Define custom rpc name
+ * Define custom rpc method name
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Documented
-public @interface RpcName {
-    String value();
+public @interface RpcMethod {
+    String rpcName();
 }

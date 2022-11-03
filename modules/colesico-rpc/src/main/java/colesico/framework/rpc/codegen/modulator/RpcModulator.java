@@ -183,8 +183,12 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
             // .addApi(
             cb.add("\n.$N(\n", RpcLigature.ADD_API_METHOD);
             cb.indent();
-            // RpcLigature.api("rpc.interface.name")
-            cb.add("$T.$N($S)\n", ClassName.get(RpcLigature.class), RpcLigature.API_METHOD, rpcApi.rpcApiName());
+            // RpcLigature.api("ns","rpc.interface.name")
+            if (RpcApi.DEFAULT_NAMESPACE.equals(rpcApi.getNamespace())) {
+                cb.add("$T.$N($S)\n", ClassName.get(RpcLigature.class), RpcLigature.API_METHOD, rpcApi.rpcName());
+            } else {
+                cb.add("$T.$N($S,$S)\n", ClassName.get(RpcLigature.class), RpcLigature.API_METHOD, rpcApi.getNamespace(), rpcApi.rpcName());
+            }
             cb.indent();
             for (RpcApiMethodElement rpcApiMethod : rpcApi.getRpcMethods()) {
                 // .addMethod("methodName", teleMethodFactory()
