@@ -42,7 +42,6 @@ public class RpcApiMethodElement {
     public RpcApiMethodElement(MethodElement originMethod, String rpcName) {
         this.originMethod = originMethod;
         this.rpcName = rpcName;
-        this.index = index;
     }
 
     public String getRequestClassSimpleName() {
@@ -72,7 +71,7 @@ public class RpcApiMethodElement {
 
     public String rpcMethodName() {
         if (StringUtils.isBlank(rpcName)) {
-            return originMethod.getName();
+            return originMethod.getName()+"_"+index;
         } else {
             return rpcName;
         }

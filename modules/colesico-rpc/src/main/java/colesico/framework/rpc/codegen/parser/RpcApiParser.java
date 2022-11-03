@@ -47,7 +47,7 @@ public class RpcApiParser extends FrameworkAbstractParser {
                         .element(method.unwrap()).build();
             }
             RpcMethod rpcMethodAnn = method.unwrap().getAnnotation(RpcMethod.class);
-            RpcApiMethodElement me = new RpcApiMethodElement(method,rpcMethodAnn == null ? null : rpcMethodAnn.name());
+            RpcApiMethodElement me = new RpcApiMethodElement(method, rpcMethodAnn != null ? rpcMethodAnn.name() : null);
             rpcApiElm.addMethod(me);
             parseParams(me);
         }
