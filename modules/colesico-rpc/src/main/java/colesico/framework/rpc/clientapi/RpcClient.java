@@ -14,5 +14,5 @@ public interface RpcClient {
     /**
      * Adds extra parameters and call target
      */
-    <R> RpcResponse<R> call(String rpcApiName, String rpcMethodName, RpcRequest request, Class<? extends RpcResponse<R>> responseType);
+    <R> RpcResponse<R> call(String rpcNamespace, String rpcApiName, String rpcMethodName, RpcRequest request, Class<? extends RpcResponse<R>> responseType);
 }

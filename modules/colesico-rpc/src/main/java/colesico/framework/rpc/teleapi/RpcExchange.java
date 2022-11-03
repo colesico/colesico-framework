@@ -25,16 +25,17 @@ public interface RpcExchange {
     void sendError(RpcError error);
 
     /**
-         * Rpc api and method name to be invoked
-         */
-        record Operation(String apiName, String methodName) {
+     * Rpc namespce, api and method name to be invoked
+     */
+    record Operation(String rpcNamespace, String rpcApiName, String rpcMethodName) {
 
         @Override
-            public String toString() {
-                return "Operation{" +
-                        "apiName='" + apiName + '\'' +
-                        ", methodName='" + methodName + '\'' +
-                        '}';
-            }
+        public String toString() {
+            return "Operation{" +
+                    "rpcNamespace='" + rpcNamespace + '\'' +
+                    ", rpcApiName='" + rpcApiName + '\'' +
+                    ", rpcMethodName='" + rpcMethodName + '\'' +
+                    '}';
         }
+    }
 }

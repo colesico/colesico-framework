@@ -29,13 +29,13 @@ public @interface RpcApi {
     String DEFAULT_NAMESPACE = "rpc";
 
     /**
-     * RpcName shortcut.
+     * RPC name
      * If not defined assumed as rpc api interface canonical name
      */
-    String rpcName() default "";
+    String name() default "";
 
     /**
-     * Rpc api namespace
+     * RPC rpcNamespace
      */
     String namespace() default DEFAULT_NAMESPACE;
 }

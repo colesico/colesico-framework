@@ -18,9 +18,9 @@ public class RpcApiElement {
     private final List<RpcApiMethodElement> rpcMethods = new ArrayList<>();
 
     /**
-     * RPC API Namespace
+     * RPC Namespace
      */
-    private final String namespace;
+    private final String rpcNamespace;
 
     /**
      * Custom RPC name
@@ -29,9 +29,9 @@ public class RpcApiElement {
      */
     private final String rpcName;
 
-    public RpcApiElement(ClassElement originInterface, String namespace, String rpcName) {
+    public RpcApiElement(ClassElement originInterface, String rpcNamespace, String rpcName) {
         this.originInterface = originInterface;
-        this.namespace = namespace;
+        this.rpcNamespace = rpcNamespace;
         this.rpcName = rpcName;
     }
 
@@ -40,8 +40,8 @@ public class RpcApiElement {
         method.setParentApi(this);
     }
 
-    public String getNamespace() {
-        return namespace;
+    public String getRpcNamespace() {
+        return rpcNamespace;
     }
 
     public String rpcName() {

@@ -37,7 +37,9 @@ abstract public class HttpRpcExchange implements RpcExchange {
     @Override
     public Operation resolveOperation() {
         HttpValues<String, String> headers = httpContextProv.get().getRequest().getHeaders();
-        Operation resolution = new Operation(headers.get(HttpRpcClient.RPC_API_HEADER),
+        Operation resolution = new Operation(
+                headers.get(HttpRpcClient.RPC_NAMESPACE_HEADER),
+                headers.get(HttpRpcClient.RPC_API_HEADER),
                 headers.get(HttpRpcClient.RPC_METHOD_HEADER));
         return resolution;
     }

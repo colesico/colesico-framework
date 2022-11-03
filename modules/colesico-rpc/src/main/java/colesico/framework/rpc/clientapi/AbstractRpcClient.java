@@ -4,7 +4,6 @@ import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.rpc.RpcApi;
 import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.RpcException;
-import colesico.framework.rpc.RpcMethod;
 import colesico.framework.rpc.teleapi.RpcRequest;
 import colesico.framework.rpc.teleapi.RpcResponse;
 import org.slf4j.Logger;
@@ -55,10 +54,10 @@ abstract public class AbstractRpcClient implements RpcClient {
 
     abstract protected <T> T deserialize(InputStream is, Class<T> type);
 
-    abstract protected EndpointResponse callEndpoint(String endpoint, String rpcApiName, String rpcMethodName, byte[] data);
+    abstract protected EndpointResponse callEndpoint(String endpoint, String rpcNamespace, String rpcApiName, String rpcMethodName, byte[] data);
 
     @Override
-    public <R> RpcResponse<R> call(String rpcApiName, String rpcMethodName, RpcRequest request, Class<? extends RpcResponse<R>> responseType) {
+    public <R> RpcResponse<R> call(String rpcNamespace, String rpcApiName, String rpcMethodName, RpcRequest request, Class<? extends RpcResponse<R>> responseType) {
         logger.debug("RPC client calls api: {} method: {}", rpcApiName, rpcMethodName);
 
         // Invoke request handlers
@@ -77,7 +76,7 @@ abstract public class AbstractRpcClient implements RpcClient {
         logger.debug("Resolved endpoint {}", endpoint);
 
         // Call endpoint
-        EndpointResponse endpointResp = callEndpoint(endpoint, rpcApiName, rpcMethodName, requestData);
+        EndpointResponse endpointResp = callEndpoint(endpoint, rpcNamespace, rpcApiName, rpcMethodName, requestData);
 
         if (endpointResp.getError() != null) {
             throw createException(endpointResp.getError());
@@ -134,7 +133,7 @@ abstract public class AbstractRpcClient implements RpcClient {
 
         @Override
         public void addEndpoint(Class<?> rpcApiClass, String endpoint) {
-            String rpcApiName = rpcApiClass.getAnnotation(RpcApi.class).rpcName();
+            String rpcApiName = rpcApiClass.getAnnotation(RpcApi.class).name();
             if (rpcApiName != null) {
                 addEndpoint(rpcApiName, endpoint);
             } else {
