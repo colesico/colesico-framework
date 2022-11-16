@@ -1,5 +1,6 @@
 package colesico.framework.rpc.clientapi;
 
+import colesico.framework.assist.StrUtils;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.rpc.RpcApi;
 import colesico.framework.rpc.RpcError;
@@ -133,9 +134,9 @@ abstract public class AbstractRpcClient implements RpcClient {
 
         @Override
         public void addEndpoint(Class<?> rpcApiClass, String endpoint) {
-            String rpcApiName = rpcApiClass.getAnnotation(RpcApi.class).name();
-            if (rpcApiName != null) {
-                addEndpoint(rpcApiName, endpoint);
+            RpcApi rpcApiAnn = rpcApiClass.getAnnotation(RpcApi.class);
+            if (rpcApiAnn != null && !StrUtils.isEmpty(rpcApiAnn.name())) {
+                addEndpoint(rpcApiAnn.name(), endpoint);
             } else {
                 addEndpoint(rpcApiClass.getCanonicalName(), endpoint);
             }
