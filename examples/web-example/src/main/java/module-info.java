@@ -6,7 +6,7 @@ module colesico.framework.example.web {
     requires colesico.framework.webstatic;
     requires colesico.framework.pebble;
 
-    requires logback.classic;
+    requires ch.qos.logback.classic;
 
     exports colesico.framework.example.web.params;
     exports colesico.framework.example.web.staticres;

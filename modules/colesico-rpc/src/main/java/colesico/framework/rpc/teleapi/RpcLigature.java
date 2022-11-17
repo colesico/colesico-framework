@@ -16,7 +16,9 @@
 
 package colesico.framework.rpc.teleapi;
 
+import colesico.framework.rpc.RpcApi;
 import colesico.framework.rpc.RpcException;
+import colesico.framework.rpc.RpcMethod;
 import colesico.framework.teleapi.TeleMethod;
 
 import java.util.ArrayList;
@@ -29,75 +31,86 @@ public final class RpcLigature {
     public static final String API_METHOD = "api";
 
     /**
-     * Supported RPC APIs
+     * Supported RPC APIs (rpcNamespace -> api)
      */
-    private final List<RpcApi> rpcApiList = new ArrayList<>();
+    private final List<RpcApiSpec> rpcApiList = new ArrayList<>();
 
-    public RpcLigature addApi(RpcApi rpcApi) {
+    public RpcLigature addApi(RpcApiSpec rpcApi) {
         rpcApiList.add(rpcApi);
         return this;
     }
 
-    public List<RpcApi> getRpcApiList() {
+    public List<RpcApiSpec> getRpcApiList() {
         return rpcApiList;
     }
 
     /**
      * Register new RPC API
      *
-     * @param name RPC API name. By default this is an RPC API interface name
-     * @return
+     * @param rpcName API RPC name. By default this is an RPC interface name
      */
-    public static RpcApi api(String name) {
-        return new RpcApi(name);
+    public static RpcApiSpec api(String rpcNamespace, String rpcName) {
+        return new RpcApiSpec(rpcNamespace, rpcName);
+    }
+
+    public static RpcApiSpec api(String rpcName) {
+        return new RpcApiSpec(RpcApi.DEFAULT_NAMESPACE, rpcName);
     }
 
     /**
      * RPC API ligature
      */
-    public static final class RpcApi {
-        public static final String ADD_METHOD = "addMethod";
+    public static final class RpcApiSpec {
+        public static final String ADD_RPC_METHOD = "addRpcMethod";
+
+        private final String rpcNamespace;
 
         /**
-         * RPC API name.
-         * An interface name annotated with @RpcApi
+         * API rpc name.
+         * An interface name annotated with {@link RpcMethod}
          */
-        private final String name;
+        private final String rpcName;
 
         /**
          * Map RPC method name to tele-method.
          */
-        private final Map<String, TeleMethod> teleMethods = new HashMap<>();
+        private final Map<String, TeleMethod> rpcMethods = new HashMap<>();
 
         /**
          * Constructor
          *
-         * @param name RPC interface name
+         * @param rpcNamespace API rpcNamespace
+         * @param rpcName   RPC interface name
          */
-        public RpcApi(String name) {
-            this.name = name;
+        public RpcApiSpec(String rpcNamespace, String rpcName) {
+            this.rpcNamespace = rpcNamespace;
+            this.rpcName = rpcName;
+        }
+
+        public String getRpcNamespace() {
+            return rpcNamespace;
         }
 
         /**
          * Returns RPC interface name
          */
-        public String getName() {
-            return name;
+        public String getRpcName() {
+            return rpcName;
         }
 
-        public Map<String, TeleMethod> getTeleMethods() {
-            return teleMethods;
+        public Map<String, TeleMethod> getRpcMethods() {
+            return rpcMethods;
         }
 
         /**
          * Register RPC method.
          *
-         * @param name RPC method name. By default it is a APC API interface method name
+         * @param rpcName method RPC name. By default it is a APC API interface method name
          */
-        public RpcApi addMethod(String name, TeleMethod teleMethod) {
-            TeleMethod prev = teleMethods.put(name, teleMethod);
+        public RpcApiSpec addRpcMethod(String rpcName, TeleMethod teleMethod) {
+            TeleMethod prev = rpcMethods.put(rpcName, teleMethod);
             if (prev != null) {
-                throw new RpcException("Method with name '" + name + "' has already registered");
+                throw new RpcException("Method with name '" + rpcName + "' has already registered");
             }
             return this;
         }

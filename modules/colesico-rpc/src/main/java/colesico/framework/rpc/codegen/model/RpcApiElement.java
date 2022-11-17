@@ -1,6 +1,7 @@
 package colesico.framework.rpc.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassElement;
+import colesico.framework.rpc.RpcMethod;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -17,23 +18,34 @@ public class RpcApiElement {
     private final List<RpcApiMethodElement> rpcMethods = new ArrayList<>();
 
     /**
+     * RPC Namespace
+     */
+    private final String rpcNamespace;
+
+    /**
      * Custom RPC name
      *
-     * @see colesico.framework.rpc.RpcName
+     * @see RpcMethod
      */
     private final String rpcName;
 
-    public RpcApiElement(ClassElement originInterface, String rpcName) {
+    public RpcApiElement(ClassElement originInterface, String rpcNamespace, String rpcName) {
         this.originInterface = originInterface;
+        this.rpcNamespace = rpcNamespace;
         this.rpcName = rpcName;
     }
 
     public void addMethod(RpcApiMethodElement method) {
         rpcMethods.add(method);
+        method.index = rpcMethods.size();
         method.setParentApi(this);
     }
 
-    public String rpcApiName() {
+    public String getRpcNamespace() {
+        return rpcNamespace;
+    }
+
+    public String rpcName() {
         if (StringUtils.isBlank(rpcName)) {
             return originInterface.getName();
         } else {

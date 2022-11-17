@@ -1,16 +1,16 @@
 package colesico.framework.example.rpc.api;
 
 import colesico.framework.rpc.RpcApi;
-import colesico.framework.rpc.RpcName;
+import colesico.framework.rpc.RpcMethod;
 
-@RpcApi
+@RpcApi(namespace = "myrpc", name = "hc")
 public interface HelloServiceRemote {
 
     String HELLO_MESSAGE = "Hello";
 
     String getMessage(Integer id, DataBean dataBean, NameBean nameBean);
 
-    @RpcName("getDB")
+    @RpcMethod(name = "getDB")
     DataBean getDataBean();
 
 }

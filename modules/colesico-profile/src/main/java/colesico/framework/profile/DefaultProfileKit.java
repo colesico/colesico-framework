@@ -48,7 +48,7 @@ public class DefaultProfileKit implements ProfileKit {
      * @return Valid profile or null
      */
     protected InputControlResult controlInputProfile(Profile profile) {
-        throw new UnsupportedOperationException("Default control not implemented");
+        return InputControlResult.accept(profile);
     }
 
     /**
@@ -56,7 +56,7 @@ public class DefaultProfileKit implements ProfileKit {
      * Override this method to get more specific control.
      */
     protected Profile controlOutputProfile(Profile profile) {
-        throw new UnsupportedOperationException("Default control not implemented");
+        return profile;
     }
 
     @Override

@@ -130,8 +130,8 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
                         TeleParameterElement teleParam = (TeleParameterElement) teleParams.get(i);
                         RpcApiParamElement apiParam = rpcApiParams.get(i);
                         if (!getProcessorContext().getTypeUtils().isAssignable(
-                                teleParam.getOriginElement().unwrap().asType(),
-                                apiParam.getOriginParam().unwrap().asType()
+                                teleParam.getOriginElement().getOriginType(),
+                                apiParam.getOriginParam().getOriginType()
                         )) {
                             throw CodegenException.of()
                                     .message("RPC API parameter type mismatch for " + teleParam.getOriginElement().getName() +
@@ -183,13 +183,17 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
             // .addApi(
             cb.add("\n.$N(\n", RpcLigature.ADD_API_METHOD);
             cb.indent();
-            // RpcLigature.api("rpc.interface.name")
-            cb.add("$T.$N($S)\n", ClassName.get(RpcLigature.class), RpcLigature.API_METHOD, rpcApi.rpcApiName());
+            // RpcLigature.api("ns","rpc.interface.name")
+            if (RpcApi.DEFAULT_NAMESPACE.equals(rpcApi.getRpcNamespace())) {
+                cb.add("$T.$N($S)\n", ClassName.get(RpcLigature.class), RpcLigature.API_METHOD, rpcApi.rpcName());
+            } else {
+                cb.add("$T.$N($S,$S)\n", ClassName.get(RpcLigature.class), RpcLigature.API_METHOD, rpcApi.getRpcNamespace(), rpcApi.rpcName());
+            }
             cb.indent();
             for (RpcApiMethodElement rpcApiMethod : rpcApi.getRpcMethods()) {
-                // .addMethod("methodName", teleMethodFactory()
+                // .addMethod("rpcMethodName", teleMethodFactory()
                 cb.add(".$N($S, $N())\n",
-                        RpcLigature.RpcApi.ADD_METHOD,
+                        RpcLigature.RpcApiSpec.ADD_RPC_METHOD,
                         rpcApiMethod.rpcMethodName(),
                         rpcApiMethod.getTeleMethod().getBuilderName()
                 );

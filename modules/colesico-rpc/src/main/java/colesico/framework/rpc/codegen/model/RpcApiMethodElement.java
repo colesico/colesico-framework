@@ -2,6 +2,7 @@ package colesico.framework.rpc.codegen.model;
 
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.model.MethodElement;
+import colesico.framework.rpc.RpcMethod;
 import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,9 +30,14 @@ public class RpcApiMethodElement {
     /**
      * Custom RPC name
      *
-     * @see colesico.framework.rpc.RpcName
+     * @see RpcMethod
      */
     private final String rpcName;
+
+    /**
+     * Method index within class or interface
+     */
+    protected int index = 0;
 
     public RpcApiMethodElement(MethodElement originMethod, String rpcName) {
         this.originMethod = originMethod;
@@ -39,7 +45,7 @@ public class RpcApiMethodElement {
     }
 
     public String getRequestClassSimpleName() {
-        return StrUtils.firstCharToUpperCase(originMethod.getName()) + RPC_REQUEST_CLASS_SUFFIX;
+        return StrUtils.firstCharToUpperCase(originMethod.getName()) + RPC_REQUEST_CLASS_SUFFIX+index;
     }
 
     public String getRequestClassName() {
@@ -49,13 +55,13 @@ public class RpcApiMethodElement {
     }
 
     public String getResponseClassSimpleName() {
-        return StrUtils.firstCharToUpperCase(originMethod.getName()) + RPC_RESPONSE_CLASS_SUFFIX;
+        return StrUtils.firstCharToUpperCase(originMethod.getName()) + RPC_RESPONSE_CLASS_SUFFIX+index;
     }
 
     public String getResponseClassName() {
         return parentApi.getOriginInterface().getPackageName() + '.' +
                 parentApi.getEnvelopePackClassSimpleName() + '.' +
-                StrUtils.firstCharToUpperCase(originMethod.getName()) + RPC_RESPONSE_CLASS_SUFFIX;
+                getResponseClassSimpleName();
     }
 
     public void addParameter(RpcApiParamElement param) {
@@ -65,7 +71,7 @@ public class RpcApiMethodElement {
 
     public String rpcMethodName() {
         if (StringUtils.isBlank(rpcName)) {
-            return originMethod.getName();
+            return originMethod.getName()+"_"+index;
         } else {
             return rpcName;
         }

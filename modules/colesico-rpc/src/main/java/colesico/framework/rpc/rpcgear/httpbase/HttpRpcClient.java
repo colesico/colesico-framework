@@ -1,6 +1,8 @@
 package colesico.framework.rpc.rpcgear.httpbase;
 
+import colesico.framework.assist.StrUtils;
 import colesico.framework.ioc.production.Polysupplier;
+import colesico.framework.rpc.RpcApi;
 import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.RpcException;
 import colesico.framework.rpc.clientapi.*;
@@ -21,6 +23,7 @@ import java.util.Optional;
  */
 abstract public class HttpRpcClient extends AbstractRpcClient {
 
+    public static final String RPC_NAMESPACE_HEADER = "X-RPC-NS";
     public static final String RPC_API_HEADER = "X-RPC-API";
     public static final String RPC_METHOD_HEADER = "X-RPC-Method";
     public static final String RPC_ERROR_HEADER = "X-RPC-Error";
@@ -44,13 +47,18 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
     }
 
     @Override
-    protected EndpointResponse callEndpoint(String endpoint, String rpcApiName, String rpcMethodName, byte[] data) {
+    protected EndpointResponse callEndpoint(String endpoint, String rpcNamespace, String rpcApiName, String rpcMethodName, byte[] data) {
         try {
             HttpRequest.BodyPublisher publisher = HttpRequest.BodyPublishers.ofByteArray(data);
+
+            if (StrUtils.isEmpty(rpcNamespace)){
+                rpcNamespace = RpcApi.DEFAULT_NAMESPACE;
+            }
 
             HttpRequest httpRequest = HttpRequest.newBuilder()
                     .uri(URI.create(endpoint))
                     .header(CONTENT_TYPE_HEADER, RPC_CONTENT_TYPE)
+                    .header(RPC_NAMESPACE_HEADER, URLEncoder.encode(rpcNamespace, StandardCharsets.UTF_8))
                     .header(RPC_API_HEADER, URLEncoder.encode(rpcApiName, StandardCharsets.UTF_8))
                     .header(RPC_METHOD_HEADER, URLEncoder.encode(rpcMethodName, StandardCharsets.UTF_8))
                     .POST(publisher)

@@ -50,7 +50,7 @@ public final class TeleMethodElement {
     protected final Map<String, TeleBatchElement> batches;
 
     /**
-     * Tele-method index in tele-facade
+     * Tele-method index within tele-facade
      */
     protected Integer index;
 
