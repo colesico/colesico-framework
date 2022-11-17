@@ -135,10 +135,13 @@ abstract public class AbstractRpcClient implements RpcClient {
         @Override
         public void addEndpoint(Class<?> rpcApiClass, String endpoint) {
             RpcApi rpcApiAnn = rpcApiClass.getAnnotation(RpcApi.class);
-            if (rpcApiAnn != null && !StrUtils.isEmpty(rpcApiAnn.name())) {
-                addEndpoint(rpcApiAnn.name(), endpoint);
-            } else {
+            if (rpcApiAnn == null) {
+                throw new RpcException("Not a RPC interface");
+            }
+            if (StrUtils.isEmpty(rpcApiAnn.name())) {
                 addEndpoint(rpcApiClass.getCanonicalName(), endpoint);
+            } else {
+                addEndpoint(rpcApiAnn.name(), endpoint);
             }
         }
 
