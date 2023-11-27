@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2020 Vladlen V. Larionov and others as noted.
+ * Copyright © 2014-2023 Vladlen V. Larionov and others as noted.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,41 +15,66 @@
  */
 package colesico.framework.ioc.internal;
 
+import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.Key;
+import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.scope.Fabricator;
-import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.ioc.scope.RefreshScope;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Default process scope implementation
  *
  * @author Vladlen Larionov
  */
-public final class ThreadScopeImpl implements ThreadScope {
+public final class RefreshScopeImpl implements RefreshScope {
 
-    private final ThreadLocal<Map<Key<?>, Object>> beansHolder;
+    private final Map<Key<?>, Object> beans;
+    private final Ioc ioc;
 
-    public ThreadScopeImpl() {
-        beansHolder = ThreadLocal.withInitial(HashMap::new);
+    public RefreshScopeImpl(Ioc ioc) {
+        beans = new ConcurrentHashMap();
+        this.ioc = ioc;
     }
 
     @Override
+    public <T,M> T refresh(Key<T> key, M message) {
+        T bean = (T) beans.remove(key);
+        if (bean != null) {
+            return ioc.instance(key, message);
+        }
+        return null;
+    }
+
+    @Override
+    public <T> T refresh(Class<T> type) {
+        return refresh(new TypeKey<>(type),null);
+    }
+
+    @Override
+    public void refreshAll() {
+        for (Key<?> key : beans.keySet()) {
+            remove(key);
+        }
+    }
+
+
+    @Override
     public <T> void remove(Key<T> key) {
-        beansHolder.get().remove(key);
+        beans.remove(key);
     }
 
     @Override
     public Set<Key<?>> getKeys() {
-        return beansHolder.get().keySet();
+        return beans.keySet();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T, C> T get(Key<T> key, Fabricator<T, C> fabricator, C fabricationContext) {
-        Map beans = beansHolder.get();
         Object obj = beans.computeIfAbsent(key, k -> fabricator.fabricate(fabricationContext));
         return (T) obj;
     }
@@ -57,22 +82,12 @@ public final class ThreadScopeImpl implements ThreadScope {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(Key<T> key) {
-        return (T) beansHolder.get().get(key);
+        return (T) beans.get(key);
     }
 
     @Override
     public <T> void put(Key<T> key, T value) {
-        beansHolder.get().put(key, value);
-    }
-
-    @Override
-    public void init() {
-        beansHolder.get().clear();
-    }
-
-    @Override
-    public void destroy() {
-        beansHolder.remove();
+        beans.put(key, value);
     }
 
 }

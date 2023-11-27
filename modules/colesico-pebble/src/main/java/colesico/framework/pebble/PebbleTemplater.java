@@ -27,9 +27,9 @@ import colesico.framework.weblet.HtmlResponse;
 import colesico.framework.weblet.ViewResponse;
 import colesico.framework.weblet.teleapi.WebletTWContext;
 import colesico.framework.weblet.teleapi.writer.ViewWriter;
-import com.mitchellbosecke.pebble.PebbleEngine;
-import com.mitchellbosecke.pebble.error.PebbleException;
-import com.mitchellbosecke.pebble.template.PebbleTemplate;
+import io.pebbletemplates.pebble.PebbleEngine;
+import io.pebbletemplates.pebble.error.PebbleException;
+import io.pebbletemplates.pebble.template.PebbleTemplate;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Provider;

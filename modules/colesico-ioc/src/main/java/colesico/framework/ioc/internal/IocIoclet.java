@@ -20,6 +20,7 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.conditional.Condition;
 import colesico.framework.ioc.ioclet.*;
 import colesico.framework.ioc.key.TypeKey;
+import colesico.framework.ioc.scope.RefreshScope;
 import colesico.framework.ioc.scope.ThreadScope;
 
 /**
@@ -53,6 +54,22 @@ public final class IocIoclet implements Ioclet {
         };
     }
 
+    private Factory<RefreshScope> getRefreshScopeFactory() {
+        return new SingletonFactory<>() {
+            private Ioc ioc;
+
+            @Override
+            public void setup(AdvancedIoc ioc) {
+                this.ioc = ioc;
+            }
+
+            @Override
+            public RefreshScope create(Object message) {
+                return new RefreshScopeImpl(ioc);
+            }
+        };
+    }
+
     @Override
     public String getId() {
         return IocIoclet.class.getName();
@@ -66,6 +83,10 @@ public final class IocIoclet implements Ioclet {
 
         if (catalog.accept(new TypeKey<>(ThreadScope.class), null, null, false)) {
             catalog.add(getThreadScopeFactory());
+        }
+
+        if (catalog.accept(new TypeKey<>(RefreshScope.class), null, null, false)) {
+            catalog.add(getRefreshScopeFactory());
         }
     }
 

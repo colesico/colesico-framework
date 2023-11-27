@@ -18,7 +18,7 @@ Colesico-IoC is a simple, lightweight and fast dependency injection container fo
 * Producers based instance creation configuration.
 * Dependency injection configuration discovery at container start time (SPI based).
 * Multiple dependency injection configurations support (e.g. for testing purpose).
-* Out-of-the-box Singleton scope(single instance per container), Thread scope (instance per thread) support.
+* Out-of-the-box Singleton scope(single instance per container), Thread scope (instance per thread), RefreshScope support.
 * Named injections support (@Named annotation).
 * Classed injections support (@Classed annotation).
 * Support for multiple dependency implementations (@Polyproduce).
@@ -57,8 +57,7 @@ Obtaining instances with injected dependencies is done using these methods:
 
 * instance - returns class instance
 * provider - returns class instance provider (javax.inject.Provider<>), is used to "deferred" instance obtaining/creation.
-* supplier - returns class instance supplier, is used to "deferred" instance obtaining/creation with the ability to pass
-  a  <<messages,message>>.
+* supplier - returns class instance supplier, is used to "deferred" instance obtaining/creation with the ability to pass a  <<messages,message>>.
 * polysupplier - returns chain of class instance suppliers (colesico.framework.ioc.production.Polysupplier<>)
 
 To specify what instance to return, use the "keys":
@@ -130,11 +129,8 @@ Creating an instance of a class is defined in two ways:
 In this case, the Ioc container will instantiate the instance simply by calling:
 new MyClass (param1, paramN);
 
-If need a custom logic to create an instance, define a public producer
-method that should return the instance.
-All public methods of the producer considered as a
-provider-methods of instances of classes and used by the Ioc container
-for creating instances.
+If need a custom logic to create an instance, define a public producer method that should return the instance.
+All public methods of the producer considered as a provider-methods of instances of classes and used by the Ioc container for creating instances.
 
 Producer example:
 
@@ -169,7 +165,7 @@ public class MyProducer {
 There are two ways to work with implementations:
 
 . Through the producer's producing method
-. Using @KeyType annotation  (or @Produce.keyType)
+. Using @KeyType annotation (or @Produce.keyType)
 
 [source,java]
 ----
@@ -192,6 +188,7 @@ or with keyType feature:
 public class MyProducer {
 }
 ----
+
 This producer will produce MyInterface object implemented by MyImplementation class.
 In this case the object can be obtained from the container by MyInterface type only:
 i.e. ioc.instance(MyInterface.class).
@@ -240,14 +237,14 @@ The framework out-of-the-box supports the following scopes of instances:
 
 * @Singleton - so-called local singleton.
 One instance of class per Ioc container.
-* @ThreadScoped - one instance  per thread.
+* @ThreadScoped - one instance per thread.
 * @Unscoped - no scope defined for instance.
 
 To define the instance scope you must specify a scope annotation(@Singleton и др) either on the instance class or on the producer provider-method.
 
 === Singleton
 
-This scope supports one instance  per IoC container (local singleton).
+This scope supports one instance per IoC container (local singleton).
 
 Example:
 
@@ -275,39 +272,36 @@ In this example the Instances of both classes MyBean1 and MyBean2 are singletons
 === Thread scope
 
 This scope supports one instance per thread.
-When the thread scope is used with threads from a thread pool,
-before using it in a thread retrieved from the pool,
-it is  mandatory need call ThreadScope.init() on the scope instance
-and  call ThreadScope.destroy() before returning the thread to the pool.
+When the thread scope is used with threads from a thread pool, before using it in a thread retrieved from the pool, it is mandatory need call ThreadScope.init() on the scope instance and call ThreadScope.destroy() before returning the thread to the pool.
+
+=== Refresh scope
+
+Refresh scope similar to a singleton, but allows to recreate beans on demand, by invocing RequesetScope.refresh().
+This could be useful, for example, to implement reloading configuration without application restarting.
 
 === Unscoped
 
-An instance of the class associated with @Unscoped annotation
-will be created each time it is requested from the IoC container.
+An instance of the class associated with @Unscoped annotation will be created each time it is requested from the IoC container.
 This is default "scope" when no scope explicitly defined.
 
 == Injectable constructors
 
 Classes for dependency injection may not have an explicitly defined constructor.
 Ioc container will use the default constructor to create instances.
-If more than one constructor declared, the one that will be used for dependency
-injection must be annotated with @Inject annotation, otherwise the Ioc container
-will use the first one in the class.
+If more than one constructor declared, the one that will be used for dependency injection must be annotated with @Inject annotation, otherwise the Ioc container will use the first one in the class.
 If the constructor is the only, the @Inject annotation is optional.
 
-The constructor parameters can be annotated with the @Named, @Classed annotations
-(for named/classed dependencies)
+The constructor parameters can be annotated with the @Named, @Classed annotations (for named/classed dependencies)
 
 == Field/properties based injection
 
 This kind of injection is not supported.
 
 == Messages
-[[messages]]
 
-The messages are an instance supplying conception when it is possible to pass any object
-as a parameter for instance creation. For example this may be used for Logger
-creation with passing an InjectionPoint information.
+[[messages]]
+The messages are an instance supplying conception when it is possible to pass any object as a parameter for instance creation.
+For example this may be used for Logger creation with passing an InjectionPoint information.
 
 To obtain message in producing method use the @Message annotation:
 
@@ -347,9 +341,7 @@ Or with IoC directly:
 
 In some cases it is useful to know the target class where the dependency injected.
 For example, it can be required for the Logger injection.
-To pass Injection point information to dependency producer use a @Contextual annotation,
-and to obtain that Injection point in the producer use a @Message annotation and
-InjectionPoint type parameter.
+To pass Injection point information to dependency producer use a @Contextual annotation, and to obtain that Injection point in the producer use a @Message annotation and InjectionPoint type parameter.
 See logger injection detail example in the ioc-example source code.
 
 Example:
@@ -381,25 +373,21 @@ public class ServiceBean{
 IoC container supports the following lifecycle listeners:
 
 * Post construct.
-The bean public method annotated with _@PostConstruct_ annotation will be
-invoked by the IoC container after a bean has been created and post produce listener
-been invoked.
+The bean public method annotated with _@PostConstruct_ annotation will be invoked by the IoC container after a bean has been created and post produce listener been invoked.
 * Post produce.
 _@PostProduce_ annotation should be applied to public producer method to declare post produce listener.
 The post produce listener invoked by the IoC container to handle just produced instance.
 
 === Listeners control
 
-By default, for the default producing (_@Produce_) post produce life cycle listeners invocation is disabled
-and post construct is enabled. For the producing methods all listener invocation are disabled.
-To enable listeners invocation for a specific instance use _@ListenersControl_ annotation on the producing
-method or _@Produce.postProduce/postConstruct_ on default producing declarations.
+By default, for the default producing (_@Produce_) post produce life cycle listeners invocation is disabled and post construct is enabled.
+For the producing methods all listener invocation are disabled.
+To enable listeners invocation for a specific instance use _@ListenersControl_ annotation on the producing method or _@Produce.postProduce/postConstruct_ on default producing declarations.
 
 === @PostProduce
 
 Post produce listener invoked before @PostConstruct listener.
-Post produce listener method should accept producing instance as message and return the
-same instance (or substituted)
+Post produce listener method should accept producing instance as message and return the same instance (or substituted)
 
 Example:
 
@@ -441,8 +429,7 @@ It allows to specify condition checking class be used to make a decision to incl
 (To use the given producing method or not)
 
 Condition checking class is a class implements colesico.framework.ioc.conditional.Condition interface.
-It's method isMet(ConditionContext context) invoked by IoC builder to determine should a given producing factory
-to be involved or not.
+It's method isMet(ConditionContext context) invoked by IoC builder to determine should a given producing factory to be involved or not.
 
 Example:
 
@@ -551,11 +538,7 @@ Specify annotation processor:
 == Run an application with plugins discovering at startup.
 
 Ioc container discovers producers with ServiceLoader.
-If the application consists of several files (in lib/* dir.), and
-another files (e.g. plugins, modules etc) will be added later without
-rebuilding the main project, in order the IoC container can discover
-the all providers in these separate jar files run the application with
-a command:
+If the application consists of several files (in lib/* dir.), and another files (e.g. plugins, modules etc) will be added later without rebuilding the main project, in order the IoC container can discover the all providers in these separate jar files run the application with a command:
 
 ----
 java -cp lib/*;myapp-1.0.jar my.app.Main

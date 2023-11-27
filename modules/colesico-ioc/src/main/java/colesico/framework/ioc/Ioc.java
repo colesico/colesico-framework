@@ -45,19 +45,19 @@ public interface Ioc {
      * @return the instance if the appropriate factory is found, exception otherwise
      * @see TypeKey
      */
-    <T> T instance(Key<T> key, Object message) throws UnsatisfiedInjectionException;
+    <T, M> T instance(Key<T> key, M message) throws UnsatisfiedInjectionException;
 
     /**
      * Returns instance of T by its class or null if the appropriate factory is not found.
      */
-    <T> T instanceOrNull(Key<T> key, Object message);
+    <T, M> T instanceOrNull(Key<T> key, M message);
 
     /**
      * Returns provider for instance of T by key
      *
      * @return the provider if the appropriate factory is found, exception otherwise
      */
-    <T> Provider<T> provider(Key<T> key, Object message) throws UnsatisfiedInjectionException;
+    <T,M> Provider<T> provider(Key<T> key, M message) throws UnsatisfiedInjectionException;
 
     /**
      * Returns provider if exists or null if the appropriate factory is not found.
@@ -67,7 +67,7 @@ public interface Ioc {
      * @param <T>
      * @return
      */
-    <T> Provider<T> providerOrNull(Key<T> key, Object message);
+    <T,M> Provider<T> providerOrNull(Key<T> key, M message);
 
     /**
      * Returns supplier by key
@@ -125,6 +125,7 @@ public interface Ioc {
 
     /**
      * Shortcut method
+     *
      * @param type
      * @param <T>
      * @return

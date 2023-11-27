@@ -24,12 +24,11 @@ import colesico.framework.example.ioc.logger.MainBeanLOG;
 import colesico.framework.example.ioc.message.MainBeanMSG;
 import colesico.framework.example.ioc.multiplugin.MainBeanMLP;
 import colesico.framework.example.ioc.named.MainBeanNMD;
-import colesico.framework.example.ioc.scope.Singleton3;
+import colesico.framework.example.ioc.scope.*;
 import colesico.framework.example.ioc.substitute.MainBeanREP;
-import colesico.framework.example.ioc.scope.Singleton1;
-import colesico.framework.example.ioc.scope.Singleton2;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
+import colesico.framework.ioc.scope.RefreshScope;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -92,7 +91,7 @@ public class IocExampleTest {
     }
 
     @Test
-    public void testScope() {
+    public void testSingletonScope() {
         Singleton1 s1 = ioc.instance(Singleton1.class);
         assertEquals(s1.getMessage(), "Singleton1-0");
         s1 = ioc.instance(Singleton1.class);
@@ -107,6 +106,31 @@ public class IocExampleTest {
         assertEquals(s3.getMessage(), "Singleton3-0");
         s3 = ioc.instance(Singleton3.class);
         assertEquals(s3.getMessage(), "Singleton3-1");
+
+    }
+
+    @Test
+    public void testThreadScope() {
+        ThreadScoped1 ts = ioc.instance(ThreadScoped1.class);
+        assertEquals(ts.getMessage(), "ThreadScoped1-0");
+        //TODO: add second thread
+    }
+
+    @Test
+    public void testRefreshScope() {
+        RefreshScoped1 rs = ioc.instance(RefreshScoped1.class);
+        assertEquals(rs.getMessage(), "RefreshScoped1-0");
+
+        rs = ioc.instance(RefreshScoped1.class);
+        assertEquals(rs.getMessage(), "RefreshScoped1-1");
+
+        RefreshScope refreshScope = ioc.instance(RefreshScope.class);
+
+        rs = refreshScope.refresh(RefreshScoped1.class);
+        assertEquals(rs.getMessage(), "RefreshScoped1-0");
+
+        rs = ioc.instance(RefreshScoped1.class);
+        assertEquals(rs.getMessage(), "RefreshScoped1-1");
     }
 
     @Test

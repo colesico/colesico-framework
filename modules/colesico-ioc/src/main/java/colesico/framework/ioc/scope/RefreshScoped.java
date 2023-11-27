@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.pebble;
+package colesico.framework.ioc.scope;
 
-import colesico.framework.config.ConfigModel;
-import colesico.framework.config.ConfigPrototype;
-import io.pebbletemplates.pebble.PebbleEngine;
+import java.lang.annotation.*;
 
 /**
- * This config is used to set pebble engine building options
+ * Defines instance scope as refresh scoped
  *
  * @author Vladlen Larionov
  */
-@ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class PebbleOptionsPrototype {
-    abstract public void applyOptions(PebbleEngine.Builder builder);
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Inherited
+@Documented
+@CustomScope(RefreshScope.class)
+public @interface RefreshScoped {
 }

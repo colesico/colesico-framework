@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2020 Vladlen V. Larionov and others as noted.
+ * Copyright © 2014-2023 Vladlen V. Larionov and others as noted.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public final class IocContainerImpl implements AdvancedIoc {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T instance(Key<T> key, Object message) throws UnsatisfiedInjectionException {
+    public <T, M> T instance(Key<T> key, M message) throws UnsatisfiedInjectionException {
         Factory factory = factories.get(key);
         if (factory == null) {
             throw new UnsatisfiedInjectionException(key);
@@ -54,7 +54,7 @@ public final class IocContainerImpl implements AdvancedIoc {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T instanceOrNull(Key<T> key, Object message) {
+    public <T, M> T instanceOrNull(Key<T> key, M message) {
         Factory factory = factories.get(key);
         if (factory == null) {
             return null;
@@ -64,7 +64,7 @@ public final class IocContainerImpl implements AdvancedIoc {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Provider<T> provider(Key<T> key, Object message) throws UnsatisfiedInjectionException {
+    public <T, M> Provider<T> provider(Key<T> key, M message) throws UnsatisfiedInjectionException {
         Factory factory = factories.get(key);
         if (factory == null) {
             throw new UnsatisfiedInjectionException(key);
@@ -74,7 +74,7 @@ public final class IocContainerImpl implements AdvancedIoc {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Provider<T> providerOrNull(Key<T> key, Object message) {
+    public <T, M> Provider<T> providerOrNull(Key<T> key, M message) {
         Factory factory = factories.get(key);
         if (factory == null) {
             return null;
