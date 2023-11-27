@@ -18,6 +18,7 @@ package colesico.framework.example.ioc.scope;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
+import colesico.framework.ioc.scope.RefreshScoped;
 import colesico.framework.ioc.scope.ThreadScoped;
 
 import javax.inject.Singleton;
@@ -26,6 +27,7 @@ import javax.inject.Singleton;
 @Produce(Singleton1.class)
 @Produce(value = Singleton3.class, scoped = Singleton.class)
 @Produce(value = ThreadScoped1.class, scoped = ThreadScoped.class)
+@Produce(value = RefreshScoped1.class, scoped = RefreshScoped.class)
 public class ScopeProducer {
 
     @Singleton

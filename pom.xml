@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright © 2014-2020 Vladlen V. Larionov and others as noted.
+  ~ Copyright © 2014-2023 Vladlen V. Larionov and others as noted.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -169,7 +169,7 @@
 
                 <module>modules/colesico-pebble</module>
                 <module>modules/colesico-restlet</module>
-                <module>modules/colesico-openapi</module>
+<!--                <module>modules/colesico-openapi</module>-->
                 <module>modules/colesico-undertow</module>
             </modules>
         </profile>
