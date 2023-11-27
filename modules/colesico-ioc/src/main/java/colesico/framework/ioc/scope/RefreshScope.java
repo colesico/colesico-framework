@@ -31,10 +31,10 @@ public interface RefreshScope extends Scope {
      *
      * @return bean a new instance if previous one existed
      */
-    <T> T refresh(Key<T> key);
+    <T, M> T refresh(Key<T> key, M message);
 
     /**
-     * Alias for {@link #refresh(Key)}
+     * Alias for {@link #refresh(Key, Object)}
      */
     <T> T refresh(Class<T> type);
 

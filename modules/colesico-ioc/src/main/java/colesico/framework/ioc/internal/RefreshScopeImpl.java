@@ -41,17 +41,17 @@ public final class RefreshScopeImpl implements RefreshScope {
     }
 
     @Override
-    public <T> T refresh(Key<T> key) {
+    public <T,M> T refresh(Key<T> key, M message) {
         T bean = (T) beans.remove(key);
         if (bean != null) {
-            return ioc.instance(key, null);
+            return ioc.instance(key, message);
         }
         return null;
     }
 
     @Override
     public <T> T refresh(Class<T> type) {
-        return refresh(new TypeKey<>(type));
+        return refresh(new TypeKey<>(type),null);
     }
 
     @Override
