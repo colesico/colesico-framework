@@ -76,15 +76,10 @@
         <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
         <versions-maven-plugin.version>2.16.0</versions-maven-plugin.version>
         <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
-        <!-- Do not change javadoc version without tests! -->
         <maven-javadoc-plugin.version>3.6.2</maven-javadoc-plugin.version>
-        <org.ow2.asm.version>9.4</org.ow2.asm.version>
-        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
         <spotbugs-maven-plugin.version>4.7.2.1</spotbugs-maven-plugin.version>
-
-        <!-- Nexus plugin dependency -->
-        <xstream.version>1.4.20</xstream.version>
 
         <!-- Other -->
         <commons-lang3.version>3.14.0</commons-lang3.version>
@@ -284,13 +279,6 @@
                                 </configuration>
                             </execution>
                         </executions>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.ow2.asm</groupId>
-                                <artifactId>asm</artifactId>
-                                <version>${org.ow2.asm.version}</version>
-                            </dependency>
-                        </dependencies>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -316,13 +304,6 @@
                             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
                         </configuration>
-                        <dependencies>
-                            <dependency>
-                                <groupId>com.thoughtworks.xstream</groupId>
-                                <artifactId>xstream</artifactId>
-                                <version>${xstream.version}</version>
-                            </dependency>
-                        </dependencies>
                     </plugin>
                 </plugins>
             </build>
