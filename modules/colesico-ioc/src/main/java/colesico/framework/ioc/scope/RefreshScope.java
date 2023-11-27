@@ -29,7 +29,7 @@ public interface RefreshScope extends Scope {
     /**
      * Recreate existing bean instance referenced by key within the scope.
      *
-     * @return bean a new instance if previous one existed
+     * @return bean new instance if previous one existed, null otherwise
      */
     <T, M> T refresh(Key<T> key, M message);
 
