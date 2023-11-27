@@ -77,10 +77,10 @@
         <versions-maven-plugin.version>2.16.0</versions-maven-plugin.version>
         <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
         <!-- Do not change javadoc version without tests! -->
-        <maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.6.2</maven-javadoc-plugin.version>
         <org.ow2.asm.version>9.4</org.ow2.asm.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-        <nexus-staging-maven-plugin.version>1.6.12</nexus-staging-maven-plugin.version>
+        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
         <spotbugs-maven-plugin.version>4.7.2.1</spotbugs-maven-plugin.version>
 
         <!-- Nexus plugin dependency -->
