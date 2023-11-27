@@ -91,7 +91,7 @@ public class IocExampleTest {
     }
 
     @Test
-    public void testScope() {
+    public void testSingletonScope() {
         Singleton1 s1 = ioc.instance(Singleton1.class);
         assertEquals(s1.getMessage(), "Singleton1-0");
         s1 = ioc.instance(Singleton1.class);
@@ -107,16 +107,30 @@ public class IocExampleTest {
         s3 = ioc.instance(Singleton3.class);
         assertEquals(s3.getMessage(), "Singleton3-1");
 
-        ThreadScoped1 ts = ioc.instance(ThreadScoped1.class);
-        assertEquals(ts.getMessage(),"ThreadScoped1-0");
-        //TODO: add second thread
+    }
 
+    @Test
+    public void testThreadScope() {
+        ThreadScoped1 ts = ioc.instance(ThreadScoped1.class);
+        assertEquals(ts.getMessage(), "ThreadScoped1-0");
+        //TODO: add second thread
+    }
+
+    @Test
+    public void testRefreshScope() {
         RefreshScoped1 rs = ioc.instance(RefreshScoped1.class);
-        assertEquals(rs.getMessage(),"RefreshScoped1-0");
-        assertEquals(rs.getMessage(),"RefreshScoped1-1");
+        assertEquals(rs.getMessage(), "RefreshScoped1-0");
+
+        rs = ioc.instance(RefreshScoped1.class);
+        assertEquals(rs.getMessage(), "RefreshScoped1-1");
+
         RefreshScope refreshScope = ioc.instance(RefreshScope.class);
+
         rs = refreshScope.refresh(RefreshScoped1.class);
-        assertEquals(rs.getMessage(),"RefreshScoped1-0");
+        assertEquals(rs.getMessage(), "RefreshScoped1-0");
+
+        rs = ioc.instance(RefreshScoped1.class);
+        assertEquals(rs.getMessage(), "RefreshScoped1-1");
     }
 
     @Test
