@@ -18,10 +18,10 @@ package colesico.framework.pebble.internal;
 
 import colesico.framework.translation.TranslationBundle;
 import colesico.framework.translation.TranslationKit;
-import com.mitchellbosecke.pebble.extension.NodeVisitor;
-import com.mitchellbosecke.pebble.node.AbstractRenderableNode;
-import com.mitchellbosecke.pebble.template.EvaluationContextImpl;
-import com.mitchellbosecke.pebble.template.PebbleTemplateImpl;
+import io.pebbletemplates.pebble.extension.NodeVisitor;
+import io.pebbletemplates.pebble.node.AbstractRenderableNode;
+import io.pebbletemplates.pebble.template.EvaluationContextImpl;
+import io.pebbletemplates.pebble.template.PebbleTemplateImpl;
 
 import java.io.IOException;
 import java.io.Writer;

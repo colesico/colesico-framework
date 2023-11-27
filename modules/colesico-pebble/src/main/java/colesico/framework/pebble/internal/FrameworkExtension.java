@@ -18,10 +18,10 @@ package colesico.framework.pebble.internal;
 
 import colesico.framework.ioc.Ioc;
 import colesico.framework.translation.TranslationKit;
-import com.mitchellbosecke.pebble.extension.AbstractExtension;
-import com.mitchellbosecke.pebble.extension.Filter;
-import com.mitchellbosecke.pebble.extension.Function;
-import com.mitchellbosecke.pebble.tokenParser.TokenParser;
+import io.pebbletemplates.pebble.extension.AbstractExtension;
+import io.pebbletemplates.pebble.extension.Filter;
+import io.pebbletemplates.pebble.extension.Function;
+import io.pebbletemplates.pebble.tokenParser.TokenParser;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * @author Vladlen Larionov

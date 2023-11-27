@@ -17,9 +17,9 @@
 package colesico.framework.pebble.internal;
 
 import colesico.framework.resource.ResourceKit;
-import com.mitchellbosecke.pebble.error.LoaderException;
-import com.mitchellbosecke.pebble.loader.Loader;
-import com.mitchellbosecke.pebble.utils.PathUtils;
+import io.pebbletemplates.pebble.error.LoaderException;
+import io.pebbletemplates.pebble.loader.Loader;
+import io.pebbletemplates.pebble.utils.PathUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

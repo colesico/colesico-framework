@@ -17,12 +17,12 @@
 package colesico.framework.pebble.internal;
 
 import colesico.framework.translation.TranslationKit;
-import com.mitchellbosecke.pebble.error.ParserException;
-import com.mitchellbosecke.pebble.lexer.Token;
-import com.mitchellbosecke.pebble.lexer.TokenStream;
-import com.mitchellbosecke.pebble.node.RenderableNode;
-import com.mitchellbosecke.pebble.parser.Parser;
-import com.mitchellbosecke.pebble.tokenParser.TokenParser;
+import io.pebbletemplates.pebble.error.ParserException;
+import io.pebbletemplates.pebble.lexer.Token;
+import io.pebbletemplates.pebble.lexer.TokenStream;
+import io.pebbletemplates.pebble.node.RenderableNode;
+import io.pebbletemplates.pebble.parser.Parser;
+import io.pebbletemplates.pebble.tokenParser.TokenParser;
 import org.apache.commons.lang3.StringUtils;
 
 /**

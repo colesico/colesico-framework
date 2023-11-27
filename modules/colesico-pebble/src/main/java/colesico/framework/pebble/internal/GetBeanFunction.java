@@ -1,9 +1,9 @@
 package colesico.framework.pebble.internal;
 
 import colesico.framework.ioc.Ioc;
-import com.mitchellbosecke.pebble.extension.Function;
-import com.mitchellbosecke.pebble.template.EvaluationContext;
-import com.mitchellbosecke.pebble.template.PebbleTemplate;
+import io.pebbletemplates.pebble.extension.Function;
+import io.pebbletemplates.pebble.template.EvaluationContext;
+import io.pebbletemplates.pebble.template.PebbleTemplate;
 
 import java.util.List;
 import java.util.Map;

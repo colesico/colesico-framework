@@ -18,7 +18,7 @@ package colesico.framework.pebble;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
-import com.mitchellbosecke.pebble.PebbleEngine;
+import io.pebbletemplates.pebble.PebbleEngine;
 
 /**
  * This config is used to set pebble engine building options
