@@ -27,9 +27,9 @@ import colesico.framework.service.codegen.model.InterceptionPhases;
 import colesico.framework.service.codegen.model.ServiceFieldElement;
 import colesico.framework.service.codegen.model.ServiceMethodElement;
 import colesico.framework.service.codegen.modulator.Modulator;
-import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.TypeName;
+import com.palantir.javapoet.CodeBlock;
+import com.palantir.javapoet.FieldSpec;
+import com.palantir.javapoet.TypeName;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.DeclaredType;

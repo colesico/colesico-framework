@@ -1,7 +1,7 @@
 module colesico.framework.router {
 
     requires static java.compiler;
-    requires static com.squareup.javapoet;
+    requires static com.palantir.javapoet;
 
     requires transitive colesico.framework.service;
     requires transitive colesico.framework.http;

@@ -25,7 +25,7 @@ module colesico.framework.eventbus {
 
     requires org.apache.commons.lang3;
     requires java.compiler;
-    requires com.squareup.javapoet;
+    requires com.palantir.javapoet;
 
     // classes
     exports colesico.framework.eventbus;

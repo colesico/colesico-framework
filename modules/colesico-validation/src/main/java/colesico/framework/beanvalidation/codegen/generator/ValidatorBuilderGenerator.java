@@ -11,7 +11,7 @@ import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.dslvalidator.builder.FlowControlBuilder;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;

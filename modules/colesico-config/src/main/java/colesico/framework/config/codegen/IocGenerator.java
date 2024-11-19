@@ -27,7 +27,7 @@ import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polyproduce;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Supplier;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

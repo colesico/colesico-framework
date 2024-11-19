@@ -26,7 +26,7 @@ import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.ioclet.Catalog;
 import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.ioclet.Ioclet;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

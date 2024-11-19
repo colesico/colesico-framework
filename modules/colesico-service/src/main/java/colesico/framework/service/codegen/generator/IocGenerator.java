@@ -27,7 +27,7 @@ import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import colesico.framework.teleapi.TeleFacade;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

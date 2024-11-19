@@ -2,7 +2,7 @@ module colesico.framework.security {
 
     // Compile time req.
     requires static java.compiler;
-    requires static com.squareup.javapoet;
+    requires static com.palantir.javapoet;
 
     // Runtime req.
     requires transitive colesico.framework.service;

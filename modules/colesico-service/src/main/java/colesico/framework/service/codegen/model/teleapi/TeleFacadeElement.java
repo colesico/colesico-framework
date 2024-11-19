@@ -24,7 +24,7 @@ import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TeleDriver;
 import colesico.framework.teleapi.TeleFacade;
-import com.squareup.javapoet.CodeBlock;
+import com.palantir.javapoet.CodeBlock;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;

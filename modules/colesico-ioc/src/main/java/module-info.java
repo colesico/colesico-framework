@@ -20,7 +20,7 @@ module colesico.framework.ioc {
 
     // Compile time
     requires static java.compiler;
-    requires static com.squareup.javapoet;
+    requires static com.palantir.javapoet;
 
     // Inherited in client projects
     requires transitive javax.inject;

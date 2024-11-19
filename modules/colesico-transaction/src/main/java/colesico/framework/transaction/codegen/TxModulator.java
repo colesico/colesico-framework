@@ -25,9 +25,9 @@ import colesico.framework.service.codegen.modulator.Modulator;
 import colesico.framework.transaction.TransactionPropagation;
 import colesico.framework.transaction.Transactional;
 import colesico.framework.transaction.TransactionalShell;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.FieldSpec;
+import com.palantir.javapoet.ClassName;
+import com.palantir.javapoet.CodeBlock;
+import com.palantir.javapoet.FieldSpec;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.element.Modifier;

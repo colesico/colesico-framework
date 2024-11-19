@@ -16,7 +16,7 @@
 
 package colesico.framework.assist.codegen;
 
-import com.squareup.javapoet.TypeName;
+import com.palantir.javapoet.TypeName;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;

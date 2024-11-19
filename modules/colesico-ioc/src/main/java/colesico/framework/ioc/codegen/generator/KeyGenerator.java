@@ -27,9 +27,9 @@ import colesico.framework.ioc.key.ClassedKey;
 import colesico.framework.ioc.key.NamedKey;
 import colesico.framework.ioc.key.PPLKey;
 import colesico.framework.ioc.key.TypeKey;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.TypeName;
+import com.palantir.javapoet.ClassName;
+import com.palantir.javapoet.CodeBlock;
+import com.palantir.javapoet.TypeName;
 
 import javax.annotation.processing.ProcessingEnvironment;
 

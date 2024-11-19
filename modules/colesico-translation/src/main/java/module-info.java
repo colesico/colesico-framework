@@ -2,7 +2,7 @@ module colesico.framework.translation {
 
     // Compile time req.
     requires static java.compiler;
-    requires static com.squareup.javapoet;
+    requires static com.palantir.javapoet;
 
     requires org.slf4j;
 

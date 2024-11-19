@@ -4,10 +4,9 @@ module colesico.framework.undertow {
     requires transitive colesico.framework.httpserver;
 
     requires org.slf4j;
-
     requires org.apache.commons.lang3;
 
-    requires undertow.core;
+    requires transitive undertow.core;
     requires xnio.api;
 
 

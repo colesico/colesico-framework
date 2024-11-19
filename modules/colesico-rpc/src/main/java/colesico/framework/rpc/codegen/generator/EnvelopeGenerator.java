@@ -8,7 +8,7 @@ import colesico.framework.rpc.codegen.model.RpcApiMethodElement;
 import colesico.framework.rpc.codegen.model.RpcApiParamElement;
 import colesico.framework.rpc.teleapi.RpcRequest;
 import colesico.framework.rpc.teleapi.RpcResponse;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;

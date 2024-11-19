@@ -2,9 +2,9 @@ package colesico.framework.service.codegen.assist;
 
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.service.codegen.model.teleapi.*;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.TypeName;
+import com.palantir.javapoet.ClassName;
+import com.palantir.javapoet.CodeBlock;
+import com.palantir.javapoet.TypeName;
 
 import javax.lang.model.type.TypeMirror;
 

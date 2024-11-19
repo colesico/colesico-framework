@@ -19,7 +19,7 @@ import colesico.framework.service.codegen.modulator.Modulator;
 module colesico.framework.weblet {
 
     requires static java.compiler;
-    requires static com.squareup.javapoet;
+    requires static com.palantir.javapoet;
 
     requires transitive colesico.framework.telehttp;
 

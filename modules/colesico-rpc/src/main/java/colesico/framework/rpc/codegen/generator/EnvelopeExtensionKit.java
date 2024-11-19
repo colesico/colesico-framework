@@ -2,7 +2,7 @@ package colesico.framework.rpc.codegen.generator;
 
 import colesico.framework.assist.ServiceLocator;
 import colesico.framework.rpc.codegen.model.RpcApiMethodElement;
-import com.squareup.javapoet.TypeSpec;
+import com.palantir.javapoet.TypeSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

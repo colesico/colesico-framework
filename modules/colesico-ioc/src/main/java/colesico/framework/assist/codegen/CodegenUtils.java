@@ -19,7 +19,7 @@ package colesico.framework.assist.codegen;
 import colesico.framework.assist.TypeWrapper;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.assist.codegen.model.ParameterElement;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -58,7 +58,7 @@ public class CodegenUtils {
                 .indent("    ")
                 .build();
 
-        String fullName = javaFile.packageName + "." + typeSpec.name;
+        String fullName = javaFile.packageName() + "." + typeSpec.name();
         try {
             final JavaFileObject sourceFile = procEnv.getFiler().createSourceFile(fullName, linkedElements);
 

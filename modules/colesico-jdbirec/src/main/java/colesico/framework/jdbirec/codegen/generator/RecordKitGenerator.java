@@ -25,7 +25,7 @@ import colesico.framework.jdbirec.codegen.model.ColumnElement;
 import colesico.framework.jdbirec.codegen.model.CompositionElement;
 import colesico.framework.jdbirec.codegen.model.RecordKitElement;
 import colesico.framework.jdbirec.codegen.model.ViewSetElement;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

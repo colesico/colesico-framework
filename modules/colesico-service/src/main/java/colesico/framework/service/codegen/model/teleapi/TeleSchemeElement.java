@@ -3,7 +3,7 @@ package colesico.framework.service.codegen.model.teleapi;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.teleapi.TeleScheme;
-import com.squareup.javapoet.CodeBlock;
+import com.palantir.javapoet.CodeBlock;
 
 /**
  * Tele-scheme element

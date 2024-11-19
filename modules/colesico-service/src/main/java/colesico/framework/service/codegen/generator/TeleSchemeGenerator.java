@@ -6,7 +6,7 @@ import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.teleapi.TeleScheme;
 import colesico.framework.service.codegen.model.teleapi.TeleSchemeElement;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.inject.Inject;

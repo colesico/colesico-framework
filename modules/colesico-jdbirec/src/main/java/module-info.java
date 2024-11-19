@@ -4,7 +4,7 @@ module colesico.framework.jdbirec {
     requires transitive org.jdbi.v3.core;
 
     requires static colesico.framework.ioc;
-    requires static com.squareup.javapoet;
+    requires static com.palantir.javapoet;
 
     requires org.slf4j;
 

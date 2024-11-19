@@ -29,7 +29,7 @@ import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.service.*;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -149,7 +149,7 @@ public class ServiceGenerator {
             ParameterElement similarParam = findSimilarParam(fieldElm, constructorParams);
 
             if (similarParam == null) {
-                ParameterSpec.Builder pb = ParameterSpec.builder(fieldElm.getInjectAs(), fieldElm.getSpec().name);
+                ParameterSpec.Builder pb = ParameterSpec.builder(fieldElm.getInjectAs(), fieldElm.getSpec().name());
                 if (StringUtils.isNotEmpty(fieldElm.getNamed())) {
                     AnnotationSpec.Builder named = AnnotationSpec.builder(Named.class);
                     named.addMember("value", "$S", fieldElm.getNamed());
@@ -161,10 +161,10 @@ public class ServiceGenerator {
                 }
 
                 constructorBuilder.addParameter(pb.build());
-                constructorBuilder.addStatement("this.$N = $N", fieldElm.getSpec().name, fieldElm.getSpec().name);
+                constructorBuilder.addStatement("this.$N = $N", fieldElm.getSpec().name(), fieldElm.getSpec().name());
             } else {
                 String paramName = StrUtils.addPrefix(METHOD_PARAM_PREFIX, similarParam.getName());
-                constructorBuilder.addStatement("this.$N = $N", fieldElm.getSpec().name, paramName);
+                constructorBuilder.addStatement("this.$N = $N", fieldElm.getSpec().name(), paramName);
             }
         }
 

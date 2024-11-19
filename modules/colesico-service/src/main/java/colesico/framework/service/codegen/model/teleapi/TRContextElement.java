@@ -1,6 +1,6 @@
 package colesico.framework.service.codegen.model.teleapi;
 
-import com.squareup.javapoet.CodeBlock;
+import com.palantir.javapoet.CodeBlock;
 
 /**
  * Represents tele data-reading context

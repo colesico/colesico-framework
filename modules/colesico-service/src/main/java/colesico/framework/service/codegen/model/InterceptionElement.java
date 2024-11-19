@@ -16,7 +16,7 @@
 
 package colesico.framework.service.codegen.model;
 
-import com.squareup.javapoet.CodeBlock;
+import com.palantir.javapoet.CodeBlock;
 
 public class InterceptionElement {
     private final CodeBlock interceptorCode;

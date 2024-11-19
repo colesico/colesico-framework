@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package olesico.framework.test.example.transaction;
+package colesico.framework.test.example.transaction;
 
 import colesico.framework.example.transaction.AppService;
 import colesico.framework.example.transaction.TextBuffer;

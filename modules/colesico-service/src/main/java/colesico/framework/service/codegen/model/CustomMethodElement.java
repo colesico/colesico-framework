@@ -16,7 +16,7 @@
 
 package colesico.framework.service.codegen.model;
 
-import com.squareup.javapoet.MethodSpec;
+import com.palantir.javapoet.MethodSpec;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +52,7 @@ public final class CustomMethodElement {
     }
 
     public String getName() {
-        return spec.name;
+        return spec.name();
     }
 
     public ServiceElement getParentService() {

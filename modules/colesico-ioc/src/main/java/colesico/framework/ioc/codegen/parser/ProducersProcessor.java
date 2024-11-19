@@ -24,7 +24,7 @@ import colesico.framework.ioc.codegen.generator.IocletGenerator;
 import colesico.framework.ioc.codegen.generator.SPIGenerator;
 import colesico.framework.ioc.codegen.model.IocletElement;
 import colesico.framework.ioc.production.Producer;
-import com.squareup.javapoet.TypeSpec;
+import com.palantir.javapoet.TypeSpec;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.RoundEnvironment;

@@ -1,12 +1,14 @@
 module colesico.framework.example.web {
 
-    requires colesico.framework.undertow;
-    requires colesico.framework.weblet;
-    requires colesico.framework.restlet;
-    requires colesico.framework.webstatic;
-    requires colesico.framework.pebble;
+    requires transitive colesico.framework.undertow;
+    requires transitive colesico.framework.weblet;
+    requires transitive colesico.framework.restlet;
+    requires transitive colesico.framework.webstatic;
+    requires transitive colesico.framework.pebble;
 
-    requires ch.qos.logback.classic;
+    requires transitive java.net.http;
+
+    requires org.slf4j;
 
     exports colesico.framework.example.web.params;
     exports colesico.framework.example.web.staticres;

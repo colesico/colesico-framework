@@ -19,7 +19,7 @@ import colesico.framework.service.codegen.modulator.Modulator;
 module colesico.framework.restlet {
 
     requires static java.compiler;
-    requires static com.squareup.javapoet;
+    requires static com.palantir.javapoet;
 
     requires transitive colesico.framework.telehttp;
 
@@ -27,7 +27,7 @@ module colesico.framework.restlet {
 
     requires org.apache.commons.lang3;
 
-    requires com.google.gson;
+    requires transitive com.google.gson;
 
     // API
     exports colesico.framework.restlet;

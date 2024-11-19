@@ -5,10 +5,10 @@ import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.service.codegen.model.teleapi.TeleBatchElement;
 import colesico.framework.service.codegen.model.teleapi.TeleBatchFieldElement;
 import colesico.framework.service.codegen.model.teleapi.TeleBatchPackElement;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec;
+import com.palantir.javapoet.FieldSpec;
+import com.palantir.javapoet.MethodSpec;
+import com.palantir.javapoet.TypeName;
+import com.palantir.javapoet.TypeSpec;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;

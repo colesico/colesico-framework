@@ -1,8 +1,9 @@
 module colesico.framework.example.helloworld {
 
-    requires colesico.framework.bundle.web;
-    requires colesico.framework.undertow;
-    requires java.net.http;
+    requires transitive colesico.framework.bundle.web;
+    requires transitive colesico.framework.undertow;
+    requires transitive java.net.http;
+    requires org.slf4j;
 
     exports colesico.framework.example.helloworld;
 }

@@ -16,8 +16,8 @@
 
 package colesico.framework.service.codegen.model;
 
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.TypeName;
+import com.palantir.javapoet.FieldSpec;
+import com.palantir.javapoet.TypeName;
 
 /**
  * Represents service custom filed
@@ -54,7 +54,7 @@ public final class ServiceFieldElement {
     }
 
     public ServiceFieldElement inject() {
-        this.injectAs = spec.type;
+        this.injectAs = spec.type();
         return this;
     }
 
@@ -82,11 +82,11 @@ public final class ServiceFieldElement {
     }
 
     public String getName() {
-        return spec.name;
+        return spec.name();
     }
 
     public String getTypeName() {
-        return spec.type.toString();
+        return spec.type().toString();
     }
 
     public FieldSpec getSpec() {

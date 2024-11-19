@@ -28,9 +28,9 @@ import colesico.framework.service.codegen.model.ServiceMethodElement;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.modulator.Modulator;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeName;
+import com.palantir.javapoet.ClassName;
+import com.palantir.javapoet.MethodSpec;
+import com.palantir.javapoet.TypeName;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;

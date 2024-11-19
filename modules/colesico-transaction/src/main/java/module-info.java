@@ -5,7 +5,7 @@ module colesico.framework.transaction {
     requires org.slf4j;
 
     requires org.apache.commons.lang3;
-    requires com.squareup.javapoet;
+    requires com.palantir.javapoet;
     requires java.compiler;
 
     // API

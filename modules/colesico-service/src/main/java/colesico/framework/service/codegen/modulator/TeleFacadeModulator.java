@@ -20,7 +20,7 @@ import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.*;
 import colesico.framework.teleapi.TeleFacade;
-import com.squareup.javapoet.CodeBlock;
+import com.palantir.javapoet.CodeBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

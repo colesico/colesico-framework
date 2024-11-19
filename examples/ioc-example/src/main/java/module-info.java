@@ -11,4 +11,6 @@ module colesico.framework.example.ioc {
     exports colesico.framework.example.ioc.multiplugin;
     exports colesico.framework.example.ioc.message;
     exports colesico.framework.example.ioc.logger;
+    exports colesico.framework.example.ioc.conditional;
+    exports colesico.framework.example.ioc.lifecycle;
 }

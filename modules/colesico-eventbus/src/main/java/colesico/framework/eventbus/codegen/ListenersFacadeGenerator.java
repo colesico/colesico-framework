@@ -21,7 +21,7 @@ import colesico.framework.eventbus.EventBinding;
 import colesico.framework.eventbus.EventsListener;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -24,7 +24,7 @@ import colesico.framework.translation.AbstractDictionary;
 import colesico.framework.translation.TranslationKey;
 import colesico.framework.translation.TranslationKit;
 import colesico.framework.translation.codegen.model.DictionaryElement;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

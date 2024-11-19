@@ -3,9 +3,9 @@ package colesico.framework.rpc.codegen.generator;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.rpc.codegen.model.RpcApiElement;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeName;
+import com.palantir.javapoet.ClassName;
+import com.palantir.javapoet.MethodSpec;
+import com.palantir.javapoet.TypeName;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.inject.Singleton;

@@ -1,10 +1,12 @@
 module colesico.framework.example.restlet {
 
-    requires colesico.framework.bundle.web;
-    requires colesico.framework.undertow;
-    requires java.net.http;
-    requires colesico.framework.openapi;
+    requires transitive colesico.framework.bundle.web;
+    requires transitive colesico.framework.undertow;
+    requires transitive java.net.http;
+    requires transitive  undertow.core;
 
     exports colesico.framework.example.restlet;
-    opens colesico.framework.example.restlet to gson;
+    exports colesico.framework.example.restlet.customexception;
+
+    opens colesico.framework.example.restlet to com.google.gson;
 }

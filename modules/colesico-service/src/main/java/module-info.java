@@ -20,7 +20,7 @@ module colesico.framework.service {
 
     // Compile time
     requires static java.compiler;
-    requires static com.squareup.javapoet;
+    requires static com.palantir.javapoet;
 
     // Inherited in child projects
     requires transitive colesico.framework.teleapi;

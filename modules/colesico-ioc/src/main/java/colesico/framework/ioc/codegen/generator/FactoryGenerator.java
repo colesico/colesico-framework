@@ -29,7 +29,7 @@ import colesico.framework.ioc.codegen.model.ScopeElement;
 import colesico.framework.ioc.production.InstanceProducingException;
 import colesico.framework.ioc.ioclet.*;
 import colesico.framework.ioc.message.InjectionPoint;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
