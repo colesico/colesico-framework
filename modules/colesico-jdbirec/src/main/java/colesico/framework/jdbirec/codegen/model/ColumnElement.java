@@ -22,6 +22,8 @@ import colesico.framework.jdbirec.Column;
 
 import java.util.Objects;
 
+import static colesico.framework.jdbirec.Column.*;
+
 public class ColumnElement {
 
     /**
@@ -40,35 +42,39 @@ public class ColumnElement {
     protected final String name;
 
     /**
+     * Create column SQL definition
+     */
+    protected String definition;
+
+    /**
      * Mediator class
      *
      * @see colesico.framework.jdbirec.FieldMediator
      */
     protected ClassType mediator;
 
+    protected String insertAs = FIELD_REF;
+    protected String updateAs = INSERT_AS_REF;
+    protected String selectAs = COLUMN_REF;
+
     /**
      * Column value can be imported from result set
+     *
+     * @see Column#importable()
      */
-    protected boolean importable;
+    protected boolean importable = true;
 
     /**
      * Column value can be exported to prepared statement
+     *
+     * @see Column#exportable()
      */
-    protected boolean exportable;
-
-    protected String insertAs;
-    protected String updateAs;
-    protected String selectAs;
+    protected boolean exportable = true;
 
     /**
-     * Create column SQL definition
+     * @see Column#group() ()
      */
-    protected String definition;
-
-    /**
-     * @see Column#virtual()
-     */
-    protected boolean virtual;
+    protected String groupPath = "";
 
     public ColumnElement(FieldElement originField, String name) {
         if (name == null) {
@@ -118,14 +124,6 @@ public class ColumnElement {
         this.definition = definition;
     }
 
-    public boolean isVirtual() {
-        return virtual;
-    }
-
-    public void setVirtual(boolean virtual) {
-        this.virtual = virtual;
-    }
-
     public boolean isImportable() {
         return importable;
     }
@@ -157,6 +155,15 @@ public class ColumnElement {
     public void setUpdateAs(String updateAs) {
         this.updateAs = updateAs;
     }
+
+    public String getGroupPath() {
+        return groupPath;
+    }
+
+    public void setGroupPath(String groupPath) {
+        this.groupPath = groupPath;
+    }
+
 
     @Override
     public boolean equals(Object o) {

@@ -19,7 +19,7 @@ package colesico.framework.jdbirec;
 import java.lang.annotation.*;
 
 /**
- * \@Columns container
+ * Columns container
  */
 @Documented
 @Target(ElementType.FIELD)

@@ -20,7 +20,10 @@ import java.lang.annotation.*;
 import java.sql.ResultSet;
 
 /**
- * Defines record column. Analogue of JPA @Column annotation
+ * Defines record or composition column.
+ * Analogue of JPA @Column annotation.
+ * A record or composition field may be marked with multiple
+ * \@Column annotations, one of which is an actual and the rest mast be virtual
  *
  * @see RecordKitConfig
  */
@@ -38,10 +41,16 @@ public @interface Column {
     String NOP_REF = "@nop";
 
     /**
-     * Column name.
+     * Database column name.
      * \@filed means auto generated name from field value
      */
     String name() default FIELD_REF;
+
+    /**
+     * Column definition for create table sql.
+     * If \@nop is specified column will not be included to  create table definition.
+     */
+    String definition() default "";
 
     /**
      * Value mediator to transmit field value to sql format and back
@@ -75,27 +84,16 @@ public @interface Column {
     String selectAs() default COLUMN_REF;
 
     /**
-     * Column definition for create table sql.
-     * If \@nop is specified column will not be included to the create table definition.
-     */
-    String definition() default "";
-
-    /**
-     * Use this field value in {@link AbstractRecordKit#exportRecord(Object, AbstractRecordKit.FieldReceiver)} method
+     * Use this field value in {@link AbstractRecordKit#exportRecord(Object, AbstractRecordKit.FieldReceiver)} method.
+     * If TRUE, field will be persisted to database
      */
     boolean exportable() default true;
 
     /**
-     * Use this field value in {@link AbstractRecordKit#importRecord(Object, ResultSet)} method,
-     * so field value will not be obtained from sql query result set.
+     * Use this field value in {@link AbstractRecordKit#importRecord(Object, ResultSet)} method.
+     * If TRUE, field will be obtained from sql query result set.
      */
     boolean importable() default true;
-
-    /**
-     * Indicates that the column is not belongs to the record in it is declared and can be linked
-     * to another records with @Composition
-     */
-    boolean virtual() default false;
 
     /**
      * Record views
@@ -103,4 +101,10 @@ public @interface Column {
      * @see RecordKitConfig#views()
      */
     String[] views() default {RecordView.ALL_VIEWS};
+
+    /**
+     * Group name to which this column is belongs within the composition.
+     * @see Composition#groups()
+     */
+    String group() default "";
 }

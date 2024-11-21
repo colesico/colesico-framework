@@ -51,20 +51,27 @@ public class CompositionElement {
      */
     private final FieldElement originField;
 
+    /**
+     * @see Composition#naming()
+     */
+    private String naming = "";
 
     /**
-     * Columns list imported from composition class
+     * @see Composition#groups()
+     */
+    private List<String> groupPaths;
+
+    /**
+     * @see Composition#nullInstace()
+     */
+    private boolean nullInstance=true;
+
+    /**
+     * Columns list exported from composition class
      *
-     * @see Composition#columns()
+     * @see Composition#columnOverriding()
      */
-    private final List<ColumnBindingElement> boundColumns = new ArrayList<>();
-
-    /**
-     * @see Composition#keyColumn()
-     */
-    private String keyColumn;
-
-    private String columnsPrefix = "";
+    private final List<ColumnOverridingElement> columnOverriding = new ArrayList<>();
 
     private final Set<ColumnElement> columns = new LinkedHashSet<>();
 
@@ -123,8 +130,8 @@ public class CompositionElement {
         columnElm.setParentComposition(this);
     }
 
-    public void bindColumn(ColumnBindingElement cb) {
-        boundColumns.add(cb);
+    public void overrideColumn(ColumnOverridingElement oce) {
+        columnOverriding.add(oce);
     }
 
     public RecordKitElement getParentRecordKit() {
@@ -143,16 +150,20 @@ public class CompositionElement {
         return originField;
     }
 
-    public List<ColumnBindingElement> getBoundColumns() {
-        return boundColumns;
+    public List<ColumnOverridingElement> getColumnOverriding() {
+        return columnOverriding;
     }
 
-    public String getKeyColumn() {
-        return keyColumn;
+    public String getNaming() {
+        return naming;
     }
 
-    public String getColumnsPrefix() {
-        return columnsPrefix;
+    public List<String> getGroupPaths() {
+        return groupPaths;
+    }
+
+    public boolean isNullInstance() {
+        return nullInstance;
     }
 
     public Set<ColumnElement> getColumns() {
@@ -171,12 +182,16 @@ public class CompositionElement {
         this.parentComposition = parentComposition;
     }
 
-    public void setKeyColumn(String keyColumn) {
-        this.keyColumn = keyColumn;
+    public void setNaming(String naming) {
+        this.naming = naming;
     }
 
-    public void setColumnsPrefix(String columnsPrefix) {
-        this.columnsPrefix = columnsPrefix;
+    public void setGroupPaths(List<String> groupPaths) {
+        this.groupPaths = groupPaths;
+    }
+
+    public void setNullInstance(boolean nullInstance) {
+        this.nullInstance = nullInstance;
     }
 
     public void setTableName(String tableName) {

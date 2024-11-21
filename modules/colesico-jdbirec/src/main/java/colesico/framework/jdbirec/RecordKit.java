@@ -16,8 +16,6 @@ public interface RecordKit<R> {
 
     /**
      * Return table name
-     *
-     * @return
      */
     String getTableName();
 
@@ -31,7 +29,7 @@ public interface RecordKit<R> {
     RowMapper<R> mapper();
 
     @FunctionalInterface
-    public interface FieldReceiver {
+    interface FieldReceiver {
 
         String SET_METHOD = "set";
         String FIELD_PARAM = "field";

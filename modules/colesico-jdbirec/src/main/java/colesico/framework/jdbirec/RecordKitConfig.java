@@ -49,7 +49,7 @@ public @interface RecordKitConfig {
     /**
      * Base class to be extended by this record kit generated implementation
      */
-    Class<? extends RecordKit> extend() default AbstractRecordKit.class;
+    Class<? extends RecordKit> superclass() default AbstractRecordKit.class;
 
     /**
      * Interpret the composition as join records (select from table join...)

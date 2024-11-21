@@ -289,14 +289,21 @@ public class RecordKitGenerator {
             generateCompositionFromResultSet(subComposition, compositionVar, cbo);
         }
 
-        if (composition.getKeyColumn() == null) {
+        if (composition.isNullInstance()) {
             cb.add(cbo.build());
         } else {
-            cb.add("if ($N.getObject($S) != null) {\n", AbstractRecordKit.RESULT_SET_PARAM, composition.getKeyColumn());
-            cb.indent();
+            for (ColumnElement column : composition.getColumns()) {
+                cb.add("if ($N.getObject($S) != null) {\n", AbstractRecordKit.RESULT_SET_PARAM, column);
+                cb.indent();
+            }
+
             cb.add(cbo.build());
-            cb.unindent();
-            cb.add("}\n");
+
+            for (ColumnElement column : composition.getColumns()) {
+                cb.unindent();
+                cb.add("}\n");
+            }
+
         }
     }
 
@@ -347,7 +354,7 @@ public class RecordKitGenerator {
     }
 
     protected void generateGetJoinTables() {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(AbstractRecordKit.GET_TABLE_ALIASES_METHOD);
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(AbstractRecordKit.GET_TABLES_ALIASES_METHOD);
         mb.addModifiers(Modifier.PUBLIC);
         mb.addAnnotation(Override.class);
         TypeName retTypeName = ParameterizedTypeName.get(ClassName.get(Map.class),

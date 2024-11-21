@@ -17,24 +17,21 @@
 package colesico.framework.jdbirec;
 
 import java.lang.annotation.*;
-import java.sql.ResultSet;
 
 /**
- * Defines composition column to be bound from composition
+ * Column overriding.
+ * Defines new spec for composition column which will be included in the record.
  */
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface BindColumn {
+public @interface ColumnOverriding {
 
     /**
-     * Name of the column to import from the composition or nested compositions
-     */
-    String value() default "";
-
-    /**
-     * value alias
+     * Target composition column name.
+     * Nested composition columns can be referenced with comp1.comp2.column
+     * @see Column#name()
      */
     String column() default "";
 
@@ -44,8 +41,14 @@ public @interface BindColumn {
     String name() default "";
 
     /**
-     * Meditor class overriding
+     * Column definition overriding
+     */
+    String definition() default "";
+
+    /**
+     * Mediator class overriding
      */
     Class<? extends FieldMediator> mediator() default FieldMediator.class;
 
+    // TODO: define other column properties to override
 }

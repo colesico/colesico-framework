@@ -20,7 +20,8 @@ import java.lang.annotation.*;
 
 
 /**
- * Fields composition marker.  (analogue of JPA @Embedded)
+ * Fields composition marker.
+ * Analogue of JPA @Embedded.
  */
 @Documented
 @Target(ElementType.FIELD)
@@ -29,29 +30,45 @@ import java.lang.annotation.*;
 @Inherited
 public @interface Composition {
 
+    // Column name reference
+    String COLUMN_REF="@column";
+
+    // Column field name reference
+    String FILED_REF="@field";
+
     /**
-     * Composition columns name prefix.
-     * This value is used to set the general prefix for names of the composition columns
+     * Composition field renaming strategy.
+     * If not specified, the field names remain unchanged.
+     * Examples:
+     *  foo_@column_bar ->  foo_{@link Column#name()}_bar
+     *  foo_@field_bar -> foo_[composition filed name]_bar
      */
-    String columnsPrefix() default "";
+    String naming() default COLUMN_REF;
 
     /**
-     * Columns to be used from composition class and nested classes.
-     * If specified, imports only listed columns.
-     * If not specified imports all not virtual columns.
+     * Bind composition columns associated with the one of specified group.
+     * For each composition field can be specified several @Column annotations
+     * distinguished by the group name. If the groups is specified,
+     * only the @Column associated with this group will be used from the composition
+     * @see Column#group()
      */
-    BindColumn[] columns() default {};
-
-    //TODO: columns usage flag: AUTO (default), ALL
+    String[] groups() default {""};
 
     /**
-     * If specified creates composition object only if key column value is not null
+     * If FALSE, creates composition object only if any column value is not null,
+     * otherwise the composition object will be created regardless of the column values,
+     * i.e. even if all column values are null
      */
-    String keyColumn() default "";
+    boolean nullInstace() default true;
 
     /**
-     * @return
+     * Record views
      * @see RecordKitConfig#views()
      */
     String[] views() default {RecordView.ALL_VIEWS};
+
+    /**
+     * Columns overriding
+     */
+    ColumnOverriding[] columnOverriding() default {};
 }

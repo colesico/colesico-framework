@@ -30,7 +30,7 @@ abstract public class AbstractRecordKit<R> implements RecordKit<R> {
 
     public static final String EXPORT_RECORD_METHOD = "exportRecord";
     public static final String IMPORT_RECORD_METHOD = "importRecord";
-    public static final String GET_TABLE_ALIASES_METHOD = "getTableAliases";
+    public static final String GET_TABLES_ALIASES_METHOD = "getTablesAliases";
     public static final String GET_RECORD_TOKEN_METHOD = "getRecordToken";
     public static final String GET_COLUMNS_TOKEN_METHOD = "getColumnsToken";
     public static final String GET_UPDATES_TOKEN_METHOD = "getUpdatesToken";
@@ -42,14 +42,21 @@ abstract public class AbstractRecordKit<R> implements RecordKit<R> {
     public static final String FIELD_RECEIVER_PARAM = "fr";
     public static final String RESULT_SET_PARAM = "rs";
 
+    /**
+     *  Exports the value of the record fields for subsequent saving to the database
+     */
     abstract protected void exportRecord(R rec, FieldReceiver fr);
 
+    /**
+     * Imports column values from database query result to the record fields
+     */
     abstract protected R importRecord(R rec, ResultSet rs) throws SQLException;
 
     /**
-     * Returns table aliases to table name mapping
+     * Returns table name to table alias name mappings
+     * for master table and joint record kits
      */
-    abstract protected Map<String, String> getTableAliases();
+    abstract protected Map<String, String> getTablesAliases();
 
     /**
      * Select columns and expressions, separated by comma:  column1,column2, expr(column3)...
@@ -85,7 +92,7 @@ abstract public class AbstractRecordKit<R> implements RecordKit<R> {
                 .replace(VALUES_REF, getValuesToken())
                 .replace(UPDATES_REF, getUpdatesToken());
 
-        Map<String, String> tableAls = getTableAliases();
+        Map<String, String> tableAls = getTablesAliases();
         if (tableAls != null) {
             for (Map.Entry<String, String> jt : tableAls.entrySet()) {
                 String ref = "@" + jt.getKey();

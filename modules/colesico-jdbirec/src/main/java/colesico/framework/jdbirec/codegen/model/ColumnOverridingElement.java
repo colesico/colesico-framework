@@ -1,35 +1,46 @@
 package colesico.framework.jdbirec.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.jdbirec.ColumnOverriding;
 
-public class ColumnBindingElement {
+public class ColumnOverridingElement {
 
     /**
-     * Composition column name
+     * Target composition column path to be overriding
+     * @see ColumnOverriding#column()
      */
-    private final String column;
+    private final String columnPath;
 
     /**
      * Column name overriding
+     * @see ColumnOverriding#name()
      */
     private String name;
 
     /**
+     * Column definition overriding
+     * @see ColumnOverriding#definition()
+     */
+    private String definition;
+
+    /**
      * Mediator overriding
+     * @see ColumnOverriding#mediator()
      */
     private ClassType mediator;
 
     /**
-     * Indicate that this binding element was associated with a column element
+     * Indicate that this overriding element was associated with a column element.
+     * I.e. parser actually founds column element for overriding
      */
     private boolean associated = false;
 
-    public ColumnBindingElement(String column) {
-        this.column = column;
+    public ColumnOverridingElement(String columnPath) {
+        this.columnPath = columnPath;
     }
 
-    public String getColumn() {
-        return column;
+    public String getColumnPath() {
+        return columnPath;
     }
 
     public String getName() {
@@ -38,6 +49,14 @@ public class ColumnBindingElement {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDefinition() {
+        return definition;
+    }
+
+    public void setDefinition(String definition) {
+        this.definition = definition;
     }
 
     public ClassType getMediator() {
@@ -58,8 +77,8 @@ public class ColumnBindingElement {
 
     @Override
     public String toString() {
-        return "ColumnBindingElement{" +
-                "column='" + column + '\'' +
+        return "ColumnOverridingElement{" +
+                "columnPath='" + columnPath + '\'' +
                 ", name='" + name + '\'' +
                 ", mediator=" + mediator +
                 ", associated=" + associated +
