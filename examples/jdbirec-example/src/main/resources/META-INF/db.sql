@@ -1,8 +1,11 @@
 create table if not exists users(
   id numeric
+
   person varchar(16),
+
   home_phn  varchar(32),
   home_addr varchar(32),
+
   wrk_phone  varchar(32),
  );
 delete from users;

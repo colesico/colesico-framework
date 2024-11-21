@@ -260,18 +260,21 @@ public class RecordKitParser extends FrameworkAbstractParser {
 
     }
 
-    protected String applyColumnRenaming(CompositionElement composition, FieldElement columnField, String columnName) {
+    protected String applyColumnRenaming(CompositionElement composition, FieldElement columnField, String columnColumnName) {
+        String columnOriginName = columnColumnName;
         if (StringUtils.isBlank(composition.getRenaming())) {
-            return columnName;
+            return columnColumnName;
         }
 
-        columnName = StringUtils.replace(composition.getRenaming(), Composition.AUTO_REF, composition.getName() + "_" + columnField.getName());
-        columnName = StringUtils.replace(columnName, Composition.COLUMN_REF, columnName);
-        columnName = StringUtils.replace(columnName, Composition.COLUMN_FILED_REF, columnField.getName());
-        columnName = StringUtils.replace(columnName, Composition.COMPOSITION_REF, composition.getName());
-        columnName = StringUtils.replace(columnName, Composition.COMPOSITION_FIELD_REF, composition.getOriginField().getName());
+        columnColumnName = StringUtils.replace(composition.getRenaming(), Composition.AUTO_REF, composition.getName() + "_" + columnField.getName());
+        columnColumnName = StringUtils.replace(columnColumnName, Composition.COLUMN_FILED_REF, columnField.getName());
+        columnColumnName = StringUtils.replace(columnColumnName, Composition.COLUMN_REF, columnOriginName);
+        columnColumnName = StringUtils.replace(columnColumnName, Composition.COMPOSITION_FIELD_REF, composition.getOriginField().getName());
+        columnColumnName = StringUtils.replace(columnColumnName, Composition.COMPOSITION_REF, composition.getName());
 
-        return columnName;
+        logger.debug("Column renaming: {} -> rule '{}' -> {}",columnOriginName,composition.getRenaming(),columnColumnName);
+
+        return columnColumnName;
     }
 
     /**
@@ -312,13 +315,10 @@ public class RecordKitParser extends FrameworkAbstractParser {
             // Construct mediator type
             TypeMirror mediatorTypeMirror = columnAst.getValueTypeMirror(Column::mediator);
             ClassType mediator = null;
+
+            // Test mediatorTypeMirror!=FieldMediator.calss
             if (!CodegenUtils.isAssignable(FieldMediator.class, mediatorTypeMirror, processingEnv)) {
                 mediator = new ClassType(processingEnv, (DeclaredType) mediatorTypeMirror);
-            } else {
-                throw CodegenException.of()
-                        .message("Mediator " + mediatorTypeMirror + " is not subclass of " + FieldMediator.class.getName())
-                        .element(field)
-                        .build();
             }
 
             String insertAs = StringUtils.trim(columnAst.unwrap().insertAs());

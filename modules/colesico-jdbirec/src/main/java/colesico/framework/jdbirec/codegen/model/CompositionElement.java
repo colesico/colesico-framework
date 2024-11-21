@@ -64,7 +64,7 @@ public class CompositionElement {
     /**
      * @see Composition#groups()
      */
-    private List<String> groupPaths;
+    private List<String> groupPaths = new ArrayList<>();
 
     /**
      * @see Composition#nullInstace()

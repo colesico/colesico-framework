@@ -126,7 +126,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>colesico.framework.example.jdbirec.Main</mainClass>
+                            <mainClass>colesico.framework.example.jdbi.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -13,11 +13,41 @@ public class User {
     @Column(name = "person")
     private String name;
 
-    @Composition(
-            columnOverriding = @ColumnOverriding(column = "phone", name = "phn")
-    )
+    @Composition(columnOverriding = @ColumnOverriding(column = "phone", name = "phn"))
     private Contacts home;
 
     @Composition(views = RecordView.FULL_RECORD, renaming = "wrk_@column")
     private Contacts work;
+
+    public Number getId() {
+        return id;
+    }
+
+    public void setId(Number id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Contacts getHome() {
+        return home;
+    }
+
+    public void setHome(Contacts home) {
+        this.home = home;
+    }
+
+    public Contacts getWork() {
+        return work;
+    }
+
+    public void setWork(Contacts work) {
+        this.work = work;
+    }
 }

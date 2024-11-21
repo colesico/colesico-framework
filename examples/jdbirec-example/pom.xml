@@ -94,6 +94,11 @@
                             <artifactId>colesico-service</artifactId>
                             <version>${project.version}</version>
                         </path>
+                        <path>
+                            <groupId>net.colesico.framework</groupId>
+                            <artifactId>colesico-jdbirec</artifactId>
+                            <version>${project.version}</version>
+                        </path>
                         <dependency>
                             <groupId>net.colesico.framework</groupId>
                             <artifactId>colesico-transaction</artifactId>
@@ -132,7 +137,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>colesico.framework.example.jdbi.Main</mainClass>
+                            <mainClass>colesico.framework.example.jdbirec.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
