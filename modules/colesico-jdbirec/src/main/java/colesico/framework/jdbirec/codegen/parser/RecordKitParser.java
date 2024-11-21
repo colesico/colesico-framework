@@ -175,9 +175,9 @@ public class RecordKitParser extends FrameworkAbstractParser {
         return columns;
     }
 
-    protected void parseFieldCompositions(final CompositionElement composition, FieldElement field) {
+    protected void parseFieldCompositions(final CompositionElement composition, FieldElement compositionField) {
 
-        final List<Composition> subcompAnnList = getCompositions(field);
+        final List<Composition> subcompAnnList = getCompositions(compositionField);
 
         for (Composition subcompAnn : subcompAnnList) {
 
@@ -188,12 +188,19 @@ public class RecordKitParser extends FrameworkAbstractParser {
                 continue;
             }
 
-            ClassType subcompType = field.asClassType();
-            CompositionElement subcomposition = new CompositionElement(recordKitElement, subcompType, field);
+            ClassType subcompType = compositionField.asClassType();
+            CompositionElement subcomposition = new CompositionElement(recordKitElement, subcompType, compositionField);
             composition.addSubComposition(subcomposition);
 
-            // Set naming
-            subcomposition.setNaming(subcompAst.unwrap().naming());
+            // Set name
+            if (StringUtils.isNotBlank(subcompAnn.name())) {
+                subcomposition.setName(StringUtils.trim(subcompAnn.name()));
+            } else {
+                subcomposition.setName(compositionField.getName());
+            }
+
+            // Set renaming
+            subcomposition.setRenaming(subcompAst.unwrap().renaming());
 
             // Set null instance
             subcomposition.setNullInstance(subcompAst.unwrap().nullInstace());
@@ -253,13 +260,16 @@ public class RecordKitParser extends FrameworkAbstractParser {
 
     }
 
-    protected String applyColumnNaming(CompositionElement composition, FieldElement columnField, String columnName) {
-        if (StringUtils.isBlank(composition.getNaming())) {
+    protected String applyColumnRenaming(CompositionElement composition, FieldElement columnField, String columnName) {
+        if (StringUtils.isBlank(composition.getRenaming())) {
             return columnName;
         }
 
-        columnName = StringUtils.replace(composition.getNaming(), Composition.COLUMN_REF, columnName);
-        columnName = StringUtils.replace(columnName, Composition.FILED_REF, columnField.getName());
+        columnName = StringUtils.replace(composition.getRenaming(), Composition.AUTO_REF, composition.getName() + "_" + columnField.getName());
+        columnName = StringUtils.replace(columnName, Composition.COLUMN_REF, columnName);
+        columnName = StringUtils.replace(columnName, Composition.COLUMN_FILED_REF, columnField.getName());
+        columnName = StringUtils.replace(columnName, Composition.COMPOSITION_REF, composition.getName());
+        columnName = StringUtils.replace(columnName, Composition.COMPOSITION_FIELD_REF, composition.getOriginField().getName());
 
         return columnName;
     }
@@ -349,7 +359,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
             // Apply naming strategy from current composition to root
             CompositionElement c = composition;
             while (c != null) {
-                columnName = applyColumnNaming(c, field, columnName);
+                columnName = applyColumnRenaming(c, field, columnName);
                 c = c.getParentComposition();
             }
 

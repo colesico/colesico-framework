@@ -195,8 +195,9 @@
                 <module>examples/web-example</module>
                 <module>examples/eventbus-example</module>
                 <module>examples/transaction-example</module>
-                <module>examples/jdbi-example</module>
                 <module>examples/jdbc-example</module>
+                <module>examples/jdbi-example</module>
+                <module>examples/jdbirec-example</module>
                 <module>examples/slf4j-example</module>
                 <module>examples/translation-example</module>
                 <module>examples/rpc-example</module>

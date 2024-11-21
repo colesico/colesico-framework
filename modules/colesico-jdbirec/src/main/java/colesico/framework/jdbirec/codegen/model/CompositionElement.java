@@ -52,9 +52,14 @@ public class CompositionElement {
     private final FieldElement originField;
 
     /**
-     * @see Composition#naming()
+     * @see Composition#name()
      */
-    private String naming = "";
+    private String name = "";
+
+    /**
+     * @see Composition#renaming()
+     */
+    private String renaming = "";
 
     /**
      * @see Composition#groups()
@@ -154,8 +159,16 @@ public class CompositionElement {
         return columnOverriding;
     }
 
-    public String getNaming() {
-        return naming;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getRenaming() {
+        return renaming;
     }
 
     public List<String> getGroupPaths() {
@@ -182,8 +195,8 @@ public class CompositionElement {
         this.parentComposition = parentComposition;
     }
 
-    public void setNaming(String naming) {
-        this.naming = naming;
+    public void setRenaming(String renaming) {
+        this.renaming = renaming;
     }
 
     public void setGroupPaths(List<String> groupPaths) {
