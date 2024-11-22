@@ -43,7 +43,7 @@ public @interface RecordKit {
     /**
      * Record views definition
      */
-    RecordView[] views() default {};
+    RecordView[] views() default {@RecordView};
 
     /**
      * Interpret the composition as join records (select from table join...)

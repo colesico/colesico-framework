@@ -20,7 +20,7 @@ public class User {
     )
     private Contacts home;
 
-    @Composition(viewsStr = RecordView.FULL_VIEW, renaming = "wrk_@column")
+    @Composition(renaming = "wrk_@column")
     private Contacts work;
 
     public Number getId() {

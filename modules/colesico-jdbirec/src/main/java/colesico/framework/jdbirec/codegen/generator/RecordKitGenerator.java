@@ -21,10 +21,7 @@ import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.*;
-import colesico.framework.jdbirec.codegen.model.ColumnElement;
-import colesico.framework.jdbirec.codegen.model.CompositionElement;
-import colesico.framework.jdbirec.codegen.model.RecordKitElement;
-import colesico.framework.jdbirec.codegen.model.ViewSetElement;
+import colesico.framework.jdbirec.codegen.model.*;
 import com.palantir.javapoet.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -59,7 +56,7 @@ public class RecordKitGenerator {
         if (RecordView.DEFAULT_VIEW.equals(recordKitElement.getView())) {
             return recordKitElement.getOriginClass().getSimpleName() + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
         } else {
-            String viewPart = StrUtils.firstCharToUpperCase(recordKitElement.getView());
+            String viewPart = StrUtils.firstCharToUpperCase(recordKitElement.getView().getName());
             return recordKitElement.getOriginClass().getSimpleName() + viewPart + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
         }
     }
@@ -546,7 +543,7 @@ public class RecordKitGenerator {
     }
 
     public void generate(ViewSetElement views) {
-        for (Map.Entry<String, RecordKitElement> pr : views.getRecordKits().entrySet()) {
+        for (Map.Entry<RecordViewElement, RecordKitElement> pr : views.getRecordKits().entrySet()) {
             generateRecord(pr.getValue());
         }
     }

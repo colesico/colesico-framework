@@ -40,13 +40,11 @@ public @interface Column {
     String UPDATE_AS_REF = "@updateAs";
     String NOP_REF = "@nop";
 
-    String FIELD_GROUP = "@field";
-
     /**
      * Database column name.
-     * \@filed means auto generated name from field value
+     * Default - auto generated column name from field name
      */
-    String name() default FIELD_REF;
+    String name() default "";
 
     /**
      * Column definition for create table sql.

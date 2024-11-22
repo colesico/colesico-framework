@@ -53,7 +53,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
      */
     protected void checkViewName(final String viewName, Element parentElement) {
         if (!viewName.matches("[A-Za-z0-9]+")) {
-            throw CodegenException.of().message("Invalid record view name. Alphanumeric chars expected: " + p).element(parentElement).build();
+            throw CodegenException.of().message("Invalid record view name. Alphanumeric chars expected: " + viewName).element(parentElement).build();
         }
     }
 
@@ -116,22 +116,11 @@ public class RecordKitParser extends FrameworkAbstractParser {
     }
 
     /**
-     * Finds the composition group path matches the column group
+     * Check tags accepted by filters
      */
-    protected boolean isInGroup(CompositionElement columnComposition, String columnGroup) {
-
-        // Lookup compositions from current to root
-        CompositionElement c = columnComposition;
-        while (c != null) {
-            for (String compositionGroup : c.getTagFilter()) {
-                if (compositionGroup.equals(columnGroup)) {
-                    return true;
-                }
-            }
-            c = c.getParentComposition();
-
-        }
-        return false;
+    protected boolean acceptTagsByFilter(CompositionElement columnComposition, Set<String> tags) {
+        //TODO: implement filter
+        return true;
     }
 
     protected boolean hasParentOverridings(CompositionElement cmp) {
@@ -171,8 +160,10 @@ public class RecordKitParser extends FrameworkAbstractParser {
 
             Set<String> tags = buildTags(parentComp, compField, compAst.unwrap().tags());
 
-            // Check tags
-            // TODO: check tags
+            // Check tags by filter
+            if (!acceptTagsByFilter(parentComp,tags)){
+                continue;
+            }
 
             ClassType compType = compField.asClassType();
             CompositionElement comp = new CompositionElement(recordKitElement, compType, compField, tags);
@@ -278,39 +269,31 @@ public class RecordKitParser extends FrameworkAbstractParser {
     protected void parseFieldColumns(final CompositionElement parentComp, FieldElement columnField) {
         logger.debug("Parse columns on field: {} of composition: {}", columnField.getName(), parentComp);
         final List<AnnotationAssist<Column>> columns = findFieldColumns(columnField);
-        final Set<String> fieldGroups = new HashSet<>();
+
+        boolean columnBound = false;
 
         for (AnnotationAssist<Column> columnAst : columns) {
 
+            if (columnBound) {
+                throw CodegenException.of()
+                        .message("Duplicate field column definition: " + columnAst.unwrap())
+                        .element(columnField)
+                        .build();
+            }
+
             Set<String> tags = buildTags(parentComp, columnField, columnAst.unwrap().tags());
 
-            // Check tags
-            // TODO: check tags
-
-            // Build group path
-            String groupPath = buildColumnTags(parentComp, columnField, columnAst);
-            if (fieldGroups.contains(groupPath)) {
-                throw CodegenException.of()
-                        .message("Duplicate column group '" + groupPath
-                                + "' on field '" + parentComp.getOriginType().getName() + '.' +
-                                columnField.getName() + "'.")
-                        .element(parentComp.getOriginField()).build();
-            }
-            fieldGroups.add(groupPath);
-            logger.debug("Group path: {}", groupPath);
-
-            // Check group path
-            if (!isInGroup(parentComp, groupPath)) {
-                logger.debug("Skipped by group: {}", groupPath);
+            // Check tags by filter
+            if (!acceptTagsByFilter(parentComp,tags)){
                 continue;
             }
 
             // Construct origin column name
-            String columnName;
-            if (columnAst.unwrap().name().equals(Column.FIELD_REF) || StringUtils.isBlank(columnAst.unwrap().name())) {
-                columnName = StrUtils.toSeparatorNotation(columnField.getName(), '_');
+            String name;
+            if (StringUtils.isBlank(columnAst.unwrap().name())) {
+                name = StrUtils.toSeparatorNotation(columnField.getName(), '_');
             } else {
-                columnName = StringUtils.trim(columnAst.unwrap().name());
+                name = StringUtils.trim(columnAst.unwrap().name());
             }
 
             // Construct column definition
@@ -345,17 +328,17 @@ public class RecordKitParser extends FrameworkAbstractParser {
             }
 
             // Find and apply column overriding
-            List<ColumnOverridingElement> overridingList = findColumnOverridings(parentComp, columnName);
+            List<ColumnOverridingElement> overridingList = findColumnOverridings(parentComp, name);
             for (ColumnOverridingElement overriding : overridingList) {
-                logger.debug("Overriding for column: {}; overriding: {}", columnName, overriding);
+                logger.debug("Overriding for column: {}; overriding: {}", name, overriding);
                 overriding.setAssociated(true);
 
                 if (overriding.getName() != null) {
-                    columnName = overriding.getName();
+                    name = overriding.getName();
                 }
 
                 if (overriding.getDefinition() != null) {
-                    columnName = overriding.getDefinition();
+                    name = overriding.getDefinition();
                 }
 
                 if (overriding.getMediator() != null) {
@@ -366,13 +349,13 @@ public class RecordKitParser extends FrameworkAbstractParser {
             // Apply naming strategy from current composition to root
             CompositionElement c = parentComp;
             while (c != null) {
-                columnName = applyColumnRenaming(c, columnField, columnName);
+                name = applyColumnRenaming(c, columnField, name);
                 c = c.getParentComposition();
             }
 
             // Build column element
 
-            ColumnElement column = new ColumnElement(columnField, columnName, groupPath,tags);
+            ColumnElement column = new ColumnElement(columnField, name, tags);
             parentComp.addColumn(column);
 
             column.setDefinition(definition);
@@ -421,6 +404,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
                 }
             }
 
+            columnBound = true;
         }
     }
 
