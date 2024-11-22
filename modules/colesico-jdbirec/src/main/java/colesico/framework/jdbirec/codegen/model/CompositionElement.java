@@ -20,6 +20,7 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.Composition;
+import colesico.framework.jdbirec.RecordView;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -57,19 +58,14 @@ public class CompositionElement {
     private String name = "";
 
     /**
+     * @see Composition#tagFilter()
+     */
+    private String tagFilter = RecordView.ALL_TAGS_FILTER;
+
+    /**
      * @see Composition#renaming()
      */
     private String renaming = "";
-
-    /**
-     * @see Composition#groups()
-     */
-    private List<String> groupPaths = new ArrayList<>();
-
-    /**
-     * @see Composition#nullInstace()
-     */
-    private boolean nullInstance=true;
 
     /**
      * Columns list exported from composition class
@@ -77,6 +73,17 @@ public class CompositionElement {
      * @see Composition#columnOverriding()
      */
     private final List<ColumnOverridingElement> columnOverriding = new ArrayList<>();
+
+    /**
+     * @see Composition#nullInstace()
+     */
+    private boolean nullInstance = true;
+
+    /**
+     * @see Composition#tags()
+     */
+    protected final Set<String> tags;
+
 
     private final Set<ColumnElement> columns = new LinkedHashSet<>();
 
@@ -88,10 +95,14 @@ public class CompositionElement {
      */
     private String tableName;
 
-    public CompositionElement(RecordKitElement parentRecordKit, ClassType originType, FieldElement originField) {
+    public CompositionElement(RecordKitElement parentRecordKit,
+                              ClassType compositionType,
+                              FieldElement compositionField,
+                              Set<String> compositionTags) {
         this.parentRecordKit = parentRecordKit;
-        this.originType = originType;
-        this.originField = originField;
+        this.originType = compositionType;
+        this.originField = compositionField;
+        this.tags = compositionTags;
     }
 
     /**
@@ -131,6 +142,7 @@ public class CompositionElement {
                             " Parent composition: " + (this.getParentComposition() != null ? this.getParentComposition() : "null"))
                     .element(columnElm.getOriginField()).build();
         }
+
         columns.add(columnElm);
         columnElm.setParentComposition(this);
     }
@@ -171,8 +183,8 @@ public class CompositionElement {
         return renaming;
     }
 
-    public List<String> getGroupPaths() {
-        return groupPaths;
+    public String getTagFilter() {
+        return tagFilter;
     }
 
     public boolean isNullInstance() {
@@ -199,8 +211,8 @@ public class CompositionElement {
         this.renaming = renaming;
     }
 
-    public void setGroupPaths(List<String> groupPaths) {
-        this.groupPaths = groupPaths;
+    public void setTagFilter(String tagFilter) {
+        this.tagFilter = tagFilter;
     }
 
     public void setNullInstance(boolean nullInstance) {
@@ -214,8 +226,8 @@ public class CompositionElement {
     @Override
     public String toString() {
         return "CompositionElement{" +
-                "originClass=" + originType +
-                ", originField=" + originField +
+                "originType=" + originType +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

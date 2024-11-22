@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * Basic record kit class
  */
-abstract public class AbstractRecordKit<R> implements RecordKit<R> {
+abstract public class AbstractRecordKitApi<R> implements RecordKitApi<R> {
 
     public static final String EXPORT_RECORD_METHOD = "exportRecord";
     public static final String IMPORT_RECORD_METHOD = "importRecord";

@@ -7,7 +7,7 @@ public class Contacts {
     @Column
     private String phone;
 
-    @Column(name = "addr")
+    @Column(name = "adr")
     private String address;
 
     public String getPhone() {

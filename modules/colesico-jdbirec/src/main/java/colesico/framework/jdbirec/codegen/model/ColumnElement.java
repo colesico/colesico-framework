@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2020 Vladlen V. Larionov and others as noted.
+ * Copyright © 2014-2024 Vladlen V. Larionov and others as noted.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,9 @@ import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.Column;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import static colesico.framework.jdbirec.Column.*;
 
@@ -72,16 +74,17 @@ public class ColumnElement {
     protected boolean exportable = true;
 
     /**
-     * @see Column#group() ()
+     * @see Column#tags()
      */
-    protected String groupPath = "";
+    protected final Set<String> tags;
 
-    public ColumnElement(FieldElement originField, String name) {
-        if (name == null) {
+    public ColumnElement(FieldElement columnField, String columnName, Set<String> columnTags) {
+        if (columnName == null) {
             throw new RuntimeException("Name is null");
         }
-        this.name = name;
-        this.originField = originField;
+        this.name = columnName;
+        this.tags = columnTags;
+        this.originField = columnField;
     }
 
     public FieldElement getOriginField() {
@@ -156,14 +159,9 @@ public class ColumnElement {
         this.updateAs = updateAs;
     }
 
-    public String getGroupPath() {
-        return groupPath;
+    public Set<String> getTags() {
+        return tags;
     }
-
-    public void setGroupPath(String groupPath) {
-        this.groupPath = groupPath;
-    }
-
 
     @Override
     public boolean equals(Object o) {

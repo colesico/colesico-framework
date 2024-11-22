@@ -19,16 +19,14 @@ package colesico.framework.jdbirec.codegen.model;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RecordKitElement {
+
     /**
-     * View name associated with this kit
+     * View associated with this kit
      */
-    private final String view;
+    private final RecordViewElement view;
 
     /**
      * Origin record kit interface
@@ -58,17 +56,17 @@ public class RecordKitElement {
     /**
      * Class that extended by this kit implementation  (default is AbstractRecordKit)
      */
-    private ClassType extendClass;
+    private ClassType superclass;
 
     private final CompositionElement rootComposition;
 
-    public RecordKitElement(String view, ClassElement originClass, ClassType recordType, ClassType extend, String tableName) {
+    public RecordKitElement(RecordViewElement view, ClassElement originClass, ClassType recordType, ClassType extend, String tableName) {
         this.view = view;
         this.originClass = originClass;
         this.recordType = recordType;
-        this.extendClass = extend;
+        this.superclass = extend;
         this.tableName = tableName;
-        this.rootComposition = new CompositionElement(this, recordType, null);
+        this.rootComposition = new CompositionElement(this, recordType, null, Set.of());
     }
 
     public CompositionElement getRootComposition() {
@@ -97,11 +95,11 @@ public class RecordKitElement {
         return tableName;
     }
 
-    public ClassType getExtendClass() {
-        return extendClass;
+    public ClassType getSuperclass() {
+        return superclass;
     }
 
-    public String getView() {
+    public RecordViewElement getView() {
         return view;
     }
 

@@ -33,7 +33,7 @@ public class AppService {
      */
     private final Provider<Handle> handleProv;
 
-    @Named(RecordView.BRIEF_RECORD)
+    @Named(RecordView.BRIEF_VIEW)
     private final UserDao userDao;
 
     public AppService(Provider<Handle> handleProv, UserDao userDao) {

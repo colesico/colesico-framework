@@ -1,24 +1,58 @@
-/*
- * Copyright © 2014-2020 Vladlen V. Larionov and others as noted.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package colesico.framework.jdbirec;
 
-public class RecordView {
-    public static final String DEFAULT_VIEW = "default";
-    public static final String ALL_VIEWS = "*";
-    public static final String FULL_RECORD = "full";
-    public static final String BRIEF_RECORD = "brief";
+
+import java.lang.annotation.*;
+
+/**
+ * Record View.
+ * <p>
+ * To be able to work within the same record with different sets of fields of this record,
+ * the system of views is used. Each view includes a specific set of record fields.
+ * View name must consist of letters and numbers only.
+ */
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+public @interface RecordView {
+
+    String DEFAULT_VIEW = "default";
+    String FULL_VIEW = "full";
+    String BRIEF_VIEW = "brief";
+
+    String ALL_TAGS_FILTER = "*";
+
+    /**
+     * View name
+     */
+    String name() default DEFAULT_VIEW;
+
+    /**
+     * View tag filter
+     * <p>
+     * Bind to record a columns and compositions associated with
+     * the tags accepted by this filter.
+     * </p>
+     * <p>
+     * For each record field can be specified several columns or
+     * compositions with different tags. Only the columns and compositions
+     * with acceptable by filter tags will be bound to the record.
+     * </p>
+     * <p>
+     * It is possible to specify  {@link Composition#tags()}
+     * or {@link Column#tags()} as global tags or local ones.
+     * Global tags begin with the '#' symbol, i.e. #theTag
+     * Local tags are automatically converted to global tags
+     * by adding '#' symbol and  the set of fields of the path
+     * to the record field, i.e. theTag -> #foo.bar.theTag
+     * </p>
+     * <p>
+     * A 'field' tag, consisting of the set of fields of the path to the record field,
+     * is always automatically added to the set of tags
+     * i.e. #foo.bar.theField
+     * </p>
+     *
+     * @see Column#tags()
+     * @see Composition#tags()
+     * @see Composition#tagFilter()
+     */
+    String tagFilter() default ALL_TAGS_FILTER;
 }

@@ -80,6 +80,7 @@ public class ColumnOverridingElement {
         return "ColumnOverridingElement{" +
                 "columnPath='" + columnPath + '\'' +
                 ", name='" + name + '\'' +
+                ", definition='" + definition + '\'' +
                 ", mediator=" + mediator +
                 ", associated=" + associated +
                 '}';

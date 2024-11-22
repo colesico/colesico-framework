@@ -30,42 +30,50 @@ import java.lang.annotation.*;
 @Inherited
 public @interface Composition {
 
-    // Composition field name + column name naming
-    String AUTO_REF ="@auto";
+    // Substitution to composition field name + column name
+    String RN_AUTO = "@auto";
 
+    // Substitution to origin column name
+    String RN_COLUMN = "@column";
 
-    // Column name reference
-    String COLUMN_REF="@column";
+    // Substitution to column field name
+    String RN_COLUMN_FILED = "@column-field";
 
-    // Column field name reference
-    String COLUMN_FILED_REF ="@column-field";
+    // Substitution to column composition name
+    String RN_COMPOSITION = "@composition";
 
-    // Column composition name reference
-    String COMPOSITION_REF="@composition";
+    // Substitution to column composition field name
+    String RN_COMPOSITION_FIELD = "@composition-field";
 
-    // Column composition field name reference
-    String COMPOSITION_FIELD_REF ="@composition-field";
-
-    // Composition name. Default as composition field name
+    /**
+     * Composition name.
+     * Default value is derived from composition field name
+     */
     String name() default "";
 
     /**
-     * Composition field renaming strategy.
-     * If not specified, the field names remain unchanged.
-     * Examples:
-     *  foo_@column_bar ->  foo_{@link Column#name()}_bar
-     *  foo_@field_bar -> foo_[composition filed name]_bar
+     * Tag filter for nested columns and compositions
+     *
+     * @see RecordView#tagFilter()
+     * @see Column#tags()
      */
-    String renaming() default AUTO_REF;
+    String tagFilter() default RecordView.ALL_TAGS_FILTER;
 
     /**
-     * Bind composition columns associated with the one of specified group.
-     * For each composition field can be specified several @Column annotations
-     * distinguished by the group name. If the groups is specified,
-     * only the @Column associated with this group will be used from the composition
-     * @see Column#group()
+     * Composition columns renaming strategy.
+     * <p>
+     * If not specified, the column names remain unchanged.
+     * Examples:
+     * foo_@column_bar ->  foo_{@link Column#name()}_bar
+     * foo_@field_bar -> foo_[composition filed name]_bar
+     * </p>
      */
-    String[] groups() default {""};
+    String renaming() default RN_AUTO;
+
+    /**
+     * Composition columns overriding
+     */
+    ColumnOverriding[] columnOverriding() default {};
 
     /**
      * If FALSE, creates composition object only if any column value is not null,
@@ -75,13 +83,9 @@ public @interface Composition {
     boolean nullInstace() default true;
 
     /**
-     * Record views
-     * @see RecordKitConfig#views()
+     * Composition tags
+     *
+     * @see RecordView#tagFilter()
      */
-    String[] views() default {RecordView.ALL_VIEWS};
-
-    /**
-     * Columns overriding
-     */
-    ColumnOverriding[] columnOverriding() default {};
+    String[] tags() default {};
 }

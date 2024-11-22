@@ -25,7 +25,7 @@ import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.*;
-import colesico.framework.jdbirec.RecordKitConfig;
+import colesico.framework.jdbirec.RecordKit;
 import colesico.framework.jdbirec.codegen.model.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -51,26 +51,10 @@ public class RecordKitParser extends FrameworkAbstractParser {
     /**
      * Check view name should be class name compatible to generate class name suffix
      */
-    protected void checkViewNames(final String[] views, Element parentElement) {
-        for (String p : views) {
-            if (!p.matches("[A-Za-z0-9]+")) {
-                throw CodegenException.of().message("Invalid record view name. Alphanumeric chars expected: " + p).element(parentElement).build();
-            }
+    protected void checkViewName(final String viewName, Element parentElement) {
+        if (!viewName.matches("[A-Za-z0-9]+")) {
+            throw CodegenException.of().message("Invalid record view name. Alphanumeric chars expected: " + p).element(parentElement).build();
         }
-    }
-
-    /**
-     * Check that the given views matches current view
-     */
-    protected boolean isInView(String currentView, String[] views) {
-        for (String p : views) {
-            if (currentView.equals(p)) {
-                return true;
-            } else if (RecordView.ALL_VIEWS.equals(p)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -96,6 +80,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
      * Lookup column overridings from column composition to root composition
      */
     protected List<ColumnOverridingElement> findColumnOverridings(CompositionElement columnComposition, String columnName) {
+        logger.debug("Find composition {} column '{}' overridings...", columnComposition, columnName);
 
         // Build composition chain from root to this
         CompositionElement c = columnComposition;
@@ -104,14 +89,15 @@ public class RecordKitParser extends FrameworkAbstractParser {
             compositionChain.add(c);
             c = c.getParentComposition();
         }
+        logger.debug("compositionChain size: {} ", compositionChain.size());
+
         // Collections.reverse(compositionChain);
 
         // Lookup overriding definition within compositions, starts from root composition
         List<ColumnOverridingElement> columnOverridings = new ArrayList<>();
-
         String columnPath = buildCompositionPath(columnComposition, columnName);
         for (CompositionElement ce : compositionChain) {
-            logger.debug("Check composition column overriding: {}:{} ", ce, ce.getColumnOverriding().size());
+            logger.debug("Composition {} column overriding size= {} ", ce, ce.getColumnOverriding().size());
 
             if (ce.getColumnOverriding().isEmpty()) {
                 continue;
@@ -119,7 +105,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
 
             // Find column within overriding
             for (ColumnOverridingElement coe : ce.getColumnOverriding()) {
-                logger.debug("FindColumnOverriding:  {} ? {}", columnPath, coe);
+                logger.debug("Test column {} overriding:  {}", columnPath, coe);
                 if (coe.getColumnPath().equals(columnPath)) {
                     columnOverridings.add(coe);
                 }
@@ -132,21 +118,20 @@ public class RecordKitParser extends FrameworkAbstractParser {
     /**
      * Finds the composition group path matches the column group
      */
-    protected String findCompositionGroupPath(CompositionElement columnComposition, String columnGroup) {
+    protected boolean isInGroup(CompositionElement columnComposition, String columnGroup) {
 
         // Lookup compositions from current to root
         CompositionElement c = columnComposition;
-        String columnGroupPath = buildCompositionPath(columnComposition, columnGroup);
-
         while (c != null) {
-            for (String compositionGroupPath : c.getGroupPaths()) {
-                if (compositionGroupPath.equals(columnGroupPath)) {
-                    return columnGroupPath;
+            for (String compositionGroup : c.getTagFilter()) {
+                if (compositionGroup.equals(columnGroup)) {
+                    return true;
                 }
             }
             c = c.getParentComposition();
+
         }
-        return null;
+        return false;
     }
 
     protected boolean hasParentOverridings(CompositionElement cmp) {
@@ -160,77 +145,72 @@ public class RecordKitParser extends FrameworkAbstractParser {
         return false;
     }
 
-    private List<Column> getFieldColumns(FieldElement field) {
-        final List<Column> columns = new ArrayList<>();
+    private List<AnnotationAssist<Column>> findFieldColumns(FieldElement field) {
+        final List<AnnotationAssist<Column>> result = new ArrayList<>();
 
-        AnnotationAssist<Column> columnAnnElm = field.getAnnotation(Column.class);
-        if (columnAnnElm != null) {
-            columns.add(columnAnnElm.unwrap());
+        AnnotationAssist<Column> column = field.getAnnotation(Column.class);
+        if (column != null) {
+            result.add(column);
         } else {
-            AnnotationAssist<Columns> columnsAnnElm = field.getAnnotation(Columns.class);
-            if (columnsAnnElm != null) {
-                columns.addAll(Arrays.asList(columnsAnnElm.unwrap().value()));
+            AnnotationAssist<Columns> columns = field.getAnnotation(Columns.class);
+            if (columns != null) {
+                for (Column col : columns.unwrap().value()) {
+                    column = new AnnotationAssist<>(processingEnv, col);
+                    result.add(column);
+                }
             }
         }
-        return columns;
+        return result;
     }
 
-    protected void parseFieldCompositions(final CompositionElement composition, FieldElement compositionField) {
+    protected void parseFieldCompositions(final CompositionElement parentComp, FieldElement compField) {
 
-        final List<Composition> subcompAnnList = getCompositions(compositionField);
+        final List<AnnotationAssist<Composition>> compositions = findFieldCompositions(compField);
 
-        for (Composition subcompAnn : subcompAnnList) {
+        for (AnnotationAssist<Composition> compAst : compositions) {
 
-            AnnotationAssist<Composition> subcompAst = new AnnotationAssist<>(processingEnv, subcompAnn);
+            Set<String> tags = buildTags(parentComp, compField, compAst.unwrap().tags());
 
-            // Check view
-            if (!isInView(composition.getParentRecordKit().getView(), subcompAst.unwrap().views())) {
-                continue;
-            }
+            // Check tags
+            // TODO: check tags
 
-            ClassType subcompType = compositionField.asClassType();
-            CompositionElement subcomposition = new CompositionElement(recordKitElement, subcompType, compositionField);
-            composition.addSubComposition(subcomposition);
+            ClassType compType = compField.asClassType();
+            CompositionElement comp = new CompositionElement(recordKitElement, compType, compField, tags);
+            parentComp.addSubComposition(comp);
 
             // Set name
-            if (StringUtils.isNotBlank(subcompAnn.name())) {
-                subcomposition.setName(StringUtils.trim(subcompAnn.name()));
+            if (StringUtils.isNotBlank(compAst.unwrap().name())) {
+                comp.setName(StringUtils.trim(compAst.unwrap().name()));
             } else {
-                subcomposition.setName(compositionField.getName());
+                comp.setName(compField.getName());
             }
 
             // Set renaming
-            subcomposition.setRenaming(subcompAst.unwrap().renaming());
+            comp.setRenaming(compAst.unwrap().renaming());
 
             // Set null instance
-            subcomposition.setNullInstance(subcompAst.unwrap().nullInstace());
+            comp.setNullInstance(compAst.unwrap().nullInstace());
 
-            // Parse groups
-            List<String> groupPaths = new ArrayList<>();
-            for (String group : subcompAst.unwrap().groups()) {
-                // Calculate group path from root composition
-                String groupPath = buildCompositionPath(subcomposition, group);
-                groupPaths.add(groupPath);
-            }
-            subcomposition.setGroupPaths(groupPaths);
+            // Set tagFilter
+            comp.setTagFilter(compAst.unwrap().tagFilter());
 
             // Check subcomposition is a joint composition
-            JointRecord jointRecord = composition.getParentRecordKit().getJointRecords().get(subcompType);
+            JointRecord jointRecord = parentComp.getParentRecordKit().getJointRecords().get(compType);
             String tableName;
             if (jointRecord != null) {
                 tableName = jointRecord.getTableName();
             } else {
-                tableName = composition.getTableName();
+                tableName = parentComp.getTableName();
             }
-            subcomposition.setTableName(tableName);
+            comp.setTableName(tableName);
 
             // Parse column overriding
 
-            for (ColumnOverriding co : subcompAst.unwrap().columnOverriding()) {
+            for (ColumnOverriding co : compAst.unwrap().columnOverriding()) {
                 AnnotationAssist<ColumnOverriding> coa = new AnnotationAssist<>(processingEnv, co);
 
                 String columnName = co.column();
-                String columnPath = buildCompositionPath(subcomposition, columnName);
+                String columnPath = buildCompositionPath(comp, columnName);
                 ColumnOverridingElement cre = new ColumnOverridingElement(columnPath);
 
                 // name overriding
@@ -249,11 +229,11 @@ public class RecordKitParser extends FrameworkAbstractParser {
                     cre.setMediator(new ClassType(processingEnv, (DeclaredType) mediatorType));
                 }
 
-                subcomposition.overrideColumn(cre);
+                comp.overrideColumn(cre);
             }
 
             // Parse nested composition
-            parseComposition(subcomposition);
+            parseComposition(comp);
 
             break;
         } // for compositionAnnList
@@ -262,46 +242,73 @@ public class RecordKitParser extends FrameworkAbstractParser {
 
     protected String applyColumnRenaming(CompositionElement composition, FieldElement columnField, String columnColumnName) {
         String columnOriginName = columnColumnName;
-        if (StringUtils.isBlank(composition.getRenaming())) {
-            return columnColumnName;
+        if (StringUtils.isNotBlank(composition.getRenaming())) {
+            columnColumnName = StringUtils.replace(composition.getRenaming(), Composition.RN_AUTO, composition.getName() + "_" + columnOriginName);
+            columnColumnName = StringUtils.replace(columnColumnName, Composition.RN_COLUMN_FILED, columnField.getName());
+            columnColumnName = StringUtils.replace(columnColumnName, Composition.RN_COLUMN, columnOriginName);
+            columnColumnName = StringUtils.replace(columnColumnName, Composition.RN_COMPOSITION_FIELD, composition.getOriginField().getName());
+            columnColumnName = StringUtils.replace(columnColumnName, Composition.RN_COMPOSITION, composition.getName());
         }
-
-        columnColumnName = StringUtils.replace(composition.getRenaming(), Composition.AUTO_REF, composition.getName() + "_" + columnField.getName());
-        columnColumnName = StringUtils.replace(columnColumnName, Composition.COLUMN_FILED_REF, columnField.getName());
-        columnColumnName = StringUtils.replace(columnColumnName, Composition.COLUMN_REF, columnOriginName);
-        columnColumnName = StringUtils.replace(columnColumnName, Composition.COMPOSITION_FIELD_REF, composition.getOriginField().getName());
-        columnColumnName = StringUtils.replace(columnColumnName, Composition.COMPOSITION_REF, composition.getName());
-
-        logger.debug("Column renaming: {} -> rule '{}' -> {}",columnOriginName,composition.getRenaming(),columnColumnName);
+        logger.debug("Column renaming: {} -> rule '{}' -> {}", columnOriginName, composition.getRenaming(), columnColumnName);
 
         return columnColumnName;
+    }
+
+    protected Set<String> buildTags(CompositionElement composition, FieldElement columnField, String[] tagDefinitions) {
+        Set<String> tags = new HashSet<>();
+
+        // Add default tags
+        String fieldTag = "#" + buildCompositionPath(composition, columnField.getName());
+        tags.add(fieldTag);
+
+        // Transform local tags to global
+        for (String tag : tagDefinitions) {
+            if (!StringUtils.startsWith(tag, "#")) {
+                tag = "#" + buildCompositionPath(composition, tag);
+            }
+            tags.add(tag);
+        }
+
+        return tags;
     }
 
     /**
      * Parse field columns
      */
-    protected void parseFieldColumns(final CompositionElement composition, FieldElement field) {
-        logger.debug("Parse columns on field: {} of composition: {}", field, composition);
-        final List<Column> columnAnnList = getFieldColumns(field);
-        for (Column columnAnn : columnAnnList) {
+    protected void parseFieldColumns(final CompositionElement parentComp, FieldElement columnField) {
+        logger.debug("Parse columns on field: {} of composition: {}", columnField.getName(), parentComp);
+        final List<AnnotationAssist<Column>> columns = findFieldColumns(columnField);
+        final Set<String> fieldGroups = new HashSet<>();
 
-            // Check view
-            if (!isInView(composition.getParentRecordKit().getView(), columnAnn.views())) {
+        for (AnnotationAssist<Column> columnAst : columns) {
+
+            Set<String> tags = buildTags(parentComp, columnField, columnAst.unwrap().tags());
+
+            // Check tags
+            // TODO: check tags
+
+            // Build group path
+            String groupPath = buildColumnTags(parentComp, columnField, columnAst);
+            if (fieldGroups.contains(groupPath)) {
+                throw CodegenException.of()
+                        .message("Duplicate column group '" + groupPath
+                                + "' on field '" + parentComp.getOriginType().getName() + '.' +
+                                columnField.getName() + "'.")
+                        .element(parentComp.getOriginField()).build();
+            }
+            fieldGroups.add(groupPath);
+            logger.debug("Group path: {}", groupPath);
+
+            // Check group path
+            if (!isInGroup(parentComp, groupPath)) {
+                logger.debug("Skipped by group: {}", groupPath);
                 continue;
             }
-
-            // Check group
-            String columnGroupPath = findCompositionGroupPath(composition, columnAnn.group());
-            if (columnGroupPath == null) {
-                continue;
-            }
-
-            AnnotationAssist<Column> columnAst = new AnnotationAssist<>(processingEnv, columnAnn);
 
             // Construct origin column name
             String columnName;
             if (columnAst.unwrap().name().equals(Column.FIELD_REF) || StringUtils.isBlank(columnAst.unwrap().name())) {
-                columnName = StrUtils.toSeparatorNotation(field.getName(), '_');
+                columnName = StrUtils.toSeparatorNotation(columnField.getName(), '_');
             } else {
                 columnName = StringUtils.trim(columnAst.unwrap().name());
             }
@@ -338,7 +345,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
             }
 
             // Find and apply column overriding
-            List<ColumnOverridingElement> overridingList = findColumnOverridings(composition, columnName);
+            List<ColumnOverridingElement> overridingList = findColumnOverridings(parentComp, columnName);
             for (ColumnOverridingElement overriding : overridingList) {
                 logger.debug("Overriding for column: {}; overriding: {}", columnName, overriding);
                 overriding.setAssociated(true);
@@ -357,32 +364,32 @@ public class RecordKitParser extends FrameworkAbstractParser {
             }
 
             // Apply naming strategy from current composition to root
-            CompositionElement c = composition;
+            CompositionElement c = parentComp;
             while (c != null) {
-                columnName = applyColumnRenaming(c, field, columnName);
+                columnName = applyColumnRenaming(c, columnField, columnName);
                 c = c.getParentComposition();
             }
 
             // Build column element
 
-            ColumnElement columnElement = new ColumnElement(field, columnName);
-            composition.addColumn(columnElement);
+            ColumnElement column = new ColumnElement(columnField, columnName, groupPath,tags);
+            parentComp.addColumn(column);
 
-            columnElement.setDefinition(definition);
-            columnElement.setMediator(mediator);
+            column.setDefinition(definition);
+            column.setMediator(mediator);
 
-            columnElement.setImportable(columnAst.unwrap().importable());
-            columnElement.setExportable(columnAst.unwrap().exportable());
+            column.setImportable(columnAst.unwrap().importable());
+            column.setExportable(columnAst.unwrap().exportable());
 
             // insertAs
 
             if (!Column.NOP_REF.equals(insertAs)) {
                 if (insertAs.equals(Column.UPDATE_AS_REF)) {
                     if (!Column.NOP_REF.equals(updateAs)) {
-                        columnElement.setInsertAs(updateAs);
+                        column.setInsertAs(updateAs);
                     }
                 } else {
-                    columnElement.setInsertAs(insertAs);
+                    column.setInsertAs(insertAs);
                 }
             }
 
@@ -391,45 +398,48 @@ public class RecordKitParser extends FrameworkAbstractParser {
             if (!Column.NOP_REF.equals(updateAs)) {
                 if (updateAs.equals(Column.INSERT_AS_REF)) {
                     if (!Column.NOP_REF.equals(insertAs)) {
-                        columnElement.setUpdateAs(insertAs);
+                        column.setUpdateAs(insertAs);
                     }
                 } else {
-                    columnElement.setUpdateAs(updateAs);
+                    column.setUpdateAs(updateAs);
                 }
             }
 
             // selectAs
 
             if (!Column.NOP_REF.equals(selectAs)) {
-                columnElement.setSelectAs(selectAs);
+                column.setSelectAs(selectAs);
             }
 
             // definition
 
             if (!Column.NOP_REF.equals(definition)) {
                 if (StringUtils.isEmpty(definition)) {
-                    columnElement.setDefinition("[COLUMN DEFINITION]");
+                    column.setDefinition("[COLUMN DEFINITION]");
                 } else {
-                    columnElement.setDefinition(definition);
+                    column.setDefinition(definition);
                 }
             }
 
         }
     }
 
-    private List<Composition> getCompositions(FieldElement field) {
-        final List<Composition> compositions = new ArrayList<>();
+    private List<AnnotationAssist<Composition>> findFieldCompositions(FieldElement field) {
+        final List<AnnotationAssist<Composition>> result = new ArrayList<>();
 
-        AnnotationAssist<Composition> compositionAst = field.getAnnotation(Composition.class);
-        if (compositionAst != null) {
-            compositions.add(compositionAst.unwrap());
+        AnnotationAssist<Composition> composition = field.getAnnotation(Composition.class);
+        if (composition != null) {
+            result.add(composition);
         } else {
-            AnnotationAssist<Compositions> compositionsAst = field.getAnnotation(Compositions.class);
-            if (compositionsAst != null) {
-                compositions.addAll(Arrays.asList(compositionsAst.unwrap().value()));
+            AnnotationAssist<Compositions> compositions = field.getAnnotation(Compositions.class);
+            if (compositions != null) {
+                for (Composition comp : compositions.unwrap().value()) {
+                    composition = new AnnotationAssist<>(processingEnv, comp);
+                    result.add(composition);
+                }
             }
         }
-        return compositions;
+        return result;
     }
 
     protected void parseComposition(final CompositionElement composition) {
@@ -480,14 +490,14 @@ public class RecordKitParser extends FrameworkAbstractParser {
         ClassType superClass = null;
         List<ClassType> interfaces = recordKitInterface.getInterfaces();
         for (ClassType iface : interfaces) {
-            if (iface.getErasure().toString().equals(RecordKit.class.getCanonicalName())) {
+            if (iface.getErasure().toString().equals(RecordKitApi.class.getCanonicalName())) {
                 superClass = iface;
                 break;
             }
         }
 
         if (superClass == null) {
-            throw CodegenException.of().element(recordKitInterface.unwrap()).message("Not extends " + RecordKit.class.getName()).build();
+            throw CodegenException.of().element(recordKitInterface.unwrap()).message("Not extends " + RecordKitApi.class.getName()).build();
         }
 
         if (superClass.unwrap().getTypeArguments().size() != 1) {
@@ -503,13 +513,13 @@ public class RecordKitParser extends FrameworkAbstractParser {
     /**
      * Parse given record view
      */
-    protected RecordKitElement parseRecordView(ClassElement recordKitClass, String view) {
+    protected RecordKitElement parseRecordView(ClassElement recordKitClass, RecordViewElement view) {
 
         ClassType recordType = getRecordTypeFromKit(recordKitClass);
 
-        AnnotationAssist<RecordKitConfig> configAnn = recordKitClass.getAnnotation(RecordKitConfig.class);
+        AnnotationAssist<RecordKit> configAnn = recordKitClass.getAnnotation(RecordKit.class);
         String tableName = configAnn.unwrap().table();
-        TypeMirror extendMirror = configAnn.getValueTypeMirror(RecordKitConfig::superclass);
+        TypeMirror extendMirror = configAnn.getValueTypeMirror(RecordKit::superclass);
         ClassType extendType = new ClassType(processingEnv, (DeclaredType) extendMirror);
         recordKitElement = new RecordKitElement(view, recordKitClass, recordType, extendType, tableName);
 
@@ -519,10 +529,10 @@ public class RecordKitParser extends FrameworkAbstractParser {
         }
 
         // Parse Joint Record Kits
-        TypeMirror[] jointRecordKits = configAnn.getValueTypeMirrors(RecordKitConfig::join);
+        TypeMirror[] jointRecordKits = configAnn.getValueTypeMirrors(RecordKit::join);
         for (TypeMirror jrk : jointRecordKits) {
             ClassElement jointRecordKitClass = ClassElement.fromType(processingEnv, (DeclaredType) jrk);
-            AnnotationAssist<RecordKitConfig> jointConfigAnn = jointRecordKitClass.getAnnotation(RecordKitConfig.class);
+            AnnotationAssist<RecordKit> jointConfigAnn = jointRecordKitClass.getAnnotation(RecordKit.class);
             String jointTableName = jointConfigAnn.unwrap().table();
 
             ClassType jointRecordType = getRecordTypeFromKit(jointRecordKitClass);
@@ -537,26 +547,25 @@ public class RecordKitParser extends FrameworkAbstractParser {
         return recordKitElement;
     }
 
-    public ViewSetElement parse(ClassElement recordKitClass) {
+    public ViewSetElement parseRecord(ClassElement recordKitClass) {
         logger.debug("Parse record kit interface: {} ", recordKitClass);
 
-        AnnotationAssist<RecordKitConfig> configAnn = recordKitClass.getAnnotation(RecordKitConfig.class);
+        AnnotationAssist<RecordKit> rkConfigAnn = recordKitClass.getAnnotation(RecordKit.class);
         // Get declared views
-        String[] views = configAnn.unwrap().views();
-        // View name should be class name compatible
-        checkViewNames(views, recordKitClass.unwrap());
+        RecordView[] declaredViews = rkConfigAnn.unwrap().views();
 
-        // Build view list
-        List<String> viewsList = new ArrayList<>();
-        for (String view : views) {
-            if (!RecordView.ALL_VIEWS.equals(view)) {
-                viewsList.add(view);
-            }
+        // Build views
+        Set<RecordViewElement> views = new HashSet<>();
+        for (RecordView declaredView : declaredViews) {
+            // View name should be class name compatible
+            checkViewName(declaredView.name(), recordKitClass.unwrap());
+            RecordViewElement view = new RecordViewElement(declaredView.name(), declaredView.tagFilter());
+            views.add(view);
         }
 
         // Parse each view
         ViewSetElement viewSetElm = new ViewSetElement();
-        for (String view : viewsList) {
+        for (RecordViewElement view : views) {
             RecordKitElement kitElm = parseRecordView(recordKitClass, view);
             viewSetElm.addRecordKit(view, kitElm);
         }

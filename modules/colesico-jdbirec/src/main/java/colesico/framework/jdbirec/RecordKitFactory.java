@@ -25,7 +25,7 @@ public class RecordKitFactory {
 
     public static final String KIT_IMPL_CLASS_SUFFIX = "Impl";
 
-    private static <R, K extends RecordKit<R>> K getKit(String kitClassName, String view) {
+    private static <R, K extends RecordKitApi<R>> K getKit(String kitClassName, String view) {
         try {
             Class<K> kitClass = (Class<K>) Class.forName(kitClassName);
             Constructor<K> constructor = kitClass.getConstructor();
@@ -37,12 +37,12 @@ public class RecordKitFactory {
         }
     }
 
-    public static <R, K extends RecordKit<R>> K getKit(Class<K> recordKitClass) {
+    public static <R, K extends RecordKitApi<R>> K getKit(Class<K> recordKitClass) {
         String kitClassName = recordKitClass.getName() + KIT_IMPL_CLASS_SUFFIX;
         return getKit(kitClassName, RecordView.DEFAULT_VIEW);
     }
 
-    public static <R, K extends RecordKit<R>> K getKit(Class<K> recordKitClass, String view) {
+    public static <R, K extends RecordKitApi<R>> K getKit(Class<K> recordKitClass, String view) {
 
         if (view == null || RecordView.DEFAULT_VIEW.equals(view)) {
             return getKit(recordKitClass);

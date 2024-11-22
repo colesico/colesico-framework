@@ -13,10 +13,14 @@ public class User {
     @Column(name = "person")
     private String name;
 
-    @Composition(columnOverriding = @ColumnOverriding(column = "phone", name = "phn"))
+    @Composition(columnOverriding = {
+            @ColumnOverriding(column = "phone", name = "phn"),
+            @ColumnOverriding(column = "adr", name = "adr0")
+    }
+    )
     private Contacts home;
 
-    @Composition(views = RecordView.FULL_RECORD, renaming = "wrk_@column")
+    @Composition(viewsStr = RecordView.FULL_VIEW, renaming = "wrk_@column")
     private Contacts work;
 
     public Number getId() {

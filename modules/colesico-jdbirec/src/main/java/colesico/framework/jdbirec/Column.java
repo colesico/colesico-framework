@@ -25,7 +25,7 @@ import java.sql.ResultSet;
  * A record or composition field may be marked with multiple
  * \@Column annotations, one of which is an actual and the rest mast be virtual
  *
- * @see RecordKitConfig
+ * @see RecordKit
  */
 @Documented
 @Target(ElementType.FIELD)
@@ -39,6 +39,8 @@ public @interface Column {
     String INSERT_AS_REF = "@insertAs";
     String UPDATE_AS_REF = "@updateAs";
     String NOP_REF = "@nop";
+
+    String FIELD_GROUP = "@field";
 
     /**
      * Database column name.
@@ -84,27 +86,21 @@ public @interface Column {
     String selectAs() default COLUMN_REF;
 
     /**
-     * Use this field value in {@link AbstractRecordKit#exportRecord(Object, AbstractRecordKit.FieldReceiver)} method.
+     * Use this field value in {@link AbstractRecordKitApi#exportRecord(Object, AbstractRecordKitApi.FieldReceiver)} method.
      * If TRUE, field will be persisted to database
      */
     boolean exportable() default true;
 
     /**
-     * Use this field value in {@link AbstractRecordKit#importRecord(Object, ResultSet)} method.
+     * Use this field value in {@link AbstractRecordKitApi#importRecord(Object, ResultSet)} method.
      * If TRUE, field will be obtained from sql query result set.
      */
     boolean importable() default true;
 
     /**
-     * Record views
+     * Column tags
      *
-     * @see RecordKitConfig#views()
+     * @see RecordView#tagFilter()
      */
-    String[] views() default {RecordView.ALL_VIEWS};
-
-    /**
-     * Group name to which this column is belongs within the composition.
-     * @see Composition#groups()
-     */
-    String group() default "";
+    String[] tags() default {};
 }

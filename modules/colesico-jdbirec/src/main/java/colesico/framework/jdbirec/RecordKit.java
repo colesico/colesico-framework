@@ -1,40 +1,58 @@
+/*
+ * Copyright © 2014-2020 Vladlen V. Larionov and others as noted.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package colesico.framework.jdbirec;
 
-import org.jdbi.v3.core.mapper.RowMapper;
+import java.lang.annotation.*;
 
-import java.util.Map;
-
-public interface RecordKit<R> {
-
-    String TABLE_NAME_REF = "@table";
-    String RECORD_REF = "@record";
-    String COLUMNS_REF = "@columns";
-    String UPDATES_REF = "@updates";
-    String VALUES_REF = "@values";
-
-    R newRecord();
-
-    /**
-     * Return table name
-     */
-    String getTableName();
+/**
+ * Record kit configuration.
+ * <p>
+ * Define this annotation on record kit interface
+ * </p>
+ */
+@Documented
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+public @interface RecordKit {
 
     /**
-     * Transforms query text with references (@table, @columns, @updates, @values) to actual sql
+     * Master table name for record
      */
-    String sql(String query);
+    String table() default "";
 
-    Map<String, Object> map(R record);
+    /**
+     * Master table alias to use in sql queries
+     */
+    String tableAlias() default "";
 
-    RowMapper<R> mapper();
+    /**
+     * Record views definition
+     */
+    RecordView[] views() default {};
 
-    @FunctionalInterface
-    interface FieldReceiver {
+    /**
+     * Interpret the composition as join records (select from table join...)
+     */
+    Class<? extends RecordKitApi>[] join() default {};
 
-        String SET_METHOD = "set";
-        String FIELD_PARAM = "field";
-        String VALUE_PARAM = "value";
+    /**
+     * Base class to be extended by this record kit generated implementation
+     */
+    Class<? extends RecordKitApi> superclass() default AbstractRecordKitApi.class;
 
-        void set(String field, Object value);
-    }
 }
