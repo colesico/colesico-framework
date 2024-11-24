@@ -54,10 +54,10 @@ public @interface Composition {
     /**
      * Tag filter for nested columns and compositions
      *
-     * @see RecordView#tagFilter()
+     * @see TagFilter()
      * @see Column#tags()
      */
-    String tagFilter() default RecordView.ALL_TAGS_FILTER;
+    TagFilter tagFilter() default @TagFilter;
 
     /**
      * Composition columns renaming strategy.

@@ -21,6 +21,7 @@ import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.Composition;
 import colesico.framework.jdbirec.RecordView;
+import colesico.framework.jdbirec.TagFilter;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -60,7 +61,7 @@ public class CompositionElement {
     /**
      * @see Composition#tagFilter()
      */
-    private String tagFilter = RecordView.ALL_TAGS_FILTER;
+    private TagFilterElement tagFilter = new TagFilterElement();
 
     /**
      * @see Composition#renaming()
@@ -183,7 +184,7 @@ public class CompositionElement {
         return renaming;
     }
 
-    public String getTagFilter() {
+    public TagFilterElement getTagFilter() {
         return tagFilter;
     }
 
@@ -211,7 +212,7 @@ public class CompositionElement {
         this.renaming = renaming;
     }
 
-    public void setTagFilter(String tagFilter) {
+    public void setTagFilter(TagFilterElement tagFilter) {
         this.tagFilter = tagFilter;
     }
 

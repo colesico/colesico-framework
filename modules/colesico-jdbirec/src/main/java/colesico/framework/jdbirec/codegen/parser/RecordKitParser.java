@@ -134,6 +134,16 @@ public class RecordKitParser extends FrameworkAbstractParser {
         return false;
     }
 
+    protected TagFilterElement parseTagFilter(TagFilter tagFilter) {
+        TagFilterElement tagFilterElement = new TagFilterElement();
+        if (tagFilter != null) {
+            tagFilterElement.setAnyOf(Arrays.asList(tagFilter.anyOf()));
+            tagFilterElement.setOneOf(Arrays.asList(tagFilter.oneOf()));
+            tagFilterElement.setNoneOf(Arrays.asList(tagFilter.noneOf()));
+        }
+        return tagFilterElement;
+    }
+
     private List<AnnotationAssist<Column>> findFieldColumns(FieldElement field) {
         final List<AnnotationAssist<Column>> result = new ArrayList<>();
 
@@ -161,7 +171,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
             Set<String> tags = buildTags(parentComp, compField, compAst.unwrap().tags());
 
             // Check tags by filter
-            if (!acceptTagsByFilter(parentComp,tags)){
+            if (!acceptTagsByFilter(parentComp, tags)) {
                 continue;
             }
 
@@ -183,7 +193,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
             comp.setNullInstance(compAst.unwrap().nullInstace());
 
             // Set tagFilter
-            comp.setTagFilter(compAst.unwrap().tagFilter());
+            comp.setTagFilter(parseTagFilter(compAst.unwrap().tagFilter()));
 
             // Check subcomposition is a joint composition
             JointRecord jointRecord = parentComp.getParentRecordKit().getJointRecords().get(compType);
@@ -284,7 +294,7 @@ public class RecordKitParser extends FrameworkAbstractParser {
             Set<String> tags = buildTags(parentComp, columnField, columnAst.unwrap().tags());
 
             // Check tags by filter
-            if (!acceptTagsByFilter(parentComp,tags)){
+            if (!acceptTagsByFilter(parentComp, tags)) {
                 continue;
             }
 
@@ -501,19 +511,20 @@ public class RecordKitParser extends FrameworkAbstractParser {
 
         ClassType recordType = getRecordTypeFromKit(recordKitClass);
 
-        AnnotationAssist<RecordKit> configAnn = recordKitClass.getAnnotation(RecordKit.class);
-        String tableName = configAnn.unwrap().table();
-        TypeMirror extendMirror = configAnn.getValueTypeMirror(RecordKit::superclass);
-        ClassType extendType = new ClassType(processingEnv, (DeclaredType) extendMirror);
-        recordKitElement = new RecordKitElement(view, recordKitClass, recordType, extendType, tableName);
+        AnnotationAssist<RecordKit> declaredRecordKit = recordKitClass.getAnnotation(RecordKit.class);
+
+        String tableName = declaredRecordKit.unwrap().table();
+        TypeMirror superclassMirror = declaredRecordKit.getValueTypeMirror(RecordKit::superclass);
+        ClassType superclassType = new ClassType(processingEnv, (DeclaredType) superclassMirror);
+        recordKitElement = new RecordKitElement(view, recordKitClass, recordType, superclassType, tableName);
 
         // Add master table alias if specified
-        if (StringUtils.isNotBlank(configAnn.unwrap().tableAlias())) {
-            recordKitElement.addTableAlias(configAnn.unwrap().tableAlias(), configAnn.unwrap().table());
+        if (StringUtils.isNotBlank(declaredRecordKit.unwrap().tableAlias())) {
+            recordKitElement.addTableAlias(declaredRecordKit.unwrap().tableAlias(), declaredRecordKit.unwrap().table());
         }
 
         // Parse Joint Record Kits
-        TypeMirror[] jointRecordKits = configAnn.getValueTypeMirrors(RecordKit::join);
+        TypeMirror[] jointRecordKits = declaredRecordKit.getValueTypeMirrors(RecordKit::join);
         for (TypeMirror jrk : jointRecordKits) {
             ClassElement jointRecordKitClass = ClassElement.fromType(processingEnv, (DeclaredType) jrk);
             AnnotationAssist<RecordKit> jointConfigAnn = jointRecordKitClass.getAnnotation(RecordKit.class);
@@ -534,26 +545,22 @@ public class RecordKitParser extends FrameworkAbstractParser {
     public ViewSetElement parseRecord(ClassElement recordKitClass) {
         logger.debug("Parse record kit interface: {} ", recordKitClass);
 
-        AnnotationAssist<RecordKit> rkConfigAnn = recordKitClass.getAnnotation(RecordKit.class);
+        AnnotationAssist<RecordKit> declaredRecordKit = recordKitClass.getAnnotation(RecordKit.class);
         // Get declared views
-        RecordView[] declaredViews = rkConfigAnn.unwrap().views();
+        RecordView[] declaredViews = declaredRecordKit.unwrap().views();
 
-        // Build views
-        Set<RecordViewElement> views = new HashSet<>();
+        // Parse views
+        ViewSetElement viewSet = new ViewSetElement();
         for (RecordView declaredView : declaredViews) {
             // View name should be class name compatible
             checkViewName(declaredView.name(), recordKitClass.unwrap());
-            RecordViewElement view = new RecordViewElement(declaredView.name(), declaredView.tagFilter());
-            views.add(view);
-        }
+            RecordViewElement view = new RecordViewElement(
+                    declaredView.name(),
+                    parseTagFilter(declaredView.tagFilter()));
 
-        // Parse each view
-        ViewSetElement viewSetElm = new ViewSetElement();
-        for (RecordViewElement view : views) {
             RecordKitElement kitElm = parseRecordView(recordKitClass, view);
-            viewSetElm.addRecordKit(view, kitElm);
+            viewSet.addRecordKit(view, kitElm);
         }
-
-        return viewSetElm;
+        return viewSet;
     }
 }

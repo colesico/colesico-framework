@@ -1,12 +1,14 @@
 package colesico.framework.jdbirec.codegen.model;
 
+import colesico.framework.jdbirec.TagFilter;
+
 import java.util.Objects;
 
 public class RecordViewElement {
     private final String name;
-    private final String tagFilter;
+    private final TagFilterElement tagFilter;
 
-    public RecordViewElement(String name, String tagFilter) {
+    public RecordViewElement(String name, TagFilterElement tagFilter) {
         this.name = name;
         this.tagFilter = tagFilter;
     }
@@ -15,7 +17,7 @@ public class RecordViewElement {
         return name;
     }
 
-    public String getTagFilter() {
+    public TagFilterElement getTagFilter() {
         return tagFilter;
     }
 
