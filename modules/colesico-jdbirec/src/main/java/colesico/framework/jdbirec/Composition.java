@@ -24,7 +24,7 @@ import java.lang.annotation.*;
  * Analogue of JPA @Embedded.
  */
 @Documented
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Repeatable(Compositions.class)
 @Inherited
@@ -85,7 +85,7 @@ public @interface Composition {
     /**
      * Composition tags
      *
-     * @see RecordView#tagFilter()
+     * @see TagFilter
      */
     String[] tags() default {};
 }

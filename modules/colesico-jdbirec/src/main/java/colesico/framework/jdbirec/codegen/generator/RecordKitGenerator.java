@@ -314,7 +314,7 @@ public class RecordKitGenerator {
 
         CodeBlock.Builder cb = CodeBlock.builder();
         varNames = new VarNames();
-        generateCompositionToMap(recordKitElement.getRootComposition(), null, cb);
+        generateCompositionToMap(recordKitElement.getRootCompositions(), null, cb);
         mb.addCode(cb.build());
 
         classBuilder.addMethod(mb.build());
@@ -333,7 +333,7 @@ public class RecordKitGenerator {
         varNames = new VarNames();
 
         CodeBlock.Builder cb = CodeBlock.builder();
-        generateCompositionFromResultSet(recordKitElement.getRootComposition(), null, cb);
+        generateCompositionFromResultSet(recordKitElement.getRootCompositions(), null, cb);
         mb.addCode(cb.build());
 
         mb.addStatement("return $N", AbstractRecordKitApi.RECORD_PARAM);
@@ -542,7 +542,7 @@ public class RecordKitGenerator {
         CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), packageName, recordKitElement.getOriginClass().unwrap());
     }
 
-    public void generate(ViewSetElement views) {
+    public void generate(RecordKitElement recordKit) {
         for (Map.Entry<RecordViewElement, RecordKitElement> pr : views.getRecordKits().entrySet()) {
             generateRecord(pr.getValue());
         }

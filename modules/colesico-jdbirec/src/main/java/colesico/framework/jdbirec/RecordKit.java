@@ -41,11 +41,6 @@ public @interface RecordKit {
     String tableAlias() default "";
 
     /**
-     * Record views definition
-     */
-    RecordView[] views() default {@RecordView};
-
-    /**
      * Interpret the composition as join records (select from table join...)
      */
     Class<? extends RecordKitApi>[] join() default {};

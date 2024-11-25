@@ -20,8 +20,6 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.Composition;
-import colesico.framework.jdbirec.RecordView;
-import colesico.framework.jdbirec.TagFilter;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -56,7 +54,7 @@ public class CompositionElement {
     /**
      * @see Composition#name()
      */
-    private String name = "";
+    private final String name;
 
     /**
      * @see Composition#tagFilter()
@@ -96,14 +94,17 @@ public class CompositionElement {
      */
     private String tableName;
 
-    public CompositionElement(RecordKitElement parentRecordKit,
-                              ClassType compositionType,
-                              FieldElement compositionField,
-                              Set<String> compositionTags) {
-        this.parentRecordKit = parentRecordKit;
-        this.originType = compositionType;
-        this.originField = compositionField;
-        this.tags = compositionTags;
+    public CompositionElement(RecordKitElement recordKit,
+                              ClassType compType,
+                              String compName,
+                              Set<String> compTags,
+                              FieldElement compField
+    ) {
+        this.parentRecordKit = recordKit;
+        this.originType = compType;
+        this.name = compName;
+        this.tags = compTags;
+        this.originField = compField;
     }
 
     /**
@@ -174,10 +175,6 @@ public class CompositionElement {
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getRenaming() {

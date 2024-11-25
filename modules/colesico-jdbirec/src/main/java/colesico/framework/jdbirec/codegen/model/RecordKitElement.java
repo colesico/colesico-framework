@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2020 Vladlen V. Larionov and others as noted.
+ * Copyright © 2014-2024 Vladlen V. Larionov and others as noted.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,13 @@
 
 package colesico.framework.jdbirec.codegen.model;
 
+import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 
 import java.util.*;
 
 public class RecordKitElement {
-
-    /**
-     * View associated with this kit
-     */
-    private final RecordViewElement view;
 
     /**
      * Origin record kit interface
@@ -44,7 +40,8 @@ public class RecordKitElement {
     private final String tableName;
 
     /**
-     * Table aliases to reference within sql queries
+     * Table aliases to reference within sql queries.
+     * Table aliases for the record table and joint records
      */
     private Map<String, String> tableAliases = new HashMap<>();
 
@@ -58,15 +55,26 @@ public class RecordKitElement {
      */
     private ClassType superclass;
 
+    /**
+     * Root compositions derived from record class
+     */
     private final CompositionElement rootComposition;
 
-    public RecordKitElement(RecordViewElement view, ClassElement originClass, ClassType recordType, ClassType extend, String tableName) {
-        this.view = view;
+    public RecordKitElement(ClassElement originClass,
+                            ClassType recordType,
+                            ClassType superclass,
+                            String tableName) {
+
         this.originClass = originClass;
         this.recordType = recordType;
-        this.superclass = extend;
+        this.superclass = superclass;
         this.tableName = tableName;
-        this.rootComposition = new CompositionElement(this, recordType, null, Set.of());
+
+        rootComposition = new CompositionElement(this, null, null, Set.of());
+    }
+
+    public void addJointRecord(JointRecord rec) {
+        jointRecords.put(rec.getRecordType(), rec);
     }
 
     public CompositionElement getRootComposition() {
@@ -77,30 +85,12 @@ public class RecordKitElement {
         return recordType;
     }
 
-    public boolean hasColumn(ColumnElement columnElement) {
-        return rootComposition.hasColumn(columnElement);
-    }
-
-    public List<ColumnElement> getAllColumns() {
-        List<ColumnElement> result = new ArrayList<>();
-        rootComposition.collectSubColumns(result);
-        return result;
-    }
-
-    public void addJointRecord(JointRecord rec) {
-        jointRecords.put(rec.getRecordType(), rec);
-    }
-
     public String getTableName() {
         return tableName;
     }
 
     public ClassType getSuperclass() {
         return superclass;
-    }
-
-    public RecordViewElement getView() {
-        return view;
     }
 
     public Map<String, String> getTableAliases() {

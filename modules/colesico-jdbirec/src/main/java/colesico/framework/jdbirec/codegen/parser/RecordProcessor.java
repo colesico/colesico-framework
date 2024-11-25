@@ -21,7 +21,7 @@ import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.jdbirec.RecordKit;
 import colesico.framework.jdbirec.codegen.generator.RecordKitGenerator;
-import colesico.framework.jdbirec.codegen.model.ViewSetElement;
+import colesico.framework.jdbirec.codegen.model.RecordKitElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -35,7 +35,7 @@ import java.util.Set;
 public class RecordProcessor extends FrameworkAbstractProcessor {
 
     private RecordKitParser recordKitParser;
-    private RecordKitGenerator recordHelperGenerator;
+    private RecordKitGenerator recordKitGenerator;
 
     public RecordProcessor() {
         super();
@@ -49,7 +49,7 @@ public class RecordProcessor extends FrameworkAbstractProcessor {
     @Override
     protected void onInit() {
         recordKitParser = new RecordKitParser(processingEnv);
-        recordHelperGenerator = new RecordKitGenerator(processingEnv);
+        recordKitGenerator = new RecordKitGenerator(processingEnv);
     }
 
     @Override
@@ -62,8 +62,8 @@ public class RecordProcessor extends FrameworkAbstractProcessor {
             try {
                 recordKitClass = (TypeElement) elm;
                 logger.debug("Processing record kit interface: {} ", recordKitClass.getSimpleName());
-                ViewSetElement views = recordKitParser.parseRecord(ClassElement.fromElement(processingEnv, recordKitClass));
-                recordHelperGenerator.generate(views);
+                RecordKitElement recordKit = recordKitParser.parseRecordKit(ClassElement.fromElement(processingEnv, recordKitClass));
+                recordKitGenerator.generate(recordKit);
             } catch (CodegenException ce) {
                 String message = "Error processing class '" + elm.toString() + "': " + ce.getMessage();
                 logger.debug(message);

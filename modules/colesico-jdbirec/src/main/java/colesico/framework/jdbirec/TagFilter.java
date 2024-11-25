@@ -24,9 +24,9 @@ import java.lang.annotation.RetentionPolicy;
  * to the record field, i.e. theTag -> #foo.bar.theTag
  * </p>
  * <p>
- * A 'field' tag, consisting of the set of fields of the path to the record field,
- * is always automatically added to the set of tags
- * i.e. #foo.bar.theField
+ * A tag,  consisting of the path of the composition fields to the element and the name of
+ * this element, is automatically added to the tags of each element (composition or column),
+ * i.e. #foo.bar.compName or #foo.bar.baz.columnName
  * </p>
  * <p>
  * Tag filter fields are combined with an AND condition, i.e.

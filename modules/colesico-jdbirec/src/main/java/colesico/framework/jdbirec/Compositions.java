@@ -23,7 +23,7 @@ import java.lang.annotation.*;
  * Composition container
  */
 @Documented
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface Compositions {
