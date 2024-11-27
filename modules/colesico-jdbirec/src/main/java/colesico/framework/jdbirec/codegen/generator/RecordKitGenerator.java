@@ -21,6 +21,7 @@ import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.*;
+import colesico.framework.jdbirec.Record;
 import colesico.framework.jdbirec.codegen.model.*;
 import com.palantir.javapoet.*;
 import org.apache.commons.lang3.StringUtils;
@@ -53,7 +54,7 @@ public class RecordKitGenerator {
     }
 
     protected String getRecordKitInstanceClassName() {
-        if (RecordView.DEFAULT_VIEW.equals(recordKitElement.getView())) {
+        if (Record.VIEW_DEFAULT.equals(recordKitElement.getView())) {
             return recordKitElement.getOriginClass().getSimpleName() + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
         } else {
             String viewPart = StrUtils.firstCharToUpperCase(recordKitElement.getView().getName());

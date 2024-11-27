@@ -10,8 +10,8 @@ public class RecordElement extends ContainerElement{
      */
     private final String view;
 
-    public RecordElement(ClassType originType, RecordKitElement parentRecordKit, String view) {
-        super(originType, parentRecordKit);
+    public RecordElement( RecordKitElement recordKit, ClassType type,String view) {
+        super(recordKit,type);
         this.view = view;
     }
 

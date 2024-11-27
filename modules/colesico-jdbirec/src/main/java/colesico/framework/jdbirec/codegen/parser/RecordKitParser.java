@@ -302,14 +302,19 @@ public class RecordKitParser extends RecordKitHelpers {
     }
 
 
-    protected RecordElement parseRecord(final AnnotationAssist<Record> recordAnn, final ClassType recordType) {
-        logger.debug("Parse record: {} of type: {};", recordAnn, recordType);
+    protected RecordElement parseRecord(
+            final RecordKitElement recordKit,
+            final ClassType type,
+            final AnnotationAssist<Record> recordAnn) {
+
+        logger.debug("Parse record: {} of type: {};", recordAnn, type);
 
         // Build composition name
         String view = recordAnn.unwrap().view();
-        checkViewName(view, recordType.asTypeElement());
+        checkViewName(view, type.asTypeElement());
 
-        RecordElement rec = new RecordElement(recordType, recordKitElement, view);
+        RecordElement rec = new RecordElement(recordKitElement, type, view);
+        recordKit.addRecord(rec);
 
         // Set renaming
         rec.setRenaming(recordAnn.unwrap().renaming());
@@ -361,7 +366,7 @@ public class RecordKitParser extends RecordKitHelpers {
         // Parse records
         Set<AnnotationAssist<Record>> recordsAnn = findTypeRecords(recordType);
         for (AnnotationAssist<Record> recordAnn : recordsAnn) {
-            parseRecord(recordAnn, recordType);
+            parseRecord(recordKitElement, recordType, recordAnn);
         }
 
         return recordKitElement;

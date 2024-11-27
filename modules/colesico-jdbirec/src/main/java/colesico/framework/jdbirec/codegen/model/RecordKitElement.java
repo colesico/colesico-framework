@@ -18,9 +18,11 @@ package colesico.framework.jdbirec.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
-import colesico.framework.jdbirec.Record;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class RecordKitElement {
 
@@ -75,7 +77,6 @@ public class RecordKitElement {
     public void addRecord(RecordElement rec) {
         records.add(rec);
     }
-
 
     public void addJointRecord(JointRecord rec) {
         jointRecords.put(rec.getRecordType(), rec);

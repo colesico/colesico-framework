@@ -46,8 +46,8 @@ public class ContainerElement {
     protected String renaming = "";
 
     public ContainerElement(RecordKitElement recordKit, ClassType type) {
-        this.type = type;
         this.recordKit = recordKit;
+        this.type = type;
     }
 
     /**
