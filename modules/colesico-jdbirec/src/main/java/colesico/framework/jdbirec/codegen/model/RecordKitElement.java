@@ -16,9 +16,9 @@
 
 package colesico.framework.jdbirec.codegen.model;
 
-import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.jdbirec.Record;
 
 import java.util.*;
 
@@ -58,7 +58,7 @@ public class RecordKitElement {
     /**
      * Root compositions derived from record class
      */
-    private final CompositionElement rootComposition;
+    private final Set<RecordElement> records = new HashSet<>();
 
     public RecordKitElement(ClassElement originClass,
                             ClassType recordType,
@@ -70,15 +70,19 @@ public class RecordKitElement {
         this.superclass = superclass;
         this.tableName = tableName;
 
-        rootComposition = new CompositionElement(this, null, null, Set.of());
     }
+
+    public void addRecord(RecordElement rec) {
+        records.add(rec);
+    }
+
 
     public void addJointRecord(JointRecord rec) {
         jointRecords.put(rec.getRecordType(), rec);
     }
 
-    public CompositionElement getRootComposition() {
-        return rootComposition;
+    public Set<RecordElement> getRecords() {
+        return records;
     }
 
     public ClassType getRecordType() {

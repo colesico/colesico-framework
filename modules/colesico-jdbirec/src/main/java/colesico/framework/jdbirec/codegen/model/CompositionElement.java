@@ -16,40 +16,25 @@
 
 package colesico.framework.jdbirec.codegen.model;
 
-import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.Composition;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
  * Composition model
  */
-public class CompositionElement {
+public class CompositionElement extends ContainerElement {
 
     /**
-     * Parent kit ref
+     * Composition parent container
      */
-    private final RecordKitElement parentRecordKit;
+    private ContainerElement container;
 
     /**
-     * Parent composition ref
+     * Composition field in the parent container
      */
-    private CompositionElement parentComposition;
-
-    /**
-     * Composition class type
-     */
-    private final ClassType originType;
-
-    /**
-     * Composition field in the parent composition
-     */
-    private final FieldElement originField;
+    private final FieldElement field;
 
     /**
      * @see Composition#name()
@@ -57,175 +42,71 @@ public class CompositionElement {
     private final String name;
 
     /**
-     * @see Composition#tagFilter()
-     */
-    private TagFilterElement tagFilter = new TagFilterElement();
-
-    /**
-     * @see Composition#renaming()
-     */
-    private String renaming = "";
-
-    /**
-     * Columns list exported from composition class
-     *
-     * @see Composition#columnOverriding()
-     */
-    private final List<ColumnOverridingElement> columnOverriding = new ArrayList<>();
-
-    /**
-     * @see Composition#nullInstace()
-     */
-    private boolean nullInstance = true;
-
-    /**
      * @see Composition#tags()
      */
     protected final Set<String> tags;
 
 
-    private final Set<ColumnElement> columns = new LinkedHashSet<>();
-
-    private final Set<CompositionElement> subCompositions = new LinkedHashSet<>();
-
+    /**
+     * @see Composition#nullInstace()
+     */
+    private boolean nullInstance = true;
     /**
      * Composition table name.
      * This is for joint records.
      */
     private String tableName;
 
-    public CompositionElement(RecordKitElement recordKit,
-                              ClassType compType,
-                              String compName,
-                              Set<String> compTags,
-                              FieldElement compField
-    ) {
-        this.parentRecordKit = recordKit;
-        this.originType = compType;
-        this.name = compName;
-        this.tags = compTags;
-        this.originField = compField;
+    public CompositionElement(RecordKitElement recordKit, FieldElement field, String name, Set<String> tags) {
+        super(recordKit, field.asClassType());
+        this.field = field;
+        this.name = name;
+        this.tags = tags;
     }
 
-    /**
-     * Checks that the given column contains in this composition or nested.
-     * This used to eliminate column duplication
-     */
-    public boolean hasColumn(ColumnElement columnElement) {
-        if (columns.contains(columnElement)) {
-            return true;
-        }
-        for (CompositionElement sce : subCompositions) {
-            if (sce.hasColumn(columnElement)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void collectSubColumns(List<ColumnElement> allSubColumns) {
-        allSubColumns.addAll(columns);
-        for (CompositionElement comp : subCompositions) {
-            comp.collectSubColumns(allSubColumns);
-        }
-    }
-
-    public void addSubComposition(CompositionElement compElm) {
-        compElm.setParentComposition(this);
-        subCompositions.add(compElm);
-    }
-
-    public void addColumn(ColumnElement columnElm) {
-        if (parentRecordKit.hasColumn(columnElm)) {
-            throw CodegenException.of()
-                    .message("Duplicate column '" + columnElm.getName() + "' on field '" +
-                            this.getOriginType() + '.' +
-                            columnElm.getOriginField().getName() + "'." +
-                            " Parent composition: " + (this.getParentComposition() != null ? this.getParentComposition() : "null"))
-                    .element(columnElm.getOriginField()).build();
-        }
-
-        columns.add(columnElm);
-        columnElm.setParentComposition(this);
-    }
-
-    public void overrideColumn(ColumnOverridingElement oce) {
-        columnOverriding.add(oce);
-    }
-
-    public RecordKitElement getParentRecordKit() {
-        return parentRecordKit;
-    }
-
-    public CompositionElement getParentComposition() {
-        return parentComposition;
-    }
-
-    public ClassType getOriginType() {
-        return originType;
-    }
-
-    public FieldElement getOriginField() {
-        return originField;
-    }
-
-    public List<ColumnOverridingElement> getColumnOverriding() {
-        return columnOverriding;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getRenaming() {
-        return renaming;
-    }
-
-    public TagFilterElement getTagFilter() {
-        return tagFilter;
-    }
-
-    public boolean isNullInstance() {
-        return nullInstance;
-    }
-
-    public Set<ColumnElement> getColumns() {
-        return columns;
-    }
-
-    public Set<CompositionElement> getSubCompositions() {
-        return subCompositions;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setParentComposition(CompositionElement parentComposition) {
-        this.parentComposition = parentComposition;
-    }
-
-    public void setRenaming(String renaming) {
-        this.renaming = renaming;
-    }
-
-    public void setTagFilter(TagFilterElement tagFilter) {
-        this.tagFilter = tagFilter;
-    }
-
-    public void setNullInstance(boolean nullInstance) {
-        this.nullInstance = nullInstance;
+    public void setContainer(ContainerElement container) {
+        this.container = container;
     }
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
     }
 
+    public void setNullInstance(boolean nullInstance) {
+        this.nullInstance = nullInstance;
+    }
+
+    public ContainerElement getContainer() {
+        return container;
+    }
+
+    public FieldElement getField() {
+        return field;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public boolean isNullInstance() {
+        return nullInstance;
+    }
+
+
+    public String getTableName() {
+        return tableName;
+    }
+
+
     @Override
     public String toString() {
         return "CompositionElement{" +
-                "originType=" + originType +
-                ", name='" + name + '\'' +
+                "type=" + type +
+                ", field=" + field +
                 '}';
     }
 }

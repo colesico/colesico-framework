@@ -103,7 +103,7 @@ public class RecordKitGenerator {
     public String generateChain(String rootVarName, CompositionElement composition, ColumnElement column, Function<FieldElement, String> fieldTransformer) {
         Deque<FieldElement> fieldsStack = new ArrayDeque<>();
         if (column != null) {
-            fieldsStack.push(column.getOriginField());
+            fieldsStack.push(column.getField());
         }
         CompositionElement current = composition;
         while (current.getOriginField() != null) {
@@ -130,23 +130,23 @@ public class RecordKitGenerator {
         } else {
             compositionVar = varNames.getNextVarName(composition.getOriginField().getName());
             cb.add("\n");
-            cb.add("// Composition: " + composition.getOriginType().unwrap() + "\n\n");
+            cb.add("// Composition: " + composition.getType().unwrap() + "\n\n");
             // SubCompositionType comp=parentComp.getSubComposition()
             cb.addStatement("$T $N = $N.$N()",
-                    TypeName.get(composition.getOriginType().unwrap()),
+                    TypeName.get(composition.getType().unwrap()),
                     compositionVar,
                     parentCompositionVar,
                     toGetterName(composition.getOriginField()));
             // if (comp == null) { comp = new SubCompositionType()}
-            cb.add("if ($N == null) { $N = new $T(); }\n", compositionVar, compositionVar, TypeName.get(composition.getOriginType().unwrap()));
+            cb.add("if ($N == null) { $N = new $T(); }\n", compositionVar, compositionVar, TypeName.get(composition.getType().unwrap()));
         }
 
         for (ColumnElement column : composition.getColumns()) {
             if (!column.isExportable()) {
                 continue;
             }
-            String paramName = generateChain(null, column.getParentComposition(), column, FieldElement::getName);
-            String fieldGetterName = toGetterName(column.getOriginField());
+            String paramName = generateChain(null, column.getContainer(), column, FieldElement::getName);
+            String fieldGetterName = toGetterName(column.getField());
             if (column.getMediator() == null) {
                 // fr.receive("column",comp.getField1())
                 cb.add("$N.$N($S, ", AbstractRecordKitApi.FIELD_RECEIVER_PARAM, AbstractRecordKitApi.FieldReceiver.SET_METHOD, paramName);
@@ -183,7 +183,7 @@ public class RecordKitGenerator {
             return;
         }
 
-        String fieldType = column.getOriginField().getOriginType().toString();
+        String fieldType = column.getField().getOriginType().toString();
         switch (fieldType) {
             case "char":
                 cb.add("$N.getChar($S)", AbstractRecordKitApi.RESULT_SET_PARAM, getSelectColumnName(column));
@@ -236,11 +236,11 @@ public class RecordKitGenerator {
             case "java.lang.Double":
             case "java.lang.Float":
             case "java.lang.Character":
-                cb.add("$N.getObject($S,$T.class)", AbstractRecordKitApi.RESULT_SET_PARAM, getSelectColumnName(column), TypeName.get(column.getOriginField().getOriginType()));
+                cb.add("$N.getObject($S,$T.class)", AbstractRecordKitApi.RESULT_SET_PARAM, getSelectColumnName(column), TypeName.get(column.getField().getOriginType()));
                 break;
 
             default:
-                cb.add("$N.getObject($S,$T.class)", AbstractRecordKitApi.RESULT_SET_PARAM, getSelectColumnName(column), TypeName.get(column.getOriginField().getOriginType()));
+                cb.add("$N.getObject($S,$T.class)", AbstractRecordKitApi.RESULT_SET_PARAM, getSelectColumnName(column), TypeName.get(column.getField().getOriginType()));
         }
     }
 
@@ -251,12 +251,12 @@ public class RecordKitGenerator {
             compositionVar = AbstractRecordKitApi.RECORD_PARAM;
         } else {
             cbo.add("\n");
-            cbo.add("// Composition: " + composition.getOriginType().unwrap());
+            cbo.add("// Composition: " + composition.getType().unwrap());
             cbo.add("\n\n");
             compositionVar = varNames.getNextVarName(composition.getOriginField().getName());
             // SubCompositionType comp=parentComp.getSubComposition()
             cbo.addStatement("$T $N = $N.$N()",
-                    TypeName.get(composition.getOriginType().unwrap()),
+                    TypeName.get(composition.getType().unwrap()),
                     compositionVar,
                     parentCompositionVar,
                     toGetterName(composition.getOriginField()));
@@ -264,7 +264,7 @@ public class RecordKitGenerator {
             cbo.add("if ($N == null) {\n", compositionVar);
             cbo.indent();
             // comp = new SubCompositionType();
-            cbo.addStatement("$N = new $T()", compositionVar, TypeName.get(composition.getOriginType().unwrap()));
+            cbo.addStatement("$N = new $T()", compositionVar, TypeName.get(composition.getType().unwrap()));
             // parentComp.setSubComposition(comp)
             cbo.addStatement("$N.$N($N)", parentCompositionVar, toSetterName(composition.getOriginField()), compositionVar);
             cbo.unindent();
@@ -276,7 +276,7 @@ public class RecordKitGenerator {
                 continue;
             }
             // comp.setField(
-            cbo.add("$N.$N", compositionVar, toSetterName(column.getOriginField()));
+            cbo.add("$N.$N", compositionVar, toSetterName(column.getField()));
             cbo.add("(");
             generateGetValue(column, cbo);
             cbo.add(");\n");
@@ -389,7 +389,7 @@ public class RecordKitGenerator {
             }
 
             String selectAs = column.getSelectAs();
-            String tableName = column.getParentComposition().getTableName();
+            String tableName = column.getContainer().getTableName();
             if (StringUtils.isBlank(tableName)) {
                 selectAs = selectAs.replaceAll(Column.COLUMN_REF + "\\((.+)\\)", "$1");
                 selectAs = StringUtils.replace(selectAs, Column.COLUMN_REF, column.getName());
@@ -444,7 +444,7 @@ public class RecordKitGenerator {
             }
 
             if (column.getInsertAs().equals(Column.FIELD_REF)) {
-                String paramName = generateChain(null, column.getParentComposition(), column, FieldElement::getName);
+                String paramName = generateChain(null, column.getContainer(), column, FieldElement::getName);
                 columnValues.add(":" + paramName);
             } else {
                 columnValues.add(column.getInsertAs());
@@ -470,7 +470,7 @@ public class RecordKitGenerator {
             }
 
             if (column.getUpdateAs().equals(Column.FIELD_REF)) {
-                String paramName = generateChain(null, column.getParentComposition(), column, FieldElement::getName);
+                String paramName = generateChain(null, column.getContainer(), column, FieldElement::getName);
                 assigns.add(column.getName() + " = :" + paramName);
             } else {
                 assigns.add(column.getName() + " = " + column.getUpdateAs());

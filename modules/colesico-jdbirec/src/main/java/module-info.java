@@ -10,6 +10,7 @@ module colesico.framework.jdbirec {
 
     requires org.apache.commons.lang3;
     requires org.slf4j;
+    requires java.desktop;
 
     // API
     exports colesico.framework.jdbirec;

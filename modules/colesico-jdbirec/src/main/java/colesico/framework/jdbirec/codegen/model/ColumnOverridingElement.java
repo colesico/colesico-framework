@@ -6,12 +6,6 @@ import colesico.framework.jdbirec.ColumnOverriding;
 public class ColumnOverridingElement {
 
     /**
-     * Target composition column path to be overriding
-     * @see ColumnOverriding#column()
-     */
-    private final String columnPath;
-
-    /**
      * Column name overriding
      * @see ColumnOverriding#name()
      */
@@ -28,6 +22,12 @@ public class ColumnOverridingElement {
      * @see ColumnOverriding#mediator()
      */
     private ClassType mediator;
+
+    /**
+     * Target composition column path to be overriding
+     * @see ColumnOverriding#column()
+     */
+    private final String columnPath;
 
     /**
      * Indicate that this overriding element was associated with a column element.

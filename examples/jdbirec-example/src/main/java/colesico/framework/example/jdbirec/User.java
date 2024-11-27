@@ -4,8 +4,11 @@ package colesico.framework.example.jdbirec;
 import colesico.framework.jdbirec.Column;
 import colesico.framework.jdbirec.ColumnOverriding;
 import colesico.framework.jdbirec.Composition;
-import colesico.framework.jdbirec.RecordView;
+import colesico.framework.jdbirec.Record;
+import colesico.framework.jdbirec.TagFilter;
 
+@Record(view = "brief", tagFilter = @TagFilter(oneOf = {"#brief", "#any"}))
+@Record(view = "full", tagFilter = @TagFilter(oneOf = {"#full", "#any"}))
 public class User {
     @Column()
     private Number id;

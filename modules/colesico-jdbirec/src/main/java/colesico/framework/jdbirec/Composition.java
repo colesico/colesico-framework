@@ -30,24 +30,11 @@ import java.lang.annotation.*;
 @Inherited
 public @interface Composition {
 
-    // Substitution to composition field name + column name
-    String RN_AUTO = "@auto";
-
-    // Substitution to origin column name
-    String RN_COLUMN = "@column";
-
-    // Substitution to column field name
-    String RN_COLUMN_FILED = "@column-field";
-
-    // Substitution to column composition name
-    String RN_COMPOSITION = "@composition";
-
-    // Substitution to column composition field name
-    String RN_COMPOSITION_FIELD = "@composition-field";
-
     /**
      * Composition name.
-     * Default value is derived from composition field name
+     * Alias for composition field name.
+     * If not specified, will take the value of the composition field name.
+     * This name is useful for composition columns renaming.
      */
     String name() default "";
 
@@ -59,6 +46,16 @@ public @interface Composition {
      */
     TagFilter tagFilter() default @TagFilter;
 
+
+    // Substitution to composition name + column name
+    String RN_AUTO = "@auto";
+
+    // Substitution to origin column name
+    String RN_COLUMN_NAME = "@column";
+
+    // Substitution to column composition name
+    String RN_COMPOSITION_NAME = "@composition";
+
     /**
      * Composition columns renaming strategy.
      * <p>
@@ -68,7 +65,7 @@ public @interface Composition {
      * foo_@field_bar -> foo_[composition filed name]_bar
      * </p>
      */
-    String renaming() default RN_AUTO;
+    String renaming() default "";
 
     /**
      * Composition columns overriding

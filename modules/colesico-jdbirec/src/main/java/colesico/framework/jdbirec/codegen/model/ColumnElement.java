@@ -20,7 +20,6 @@ import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.Column;
 
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -29,19 +28,24 @@ import static colesico.framework.jdbirec.Column.*;
 public class ColumnElement {
 
     /**
-     * Composition class field
+     * Column field within container
      */
-    protected final FieldElement originField;
-
-    /**
-     * Parent composition ref
-     */
-    protected CompositionElement parentComposition;
+    protected final FieldElement field;
 
     /**
      * Column name
      */
     protected final String name;
+
+    /**
+     * @see Column#tags()
+     */
+    protected final Set<String> tags;
+
+    /**
+     * Parent container ref
+     */
+    protected ContainerElement container;
 
     /**
      * Create column SQL definition
@@ -58,14 +62,12 @@ public class ColumnElement {
     protected String insertAs = FIELD_REF;
     protected String updateAs = INSERT_AS_REF;
     protected String selectAs = COLUMN_REF;
-
     /**
      * Column value can be imported from result set
      *
      * @see Column#importable()
      */
     protected boolean importable = true;
-
     /**
      * Column value can be exported to prepared statement
      *
@@ -73,30 +75,22 @@ public class ColumnElement {
      */
     protected boolean exportable = true;
 
-    /**
-     * @see Column#tags()
-     */
-    protected final Set<String> tags;
-
-    public ColumnElement(FieldElement columnField, String columnName, Set<String> columnTags) {
-        if (columnName == null) {
-            throw new RuntimeException("Name is null");
-        }
-        this.name = columnName;
-        this.tags = columnTags;
-        this.originField = columnField;
+    public ColumnElement(FieldElement field, String name, Set<String> tags) {
+        this.field = field;
+        this.name = name;
+        this.tags = tags;
     }
 
-    public FieldElement getOriginField() {
-        return originField;
+    public FieldElement getField() {
+        return field;
     }
 
-    public CompositionElement getParentComposition() {
-        return parentComposition;
+    public ContainerElement getContainer() {
+        return container;
     }
 
-    public void setParentComposition(CompositionElement parentComposition) {
-        this.parentComposition = parentComposition;
+    public void setContainer(ContainerElement container) {
+        this.container = container;
     }
 
     public String getName() {
@@ -164,6 +158,11 @@ public class ColumnElement {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -172,7 +171,12 @@ public class ColumnElement {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(name);
+    public String toString() {
+        return "ColumnElement{" +
+                "container=" + container +
+                ", field=" + field +
+                ", name='" + name + '\'' +
+                ", tags=" + tags +
+                '}';
     }
 }
