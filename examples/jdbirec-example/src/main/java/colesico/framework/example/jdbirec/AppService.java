@@ -16,7 +16,6 @@
 
 package colesico.framework.example.jdbirec;
 
-import colesico.framework.jdbirec.RecordView;
 import colesico.framework.service.Service;
 import colesico.framework.transaction.Transactional;
 import org.jdbi.v3.core.Handle;
@@ -33,7 +32,7 @@ public class AppService {
      */
     private final Provider<Handle> handleProv;
 
-    @Named(RecordView.BRIEF_VIEW)
+    //@Named(RecordView.BRIEF_VIEW)
     private final UserDao userDao;
 
     public AppService(Provider<Handle> handleProv, UserDao userDao) {
