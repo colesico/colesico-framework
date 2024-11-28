@@ -84,13 +84,13 @@ public @interface Column {
     String selectAs() default COLUMN_REF;
 
     /**
-     * Use this field value in {@link AbstractRecordKitApi#exportRecord(Object, AbstractRecordKitApi.FieldReceiver)} method.
+     * Use this field value in {@link AbstRactrecordKit#exportRecord(Object, AbstRactrecordKit.FieldReceiver)} method.
      * If TRUE, field will be persisted to database
      */
     boolean exportable() default true;
 
     /**
-     * Use this field value in {@link AbstractRecordKitApi#importRecord(Object, ResultSet)} method.
+     * Use this field value in {@link AbstRactrecordKit#importRecord(Object, ResultSet)} method.
      * If TRUE, field will be obtained from sql query result set.
      */
     boolean importable() default true;

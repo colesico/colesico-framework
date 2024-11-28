@@ -12,6 +12,7 @@ import colesico.framework.jdbirec.*;
 import colesico.framework.jdbirec.codegen.model.ColumnOverridingElement;
 import colesico.framework.jdbirec.codegen.model.CompositionElement;
 import colesico.framework.jdbirec.codegen.model.ContainerElement;
+import colesico.framework.jdbirec.codegen.model.RecordElement;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -274,5 +275,10 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
         return recordType;
     }
 
+
+    protected void validateRecord(RecordElement record) {
+        //TODO ?
+
+    }
 
 }

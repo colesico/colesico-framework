@@ -27,9 +27,9 @@ import java.util.Set;
 public class CompositionElement extends ContainerElement {
 
     /**
-     * Composition parent container
+     * Composition parent container  (Record or another composition)
      */
-    private ContainerElement container;
+    private final ContainerElement container;
 
     /**
      * Composition field in the parent container
@@ -46,36 +46,30 @@ public class CompositionElement extends ContainerElement {
      */
     protected final Set<String> tags;
 
-
     /**
      * @see Composition#nullInstace()
      */
     private boolean nullInstance = true;
-    /**
-     * Composition table name.
-     * This is for joint records.
-     */
-    private String tableName;
 
-    public CompositionElement(RecordKitElement recordKit, FieldElement field, String name, Set<String> tags) {
+    public CompositionElement(final RecordKitElement recordKit,
+                              final ContainerElement container,
+                              final FieldElement field,
+                              final String name,
+                              final Set<String> tags) {
         super(recordKit, field.asClassType());
+        this.container = container;
         this.field = field;
         this.name = name;
         this.tags = tags;
-    }
-
-    public void setContainer(ContainerElement container) {
-        this.container = container;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
     }
 
     public void setNullInstance(boolean nullInstance) {
         this.nullInstance = nullInstance;
     }
 
+    /**
+     * Get parent container
+     */
     public ContainerElement getContainer() {
         return container;
     }
@@ -95,12 +89,6 @@ public class CompositionElement extends ContainerElement {
     public boolean isNullInstance() {
         return nullInstance;
     }
-
-
-    public String getTableName() {
-        return tableName;
-    }
-
 
     @Override
     public String toString() {

@@ -37,6 +37,12 @@ public class RecordKitElement {
     private final ClassType recordType;
 
     /**
+     * Class that extended by this kit implementation  (default is AbstractRecordKit)
+     */
+    private final ClassType superclass;
+
+
+    /**
      * Master table name associated with record of given type
      */
     private final String tableName;
@@ -51,11 +57,6 @@ public class RecordKitElement {
      * Records to be used in the joins
      */
     private Map<ClassType, JointRecord> jointRecords = new HashMap<>();
-
-    /**
-     * Class that extended by this kit implementation  (default is AbstractRecordKit)
-     */
-    private ClassType superclass;
 
     /**
      * Root compositions derived from record class
@@ -75,7 +76,9 @@ public class RecordKitElement {
     }
 
     public void addRecord(RecordElement rec) {
-        records.add(rec);
+        if (!records.add(rec)) {
+            throw new RuntimeException("Duplicate record view: " + rec.getView());
+        }
     }
 
     public void addJointRecord(JointRecord rec) {
@@ -113,4 +116,5 @@ public class RecordKitElement {
     public Map<ClassType, JointRecord> getJointRecords() {
         return jointRecords;
     }
+
 }

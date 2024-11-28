@@ -48,6 +48,6 @@ public @interface RecordKit {
     /**
      * Base class to be extended by this record kit generated implementation
      */
-    Class<? extends RecordKitApi> superclass() default AbstractRecordKitApi.class;
+    Class<? extends RecordKitApi> superclass() default AbstRactrecordKit.class;
 
 }

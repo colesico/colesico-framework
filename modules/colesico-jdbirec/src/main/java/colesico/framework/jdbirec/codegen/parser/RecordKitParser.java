@@ -230,23 +230,32 @@ public class RecordKitParser extends RecordKitHelpers {
             final Set<AnnotationAssist<Column>> columnsAnn = findFieldColumns(field);
             ColumnElement column = null;
             for (AnnotationAssist<Column> columnAnn : columnsAnn) {
-                column = parseColumn(cont, field, columnAnn);
-                if (column == null) {
-                    continue;
+                ColumnElement c = parseColumn(cont, field, columnAnn);
+                if (c != null) {
+                    if (column == null) {
+                        column = c;
+                    } else {
+                        throw new RuntimeException("Multiple columns for field: " + field.getName());
+                    }
                 }
-                break;
+
             }
 
             // Parse nested compositions
 
             if (column == null) {
                 Set<AnnotationAssist<Composition>> compsAnn = findFieldCompositions(field);
+                CompositionElement comp = null;
                 for (AnnotationAssist<Composition> compAnn : compsAnn) {
-                    CompositionElement nestedComp = parseComposition(cont, field, compAnn);
-                    if (nestedComp == null) {
-                        continue;
+                    CompositionElement c = parseComposition(cont, field, compAnn);
+                    if (c != null) {
+                        if (comp == null) {
+                            comp = c;
+                        } else {
+                            throw new RuntimeException("Multiple compositions for field: " + field.getName());
+                        }
                     }
-                    break;
+
                 }
             }
         }
@@ -269,7 +278,7 @@ public class RecordKitParser extends RecordKitHelpers {
             return null;
         }
 
-        CompositionElement comp = new CompositionElement(recordKitElement, field, name, tags);
+        CompositionElement comp = new CompositionElement(recordKitElement, container, field, name, tags);
         container.addComposition(comp);
 
         // Set renaming
@@ -291,7 +300,7 @@ public class RecordKitParser extends RecordKitHelpers {
         if (jointRecord != null) {
             tableName = jointRecord.getTableName();
         } else {
-            tableName = ""; // TODO: get from parent container??
+            tableName = container.getTableName();
         }
         comp.setTableName(tableName);
 
@@ -315,6 +324,9 @@ public class RecordKitParser extends RecordKitHelpers {
 
         RecordElement rec = new RecordElement(recordKitElement, type, view);
         recordKit.addRecord(rec);
+
+        // Set table name
+        rec.setTableName(recordKitElement.getTableName());
 
         // Set renaming
         rec.setRenaming(recordAnn.unwrap().renaming());
@@ -367,6 +379,10 @@ public class RecordKitParser extends RecordKitHelpers {
         Set<AnnotationAssist<Record>> recordsAnn = findTypeRecords(recordType);
         for (AnnotationAssist<Record> recordAnn : recordsAnn) {
             parseRecord(recordKitElement, recordType, recordAnn);
+        }
+
+        for (RecordElement record : recordKitElement.getRecords()) {
+            validateRecord(record);
         }
 
         return recordKitElement;

@@ -9,7 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ContainerElement {
+abstract public class ContainerElement {
 
     /**
      * Parent kit ref
@@ -30,10 +30,12 @@ public class ContainerElement {
      * Container columns
      */
     protected final Set<ColumnElement> columns = new LinkedHashSet<>();
+
     /**
-     * Container nested compositions
+     * Nested containers
      */
     protected final Set<CompositionElement> compositions = new LinkedHashSet<>();
+
     /**
      * @see Composition#tagFilter()
      * @see Record#tagFilter()
@@ -44,6 +46,12 @@ public class ContainerElement {
      * @see Record#renaming()
      */
     protected String renaming = "";
+
+    /**
+     * Container table name.
+     * This is for joint records.
+     */
+    private String tableName;
 
     public ContainerElement(RecordKitElement recordKit, ClassType type) {
         this.recordKit = recordKit;
@@ -58,7 +66,7 @@ public class ContainerElement {
         if (columns.contains(columnElement)) {
             return true;
         }
-        for (CompositionElement sce : compositions) {
+        for (ContainerElement sce : compositions) {
             if (sce.hasColumn(columnElement)) {
                 return true;
             }
@@ -68,14 +76,13 @@ public class ContainerElement {
 
     public void collectAllColumns(List<ColumnElement> allColumns) {
         allColumns.addAll(columns);
-        for (CompositionElement comp : compositions) {
-            comp.collectAllColumns(allColumns);
+        for (ContainerElement cont : compositions) {
+            cont.collectAllColumns(allColumns);
         }
     }
 
     public void addComposition(CompositionElement composition) {
         compositions.add(composition);
-        composition.setContainer(this);
     }
 
     public void addColumnOverriding(ColumnOverridingElement overriding) {
@@ -87,12 +94,20 @@ public class ContainerElement {
         column.setContainer(this);
     }
 
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
     public ClassType getType() {
         return type;
     }
 
     public RecordKitElement getRecordKit() {
         return recordKit;
+    }
+
+    public String getTableName() {
+        return tableName;
     }
 
     public TagFilterElement getTagFilter() {
