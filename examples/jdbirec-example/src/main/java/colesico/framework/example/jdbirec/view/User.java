@@ -17,10 +17,10 @@ import static colesico.framework.jdbirec.TagFilter.*;
 public class User {
 
     @Column
-    private Number id;
+    private Integer id;
 
-    @Column
-    private String name;
+    @Column(tags = TG_BRIEF)
+    private String name = null;
 
     @Composition(renaming = "h_@column", tags = TG_FULL)
     private Contacts home;
@@ -33,11 +33,11 @@ public class User {
     )
     private Contacts extra;
 
-    public Number getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Number id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

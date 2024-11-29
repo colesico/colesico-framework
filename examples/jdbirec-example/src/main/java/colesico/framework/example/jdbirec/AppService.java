@@ -17,7 +17,7 @@
 package colesico.framework.example.jdbirec;
 
 import colesico.framework.example.jdbirec.view.User;
-import colesico.framework.example.jdbirec.view.UserRK;
+import colesico.framework.example.jdbirec.view.UserRk;
 import colesico.framework.jdbirec.Record;
 import colesico.framework.service.Service;
 import colesico.framework.transaction.Transactional;
@@ -37,19 +37,23 @@ public class AppService {
     private final Provider<Handle> handleProv;
 
 
-    private final UserRK userDao;
+    private final UserRk userRk;
 
-    @Named(Record.VIEW_FULL)
-    private final UserRK userDaoFull;
+    private final UserRk userFullRk;
 
-    @Named(Record.VIEW_BRIEF)
-    private final UserRK userDaoBrief;
+    private final UserRk userBriefRk;
 
-    public AppService(Provider<Handle> handleProv, UserRK userDao, UserRK userDaoFull, UserRK userDaoBrief) {
+    public AppService(Provider<Handle> handleProv,
+                      UserRk userDao,
+                      @Named(Record.VIEW_FULL)
+                      UserRk userDaoFull,
+                      @Named(Record.VIEW_BRIEF)
+                      UserRk userDaoBrief) {
+
         this.handleProv = handleProv;
-        this.userDao = userDao;
-        this.userDaoFull = userDaoFull;
-        this.userDaoBrief = userDaoBrief;
+        this.userRk = userDao;
+        this.userFullRk = userDaoFull;
+        this.userBriefRk = userDaoBrief;
     }
 
     public User getUser() {
@@ -59,11 +63,39 @@ public class AppService {
         String query = "select @record from @usr";
 
         Optional<User> user = handle
-                .createQuery(userDao.sql(query))
-
-                .map(userDao.mapper())
+                .createQuery(userRk.sql(query))
+                .map(userRk.mapper())
                 .findFirst();
 
+
+        return user.orElse(null);
+    }
+
+    public User getUserFull() {
+
+        Handle handle = handleProv.get();
+
+        String query = "select @record from @usr";
+
+        Optional<User> user = handle
+                .createQuery(userFullRk.sql(query))
+                .map(userFullRk.mapper())
+                .findFirst();
+
+        return user.orElse(null);
+    }
+
+    public User getUserBrief() {
+
+        Handle handle = handleProv.get();
+
+        String query = "select @record from @usr where id=:id";
+
+        Optional<User> user = handle
+                .createQuery(userBriefRk.sql(query))
+                .bind("id", 1)
+                .map(userBriefRk.mapper())
+                .findFirst();
 
         return user.orElse(null);
     }
