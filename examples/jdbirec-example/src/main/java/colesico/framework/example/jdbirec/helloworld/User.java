@@ -5,7 +5,7 @@ import colesico.framework.jdbirec.Column;
 import colesico.framework.jdbirec.Composition;
 import colesico.framework.jdbirec.Record;
 
-import static colesico.framework.jdbirec.Composition.RN_AUTO;
+import static colesico.framework.jdbirec.Composition.RN_PREFIX;
 
 @Record
 public class User {
@@ -18,7 +18,7 @@ public class User {
     @Composition
     private Contacts home;
 
-    @Composition(renaming = RN_AUTO)
+    @Composition(renaming = RN_PREFIX)
     private Contacts work;
 
     public Number getId() {

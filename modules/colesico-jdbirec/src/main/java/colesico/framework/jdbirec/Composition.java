@@ -47,8 +47,8 @@ public @interface Composition {
     TagFilter tagFilter() default @TagFilter;
 
 
-    // Substitution to composition name + column name
-    String RN_AUTO = "@auto";
+    // Substitution to composition name + '_' + column name
+    String RN_PREFIX = "@prefix";
 
     // Substitution to origin column name
     String RN_COLUMN_NAME = "@column";

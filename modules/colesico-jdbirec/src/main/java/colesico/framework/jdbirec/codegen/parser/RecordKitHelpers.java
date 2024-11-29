@@ -274,11 +274,11 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
         String columnOriginName = columnName;
         if (StringUtils.isNotBlank(container.getRenaming())) {
             if (container instanceof CompositionElement comp) {
-                columnName = StringUtils.replace(container.getRenaming(), Composition.RN_AUTO, comp.getName() + "_" + columnOriginName);
+                columnName = StringUtils.replace(container.getRenaming(), Composition.RN_PREFIX, comp.getName() + "_" + columnOriginName);
                 columnName = StringUtils.replace(columnName, Composition.RN_COLUMN_NAME, columnOriginName);
                 columnName = StringUtils.replace(columnName, Composition.RN_COMPOSITION_NAME, comp.getName());
             } else {
-                columnName = StringUtils.replace(container.getRenaming(), Composition.RN_AUTO, columnOriginName);
+                columnName = StringUtils.replace(container.getRenaming(), Composition.RN_PREFIX, columnOriginName);
                 columnName = StringUtils.replace(columnName, Composition.RN_COLUMN_NAME, columnOriginName);
                 columnName = StringUtils.replace(columnName, Composition.RN_COMPOSITION_NAME, "");
             }

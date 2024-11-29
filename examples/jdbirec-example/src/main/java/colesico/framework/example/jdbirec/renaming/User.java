@@ -6,7 +6,7 @@ import colesico.framework.jdbirec.ColumnOverriding;
 import colesico.framework.jdbirec.Composition;
 import colesico.framework.jdbirec.Record;
 
-import static colesico.framework.jdbirec.Composition.RN_AUTO;
+import static colesico.framework.jdbirec.Composition.RN_PREFIX;
 
 @Record(
         columnOverriding = @ColumnOverriding(column = "id", name = "user_id")
@@ -26,7 +26,7 @@ public class User {
     )
     private Contacts home;
 
-    @Composition(name = "w", renaming = RN_AUTO)
+    @Composition(name = "w", renaming = RN_PREFIX)
     private Contacts work;
 
     public Number getId() {
