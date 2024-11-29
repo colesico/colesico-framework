@@ -20,8 +20,9 @@ import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.FieldElement;
-import colesico.framework.jdbirec.Record;
-import colesico.framework.jdbirec.*;
+import colesico.framework.jdbirec.AbstRactrecordKit;
+import colesico.framework.jdbirec.Column;
+import colesico.framework.jdbirec.FieldMediator;
 import colesico.framework.jdbirec.codegen.model.*;
 import com.palantir.javapoet.*;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.inject.Singleton;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 import java.sql.ResultSet;
@@ -54,14 +56,6 @@ public class RecordKitGenerator {
         this.processingEnv = processingEnv;
     }
 
-    protected String buildRecordKitInstanceClassName(RecordElement record) {
-        if (Record.VIEW_DEFAULT.equals(record.getView())) {
-            return recordKitElement.getOriginClass().getSimpleName() + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
-        } else {
-            String namePart = StrUtils.firstCharToUpperCase(record.getView());
-            return recordKitElement.getOriginClass().getSimpleName() + namePart + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
-        }
-    }
 
     protected String toGetterFunction(FieldElement field) {
         return toGetterName(field) + "()";
@@ -523,7 +517,7 @@ public class RecordKitGenerator {
     protected void generateRecord(RecordElement record) {
         this.recordElement = record;
         this.mediatorFields = new KitFields("md");
-        this.classBuilder = TypeSpec.classBuilder(buildRecordKitInstanceClassName(record));
+        this.classBuilder = TypeSpec.classBuilder(RecordKitGeneratorUtils.buildRecordKitInstanceClassName(record));
 
         classBuilder.addModifiers(Modifier.PUBLIC);
 
@@ -533,6 +527,7 @@ public class RecordKitGenerator {
 
         classBuilder.superclass(baseTypeName);
         classBuilder.addSuperinterface(TypeName.get(recordKitElement.getOriginClass().asClassType().unwrap()));
+        classBuilder.addAnnotation(Singleton.class);
 
         generateRecordKitClassDoc();
 
@@ -557,5 +552,8 @@ public class RecordKitGenerator {
         for (RecordElement record : recordKit.getRecords()) {
             generateRecord(record);
         }
+
+        IocGenerator iocGenerator = new IocGenerator(processingEnv);
+        iocGenerator.generate(recordKit);
     }
 }

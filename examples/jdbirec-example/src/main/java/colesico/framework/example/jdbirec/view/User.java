@@ -6,6 +6,7 @@ import colesico.framework.jdbirec.Composition;
 import colesico.framework.jdbirec.Record;
 import colesico.framework.jdbirec.TagFilter;
 
+import static colesico.framework.jdbirec.Composition.RN_PREFIX;
 import static colesico.framework.jdbirec.Record.VIEW_BRIEF;
 import static colesico.framework.jdbirec.Record.VIEW_FULL;
 import static colesico.framework.jdbirec.TagFilter.*;
@@ -27,7 +28,7 @@ public class User {
     @Composition(renaming = "w_@column", tags = {TG_FULL, TG_BRIEF})
     private Contacts work;
 
-    @Composition(renaming = "e_@column",
+    @Composition(renaming = RN_PREFIX,
             tagFilter = @TagFilter(anyOf = {TG_FULL, "#extra.email"})
     )
     private Contacts extra;
@@ -70,5 +71,16 @@ public class User {
 
     public void setExtra(Contacts extra) {
         this.extra = extra;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", home=" + home +
+                ", work=" + work +
+                ", extra=" + extra +
+                '}';
     }
 }

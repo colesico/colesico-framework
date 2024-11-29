@@ -137,4 +137,6 @@ abstract public class ContainerElement {
     public Set<CompositionElement> getCompositions() {
         return compositions;
     }
+
+
 }

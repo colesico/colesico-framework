@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static colesico.framework.jdbirec.Record.VIEW_DEFAULT;
+
 public class RecordElement extends ContainerElement {
 
     /**
@@ -23,6 +25,10 @@ public class RecordElement extends ContainerElement {
         List<ColumnElement> columns = new ArrayList<>();
         collectAllColumns(columns);
         return columns;
+    }
+
+    public boolean isDefaultView() {
+        return VIEW_DEFAULT.equals(view);
     }
 
     public String getView() {

@@ -16,12 +16,16 @@
 
 package colesico.framework.example.jdbirec;
 
-import colesico.framework.example.jdbirec.view.UserDao;
+import colesico.framework.example.jdbirec.view.User;
+import colesico.framework.example.jdbirec.view.UserRK;
+import colesico.framework.jdbirec.Record;
 import colesico.framework.service.Service;
 import colesico.framework.transaction.Transactional;
 import org.jdbi.v3.core.Handle;
 
+import javax.inject.Named;
 import javax.inject.Provider;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -32,22 +36,35 @@ public class AppService {
      */
     private final Provider<Handle> handleProv;
 
-    //@Named(RecordView.BRIEF_VIEW)
-    private final UserDao userDao;
 
-    public AppService(Provider<Handle> handleProv, UserDao userDao) {
+    private final UserRK userDao;
+
+    @Named(Record.VIEW_FULL)
+    private final UserRK userDaoFull;
+
+    @Named(Record.VIEW_BRIEF)
+    private final UserRK userDaoBrief;
+
+    public AppService(Provider<Handle> handleProv, UserRK userDao, UserRK userDaoFull, UserRK userDaoBrief) {
         this.handleProv = handleProv;
         this.userDao = userDao;
+        this.userDaoFull = userDaoFull;
+        this.userDaoBrief = userDaoBrief;
     }
 
-    public String readValue(Integer key) {
+    public User getUser() {
 
         Handle handle = handleProv.get();
-        String val = handle.createQuery("select avalue from avalues where akey=:key")
-                .bind("key", key)
-                .mapTo(String.class)
-                .first();
 
-        return val;
+        String query = "select @record from @usr";
+
+        Optional<User> user = handle
+                .createQuery(userDao.sql(query))
+
+                .map(userDao.mapper())
+                .findFirst();
+
+
+        return user.orElse(null);
     }
 }

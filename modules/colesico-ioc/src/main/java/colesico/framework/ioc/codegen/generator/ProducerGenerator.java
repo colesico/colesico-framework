@@ -73,7 +73,7 @@ public class ProducerGenerator {
 
         this.producerPackageName = producerPackageName;
         if (!producerClassSimpleName.endsWith(PRODUCER_CLASS_NAME_SUFFIX)) {
-            producerClassSimpleName = producerClassSimpleName + "Producer";
+            producerClassSimpleName = producerClassSimpleName + PRODUCER_CLASS_NAME_SUFFIX;
         }
         this.producerClassSimpleName = producerClassSimpleName;
         this.producerClassName = this.producerPackageName + '.' + this.producerClassSimpleName;
@@ -119,7 +119,7 @@ public class ProducerGenerator {
 
     public AnnotationSpec.Builder addProduceAnnotation(TypeName value) {
         AnnotationSpec.Builder produceAnn = AnnotationSpec.builder(Produce.class);
-        produceAnn.addMember("value", "$T.class", value);
+        produceAnn.addMember(Produce.VALUE_METHOD, "$T.class", value);
         producerAnnotations.add(produceAnn);
         return produceAnn;
     }
