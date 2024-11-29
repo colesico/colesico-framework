@@ -1,4 +1,4 @@
-package colesico.framework.example.jdbirec;
+package colesico.framework.example.jdbirec.renaming;
 
 import colesico.framework.jdbirec.Column;
 
@@ -7,7 +7,7 @@ public class Contacts {
     @Column
     private String phone;
 
-    @Column(name = "adr")
+    @Column(name="location")
     private String address;
 
     public String getPhone() {

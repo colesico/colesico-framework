@@ -16,11 +16,11 @@
 
 package colesico.framework.example.jdbirec;
 
+import colesico.framework.example.jdbirec.view.UserDao;
 import colesico.framework.service.Service;
 import colesico.framework.transaction.Transactional;
 import org.jdbi.v3.core.Handle;
 
-import javax.inject.Named;
 import javax.inject.Provider;
 
 @Service

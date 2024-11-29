@@ -9,10 +9,7 @@ import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.Record;
 import colesico.framework.jdbirec.*;
-import colesico.framework.jdbirec.codegen.model.ColumnOverridingElement;
-import colesico.framework.jdbirec.codegen.model.CompositionElement;
-import colesico.framework.jdbirec.codegen.model.ContainerElement;
-import colesico.framework.jdbirec.codegen.model.RecordElement;
+import colesico.framework.jdbirec.codegen.model.*;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -21,7 +18,17 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import java.util.*;
 
+import static colesico.framework.jdbirec.TagFilter.TF_HAS_TAGS;
+import static colesico.framework.jdbirec.TagFilter.TF_NO_TAGS;
+
 abstract public class RecordKitHelpers extends FrameworkAbstractParser {
+
+    /**
+     * Default tags size
+     *
+     * @see RecordKitHelpers#buildTags(ContainerElement, FieldElement, String, String[])
+     */
+    protected static int DEFAULT_TAGS_SIZE = 0;
 
     public RecordKitHelpers(ProcessingEnvironment processingEnv) {
         super(processingEnv);
@@ -135,12 +142,63 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
         return StringUtils.join(namesStack, ".");
     }
 
+    protected boolean hasTagsFilter(String filter, Set<String> tags) {
+        if (TF_HAS_TAGS.equals(filter)) {
+            return tags.size() > DEFAULT_TAGS_SIZE; // tags always has two default tags   (nameTag & fieldTag)
+        } else {
+            return false;
+        }
+    }
+
+    protected boolean noTagsFilter(String filter, Set<String> tags) {
+        if (TF_NO_TAGS.equals(filter)) {
+            return tags.size() <= DEFAULT_TAGS_SIZE; // tags always has two default tags   (nameTag & fieldTag)
+        } else {
+            return false;
+        }
+    }
+
+    protected boolean containsTagsFilter(String filter, Set<String> tags) {
+        return tags.contains(filter);
+    }
+
     /**
      * Check tags accepted by filters
      */
     protected boolean acceptTagsByFilter(ContainerElement container, Set<String> tags) {
-        //TODO: implement filter
-        return true;
+        TagFilterElement tagFilter = container.getTagFilter();
+        boolean anyOf;
+        if (!tagFilter.getAnyOf().isEmpty()) {
+            anyOf = false;
+            for (String filter : tagFilter.getAnyOf()) {
+                if (hasTagsFilter(filter, tags) ||
+                        noTagsFilter(filter, tags) ||
+                        containsTagsFilter(filter, tags)) {
+                    anyOf = true;
+                    break;
+                }
+            }
+        } else {
+            anyOf = true;
+        }
+
+        boolean noneOf;
+        if (!tagFilter.getNoneOf().isEmpty()) {
+            noneOf = true;
+            for (String filter : tagFilter.getNoneOf()) {
+                if (hasTagsFilter(filter, tags) ||
+                        noTagsFilter(filter, tags) ||
+                        containsTagsFilter(filter, tags)) {
+                    noneOf = false;
+                    break;
+                }
+            }
+        } else {
+            noneOf = true;
+        }
+
+        logger.debug("Tag filter anyOf: {} && noneOf: {}", anyOf, noneOf);
+        return anyOf && noneOf;
     }
 
     protected Set<AnnotationAssist<Composition>> findFieldCompositions(FieldElement field) {
@@ -229,11 +287,15 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
         Set<String> result = new HashSet<>();
 
         // Add default tags
-        String fieldTag = "#" + buildContainerPath(container, field.getName());
-        result.add(fieldTag);
-
         String nameTag = "#" + buildContainerPath(container, name);
         result.add(nameTag);
+
+        String fieldTag = "#field:" + buildContainerPath(container, field.getName());
+        result.add(fieldTag);
+
+        if (DEFAULT_TAGS_SIZE == 0) {
+            DEFAULT_TAGS_SIZE = result.size();
+        }
 
         // Transform local tags to global
         for (String tagDef : tagsDef) {

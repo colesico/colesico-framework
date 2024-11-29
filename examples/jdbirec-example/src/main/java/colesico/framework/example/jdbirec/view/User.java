@@ -1,29 +1,29 @@
-package colesico.framework.example.jdbirec;
+package colesico.framework.example.jdbirec.view;
 
 
 import colesico.framework.jdbirec.Column;
-import colesico.framework.jdbirec.ColumnOverriding;
 import colesico.framework.jdbirec.Composition;
 import colesico.framework.jdbirec.Record;
 import colesico.framework.jdbirec.TagFilter;
 
-@Record(view = "brief", tagFilter = @TagFilter(oneOf = {"#brief", "#any"}))
-@Record(view = "full", tagFilter = @TagFilter(oneOf = {"#full", "#any"}))
+import static colesico.framework.jdbirec.Record.VIEW_BRIEF;
+import static colesico.framework.jdbirec.Record.VIEW_FULL;
+import static colesico.framework.jdbirec.TagFilter.*;
+
+@Record(view = VIEW_FULL, tagFilter = @TagFilter(anyOf = {TG_FULL, TF_NO_TAGS}))
+@Record(view = VIEW_BRIEF, tagFilter = @TagFilter(anyOf = {TG_BRIEF, TF_NO_TAGS}))
 public class User {
-    @Column()
+
+    @Column
     private Number id;
 
-    @Column(name = "person")
+    @Column
     private String name;
 
-    @Composition(columnOverriding = {
-            @ColumnOverriding(column = "phone", name = "phn"),
-            @ColumnOverriding(column = "adr", name = "adr0")
-    }
-    )
+    @Composition(renaming = "h_@column", tags = TG_FULL)
     private Contacts home;
 
-    @Composition(renaming = "wrk_@column")
+    @Composition(renaming = "w_@column", tags = {TG_FULL, TG_BRIEF})
     private Contacts work;
 
     public Number getId() {

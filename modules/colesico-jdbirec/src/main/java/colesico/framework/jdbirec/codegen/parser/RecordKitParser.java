@@ -50,7 +50,6 @@ public class RecordKitParser extends RecordKitHelpers {
         TagFilterElement tagFilter = new TagFilterElement();
         if (tagFilterAnn != null) {
             tagFilter.setAnyOf(Arrays.asList(tagFilterAnn.anyOf()));
-            tagFilter.setOneOf(Arrays.asList(tagFilterAnn.oneOf()));
             tagFilter.setNoneOf(Arrays.asList(tagFilterAnn.noneOf()));
         }
         cont.setTagFilter(tagFilter);
@@ -179,7 +178,7 @@ public class RecordKitParser extends RecordKitHelpers {
 
         if (!Column.NOP_REF.equals(definition)) {
             if (StringUtils.isEmpty(definition)) {
-                column.setDefinition("[COLUMN DEFINITION]");
+                column.setDefinition("[DEFINITION]");
             } else {
                 column.setDefinition(definition);
             }

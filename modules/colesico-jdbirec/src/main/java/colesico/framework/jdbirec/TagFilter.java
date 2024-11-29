@@ -41,11 +41,29 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TagFilter {
 
+    String TG_FULL = "#full";
+    String TG_BRIEF = "#brief";
 
-    String[] oneOf() default {};
+    /**
+     * Tag filter -  not empty tag set
+     */
+    String TF_HAS_TAGS = "+";
 
+    /**
+     * Tag filter - empty tag set
+     */
+    String TF_NO_TAGS = "-";
+
+    /**
+     * Accepts for any of the given tag.
+     * Analogue of SQL IN(...)
+     */
     String[] anyOf() default {};
 
+    /**
+     * Accepts for none of the given tag.
+     * Analogue of SQL NOT IN(...)
+     */
     String[] noneOf() default {};
 
 }

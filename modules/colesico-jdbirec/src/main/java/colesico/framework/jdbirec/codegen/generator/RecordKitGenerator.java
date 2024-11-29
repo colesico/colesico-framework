@@ -491,7 +491,7 @@ public class RecordKitGenerator {
     protected String generateCreateTableSQL() {
         List<ColumnElement> allColumns = recordElement.getAllColumns();
         StringBuilder sb = new StringBuilder("CREATE TABLE ");
-        sb.append(getTableName()).append("(");
+        sb.append(getTableName()).append("(\n");
 
         List<String> columnNames = new ArrayList<>();
         for (ColumnElement column : allColumns) {
@@ -499,11 +499,17 @@ public class RecordKitGenerator {
             if (definition == null) {
                 continue;
             }
-            columnNames.add(column.getName() + " " + definition);
+            columnNames.add("    " + column.getName() + " " + definition);
         }
-        sb.append(StringUtils.join(columnNames, ", "));
-        sb.append(")\n");
+        sb.append(StringUtils.join(columnNames, ", \n"));
+        sb.append("\n)\n");
         return sb.toString();
+    }
+
+    protected void generateRecordKitClassDoc() {
+        CodeBlock.Builder cb = CodeBlock.builder();
+        cb.add(generateCreateTableSQL());
+        classBuilder.addJavadoc(cb.build());
     }
 
     protected String getTableName() {
@@ -528,6 +534,8 @@ public class RecordKitGenerator {
         classBuilder.superclass(baseTypeName);
         classBuilder.addSuperinterface(TypeName.get(recordKitElement.getOriginClass().asClassType().unwrap()));
 
+        generateRecordKitClassDoc();
+
         generateExportMethod();
         generateImportMethod();
         generateGetTableName();
@@ -536,9 +544,6 @@ public class RecordKitGenerator {
         generateGetColumnsToken();
         generateGetValuesToken();
         generateGetUpdatesToken();
-
-        classBuilder.addJavadoc(generateCreateTableSQL());
-
         generateNewRecord();
         generateMediatorFields();
         generateConstructor();
