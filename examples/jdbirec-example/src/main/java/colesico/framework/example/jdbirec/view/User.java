@@ -26,6 +26,11 @@ public class User {
     @Composition(renaming = "w_@column", tags = {TG_FULL, TG_BRIEF})
     private Contacts work;
 
+    @Composition(renaming = "e_@column",
+            tagFilter = @TagFilter(anyOf = {TG_FULL, "#extra.email"})
+    )
+    private Contacts extra;
+
     public Number getId() {
         return id;
     }
@@ -56,5 +61,13 @@ public class User {
 
     public void setWork(Contacts work) {
         this.work = work;
+    }
+
+    public Contacts getExtra() {
+        return extra;
+    }
+
+    public void setExtra(Contacts extra) {
+        this.extra = extra;
     }
 }

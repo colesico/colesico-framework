@@ -162,10 +162,7 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
         return tags.contains(filter);
     }
 
-    /**
-     * Check tags accepted by filters
-     */
-    protected boolean acceptTagsByFilter(ContainerElement container, Set<String> tags) {
+    protected boolean tagsContainerFilter(ContainerElement container, Set<String> tags) {
         TagFilterElement tagFilter = container.getTagFilter();
         boolean anyOf;
         if (!tagFilter.getAnyOf().isEmpty()) {
@@ -199,6 +196,20 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
 
         logger.debug("Tag filter anyOf: {} && noneOf: {}", anyOf, noneOf);
         return anyOf && noneOf;
+    }
+
+    /**
+     * Check tags accepted by filters
+     */
+    protected boolean acceptTagsByFilter(ContainerElement container, Set<String> tags) {
+        ContainerElement c = container;
+        while (c != null) {
+            if (!tagsContainerFilter(c, tags)) {
+                return false;
+            }
+            c = c instanceof CompositionElement comp ? comp.getContainer() : null;
+        }
+        return true;
     }
 
     protected Set<AnnotationAssist<Composition>> findFieldCompositions(FieldElement field) {

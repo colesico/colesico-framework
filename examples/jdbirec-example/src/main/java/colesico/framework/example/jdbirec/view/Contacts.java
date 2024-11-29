@@ -9,6 +9,9 @@ public class Contacts {
     @Column
     private String phone;
 
+    @Column
+    private String email;
+
     @Column(tags = TG_FULL)
     private String address;
 
@@ -26,5 +29,13 @@ public class Contacts {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
