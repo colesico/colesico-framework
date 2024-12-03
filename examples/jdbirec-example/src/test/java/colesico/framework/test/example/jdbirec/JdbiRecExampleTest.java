@@ -1,7 +1,8 @@
 package colesico.framework.test.example.jdbirec;
 
 import colesico.framework.example.jdbirec.AppService;
-import colesico.framework.example.jdbirec.view.User;
+import colesico.framework.example.jdbirec.selectas.SAUser;
+import colesico.framework.example.jdbirec.view.VWUser;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import org.slf4j.Logger;
@@ -24,10 +25,18 @@ public class JdbiRecExampleTest {
     }
 
     @Test
+    public void testSelectAs() {
+        logger.info("Run JDBI test");
+        AppService service = ioc.instance(AppService.class);
+        SAUser user = service.getSAUser();
+        assertEquals(user.getName(), "USER:Ivan");
+    }
+
+    @Test
     public void testDefaultView() {
         logger.info("Run JDBI test");
         AppService service = ioc.instance(AppService.class);
-        User user = service.getUser();
+        VWUser user = service.getVWUser();
         assertEquals(user.getName(), "Ivan");
         assertEquals(user.getExtra().getAddress(), "extra-address");
     }
@@ -36,7 +45,7 @@ public class JdbiRecExampleTest {
     public void testFullView() {
         logger.info("Run JDBI test");
         AppService service = ioc.instance(AppService.class);
-        User user = service.getUserFull();
+        VWUser user = service.getVWUserFull();
         assertEquals(user.getName(), null);
         assertEquals(user.getExtra().getAddress(), "extra-address");
     }
@@ -45,7 +54,7 @@ public class JdbiRecExampleTest {
     public void testBriefView() {
         logger.info("Run JDBI test");
         AppService service = ioc.instance(AppService.class);
-        User user = service.getUserBrief();
+        VWUser user = service.getVWUserBrief();
         assertEquals(user.getId(), 1);
         assertEquals(user.getExtra().getAddress(), null);
     }

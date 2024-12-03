@@ -14,7 +14,7 @@ import static colesico.framework.jdbirec.TagFilter.*;
 @Record
 @Record(view = VIEW_FULL, tagFilter = @TagFilter(anyOf = {TG_FULL, TF_NO_TAGS}))
 @Record(view = VIEW_BRIEF, tagFilter = @TagFilter(anyOf = {TG_BRIEF, TF_NO_TAGS}))
-public class User {
+public class VWUser {
 
     @Column
     private Integer id;

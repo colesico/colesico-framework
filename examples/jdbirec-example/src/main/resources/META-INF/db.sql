@@ -1,4 +1,4 @@
-create table if not exists users(
+create table if not exists users_v(
     id numeric,
     name varchar(16), 
     h_phone varchar(16),
@@ -10,5 +10,5 @@ create table if not exists users(
     extra_email varchar(16), 
     extra_address varchar(16)
  );
-delete from users;
-insert into users values( 1, 'Ivan','', '','','','','w-address','extra@email','extra-address');
+delete from users_v;
+insert into users_v values( 1, 'Ivan','', '','','','','w-address','extra@email','extra-address');

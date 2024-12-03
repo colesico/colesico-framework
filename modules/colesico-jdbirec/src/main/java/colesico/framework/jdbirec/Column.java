@@ -44,13 +44,13 @@ public @interface Column {
      * Database column name.
      * Default - auto generated column name from field name
      */
-    String name() default "";
+    String name() default FIELD_REF;
 
     /**
      * Column definition for create table sql.
      * If \@nop is specified column will not be included to  create table definition.
      */
-    String definition() default "";
+    String definition() default NOP_REF;
 
     /**
      * Value mediator to transmit field value to sql format and back
@@ -75,10 +75,7 @@ public @interface Column {
 
     /**
      * Column value for selecting.
-     * <p>
      * \@column - Select column value. Column identified by @Column.name value
-     * To specify another column for selection use: @column([name]), where [name] - another column name
-     * <p>
      * \@nop -  Don't select
      */
     String selectAs() default COLUMN_REF;

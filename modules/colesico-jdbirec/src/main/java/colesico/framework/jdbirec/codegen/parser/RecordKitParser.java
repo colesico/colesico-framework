@@ -76,12 +76,6 @@ public class RecordKitParser extends RecordKitHelpers {
             return null;
         }
 
-        // Construct column definition
-        String definition = null;
-        if (StringUtils.isNotBlank(columnAnn.unwrap().definition())) {
-            definition = StringUtils.trim(columnAnn.unwrap().definition());
-        }
-
         // Construct mediator type
         TypeMirror mediatorTypeMirror = columnAnn.getValueTypeMirror(Column::mediator);
         ClassType mediator = null;
@@ -89,6 +83,12 @@ public class RecordKitParser extends RecordKitHelpers {
         // Test mediatorTypeMirror!=FieldMediator.calss
         if (!CodegenUtils.isAssignable(FieldMediator.class, mediatorTypeMirror, processingEnv)) {
             mediator = new ClassType(processingEnv, (DeclaredType) mediatorTypeMirror);
+        }
+
+        // Construct column definition
+        String definition = StringUtils.trim(columnAnn.unwrap().definition());
+        if (StringUtils.isBlank(definition)) {
+            definition = Column.NOP_REF;
         }
 
         String insertAs = StringUtils.trim(columnAnn.unwrap().insertAs());
@@ -138,7 +138,6 @@ public class RecordKitParser extends RecordKitHelpers {
         ColumnElement column = new ColumnElement(field, name, tags);
         container.addColumn(column);
 
-        column.setDefinition(definition);
         column.setMediator(mediator);
 
         column.setImportable(columnAnn.unwrap().importable());
@@ -177,11 +176,7 @@ public class RecordKitParser extends RecordKitHelpers {
         // definition
 
         if (!Column.NOP_REF.equals(definition)) {
-            if (StringUtils.isEmpty(definition)) {
-                column.setDefinition("[DEFINITION]");
-            } else {
-                column.setDefinition(definition);
-            }
+            column.setDefinition(definition);
         }
 
         return column;
@@ -325,7 +320,9 @@ public class RecordKitParser extends RecordKitHelpers {
         recordKit.addRecord(rec);
 
         // Set table name
-        rec.setTableName(recordKitElement.getTableName());
+        //rec.setTableName(recordKitElement.getTableName());
+        rec.setTableName(null);
+
 
         // Set renaming
         rec.setRenaming(recordAnn.unwrap().renaming());

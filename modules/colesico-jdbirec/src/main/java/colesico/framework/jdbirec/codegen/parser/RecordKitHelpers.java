@@ -35,11 +35,9 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
     }
 
     protected static String buildColumnName(AnnotationAssist<Column> columnAnn, FieldElement columnField) {
-        String name;
-        if (StringUtils.isBlank(columnAnn.unwrap().name())) {
+        String name = StringUtils.trim(columnAnn.unwrap().name());
+        if (Column.FIELD_REF.equals(name) || StringUtils.isBlank(name)) {
             name = StrUtils.toSeparatorNotation(columnField.getName(), '_');
-        } else {
-            name = StringUtils.trim(columnAnn.unwrap().name());
         }
         return name;
     }

@@ -22,6 +22,6 @@ public class Main {
 
     public static void main(String[] args) {
         AppService srv = IocBuilder.create().build().instance(AppService.class);
-        System.out.println("Value from default DB = " + srv.getUser());
+        System.out.println("Value from default DB = " + srv.getVWUser());
     }
 }
