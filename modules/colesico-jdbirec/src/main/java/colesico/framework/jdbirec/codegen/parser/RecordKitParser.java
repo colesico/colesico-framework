@@ -144,7 +144,6 @@ public class RecordKitParser extends RecordKitHelpers {
         column.setExportable(columnAnn.unwrap().exportable());
 
         // insertAs
-
         if (!Column.NOP_REF.equals(insertAs)) {
             if (insertAs.equals(Column.UPDATE_AS_REF)) {
                 if (!Column.NOP_REF.equals(updateAs)) {
@@ -156,7 +155,6 @@ public class RecordKitParser extends RecordKitHelpers {
         }
 
         // updateAs
-
         if (!Column.NOP_REF.equals(updateAs)) {
             if (updateAs.equals(Column.INSERT_AS_REF)) {
                 if (!Column.NOP_REF.equals(insertAs)) {
@@ -168,13 +166,11 @@ public class RecordKitParser extends RecordKitHelpers {
         }
 
         // selectAs
-
         if (!Column.NOP_REF.equals(selectAs)) {
             column.setSelectAs(selectAs);
         }
 
         // definition
-
         if (!Column.NOP_REF.equals(definition)) {
             column.setDefinition(definition);
         }

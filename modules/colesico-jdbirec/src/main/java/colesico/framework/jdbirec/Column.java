@@ -76,7 +76,7 @@ public @interface Column {
     /**
      * Column value for selecting.
      * \@column - Select column value. Column identified by @Column.name value
-     * \@nop -  Don't select
+     * \@nop -  Do not enlist the column name in the select statement
      * <p>
      * example: selectAs = 'Value:' || @column
      * </p>

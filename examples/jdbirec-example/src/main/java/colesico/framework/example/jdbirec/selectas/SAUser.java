@@ -5,7 +5,7 @@ import colesico.framework.jdbirec.Column;
 import colesico.framework.jdbirec.Composition;
 import colesico.framework.jdbirec.Record;
 
-import static colesico.framework.jdbirec.Composition.RN_PREFIX;
+import static colesico.framework.jdbirec.Column.NOP_REF;
 
 @Record
 public class SAUser {
@@ -13,10 +13,14 @@ public class SAUser {
     @Column
     private Integer id;
 
+    // column selection to be defined in select statement
+    @Column(exportable = false, selectAs = NOP_REF, updateAs = NOP_REF, insertAs = NOP_REF)
+    private Integer count;
+
     @Column(selectAs = "'USER:' || @column")
     private String name;
 
-    @Composition(name = "h", renaming = RN_PREFIX)
+    @Composition(renaming = "h_@column")
     private Contacts contacts;
 
     public Integer getId() {
@@ -41,5 +45,13 @@ public class SAUser {
 
     public void setContacts(Contacts contacts) {
         this.contacts = contacts;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }

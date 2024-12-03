@@ -59,9 +59,9 @@ public class ColumnElement {
      */
     protected ClassType mediator;
 
-    protected String insertAs = FIELD_REF;
-    protected String updateAs = INSERT_AS_REF;
-    protected String selectAs = COLUMN_REF;
+    protected String insertAs;
+    protected String updateAs;
+    protected String selectAs;
     /**
      * Column value can be imported from result set
      *

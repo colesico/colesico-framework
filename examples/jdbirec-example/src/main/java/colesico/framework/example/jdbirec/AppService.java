@@ -68,7 +68,7 @@ public class AppService {
 
         Handle handle = handleProv.get();
 
-        String query = saUserRk.sql("select @record from @usr");
+        String query = saUserRk.sql("select count(*) as count, @record from @usr");
         System.out.println("SA: " + query);
 
         Optional<SAUser> user = handle
