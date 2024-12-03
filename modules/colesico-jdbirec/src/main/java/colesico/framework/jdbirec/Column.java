@@ -77,6 +77,9 @@ public @interface Column {
      * Column value for selecting.
      * \@column - Select column value. Column identified by @Column.name value
      * \@nop -  Don't select
+     * <p>
+     * example: selectAs = 'Value:' || @column
+     * </p>
      */
     String selectAs() default COLUMN_REF;
 

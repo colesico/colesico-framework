@@ -319,7 +319,7 @@ public class RecordKitParser extends RecordKitHelpers {
         RecordElement rec = new RecordElement(recordKitElement, type, view);
         recordKit.addRecord(rec);
 
-        // Set table name
+        // Set record default table name
         //rec.setTableName(recordKitElement.getTableName());
         rec.setTableName(null);
 
