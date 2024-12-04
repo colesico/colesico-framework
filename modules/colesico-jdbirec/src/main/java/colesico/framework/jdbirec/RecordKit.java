@@ -41,11 +41,6 @@ public @interface RecordKit {
     String tableAlias() default "";
 
     /**
-     * Interpret the composition as join records (select from table join...)
-     */
-    Class<? extends RecordKitApi>[] join() default {};
-
-    /**
      * Base class to be extended by this record kit generated implementation
      */
     Class<? extends RecordKitApi> superclass() default AbstRactrecordKit.class;

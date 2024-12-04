@@ -251,6 +251,20 @@ public class RecordKitParser extends RecordKitHelpers {
         }
     }
 
+    /**
+     * Parse joint record kits
+     */
+    protected JointRecord parseJoin(ClassType jointRecordType) {
+
+        AnnotationAssist<RecordKit> jointRecordKitAnn = jointRecordType.asClassElement().getAnnotation(RecordKit.class);
+        String jointTableName = jointRecordKitAnn.unwrap().table();
+        JointRecord rec = new JointRecord(jointTableName, jointRecordType);
+        recordKitElement.addJointRecord(rec);
+        recordKitElement.addTableAlias(jointRecordKitAnn.unwrap().tableAlias(), jointTableName);
+
+        return rec;
+    }
+
     protected CompositionElement parseComposition(final ContainerElement container,
                                                   final FieldElement field,
                                                   final AnnotationAssist<Composition> compAnn) {
@@ -285,7 +299,10 @@ public class RecordKitParser extends RecordKitHelpers {
 
         // Set table name
         // Check that this composition specified as a  joint record
-        JointRecord jointRecord = comp.getRecordKit().getJointRecords().get(comp.getType());
+        JointRecord jointRecord = null;
+        if (compAnn.unwrap().join()) {
+            jointRecord = parseJoin(comp.getType());
+        }
         String tableName;
         if (jointRecord != null) {
             tableName = jointRecord.getTableName();
@@ -338,7 +355,6 @@ public class RecordKitParser extends RecordKitHelpers {
         return rec;
     }
 
-
     public RecordKitElement parseRecordKit(ClassElement recordKitClass) {
         logger.debug("Parse record kit: {} ", recordKitClass);
 
@@ -354,20 +370,6 @@ public class RecordKitParser extends RecordKitHelpers {
         // Add master table alias if specified
         if (StringUtils.isNotBlank(recordKitAnn.unwrap().tableAlias())) {
             recordKitElement.addTableAlias(recordKitAnn.unwrap().tableAlias(), recordKitAnn.unwrap().table());
-        }
-
-        // Parse Joint Record Kits
-        TypeMirror[] jointRecordKits = recordKitAnn.getValueTypeMirrors(RecordKit::join);
-        for (TypeMirror jrk : jointRecordKits) {
-            ClassElement jointRecordKitClass = ClassElement.fromType(processingEnv, (DeclaredType) jrk);
-            AnnotationAssist<RecordKit> jointRecordKitAnn = jointRecordKitClass.getAnnotation(RecordKit.class);
-            String jointTableName = jointRecordKitAnn.unwrap().table();
-
-            ClassType jointRecordType = getRecordTypeFromKit(jointRecordKitClass);
-
-            JointRecord rec = new JointRecord(jointTableName, jointRecordType);
-            recordKitElement.addJointRecord(rec);
-            recordKitElement.addTableAlias(jointRecordKitAnn.unwrap().tableAlias(), jointTableName);
         }
 
         // Parse records

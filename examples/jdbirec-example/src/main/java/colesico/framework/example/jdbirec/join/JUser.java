@@ -5,23 +5,20 @@ import colesico.framework.jdbirec.Column;
 import colesico.framework.jdbirec.Composition;
 import colesico.framework.jdbirec.Record;
 
-import static colesico.framework.jdbirec.Column.AS_NOP;
-
 @Record
 public class JUser {
 
     @Column
     private Integer id;
 
-    // column selection to be defined in select statement
-    @Column(exportable = false, selectAs = AS_NOP, insertAs = AS_NOP)
-    private Integer count;
-
-    @Column(selectAs = "'USER:' || @column")
+    @Column
     private String name;
 
-    @Composition(renaming = "h_@column")
+    @Composition
     private JContacts contacts;
+
+    @Composition
+    private JContacts joinContacts;
 
     public Integer getId() {
         return id;
@@ -47,11 +44,11 @@ public class JUser {
         this.contacts = contacts;
     }
 
-    public Integer getCount() {
-        return count;
+    public JContacts getJoinContacts() {
+        return joinContacts;
     }
 
-    public void setCount(Integer count) {
-        this.count = count;
+    public void setJoinContacts(JContacts joinContacts) {
+        this.joinContacts = joinContacts;
     }
 }

@@ -80,6 +80,12 @@ public @interface Composition {
     boolean nullInstace() default true;
 
     /**
+     * Interpret the composition as join record
+     * (for query like: select from table join table2...)
+     */
+    boolean join() default false;
+
+    /**
      * Composition tags
      *
      * @see TagFilter
