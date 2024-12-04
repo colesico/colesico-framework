@@ -31,6 +31,7 @@ public @interface ColumnOverriding {
     /**
      * Target composition column name.
      * Nested composition columns can be referenced with comp1.comp2.column
+     *
      * @see Column#name()
      */
     String column() default "";

@@ -19,8 +19,8 @@ package colesico.framework.jdbirec.codegen.generator;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.ioc.production.Produce;
-import colesico.framework.jdbirec.codegen.model.RecordElement;
 import colesico.framework.jdbirec.codegen.model.RecordKitElement;
+import colesico.framework.jdbirec.codegen.model.RecordViewElement;
 import com.palantir.javapoet.AnnotationSpec;
 import com.palantir.javapoet.ClassName;
 import com.palantir.javapoet.TypeName;
@@ -41,14 +41,14 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         String producerClassSimpleName = recordKit.getOriginClass().getSimpleName() + PRODUCER_SUFFIX;
         ProducerGenerator producerGenerator = new ProducerGenerator(packageName, producerClassSimpleName, this.getClass(), processingEnv);
 
-        for (RecordElement record : recordKit.getRecords()) {
+        for (RecordViewElement view : recordKit.getRecord().getViews()) {
             logger.debug("Generating JDBI Rec producer: " + producerGenerator.getProducerClassFilePath());
-            String implPackageStr = record.getType().asClassElement().getPackageName();
-            String implClassStr = RecordKitGeneratorUtils.buildRecordKitInstanceClassName(record);
+            String implPackageStr = view.getType().asClassElement().getPackageName();
+            String implClassStr = RecordKitGeneratorUtils.buildRecordKitInstanceClassName(view);
             ClassName implClassName = ClassName.bestGuess(implPackageStr + "." + implClassStr);
             AnnotationSpec.Builder produceAnn = producerGenerator.addProduceAnnotation(implClassName);
-            if (!record.isDefaultView()) {
-                produceAnn.addMember(Produce.NAMED_METHOD, "$S", record.getView());
+            if (!view.isDefaultView()) {
+                produceAnn.addMember(Produce.NAMED_METHOD, "$S", view.getName());
             }
 
             TypeName recKitType = TypeName.get(recordKit.getOriginClass().asClassType().unwrap());

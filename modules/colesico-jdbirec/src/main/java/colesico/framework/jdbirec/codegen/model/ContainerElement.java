@@ -2,7 +2,7 @@ package colesico.framework.jdbirec.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.jdbirec.Composition;
-import colesico.framework.jdbirec.Record;
+import colesico.framework.jdbirec.RecordView;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -12,20 +12,30 @@ import java.util.Set;
 abstract public class ContainerElement {
 
     /**
-     * Parent kit ref
+     * Parent record ref
      */
-    protected final RecordKitElement recordKit;
+    protected final RecordElement record;
 
     /**
      * Container class type
      */
     protected final ClassType type;
+
+    /**
+     * Container name
+     *
+     * @see Composition#name()
+     * @see RecordView#name()
+     */
+    private final String name;
+
     /**
      * Columns list exported from composition class
      *
      * @see Composition#columnOverriding()
      */
     protected final List<ColumnOverridingElement> columnOverriding = new ArrayList<>();
+
     /**
      * Container columns
      */
@@ -38,24 +48,26 @@ abstract public class ContainerElement {
 
     /**
      * @see Composition#tagFilter()
-     * @see Record#tagFilter()
+     * @see RecordView#tagFilter()
      */
     protected TagFilterElement tagFilter = new TagFilterElement();
+
     /**
      * @see Composition#renaming()
-     * @see Record#renaming()
+     * @see RecordView#renaming()
      */
     protected String renaming = "";
 
     /**
      * Container table name.
-     * This is for joint records.
+     * Can be differ from record table name specified for joint records
      */
     private String tableName;
 
-    public ContainerElement(RecordKitElement recordKit, ClassType type) {
-        this.recordKit = recordKit;
+    public ContainerElement(RecordElement record, ClassType type, String name) {
+        this.record = record;
         this.type = type;
+        this.name = name;
     }
 
     /**
@@ -102,10 +114,6 @@ abstract public class ContainerElement {
         return type;
     }
 
-    public RecordKitElement getRecordKit() {
-        return recordKit;
-    }
-
     public String getTableName() {
         return tableName;
     }
@@ -138,5 +146,11 @@ abstract public class ContainerElement {
         return compositions;
     }
 
+    public String getName() {
+        return name;
+    }
 
+    public RecordElement getRecord() {
+        return record;
+    }
 }

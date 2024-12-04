@@ -1,19 +1,23 @@
 package colesico.framework.example.jdbirec.view;
 
 
-import colesico.framework.jdbirec.Column;
-import colesico.framework.jdbirec.Composition;
 import colesico.framework.jdbirec.Record;
-import colesico.framework.jdbirec.TagFilter;
+import colesico.framework.jdbirec.*;
 
 import static colesico.framework.jdbirec.Composition.RN_PREFIX;
-import static colesico.framework.jdbirec.Record.VIEW_BRIEF;
-import static colesico.framework.jdbirec.Record.VIEW_FULL;
+import static colesico.framework.jdbirec.RecordView.VIEW_BRIEF;
+import static colesico.framework.jdbirec.RecordView.VIEW_FULL;
 import static colesico.framework.jdbirec.TagFilter.*;
 
-@Record
-@Record(view = VIEW_FULL, tagFilter = @TagFilter(anyOf = {TG_FULL, TF_NO_TAGS}))
-@Record(view = VIEW_BRIEF, tagFilter = @TagFilter(anyOf = {TG_BRIEF, TF_NO_TAGS}))
+@Record(
+        table = "v_users",
+        tableAlias = "usr",
+        views = {
+                @RecordView,
+                @RecordView(name = VIEW_FULL, tagFilter = @TagFilter(anyOf = {TG_FULL, TF_NO_TAGS})),
+                @RecordView(name = VIEW_BRIEF, tagFilter = @TagFilter(anyOf = {TG_BRIEF, TF_NO_TAGS}))
+        }
+)
 public class VUser {
 
     @Column

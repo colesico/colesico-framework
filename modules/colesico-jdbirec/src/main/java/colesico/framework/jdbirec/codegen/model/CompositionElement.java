@@ -37,11 +37,6 @@ public class CompositionElement extends ContainerElement {
     private final FieldElement field;
 
     /**
-     * @see Composition#name()
-     */
-    private final String name;
-
-    /**
      * @see Composition#tags()
      */
     protected final Set<String> tags;
@@ -51,15 +46,14 @@ public class CompositionElement extends ContainerElement {
      */
     private boolean nullInstance = true;
 
-    public CompositionElement(final RecordKitElement recordKit,
+    public CompositionElement(final RecordElement record,
                               final ContainerElement container,
                               final FieldElement field,
                               final String name,
                               final Set<String> tags) {
-        super(recordKit, field.asClassType());
+        super(record, field.asClassType(), name);
         this.container = container;
         this.field = field;
-        this.name = name;
         this.tags = tags;
     }
 
@@ -76,10 +70,6 @@ public class CompositionElement extends ContainerElement {
 
     public FieldElement getField() {
         return field;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Set<String> getTags() {

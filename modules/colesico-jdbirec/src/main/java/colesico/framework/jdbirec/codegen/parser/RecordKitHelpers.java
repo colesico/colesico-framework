@@ -61,24 +61,6 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
         }
     }
 
-    protected Set<AnnotationAssist<Record>> findTypeRecords(ClassType type) {
-        final Set<AnnotationAssist<Record>> result = new HashSet<>();
-
-        AnnotationAssist<Record> record = type.asClassElement().getAnnotation(Record.class);
-        if (record != null) {
-            result.add(record);
-        } else {
-            AnnotationAssist<Records> records = type.asClassElement().getAnnotation(Records.class);
-            if (records != null) {
-                for (Record rec : records.unwrap().value()) {
-                    record = new AnnotationAssist<>(processingEnv, rec);
-                    result.add(record);
-                }
-            }
-        }
-        return result;
-    }
-
     /**
      * Lookup column overridings from column composition to root composition
      */
@@ -287,6 +269,14 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
         return columnName;
     }
 
+    protected String getTableAlias(AnnotationAssist<Record> recordAnn, String tableName) {
+        String tableAlias = StringUtils.trim(recordAnn.unwrap().tableAlias());
+        if (StringUtils.isBlank(tableAlias)) {
+            return tableName;
+        }
+        return tableAlias;
+    }
+
     protected Set<String> buildTags(
             ContainerElement container,
             FieldElement field,
@@ -347,7 +337,7 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
     }
 
 
-    protected void validateRecord(RecordElement record) {
+    protected void validateRecordView(RecordViewElement record) {
         //TODO ?
 
     }

@@ -22,7 +22,7 @@ import colesico.framework.example.jdbirec.selectas.SUser;
 import colesico.framework.example.jdbirec.selectas.SUserRk;
 import colesico.framework.example.jdbirec.view.VUser;
 import colesico.framework.example.jdbirec.view.VUserRk;
-import colesico.framework.jdbirec.Record;
+import colesico.framework.jdbirec.RecordView;
 import colesico.framework.service.Service;
 import colesico.framework.transaction.Transactional;
 import org.jdbi.v3.core.Handle;
@@ -55,9 +55,9 @@ public class AppService {
                       RUserRk rUserRk,
                       SUserRk sUserRk,
                       VUserRk vUserRk,
-                      @Named(Record.VIEW_FULL)
+                      @Named(RecordView.VIEW_FULL)
                       VUserRk vUserFullRk,
-                      @Named(Record.VIEW_BRIEF)
+                      @Named(RecordView.VIEW_BRIEF)
                       VUserRk vUserBriefRk) {
 
         this.handleProv = handleProv;

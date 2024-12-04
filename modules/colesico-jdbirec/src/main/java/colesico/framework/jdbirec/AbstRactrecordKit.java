@@ -43,7 +43,7 @@ abstract public class AbstRactrecordKit<R> implements RecordKitApi<R> {
     public static final String RESULT_SET_PARAM = "rs";
 
     /**
-     *  Exports the value of the record fields for subsequent saving to the database
+     * Exports the value of the record fields for subsequent saving to the database
      */
     abstract protected void exportRecord(R rec, FieldReceiver fr);
 

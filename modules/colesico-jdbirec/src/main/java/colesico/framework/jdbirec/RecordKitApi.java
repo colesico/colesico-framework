@@ -6,6 +6,7 @@ import java.util.Map;
 
 /**
  * Record kit basic API
+ *
  * @param <R> Record class
  */
 public interface RecordKitApi<R> {

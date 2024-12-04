@@ -39,12 +39,12 @@ public class RecordKitFactory {
 
     public static <R, K extends RecordKitApi<R>> K getKit(Class<K> recordKitClass) {
         String kitClassName = recordKitClass.getName() + KIT_IMPL_CLASS_SUFFIX;
-        return getKit(kitClassName, Record.VIEW_DEFAULT);
+        return getKit(kitClassName, RecordView.VIEW_DEFAULT);
     }
 
     public static <R, K extends RecordKitApi<R>> K getKit(Class<K> recordKitClass, String view) {
 
-        if (view == null || Record.VIEW_DEFAULT.equals(view)) {
+        if (view == null || RecordView.VIEW_DEFAULT.equals(view)) {
             return getKit(recordKitClass);
         }
 

@@ -1,15 +1,16 @@
 package colesico.framework.example.jdbirec.renaming;
 
 
-import colesico.framework.jdbirec.Column;
-import colesico.framework.jdbirec.ColumnOverriding;
-import colesico.framework.jdbirec.Composition;
 import colesico.framework.jdbirec.Record;
+import colesico.framework.jdbirec.*;
 
 import static colesico.framework.jdbirec.Composition.RN_PREFIX;
 
-@Record(
-        columnOverriding = @ColumnOverriding(column = "id", name = "user_id")
+@Record(table = "r_users",
+        tableAlias = "usr",
+        views = @RecordView(
+                columnOverriding = @ColumnOverriding(column = "id", name = "user_id")
+        )
 )
 public class RUser {
     @Column

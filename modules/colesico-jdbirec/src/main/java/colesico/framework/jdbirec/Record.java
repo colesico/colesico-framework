@@ -22,43 +22,27 @@ import java.lang.annotation.*;
 /**
  * Record definition.
  * Analogue of JPA @Entity.
- * Record is a root composition.
- *
- * @see Composition
  */
 @Documented
-@Target({ElementType.TYPE})
+@Target({ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
-@Repeatable(Records.class)
 @Inherited
 public @interface Record {
 
-    String VIEW_DEFAULT = "default";
-    String VIEW_FULL = "full";
-    String VIEW_BRIEF = "brief";
+    /**
+     * Master table name for records view
+     */
+    String table() default "";
 
     /**
-     * Record view name.
-     * <p>
-     * To be able to work within the same record class with different sets of fields of this record,
-     * the system of views is used. Each view includes a specific set of record columns or compositions.
-     * View name must consist of letters and numbers only.
+     * Master table alias to use in sql queries as @theAlias
+     * If not specified, the alias matches the table name, i.e. @theTableName
      */
-    String view() default VIEW_DEFAULT;
+    String tableAlias() default "";
 
     /**
-     * @see Composition#tagFilter()
+     * Record views
      */
-    TagFilter tagFilter() default @TagFilter;
-
-    /**
-     * @see Composition#renaming()
-     */
-    String renaming() default "";
-
-    /**
-     * @see Composition#columnOverriding()
-     */
-    ColumnOverriding[] columnOverriding() default {};
+    RecordView[] views() default {@RecordView};
 
 }

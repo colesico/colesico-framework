@@ -41,10 +41,15 @@ import java.util.function.Function;
 public class RecordKitGenerator {
 
     private static final Logger logger = LoggerFactory.getLogger(RecordKitGenerator.class);
+
     private final ProcessingEnvironment processingEnv;
 
-    protected RecordKitElement recordKitElement;
-    protected RecordElement recordElement;
+    protected RecordKitElement recordKit;
+
+    protected RecordElement record;
+
+    protected RecordViewElement recordView;
+
     protected TypeSpec.Builder classBuilder;
 
     // Mediator fields
@@ -91,8 +96,8 @@ public class RecordKitGenerator {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(AbstRactrecordKit.NEW_RECORD_METHOD);
         mb.addModifiers(Modifier.PUBLIC);
         mb.addAnnotation(Override.class);
-        mb.returns(TypeName.get(recordKitElement.getRecordType().unwrap()));
-        mb.addStatement("return new $T()", TypeName.get(recordKitElement.getRecordType().unwrap()));
+        mb.returns(TypeName.get(record.getType().unwrap()));
+        mb.addStatement("return new $T()", TypeName.get(record.getType().unwrap()));
         classBuilder.addMethod(mb.build());
     }
 
@@ -307,13 +312,13 @@ public class RecordKitGenerator {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(AbstRactrecordKit.EXPORT_RECORD_METHOD);
         mb.addModifiers(Modifier.PUBLIC);
         mb.addAnnotation(Override.class);
-        mb.addParameter(TypeName.get(recordElement.getType().unwrap()), AbstRactrecordKit.RECORD_PARAM, Modifier.FINAL);
+        mb.addParameter(TypeName.get(recordView.getType().unwrap()), AbstRactrecordKit.RECORD_PARAM, Modifier.FINAL);
         mb.addParameter(TypeName.get(AbstRactrecordKit.FieldReceiver.class),
                 AbstRactrecordKit.FIELD_RECEIVER_PARAM, Modifier.FINAL);
 
         CodeBlock.Builder cb = CodeBlock.builder();
         varNames = new VarNames();
-        generateContainerToMap(recordElement, null, cb);
+        generateContainerToMap(recordView, null, cb);
         mb.addCode(cb.build());
 
         classBuilder.addMethod(mb.build());
@@ -324,15 +329,15 @@ public class RecordKitGenerator {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(AbstRactrecordKit.IMPORT_RECORD_METHOD);
         mb.addModifiers(Modifier.PUBLIC);
         mb.addAnnotation(Override.class);
-        mb.returns(TypeName.get(recordKitElement.getRecordType().unwrap()));
-        mb.addParameter(TypeName.get(recordKitElement.getRecordType().unwrap()), AbstRactrecordKit.RECORD_PARAM, Modifier.FINAL);
+        mb.returns(TypeName.get(record.getType().unwrap()));
+        mb.addParameter(TypeName.get(record.getType().unwrap()), AbstRactrecordKit.RECORD_PARAM, Modifier.FINAL);
         mb.addParameter(ClassName.get(ResultSet.class), AbstRactrecordKit.RESULT_SET_PARAM, Modifier.FINAL);
         mb.addException(ClassName.get(SQLException.class));
 
         varNames = new VarNames();
 
         CodeBlock.Builder cb = CodeBlock.builder();
-        generateContainerFromResultSet(recordElement, null, cb);
+        generateContainerFromResultSet(recordView, null, cb);
         mb.addCode(cb.build());
 
         mb.addStatement("return $N", AbstRactrecordKit.RECORD_PARAM);
@@ -357,9 +362,9 @@ public class RecordKitGenerator {
                 ClassName.get(String.class), ClassName.get(String.class));
         mb.returns(retTypeName);
 
-        if (!recordKitElement.getTableAliases().isEmpty()) {
+        if (!recordKit.getTableAliases().isEmpty()) {
             ArrayCodegen acg = new ArrayCodegen();
-            for (Map.Entry<String, String> jt : recordKitElement.getTableAliases().entrySet()) {
+            for (Map.Entry<String, String> jt : recordKit.getTableAliases().entrySet()) {
                 acg.add("$S,$S", jt.getKey(), jt.getValue());
             }
             CodeBlock.Builder cb = CodeBlock.builder();
@@ -379,7 +384,7 @@ public class RecordKitGenerator {
         mb.addAnnotation(Override.class);
         mb.returns(ClassName.get(String.class));
 
-        List<ColumnElement> allColumns = recordElement.getAllColumns();
+        List<ColumnElement> allColumns = recordView.getAllColumns();
         List<String> selectItems = new ArrayList<>();
 
         for (ColumnElement column : allColumns) {
@@ -413,7 +418,7 @@ public class RecordKitGenerator {
         mb.addAnnotation(Override.class);
         mb.returns(ClassName.get(String.class));
 
-        List<ColumnElement> allColumns = recordElement.getAllColumns();
+        List<ColumnElement> allColumns = recordView.getAllColumns();
         List<String> columnNames = new ArrayList<>();
         for (ColumnElement column : allColumns) {
             if (column.getInsertAs() == null) {
@@ -432,7 +437,7 @@ public class RecordKitGenerator {
         mb.addAnnotation(Override.class);
         mb.returns(ClassName.get(String.class));
 
-        List<ColumnElement> allColumns = recordElement.getAllColumns();
+        List<ColumnElement> allColumns = recordView.getAllColumns();
         List<String> columnValues = new ArrayList<>();
         for (ColumnElement column : allColumns) {
             if (column.getInsertAs() == null) {
@@ -458,7 +463,7 @@ public class RecordKitGenerator {
         mb.addAnnotation(Override.class);
         mb.returns(ClassName.get(String.class));
 
-        List<ColumnElement> allColumns = recordElement.getAllColumns();
+        List<ColumnElement> allColumns = recordView.getAllColumns();
         List<String> assigns = new ArrayList<>();
         for (ColumnElement column : allColumns) {
             if (column.getUpdateAs() == null) {
@@ -480,7 +485,7 @@ public class RecordKitGenerator {
 
 
     protected String generateCreateTableSQL() {
-        List<ColumnElement> allColumns = recordElement.getAllColumns();
+        List<ColumnElement> allColumns = recordView.getAllColumns();
         StringBuilder sb = new StringBuilder("CREATE TABLE ");
         sb.append(getTableName()).append("(\n");
 
@@ -504,26 +509,26 @@ public class RecordKitGenerator {
     }
 
     protected String getTableName() {
-        if (StringUtils.isEmpty(recordKitElement.getTableName())) {
+        if (StringUtils.isEmpty(record.getTableName())) {
             return "[TABLE]";
         } else {
-            return recordKitElement.getTableName();
+            return record.getTableName();
         }
     }
 
-    protected void generateRecord(RecordElement record) {
-        this.recordElement = record;
+    protected void generateRecord(RecordViewElement view) {
+        this.recordView = view;
         this.mediatorFields = new KitFields("md");
-        this.classBuilder = TypeSpec.classBuilder(RecordKitGeneratorUtils.buildRecordKitInstanceClassName(record));
+        this.classBuilder = TypeSpec.classBuilder(RecordKitGeneratorUtils.buildRecordKitInstanceClassName(view));
 
         classBuilder.addModifiers(Modifier.PUBLIC);
 
         TypeName baseTypeName = ParameterizedTypeName.get(
-                ClassName.bestGuess(recordKitElement.getSuperclass().asClassElement().getName()),
-                TypeName.get(recordKitElement.getRecordType().unwrap()));
+                ClassName.bestGuess(recordKit.getSuperclass().asClassElement().getName()),
+                TypeName.get(view.getType().unwrap()));
 
         classBuilder.superclass(baseTypeName);
-        classBuilder.addSuperinterface(TypeName.get(recordKitElement.getOriginClass().asClassType().unwrap()));
+        classBuilder.addSuperinterface(TypeName.get(recordKit.getOriginClass().asClassType().unwrap()));
         classBuilder.addAnnotation(Singleton.class);
 
         generateRecordKitClassDoc();
@@ -540,14 +545,15 @@ public class RecordKitGenerator {
         generateMediatorFields();
         generateConstructor();
 
-        String packageName = recordKitElement.getOriginClass().getPackageName();
-        CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), packageName, recordKitElement.getOriginClass().unwrap());
+        String packageName = recordKit.getOriginClass().getPackageName();
+        CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), packageName, recordKit.getOriginClass().unwrap());
     }
 
     public void generate(RecordKitElement recordKit) {
-        this.recordKitElement = recordKit;
-        for (RecordElement record : recordKit.getRecords()) {
-            generateRecord(record);
+        this.recordKit = recordKit;
+        this.record = recordKit.getRecord();
+        for (RecordViewElement view : recordKit.getRecord().getViews()) {
+            generateRecord(view);
         }
 
         IocGenerator iocGenerator = new IocGenerator(processingEnv);

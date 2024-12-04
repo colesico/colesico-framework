@@ -7,24 +7,28 @@ public class ColumnOverridingElement {
 
     /**
      * Column name overriding
+     *
      * @see ColumnOverriding#name()
      */
     private String name;
 
     /**
      * Column definition overriding
+     *
      * @see ColumnOverriding#definition()
      */
     private String definition;
 
     /**
      * Mediator overriding
+     *
      * @see ColumnOverriding#mediator()
      */
     private ClassType mediator;
 
     /**
      * Target composition column path to be overriding
+     *
      * @see ColumnOverriding#column()
      */
     private final String columnPath;

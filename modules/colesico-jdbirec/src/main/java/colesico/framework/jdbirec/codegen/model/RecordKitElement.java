@@ -20,9 +20,7 @@ import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class RecordKitElement {
 
@@ -32,90 +30,60 @@ public class RecordKitElement {
     private final ClassElement originClass;
 
     /**
-     * Record type
-     */
-    private final ClassType recordType;
-
-    /**
      * Class that extended by this kit implementation  (default is AbstractRecordKit)
      */
     private final ClassType superclass;
 
-
     /**
-     * Master table name associated with record of given type
+     * Record to be processed
      */
-    private final String tableName;
+    private RecordElement record;
 
     /**
      * Table aliases to reference within sql queries.
      * Table aliases for the record table and joint records
      */
-    private Map<String, String> tableAliases = new HashMap<>();
+    private final Map<String, String> tableAliases = new HashMap<>();
 
     /**
      * Records to be used in the joins
      */
-    private Map<ClassType, JointRecord> jointRecords = new HashMap<>();
+    private final Map<ClassType, JointRecord> jointRecords = new HashMap<>();
 
-    /**
-     * Root compositions derived from record class
-     */
-    private final Set<RecordElement> records = new HashSet<>();
-
-    public RecordKitElement(ClassElement originClass,
-                            ClassType recordType,
-                            ClassType superclass,
-                            String tableName) {
-
+    public RecordKitElement(ClassElement originClass, ClassType superclass) {
         this.originClass = originClass;
-        this.recordType = recordType;
         this.superclass = superclass;
-        this.tableName = tableName;
-
-    }
-
-    public void addRecord(RecordElement rec) {
-        if (!records.add(rec)) {
-            throw new RuntimeException("Duplicate record view: " + rec.getView());
-        }
     }
 
     public void addJointRecord(JointRecord rec) {
         jointRecords.put(rec.getRecordType(), rec);
     }
 
-    public Set<RecordElement> getRecords() {
-        return records;
-    }
-
-    public ClassType getRecordType() {
-        return recordType;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public ClassType getSuperclass() {
-        return superclass;
-    }
-
-    public Map<String, String> getTableAliases() {
-        return tableAliases;
-    }
-
     public void addTableAlias(String alias, String table) {
         tableAliases.put(alias, table);
+    }
+
+    public void setRecord(RecordElement record) {
+        this.record = record;
     }
 
     public ClassElement getOriginClass() {
         return originClass;
     }
 
+    public ClassType getSuperclass() {
+        return superclass;
+    }
+
+    public RecordElement getRecord() {
+        return record;
+    }
+
+    public Map<String, String> getTableAliases() {
+        return tableAliases;
+    }
+
     public Map<ClassType, JointRecord> getJointRecords() {
         return jointRecords;
     }
-
-
 }

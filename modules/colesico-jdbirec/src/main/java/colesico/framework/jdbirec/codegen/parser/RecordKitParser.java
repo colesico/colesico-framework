@@ -40,7 +40,17 @@ public class RecordKitParser extends RecordKitHelpers {
     /**
      * Parsing record
      */
-    protected RecordKitElement recordKitElement;
+    protected RecordKitElement recordKit;
+
+    /**
+     * Parsing record
+     */
+    protected RecordElement record;
+
+    /**
+     * Parsing view
+     */
+    protected RecordViewElement view;
 
     public RecordKitParser(ProcessingEnvironment processingEnv) {
         super(processingEnv);
@@ -182,7 +192,7 @@ public class RecordKitParser extends RecordKitHelpers {
     private void parseColumnOverridings(ContainerElement cont, ColumnOverriding[] overridingsAnn) {
         for (ColumnOverriding co : overridingsAnn) {
 
-            AnnotationAssist<ColumnOverriding> overridingAnn = new AnnotationAssist<>(processingEnv, co);
+            AnnotationAssist<ColumnOverriding> overridingAnn = AnnotationAssist.of(processingEnv, co);
 
             String columnName = overridingAnn.unwrap().column();
             String columnPath = buildContainerPath(cont, columnName);
@@ -252,15 +262,17 @@ public class RecordKitParser extends RecordKitHelpers {
     }
 
     /**
-     * Parse joint record kits
+     * Parse joint record
      */
-    protected JointRecord parseJoin(ClassType jointRecordType) {
+    protected JointRecord parseJoinRecord(ClassType compositionType) {
 
-        AnnotationAssist<RecordKit> jointRecordKitAnn = jointRecordType.asClassElement().getAnnotation(RecordKit.class);
-        String jointTableName = jointRecordKitAnn.unwrap().table();
-        JointRecord rec = new JointRecord(jointTableName, jointRecordType);
-        recordKitElement.addJointRecord(rec);
-        recordKitElement.addTableAlias(jointRecordKitAnn.unwrap().tableAlias(), jointTableName);
+        AnnotationAssist<Record> jointRecordKitAnn = compositionType.asClassElement().getAnnotation(Record.class);
+        String jointTableName = StringUtils.trim(jointRecordKitAnn.unwrap().table());
+        String jointTableAlias = getTableAlias(jointRecordKitAnn, jointTableName);
+
+        JointRecord rec = new JointRecord(jointTableName, compositionType);
+        recordKit.addJointRecord(rec);
+        recordKit.addTableAlias(jointTableAlias, jointTableName);
 
         return rec;
     }
@@ -282,7 +294,7 @@ public class RecordKitParser extends RecordKitHelpers {
             return null;
         }
 
-        CompositionElement comp = new CompositionElement(recordKitElement, container, field, name, tags);
+        CompositionElement comp = new CompositionElement(record, container, field, name, tags);
         container.addComposition(comp);
 
         // Set renaming
@@ -301,7 +313,7 @@ public class RecordKitParser extends RecordKitHelpers {
         // Check that this composition specified as a  joint record
         JointRecord jointRecord = null;
         if (compAnn.unwrap().join()) {
-            jointRecord = parseJoin(comp.getType());
+            jointRecord = parseJoinRecord(comp.getType());
         }
         String tableName;
         if (jointRecord != null) {
@@ -317,72 +329,84 @@ public class RecordKitParser extends RecordKitHelpers {
         return comp;
     }
 
-
-    protected RecordElement parseRecord(
-            final RecordKitElement recordKit,
+    protected RecordViewElement parseRecordView(
             final ClassType type,
-            final AnnotationAssist<Record> recordAnn) {
+            final AnnotationAssist<RecordView> viewAnn) {
 
-        logger.debug("Parse record: {} of type: {};", recordAnn, type);
+        logger.debug("Parse record view: {} of type: {};", viewAnn, type);
 
         // Build composition name
-        String view = recordAnn.unwrap().view();
-        if (StringUtils.isBlank(view)) {
-            view = Record.VIEW_DEFAULT;
+        String viewName = viewAnn.unwrap().name();
+        if (StringUtils.isBlank(viewName)) {
+            viewName = RecordView.VIEW_DEFAULT;
         }
-        checkViewName(view, type.asTypeElement());
+        checkViewName(viewName, type.asTypeElement());
 
-        RecordElement rec = new RecordElement(recordKitElement, type, view);
-        recordKit.addRecord(rec);
+        view = new RecordViewElement(record, type, viewName);
+        record.addView(view);
 
         // Set record default table name
-        //rec.setTableName(recordKitElement.getTableName());
-        rec.setTableName(null);
-
+        // view.setTableName(record.getTableName());
+        view.setTableName(null);
 
         // Set renaming
-        rec.setRenaming(recordAnn.unwrap().renaming());
+        view.setRenaming(viewAnn.unwrap().renaming());
 
         // Set tagFilter
-        parseTagFilter(rec, recordAnn.unwrap().tagFilter());
+        parseTagFilter(view, viewAnn.unwrap().tagFilter());
 
         // Parse column overriding
-        parseColumnOverridings(rec, recordAnn.unwrap().columnOverriding());
+        parseColumnOverridings(view, viewAnn.unwrap().columnOverriding());
 
         // Process composition fields
-        parseContainerFields(rec);
+        parseContainerFields(view);
 
-        return rec;
+        return view;
+    }
+
+    protected RecordElement parseRecord(ClassType recordType) {
+
+        AnnotationAssist<Record> recordAnn = recordType.asClassElement().getAnnotation(Record.class);
+
+        String tableName = StringUtils.trim(recordAnn.unwrap().table());
+        if (StringUtils.isBlank(tableName)) {
+            throw new RuntimeException("Unspecified table name for record: " + recordType);
+        }
+
+        String tableAlias = getTableAlias(recordAnn, tableName);
+
+        record = new RecordElement(recordKit, recordType, tableName, tableAlias);
+        recordKit.setRecord(record);
+
+        // Add master table alias if specified
+        recordKit.addTableAlias(tableAlias, tableName);
+
+        // Parse record views
+        for (RecordView viewAnn : recordAnn.unwrap().views()) {
+            parseRecordView(recordType, AnnotationAssist.of(processingEnv, viewAnn));
+        }
+
+        for (RecordViewElement view : record.getViews()) {
+            validateRecordView(view);
+        }
+
+        return record;
     }
 
     public RecordKitElement parseRecordKit(ClassElement recordKitClass) {
         logger.debug("Parse record kit: {} ", recordKitClass);
 
-        ClassType recordType = getRecordTypeFromKit(recordKitClass);
-
         AnnotationAssist<RecordKit> recordKitAnn = recordKitClass.getAnnotation(RecordKit.class);
 
-        String tableName = recordKitAnn.unwrap().table();
         TypeMirror superclassMirror = recordKitAnn.getValueTypeMirror(RecordKit::superclass);
         ClassType superclassType = new ClassType(processingEnv, (DeclaredType) superclassMirror);
-        recordKitElement = new RecordKitElement(recordKitClass, recordType, superclassType, tableName);
+        recordKit = new RecordKitElement(recordKitClass, superclassType);
 
-        // Add master table alias if specified
-        if (StringUtils.isNotBlank(recordKitAnn.unwrap().tableAlias())) {
-            recordKitElement.addTableAlias(recordKitAnn.unwrap().tableAlias(), recordKitAnn.unwrap().table());
-        }
+        ClassType recordType = getRecordTypeFromKit(recordKitClass);
 
-        // Parse records
-        Set<AnnotationAssist<Record>> recordsAnn = findTypeRecords(recordType);
-        for (AnnotationAssist<Record> recordAnn : recordsAnn) {
-            parseRecord(recordKitElement, recordType, recordAnn);
-        }
+        parseRecord(recordType);
 
-        for (RecordElement record : recordKitElement.getRecords()) {
-            validateRecord(record);
-        }
-
-        return recordKitElement;
+        return recordKit;
 
     }
 }

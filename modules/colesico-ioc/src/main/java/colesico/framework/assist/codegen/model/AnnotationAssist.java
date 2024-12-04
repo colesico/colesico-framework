@@ -28,6 +28,10 @@ public class AnnotationAssist<A extends Annotation> extends Assist {
 
     protected final A originAnnotation;
 
+    public static <A extends Annotation> AnnotationAssist<A> of(ProcessingEnvironment processingEnv, A annotation) {
+        return new AnnotationAssist<>(processingEnv, annotation);
+    }
+
     public AnnotationAssist(ProcessingEnvironment processingEnv, A annotation) {
         super(processingEnv);
         this.originAnnotation = annotation;

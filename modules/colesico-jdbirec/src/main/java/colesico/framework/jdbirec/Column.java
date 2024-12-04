@@ -98,7 +98,7 @@ public @interface Column {
     /**
      * Column tags
      *
-     * @see Record#tagFilter()
+     * @see RecordView#tagFilter()
      */
     String[] tags() default {};
 }

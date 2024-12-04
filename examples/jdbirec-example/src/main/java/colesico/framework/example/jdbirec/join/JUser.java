@@ -5,7 +5,7 @@ import colesico.framework.jdbirec.Column;
 import colesico.framework.jdbirec.Composition;
 import colesico.framework.jdbirec.Record;
 
-@Record
+@Record(table = "users_v", tableAlias = "usr")
 public class JUser {
 
     @Column

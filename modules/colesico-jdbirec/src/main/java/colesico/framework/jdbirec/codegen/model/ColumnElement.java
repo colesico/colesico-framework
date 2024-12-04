@@ -23,8 +23,6 @@ import colesico.framework.jdbirec.Column;
 import java.util.Objects;
 import java.util.Set;
 
-import static colesico.framework.jdbirec.Column.*;
-
 public class ColumnElement {
 
     /**
@@ -62,6 +60,7 @@ public class ColumnElement {
     protected String insertAs;
     protected String updateAs;
     protected String selectAs;
+
     /**
      * Column value can be imported from result set
      *

@@ -1,57 +1,67 @@
 package colesico.framework.jdbirec.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassType;
-import colesico.framework.jdbirec.Record;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
-import static colesico.framework.jdbirec.Record.VIEW_DEFAULT;
-
-public class RecordElement extends ContainerElement {
+/**
+ * @see colesico.framework.jdbirec.Record
+ */
+public class RecordElement {
+    /**
+     * Parent record kit
+     */
+    private final RecordKitElement recordKit;
 
     /**
-     * @see Record#view()
+     * Record type
      */
-    private final String view;
+    private final ClassType type;
 
-    public RecordElement(RecordKitElement recordKit, ClassType type, String view) {
-        super(recordKit, type);
-        this.view = view;
+    /**
+     * Master table name associated with record of given type
+     */
+    private final String tableName;
+
+    private final String tableAlias;
+
+    /**
+     * Root compositions derived from record  class
+     */
+    private final Set<RecordViewElement> views = new HashSet<>();
+
+
+    public RecordElement(RecordKitElement recordKit, ClassType type, String tableName, String tableAlias) {
+        this.recordKit = recordKit;
+        this.type = type;
+        this.tableName = tableName;
+        this.tableAlias = tableAlias;
     }
 
-    public List<ColumnElement> getAllColumns() {
-        List<ColumnElement> columns = new ArrayList<>();
-        collectAllColumns(columns);
-        return columns;
+    public void addView(RecordViewElement view) {
+        if (!views.add(view)) {
+            throw new RuntimeException("Duplicate record view: " + view.getName());
+        }
     }
 
-    public boolean isDefaultView() {
-        return VIEW_DEFAULT.equals(view);
+    public RecordKitElement getRecordKit() {
+        return recordKit;
     }
 
-    public String getView() {
-        return view;
+    public ClassType getType() {
+        return type;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        RecordElement that = (RecordElement) o;
-        return Objects.equals(view, that.view);
+    public String getTableName() {
+        return tableName;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(view);
+    public String getTableAlias() {
+        return tableAlias;
     }
 
-    @Override
-    public String toString() {
-        return "RecordElement{" +
-                "originType=" + type +
-                ", view='" + view + '\'' +
-                '}';
+    public Set<RecordViewElement> getViews() {
+        return views;
     }
 }

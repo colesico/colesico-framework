@@ -7,7 +7,7 @@ import colesico.framework.jdbirec.Record;
 
 import static colesico.framework.jdbirec.Composition.RN_PREFIX;
 
-@Record
+@Record(table = "users")
 public class User {
     @Column
     private Number id;

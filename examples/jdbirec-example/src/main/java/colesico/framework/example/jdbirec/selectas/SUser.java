@@ -7,7 +7,7 @@ import colesico.framework.jdbirec.Record;
 
 import static colesico.framework.jdbirec.Column.AS_NOP;
 
-@Record
+@Record(table = "v_users", tableAlias = "usr")
 public class SUser {
 
     @Column

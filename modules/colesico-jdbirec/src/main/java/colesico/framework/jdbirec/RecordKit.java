@@ -31,16 +31,6 @@ import java.lang.annotation.*;
 public @interface RecordKit {
 
     /**
-     * Master table name for record
-     */
-    String table() default "";
-
-    /**
-     * Master table alias to use in sql queries
-     */
-    String tableAlias() default "";
-
-    /**
      * Base class to be extended by this record kit generated implementation
      */
     Class<? extends RecordKitApi> superclass() default AbstRactrecordKit.class;
