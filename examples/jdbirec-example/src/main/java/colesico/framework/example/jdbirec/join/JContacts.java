@@ -1,7 +1,9 @@
 package colesico.framework.example.jdbirec.join;
 
 import colesico.framework.jdbirec.Column;
+import colesico.framework.jdbirec.Record;
 
+@Record(table = "j_contacts")
 public class JContacts {
 
     @Column

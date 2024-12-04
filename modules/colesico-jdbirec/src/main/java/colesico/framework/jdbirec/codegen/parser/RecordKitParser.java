@@ -16,6 +16,7 @@
 
 package colesico.framework.jdbirec.codegen.parser;
 
+import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
@@ -235,7 +236,9 @@ public class RecordKitParser extends RecordKitHelpers {
                     if (column == null) {
                         column = c;
                     } else {
-                        throw new RuntimeException("Multiple columns for field: " + field.getName());
+                        throw CodegenException.of()
+                                .message("Multiple columns for field: " + field.getName())
+                                .build();
                     }
                 }
 
@@ -252,7 +255,7 @@ public class RecordKitParser extends RecordKitHelpers {
                         if (comp == null) {
                             comp = c;
                         } else {
-                            throw new RuntimeException("Multiple compositions for field: " + field.getName());
+                            throw CodegenException.of().message("Multiple compositions for field: " + field.getName()).build();
                         }
                     }
 
@@ -267,6 +270,9 @@ public class RecordKitParser extends RecordKitHelpers {
     protected JointRecord parseJoinRecord(ClassType compositionType) {
 
         AnnotationAssist<Record> jointRecordKitAnn = compositionType.asClassElement().getAnnotation(Record.class);
+        if (jointRecordKitAnn == null) {
+            throw CodegenException.of().message("No @Record annotation on joint composition: " + compositionType).build();
+        }
         String jointTableName = StringUtils.trim(jointRecordKitAnn.unwrap().table());
         String jointTableAlias = getTableAlias(jointRecordKitAnn, jointTableName);
 
@@ -370,7 +376,10 @@ public class RecordKitParser extends RecordKitHelpers {
 
         String tableName = StringUtils.trim(recordAnn.unwrap().table());
         if (StringUtils.isBlank(tableName)) {
-            throw new RuntimeException("Unspecified table name for record: " + recordType);
+            throw CodegenException.of()
+                    .message("Unspecified table name for record: " + recordType)
+                    .element(recordType.asClassElement())
+                    .build();
         }
 
         String tableAlias = getTableAlias(recordAnn, tableName);

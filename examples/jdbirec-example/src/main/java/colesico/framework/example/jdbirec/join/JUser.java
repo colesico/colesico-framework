@@ -17,7 +17,7 @@ public class JUser {
     @Composition
     private JContacts contacts;
 
-    @Composition
+    @Composition(join = true)
     private JContacts joinContacts;
 
     public Integer getId() {

@@ -272,6 +272,11 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
     protected String getTableAlias(AnnotationAssist<Record> recordAnn, String tableName) {
         String tableAlias = StringUtils.trim(recordAnn.unwrap().tableAlias());
         if (StringUtils.isBlank(tableAlias)) {
+            if (StringUtils.isBlank(tableName)) {
+                throw CodegenException.of()
+                        .message("Unspecified table name")
+                        .build();
+            }
             return tableName;
         }
         return tableAlias;
