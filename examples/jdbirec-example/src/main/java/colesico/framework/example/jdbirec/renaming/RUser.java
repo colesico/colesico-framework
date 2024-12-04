@@ -11,9 +11,9 @@ import static colesico.framework.jdbirec.Composition.RN_PREFIX;
 @Record(
         columnOverriding = @ColumnOverriding(column = "id", name = "user_id")
 )
-public class User {
+public class RUser {
     @Column
-    private Number id;
+    private Integer id;
 
     @Column(name = "user_name")
     private String name;
@@ -24,16 +24,16 @@ public class User {
                     @ColumnOverriding(column = "location", name = "post_addr")
             }
     )
-    private Contacts home;
+    private RContacts home;
 
     @Composition(name = "w", renaming = RN_PREFIX)
-    private Contacts work;
+    private RContacts work;
 
     public Number getId() {
         return id;
     }
 
-    public void setId(Number id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -45,19 +45,19 @@ public class User {
         this.name = name;
     }
 
-    public Contacts getHome() {
+    public RContacts getHome() {
         return home;
     }
 
-    public void setHome(Contacts home) {
+    public void setHome(RContacts home) {
         this.home = home;
     }
 
-    public Contacts getWork() {
+    public RContacts getWork() {
         return work;
     }
 
-    public void setWork(Contacts work) {
+    public void setWork(RContacts work) {
         this.work = work;
     }
 }

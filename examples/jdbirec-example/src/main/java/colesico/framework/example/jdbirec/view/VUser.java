@@ -14,7 +14,7 @@ import static colesico.framework.jdbirec.TagFilter.*;
 @Record
 @Record(view = VIEW_FULL, tagFilter = @TagFilter(anyOf = {TG_FULL, TF_NO_TAGS}))
 @Record(view = VIEW_BRIEF, tagFilter = @TagFilter(anyOf = {TG_BRIEF, TF_NO_TAGS}))
-public class VWUser {
+public class VUser {
 
     @Column
     private Integer id;
@@ -23,15 +23,15 @@ public class VWUser {
     private String name = null;
 
     @Composition(renaming = "h_@column", tags = TG_FULL)
-    private Contacts home;
+    private VContacts home;
 
     @Composition(renaming = "w_@column", tags = {TG_FULL, TG_BRIEF})
-    private Contacts work;
+    private VContacts work;
 
     @Composition(renaming = RN_PREFIX,
             tagFilter = @TagFilter(anyOf = {TG_FULL, "#extra.email"})
     )
-    private Contacts extra;
+    private VContacts extra;
 
     public Integer getId() {
         return id;
@@ -49,27 +49,27 @@ public class VWUser {
         this.name = name;
     }
 
-    public Contacts getHome() {
+    public VContacts getHome() {
         return home;
     }
 
-    public void setHome(Contacts home) {
+    public void setHome(VContacts home) {
         this.home = home;
     }
 
-    public Contacts getWork() {
+    public VContacts getWork() {
         return work;
     }
 
-    public void setWork(Contacts work) {
+    public void setWork(VContacts work) {
         this.work = work;
     }
 
-    public Contacts getExtra() {
+    public VContacts getExtra() {
         return extra;
     }
 
-    public void setExtra(Contacts extra) {
+    public void setExtra(VContacts extra) {
         this.extra = extra;
     }
 

@@ -1,9 +1,9 @@
-package colesico.framework.example.jdbirec.view;
+package colesico.framework.example.jdbirec.join;
 
 import colesico.framework.jdbirec.RecordKit;
 import colesico.framework.jdbirec.RecordKitApi;
 
 @RecordKit(table = "users_v", tableAlias = "usr")
-public interface VWUserRk extends RecordKitApi<VWUser> {
+public interface JUserRk extends RecordKitApi<JUser> {
 
 }

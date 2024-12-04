@@ -389,15 +389,15 @@ public class RecordKitGenerator {
 
             String selectAs = column.getSelectAs();
 
-            if (!Column.COLUMN_REF.equals(selectAs)) {
+            if (!Column.AS_COLUMN.equals(selectAs)) {
                 selectAs = selectAs + " as " + column.getName();
             }
 
             String tableName = column.getContainer().getTableName();
             if (StringUtils.isBlank(tableName)) {
-                selectAs = StringUtils.replace(selectAs, Column.COLUMN_REF, column.getName());
+                selectAs = StringUtils.replace(selectAs, Column.AS_COLUMN, column.getName());
             } else {
-                selectAs = StringUtils.replace(selectAs, Column.COLUMN_REF, tableName + '.' + column.getName());
+                selectAs = StringUtils.replace(selectAs, Column.AS_COLUMN, tableName + '.' + column.getName());
             }
 
             selectItems.add(selectAs);
@@ -439,7 +439,7 @@ public class RecordKitGenerator {
                 continue;
             }
 
-            if (column.getInsertAs().equals(Column.FIELD_REF)) {
+            if (column.getInsertAs().equals(Column.AS_FIELD)) {
                 String paramName = generateVarChain(null, column.getContainer(), column, FieldElement::getName);
                 columnValues.add(":" + paramName);
             } else {
@@ -465,7 +465,7 @@ public class RecordKitGenerator {
                 continue;
             }
 
-            if (column.getUpdateAs().equals(Column.FIELD_REF)) {
+            if (column.getUpdateAs().equals(Column.AS_FIELD)) {
                 String paramName = generateVarChain(null, column.getContainer(), column, FieldElement::getName);
                 assigns.add(column.getName() + " = :" + paramName);
             } else {

@@ -47,12 +47,12 @@ public @interface TagFilter {
     /**
      * Tag filter -  not empty tag set
      */
-    String TF_HAS_TAGS = "+";
+    String TF_HAS_TAGS = "?has-tags";
 
     /**
      * Tag filter - empty tag set
      */
-    String TF_NO_TAGS = "-";
+    String TF_NO_TAGS = "?no-tags";
 
     /**
      * Accepts for any of the given tag.

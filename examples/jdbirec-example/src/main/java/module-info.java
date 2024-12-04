@@ -12,5 +12,6 @@ module colesico.framework.example.jdbirec {
     exports colesico.framework.example.jdbirec.renaming;
     exports colesico.framework.example.jdbirec.view;
     exports colesico.framework.example.jdbirec.selectas;
+    exports colesico.framework.example.jdbirec.join;
 
 }

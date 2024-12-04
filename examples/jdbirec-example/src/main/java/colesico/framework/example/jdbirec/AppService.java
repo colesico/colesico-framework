@@ -16,10 +16,12 @@
 
 package colesico.framework.example.jdbirec;
 
-import colesico.framework.example.jdbirec.selectas.SAUser;
-import colesico.framework.example.jdbirec.selectas.SAUserRk;
-import colesico.framework.example.jdbirec.view.VWUser;
-import colesico.framework.example.jdbirec.view.VWUserRk;
+import colesico.framework.example.jdbirec.renaming.RUser;
+import colesico.framework.example.jdbirec.renaming.RUserRk;
+import colesico.framework.example.jdbirec.selectas.SUser;
+import colesico.framework.example.jdbirec.selectas.SUserRk;
+import colesico.framework.example.jdbirec.view.VUser;
+import colesico.framework.example.jdbirec.view.VUserRk;
 import colesico.framework.jdbirec.Record;
 import colesico.framework.service.Service;
 import colesico.framework.transaction.Transactional;
@@ -39,41 +41,61 @@ public class AppService {
     private final Provider<Handle> handleProv;
 
 
-    private final VWUserRk vwUserRk;
+    private final VUserRk vUserRk;
 
-    private final VWUserRk vwUserFullRk;
+    private final VUserRk vUserFullRk;
 
-    private final VWUserRk vwUserBriefRk;
+    private final VUserRk vUserBriefRk;
 
-    private final SAUserRk saUserRk;
+    private final SUserRk sUserRk;
+
+    private final RUserRk rUserRk;
 
     public AppService(Provider<Handle> handleProv,
-                      SAUserRk saUserRk,
-                      VWUserRk vwUserRk,
+                      RUserRk rUserRk,
+                      SUserRk sUserRk,
+                      VUserRk vUserRk,
                       @Named(Record.VIEW_FULL)
-                      VWUserRk vwUserFullRk,
+                      VUserRk vUserFullRk,
                       @Named(Record.VIEW_BRIEF)
-                      VWUserRk vwUserBriefRk) {
+                      VUserRk vUserBriefRk) {
 
         this.handleProv = handleProv;
 
-        this.saUserRk = saUserRk;
+        this.rUserRk = rUserRk;
+        this.sUserRk = sUserRk;
 
-        this.vwUserRk = vwUserRk;
-        this.vwUserFullRk = vwUserFullRk;
-        this.vwUserBriefRk = vwUserBriefRk;
+        this.vUserRk = vUserRk;
+        this.vUserFullRk = vUserFullRk;
+        this.vUserBriefRk = vUserBriefRk;
     }
 
-    public SAUser getSAUser() {
+    public RUser getRUser() {
 
         Handle handle = handleProv.get();
 
-        String query = saUserRk.sql("select count(*) as count, @record from @usr");
-        System.out.println("SA: " + query);
+        String query = rUserRk.sql("select @record from @usr");
+        System.out.println("RU: " + query);
 
-        Optional<SAUser> user = handle
+        Optional<RUser> user = handle
                 .createQuery(query)
-                .map(saUserRk.mapper())
+                .map(rUserRk.mapper())
+                .findFirst();
+
+
+        return user.orElse(null);
+    }
+
+    public SUser getSUser() {
+
+        Handle handle = handleProv.get();
+
+        String query = sUserRk.sql("select count(*) as count, @record from @usr");
+        System.out.println("SU: " + query);
+
+        Optional<SUser> user = handle
+                .createQuery(query)
+                .map(sUserRk.mapper())
                 .findFirst();
 
 
@@ -81,45 +103,45 @@ public class AppService {
     }
 
 
-    public VWUser getVWUser() {
+    public VUser getVUser() {
 
         Handle handle = handleProv.get();
 
-        String query = vwUserRk.sql("select @record from @usr");
-        System.out.println("VW: " + query);
-        Optional<VWUser> user = handle
+        String query = vUserRk.sql("select @record from @usr");
+        System.out.println("VU: " + query);
+        Optional<VUser> user = handle
                 .createQuery(query)
-                .map(vwUserRk.mapper())
+                .map(vUserRk.mapper())
                 .findFirst();
 
 
         return user.orElse(null);
     }
 
-    public VWUser getVWUserFull() {
+    public VUser getVUserFull() {
 
         Handle handle = handleProv.get();
 
         String query = "select @record from @usr";
 
-        Optional<VWUser> user = handle
-                .createQuery(vwUserFullRk.sql(query))
-                .map(vwUserFullRk.mapper())
+        Optional<VUser> user = handle
+                .createQuery(vUserFullRk.sql(query))
+                .map(vUserFullRk.mapper())
                 .findFirst();
 
         return user.orElse(null);
     }
 
-    public VWUser getVWUserBrief() {
+    public VUser getVUserBrief() {
 
         Handle handle = handleProv.get();
 
         String query = "select @record from @usr where id=:id";
 
-        Optional<VWUser> user = handle
-                .createQuery(vwUserBriefRk.sql(query))
+        Optional<VUser> user = handle
+                .createQuery(vUserBriefRk.sql(query))
                 .bind("id", 1)
-                .map(vwUserBriefRk.mapper())
+                .map(vUserBriefRk.mapper())
                 .findFirst();
 
         return user.orElse(null);

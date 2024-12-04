@@ -34,23 +34,23 @@ import java.sql.ResultSet;
 @Inherited
 public @interface Column {
 
-    String FIELD_REF = "@field";
-    String COLUMN_REF = "@column";
-    String INSERT_AS_REF = "@insertAs";
-    String UPDATE_AS_REF = "@updateAs";
-    String NOP_REF = "@nop";
+    String AS_FIELD = "@field";
+    String AS_COLUMN = "@column";
+    String AS_INSERT = "@insertAs";
+    String AS_UPDATE = "@updateAs";
+    String AS_NOP = "@nop";
 
     /**
      * Database column name.
      * Default - auto generated column name from field name
      */
-    String name() default FIELD_REF;
+    String name() default AS_FIELD;
 
     /**
      * Column definition for create table sql.
      * If \@nop is specified column will not be included to  create table definition.
      */
-    String definition() default NOP_REF;
+    String definition() default AS_NOP;
 
     /**
      * Value mediator to transmit field value to sql format and back
@@ -63,7 +63,7 @@ public @interface Column {
      * \@updateAs - the same as updateAs
      * \@nop -  no insertion
      */
-    String insertAs() default FIELD_REF;
+    String insertAs() default AS_FIELD;
 
     /**
      * Possible values:
@@ -71,7 +71,7 @@ public @interface Column {
      * \@insertAs - the same as insertAs
      * \@nop -  don't update
      */
-    String updateAs() default INSERT_AS_REF;
+    String updateAs() default AS_INSERT;
 
     /**
      * Column value for selecting.
@@ -81,7 +81,7 @@ public @interface Column {
      * example: selectAs = 'Value:' || @column
      * </p>
      */
-    String selectAs() default COLUMN_REF;
+    String selectAs() default AS_COLUMN;
 
     /**
      * Use this field value in {@link AbstRactrecordKit#exportRecord(Object, AbstRactrecordKit.FieldReceiver)} method.

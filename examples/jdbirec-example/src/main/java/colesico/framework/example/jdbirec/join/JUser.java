@@ -1,27 +1,27 @@
-package colesico.framework.example.jdbirec.selectas;
+package colesico.framework.example.jdbirec.join;
 
 
 import colesico.framework.jdbirec.Column;
 import colesico.framework.jdbirec.Composition;
 import colesico.framework.jdbirec.Record;
 
-import static colesico.framework.jdbirec.Column.NOP_REF;
+import static colesico.framework.jdbirec.Column.AS_NOP;
 
 @Record
-public class SAUser {
+public class JUser {
 
     @Column
     private Integer id;
 
     // column selection to be defined in select statement
-    @Column(exportable = false, selectAs = NOP_REF, updateAs = NOP_REF, insertAs = NOP_REF)
+    @Column(exportable = false, selectAs = AS_NOP, insertAs = AS_NOP)
     private Integer count;
 
     @Column(selectAs = "'USER:' || @column")
     private String name;
 
     @Composition(renaming = "h_@column")
-    private Contacts contacts;
+    private JContacts contacts;
 
     public Integer getId() {
         return id;
@@ -39,11 +39,11 @@ public class SAUser {
         this.name = name;
     }
 
-    public Contacts getContacts() {
+    public JContacts getContacts() {
         return contacts;
     }
 
-    public void setContacts(Contacts contacts) {
+    public void setContacts(JContacts contacts) {
         this.contacts = contacts;
     }
 

@@ -88,23 +88,23 @@ public class RecordKitParser extends RecordKitHelpers {
         // Construct column definition
         String definition = StringUtils.trim(columnAnn.unwrap().definition());
         if (StringUtils.isBlank(definition)) {
-            definition = Column.NOP_REF;
+            definition = Column.AS_NOP;
         }
 
         String insertAs = StringUtils.trim(columnAnn.unwrap().insertAs());
         if (StringUtils.isBlank(insertAs)) {
-            insertAs = Column.FIELD_REF;
+            insertAs = Column.AS_FIELD;
         }
 
         String updateAs = StringUtils.trim(columnAnn.unwrap().updateAs());
 
         if (StringUtils.isBlank(updateAs)) {
-            updateAs = Column.INSERT_AS_REF;
+            updateAs = Column.AS_INSERT;
         }
 
         String selectAs = StringUtils.trim(columnAnn.unwrap().selectAs());
         if (StringUtils.isBlank(selectAs)) {
-            selectAs = Column.COLUMN_REF;
+            selectAs = Column.AS_COLUMN;
         }
 
         // Find and apply column overriding
@@ -144,9 +144,9 @@ public class RecordKitParser extends RecordKitHelpers {
         column.setExportable(columnAnn.unwrap().exportable());
 
         // insertAs
-        if (!Column.NOP_REF.equals(insertAs)) {
-            if (insertAs.equals(Column.UPDATE_AS_REF)) {
-                if (!Column.NOP_REF.equals(updateAs)) {
+        if (!Column.AS_NOP.equals(insertAs)) {
+            if (insertAs.equals(Column.AS_UPDATE)) {
+                if (!Column.AS_NOP.equals(updateAs)) {
                     column.setInsertAs(updateAs);
                 }
             } else {
@@ -155,9 +155,9 @@ public class RecordKitParser extends RecordKitHelpers {
         }
 
         // updateAs
-        if (!Column.NOP_REF.equals(updateAs)) {
-            if (updateAs.equals(Column.INSERT_AS_REF)) {
-                if (!Column.NOP_REF.equals(insertAs)) {
+        if (!Column.AS_NOP.equals(updateAs)) {
+            if (updateAs.equals(Column.AS_INSERT)) {
+                if (!Column.AS_NOP.equals(insertAs)) {
                     column.setUpdateAs(insertAs);
                 }
             } else {
@@ -166,12 +166,12 @@ public class RecordKitParser extends RecordKitHelpers {
         }
 
         // selectAs
-        if (!Column.NOP_REF.equals(selectAs)) {
+        if (!Column.AS_NOP.equals(selectAs)) {
             column.setSelectAs(selectAs);
         }
 
         // definition
-        if (!Column.NOP_REF.equals(definition)) {
+        if (!Column.AS_NOP.equals(definition)) {
             column.setDefinition(definition);
         }
 
@@ -310,6 +310,9 @@ public class RecordKitParser extends RecordKitHelpers {
 
         // Build composition name
         String view = recordAnn.unwrap().view();
+        if (StringUtils.isBlank(view)) {
+            view = Record.VIEW_DEFAULT;
+        }
         checkViewName(view, type.asTypeElement());
 
         RecordElement rec = new RecordElement(recordKitElement, type, view);

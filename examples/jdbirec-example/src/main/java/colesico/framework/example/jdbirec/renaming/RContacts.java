@@ -2,7 +2,7 @@ package colesico.framework.example.jdbirec.renaming;
 
 import colesico.framework.jdbirec.Column;
 
-public class Contacts {
+public class RContacts {
 
     @Column
     private String phone;

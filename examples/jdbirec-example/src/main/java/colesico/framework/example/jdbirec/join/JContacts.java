@@ -1,8 +1,8 @@
-package colesico.framework.example.jdbirec.selectas;
+package colesico.framework.example.jdbirec.join;
 
 import colesico.framework.jdbirec.Column;
 
-public class Contacts {
+public class JContacts {
 
     @Column
     private String phone;

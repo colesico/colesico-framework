@@ -4,7 +4,7 @@ import colesico.framework.jdbirec.Column;
 
 import static colesico.framework.jdbirec.TagFilter.TG_FULL;
 
-public class Contacts {
+public class VContacts {
 
     @Column
     private String phone;
