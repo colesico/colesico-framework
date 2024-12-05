@@ -4,8 +4,9 @@ package colesico.framework.example.jdbirec.join;
 import colesico.framework.jdbirec.Column;
 import colesico.framework.jdbirec.Composition;
 import colesico.framework.jdbirec.Record;
+import colesico.framework.jdbirec.TagFilter;
 
-@Record(table = "users_v", tableAlias = "usr")
+@Record(table = "j_users", tableAlias = "usr")
 public class JUser {
 
     @Column
@@ -14,11 +15,8 @@ public class JUser {
     @Column
     private String name;
 
-    @Composition
+    @Composition(join = true, tagFilter = @TagFilter(noneOf = "#contacts.id"))
     private JContacts contacts;
-
-    @Composition(join = true)
-    private JContacts joinContacts;
 
     public Integer getId() {
         return id;
@@ -42,13 +40,5 @@ public class JUser {
 
     public void setContacts(JContacts contacts) {
         this.contacts = contacts;
-    }
-
-    public JContacts getJoinContacts() {
-        return joinContacts;
-    }
-
-    public void setJoinContacts(JContacts joinContacts) {
-        this.joinContacts = joinContacts;
     }
 }

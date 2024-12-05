@@ -16,6 +16,8 @@
 
 package colesico.framework.example.jdbirec;
 
+import colesico.framework.example.jdbirec.join.JUser;
+import colesico.framework.example.jdbirec.join.JUserRk;
 import colesico.framework.example.jdbirec.renaming.RUser;
 import colesico.framework.example.jdbirec.renaming.RUserRk;
 import colesico.framework.example.jdbirec.selectas.SUser;
@@ -51,10 +53,13 @@ public class AppService {
 
     private final RUserRk rUserRk;
 
+    private final JUserRk jUserRk;
+
     public AppService(Provider<Handle> handleProv,
                       RUserRk rUserRk,
                       SUserRk sUserRk,
                       VUserRk vUserRk,
+                      JUserRk jUserRk,
                       @Named(RecordView.VIEW_FULL)
                       VUserRk vUserFullRk,
                       @Named(RecordView.VIEW_BRIEF)
@@ -64,10 +69,27 @@ public class AppService {
 
         this.rUserRk = rUserRk;
         this.sUserRk = sUserRk;
+        this.jUserRk = jUserRk;
 
         this.vUserRk = vUserRk;
         this.vUserFullRk = vUserFullRk;
         this.vUserBriefRk = vUserBriefRk;
+    }
+
+    public JUser getJUser() {
+
+        Handle handle = handleProv.get();
+
+        String query = jUserRk.sql("select @record from @usr left join @j_contacts on @usr.id=@j_contacts.id");
+        System.out.println("JU: " + query);
+
+        Optional<JUser> user = handle
+                .createQuery(query)
+                .map(jUserRk.mapper())
+                .findFirst();
+
+
+        return user.orElse(null);
     }
 
     public RUser getRUser() {

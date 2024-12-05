@@ -7,6 +7,9 @@ import colesico.framework.jdbirec.Record;
 public class JContacts {
 
     @Column
+    private Integer id;
+
+    @Column
     private String phone;
 
     @Column
@@ -28,4 +31,11 @@ public class JContacts {
         this.email = email;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 }

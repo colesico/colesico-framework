@@ -23,3 +23,18 @@ create table if not exists r_users(
 );
 delete from r_users;
 insert into r_users values( 1, 'Ivan','', 'Moscow 1','+7888999000','Russia');
+
+create table if not exists j_users(
+    id numeric,
+    name varchar(16)
+);
+delete from j_users;
+insert into j_users values( 1, 'Ivan');
+
+create table if not exists j_contacts(
+    id numeric,
+    phone varchar(16),
+    email varchar(16)
+);
+delete from j_contacts;
+insert into j_contacts values( 1, '+7888999000','email@domain.ru');

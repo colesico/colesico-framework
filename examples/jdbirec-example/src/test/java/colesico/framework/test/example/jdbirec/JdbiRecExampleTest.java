@@ -1,6 +1,7 @@
 package colesico.framework.test.example.jdbirec;
 
 import colesico.framework.example.jdbirec.AppService;
+import colesico.framework.example.jdbirec.join.JUser;
 import colesico.framework.example.jdbirec.renaming.RUser;
 import colesico.framework.example.jdbirec.selectas.SUser;
 import colesico.framework.example.jdbirec.view.VUser;
@@ -22,6 +23,14 @@ public class JdbiRecExampleTest {
     @BeforeClass
     public void init() {
         ioc = IocBuilder.create().build();
+    }
+
+    @Test
+    public void testJoin() {
+        logger.info("Test join");
+        AppService service = ioc.instance(AppService.class);
+        JUser user = service.getJUser();
+        //assertEquals(user.getHome().getAddress(), "Moscow 1");
     }
 
     @Test

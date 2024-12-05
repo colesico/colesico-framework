@@ -352,8 +352,7 @@ public class RecordKitParser extends RecordKitHelpers {
         record.addView(view);
 
         // Set record default table name
-        // view.setTableName(record.getTableName());
-        view.setTableName(null);
+        view.setTableName(record.getTableName());
 
         // Set renaming
         view.setRenaming(viewAnn.unwrap().renaming());
