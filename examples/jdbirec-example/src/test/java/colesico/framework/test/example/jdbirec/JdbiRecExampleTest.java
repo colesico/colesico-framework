@@ -30,7 +30,7 @@ public class JdbiRecExampleTest {
         logger.info("Test join");
         AppService service = ioc.instance(AppService.class);
         JUser user = service.getJUser();
-        //assertEquals(user.getHome().getAddress(), "Moscow 1");
+        assertEquals(user.getContacts().getEmail(), "email@domain.ru");
     }
 
     @Test

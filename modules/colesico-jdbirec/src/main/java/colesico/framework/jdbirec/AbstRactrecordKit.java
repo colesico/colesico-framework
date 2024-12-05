@@ -31,10 +31,10 @@ abstract public class AbstRactrecordKit<R> implements RecordKitApi<R> {
     public static final String EXPORT_RECORD_METHOD = "exportRecord";
     public static final String IMPORT_RECORD_METHOD = "importRecord";
     public static final String GET_TABLES_ALIASES_METHOD = "getTablesAliases";
-    public static final String GET_RECORD_TOKEN_METHOD = "getRecordToken";
-    public static final String GET_COLUMNS_TOKEN_METHOD = "getColumnsToken";
+    public static final String GET_RECORD_TOKEN_METHOD = "getSelectRecordToken";
+    public static final String GET_COLUMNS_TOKEN_METHOD = "getInsertColumnsToken";
+    public static final String GET_VALUES_TOKEN_METHOD = "getInsertValuesToken";
     public static final String GET_UPDATES_TOKEN_METHOD = "getUpdatesToken";
-    public static final String GET_VALUES_TOKEN_METHOD = "getValuesToken";
     public static final String NEW_RECORD_METHOD = "newRecord";
     public static final String GET_TABLE_NAME_METHOD = "getTableName";
 
@@ -62,19 +62,19 @@ abstract public class AbstRactrecordKit<R> implements RecordKitApi<R> {
      * Select columns and expressions, separated by comma:  column1,column2, expr(column3)...
      * This token for use in select statements
      */
-    abstract protected String getRecordToken();
+    abstract protected String getSelectRecordToken();
 
     /**
      * Column names separate with  comma:  column1,column2...
      * This token for use in insert statements
      */
-    abstract protected String getColumnsToken();
+    abstract protected String getInsertColumnsToken();
 
     /**
      * Param names separated with comma: :param1,:param2...
      * This token for use in insert statements
      */
-    abstract protected String getValuesToken();
+    abstract protected String getInsertValuesToken();
 
     /**
      * Column assignments separated with comma: column1 = :param1, column2 = :param2 ...
@@ -87,9 +87,9 @@ abstract public class AbstRactrecordKit<R> implements RecordKitApi<R> {
 
         query = query
                 .replace(TABLE_NAME_REF, getTableName())
-                .replace(RECORD_REF, getRecordToken())
-                .replace(COLUMNS_REF, getColumnsToken())
-                .replace(VALUES_REF, getValuesToken())
+                .replace(RECORD_REF, getSelectRecordToken())
+                .replace(COLUMNS_REF, getInsertColumnsToken())
+                .replace(VALUES_REF, getInsertValuesToken())
                 .replace(UPDATES_REF, getUpdatesToken());
 
         Map<String, String> tableAls = getTablesAliases();

@@ -127,6 +127,10 @@ public class RecordKitGenerator {
     protected void generateContainerToMap(ContainerElement container, String parentContainerVar, CodeBlock.Builder cb) {
         String compositionVar;
         if (container instanceof CompositionElement composition) {
+            if (composition.isJoin()) {
+                return;
+            }
+
             compositionVar = varNames.getNextVarName(composition.getField().getName());
             cb.add("\n");
             cb.add("// Composition: " + composition.getType().unwrap() + "\n\n");
@@ -354,7 +358,7 @@ public class RecordKitGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    protected void generateGetJoinTables() {
+    protected void generateGetTableAliases() {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(AbstRactrecordKit.GET_TABLES_ALIASES_METHOD);
         mb.addModifiers(Modifier.PUBLIC);
         mb.addAnnotation(Override.class);
@@ -378,7 +382,7 @@ public class RecordKitGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    protected void generateGetRecordToken() {
+    protected void generateGetSelectRecordToken() {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(AbstRactrecordKit.GET_RECORD_TOKEN_METHOD);
         mb.addModifiers(Modifier.PROTECTED);
         mb.addAnnotation(Override.class);
@@ -412,7 +416,10 @@ public class RecordKitGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    protected void generateGetColumnsToken() {
+    /**
+     * For insert sql statements
+     */
+    protected void generateGetInsertColumnsToken() {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(AbstRactrecordKit.GET_COLUMNS_TOKEN_METHOD);
         mb.addModifiers(Modifier.PROTECTED);
         mb.addAnnotation(Override.class);
@@ -424,6 +431,11 @@ public class RecordKitGenerator {
             if (column.getInsertAs() == null) {
                 continue;
             }
+            if (column.getContainer() instanceof CompositionElement c) {
+                if (c.isJoin()) {
+                    continue;
+                }
+            }
             columnNames.add(column.getName());
         }
         String token = StringUtils.join(columnNames, ", ");
@@ -431,7 +443,7 @@ public class RecordKitGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    protected void generateGetValuesToken() {
+    protected void generateGetInsertValuesToken() {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(AbstRactrecordKit.GET_VALUES_TOKEN_METHOD);
         mb.addModifiers(Modifier.PROTECTED);
         mb.addAnnotation(Override.class);
@@ -442,6 +454,12 @@ public class RecordKitGenerator {
         for (ColumnElement column : allColumns) {
             if (column.getInsertAs() == null) {
                 continue;
+            }
+
+            if (column.getContainer() instanceof CompositionElement c) {
+                if (c.isJoin()) {
+                    continue;
+                }
             }
 
             if (column.getInsertAs().equals(Column.AS_FIELD)) {
@@ -468,6 +486,12 @@ public class RecordKitGenerator {
         for (ColumnElement column : allColumns) {
             if (column.getUpdateAs() == null) {
                 continue;
+            }
+
+            if (column.getContainer() instanceof CompositionElement c) {
+                if (c.isJoin()) {
+                    continue;
+                }
             }
 
             if (column.getUpdateAs().equals(Column.AS_FIELD)) {
@@ -536,10 +560,10 @@ public class RecordKitGenerator {
         generateExportMethod();
         generateImportMethod();
         generateGetTableName();
-        generateGetJoinTables();
-        generateGetRecordToken();
-        generateGetColumnsToken();
-        generateGetValuesToken();
+        generateGetTableAliases();
+        generateGetSelectRecordToken();
+        generateGetInsertColumnsToken();
+        generateGetInsertValuesToken();
         generateGetUpdatesToken();
         generateNewRecord();
         generateMediatorFields();

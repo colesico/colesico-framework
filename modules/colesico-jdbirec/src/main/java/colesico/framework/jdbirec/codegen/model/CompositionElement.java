@@ -46,6 +46,11 @@ public class CompositionElement extends ContainerElement {
      */
     private boolean nullInstance = true;
 
+    /**
+     * Is composition joint
+     */
+    private boolean join = false;
+
     public CompositionElement(final RecordElement record,
                               final ContainerElement container,
                               final FieldElement field,
@@ -78,6 +83,14 @@ public class CompositionElement extends ContainerElement {
 
     public boolean isNullInstance() {
         return nullInstance;
+    }
+
+    public boolean isJoin() {
+        return join;
+    }
+
+    public void setJoin(boolean join) {
+        this.join = join;
     }
 
     @Override

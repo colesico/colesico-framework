@@ -320,7 +320,13 @@ public class RecordKitParser extends RecordKitHelpers {
         JointRecord jointRecord = null;
         if (compAnn.unwrap().join()) {
             jointRecord = parseJoinRecord(comp.getType());
+            comp.setJoin(true);
+        } else {
+            if (container instanceof CompositionElement c) {
+                comp.setJoin(c.isJoin());
+            }
         }
+
         String tableName;
         if (jointRecord != null) {
             tableName = jointRecord.getTableName();

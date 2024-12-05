@@ -16,6 +16,7 @@
 
 package colesico.framework.example.jdbirec;
 
+import colesico.framework.example.jdbirec.join.JContactsRk;
 import colesico.framework.example.jdbirec.join.JUser;
 import colesico.framework.example.jdbirec.join.JUserRk;
 import colesico.framework.example.jdbirec.renaming.RUser;
@@ -54,12 +55,14 @@ public class AppService {
     private final RUserRk rUserRk;
 
     private final JUserRk jUserRk;
+    private final JContactsRk jContactsRk;
 
     public AppService(Provider<Handle> handleProv,
                       RUserRk rUserRk,
                       SUserRk sUserRk,
                       VUserRk vUserRk,
                       JUserRk jUserRk,
+                      JContactsRk jContactsRk,
                       @Named(RecordView.VIEW_FULL)
                       VUserRk vUserFullRk,
                       @Named(RecordView.VIEW_BRIEF)
@@ -70,6 +73,8 @@ public class AppService {
         this.rUserRk = rUserRk;
         this.sUserRk = sUserRk;
         this.jUserRk = jUserRk;
+        this.jContactsRk = jContactsRk;
+
 
         this.vUserRk = vUserRk;
         this.vUserFullRk = vUserFullRk;
