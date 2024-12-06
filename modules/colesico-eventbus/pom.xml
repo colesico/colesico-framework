@@ -50,6 +50,11 @@
             <artifactId>colesico-service</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-config</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

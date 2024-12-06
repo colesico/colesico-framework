@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-import colesico.framework.taskhub.codegen.EventModulator;
+package colesico.framework.taskhub;
 
-module colesico.framework.eventbus {
+/**
+ * Event management service
+ */
+public interface EventService {
+    void start();
 
-    requires transitive colesico.framework.service;
-    requires transitive colesico.framework.config;
-    requires org.slf4j;
+    void stop();
 
-    // classes
-    exports colesico.framework.taskhub.internal to colesico.framework.ioc;
-    exports colesico.framework.taskhub;
-    exports colesico.framework.taskhub.binding;
-
-    provides Modulator with EventModulator;
+    boolean isRunning();
 }

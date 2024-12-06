@@ -16,7 +16,7 @@
 
 package colesico.framework.example.asynctask;
 
-import colesico.framework.asynctask.TaskService;
+import colesico.framework.taskhub.EventService;
 import colesico.framework.example.asynctask.eventbus.TaskListenerService;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
@@ -35,7 +35,7 @@ public class Main {
         Ioc ioc = IocBuilder.create().build();
 
         // Start async tasks service
-        TaskService taskService = ioc.instance(TaskService.class);
+        EventService taskService = ioc.instance(EventService.class);
         taskService.start();
 
         // Enqueue task

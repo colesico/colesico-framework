@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-import colesico.framework.taskhub.codegen.EventModulator;
+package colesico.framework.taskhub.binding;
 
-module colesico.framework.eventbus {
+import javax.inject.Provider;
 
-    requires transitive colesico.framework.service;
-    requires transitive colesico.framework.config;
-    requires org.slf4j;
+abstract public class ListenerBinding<S> {
 
-    // classes
-    exports colesico.framework.taskhub.internal to colesico.framework.ioc;
-    exports colesico.framework.taskhub;
-    exports colesico.framework.taskhub.binding;
+    public static final String GET_BINDINGS_METHOD = "getEventBindings";
+    public static final String TARGET_PROV_FIELD = "targetProv";
 
-    provides Modulator with EventModulator;
+    protected final Provider<S> targetProv;
+
+    public ListenerBinding(Provider<S> targetProv) {
+        this.targetProv = targetProv;
+    }
+
+    abstract public EventBinding[] getEventBindings();
 }

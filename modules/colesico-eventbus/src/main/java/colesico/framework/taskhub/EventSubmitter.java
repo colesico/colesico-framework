@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-import colesico.framework.taskhub.codegen.EventModulator;
+package colesico.framework.taskhub;
 
-module colesico.framework.eventbus {
+/**
+ * Background event execution
+ */
+public interface EventSubmitter {
 
-    requires transitive colesico.framework.service;
-    requires transitive colesico.framework.config;
-    requires org.slf4j;
-
-    // classes
-    exports colesico.framework.taskhub.internal to colesico.framework.ioc;
-    exports colesico.framework.taskhub;
-    exports colesico.framework.taskhub.binding;
-
-    provides Modulator with EventModulator;
+    <E> void submit(E event);
 }

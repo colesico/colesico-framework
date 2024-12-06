@@ -17,7 +17,7 @@
 package colesico.framework.test.example.asynctask;
 
 
-import colesico.framework.asynctask.TaskService;
+import colesico.framework.taskhub.EventService;
 import colesico.framework.example.asynctask.TasksSubmitterService;
 import colesico.framework.example.asynctask.eventbus.TaskListenerService;
 import colesico.framework.example.asynctask.performer.TaskPerformerService;
@@ -31,12 +31,12 @@ import static org.testng.Assert.assertEquals;
 
 public class AsyncTaskExampleTest {
     private Ioc ioc;
-    private TaskService taskService;
+    private EventService taskService;
 
     @BeforeClass
     public void init() {
         ioc = IocBuilder.create().build();
-        taskService = ioc.instance(TaskService.class);
+        taskService = ioc.instance(EventService.class);
         taskService.start();
     }
 

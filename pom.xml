@@ -138,7 +138,6 @@
                 <module>modules/colesico-rpc</module>
                 <module>modules/colesico-validation</module>
                 <module>modules/colesico-eventbus</module>
-                <module>modules/colesico-asynctask</module>
 
                 <!-- Logging -->
                 <module>modules/colesico-slf4j</module>

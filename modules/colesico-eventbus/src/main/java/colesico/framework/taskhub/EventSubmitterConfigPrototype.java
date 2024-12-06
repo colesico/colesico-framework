@@ -14,18 +14,33 @@
  * limitations under the License.
  */
 
-import colesico.framework.taskhub.codegen.EventModulator;
+package colesico.framework.taskhub;
 
-module colesico.framework.eventbus {
+import colesico.framework.config.ConfigModel;
+import colesico.framework.config.ConfigPrototype;
 
-    requires transitive colesico.framework.service;
-    requires transitive colesico.framework.config;
-    requires org.slf4j;
+/**
+ * Task queue configuration prototype
+ */
+@ConfigPrototype(model = ConfigModel.POLYVARIANT)
+abstract public class EventSubmitterConfigPrototype extends AbstractEventExecutorConfig {
 
-    // classes
-    exports colesico.framework.taskhub.internal to colesico.framework.ioc;
-    exports colesico.framework.taskhub;
-    exports colesico.framework.taskhub.binding;
+    /**
+     * 0 - for unlimited
+     */
+    public int getQueueCapacity() {
+        return 500;
+    }
 
-    provides Modulator with EventModulator;
+    /**
+     * Maximum number of active task workers
+     */
+    public int getMaximumPoolSize() {
+        return 1;
+    }
+
+    public long getKeepAliveTime() {
+        return 0L;
+    }
+
 }

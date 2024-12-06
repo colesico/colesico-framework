@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-import colesico.framework.taskhub.codegen.EventModulator;
+package colesico.framework.taskhub.internal;
 
-module colesico.framework.eventbus {
+import colesico.framework.taskhub.EventDispatcher;
+import colesico.framework.ioc.production.Produce;
+import colesico.framework.ioc.production.Producer;
 
-    requires transitive colesico.framework.service;
-    requires transitive colesico.framework.config;
-    requires org.slf4j;
+import javax.inject.Singleton;
 
-    // classes
-    exports colesico.framework.taskhub.internal to colesico.framework.ioc;
-    exports colesico.framework.taskhub;
-    exports colesico.framework.taskhub.binding;
+@Producer
+@Produce(value = EventDispatcherImpl.class, keyType = EventDispatcher.class, scoped = Singleton.class)
+public class EventSenderProducer {
 
-    provides Modulator with EventModulator;
 }

@@ -16,7 +16,7 @@
 
 package colesico.framework.example.eventbus;
 
-import colesico.framework.eventbus.OnEvent;
+import colesico.framework.taskhub.OnEvent;
 import colesico.framework.service.Service;
 
 @Service

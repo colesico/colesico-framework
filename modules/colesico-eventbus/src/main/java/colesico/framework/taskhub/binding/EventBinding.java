@@ -14,18 +14,25 @@
  * limitations under the License.
  */
 
-import colesico.framework.taskhub.codegen.EventModulator;
+package colesico.framework.taskhub.binding;
 
-module colesico.framework.eventbus {
+import colesico.framework.taskhub.EventListener;
 
-    requires transitive colesico.framework.service;
-    requires transitive colesico.framework.config;
-    requires org.slf4j;
+public final class EventBinding<E> {
 
-    // classes
-    exports colesico.framework.taskhub.internal to colesico.framework.ioc;
-    exports colesico.framework.taskhub;
-    exports colesico.framework.taskhub.binding;
+    private final Class<E> eventClass;
+    private final EventListener<E> handler;
 
-    provides Modulator with EventModulator;
+    public EventBinding(Class<E> eventClass, EventListener<E> handler) {
+        this.eventClass = eventClass;
+        this.handler = handler;
+    }
+
+    public Class<E> getEventClass() {
+        return eventClass;
+    }
+
+    public EventListener<E> getHandler() {
+        return handler;
+    }
 }

@@ -14,18 +14,26 @@
  * limitations under the License.
  */
 
-import colesico.framework.taskhub.codegen.EventModulator;
+package colesico.framework.taskhub.codegen;
 
-module colesico.framework.eventbus {
+import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.assist.codegen.model.MethodElement;
 
-    requires transitive colesico.framework.service;
-    requires transitive colesico.framework.config;
-    requires org.slf4j;
+public class EventHandlerElement {
 
-    // classes
-    exports colesico.framework.taskhub.internal to colesico.framework.ioc;
-    exports colesico.framework.taskhub;
-    exports colesico.framework.taskhub.binding;
+    private final MethodElement originMethod;
+    private final ClassType eventType;
 
-    provides Modulator with EventModulator;
+    public EventHandlerElement(MethodElement originMethod, ClassType eventType) {
+        this.originMethod = originMethod;
+        this.eventType = eventType;
+    }
+
+    public MethodElement getOriginMethod() {
+        return originMethod;
+    }
+
+    public ClassType getEventType() {
+        return eventType;
+    }
 }

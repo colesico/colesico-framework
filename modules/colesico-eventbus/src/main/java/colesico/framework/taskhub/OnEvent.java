@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package colesico.framework.taskhub;
 
-import colesico.framework.taskhub.codegen.EventModulator;
+import java.lang.annotation.*;
 
-module colesico.framework.eventbus {
-
-    requires transitive colesico.framework.service;
-    requires transitive colesico.framework.config;
-    requires org.slf4j;
-
-    // classes
-    exports colesico.framework.taskhub.internal to colesico.framework.ioc;
-    exports colesico.framework.taskhub;
-    exports colesico.framework.taskhub.binding;
-
-    provides Modulator with EventModulator;
+/**
+ * Declares a service method as an event listener
+ *
+ * @author Vladlen Larionov
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD})
+@Inherited
+@Documented
+public @interface OnEvent {
 }

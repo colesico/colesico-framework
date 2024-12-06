@@ -16,8 +16,8 @@
 
 package colesico.framework.example.eventbus;
 
-import colesico.framework.eventbus.EventBus;
-import colesico.framework.eventbus.OnEvent;
+import colesico.framework.eventbus.TaskDispatcher;
+import colesico.framework.taskhub.OnEvent;
 import colesico.framework.service.Service;
 
 import javax.inject.Inject;
@@ -25,16 +25,16 @@ import javax.inject.Inject;
 @Service
 public class Sender {
 
-    final EventBus eventBus;
+    final TaskDispatcher taskDispatcher;
 
     @Inject
-    public Sender(EventBus eventBus) {
-        this.eventBus = eventBus;
+    public Sender(TaskDispatcher taskDispatcher) {
+        this.taskDispatcher = taskDispatcher;
     }
 
     public void sendEvent() {
-        eventBus.send(new MyEvent1("Hello1"));
-        eventBus.send(new MyEvent2("Hello2"));
+        taskDispatcher.send(new MyEvent1("Hello1"));
+        taskDispatcher.send(new MyEvent2("Hello2"));
     }
 
     @OnEvent
