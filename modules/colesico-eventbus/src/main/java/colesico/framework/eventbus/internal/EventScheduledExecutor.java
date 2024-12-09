@@ -1,8 +1,8 @@
-package colesico.framework.taskhub.internal;
+package colesico.framework.eventbus.internal;
 
-import colesico.framework.taskhub.AbstractEventExecutorConfig;
-import colesico.framework.taskhub.EventDispatcher;
-import colesico.framework.taskhub.EventSchedulerConfigPrototype;
+import colesico.framework.eventbus.AbstractEventExecutorConfig;
+import colesico.framework.eventbus.EventDispatcher;
+import colesico.framework.eventbus.EventSchedulerConfigPrototype;
 
 import java.util.concurrent.*;
 

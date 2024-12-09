@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package colesico.framework.taskhub.codegen;
+package colesico.framework.eventbus.codegen;
 
-import colesico.framework.taskhub.binding.ListenerBinding;
+import colesico.framework.eventbus.registry.ServiceListener;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.ParameterElement;
-import colesico.framework.taskhub.OnEvent;
+import colesico.framework.eventbus.OnEvent;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.ioc.production.Polyproduce;
 import colesico.framework.service.codegen.model.ServiceMethodElement;
@@ -106,7 +106,7 @@ public class EventModulator extends Modulator {
         generator.addProduceAnnotation(facadeType);
 
         String methodName = "get" + facadeGenerator.getListenersFacadeClassName(service);
-        MethodSpec.Builder mb = generator.addProduceMethod(methodName, ClassName.get(ListenerBinding.class));
+        MethodSpec.Builder mb = generator.addProduceMethod(methodName, ClassName.get(ServiceListener.class));
         mb.addAnnotation(Polyproduce.class);
         mb.addParameter(facadeType, "impl", Modifier.FINAL);
         mb.addStatement("return impl");

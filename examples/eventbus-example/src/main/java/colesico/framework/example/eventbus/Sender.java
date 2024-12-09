@@ -17,7 +17,7 @@
 package colesico.framework.example.eventbus;
 
 import colesico.framework.eventbus.TaskDispatcher;
-import colesico.framework.taskhub.OnEvent;
+import colesico.framework.eventbus.OnEvent;
 import colesico.framework.service.Service;
 
 import javax.inject.Inject;

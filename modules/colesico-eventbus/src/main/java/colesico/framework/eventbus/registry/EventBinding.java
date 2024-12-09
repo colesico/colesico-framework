@@ -14,20 +14,8 @@
  * limitations under the License.
  */
 
-package colesico.framework.taskhub.binding;
+package colesico.framework.eventbus.registry;
 
-import javax.inject.Provider;
+public record EventBinding<E>(Class<E> eventClass, EventListener<E> listener) {
 
-abstract public class ListenerBinding<S> {
-
-    public static final String GET_BINDINGS_METHOD = "getEventBindings";
-    public static final String TARGET_PROV_FIELD = "targetProv";
-
-    protected final Provider<S> targetProv;
-
-    public ListenerBinding(Provider<S> targetProv) {
-        this.targetProv = targetProv;
-    }
-
-    abstract public EventBinding[] getEventBindings();
 }

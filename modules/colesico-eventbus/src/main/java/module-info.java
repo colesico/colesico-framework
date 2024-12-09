@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import colesico.framework.taskhub.codegen.EventModulator;
+import colesico.framework.eventbus.codegen.EventModulator;
 
 module colesico.framework.eventbus {
 
@@ -23,9 +23,9 @@ module colesico.framework.eventbus {
     requires org.slf4j;
 
     // classes
-    exports colesico.framework.taskhub.internal to colesico.framework.ioc;
-    exports colesico.framework.taskhub;
-    exports colesico.framework.taskhub.binding;
+    exports colesico.framework.eventbus.internal to colesico.framework.ioc;
+    exports colesico.framework.eventbus;
+    exports colesico.framework.eventbus.registry;
 
     provides Modulator with EventModulator;
 }

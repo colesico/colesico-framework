@@ -14,33 +14,23 @@
  * limitations under the License.
  */
 
-package colesico.framework.taskhub;
+package colesico.framework.eventbus.registry;
 
-import colesico.framework.config.ConfigModel;
-import colesico.framework.config.ConfigPrototype;
+import javax.inject.Provider;
 
-/**
- * Task queue configuration prototype
- */
-@ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class EventSubmitterConfigPrototype extends AbstractEventExecutorConfig {
+abstract public class ServiceListener<S> {
+
+    public static final String GET_BINDINGS_METHOD = "getEventBindings";
+    public static final String SERVICE_PROV_FIELD = "serviceProv";
 
     /**
-     * 0 - for unlimited
+     * Listener service provider
      */
-    public int getQueueCapacity() {
-        return 500;
+    protected final Provider<S> serviceProv;
+
+    public ServiceListener(Provider<S> serviceProv) {
+        this.serviceProv = serviceProv;
     }
 
-    /**
-     * Maximum number of active task workers
-     */
-    public int getMaximumPoolSize() {
-        return 1;
-    }
-
-    public long getKeepAliveTime() {
-        return 0L;
-    }
-
+    abstract public EventBinding<?>[] getEventBindings();
 }

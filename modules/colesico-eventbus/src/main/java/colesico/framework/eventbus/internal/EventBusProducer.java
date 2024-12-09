@@ -14,34 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.taskhub.internal;
+package colesico.framework.eventbus.internal;
 
-import colesico.framework.taskhub.EventScheduler;
-import colesico.framework.taskhub.EventService;
-import colesico.framework.taskhub.EventSubmitter;
+import colesico.framework.eventbus.SyncEventBus;
+import colesico.framework.eventbus.registry.DefaultEventRegistry;
+import colesico.framework.eventbus.registry.EventRegistry;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 
 import javax.inject.Singleton;
 
 @Producer
-@Produce(EventServiceImpl.class)
-@Produce(DefaultTaskPerformer.class)
-public class TaskProducer {
-
-    @Singleton
-    public EventService getTaskService(EventServiceImpl impl) {
-        return impl;
-    }
-
-    @Singleton
-    public EventSubmitter getTaskPublisher(EventServiceImpl impl) {
-        return impl;
-    }
-
-    @Singleton
-    public EventScheduler getTaskScheduler(EventServiceImpl impl) {
-        return impl;
-    }
+@Produce(value = DefaultEventRegistry.class, keyType = EventRegistry.class, scoped = Singleton.class)
+@Produce(value = SyncEventBusImpl.class, keyType = SyncEventBus.class, scoped = Singleton.class)
+public class EventBusProducer {
 
 }

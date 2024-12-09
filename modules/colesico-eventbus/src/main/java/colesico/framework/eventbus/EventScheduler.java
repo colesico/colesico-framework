@@ -1,4 +1,4 @@
-package colesico.framework.taskhub;
+package colesico.framework.eventbus;
 
 import java.util.concurrent.TimeUnit;
 

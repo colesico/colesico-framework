@@ -1,6 +1,6 @@
 package colesico.framework.example.asynctask.eventbus;
 
-import colesico.framework.taskhub.OnEvent;
+import colesico.framework.eventbus.OnEvent;
 import colesico.framework.service.Service;
 
 /**

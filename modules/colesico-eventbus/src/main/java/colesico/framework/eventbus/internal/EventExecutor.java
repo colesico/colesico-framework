@@ -1,7 +1,8 @@
-package colesico.framework.taskhub.internal;
+package colesico.framework.eventbus.internal;
 
-import colesico.framework.taskhub.AbstractEventExecutorConfig;
-import colesico.framework.taskhub.EventDispatcher;
+import colesico.framework.eventbus.AbstractEventExecutorConfig;
+import colesico.framework.eventbus.registry.EventListener;
+import colesico.framework.eventbus.registry.EventRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,17 +17,17 @@ abstract public class EventExecutor {
 
     protected static final Logger logger = LoggerFactory.getLogger(EventExecutor.class);
 
-    private final EventDispatcher dispatcher;
+    protected final EventRegistry registry;
 
     abstract protected ExecutorService getExecutorService();
 
     abstract protected AbstractEventExecutorConfig getConfig();
 
-    public EventExecutor(EventDispatcher dispatcher) {
-        this.dispatcher = dispatcher;
+    public EventExecutor(EventRegistry registry) {
+        this.registry = registry;
     }
 
-    protected final <E> Runnable createTask(final E event) {
+    protected final <E> Runnable createTask(final EventListener<E> listener, final E event) {
         final long enqueueTime = System.currentTimeMillis();
         logger.debug("New task queued: {}", event);
         return () -> {
@@ -34,15 +35,11 @@ abstract public class EventExecutor {
                 final long queueingDuration = System.currentTimeMillis() - enqueueTime;
                 logger.debug("Task ready to be executed. Duration being in queue {}", queueingDuration);
             }
-            dispatcher.dispatch(event);
+            listener.consume(event);
         };
     }
 
-    public final <E> void submit(final E event) {
-        getExecutorService().submit(createTask(event));
-    }
-
-    public final void stop() {
+    public final void shutdown() {
         getExecutorService().shutdown();
     }
 

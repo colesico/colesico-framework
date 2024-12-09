@@ -14,16 +14,26 @@
  * limitations under the License.
  */
 
-package colesico.framework.taskhub.internal;
+package colesico.framework.eventbus.codegen;
 
-import colesico.framework.taskhub.EventDispatcher;
-import colesico.framework.ioc.production.Produce;
-import colesico.framework.ioc.production.Producer;
+import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.assist.codegen.model.MethodElement;
 
-import javax.inject.Singleton;
+public class EventHandlerElement {
 
-@Producer
-@Produce(value = EventDispatcherImpl.class, keyType = EventDispatcher.class, scoped = Singleton.class)
-public class EventSenderProducer {
+    private final MethodElement originMethod;
+    private final ClassType eventType;
 
+    public EventHandlerElement(MethodElement originMethod, ClassType eventType) {
+        this.originMethod = originMethod;
+        this.eventType = eventType;
+    }
+
+    public MethodElement getOriginMethod() {
+        return originMethod;
+    }
+
+    public ClassType getEventType() {
+        return eventType;
+    }
 }

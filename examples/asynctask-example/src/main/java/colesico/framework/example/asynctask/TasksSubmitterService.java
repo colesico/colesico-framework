@@ -1,6 +1,6 @@
 package colesico.framework.example.asynctask;
 
-import colesico.framework.taskhub.EventSubmitter;
+import colesico.framework.eventbus.AsyncEventBus;
 import colesico.framework.example.asynctask.eventbus.TaskPayload;
 import colesico.framework.example.asynctask.performer.PerfTaskPayload;
 import colesico.framework.service.Service;
@@ -8,9 +8,9 @@ import colesico.framework.service.Service;
 @Service
 public class TasksSubmitterService {
 
-    final EventSubmitter taskSubmitter;
+    final AsyncEventBus taskSubmitter;
 
-    public TasksSubmitterService(EventSubmitter taskSubmitter) {
+    public TasksSubmitterService(AsyncEventBus taskSubmitter) {
         this.taskSubmitter = taskSubmitter;
     }
 

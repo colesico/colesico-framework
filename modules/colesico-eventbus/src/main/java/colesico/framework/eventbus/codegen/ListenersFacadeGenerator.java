@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package colesico.framework.taskhub.codegen;
+package colesico.framework.eventbus.codegen;
 
-import colesico.framework.taskhub.binding.ListenerBinding;
+import colesico.framework.eventbus.registry.ServiceListener;
 import colesico.framework.assist.codegen.CodegenUtils;
-import colesico.framework.taskhub.binding.EventBinding;
+import colesico.framework.eventbus.registry.EventBinding;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import com.palantir.javapoet.*;
@@ -50,10 +50,10 @@ public class ListenersFacadeGenerator {
         mb.addModifiers(Modifier.PUBLIC);
         mb.addParameter(
                 ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(service.getOriginClass().getOriginType())),
-                ListenerBinding.TARGET_PROV_FIELD,
+                ServiceListener.SERVICE_PROV_FIELD,
                 Modifier.FINAL);
 
-        mb.addStatement("super($N)", ListenerBinding.TARGET_PROV_FIELD);
+        mb.addStatement("super($N)", ServiceListener.SERVICE_PROV_FIELD);
         classBuilder.addMethod(mb.build());
     }
 
@@ -67,7 +67,7 @@ public class ListenersFacadeGenerator {
         mb.addStatement("$T $N=this.$N.get()",
                 TypeName.get(service.getOriginClass().getOriginType()),
                 TARGET_VAR,
-                ListenerBinding.TARGET_PROV_FIELD);
+                ServiceListener.SERVICE_PROV_FIELD);
         mb.addStatement("$N.$N($N)",
                 TARGET_VAR,
                 handler.getOriginMethod().getName(),
@@ -84,7 +84,7 @@ public class ListenersFacadeGenerator {
     }
 
     protected void generateGetBindingsMethod(ServiceElement service, List<EventHandlerElement> handlers, TypeSpec.Builder classBuilder) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(ListenerBinding.GET_BINDINGS_METHOD);
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(ServiceListener.GET_BINDINGS_METHOD);
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
         TypeName resType = ArrayTypeName.of(ClassName.get(EventBinding.class));
@@ -128,7 +128,7 @@ public class ListenersFacadeGenerator {
 
         TypeSpec.Builder classBuilder = TypeSpec.classBuilder(facadeClassSimpleName);
         classBuilder.addModifiers(Modifier.PUBLIC);
-        classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(ListenerBinding.class), TypeName.get(service.getOriginClass().getOriginType())));
+        classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(ServiceListener.class), TypeName.get(service.getOriginClass().getOriginType())));
 
         classBuilder.addAnnotation(CodegenUtils.generateGenstamp(this.getClass().getName(), null, null));
         classBuilder.addAnnotation(Singleton.class);

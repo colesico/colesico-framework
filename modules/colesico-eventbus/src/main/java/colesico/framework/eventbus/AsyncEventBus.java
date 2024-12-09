@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package colesico.framework.taskhub;
+package colesico.framework.eventbus;
 
 /**
  * Background event execution
  */
-public interface EventSubmitter {
+public interface AsyncEventBus {
 
+    /**
+     * Process event asynchronously
+     */
     <E> void submit(E event);
+
 }

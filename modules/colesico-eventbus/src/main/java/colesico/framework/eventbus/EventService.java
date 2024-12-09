@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package colesico.framework.taskhub;
 
-import java.lang.annotation.*;
+package colesico.framework.eventbus;
 
 /**
- * Declares a service method as an event listener
- *
- * @author Vladlen Larionov
+ * Event management service
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
-@Inherited
-@Documented
-public @interface OnEvent {
+public interface EventService {
+    void start();
+
+    void stop();
+
+    boolean isRunning();
 }

@@ -14,26 +14,33 @@
  * limitations under the License.
  */
 
-package colesico.framework.taskhub.codegen;
+package colesico.framework.eventbus;
 
-import colesico.framework.assist.codegen.model.ClassType;
-import colesico.framework.assist.codegen.model.MethodElement;
+import colesico.framework.config.ConfigModel;
+import colesico.framework.config.ConfigPrototype;
 
-public class EventHandlerElement {
+/**
+ * Task queue configuration prototype
+ */
+@ConfigPrototype(model = ConfigModel.POLYVARIANT)
+abstract public class EventSubmitterConfigPrototype extends AbstractEventExecutorConfig {
 
-    private final MethodElement originMethod;
-    private final ClassType eventType;
-
-    public EventHandlerElement(MethodElement originMethod, ClassType eventType) {
-        this.originMethod = originMethod;
-        this.eventType = eventType;
+    /**
+     * 0 - for unlimited
+     */
+    public int getQueueCapacity() {
+        return 500;
     }
 
-    public MethodElement getOriginMethod() {
-        return originMethod;
+    /**
+     * Maximum number of active task workers
+     */
+    public int getMaximumPoolSize() {
+        return 1;
     }
 
-    public ClassType getEventType() {
-        return eventType;
+    public long getKeepAliveTime() {
+        return 0L;
     }
+
 }

@@ -1,7 +1,7 @@
 package colesico.framework.example.asynctask.performer;
 
 import colesico.framework.asynctask.TaskPerformer;
-import colesico.framework.taskhub.EventSubmitterConfigPrototype;
+import colesico.framework.eventbus.EventSubmitterConfigPrototype;
 import colesico.framework.config.Config;
 
 import javax.inject.Inject;

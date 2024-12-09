@@ -14,25 +14,9 @@
  * limitations under the License.
  */
 
-package colesico.framework.taskhub.binding;
+package colesico.framework.eventbus.registry;
 
-import colesico.framework.taskhub.EventListener;
-
-public final class EventBinding<E> {
-
-    private final Class<E> eventClass;
-    private final EventListener<E> handler;
-
-    public EventBinding(Class<E> eventClass, EventListener<E> handler) {
-        this.eventClass = eventClass;
-        this.handler = handler;
-    }
-
-    public Class<E> getEventClass() {
-        return eventClass;
-    }
-
-    public EventListener<E> getHandler() {
-        return handler;
-    }
+@FunctionalInterface
+public interface EventListener<E> {
+    void consume(E event);
 }

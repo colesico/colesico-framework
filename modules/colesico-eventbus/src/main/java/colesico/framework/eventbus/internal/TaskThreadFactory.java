@@ -1,4 +1,4 @@
-package colesico.framework.taskhub.internal;
+package colesico.framework.eventbus.internal;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;

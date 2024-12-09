@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package colesico.framework.taskhub.internal;
+package colesico.framework.eventbus.internal;
 
+import colesico.framework.eventbus.*;
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.taskhub.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,21 +27,21 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
-public class EventServiceImpl implements EventService, EventSubmitter, EventScheduler {
+public class AsyncEventServiceImpl implements EventService, AsyncEventBus, EventScheduler {
 
     private final Logger logger = LoggerFactory.getLogger(EventService.class);
 
     private final Polysupplier<EventSubmitterConfigPrototype> queueConfigs;
     private final Polysupplier<EventSchedulerConfigPrototype> scheduleConfigs;
 
-    private final Map<Class<?>, EventQueueExecutor> queues = new HashMap<>();
+    private final Map<Class<?>, AsyncEventBusImpl> queues = new HashMap<>();
     private final Map<Class<?>, EventScheduledExecutor> schedules = new HashMap<>();
 
     private volatile boolean running = false;
 
-    public EventServiceImpl(Polysupplier<EventSubmitterConfigPrototype> queueConfigs,
-                            Polysupplier<EventSchedulerConfigPrototype> scheduleConfigs,
-                            ) {
+    public AsyncEventServiceImpl(Polysupplier<EventSubmitterConfigPrototype> queueConfigs,
+                                 Polysupplier<EventSchedulerConfigPrototype> scheduleConfigs,
+                                 ) {
 
         this.queueConfigs = queueConfigs;
         this.scheduleConfigs = scheduleConfigs;
@@ -58,7 +58,7 @@ public class EventServiceImpl implements EventService, EventSubmitter, EventSche
         queueConfigs.forEach(queueConfig -> {
             logger.debug("Found task queue definition for payload type '{}'", queueConfig.getPayloadType());
 
-            EventQueueExecutor taskExecutor = new EventQueueExecutor(defaultConsumer, queueConfig);
+            AsyncEventBusImpl taskExecutor = new AsyncEventBusImpl(defaultConsumer, queueConfig);
             EventExecutor prev = queues.put(queueConfig.getPayloadType(), taskExecutor);
             if (prev != null) {
                 throw new RuntimeException("Duplicate task payload type '" + queueConfig.getPayloadType() + "' defined in " + queueConfig);
@@ -87,12 +87,12 @@ public class EventServiceImpl implements EventService, EventSubmitter, EventSche
     public synchronized void stop() {
         checkRunning();
         // Stop
-        for (EventQueueExecutor queue : queues.values()) {
-            queue.stop();
+        for (AsyncEventBusImpl queue : queues.values()) {
+            queue.shutdown();
         }
 
         // Await termination
-        for (EventQueueExecutor queue : queues.values()) {
+        for (AsyncEventBusImpl queue : queues.values()) {
             queue.awaitTermination(60);
         }
 
@@ -113,7 +113,7 @@ public class EventServiceImpl implements EventService, EventSubmitter, EventSche
     @Override
     public <P> void submit(P event) {
         checkRunning();
-        final EventQueueExecutor executor = queues.get(event.getClass());
+        final AsyncEventBusImpl executor = queues.get(event.getClass());
         if (executor == null) {
             throw new RuntimeException("Undetermined task payload: " + event);
         }
