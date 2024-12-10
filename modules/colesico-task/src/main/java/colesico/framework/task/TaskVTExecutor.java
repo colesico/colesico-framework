@@ -21,5 +21,4 @@ package colesico.framework.task;
  */
 public interface TaskVTExecutor extends TaskExecutor {
 
-
 }

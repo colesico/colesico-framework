@@ -65,7 +65,7 @@
         </dependency>
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-eventbus</artifactId>
+            <artifactId>colesico-event</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

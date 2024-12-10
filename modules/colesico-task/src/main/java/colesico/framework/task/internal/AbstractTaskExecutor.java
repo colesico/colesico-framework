@@ -80,7 +80,7 @@ abstract public class AbstractTaskExecutor {
     public <T, R> Collection<Future<R>> submit(final T task) {
         checkRunning();
         return registry.apply(task.getClass(),
-                worker -> getExecutorService().submit(createCallableTask(worker, task))
+                worker -> getExecutorService().submit(createCallableTask((TaskWorker<T, R>) worker, task))
         );
     }
 
