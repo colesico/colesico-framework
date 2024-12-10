@@ -17,12 +17,11 @@
 package colesico.framework.task.internal;
 
 import colesico.framework.task.TaskDispatcher;
-import colesico.framework.task.registry.WorkersGroup;
 import colesico.framework.task.registry.TaskRegistry;
+import colesico.framework.task.registry.TaskWorker;
 
 import javax.inject.Singleton;
 import java.util.Collection;
-import java.util.List;
 
 @Singleton
 public class TaskDispatcherImpl implements TaskDispatcher {
@@ -35,11 +34,9 @@ public class TaskDispatcherImpl implements TaskDispatcher {
 
     @Override
     public <T, R> Collection<R> dispatch(final T task) {
-        var workers = (WorkersGroup<T, R>) registry.getTaskWorkers(task.getClass());
-        if (workers != null) {
-            return workers.apply(worker -> worker.work(task));
-        }
-        return List.of();
+        return registry.apply(task.getClass(),
+                worker -> ((TaskWorker<T, R>) worker).work(task)
+        );
     }
 
 }

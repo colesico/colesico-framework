@@ -6,7 +6,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 @Singleton
 public class DefaultTaskRegistry implements TaskRegistry {
@@ -43,5 +45,14 @@ public class DefaultTaskRegistry implements TaskRegistry {
     @Override
     public Collection<Class<?>> getTaskTypes() {
         return taskWorkers.keySet();
+    }
+
+    @Override
+    public <T, R, O> Collection<O> apply(Class<T> taskClass, Function<TaskWorker<T, R>, O> action) {
+        var workers = (WorkersGroup<T, R>) getTaskWorkers(taskClass);
+        if (workers != null) {
+            return workers.apply(action);
+        }
+        return List.of();
     }
 }

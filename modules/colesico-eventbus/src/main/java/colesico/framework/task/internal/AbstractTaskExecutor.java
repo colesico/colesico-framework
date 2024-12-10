@@ -1,9 +1,9 @@
 package colesico.framework.task.internal;
 
 import colesico.framework.task.AbstractTaskExecutorConfig;
-import colesico.framework.task.registry.WorkersGroup;
-import colesico.framework.task.registry.TaskWorker;
 import colesico.framework.task.registry.TaskRegistry;
+import colesico.framework.task.registry.TaskWorker;
+import colesico.framework.task.registry.WorkersGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,13 +59,29 @@ abstract public class AbstractTaskExecutor {
         };
     }
 
-    public <T, R> Collection<Future<R>> submit(final T task) {
-        checkRunning();
+    public <T, R> Collection<R> dispatch(final T task) {
         var workers = (WorkersGroup<T, R>) registry.getTaskWorkers(task.getClass());
         if (workers != null) {
-            return workers.apply(worker -> getExecutorService().submit(createCallableTask(worker, task)));
+            return workers.apply(worker -> worker.work(task));
         }
         return List.of();
+    }
+
+    public <T> void execute(final T task) {
+        checkRunning();
+
+        registry.apply(task.getClass(),
+                worker -> {
+                    getExecutorService().execute(createRunnableTask((TaskWorker<T, ?>) worker, task));
+                    return null;
+                });
+    }
+
+    public <T, R> Collection<Future<R>> submit(final T task) {
+        checkRunning();
+        return registry.apply(task.getClass(),
+                worker -> getExecutorService().submit(createCallableTask(worker, task))
+        );
     }
 
     public synchronized void start() {

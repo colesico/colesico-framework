@@ -16,21 +16,10 @@
 
 package colesico.framework.task;
 
-import java.util.Collection;
-import java.util.concurrent.Future;
-
 /**
- * Async task execution
+ * Async task execution with virtual threads
  */
-public interface TaskExecutor  extends TaskDispatcher{
+public interface TaskVTExecutor extends TaskExecutor {
 
-    <T> void execute(T task);
 
-    <T, R> Collection<Future<R>> submit(T task);
-
-    void start();
-
-    void stop();
-
-    boolean isRunning();
 }
