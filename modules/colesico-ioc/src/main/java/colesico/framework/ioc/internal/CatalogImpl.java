@@ -17,8 +17,6 @@
 package colesico.framework.ioc.internal;
 
 import colesico.framework.ioc.AmbiguousDependencyException;
-import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.IocException;
 import colesico.framework.ioc.conditional.Condition;
 import colesico.framework.ioc.conditional.ConditionContext;
@@ -47,6 +45,10 @@ public class CatalogImpl implements Catalog {
     @Override
     public <T> boolean accept(Key<T> key, Condition condition, Substitution substitution, boolean polyproducing) {
 
+        if (substitution == null) {
+            substitution = Substitution.REGULAR;
+        }
+
         curEntry = new CatalogEntry(key, condition, substitution, polyproducing);
 
         // Check condition
@@ -61,43 +63,29 @@ public class CatalogImpl implements Catalog {
             return true;
         }
 
-        // Check substitution
-        if (curEntry.getSubstitution() != null || prevEntry.getSubstitution() != null) {
-
-            if (curEntry.isPolyproducing() != prevEntry.isPolyproducing()) {
-                throw new IocException("Substitution polyproducing mismatch for key: " + key);
-            }
-
-            if (curEntry.getSubstitution() != null && prevEntry.getSubstitution() != null) {
-
-                if (curEntry.getSubstitution().getRank() > prevEntry.getSubstitution().getRank()) {
-                    curEntry.setAction(EntryAction.SUBSTITUTE);
-                    return true;
-                }
-
-                if (curEntry.getSubstitution().getRank() < prevEntry.getSubstitution().getRank()) {
-                    curEntry.setAction(EntryAction.NONE);
-                    return false;
-                }
-
-                throw new AmbiguousDependencyException("Ambiguous substitution definition for key: " + key);
-            }
-
-            if (curEntry.getSubstitution() != null && prevEntry.getSubstitution() == null) {
-                curEntry.setAction(EntryAction.SUBSTITUTE);
-                return true;
-            }
-
-            // curEntry.getSubstitution() == null && prevEntry.getSubstitution() != null
-            curEntry.setAction(EntryAction.NONE);
-            return false;
-        }
+        // Polyproducing
 
         if (curEntry.isPolyproducing() && prevEntry.isPolyproducing()) {
             curEntry.setAction(EntryAction.APPEND);
             return true;
         }
 
+        if (curEntry.isPolyproducing() != prevEntry.isPolyproducing()) {
+            throw new IocException("Polyproducing mismatch for key: " + key);
+        }
+
+        // Check substitution
+        if (curEntry.getSubstitution().getRank() > prevEntry.getSubstitution().getRank()) {
+            curEntry.setAction(EntryAction.SUBSTITUTE);
+            return true;
+        }
+
+        if (curEntry.getSubstitution().getRank() < prevEntry.getSubstitution().getRank()) {
+            curEntry.setAction(EntryAction.NONE);
+            return false;
+        }
+
+        // curEntry.getSubstitution().getRank() == prevEntry.getSubstitution().getRank()
         throw new AmbiguousDependencyException("Ambiguous factory for key: " + key + ";");
 
     }

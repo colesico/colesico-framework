@@ -59,6 +59,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
     protected MethodSpec.Builder createProducingOnPrototypeMethodBuilder(final ProducerGenerator prodGen, final ConfigElement config) {
         String methodName = "get" + config.getOriginClass().getSimpleName();
         MethodSpec.Builder mb = prodGen.addProduceMethod(methodName, TypeName.get(config.getPrototype().getOriginType()));
+
         // Config impl param
         ParameterSpec.Builder pb = ParameterSpec.builder(TypeName.get(config.getOriginClass().getOriginType()), CONF_PARAM, Modifier.FINAL);
         if (config.getClassedQualifier() != null) {
