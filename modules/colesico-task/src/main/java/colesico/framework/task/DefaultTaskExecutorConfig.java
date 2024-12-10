@@ -9,6 +9,6 @@ import colesico.framework.ioc.conditional.Substitution;
  * Override this with {@link colesico.framework.ioc.conditional.Substitute}
  */
 @Config
-@Substitute(Substitution.DUMMY)
+@Substitute(Substitution.STUB)
 public class DefaultTaskExecutorConfig extends TaskExecutorConfigPrototype {
 }

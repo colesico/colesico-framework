@@ -23,10 +23,10 @@ package colesico.framework.ioc.conditional;
 public enum Substitution {
 
     /**
-     * For dummy instance production.
-     * The dummy instance can be replaced with regular instances  production  or higher rank.
+     * For stub instance production.
+     * The stub instance can be replaced with regular instances  production  or higher rank.
      */
-    DUMMY(-1),
+    STUB(-1),
 
     /**
      * Regular instance production rank.
@@ -35,7 +35,7 @@ public enum Substitution {
     REGULAR(0),
 
     /**
-     * For replace the regular (or dummy) instances  production.
+     * For replace the regular (or stub) instances  production.
      * This is default rank for {@link Substitute} annotation
      */
     DEFAULT(1),
@@ -51,7 +51,7 @@ public enum Substitution {
     TEST(3);
 
     /**
-     * Substitution priority. (-1) - minimum ; (+3) - maximum
+     * Substitution priority (rank). (-1) - minimum ; (+3) - maximum
      */
     private final int rank;
 
