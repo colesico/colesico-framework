@@ -1,7 +1,7 @@
 package colesico.framework.task.internal;
 
 import colesico.framework.task.TaskExecutor;
-import colesico.framework.task.TaskExecutorConfigPrototype;
+import colesico.framework.task.AbstractTaskExecutorConfig;
 import colesico.framework.task.TaskSubmitterConfigPrototype;
 import colesico.framework.task.registry.TaskRegistry;
 
@@ -42,7 +42,7 @@ public final class TaskExecutorImpl extends AbstractTaskExecutor implements Task
     }
 
     @Override
-    protected TaskExecutorConfigPrototype getConfig() {
+    protected AbstractTaskExecutorConfig getConfig() {
         return config;
     }
 

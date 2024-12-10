@@ -16,6 +16,9 @@
 
 package colesico.framework.task;
 
+import java.util.Collection;
+import java.util.concurrent.Future;
+
 /**
  * Async task execution
  */
@@ -24,7 +27,7 @@ public interface TaskExecutor {
     /**
      * Process task asynchronously
      */
-    <E> void submit(E task);
+    <T, R> Collection<Future<R>> submit(T task);
 
     void start();
 

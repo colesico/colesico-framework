@@ -7,5 +7,5 @@ import colesico.framework.config.ConfigPrototype;
  * Task schedule configuration prototype
  */
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class TaskSchedulerConfigPrototype extends TaskExecutorConfigPrototype {
+abstract public class TaskSchedulerConfigPrototype extends AbstractTaskExecutorConfig {
 }

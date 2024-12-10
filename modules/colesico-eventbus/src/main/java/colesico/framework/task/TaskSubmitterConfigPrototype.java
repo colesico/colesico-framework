@@ -23,7 +23,14 @@ import colesico.framework.config.ConfigPrototype;
  * Task queue configuration prototype
  */
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class TaskSubmitterConfigPrototype extends TaskExecutorConfigPrototype {
+abstract public class TaskSubmitterConfigPrototype extends AbstractTaskExecutorConfig {
+
+    /**
+     * Initial task workers pool size
+     */
+    public int getCorePoolSize() {
+        return 1;
+    }
 
     /**
      * 0 - for unlimited

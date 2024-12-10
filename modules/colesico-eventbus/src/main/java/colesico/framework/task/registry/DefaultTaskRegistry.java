@@ -9,39 +9,37 @@ import java.util.Map;
 
 public class DefaultTaskRegistry implements TaskRegistry {
 
-    protected final Map<Class<?>, ListenersGroup<?,?>> taskListeners = new HashMap<>();
+    protected final Map<Class<?>, WorkersGroup<?, ?>> taskWorkers = new HashMap<>();
 
     @Inject
-    public DefaultTaskRegistry(Polysupplier<ServiceListener> listenersSupp) {
-        initTaskListeners(listenersSupp);
+    public DefaultTaskRegistry(Polysupplier<ServiceWorkers> workersSupp) {
+        initTaskWorkers(workersSupp);
     }
 
-    @SuppressWarnings("unchecked")
-    protected void initTaskListeners(Polysupplier<ServiceListener> listenersSupp) {
-        listenersSupp.forEach(
-                listener -> {
-                    var bindings = listener.getTaskBindings();
+    protected void initTaskWorkers(Polysupplier<ServiceWorkers> workersSupp) {
+        workersSupp.forEach(
+                worker -> {
+                    var bindings = worker.getTaskBindings();
                     for (var binding : bindings) {
-                        var listeners = taskListeners.computeIfAbsent(binding.taskClass(), c -> new ListenersGroup<>());
-                        listeners.add(binding.listener());
+                        var workers = taskWorkers.computeIfAbsent(binding.taskClass(), c -> new WorkersGroup<>());
+                        workers.add(binding.worker());
                     }
                 }, null
         );
     }
 
     @Override
-    public boolean hasListeners(Class<?> taskClass) {
-        return taskListeners.containsKey(taskClass);
+    public boolean hasWorkers(Class<?> taskClass) {
+        return taskWorkers.containsKey(taskClass);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <E> ListenersGroup<E> getTaskListeners(Class<E> taskClass) {
-        return (ListenersGroup<E>) taskListeners.get(taskClass);
+    public <T, R> WorkersGroup<T, R> getTaskWorkers(Class<T> taskClass) {
+        return (WorkersGroup<T, R>) taskWorkers.get(taskClass);
     }
 
     @Override
     public Collection<Class<?>> getTaskTypes() {
-        return taskListeners.keySet();
+        return taskWorkers.keySet();
     }
 }

@@ -16,7 +16,7 @@
 
 package colesico.framework.task.codegen;
 
-import colesico.framework.task.registry.ServiceListener;
+import colesico.framework.task.registry.ServiceWorkers;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.task.registry.TaskBinding;
 import colesico.framework.service.codegen.model.ServiceElement;
@@ -31,16 +31,16 @@ import javax.inject.Singleton;
 import javax.lang.model.element.Modifier;
 import java.util.List;
 
-public class ListenersFacadeGenerator {
+public class WorkersFacadeGenerator {
 
-    public static final String FACADE_SUFFIX = "Listener";
+    public static final String FACADE_SUFFIX = "Worker";
     public static final String TASK_PARAM = "task";
     public static final String TARGET_VAR = "target";
 
-    private final Logger logger = LoggerFactory.getLogger(ListenersFacadeGenerator.class);
+    private final Logger logger = LoggerFactory.getLogger(WorkersFacadeGenerator.class);
     private final ServiceProcessorContext context;
 
-    public ListenersFacadeGenerator(ServiceProcessorContext context) {
+    public WorkersFacadeGenerator(ServiceProcessorContext context) {
         this.context = context;
     }
 
@@ -50,14 +50,14 @@ public class ListenersFacadeGenerator {
         mb.addModifiers(Modifier.PUBLIC);
         mb.addParameter(
                 ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(service.getOriginClass().getOriginType())),
-                ServiceListener.SERVICE_PROV_FIELD,
+                ServiceWorkers.SERVICE_PROV_FIELD,
                 Modifier.FINAL);
 
-        mb.addStatement("super($N)", ServiceListener.SERVICE_PROV_FIELD);
+        mb.addStatement("super($N)", ServiceWorkers.SERVICE_PROV_FIELD);
         classBuilder.addMethod(mb.build());
     }
 
-    protected void generateHandlerProxy(ServiceElement service, TaskListenerElement handler, TypeSpec.Builder classBuilder) {
+    protected void generateHandlerProxy(ServiceElement service, TaskWorkerElement handler, TypeSpec.Builder classBuilder) {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(handler.getOriginMethod().getName());
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
@@ -67,7 +67,7 @@ public class ListenersFacadeGenerator {
         mb.addStatement("$T $N=this.$N.get()",
                 TypeName.get(service.getOriginClass().getOriginType()),
                 TARGET_VAR,
-                ServiceListener.SERVICE_PROV_FIELD);
+                ServiceWorkers.SERVICE_PROV_FIELD);
         mb.addStatement("$N.$N($N)",
                 TARGET_VAR,
                 handler.getOriginMethod().getName(),
@@ -77,14 +77,14 @@ public class ListenersFacadeGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    protected void generateHandlersProxies(ServiceElement service, List<TaskListenerElement> handlers, TypeSpec.Builder classBuilder) {
-        for (TaskListenerElement handler : handlers) {
+    protected void generateHandlersProxies(ServiceElement service, List<TaskWorkerElement> handlers, TypeSpec.Builder classBuilder) {
+        for (TaskWorkerElement handler : handlers) {
             generateHandlerProxy(service, handler, classBuilder);
         }
     }
 
-    protected void generateGetBindingsMethod(ServiceElement service, List<TaskListenerElement> handlers, TypeSpec.Builder classBuilder) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(ServiceListener.GET_BINDINGS_METHOD);
+    protected void generateGetBindingsMethod(ServiceElement service, List<TaskWorkerElement> handlers, TypeSpec.Builder classBuilder) {
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(ServiceWorkers.GET_BINDINGS_METHOD);
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
         TypeName resType = ArrayTypeName.of(ClassName.get(TaskBinding.class));
@@ -95,7 +95,7 @@ public class ListenersFacadeGenerator {
         cb.indent();
 
         int i = 0;
-        for (TaskListenerElement ele : handlers) {
+        for (TaskWorkerElement ele : handlers) {
             i++;
             cb.add("new $T<>($T.class, this::$L)",
                     ClassName.get(TaskBinding.class),
@@ -117,18 +117,18 @@ public class ListenersFacadeGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    public String getListenersFacadeClassName(ServiceElement service) {
+    public String getWorkersFacadeClassName(ServiceElement service) {
         String facadeClassSimpleName = service.getOriginClass().getSimpleName() + FACADE_SUFFIX;
         return facadeClassSimpleName;
     }
 
-    public void generateListenersFacade(ServiceElement service, List<TaskListenerElement> handlers) {
-        String facadeClassSimpleName = getListenersFacadeClassName(service);
-        logger.debug("Generate Tasks listener facade '"+facadeClassSimpleName+"' for service: " + service.getOriginClass().getName());
+    public void generateWorkersFacade(ServiceElement service, List<TaskWorkerElement> handlers) {
+        String facadeClassSimpleName = getWorkersFacadeClassName(service);
+        logger.debug("Generate Tasks worker facade '"+facadeClassSimpleName+"' for service: " + service.getOriginClass().getName());
 
         TypeSpec.Builder classBuilder = TypeSpec.classBuilder(facadeClassSimpleName);
         classBuilder.addModifiers(Modifier.PUBLIC);
-        classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(ServiceListener.class), TypeName.get(service.getOriginClass().getOriginType())));
+        classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(ServiceWorkers.class), TypeName.get(service.getOriginClass().getOriginType())));
 
         classBuilder.addAnnotation(CodegenUtils.generateGenstamp(this.getClass().getName(), null, null));
         classBuilder.addAnnotation(Singleton.class);

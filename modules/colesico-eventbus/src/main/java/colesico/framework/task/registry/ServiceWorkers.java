@@ -18,17 +18,17 @@ package colesico.framework.task.registry;
 
 import javax.inject.Provider;
 
-abstract public class ServiceListener<S> {
+abstract public class ServiceWorkers<S> {
 
     public static final String GET_BINDINGS_METHOD = "getTaskBindings";
     public static final String SERVICE_PROV_FIELD = "serviceProv";
 
     /**
-     * Listener service provider
+     * Worker service provider
      */
     protected final Provider<S> serviceProv;
 
-    public ServiceListener(Provider<S> serviceProv) {
+    public ServiceWorkers(Provider<S> serviceProv) {
         this.serviceProv = serviceProv;
     }
 

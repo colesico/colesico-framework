@@ -19,12 +19,12 @@ package colesico.framework.task.codegen;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
 
-public class TaskListenerElement {
+public class TaskWorkerElement {
 
     private final MethodElement originMethod;
     private final ClassType taskType;
 
-    public TaskListenerElement(MethodElement originMethod, ClassType taskType) {
+    public TaskWorkerElement(MethodElement originMethod, ClassType taskType) {
         this.originMethod = originMethod;
         this.taskType = taskType;
     }

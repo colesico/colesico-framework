@@ -1,15 +1,17 @@
 package colesico.framework.task.internal;
 
-import colesico.framework.task.TaskExecutorConfigPrototype;
-import colesico.framework.task.registry.TaskHandler;
+import colesico.framework.task.AbstractTaskExecutorConfig;
+import colesico.framework.task.registry.WorkersGroup;
+import colesico.framework.task.registry.TaskWorker;
 import colesico.framework.task.registry.TaskRegistry;
-import colesico.framework.task.registry.ListenersGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,7 +27,7 @@ abstract public class AbstractTaskExecutor {
 
     abstract protected ExecutorService getExecutorService();
 
-    abstract protected TaskExecutorConfigPrototype getConfig();
+    abstract protected AbstractTaskExecutorConfig getConfig();
 
     public AbstractTaskExecutor(TaskRegistry registry) {
         this.registry = registry;
@@ -41,24 +43,29 @@ abstract public class AbstractTaskExecutor {
         }
     }
 
-    protected final <E, R> Callable<R> createTask(final TaskHandler<E, R> listener, final E task) {
-        final long enqueueTime = System.currentTimeMillis();
-        logger.debug("New task queued: {}", task);
+    protected final <T, R> Callable<R> createCallableTask(final TaskWorker<T, R> worker, final T task) {
+        logger.debug("New callable task: {}", task);
         return () -> {
-            if (logger.isDebugEnabled()) {
-                final long queueingDuration = System.currentTimeMillis() - enqueueTime;
-                logger.debug("Task ready to be executed. Duration being in queue {}", queueingDuration);
-            }
-            return listener.handle(task);
+            logger.debug("Execute callable task: {}", task);
+            return worker.work(task);
         };
     }
 
-    public <E> void submit(final E task) {
+    protected final <T> Runnable createRunnableTask(final TaskWorker<T, ?> worker, final T task) {
+        logger.debug("New runnable task: {}", task);
+        return () -> {
+            logger.debug("Execute runnable task: {}", task);
+            worker.work(task);
+        };
+    }
+
+    public <T, R> Collection<Future<R>> submit(final T task) {
         checkRunning();
-        var listeners = (ListenersGroup<E>) registry.getTaskListeners(task.getClass());
-        if (listeners != null) {
-            listeners.apply(listener -> getExecutorService().submit(createTask(listener, task)));
+        var workers = (WorkersGroup<T, R>) registry.getTaskWorkers(task.getClass());
+        if (workers != null) {
+            return workers.apply(worker -> getExecutorService().submit(createCallableTask(worker, task)));
         }
+        return List.of();
     }
 
     public synchronized void start() {
@@ -78,24 +85,18 @@ abstract public class AbstractTaskExecutor {
 
         // Await termination
         try {
-            getExecutorService().awaitTermination(getConfig().awaitTerminationSeconds(), TimeUnit.SECONDS);
-        } catch (Exception e) {
-            logger.error("Error stopping task executor: {}", e.getMessage());
-        }
-        running = false;
-    }
-
-
-    public final void awaitTermination(long seconds) {
-        try {
-            boolean taskCompleted = getExecutorService().awaitTermination(seconds, TimeUnit.SECONDS);
+            boolean taskCompleted = getExecutorService().awaitTermination(getConfig().awaitTerminationSeconds(), TimeUnit.SECONDS);
             if (!taskCompleted) {
                 logger.info("Some tasks were not completed for task executor");
                 final List<Runnable> rejected = getExecutorService().shutdownNow();
                 logger.info("Rejected tasks: " + rejected.size());
             }
-        } catch (InterruptedException e) {
+        } catch (InterruptedException t) {
             logger.error("Await termination interrupted");
+        } catch (Exception t) {
+            logger.error("Error stopping task executor: {}", t.getMessage());
         }
+        running = false;
     }
+
 }

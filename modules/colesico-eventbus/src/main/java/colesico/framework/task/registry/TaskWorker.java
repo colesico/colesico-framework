@@ -17,6 +17,6 @@
 package colesico.framework.task.registry;
 
 @FunctionalInterface
-public interface TaskHandler<E, R> {
-    R handle(E task);
+public interface TaskWorker<T, R> {
+    R work(T task);
 }

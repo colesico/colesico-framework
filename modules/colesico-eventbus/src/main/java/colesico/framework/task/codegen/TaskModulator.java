@@ -16,7 +16,7 @@
 
 package colesico.framework.task.codegen;
 
-import colesico.framework.task.registry.ServiceListener;
+import colesico.framework.task.registry.ServiceWorkers;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassType;
@@ -39,12 +39,12 @@ import java.util.List;
 
 public class TaskModulator extends Modulator {
 
-    private ListenersFacadeGenerator facadeGenerator;
+    private WorkersFacadeGenerator facadeGenerator;
 
     @Override
     public void onInit(ServiceProcessorContext context) {
         super.onInit(context);
-        facadeGenerator = new ListenersFacadeGenerator(context);
+        facadeGenerator = new WorkersFacadeGenerator(context);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class TaskModulator extends Modulator {
         if (taskType == null) {
             throw CodegenException.of().message("Unsupported task type kind").element(params.get(0).unwrap()).build();
         }
-        TaskListenerElement evlElement = new TaskListenerElement(proxyMethod.getOriginMethod(), taskType);
+        TaskWorkerElement evlElement = new TaskWorkerElement(proxyMethod.getOriginMethod(), taskType);
         proxyMethod.setProperty(evlElement);
     }
 
@@ -82,9 +82,9 @@ public class TaskModulator extends Modulator {
     public void onServiceGenerated(ServiceElement service) {
         super.onServiceGenerated(service);
 
-        List<TaskListenerElement> handlers = getTaskHandlers(service);
+        List<TaskWorkerElement> handlers = getTaskHandlers(service);
         if (!handlers.isEmpty()) {
-            facadeGenerator.generateListenersFacade(service, handlers);
+            facadeGenerator.generateWorkersFacade(service, handlers);
         }
 
     }
@@ -94,28 +94,28 @@ public class TaskModulator extends Modulator {
     public void onGenerateIocProducer(ProducerGenerator generator, ServiceElement service) {
         super.onGenerateIocProducer(generator, service);
 
-        List<TaskListenerElement> handlers = getTaskHandlers(service);
+        List<TaskWorkerElement> handlers = getTaskHandlers(service);
         if (handlers.isEmpty()) {
             return;
         }
 
         String listnerFacadeClassName = service.getOriginClass().getPackageName() + '.' +
-                facadeGenerator.getListenersFacadeClassName(service);
+                facadeGenerator.getWorkersFacadeClassName(service);
 
         TypeName facadeType = ClassName.bestGuess(listnerFacadeClassName);
         generator.addProduceAnnotation(facadeType);
 
-        String methodName = "get" + facadeGenerator.getListenersFacadeClassName(service);
-        MethodSpec.Builder mb = generator.addProduceMethod(methodName, ClassName.get(ServiceListener.class));
+        String methodName = "get" + facadeGenerator.getWorkersFacadeClassName(service);
+        MethodSpec.Builder mb = generator.addProduceMethod(methodName, ClassName.get(ServiceWorkers.class));
         mb.addAnnotation(Polyproduce.class);
         mb.addParameter(facadeType, "impl", Modifier.FINAL);
         mb.addStatement("return impl");
     }
 
-    protected List<TaskListenerElement> getTaskHandlers(ServiceElement service) {
-        List<TaskListenerElement> handlers = new ArrayList<>();
+    protected List<TaskWorkerElement> getTaskHandlers(ServiceElement service) {
+        List<TaskWorkerElement> handlers = new ArrayList<>();
         for (ServiceMethodElement pm : service.getServiceMethods()) {
-            TaskListenerElement el = pm.getProperty(TaskListenerElement.class);
+            TaskWorkerElement el = pm.getProperty(TaskWorkerElement.class);
             if (el != null) {
                 handlers.add(el);
             }

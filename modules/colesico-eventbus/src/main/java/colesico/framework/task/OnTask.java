@@ -18,7 +18,7 @@ package colesico.framework.task;
 import java.lang.annotation.*;
 
 /**
- * Declares a service method as an task listener
+ * Declares a service method as an task worker
  *
  * @author Vladlen Larionov
  */

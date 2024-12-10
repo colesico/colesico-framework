@@ -17,10 +17,12 @@
 package colesico.framework.task.internal;
 
 import colesico.framework.task.TaskDispatcher;
+import colesico.framework.task.registry.WorkersGroup;
 import colesico.framework.task.registry.TaskRegistry;
-import colesico.framework.task.registry.ListenersGroup;
 
 import javax.inject.Singleton;
+import java.util.Collection;
+import java.util.List;
 
 @Singleton
 public class TaskDispatcherImpl implements TaskDispatcher {
@@ -32,12 +34,12 @@ public class TaskDispatcherImpl implements TaskDispatcher {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <E> void dispatch(final E task) {
-        var listeners = (ListenersGroup<E>) registry.getTaskListeners(task.getClass());
-        if (listeners != null) {
-            listeners.apply(listener -> listener.consume(task));
+    public <T, R> Collection<R> dispatch(final T task) {
+        var workers = (WorkersGroup<T, R>) registry.getTaskWorkers(task.getClass());
+        if (workers != null) {
+            return workers.apply(worker -> worker.work(task));
         }
+        return List.of();
     }
 
 }

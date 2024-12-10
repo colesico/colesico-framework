@@ -5,9 +5,9 @@ import java.util.Collection;
 
 public interface TaskRegistry {
 
-    boolean hasListeners(Class<?> taskClass);
+    boolean hasWorkers(Class<?> taskClass);
 
-    <E> ListenersGroup<E> getTaskListeners(Class<E> taskClass);
+    <T,R> WorkersGroup<T,R> getTaskWorkers(Class<T> taskClass);
 
     Collection<Class<?>> getTaskTypes();
 }

@@ -1,6 +1,6 @@
 package colesico.framework.task.internal;
 
-import colesico.framework.task.TaskExecutorConfigPrototype;
+import colesico.framework.task.AbstractTaskExecutorConfig;
 import colesico.framework.taskbus.TaskDispatcher;
 import colesico.framework.task.TaskSchedulerConfigPrototype;
 
@@ -31,19 +31,19 @@ public final class TaskScheduledExecutor extends AbstractTaskExecutor {
     }
 
     @Override
-    protected TaskExecutorConfigPrototype getConfig() {
+    protected AbstractTaskExecutorConfig getConfig() {
         return config;
     }
 
     public <P> void schedule(P taskPayload, long delay, TimeUnit unit) {
-        executorService.schedule(createTask(taskPayload), delay, unit);
+        executorService.schedule(createCallableTask(taskPayload), delay, unit);
     }
 
     public <P> void scheduleAtFixedRate(P taskPayload, long initialDelay, long period, TimeUnit unit) {
-        executorService.scheduleAtFixedRate(createTask(taskPayload), initialDelay, period, unit);
+        executorService.scheduleAtFixedRate(createCallableTask(taskPayload), initialDelay, period, unit);
     }
 
     public <P> void scheduleWithFixedDelay(P taskPayload, long initialDelay, long delay, TimeUnit unit) {
-        executorService.scheduleWithFixedDelay(createTask(taskPayload), initialDelay, delay, unit);
+        executorService.scheduleWithFixedDelay(createCallableTask(taskPayload), initialDelay, delay, unit);
     }
 }
