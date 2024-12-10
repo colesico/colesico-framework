@@ -16,6 +16,6 @@
 
 package colesico.framework.task.registry;
 
-public record TaskBinding<T>(Class<T> taskClass, TaskWorker<T> worker) {
+public record TaskBinding<T,R>(Class<T> taskClass, TaskWorker<T,R> worker) {
 
 }

@@ -1,13 +1,13 @@
 package colesico.framework.example.asynctask.performer;
 
 import colesico.framework.asynctask.TaskPerformer;
-import colesico.framework.task.TaskSubmitterConfigPrototype;
+import colesico.framework.task.TaskExecutorConfigPrototype;
 import colesico.framework.config.Config;
 
 import javax.inject.Inject;
 
 @Config
-public class PerfTaskQueueConfig extends TaskSubmitterConfigPrototype {
+public class PerfTaskQueueConfig extends TaskExecutorConfigPrototype {
 
     private final TaskPerformerService performer;
 

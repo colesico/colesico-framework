@@ -15,12 +15,15 @@
  */
 
 import colesico.framework.task.codegen.TaskModulator;
+import colesico.framework.service.codegen.modulator.Modulator;
 
 module colesico.framework.eventbus {
 
     requires transitive colesico.framework.service;
     requires transitive colesico.framework.config;
     requires org.slf4j;
+    requires java.compiler;
+    requires com.palantir.javapoet;
 
     // classes
     exports colesico.framework.task.internal to colesico.framework.ioc;

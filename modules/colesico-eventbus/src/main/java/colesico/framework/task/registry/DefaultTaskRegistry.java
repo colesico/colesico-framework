@@ -3,10 +3,12 @@ package colesico.framework.task.registry;
 import colesico.framework.ioc.production.Polysupplier;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+@Singleton
 public class DefaultTaskRegistry implements TaskRegistry {
 
     protected final Map<Class<?>, WorkersGroup<?, ?>> taskWorkers = new HashMap<>();

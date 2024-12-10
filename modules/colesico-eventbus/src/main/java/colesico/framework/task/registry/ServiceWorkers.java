@@ -32,5 +32,5 @@ abstract public class ServiceWorkers<S> {
         this.serviceProv = serviceProv;
     }
 
-    abstract public TaskBinding<?>[] getTaskBindings();
+    abstract public TaskBinding<?,?>[] getTaskBindings();
 }

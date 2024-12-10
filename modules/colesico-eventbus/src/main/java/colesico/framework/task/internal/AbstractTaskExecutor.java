@@ -37,7 +37,7 @@ abstract public class AbstractTaskExecutor {
         return running;
     }
 
-    private void checkRunning() {
+    protected void checkRunning() {
         if (!running) {
             throw new IllegalStateException("Async tasks service is not started");
         }

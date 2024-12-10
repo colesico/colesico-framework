@@ -1,26 +1,30 @@
 package colesico.framework.task.internal;
 
-import colesico.framework.task.TaskExecutor;
 import colesico.framework.task.AbstractTaskExecutorConfig;
-import colesico.framework.task.TaskSubmitterConfigPrototype;
+import colesico.framework.task.TaskExecutor;
+import colesico.framework.task.TaskExecutorConfigPrototype;
 import colesico.framework.task.registry.TaskRegistry;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.concurrent.*;
 
 /**
  * Task queue
  */
+@Singleton
 public final class TaskExecutorImpl extends AbstractTaskExecutor implements TaskExecutor {
 
-    private final TaskSubmitterConfigPrototype config;
+    private final TaskExecutorConfigPrototype config;
 
     private final ThreadPoolExecutor executorService;
 
-    public TaskExecutorImpl(TaskRegistry taskRegistry, TaskSubmitterConfigPrototype config) {
+    @Inject
+    public TaskExecutorImpl(TaskRegistry taskRegistry, TaskExecutorConfigPrototype config) {
         super(taskRegistry);
         this.config = config;
 
-        ThreadFactory threadFactory = new TaskThreadFactory("COLESICO-TASK-ASYNC");
+        ThreadFactory threadFactory = new TaskThreadFactory("COLESICO-TASKS-ASYNC");
 
         BlockingQueue<Runnable> queue;
         if (config.getQueueCapacity() <= 0) {
@@ -33,7 +37,9 @@ public final class TaskExecutorImpl extends AbstractTaskExecutor implements Task
                 config.getCorePoolSize(),
                 config.getMaximumPoolSize(),
                 config.getKeepAliveTime(),
-                TimeUnit.MILLISECONDS, queue, threadFactory);
+                TimeUnit.MILLISECONDS,
+                queue,
+                threadFactory);
     }
 
     @Override
@@ -45,7 +51,6 @@ public final class TaskExecutorImpl extends AbstractTaskExecutor implements Task
     protected AbstractTaskExecutorConfig getConfig() {
         return config;
     }
-
 
 
 }

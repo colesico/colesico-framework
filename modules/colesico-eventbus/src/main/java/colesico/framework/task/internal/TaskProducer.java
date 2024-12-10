@@ -25,8 +25,8 @@ import colesico.framework.ioc.production.Producer;
 import javax.inject.Singleton;
 
 @Producer
-@Produce(value = DefaultTaskRegistry.class, keyType = TaskRegistry.class, scoped = Singleton.class)
-@Produce(value = TaskDispatcherImpl.class, keyType = TaskDispatcher.class, scoped = Singleton.class)
+@Produce(value = DefaultTaskRegistry.class, keyType = TaskRegistry.class)
+@Produce(value = TaskDispatcherImpl.class, keyType = TaskDispatcher.class)
 public class TaskProducer {
 
 }

@@ -1,5 +1,7 @@
 package colesico.framework.task;
 
+import java.util.Collection;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -7,7 +9,7 @@ import java.util.concurrent.TimeUnit;
  */
 public interface TaskScheduler extends TaskExecutor {
 
-    <T> void schedule(T task, long delay, TimeUnit unit);
+    <T, R> Collection<Future<R>> schedule(T task, long delay, TimeUnit unit);
 
     <T> void scheduleAtFixedRate(T task, long initialDelay, long period, TimeUnit unit);
 

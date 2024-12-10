@@ -22,28 +22,28 @@ import colesico.framework.config.ConfigPrototype;
 /**
  * Task queue configuration prototype
  */
-@ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class TaskSubmitterConfigPrototype extends AbstractTaskExecutorConfig {
-
-    /**
-     * Initial task workers pool size
-     */
-    public int getCorePoolSize() {
-        return 1;
-    }
+@ConfigPrototype(model = ConfigModel.SINGLE)
+abstract public class TaskExecutorConfigPrototype extends AbstractTaskExecutorConfig {
 
     /**
      * 0 - for unlimited
      */
     public int getQueueCapacity() {
-        return 500;
+        return 50;
+    }
+
+    /**
+     * Initial task workers pool size
+     */
+    public int getCorePoolSize() {
+        return 5;
     }
 
     /**
      * Maximum number of active task workers
      */
     public int getMaximumPoolSize() {
-        return 1;
+        return 10;
     }
 
     public long getKeepAliveTime() {

@@ -29,9 +29,9 @@
     <artifactId>colesico-eventbus</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico Event Bus</name>
+    <name>Colesico Task</name>
     <description>
-        Colesico framework even bus support for services
+        Colesico framework async tasks support for services
     </description>
     <url>https://github.com/colesico/colesico-framework</url>
 

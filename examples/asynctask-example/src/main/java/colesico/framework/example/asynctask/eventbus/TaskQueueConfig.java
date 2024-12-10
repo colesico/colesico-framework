@@ -1,10 +1,10 @@
 package colesico.framework.example.asynctask.eventbus;
 
-import colesico.framework.task.TaskSubmitterConfigPrototype;
+import colesico.framework.task.TaskExecutorConfigPrototype;
 import colesico.framework.config.Config;
 
 @Config
-public class TaskQueueConfig extends TaskSubmitterConfigPrototype {
+public class TaskQueueConfig extends TaskExecutorConfigPrototype {
 
     @Override
     public Class<?> getPayloadType() {

@@ -6,7 +6,7 @@ package colesico.framework.task;
 abstract public class AbstractTaskExecutorConfig {
 
     public int awaitTerminationSeconds() {
-        return 10;
+        return 5;
     }
 
 }
