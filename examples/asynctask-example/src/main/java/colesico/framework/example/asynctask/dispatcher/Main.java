@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.eventbus;
+package colesico.framework.example.asynctask.dispatcher;
 
-public class MyEvent2 {
-    public String message;
+import colesico.framework.ioc.Ioc;
+import colesico.framework.ioc.IocBuilder;
 
-    public MyEvent2(String message) {
-        this.message = message;
+public class Main {
+
+    public static void main(String[] args) {
+
+        Ioc ioc = IocBuilder.create().build();
+        Sender sender = ioc.instance(Sender.class);
+        sender.sendEvent();
+
     }
 }

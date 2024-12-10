@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.eventbus;
+package colesico.framework.example.asynctask.dispatcher;
 
 public class MyEvent1 {
     public String message;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.eventbus;
+package colesico.framework.example.asynctask.dispatcher;
 
 import colesico.framework.task.OnTask;
 import colesico.framework.service.Service;
