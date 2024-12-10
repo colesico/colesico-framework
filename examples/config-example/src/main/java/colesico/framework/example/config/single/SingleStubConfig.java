@@ -21,7 +21,7 @@ import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.conditional.Substitution;
 
 /**
- * This config-stub will be used if no other config is specified.
+ * This config-stub will be used if no other config is declared.
  */
 @Config
 @Substitute(Substitution.STUB)

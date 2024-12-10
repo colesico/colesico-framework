@@ -17,21 +17,19 @@
 package colesico.framework.jdbi;
 
 import colesico.framework.config.Config;
-import colesico.framework.hikaricp.HikariProperties;
-import colesico.framework.ioc.conditional.Requires;
-import colesico.framework.ioc.production.Classed;
+import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.production.Polysupplier;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
+import static colesico.framework.ioc.conditional.Substitution.STUB;
+
 /**
  * Default jdbi config.
- * To override this config use {@link  colesico.framework.ioc.conditional.Substitute}
- * or {@link JdbiConditions#disableDefaultConfig()}
  */
 @Config
-@Requires(JdbiConditions.DefaultConfig.class)
+@Substitute(STUB)
 public final class DefaultJdbiConfig extends AbstractJdbiConfig {
 
     @Inject
