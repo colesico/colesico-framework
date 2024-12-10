@@ -16,7 +16,7 @@
 
 package colesico.framework.example.eventbus;
 
-import colesico.framework.eventbus.OnEvent;
+import colesico.framework.task.OnTask;
 import colesico.framework.service.Service;
 
 @Service
@@ -25,13 +25,13 @@ public class Receiver {
     private MyEvent1 event1;
     private MyEvent2 event2;
 
-    @OnEvent
+    @OnTask
     public void onEvent1(MyEvent1 event) {
         System.out.println("Receiver on MyEvent1: " + event.message);
         this.event1 = event;
     }
 
-    @OnEvent
+    @OnTask
     public void onEvent2(MyEvent2 event) {
         System.out.println("Receiver on MyEvent2: " + event.message);
         this.event2 = event;

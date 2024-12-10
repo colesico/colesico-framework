@@ -13,27 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package colesico.framework.task;
 
-package colesico.framework.eventbus.codegen;
+import java.lang.annotation.*;
 
-import colesico.framework.assist.codegen.model.ClassType;
-import colesico.framework.assist.codegen.model.MethodElement;
-
-public class EventHandlerElement {
-
-    private final MethodElement originMethod;
-    private final ClassType eventType;
-
-    public EventHandlerElement(MethodElement originMethod, ClassType eventType) {
-        this.originMethod = originMethod;
-        this.eventType = eventType;
-    }
-
-    public MethodElement getOriginMethod() {
-        return originMethod;
-    }
-
-    public ClassType getEventType() {
-        return eventType;
-    }
+/**
+ * Declares a service method as an task listener
+ *
+ * @author Vladlen Larionov
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD})
+@Inherited
+@Documented
+public @interface OnTask {
 }

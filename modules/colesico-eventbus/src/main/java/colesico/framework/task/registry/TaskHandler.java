@@ -14,19 +14,9 @@
  * limitations under the License.
  */
 
-package colesico.framework.eventbus.internal;
+package colesico.framework.task.registry;
 
-import colesico.framework.eventbus.SyncEventBus;
-import colesico.framework.eventbus.registry.DefaultEventRegistry;
-import colesico.framework.eventbus.registry.EventRegistry;
-import colesico.framework.ioc.production.Produce;
-import colesico.framework.ioc.production.Producer;
-
-import javax.inject.Singleton;
-
-@Producer
-@Produce(value = DefaultEventRegistry.class, keyType = EventRegistry.class, scoped = Singleton.class)
-@Produce(value = SyncEventBusImpl.class, keyType = SyncEventBus.class, scoped = Singleton.class)
-public class EventBusProducer {
-
+@FunctionalInterface
+public interface TaskHandler<E, R> {
+    R handle(E task);
 }

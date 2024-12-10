@@ -1,26 +1,26 @@
-package colesico.framework.eventbus.registry;
+package colesico.framework.task.registry;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.Consumer;
 
-public final class ListenersGroup<E> {
+public final class ListenersGroup<E,R> {
 
-    private final Collection<EventListener<E>> listeners = new ArrayList<>();
+    private final Collection<TaskHandler<E,R>> listeners = new ArrayList<>();
 
     public boolean isEmpty() {
         return listeners.isEmpty();
     }
     
-    public void add(EventListener<E> listener) {
+    public void add(TaskHandler<E,R> listener) {
         listeners.add(listener);
     }
 
     /**
      * Apply action on each listener within the group
      */
-    public void apply(Consumer<EventListener<E>> action) {
+    public void apply(Consumer<TaskHandler<E,R>> action) {
         if (!listeners.isEmpty()) {
             for (var listener : listeners) {
                 action.accept(listener);
@@ -28,7 +28,7 @@ public final class ListenersGroup<E> {
         }
     }
 
-    public Iterator<EventListener<E>> iterator() {
+    public Iterator<TaskHandler<E,R>> iterator() {
         return listeners.iterator();
     }
 

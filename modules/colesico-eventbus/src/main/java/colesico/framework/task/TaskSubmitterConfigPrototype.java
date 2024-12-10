@@ -14,15 +14,33 @@
  * limitations under the License.
  */
 
-package colesico.framework.eventbus;
+package colesico.framework.task;
+
+import colesico.framework.config.ConfigModel;
+import colesico.framework.config.ConfigPrototype;
 
 /**
- * Event management service
+ * Task queue configuration prototype
  */
-public interface EventService {
-    void start();
+@ConfigPrototype(model = ConfigModel.POLYVARIANT)
+abstract public class TaskSubmitterConfigPrototype extends TaskExecutorConfigPrototype {
 
-    void stop();
+    /**
+     * 0 - for unlimited
+     */
+    public int getQueueCapacity() {
+        return 500;
+    }
 
-    boolean isRunning();
+    /**
+     * Maximum number of active task workers
+     */
+    public int getMaximumPoolSize() {
+        return 1;
+    }
+
+    public long getKeepAliveTime() {
+        return 0L;
+    }
+
 }

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package colesico.framework.eventbus.codegen;
+package colesico.framework.task.codegen;
 
-import colesico.framework.eventbus.registry.ServiceListener;
+import colesico.framework.task.registry.ServiceListener;
 import colesico.framework.assist.codegen.CodegenUtils;
-import colesico.framework.eventbus.registry.EventBinding;
+import colesico.framework.task.registry.TaskBinding;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import com.palantir.javapoet.*;
@@ -34,7 +34,7 @@ import java.util.List;
 public class ListenersFacadeGenerator {
 
     public static final String FACADE_SUFFIX = "Listener";
-    public static final String EVENT_PARAM = "event";
+    public static final String TASK_PARAM = "task";
     public static final String TARGET_VAR = "target";
 
     private final Logger logger = LoggerFactory.getLogger(ListenersFacadeGenerator.class);
@@ -57,11 +57,11 @@ public class ListenersFacadeGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    protected void generateHandlerProxy(ServiceElement service, EventHandlerElement handler, TypeSpec.Builder classBuilder) {
+    protected void generateHandlerProxy(ServiceElement service, TaskListenerElement handler, TypeSpec.Builder classBuilder) {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(handler.getOriginMethod().getName());
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
-        ParameterSpec.Builder pb = ParameterSpec.builder(TypeName.get(handler.getEventType().unwrap()), EVENT_PARAM, Modifier.FINAL);
+        ParameterSpec.Builder pb = ParameterSpec.builder(TypeName.get(handler.getTaskType().unwrap()), TASK_PARAM, Modifier.FINAL);
         mb.addParameter(pb.build());
 
         mb.addStatement("$T $N=this.$N.get()",
@@ -71,23 +71,23 @@ public class ListenersFacadeGenerator {
         mb.addStatement("$N.$N($N)",
                 TARGET_VAR,
                 handler.getOriginMethod().getName(),
-                EVENT_PARAM
+                TASK_PARAM
         );
 
         classBuilder.addMethod(mb.build());
     }
 
-    protected void generateHandlersProxies(ServiceElement service, List<EventHandlerElement> handlers, TypeSpec.Builder classBuilder) {
-        for (EventHandlerElement handler : handlers) {
+    protected void generateHandlersProxies(ServiceElement service, List<TaskListenerElement> handlers, TypeSpec.Builder classBuilder) {
+        for (TaskListenerElement handler : handlers) {
             generateHandlerProxy(service, handler, classBuilder);
         }
     }
 
-    protected void generateGetBindingsMethod(ServiceElement service, List<EventHandlerElement> handlers, TypeSpec.Builder classBuilder) {
+    protected void generateGetBindingsMethod(ServiceElement service, List<TaskListenerElement> handlers, TypeSpec.Builder classBuilder) {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(ServiceListener.GET_BINDINGS_METHOD);
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
-        TypeName resType = ArrayTypeName.of(ClassName.get(EventBinding.class));
+        TypeName resType = ArrayTypeName.of(ClassName.get(TaskBinding.class));
         mb.returns(resType);
 
         CodeBlock.Builder cb = CodeBlock.builder();
@@ -95,11 +95,11 @@ public class ListenersFacadeGenerator {
         cb.indent();
 
         int i = 0;
-        for (EventHandlerElement ele : handlers) {
+        for (TaskListenerElement ele : handlers) {
             i++;
             cb.add("new $T<>($T.class, this::$L)",
-                    ClassName.get(EventBinding.class),
-                    TypeName.get(ele.getEventType().unwrap()),
+                    ClassName.get(TaskBinding.class),
+                    TypeName.get(ele.getTaskType().unwrap()),
                     ele.getOriginMethod().getName()
             );
             if (i < handlers.size()) {
@@ -122,9 +122,9 @@ public class ListenersFacadeGenerator {
         return facadeClassSimpleName;
     }
 
-    public void generateListenersFacade(ServiceElement service, List<EventHandlerElement> handlers) {
+    public void generateListenersFacade(ServiceElement service, List<TaskListenerElement> handlers) {
         String facadeClassSimpleName = getListenersFacadeClassName(service);
-        logger.debug("Generate Events listener facade '"+facadeClassSimpleName+"' for service: " + service.getOriginClass().getName());
+        logger.debug("Generate Tasks listener facade '"+facadeClassSimpleName+"' for service: " + service.getOriginClass().getName());
 
         TypeSpec.Builder classBuilder = TypeSpec.classBuilder(facadeClassSimpleName);
         classBuilder.addModifiers(Modifier.PUBLIC);

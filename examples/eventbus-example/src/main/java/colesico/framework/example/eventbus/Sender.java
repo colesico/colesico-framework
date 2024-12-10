@@ -17,7 +17,7 @@
 package colesico.framework.example.eventbus;
 
 import colesico.framework.eventbus.TaskDispatcher;
-import colesico.framework.eventbus.OnEvent;
+import colesico.framework.task.OnTask;
 import colesico.framework.service.Service;
 
 import javax.inject.Inject;
@@ -37,7 +37,7 @@ public class Sender {
         taskDispatcher.send(new MyEvent2("Hello2"));
     }
 
-    @OnEvent
+    @OnTask
     public void onEvent2(MyEvent2 event) {
         System.out.println("Sender on MyEvent2: " + event.message);
     }

@@ -14,31 +14,30 @@
  * limitations under the License.
  */
 
-package colesico.framework.eventbus.internal;
+package colesico.framework.task.internal;
 
-import colesico.framework.eventbus.SyncEventBus;
-import colesico.framework.eventbus.registry.EventRegistry;
-import colesico.framework.eventbus.registry.ListenersGroup;
+import colesico.framework.task.TaskDispatcher;
+import colesico.framework.task.registry.TaskRegistry;
+import colesico.framework.task.registry.ListenersGroup;
 
 import javax.inject.Singleton;
 
 @Singleton
-public class SyncEventBusImpl implements SyncEventBus {
+public class TaskDispatcherImpl implements TaskDispatcher {
 
-    private final EventRegistry registry;
+    private final TaskRegistry registry;
 
-    public SyncEventBusImpl(EventRegistry registry) {
+    public TaskDispatcherImpl(TaskRegistry registry) {
         this.registry = registry;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E> void dispatch(final E event) {
-        var listeners = (ListenersGroup<E>) registry.getEventListeners(event.getClass());
+    public <E> void dispatch(final E task) {
+        var listeners = (ListenersGroup<E>) registry.getTaskListeners(task.getClass());
         if (listeners != null) {
-            listeners.apply(listener -> listener.consume(event));
+            listeners.apply(listener -> listener.consume(task));
         }
     }
-
 
 }

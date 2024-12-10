@@ -14,9 +14,23 @@
  * limitations under the License.
  */
 
-package colesico.framework.eventbus.registry;
+package colesico.framework.task.registry;
 
-@FunctionalInterface
-public interface EventListener<E> {
-    void consume(E event);
+import javax.inject.Provider;
+
+abstract public class ServiceListener<S> {
+
+    public static final String GET_BINDINGS_METHOD = "getTaskBindings";
+    public static final String SERVICE_PROV_FIELD = "serviceProv";
+
+    /**
+     * Listener service provider
+     */
+    protected final Provider<S> serviceProv;
+
+    public ServiceListener(Provider<S> serviceProv) {
+        this.serviceProv = serviceProv;
+    }
+
+    abstract public TaskBinding<?>[] getTaskBindings();
 }

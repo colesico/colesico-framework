@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package colesico.framework.eventbus.codegen;
+package colesico.framework.task.codegen;
 
-import colesico.framework.eventbus.registry.ServiceListener;
+import colesico.framework.task.registry.ServiceListener;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.ParameterElement;
-import colesico.framework.eventbus.OnEvent;
+import colesico.framework.task.OnTask;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.ioc.production.Polyproduce;
 import colesico.framework.service.codegen.model.ServiceMethodElement;
@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EventModulator extends Modulator {
+public class TaskModulator extends Modulator {
 
     private ListenersFacadeGenerator facadeGenerator;
 
@@ -56,7 +56,7 @@ public class EventModulator extends Modulator {
     public void onServiceMethodParsed(ServiceMethodElement proxyMethod) {
         super.onServiceMethodParsed(proxyMethod);
 
-        AnnotationAssist<OnEvent> handlerAnn = proxyMethod.getOriginMethod().getAnnotation(OnEvent.class);
+        AnnotationAssist<OnTask> handlerAnn = proxyMethod.getOriginMethod().getAnnotation(OnTask.class);
         if (handlerAnn == null) {
             return;
         }
@@ -65,16 +65,16 @@ public class EventModulator extends Modulator {
 
         if (params.size() != 1) {
             throw CodegenException.of().
-                    message("Event handler must have only one argument")
+                    message("Task handler must have only one argument")
                     .element(proxyMethod.getOriginMethod())
                     .build();
         }
 
-        ClassType eventType = params.get(0).asClassType();
-        if (eventType == null) {
-            throw CodegenException.of().message("Unsupported event type kind").element(params.get(0).unwrap()).build();
+        ClassType taskType = params.get(0).asClassType();
+        if (taskType == null) {
+            throw CodegenException.of().message("Unsupported task type kind").element(params.get(0).unwrap()).build();
         }
-        EventHandlerElement evlElement = new EventHandlerElement(proxyMethod.getOriginMethod(), eventType);
+        TaskListenerElement evlElement = new TaskListenerElement(proxyMethod.getOriginMethod(), taskType);
         proxyMethod.setProperty(evlElement);
     }
 
@@ -82,7 +82,7 @@ public class EventModulator extends Modulator {
     public void onServiceGenerated(ServiceElement service) {
         super.onServiceGenerated(service);
 
-        List<EventHandlerElement> handlers = getEventHandlers(service);
+        List<TaskListenerElement> handlers = getTaskHandlers(service);
         if (!handlers.isEmpty()) {
             facadeGenerator.generateListenersFacade(service, handlers);
         }
@@ -94,7 +94,7 @@ public class EventModulator extends Modulator {
     public void onGenerateIocProducer(ProducerGenerator generator, ServiceElement service) {
         super.onGenerateIocProducer(generator, service);
 
-        List<EventHandlerElement> handlers = getEventHandlers(service);
+        List<TaskListenerElement> handlers = getTaskHandlers(service);
         if (handlers.isEmpty()) {
             return;
         }
@@ -112,10 +112,10 @@ public class EventModulator extends Modulator {
         mb.addStatement("return impl");
     }
 
-    protected List<EventHandlerElement> getEventHandlers(ServiceElement service) {
-        List<EventHandlerElement> handlers = new ArrayList<>();
+    protected List<TaskListenerElement> getTaskHandlers(ServiceElement service) {
+        List<TaskListenerElement> handlers = new ArrayList<>();
         for (ServiceMethodElement pm : service.getServiceMethods()) {
-            EventHandlerElement el = pm.getProperty(EventHandlerElement.class);
+            TaskListenerElement el = pm.getProperty(TaskListenerElement.class);
             if (el != null) {
                 handlers.add(el);
             }

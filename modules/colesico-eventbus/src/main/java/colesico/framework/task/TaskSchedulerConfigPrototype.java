@@ -1,4 +1,4 @@
-package colesico.framework.eventbus;
+package colesico.framework.task;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
@@ -7,5 +7,5 @@ import colesico.framework.config.ConfigPrototype;
  * Task schedule configuration prototype
  */
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class EventSchedulerConfigPrototype extends AbstractEventExecutorConfig {
+abstract public class TaskSchedulerConfigPrototype extends TaskExecutorConfigPrototype {
 }

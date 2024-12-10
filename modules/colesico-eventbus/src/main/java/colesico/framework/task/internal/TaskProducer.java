@@ -14,8 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.eventbus.registry;
+package colesico.framework.task.internal;
 
-public record EventBinding<E>(Class<E> eventClass, EventListener<E> listener) {
+import colesico.framework.task.TaskDispatcher;
+import colesico.framework.task.registry.DefaultTaskRegistry;
+import colesico.framework.task.registry.TaskRegistry;
+import colesico.framework.ioc.production.Produce;
+import colesico.framework.ioc.production.Producer;
+
+import javax.inject.Singleton;
+
+@Producer
+@Produce(value = DefaultTaskRegistry.class, keyType = TaskRegistry.class, scoped = Singleton.class)
+@Produce(value = TaskDispatcherImpl.class, keyType = TaskDispatcher.class, scoped = Singleton.class)
+public class TaskProducer {
 
 }

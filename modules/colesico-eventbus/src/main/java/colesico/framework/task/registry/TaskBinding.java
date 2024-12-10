@@ -14,16 +14,8 @@
  * limitations under the License.
  */
 
-package colesico.framework.eventbus;
+package colesico.framework.task.registry;
 
-/**
- * Background event execution
- */
-public interface AsyncEventBus {
-
-    /**
-     * Process event asynchronously
-     */
-    <E> void submit(E event);
+public record TaskBinding<E>(Class<E> taskClass, TaskHandler<E> listener) {
 
 }

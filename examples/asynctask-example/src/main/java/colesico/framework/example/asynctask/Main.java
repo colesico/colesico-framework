@@ -16,7 +16,7 @@
 
 package colesico.framework.example.asynctask;
 
-import colesico.framework.eventbus.EventService;
+import colesico.framework.task.EventService;
 import colesico.framework.example.asynctask.eventbus.TaskListenerService;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;

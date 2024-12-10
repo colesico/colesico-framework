@@ -17,7 +17,7 @@
 package colesico.framework.test.example.asynctask;
 
 
-import colesico.framework.eventbus.EventService;
+import colesico.framework.task.EventService;
 import colesico.framework.example.asynctask.TasksSubmitterService;
 import colesico.framework.example.asynctask.eventbus.TaskListenerService;
 import colesico.framework.example.asynctask.performer.TaskPerformerService;

@@ -1,24 +1,24 @@
-package colesico.framework.eventbus.internal;
+package colesico.framework.task.internal;
 
-import colesico.framework.eventbus.AbstractEventExecutorConfig;
-import colesico.framework.eventbus.EventDispatcher;
-import colesico.framework.eventbus.EventSchedulerConfigPrototype;
+import colesico.framework.task.TaskExecutorConfigPrototype;
+import colesico.framework.taskbus.TaskDispatcher;
+import colesico.framework.task.TaskSchedulerConfigPrototype;
 
 import java.util.concurrent.*;
 
 /**
  * Tasks schedule
  */
-public final class EventScheduledExecutor extends EventExecutor {
+public final class TaskScheduledExecutor extends AbstractTaskExecutor {
 
-    private final EventSchedulerConfigPrototype config;
+    private final TaskSchedulerConfigPrototype config;
 
     private final ThreadFactory threadFactory;
 
     private final ScheduledExecutorService executorService;
 
-    public EventScheduledExecutor(EventDispatcher eventDispatcher, EventSchedulerConfigPrototype config) {
-        super(eventDispatcher);
+    public TaskScheduledExecutor(TaskDispatcher taskDispatcher, TaskSchedulerConfigPrototype config) {
+        super(taskDispatcher);
         this.config = config;
 
         this.threadFactory = new TaskThreadFactory("ETS-" + config.getPayloadType().getSimpleName());
@@ -31,7 +31,7 @@ public final class EventScheduledExecutor extends EventExecutor {
     }
 
     @Override
-    protected AbstractEventExecutorConfig getConfig() {
+    protected TaskExecutorConfigPrototype getConfig() {
         return config;
     }
 
