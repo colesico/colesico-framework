@@ -51,7 +51,7 @@ public enum Substitution {
     TEST(3);
 
     /**
-     * Substitution priority. 1 - minimum ; 3 - maximum
+     * Substitution priority. (-1) - minimum ; (+3) - maximum
      */
     private final int rank;
 
