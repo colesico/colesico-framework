@@ -192,7 +192,6 @@
                 <module>examples/hocon-example</module>
                 <module>examples/ioc-example</module>
                 <module>examples/web-example</module>
-                <module>examples/eventbus-example</module>
                 <module>examples/transaction-example</module>
                 <module>examples/jdbc-example</module>
                 <module>examples/jdbi-example</module>

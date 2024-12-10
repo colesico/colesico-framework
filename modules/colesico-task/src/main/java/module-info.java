@@ -17,7 +17,7 @@
 import colesico.framework.task.codegen.TaskModulator;
 import colesico.framework.service.codegen.modulator.Modulator;
 
-module colesico.framework.eventbus {
+module colesico.framework.task {
 
     requires transitive colesico.framework.service;
     requires transitive colesico.framework.config;

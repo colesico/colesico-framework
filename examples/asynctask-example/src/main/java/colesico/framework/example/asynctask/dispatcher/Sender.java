@@ -16,7 +16,7 @@
 
 package colesico.framework.example.asynctask.dispatcher;
 
-import colesico.framework.eventbus.TaskDispatcher;
+import colesico.framework.task.TaskDispatcher;
 import colesico.framework.task.OnTask;
 import colesico.framework.service.Service;
 
@@ -33,8 +33,8 @@ public class Sender {
     }
 
     public void sendEvent() {
-        taskDispatcher.send(new MyEvent1("Hello1"));
-        taskDispatcher.send(new MyEvent2("Hello2"));
+        taskDispatcher.dispatch(new MyEvent1("Hello1"));
+        taskDispatcher.dispatch(new MyEvent2("Hello2"));
     }
 
     @OnTask

@@ -22,12 +22,12 @@
         <!-- Colesico -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-bundle-base</artifactId>
+            <artifactId>colesico-service</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-asynctask</artifactId>
+            <artifactId>colesico-task</artifactId>
             <version>${project.version}</version>
         </dependency>
 
