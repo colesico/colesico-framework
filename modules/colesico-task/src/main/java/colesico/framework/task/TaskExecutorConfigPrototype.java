@@ -28,26 +28,49 @@ abstract public class TaskExecutorConfigPrototype extends AbstractTaskExecutorCo
     /**
      * 0 - for unlimited
      */
-    public int getQueueCapacity() {
-        return 50;
-    }
+    protected Integer queueCapacity = 50;
 
     /**
      * Initial task workers pool size
      */
-    public int getCorePoolSize() {
-        return 5;
-    }
+    protected Integer corePoolSize = 5;
 
     /**
      * Maximum number of active task workers
      */
-    public int getMaximumPoolSize() {
-        return 10;
+    protected Integer maximumPoolSize = 10;
+
+    protected Long keepAliveTime = 0L;
+
+    public Integer getQueueCapacity() {
+        return queueCapacity;
     }
 
-    public long getKeepAliveTime() {
-        return 0L;
+    public void setQueueCapacity(Integer queueCapacity) {
+        this.queueCapacity = queueCapacity;
     }
 
+    public Integer getCorePoolSize() {
+        return corePoolSize;
+    }
+
+    public void setCorePoolSize(Integer corePoolSize) {
+        this.corePoolSize = corePoolSize;
+    }
+
+    public Integer getMaximumPoolSize() {
+        return maximumPoolSize;
+    }
+
+    public void setMaximumPoolSize(Integer maximumPoolSize) {
+        this.maximumPoolSize = maximumPoolSize;
+    }
+
+    public Long getKeepAliveTime() {
+        return keepAliveTime;
+    }
+
+    public void setKeepAliveTime(Long keepAliveTime) {
+        this.keepAliveTime = keepAliveTime;
+    }
 }

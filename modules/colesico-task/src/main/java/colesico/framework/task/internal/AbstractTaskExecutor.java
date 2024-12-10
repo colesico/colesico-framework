@@ -101,7 +101,7 @@ abstract public class AbstractTaskExecutor {
 
         // Await termination
         try {
-            boolean taskCompleted = getExecutorService().awaitTermination(getConfig().awaitTerminationSeconds(), TimeUnit.SECONDS);
+            boolean taskCompleted = getExecutorService().awaitTermination(getConfig().getAwaitTerminationSeconds(), TimeUnit.SECONDS);
             if (!taskCompleted) {
                 logger.info("Some tasks were not completed for task executor");
                 final List<Runnable> rejected = getExecutorService().shutdownNow();

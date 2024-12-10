@@ -12,8 +12,13 @@ abstract public class TaskSchedulerConfigPrototype extends AbstractTaskExecutorC
     /**
      * Initial task workers pool size
      */
-    public int getCorePoolSize() {
-        return 5;
+    protected Integer corePoolSize = 5;
+
+    public Integer getCorePoolSize() {
+        return corePoolSize;
     }
 
+    public void setCorePoolSize(Integer corePoolSize) {
+        this.corePoolSize = corePoolSize;
+    }
 }

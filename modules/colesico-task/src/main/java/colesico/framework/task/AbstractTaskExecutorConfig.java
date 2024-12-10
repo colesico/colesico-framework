@@ -5,8 +5,13 @@ package colesico.framework.task;
  */
 abstract public class AbstractTaskExecutorConfig {
 
-    public int awaitTerminationSeconds() {
-        return 5;
+    protected Integer awaitTerminationSeconds = 5;
+
+    public Integer getAwaitTerminationSeconds() {
+        return awaitTerminationSeconds;
     }
 
+    public void setAwaitTerminationSeconds(Integer awaitTerminationSeconds) {
+        this.awaitTerminationSeconds = awaitTerminationSeconds;
+    }
 }
