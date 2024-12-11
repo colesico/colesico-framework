@@ -17,11 +17,10 @@
 package colesico.framework.test.example.asynctask;
 
 
-import colesico.framework.asynctask.TaskDispatcher;
 import colesico.framework.asynctask.TaskExecutor;
-import colesico.framework.example.asynctask.AsyncProducerService;
+import colesico.framework.example.asynctask.AsyncSender;
 import colesico.framework.example.asynctask.Consumer;
-import colesico.framework.example.asynctask.SyncProducerService;
+import colesico.framework.example.asynctask.SyncSender;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import org.testng.annotations.AfterClass;
@@ -38,20 +37,18 @@ public class AsyncTaskExampleTest {
     private Ioc ioc;
 
     private Consumer consumer;
-    private SyncProducerService syncProducer;
-    private AsyncProducerService asyncProducer;
+    private SyncSender syncSender;
+    private AsyncSender asyncSender;
 
-    private TaskDispatcher dispatcher;
     private TaskExecutor executor;
 
     @BeforeClass
     public void init() {
         ioc = IocBuilder.create().build();
         consumer = ioc.instance(Consumer.class);
-        syncProducer = ioc.instance(SyncProducerService.class);
-        asyncProducer = ioc.instance(AsyncProducerService.class);
+        syncSender = ioc.instance(SyncSender.class);
+        asyncSender = ioc.instance(AsyncSender.class);
 
-        dispatcher = ioc.instance(TaskDispatcher.class);
         executor = ioc.instance(TaskExecutor.class);
         executor.start();
     }
@@ -64,21 +61,21 @@ public class AsyncTaskExampleTest {
     @Test
     public void testTask() throws ExecutionException, InterruptedException {
 
-        syncProducer.produceTasks();
+        syncSender.produceTasks();
 
-        Collection<Future<String>> results = asyncProducer.produceTasks();
+        Collection<Future<String>> results = asyncSender.produceTasks();
         // Await some time
         Thread.sleep(100);
-        for(Future<String> res:results) {
-             System.out.println("Worker result: " + res.get());
+        for (Future<String> res : results) {
+            System.out.println("Worker result: " + res.get());
         }
 
-        System.out.println("Consumer state: "+consumer);
+        System.out.println("Consumer state: " + consumer);
 
-        assertEquals(consumer.getTask1().message(),"Hello1");
-        assertEquals(consumer.getTask2().message(),"Hello1");
-        assertEquals(consumer.getTask3().message(),"Hello2");
-        assertEquals(consumer.getTask4().message(),"Hello2");
+        assertEquals(consumer.getTask1().message(), "Hello1");
+        assertEquals(consumer.getTask2().message(), "Hello1");
+        assertEquals(consumer.getTask3().message(), "Hello2");
+        assertEquals(consumer.getTask4().message(), "Hello2");
 
     }
 

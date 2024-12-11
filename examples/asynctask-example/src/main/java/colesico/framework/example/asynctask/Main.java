@@ -31,11 +31,10 @@ public class Main {
 
     public static void main(String[] args) {
         Ioc ioc = IocBuilder.create().build();
-        AsyncProducerService asyncProducer = ioc.instance(AsyncProducerService.class);
+        AsyncSender asyncProducer = ioc.instance(AsyncSender.class);
         asyncProducer.produceTasks();
         sleep(100);
         Consumer consumer = ioc.instance(Consumer.class);
         System.out.println("Consumer: " + consumer);
-
     }
 }

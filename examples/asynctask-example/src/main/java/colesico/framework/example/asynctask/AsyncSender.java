@@ -8,12 +8,12 @@ import java.util.Collection;
 import java.util.concurrent.Future;
 
 @Service
-public class AsyncProducerService {
+public class AsyncSender {
 
     final TaskExecutor executor;
 
     @Inject
-    public AsyncProducerService(TaskExecutor dispatcher) {
+    public AsyncSender(TaskExecutor dispatcher) {
         this.executor = dispatcher;
     }
 

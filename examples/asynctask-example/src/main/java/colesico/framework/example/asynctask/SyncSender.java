@@ -23,12 +23,12 @@ import javax.inject.Inject;
 import java.util.Collection;
 
 @Service
-public class SyncProducerService {
+public class SyncSender {
 
     final TaskDispatcher dispatcher;
 
     @Inject
-    public SyncProducerService(TaskDispatcher dispatcher) {
+    public SyncSender(TaskDispatcher dispatcher) {
         this.dispatcher = dispatcher;
     }
 
