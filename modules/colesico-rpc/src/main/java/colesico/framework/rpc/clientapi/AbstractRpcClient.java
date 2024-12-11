@@ -120,23 +120,25 @@ abstract public class AbstractRpcClient implements RpcClient {
     }
 
     private static final class EndpointsRegistryImpl implements RpcEndpointsPrototype.EndpointsRegistry {
-
+        protected final Logger logger = LoggerFactory.getLogger(EndpointsRegistryImpl.class);
         // RPC API Name to endpoint map
         private final Map<String, String> endpointsMap = new HashMap<>();
 
         @Override
         public void addEndpoint(String rpcApiName, String endpoint) {
+            logger.debug("Add RPC API name: {} -> Endpoint: {}", rpcApiName, endpoint);
             String prev = endpointsMap.put(rpcApiName, endpoint);
             if (prev != null) {
-                throw new RpcException("RPC API " + rpcApiName + " endpoint already defined: " + prev);
+                throw new RpcException("RPC API " + rpcApiName + " endpoint already defined as:" + prev + " while trying to register: " + endpoint);
             }
         }
 
         @Override
         public void addEndpoint(Class<?> rpcApiClass, String endpoint) {
+            logger.debug("Add RPC API class: {} -> Endpoint: {}", rpcApiClass, endpoint);
             RpcApi rpcApiAnn = rpcApiClass.getAnnotation(RpcApi.class);
             if (rpcApiAnn == null) {
-                throw new RpcException("Not a RPC interface: "+rpcApiClass.getCanonicalName());
+                throw new RpcException("Not a RPC interface: " + rpcApiClass.getCanonicalName());
             }
             if (StrUtils.isEmpty(rpcApiAnn.name())) {
                 addEndpoint(rpcApiClass.getCanonicalName(), endpoint);

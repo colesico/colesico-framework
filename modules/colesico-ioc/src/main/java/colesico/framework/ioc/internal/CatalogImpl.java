@@ -63,16 +63,6 @@ public class CatalogImpl implements Catalog {
             return true;
         }
 
-        // Polyproducing
-
-        if (curEntry.isPolyproducing() && prevEntry.isPolyproducing()) {
-            curEntry.setAction(EntryAction.APPEND);
-            return true;
-        }
-
-        if (curEntry.isPolyproducing() != prevEntry.isPolyproducing()) {
-            throw new IocException("Polyproducing mismatch for key: " + key);
-        }
 
         // Check substitution
         if (curEntry.getSubstitution().getRank() > prevEntry.getSubstitution().getRank()) {
@@ -83,6 +73,17 @@ public class CatalogImpl implements Catalog {
         if (curEntry.getSubstitution().getRank() < prevEntry.getSubstitution().getRank()) {
             curEntry.setAction(EntryAction.NONE);
             return false;
+        }
+
+        // Check polyproducing
+
+        if (curEntry.isPolyproducing() && prevEntry.isPolyproducing()) {
+            curEntry.setAction(EntryAction.APPEND);
+            return true;
+        }
+
+        if (curEntry.isPolyproducing() != prevEntry.isPolyproducing()) {
+            throw new IocException("Polyproducing mismatch for key: " + key);
         }
 
         // curEntry.getSubstitution().getRank() == prevEntry.getSubstitution().getRank()
