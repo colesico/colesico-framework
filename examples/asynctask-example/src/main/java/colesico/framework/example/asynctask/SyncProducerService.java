@@ -35,7 +35,6 @@ public class SyncProducerService {
     public void produceTasks() {
         Collection<String> res = dispatcher.dispatchReturn(new Task1("Hello1"));
         System.out.println("Task1 result: " + res.iterator().next());
-        dispatcher.dispatch(new Task2("Hello2"));
     }
 
 

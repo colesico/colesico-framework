@@ -23,8 +23,9 @@ import colesico.framework.service.Service;
 public class Consumer {
 
     private Task1 task1;
-    private Task2 task2;
+    private Task1 task2;
     private Task2 task3;
+    private Task2 task4;
 
     @OnTask
     public String worker1(Task1 task) {
@@ -34,27 +35,38 @@ public class Consumer {
     }
 
     @OnTask
-    public void worker2(Task2 task) {
+    public void worker2(Task1 task) {
         System.out.println("Worker2: " + task.message());
         this.task2 = task;
     }
 
     @OnTask
-    public void worker3(Task2 task) {
+    public String worker3(Task2 task) {
         System.out.println("Worker3: " + task.message());
         this.task3 = task;
+        return "Hello from Worker3";
+    }
+
+    @OnTask
+    public void worker4(Task2 task) {
+        System.out.println("Worker4: " + task.message());
+        this.task4 = task;
     }
 
     public Task1 getTask1() {
         return task1;
     }
 
-    public Task2 getTask2() {
+    public Task1 getTask2() {
         return task2;
     }
 
     public Task2 getTask3() {
         return task3;
+    }
+
+    public Task2 getTask4() {
+        return task4;
     }
 
     @Override
@@ -63,6 +75,7 @@ public class Consumer {
                 "task1=" + task1 +
                 ", task2=" + task2 +
                 ", task3=" + task3 +
+                ", task4=" + task4 +
                 '}';
     }
 }

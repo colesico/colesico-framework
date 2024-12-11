@@ -26,4 +26,11 @@ public class Task2 {
     public String message() {
         return message;
     }
+
+    @Override
+    public String toString() {
+        return "Task2{" +
+                "message='" + message + '\'' +
+                '}';
+    }
 }

@@ -32,6 +32,8 @@ import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import static org.testng.Assert.assertEquals;
+
 public class AsyncTaskExampleTest {
     private Ioc ioc;
 
@@ -60,14 +62,23 @@ public class AsyncTaskExampleTest {
     }
 
     @Test
-    public void testAyncTask() throws ExecutionException, InterruptedException {
+    public void testTask() throws ExecutionException, InterruptedException {
 
+        syncProducer.produceTasks();
 
-        Collection<Future<String>> res = asyncProducer.produceTasks();
+        Collection<Future<String>> results = asyncProducer.produceTasks();
         // Await some time
         Thread.sleep(100);
-        String task1Result = res.iterator().next().get();
-        System.out.println(task1Result);
+        for(Future<String> res:results) {
+             System.out.println("Worker result: " + res.get());
+        }
+
+        System.out.println("Consumer state: "+consumer);
+
+        assertEquals(consumer.getTask1().message(),"Hello1");
+        assertEquals(consumer.getTask2().message(),"Hello1");
+        assertEquals(consumer.getTask3().message(),"Hello2");
+        assertEquals(consumer.getTask4().message(),"Hello2");
 
     }
 

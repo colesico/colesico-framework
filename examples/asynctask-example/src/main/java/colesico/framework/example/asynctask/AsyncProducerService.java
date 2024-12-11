@@ -18,8 +18,6 @@ public class AsyncProducerService {
     }
 
     public Collection<Future<String>> produceTasks() {
-        Collection<Future<String>> res = executor.submitReturn(new Task1("Hello1"));
-        executor.submit(new Task2("Hello2"));
-        return res;
+        return executor.submitReturn(new Task2("Hello2"));
     }
 }
