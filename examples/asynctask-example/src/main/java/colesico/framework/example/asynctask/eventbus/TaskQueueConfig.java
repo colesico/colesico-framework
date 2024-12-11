@@ -1,6 +1,6 @@
 package colesico.framework.example.asynctask.eventbus;
 
-import colesico.framework.task.TaskExecutorConfigPrototype;
+import colesico.framework.asynctask.TaskExecutorConfigPrototype;
 import colesico.framework.config.Config;
 
 @Config

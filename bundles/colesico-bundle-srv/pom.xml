@@ -65,7 +65,7 @@
         </dependency>
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-task</artifactId>
+            <artifactId>colesico-asynctask</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
