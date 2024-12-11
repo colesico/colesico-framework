@@ -45,6 +45,7 @@ public class CatalogImpl implements Catalog {
     @Override
     public <T> boolean accept(Key<T> key, Condition condition, Substitution substitution, boolean polyproducing) {
 
+        // for older version ioclets compatibility
         if (substitution == null) {
             substitution = Substitution.REGULAR;
         }
