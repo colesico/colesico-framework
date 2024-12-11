@@ -16,6 +16,5 @@
 
 package colesico.framework.asynctask.registry;
 
-public record TaskBinding<T,R>(Class<T> taskClass, TaskWorker<T,R> worker) {
-
+public record TaskBinding<T, R>(Class<T> taskClass, TaskWorker<T, R> worker) {
 }

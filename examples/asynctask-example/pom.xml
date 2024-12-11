@@ -67,7 +67,7 @@
                         </path>
                         <path>
                             <groupId>net.colesico.framework</groupId>
-                            <artifactId>colesico-eventbus</artifactId>
+                            <artifactId>colesico-asynctask</artifactId>
                             <version>${project.version}</version>
                         </path>
                         <!-- Enable compile time log -->

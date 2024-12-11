@@ -14,27 +14,35 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.asynctask.dispatcher;
+package colesico.framework.example.asynctask;
 
-import colesico.framework.service.Service;
 import colesico.framework.asynctask.OnTask;
+import colesico.framework.service.Service;
 
 @Service
 public class Consumer {
 
     private Task1 task1;
     private Task2 task2;
+    private Task2 task3;
 
     @OnTask
-    public void onTask1(Task1 task) {
-        System.out.println("Consumer on Task1: " + task.message);
+    public String worker1(Task1 task) {
+        System.out.println("Worker1: " + task.message());
         this.task1 = task;
+        return "Hello from Worker1";
     }
 
     @OnTask
-    public void onTask2(Task2 task) {
-        System.out.println("Consumer on Task2: " + task.message);
+    public void worker2(Task2 task) {
+        System.out.println("Worker2: " + task.message());
         this.task2 = task;
+    }
+
+    @OnTask
+    public void worker3(Task2 task) {
+        System.out.println("Worker3: " + task.message());
+        this.task3 = task;
     }
 
     public Task1 getTask1() {
@@ -43,5 +51,18 @@ public class Consumer {
 
     public Task2 getTask2() {
         return task2;
+    }
+
+    public Task2 getTask3() {
+        return task3;
+    }
+
+    @Override
+    public String toString() {
+        return "Consumer{" +
+                "task1=" + task1 +
+                ", task2=" + task2 +
+                ", task3=" + task3 +
+                '}';
     }
 }

@@ -17,54 +17,57 @@
 package colesico.framework.test.example.asynctask;
 
 
-import colesico.framework.task.EventService;
-import colesico.framework.example.asynctask.TasksSubmitterService;
-import colesico.framework.example.asynctask.eventbus.TaskListenerService;
-import colesico.framework.example.asynctask.performer.TaskPerformerService;
+import colesico.framework.asynctask.TaskDispatcher;
+import colesico.framework.asynctask.TaskExecutor;
+import colesico.framework.example.asynctask.AsyncProducerService;
+import colesico.framework.example.asynctask.Consumer;
+import colesico.framework.example.asynctask.SyncProducerService;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
+import java.util.Collection;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class AsyncTaskExampleTest {
     private Ioc ioc;
-    private EventService taskService;
+
+    private Consumer consumer;
+    private SyncProducerService syncProducer;
+    private AsyncProducerService asyncProducer;
+
+    private TaskDispatcher dispatcher;
+    private TaskExecutor executor;
 
     @BeforeClass
     public void init() {
         ioc = IocBuilder.create().build();
-        taskService = ioc.instance(EventService.class);
-        taskService.start();
+        consumer = ioc.instance(Consumer.class);
+        syncProducer = ioc.instance(SyncProducerService.class);
+        asyncProducer = ioc.instance(AsyncProducerService.class);
+
+        dispatcher = ioc.instance(TaskDispatcher.class);
+        executor = ioc.instance(TaskExecutor.class);
+        executor.start();
     }
 
     @AfterClass
     public void done() {
-        taskService.stop();
+        executor.stop();
     }
 
     @Test
-    public void testEventBus() {
+    public void testAyncTask() throws ExecutionException, InterruptedException {
 
-        // Enqueue task
-        TasksSubmitterService publisherService = ioc.instance(TasksSubmitterService.class);
-        publisherService.enqueueTasks();
 
+        Collection<Future<String>> res = asyncProducer.produceTasks();
         // Await some time
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        TaskListenerService consumerService = ioc.instance(TaskListenerService.class);
-
-        assertEquals(consumerService.payload.value, "value");
-
-        TaskPerformerService performerService = ioc.instance(TaskPerformerService.class);
-        assertEquals(performerService.payload.value, "perf");
+        Thread.sleep(100);
+        String task1Result = res.iterator().next().get();
+        System.out.println(task1Result);
 
     }
 

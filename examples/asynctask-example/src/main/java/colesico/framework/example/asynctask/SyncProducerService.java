@@ -14,12 +14,29 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.asynctask.dispatcher;
+package colesico.framework.example.asynctask;
 
-public class Task1 {
-    public String message;
+import colesico.framework.asynctask.TaskDispatcher;
+import colesico.framework.service.Service;
 
-    public Task1(String message) {
-        this.message = message;
+import javax.inject.Inject;
+import java.util.Collection;
+
+@Service
+public class SyncProducerService {
+
+    final TaskDispatcher dispatcher;
+
+    @Inject
+    public SyncProducerService(TaskDispatcher dispatcher) {
+        this.dispatcher = dispatcher;
     }
+
+    public void produceTasks() {
+        Collection<String> res = dispatcher.dispatchReturn(new Task1("Hello1"));
+        System.out.println("Task1 result: " + res.iterator().next());
+        dispatcher.dispatch(new Task2("Hello2"));
+    }
+
+
 }

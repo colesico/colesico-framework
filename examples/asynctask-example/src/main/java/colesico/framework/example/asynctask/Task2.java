@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.asynctask.dispatcher;
+package colesico.framework.example.asynctask;
 
-import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.IocBuilder;
+public class Task2 {
+    private final String message;
 
-public class DispatcherApp {
+    public Task2(String message) {
+        this.message = message;
+    }
 
-    public static void main(String[] args) {
-
-        Ioc ioc = IocBuilder.create().build();
-        Producer producer = ioc.instance(Producer.class);
-        producer.produceTasks();
-
+    public String message() {
+        return message;
     }
 }

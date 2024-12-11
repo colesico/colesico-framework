@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.asynctask.dispatcher;
+package colesico.framework.example.asynctask;
 
-public class Task2 {
-    public String message;
-
-    public Task2(String message) {
-        this.message = message;
-    }
+public record Task1 (String message) {
 }

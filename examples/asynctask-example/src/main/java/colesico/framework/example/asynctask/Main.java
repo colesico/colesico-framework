@@ -16,8 +16,6 @@
 
 package colesico.framework.example.asynctask;
 
-import colesico.framework.task.EventService;
-import colesico.framework.example.asynctask.eventbus.TaskListenerService;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 
@@ -33,23 +31,11 @@ public class Main {
 
     public static void main(String[] args) {
         Ioc ioc = IocBuilder.create().build();
-
-        // Start async tasks service
-        EventService taskService = ioc.instance(EventService.class);
-        taskService.start();
-
-        // Enqueue task
-        TasksSubmitterService publisherService = ioc.instance(TasksSubmitterService.class);
-        publisherService.enqueueTasks();
-
-        // Await some time for task been processed
+        AsyncProducerService asyncProducer = ioc.instance(AsyncProducerService.class);
+        asyncProducer.produceTasks();
         sleep(100);
+        Consumer consumer = ioc.instance(Consumer.class);
+        System.out.println("Consumer: " + consumer);
 
-        // Print task payload
-        TaskListenerService consumerService = ioc.instance(TaskListenerService.class);
-        System.out.println(consumerService.payload);
-
-        // Stop task service
-        taskService.stop();
     }
 }
