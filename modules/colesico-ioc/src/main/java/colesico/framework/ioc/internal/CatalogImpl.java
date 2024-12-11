@@ -63,6 +63,10 @@ public class CatalogImpl implements Catalog {
             return true;
         }
 
+        // Check polyproducing
+        if (curEntry.isPolyproducing() != prevEntry.isPolyproducing()) {
+            throw new IocException("Polyproducing mismatch for key: " + key);
+        }
 
         // Check substitution
         if (curEntry.getSubstitution().getRank() > prevEntry.getSubstitution().getRank()) {
@@ -75,6 +79,8 @@ public class CatalogImpl implements Catalog {
             return false;
         }
 
+        // curEntry.getSubstitution().getRank() == prevEntry.getSubstitution().getRank()
+
         // Check polyproducing
 
         if (curEntry.isPolyproducing() && prevEntry.isPolyproducing()) {
@@ -82,11 +88,6 @@ public class CatalogImpl implements Catalog {
             return true;
         }
 
-        if (curEntry.isPolyproducing() != prevEntry.isPolyproducing()) {
-            throw new IocException("Polyproducing mismatch for key: " + key);
-        }
-
-        // curEntry.getSubstitution().getRank() == prevEntry.getSubstitution().getRank()
         throw new AmbiguousDependencyException("Ambiguous factory for key: " + key + ";");
 
     }
