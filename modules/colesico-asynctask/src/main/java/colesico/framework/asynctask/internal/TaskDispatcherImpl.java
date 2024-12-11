@@ -33,6 +33,13 @@ public class TaskDispatcherImpl implements TaskDispatcher {
     }
 
     @Override
+    public <T> void dispatchVoid(T task) {
+        registry.applyVoid(task.getClass(),
+                worker -> ((TaskWorker<T, ?>) worker).work(task)
+        );
+    }
+
+    @Override
     public <T, R> Collection<R> dispatchReturn(final T task) {
         return registry.applyReturn(task.getClass(),
                 worker -> ((TaskWorker<T, R>) worker).work(task)

@@ -3,7 +3,6 @@ package colesico.framework.asynctask.internal;
 import colesico.framework.asynctask.AbstractTaskExecutorConfig;
 import colesico.framework.asynctask.registry.TaskRegistry;
 import colesico.framework.asynctask.registry.TaskWorker;
-import colesico.framework.asynctask.registry.WorkersGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,18 +55,15 @@ abstract public class AbstractTaskExecutor {
     }
 
     public <T, R> void dispatchVoid(final T task) {
-        var workers = (WorkersGroup<T, R>) registry.getTaskWorkers(task.getClass());
-        if (workers != null) {
-            workers.applyVoid(worker -> worker.work(task));
-        }
+        registry.applyVoid(task.getClass(),
+                worker -> ((TaskWorker<T, ?>) worker).work(task)
+        );
     }
 
     public <T, R> Collection<R> dispatchReturn(final T task) {
-        var workers = (WorkersGroup<T, R>) registry.getTaskWorkers(task.getClass());
-        if (workers != null) {
-            return workers.applyReturn(worker -> worker.work(task));
-        }
-        return List.of();
+        return registry.applyReturn(task.getClass(),
+                worker -> ((TaskWorker<T, R>) worker).work(task)
+        );
     }
 
     public <T> void submitVoid(final T task) {

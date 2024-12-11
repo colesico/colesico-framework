@@ -15,6 +15,7 @@
  */
 
 import colesico.framework.asynctask.codegen.TaskModulator;
+import colesico.framework.service.codegen.modulator.Modulator;
 
 module colesico.framework.asynctask {
 
