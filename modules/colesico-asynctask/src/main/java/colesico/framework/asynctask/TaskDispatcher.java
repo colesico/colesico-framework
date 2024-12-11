@@ -7,7 +7,7 @@ import java.util.Collection;
  */
 public interface TaskDispatcher {
 
-    <T> void dispatchVoid(T task);
+    <T> void dispatch(T task);
 
     <T, R> Collection<R> dispatchReturn(T task);
 

@@ -24,7 +24,7 @@ import java.util.concurrent.Future;
  */
 public interface TaskExecutor  extends TaskDispatcher{
 
-    <T> void submitVoid(T task);
+    <T> void submit(T task);
 
     <T, R> Collection<Future<R>> submitReturn(T task);
 

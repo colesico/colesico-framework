@@ -33,7 +33,7 @@ public class TaskDispatcherImpl implements TaskDispatcher {
     }
 
     @Override
-    public <T> void dispatchVoid(T task) {
+    public <T> void dispatch(T task) {
         registry.applyVoid(task.getClass(),
                 worker -> ((TaskWorker<T, ?>) worker).work(task)
         );

@@ -54,7 +54,7 @@ abstract public class AbstractTaskExecutor {
         };
     }
 
-    public <T, R> void dispatchVoid(final T task) {
+    public <T> void dispatch(final T task) {
         registry.applyVoid(task.getClass(),
                 worker -> ((TaskWorker<T, ?>) worker).work(task)
         );
@@ -66,7 +66,7 @@ abstract public class AbstractTaskExecutor {
         );
     }
 
-    public <T> void submitVoid(final T task) {
+    public <T> void submit(final T task) {
         checkRunning();
         registry.applyVoid(task.getClass(),
                 worker -> getExecutorService().execute(createRunnableTask((TaskWorker<T, ?>) worker, task))
