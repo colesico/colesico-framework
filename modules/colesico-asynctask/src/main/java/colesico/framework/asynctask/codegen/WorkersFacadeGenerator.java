@@ -16,8 +16,8 @@
 
 package colesico.framework.asynctask.codegen;
 
-import colesico.framework.asynctask.registry.ServiceWorkers;
 import colesico.framework.assist.codegen.CodegenUtils;
+import colesico.framework.asynctask.registry.ServiceWorkers;
 import colesico.framework.asynctask.registry.TaskBinding;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
@@ -29,11 +29,12 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.TypeKind;
 import java.util.List;
 
 public class WorkersFacadeGenerator {
 
-    public static final String FACADE_SUFFIX = "Worker";
+    public static final String FACADE_SUFFIX = "Workers";
     public static final String TASK_PARAM = "task";
     public static final String TARGET_VAR = "target";
 
@@ -60,6 +61,7 @@ public class WorkersFacadeGenerator {
     protected void generateHandlerProxy(ServiceElement service, TaskWorkerElement handler, TypeSpec.Builder classBuilder) {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(handler.getOriginMethod().getName());
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+        mb.returns(ClassName.get(Object.class));
 
         ParameterSpec.Builder pb = ParameterSpec.builder(TypeName.get(handler.getTaskType().unwrap()), TASK_PARAM, Modifier.FINAL);
         mb.addParameter(pb.build());
@@ -68,11 +70,21 @@ public class WorkersFacadeGenerator {
                 TypeName.get(service.getOriginClass().getOriginType()),
                 TARGET_VAR,
                 ServiceWorkers.SERVICE_PROV_FIELD);
-        mb.addStatement("$N.$N($N)",
-                TARGET_VAR,
-                handler.getOriginMethod().getName(),
-                TASK_PARAM
-        );
+
+        if (handler.getOriginMethod().getReturnType().getKind() != TypeKind.VOID) {
+            mb.addStatement("return $N.$N($N)",
+                    TARGET_VAR,
+                    handler.getOriginMethod().getName(),
+                    TASK_PARAM
+            );
+        } else {
+            mb.addStatement("$N.$N($N)",
+                    TARGET_VAR,
+                    handler.getOriginMethod().getName(),
+                    TASK_PARAM
+            );
+            mb.addStatement("return null");
+        }
 
         classBuilder.addMethod(mb.build());
     }
@@ -124,7 +136,7 @@ public class WorkersFacadeGenerator {
 
     public void generateWorkersFacade(ServiceElement service, List<TaskWorkerElement> handlers) {
         String facadeClassSimpleName = getWorkersFacadeClassName(service);
-        logger.debug("Generate Tasks worker facade '"+facadeClassSimpleName+"' for service: " + service.getOriginClass().getName());
+        logger.debug("Generate Tasks worker facade '" + facadeClassSimpleName + "' for service: " + service.getOriginClass().getName());
 
         TypeSpec.Builder classBuilder = TypeSpec.classBuilder(facadeClassSimpleName);
         classBuilder.addModifiers(Modifier.PUBLIC);
