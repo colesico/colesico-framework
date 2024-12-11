@@ -114,8 +114,8 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
             }
 
             mb.returns(ParameterizedTypeName.get(
-                    ClassName.get(Factory.class),
-                    TypeName.get(fe.getSuppliedType().unwrap())
+                            ClassName.get(Factory.class),
+                            TypeName.get(fe.getSuppliedType().unwrap())
                     )
             );
             mb.addModifiers(Modifier.PUBLIC);
@@ -151,12 +151,14 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
                 } else {
                     cb.add(", null");
                 }
+
                 // Substitution
                 if (factoryElm.getSubstitution() != null) {
                     cb.add(", $T.$N", ClassName.get(Substitution.class), factoryElm.getSubstitution().getSubstitutionType().name());
                 } else {
-                    cb.add(", null");
+                    cb.add(", $T.$N", ClassName.get(Substitution.class), Substitution.REGULAR.name());
                 }
+
                 // Polyproduce
                 cb.add(", $L", factoryElm.getPolyproduce());
 
