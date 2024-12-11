@@ -37,21 +37,20 @@ public class RpcApiTest {
 
     @BeforeClass
     public void init() {
-        TestCondition.enable();
         ioc = IocBuilder.create().build();
-        logger.info("Start http server");
+        logger.info("Start http server...");
         httpServer = ioc.instance(HttpServer.class).start();
     }
 
     @AfterClass
     public void destroy() {
-        logger.info("Stop http server");
+        logger.info("Stop http server...");
         httpServer.stop();
     }
 
     @Test
     public void test1() {
-        logger.info("Test DataBean retrieving");
+        logger.info("Test DataBean retrieving from remote service");
         HelloServiceRemote remoteSrv = ioc.instance(HelloServiceRemote.class);
         String val = remoteSrv.getDataBean().getValue();
         System.out.println("DataBean.value=" + val);

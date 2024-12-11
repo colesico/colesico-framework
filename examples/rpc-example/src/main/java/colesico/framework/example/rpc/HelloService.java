@@ -26,7 +26,7 @@ public class HelloService implements HelloServiceRemote {
 
     @Override
     public String getMessage(Integer id, DataBean dataBean, NameBean nb) {
-        return  "Message { ID:" + id +" DataBean:" +dataBean.toString()
+        return  "{ ID:" + id +" DataBean:" +dataBean.toString()
                 + " NameBean:" + nb.toString()+" }";
     }
 

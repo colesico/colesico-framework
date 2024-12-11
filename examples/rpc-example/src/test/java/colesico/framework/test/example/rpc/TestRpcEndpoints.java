@@ -8,7 +8,6 @@ import colesico.framework.ioc.conditional.TestCondition;
 import colesico.framework.rpc.clientapi.RpcEndpointsPrototype;
 
 @Config
-@Requires(TestCondition.class)
 @Substitute
 public class TestRpcEndpoints extends RpcEndpointsPrototype {
     @Override

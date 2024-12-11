@@ -25,7 +25,7 @@ import colesico.framework.ioc.conditional.Substitution;
  */
 @Config
 @Substitute(Substitution.STUB)
-public class SingleStubConfig extends SingleConfigPrototype {
+public class DefaultSingleConfig extends SingleConfigPrototype {
     private int counter = 0;
 
     @Override

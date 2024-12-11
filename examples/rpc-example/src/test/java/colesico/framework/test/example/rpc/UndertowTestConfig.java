@@ -24,7 +24,6 @@ import colesico.framework.undertow.UndertowConfigPrototype;
 import io.undertow.Undertow;
 
 @Config
-@Requires(TestCondition.class)
 @Substitute
 public class UndertowTestConfig extends UndertowConfigPrototype {
 

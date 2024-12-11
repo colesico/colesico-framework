@@ -35,6 +35,7 @@ public class Main {
         HelloServiceRemote remoteSrv = ioc.instance(HelloServiceRemote.class);
         DataBean db = remoteSrv.getDataBean();
         System.out.println("DataBean.value=" + db.getValue());
+
         String message = remoteSrv.getMessage(7, db,
                 new NameBean("Ivan",
                         new DataBean("Hi")));

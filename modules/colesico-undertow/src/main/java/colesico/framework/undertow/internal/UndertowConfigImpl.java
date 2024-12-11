@@ -16,6 +16,8 @@
 package colesico.framework.undertow.internal;
 
 
+import colesico.framework.ioc.conditional.Substitute;
+import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.undertow.UndertowConfigPrototype;
 import io.undertow.Undertow;
 import org.slf4j.Logger;
@@ -30,6 +32,7 @@ import javax.inject.Singleton;
  */
 
 @Singleton
+@Substitute(Substitution.STUB)
 public final class UndertowConfigImpl extends UndertowConfigPrototype {
     private static Logger log = LoggerFactory.getLogger(UndertowConfigImpl.class);
 
