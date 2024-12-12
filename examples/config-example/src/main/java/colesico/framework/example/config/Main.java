@@ -26,13 +26,14 @@ public class Main {
     public static void main(String[] args) {
         MainBean service = IocBuilder.create().build().instance(MainBean.class);
 
-        out.println("Value from simple config: "+service.getSimpleConfigValue());
-        out.println("Value from single config: "+service.getSingleConfigValue());
-        out.println("Values from polyvariant configs: "+service.getPolyconfigValues());
-        out.println("Values from message configs: "+service.getMessageConfigValues());
-        out.println("Value from simple source config: "+service.getSourceSimpleConfigValue());
-        out.println("Value from single source config: "+service.getSourceSingleConfigValue());
-        out.println("Value from prefixed source config: "+service.getSourcePrefixConfigValue());
-        out.println("Value from nested source config: "+service.getSourceNestedConfigValue());
+        out.println("Value from simple config: " + service.getSimpleConfigValue());
+        out.println("Value from single config: " + service.getSingleConfigValue());
+        out.println("Values from polyvariant configs: " + service.getPolyconfigValues());
+        out.println("Values from message configs: " + service.getMessageConfigValues());
+        out.println("Value from simple source config: " + service.getSourceSimpleConfigValue());
+        out.println("Value from single source config: " + service.getSourceSingleConfigValue());
+        out.println("Value from prefixed source config: " + service.getSourcePrefixConfigValue());
+        out.println("Value from nested source config: " + service.getSourceNestedConfigValue());
+        out.println("Value from default config: " + service.getDefaultConfigValue());
     }
 }

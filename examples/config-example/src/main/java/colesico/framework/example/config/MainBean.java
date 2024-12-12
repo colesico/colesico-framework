@@ -17,6 +17,7 @@
 package colesico.framework.example.config;
 
 import colesico.framework.example.config.classed.ClassedConfigsBean;
+import colesico.framework.example.config.defaultcfg.DefaultConfigPrototype;
 import colesico.framework.example.config.message.MessageConfig1;
 import colesico.framework.example.config.message.MessageConfig2;
 import colesico.framework.example.config.message.TargetBean;
@@ -45,6 +46,8 @@ public class MainBean {
 
     private final ClassedConfigsBean classedConfigsBean;
 
+    private final DefaultConfigPrototype defaultConfig;
+
     public MainBean(SimpleConfig simpleConfig,
                     // Config in single configuration model
                     Provider<SingleConfigPrototype> singleConfigProv,
@@ -54,11 +57,11 @@ public class MainBean {
 
                     // A bean configured with the configuration in the message model
                     @Classed(MessageConfig1.class)
-                        TargetBean targetService1,
+                    TargetBean targetService1,
 
                     // A bean configured with the configuration in the message model
                     @Classed(MessageConfig2.class)
-                        TargetBean targetService2,
+                    TargetBean targetService2,
 
                     // The configuration  the values of that is read from config source
                     SourceSimpleConfig sourceSimpleConfig,
@@ -67,7 +70,9 @@ public class MainBean {
                     SourceNestedConfig sourceNestedConfig,
 
                     // Classed single and named configs injected to classedConfigsBean
-                    ClassedConfigsBean classedConfigsBean
+                    ClassedConfigsBean classedConfigsBean,
+
+                    DefaultConfigPrototype defaultConfig
     ) {
 
         this.simpleConfig = simpleConfig;
@@ -80,6 +85,7 @@ public class MainBean {
         this.sourcePrefixConfig = sourcePrefixConfig;
         this.sourceNestedConfig = sourceNestedConfig;
         this.classedConfigsBean = classedConfigsBean;
+        this.defaultConfig = defaultConfig;
     }
 
     public String getSimpleConfigValue() {
@@ -111,6 +117,7 @@ public class MainBean {
     public String getSourcePrefixConfigValue() {
         return sourcePrefixConfig.getValue();
     }
+
     public String getSourcePrefixConfigEmptyValue() {
         return sourcePrefixConfig.getEmptyValue();
     }
@@ -122,6 +129,10 @@ public class MainBean {
 
     public String getClassedConfigValue() {
         return classedConfigsBean.getValues();
+    }
+
+    public String getDefaultConfigValue() {
+        return defaultConfig.configure();
     }
 
 }

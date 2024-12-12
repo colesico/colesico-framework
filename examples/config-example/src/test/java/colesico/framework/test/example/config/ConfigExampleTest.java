@@ -85,4 +85,9 @@ public class ConfigExampleTest {
         assertEquals(service.getClassedConfigValue(), "SingleConfig;PolyConfig");
     }
 
+    @Test
+    public void testDefaultConfig() {
+        assertEquals(service.getDefaultConfigValue(), "custom");
+    }
+
 }

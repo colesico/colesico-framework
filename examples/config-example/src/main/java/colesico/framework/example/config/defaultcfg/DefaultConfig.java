@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.config.single;
+package colesico.framework.example.config.defaultcfg;
 
 import colesico.framework.config.Config;
 import colesico.framework.ioc.conditional.Substitute;
@@ -25,11 +25,11 @@ import colesico.framework.ioc.conditional.Substitution;
  */
 @Config
 @Substitute(Substitution.STUB)
-public class DefaultSingleConfig extends SingleConfigPrototype {
-    private int counter = 0;
+public class DefaultConfig extends DefaultConfigPrototype {
 
     @Override
-    public String getValue() {
-        return "Single stub" + (counter++);
+    public String configure() {
+        System.out.println("Default configuration");
+        return "default";
     }
 }
