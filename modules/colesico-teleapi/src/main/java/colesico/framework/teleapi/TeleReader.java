@@ -22,6 +22,7 @@ package colesico.framework.teleapi;
  * reader or writer is used for given data type.
  * <p>
  * Reader is used to read param values from remote client.
+ * Reader must be a stateless  (may be a singleton but stateless)
  *
  * @param <V> the value  type to be read
  * @param <C> the reading context

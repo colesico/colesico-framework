@@ -33,16 +33,23 @@ public interface Profile {
 
     String GET_LOCALE_METHOD = "getLocale";
 
+    <A> boolean hasAttribute(Class<A> prefClass);
+
     /**
      * Attributes are any values that define the profiling configuration.
      * Examples of attributes may be the user's time zone, terminal type (mobile, PC), etc.
-     * Attributes are assigned on the calling side and cannot be changed in the application.
+     * Attributes are assigned on the calling side and not returned back
+     * (not writed to {@link colesico.framework.teleapi.DataPort} ).
      */
     <A> A getAttribute(Class<A> attrClass);
 
+    <A> A setAttribute(A attribute);
+
+    <P> boolean hasPreference(Class<P> prefClass);
+
     /**
-     * Preferences are similar to attributes, but can be set inside the
-     * application as preferred by the user. For example, interface theme, language, etc.
+     * Preferences are similar to attributes, but they writed to
+     * For example, interface theme, language, etc.
      */
     <P> P getPreference(Class<P> prefClass);
 
@@ -55,7 +62,10 @@ public interface Profile {
      * Returns user locale.
      */
     default Locale getLocale() {
-        return getPreference(Locale.class);
+        if (hasPreference(Locale.class)) {
+            return getPreference(Locale.class);
+        }
+        return getAttribute(Locale.class);
     }
 
     /**

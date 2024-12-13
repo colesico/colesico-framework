@@ -21,17 +21,16 @@ import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.profile.Profile;
 import colesico.framework.profile.ProfileUtils;
-import colesico.framework.profile.teleapi.CommonProfileCreator;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTeleReader;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
 import colesico.framework.telehttp.writer.ProfileWriter;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.Base64;
+import java.util.Collection;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Default profile reader
@@ -41,57 +40,48 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
 
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
 
-    protected final ProfileUtils<P> profileSerializer;
-    protected final CommonProfileCreator commonProfileCreator;
+    protected final ProfileUtils<P> profileUtils;
     protected final Provider<HttpContext> httpContextProv;
 
-    public ProfileReader(ProfileUtils profileUtils, CommonProfileCreator commonProfileCreator, Provider<HttpContext> httpContextProv) {
-        this.profileSerializer = profileUtils;
-        this.commonProfileCreator = commonProfileCreator;
+    public ProfileReader(ProfileUtils profileUtils, Provider<HttpContext> httpContextProv) {
+        this.profileUtils = profileUtils;
         this.httpContextProv = httpContextProv;
     }
 
-    protected P getCustomProfile(HttpRequest request) {
+    protected P buildProfile(HttpRequest request) {
 
-        // Retrieve profile from http header
-        String profileValue = request.getHeaders().get(ProfileWriter.HEADER_NAME);
-        if (StringUtils.isBlank(profileValue)) {
-            // Retrieve profile from http cookie
-            HttpCookie cookie = request.getCookies().get(ProfileWriter.COOKIE_NAME);
-            if (cookie == null) {
-                return null;
+        String attributeTagsStr = request.getHeaders().get(ProfileWriter.ATTRIBUTES_HEADER_NAME);
+        Map<String, String> attributeTags = TeleHttpUtils.parseProfileTags(attributeTagsStr);
+        Collection<?> attributes = profileUtils.fromTags(attributeTags);
+
+        Map<String, String> preferenceTags;
+        HttpCookie preferenceTagCookie = request.getCookies().get(ProfileWriter.PREFERENCE_COOKIE_NAME);
+        if (preferenceTagCookie != null) {
+            preferenceTags = TeleHttpUtils.parseProfileTags(preferenceTagCookie.getValue());
+        } else {
+            preferenceTags = Map.of();
+        }
+        Collection<?> preferences = profileUtils.fromTags(preferenceTags);
+
+        P profile = profileUtils.create(attributes, preferences);
+
+        if (!profile.hasPreference(Locale.class)) {
+            String acceptLangs = request.getHeaders().get(ACCEPT_LANGUAGE_HEADER);
+            Locale locale = TeleHttpUtils.getAcceptedLanguage(acceptLangs);
+            if (locale == null) {
+                locale = Locale.getDefault();
             }
-            profileValue = cookie.getValue();
+            profile.setAttribute(locale);
         }
 
-        if (StringUtils.isBlank(profileValue)) {
-            return null;
-        }
-
-        Base64.Decoder decoder = Base64.getDecoder();
-        byte[] profileBytes = decoder.decode(profileValue);
-
-        P profile = profileSerializer.deserialize(profileBytes);
         return profile;
     }
 
-    protected P getDefaultProfile(HttpRequest request) {
-        String accLangs = request.getHeaders().get(ACCEPT_LANGUAGE_HEADER);
-        Locale locale = TeleHttpUtils.getAcceptedLanguage(accLangs);
-        if (locale == null) {
-            locale = Locale.getDefault();
-        }
-
-        return commonProfileCreator.createCommonProfile(locale);
-    }
 
     @Override
     public final P read(C context) {
         HttpRequest request = httpContextProv.get().getRequest();
-        P profile = getCustomProfile(request);
-        if (profile == null) {
-            profile = getDefaultProfile(request);
-        }
+        P profile = buildProfile(request);
         return profile;
     }
 }

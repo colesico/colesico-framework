@@ -10,9 +10,14 @@ public interface ProfileUtils<P extends Profile> {
      */
     P create(Collection<?> attributes, Collection<?> preferences);
 
-    Collection<?> getPreference(P profile);
+    Collection<?> getPreferences(P profile);
 
     Collection<?> getAttributes(P profile);
+
+    /**
+     * Return all possible tag keys
+     */
+    Collection<String> getRegisteredTagKeys();
 
     Collection<?> fromTags(Map<String, String> tags);
 

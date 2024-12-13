@@ -18,7 +18,7 @@ public class ProfileUtilsImpl implements ProfileUtils<ProfileImpl> {
     }
 
     @Override
-    public Collection<?> getPreference(ProfileImpl profile) {
+    public Collection<?> getPreferences(ProfileImpl profile) {
         return profile.getPreferences().values();
     }
 

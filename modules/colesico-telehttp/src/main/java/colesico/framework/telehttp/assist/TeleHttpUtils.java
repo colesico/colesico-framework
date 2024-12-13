@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 public class TeleHttpUtils {
@@ -59,6 +60,14 @@ public class TeleHttpUtils {
             }
         }
         return sb.toString();
+    }
+
+    public static Map<String, String> parseProfileTags(String tagsStr) {
+        if (StringUtils.isBlank(tagsStr)) {
+            return Map.of();
+        }
+        // TODO:
+        return null;
     }
 
 }
