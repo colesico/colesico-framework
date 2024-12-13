@@ -24,7 +24,7 @@ import java.lang.reflect.Type;
 
 /**
  * Data exchange port for communication with remote client.
- * This port is destined for retrieving parameters values from remote client and sending back a results.
+ * This port is designed for retrieving parameters values from remote client and sending back a results.
  * A request "controller"  (tele-driver, controller servlet or something similar) creates and puts DataPort instance
  * to the process scope for each request process.
  *
@@ -64,7 +64,7 @@ public interface DataPort<R extends TRContext, W extends TWContext> {
     <V> void write(V value, W context);
 
     /**
-     * Internally must create appropriate reading context and forward to {@link DataPort#write(Object, Type)}
+     * Internally must create appropriate writing context and forward to {@link DataPort#write(Object, Type)}
      */
     <V> void write(V value, Type valueType);
 

@@ -3,7 +3,6 @@ package colesico.framework.resource.assist.localization;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * Localizing qualifiers linked with localization subject  (resource, e.t.c.)
@@ -89,13 +88,6 @@ public final class SubjectQualifiers implements Iterable<String> {
     @Override
     public Iterator<String> iterator() {
         return Arrays.stream(values).iterator();
-    }
-
-    @Override
-    public void forEach(Consumer<? super String> action) {
-        for (String q : values) {
-            action.accept(q);
-        }
     }
 
     public String toSuffix(char separator) {

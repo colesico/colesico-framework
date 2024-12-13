@@ -18,17 +18,21 @@ package colesico.framework.http;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.function.Consumer;
 
 /**
  * @author Vladlen Larionov
  */
-public final class MultiValue<T> {
+public final class MultiValue<T>  implements Iterable<T>{
     private final Collection<T> values;
 
     public MultiValue(Collection<T> values) {
         this.values = values;
     }
 
+    /**
+     * First value from values or null if no value
+     */
     public T value() {
         Iterator<T> iterator = values.iterator();
         return iterator.hasNext() ? iterator.next() : null;

@@ -1,7 +1,7 @@
 package colesico.framework.rpc.clientapi.handler;
 
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.teleapi.ProfileSerializer;
+import colesico.framework.profile.ProfileListener;
 import colesico.framework.rpc.teleapi.BasicEnvelope;
 import colesico.framework.rpc.clientapi.RpcRequestHandler;
 import colesico.framework.security.Principal;
@@ -14,12 +14,12 @@ import javax.inject.Singleton;
 public class BasicRequestHandler implements RpcRequestHandler<BasicEnvelope> {
 
     private final PrincipalSerializer principalSerializer;
-    private final ProfileSerializer profileSerializer;
+    private final ProfileListener profileSerializer;
 
     private final Provider<Principal> principalProv;
     private final Provider<Profile> profileProv;
 
-    public BasicRequestHandler(PrincipalSerializer principalSerializer, ProfileSerializer profileSerializer, Provider<Principal> principalProv, Provider<Profile> profileProv) {
+    public BasicRequestHandler(PrincipalSerializer principalSerializer, ProfileListener profileSerializer, Provider<Principal> principalProv, Provider<Profile> profileProv) {
         this.principalSerializer = principalSerializer;
         this.profileSerializer = profileSerializer;
         this.principalProv = principalProv;

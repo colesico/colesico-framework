@@ -17,8 +17,8 @@
 package colesico.framework.restlet.internal.gsonconv;
 
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.restlet.teleapi.RestletJsonConverter;
 import colesico.framework.restlet.teleapi.RestletGsonOptionsPrototype;
+import colesico.framework.restlet.teleapi.RestletJsonConverter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -42,7 +42,7 @@ public class GsonConverter implements RestletJsonConverter {
                 .registerTypeHierarchyAdapter(byte[].class, new GsonByteArrayToBase64())
                 .registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTime())
         ;
-        options.forEach(o -> o.applyOptions(builder), null);
+        options.forEach(o -> o.applyOptions(builder));
         this.gson = builder.create();
     }
 

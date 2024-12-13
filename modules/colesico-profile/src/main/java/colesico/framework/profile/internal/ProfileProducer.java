@@ -17,46 +17,42 @@ package colesico.framework.profile.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.profile.DefaultProfileKit;
+import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileKit;
-import colesico.framework.profile.teleapi.CommonProfileCreator;
-import colesico.framework.profile.teleapi.ProfileSerializer;
+import colesico.framework.profile.ProfilePort;
 
 import javax.inject.Provider;
-import javax.inject.Singleton;
 import java.util.Locale;
 
 
 @Producer
-@Produce(DefaultProfileKit.class)
-@Produce(ProfileSerializerImpl.class)
-@Produce(CommonProfileCreatorImpl.class)
+@Produce(ProfileDefaultPort.class)
 public class ProfileProducer {
 
-    @Singleton
-    public ProfileKit getProfileKit(DefaultProfileKit impl) {
-        return impl;
+    @Unscoped
+    public Profile getProfile(ProfilePort port) {
+        return port.read();
     }
 
-
-    public Profile getProfile(ProfileKit kit) {
-        return kit.getProfile();
-    }
-
+    /**
+     * Get current locale
+     */
+    @Unscoped
     public Locale getLocale(Provider<Profile> profileProv) {
         Profile profile = profileProv.get();
         return profile != null ? profile.getLocale() : Locale.getDefault();
     }
 
-    @Singleton
-    public ProfileSerializer getProfileSerializer(ProfileSerializerImpl impl) {
-        return impl;
+    /**
+     * Produces profile port
+     */
+    @Unscoped
+    public ProfilePort getProfileSource(ThreadScope scope, Provider<ProfileDefaultPort> defaultPortProvider) {
+        ProfilePort source = scope.get(ProfilePort.SCOPE_KEY);
+        if (source == null) {
+            return defaultPortProvider.get();
+        }
+        return source;
     }
-
-    @Singleton
-    public CommonProfileCreator getCommonProfileCreator(CommonProfileCreatorImpl impl) {
-        return impl;
-    }
-
 }

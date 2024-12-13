@@ -1,7 +1,7 @@
 package colesico.framework.rpc.teleapi.writer;
 
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.teleapi.ProfileSerializer;
+import colesico.framework.profile.ProfileListener;
 import colesico.framework.rpc.teleapi.BasicEnvelope;
 import colesico.framework.rpc.teleapi.RpcTWContext;
 import colesico.framework.rpc.teleapi.RpcTeleWriter;
@@ -11,9 +11,9 @@ import javax.inject.Singleton;
 @Singleton
 public class RpcProfileWriter implements RpcTeleWriter<Profile> {
 
-    protected final ProfileSerializer profileSerializer;
+    protected final ProfileListener profileSerializer;
 
-    public RpcProfileWriter(ProfileSerializer profileSerializer) {
+    public RpcProfileWriter(ProfileListener profileSerializer) {
         this.profileSerializer = profileSerializer;
     }
 

@@ -39,7 +39,7 @@ public class JdbiProducer {
         final Jdbi jdbi = Jdbi.create(config.getDataSource());
         jdbi.installPlugins();
         if (config.getOptions() != null) {
-            config.getOptions().forEach(o -> o.applyOptions(jdbi), null);
+            config.getOptions().forEach(o -> o.applyOptions(jdbi));
         }
         return jdbi;
     }

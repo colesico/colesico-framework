@@ -14,32 +14,44 @@
  * limitations under the License.
  */
 
-package colesico.framework.profile.internal;
+package colesico.framework.profile;
 
-import colesico.framework.profile.DefaultProfile;
-import colesico.framework.profile.Profile;
-import colesico.framework.profile.teleapi.ProfileSerializer;
-import org.apache.commons.lang3.StringUtils;
+import colesico.framework.profile.internal.ProfileImpl;
 
 import javax.inject.Singleton;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 /**
- * Default profile tele-assistant
+ * Utils for default profile
  */
 @Singleton
-public class ProfileSerializerImpl implements ProfileSerializer<DefaultProfile> {
+public class DefaultProfileListener implements ProfileListener<ProfileImpl> {
 
     @Override
-    public byte[] serialize(DefaultProfile profile) {
+    public ProfileImpl create(Locale locale) {
+        return new ProfileImpl(Locale.getDefault());
+    }
+
+    @Override
+    public byte[] serialize(ProfileImpl profile) {
         return profile.getLocale().toLanguageTag().getBytes(StandardCharsets.UTF_8);
     }
 
     @Override
-    public DefaultProfile deserialize(byte[] profileBytes) {
+    public ProfileImpl deserialize(byte[] profileBytes) {
         String localeStr = new String(profileBytes, StandardCharsets.UTF_8);
-        return new DefaultProfile(Locale.forLanguageTag(localeStr));
+        return new ProfileImpl(Locale.forLanguageTag(localeStr));
+    }
+
+    @Override
+    public ProfileImpl beforeWrite(ProfileImpl profile) {
+        return profile;
+    }
+
+    @Override
+    public CheckResult<ProfileImpl> afterRead(ProfileImpl profile) {
+        return CheckResult.accept(profile);
     }
 
 }

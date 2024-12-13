@@ -19,6 +19,7 @@ package colesico.framework.ioc.production;
 import colesico.framework.ioc.key.Key;
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -29,7 +30,7 @@ import java.util.function.Consumer;
  * @see Key < T >
  * @see Polyproduce
  */
-public interface Polysupplier<T> {
+public interface Polysupplier<T> extends Iterable<T> {
     /**
      * True if this polysupplier can supply instances
      *
@@ -45,7 +46,12 @@ public interface Polysupplier<T> {
      */
     Iterator<T> iterator(Object message);
 
+    default Iterator<T> iterator() {
+        return iterator(null);
+    }
+
     default void forEach(Consumer<? super T> action, Object message) {
+        Objects.requireNonNull(action);
         if (isNotEmpty()) {
             Iterator<T> it = iterator(message);
             while (it.hasNext()) {

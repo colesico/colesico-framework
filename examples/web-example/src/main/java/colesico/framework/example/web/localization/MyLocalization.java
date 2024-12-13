@@ -16,7 +16,7 @@
 
 package colesico.framework.example.web.localization;
 
-import colesico.framework.profile.DefaultProfile;
+import colesico.framework.profile.internal.ProfileImpl;
 import colesico.framework.profile.ProfileKit;
 import colesico.framework.weblet.HtmlResponse;
 import colesico.framework.weblet.Weblet;
@@ -36,13 +36,13 @@ public class MyLocalization {
 
     // http://localhost:8080/my-localization/ru
     public HtmlResponse ru() {
-        l10n.setProfile(new DefaultProfile(new Locale("ru", "RU")));
+        l10n.setProfile(new ProfileImpl(new Locale("ru", "RU")));
         return HtmlResponse.of("Русский");
     }
 
     // http://localhost:8080/my-localization/en
     public HtmlResponse en() {
-        l10n.setProfile(new DefaultProfile(new Locale("en", "GB")));
+        l10n.setProfile(new ProfileImpl(new Locale("en", "GB")));
         return HtmlResponse.of("English");
     }
 
@@ -53,7 +53,7 @@ public class MyLocalization {
 
     // http://localhost:8080/my-localization/inherit
     public HtmlResponse inherit() {
-        l10n.setProfile(new DefaultProfile(new Locale("ru", "RU")));
+        l10n.setProfile(new ProfileImpl(new Locale("ru", "RU")));
         return HtmlResponse.of(translations.hello3());
     }
 }

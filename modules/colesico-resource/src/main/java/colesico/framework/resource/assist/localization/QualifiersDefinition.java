@@ -2,7 +2,6 @@ package colesico.framework.resource.assist.localization;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.function.Consumer;
 
 /**
  * Defines all possible qualifier names and its canonical order.
@@ -49,13 +48,6 @@ public final class QualifiersDefinition implements Iterable<String> {
     @Override
     public Iterator<String> iterator() {
         return Arrays.stream(names).iterator();
-    }
-
-    @Override
-    public void forEach(Consumer<? super String> action) {
-        for (String n : names) {
-            action.accept(n);
-        }
     }
 
     @Override

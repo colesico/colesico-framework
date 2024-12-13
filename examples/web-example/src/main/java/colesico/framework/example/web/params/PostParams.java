@@ -17,40 +17,42 @@
 package colesico.framework.example.web.params;
 
 import colesico.framework.http.HttpMethod;
+import colesico.framework.router.RequestMethod;
 import colesico.framework.telehttp.Origin;
 import colesico.framework.telehttp.ParamName;
-import colesico.framework.router.RequestMethod;
 import colesico.framework.telehttp.ParamOrigin;
-import colesico.framework.weblet.*;
+import colesico.framework.weblet.HtmlResponse;
+import colesico.framework.weblet.Weblet;
 
 @Weblet
 public class PostParams {
 
     // http://localhost:8080/post-params/form?action=default-action
     // http://localhost:8080/post-params/form?action=advanced-action?getparam=1
-    public HtmlResponse form(String action){
-        StringBuilder sb= new StringBuilder();
-        sb.append("<form method='post'>")
-                .append("<input type='text' name='formval' value=''/>")
-                .append("<input type='submit' value='Submit' formaction='/post-params/"+action+"'/>")
-                .append("</form>");
+    public HtmlResponse form(String action) {
+        String formHtml = """
+                <form method='post'>
+                    <input type='text' name='formval' value=''/>
+                    <input type='submit' value='Submit' formaction='/post-params/%s'/>
+                </form>
+                """;
 
-        return HtmlResponse.of(sb.toString());
+        return HtmlResponse.of(String.format(formHtml, action));
     }
 
     // for http://localhost:8080/post-params/form?action=default-action
     @RequestMethod(HttpMethod.POST)
-    public HtmlResponse defaultAction(String formval){
-        return HtmlResponse.of("formval="+formval);
+    public HtmlResponse defaultAction(String formval) {
+        return HtmlResponse.of("formval=" + formval);
     }
 
     //for http://localhost:8080/post-params/form?action=advanced-action?extraparam=1
     @RequestMethod(HttpMethod.POST)
     public HtmlResponse advancedAction(
-                                       /* formval is a get or post param */String formval,
-                                       /* getVal is a get or post param  */@ParamName("extraparam") Integer getVal,
-                                       /* postVal is a post param only */  @ParamName("extraparam") @ParamOrigin(Origin.POST) Integer postVal){
+            /* formval is a get or post param */String formval,
+            /* getVal is a get or post param  */@ParamName("extraparam") Integer getVal,
+            /* postVal is a post param only */  @ParamName("extraparam") @ParamOrigin(Origin.POST) Integer postVal) {
 
-        return HtmlResponse.of("formval="+formval+"; extraparam(get)="+getVal+"; extraparam(post)="+postVal);
+        return HtmlResponse.of("formval=" + formval + "; extraparam(get)=" + getVal + "; extraparam(post)=" + postVal);
     }
 }

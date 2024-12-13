@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.function.Consumer;
 
 /**
  * Objective qualifier values is used to select appropriate localized resource, etc.
@@ -61,13 +60,6 @@ public final class ObjectiveQualifiers implements Iterable<String> {
     @Override
     public Iterator<String> iterator() {
         return Arrays.stream(values).iterator();
-    }
-
-    @Override
-    public void forEach(Consumer<? super String> action) {
-        for (String q : values) {
-            action.accept(q);
-        }
     }
 
     @Override

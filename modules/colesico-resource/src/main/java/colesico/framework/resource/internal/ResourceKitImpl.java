@@ -25,7 +25,9 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 /**
  * @author Vladlen Larionov
@@ -41,7 +43,7 @@ public final class ResourceKitImpl implements ResourceKit {
     public ResourceKitImpl(Polysupplier<ResourceOptionsPrototype> configs) {
 
         final RewriterRegistryImpl registry = new RewriterRegistryImpl();
-        configs.forEach(cfg -> cfg.setupRewriters(registry), null);
+        configs.forEach(cfg -> cfg.setupRewriters(registry));
 
         for (RewritingPhase ph : RewritingPhase.values()) {
             List<PathRewriter> phaseRewList = registry.getPhaseRewriters(ph);

@@ -16,20 +16,53 @@
 
 package colesico.framework.profile;
 
+import colesico.framework.profile.internal.ProfileImpl;
+
 import java.util.Locale;
 
 /**
  * User localization profile.
- * The specific implementation depends on the needs of the application and has to be implemented in the application.
- * Framework provides default implementation {@link DefaultProfile}
+ * The profile contains information necessary to adapt
+ * the application to the user. For example - localization (translation),
+ * localization of resources, various user preferences.
+ * The specific implementation depends on the needs of the application and
+ * has to be implemented in the application.
+ * Framework provides default implementation {@link ProfileImpl}
  */
 public interface Profile {
 
     String GET_LOCALE_METHOD = "getLocale";
 
     /**
+     * Attributes are any values that define the profiling configuration.
+     * Examples of attributes may be the user's time zone, terminal type (mobile, PC), etc.
+     * Attributes are assigned on the calling side and cannot be changed in the application.
+     */
+    <A> A getAttribute(Class<A> attrClass);
+
+    /**
+     * Preferences are similar to attributes, but can be set inside the
+     * application as preferred by the user. For example, interface theme, language, etc.
+     */
+    <P> P getPreference(Class<P> prefClass);
+
+    /**
+     * @return previously preference or null
+     */
+    <P> P setPreference(P preference);
+
+    /**
      * Returns user locale.
      */
-    Locale getLocale();
+    default Locale getLocale() {
+        return getPreference(Locale.class);
+    }
+
+    /**
+     * Change locale
+     */
+    default Locale setLocale(Locale locale) {
+        return setPreference(locale);
+    }
 
 }

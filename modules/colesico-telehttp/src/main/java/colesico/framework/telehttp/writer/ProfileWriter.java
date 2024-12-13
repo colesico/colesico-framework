@@ -20,13 +20,12 @@ import colesico.framework.http.CookieFactory;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
+import colesico.framework.profile.ProfileListener;
 import colesico.framework.telehttp.HttpTWContext;
 import colesico.framework.telehttp.HttpTeleWriter;
 import colesico.framework.telehttp.ProfileHttpConfigPrototype;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.teleapi.ProfileSerializer;
 
-import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.Base64;
@@ -39,10 +38,10 @@ public final class ProfileWriter<C extends HttpTWContext> extends HttpTeleWriter
     public static final String HEADER_NAME = "X-Localization";
 
     protected final ProfileHttpConfigPrototype config;
-    protected final ProfileSerializer profileSerializer;
+    protected final ProfileListener profileSerializer;
     protected final CookieFactory cookieFactory;
 
-    public ProfileWriter(Provider<HttpContext> httpContextProv, ProfileHttpConfigPrototype config, ProfileSerializer profileSerializer, CookieFactory cookieFactory) {
+    public ProfileWriter(Provider<HttpContext> httpContextProv, ProfileHttpConfigPrototype config, ProfileListener profileSerializer, CookieFactory cookieFactory) {
         super(httpContextProv);
         this.config = config;
         this.profileSerializer = profileSerializer;

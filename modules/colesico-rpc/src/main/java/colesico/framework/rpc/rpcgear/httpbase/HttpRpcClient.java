@@ -41,7 +41,7 @@ abstract public class HttpRpcClient extends AbstractRpcClient {
         final HttpClient.Builder httpClientBuilder = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_2);
 
-        options.forEach(o -> o.applyOptions(httpClientBuilder), null);
+        options.forEach(o -> o.applyOptions(httpClientBuilder));
 
         httpClient = httpClientBuilder.build();
     }

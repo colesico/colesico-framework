@@ -29,7 +29,7 @@ public class DefaultTaskRegistry implements TaskRegistry {
                         var workers = taskWorkers.computeIfAbsent(binding.taskClass(), c -> new WorkersGroup<>());
                         workers.add(binding.worker());
                     }
-                }, null
+                }
         );
     }
 

@@ -38,9 +38,9 @@ abstract public class AbstractRpcClient implements RpcClient {
                              Polysupplier<RpcResponseHandler> responseHnd,
                              RpcErrorHandlerFactory errorHndFac) {
 
-        endpointsConf.forEach(c -> c.addEndpoints(endpoints), null);
-        requestHnd.forEach(c -> this.requestHandlers.add(c), null);
-        responseHnd.forEach(c -> this.responseHandlers.add(c), null);
+        endpointsConf.forEach(c -> c.addEndpoints(endpoints));
+        requestHnd.forEach(c -> this.requestHandlers.add(c));
+        responseHnd.forEach(c -> this.responseHandlers.add(c));
 
         this.errorHandlerFactory = errorHndFac;
 

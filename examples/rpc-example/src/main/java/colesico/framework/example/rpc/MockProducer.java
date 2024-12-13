@@ -18,7 +18,7 @@ package colesico.framework.example.rpc;
 
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.profile.DefaultProfile;
+import colesico.framework.profile.internal.ProfileImpl;
 import colesico.framework.profile.Profile;
 import colesico.framework.security.DefaultPrincipal;
 import colesico.framework.security.Principal;
@@ -33,7 +33,7 @@ public class MockProducer {
 
     @Substitute
     public Profile getProfile() {
-        return new DefaultProfile(new Locale("de", "DE", "UNIX"));
+        return new ProfileImpl(new Locale("de", "DE", "UNIX"));
     }
 
     @Substitute

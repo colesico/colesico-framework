@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.io.InputStream;
 
 /**
  * @author Vladlen Larionov
@@ -114,13 +113,13 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
 
     protected void notifyRequestListener(final HttpContext context, final Object service) {
         if (reqListenerSup.isNotEmpty()) {
-            reqListenerSup.forEach(s -> s.onRequest(context, dataPort, service), null);
+            reqListenerSup.forEach(s -> s.onRequest(context, dataPort, service));
         }
     }
 
     protected void notifyResponseListener(final HttpContext context) {
         if (respListenerSup.isNotEmpty()) {
-            respListenerSup.forEach(s -> s.onResponse(context, dataPort), null);
+            respListenerSup.forEach(s -> s.onResponse(context, dataPort));
         }
     }
 

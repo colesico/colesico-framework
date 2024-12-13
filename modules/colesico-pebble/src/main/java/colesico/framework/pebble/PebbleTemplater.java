@@ -63,7 +63,7 @@ public class PebbleTemplater extends ViewWriter implements HtmlRenderer {
                 .defaultEscapingStrategy("html")
                 .cacheActive(true);
 
-        optionsSup.forEach(options -> options.applyOptions(builder), null);
+        optionsSup.forEach(options -> options.applyOptions(builder));
 
         pebbleEngine = builder.build();
     }

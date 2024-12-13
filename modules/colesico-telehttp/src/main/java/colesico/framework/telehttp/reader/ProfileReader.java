@@ -20,8 +20,8 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.profile.Profile;
+import colesico.framework.profile.ProfileUtils;
 import colesico.framework.profile.teleapi.CommonProfileCreator;
-import colesico.framework.profile.teleapi.ProfileSerializer;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTeleReader;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
@@ -37,21 +37,21 @@ import java.util.Locale;
  * Default profile reader
  */
 @Singleton
-public class ProfileReader<C extends HttpTRContext> implements HttpTeleReader<Profile, C> {
+public class ProfileReader<P extends Profile, C extends HttpTRContext> implements HttpTeleReader<P, C> {
 
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
 
-    protected final ProfileSerializer profileSerializer;
+    protected final ProfileUtils<P> profileSerializer;
     protected final CommonProfileCreator commonProfileCreator;
     protected final Provider<HttpContext> httpContextProv;
 
-    public ProfileReader(ProfileSerializer profileSerializer, CommonProfileCreator commonProfileCreator, Provider<HttpContext> httpContextProv) {
-        this.profileSerializer = profileSerializer;
+    public ProfileReader(ProfileUtils profileUtils, CommonProfileCreator commonProfileCreator, Provider<HttpContext> httpContextProv) {
+        this.profileSerializer = profileUtils;
         this.commonProfileCreator = commonProfileCreator;
         this.httpContextProv = httpContextProv;
     }
 
-    protected Profile getCustomProfile(HttpRequest request) {
+    protected P getCustomProfile(HttpRequest request) {
 
         // Retrieve profile from http header
         String profileValue = request.getHeaders().get(ProfileWriter.HEADER_NAME);
@@ -71,11 +71,11 @@ public class ProfileReader<C extends HttpTRContext> implements HttpTeleReader<Pr
         Base64.Decoder decoder = Base64.getDecoder();
         byte[] profileBytes = decoder.decode(profileValue);
 
-        Profile profile = profileSerializer.deserialize(profileBytes);
+        P profile = profileSerializer.deserialize(profileBytes);
         return profile;
     }
 
-    protected Profile getCommonProfile(HttpRequest request) {
+    protected P getDefaultProfile(HttpRequest request) {
         String accLangs = request.getHeaders().get(ACCEPT_LANGUAGE_HEADER);
         Locale locale = TeleHttpUtils.getAcceptedLanguage(accLangs);
         if (locale == null) {
@@ -86,11 +86,11 @@ public class ProfileReader<C extends HttpTRContext> implements HttpTeleReader<Pr
     }
 
     @Override
-    public final Profile read(C context) {
+    public final P read(C context) {
         HttpRequest request = httpContextProv.get().getRequest();
-        Profile profile = getCustomProfile(request);
+        P profile = getCustomProfile(request);
         if (profile == null) {
-            profile = getCommonProfile(request);
+            profile = getDefaultProfile(request);
         }
         return profile;
     }
