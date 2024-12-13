@@ -3,8 +3,9 @@ package colesico.framework.profile.internal;
 import colesico.framework.profile.ProfileUtils;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 
 public class ProfileUtilsImpl implements ProfileUtils<ProfileImpl> {
 
@@ -17,13 +18,23 @@ public class ProfileUtilsImpl implements ProfileUtils<ProfileImpl> {
     }
 
     @Override
-    public Map<String, String> preferenceTags(ProfileImpl profile) {
-        Map<String, String> result = new HashMap<>();
-        profile.getPreferences().forEach();
+    public Collection<?> getPreference(ProfileImpl profile) {
+        return profile.getPreferences().values();
     }
 
     @Override
-    public Map<String, String> attributeTags(ProfileImpl profile) {
-        Map<String, String> result = new HashMap<>();
+    public Collection<?> getAttributes(ProfileImpl profile) {
+        return profile.getAttributes().values();
     }
+
+    @Override
+    public Collection<?> fromTags(Map<String, String> tags) {
+        return List.of();
+    }
+
+    @Override
+    public Map<String, String> toTags(Collection<?> items) {
+        return Map.of();
+    }
+
 }

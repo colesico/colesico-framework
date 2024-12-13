@@ -10,17 +10,12 @@ public interface ProfileUtils<P extends Profile> {
      */
     P create(Collection<?> attributes, Collection<?> preferences);
 
-    P -- create(Map<String, String> attributeTags, Map<String, String> preferenceTags);
+    Collection<?> getPreference(P profile);
 
-    /**
-     * Export preferences to string map : prefKey->prefValue
-     */
-    Map<String, String> getPreferenceTags(P profile);
+    Collection<?> getAttributes(P profile);
 
-    /**
-     * Export attributes to string map : attrKey->attrValue
-     */
-    Map<String, String> getAttributeTags(P profile);
+    Collection<?> fromTags(Map<String, String> tags);
 
+    Map<String, String> toTags(Collection<?> items);
 
 }
