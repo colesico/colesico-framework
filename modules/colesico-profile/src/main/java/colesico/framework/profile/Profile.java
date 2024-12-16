@@ -33,7 +33,7 @@ public interface Profile {
 
     String GET_LOCALE_METHOD = "getLocale";
 
-    <A> boolean hasAttribute(Class<A> prefClass);
+    <T> boolean hasAttribute(Class<T> prefClass);
 
     /**
      * Attributes are any values that define the profiling configuration.
@@ -41,31 +41,45 @@ public interface Profile {
      * Attributes are assigned on the calling side and not returned back
      * (not writed to {@link colesico.framework.teleapi.DataPort} ).
      */
-    <A> A getAttribute(Class<A> attrClass);
+    <T> T getAttribute(Class<T> attrClass);
 
-    <A> A setAttribute(A attribute);
+    <T> T setAttribute(T attribute);
 
-    <P> boolean hasPreference(Class<P> prefClass);
+    <T> boolean hasPreference(Class<T> prefClass);
 
     /**
      * Preferences are similar to attributes, but they writed to
      * For example, interface theme, language, etc.
      */
-    <P> P getPreference(Class<P> prefClass);
+    <T> T getPreference(Class<T> prefClass);
 
     /**
      * @return previously preference or null
      */
-    <P> P setPreference(P preference);
+    <T> T setPreference(T preference);
+
+    /**
+     * Has preference or attribute
+     */
+    default <T> boolean hasValue(Class<T> valueClass) {
+        return hasPreference(valueClass) || hasAttribute(valueClass);
+    }
+
+    /**
+     * Get preference or attribute
+     */
+    default <T> T getValue(Class<T> valueClass) {
+        if (hasPreference(valueClass)) {
+            return getPreference(valueClass);
+        }
+        return getAttribute(valueClass);
+    }
 
     /**
      * Returns user locale.
      */
     default Locale getLocale() {
-        if (hasPreference(Locale.class)) {
-            return getPreference(Locale.class);
-        }
-        return getAttribute(Locale.class);
+        return getValue(Locale.class);
     }
 
     /**

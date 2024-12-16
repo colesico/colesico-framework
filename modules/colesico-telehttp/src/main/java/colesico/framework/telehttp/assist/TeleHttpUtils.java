@@ -3,7 +3,10 @@ package colesico.framework.telehttp.assist;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -62,12 +65,45 @@ public class TeleHttpUtils {
         return sb.toString();
     }
 
-    public static Map<String, String> parseProfileTags(String tagsStr) {
-        if (StringUtils.isBlank(tagsStr)) {
+    public static String stringifyProperties(Map<String, String> properties) {
+        if (properties == null || properties.isEmpty()) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        try {
+            for (Map.Entry<String, String> e : properties.entrySet()) {
+                if (!sb.isEmpty()) {
+                    sb.append("&");
+                }
+                String name = e.getKey();
+                String value = URLEncoder.encode(e.getValue(), StandardCharsets.UTF_8);
+                sb.append(name).append("=").append(value);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return sb.toString();
+    }
+
+    public static Map<String, String> parseProperties(String properties) {
+        if (StringUtils.isBlank(properties)) {
             return Map.of();
         }
-        // TODO:
-        return null;
+
+        Map<String, String> result = new HashMap<>();
+
+        StringTokenizer st = new StringTokenizer(properties, "&");
+        while (st.hasMoreTokens()) {
+            String property = st.nextToken();
+            String[] keyVal = StringUtils.split(property, "=");
+            String key = keyVal[0];
+            String val = URLDecoder.decode(keyVal[1], StandardCharsets.UTF_8);
+            result.put(key, val);
+        }
+
+        return result;
     }
 
 }

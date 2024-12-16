@@ -20,55 +20,59 @@ import colesico.framework.http.CookieFactory;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
-import colesico.framework.profile.ProfileListener;
+import colesico.framework.profile.Profile;
+import colesico.framework.profile.ProfileUtils;
 import colesico.framework.telehttp.HttpTWContext;
 import colesico.framework.telehttp.HttpTeleWriter;
 import colesico.framework.telehttp.ProfileHttpConfigPrototype;
-import colesico.framework.profile.Profile;
+import colesico.framework.telehttp.assist.TeleHttpUtils;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.Base64;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Map;
 
 @Singleton
-public final class ProfileWriter<C extends HttpTWContext> extends HttpTeleWriter<Profile, C> {
+public final class ProfileWriter<P extends Profile, C extends HttpTWContext> extends HttpTeleWriter<P, C> {
 
     public static final String PREFERENCE_COOKIE_NAME = "profile";
     public static final String ATTRIBUTES_HEADER_NAME = "X-Profile";
 
     protected final ProfileHttpConfigPrototype config;
-    protected final ProfileListener profileSerializer;
+    protected final ProfileUtils<P> profileUtils;
     protected final CookieFactory cookieFactory;
 
-    public ProfileWriter(Provider<HttpContext> httpContextProv, ProfileHttpConfigPrototype config, ProfileListener profileSerializer, CookieFactory cookieFactory) {
+    public ProfileWriter(Provider<HttpContext> httpContextProv,
+                         ProfileHttpConfigPrototype config, ProfileUtils profileUtils,
+                         CookieFactory cookieFactory) {
         super(httpContextProv);
         this.config = config;
-        this.profileSerializer = profileSerializer;
+        this.profileUtils = profileUtils;
         this.cookieFactory = cookieFactory;
     }
 
     @Override
-    public final void write(Profile profile, C wrContext) {
+    public final void write(P profile, C wrContext) {
         // Calc expiring
         Calendar expires = Calendar.getInstance();
-        String profileValue;
+        String preferenceStr;
         if (profile != null) {
-            byte[] profileBytes = profileSerializer.serialize(profile);
-            Base64.Encoder encoder = Base64.getEncoder();
-            profileValue = encoder.encodeToString(profileBytes);
+            Collection<?> preferences = profileUtils.getPreferences(profile);
+            Map<String, String> preferenceProps = profileUtils.toProperties(preferences);
+            preferenceStr = TeleHttpUtils.stringifyProperties(preferenceProps);
             expires.add(Calendar.DAY_OF_MONTH, config.getCookieValidityDays());
         } else {
-            profileValue = null;
+            preferenceStr = null;
             expires.add(Calendar.DAY_OF_MONTH, -1);
         }
 
-        HttpCookie cookie = cookieFactory.create(PREFERENCE_COOKIE_NAME, profileValue);
+        HttpCookie cookie = cookieFactory.create(PREFERENCE_COOKIE_NAME, preferenceStr);
         cookie.setExpires(expires.getTime()).setSameSite(HttpCookie.SameSite.STRICT);
 
         HttpResponse response = httpContextProv.get().getResponse();
         response.setCookie(cookie);
-        response.setHeader(ATTRIBUTES_HEADER_NAME, profileValue);
+        response.setHeader(ATTRIBUTES_HEADER_NAME, preferenceStr);
 
     }
 }

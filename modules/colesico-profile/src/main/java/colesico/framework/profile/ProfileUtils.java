@@ -15,12 +15,21 @@ public interface ProfileUtils<P extends Profile> {
     Collection<?> getAttributes(P profile);
 
     /**
-     * Return all possible tag keys
+     * Converts profile values to properties map: property_name => property_value
+     * The property name must be lowercase, match [a-z0-9], and start with a letter.
+     * <p>
+     * Property values can contain any characters
+     * </p>
      */
-    Collection<String> getRegisteredTagKeys();
+    Map<String, String> toProperties(Collection<?> values);
 
-    Collection<?> fromTags(Map<String, String> tags);
+    /**
+     * Converts properties to values
+     */
+    Collection<?> fromProperties(Map<String, String> properties);
 
-    Map<String, String> toTags(Collection<?> items);
+    byte[] serialize(Collection<?> values);
+
+    Collection<?> deserialize(byte[] values);
 
 }
