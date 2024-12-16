@@ -24,7 +24,7 @@ public class ProfileUtilsImpl implements ProfileUtils<ProfileImpl> {
     public ProfileUtilsImpl(Polysupplier<ProfileConfigPrototype> profConfigs) {
         profConfigs.forEach(cfg -> {
                     cfg.forEach(cvb -> {
-                                valueConvertersByClass.put(cvb.valueClass(), cvb.converter());
+                                valueConvertersByClass.put(cvb.propertyClass(), cvb.converter());
                                 valueConvertersByProperty.put(cvb.converter().getTagKey(), cvb.converter());
                             }
                     );

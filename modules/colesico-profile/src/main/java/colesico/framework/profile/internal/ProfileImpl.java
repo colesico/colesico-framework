@@ -30,12 +30,22 @@ public class ProfileImpl implements Profile {
     private final Map<Class<?>, ? super Object> preferences = new HashMap<>();
 
     @Override
+    public <T> boolean hasAttribute(Class<T> attrClass) {
+        return attributes.containsKey(attrClass);
+    }
+
+    @Override
     public <A> A getAttribute(Class<A> attrClass) {
         return (A) attributes.get(attrClass);
     }
 
     public <A> A setAttribute(A attribute) {
         return (A) attributes.put(attribute.getClass(), attribute);
+    }
+
+    @Override
+    public <T> boolean hasPreference(Class<T> prefClass) {
+        return preferences.containsKey(prefClass);
     }
 
     @Override

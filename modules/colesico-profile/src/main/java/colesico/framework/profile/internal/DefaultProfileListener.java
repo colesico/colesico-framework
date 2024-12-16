@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package colesico.framework.profile;
+package colesico.framework.profile.internal;
 
+import colesico.framework.profile.Profile;
+import colesico.framework.profile.ProfileListener;
 
-public interface ProfileListener {
+import javax.inject.Singleton;
 
-    /**
-     * Controls the profile before write it to the source.
-     * Override this method to get more specific control.
-     */
-    Profile beforeWrite(Profile profile);
+/**
+ * Default profile listener
+ */
+@Singleton
+public class DefaultProfileListener implements ProfileListener {
 
-    /**
-     * Controls the profile after read from the source.
-     * Override this method to get more specific control.
-     * This method is used to fine grained control of profile: check validity,
-     * enrich with extra data, e.t.c.
-     *
-     * @return Valid profile or null
-     */
-    Profile afterRead(Profile profile);
+    @Override
+    public Profile beforeWrite(Profile profile) {
+        return profile;
+    }
 
+    @Override
+    public Profile afterRead(Profile profile) {
+        return profile;
+    }
 }

@@ -24,7 +24,7 @@ import java.util.Locale;
  * User localization profile.
  * The profile contains information necessary to adapt
  * the application to the user. For example - localization (translation),
- * localization of resources, various user preferences.
+ * localization of resources, user terminal type, various user preferences.
  * The specific implementation depends on the needs of the application and
  * has to be implemented in the application.
  * Framework provides default implementation {@link ProfileImpl}
@@ -33,7 +33,7 @@ public interface Profile {
 
     String GET_LOCALE_METHOD = "getLocale";
 
-    <T> boolean hasAttribute(Class<T> prefClass);
+    <T> boolean hasAttribute(Class<T> attrClass);
 
     /**
      * Attributes are any values that define the profiling configuration.

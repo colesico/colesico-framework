@@ -7,17 +7,16 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class ProfileConfigPrototype implements Iterable<ProfileConfigPrototype.ValueConverterBinding> {
+abstract public class ProfileConfigPrototype implements Iterable<ProfileConfigPrototype.PropertyConverterBinding> {
 
-    abstract public ValueConverterBinding[] getConverterBindings();
+    abstract public PropertyConverterBinding[] getConverterBindings();
 
     @Override
-    final public Iterator<ValueConverterBinding> iterator() {
+    final public Iterator<PropertyConverterBinding> iterator() {
         return Arrays.stream(getConverterBindings()).iterator();
     }
 
-    public record ValueConverterBinding<V>(Class<V> valueClass, PropertyConverter<V> converter) {
+    public record PropertyConverterBinding<V>(Class<V> propertyClass, PropertyConverter<V> converter) {
     }
-
 
 }

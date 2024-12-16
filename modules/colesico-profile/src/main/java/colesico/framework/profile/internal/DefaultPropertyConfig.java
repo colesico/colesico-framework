@@ -9,9 +9,9 @@ import java.util.Locale;
 public class DefaultPropertyConfig extends ProfileConfigPrototype {
 
     @Override
-    public ValueConverterBinding[] getConverterBindings() {
-        return new ValueConverterBinding[]{
-                new ValueConverterBinding<>(Locale.class, LocaleConverter.of())
+    public PropertyConverterBinding[] getConverterBindings() {
+        return new PropertyConverterBinding[]{
+                new PropertyConverterBinding<>(Locale.class, LocaleConverter.of())
         };
     }
 }
