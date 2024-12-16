@@ -61,25 +61,25 @@ public interface Profile {
     /**
      * Has preference or attribute
      */
-    default <T> boolean hasValue(Class<T> valueClass) {
-        return hasPreference(valueClass) || hasAttribute(valueClass);
+    default <T> boolean hasProperty(Class<T> propClass) {
+        return hasPreference(propClass) || hasAttribute(propClass);
     }
 
     /**
      * Get preference or attribute
      */
-    default <T> T getValue(Class<T> valueClass) {
-        if (hasPreference(valueClass)) {
-            return getPreference(valueClass);
+    default <T> T getProperty(Class<T> propClass) {
+        if (hasPreference(propClass)) {
+            return getPreference(propClass);
         }
-        return getAttribute(valueClass);
+        return getAttribute(propClass);
     }
 
     /**
      * Returns user locale.
      */
     default Locale getLocale() {
-        return getValue(Locale.class);
+        return getProperty(Locale.class);
     }
 
     /**

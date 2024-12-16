@@ -16,7 +16,7 @@ abstract public class ProfileConfigPrototype implements Iterable<ProfileConfigPr
         return Arrays.stream(getConverterBindings()).iterator();
     }
 
-    public record ValueConverterBinding<V>(Class<V> valueClass, ValueConverter<V> converter) {
+    public record ValueConverterBinding<V>(Class<V> valueClass, PropertyConverter<V> converter) {
     }
 
 

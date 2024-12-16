@@ -65,45 +65,45 @@ public class TeleHttpUtils {
         return sb.toString();
     }
 
-    public static String stringifyProperties(Map<String, String> properties) {
-        if (properties == null || properties.isEmpty()) {
+    public static String stringifyTags(Map<String, String> tags) {
+        if (tags == null || tags.isEmpty()) {
             return null;
         }
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder tagsStr = new StringBuilder();
         try {
-            for (Map.Entry<String, String> e : properties.entrySet()) {
-                if (!sb.isEmpty()) {
-                    sb.append("&");
+            for (Map.Entry<String, String> e : tags.entrySet()) {
+                if (!tagsStr.isEmpty()) {
+                    tagsStr.append("&");
                 }
                 String name = e.getKey();
                 String value = URLEncoder.encode(e.getValue(), StandardCharsets.UTF_8);
-                sb.append(name).append("=").append(value);
+                tagsStr.append(name).append("=").append(value);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        return sb.toString();
+        return tagsStr.toString();
     }
 
-    public static Map<String, String> parseProperties(String properties) {
-        if (StringUtils.isBlank(properties)) {
+    public static Map<String, String> parseTags(String tagsStr) {
+        if (StringUtils.isBlank(tagsStr)) {
             return Map.of();
         }
 
-        Map<String, String> result = new HashMap<>();
+        Map<String, String> tags = new HashMap<>();
 
-        StringTokenizer st = new StringTokenizer(properties, "&");
+        StringTokenizer st = new StringTokenizer(tagsStr, "&");
         while (st.hasMoreTokens()) {
-            String property = st.nextToken();
-            String[] keyVal = StringUtils.split(property, "=");
+            String tag = st.nextToken();
+            String[] keyVal = StringUtils.split(tag, "=");
             String key = keyVal[0];
             String val = URLDecoder.decode(keyVal[1], StandardCharsets.UTF_8);
-            result.put(key, val);
+            tags.put(key, val);
         }
 
-        return result;
+        return tags;
     }
 
 }

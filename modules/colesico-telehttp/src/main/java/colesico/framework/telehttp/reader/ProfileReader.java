@@ -50,18 +50,19 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
 
     protected P buildProfile(HttpRequest request) {
 
-        String attributeTagsStr = request.getHeaders().get(ProfileWriter.ATTRIBUTES_HEADER_NAME);
-        Map<String, String> attributeProps = TeleHttpUtils.parseProperties(attributeTagsStr);
-        Collection<?> attributes = profileUtils.fromProperties(attributeProps);
 
-        Map<String, String> preferenceProps;
+        String tagsStr = request.getHeaders().get(ProfileWriter.ATTRIBUTES_HEADER_NAME);
+        Map<String, String> tags = TeleHttpUtils.parseTags(tagsStr);
+        Collection<?> attributes = profileUtils.fromTags(tags);
+
+
         HttpCookie preferenceTagCookie = request.getCookies().get(ProfileWriter.PREFERENCE_COOKIE_NAME);
         if (preferenceTagCookie != null) {
-            preferenceProps = TeleHttpUtils.parseProperties(preferenceTagCookie.getValue());
+            tags = TeleHttpUtils.parseTags(preferenceTagCookie.getValue());
         } else {
-            preferenceProps = Map.of();
+            tags = Map.of();
         }
-        Collection<?> preferences = profileUtils.fromProperties(preferenceProps);
+        Collection<?> preferences = profileUtils.fromTags(tags);
 
         P profile = profileUtils.create(attributes, preferences);
 

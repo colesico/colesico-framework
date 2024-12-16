@@ -59,8 +59,8 @@ public final class ProfileWriter<P extends Profile, C extends HttpTWContext> ext
         String preferenceStr;
         if (profile != null) {
             Collection<?> preferences = profileUtils.getPreferences(profile);
-            Map<String, String> preferenceProps = profileUtils.toProperties(preferences);
-            preferenceStr = TeleHttpUtils.stringifyProperties(preferenceProps);
+            Map<String, String> preferenceProps = profileUtils.toTags(preferences);
+            preferenceStr = TeleHttpUtils.stringifyTags(preferenceProps);
             expires.add(Calendar.DAY_OF_MONTH, config.getCookieValidityDays());
         } else {
             preferenceStr = null;
