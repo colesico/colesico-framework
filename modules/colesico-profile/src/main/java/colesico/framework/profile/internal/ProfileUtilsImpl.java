@@ -61,16 +61,6 @@ public class ProfileUtilsImpl implements ProfileUtils<ProfileImpl> {
     }
 
     @Override
-    public Collection<?> getPreferences(ProfileImpl profile) {
-        return profile.getPreferences().values();
-    }
-
-    @Override
-    public Collection<?> getAttributes(ProfileImpl profile) {
-        return profile.getAttributes().values();
-    }
-
-    @Override
     public Map<String, String> toTags(Collection<?> properties) {
         Map<String, String> tags = new HashMap<>();
         for (Object property : properties) {

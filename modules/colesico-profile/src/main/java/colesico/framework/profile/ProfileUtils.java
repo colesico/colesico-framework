@@ -21,10 +21,6 @@ public interface ProfileUtils<P extends Profile> {
         return create(attributes, null);
     }
 
-    Collection<?> getPreferences(P profile);
-
-    Collection<?> getAttributes(P profile);
-
     /**
      * Converts profile properties to properties map: tag-key=> tag-value
      * The tag-key must be lowercase, match [a-z0-9], and start with a letter.

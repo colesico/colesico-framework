@@ -18,6 +18,7 @@ package colesico.framework.profile.internal;
 
 import colesico.framework.profile.Profile;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,43 +27,51 @@ import java.util.Map;
  */
 public class ProfileImpl implements Profile {
 
-    private final Map<Class<?>, ? super Object> attributes = new HashMap<>();
-    private final Map<Class<?>, ? super Object> preferences = new HashMap<>();
+    private final Map<Class<?>, ? super Object> attributesMap = new HashMap<>();
+    private final Map<Class<?>, ? super Object> preferencesMap = new HashMap<>();
 
     @Override
     public <T> boolean hasAttribute(Class<T> attrClass) {
-        return attributes.containsKey(attrClass);
+        return attributesMap.containsKey(attrClass);
     }
 
     @Override
     public <A> A getAttribute(Class<A> attrClass) {
-        return (A) attributes.get(attrClass);
+        return (A) attributesMap.get(attrClass);
     }
 
     public <A> A setAttribute(A attribute) {
-        return (A) attributes.put(attribute.getClass(), attribute);
+        return (A) attributesMap.put(attribute.getClass(), attribute);
+    }
+
+    public Collection<?> getAttributes() {
+        return attributesMap.values();
     }
 
     @Override
     public <T> boolean hasPreference(Class<T> prefClass) {
-        return preferences.containsKey(prefClass);
+        return preferencesMap.containsKey(prefClass);
     }
 
     @Override
     public <P> P getPreference(Class<P> prefClass) {
-        return (P) preferences.get(prefClass);
+        return (P) preferencesMap.get(prefClass);
     }
 
     @Override
     public <P> P setPreference(P preference) {
-        return (P) preferences.put(preference.getClass(), preference);
+        return (P) preferencesMap.put(preference.getClass(), preference);
     }
 
-    public Map<Class<?>, ? super Object> getAttributes() {
-        return attributes;
+    public Collection<?> getPreferences() {
+        return preferencesMap.values();
     }
 
-    public Map<Class<?>, ? super Object> getPreferences() {
-        return preferences;
+    public Map<Class<?>, ? super Object> getAttributesMap() {
+        return attributesMap;
+    }
+
+    public Map<Class<?>, ? super Object> getPreferencesMap() {
+        return preferencesMap;
     }
 }

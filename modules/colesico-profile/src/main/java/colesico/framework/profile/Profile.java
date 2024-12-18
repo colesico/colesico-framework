@@ -19,8 +19,8 @@ package colesico.framework.profile;
 import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.profile.internal.ProfileImpl;
-import colesico.framework.teleapi.DataPort;
 
+import java.util.Collection;
 import java.util.Locale;
 
 /**
@@ -51,6 +51,11 @@ public interface Profile {
      */
     <T> T getAttribute(Class<T> attrClass);
 
+    /**
+     * All attributes
+     */
+    Collection<?> getAttributes();
+
     <T> T setAttribute(T attribute);
 
     <T> boolean hasPreference(Class<T> prefClass);
@@ -60,6 +65,11 @@ public interface Profile {
      * For example, interface theme, language, etc.
      */
     <T> T getPreference(Class<T> prefClass);
+
+    /**
+     * All preferences
+     */
+    Collection<?> getPreferences();
 
     /**
      * @return previously preference or null
