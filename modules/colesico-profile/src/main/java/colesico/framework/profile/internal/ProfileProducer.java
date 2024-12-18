@@ -17,22 +17,23 @@ package colesico.framework.profile.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfilePort;
+import colesico.framework.profile.ProfileSource;
+import colesico.framework.profile.ProfileUtils;
 
 import javax.inject.Provider;
 import java.util.Locale;
 
 
 @Producer
-@Produce(ProfileDefaultPort.class)
+@Produce(value = ProfileUtilsImpl.class, keyType = ProfileUtils.class)
+@Produce(value = ProfileSourceImpl.class, keyType = ProfileSource.class)
 public class ProfileProducer {
 
     @Unscoped
-    public Profile getProfile(ProfilePort port) {
-        return port.read();
+    public Profile getProfile(ProfileSource source) {
+        return source.read();
     }
 
     /**
@@ -44,15 +45,5 @@ public class ProfileProducer {
         return profile != null ? profile.getLocale() : Locale.getDefault();
     }
 
-    /**
-     * Produces profile port
-     */
-    @Unscoped
-    public ProfilePort getProfileSource(ThreadScope scope, Provider<ProfileDefaultPort> defaultPortProvider) {
-        ProfilePort source = scope.get(ProfilePort.SCOPE_KEY);
-        if (source == null) {
-            return defaultPortProvider.get();
-        }
-        return source;
-    }
+
 }

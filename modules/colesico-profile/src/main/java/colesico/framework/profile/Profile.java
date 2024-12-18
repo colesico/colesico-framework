@@ -16,7 +16,10 @@
 
 package colesico.framework.profile;
 
+import colesico.framework.ioc.key.Key;
+import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.profile.internal.ProfileImpl;
+import colesico.framework.teleapi.DataPort;
 
 import java.util.Locale;
 
@@ -32,6 +35,11 @@ import java.util.Locale;
 public interface Profile {
 
     String GET_LOCALE_METHOD = "getLocale";
+
+    /**
+     * Scope key for caching profile
+     */
+    Key<Profile> SCOPE_KEY = new TypeKey<>(Profile.class);
 
     <T> boolean hasAttribute(Class<T> attrClass);
 

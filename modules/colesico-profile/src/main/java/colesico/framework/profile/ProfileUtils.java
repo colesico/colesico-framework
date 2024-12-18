@@ -3,10 +3,17 @@ package colesico.framework.profile;
 import java.util.Collection;
 import java.util.Map;
 
+/**
+ * Low-level profile utilities for profile source.
+ * It is a tooling facade for the profile  implementation.
+ */
 public interface ProfileUtils<P extends Profile> {
 
     /**
      * Create profile instance
+     *
+     * @param attributes  can be null
+     * @param preferences can b null
      */
     P create(Collection<?> attributes, Collection<?> preferences);
 

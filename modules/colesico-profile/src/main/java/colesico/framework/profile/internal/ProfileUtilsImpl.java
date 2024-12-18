@@ -51,8 +51,12 @@ public class ProfileUtilsImpl implements ProfileUtils<ProfileImpl> {
     @Override
     public ProfileImpl create(Collection<?> attributes, Collection<?> preferences) {
         ProfileImpl profile = new ProfileImpl();
-        attributes.forEach(profile::setAttribute);
-        preferences.forEach(profile::setAttribute);
+        if (attributes != null) {
+            attributes.forEach(profile::setAttribute);
+        }
+        if (preferences != null) {
+            preferences.forEach(profile::setAttribute);
+        }
         return profile;
     }
 

@@ -17,9 +17,7 @@ module colesico.framework.profile {
 
     // API
     exports colesico.framework.profile;
-    exports colesico.framework.profile.teleapi;
-    exports colesico.framework.profile.internal;
 
     // Internals
-
+    exports colesico.framework.profile.internal to colesico.framework.ioc;
 }
