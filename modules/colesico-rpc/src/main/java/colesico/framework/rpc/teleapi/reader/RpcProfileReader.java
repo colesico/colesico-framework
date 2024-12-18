@@ -1,8 +1,7 @@
 package colesico.framework.rpc.teleapi.reader;
 
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileListener;
-import colesico.framework.profile.teleapi.CommonProfileCreator;
+import colesico.framework.profile.ProfileUtils;
 import colesico.framework.rpc.teleapi.BasicEnvelope;
 import colesico.framework.rpc.teleapi.RpcTRContext;
 import colesico.framework.rpc.teleapi.RpcTeleReader;
@@ -13,26 +12,22 @@ import java.util.Locale;
 @Singleton
 public class RpcProfileReader implements RpcTeleReader<Profile> {
 
-    protected final ProfileListener profileSerializer;
-    protected final CommonProfileCreator commonProfileCreator;
+    protected final ProfileUtils profileUtils;
 
-    public RpcProfileReader(ProfileListener profileSerializer, CommonProfileCreator commonProfileCreator) {
-        this.profileSerializer = profileSerializer;
-        this.commonProfileCreator = commonProfileCreator;
+    public RpcProfileReader(ProfileUtils profileUtils) {
+        this.profileUtils = profileUtils;
     }
 
     @Override
     public Profile read(RpcTRContext context) {
-        Profile profile;
+        Profile profile = null;
         if (context.getValueGetter() != null) {
             profile = (Profile) context.getValueGetter().get(context.getRequest());
         } else {
             BasicEnvelope env = (BasicEnvelope) context.getRequest();
-            profile = profileSerializer.deserialize(env.getProfile());
+            profile = profileUtils.deserialize(env.getProfile());
         }
-        if (profile == null) {
-            profile = commonProfileCreator.createCommonProfile(Locale.getDefault());
-        }
+
         return profile;
     }
 }

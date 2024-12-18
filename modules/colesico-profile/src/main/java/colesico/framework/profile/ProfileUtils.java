@@ -17,6 +17,10 @@ public interface ProfileUtils<P extends Profile> {
      */
     P create(Collection<?> attributes, Collection<?> preferences);
 
+    default P create(Collection<?> attributes) {
+        return create(attributes, null);
+    }
+
     Collection<?> getPreferences(P profile);
 
     Collection<?> getAttributes(P profile);

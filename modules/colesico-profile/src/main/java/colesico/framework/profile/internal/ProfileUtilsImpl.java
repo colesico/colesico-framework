@@ -1,7 +1,7 @@
 package colesico.framework.profile.internal;
 
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.profile.ProfileConfigPrototype;
+import colesico.framework.profile.ProfileConverterBindings;
 import colesico.framework.profile.ProfileUtils;
 import colesico.framework.profile.PropertyConverter;
 
@@ -21,8 +21,8 @@ public class ProfileUtilsImpl implements ProfileUtils<ProfileImpl> {
     protected final Map<Class<?>, PropertyConverter<?>> valueConvertersByClass = new HashMap<>();
     protected final Map<String, PropertyConverter<?>> valueConvertersByProperty = new HashMap<>();
 
-    public ProfileUtilsImpl(Polysupplier<ProfileConfigPrototype> profConfigs) {
-        profConfigs.forEach(cfg -> {
+    public ProfileUtilsImpl(Polysupplier<ProfileConverterBindings> profConverters) {
+        profConverters.forEach(cfg -> {
                     cfg.forEach(cvb -> {
                                 valueConvertersByClass.put(cvb.propertyClass(), cvb.converter());
                                 valueConvertersByProperty.put(cvb.converter().getTagKey(), cvb.converter());

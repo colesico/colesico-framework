@@ -1,12 +1,12 @@
 package colesico.framework.profile.internal;
 
 import colesico.framework.config.Config;
-import colesico.framework.profile.ProfileConfigPrototype;
+import colesico.framework.profile.ProfileConverterBindings;
 
 import java.util.Locale;
 
 @Config
-public class DefaultPropertyConfig extends ProfileConfigPrototype {
+public class LocaleConverterBinding extends ProfileConverterBindings {
 
     @Override
     public PropertyConverterBinding[] getConverterBindings() {

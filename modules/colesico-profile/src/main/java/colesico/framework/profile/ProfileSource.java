@@ -9,6 +9,10 @@ package colesico.framework.profile;
  */
 public interface ProfileSource {
 
+    /**
+     * Read profile form source.
+     * If there is having no profile in the source  - must return default profile with Locale from {@link ProfileConfigPrototype}
+     */
     Profile read();
 
     void write(Profile profile);
