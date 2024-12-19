@@ -33,8 +33,8 @@ import java.util.Locale;
 public class ProfileProducer {
 
     @Unscoped
-    public Profile getProfile(ProfileKit source) {
-        return source.profile();
+    public Profile getProfile(ProfileKit pk) {
+        return pk.profile();
     }
 
     /**
