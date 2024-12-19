@@ -1,5 +1,8 @@
 package colesico.framework.profile;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Represents a source that is used for retrieve Profile instance from
  * the Source and put it back for profile preferences.
@@ -13,19 +16,28 @@ public interface ProfileKit {
      * Obtain profile form source.
      * If there is having no profile in the source  - must return default profile with Locale from {@link ProfileConfigPrototype}
      */
-    Profile get();
+    Profile profile();
+
+    /**
+     * Create preferences to control preferred profile properties
+     */
+    ProfilePreferences preferences();
 
     /**
      * Writes profile preferences to data port
      */
-    void commit(Profile profisle);
+    void commit(ProfilePreferences preferences);
 
-    default void commit(Object... preferences) {
-        Profile profile = get();
-        Preferences preferenceApi = profile.preferences();
-        for (Object pref : preferences) {
-            preferenceApi.set(pref);
+    default void commit(Collection<?> properties) {
+        ProfilePreferences preferences = preferences();
+        for (Object prop : properties) {
+            preferences.add(prop);
         }
-        commit(profile);
+        commit(preferences);
     }
+
+    default void commitAll(Object... properties) {
+        commit(List.of(properties));
+    }
+
 }

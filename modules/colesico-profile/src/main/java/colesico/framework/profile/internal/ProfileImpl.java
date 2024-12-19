@@ -16,7 +16,6 @@
 
 package colesico.framework.profile.internal;
 
-import colesico.framework.profile.Preferences;
 import colesico.framework.profile.Profile;
 
 import java.util.*;
@@ -32,15 +31,13 @@ public class ProfileImpl implements Profile {
 
     private final Set<? super Object> preferences = new HashSet<>();
 
-    private final PreferencesApi preferencesApi = new PreferencesApi();
-
     public static ProfileImpl of() {
         return new ProfileImpl();
     }
 
     public static ProfileImpl of(Locale locale) {
         ProfileImpl profile = new ProfileImpl();
-        profile.setAttribute(locale);
+        profile.addAttribute(locale);
         return profile;
     }
 
@@ -54,17 +51,12 @@ public class ProfileImpl implements Profile {
         return (T) properties.get(propertyClass);
     }
 
-    @Override
-    public PreferencesApi preferences() {
-        return preferencesApi;
-    }
-
-    protected <T> T setAttribute(T property) {
+    protected <T> T addAttribute(T property) {
         attributes.add(property);
         return (T) properties.put(property.getClass(), property);
     }
 
-    protected <T> T setPreference(T property) {
+    protected <T> T addPreference(T property) {
         preferences.add(property);
         return (T) properties.put(property.getClass(), property);
     }
@@ -86,46 +78,4 @@ public class ProfileImpl implements Profile {
         return properties.values().iterator();
     }
 
-    protected class PreferencesApi implements Preferences {
-
-        @Override
-        public boolean isEmpty() {
-            return preferences.isEmpty();
-        }
-
-        @Override
-        public <T> boolean contains(Class<T> propertyClass) {
-            T property = (T) properties.get(propertyClass);
-            if (property != null) {
-                return preferences.contains(property);
-            } else {
-                return false;
-            }
-        }
-
-        @Override
-        public void clear() {
-            preferences.clear();
-        }
-
-        @Override
-        public <T> T set(T property) {
-            return setPreference(property);
-        }
-
-        @Override
-        public <T> T remove(Class<T> propertyClass) {
-            T property = (T) properties.get(propertyClass);
-            if (property != null) {
-                preferences.remove(property);
-                return property;
-            }
-            return null;
-        }
-
-        @Override
-        public Iterator iterator() {
-            return preferences.iterator();
-        }
-    }
 }

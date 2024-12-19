@@ -21,18 +21,21 @@ public interface ProfileUtils<P extends Profile> {
      * @param attributes  can be null
      * @param preferences can b null
      */
-    P create(Collection<?> attributes, Collection<?> preferences);
+    P createProfile(Collection<?> attributes, Collection<?> preferences);
 
     default P fromAttributes(Collection<?> attributes) {
-        return create(attributes, null);
+        return createProfile(attributes, null);
     }
 
     default P fromPreferences(Collection<?> preferences) {
-        return create(null, preferences);
+        return createProfile(null, preferences);
     }
 
+    /**
+     * Useful for testing purposes (mockup profile)
+     */
     default P fromLocale(Locale locale) {
-        return create(List.of(locale), null);
+        return createProfile(List.of(locale), null);
     }
 
     Collection<?> getProperties(P profile);
@@ -46,14 +49,19 @@ public interface ProfileUtils<P extends Profile> {
      *
      * @return previous assigned property if exists
      */
-    <T> T setAttribute(P profile, T property);
+    <T> T addAttribute(P profile, T property);
 
     /**
      * Set profile property as preference
      *
      * @return previous assigned property if exists
      */
-    <T> T setPreference(P profile, T property);
+    <T> T addPreference(P profile, T property);
+
+    /**
+     * Create profile preferences control
+     */
+    ProfilePreferences createPreferences(P profile);
 
     /**
      * Converts profile properties to tag map: tag-key=> tag-value
@@ -95,7 +103,7 @@ public interface ProfileUtils<P extends Profile> {
         byte[] preferences = new byte[buff.getInt()];
         buff.get(preferences);
 
-        return create(fromBytes(attributes), fromBytes(preferences));
+        return createProfile(fromBytes(attributes), fromBytes(preferences));
     }
 
 }

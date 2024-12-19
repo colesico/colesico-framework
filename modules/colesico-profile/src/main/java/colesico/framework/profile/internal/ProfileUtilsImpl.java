@@ -1,6 +1,7 @@
 package colesico.framework.profile.internal;
 
 import colesico.framework.ioc.production.Polysupplier;
+import colesico.framework.profile.ProfilePreferences;
 import colesico.framework.profile.ProfileConverterBindings;
 import colesico.framework.profile.ProfileUtils;
 import colesico.framework.profile.PropertyConverter;
@@ -49,13 +50,13 @@ public class ProfileUtilsImpl implements ProfileUtils<ProfileImpl> {
     }
 
     @Override
-    public ProfileImpl create(Collection<?> attributes, Collection<?> preferences) {
+    public ProfileImpl createProfile(Collection<?> attributes, Collection<?> preferences) {
         ProfileImpl profile = new ProfileImpl();
         if (attributes != null) {
-            attributes.forEach(profile::setAttribute);
+            attributes.forEach(profile::addAttribute);
         }
         if (preferences != null) {
-            preferences.forEach(profile::setAttribute);
+            preferences.forEach(profile::addAttribute);
         }
         return profile;
     }
@@ -76,13 +77,18 @@ public class ProfileUtilsImpl implements ProfileUtils<ProfileImpl> {
     }
 
     @Override
-    public <T> T setAttribute(ProfileImpl profile, T property) {
-        return profile.setAttribute(property);
+    public <T> T addAttribute(ProfileImpl profile, T property) {
+        return profile.addAttribute(property);
     }
 
     @Override
-    public <T> T setPreference(ProfileImpl profile, T property) {
-        return profile.setPreference(property);
+    public <T> T addPreference(ProfileImpl profile, T property) {
+        return profile.addPreference(property);
+    }
+
+    @Override
+    public ProfilePreferences createPreferences(ProfileImpl profile) {
+        return new ProfilePreferencesImpl(profile);
     }
 
     @Override

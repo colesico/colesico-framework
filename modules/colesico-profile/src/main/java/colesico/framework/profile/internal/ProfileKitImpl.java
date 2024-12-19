@@ -30,7 +30,7 @@ public class ProfileKitImpl implements ProfileKit {
     }
 
     @Override
-    public Profile get() {
+    public Profile profile() {
         Profile profile = threadScope.get(Profile.SCOPE_KEY);
         if (profile != null) {
             return profile;
@@ -48,7 +48,14 @@ public class ProfileKitImpl implements ProfileKit {
     }
 
     @Override
-    public void commit(Profile profile) {
+    public ProfilePreferences preferences() {
+        Profile profile = profile();
+        return profileUtils.createPreferences(profile);
+    }
+
+    @Override
+    public void commit(ProfilePreferences preferences) {
+        Profile profile = preferences.profile();
         profile = listener.beforeWrite(profile);
         dataPortProv.get().write(profile, Profile.class);
     }

@@ -34,7 +34,7 @@ public class ProfileProducer {
 
     @Unscoped
     public Profile getProfile(ProfileKit source) {
-        return source.get();
+        return source.profile();
     }
 
     /**

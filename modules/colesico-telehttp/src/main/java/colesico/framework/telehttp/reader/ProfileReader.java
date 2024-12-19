@@ -64,7 +64,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
         }
         Collection<?> preferences = profileUtils.fromTags(tags);
 
-        P profile = profileUtils.create(attributes, preferences);
+        P profile = profileUtils.createProfile(attributes, preferences);
 
         if (!profile.contains(Locale.class)) {
             String acceptLangs = request.getHeaders().get(ACCEPT_LANGUAGE_HEADER);
@@ -72,7 +72,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
             if (locale == null) {
                 locale = Locale.getDefault();
             }
-            profileUtils.setAttribute(profile, locale);
+            profileUtils.addAttribute(profile, locale);
         }
 
         return profile;

@@ -1,6 +1,5 @@
 package colesico.framework.rpc.clientapi.handler;
 
-import colesico.framework.profile.Profile;
 import colesico.framework.profile.ProfileKit;
 import colesico.framework.profile.ProfileUtils;
 import colesico.framework.rpc.clientapi.RpcResponseHandler;
@@ -40,12 +39,9 @@ public class BasicResponseHandler implements RpcResponseHandler<BasicEnvelope> {
         }
 
         if (response.getProfile() != null) {
-            if (response.getProfile().length == 0) {
-                profileKit.commit((Profile) null);
-            } else {
+            if (response.getProfile().length != 0) {
                 Collection prefs = profileUtils.fromBytes(response.getProfile());
-                Profile profile = profileUtils.fromPreferences(prefs);
-                profileKit.commit(profile);
+                profileKit.commit(prefs);
             }
         }
     }
