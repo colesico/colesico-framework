@@ -40,6 +40,9 @@ public interface Profile extends Iterable {
      */
     Key<Profile> SCOPE_KEY = new TypeKey<>(Profile.class);
 
+    /**
+     * Check property exists
+     */
     <T> boolean hasProperty(Class<T> propClass);
 
     /**
@@ -49,11 +52,7 @@ public interface Profile extends Iterable {
      */
     <T> T getProperty(Class<T> propClass);
 
-    /**
-     * Set profile property as preference.
-     * @see ProfileKit#commit(Profile)
-     */
-    <T> T setPreference(T property);
+    Preferences getPreferences();
 
     /**
      * Returns user locale.

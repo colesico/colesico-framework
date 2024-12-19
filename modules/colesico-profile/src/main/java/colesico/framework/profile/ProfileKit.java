@@ -20,9 +20,9 @@ public interface ProfileKit {
      */
     void commit(Profile profile);
 
-    default <T> void commit(T... preferences) {
+    default void commit(Object... preferences) {
         Profile profile = get();
-        for (T pref : preferences) {
+        for (Object pref : preferences) {
             profile.setPreference(pref);
         }
         commit(profile);
