@@ -16,6 +16,7 @@
 
 package colesico.framework.profile.internal;
 
+import colesico.framework.profile.Preferences;
 import colesico.framework.profile.Profile;
 
 import java.util.*;
@@ -31,6 +32,8 @@ public class ProfileImpl implements Profile {
 
     private final Set<? super Object> preferences = new HashSet<>();
 
+    private final PreferencesApi preferencesApi = new PreferencesApi();
+
     public static ProfileImpl of() {
         return new ProfileImpl();
     }
@@ -42,23 +45,27 @@ public class ProfileImpl implements Profile {
     }
 
     @Override
-    public <T> boolean hasProperty(Class<T> propClass) {
-        return properties.containsKey(propClass);
+    public <T> boolean contains(Class<T> propertyClass) {
+        return properties.containsKey(propertyClass);
     }
 
     @Override
-    public <T> T getProperty(Class<T> propClass) {
-        return (T) properties.get(propClass);
+    public <T> T get(Class<T> propertyClass) {
+        return (T) properties.get(propertyClass);
     }
 
     @Override
-    public <T> T setPreference(T attribute) {
-        preferences.add(attribute);
-        return (T) properties.put(attribute.getClass(), attribute);
+    public PreferencesApi preferences() {
+        return preferencesApi;
     }
 
     protected <T> T setAttribute(T property) {
         attributes.add(property);
+        return (T) properties.put(property.getClass(), property);
+    }
+
+    protected <T> T setPreference(T property) {
+        preferences.add(property);
         return (T) properties.put(property.getClass(), property);
     }
 
@@ -77,5 +84,53 @@ public class ProfileImpl implements Profile {
     @Override
     public Iterator iterator() {
         return properties.values().iterator();
+    }
+
+    protected class PreferencesApi implements Preferences {
+
+        @Override
+        public boolean isEmpty() {
+            return preferences.isEmpty();
+        }
+
+        @Override
+        public <T> boolean contains(Class<T> propertyClass) {
+            T property = (T) properties.get(propertyClass);
+            if (property != null) {
+                return preferences.contains(property);
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public void clear() {
+            preferences.clear();
+        }
+
+        @Override
+        public <T> T get(Class<T> propertyClass) {
+            return null;
+        }
+
+        @Override
+        public <T> T set(T property) {
+            preferences.add(property);
+            return (T) properties.put(property.getClass(), property);
+        }
+
+        @Override
+        public <T> T remove(Class<T> propertyClass) {
+            T property = (T) properties.get(propertyClass);
+            if (property != null) {
+                return (T) properties.remove(property);
+            }
+            return null;
+        }
+
+        @Override
+        public Iterator iterator() {
+            return preferences.iterator();
+        }
     }
 }

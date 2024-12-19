@@ -22,7 +22,7 @@ public interface ProfileKit {
 
     default void commit(Object... preferences) {
         Profile profile = get();
-        Preferences preferenceApi = profile.getPreferences();
+        Preferences preferenceApi = profile.preferences();
         for (Object pref : preferences) {
             preferenceApi.set(pref);
         }

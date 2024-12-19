@@ -37,7 +37,7 @@ public class MyLocalization {
     // http://localhost:8080/my-localization/ru
     public HtmlResponse ru() {
         Profile profile = profileKit.get();
-        profile.getPreferences().set(new Locale("ru", "RU"));
+        profile.preferences().set(new Locale("ru", "RU"));
         profileKit.commit(profile);
         return HtmlResponse.of("Русский");
     }

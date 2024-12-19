@@ -43,22 +43,34 @@ public interface Profile extends Iterable {
     /**
      * Check property exists
      */
-    <T> boolean hasProperty(Class<T> propClass);
+    <T> boolean contains(Class<T> propertyClass);
 
     /**
      * Properties are any values that define the profiling configuration.
      * Examples of property may be the user's locale, time zone, terminal type (mobile, PC), etc.
      * Attributes are assigned on the calling side or with {@link ProfileListener}
      */
-    <T> T getProperty(Class<T> propClass);
+    <T> T get(Class<T> propertyClass);
 
-    Preferences getPreferences();
+    /**
+     * Profile preferences
+     *
+     * @see ProfileKit#commit(Profile)
+     */
+    Preferences preferences();
 
     /**
      * Returns user locale.
      */
     default Locale getLocale() {
-        return getProperty(Locale.class);
+        return get(Locale.class);
+    }
+
+    /**
+     * Set preferred locale
+     */
+    default void setLocale(Locale locale) {
+        preferences().set(locale);
     }
 
 }

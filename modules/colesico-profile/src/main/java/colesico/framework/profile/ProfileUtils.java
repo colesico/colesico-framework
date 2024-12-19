@@ -56,7 +56,7 @@ public interface ProfileUtils<P extends Profile> {
     <T> T setPreference(P profile, T property);
 
     /**
-     * Converts profile properties to properties map: tag-key=> tag-value
+     * Converts profile properties to tag map: tag-key=> tag-value
      * The tag-key must be lowercase, match [a-z0-9], and start with a letter.
      * <p>
      * Tag values can contain any characters

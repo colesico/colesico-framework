@@ -6,9 +6,11 @@ package colesico.framework.profile;
  */
 public interface Preferences extends Iterable {
 
-    <T> boolean exists(Class<T> propertyClass);
+    boolean isEmpty();
 
-    <T> T get(Class<T> propertyClass);
+    <T> boolean contains(Class<T> propertyClass);
+
+    void clear();
 
     /**
      * Set profile property as preference.
@@ -18,7 +20,7 @@ public interface Preferences extends Iterable {
     <T> T set(T property);
 
     /**
-     * Set profile property as preference.
+     * Remove profile property from preferred.
      *
      * @see ProfileKit#commit(Profile)
      */

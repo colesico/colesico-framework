@@ -19,31 +19,31 @@ import java.util.Map;
 public class ProfileUtilsImpl implements ProfileUtils<ProfileImpl> {
 
     protected final Map<Class<?>, PropertyConverter<?>> valueConvertersByClass = new HashMap<>();
-    protected final Map<String, PropertyConverter<?>> valueConvertersByProperty = new HashMap<>();
+    protected final Map<String, PropertyConverter<?>> valueConvertersByTagKey = new HashMap<>();
 
     public ProfileUtilsImpl(Polysupplier<ProfileConverterBindings> profConverters) {
         profConverters.forEach(cfg -> {
                     cfg.forEach(cvb -> {
                                 valueConvertersByClass.put(cvb.propertyClass(), cvb.converter());
-                                valueConvertersByProperty.put(cvb.converter().getTagKey(), cvb.converter());
+                                valueConvertersByTagKey.put(cvb.converter().getTagKey(), cvb.converter());
                             }
                     );
                 }
         );
     }
 
-    protected PropertyConverter getValueConverter(Class valueCalss) {
+    protected PropertyConverter getPropertyConverter(Class valueCalss) {
         PropertyConverter conv = valueConvertersByClass.get(valueCalss);
         if (conv == null) {
-            throw new RuntimeException("Profile value converter not found for class: " + valueCalss);
+            throw new RuntimeException("Profile property converter not found for class: " + valueCalss);
         }
         return conv;
     }
 
-    protected PropertyConverter getValueConverter(String propertyName) {
-        PropertyConverter conv = valueConvertersByProperty.get(propertyName);
+    protected PropertyConverter getPropertyConverter(String tagKey) {
+        PropertyConverter conv = valueConvertersByTagKey.get(tagKey);
         if (conv == null) {
-            throw new RuntimeException("Profile value converter not found for property: " + propertyName);
+            throw new RuntimeException("Profile property converter not found for property: " + tagKey);
         }
         return conv;
     }
@@ -89,7 +89,7 @@ public class ProfileUtilsImpl implements ProfileUtils<ProfileImpl> {
     public Map<String, String> toTags(Collection<?> properties) {
         Map<String, String> tags = new HashMap<>();
         for (Object property : properties) {
-            PropertyConverter converter = getValueConverter(property.getClass());
+            PropertyConverter converter = getPropertyConverter(property.getClass());
             tags.put(converter.getTagKey(), converter.toTag(property));
         }
         return tags;
@@ -98,11 +98,11 @@ public class ProfileUtilsImpl implements ProfileUtils<ProfileImpl> {
     @Override
     public Collection<?> fromTags(Map<String, String> tags) {
         Collection<Object> properties = new ArrayList<>();
-        for (Map.Entry<String, String> prop : tags.entrySet()) {
-            String propertyName = prop.getKey();
-            PropertyConverter<?> converter = getValueConverter(propertyName);
-            Object value = converter.fromTag(prop.getValue());
-            properties.add(value);
+        for (Map.Entry<String, String> tag : tags.entrySet()) {
+            String tagKey = tag.getKey();
+            PropertyConverter<?> converter = getPropertyConverter(tagKey);
+            Object property = converter.fromTag(tag.getValue());
+            properties.add(property);
         }
         return properties;
     }
@@ -114,7 +114,7 @@ public class ProfileUtilsImpl implements ProfileUtils<ProfileImpl> {
              DataOutputStream dos = new DataOutputStream(baos)) {
 
             for (Object property : properties) {
-                PropertyConverter converter = getValueConverter(property.getClass());
+                PropertyConverter converter = getPropertyConverter(property.getClass());
                 byte[] tagKeyBytes = converter.getTagKey().getBytes(StandardCharsets.UTF_8);
                 dos.write(tagKeyBytes.length);
                 dos.write(tagKeyBytes);
@@ -140,7 +140,7 @@ public class ProfileUtilsImpl implements ProfileUtils<ProfileImpl> {
                 String tagName = new String(dis.readNBytes(tagNameLen), StandardCharsets.UTF_8);
                 int propBytesLen = dis.read();
                 byte[] propBytes = dis.readNBytes(propBytesLen);
-                PropertyConverter<?> converter = getValueConverter(tagName);
+                PropertyConverter<?> converter = getPropertyConverter(tagName);
                 properties.add(converter.fromBytes(propBytes));
             }
         } catch (Exception ex) {
