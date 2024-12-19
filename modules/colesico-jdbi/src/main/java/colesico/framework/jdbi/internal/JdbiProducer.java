@@ -16,15 +16,22 @@
 
 package colesico.framework.jdbi.internal;
 
+import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.message.Message;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
+import colesico.framework.jdbi.DefaultJdbiConfig;
 import colesico.framework.jdbi.JdbiConfigPrototype;
 import colesico.framework.jdbi.JdbiTransactionalShell;
 import colesico.framework.transaction.TransactionalShell;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
+
+import javax.inject.Singleton;
+import java.sql.Connection;
+
+import static colesico.framework.ioc.conditional.Substitution.STUB;
 
 @Producer
 public class JdbiProducer {
@@ -52,4 +59,22 @@ public class JdbiProducer {
         return ((JdbiTransactionalShell) txShell).getHandle();
     }
 
+    /**
+     * Default transactional shell producing
+     */
+    @Singleton
+    @Substitute(STUB)
+    public TransactionalShell getDefaultTransactionalShell(@Classed(DefaultJdbiConfig.class) Jdbi jdbi) {
+        return new JdbiTransactionalShell(jdbi);
+    }
+
+    /**
+     * Default connection producing
+     * Produce connection from jdbc tx shell as default connection
+     */
+    @Unscoped
+    @Substitute(STUB)
+    public Connection getDefaultConnection(TransactionalShell txShell) {
+        return ((JdbiTransactionalShell) txShell).getHandle().getConnection();
+    }
 }

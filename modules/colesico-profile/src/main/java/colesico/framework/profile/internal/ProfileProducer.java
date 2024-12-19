@@ -15,12 +15,11 @@
  */
 package colesico.framework.profile.internal;
 
+import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
-import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileKit;
-import colesico.framework.profile.ProfileUtils;
+import colesico.framework.profile.*;
 
 import javax.inject.Provider;
 import java.util.Locale;
@@ -29,6 +28,9 @@ import java.util.Locale;
 @Producer
 @Produce(value = ProfileUtilsImpl.class, keyType = ProfileUtils.class)
 @Produce(value = ProfileKitImpl.class, keyType = ProfileKit.class)
+
+@Produce(value = DefaultProfileListener.class, keyType = ProfileListener.class, substitute = Substitution.STUB)
+@Produce(value = DefaultProfileConfig.class, keyType = ProfileConfigPrototype.class, substitute = Substitution.STUB)
 public class ProfileProducer {
 
     @Unscoped

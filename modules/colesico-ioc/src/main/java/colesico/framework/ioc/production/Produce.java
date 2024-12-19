@@ -17,6 +17,7 @@
 package colesico.framework.ioc.production;
 
 import colesico.framework.ioc.conditional.Condition;
+import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.scope.Unscoped;
 
 import java.lang.annotation.*;
@@ -105,4 +106,8 @@ public @interface Produce {
      */
     Class<?>[] keyType() default {};
 
+    /**
+     * @see Substitution
+     */
+    Substitution substitute() default Substitution.REGULAR;
 }
