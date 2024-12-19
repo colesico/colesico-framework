@@ -37,7 +37,7 @@ public class TestProducer {
 
     @Singleton
     public Profile getProfile(ProfileUtils profileUtils) {
-        return profileUtils.create(List.of(Locale.of("en", "RU")));
+        return profileUtils.fromAttributes(List.of(Locale.of("en", "RU")));
     }
 
     @Singleton

@@ -38,7 +38,7 @@ public class ProfileSourceImpl implements ProfileSource {
 
         profile = (Profile) dataPortProv.get().read(Profile.class);
         if (profile == null) {
-            profile = profileUtils.create(List.of(config.getDefaultLocale()));
+            profile = profileUtils.fromAttributes(List.of(config.getDefaultLocale()));
         }
 
         profile = listener.afterRead(profile);

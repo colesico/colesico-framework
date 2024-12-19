@@ -44,8 +44,8 @@ public class BasicResponseHandler implements RpcResponseHandler<BasicEnvelope> {
                 profileSource.write(null);
             } else {
                 Collection prefs = profileUtils.fromBytes(response.getProfile());
-                Profile profile = profileUtils.create(null,prefs);
-                profileSource.setProfile(profile);
+                Profile profile = profileUtils.fromPreferences(prefs);
+                profileSource.write(profile);
             }
         }
     }
