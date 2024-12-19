@@ -35,6 +35,12 @@ public class ProfileImpl implements Profile {
         return new ProfileImpl();
     }
 
+    public static ProfileImpl of(Locale locale) {
+        ProfileImpl profile = new ProfileImpl();
+        profile.setAttribute(locale);
+        return profile;
+    }
+
     @Override
     public <T> boolean hasProperty(Class<T> propClass) {
         return properties.containsKey(propClass);

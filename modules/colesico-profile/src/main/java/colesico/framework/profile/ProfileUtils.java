@@ -2,6 +2,8 @@ package colesico.framework.profile;
 
 import java.nio.ByteBuffer;
 import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -27,6 +29,10 @@ public interface ProfileUtils<P extends Profile> {
 
     default P fromPreferences(Collection<?> preferences) {
         return create(null, preferences);
+    }
+
+    default P fromLocale(Locale locale) {
+        return create(List.of(locale), null);
     }
 
     Collection<?> getProperties(P profile);

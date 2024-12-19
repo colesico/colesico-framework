@@ -21,8 +21,8 @@ import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.conditional.TestCondition;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.profile.internal.ProfileImpl;
 import colesico.framework.profile.Profile;
+import colesico.framework.profile.ProfileUtils;
 
 import javax.inject.Singleton;
 import java.util.Locale;
@@ -34,7 +34,7 @@ import java.util.Locale;
 public class TestProducer {
 
     @Singleton
-    public Profile getProfile() {
-        return new ProfileImpl(new Locale("en", "RU"));
+    public Profile getProfile(ProfileUtils pu) {
+        return pu.fromLocale(new Locale("en", "RU"));
     }
 }
