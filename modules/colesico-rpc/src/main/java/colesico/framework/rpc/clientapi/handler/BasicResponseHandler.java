@@ -41,7 +41,7 @@ public class BasicResponseHandler implements RpcResponseHandler<BasicEnvelope> {
 
         if (response.getProfile() != null) {
             if (response.getProfile().length == 0) {
-                profileKit.commit(null);
+                profileKit.commit((Profile) null);
             } else {
                 Collection prefs = profileUtils.fromBytes(response.getProfile());
                 Profile profile = profileUtils.fromPreferences(prefs);

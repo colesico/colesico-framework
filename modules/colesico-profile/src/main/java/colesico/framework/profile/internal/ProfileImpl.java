@@ -109,14 +109,8 @@ public class ProfileImpl implements Profile {
         }
 
         @Override
-        public <T> T get(Class<T> propertyClass) {
-            return null;
-        }
-
-        @Override
         public <T> T set(T property) {
-            preferences.add(property);
-            return (T) properties.put(property.getClass(), property);
+            return setPreference(property);
         }
 
         @Override

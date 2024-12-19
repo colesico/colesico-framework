@@ -10,8 +10,6 @@ public interface Preferences extends Iterable {
 
     <T> boolean contains(Class<T> propertyClass);
 
-    void clear();
-
     /**
      * Set profile property as preference.
      *
@@ -25,4 +23,7 @@ public interface Preferences extends Iterable {
      * @see ProfileKit#commit(Profile)
      */
     <T> T remove(Class<T> propertyClass);
+
+    void clear();
+
 }

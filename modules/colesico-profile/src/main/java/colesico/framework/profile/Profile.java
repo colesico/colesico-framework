@@ -41,7 +41,7 @@ public interface Profile extends Iterable {
     Key<Profile> SCOPE_KEY = new TypeKey<>(Profile.class);
 
     /**
-     * Check property exists
+     * Check profile contains property
      */
     <T> boolean contains(Class<T> propertyClass);
 
