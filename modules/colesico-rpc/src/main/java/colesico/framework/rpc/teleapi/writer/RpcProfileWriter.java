@@ -21,7 +21,7 @@ public class RpcProfileWriter implements RpcTeleWriter<Profile> {
     public void write(Profile value, RpcTWContext context) {
         BasicEnvelope env = (BasicEnvelope) context.getResponse();
         if (value != null) {
-            env.setProfile(profileUtils.toBytes(value.getPreferences()));
+            env.setProfile(profileUtils.toBytes(profileUtils.getPreferences(value)));
         } else {
             env.setProfile(new byte[0]);
         }

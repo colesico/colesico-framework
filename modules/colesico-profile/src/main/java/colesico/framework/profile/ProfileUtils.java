@@ -1,5 +1,6 @@
 package colesico.framework.profile;
 
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public interface ProfileUtils<P extends Profile> {
     default P create(Collection<?> attributes) {
         return create(attributes, null);
     }
-    
+
     Collection<?> getProperties(P profile);
 
     Collection<?> getAttributes(P profile);
@@ -64,5 +65,27 @@ public interface ProfileUtils<P extends Profile> {
     byte[] toBytes(Collection<?> properties);
 
     Collection<?> fromBytes(byte[] propertiesBytes);
+
+    default byte[] serialize(P profile) {
+        byte[] attributes = toBytes(getAttributes(profile));
+        byte[] preferences = toBytes(getProperties(profile));
+
+        ByteBuffer buff = ByteBuffer.allocate(attributes.length + preferences.length + Integer.BYTES * 2);
+        buff.putInt(attributes.length).put(attributes);
+        buff.putInt(preferences.length).put(preferences);
+
+        return buff.array();
+    }
+
+    default P deserialize(byte[] profileBytes) {
+        ByteBuffer buff = ByteBuffer.wrap(profileBytes);
+        byte[] attributes = new byte[buff.getInt()];
+        buff.get(attributes);
+
+        byte[] preferences = new byte[buff.getInt()];
+        buff.get(preferences);
+
+        return create(fromBytes(attributes), fromBytes(preferences));
+    }
 
 }

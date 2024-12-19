@@ -31,7 +31,7 @@ import java.util.Locale;
  * has to be implemented in the application.
  * Framework provides default implementation {@link ProfileImpl}
  */
-public interface Profile {
+public interface Profile extends Iterable {
 
     String GET_LOCALE_METHOD = "getLocale";
 
