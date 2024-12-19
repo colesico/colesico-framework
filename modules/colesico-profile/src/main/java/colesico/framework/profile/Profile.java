@@ -50,6 +50,12 @@ public interface Profile extends Iterable {
     <T> T getProperty(Class<T> propClass);
 
     /**
+     * Set profile property as preference.
+     * @see ProfileKit#commit(Profile)
+     */
+    <T> T setPreference(T property);
+
+    /**
      * Returns user locale.
      */
     default Locale getLocale() {

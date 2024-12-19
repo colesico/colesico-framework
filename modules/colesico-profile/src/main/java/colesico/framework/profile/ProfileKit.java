@@ -1,7 +1,5 @@
 package colesico.framework.profile;
 
-import java.util.Collection;
-
 /**
  * Represents a source that is used for retrieve Profile instance from
  * the Source and put it back for profile preferences.
@@ -9,16 +7,24 @@ import java.util.Collection;
  * Profile port instance should be explicitly assign with current thread by
  * putting it to {@link colesico.framework.ioc.scope.ThreadScope}
  */
-public interface ProfileSource {
+public interface ProfileKit {
 
     /**
      * Obtain profile form source.
      * If there is having no profile in the source  - must return default profile with Locale from {@link ProfileConfigPrototype}
      */
-    Profile getProfile();
+    Profile get();
 
     /**
-     * Commit profile preferences to
+     * Writes profile preferences to data port
      */
-    void write(Profile profile);
+    void commit(Profile profile);
+
+    default <T> void commit(T... preferences) {
+        Profile profile = get();
+        for (T pref : preferences) {
+            profile.setPreference(pref);
+        }
+        commit(profile);
+    }
 }

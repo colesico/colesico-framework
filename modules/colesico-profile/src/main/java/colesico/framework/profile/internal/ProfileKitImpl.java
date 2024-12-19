@@ -9,7 +9,7 @@ import javax.inject.Singleton;
 import java.util.List;
 
 @Singleton
-public class ProfileSourceImpl implements ProfileSource {
+public class ProfileKitImpl implements ProfileKit {
 
     protected final Provider<DataPort> dataPortProv;
 
@@ -22,7 +22,7 @@ public class ProfileSourceImpl implements ProfileSource {
     // Profile cache
     protected ThreadScope threadScope;
 
-    public ProfileSourceImpl(Provider<DataPort> dataPortProv, ProfileListener listener, ProfileUtils profileUtils, ProfileConfigPrototype config) {
+    public ProfileKitImpl(Provider<DataPort> dataPortProv, ProfileListener listener, ProfileUtils profileUtils, ProfileConfigPrototype config) {
         this.dataPortProv = dataPortProv;
         this.listener = listener;
         this.profileUtils = profileUtils;
@@ -30,7 +30,7 @@ public class ProfileSourceImpl implements ProfileSource {
     }
 
     @Override
-    public Profile getProfile() {
+    public Profile get() {
         Profile profile = threadScope.get(Profile.SCOPE_KEY);
         if (profile != null) {
             return profile;
@@ -48,7 +48,7 @@ public class ProfileSourceImpl implements ProfileSource {
     }
 
     @Override
-    public void write(Profile profile) {
+    public void commit(Profile profile) {
         profile = listener.beforeWrite(profile);
         dataPortProv.get().write(profile, Profile.class);
     }

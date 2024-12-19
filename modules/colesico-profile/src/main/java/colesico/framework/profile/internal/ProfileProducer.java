@@ -19,7 +19,7 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileSource;
+import colesico.framework.profile.ProfileKit;
 import colesico.framework.profile.ProfileUtils;
 
 import javax.inject.Provider;
@@ -28,12 +28,12 @@ import java.util.Locale;
 
 @Producer
 @Produce(value = ProfileUtilsImpl.class, keyType = ProfileUtils.class)
-@Produce(value = ProfileSourceImpl.class, keyType = ProfileSource.class)
+@Produce(value = ProfileKitImpl.class, keyType = ProfileKit.class)
 public class ProfileProducer {
 
     @Unscoped
-    public Profile getProfile(ProfileSource source) {
-        return source.getProfile();
+    public Profile getProfile(ProfileKit source) {
+        return source.get();
     }
 
     /**

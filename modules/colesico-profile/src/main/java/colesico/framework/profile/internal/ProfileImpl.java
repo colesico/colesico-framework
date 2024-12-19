@@ -51,14 +51,15 @@ public class ProfileImpl implements Profile {
         return (T) properties.get(propClass);
     }
 
+    @Override
+    public <T> T setPreference(T attribute) {
+        preferences.add(attribute);
+        return (T) properties.put(attribute.getClass(), attribute);
+    }
+
     protected <T> T setAttribute(T property) {
         attributes.add(property);
         return (T) properties.put(property.getClass(), property);
-    }
-
-    protected <T> T setPreference(T attribute) {
-        preferences.add(attribute);
-        return (T) properties.put(attribute.getClass(), attribute);
     }
 
     protected Map<Class<?>, ? super Object> getProperties() {

@@ -1,7 +1,7 @@
 package colesico.framework.rpc.clientapi.handler;
 
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileSource;
+import colesico.framework.profile.ProfileKit;
 import colesico.framework.profile.ProfileUtils;
 import colesico.framework.rpc.clientapi.RpcResponseHandler;
 import colesico.framework.rpc.teleapi.BasicEnvelope;
@@ -16,13 +16,13 @@ import java.util.Collection;
 public class BasicResponseHandler implements RpcResponseHandler<BasicEnvelope> {
 
 
-    private final ProfileSource profileSource;
+    private final ProfileKit profileKit;
     private final ProfileUtils profileUtils;
     private final SecurityKit securityKit;
     private final PrincipalSerializer principalSerializer;
 
-    public BasicResponseHandler(ProfileSource profileSource, ProfileUtils profileUtils, SecurityKit securityKit, PrincipalSerializer principalSerializer) {
-        this.profileSource = profileSource;
+    public BasicResponseHandler(ProfileKit profileKit, ProfileUtils profileUtils, SecurityKit securityKit, PrincipalSerializer principalSerializer) {
+        this.profileKit = profileKit;
         this.profileUtils = profileUtils;
         this.securityKit = securityKit;
         this.principalSerializer = principalSerializer;
@@ -41,11 +41,11 @@ public class BasicResponseHandler implements RpcResponseHandler<BasicEnvelope> {
 
         if (response.getProfile() != null) {
             if (response.getProfile().length == 0) {
-                profileSource.write(null);
+                profileKit.commit(null);
             } else {
                 Collection prefs = profileUtils.fromBytes(response.getProfile());
                 Profile profile = profileUtils.fromPreferences(prefs);
-                profileSource.write(profile);
+                profileKit.commit(profile);
             }
         }
     }
