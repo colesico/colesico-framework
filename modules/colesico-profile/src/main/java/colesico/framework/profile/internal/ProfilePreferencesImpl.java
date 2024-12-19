@@ -1,7 +1,7 @@
 package colesico.framework.profile.internal;
 
-import colesico.framework.profile.ProfilePreferences;
 import colesico.framework.profile.Profile;
+import colesico.framework.profile.ProfilePreferences;
 
 import java.util.Iterator;
 
@@ -20,7 +20,7 @@ public class ProfilePreferencesImpl implements ProfilePreferences {
 
     @Override
     public <T> boolean contains(Class<T> propertyClass) {
-        T property =  profile.get(propertyClass);
+        T property = profile.get(propertyClass);
         if (property != null) {
             return profile.getPreferences().contains(property);
         } else {

@@ -1,8 +1,8 @@
 package colesico.framework.profile.internal;
 
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.profile.ProfilePreferences;
 import colesico.framework.profile.ProfileConverterBindings;
+import colesico.framework.profile.ProfilePreferences;
 import colesico.framework.profile.ProfileUtils;
 import colesico.framework.profile.PropertyConverter;
 
