@@ -19,4 +19,5 @@ public interface BasicEnvelope {
     byte[] getProfile();
 
     void setProfile(byte[] profile);
+
 }

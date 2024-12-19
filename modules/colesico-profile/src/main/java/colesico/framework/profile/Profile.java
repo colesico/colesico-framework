@@ -20,7 +20,6 @@ import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.profile.internal.ProfileImpl;
 
-import java.util.Collection;
 import java.util.Locale;
 
 /**
@@ -41,70 +40,20 @@ public interface Profile {
      */
     Key<Profile> SCOPE_KEY = new TypeKey<>(Profile.class);
 
-    <T> boolean hasAttribute(Class<T> attrClass);
+    <T> boolean hasProperty(Class<T> propClass);
 
     /**
-     * Attributes are any values that define the profiling configuration.
-     * Examples of attributes may be the user's time zone, terminal type (mobile, PC), etc.
-     * Attributes are assigned on the calling side and not returned back
-     * (not writed to {@link colesico.framework.teleapi.DataPort} ).
+     * Properties are any values that define the profiling configuration.
+     * Examples of property may be the user's locale, time zone, terminal type (mobile, PC), etc.
+     * Attributes are assigned on the calling side or with {@link ProfileListener}
      */
-    <T> T getAttribute(Class<T> attrClass);
-
-    /**
-     * All attributes
-     */
-    Collection<?> getAttributes();
-
-    <T> T setAttribute(T attribute);
-
-    <T> boolean hasPreference(Class<T> prefClass);
-
-    /**
-     * Preferences are similar to attributes, but they writed to
-     * For example, interface theme, language, etc.
-     */
-    <T> T getPreference(Class<T> prefClass);
-
-    /**
-     * All preferences
-     */
-    Collection<?> getPreferences();
-
-    /**
-     * @return previously preference or null
-     */
-    <T> T setPreference(T preference);
-
-    /**
-     * Has preference or attribute
-     */
-    default <T> boolean hasProperty(Class<T> propClass) {
-        return hasPreference(propClass) || hasAttribute(propClass);
-    }
-
-    /**
-     * Get preference or attribute
-     */
-    default <T> T getProperty(Class<T> propClass) {
-        if (hasPreference(propClass)) {
-            return getPreference(propClass);
-        }
-        return getAttribute(propClass);
-    }
+    <T> T getProperty(Class<T> propClass);
 
     /**
      * Returns user locale.
      */
     default Locale getLocale() {
         return getProperty(Locale.class);
-    }
-
-    /**
-     * Change locale
-     */
-    default Locale setLocale(Locale locale) {
-        return setPreference(locale);
     }
 
 }

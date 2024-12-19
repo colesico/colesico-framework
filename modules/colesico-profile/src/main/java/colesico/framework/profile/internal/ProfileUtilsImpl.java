@@ -61,6 +61,31 @@ public class ProfileUtilsImpl implements ProfileUtils<ProfileImpl> {
     }
 
     @Override
+    public Collection<?> getAttributes(ProfileImpl profile) {
+        return profile.getAttributes();
+    }
+
+    @Override
+    public Collection<?> getPreferences(ProfileImpl profile) {
+        return profile.getPreferences();
+    }
+
+    @Override
+    public Collection<?> getProperties(ProfileImpl profile) {
+        return profile.getProperties().values();
+    }
+
+    @Override
+    public <T> T setAttribute(ProfileImpl profile, T property) {
+        return profile.setAttribute(property);
+    }
+
+    @Override
+    public <T> T setPreference(ProfileImpl profile, T property) {
+        return profile.setPreference(property);
+    }
+
+    @Override
     public Map<String, String> toTags(Collection<?> properties) {
         Map<String, String> tags = new HashMap<>();
         for (Object property : properties) {
@@ -105,9 +130,9 @@ public class ProfileUtilsImpl implements ProfileUtils<ProfileImpl> {
     }
 
     @Override
-    public Collection<?> fromBytes(byte[] propertyBytes) {
+    public Collection<?> fromBytes(byte[] propertiesBytes) {
         Collection<Object> properties = new ArrayList<>();
-        try (ByteArrayInputStream bais = new ByteArrayInputStream(propertyBytes);
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(propertiesBytes);
              DataInputStream dis = new DataInputStream(bais)) {
 
             while (dis.available() > 0) {

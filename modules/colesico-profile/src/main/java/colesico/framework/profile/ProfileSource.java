@@ -1,5 +1,7 @@
 package colesico.framework.profile;
 
+import java.util.Collection;
+
 /**
  * Represents a source that is used for retrieve Profile instance from
  * the Source and put it back for profile preferences.
@@ -10,10 +12,13 @@ package colesico.framework.profile;
 public interface ProfileSource {
 
     /**
-     * Read profile form source.
+     * Obtain profile form source.
      * If there is having no profile in the source  - must return default profile with Locale from {@link ProfileConfigPrototype}
      */
-    Profile read();
+    Profile getProfile();
 
+    /**
+     * Commit profile preferences to
+     */
     void write(Profile profile);
 }

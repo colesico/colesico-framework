@@ -66,13 +66,13 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
 
         P profile = profileUtils.create(attributes, preferences);
 
-        if (!profile.hasPreference(Locale.class)) {
+        if (!profile.hasProperty(Locale.class)) {
             String acceptLangs = request.getHeaders().get(ACCEPT_LANGUAGE_HEADER);
             Locale locale = TeleHttpUtils.getAcceptedLanguage(acceptLangs);
             if (locale == null) {
                 locale = Locale.getDefault();
             }
-            profile.setAttribute(locale);
+            profileUtils.setAttribute(profile, locale);
         }
 
         return profile;

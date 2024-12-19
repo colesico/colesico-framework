@@ -7,7 +7,6 @@ import colesico.framework.rpc.teleapi.RpcTRContext;
 import colesico.framework.rpc.teleapi.RpcTeleReader;
 
 import javax.inject.Singleton;
-import java.util.Locale;
 
 @Singleton
 public class RpcProfileReader implements RpcTeleReader<Profile> {
@@ -25,7 +24,7 @@ public class RpcProfileReader implements RpcTeleReader<Profile> {
             profile = (Profile) context.getValueGetter().get(context.getRequest());
         } else {
             BasicEnvelope env = (BasicEnvelope) context.getRequest();
-            profile = profileUtils.fromBytes(env.getProfile());
+            profile = profileUtils.deserialize(env.getProfile());
         }
 
         return profile;

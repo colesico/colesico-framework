@@ -30,7 +30,7 @@ public class ProfileSourceImpl implements ProfileSource {
     }
 
     @Override
-    public Profile read() {
+    public Profile getProfile() {
         Profile profile = threadScope.get(Profile.SCOPE_KEY);
         if (profile != null) {
             return profile;

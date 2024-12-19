@@ -5,12 +5,15 @@ import java.util.Map;
 
 /**
  * Low-level profile utilities for profile source.
- * It is a tooling facade for the profile  implementation.
+ * It is an instrumental facade for the profile implementation.
  */
 public interface ProfileUtils<P extends Profile> {
 
     /**
-     * Create profile instance
+     * Create profile instance.
+     * Attributes are set on the calling side by the client application and
+     * cannot be changed. Preferences are overrides of attributes that are also
+     * stored on the client side.
      *
      * @param attributes  can be null
      * @param preferences can b null
@@ -20,6 +23,26 @@ public interface ProfileUtils<P extends Profile> {
     default P create(Collection<?> attributes) {
         return create(attributes, null);
     }
+    
+    Collection<?> getProperties(P profile);
+
+    Collection<?> getAttributes(P profile);
+
+    Collection<?> getPreferences(P profile);
+
+    /**
+     * Set profile property as attribute
+     *
+     * @return previous assigned property if exists
+     */
+    <T> T setAttribute(P profile, T property);
+
+    /**
+     * Set profile property as preference
+     *
+     * @return previous assigned property if exists
+     */
+    <T> T setPreference(P profile, T property);
 
     /**
      * Converts profile properties to properties map: tag-key=> tag-value
@@ -40,6 +63,6 @@ public interface ProfileUtils<P extends Profile> {
      */
     byte[] toBytes(Collection<?> properties);
 
-    Collection<?> fromBytes(byte[] properties);
+    Collection<?> fromBytes(byte[] propertiesBytes);
 
 }

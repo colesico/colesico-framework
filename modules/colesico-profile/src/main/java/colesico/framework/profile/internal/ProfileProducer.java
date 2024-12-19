@@ -33,7 +33,7 @@ public class ProfileProducer {
 
     @Unscoped
     public Profile getProfile(ProfileSource source) {
-        return source.read();
+        return source.getProfile();
     }
 
     /**

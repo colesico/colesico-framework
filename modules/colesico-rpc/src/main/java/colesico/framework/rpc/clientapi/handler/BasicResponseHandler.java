@@ -1,8 +1,8 @@
 package colesico.framework.rpc.clientapi.handler;
 
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileListener;
-import colesico.framework.profile.ProfileKit;
+import colesico.framework.profile.ProfileSource;
+import colesico.framework.profile.ProfileUtils;
 import colesico.framework.rpc.clientapi.RpcResponseHandler;
 import colesico.framework.rpc.teleapi.BasicEnvelope;
 import colesico.framework.security.Principal;
@@ -10,20 +10,22 @@ import colesico.framework.security.SecurityKit;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 
 import javax.inject.Singleton;
+import java.util.Collection;
 
 @Singleton
 public class BasicResponseHandler implements RpcResponseHandler<BasicEnvelope> {
 
-    private final PrincipalSerializer principalSerializer;
-    private final ProfileListener profileSerializer;
-    private final SecurityKit securityKit;
-    private final ProfileKit profileKit;
 
-    public BasicResponseHandler(PrincipalSerializer principalSerializer, ProfileListener profileSerializer, SecurityKit securityKit, ProfileKit profileKit) {
-        this.principalSerializer = principalSerializer;
-        this.profileSerializer = profileSerializer;
+    private final ProfileSource profileSource;
+    private final ProfileUtils profileUtils;
+    private final SecurityKit securityKit;
+    private final PrincipalSerializer principalSerializer;
+
+    public BasicResponseHandler(ProfileSource profileSource, ProfileUtils profileUtils, SecurityKit securityKit, PrincipalSerializer principalSerializer) {
+        this.profileSource = profileSource;
+        this.profileUtils = profileUtils;
         this.securityKit = securityKit;
-        this.profileKit = profileKit;
+        this.principalSerializer = principalSerializer;
     }
 
     @Override
@@ -39,10 +41,11 @@ public class BasicResponseHandler implements RpcResponseHandler<BasicEnvelope> {
 
         if (response.getProfile() != null) {
             if (response.getProfile().length == 0) {
-                profileKit.setProfile(null);
+                profileSource.write(null);
             } else {
-                Profile profile = profileSerializer.deserialize(response.getProfile());
-                profileKit.setProfile(profile);
+                Collection prefs = profileUtils.fromBytes(response.getProfile());
+                Profile profile = profileUtils.create(null,prefs);
+                profileSource.setProfile(profile);
             }
         }
     }

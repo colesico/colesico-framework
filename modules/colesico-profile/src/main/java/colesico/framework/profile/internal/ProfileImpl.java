@@ -18,60 +18,56 @@ package colesico.framework.profile.internal;
 
 import colesico.framework.profile.Profile;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Profile default implementation
  */
 public class ProfileImpl implements Profile {
 
-    private final Map<Class<?>, ? super Object> attributesMap = new HashMap<>();
-    private final Map<Class<?>, ? super Object> preferencesMap = new HashMap<>();
+    private final Map<Class<?>, ? super Object> properties = new HashMap<>();
 
-    @Override
-    public <T> boolean hasAttribute(Class<T> attrClass) {
-        return attributesMap.containsKey(attrClass);
+    private final Set<? super Object> attributes = new HashSet<>();
+
+    private final Set<? super Object> preferences = new HashSet<>();
+
+    public static ProfileImpl of() {
+        return new ProfileImpl();
     }
 
     @Override
-    public <A> A getAttribute(Class<A> attrClass) {
-        return (A) attributesMap.get(attrClass);
-    }
-
-    public <A> A setAttribute(A attribute) {
-        return (A) attributesMap.put(attribute.getClass(), attribute);
-    }
-
-    public Collection<?> getAttributes() {
-        return attributesMap.values();
+    public <T> boolean hasProperty(Class<T> propClass) {
+        return properties.containsKey(propClass);
     }
 
     @Override
-    public <T> boolean hasPreference(Class<T> prefClass) {
-        return preferencesMap.containsKey(prefClass);
+    public <T> T getProperty(Class<T> propClass) {
+        return (T) properties.get(propClass);
     }
 
-    @Override
-    public <P> P getPreference(Class<P> prefClass) {
-        return (P) preferencesMap.get(prefClass);
+    protected <T> T setAttribute(T property) {
+        attributes.add(property);
+        return (T) properties.put(property.getClass(), property);
     }
 
-    @Override
-    public <P> P setPreference(P preference) {
-        return (P) preferencesMap.put(preference.getClass(), preference);
+    protected <T> T setPreference(T attribute) {
+        preferences.add(attribute);
+        return (T) properties.put(attribute.getClass(), attribute);
     }
 
-    public Collection<?> getPreferences() {
-        return preferencesMap.values();
+    protected Map<Class<?>, ? super Object> getProperties() {
+        return properties;
     }
 
-    public Map<Class<?>, ? super Object> getAttributesMap() {
-        return attributesMap;
+    protected Set<? super Object> getAttributes() {
+        return attributes;
     }
 
-    public Map<Class<?>, ? super Object> getPreferencesMap() {
-        return preferencesMap;
+    protected Set<? super Object> getPreferences() {
+        return preferences;
     }
+
 }

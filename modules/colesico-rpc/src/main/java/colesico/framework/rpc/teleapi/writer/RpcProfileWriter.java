@@ -7,7 +7,6 @@ import colesico.framework.rpc.teleapi.RpcTWContext;
 import colesico.framework.rpc.teleapi.RpcTeleWriter;
 
 import javax.inject.Singleton;
-import java.util.Collection;
 
 @Singleton
 public class RpcProfileWriter implements RpcTeleWriter<Profile> {
@@ -22,8 +21,7 @@ public class RpcProfileWriter implements RpcTeleWriter<Profile> {
     public void write(Profile value, RpcTWContext context) {
         BasicEnvelope env = (BasicEnvelope) context.getResponse();
         if (value != null) {
-            Collection preferences = profileUtils.getPreferences(value);
-            env.setProfile(profileUtils.toBytes(preferences));
+            env.setProfile(profileUtils.toBytes(value.getPreferences()));
         } else {
             env.setProfile(new byte[0]);
         }
