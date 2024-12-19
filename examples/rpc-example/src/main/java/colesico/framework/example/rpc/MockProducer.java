@@ -18,8 +18,8 @@ package colesico.framework.example.rpc;
 
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.profile.internal.ProfileImpl;
 import colesico.framework.profile.Profile;
+import colesico.framework.profile.ProfileUtils;
 import colesico.framework.security.DefaultPrincipal;
 import colesico.framework.security.Principal;
 
@@ -32,8 +32,8 @@ import java.util.Locale;
 public class MockProducer {
 
     @Substitute
-    public Profile getProfile() {
-        return new ProfileImpl(new Locale("de", "DE", "UNIX"));
+    public Profile getProfile(ProfileUtils pu) {
+        return pu.fromLocale(new Locale("de", "DE", "UNIX"));
     }
 
     @Substitute

@@ -18,8 +18,8 @@ package colesico.framework.example.translation;
 
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.profile.internal.ProfileImpl;
 import colesico.framework.profile.Profile;
+import colesico.framework.profile.ProfileUtils;
 
 import java.util.Locale;
 
@@ -29,32 +29,32 @@ import java.util.Locale;
  */
 @Producer
 public class ProfileMockProducer {
-    private static final Profile deProfile = new ProfileImpl(new Locale("de", "DE", "UNIX"));
-    private static final Profile enProfile = new ProfileImpl(new Locale("en", "GB"));
-    private static final Profile ruProfile = new ProfileImpl(new Locale("ru"));
-    private static final Profile frProfile = new ProfileImpl(new Locale("fr", "FR"));
+    private static final Locale deLocale = new Locale("de", "DE", "UNIX");
+    private static final Locale enLocale = new Locale("en", "GB");
+    private static final Locale ruLocale = new Locale("ru");
+    private static final Locale frLocale = new Locale("fr", "FR");
 
 
-    private static Profile curProfile = deProfile;
+    private static Locale curLocale = deLocale;
 
     public static void en() {
-        curProfile = enProfile;
+        curLocale = enLocale;
     }
 
     public static void ru() {
-        curProfile = ruProfile;
+        curLocale = ruLocale;
     }
 
     public static void de() {
-        curProfile = deProfile;
+        curLocale = deLocale;
     }
 
     public static void fr() {
-        curProfile = frProfile;
+        curLocale = frLocale;
     }
 
     @Substitute
-    public Profile getProfile() {
-        return curProfile;
+    public Profile getProfile(ProfileUtils profileUtils) {
+        return profileUtils.fromLocale(curLocale);
     }
 }

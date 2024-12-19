@@ -28,7 +28,6 @@ import java.util.Locale;
 @Producer
 @Produce(value = ProfileUtilsImpl.class, keyType = ProfileUtils.class)
 @Produce(value = ProfileKitImpl.class, keyType = ProfileKit.class)
-
 @Produce(value = DefaultProfileListener.class, keyType = ProfileListener.class, substitute = Substitution.STUB)
 @Produce(value = DefaultProfileConfig.class, keyType = ProfileConfigPrototype.class, substitute = Substitution.STUB)
 public class ProfileProducer {
