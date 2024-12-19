@@ -19,6 +19,7 @@ package colesico.framework.ioc.codegen.model;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
+import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Produce;
 
 import javax.lang.model.element.Element;
@@ -37,6 +38,7 @@ public class DefaultFactoryElement extends FactoryElement {
                                  String factoryMethodBaseName,
                                  ScopeElement scope,
                                  ConditionElement condition,
+                                 SubstitutionElement substitution,
                                  Boolean polyproduce,
                                  String named,
                                  ClassifierType classed,
@@ -50,7 +52,7 @@ public class DefaultFactoryElement extends FactoryElement {
                 factoryMethodBaseName,
                 scope,
                 condition,
-                null,
+                substitution,
                 polyproduce,
                 null,
                 named,

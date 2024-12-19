@@ -43,6 +43,7 @@ public @interface Produce {
     String POST_PRODUCE_METHOD = "postProduce";
     String POST_CONSTRUCT_METHOD = "postConstruct";
     String KEY_TYPE_METHOD = "keyType";
+    String SUBSTITUTE_METHOD = "substitute";
 
     /**
      * Class of instance to be produced
