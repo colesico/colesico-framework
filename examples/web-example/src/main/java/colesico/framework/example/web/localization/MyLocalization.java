@@ -44,7 +44,7 @@ public class MyLocalization {
 
     // http://localhost:8080/my-localization/en
     public HtmlResponse en() {
-        profileKit.commitAll(new Locale("en", "GB"));
+        profileKit.commitProp(new Locale("en", "GB"));
         return HtmlResponse.of("English");
     }
 
@@ -55,7 +55,7 @@ public class MyLocalization {
 
     // http://localhost:8080/my-localization/inherit
     public HtmlResponse inherit() {
-        profileKit.commitAll(new Locale("ru", "RU"));
+        profileKit.commitProp(new Locale("ru", "RU"));
         return HtmlResponse.of(translations.hello3());
     }
 }

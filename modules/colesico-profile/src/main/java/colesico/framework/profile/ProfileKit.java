@@ -36,7 +36,7 @@ public interface ProfileKit {
         commit(preferences);
     }
 
-    default void commitAll(Object... properties) {
+    default void commitProp(Object... properties) {
         commit(List.of(properties));
     }
 
