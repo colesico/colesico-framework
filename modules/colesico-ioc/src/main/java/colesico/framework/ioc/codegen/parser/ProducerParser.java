@@ -25,6 +25,7 @@ import colesico.framework.ioc.codegen.model.*;
 import colesico.framework.ioc.conditional.Condition;
 import colesico.framework.ioc.conditional.Requires;
 import colesico.framework.ioc.conditional.Substitute;
+import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.listener.ListenersControl;
 import colesico.framework.ioc.listener.PostConstruct;
 import colesico.framework.ioc.listener.PostProduce;
@@ -339,7 +340,15 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         // Substitute
-        SubstitutionElement substitution = new SubstitutionElement(produceAnn.unwrap().substitute());
+        Substitution substitute = produceAnn.unwrap().substitute();
+        if (substitute == Substitution.REGULAR) {
+            AnnotationAssist<Substitute> subsAnn = iocletElement.getOriginProducer().getAnnotation(Substitute.class);
+            if (subsAnn != null) {
+                substitute = subsAnn.unwrap().value();
+            }
+        }
+        SubstitutionElement substitution = new SubstitutionElement(substitute);
+
 
         final DefaultFactoryElement factory =
                 new DefaultFactoryElement(

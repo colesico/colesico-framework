@@ -117,7 +117,8 @@ public class ProfileImpl implements Profile {
         public <T> T remove(Class<T> propertyClass) {
             T property = (T) properties.get(propertyClass);
             if (property != null) {
-                return (T) properties.remove(property);
+                preferences.remove(property);
+                return property;
             }
             return null;
         }
