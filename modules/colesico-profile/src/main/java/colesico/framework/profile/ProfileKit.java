@@ -18,12 +18,13 @@ public interface ProfileKit {
     /**
      * Writes profile preferences to data port
      */
-    void commit(Profile profile);
+    void commit(Profile profisle);
 
     default void commit(Object... preferences) {
         Profile profile = get();
+        Preferences preferenceApi = profile.getPreferences();
         for (Object pref : preferences) {
-            profile.setPreference(pref);
+            preferenceApi.set(pref);
         }
         commit(profile);
     }
