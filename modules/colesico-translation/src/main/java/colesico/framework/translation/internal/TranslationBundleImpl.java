@@ -18,19 +18,19 @@ package colesico.framework.translation.internal;
 
 import colesico.framework.translation.TextFormatter;
 import colesico.framework.translation.TranslationBundle;
-import colesico.framework.translation.assist.propbundle.PropertyBundle;
 
-import java.util.List;
+import java.util.Enumeration;
+import java.util.ResourceBundle;
 
 /**
- * Implementation based on underlying {@link PropertyBundle}
+ * Implementation based on underlying {@link ResourceBundle}
  */
 public final class TranslationBundleImpl implements TranslationBundle {
 
-    private final PropertyBundle bundle;
+    private final ResourceBundle bundle;
     private final TextFormatter formatter;
 
-    public TranslationBundleImpl(PropertyBundle bundle, TextFormatter formatter) {
+    public TranslationBundleImpl(ResourceBundle bundle, TextFormatter formatter) {
         this.bundle = bundle;
         this.formatter = formatter;
     }
@@ -52,9 +52,11 @@ public final class TranslationBundleImpl implements TranslationBundle {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(bundle.getBaseName()).append(":\n");
-        List<String> keys = bundle.getKeys();
-        for (String key : keys) {
+        String baseName = bundle.getBaseBundleName();
+        StringBuilder sb = new StringBuilder(baseName == null ? "?" : baseName).append(":\n");
+        Enumeration<String> keys = bundle.getKeys();
+        while (keys.hasMoreElements()) {
+            String key = keys.nextElement();
             sb.append(key).append('=').append(bundle.getString(key)).append(";\n");
         }
         return sb.toString();

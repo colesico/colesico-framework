@@ -16,7 +16,6 @@ module colesico.framework.translation {
     // API
     exports colesico.framework.translation;
     exports colesico.framework.translation.assist.lang;
-    exports colesico.framework.translation.assist.propbundle;
 
     // Internals
     exports colesico.framework.translation.internal to colesico.framework.ioc;

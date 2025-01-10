@@ -18,19 +18,18 @@ package colesico.framework.translation.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.resource.ResourceKit;
+import colesico.framework.translation.ResourceBundleControlFactory;
 import colesico.framework.translation.TextFormatter;
 import colesico.framework.translation.TranslationKit;
-import colesico.framework.translation.assist.propbundle.PropertyBundleCache;
-import colesico.framework.translation.assist.propbundle.PropertyBundleCacheSoft;
-import colesico.framework.translation.assist.propbundle.PropertyBundleFactory;
 
 import javax.inject.Singleton;
+import java.util.ResourceBundle;
 
 
 @Producer
 @Produce(TranslationKitImpl.class)
 @Produce(value = TextFormatterImpl.class, keyType = TextFormatter.class)
+@Produce(value = ResourceBundleControlFactoryImpl.class, keyType = ResourceBundleControlFactory.class)
 public class TranslationProducer {
 
     @Singleton
@@ -38,8 +37,4 @@ public class TranslationProducer {
         return impl;
     }
 
-    public PropertyBundleFactory getPropertyBundleFactory(ResourceKit resourceKit) {
-        PropertyBundleCache cache = new PropertyBundleCacheSoft(0.3);
-        return new PropertyBundleFactory(cache, rn -> resourceKit.rewrite(rn));
-    }
 }

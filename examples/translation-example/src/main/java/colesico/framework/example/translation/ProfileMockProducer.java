@@ -29,10 +29,10 @@ import java.util.Locale;
  */
 @Producer
 public class ProfileMockProducer {
-    private static final Locale deLocale = new Locale("de", "DE", "UNIX");
-    private static final Locale enLocale = new Locale("en", "GB");
-    private static final Locale ruLocale = new Locale("ru");
-    private static final Locale frLocale = new Locale("fr", "FR");
+    private static final Locale deLocale = Locale.of("de", "DE", "UNIX");
+    private static final Locale enLocale = Locale.of("en", "GB");
+    private static final Locale ruLocale = Locale.of("ru");
+    private static final Locale frLocale = Locale.of("fr", "FR");
 
 
     private static Locale curLocale = deLocale;

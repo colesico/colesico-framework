@@ -82,4 +82,13 @@ public class ProfileImpl implements Profile {
         return properties.values().iterator();
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Profile { ");
+        for (Map.Entry<Class<?>, ? super Object> me : properties.entrySet()) {
+            sb.append(me.getKey().getSimpleName()).append("=").append(me.getValue()).append("; ");
+        }
+        sb.append(" }");
+        return sb.toString();
+    }
 }

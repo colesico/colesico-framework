@@ -19,18 +19,17 @@ package colesico.framework.translation.internal;
 
 import colesico.framework.ioc.key.StringKey;
 import colesico.framework.ioc.scope.ThreadScope;
-import colesico.framework.translation.TextFormatter;
-import colesico.framework.translation.Translatable;
-import colesico.framework.translation.TranslationBundle;
-import colesico.framework.translation.TranslationKit;
-import colesico.framework.translation.assist.propbundle.PropertyBundle;
-import colesico.framework.translation.assist.propbundle.PropertyBundleFactory;
+import colesico.framework.translation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.Locale;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
+import java.util.spi.AbstractResourceBundleProvider;
+import java.util.spi.ResourceBundleProvider;
 
 /**
  * @author Vladlen Larionov
@@ -42,17 +41,16 @@ public class TranslationKitImpl implements TranslationKit {
 
     protected final Logger logger = LoggerFactory.getLogger(TranslationKit.class);
 
-    protected final Provider<Locale> localeProv;
     protected final ThreadScope threadScope;
 
-    protected final PropertyBundleFactory propBundleFactory;
-
+    protected final Provider<Locale> localeProv;
+    protected final ResourceBundleControlFactory controlFactory;
     protected final TextFormatter formatter;
 
-    public TranslationKitImpl(Provider<Locale> localeProv, ThreadScope threadScope, PropertyBundleFactory propBundleFactory, TextFormatter formatter) {
-        this.localeProv = localeProv;
+    public TranslationKitImpl(ThreadScope threadScope, Provider<Locale> localeProv, ResourceBundleControlFactory controlFactory, TextFormatter formatter) {
         this.threadScope = threadScope;
-        this.propBundleFactory = propBundleFactory;
+        this.localeProv = localeProv;
+        this.controlFactory = controlFactory;
         this.formatter = formatter;
     }
 
@@ -71,9 +69,12 @@ public class TranslationKitImpl implements TranslationKit {
             return translationBundle;
         }
 
-        PropertyBundle propBundle = propBundleFactory.getBundle(baseName, localeProv.get());
 
-        translationBundle = new TranslationBundleImpl(propBundle, formatter);
+
+        PropertyResourceBundle resourceBundle =
+                (PropertyResourceBundle) ResourceBundleProvider.getBundle(baseName, localeProv.get(), controlFactory.getControl());
+
+        translationBundle = new TranslationBundleImpl(resourceBundle, formatter);
 
         // Reference the bundle from thread scope to fast access in the same thread
         threadScope.put(scopeKey, translationBundle);
