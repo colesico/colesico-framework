@@ -47,15 +47,18 @@ public class ProfileImpl implements Profile {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T get(Class<T> propertyClass) {
         return (T) properties.get(propertyClass);
     }
 
+    @SuppressWarnings("unchecked")
     protected <T> T addAttribute(T property) {
         attributes.add(property);
         return (T) properties.put(property.getClass(), property);
     }
 
+    @SuppressWarnings("unchecked")
     protected <T> T addPreference(T property) {
         preferences.add(property);
         return (T) properties.put(property.getClass(), property);
@@ -74,7 +77,8 @@ public class ProfileImpl implements Profile {
     }
 
     @Override
-    public Iterator iterator() {
+
+    public Iterator<?> iterator() {
         return properties.values().iterator();
     }
 
