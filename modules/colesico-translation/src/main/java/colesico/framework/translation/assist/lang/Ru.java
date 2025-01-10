@@ -20,10 +20,17 @@ import colesico.framework.translation.Translation;
 
 import java.lang.annotation.*;
 
+/**
+ * Russian translation
+ */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 @Inherited
 @Translation("ru")
 public @interface Ru {
+
+    /**
+     * Текст для русского языка
+     */
     String value();
 }

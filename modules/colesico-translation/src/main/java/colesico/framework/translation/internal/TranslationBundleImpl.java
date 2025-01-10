@@ -16,10 +16,10 @@
 
 package colesico.framework.translation.internal;
 
+import colesico.framework.translation.TextFormatter;
 import colesico.framework.translation.TranslationBundle;
 import colesico.framework.translation.assist.propbundle.PropertyBundle;
 
-import java.text.MessageFormat;
 import java.util.List;
 
 /**
@@ -28,9 +28,11 @@ import java.util.List;
 public final class TranslationBundleImpl implements TranslationBundle {
 
     private final PropertyBundle bundle;
+    private final TextFormatter formatter;
 
-    public TranslationBundleImpl(PropertyBundle bundle) {
+    public TranslationBundleImpl(PropertyBundle bundle, TextFormatter formatter) {
         this.bundle = bundle;
+        this.formatter = formatter;
     }
 
     @Override
@@ -42,7 +44,7 @@ public final class TranslationBundleImpl implements TranslationBundle {
         }
 
         if (params.length > 0) {
-            return MessageFormat.format(translation, params);
+            return formatter.format(translation, params);
         }
 
         return translation;

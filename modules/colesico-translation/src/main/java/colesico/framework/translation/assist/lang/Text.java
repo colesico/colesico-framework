@@ -20,10 +20,16 @@ import colesico.framework.translation.Translation;
 
 import java.lang.annotation.*;
 
+/**
+ * Default translation
+ */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 @Inherited
 @Translation("")
 public @interface Text {
+    /**
+     * Default text for any language
+     */
     String value();
 }

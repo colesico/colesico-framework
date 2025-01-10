@@ -18,7 +18,7 @@ package colesico.framework.translation;
 
 /**
  * Is used to retrieve string translations.
- * Bundle should contains a translations only for the concrete locale
+ * Bundle should contain a translations only for the concrete locale
  */
 public interface TranslationBundle {
 
@@ -26,7 +26,7 @@ public interface TranslationBundle {
 
     /**
      * Returns the string by its key or the default value if string was not found.
-     * Also performs the parameter substitution with MessageFormat.format(...)
+     * Also performs the parameter substitution by default with MessageFormat.format(...)
      */
     //TODO: specify forrmater via config?
     String get(String key, String defaultValue, Object... params);

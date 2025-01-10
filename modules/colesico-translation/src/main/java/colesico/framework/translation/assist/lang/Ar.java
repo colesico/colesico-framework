@@ -20,17 +20,10 @@ import colesico.framework.translation.Translation;
 
 import java.lang.annotation.*;
 
-/**
- * English translation
- */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 @Inherited
-@Translation("en")
-public @interface En {
-
-    /**
-     * Text for English language
-     */
+@Translation("ar")
+public @interface Ar {
     String value();
 }

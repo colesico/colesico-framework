@@ -19,8 +19,9 @@ package colesico.framework.translation.internal;
 
 import colesico.framework.ioc.key.StringKey;
 import colesico.framework.ioc.scope.ThreadScope;
-import colesico.framework.translation.TranslationBundle;
+import colesico.framework.translation.TextFormatter;
 import colesico.framework.translation.Translatable;
+import colesico.framework.translation.TranslationBundle;
 import colesico.framework.translation.TranslationKit;
 import colesico.framework.translation.assist.propbundle.PropertyBundle;
 import colesico.framework.translation.assist.propbundle.PropertyBundleFactory;
@@ -46,10 +47,13 @@ public class TranslationKitImpl implements TranslationKit {
 
     protected final PropertyBundleFactory propBundleFactory;
 
-    public TranslationKitImpl(Provider<Locale> localeProv, ThreadScope threadScope, PropertyBundleFactory propBundleFactory) {
+    protected final TextFormatter formatter;
+
+    public TranslationKitImpl(Provider<Locale> localeProv, ThreadScope threadScope, PropertyBundleFactory propBundleFactory, TextFormatter formatter) {
         this.localeProv = localeProv;
         this.threadScope = threadScope;
         this.propBundleFactory = propBundleFactory;
+        this.formatter = formatter;
     }
 
     @Override
@@ -69,7 +73,7 @@ public class TranslationKitImpl implements TranslationKit {
 
         PropertyBundle propBundle = propBundleFactory.getBundle(baseName, localeProv.get());
 
-        translationBundle = new TranslationBundleImpl(propBundle);
+        translationBundle = new TranslationBundleImpl(propBundle, formatter);
 
         // Reference the bundle from thread scope to fast access in the same thread
         threadScope.put(scopeKey, translationBundle);

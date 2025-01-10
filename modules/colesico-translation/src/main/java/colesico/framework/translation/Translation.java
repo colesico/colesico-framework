@@ -26,5 +26,8 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 public @interface Translation {
+    /**
+     * Language code  (ru, en, es ...)
+     */
     String value();
 }
