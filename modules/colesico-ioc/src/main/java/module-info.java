@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import colesico.framework.ioc.ioclet.Ioclet;
-
 module colesico.framework.ioc {
 
     // Compile time
@@ -51,5 +49,5 @@ module colesico.framework.ioc {
     exports colesico.framework.ioc.codegen.generator;
     exports colesico.framework.assist.codegen.model;
 
-    uses Ioclet;
+    uses colesico.framework.ioc.ioclet.Ioclet;
 }
