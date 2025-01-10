@@ -20,16 +20,14 @@ package colesico.framework.translation.internal;
 import colesico.framework.ioc.key.StringKey;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.translation.*;
+import colesico.framework.translation.assist.propbundle.PropertyBundle;
+import colesico.framework.translation.assist.propbundle.PropertyBundleFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.Locale;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
-import java.util.spi.AbstractResourceBundleProvider;
-import java.util.spi.ResourceBundleProvider;
 
 /**
  * @author Vladlen Larionov
@@ -44,13 +42,13 @@ public class TranslationKitImpl implements TranslationKit {
     protected final ThreadScope threadScope;
 
     protected final Provider<Locale> localeProv;
-    protected final ResourceBundleControlFactory controlFactory;
+    protected final PropertyBundleFactory propertyBundleFactory;
     protected final TextFormatter formatter;
 
-    public TranslationKitImpl(ThreadScope threadScope, Provider<Locale> localeProv, ResourceBundleControlFactory controlFactory, TextFormatter formatter) {
+    public TranslationKitImpl(ThreadScope threadScope, Provider<Locale> localeProv, PropertyBundleFactory propertyBundleFactory, TextFormatter formatter) {
         this.threadScope = threadScope;
         this.localeProv = localeProv;
-        this.controlFactory = controlFactory;
+        this.propertyBundleFactory = propertyBundleFactory;
         this.formatter = formatter;
     }
 
@@ -70,11 +68,9 @@ public class TranslationKitImpl implements TranslationKit {
         }
 
 
+        PropertyBundle propertyBundle = propertyBundleFactory.getBundle(baseName, localeProv.get());
 
-        PropertyResourceBundle resourceBundle =
-                (PropertyResourceBundle) ResourceBundleProvider.getBundle(baseName, localeProv.get(), controlFactory.getControl());
-
-        translationBundle = new TranslationBundleImpl(resourceBundle, formatter);
+        translationBundle = new TranslationBundleImpl(propertyBundle, formatter);
 
         // Reference the bundle from thread scope to fast access in the same thread
         threadScope.put(scopeKey, translationBundle);

@@ -18,8 +18,8 @@ package colesico.framework.translation.internal;
 
 import colesico.framework.translation.TextFormatter;
 import colesico.framework.translation.TranslationBundle;
+import colesico.framework.translation.assist.propbundle.PropertyBundle;
 
-import java.util.Enumeration;
 import java.util.ResourceBundle;
 
 /**
@@ -27,10 +27,10 @@ import java.util.ResourceBundle;
  */
 public final class TranslationBundleImpl implements TranslationBundle {
 
-    private final ResourceBundle bundle;
+    private final PropertyBundle bundle;
     private final TextFormatter formatter;
 
-    public TranslationBundleImpl(ResourceBundle bundle, TextFormatter formatter) {
+    public TranslationBundleImpl(PropertyBundle bundle, TextFormatter formatter) {
         this.bundle = bundle;
         this.formatter = formatter;
     }
@@ -52,13 +52,12 @@ public final class TranslationBundleImpl implements TranslationBundle {
 
     @Override
     public String toString() {
-        String baseName = bundle.getBaseBundleName();
-        StringBuilder sb = new StringBuilder(baseName == null ? "?" : baseName).append(":\n");
-        Enumeration<String> keys = bundle.getKeys();
-        while (keys.hasMoreElements()) {
-            String key = keys.nextElement();
-            sb.append(key).append('=').append(bundle.getString(key)).append(";\n");
+        StringBuilder sb = new StringBuilder("TranslationBundle {\n");
+        sb.append("baseName=").append(bundle.getBaseName()).append("\n");
+        for (var key : bundle.getKeys()) {
+            sb.append(key).append('=').append(bundle.getString(key)).append("\n");
         }
+        sb.append("\n }");
         return sb.toString();
     }
 }
