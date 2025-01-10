@@ -20,7 +20,6 @@ import colesico.framework.assist.ServiceLocator;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.IocException;
-import colesico.framework.ioc.conditional.Condition;
 import colesico.framework.ioc.conditional.ConditionContext;
 import colesico.framework.ioc.ioclet.AdvancedIoc;
 import colesico.framework.ioc.ioclet.Factory;
@@ -30,7 +29,9 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Vladlen Larionov
@@ -130,8 +131,8 @@ public class IocBuilderImpl implements IocBuilder {
     protected List<Ioclet> lookupIoclets() {
         List<Ioclet> result = new ArrayList<>();
         log.debug("Lookup ioclets...");
-        ServiceLocator<Ioclet> locator = ServiceLocator.of(this.getClass(), Ioclet.class);
-        for (Ioclet ioclet : locator.getProviders()) {
+        ServiceLocator<Ioclet> ioclets = ServiceLocator.of(this.getClass(), Ioclet.class);
+        for (Ioclet ioclet : ioclets) {
             log.debug("Found ioclet '" + ioclet.getClass().getName() + "' with id: '" + ioclet.getId() + "'");
             result.add(ioclet);
         }

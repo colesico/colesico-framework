@@ -24,27 +24,20 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.security.AccessControlContext;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.ServiceConfigurationError;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
  * ServiceLoader alternative
  */
-public class ServiceLocator<S> {
+public class ServiceLocator<S> implements Iterable<S> {
 
     static final String SERVICE_CATALOG_PREFIX = "META-INF/services/";
 
     private final Class<S> service;
     private final ClassLoader classLoader;
     private final Predicate<Class<? extends S>> classFilter;
-    private final AccessControlContext acc;
 
     protected ServiceLocator(Class<?> caller, Class<S> service, ClassLoader classLoader, Predicate<Class<? extends S>> classFilter) {
         if (caller == null) {
@@ -67,10 +60,6 @@ public class ServiceLocator<S> {
             this.classLoader = ClassLoader.getSystemClassLoader();
         }
         this.classFilter = classFilter;
-
-        this.acc = (System.getSecurityManager() != null)
-            ? AccessController.getContext()
-            : null;
     }
 
     protected Set<String> getServiceProviderClassNames(URL serviceProvidersCatalogueUrl) {
@@ -140,12 +129,7 @@ public class ServiceLocator<S> {
     }
 
     public Set<? extends S> getProviders() {
-        if (acc == null) {
-            return getProvidersImpl(service.getName(), classLoader, classFilter);
-        } else {
-            PrivilegedAction<Set<? extends S>> action = () -> getProvidersImpl(service.getName(), classLoader, classFilter);
-            return AccessController.doPrivileged(action, acc);
-        }
+        return getProvidersImpl(service.getName(), classLoader, classFilter);
     }
 
     public static <S> ServiceLocator<S> of(Class<?> caller, Class<S> service, ClassLoader classLoader, Predicate<Class<? extends S>> classFilter) {
@@ -166,4 +150,9 @@ public class ServiceLocator<S> {
         return new ServiceLocator<>(caller, service, classLoader, null);
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public Iterator<S> iterator() {
+        return (Iterator<S>) getProviders().iterator();
+    }
 }

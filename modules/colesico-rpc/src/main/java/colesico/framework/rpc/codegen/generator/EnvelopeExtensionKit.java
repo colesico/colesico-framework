@@ -22,10 +22,10 @@ public class EnvelopeExtensionKit {
     public void lookup() {
         logger.debug("Lookup envelops extensions...");
         extensions.clear();
-        ServiceLocator<EnvelopeExtension> locator = ServiceLocator.of(this.getClass(), EnvelopeExtension.class, getClass().getClassLoader());
-        for (EnvelopeExtension plg : locator.getProviders()) {
-            extensions.add(plg);
-            logger.debug("Found envelope extension : " + plg.getClass().getName());
+        ServiceLocator<EnvelopeExtension> extensions = ServiceLocator.of(this.getClass(), EnvelopeExtension.class, getClass().getClassLoader());
+        for (EnvelopeExtension envExt : extensions) {
+            this.extensions.add(envExt);
+            logger.debug("Found envelope extension : " + envExt.getClass().getName());
         }
     }
 

@@ -18,17 +18,21 @@ package colesico.framework.service.codegen.modulator;
 
 import colesico.framework.assist.ServiceLocator;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
-import colesico.framework.service.codegen.model.*;
+import colesico.framework.service.codegen.model.ServiceElement;
+import colesico.framework.service.codegen.model.ServiceMethodElement;
 import colesico.framework.service.codegen.model.teleapi.TeleEntryElement;
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
-import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import colesico.framework.service.codegen.parser.RoundContext;
+import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Modulators management
@@ -50,9 +54,9 @@ public class ModulatorKit {
 
         // Lookup modulators with ServiceLocator
 
-        ServiceLocator<Modulator> locator = ServiceLocator.of(this.getClass(), Modulator.class, getClass().getClassLoader());
-        for (Modulator ext : locator.getProviders()) {
-            modulators.add(ext);
+        ServiceLocator<Modulator> modulators = ServiceLocator.of(this.getClass(), Modulator.class, getClass().getClassLoader());
+        for (Modulator ext : modulators) {
+            this.modulators.add(ext);
             Set<Class<? extends Annotation>> ma = ext.serviceAnnotations();
             if (ma != null) {
                 serviceAnnotations.addAll(ma);
@@ -62,7 +66,7 @@ public class ModulatorKit {
 
         // Sort by event listening order
 
-        modulators.sort((m1, m2) -> {
+        this.modulators.sort((m1, m2) -> {
             switch (m1.listenOrder(m2.getClass())) {
                 case BEFORE:
                     return -1;
