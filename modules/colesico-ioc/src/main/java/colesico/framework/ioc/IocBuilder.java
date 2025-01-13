@@ -16,6 +16,7 @@
 
 package colesico.framework.ioc;
 
+import colesico.framework.assist.spi.ServiceLocatorFactory;
 import colesico.framework.ioc.conditional.ConditionContext;
 import colesico.framework.ioc.internal.IocBuilderImpl;
 import colesico.framework.ioc.ioclet.Ioclet;
@@ -51,7 +52,13 @@ public interface IocBuilder {
     IocBuilder useIoclet(Ioclet ioclet);
 
     /**
+     * Use custom ServiceLocator to scan ioclets within classpath
+     */
+    IocBuilder useServiceLocatorFactory(ServiceLocatorFactory serviceLocatorFactory);
+
+    /**
      * Returns condition context for (pre)configure the conditions
+     *
      * @see colesico.framework.ioc.conditional.Requires
      */
     ConditionContext getConditionContext();

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.assist;
+package colesico.framework.assist.spi;
 
 
 import java.io.BufferedReader;
@@ -29,17 +29,17 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * ServiceLoader alternative
+ * {@link ServiceLoader} alternative
  */
-public class ServiceLocator<S> implements Iterable<S> {
+public class DefaultServiceLocator<S> implements ServiceLocator<S> {
 
     static final String SERVICE_CATALOG_PREFIX = "META-INF/services/";
 
-    private final Class<S> service;
-    private final ClassLoader classLoader;
-    private final Predicate<Class<? extends S>> classFilter;
+    protected final Class<S> service;
+    protected final ClassLoader classLoader;
+    protected final Predicate<Class<? extends S>> classFilter;
 
-    protected ServiceLocator(Class<?> caller, Class<S> service, ClassLoader classLoader, Predicate<Class<? extends S>> classFilter) {
+    protected DefaultServiceLocator(Class<?> caller, Class<S> service, ClassLoader classLoader, Predicate<Class<? extends S>> classFilter) {
         if (caller == null) {
             throw new ServiceConfigurationError("Caller class is null");
         }
@@ -128,31 +128,9 @@ public class ServiceLocator<S> implements Iterable<S> {
         return result;
     }
 
-    public Set<? extends S> getProviders() {
+    @Override
+    public Set<S> getProviders() {
         return getProvidersImpl(service.getName(), classLoader, classFilter);
     }
 
-    public static <S> ServiceLocator<S> of(Class<?> caller, Class<S> service, ClassLoader classLoader, Predicate<Class<? extends S>> classFilter) {
-        return new ServiceLocator<>(caller, service, classLoader, classFilter);
-    }
-
-    public static <S> ServiceLocator<S> of(Class<?> caller, Class<S> service, ClassLoader classLoader) {
-        return new ServiceLocator<>(caller, service, classLoader, null);
-    }
-
-    public static <S> ServiceLocator<S> of(Class<?> caller, Class<S> service, Predicate<Class<? extends S>> classFilter) {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        return new ServiceLocator<>(caller, service, classLoader, classFilter);
-    }
-
-    public static <S> ServiceLocator<S> of(Class<?> caller, Class<S> service) {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        return new ServiceLocator<>(caller, service, classLoader, null);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<S> iterator() {
-        return (Iterator<S>) getProviders().iterator();
-    }
 }

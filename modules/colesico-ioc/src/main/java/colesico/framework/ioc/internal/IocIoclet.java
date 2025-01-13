@@ -17,7 +17,6 @@
 package colesico.framework.ioc.internal;
 
 import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.conditional.Condition;
 import colesico.framework.ioc.ioclet.*;
 import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.scope.RefreshScope;

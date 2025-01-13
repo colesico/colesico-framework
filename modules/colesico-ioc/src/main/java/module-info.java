@@ -47,6 +47,7 @@ module colesico.framework.ioc {
     exports colesico.framework.ioc.codegen.parser;
     exports colesico.framework.ioc.codegen.generator;
     exports colesico.framework.assist.codegen.model;
+    exports colesico.framework.assist.spi;
 
     uses colesico.framework.ioc.ioclet.Ioclet;
 }

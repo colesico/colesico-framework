@@ -16,7 +16,9 @@
 
 package colesico.framework.ioc.internal;
 
-import colesico.framework.assist.ServiceLocator;
+import colesico.framework.assist.spi.DefaultServiceLocatorFactory;
+import colesico.framework.assist.spi.ServiceLocator;
+import colesico.framework.assist.spi.ServiceLocatorFactory;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.IocException;
@@ -40,6 +42,8 @@ import java.util.Map;
 public class IocBuilderImpl implements IocBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(IocBuilder.class);
+
+    protected ServiceLocatorFactory serviceLocatorFactory = DefaultServiceLocatorFactory.of();
 
     /**
      * Manually added ioclets
@@ -69,6 +73,12 @@ public class IocBuilderImpl implements IocBuilder {
     @Override
     public IocBuilderImpl useIoclet(Ioclet ioclet) {
         extraIoclets.add(ioclet);
+        return this;
+    }
+
+    @Override
+    public IocBuilder useServiceLocatorFactory(ServiceLocatorFactory serviceLocatorFactory) {
+        this.serviceLocatorFactory = serviceLocatorFactory;
         return this;
     }
 
@@ -131,7 +141,7 @@ public class IocBuilderImpl implements IocBuilder {
     protected List<Ioclet> lookupIoclets() {
         List<Ioclet> result = new ArrayList<>();
         log.debug("Lookup ioclets...");
-        ServiceLocator<Ioclet> ioclets = ServiceLocator.of(this.getClass(), Ioclet.class);
+        ServiceLocator<Ioclet> ioclets = serviceLocatorFactory.locator(this.getClass(), Ioclet.class);
         for (Ioclet ioclet : ioclets) {
             log.debug("Found ioclet '" + ioclet.getClass().getName() + "' with id: '" + ioclet.getId() + "'");
             result.add(ioclet);

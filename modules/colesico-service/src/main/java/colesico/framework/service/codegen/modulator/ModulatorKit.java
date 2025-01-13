@@ -16,7 +16,9 @@
 
 package colesico.framework.service.codegen.modulator;
 
-import colesico.framework.assist.ServiceLocator;
+import colesico.framework.assist.spi.DefaultServiceLocatorFactory;
+import colesico.framework.assist.spi.ServiceLocator;
+import colesico.framework.assist.spi.ServiceLocatorFactory;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.ServiceMethodElement;
@@ -43,6 +45,8 @@ public class ModulatorKit {
 
     protected final Logger logger = LoggerFactory.getLogger(ModulatorKit.class);
 
+    protected final ServiceLocatorFactory serviceLocatorFactory = DefaultServiceLocatorFactory.of();
+
     public ModulatorKit() {
         modulators = new ArrayList<>();
         serviceAnnotations = new HashSet<>();
@@ -54,7 +58,7 @@ public class ModulatorKit {
 
         // Lookup modulators with ServiceLocator
 
-        ServiceLocator<Modulator> modulators = ServiceLocator.of(this.getClass(), Modulator.class, getClass().getClassLoader());
+        ServiceLocator<Modulator> modulators = serviceLocatorFactory.locator(this.getClass(), Modulator.class, getClass().getClassLoader());
         for (Modulator ext : modulators) {
             this.modulators.add(ext);
             Set<Class<? extends Annotation>> ma = ext.serviceAnnotations();
