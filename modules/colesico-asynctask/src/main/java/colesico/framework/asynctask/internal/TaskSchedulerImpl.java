@@ -6,8 +6,8 @@ import colesico.framework.asynctask.TaskSchedulerConfigPrototype;
 import colesico.framework.asynctask.registry.TaskRegistry;
 import colesico.framework.asynctask.registry.TaskWorker;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.util.Collection;
 import java.util.concurrent.*;
 

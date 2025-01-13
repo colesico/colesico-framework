@@ -25,7 +25,7 @@ import colesico.framework.restlet.teleapi.reader.*;
 import colesico.framework.security.Principal;
 import colesico.framework.telehttp.reader.*;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;

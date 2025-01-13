@@ -19,9 +19,9 @@ package colesico.framework.example.jdbc;
 import colesico.framework.service.Service;
 import colesico.framework.transaction.Transactional;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

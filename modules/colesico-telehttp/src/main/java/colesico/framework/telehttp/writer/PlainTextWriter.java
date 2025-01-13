@@ -4,9 +4,9 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.telehttp.HttpTWContext;
 import colesico.framework.telehttp.HttpTeleWriter;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 @Singleton
 public final class PlainTextWriter<C extends HttpTWContext> extends HttpTeleWriter<Object, C> {

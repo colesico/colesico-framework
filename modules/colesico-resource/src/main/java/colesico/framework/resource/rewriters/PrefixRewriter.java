@@ -23,7 +23,7 @@ import colesico.framework.resource.RewritingPhase;
 import colesico.framework.resource.assist.PathTrie;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Rewrites the path by a partial prefix match.

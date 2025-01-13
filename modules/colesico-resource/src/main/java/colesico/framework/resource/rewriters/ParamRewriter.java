@@ -21,7 +21,7 @@ import colesico.framework.resource.RewriterRegistry;
 import colesico.framework.resource.RewritingPhase;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;

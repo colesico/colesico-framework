@@ -3,7 +3,7 @@ package colesico.framework.telehttp;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.NamedKey;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 public final class OriginFactory {

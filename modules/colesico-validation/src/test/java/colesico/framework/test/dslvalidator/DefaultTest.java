@@ -24,7 +24,7 @@ import colesico.framework.validation.Validator;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 public class DefaultTest {
 

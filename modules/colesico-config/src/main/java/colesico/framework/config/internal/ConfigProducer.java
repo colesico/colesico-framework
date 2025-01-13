@@ -21,7 +21,7 @@ import colesico.framework.config.PropertiesSource;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Producer
 @Produce(PropertiesSource.class)

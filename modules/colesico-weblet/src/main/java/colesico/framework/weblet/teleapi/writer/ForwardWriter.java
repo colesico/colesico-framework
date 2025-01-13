@@ -23,8 +23,8 @@ import colesico.framework.weblet.RedirectResponse;
 import colesico.framework.weblet.teleapi.WebletTWContext;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 /**
  * Performs forward operation

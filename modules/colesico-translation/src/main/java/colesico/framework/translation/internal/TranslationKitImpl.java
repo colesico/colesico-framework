@@ -26,8 +26,8 @@ import colesico.framework.translation.assist.propbundle.PropertyBundleFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 import java.util.Locale;
 import java.util.ServiceLoader;
 

@@ -18,7 +18,7 @@ package colesico.framework.ioc.production;
 
 import colesico.framework.ioc.key.ClassedKey;
 
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 import java.lang.annotation.*;
 
 /**
@@ -28,7 +28,7 @@ import java.lang.annotation.*;
  *
  * @author Vladlen Larionov
  * @see ClassedKey
- * @see javax.inject.Named
+ * @see jakarta.inject.Named
  */
 @Qualifier
 @Documented

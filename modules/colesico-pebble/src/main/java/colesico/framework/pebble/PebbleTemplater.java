@@ -32,8 +32,8 @@ import io.pebbletemplates.pebble.error.PebbleException;
 import io.pebbletemplates.pebble.template.PebbleTemplate;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;

@@ -2,8 +2,8 @@ package colesico.framework.security;
 
 import colesico.framework.service.InvocationContext;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * Checks that the current principal exists

@@ -22,7 +22,7 @@ import colesico.framework.restlet.teleapi.RestletJsonConverter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.io.Reader;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;

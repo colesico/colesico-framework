@@ -21,7 +21,7 @@ import colesico.framework.transaction.TransactionPropagation;
 import colesico.framework.transaction.Transactional;
 import colesico.framework.transaction.TransactionalShell;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 /**
  * An application service.

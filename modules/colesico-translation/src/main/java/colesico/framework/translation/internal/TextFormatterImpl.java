@@ -2,7 +2,7 @@ package colesico.framework.translation.internal;
 
 import colesico.framework.translation.TextFormatter;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.text.MessageFormat;
 
 @Singleton

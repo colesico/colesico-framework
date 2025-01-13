@@ -26,7 +26,7 @@ import colesico.framework.profile.ProfileUtils;
 import colesico.framework.resource.ResourceOptionsPrototype;
 import colesico.framework.resource.rewriters.ParamRewriter;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.List;
 import java.util.Locale;
 

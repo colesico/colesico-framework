@@ -19,7 +19,7 @@ package colesico.framework.weblet.teleapi;
 import colesico.framework.http.HttpContext;
 import colesico.framework.telehttp.HttpTeleWriter;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 /**
  * Weblet writer base class

@@ -28,7 +28,7 @@ import colesico.framework.weblet.*;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.writer.*;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Producer
 @Produce(StringWriter.class)

@@ -20,7 +20,7 @@ import colesico.framework.http.*;
 import colesico.framework.service.ApplicationException;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Base64;

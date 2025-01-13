@@ -5,8 +5,8 @@ import colesico.framework.restlet.teleapi.RestletTWContext;
 import colesico.framework.restlet.teleapi.writer.AbstractExceptionWriter;
 import colesico.framework.restlet.teleapi.writer.ObjectWriter;
 
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 /**
  * Writer to send custom exception to client

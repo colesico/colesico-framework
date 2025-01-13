@@ -4,8 +4,8 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.profile.*;
 import colesico.framework.teleapi.DataPort;
 
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 import java.util.List;
 
 @Singleton

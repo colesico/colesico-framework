@@ -28,7 +28,7 @@ import colesico.framework.transaction.TransactionalShell;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.sql.Connection;
 
 import static colesico.framework.ioc.conditional.Substitution.STUB;

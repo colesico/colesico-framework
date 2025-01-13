@@ -21,7 +21,7 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.security.*;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Producer
 @Produce(DefaultSecurityKit.class)

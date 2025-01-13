@@ -30,8 +30,8 @@ import colesico.framework.service.Service;
 import colesico.framework.transaction.Transactional;
 import org.jdbi.v3.core.Handle;
 
-import javax.inject.Named;
-import javax.inject.Provider;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
 import java.util.Optional;
 
 @Service

@@ -3,8 +3,8 @@ package colesico.framework.telehttp.origin;
 import colesico.framework.router.RouterContext;
 import colesico.framework.telehttp.Origin;
 
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class RouteOrigin implements Origin {

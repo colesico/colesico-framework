@@ -25,7 +25,7 @@ import colesico.framework.translation.assist.propbundle.PropertyBundleCache;
 import colesico.framework.translation.assist.propbundle.PropertyBundleCacheSoft;
 import colesico.framework.translation.assist.propbundle.PropertyBundleFactory;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 
 @Producer

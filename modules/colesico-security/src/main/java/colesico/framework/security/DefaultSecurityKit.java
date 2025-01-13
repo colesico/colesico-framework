@@ -23,8 +23,8 @@ import colesico.framework.teleapi.DataPort;
 import colesico.framework.teleapi.TRContext;
 import colesico.framework.teleapi.TWContext;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 /**
  * Security kit default implementation.

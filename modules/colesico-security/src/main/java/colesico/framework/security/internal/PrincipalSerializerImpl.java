@@ -19,7 +19,7 @@ package colesico.framework.security.internal;
 import colesico.framework.security.DefaultPrincipal;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.nio.charset.StandardCharsets;
 
 /**

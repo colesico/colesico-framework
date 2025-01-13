@@ -25,7 +25,7 @@ import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.production.Supplier;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 import java.util.Map;
 
 /**

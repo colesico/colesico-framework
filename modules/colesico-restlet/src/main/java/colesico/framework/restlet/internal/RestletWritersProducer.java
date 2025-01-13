@@ -28,7 +28,7 @@ import colesico.framework.security.PrincipalRequiredException;
 import colesico.framework.telehttp.writer.PrincipalWriter;
 import colesico.framework.telehttp.writer.ProfileWriter;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Producer
 @Produce(RestletExceptionWriter.class)

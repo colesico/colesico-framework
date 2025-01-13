@@ -16,7 +16,7 @@
 
 package colesico.framework.example.ioc.named;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 public class MainBeanNMD {
 

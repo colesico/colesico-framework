@@ -3,7 +3,7 @@ package colesico.framework.example.asynctask;
 import colesico.framework.asynctask.TaskExecutor;
 import colesico.framework.service.Service;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.Collection;
 import java.util.concurrent.Future;
 

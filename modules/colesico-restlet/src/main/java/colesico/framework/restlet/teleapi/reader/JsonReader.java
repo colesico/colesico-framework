@@ -13,9 +13,9 @@ import colesico.framework.telehttp.OriginFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 import java.io.InputStream;
 
 import static colesico.framework.http.HttpMethod.*;

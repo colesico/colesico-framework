@@ -102,7 +102,7 @@
         <undertow.version>2.3.18.Final</undertow.version>
         <kryo.version>5.6.2</kryo.version>
 
-        <javax.inject.version>1</javax.inject.version>
+        <jakarta.inject-api.version>2.0.1</jakarta.inject-api.version>
 
         <!-- Tests -->
         <org-testng.version>7.10.2</org-testng.version>

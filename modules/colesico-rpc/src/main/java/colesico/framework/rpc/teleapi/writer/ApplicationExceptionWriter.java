@@ -5,7 +5,7 @@ import colesico.framework.rpc.teleapi.RpcTWContext;
 import colesico.framework.rpc.teleapi.RpcTeleWriter;
 import colesico.framework.service.ApplicationException;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class ApplicationExceptionWriter implements RpcTeleWriter<ApplicationException> {

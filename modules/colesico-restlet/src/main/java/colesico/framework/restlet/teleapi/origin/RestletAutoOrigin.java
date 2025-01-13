@@ -5,8 +5,8 @@ import colesico.framework.http.HttpRequest;
 import colesico.framework.restlet.teleapi.RestletOrigin;
 import colesico.framework.router.RouterContext;
 
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class RestletAutoOrigin implements RestletOrigin {

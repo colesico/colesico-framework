@@ -27,7 +27,7 @@ import colesico.framework.teleapi.TeleMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;

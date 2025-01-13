@@ -6,7 +6,7 @@ import colesico.framework.rpc.teleapi.RpcTeleReader;
 import colesico.framework.security.Principal;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class RpcPrincipalReader implements RpcTeleReader<Principal> {

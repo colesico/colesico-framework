@@ -27,7 +27,7 @@ public class MainBeanHWD {
     private final HelloBean helloService;
 
     /**
-     * Annotation {@link javax.inject.Inject}
+     * Annotation {@link jakarta.inject.Inject}
      * is not needed because the constructor is the only one
      */
     public MainBeanHWD(HelloBean helloService) {

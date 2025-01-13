@@ -8,8 +8,8 @@ import colesico.framework.rpc.clientapi.RpcResponseHandler;
 import colesico.framework.rpc.rpcgear.httpbase.HttpRpcClient;
 import colesico.framework.rpc.rpcgear.httpbase.HttpRpcClientOptionsPrototype;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.io.InputStream;
 import java.io.OutputStream;
 

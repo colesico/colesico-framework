@@ -16,7 +16,7 @@
 
 package colesico.framework.ioc.ioclet;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 /**
  * Provider default implementation

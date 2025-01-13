@@ -6,7 +6,7 @@ import colesico.framework.rpc.teleapi.BasicEnvelope;
 import colesico.framework.rpc.teleapi.RpcTWContext;
 import colesico.framework.rpc.teleapi.RpcTeleWriter;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class RpcProfileWriter implements RpcTeleWriter<Profile> {

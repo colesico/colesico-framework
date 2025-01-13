@@ -5,7 +5,7 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Producer to register custom exception writer

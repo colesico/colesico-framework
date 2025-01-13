@@ -16,7 +16,7 @@
 
 package colesico.framework.teleapi;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 /**
  * Unified facade for tele-method invocations.

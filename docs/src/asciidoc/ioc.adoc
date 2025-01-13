@@ -56,7 +56,7 @@ Ioc ioc = IocBuilder.create().build();
 Obtaining instances with injected dependencies is done using these methods:
 
 * instance - returns class instance
-* provider - returns class instance provider (javax.inject.Provider<>), is used to "deferred" instance obtaining/creation.
+* provider - returns class instance provider (jakarta.inject.Provider<>), is used to "deferred" instance obtaining/creation.
 * supplier - returns class instance supplier, is used to "deferred" instance obtaining/creation with the ability to pass a  <<messages,message>>.
 * polysupplier - returns chain of class instance suppliers (colesico.framework.ioc.production.Polysupplier<>)
 

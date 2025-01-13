@@ -16,7 +16,7 @@
 
 package colesico.framework.example.ioc.scope;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Here is Singleton definition directly on class

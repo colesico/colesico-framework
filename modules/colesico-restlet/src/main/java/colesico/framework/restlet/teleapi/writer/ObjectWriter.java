@@ -3,7 +3,7 @@ package colesico.framework.restlet.teleapi.writer;
 import colesico.framework.http.HttpContext;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 abstract public class ObjectWriter extends RestletTeleWriter<Object> {
 

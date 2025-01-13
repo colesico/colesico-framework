@@ -30,7 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 import java.sql.ResultSet;

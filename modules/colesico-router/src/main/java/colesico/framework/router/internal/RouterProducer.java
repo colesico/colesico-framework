@@ -24,7 +24,7 @@ import colesico.framework.router.RouterBuilder;
 import colesico.framework.router.RouterContext;
 import colesico.framework.router.RouterOptions;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 
 /**

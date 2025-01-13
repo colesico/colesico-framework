@@ -10,8 +10,8 @@ import colesico.framework.rpc.teleapi.RpcResponse;
 import com.palantir.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 

@@ -16,7 +16,7 @@
 
 package colesico.framework.ioc.message;
 
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 import java.lang.annotation.*;
 
 /**

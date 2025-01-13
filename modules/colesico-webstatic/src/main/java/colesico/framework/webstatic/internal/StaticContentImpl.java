@@ -24,7 +24,7 @@ import colesico.framework.webstatic.StaticContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 import java.io.InputStream;
 import java.io.OutputStream;
 

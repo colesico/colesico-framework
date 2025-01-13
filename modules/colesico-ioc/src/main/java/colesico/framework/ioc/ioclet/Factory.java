@@ -20,7 +20,7 @@ import colesico.framework.ioc.production.Polyproduce;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.production.Supplier;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 /**
  * Factory superclass. Should be expanded by all the factories.

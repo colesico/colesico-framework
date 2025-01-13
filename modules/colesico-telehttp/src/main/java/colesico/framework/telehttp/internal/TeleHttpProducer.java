@@ -7,7 +7,7 @@ import colesico.framework.telehttp.PrincipalHttpConfigPrototype;
 import colesico.framework.telehttp.ProfileHttpConfigPrototype;
 import colesico.framework.telehttp.assist.CSRFProtector;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.nio.charset.StandardCharsets;
 
 @Producer

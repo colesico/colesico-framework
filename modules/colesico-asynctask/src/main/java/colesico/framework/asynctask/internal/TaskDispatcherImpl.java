@@ -20,7 +20,7 @@ import colesico.framework.asynctask.TaskDispatcher;
 import colesico.framework.asynctask.registry.TaskRegistry;
 import colesico.framework.asynctask.registry.TaskWorker;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Collection;
 
 @Singleton

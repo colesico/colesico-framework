@@ -7,7 +7,7 @@ import colesico.framework.jdbc.JdbcConditions;
 import colesico.framework.jdbc.JdbcTransactionalShell;
 import colesico.framework.transaction.TransactionalShell;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.sql.DataSource;
 import java.sql.Connection;
 

@@ -4,7 +4,7 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.ClassedKey;
 import colesico.framework.rpc.RpcError;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class RpcErrorHandlerFactory {

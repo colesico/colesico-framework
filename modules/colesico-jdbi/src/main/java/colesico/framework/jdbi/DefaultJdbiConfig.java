@@ -20,7 +20,7 @@ import colesico.framework.config.Config;
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.production.Polysupplier;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.sql.DataSource;
 
 import static colesico.framework.ioc.conditional.Substitution.STUB;

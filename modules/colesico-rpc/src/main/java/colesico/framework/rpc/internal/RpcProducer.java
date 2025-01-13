@@ -25,7 +25,7 @@ import colesico.framework.rpc.teleapi.writer.RpcProfileWriter;
 import colesico.framework.security.Principal;
 import colesico.framework.service.ApplicationException;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Producer
 @Produce(RpcErrorHandlerFactory.class)

@@ -28,7 +28,7 @@ import colesico.framework.example.config.source.*;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polysupplier;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 public class MainBean {
 

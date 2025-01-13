@@ -6,8 +6,8 @@ import colesico.framework.http.HttpRequest;
 import colesico.framework.router.RouterContext;
 import colesico.framework.weblet.teleapi.WebletOrigin;
 
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class WebletAutoOrigin implements WebletOrigin {

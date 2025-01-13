@@ -5,7 +5,7 @@ import colesico.framework.restlet.RestletError;
 import colesico.framework.restlet.teleapi.RestletTWContext;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 /**
  * Exception writer helper

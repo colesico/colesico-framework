@@ -16,7 +16,7 @@
 
 package colesico.framework.example.ioc.named;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class NamedBean {
 

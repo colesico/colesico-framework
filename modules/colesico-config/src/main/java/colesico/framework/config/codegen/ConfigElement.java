@@ -56,7 +56,7 @@ public class ConfigElement {
 
     /**
      * Scoped annotation type
-     * @see javax.inject.Singleton
+     * @see jakarta.inject.Singleton
      * @see colesico.framework.ioc.scope.Unscoped
      * @see colesico.framework.ioc.scope.CustomScope
      */

@@ -5,7 +5,7 @@ import colesico.framework.http.HttpRequest;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.teleapi.TeleWriter;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 /**
  * Basic tel-writer for interaction over http

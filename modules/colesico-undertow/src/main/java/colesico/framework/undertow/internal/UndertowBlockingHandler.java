@@ -12,7 +12,7 @@ import colesico.framework.router.Router;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * This processor is used to perform blocking requests processing and

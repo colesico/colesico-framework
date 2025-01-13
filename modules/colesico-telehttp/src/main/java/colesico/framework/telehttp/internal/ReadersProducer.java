@@ -7,7 +7,7 @@ import colesico.framework.telehttp.reader.*;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;

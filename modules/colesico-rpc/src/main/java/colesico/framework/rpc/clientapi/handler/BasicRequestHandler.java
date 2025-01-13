@@ -7,8 +7,8 @@ import colesico.framework.rpc.teleapi.BasicEnvelope;
 import colesico.framework.security.Principal;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class BasicRequestHandler implements RpcRequestHandler<BasicEnvelope> {

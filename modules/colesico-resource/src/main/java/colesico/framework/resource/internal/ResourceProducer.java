@@ -23,7 +23,7 @@ import colesico.framework.resource.rewriters.localization.L10nRewriter;
 import colesico.framework.resource.rewriters.localization.L10nRewriterConfigPrototype;
 import colesico.framework.resource.rewriters.PrefixRewriter;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 
 @Producer

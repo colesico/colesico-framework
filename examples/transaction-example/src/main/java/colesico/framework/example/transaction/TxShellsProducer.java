@@ -19,8 +19,8 @@ package colesico.framework.example.transaction;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.transaction.TransactionalShell;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 
 /**
  * Transactional shells producer

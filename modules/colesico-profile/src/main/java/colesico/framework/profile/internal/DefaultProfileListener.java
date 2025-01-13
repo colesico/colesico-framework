@@ -19,7 +19,7 @@ package colesico.framework.profile.internal;
 import colesico.framework.profile.Profile;
 import colesico.framework.profile.ProfileListener;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Default profile listener

@@ -4,8 +4,8 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.restlet.teleapi.RestletTWContext;
 import colesico.framework.security.PrincipalRequiredException;
 
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class PrincipalRequiredExceptionWriter extends AbstractExceptionWriter<PrincipalRequiredException> {

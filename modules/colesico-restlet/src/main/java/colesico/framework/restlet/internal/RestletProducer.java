@@ -25,8 +25,8 @@ import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.origin.RestletAutoOrigin;
 import colesico.framework.telehttp.Origin;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 
 
 /**

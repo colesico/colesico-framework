@@ -6,7 +6,7 @@ import colesico.framework.router.RouterBuilder;
 import colesico.framework.router.RouterOptions;
 import colesico.framework.rpc.teleapi.RpcExchange;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Config
 public class RpcRouterOptions extends RouterOptions {

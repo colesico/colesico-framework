@@ -24,7 +24,7 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.profile.ProfileUtils;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Locale;
 
 @Producer

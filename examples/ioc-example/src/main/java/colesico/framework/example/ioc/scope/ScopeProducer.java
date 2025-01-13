@@ -21,7 +21,7 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.RefreshScoped;
 import colesico.framework.ioc.scope.ThreadScoped;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Producer
 @Produce(Singleton1.class)

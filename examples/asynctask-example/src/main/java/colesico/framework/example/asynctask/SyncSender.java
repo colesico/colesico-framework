@@ -19,7 +19,7 @@ package colesico.framework.example.asynctask;
 import colesico.framework.asynctask.TaskDispatcher;
 import colesico.framework.service.Service;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.Collection;
 
 @Service

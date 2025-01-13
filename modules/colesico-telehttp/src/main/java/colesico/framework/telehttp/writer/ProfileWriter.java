@@ -27,8 +27,8 @@ import colesico.framework.telehttp.HttpTeleWriter;
 import colesico.framework.telehttp.ProfileHttpConfigPrototype;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
 
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Map;

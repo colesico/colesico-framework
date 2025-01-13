@@ -19,7 +19,7 @@ package colesico.framework.example.ioc.named;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 @Producer
 @Produce(value = NamedBean.class, named = "default")

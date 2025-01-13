@@ -20,7 +20,7 @@ package colesico.framework.ioc.key;
  * The key for obtaining an instance from the IoC container by instance class and name.
  *
  * @author Vladlen Larionov
- * @see javax.inject.Named
+ * @see jakarta.inject.Named
  */
 public final class NamedKey<T> implements Key<T> {
 

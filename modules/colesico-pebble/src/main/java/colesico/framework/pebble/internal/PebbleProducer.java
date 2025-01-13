@@ -25,7 +25,7 @@ import colesico.framework.weblet.HtmlRenderer;
 import colesico.framework.weblet.ViewResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 
 /**

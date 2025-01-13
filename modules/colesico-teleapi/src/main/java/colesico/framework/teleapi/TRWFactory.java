@@ -3,8 +3,8 @@ package colesico.framework.teleapi;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.ClassedKey;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.lang.reflect.Type;
 
 /**

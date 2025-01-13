@@ -16,8 +16,8 @@
 
 package colesico.framework.transaction;
 
-import javax.inject.Named;
-import javax.inject.Qualifier;
+import jakarta.inject.Named;
+import jakarta.inject.Qualifier;
 import java.lang.annotation.*;
 
 @Qualifier

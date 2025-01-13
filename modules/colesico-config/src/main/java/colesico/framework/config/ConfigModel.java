@@ -45,7 +45,7 @@ public enum ConfigModel {
      *
      * @see ConfigPrototype
      * @see Polysupplier
-     * @see javax.inject.Named
+     * @see jakarta.inject.Named
      * @see Classed
      */
     POLYVARIANT,

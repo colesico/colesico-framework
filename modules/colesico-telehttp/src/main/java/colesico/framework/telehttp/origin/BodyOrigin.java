@@ -5,8 +5,8 @@ import colesico.framework.http.HttpException;
 import colesico.framework.telehttp.Origin;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
 
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 import java.io.InputStream;
 
 @Singleton

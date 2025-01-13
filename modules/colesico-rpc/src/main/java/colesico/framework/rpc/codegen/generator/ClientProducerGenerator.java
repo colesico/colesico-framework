@@ -8,7 +8,7 @@ import com.palantir.javapoet.MethodSpec;
 import com.palantir.javapoet.TypeName;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 public class ClientProducerGenerator extends FrameworkAbstractGenerator {
 

@@ -8,7 +8,7 @@ import colesico.framework.security.Principal;
 import colesico.framework.security.SecurityKit;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Collection;
 
 @Singleton

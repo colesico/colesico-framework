@@ -8,8 +8,8 @@ import colesico.framework.transaction.TransactionalShell;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 
 /**
  * To produce extra jdbi handle instance and tx shell

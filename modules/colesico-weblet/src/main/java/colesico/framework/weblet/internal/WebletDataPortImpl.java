@@ -20,7 +20,7 @@ import colesico.framework.teleapi.TRWFactory;
 import colesico.framework.weblet.WebletResponse;
 import colesico.framework.weblet.teleapi.*;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.lang.reflect.Type;
 
 @Singleton

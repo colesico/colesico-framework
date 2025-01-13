@@ -21,7 +21,7 @@ import colesico.framework.resource.ResourceOptionsPrototype;
 import colesico.framework.resource.RewriterRegistry;
 import colesico.framework.resource.rewriters.ParamRewriter;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Config
 public class ResourceConf extends ResourceOptionsPrototype {

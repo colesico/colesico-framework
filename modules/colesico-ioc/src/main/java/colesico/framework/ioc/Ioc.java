@@ -21,7 +21,7 @@ import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.production.Supplier;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 /**
  * Inversion of control container  (IoC container)

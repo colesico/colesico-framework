@@ -4,7 +4,7 @@ import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.RpcException;
 import colesico.framework.rpc.clientapi.RpcErrorHandler;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class BasicRpcErrorHandler implements RpcErrorHandler<RpcError> {

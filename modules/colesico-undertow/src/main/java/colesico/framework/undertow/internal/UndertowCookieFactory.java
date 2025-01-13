@@ -5,7 +5,7 @@ import colesico.framework.http.HttpCookie;
 import io.undertow.server.handlers.Cookie;
 import io.undertow.server.handlers.CookieImpl;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class UndertowCookieFactory implements CookieFactory {

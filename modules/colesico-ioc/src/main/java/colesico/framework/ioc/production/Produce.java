@@ -68,7 +68,7 @@ public @interface Produce {
     /**
      * Analogue of the @Named annotation
      *
-     * @see javax.inject.Named
+     * @see jakarta.inject.Named
      */
     String named() default "";
 
@@ -82,7 +82,7 @@ public @interface Produce {
     /**
      * Override class based scoped declaration
      *
-     * @see javax.inject.Singleton
+     * @see jakarta.inject.Singleton
      * @see colesico.framework.ioc.scope.ThreadScoped
      * @see Unscoped
      */

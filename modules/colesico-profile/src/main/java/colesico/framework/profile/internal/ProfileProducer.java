@@ -21,7 +21,7 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.profile.*;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 import java.util.Locale;
 
 

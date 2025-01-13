@@ -6,7 +6,7 @@ import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.jdbi.AbstractJdbiConfig;
 import colesico.framework.jdbi.JdbiOptionsPrototype;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.sql.DataSource;
 
 @Config

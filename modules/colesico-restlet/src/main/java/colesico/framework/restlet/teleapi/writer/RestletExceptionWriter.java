@@ -5,8 +5,8 @@ import colesico.framework.restlet.RestletException;
 import colesico.framework.restlet.teleapi.RestletTWContext;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class RestletExceptionWriter extends RestletTeleWriter<RestletException> {

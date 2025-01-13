@@ -3,8 +3,8 @@ package colesico.framework.restlet.teleapi.writer;
 import colesico.framework.restlet.teleapi.RestletTWContext;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * Proxy for use PlainTextWriter as custom restlet writer

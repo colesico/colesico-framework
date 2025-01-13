@@ -5,7 +5,7 @@ import colesico.framework.telehttp.HttpTeleWriter;
 import colesico.framework.weblet.ViewResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 /**
  * This writer shod be implemented by concrete view renderer  (for different templating support)

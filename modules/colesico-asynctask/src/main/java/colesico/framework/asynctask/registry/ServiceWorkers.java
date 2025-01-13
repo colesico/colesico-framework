@@ -16,7 +16,7 @@
 
 package colesico.framework.asynctask.registry;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 abstract public class ServiceWorkers<S> {
 

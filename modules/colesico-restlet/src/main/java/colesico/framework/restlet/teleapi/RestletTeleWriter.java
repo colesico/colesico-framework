@@ -19,7 +19,7 @@ package colesico.framework.restlet.teleapi;
 import colesico.framework.http.HttpContext;
 import colesico.framework.telehttp.HttpTeleWriter;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 abstract public class RestletTeleWriter<V> extends HttpTeleWriter<V, RestletTWContext> {
 

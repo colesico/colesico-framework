@@ -21,7 +21,7 @@ import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.validation.Validator;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Unscoped
 public class MyValidatorBuilder extends ValidatorBuilder {

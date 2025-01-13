@@ -44,7 +44,7 @@ abstract public class FactoryElement {
     protected final PostProduceElement postProduce;
 
     /**
-     * {@link javax.inject.Named}
+     * {@link jakarta.inject.Named}
      */
     protected final String named;
 
