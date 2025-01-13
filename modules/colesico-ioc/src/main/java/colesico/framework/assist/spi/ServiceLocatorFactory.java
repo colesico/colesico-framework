@@ -11,4 +11,8 @@ public interface ServiceLocatorFactory {
     <S> ServiceLocator<S> locator(Class<?> caller, Class<S> service, Predicate<Class<? extends S>> classFilter);
 
     <S> ServiceLocator<S> locator(Class<?> caller, Class<S> service);
+
+    static ServiceLocatorFactory of() {
+        return DefaultServiceLocatorFactory.of();
+    }
 }

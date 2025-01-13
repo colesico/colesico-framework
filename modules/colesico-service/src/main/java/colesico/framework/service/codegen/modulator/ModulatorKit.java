@@ -16,7 +16,6 @@
 
 package colesico.framework.service.codegen.modulator;
 
-import colesico.framework.assist.spi.DefaultServiceLocatorFactory;
 import colesico.framework.assist.spi.ServiceLocator;
 import colesico.framework.assist.spi.ServiceLocatorFactory;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
@@ -45,7 +44,7 @@ public class ModulatorKit {
 
     protected final Logger logger = LoggerFactory.getLogger(ModulatorKit.class);
 
-    protected final ServiceLocatorFactory serviceLocatorFactory = DefaultServiceLocatorFactory.of();
+    protected final ServiceLocatorFactory serviceLocatorFactory = ServiceLocatorFactory.of();
 
     public ModulatorKit() {
         modulators = new ArrayList<>();

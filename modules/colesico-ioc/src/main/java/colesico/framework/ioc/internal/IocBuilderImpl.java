@@ -16,7 +16,6 @@
 
 package colesico.framework.ioc.internal;
 
-import colesico.framework.assist.spi.DefaultServiceLocatorFactory;
 import colesico.framework.assist.spi.ServiceLocator;
 import colesico.framework.assist.spi.ServiceLocatorFactory;
 import colesico.framework.ioc.Ioc;
@@ -43,7 +42,7 @@ public class IocBuilderImpl implements IocBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(IocBuilder.class);
 
-    protected ServiceLocatorFactory serviceLocatorFactory = DefaultServiceLocatorFactory.of();
+    protected ServiceLocatorFactory serviceLocatorFactory = ServiceLocatorFactory.of();
 
     /**
      * Manually added ioclets

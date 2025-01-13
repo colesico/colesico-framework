@@ -1,7 +1,7 @@
 package colesico.framework.rpc.codegen.generator;
 
-import colesico.framework.assist.spi.DefaultServiceLocatorFactory;
 import colesico.framework.assist.spi.ServiceLocator;
+import colesico.framework.assist.spi.ServiceLocatorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +21,7 @@ public class EnvelopeExtensionKit {
     public void lookup() {
         logger.debug("Lookup envelops extensions...");
         extensions.clear();
-        ServiceLocator<EnvelopeExtension> extensions = DefaultServiceLocatorFactory.of().locator(this.getClass(), EnvelopeExtension.class, getClass().getClassLoader());
+        ServiceLocator<EnvelopeExtension> extensions = ServiceLocatorFactory.of().locator(this.getClass(), EnvelopeExtension.class, getClass().getClassLoader());
         for (EnvelopeExtension envExt : extensions) {
             this.extensions.add(envExt);
             logger.debug("Found envelope extension : " + envExt.getClass().getName());

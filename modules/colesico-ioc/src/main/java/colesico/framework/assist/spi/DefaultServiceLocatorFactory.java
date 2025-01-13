@@ -2,7 +2,7 @@ package colesico.framework.assist.spi;
 
 import java.util.function.Predicate;
 
-public class DefaultServiceLocatorFactory implements ServiceLocatorFactory {
+class DefaultServiceLocatorFactory implements ServiceLocatorFactory {
 
     private static final DefaultServiceLocatorFactory INSTANCE = new DefaultServiceLocatorFactory();
 
