@@ -6,6 +6,9 @@ public class DefaultServiceLocatorFactory implements ServiceLocatorFactory {
 
     private static final DefaultServiceLocatorFactory INSTANCE = new DefaultServiceLocatorFactory();
 
+    private DefaultServiceLocatorFactory() {
+    }
+
     public static DefaultServiceLocatorFactory of() {
         return INSTANCE;
     }
