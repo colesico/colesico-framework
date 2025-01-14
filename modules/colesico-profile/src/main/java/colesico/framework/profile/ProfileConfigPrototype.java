@@ -8,4 +8,11 @@ import java.util.Locale;
 @ConfigPrototype(model = ConfigModel.SINGLE)
 abstract public class ProfileConfigPrototype {
     abstract public Locale getDefaultLocale();
+
+    /**
+     *  Profile instance factory
+     */
+    public Profile createProfile() {
+        return new DefaultProfile();
+    }
 }

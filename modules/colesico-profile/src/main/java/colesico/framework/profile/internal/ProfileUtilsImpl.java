@@ -1,160 +1,154 @@
 package colesico.framework.profile.internal;
 
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.profile.ProfileConverterBindings;
-import colesico.framework.profile.ProfilePreferences;
-import colesico.framework.profile.ProfileUtils;
-import colesico.framework.profile.PropertyConverter;
+import colesico.framework.profile.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+public class ProfileUtilsImpl implements ProfileUtils {
 
-public class ProfileUtilsImpl implements ProfileUtils<ProfileImpl> {
+    private final ProfileConfigPrototype config;
 
-    protected final Map<Class<?>, PropertyConverter<?>> valueConvertersByClass = new HashMap<>();
-    protected final Map<String, PropertyConverter<?>> valueConvertersByTagKey = new HashMap<>();
+    protected final Map<String, PropertyUtils<Profile, ?>> propertyUtils = new HashMap<>();
+    protected final Set<PropertyUtils<Profile, ?>> attributUtils = new HashSet<>();
+    protected final Set<PropertyUtils<Profile, ?>> preferenceUtils = new HashSet<>();
 
-    public ProfileUtilsImpl(Polysupplier<ProfileConverterBindings> profConverters) {
-        profConverters.forEach(cfg -> {
-                    cfg.forEach(cvb -> {
-                                valueConvertersByClass.put(cvb.propertyClass(), cvb.converter());
-                                valueConvertersByTagKey.put(cvb.converter().getTagKey(), cvb.converter());
-                            }
-                    );
+    public ProfileUtilsImpl(ProfileConfigPrototype config, Polysupplier<PropertyUtils> propertyUtilsSup) {
+        this.config = config;
+
+        propertyUtilsSup.forEach(pu -> {
+                    this.propertyUtils.put(pu.getName(), pu);
+                    switch (pu.getKind()) {
+                        case ATTRIBUTE -> attributUtils.add(pu);
+                        case PREFERENCE -> preferenceUtils.add(pu);
+                        default -> throw new ProfileException("Unsupported profile property type: " + pu.getKind());
+                    }
                 }
         );
     }
 
-    protected PropertyConverter getPropertyConverter(Class valueCalss) {
-        PropertyConverter conv = valueConvertersByClass.get(valueCalss);
-        if (conv == null) {
-            throw new RuntimeException("Profile property converter not found for class: " + valueCalss);
+    protected PropertyUtils getPropertyUtils(String propertyName) {
+        var pu = propertyUtils.get(propertyName);
+        if (pu == null) {
+            throw new ProfileException("Profile property utils not found for property name: " + propertyName);
         }
-        return conv;
-    }
-
-    protected PropertyConverter getPropertyConverter(String tagKey) {
-        PropertyConverter conv = valueConvertersByTagKey.get(tagKey);
-        if (conv == null) {
-            throw new RuntimeException("Profile property converter not found for property: " + tagKey);
-        }
-        return conv;
+        return pu;
     }
 
     @Override
-    public ProfileImpl createProfile(Collection<?> attributes, Collection<?> preferences) {
-        ProfileImpl profile = new ProfileImpl();
-        if (attributes != null) {
-            attributes.forEach(profile::addAttribute);
+    @SuppressWarnings("unchecked")
+    public colesico.framework.profile.Profile createProfile(Map<String, ?> properties) {
+        final colesico.framework.profile.Profile profile = config.createProfile();
+        if (properties != null) {
+            properties.forEach((propName, propValue) -> {
+                getPropertyUtils(propName).setValue(profile, propValue);
+            });
         }
-        if (preferences != null) {
-            preferences.forEach(profile::addAttribute);
-        }
+
         return profile;
     }
 
     @Override
-    public Collection<?> getAttributes(ProfileImpl profile) {
-        return profile.getAttributes();
-    }
-
-    @Override
-    public Collection<?> getPreferences(ProfileImpl profile) {
-        return profile.getPreferences();
-    }
-
-    @Override
-    public Collection<?> getProperties(ProfileImpl profile) {
-        return profile.getProperties().values();
-    }
-
-    @Override
-    public <T> T addAttribute(ProfileImpl profile, T property) {
-        return profile.addAttribute(property);
-    }
-
-    @Override
-    public <T> T addPreference(ProfileImpl profile, T property) {
-        return profile.addPreference(property);
-    }
-
-    @Override
-    public ProfilePreferences createPreferences(ProfileImpl profile) {
-        return new ProfilePreferencesImpl(profile);
-    }
-
-    @Override
-    public Map<String, String> toTags(Collection<?> properties) {
-        Map<String, String> tags = new HashMap<>();
-        for (Object property : properties) {
-            PropertyConverter converter = getPropertyConverter(property.getClass());
-            tags.put(converter.getTagKey(), converter.toTag(property));
-        }
-        return tags;
-    }
-
-    @Override
-    public Collection<?> fromTags(Map<String, String> tags) {
-        Collection<Object> properties = new ArrayList<>();
-        for (Map.Entry<String, String> tag : tags.entrySet()) {
-            String tagKey = tag.getKey();
-            PropertyConverter<?> converter = getPropertyConverter(tagKey);
-            Object property = converter.fromTag(tag.getValue());
-            properties.add(property);
-        }
-        return properties;
-    }
-
-    @Override
-    public byte[] toBytes(Collection<?> properties) {
-        byte[] result = null;
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             DataOutputStream dos = new DataOutputStream(baos)) {
-
-            for (Object property : properties) {
-                PropertyConverter converter = getPropertyConverter(property.getClass());
-                byte[] tagKeyBytes = converter.getTagKey().getBytes(StandardCharsets.UTF_8);
-                dos.write(tagKeyBytes.length);
-                dos.write(tagKeyBytes);
-                byte[] propBytes = converter.toBytes(property);
-                dos.write(propBytes.length);
-                dos.write(propBytes);
-            }
-            result = baos.toByteArray();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
+    public Map<String, ?> getProperties(Profile profile) {
+        Map<String, ? super Object> result = new HashMap<>();
+        propertyUtils.values().forEach(pu -> {
+            result.put(pu.getName(), pu.getValue(profile));
+        });
         return result;
     }
 
     @Override
-    public Collection<?> fromBytes(byte[] propertiesBytes) {
-        Collection<Object> properties = new ArrayList<>();
-        try (ByteArrayInputStream bais = new ByteArrayInputStream(propertiesBytes);
+    public Map<String, ?> getAttributes(Profile profile) {
+        Map<String, ? super Object> attributes = new HashMap<>();
+        attributUtils.forEach(pu -> {
+            attributes.put(pu.getName(), pu.getValue(profile));
+        });
+        return attributes;
+    }
+
+    @Override
+    public Map<String, ?> getPreferences(Profile profile) {
+        Map<String, ? super Object> preferences = new HashMap<>();
+        preferenceUtils.forEach(pu -> {
+            preferences.put(pu.getName(), pu.getValue(profile));
+        });
+        return preferences;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Map<String, String> toTags(Map<String, ?> properties) {
+        Map<String, String> tags = new HashMap<>();
+        properties.forEach((propName, propValue) -> {
+            tags.put(propName, getPropertyUtils(propName).toTag(propValue));
+        });
+        return tags;
+    }
+
+    @Override
+    public Map<String, ?> fromTags(Map<String, String> tags) {
+        Map<String, ? super Object> properties = new HashMap<>();
+        tags.forEach((propName, tag) -> {
+            var pu = getPropertyUtils(propName);
+            properties.put(pu.getName(), pu.fromTag(tag));
+        });
+        return properties;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public byte[] toBytes(Map<String, ?> properties) {
+        byte[] result = null;
+
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             DataOutputStream dos = new DataOutputStream(baos)) {
+
+            for (Map.Entry<String, ?> me : properties.entrySet()) {
+                var pu = getPropertyUtils(me.getKey());
+                byte[] propNameBytes = pu.getName().getBytes(StandardCharsets.UTF_8);
+                dos.write(propNameBytes.length);
+                dos.write(propNameBytes);
+                byte[] propBytes = pu.toBytes(me.getValue());
+                dos.write(propBytes.length);
+                dos.write(propBytes);
+            }
+
+            result = baos.toByteArray();
+        } catch (Exception ex) {
+            throw new ProfileException(ex);
+        }
+
+        return result;
+    }
+
+    @Override
+    public Map<String, ?> fromBytes(byte[] bytes) {
+        Map<String, ? super Object> properties = new HashMap<>();
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
              DataInputStream dis = new DataInputStream(bais)) {
 
             while (dis.available() > 0) {
-                int tagNameLen = dis.read();
-                String tagName = new String(dis.readNBytes(tagNameLen), StandardCharsets.UTF_8);
+                int propNameLen = dis.read();
+                String propName = new String(dis.readNBytes(propNameLen), StandardCharsets.UTF_8);
                 int propBytesLen = dis.read();
                 byte[] propBytes = dis.readNBytes(propBytesLen);
-                PropertyConverter<?> converter = getPropertyConverter(tagName);
-                properties.add(converter.fromBytes(propBytes));
+                var pu = getPropertyUtils(propName);
+                properties.put(pu.getName(), pu.fromBytes(propBytes));
             }
+
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            throw new ProfileException(ex);
         }
 
         return properties;
     }
-
 
 }

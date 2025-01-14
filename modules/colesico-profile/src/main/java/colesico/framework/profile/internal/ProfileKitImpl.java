@@ -2,6 +2,7 @@ package colesico.framework.profile.internal;
 
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.profile.*;
+import colesico.framework.profile.ProfileUtils;
 import colesico.framework.teleapi.DataPort;
 
 import jakarta.inject.Provider;

@@ -18,22 +18,23 @@ package colesico.framework.profile;
 
 import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
-import colesico.framework.profile.internal.ProfileImpl;
 
 import java.util.Locale;
 
 /**
  * User localization profile.
+ * <p>
+ * Extends this class to add more profile properties.
+ * </p>
  * The profile contains information necessary to adapt
- * the application to the user. For example - localization (translation),
- * localization of resources, user terminal type, various user preferences.
+ * the application to the user. For example - locale, time zone,
+ * user terminal type (mobil/pc), various user preferences.
  * The specific implementation depends on the needs of the application and
  * has to be implemented in the application.
- * Framework provides default implementation {@link ProfileImpl}
+ * <p>
+ * Attributes are assigned on the calling side or with {@link ProfileListener}
  */
-public interface Profile extends Iterable {
-
-    String GET_LOCALE_METHOD = "getLocale";
+public interface Profile {
 
     /**
      * Scope key for caching profile
@@ -41,22 +42,13 @@ public interface Profile extends Iterable {
     Key<Profile> SCOPE_KEY = new TypeKey<>(Profile.class);
 
     /**
-     * Check profile contains property
-     */
-    <T> boolean contains(Class<T> propertyClass);
-
-    /**
-     * Properties are any values that define the profiling configuration.
-     * Examples of property may be the user's locale, time zone, terminal type (mobile, PC), etc.
-     * Attributes are assigned on the calling side or with {@link ProfileListener}
-     */
-    <T> T get(Class<T> propertyClass);
-
-    /**
      * Returns user locale.
      */
-    default Locale getLocale() {
-        return get(Locale.class);
-    }
+    Locale getLocale();
+
+    /**
+     * Set profile locale
+     */
+    void setLocale(Locale locale);
 
 }

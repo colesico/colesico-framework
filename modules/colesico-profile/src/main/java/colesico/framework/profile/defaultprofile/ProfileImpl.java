@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.profile.internal;
+package colesico.framework.profile.defaultprofile;
 
 import colesico.framework.profile.Profile;
 

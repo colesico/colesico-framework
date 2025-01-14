@@ -19,14 +19,9 @@ public interface ProfileKit {
     Profile profile();
 
     /**
-     * Create preferences to control preferred profile properties
-     */
-    ProfilePreferences preferences();
-
-    /**
      * Writes profile preferences to data port
      */
-    void commit(ProfilePreferences preferences);
+    void commit(Profile profile);
 
     default void commit(Collection<?> properties) {
         ProfilePreferences preferences = preferences();

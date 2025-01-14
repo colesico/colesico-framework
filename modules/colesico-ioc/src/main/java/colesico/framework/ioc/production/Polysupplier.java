@@ -32,7 +32,7 @@ import java.util.function.Consumer;
  */
 public interface Polysupplier<T> extends Iterable<T> {
     /**
-     * True if this polysupplier can supply instances
+     * True if this polysupplier can supply instance
      *
      * @return true is polysupplier is empty
      */

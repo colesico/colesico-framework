@@ -72,7 +72,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
             if (locale == null) {
                 locale = Locale.getDefault();
             }
-            profileUtils.addAttribute(profile, locale);
+            profileUtils.setAttribute(profile, locale);
         }
 
         return profile;

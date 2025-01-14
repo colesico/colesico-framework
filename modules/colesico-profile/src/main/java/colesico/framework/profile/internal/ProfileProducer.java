@@ -20,13 +20,14 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.profile.*;
-
 import jakarta.inject.Provider;
+
 import java.util.Locale;
 
 
 @Producer
 @Produce(value = ProfileUtilsImpl.class, keyType = ProfileUtils.class)
+@Produce(value = LocalePropertyUtils.class, keyType = ProfileUtils.class, polyproduce = true)
 @Produce(value = ProfileKitImpl.class, keyType = ProfileKit.class)
 @Produce(value = DefaultProfileListener.class, keyType = ProfileListener.class, substitute = Substitution.STUB)
 @Produce(value = DefaultProfileConfig.class, keyType = ProfileConfigPrototype.class, substitute = Substitution.STUB)

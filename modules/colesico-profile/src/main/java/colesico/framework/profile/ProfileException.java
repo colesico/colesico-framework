@@ -21,6 +21,10 @@ package colesico.framework.profile;
  */
 public class ProfileException extends RuntimeException {
 
+    public ProfileException(Throwable cause) {
+        super(cause);
+    }
+
     public ProfileException(String message) {
         super(message);
     }
