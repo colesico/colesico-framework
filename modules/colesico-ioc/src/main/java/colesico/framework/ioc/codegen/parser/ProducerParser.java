@@ -593,7 +593,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         for (ClassType supType : facElm.getKeyTypes()) {
             if (!typeUtils.isAssignable(facElm.getSuppliedType().unwrap(), supType.unwrap())) {
                 throw CodegenException.of()
-                        .message("Not an instance class subtype: " + facElm.getSuppliedType().getName() + " extends/implements " + supType.unwrap().toString())
+                        .message("Not a subtype for: " + facElm.getSuppliedType().getName() + " extends/implements " + supType.unwrap().toString())
                         .element(facElm.getOriginElement())
                         .build();
             }

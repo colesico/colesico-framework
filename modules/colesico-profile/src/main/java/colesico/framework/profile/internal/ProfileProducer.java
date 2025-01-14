@@ -47,5 +47,4 @@ public class ProfileProducer {
         return profile != null ? profile.getLocale() : Locale.getDefault();
     }
 
-
 }

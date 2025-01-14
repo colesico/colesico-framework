@@ -8,7 +8,6 @@ import java.util.Locale;
 
 public class LocalePropertyUtils implements PropertyUtils<DefaultProfile, Locale> {
 
-    public static String PROPERTY_NAME = "locale";
 
     public static LocalePropertyUtils of() {
         return new LocalePropertyUtils();
@@ -16,7 +15,7 @@ public class LocalePropertyUtils implements PropertyUtils<DefaultProfile, Locale
 
     @Override
     public String getName() {
-        return PROPERTY_NAME;
+        return DefaultProfile.LOCALE_PROPERTY;
     }
 
     @Override
@@ -53,6 +52,5 @@ public class LocalePropertyUtils implements PropertyUtils<DefaultProfile, Locale
     public Locale fromBytes(byte[] bytes) {
         return Locale.forLanguageTag(new String(bytes, StandardCharsets.UTF_8));
     }
-
 
 }

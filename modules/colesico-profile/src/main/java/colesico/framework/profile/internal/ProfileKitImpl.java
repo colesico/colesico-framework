@@ -2,12 +2,9 @@ package colesico.framework.profile.internal;
 
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.profile.*;
-import colesico.framework.profile.ProfileUtils;
 import colesico.framework.teleapi.DataPort;
-
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
-import java.util.List;
 
 @Singleton
 public class ProfileKitImpl implements ProfileKit {
@@ -39,7 +36,7 @@ public class ProfileKitImpl implements ProfileKit {
 
         profile = (Profile) dataPortProv.get().read(Profile.class);
         if (profile == null) {
-            profile = profileUtils.fromAttributes(List.of(config.getDefaultLocale()));
+            profile = profileUtils.createProfile();
         }
 
         profile = listener.afterRead(profile);
@@ -49,14 +46,7 @@ public class ProfileKitImpl implements ProfileKit {
     }
 
     @Override
-    public ProfilePreferences preferences() {
-        Profile profile = profile();
-        return profileUtils.createPreferences(profile);
-    }
-
-    @Override
-    public void commit(ProfilePreferences preferences) {
-        Profile profile = preferences.profile();
+    public void commit(Profile profile) {
         profile = listener.beforeWrite(profile);
         dataPortProv.get().write(profile, Profile.class);
     }

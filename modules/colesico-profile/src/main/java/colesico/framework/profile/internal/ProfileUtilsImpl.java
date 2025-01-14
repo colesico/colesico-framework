@@ -46,7 +46,7 @@ public class ProfileUtilsImpl implements ProfileUtils {
     @Override
     @SuppressWarnings("unchecked")
     public colesico.framework.profile.Profile createProfile(Map<String, ?> properties) {
-        final colesico.framework.profile.Profile profile = config.createProfile();
+        final colesico.framework.profile.Profile profile = config.createNewProfile();
         if (properties != null) {
             properties.forEach((propName, propValue) -> {
                 getPropertyUtils(propName).setValue(profile, propValue);
@@ -54,6 +54,11 @@ public class ProfileUtilsImpl implements ProfileUtils {
         }
 
         return profile;
+    }
+
+    @Override
+    public Profile createProfile() {
+        return createProfile(config.createDefaultProperties());
     }
 
     @Override

@@ -14,7 +14,12 @@ public interface ProfileUtils {
     /**
      * Create profile instance.
      */
-    colesico.framework.profile.Profile createProfile(Map<String, ?> properties);
+    Profile createProfile(Map<String, ?> properties);
+
+    /**
+     *  Create profile with default properties
+     */
+    Profile createProfile();
 
     /**
      * Map of profile all properties (attributes + preferences).
@@ -61,7 +66,7 @@ public interface ProfileUtils {
      * Useful for testing purposes (mockup profile)
      */
     default colesico.framework.profile.Profile fromLocale(Locale locale) {
-        return createProfile(Map.of(LocalePropertyUtils.PROPERTY_NAME, locale));
+        return createProfile(Map.of(LocalePropertyUtils.LOCALE_PROPERTY, locale));
     }
 
 
