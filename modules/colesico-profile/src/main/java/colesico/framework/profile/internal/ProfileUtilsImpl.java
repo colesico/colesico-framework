@@ -46,24 +46,18 @@ public class ProfileUtilsImpl implements ProfileUtils {
     @Override
     @SuppressWarnings("unchecked")
     public Profile createProfile(Map<String, Object> values) {
-        final Profile profile = config.createNewProfile();
-        var allValues = config.createDefaultValues();
-        allValues.putAll(values);
-        allValues.forEach((propertyName, value) -> {
-            getPropertyUtils(propertyName).setValue(profile, value);
-        });
+        final Profile profile = config.instance();
+        if (!values.isEmpty()) {
+            values.forEach((propertyName, value) -> {
+                getPropertyUtils(propertyName).setValue(profile, value);
+            });
+        }
         return profile;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Profile createProfile() {
-        final Profile profile = config.createNewProfile();
-        Map<String, Object> values = config.createDefaultValues();
-        values.forEach((propertyName, value) -> {
-            getPropertyUtils(propertyName).setValue(profile, value);
-        });
-        return profile;
+        return config.instance();
     }
 
     @Override

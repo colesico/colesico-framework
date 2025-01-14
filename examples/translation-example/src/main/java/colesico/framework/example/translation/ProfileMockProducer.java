@@ -55,6 +55,6 @@ public class ProfileMockProducer {
 
     @Substitute
     public Profile getProfile(ProfileUtils profileUtils) {
-        return profileUtils.fromLocale(curLocale);
+        return profileUtils.createProfile(curLocale);
     }
 }

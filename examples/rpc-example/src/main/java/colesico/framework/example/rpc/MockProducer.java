@@ -33,7 +33,7 @@ public class MockProducer {
 
     @Substitute
     public Profile getProfile(ProfileUtils pu) {
-        return pu.fromLocale(new Locale("de", "DE", "UNIX"));
+        return pu.createProfile(Locale.of("de", "DE", "UNIX"));
     }
 
     @Substitute
