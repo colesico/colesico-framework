@@ -18,13 +18,14 @@ public class ProfileKitImpl implements ProfileKit {
     protected final ProfileConfigPrototype config;
 
     // Profile cache
-    protected ThreadScope threadScope;
+    protected final ThreadScope threadScope;
 
-    public ProfileKitImpl(Provider<DataPort> dataPortProv, ProfileListener listener, ProfileUtils profileUtils, ProfileConfigPrototype config) {
+    public ProfileKitImpl(Provider<DataPort> dataPortProv, ProfileListener listener, ProfileUtils profileUtils, ProfileConfigPrototype config, ThreadScope threadScope) {
         this.dataPortProv = dataPortProv;
         this.listener = listener;
         this.profileUtils = profileUtils;
         this.config = config;
+        this.threadScope = threadScope;
     }
 
     @Override

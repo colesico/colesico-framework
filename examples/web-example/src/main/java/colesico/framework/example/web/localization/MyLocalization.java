@@ -33,6 +33,11 @@ public class MyLocalization {
         this.translations = translations;
     }
 
+    // http://localhost:8080/my-localization/message
+    public HtmlResponse message() {
+        return HtmlResponse.of(translations.hello1());
+    }
+
     // http://localhost:8080/my-localization/ru
     public HtmlResponse ru() {
         var profile = profileKit.profile();
@@ -47,11 +52,6 @@ public class MyLocalization {
         profile.setLocale(Locale.of("en", "GB"));
         profileKit.commit(profile);
         return HtmlResponse.of("English");
-    }
-
-    // http://localhost:8080/my-localization/message
-    public HtmlResponse message() {
-        return HtmlResponse.of(translations.hello1());
     }
 
     // http://localhost:8080/my-localization/inherit
