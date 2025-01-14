@@ -19,6 +19,8 @@ package colesico.framework.profile;
 
 public interface ProfileListener {
 
+    Profile afterCreate(Profile profile);
+
     /**
      * Controls the profile before write it to the source.
      * Override this method to get more specific control.

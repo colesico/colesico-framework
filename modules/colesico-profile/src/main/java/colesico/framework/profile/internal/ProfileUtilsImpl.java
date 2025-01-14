@@ -16,13 +16,17 @@ import java.util.Set;
 public class ProfileUtilsImpl implements ProfileUtils {
 
     private final ProfileConfigPrototype config;
+    protected final ProfileListener listener;
 
     protected final Map<String, PropertyUtils<Profile, Object>> propertyUtils = new HashMap<>();
     protected final Set<PropertyUtils<Profile, Object>> attributUtils = new HashSet<>();
     protected final Set<PropertyUtils<Profile, Object>> preferenceUtils = new HashSet<>();
 
-    public ProfileUtilsImpl(ProfileConfigPrototype config, Polysupplier<PropertyUtils> propertyUtilsSup) {
+    public ProfileUtilsImpl(ProfileConfigPrototype config,
+                            ProfileListener listener,
+                            Polysupplier<PropertyUtils> propertyUtilsSup) {
         this.config = config;
+        this.listener = listener;
 
         propertyUtilsSup.forEach(pu -> {
                     this.propertyUtils.put(pu.getName(), pu);
@@ -52,12 +56,12 @@ public class ProfileUtilsImpl implements ProfileUtils {
                 getPropertyUtils(propertyName).setValue(profile, value);
             });
         }
-        return profile;
+        return listener.afterCreate(profile);
     }
 
     @Override
     public Profile createProfile() {
-        return config.instance();
+        return listener.afterCreate(config.instance());
     }
 
     @Override
