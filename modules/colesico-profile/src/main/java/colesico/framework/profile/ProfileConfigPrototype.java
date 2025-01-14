@@ -10,21 +10,13 @@ import java.util.Map;
 @ConfigPrototype(model = ConfigModel.SINGLE)
 abstract public class ProfileConfigPrototype {
 
-    abstract public Locale getDefaultLocale();
-
     /**
      * Profile instance factory
      */
-    public Profile createNewProfile() {
-        return new DefaultProfile();
-    }
+    abstract public Profile createNewProfile();
 
     /**
-     * Create default properties
+     * Create profile  fields default values
      */
-    public Map<String, ?> createDefaultProperties() {
-        Map<String, ? super Object> properties = new HashMap<>();
-        properties.put(DefaultProfile.LOCALE_PROPERTY, getDefaultLocale());
-        return properties;
-    }
+    abstract public Map<String, Object> createDefaultValues();
 }

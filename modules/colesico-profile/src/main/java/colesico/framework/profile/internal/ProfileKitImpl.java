@@ -49,5 +49,6 @@ public class ProfileKitImpl implements ProfileKit {
     public void commit(Profile profile) {
         profile = listener.beforeWrite(profile);
         dataPortProv.get().write(profile, Profile.class);
+        threadScope.put(Profile.SCOPE_KEY, profile);
     }
 }

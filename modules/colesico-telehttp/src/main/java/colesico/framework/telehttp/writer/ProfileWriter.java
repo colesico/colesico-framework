@@ -26,12 +26,10 @@ import colesico.framework.telehttp.HttpTWContext;
 import colesico.framework.telehttp.HttpTeleWriter;
 import colesico.framework.telehttp.ProfileHttpConfigPrototype;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
-
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Map;
 
 @Singleton
 public final class ProfileWriter<P extends Profile, C extends HttpTWContext> extends HttpTeleWriter<P, C> {
@@ -40,7 +38,7 @@ public final class ProfileWriter<P extends Profile, C extends HttpTWContext> ext
     public static final String ATTRIBUTES_HEADER_NAME = "X-Profile";
 
     protected final ProfileHttpConfigPrototype config;
-    protected final ProfileUtils<P> profileUtils;
+    protected final ProfileUtils profileUtils;
     protected final CookieFactory cookieFactory;
 
     public ProfileWriter(Provider<HttpContext> httpContextProv,
@@ -58,9 +56,9 @@ public final class ProfileWriter<P extends Profile, C extends HttpTWContext> ext
         Calendar expires = Calendar.getInstance();
         String preferenceStr;
         if (profile != null) {
-            Collection<?> preferences = profileUtils.getPreferences(profile);
-            Map<String, String> preferenceProps = profileUtils.toTags(preferences);
-            preferenceStr = TeleHttpUtils.stringifyTags(preferenceProps);
+            var preferences = profileUtils.getPreferences(profile);
+            var preferencesProps = profileUtils.toProperties(preferences);
+            preferenceStr = TeleHttpUtils.stringifyProperties(preferencesProps);
             expires.add(Calendar.DAY_OF_MONTH, config.getCookieValidityDays());
         } else {
             preferenceStr = null;

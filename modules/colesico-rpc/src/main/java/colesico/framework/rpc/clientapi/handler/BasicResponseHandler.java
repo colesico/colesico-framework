@@ -7,9 +7,7 @@ import colesico.framework.rpc.teleapi.BasicEnvelope;
 import colesico.framework.security.Principal;
 import colesico.framework.security.SecurityKit;
 import colesico.framework.security.teleapi.PrincipalSerializer;
-
 import jakarta.inject.Singleton;
-import java.util.Collection;
 
 @Singleton
 public class BasicResponseHandler implements RpcResponseHandler<BasicEnvelope> {
@@ -40,8 +38,9 @@ public class BasicResponseHandler implements RpcResponseHandler<BasicEnvelope> {
 
         if (response.getProfile() != null) {
             if (response.getProfile().length != 0) {
-                Collection prefs = profileUtils.fromBytes(response.getProfile());
-                profileKit.commit(prefs);
+                // Response contains profile preferences only
+                var profile = profileUtils.deserialize(response.getProfile());
+                profileKit.commit(profile);
             }
         }
     }

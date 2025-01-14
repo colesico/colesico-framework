@@ -19,6 +19,5 @@ module colesico.framework.profile {
     exports colesico.framework.profile;
 
     // Internals
-    exports colesico.framework.profile.defaultprofile to colesico.framework.ioc;
-    exports colesico.framework.profile.internal;
+    exports colesico.framework.profile.internal to colesico.framework.ioc;
 }

@@ -17,9 +17,9 @@ public class ProfileUtilsImpl implements ProfileUtils {
 
     private final ProfileConfigPrototype config;
 
-    protected final Map<String, PropertyUtils<Profile, ?>> propertyUtils = new HashMap<>();
-    protected final Set<PropertyUtils<Profile, ?>> attributUtils = new HashSet<>();
-    protected final Set<PropertyUtils<Profile, ?>> preferenceUtils = new HashSet<>();
+    protected final Map<String, PropertyUtils<Profile, Object>> propertyUtils = new HashMap<>();
+    protected final Set<PropertyUtils<Profile, Object>> attributUtils = new HashSet<>();
+    protected final Set<PropertyUtils<Profile, Object>> preferenceUtils = new HashSet<>();
 
     public ProfileUtilsImpl(ProfileConfigPrototype config, Polysupplier<PropertyUtils> propertyUtilsSup) {
         this.config = config;
@@ -45,78 +45,83 @@ public class ProfileUtilsImpl implements ProfileUtils {
 
     @Override
     @SuppressWarnings("unchecked")
-    public colesico.framework.profile.Profile createProfile(Map<String, ?> properties) {
-        final colesico.framework.profile.Profile profile = config.createNewProfile();
-        if (properties != null) {
-            properties.forEach((propName, propValue) -> {
-                getPropertyUtils(propName).setValue(profile, propValue);
-            });
-        }
-
+    public Profile createProfile(Map<String, Object> values) {
+        final Profile profile = config.createNewProfile();
+        var allValues = config.createDefaultValues();
+        allValues.putAll(values);
+        allValues.forEach((propertyName, value) -> {
+            getPropertyUtils(propertyName).setValue(profile, value);
+        });
         return profile;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Profile createProfile() {
-        return createProfile(config.createDefaultProperties());
+        final Profile profile = config.createNewProfile();
+        Map<String, Object> values = config.createDefaultValues();
+        values.forEach((propertyName, value) -> {
+            getPropertyUtils(propertyName).setValue(profile, value);
+        });
+        return profile;
     }
 
     @Override
-    public Map<String, ?> getProperties(Profile profile) {
-        Map<String, ? super Object> result = new HashMap<>();
+    public Map<String, Object> getValues(Profile profile) {
+        Map<String, Object> values = new HashMap<>();
         propertyUtils.values().forEach(pu -> {
-            result.put(pu.getName(), pu.getValue(profile));
+            values.put(pu.getName(), pu.getValue(profile));
         });
-        return result;
+        return values;
     }
 
     @Override
-    public Map<String, ?> getAttributes(Profile profile) {
-        Map<String, ? super Object> attributes = new HashMap<>();
+    public Map<String, Object> getAttributes(Profile profile) {
+        Map<String, Object> values = new HashMap<>();
         attributUtils.forEach(pu -> {
-            attributes.put(pu.getName(), pu.getValue(profile));
+            values.put(pu.getName(), pu.getValue(profile));
         });
-        return attributes;
+        return values;
     }
 
     @Override
-    public Map<String, ?> getPreferences(Profile profile) {
-        Map<String, ? super Object> preferences = new HashMap<>();
+    public Map<String, Object> getPreferences(Profile profile) {
+        Map<String, Object> values = new HashMap<>();
         preferenceUtils.forEach(pu -> {
-            preferences.put(pu.getName(), pu.getValue(profile));
+            values.put(pu.getName(), pu.getValue(profile));
         });
-        return preferences;
+        return values;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Map<String, String> toTags(Map<String, ?> properties) {
-        Map<String, String> tags = new HashMap<>();
-        properties.forEach((propName, propValue) -> {
-            tags.put(propName, getPropertyUtils(propName).toTag(propValue));
-        });
-        return tags;
-    }
-
-    @Override
-    public Map<String, ?> fromTags(Map<String, String> tags) {
-        Map<String, ? super Object> properties = new HashMap<>();
-        tags.forEach((propName, tag) -> {
-            var pu = getPropertyUtils(propName);
-            properties.put(pu.getName(), pu.fromTag(tag));
+    public Map<String, String> toProperties(Map<String, Object> values) {
+        Map<String, String> properties = new HashMap<>();
+        values.forEach((propName, propValue) -> {
+            properties.put(propName, getPropertyUtils(propName).toProperty(propValue));
         });
         return properties;
     }
 
     @Override
+    public Map<String, Object> fromProperties(Map<String, String> properties) {
+        Map<String, Object> values = new HashMap<>();
+        properties.forEach((propName, tag) -> {
+            var pu = getPropertyUtils(propName);
+            values.put(pu.getName(), pu.fromProperty(tag));
+        });
+        return values;
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
-    public byte[] toBytes(Map<String, ?> properties) {
-        byte[] result = null;
+    public byte[] toBytes(Map<String, Object> values) {
+        byte[] bytes = null;
 
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              DataOutputStream dos = new DataOutputStream(baos)) {
 
-            for (Map.Entry<String, ?> me : properties.entrySet()) {
+            for (Map.Entry<String, Object> me : values.entrySet()) {
                 var pu = getPropertyUtils(me.getKey());
                 byte[] propNameBytes = pu.getName().getBytes(StandardCharsets.UTF_8);
                 dos.write(propNameBytes.length);
@@ -126,17 +131,17 @@ public class ProfileUtilsImpl implements ProfileUtils {
                 dos.write(propBytes);
             }
 
-            result = baos.toByteArray();
+            bytes = baos.toByteArray();
         } catch (Exception ex) {
             throw new ProfileException(ex);
         }
 
-        return result;
+        return bytes;
     }
 
     @Override
-    public Map<String, ?> fromBytes(byte[] bytes) {
-        Map<String, ? super Object> properties = new HashMap<>();
+    public Map<String, Object> fromBytes(byte[] bytes) {
+        Map<String, Object> values = new HashMap<>();
         try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
              DataInputStream dis = new DataInputStream(bais)) {
 
@@ -146,14 +151,14 @@ public class ProfileUtilsImpl implements ProfileUtils {
                 int propBytesLen = dis.read();
                 byte[] propBytes = dis.readNBytes(propBytesLen);
                 var pu = getPropertyUtils(propName);
-                properties.put(pu.getName(), pu.fromBytes(propBytes));
+                values.put(pu.getName(), pu.fromBytes(propBytes));
             }
 
         } catch (Exception ex) {
             throw new ProfileException(ex);
         }
 
-        return properties;
+        return values;
     }
 
 }

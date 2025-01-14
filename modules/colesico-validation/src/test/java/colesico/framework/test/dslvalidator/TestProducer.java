@@ -23,8 +23,8 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.profile.ProfileUtils;
-
 import jakarta.inject.Singleton;
+
 import java.util.Locale;
 
 @Producer
@@ -35,6 +35,6 @@ public class TestProducer {
 
     @Singleton
     public Profile getProfile(ProfileUtils pu) {
-        return pu.fromLocale(new Locale("en", "RU"));
+        return pu.createProfile(Locale.of("en", "RU"));
     }
 }

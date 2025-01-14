@@ -1,7 +1,6 @@
 package colesico.framework.profile;
 
-import colesico.framework.profile.internal.LocalePropertyUtils;
-
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -13,60 +12,68 @@ public interface ProfileUtils {
 
     /**
      * Create profile instance.
+     *
+     * @param values profile fields values
      */
-    Profile createProfile(Map<String, ?> properties);
+    Profile createProfile(Map<String, Object> values);
 
     /**
-     *  Create profile with default properties
+     * Create profile with default properties
      */
     Profile createProfile();
 
-    /**
-     * Map of profile all properties (attributes + preferences).
-     * property_name => property_value
-     *
-     * @see PropertyUtils#getName()
-     * @see PropertyUtils#getValue(colesico.framework.profile.Profile)
-     */
-    Map<String, ?> getProperties(Profile profile);
-
-    Map<String, ?> getAttributes(Profile profile);
-
-    Map<String, ?> getPreferences(Profile profile);
-
-    /**
-     * Converts profile properties to tags map: property-name=> tag
-     */
-    Map<String, String> toTags(Map<String, ?> properties);
-
-    /**
-     * Converts tags to properties object collection
-     */
-    Map<String, ?> fromTags(Map<String, String> tags);
-
-    /**
-     * Converts profile properties to serialized array
-     */
-    byte[] toBytes(Map<String, ?> properties);
-
-    /**
-     * Properties bytes to properties map
-     */
-    Map<String, ?> fromBytes(byte[] bytes);
-
-    default byte[] serialize(Profile profile) {
-        return toBytes(getProperties(profile));
-    }
-
-    default colesico.framework.profile.Profile deserialize(byte[] profileBytes) {
-        return createProfile(fromBytes(profileBytes));
+    default Profile createProfile(Map<String, Object> attributes, Map<String, Object> preferences) {
+        Map<String, Object> values = new HashMap<>(attributes);
+        values.putAll(preferences);
+        return createProfile(values);
     }
 
     /**
      * Useful for testing purposes (mockup profile)
      */
-    default colesico.framework.profile.Profile fromLocale(Locale locale) {
-        return createProfile(Map.of(LocalePropertyUtils.LOCALE_PROPERTY, locale));
+    default Profile createProfile(Locale locale) {
+        return createProfile(Map.of(DefaultProfile.LOCALE_PROPERTY, locale));
+    }
+
+    /**
+     * Get values of profile fields (attributes + preferences).
+     * property_name => field_value
+     *
+     * @see PropertyUtils#getName()
+     * @see PropertyUtils#getValue(colesico.framework.profile.Profile)
+     */
+    Map<String, Object> getValues(Profile profile);
+
+    Map<String, Object> getAttributes(Profile profile);
+
+    Map<String, Object> getPreferences(Profile profile);
+
+    /**
+     * Converts profile  fields values to properties map: property-name=> value
+     */
+    Map<String, String> toProperties(Map<String, Object> values);
+
+    /**
+     * Converts profile properties to fields values
+     */
+    Map<String, Object> fromProperties(Map<String, String> properties);
+
+    /**
+     * Converts profile fields values to serialized array
+     */
+    byte[] toBytes(Map<String, Object> values);
+
+    /**
+     * Profile properties bytes to fields values map
+     */
+    Map<String, Object> fromBytes(byte[] bytes);
+
+    default byte[] serialize(Profile profile) {
+        return toBytes(getValues(profile));
+    }
+
+    default Profile deserialize(byte[] bytes) {
+        return createProfile(fromBytes(bytes));
     }
 
 

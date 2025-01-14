@@ -65,14 +65,14 @@ public class TeleHttpUtils {
         return sb.toString();
     }
 
-    public static String stringifyTags(Map<String, String> tags) {
-        if (tags == null || tags.isEmpty()) {
+    public static String stringifyProperties(Map<String, String> properties) {
+        if (properties == null || properties.isEmpty()) {
             return null;
         }
 
         StringBuilder tagsStr = new StringBuilder();
         try {
-            for (Map.Entry<String, String> e : tags.entrySet()) {
+            for (Map.Entry<String, String> e : properties.entrySet()) {
                 if (!tagsStr.isEmpty()) {
                     tagsStr.append("&");
                 }
@@ -87,14 +87,14 @@ public class TeleHttpUtils {
         return tagsStr.toString();
     }
 
-    public static Map<String, String> parseTags(String tagsStr) {
-        if (StringUtils.isBlank(tagsStr)) {
+    public static Map<String, String> parseProperties(String propertiesStr) {
+        if (StringUtils.isBlank(propertiesStr)) {
             return Map.of();
         }
 
         Map<String, String> tags = new HashMap<>();
 
-        StringTokenizer st = new StringTokenizer(tagsStr, "&");
+        StringTokenizer st = new StringTokenizer(propertiesStr, "&");
         while (st.hasMoreTokens()) {
             String tag = st.nextToken();
             String[] keyVal = StringUtils.split(tag, "=");

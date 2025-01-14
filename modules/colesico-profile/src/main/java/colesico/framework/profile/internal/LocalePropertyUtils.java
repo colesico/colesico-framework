@@ -34,13 +34,13 @@ public class LocalePropertyUtils implements PropertyUtils<DefaultProfile, Locale
     }
 
     @Override
-    public String toTag(Locale locale) {
+    public String toProperty(Locale locale) {
         return locale.toLanguageTag();
     }
 
     @Override
-    public Locale fromTag(String tag) {
-        return Locale.forLanguageTag(tag);
+    public Locale fromProperty(String property) {
+        return Locale.forLanguageTag(property);
     }
 
     @Override

@@ -25,9 +25,8 @@ import colesico.framework.profile.Profile;
 import colesico.framework.profile.ProfileUtils;
 import colesico.framework.resource.ResourceOptionsPrototype;
 import colesico.framework.resource.rewriters.ParamRewriter;
-
 import jakarta.inject.Singleton;
-import java.util.List;
+
 import java.util.Locale;
 
 @Producer
@@ -37,7 +36,7 @@ public class TestProducer {
 
     @Singleton
     public Profile getProfile(ProfileUtils profileUtils) {
-        return profileUtils.fromAttributes(List.of(Locale.of("en", "RU")));
+        return profileUtils.createProfile(Locale.of("en", "RU"));
     }
 
     @Singleton

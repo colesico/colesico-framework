@@ -19,16 +19,17 @@ package colesico.framework.telehttp.reader;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpRequest;
+import colesico.framework.profile.DefaultProfile;
 import colesico.framework.profile.Profile;
+import colesico.framework.profile.ProfileConfigPrototype;
 import colesico.framework.profile.ProfileUtils;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTeleReader;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
 import colesico.framework.telehttp.writer.ProfileWriter;
-
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
-import java.util.Collection;
+
 import java.util.Locale;
 import java.util.Map;
 
@@ -40,40 +41,40 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
 
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
 
-    protected final ProfileUtils<P> profileUtils;
+    protected final ProfileUtils profileUtils;
+    protected final ProfileConfigPrototype profileConfig;
     protected final Provider<HttpContext> httpContextProv;
 
-    public ProfileReader(ProfileUtils profileUtils, Provider<HttpContext> httpContextProv) {
+    public ProfileReader(ProfileUtils profileUtils, ProfileConfigPrototype profileConfig, Provider<HttpContext> httpContextProv) {
         this.profileUtils = profileUtils;
+        this.profileConfig = profileConfig;
         this.httpContextProv = httpContextProv;
     }
 
     protected P buildProfile(HttpRequest request) {
 
+        var attributesStr = request.getHeaders().get(ProfileWriter.ATTRIBUTES_HEADER_NAME);
+        var attributesProp = TeleHttpUtils.parseProperties(attributesStr);
+        var attributes = profileUtils.fromProperties(attributesProp);
 
-        String tagsStr = request.getHeaders().get(ProfileWriter.ATTRIBUTES_HEADER_NAME);
-        Map<String, String> tags = TeleHttpUtils.parseTags(tagsStr);
-        Collection<?> attributes = profileUtils.fromTags(tags);
-
+        if (!attributes.containsKey(DefaultProfile.LOCALE_PROPERTY)) {
+            String acceptLangs = request.getHeaders().get(ACCEPT_LANGUAGE_HEADER);
+            Locale locale = TeleHttpUtils.getAcceptedLanguage(acceptLangs);
+            if (locale != null) {
+                attributes.put(DefaultProfile.LOCALE_PROPERTY, locale);
+            }
+        }
 
         HttpCookie preferenceTagCookie = request.getCookies().get(ProfileWriter.PREFERENCE_COOKIE_NAME);
         if (preferenceTagCookie != null) {
-            tags = TeleHttpUtils.parseTags(preferenceTagCookie.getValue());
+            attributesProp = TeleHttpUtils.parseProperties(preferenceTagCookie.getValue());
         } else {
-            tags = Map.of();
+            attributesProp = Map.of();
         }
-        Collection<?> preferences = profileUtils.fromTags(tags);
+        var preferences = profileUtils.fromProperties(attributesProp);
 
-        P profile = profileUtils.createProfile(attributes, preferences);
-
-        if (!profile.contains(Locale.class)) {
-            String acceptLangs = request.getHeaders().get(ACCEPT_LANGUAGE_HEADER);
-            Locale locale = TeleHttpUtils.getAcceptedLanguage(acceptLangs);
-            if (locale == null) {
-                locale = Locale.getDefault();
-            }
-            profileUtils.setAttribute(profile, locale);
-        }
+        @SuppressWarnings("unchecked")
+        P profile = (P) profileUtils.createProfile(attributes, preferences);
 
         return profile;
     }

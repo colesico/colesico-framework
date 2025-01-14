@@ -13,32 +13,32 @@ public interface PropertyUtils<P extends Profile, V> {
     PropertyKind getKind();
 
     /**
-     * Return property value
+     * Return profile field value
      */
     V getValue(P profile);
 
     /**
-     * Set property value
+     * Set profile field value
      */
     void setValue(P profile, V value);
 
     /**
-     * Convert property value to tag
+     * Convert profile  field value to string property value
      */
-    String toTag(V value);
+    String toProperty(V value);
 
     /**
-     * Convert property tag to value
+     * Convert profile string property  value to profile field value
      */
-    V fromTag(String tag);
+    V fromProperty(String property);
 
     /**
-     * Convert property value to bytes
+     * Convert profile field value to bytes
      */
     byte[] toBytes(V value);
 
     /**
-     * Convert property bytes to value
+     * Convert  bytes to profile field value
      */
     V fromBytes(byte[] bytes);
 
