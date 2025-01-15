@@ -185,22 +185,24 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>examples/helloworld-example</module>
-                <module>examples/restlet-example</module>
-                <module>examples/routing-example</module>
+
+                <module>examples/ioc-example</module>
                 <module>examples/config-example</module>
                 <module>examples/hocon-example</module>
-                <module>examples/ioc-example</module>
-                <module>examples/web-example</module>
+                <module>examples/asynctask-example</module>
+                <module>examples/profile-example</module>
+                <module>examples/translation-example</module>
                 <module>examples/transaction-example</module>
                 <module>examples/jdbc-example</module>
                 <module>examples/jdbi-example</module>
                 <module>examples/jdbirec-example</module>
-                <module>examples/slf4j-example</module>
-                <module>examples/translation-example</module>
+                <module>examples/restlet-example</module>
+                <module>examples/routing-example</module>
                 <module>examples/rpc-example</module>
                 <module>examples/rpc-api-example</module>
-                <module>examples/asynctask-example</module>
+                <module>examples/slf4j-example</module>
+                <module>examples/helloworld-example</module>
+                <module>examples/web-example</module>
             </modules>
         </profile>
         <profile>
