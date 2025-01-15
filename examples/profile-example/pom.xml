@@ -87,6 +87,11 @@
                             <artifactId>colesico-service</artifactId>
                             <version>${project.version}</version>
                         </path>
+                        <path>
+                            <groupId>net.colesico.framework</groupId>
+                            <artifactId>colesico-config</artifactId>
+                            <version>${project.version}</version>
+                        </path>
                         <!-- Enable compilation debug log -->
                         <dependency>
                             <groupId>org.slf4j</groupId>
@@ -111,6 +116,19 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>colesico.framework.example.profile.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
     </build>

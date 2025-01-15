@@ -17,20 +17,35 @@
 package colesico.framework.example.profile;
 
 
-import colesico.framework.profile.Profile;
+import colesico.framework.example.profile.custom.CustomProfile;
 import colesico.framework.profile.ProfileKit;
 import colesico.framework.service.Service;
+
+import java.util.Locale;
+import java.util.TimeZone;
 
 @Service
 public class AppService {
 
-    private final ProfileKit profileKit;
+    private final ProfileKit<CustomProfile> profileKit;
 
     public AppService(ProfileKit profileKit) {
         this.profileKit = profileKit;
     }
 
-    public Profile getProfile() {
+    public CustomProfile getProfile() {
         return profileKit.profile();
+    }
+
+    public void setLocale(Locale locale) {
+        CustomProfile profile = profileKit.profile();
+        profile.setLocale(locale);
+        profileKit.commit(profile);
+    }
+
+    public void setTimezone(TimeZone tz) {
+        CustomProfile profile = profileKit.profile();
+        profile.setTimeZone(tz);
+        profileKit.commit(profile);
     }
 }

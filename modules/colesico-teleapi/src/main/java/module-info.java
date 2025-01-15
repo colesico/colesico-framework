@@ -10,6 +10,7 @@ module colesico.framework.teleapi {
     // Exports
 
     exports colesico.framework.teleapi;
+    exports colesico.framework.teleapi.assist;
     exports colesico.framework.teleapi.internal to colesico.framework.ioc;
 
 }

@@ -16,13 +16,32 @@
 
 package colesico.framework.example.profile;
 
+import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
+import colesico.framework.teleapi.assist.SimpleDataPort;
+
+import java.time.ZoneId;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class Main {
 
     public static void main(String[] args) {
-        AppService srv = IocBuilder.create().build().instance(AppService.class);
-        System.out.println("Profile = " + srv.readValue(1));
+        Ioc ioc = IocBuilder.create().build();
 
+        // Provide default data port
+        SimpleDataPort dataPort = ioc.instance(SimpleDataPort.class);
+        dataPort.provide();
+
+        Locale.setDefault(Locale.of("ru"));
+
+        AppService srv = ioc.instance(AppService.class);
+        System.out.println("Profile = " + srv.getProfile());
+
+        srv.setLocale(Locale.of("en"));
+        System.out.println("Profile/en = " + srv.getProfile());
+
+        srv.setTimezone(TimeZone.getTimeZone("UTC"));
+        System.out.println("Timezone/en = " + srv.getProfile());
     }
 }

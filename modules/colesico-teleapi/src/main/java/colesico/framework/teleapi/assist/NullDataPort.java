@@ -1,0 +1,48 @@
+package colesico.framework.teleapi.assist;
+
+import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.teleapi.DataPort;
+import colesico.framework.teleapi.TRContext;
+import colesico.framework.teleapi.TWContext;
+import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Type;
+
+@Singleton
+public final class NullDataPort implements DataPort<TRContext, TWContext> {
+
+    private static final Logger log = LoggerFactory.getLogger(NullDataPort.class);
+    private final ThreadScope threadScope;
+
+    public NullDataPort(ThreadScope threadScope) {
+        this.threadScope = threadScope;
+    }
+
+    public void provide() {
+        threadScope.put(DataPort.SCOPE_KEY, this);
+    }
+
+    @Override
+    public Object read(TRContext context) {
+        log.debug("Read for context: {}", context);
+        return null;
+    }
+
+    @Override
+    public Object read(Type valueType) {
+        log.debug("Read for value type: {}", valueType);
+        return null;
+    }
+
+    @Override
+    public void write(Object value, TWContext context) {
+        log.debug("Write value: {}; context: {}", value, context);
+    }
+
+    @Override
+    public void write(Object value, Type valueType) {
+        log.debug("Write value: {}; value type: {}", value, valueType);
+    }
+}
