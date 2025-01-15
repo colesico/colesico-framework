@@ -43,5 +43,7 @@ public class Main {
 
         srv.setTimezone(TimeZone.getTimeZone("UTC"));
         System.out.println("Timezone/en = " + srv.getProfile());
+
+        System.out.println("DataPort = "+dataPort);
     }
 }

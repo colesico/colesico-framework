@@ -27,7 +27,7 @@ public final class SimpleDataPort implements DataPort<TRContext, TWContext> {
         threadScope.put(DataPort.SCOPE_KEY, this);
     }
 
-    public Map<Type,? super Object> getValues() {
+    public Map<Type, ? super Object> getValues() {
         return values;
     }
 
@@ -46,12 +46,22 @@ public final class SimpleDataPort implements DataPort<TRContext, TWContext> {
     @Override
     public void write(Object value, TWContext context) {
         log.debug("Write value: {}; context: {}", value, context);
-        values.put(context.getValueType(),value);
+        values.put(context.getValueType(), value);
     }
 
     @Override
     public void write(Object value, Type valueType) {
         log.debug("Write value: {}; value type: {}", value, valueType);
-        values.put(valueType,value);
+        values.put(valueType, value);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("SimpleDataPort {\n");
+        values.forEach((k, v) -> {
+            sb.append(k.getTypeName()).append("=").append(v).append("\n");
+        });
+        sb.append("}");
+        return sb.toString();
     }
 }
