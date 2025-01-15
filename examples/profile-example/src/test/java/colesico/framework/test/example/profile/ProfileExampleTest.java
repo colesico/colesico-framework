@@ -17,8 +17,10 @@
 package colesico.framework.test.example.profile;
 
 import colesico.framework.example.profile.AppService;
+import colesico.framework.example.profile.custom.CustomProfile;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
+import colesico.framework.profile.Profile;
 import colesico.framework.teleapi.assist.SimpleDataPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,44 +31,50 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertNotNull;
 
 public class ProfileExampleTest {
 
     private Ioc ioc;
     private Logger logger = LoggerFactory.getLogger(ProfileExampleTest.class);
+    private SimpleDataPort dataPort;
 
     @BeforeClass
     public void init() {
         ioc = IocBuilder.create().build();
 
         // Provide default data port
-        SimpleDataPort dataPort = ioc.instance(SimpleDataPort.class);
+        dataPort = ioc.instance(SimpleDataPort.class);
         dataPort.provide();
 
         Locale.setDefault(Locale.of("ru"));
     }
 
-    @Test
+    @Test(priority = 1)
     public void testGetProfile() {
         logger.info("Get profile");
+        dataPort.clear();
         AppService service = ioc.instance(AppService.class);
-        assertNotNull(service.getProfile());
+        assertEquals(service.getProfile().getLocale().toLanguageTag(), "ru");
     }
 
-    @Test
-    public void testSetProfile() {
-        logger.info("Set profile");
+    @Test(priority = 2)
+    public void testCommitProfile() {
+        logger.info("Commit profile");
+        dataPort.clear();
         AppService service = ioc.instance(AppService.class);
         service.setLocale(Locale.of("en"));
-        assertEquals(service.getProfile().getLocale().toLanguageTag(), "en");
+        CustomProfile profile = (CustomProfile) dataPort.getValues().get(Profile.class);
+        assertEquals(profile.getLocale().toLanguageTag(), "en");
     }
 
-    @Test
-    public void testCustomProfile() {
-        logger.info("Custom profile");
+    @Test(priority = 3)
+    public void testCommitCustomProfile() {
+        logger.info("Commit custom profile");
+        dataPort.clear();
         AppService service = ioc.instance(AppService.class);
         service.setTimezone(TimeZone.getTimeZone("UTC"));
-        assertEquals(service.getProfile().getTimeZone().getID(), "UTC");
+        CustomProfile profile = (CustomProfile) dataPort.getValues().get(Profile.class);
+
+        assertEquals(profile.getTimeZone().getID(), "UTC");
     }
 }

@@ -31,6 +31,10 @@ public final class SimpleDataPort implements DataPort<TRContext, TWContext> {
         return values;
     }
 
+    public void clear() {
+        values.clear();
+    }
+
     @Override
     public Object read(TRContext context) {
         log.debug("Read for context: {}", context);
