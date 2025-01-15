@@ -39,8 +39,8 @@ public interface ProfileUtils {
      * Get values of profile fields (attributes + preferences).
      * property_name => field_value
      *
-     * @see PropertyUtils#getName()
-     * @see PropertyUtils#getValue(colesico.framework.profile.Profile)
+     * @see ProfileValueUtils#getName()
+     * @see ProfileValueUtils#getValue(colesico.framework.profile.Profile)
      */
     Map<String, Object> getValues(Profile profile);
 

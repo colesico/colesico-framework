@@ -1,11 +1,12 @@
 package colesico.framework.profile;
 
 /**
- * Profile property assistant
+ * Profile field value utils
  */
-public interface PropertyUtils<P extends Profile, V> {
+public interface ProfileValueUtils<P extends Profile, V> {
 
     /**
+     * Return property name for profile field.
      * Property name must be lowercase, match [a-z0-9], and start with a letter.
      */
     String getName();

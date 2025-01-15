@@ -18,57 +18,53 @@ public class ProfileUtilsImpl implements ProfileUtils {
     private final ProfileConfigPrototype config;
     protected final ProfileListener listener;
 
-    protected final Map<String, PropertyUtils<Profile, Object>> propertyUtils = new HashMap<>();
-    protected final Set<PropertyUtils<Profile, Object>> attributUtils = new HashSet<>();
-    protected final Set<PropertyUtils<Profile, Object>> preferenceUtils = new HashSet<>();
+    protected final Map<String, ProfileValueUtils<Profile, Object>> valuesUtils = new HashMap<>();
+    protected final Set<ProfileValueUtils<Profile, Object>> attributUtils = new HashSet<>();
+    protected final Set<ProfileValueUtils<Profile, Object>> preferenceUtils = new HashSet<>();
 
     public ProfileUtilsImpl(ProfileConfigPrototype config,
                             ProfileListener listener,
-                            Polysupplier<PropertyUtils> propertyUtilsSup) {
+                            Polysupplier<ProfileValueUtils> propertyUtilsSup) {
         this.config = config;
         this.listener = listener;
 
-        propertyUtilsSup.forEach(pu -> {
-                    this.propertyUtils.put(pu.getName(), pu);
-                    switch (pu.getKind()) {
-                        case ATTRIBUTE -> attributUtils.add(pu);
-                        case PREFERENCE -> preferenceUtils.add(pu);
-                        default -> throw new ProfileException("Unsupported profile property type: " + pu.getKind());
+        propertyUtilsSup.forEach(vu -> {
+                    this.valuesUtils.put(vu.getName(), vu);
+                    switch (vu.getKind()) {
+                        case ATTRIBUTE -> attributUtils.add(vu);
+                        case PREFERENCE -> preferenceUtils.add(vu);
+                        default -> throw new ProfileException("Unsupported profile property type: " + vu.getKind());
                     }
                 }
         );
     }
 
-    protected PropertyUtils getPropertyUtils(String propertyName) {
-        var pu = propertyUtils.get(propertyName);
-        if (pu == null) {
-            throw new ProfileException("Profile property utils not found for property name: " + propertyName);
-        }
-        return pu;
-    }
 
     @Override
     @SuppressWarnings("unchecked")
     public Profile createProfile(Map<String, Object> values) {
-        final Profile profile = config.instance();
+        final Profile profile = config.profileInstance();
         if (!values.isEmpty()) {
             values.forEach((propertyName, value) -> {
-                getPropertyUtils(propertyName).setValue(profile, value);
+                var vu = valuesUtils.get(propertyName);
+                if (vu != null) {
+                    vu.setValue(profile, value);
+                }
             });
         }
-        return listener.afterCreate(profile);
+        return profile;
     }
 
     @Override
     public Profile createProfile() {
-        return listener.afterCreate(config.instance());
+        return config.profileInstance();
     }
 
     @Override
     public Map<String, Object> getValues(Profile profile) {
         Map<String, Object> values = new HashMap<>();
-        propertyUtils.values().forEach(pu -> {
-            values.put(pu.getName(), pu.getValue(profile));
+        valuesUtils.values().forEach(vu -> {
+            values.put(vu.getName(), vu.getValue(profile));
         });
         return values;
     }
@@ -76,8 +72,8 @@ public class ProfileUtilsImpl implements ProfileUtils {
     @Override
     public Map<String, Object> getAttributes(Profile profile) {
         Map<String, Object> values = new HashMap<>();
-        attributUtils.forEach(pu -> {
-            values.put(pu.getName(), pu.getValue(profile));
+        attributUtils.forEach(vu -> {
+            values.put(vu.getName(), vu.getValue(profile));
         });
         return values;
     }
@@ -85,18 +81,20 @@ public class ProfileUtilsImpl implements ProfileUtils {
     @Override
     public Map<String, Object> getPreferences(Profile profile) {
         Map<String, Object> values = new HashMap<>();
-        preferenceUtils.forEach(pu -> {
-            values.put(pu.getName(), pu.getValue(profile));
+        preferenceUtils.forEach(vu -> {
+            values.put(vu.getName(), vu.getValue(profile));
         });
         return values;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Map<String, String> toProperties(Map<String, Object> values) {
         Map<String, String> properties = new HashMap<>();
         values.forEach((propName, propValue) -> {
-            properties.put(propName, getPropertyUtils(propName).toProperty(propValue));
+            var vu = valuesUtils.get(propName);
+            if (vu != null) {
+                properties.put(propName, vu.toProperty(propValue));
+            }
         });
         return properties;
     }
@@ -104,9 +102,11 @@ public class ProfileUtilsImpl implements ProfileUtils {
     @Override
     public Map<String, Object> fromProperties(Map<String, String> properties) {
         Map<String, Object> values = new HashMap<>();
-        properties.forEach((propName, tag) -> {
-            var pu = getPropertyUtils(propName);
-            values.put(pu.getName(), pu.fromProperty(tag));
+        properties.forEach((propName, propValue) -> {
+            var vu = valuesUtils.get(propName);
+            if (vu != null) {
+                values.put(vu.getName(), vu.fromProperty(propValue));
+            }
         });
         return values;
     }
@@ -120,13 +120,15 @@ public class ProfileUtilsImpl implements ProfileUtils {
              DataOutputStream dos = new DataOutputStream(baos)) {
 
             for (Map.Entry<String, Object> me : values.entrySet()) {
-                var pu = getPropertyUtils(me.getKey());
-                byte[] propNameBytes = pu.getName().getBytes(StandardCharsets.UTF_8);
-                dos.write(propNameBytes.length);
-                dos.write(propNameBytes);
-                byte[] propBytes = pu.toBytes(me.getValue());
-                dos.write(propBytes.length);
-                dos.write(propBytes);
+                var vu = valuesUtils.get(me.getKey());
+                if (vu != null) {
+                    byte[] propNameBytes = vu.getName().getBytes(StandardCharsets.UTF_8);
+                    dos.write(propNameBytes.length);
+                    dos.write(propNameBytes);
+                    byte[] propBytes = vu.toBytes(me.getValue());
+                    dos.write(propBytes.length);
+                    dos.write(propBytes);
+                }
             }
 
             bytes = baos.toByteArray();
@@ -148,8 +150,10 @@ public class ProfileUtilsImpl implements ProfileUtils {
                 String propName = new String(dis.readNBytes(propNameLen), StandardCharsets.UTF_8);
                 int propBytesLen = dis.read();
                 byte[] propBytes = dis.readNBytes(propBytesLen);
-                var pu = getPropertyUtils(propName);
-                values.put(pu.getName(), pu.fromBytes(propBytes));
+                var vu = valuesUtils.get(propName);
+                if (vu != null) {
+                    values.put(vu.getName(), vu.fromBytes(propBytes));
+                }
             }
 
         } catch (Exception ex) {

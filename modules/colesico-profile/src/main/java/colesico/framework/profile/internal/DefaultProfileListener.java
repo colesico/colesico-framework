@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package colesico.framework.profile;
+package colesico.framework.profile.internal;
 
+import colesico.framework.profile.Profile;
+import colesico.framework.profile.ProfileListener;
 import jakarta.inject.Singleton;
 
 /**
@@ -23,11 +25,6 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 public class DefaultProfileListener implements ProfileListener {
-
-    @Override
-    public Profile afterCreate(Profile profile) {
-        return profile;
-    }
 
     @Override
     public Profile beforeWrite(Profile profile) {

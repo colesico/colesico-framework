@@ -9,7 +9,7 @@ abstract public class ProfileConfigPrototype {
     /**
      * Create profile with default field values
      */
-    abstract public Profile instance();
+    abstract public Profile profileInstance();
 
 
 }

@@ -1,16 +1,16 @@
 package colesico.framework.profile.internal;
 
 import colesico.framework.profile.DefaultProfile;
-import colesico.framework.profile.PropertyUtils;
+import colesico.framework.profile.ProfileValueUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
-public class LocalePropertyUtils implements PropertyUtils<DefaultProfile, Locale> {
+public class LocaleValueUtils implements ProfileValueUtils<DefaultProfile, Locale> {
 
 
-    public static LocalePropertyUtils of() {
-        return new LocalePropertyUtils();
+    public static LocaleValueUtils of() {
+        return new LocaleValueUtils();
     }
 
     @Override
