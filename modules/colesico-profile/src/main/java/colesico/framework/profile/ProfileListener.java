@@ -17,13 +17,13 @@
 package colesico.framework.profile;
 
 
-public interface ProfileListener {
+public interface ProfileListener<P extends Profile> {
 
     /**
      * Controls the profile before write it to the source.
      * Override this method to get more specific control.
      */
-    Profile beforeWrite(Profile profile);
+    Profile beforeWrite(P profile);
 
     /**
      * Controls the profile after read from the source.
@@ -33,6 +33,6 @@ public interface ProfileListener {
      *
      * @return Valid profile or null
      */
-    Profile afterRead(Profile profile);
+    Profile afterRead(P profile);
 
 }

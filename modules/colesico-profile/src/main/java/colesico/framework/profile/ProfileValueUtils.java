@@ -24,7 +24,7 @@ public interface ProfileValueUtils<P extends Profile, V> {
     void setValue(P profile, V value);
 
     /**
-     * Convert profile  field value to string property value
+     * Convert profile  field value to string  property  value representation.
      */
     String toProperty(V value);
 

@@ -10,6 +10,9 @@ public class CustomProfile extends DefaultProfile {
 
     private TimeZone timeZone;
 
+    // filled in from the listener
+    private String apiVersion;
+
     public TimeZone getTimeZone() {
         return timeZone;
     }
@@ -18,11 +21,20 @@ public class CustomProfile extends DefaultProfile {
         this.timeZone = timeZone;
     }
 
+    public String getApiVersion() {
+        return apiVersion;
+    }
+
+    public void setApiVersion(String apiVersion) {
+        this.apiVersion = apiVersion;
+    }
+
     @Override
     public String toString() {
         return "CustomProfile{" +
                 "locale=" + locale +
                 ", timeZone=" + timeZone +
+                ", apiVersion='" + apiVersion + '\'' +
                 '}';
     }
 }

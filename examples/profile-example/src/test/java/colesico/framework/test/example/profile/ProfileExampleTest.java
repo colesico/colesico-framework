@@ -77,4 +77,12 @@ public class ProfileExampleTest {
 
         assertEquals(profile.getTimeZone().getID(), "UTC");
     }
+
+    @Test(priority = 1)
+    public void testProfileListener() {
+        logger.info("Profile listener");
+        dataPort.clear();
+        AppService service = ioc.instance(AppService.class);
+        assertEquals(service.getProfile().getApiVersion(), "2.0");
+    }
 }

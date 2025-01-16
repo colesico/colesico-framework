@@ -6,5 +6,6 @@ module colesico.framework.example.profile {
 
     exports colesico.framework.example.profile;
     exports colesico.framework.example.profile.custom;
+    exports colesico.framework.example.profile.listener;
 
 }
