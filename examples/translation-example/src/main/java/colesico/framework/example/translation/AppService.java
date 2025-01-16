@@ -16,23 +16,25 @@
 
 package colesico.framework.example.translation;
 
+import colesico.framework.example.translation.dictionary.AppDictionary;
+import colesico.framework.service.Service;
 import jakarta.inject.Singleton;
 
-@Singleton
+@Service
 public class AppService {
 
-    private final AppDictionary standaloneDictionary;
+    private final AppDictionary dictionary;
 
-    public AppService(AppDictionary standaloneDictionary) {
-        this.standaloneDictionary = standaloneDictionary;
+    public AppService(AppDictionary dictionary) {
+        this.dictionary = dictionary;
     }
 
     public String sayHello() {
-        System.out.println("Bundle: " + standaloneDictionary.getBundle());
-        return standaloneDictionary.hello();
+        System.out.println("Bundle: " + dictionary.getBundle());
+        return dictionary.hello();
     }
 
     public String sayBye() {
-        return standaloneDictionary.bye("Anonymous");
+        return dictionary.bye("Anonymous");
     }
 }

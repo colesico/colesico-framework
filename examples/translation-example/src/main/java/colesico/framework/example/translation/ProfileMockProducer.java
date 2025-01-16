@@ -18,6 +18,7 @@ package colesico.framework.example.translation;
 
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.production.Producer;
+import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.profile.Profile;
 import colesico.framework.profile.ProfileUtils;
 
@@ -29,6 +30,7 @@ import java.util.Locale;
  */
 @Producer
 public class ProfileMockProducer {
+
     private static final Locale deLocale = Locale.of("de", "DE", "UNIX");
     private static final Locale enLocale = Locale.of("en", "GB");
     private static final Locale ruLocale = Locale.of("ru");
@@ -54,6 +56,7 @@ public class ProfileMockProducer {
     }
 
     @Substitute
+    @Unscoped
     public Profile getProfile(ProfileUtils profileUtils) {
         return profileUtils.createProfile(curLocale);
     }

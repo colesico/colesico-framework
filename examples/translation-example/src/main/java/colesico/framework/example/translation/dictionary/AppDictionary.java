@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.translation;
+package colesico.framework.example.translation.dictionary;
 
 import colesico.framework.translation.Dictionary;
 import colesico.framework.translation.TranslationDictionary;

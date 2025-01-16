@@ -16,6 +16,7 @@
 
 package colesico.framework.translation.internal;
 
+import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.resource.ResourceKit;
@@ -24,13 +25,12 @@ import colesico.framework.translation.TranslationKit;
 import colesico.framework.translation.assist.propbundle.PropertyBundleCache;
 import colesico.framework.translation.assist.propbundle.PropertyBundleCacheSoft;
 import colesico.framework.translation.assist.propbundle.PropertyBundleFactory;
-
 import jakarta.inject.Singleton;
 
 
 @Producer
 @Produce(TranslationKitImpl.class)
-@Produce(value = TextFormatterImpl.class, keyType = TextFormatter.class)
+@Produce(value = TextFormatterImpl.class, keyType = TextFormatter.class, substitute = Substitution.STUB)
 public class TranslationProducer {
 
     @Singleton

@@ -22,6 +22,7 @@ package colesico.framework.ioc.scope;
  * @author Vladlen Larionov
  */
 public interface ThreadScope extends Scope {
+
     /**
      * Should be called by the "dispatcher" before processing the request.
      * For example, the dispatcher of http request  (servlet) must call this method before processing the request.
@@ -32,4 +33,5 @@ public interface ThreadScope extends Scope {
      * Should be called by the "dispatcher" after processing the request
      */
     void destroy();
+
 }

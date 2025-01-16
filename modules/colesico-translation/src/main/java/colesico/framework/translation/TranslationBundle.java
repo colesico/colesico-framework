@@ -28,7 +28,6 @@ public interface TranslationBundle {
      * Returns the string by its key or the default value if string was not found.
      * Also performs the parameter substitution by default with MessageFormat.format(...)
      */
-    //TODO: specify forrmater via config?
     String get(String key, String defaultValue, Object... params);
 
 }

@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.nio.charset.StandardCharsets;
 import java.util.TimeZone;
 
-public class TimezonValueUtils implements ProfileValueUtils<CustomProfile, TimeZone> {
+public class TimezoneValueUtils implements ProfileValueUtils<CustomProfile, TimeZone> {
 
 
     @Override

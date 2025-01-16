@@ -57,7 +57,7 @@ public final class TranslationBundleImpl implements TranslationBundle {
         for (var key : bundle.getKeys()) {
             sb.append(key).append('=').append(bundle.getString(key)).append("\n");
         }
-        sb.append("\n }");
+        sb.append("}");
         return sb.toString();
     }
 }

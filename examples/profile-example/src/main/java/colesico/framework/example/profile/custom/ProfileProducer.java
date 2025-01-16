@@ -5,6 +5,6 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.ProfileValueUtils;
 
 @Producer
-@Produce(value = TimezonValueUtils.class, keyType = ProfileValueUtils.class, polyproduce = true)
+@Produce(value = TimezoneValueUtils.class, keyType = ProfileValueUtils.class, polyproduce = true)
 public class ProfileProducer {
 }

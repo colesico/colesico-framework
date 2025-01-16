@@ -18,73 +18,114 @@ package colesico.framework.test.example.translation;
 
 import colesico.framework.example.translation.AppService;
 import colesico.framework.example.translation.ProfileMockProducer;
+import colesico.framework.example.translation.formatter.CustomFormatter;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
+import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.profile.Profile;
+import colesico.framework.translation.TextFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
 public class TranslationExampleTest {
 
+    private Logger log = LoggerFactory.getLogger(TranslationExampleTest.class);
 
-    @Test
+    private Ioc ioc;
+
+    // is used for clear translation bundle cache
+    private ThreadScope threadScope;
+
+    @BeforeClass
+    public void setUp() {
+        log.info("Init translation text");
+        ioc = IocBuilder.create().build();
+        threadScope = ioc.instance(ThreadScope.class);
+    }
+
+    @Test(priority = 1)
     public void testDe() {
-        Ioc ioc = IocBuilder.create().build();
+        log.info("Test DE");
         ProfileMockProducer.de();
         Profile profile = ioc.instance(Profile.class);
-        System.out.println("DE Profile: "+profile);
+        System.out.println("DE Profile: " + profile);
         assertEquals(profile.getLocale().getLanguage(), "de");
 
+        threadScope.init();
         AppService srv = ioc.instance(AppService.class);
         assertEquals(srv.sayHello(), "HI");
+        threadScope.destroy();
     }
 
-    @Test
+    @Test(priority = 2)
     public void testRu() {
-        Ioc ioc = IocBuilder.create().build();
+        log.info("Test RU");
         ProfileMockProducer.ru();
         Profile profile = ioc.instance(Profile.class);
-        System.out.println("RU Profile: "+profile);
+        System.out.println("RU Profile: " + profile);
         assertEquals(profile.getLocale().getLanguage(), "ru");
 
+        threadScope.init();
         AppService srv = ioc.instance(AppService.class);
         assertEquals(srv.sayHello(), "Привет");
+        threadScope.destroy();
     }
 
-    @Test
+    @Test(priority = 3)
     public void testEn() {
-        Ioc ioc = IocBuilder.create().build();
+        log.info("Test EN");
         ProfileMockProducer.en();
         Profile profile = ioc.instance(Profile.class);
-        System.out.println("EN Profile: "+profile);
+        System.out.println("EN Profile: " + profile);
         assertEquals(profile.getLocale().getLanguage(), "en");
 
         AppService srv = ioc.instance(AppService.class);
         assertEquals(srv.sayHello(), "Hello");
     }
 
-    @Test
+    @Test(priority = 4)
     public void testFr() {
-        Ioc ioc = IocBuilder.create().build();
         ProfileMockProducer.fr();
         Profile profile = ioc.instance(Profile.class);
-        System.out.println("FR Profile: "+profile);
+        System.out.println("FR Profile: " + profile);
         assertEquals(profile.getLocale().getLanguage(), "fr");
 
+        threadScope.init();
         AppService srv = ioc.instance(AppService.class);
         assertEquals(srv.sayHello(), "Salut");
+        threadScope.destroy();
     }
 
-    @Test
-    public void testBye() {
-        Ioc ioc = IocBuilder.create().build();
+    @Test(priority = 5)
+    public void testFormatter() {
         ProfileMockProducer.en();
         Profile profile = ioc.instance(Profile.class);
-        System.out.println("Bye Profile: "+profile);
+        System.out.println("Bye Profile: " + profile);
         assertEquals(profile.getLocale().getLanguage(), "en");
 
+        threadScope.init();
         AppService srv = ioc.instance(AppService.class);
         assertEquals(srv.sayBye(), "Bye Anonymous");
+        threadScope.destroy();
+    }
+
+    @Test(priority = 6)
+    public void testCustomFormatter() {
+        ProfileMockProducer.en();
+        Profile profile = ioc.instance(Profile.class);
+        System.out.println("Bye Profile: " + profile);
+        assertEquals(profile.getLocale().getLanguage(), "en");
+
+        threadScope.init();
+        AppService srv = ioc.instance(AppService.class);
+        assertEquals(srv.sayBye(), "Bye Anonymous");
+
+        CustomFormatter cf = (CustomFormatter) ioc.instance(TextFormatter.class);
+        assertEquals(cf.getText(), "Bye Anonymous");
+        threadScope.destroy();
     }
 }
