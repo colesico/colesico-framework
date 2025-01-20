@@ -4,32 +4,40 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Localization assistant
+ * Localization assistant.
+ * Localizer finds the best matched {@link SubjectQualifiers} for
+ * given {@link ObjectiveQualifiers} qualifiers
+ * <p>
+ * The match is finding by lookup the subject qualifier tree.
  */
 public final class Localizer {
 
-    private static final String ANY_VALUE = "*";
+    /**
+     * Qualifier any value.
+     * Corresponds to qualifier null value.
+     */
+    public static final String ANY_VALUE = "*";
 
     /**
-     * Tree root node
+     * {@link SubjectQualifiers} tree root node.
      */
     private final Node rootNode = new Node();
 
     /**
-     * Adds resource localization
+     * Register resource qualifiers  ({@link SubjectQualifiers})  in localizer
      */
-    public void addLocalization(final SubjectQualifiers qualifiers) {
+    public void addQualifiers(final SubjectQualifiers qualifiers) {
         Node lastNode = provideLastNode(qualifiers);
         lastNode.setQualifiers(qualifiers);
     }
 
     /**
-     * Returns matched resource qualifiers.
+     * Returns resource {@link SubjectQualifiers} best matched  to {@link ObjectiveQualifiers} qualifiers.
      *
      * @param qualifiers qualification obtained from profile
      * @return null if no qualifier bound
      */
-    public SubjectQualifiers localize(final ObjectiveQualifiers qualifiers) {
+    public SubjectQualifiers match(final ObjectiveQualifiers qualifiers) {
         Node curNode = rootNode;
         for (String q : qualifiers) {
             Node node = curNode.getNext(q);

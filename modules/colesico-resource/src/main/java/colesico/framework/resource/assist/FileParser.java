@@ -2,6 +2,9 @@ package colesico.framework.resource.assist;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Parse file path to obtain file name, file extension
+ */
 public class FileParser {
 
     public static final char PATH_SEP = '/';

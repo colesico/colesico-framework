@@ -9,12 +9,11 @@ import colesico.framework.resource.assist.FileParser;
 import colesico.framework.resource.assist.PathTrie;
 import colesico.framework.resource.assist.localization.Localizer;
 import colesico.framework.resource.assist.localization.SubjectQualifiers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Localization rewriter
@@ -24,7 +23,7 @@ public class L10nRewriter implements PathRewriter {
 
     private static final Logger log = LoggerFactory.getLogger(L10nRewriter.class);
 
-    private final PathTrie<L10NConfig> pathTrie = new PathTrie<>("/");
+    private final PathTrie<L10NConfig> pathTrie = PathTrie.of();
 
     private final L10nRewriterConfigPrototype config;
     private final Provider<Profile> profileProv;
@@ -46,8 +45,9 @@ public class L10nRewriter implements PathRewriter {
     /**
      * Register localizing qualifiers for specific resource path
      *
-     * @param path
-     * @param subjectQualifiersSpec subject qualifier values set specification string in the format: qualifierName1=value1;qualifierName2=value2...
+     * @param path                  - resource path
+     * @param mode                  - rewriting mode
+     * @param subjectQualifiersSpec - subject qualifiers values set specification string in the format: qualifierName1=value1;qualifierName2=value2...
      *                              Qualifier values order is unimportant, it will be ordered at parsing time
      */
     public L10nRewriter l10n(String path, L10nMode mode, String... subjectQualifiersSpec) {
@@ -68,7 +68,7 @@ public class L10nRewriter implements PathRewriter {
         }
 
         for (String qualifiersSpecItem : subjectQualifiersSpec) {
-            localizer.addLocalization(SubjectQualifiers.fromSpec(qualifiersSpecItem, config.getQualifiersDefinition()));
+            localizer.addQualifiers(SubjectQualifiers.ofSpec(qualifiersSpecItem, config.getQualifiersDefinition()));
         }
         return this;
     }
@@ -90,7 +90,7 @@ public class L10nRewriter implements PathRewriter {
             return path;
         }
 
-        SubjectQualifiers qualifiers = l10NConfig.getLocalizer().localize(config.getObjectiveQualifiers(profileProv.get()));
+        SubjectQualifiers qualifiers = l10NConfig.getLocalizer().match(config.getObjectiveQualifiers(profileProv.get()));
 
         if (qualifiers == null) {
             return path;
@@ -98,9 +98,9 @@ public class L10nRewriter implements PathRewriter {
 
         switch (l10NConfig.getMode()) {
             case FILE:
-                return localizeFile(path, qualifiers);
+                return rewriteFileName(path, qualifiers);
             case DIR:
-                return localizeDir(path, qualifiers);
+                return rewriteDirectoryName(path, qualifiers);
             default:
                 throw new ResourceException("Unsupported localization mode: " + l10NConfig.getMode());
         }
@@ -120,7 +120,7 @@ public class L10nRewriter implements PathRewriter {
      * /.txt - > /.txt_en_GB !
      * / -> /_en_GB !
      */
-    private String localizeFile(String path, SubjectQualifiers qualifiers) {
+    private String rewriteFileName(String path, SubjectQualifiers qualifiers) {
 
         final FileParser fp = new FileParser(path);
         final String filePath = fp.path();
@@ -163,7 +163,7 @@ public class L10nRewriter implements PathRewriter {
      * /.txt - > _en_GB/.txt
      * / -> _en_GB/
      */
-    private String localizeDir(String resourcePath, SubjectQualifiers qualifiers) {
+    private String rewriteDirectoryName(String resourcePath, SubjectQualifiers qualifiers) {
         final FileParser fp = new FileParser(resourcePath);
         final String path = fp.path();
         final String fileName = fp.fileName();
@@ -207,8 +207,5 @@ public class L10nRewriter implements PathRewriter {
         }
     }
 
-    /**
-     * Resource localization mode
-     */
 
 }

@@ -12,7 +12,7 @@ public interface RewriterRegistry {
     void register(String id, PathRewriter rewriter, RewritingPhase phase);
 
     /**
-     * Registers rewriter in the register if it is not been registered before
+     * Registers rewriter in the register if it is not being registered before
      */
     void registerIfAbsent(String id, PathRewriter rewriter, RewritingPhase phase);
 

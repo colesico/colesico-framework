@@ -19,9 +19,9 @@ package colesico.framework.resource.rewriters;
 import colesico.framework.resource.PathRewriter;
 import colesico.framework.resource.RewriterRegistry;
 import colesico.framework.resource.RewritingPhase;
+import jakarta.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 
-import jakarta.inject.Singleton;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,29 +29,19 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Substitutes given properties names with its values
+ * Replaces parameter names in the path with their values
+ * <p>
+ * Example:
+ * /foo/$param1/$param2/bar/baz for $param1=dummy; $param2=100 will be
+ * rewrote to /foo/dummy/100/bar/baz
  */
 @Singleton
 public class ParamRewriter implements PathRewriter {
 
-    public static final char PROPERTY_PREFIX = '$';
+    public static final char PARAM_PREFIX = '$';
     public static final char PATH_SEPARATOR = '/';
 
-    private final Map<String, String> propertiesMap = new HashMap<>();
-
-    @Override
-    public String rewrite(String path) {
-        List<String> pathItems = splitPath(path);
-        int n = pathItems.size();
-        for (int i = 0; i < n; i++) {
-            String pathItem = pathItems.get(i);
-            if ((!"".equals(pathItem)) && pathItem.charAt(0) == PROPERTY_PREFIX) {
-                pathItem = getValue(pathItem);
-            }
-            pathItems.set(i, pathItem);
-        }
-        return StringUtils.join(pathItems, PATH_SEPARATOR);
-    }
+    private final Map<String, String> paramsMap = new HashMap<>();
 
     /**
      * Register rewriter in the rewriter register
@@ -73,24 +63,41 @@ public class ParamRewriter implements PathRewriter {
             throw new RuntimeException("Value is empty or null");
         }
 
-        if (name.charAt(0) != PROPERTY_PREFIX) {
-            throw new RuntimeException("Property name '" + name + "' must starts with '" + PROPERTY_PREFIX + "'");
+        if (name.charAt(0) != PARAM_PREFIX) {
+            throw new RuntimeException("Property name '" + name + "' must starts with '" + PARAM_PREFIX + "'");
         }
 
-        String oldPath = propertiesMap.put(name, value);
+        String oldPath = paramsMap.put(name, value);
         if (oldPath != null) {
-            throw new RuntimeException("Duplicate property: " + name + "=" + value + " (" + oldPath + ")");
+            throw new RuntimeException("Duplicate param: " + name + "=" + value + " (" + oldPath + ")");
         }
 
         return this;
     }
 
+    /**
+     * Parameter value
+     */
     public String getValue(String name) {
-        String path = propertiesMap.get(name);
+        String path = paramsMap.get(name);
         if (path == null) {
             throw new RuntimeException("Undefined parameter: " + name);
         }
         return path;
+    }
+
+    @Override
+    public String rewrite(String path) {
+        List<String> pathItems = splitPath(path);
+        int n = pathItems.size();
+        for (int i = 0; i < n; i++) {
+            String pathItem = pathItems.get(i);
+            if ((!"".equals(pathItem)) && pathItem.charAt(0) == PARAM_PREFIX) {
+                pathItem = getValue(pathItem);
+            }
+            pathItems.set(i, pathItem);
+        }
+        return StringUtils.join(pathItems, PATH_SEPARATOR);
     }
 
     private List<String> splitPath(String path) {
@@ -109,10 +116,10 @@ public class ParamRewriter implements PathRewriter {
         return res;
     }
 
-    public void dumpProperties(StringWriter writer) {
-        writer.write("Evaluated properties:\n");
-        for (Map.Entry<String, String> property : propertiesMap.entrySet()) {
-            writer.write("    " + property.getKey() + "=" + property.getValue() + "\n");
+    public void dumpParam(StringWriter writer) {
+        writer.write("Evaluated parameters:\n");
+        for (Map.Entry<String, String> param : paramsMap.entrySet()) {
+            writer.write("    " + param.getKey() + "=" + param.getValue() + "\n");
         }
     }
 }

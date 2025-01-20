@@ -9,10 +9,13 @@ import colesico.framework.resource.assist.localization.QualifiersDefinition;
 @ConfigPrototype(model = ConfigModel.SINGLE)
 abstract public class L10nRewriterConfigPrototype {
 
+    /**
+     * Setup {@link QualifiersDefinition} fo L10n rewriter
+     */
     abstract public QualifiersDefinition getQualifiersDefinition();
 
     /**
-     * Returns object qualifiers based on given profile
+     * Returns {@link ObjectiveQualifiers} from on given profile
      */
     abstract public ObjectiveQualifiers getObjectiveQualifiers(Profile profile);
 

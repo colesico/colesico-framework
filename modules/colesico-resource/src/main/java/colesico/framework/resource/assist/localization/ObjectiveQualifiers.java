@@ -5,17 +5,27 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
- * Objective qualifier values is used to select appropriate localized resource, etc.
- * Typically these qualifiers are defined based on the profile of the current user.
+ * Objective qualifiers values is used to select appropriate localized resource, etc.
+ * Typically, these qualifiers are defined based on the profile of the current user.
+ * Number of qualifiers and order must be strongly  according
+ * to canonical qualifiers number and order  defined in {@link QualifiersDefinition}
+ * Any undetermined qualifier values must be null.
  */
 public final class ObjectiveQualifiers implements Iterable<String> {
 
     /**
-     * Qualifiers
-     * Number of qualifiers and its order must be in accordance with the according to canonical qualifiers order
+     * Qualifiers values.
+     * Number of qualifiers values and its order must according
+     * to canonical qualifiers order.
      * Undetermined qualifier values must be null.
+     * <p>
+     * Example:
+     * ["en", "US"]
+     * ["ru","RU",null]
+     * [null, "UK"]
      */
     private final String[] values;
 
@@ -23,10 +33,14 @@ public final class ObjectiveQualifiers implements Iterable<String> {
         this.values = values;
     }
 
+    public static ObjectiveQualifiers of(String[] values) {
+        return new ObjectiveQualifiers(values);
+    }
+
     /**
      * Creates from the given locale for language
      */
-    public static ObjectiveQualifiers fromLocaleL(Locale locale) {
+    public static ObjectiveQualifiers ofLocaleL(Locale locale) {
         return new ObjectiveQualifiers(new String[]{
                 StringUtils.isBlank(locale.getLanguage()) ? null : locale.getLanguage(),
         });
@@ -35,7 +49,7 @@ public final class ObjectiveQualifiers implements Iterable<String> {
     /**
      * Creates from the given locale for language and country
      */
-    public static ObjectiveQualifiers fromLocaleLC(Locale locale) {
+    public static ObjectiveQualifiers ofLocaleLC(Locale locale) {
         return new ObjectiveQualifiers(new String[]{
                 StringUtils.isBlank(locale.getLanguage()) ? null : locale.getLanguage(),
                 StringUtils.isBlank(locale.getCountry()) ? null : locale.getCountry()
@@ -45,7 +59,7 @@ public final class ObjectiveQualifiers implements Iterable<String> {
     /**
      * Creates from the given locale for language, country, variant
      */
-    public static ObjectiveQualifiers fromLocaleLCV(Locale locale) {
+    public static ObjectiveQualifiers ofLocaleLCV(Locale locale) {
         return new ObjectiveQualifiers(new String[]{
                 StringUtils.isBlank(locale.getLanguage()) ? null : locale.getLanguage(),
                 StringUtils.isBlank(locale.getCountry()) ? null : locale.getCountry(),
@@ -64,8 +78,20 @@ public final class ObjectiveQualifiers implements Iterable<String> {
 
     @Override
     public String toString() {
-        return "ProfileQualifiers{" +
+        return "ObjectiveQualifiers{" +
                 "values=" + Arrays.toString(values) +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        ObjectiveQualifiers strings = (ObjectiveQualifiers) o;
+        return Objects.deepEquals(values, strings.values);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(values);
     }
 }

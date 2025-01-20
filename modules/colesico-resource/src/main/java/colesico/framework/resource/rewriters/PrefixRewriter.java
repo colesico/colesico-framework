@@ -16,14 +16,13 @@
 
 package colesico.framework.resource.rewriters;
 
-import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.PathRewriter;
+import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.RewriterRegistry;
 import colesico.framework.resource.RewritingPhase;
 import colesico.framework.resource.assist.PathTrie;
-import org.apache.commons.lang3.StringUtils;
-
 import jakarta.inject.Singleton;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Rewrites the path by a partial prefix match.
@@ -32,7 +31,7 @@ import jakarta.inject.Singleton;
 @Singleton
 public class PrefixRewriter implements PathRewriter {
 
-    private final PathTrie<Rewriting> pathTrie = new PathTrie<>("/");
+    private final PathTrie<Rewriting> pathTrie = PathTrie.of();
 
     @Override
     public final String rewrite(String path) {

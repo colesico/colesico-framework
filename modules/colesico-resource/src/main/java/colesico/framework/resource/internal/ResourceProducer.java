@@ -38,11 +38,4 @@ public class ResourceProducer {
         return impl;
     }
 
-    /**
-     * Default config
-     */
-    @Singleton
-    public L10nRewriterConfigPrototype getDefaultRewriterConfigPrototype() {
-        return new L10nRewriterConfigImpl();
-    }
-}
+  }

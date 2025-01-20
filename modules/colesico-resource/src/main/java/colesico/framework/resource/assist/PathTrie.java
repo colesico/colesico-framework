@@ -21,6 +21,9 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
+ * Path tree representation
+ *
+ * @param <V> trie node payload type
  * @author Vladlen Larionov
  */
 public class PathTrie<V> {
@@ -28,10 +31,17 @@ public class PathTrie<V> {
     protected final Node<V> rootNode;
     protected final String delimiter;
 
-
     public PathTrie(String delimiter) {
         this.rootNode = new Node<>();
         this.delimiter = delimiter;
+    }
+
+    public static <V> PathTrie<V> of() {
+        return new PathTrie<>("/");
+    }
+
+    public static <V> PathTrie<V> of(String delimiter) {
+        return new PathTrie<>(delimiter);
     }
 
     /**

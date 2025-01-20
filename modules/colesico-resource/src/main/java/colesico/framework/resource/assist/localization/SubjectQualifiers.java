@@ -5,7 +5,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 
 /**
- * Localizing qualifiers linked with localization subject  (resource, e.t.c.)
+ * Localizing qualifiers linked with localization subject  (any resource, etc.)
+ * Number of qualifiers and order must be strongly  according
+ * to canonical qualifiers number and order defined in {@link QualifiersDefinition}
+ * Any undetermined qualifier values must be null.
  */
 public final class SubjectQualifiers implements Iterable<String> {
 
@@ -16,26 +19,35 @@ public final class SubjectQualifiers implements Iterable<String> {
      */
     private final String[] values;
 
-    public static SubjectQualifiers fromMap(Map<String, String> subjectQualifiers, QualifiersDefinition definition) {
+    public SubjectQualifiers(String[] values) {
+        this.values = values;
+    }
+
+    public static SubjectQualifiers of(String[] values) {
+        return new SubjectQualifiers(values);
+    }
+
+    public static SubjectQualifiers ofMap(Map<String, String> qualifiersMap, QualifiersDefinition definition) {
+
         // Check empty
-        if (subjectQualifiers == null || subjectQualifiers.isEmpty()) {
+        if (qualifiersMap == null || qualifiersMap.isEmpty()) {
             throw new RuntimeException("Subject qualifiers is empty");
         }
 
         // Check names
         Set<String> definedNames = Set.of(definition.getNames());
-        for (String name : subjectQualifiers.keySet()) {
+        for (String name : qualifiersMap.keySet()) {
             if (!definedNames.contains(name)) {
                 throw new RuntimeException("Undefined qualifier name: " + name);
             }
         }
 
-        // Convert to array
+        // Convert map to array
         String[] qualifiersArr = new String[definition.getSize()];
         for (int i = 0; i < definition.getSize(); i++) {
             String name = definition.getName(i);
             if (name != null) {
-                qualifiersArr[i] = subjectQualifiers.get(name);
+                qualifiersArr[i] = qualifiersMap.get(name);
             } else {
                 qualifiersArr[i] = null;
             }
@@ -51,8 +63,8 @@ public final class SubjectQualifiers implements Iterable<String> {
      * @param definition
      * @return
      */
-    public static SubjectQualifiers fromSpec(String qualifiersSpec, QualifiersDefinition definition) {
-        return fromMap(parseQualifiersSpec(qualifiersSpec), definition);
+    public static SubjectQualifiers ofSpec(String qualifiersSpec, QualifiersDefinition definition) {
+        return ofMap(parseQualifiersSpec(qualifiersSpec), definition);
     }
 
     private static Map<String, String> parseQualifiersSpec(String qualifiersSpec) {
@@ -77,9 +89,6 @@ public final class SubjectQualifiers implements Iterable<String> {
         return new String[]{name, val};
     }
 
-    public SubjectQualifiers(String[] values) {
-        this.values = values;
-    }
 
     public String[] getValues() {
         return values;
