@@ -24,11 +24,11 @@ public class L10nRewriter implements PathRewriter, L10NRewriterSettings {
 
     private final PathTrie<L10NConfig> pathTrie = PathTrie.of();
 
-    private final L10nRewriterCoreConfigPrototype config;
+    private final L10nRewriterConfigPrototype config;
     private final Provider<Profile> profileProv;
 
     @Inject
-    public L10nRewriter(L10nRewriterCoreConfigPrototype config, Provider<Profile> profileProv) {
+    public L10nRewriter(L10nRewriterConfigPrototype config, Provider<Profile> profileProv) {
         this.config = config;
         this.profileProv = profileProv;
     }

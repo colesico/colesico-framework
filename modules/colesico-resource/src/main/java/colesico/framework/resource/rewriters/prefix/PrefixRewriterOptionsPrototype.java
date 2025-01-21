@@ -4,6 +4,6 @@ import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
 
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class PrefixRewriterConfigPrototype {
+abstract public class PrefixRewriterOptionsPrototype {
     abstract public void configure(PrefixRewriterSettings settings);
 }

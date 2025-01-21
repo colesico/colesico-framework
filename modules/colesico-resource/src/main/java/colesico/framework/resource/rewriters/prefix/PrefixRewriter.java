@@ -33,7 +33,7 @@ public class PrefixRewriter implements PathRewriter, PrefixRewriterSettings {
 
     private final PathTrie<Rewriting> pathTrie = PathTrie.of();
 
-    public PrefixRewriter(Polysupplier<PrefixRewriterConfigPrototype> configSup) {
+    public PrefixRewriter(Polysupplier<PrefixRewriterOptionsPrototype> configSup) {
         configSup.forEach(conf -> conf.configure(this));
     }
 

@@ -43,7 +43,7 @@ public class ParamRewriter implements PathRewriter, ParamRewriterSettings {
 
     private final Map<String, String> paramsMap = new HashMap<>();
 
-    public ParamRewriter(Polysupplier<ParamRewriterConfigPrototype> configSup) {
+    public ParamRewriter(Polysupplier<ParamRewriterOptionsPrototype> configSup) {
         configSup.forEach(conf -> conf.configure(this));
     }
 
