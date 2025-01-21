@@ -18,24 +18,18 @@ package colesico.framework.resource.internal;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.resource.ResourceKit;
-import colesico.framework.resource.rewriters.ParamRewriter;
 import colesico.framework.resource.rewriters.localization.L10nRewriter;
-import colesico.framework.resource.rewriters.localization.L10nRewriterConfigPrototype;
-import colesico.framework.resource.rewriters.PrefixRewriter;
-
+import colesico.framework.resource.rewriters.param.ParamRewriter;
+import colesico.framework.resource.rewriters.prefix.PrefixRewriter;
 import jakarta.inject.Singleton;
 
 
 @Producer
-@Produce(ResourceKitImpl.class)
-@Produce(PrefixRewriter.class)
-@Produce(ParamRewriter.class)
-@Produce(L10nRewriter.class)
+@Produce(value = PrefixRewriter.class, keyType = ParamRewriter.class, polyproduce = true)
+@Produce(value = ParamRewriter.class, keyType = ParamRewriter.class, polyproduce = true)
+@Produce(value = L10nRewriter.class, keyType = ParamRewriter.class, polyproduce = true)
+@Produce(value = ResourceKitImpl.class, keyType = ResourceKit.class)
 public class ResourceProducer {
 
-    @Singleton
-    public ResourceKit getResourcesKit(ResourceKitImpl impl) {
-        return impl;
-    }
 
-  }
+}

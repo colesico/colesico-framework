@@ -19,7 +19,7 @@ package colesico.framework.example.web.pebble;
 import colesico.framework.config.Config;
 import colesico.framework.resource.ResourceOptionsPrototype;
 import colesico.framework.resource.RewriterRegistry;
-import colesico.framework.resource.rewriters.ParamRewriter;
+import colesico.framework.resource.rewriters.param.ParamRewriter;
 
 import jakarta.inject.Inject;
 

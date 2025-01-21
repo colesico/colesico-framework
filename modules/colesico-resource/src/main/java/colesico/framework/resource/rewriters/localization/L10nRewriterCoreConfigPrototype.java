@@ -7,7 +7,7 @@ import colesico.framework.resource.assist.localization.ObjectiveQualifiers;
 import colesico.framework.resource.assist.localization.QualifiersDefinition;
 
 @ConfigPrototype(model = ConfigModel.SINGLE)
-abstract public class L10nRewriterConfigPrototype {
+abstract public class L10nRewriterCoreConfigPrototype {
 
     /**
      * Setup {@link QualifiersDefinition} fo L10n rewriter

@@ -29,8 +29,14 @@ public interface ResourceKit {
      */
     String rewrite(String path);
 
+    /**
+     * Rewrites resource path and returns resource URLs
+     */
     Enumeration<URL> getResourceURLs(String resourcePath);
 
+    /**
+     * Rewrites resource path and returns resource input stream
+     */
     InputStream getResourceStream(String resourcePath);
 
 }

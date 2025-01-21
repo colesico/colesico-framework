@@ -5,12 +5,12 @@ import java.util.Map;
 
 /**
  * Localization assistant.
- * Localizer finds the best matched {@link SubjectQualifiers} for
+ * Matcher finds the best matched {@link SubjectQualifiers} for
  * given {@link ObjectiveQualifiers} qualifiers
  * <p>
  * The match is finding by lookup the subject qualifier tree.
  */
-public final class Localizer {
+public final class Matcher {
 
     /**
      * Qualifier any value.

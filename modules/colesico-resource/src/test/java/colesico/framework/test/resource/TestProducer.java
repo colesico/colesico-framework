@@ -24,7 +24,7 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.profile.ProfileUtils;
 import colesico.framework.resource.ResourceOptionsPrototype;
-import colesico.framework.resource.rewriters.ParamRewriter;
+import colesico.framework.resource.rewriters.param.ParamRewriter;
 import jakarta.inject.Singleton;
 
 import java.util.Locale;

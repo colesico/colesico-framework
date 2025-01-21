@@ -17,11 +17,11 @@ package colesico.framework.resource.internal;
 
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.resource.*;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -33,20 +33,20 @@ import java.util.List;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class ResourceKitImpl implements ResourceKit {
+public class ResourceKitImpl implements ResourceKit {
 
     protected final Logger log = LoggerFactory.getLogger(ResourceKit.class);
 
     protected List<PathRewriter> rewriters = new ArrayList<>();
 
     @Inject
-    public ResourceKitImpl(Polysupplier<ResourceOptionsPrototype> configs) {
+    public ResourceKitImpl(Polysupplier<PathRewriter> rewritersSupp) {
 
-        final RewriterRegistryImpl registry = new RewriterRegistryImpl();
-        configs.forEach(cfg -> cfg.setupRewriters(registry));
+        final PhaseMapper phaseMapper = new PhaseMapper();
+        rewritersSupp.forEach(phaseMapper::add);
 
         for (RewritingPhase ph : RewritingPhase.values()) {
-            List<PathRewriter> phaseRewList = registry.getPhaseRewriters(ph);
+            List<PathRewriter> phaseRewList = phaseMapper.getRewriters(ph);
             if (phaseRewList == null) {
                 continue;
             }
@@ -56,10 +56,18 @@ public final class ResourceKitImpl implements ResourceKit {
     }
 
     @Override
+    public String rewrite(String path) {
+        for (PathRewriter rewriter : rewriters) {
+            path = rewriter.rewrite(path);
+        }
+        return path;
+    }
+
+    @Override
     public Enumeration<URL> getResourceURLs(String resourcePath) {
         try {
-            Enumeration<URL> resources = getClassLoader().getResources(resourcePath);
-            return resources;
+            resourcePath = rewrite(resourcePath);
+            return getClassLoader().getResources(resourcePath);
         } catch (IOException e) {
             throw new ResourceException("Error reading resource URLs", e);
         }
@@ -67,6 +75,7 @@ public final class ResourceKitImpl implements ResourceKit {
 
     @Override
     public InputStream getResourceStream(String resourcePath) {
+        resourcePath = rewrite(resourcePath);
         InputStream in = getClassLoader().getResourceAsStream(resourcePath);
         if (in == null) {
             throw new ResourceNotFoundException(resourcePath);
@@ -74,17 +83,9 @@ public final class ResourceKitImpl implements ResourceKit {
         return in;
     }
 
-    @Override
-    public final String rewrite(String path) {
-        for (PathRewriter rew : rewriters) {
-            path = rew.rewrite(path);
-        }
-        return path;
-    }
 
     private ClassLoader getClassLoader() {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        return classLoader;
+        return Thread.currentThread().getContextClassLoader();
     }
 
 }

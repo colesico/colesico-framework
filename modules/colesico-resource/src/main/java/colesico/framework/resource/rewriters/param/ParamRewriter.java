@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package colesico.framework.resource.rewriters;
+package colesico.framework.resource.rewriters.param;
 
+import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.resource.PathRewriter;
-import colesico.framework.resource.RewriterRegistry;
 import colesico.framework.resource.RewritingPhase;
 import jakarta.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
@@ -36,30 +36,32 @@ import java.util.Map;
  * rewrote to /foo/dummy/100/bar/baz
  */
 @Singleton
-public class ParamRewriter implements PathRewriter {
+public class ParamRewriter implements PathRewriter, ParamRewriterSettings {
 
     public static final char PARAM_PREFIX = '$';
     public static final char PATH_SEPARATOR = '/';
 
     private final Map<String, String> paramsMap = new HashMap<>();
 
-    /**
-     * Register rewriter in the rewriter register
-     */
-    public ParamRewriter register(RewriterRegistry registry) {
-        registry.registerIfAbsent(ParamRewriter.class.getCanonicalName(), this, RewritingPhase.EVALUATE);
-        return this;
+    public ParamRewriter(Polysupplier<ParamRewriterConfigPrototype> configSup) {
+        configSup.forEach(conf -> conf.configure(this));
+    }
+
+    @Override
+    public RewritingPhase phase() {
+        return RewritingPhase.EVALUATE;
     }
 
     /**
      * Add parameter
      */
-    public ParamRewriter param(String name, String value) {
-        if (name == null || "".equals(name)) {
+    @Override
+    public ParamRewriterSettings param(String name, String value) {
+        if (name == null || name.isEmpty()) {
             throw new RuntimeException("Property name is empty or null");
         }
 
-        if (value == null || "".equals(value)) {
+        if (value == null || value.isEmpty()) {
             throw new RuntimeException("Value is empty or null");
         }
 
@@ -78,6 +80,7 @@ public class ParamRewriter implements PathRewriter {
     /**
      * Parameter value
      */
+    @Override
     public String getValue(String name) {
         String path = paramsMap.get(name);
         if (path == null) {

@@ -37,6 +37,14 @@ public final class ObjectiveQualifiers implements Iterable<String> {
         return new ObjectiveQualifiers(values);
     }
 
+    public static ObjectiveQualifiers of(Qualifier[] qualifiers) {
+        String[] values = new String[qualifiers.length];
+        for (int i = 0; i < qualifiers.length; i++) {
+            values[i] = qualifiers[i].value();
+        }
+        return new ObjectiveQualifiers(values);
+    }
+
     /**
      * Creates from the given locale for language
      */

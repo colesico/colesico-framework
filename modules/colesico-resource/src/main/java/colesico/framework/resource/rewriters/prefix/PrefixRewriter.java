@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package colesico.framework.resource.rewriters;
+package colesico.framework.resource.rewriters.prefix;
 
+import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.resource.PathRewriter;
 import colesico.framework.resource.ResourceException;
-import colesico.framework.resource.RewriterRegistry;
 import colesico.framework.resource.RewritingPhase;
 import colesico.framework.resource.assist.PathTrie;
 import jakarta.inject.Singleton;
@@ -29,9 +29,18 @@ import org.apache.commons.lang3.StringUtils;
  * E.g for the rewriting  '/etc/srv'->'/foo'   path '/etc/srv/generator/x' will be rewritten to '/foo/generator/x'
  */
 @Singleton
-public class PrefixRewriter implements PathRewriter {
+public class PrefixRewriter implements PathRewriter, PrefixRewriterSettings {
 
     private final PathTrie<Rewriting> pathTrie = PathTrie.of();
+
+    public PrefixRewriter(Polysupplier<PrefixRewriterConfigPrototype> configSup) {
+        configSup.forEach(conf -> conf.configure(this));
+    }
+
+    @Override
+    public RewritingPhase phase() {
+        return RewritingPhase.SUBSTITUTE;
+    }
 
     @Override
     public final String rewrite(String path) {
@@ -43,17 +52,10 @@ public class PrefixRewriter implements PathRewriter {
     }
 
     /**
-     * Register rewriter in the rewriter register
-     */
-    public PrefixRewriter register(RewriterRegistry registry) {
-        registry.registerIfAbsent(PrefixRewriter.class.getCanonicalName(), this, RewritingPhase.SUBSTITUTE);
-        return this;
-    }
-
-    /**
      * Adds rewriting rule
      */
-    public PrefixRewriter rewriting(String originPathPrefix, String targetPathPrefix) {
+    @Override
+    public PrefixRewriterSettings rewriting(String originPathPrefix, String targetPathPrefix) {
         PathTrie.Node<Rewriting> node = pathTrie.add(originPathPrefix);
         if (node.getValue() != null) {
             throw new ResourceException("Duplicate path rewriting: " + originPathPrefix);

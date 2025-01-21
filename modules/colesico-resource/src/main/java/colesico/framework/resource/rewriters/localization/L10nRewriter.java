@@ -3,11 +3,10 @@ package colesico.framework.resource.rewriters.localization;
 import colesico.framework.profile.Profile;
 import colesico.framework.resource.PathRewriter;
 import colesico.framework.resource.ResourceException;
-import colesico.framework.resource.RewriterRegistry;
 import colesico.framework.resource.RewritingPhase;
 import colesico.framework.resource.assist.FileParser;
 import colesico.framework.resource.assist.PathTrie;
-import colesico.framework.resource.assist.localization.Localizer;
+import colesico.framework.resource.assist.localization.Matcher;
 import colesico.framework.resource.assist.localization.SubjectQualifiers;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -19,27 +18,24 @@ import org.slf4j.LoggerFactory;
  * Localization rewriter
  */
 @Singleton
-public class L10nRewriter implements PathRewriter {
+public class L10nRewriter implements PathRewriter, L10NRewriterSettings {
 
     private static final Logger log = LoggerFactory.getLogger(L10nRewriter.class);
 
     private final PathTrie<L10NConfig> pathTrie = PathTrie.of();
 
-    private final L10nRewriterConfigPrototype config;
+    private final L10nRewriterCoreConfigPrototype config;
     private final Provider<Profile> profileProv;
 
     @Inject
-    public L10nRewriter(L10nRewriterConfigPrototype config, Provider<Profile> profileProv) {
+    public L10nRewriter(L10nRewriterCoreConfigPrototype config, Provider<Profile> profileProv) {
         this.config = config;
         this.profileProv = profileProv;
     }
 
-    /**
-     * Register rewriter in the rewriter register
-     */
-    public L10nRewriter register(RewriterRegistry registry) {
-        registry.registerIfAbsent(L10nRewriter.class.getCanonicalName(), this, RewritingPhase.LOCALIZE);
-        return this;
+    @Override
+    public RewritingPhase phase() {
+        return RewritingPhase.LOCALIZE;
     }
 
     /**
@@ -53,22 +49,22 @@ public class L10nRewriter implements PathRewriter {
     public L10nRewriter l10n(String path, L10nMode mode, String... subjectQualifiersSpec) {
         final PathTrie.Node<L10NConfig> node = pathTrie.add(path);
         L10NConfig l10NConfig = node.getValue();
-        Localizer localizer;
+        Matcher matcher;
         if (l10NConfig == null) {
             l10NConfig = new L10NConfig();
-            localizer = new Localizer();
-            l10NConfig.setLocalizer(localizer);
+            matcher = new Matcher();
+            l10NConfig.setLocalizer(matcher);
             l10NConfig.setMode(mode);
             node.setValue(l10NConfig);
         } else {
-            localizer = l10NConfig.getLocalizer();
+            matcher = l10NConfig.getLocalizer();
             if (!mode.equals(l10NConfig.getMode())) {
                 throw new ResourceException("Localization mode mismatch");
             }
         }
 
         for (String qualifiersSpecItem : subjectQualifiersSpec) {
-            localizer.addQualifiers(SubjectQualifiers.ofSpec(qualifiersSpecItem, config.getQualifiersDefinition()));
+            matcher.addQualifiers(SubjectQualifiers.ofSpec(qualifiersSpecItem, config.getQualifiersDefinition()));
         }
         return this;
     }
@@ -187,19 +183,19 @@ public class L10nRewriter implements PathRewriter {
      */
     private static class L10NConfig {
 
-        private Localizer localizer;
+        private Matcher matcher;
         private L10nMode mode;
 
-        public Localizer getLocalizer() {
-            return localizer;
+        public Matcher getLocalizer() {
+            return matcher;
         }
 
         public L10nMode getMode() {
             return mode;
         }
 
-        public void setLocalizer(Localizer localizer) {
-            this.localizer = localizer;
+        public void setLocalizer(Matcher matcher) {
+            this.matcher = matcher;
         }
 
         public void setMode(L10nMode mode) {
