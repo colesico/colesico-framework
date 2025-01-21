@@ -1,5 +1,7 @@
 package colesico.framework.resource.assist.localization;
 
+import colesico.framework.resource.ResourceException;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,26 +12,9 @@ import java.util.Map;
  * Order of qualifiers is important due {@link Matcher} process that defines look up
  * order of qualifiers. The canonical order of qualifiers essentially determines their priority when determining
  * the best match of subject qualifiers to objective ones.
+ * Qualifier definitions are set globally for the entire resource service.
  */
 public final class QualifiersDefinition implements Iterable<String> {
-
-    /**
-     * QualifiersDefinition for language
-     */
-    public static final QualifiersDefinition QUALIFIERS_L =
-            QualifiersDefinition.of(new String[]{Qualifier.LANGUAGE_QUALIFIER});
-
-    /**
-     * QualifiersDefinition for language and country
-     */
-    public static final QualifiersDefinition QUALIFIERS_LC =
-            QualifiersDefinition.of(new String[]{Qualifier.LANGUAGE_QUALIFIER, Qualifier.COUNTRY_QUALIFIER});
-
-    /**
-     * QualifiersDefinition for language,country, variant
-     */
-    public static final QualifiersDefinition QUALIFIERS_LCV =
-            QualifiersDefinition.of(new String[]{Qualifier.LANGUAGE_QUALIFIER, Qualifier.COUNTRY_QUALIFIER, Qualifier.VARIANT_QUALIFIER});
 
     /**
      * Qualifiers names in canonical order
@@ -40,7 +25,7 @@ public final class QualifiersDefinition implements Iterable<String> {
         this.names = names;
     }
 
-    public static QualifiersDefinition of(String[] names) {
+    public static QualifiersDefinition of(String... names) {
         return new QualifiersDefinition(names);
     }
 
@@ -64,7 +49,15 @@ public final class QualifiersDefinition implements Iterable<String> {
         for (int i = 0; i < names.length; i++) {
             String name = names[i];
             String value = qualifiers.get(name);
-            values[i] = value;
+            if (value != null) {
+                values[i] = value;
+                qualifiers.remove(name);
+            } else {
+                values[i] = null;
+            }
+        }
+        if (!qualifiers.isEmpty()) {
+            throw new ResourceException("Invalid qualifier name: " + qualifiers.values().iterator().next());
         }
         return values;
     }

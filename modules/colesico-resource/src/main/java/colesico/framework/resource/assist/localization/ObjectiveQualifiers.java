@@ -1,5 +1,7 @@
 package colesico.framework.resource.assist.localization;
 
+import colesico.framework.resource.ResourceException;
+
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
@@ -35,15 +37,13 @@ public final class ObjectiveQualifiers implements Iterable<String> {
     }
 
     public static ObjectiveQualifiers of(QualifiersDefinition definition, Qualifier... qualifiers) {
-        if (definition != null) {
-            return new ObjectiveQualifiers(definition.toValues(qualifiers));
-        } else {
-            String[] values = new String[qualifiers.length];
-            for (int i = 0; i < qualifiers.length; i++) {
-                values[i] = qualifiers[i].value();
-            }
-            return new ObjectiveQualifiers(values);
+        if (qualifiers == null || qualifiers.length == 0) {
+            throw new ResourceException("Objective qualifiers is empty");
         }
+        if (definition == null) {
+            throw new ResourceException("Qualifiers definition is null");
+        }
+        return new ObjectiveQualifiers(definition.toValues(qualifiers));
     }
 
     public String[] getValues() {

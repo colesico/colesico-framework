@@ -1,8 +1,9 @@
 package colesico.framework.resource.assist.localization;
 
-import org.apache.commons.lang3.StringUtils;
+import colesico.framework.resource.ResourceException;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Localizing qualifiers linked with localization subject  (any resource, etc.)
@@ -23,72 +24,19 @@ public final class SubjectQualifiers implements Iterable<String> {
         this.values = values;
     }
 
-    public static SubjectQualifiers of(String[] values) {
+    public static SubjectQualifiers of(String... values) {
         return new SubjectQualifiers(values);
     }
 
-    public static SubjectQualifiers ofMap(Map<String, String> qualifiersMap, QualifiersDefinition definition) {
-
-        // Check empty
-        if (qualifiersMap == null || qualifiersMap.isEmpty()) {
-            throw new RuntimeException("Subject qualifiers is empty");
+    public static SubjectQualifiers of(QualifiersDefinition definition, Qualifier... qualifiers) {
+        if (qualifiers == null || qualifiers.length == 0) {
+            throw new ResourceException("Subject qualifiers is empty");
         }
-
-        // Check names
-        Set<String> definedNames = Set.of(definition.getNames());
-        for (String name : qualifiersMap.keySet()) {
-            if (!definedNames.contains(name)) {
-                throw new RuntimeException("Undefined qualifier name: " + name);
-            }
+        if (definition == null) {
+            throw new ResourceException("Qualifiers definition is null");
         }
-
-        // Convert map to array
-        String[] qualifiersArr = new String[definition.getSize()];
-        for (int i = 0; i < definition.getSize(); i++) {
-            String name = definition.getName(i);
-            if (name != null) {
-                qualifiersArr[i] = qualifiersMap.get(name);
-            } else {
-                qualifiersArr[i] = null;
-            }
-        }
-
-        return new SubjectQualifiers(qualifiersArr);
+        return new SubjectQualifiers(definition.toValues(qualifiers));
     }
-
-    /**
-     * From qualifiers spec str
-     *
-     * @param qualifiersSpec qualifiers string in the format: qualifierName1=value1,qualifierName2=value2...
-     * @param definition
-     * @return
-     */
-    public static SubjectQualifiers ofSpec(String qualifiersSpec, QualifiersDefinition definition) {
-        return ofMap(parseQualifiersSpec(qualifiersSpec), definition);
-    }
-
-    private static Map<String, String> parseQualifiersSpec(String qualifiersSpec) {
-        Map<String, String> result = new HashMap<>();
-        StringTokenizer st = new StringTokenizer(qualifiersSpec, ";");
-        while (st.hasMoreElements()) {
-            String qualifierSpec = st.nextToken();
-            String[] qualifier = parseQualifierSpec(qualifierSpec);
-            result.put(qualifier[0], qualifier[1]);
-        }
-
-        return result;
-    }
-
-    private static String[] parseQualifierSpec(String qualifierSpec) {
-        StringTokenizer st = new StringTokenizer(qualifierSpec, "=");
-        String name = StringUtils.trim(st.nextToken());
-        if (!st.hasMoreElements()) {
-            throw new RuntimeException("Invalid qualifier specification format: " + qualifierSpec);
-        }
-        String val = StringUtils.trim(st.nextToken());
-        return new String[]{name, val};
-    }
-
 
     public String[] getValues() {
         return values;
