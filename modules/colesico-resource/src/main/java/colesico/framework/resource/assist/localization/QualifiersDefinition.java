@@ -1,7 +1,9 @@
 package colesico.framework.resource.assist.localization;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Definition of  all possible qualifier names and its canonical order.
@@ -14,21 +16,24 @@ public final class QualifiersDefinition implements Iterable<String> {
     /**
      * QualifiersDefinition for language
      */
-    private static final QualifiersDefinition L_QUALIFIERS =
-            new QualifiersDefinition(new String[]{Qualifier.LANGUAGE_QUALIFIER});
+    public static final QualifiersDefinition QUALIFIERS_L =
+            QualifiersDefinition.of(new String[]{Qualifier.LANGUAGE_QUALIFIER});
 
     /**
      * QualifiersDefinition for language and country
      */
-    private static final QualifiersDefinition LC_QUALIFIERS =
-            new QualifiersDefinition(new String[]{Qualifier.LANGUAGE_QUALIFIER, Qualifier.COUNTRY_QUALIFIER});
+    public static final QualifiersDefinition QUALIFIERS_LC =
+            QualifiersDefinition.of(new String[]{Qualifier.LANGUAGE_QUALIFIER, Qualifier.COUNTRY_QUALIFIER});
 
     /**
      * QualifiersDefinition for language,country, variant
      */
-    private static final QualifiersDefinition LCV_QUALIFIERS =
-            new QualifiersDefinition(new String[]{Qualifier.LANGUAGE_QUALIFIER, Qualifier.COUNTRY_QUALIFIER, Qualifier.VARIANT_QUALIFIER});
+    public static final QualifiersDefinition QUALIFIERS_LCV =
+            QualifiersDefinition.of(new String[]{Qualifier.LANGUAGE_QUALIFIER, Qualifier.COUNTRY_QUALIFIER, Qualifier.VARIANT_QUALIFIER});
 
+    /**
+     * Qualifiers names in canonical order
+     */
     private final String[] names;
 
     public QualifiersDefinition(String[] names) {
@@ -37,27 +42,6 @@ public final class QualifiersDefinition implements Iterable<String> {
 
     public static QualifiersDefinition of(String[] names) {
         return new QualifiersDefinition(names);
-    }
-
-    /**
-     * QualifiersDefinition for language
-     */
-    public static QualifiersDefinition ofL() {
-        return L_QUALIFIERS;
-    }
-
-    /**
-     * QualifiersDefinition for language and country
-     */
-    public static QualifiersDefinition ofLC() {
-        return LC_QUALIFIERS;
-    }
-
-    /**
-     * QualifiersDefinition for language + country + variant
-     */
-    public static QualifiersDefinition ofLCV() {
-        return LCV_QUALIFIERS;
     }
 
     public String[] getNames() {
@@ -70,6 +54,30 @@ public final class QualifiersDefinition implements Iterable<String> {
 
     public String getName(int i) {
         return names[i];
+    }
+
+    /**
+     * Return qualifiers values in canonical order
+     */
+    public String[] toValues(Map<String, String> qualifiers) {
+        String[] values = new String[names.length];
+        for (int i = 0; i < names.length; i++) {
+            String name = names[i];
+            String value = qualifiers.get(name);
+            values[i] = value;
+        }
+        return values;
+    }
+
+    /**
+     * Return qualifiers values in canonical order
+     */
+    public String[] toValues(Qualifier[] qualifiers) {
+        Map<String, String> qmap = new HashMap<>();
+        for (Qualifier q : qualifiers) {
+            qmap.put(q.name(), q.value());
+        }
+        return toValues(qmap);
     }
 
     @Override

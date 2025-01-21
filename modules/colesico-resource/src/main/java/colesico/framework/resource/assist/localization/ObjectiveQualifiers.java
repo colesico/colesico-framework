@@ -1,10 +1,7 @@
 package colesico.framework.resource.assist.localization;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -33,46 +30,20 @@ public final class ObjectiveQualifiers implements Iterable<String> {
         this.values = values;
     }
 
-    public static ObjectiveQualifiers of(String[] values) {
+    public static ObjectiveQualifiers of(String... values) {
         return new ObjectiveQualifiers(values);
     }
 
-    public static ObjectiveQualifiers of(Qualifier[] qualifiers) {
-        String[] values = new String[qualifiers.length];
-        for (int i = 0; i < qualifiers.length; i++) {
-            values[i] = qualifiers[i].value();
+    public static ObjectiveQualifiers of(QualifiersDefinition definition, Qualifier... qualifiers) {
+        if (definition != null) {
+            return new ObjectiveQualifiers(definition.toValues(qualifiers));
+        } else {
+            String[] values = new String[qualifiers.length];
+            for (int i = 0; i < qualifiers.length; i++) {
+                values[i] = qualifiers[i].value();
+            }
+            return new ObjectiveQualifiers(values);
         }
-        return new ObjectiveQualifiers(values);
-    }
-
-    /**
-     * Creates from the given locale for language
-     */
-    public static ObjectiveQualifiers ofLocaleL(Locale locale) {
-        return new ObjectiveQualifiers(new String[]{
-                StringUtils.isBlank(locale.getLanguage()) ? null : locale.getLanguage(),
-        });
-    }
-
-    /**
-     * Creates from the given locale for language and country
-     */
-    public static ObjectiveQualifiers ofLocaleLC(Locale locale) {
-        return new ObjectiveQualifiers(new String[]{
-                StringUtils.isBlank(locale.getLanguage()) ? null : locale.getLanguage(),
-                StringUtils.isBlank(locale.getCountry()) ? null : locale.getCountry()
-        });
-    }
-
-    /**
-     * Creates from the given locale for language, country, variant
-     */
-    public static ObjectiveQualifiers ofLocaleLCV(Locale locale) {
-        return new ObjectiveQualifiers(new String[]{
-                StringUtils.isBlank(locale.getLanguage()) ? null : locale.getLanguage(),
-                StringUtils.isBlank(locale.getCountry()) ? null : locale.getCountry(),
-                StringUtils.isBlank(locale.getVariant()) ? null : locale.getVariant()
-        });
     }
 
     public String[] getValues() {
