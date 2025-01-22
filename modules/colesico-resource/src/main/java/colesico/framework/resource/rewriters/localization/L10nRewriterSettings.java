@@ -64,17 +64,28 @@ public final class L10nRewriterSettings {
         return qualifiers(qualifiers);
     }
 
-    protected Collection<PathSettings> pathConfigs() {
+    public Collection<PathSettings> pathSettings() {
         return pathSettings.values();
     }
 
     public static class PathSettings {
-        protected String path;
-        protected L10nMode mode;
-        protected List<Qualifier[]> qualifiers = new ArrayList<>();
+        private final String path;
+        private L10nMode mode;
+        private final List<Qualifier[]> qualifiers = new ArrayList<>();
 
         public PathSettings(String path) {
             this.path = path;
+        }
+
+        public String path() {
+            return path;
+        }
+
+        public L10nMode mode(L10nMode defaultValue) {
+            if (mode == null) {
+                return defaultValue;
+            }
+            return mode;
         }
 
         public SubjectQualifiers[] qualifiers(QualifiersDefinition definition) {

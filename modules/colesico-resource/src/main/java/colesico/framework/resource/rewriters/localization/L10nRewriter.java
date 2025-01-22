@@ -40,8 +40,8 @@ public class L10nRewriter implements PathRewriter, L10NRewriterSettings {
         options.forEach(o -> o.configure(settings));
 
         QualifiersDefinition definition = config.getQualifiersDefinition();
-        for (L10nRewriterSettings.PathSettings pc : settings.pathConfigs()) {
-            configurePath(pc.path, pc.mode, pc.qualifiers(definition));
+        for (L10nRewriterSettings.PathSettings pc : settings.pathSettings()) {
+            configurePath(pc.path(), pc.mode(config.getDefaultMode()), pc.qualifiers(definition));
         }
     }
 
