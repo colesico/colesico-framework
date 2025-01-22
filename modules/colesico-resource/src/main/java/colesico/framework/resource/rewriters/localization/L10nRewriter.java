@@ -1,5 +1,6 @@
 package colesico.framework.resource.rewriters.localization;
 
+import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.profile.Profile;
 import colesico.framework.resource.PathRewriter;
 import colesico.framework.resource.ResourceException;
@@ -7,6 +8,7 @@ import colesico.framework.resource.RewritingPhase;
 import colesico.framework.resource.assist.FileParser;
 import colesico.framework.resource.assist.PathTrie;
 import colesico.framework.resource.assist.localization.Matcher;
+import colesico.framework.resource.assist.localization.QualifiersDefinition;
 import colesico.framework.resource.assist.localization.SubjectQualifiers;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -24,13 +26,23 @@ public class L10nRewriter implements PathRewriter, L10NRewriterSettings {
 
     private final PathTrie<L10NConfig> pathTrie = PathTrie.of();
 
-    private final L10nRewriterConfigPrototype config;
+    private final L10nConfigPrototype config;
     private final Provider<Profile> profileProv;
 
     @Inject
-    public L10nRewriter(L10nRewriterConfigPrototype config, Provider<Profile> profileProv) {
+    public L10nRewriter(L10nConfigPrototype config,
+                        Polysupplier<L10NRewriterOptionsPrototype> options,
+                        Provider<Profile> profileProv) {
         this.config = config;
         this.profileProv = profileProv;
+
+        L10nRewriterSettings settings = new L10nRewriterSettings();
+        options.forEach(o -> o.configure(settings));
+
+        QualifiersDefinition definition = config.getQualifiersDefinition();
+        for (L10nRewriterSettings.PathSettings pc : settings.pathConfigs()) {
+            configurePath(pc.path, pc.mode, pc.qualifiers(definition));
+        }
     }
 
     @Override
@@ -41,36 +53,29 @@ public class L10nRewriter implements PathRewriter, L10NRewriterSettings {
     /**
      * Register localizing qualifiers for specific resource path
      *
-     * @param path                  - resource path
-     * @param mode                  - rewriting mode
-     * @param subjectQualifiersSpec - subject qualifiers values set specification string in the format: qualifierName1=value1;qualifierName2=value2...
-     *                              Qualifier values order is unimportant, it will be ordered at parsing time
+     * @param path              - resource path
+     * @param mode              - rewriting mode
+     * @param subjectQualifiers - subject qualifiers values
      */
-    public L10nRewriter l10n(String path, L10nMode mode, String... subjectQualifiersSpec) {
+    private void configurePath(String path, L10nMode mode, SubjectQualifiers... subjectQualifiers) {
         final PathTrie.Node<L10NConfig> node = pathTrie.add(path);
         L10NConfig l10NConfig = node.getValue();
         Matcher matcher;
         if (l10NConfig == null) {
-            l10NConfig = new L10NConfig();
             matcher = new Matcher();
-            l10NConfig.setLocalizer(matcher);
-            l10NConfig.setMode(mode);
+            l10NConfig = new L10NConfig(matcher, mode);
             node.setValue(l10NConfig);
         } else {
-            matcher = l10NConfig.getLocalizer();
-            if (!mode.equals(l10NConfig.getMode())) {
+            matcher = l10NConfig.matcher();
+            if (!mode.equals(l10NConfig.mode())) {
                 throw new ResourceException("Localization mode mismatch");
             }
         }
 
-        for (String qualifiersSpecItem : subjectQualifiersSpec) {
-            matcher.addQualifiers(SubjectQualifiers.ofSpec(qualifiersSpecItem, config.getQualifiersDefinition()));
+        for (SubjectQualifiers sq : subjectQualifiers) {
+            matcher.addQualifiers(sq);
         }
-        return this;
-    }
 
-    public L10nRewriter l10n(Class clazz, L10nMode mode, String... subjectQualifiersSpec) {
-        return l10n(clazz.getCanonicalName().replace('.', '/'), mode, subjectQualifiersSpec);
     }
 
     @Override
@@ -82,24 +87,21 @@ public class L10nRewriter implements PathRewriter, L10NRewriterSettings {
             return path;
         }
 
-        if (l10NConfig.getMode().equals(L10nMode.NONE)) {
+        if (l10NConfig.mode().equals(L10nMode.NONE)) {
             return path;
         }
 
-        SubjectQualifiers qualifiers = l10NConfig.getLocalizer().match(config.getObjectiveQualifiers(profileProv.get()));
+        SubjectQualifiers qualifiers = l10NConfig.matcher().match(config.getObjectiveQualifiers(profileProv.get()));
 
         if (qualifiers == null) {
             return path;
         }
 
-        switch (l10NConfig.getMode()) {
-            case FILE:
-                return rewriteFileName(path, qualifiers);
-            case DIR:
-                return rewriteDirectoryName(path, qualifiers);
-            default:
-                throw new ResourceException("Unsupported localization mode: " + l10NConfig.getMode());
-        }
+        return switch (l10NConfig.mode()) {
+            case FILE -> rewriteFileName(path, qualifiers);
+            case DIR -> rewriteDirectoryName(path, qualifiers);
+            default -> throw new ResourceException("Unsupported localization mode: " + l10NConfig.mode());
+        };
     }
 
     /**
@@ -181,26 +183,8 @@ public class L10nRewriter implements PathRewriter, L10NRewriterSettings {
     /**
      * Localization config associated with path
      */
-    private static class L10NConfig {
+    private static record L10NConfig(Matcher matcher, L10nMode mode) {
 
-        private Matcher matcher;
-        private L10nMode mode;
-
-        public Matcher getLocalizer() {
-            return matcher;
-        }
-
-        public L10nMode getMode() {
-            return mode;
-        }
-
-        public void setLocalizer(Matcher matcher) {
-            this.matcher = matcher;
-        }
-
-        public void setMode(L10nMode mode) {
-            this.mode = mode;
-        }
     }
 
 

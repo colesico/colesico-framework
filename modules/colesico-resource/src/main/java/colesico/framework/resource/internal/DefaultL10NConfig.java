@@ -7,7 +7,7 @@ import colesico.framework.profile.Profile;
 import colesico.framework.resource.assist.localization.ObjectiveQualifiers;
 import colesico.framework.resource.assist.localization.Qualifier;
 import colesico.framework.resource.assist.localization.QualifiersDefinition;
-import colesico.framework.resource.rewriters.localization.L10nRewriterConfigPrototype;
+import colesico.framework.resource.rewriters.localization.L10nConfigPrototype;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Locale;
@@ -17,7 +17,7 @@ import java.util.Locale;
  */
 @Config
 @Substitute(Substitution.STUB)
-public class DefaultL10NRewriterConfig extends L10nRewriterConfigPrototype {
+public class DefaultL10NConfig extends L10nConfigPrototype {
 
     @Override
     public QualifiersDefinition getQualifiersDefinition() {
