@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public final class L10nRewriterSettings {
+public final class L10nSettings {
 
     private Map<String, PathSettings> pathSettings;
 
@@ -19,19 +19,19 @@ public final class L10nRewriterSettings {
     /**
      * Set current configuring path
      */
-    public L10nRewriterSettings path(String path) {
+    public L10nSettings path(String path) {
         settings = pathSettings.computeIfAbsent(path, PathSettings::new);
         return this;
     }
 
-    public L10nRewriterSettings clazz(Class clazz) {
+    public L10nSettings clazz(Class clazz) {
         return path(clazz.getCanonicalName().replace('.', '/'));
     }
 
     /**
      * Set mode for current path
      */
-    public L10nRewriterSettings mode(L10nMode mode) {
+    public L10nSettings mode(L10nMode mode) {
         if (settings.mode == null) {
             settings.mode = mode;
         } else {
@@ -46,7 +46,7 @@ public final class L10nRewriterSettings {
      * Specify qualifier for current path
      * Qualifiers order is unimportant, it will be ordered at parsing time
      */
-    public L10nRewriterSettings qualifiers(Qualifier... qualifiers) {
+    public L10nSettings qualifiers(Qualifier... qualifiers) {
         settings.qualifiers.add(qualifiers);
         return this;
     }
@@ -54,7 +54,7 @@ public final class L10nRewriterSettings {
     /**
      * Specify qualifiers via name1, value1, name2, value2 ...
      */
-    public L10nRewriterSettings qualifiers(String... nv) {
+    public L10nSettings qualifiers(String... nv) {
         int length = nv.length / 2;
         Qualifier[] qualifiers = new Qualifier[length];
         for (int i = 0; i < length; i++) {

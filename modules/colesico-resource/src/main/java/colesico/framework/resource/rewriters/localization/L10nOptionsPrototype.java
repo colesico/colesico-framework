@@ -4,6 +4,6 @@ import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
 
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class L10NRewriterOptionsPrototype {
-    abstract public void configure(L10nRewriterSettings settings);
+abstract public class L10nOptionsPrototype {
+    abstract public void configure(L10nSettings settings);
 }

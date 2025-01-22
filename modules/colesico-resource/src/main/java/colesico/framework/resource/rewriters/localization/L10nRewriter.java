@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  * Localization rewriter
  */
 @Singleton
-public class L10nRewriter implements PathRewriter, L10NRewriterSettings {
+public class L10nRewriter implements PathRewriter {
 
     private static final Logger log = LoggerFactory.getLogger(L10nRewriter.class);
 
@@ -31,17 +31,17 @@ public class L10nRewriter implements PathRewriter, L10NRewriterSettings {
 
     @Inject
     public L10nRewriter(L10nConfigPrototype config,
-                        Polysupplier<L10NRewriterOptionsPrototype> options,
+                        Polysupplier<L10nOptionsPrototype> options,
                         Provider<Profile> profileProv) {
         this.config = config;
         this.profileProv = profileProv;
 
-        L10nRewriterSettings settings = new L10nRewriterSettings();
+        L10nSettings settings = new L10nSettings();
         options.forEach(o -> o.configure(settings));
 
         QualifiersDefinition definition = config.getQualifiersDefinition();
-        for (L10nRewriterSettings.PathSettings pc : settings.pathSettings()) {
-            configurePath(pc.path(), pc.mode(config.getDefaultMode()), pc.qualifiers(definition));
+        for (L10nSettings.PathSettings pc : settings.pathSettings()) {
+            pathLocalization(pc.path(), pc.mode(config.getDefaultMode()), pc.qualifiers(definition));
         }
     }
 
@@ -57,7 +57,7 @@ public class L10nRewriter implements PathRewriter, L10NRewriterSettings {
      * @param mode              - rewriting mode
      * @param subjectQualifiers - subject qualifiers values
      */
-    private void configurePath(String path, L10nMode mode, SubjectQualifiers... subjectQualifiers) {
+    private void pathLocalization(String path, L10nMode mode, SubjectQualifiers... subjectQualifiers) {
         final PathTrie.Node<L10NConfig> node = pathTrie.add(path);
         L10NConfig l10NConfig = node.getValue();
         Matcher matcher;

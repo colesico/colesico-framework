@@ -8,6 +8,7 @@ import colesico.framework.resource.assist.localization.ObjectiveQualifiers;
 import colesico.framework.resource.assist.localization.Qualifier;
 import colesico.framework.resource.assist.localization.QualifiersDefinition;
 import colesico.framework.resource.rewriters.localization.L10nConfigPrototype;
+import colesico.framework.resource.rewriters.localization.L10nMode;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Locale;
@@ -17,7 +18,7 @@ import java.util.Locale;
  */
 @Config
 @Substitute(Substitution.STUB)
-public class DefaultL10NConfig extends L10nConfigPrototype {
+public class DefaultL10nConfig extends L10nConfigPrototype {
 
     @Override
     public QualifiersDefinition getQualifiersDefinition() {
@@ -31,5 +32,10 @@ public class DefaultL10NConfig extends L10nConfigPrototype {
                 StringUtils.isBlank(locale.getLanguage()) ? null : locale.getLanguage(),
                 StringUtils.isBlank(locale.getCountry()) ? null : locale.getCountry()
         );
+    }
+
+    @Override
+    public L10nMode getDefaultMode() {
+        return L10nMode.FILE;
     }
 }
