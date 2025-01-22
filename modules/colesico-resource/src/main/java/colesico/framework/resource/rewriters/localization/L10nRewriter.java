@@ -36,11 +36,11 @@ public class L10nRewriter implements PathRewriter {
         this.config = config;
         this.profileProv = profileProv;
 
-        L10nSettings settings = new L10nSettings();
-        options.forEach(o -> o.configure(settings));
+        var opt = new L10nOptionsPrototype.Options();
+        options.forEach(o -> o.configure(opt));
 
         QualifiersDefinition definition = config.getQualifiersDefinition();
-        for (L10nSettings.PathSettings pc : settings.pathSettings()) {
+        for (var pc : opt.pathSettings()) {
             pathLocalization(pc.path(), pc.mode(config.getDefaultMode()), pc.qualifiers(definition));
         }
     }
