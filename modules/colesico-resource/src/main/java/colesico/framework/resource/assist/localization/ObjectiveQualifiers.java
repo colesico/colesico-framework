@@ -43,7 +43,7 @@ public final class ObjectiveQualifiers implements Iterable<String> {
         if (definition == null) {
             throw new ResourceException("Qualifiers definition is null");
         }
-        return new ObjectiveQualifiers(definition.toValues(qualifiers));
+        return new ObjectiveQualifiers(definition.canonicalize(qualifiers));
     }
 
     public String[] getValues() {

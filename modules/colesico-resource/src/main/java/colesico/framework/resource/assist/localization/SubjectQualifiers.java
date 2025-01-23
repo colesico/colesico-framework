@@ -6,15 +6,16 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 /**
- * Localizing qualifiers linked with localization subject  (any resource, etc.)
+ * Localizing qualifiers linked with localization subject  (any resource, file, etc.)
  * Number of qualifiers and order must be strongly  according
  * to canonical qualifiers number and order defined in {@link QualifiersDefinition}
- * Any undetermined qualifier values must be null.
+ * Some qualifiers can have null values, that is interpreted as any/undetermined value.
  */
 public final class SubjectQualifiers implements Iterable<String> {
 
     /**
-     * Qualifier values should be listed according to canonical qualifiers order {@see QualifiersDefinition}.
+     * Qualifier values should be listed according to canonical qualifiers order
+     * {@see QualifiersDefinition}.
      * <p>
      * Some values can be null.
      */
@@ -24,6 +25,12 @@ public final class SubjectQualifiers implements Iterable<String> {
         this.values = values;
     }
 
+    /**
+     * Qualifier values should be listed according to canonical qualifiers order
+     * {@see QualifiersDefinition}.
+     * <p>
+     * Some values can be null.
+     */
     public static SubjectQualifiers of(String... values) {
         return new SubjectQualifiers(values);
     }
@@ -35,7 +42,7 @@ public final class SubjectQualifiers implements Iterable<String> {
         if (definition == null) {
             throw new ResourceException("Qualifiers definition is null");
         }
-        return new SubjectQualifiers(definition.toValues(qualifiers));
+        return new SubjectQualifiers(definition.canonicalize(qualifiers));
     }
 
     public String[] getValues() {

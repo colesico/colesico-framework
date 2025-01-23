@@ -14,6 +14,7 @@ import java.util.Map;
 
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
 abstract public class L10nOptionsPrototype {
+
     abstract public void configure(Options options);
 
     public static final class Options {
@@ -102,7 +103,7 @@ abstract public class L10nOptionsPrototype {
             SubjectQualifiers[] result = new SubjectQualifiers[n];
             for (int i = 0; i < n; i++) {
                 Qualifier[] q = qualifiers.get(i);
-                SubjectQualifiers sq = SubjectQualifiers.of(definition.toValues(q));
+                SubjectQualifiers sq = SubjectQualifiers.of(definition.canonicalize(q));
                 result[i] = sq;
             }
             return result;

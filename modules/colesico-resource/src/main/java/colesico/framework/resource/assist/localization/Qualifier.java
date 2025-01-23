@@ -2,6 +2,9 @@ package colesico.framework.resource.assist.localization;
 
 import java.util.Objects;
 
+/**
+ * Configuration qualifier
+ */
 public record Qualifier(String name, String value) {
 
     public static String LANGUAGE_QUALIFIER = "language";

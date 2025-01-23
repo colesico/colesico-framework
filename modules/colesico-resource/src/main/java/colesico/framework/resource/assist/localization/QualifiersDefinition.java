@@ -8,16 +8,15 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Definition of  all possible qualifier names and its canonical order.
- * Order of qualifiers is important due {@link Matcher} process that defines look up
- * order of qualifiers. The canonical order of qualifiers essentially determines their priority when determining
+ * Definition of all possible qualifier names and its canonical order.
+ * Order of qualifiers is important due {@link Matcher} process.
+ * The canonical order of qualifiers essentially determines their priority when determining
  * the best match of subject qualifiers to objective ones.
- * Qualifier definitions are set globally for the entire resource service.
  */
 public final class QualifiersDefinition implements Iterable<String> {
 
     /**
-     * Qualifiers names in canonical order
+     * All possible qualifiers names in canonical order
      */
     private final String[] names;
 
@@ -42,9 +41,9 @@ public final class QualifiersDefinition implements Iterable<String> {
     }
 
     /**
-     * Return qualifiers values in canonical order
+     * Return qualifiers values in canonical form  (defined number and order)
      */
-    public String[] toValues(Map<String, String> qualifiers) {
+    public String[] canonicalize(Map<String, String> qualifiers) {
         String[] values = new String[names.length];
         for (int i = 0; i < names.length; i++) {
             String name = names[i];
@@ -63,14 +62,14 @@ public final class QualifiersDefinition implements Iterable<String> {
     }
 
     /**
-     * Return qualifiers values in canonical order
+     * Return qualifiers values in canonical form  (defined number and order)
      */
-    public String[] toValues(Qualifier[] qualifiers) {
+    public String[] canonicalize(Qualifier[] qualifiers) {
         Map<String, String> qmap = new HashMap<>();
         for (Qualifier q : qualifiers) {
             qmap.put(q.name(), q.value());
         }
-        return toValues(qmap);
+        return canonicalize(qmap);
     }
 
     @Override

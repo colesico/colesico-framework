@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * Localization assistant.
- * Matcher finds the best matched {@link SubjectQualifiers} for
+ * Finds the best matched {@link SubjectQualifiers} for
  * given {@link ObjectiveQualifiers} qualifiers
  * <p>
  * The match is finding by lookup the subject qualifier tree.
@@ -13,8 +13,7 @@ import java.util.Map;
 public final class Matcher {
 
     /**
-     * Qualifier any value.
-     * Corresponds to qualifier null value.
+     * Represents any qualifier value for null values
      */
     public static final String ANY_VALUE = "*";
 
@@ -24,7 +23,7 @@ public final class Matcher {
     private final Node rootNode = new Node();
 
     /**
-     * Register resource qualifiers  ({@link SubjectQualifiers})  in localizer
+     * Register resource qualifiers  ({@link SubjectQualifiers})  in matcher
      */
     public void addQualifiers(final SubjectQualifiers qualifiers) {
         Node lastNode = provideLastNode(qualifiers);
@@ -39,8 +38,11 @@ public final class Matcher {
      */
     public SubjectQualifiers match(final ObjectiveQualifiers qualifiers) {
         Node curNode = rootNode;
-        for (String q : qualifiers) {
-            Node node = curNode.getNext(q);
+        for (String qualifierValue : qualifiers) {
+            if (qualifierValue == null) {
+                qualifierValue = ANY_VALUE;
+            }
+            Node node = curNode.getNext(qualifierValue);
             if (node == null) {
                 node = curNode.getNext(ANY_VALUE);
                 if (node == null) {
@@ -92,7 +94,7 @@ public final class Matcher {
 
         @Override
         public String toString() {
-            return "Localizer.Node{qualifiers=" + qualifiers + '}';
+            return "Matcher.Node{qualifiers=" + qualifiers + '}';
         }
     }
 }
