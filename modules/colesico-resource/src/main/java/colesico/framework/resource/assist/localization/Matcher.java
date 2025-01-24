@@ -38,7 +38,7 @@ public final class Matcher<V> {
      * Returns resource {@link SubjectQualifiers} best matched  to {@link ObjectiveQualifiers} qualifiers.
      *
      * @param objectiveQualifiers qualification obtained from profile
-     * @return null if no qualifier bound
+     * @return null if no subject qualification matched
      */
     public MatchResult<V> match(final ObjectiveQualifiers objectiveQualifiers) {
         var curNode = rootNode;

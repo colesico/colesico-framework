@@ -24,7 +24,7 @@ public class L10nRewriter implements PathRewriter {
 
     private static final Logger log = LoggerFactory.getLogger(L10nRewriter.class);
 
-    private final PathTrie<L10NConfig> pathTrie = PathTrie.of();
+    private final PathTrie<PathL10n> pathTrie = PathTrie.of();
 
     private final L10nConfigPrototype config;
     private final Provider<Profile> profileProv;
@@ -58,22 +58,22 @@ public class L10nRewriter implements PathRewriter {
      * @param subjectQualifiers - subject qualifiers values
      */
     private void pathLocalization(String path, L10nMode mode, SubjectQualifiers... subjectQualifiers) {
-        final PathTrie.Node<L10NConfig> node = pathTrie.add(path);
-        L10NConfig l10NConfig = node.getValue();
-        Matcher matcher;
-        if (l10NConfig == null) {
+        final PathTrie.Node<PathL10n> node = pathTrie.add(path);
+        PathL10n pathL10N = node.getValue();
+        Matcher<X> matcher;
+        if (pathL10N == null) {
             matcher = new Matcher();
-            l10NConfig = new L10NConfig(matcher, mode);
-            node.setValue(l10NConfig);
+            pathL10N = new PathL10n(matcher, mode);
+            node.setValue(pathL10N);
         } else {
-            matcher = l10NConfig.matcher();
-            if (!mode.equals(l10NConfig.mode())) {
+            matcher = pathL10N.matcher();
+            if (!mode.equals(pathL10N.mode())) {
                 throw new ResourceException("Localization mode mismatch");
             }
         }
 
         for (SubjectQualifiers sq : subjectQualifiers) {
-            matcher.addQualifiers(sq);
+            matcher.addQualifiers(sq, );
         }
 
     }
@@ -81,26 +81,26 @@ public class L10nRewriter implements PathRewriter {
     @Override
     public String rewrite(final String path) {
 
-        L10NConfig l10NConfig = pathTrie.find(path);
+        PathL10n pathL10N = pathTrie.find(path);
 
-        if (l10NConfig == null) {
+        if (pathL10N == null) {
             return path;
         }
 
-        if (l10NConfig.mode().equals(L10nMode.NONE)) {
+        if (pathL10N.mode().equals(L10nMode.NONE)) {
             return path;
         }
 
-        SubjectQualifiers qualifiers = l10NConfig.matcher().match(config.getObjectiveQualifiers(profileProv.get()));
+        var matchResult = pathL10N.matcher().match(config.getObjectiveQualifiers(profileProv.get()));
 
-        if (qualifiers == null) {
+        if (matchResult == null) {
             return path;
         }
 
-        return switch (l10NConfig.mode()) {
-            case FILE -> rewriteFileName(path, qualifiers);
-            case DIR -> rewriteDirectoryName(path, qualifiers);
-            default -> throw new ResourceException("Unsupported localization mode: " + l10NConfig.mode());
+        return switch (pathL10N.mode()) {
+            case FILE -> rewriteFileName(path, matchResult.subjectQualifiers());
+            case DIR -> rewriteDirectoryName(path, matchResult.subjectQualifiers());
+            default -> throw new ResourceException("Unsupported localization mode: " + pathL10N.mode());
         };
     }
 
@@ -183,7 +183,7 @@ public class L10nRewriter implements PathRewriter {
     /**
      * Localization config associated with path
      */
-    private static record L10NConfig(Matcher matcher, L10nMode mode) {
+    private record PathL10n(Matcher matcher, L10nMode mode) {
 
     }
 
