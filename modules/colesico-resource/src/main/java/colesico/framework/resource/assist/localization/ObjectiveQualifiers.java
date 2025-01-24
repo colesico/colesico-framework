@@ -15,24 +15,18 @@ import java.util.Objects;
  */
 public final class ObjectiveQualifiers implements Iterable<String> {
 
-    /**
-     * Qualifiers values.
-     * Number of qualifiers values and its order must according
-     * to canonical qualifiers order.
-     * Undetermined qualifier values must be null.
-     * <p>
-     * Example:
-     * ["en", "US"]
-     * ["ru","RU",null]
-     * [null, "UK"]
-     */
     private final String[] values;
 
-    public ObjectiveQualifiers(String[] values) {
+    private ObjectiveQualifiers(String[] values) {
         this.values = values;
     }
 
-    public static ObjectiveQualifiers of(String... values) {
+    /**
+     * Default objective qualifiers
+     */
+    public static ObjectiveQualifiers of(QualifiersDefinition definition) {
+        String[] values = new String[definition.getSize()];
+        Arrays.fill(values, null);
         return new ObjectiveQualifiers(values);
     }
 

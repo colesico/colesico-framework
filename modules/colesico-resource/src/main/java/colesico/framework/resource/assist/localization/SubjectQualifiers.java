@@ -21,17 +21,20 @@ public final class SubjectQualifiers implements Iterable<String> {
      */
     private final String[] values;
 
-    public SubjectQualifiers(String[] values) {
+    private SubjectQualifiers(String[] values) {
         this.values = values;
     }
 
+    protected static SubjectQualifiers of(String... values) {
+        return new SubjectQualifiers(values);
+    }
+
     /**
-     * Qualifier values should be listed according to canonical qualifiers order
-     * {@see QualifiersDefinition}.
-     * <p>
-     * Some values can be null.
+     * Default subject qualifiers
      */
-    public static SubjectQualifiers of(String... values) {
+    public static SubjectQualifiers of(QualifiersDefinition definition) {
+        String[] values = new String[definition.getSize()];
+        Arrays.fill(values, null);
         return new SubjectQualifiers(values);
     }
 
