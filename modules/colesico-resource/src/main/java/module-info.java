@@ -17,4 +17,6 @@ module colesico.framework.resource {
     exports colesico.framework.resource.rewriters.param;
     exports colesico.framework.resource.rewriters.localization;
     exports colesico.framework.resource.internal to colesico.framework.ioc;
+    exports colesico.framework.resource.internal.rewriters.localization to colesico.framework.ioc;
+    exports colesico.framework.resource.internal.rewriters to colesico.framework.ioc;
 }

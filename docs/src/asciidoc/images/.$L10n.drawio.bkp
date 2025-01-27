@@ -1,0 +1,60 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/25.0.2 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="25.0.2">
+  <diagram name="Page-1" id="A3XhIicthDTZvs0xvkXD">
+    <mxGraphModel dx="1964" dy="670" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="u3AJ4Mv2oLsyqFLb0B4K-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="u3AJ4Mv2oLsyqFLb0B4K-1" target="u3AJ4Mv2oLsyqFLb0B4K-6">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="300" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="u3AJ4Mv2oLsyqFLb0B4K-1" value="Resource storage&lt;div&gt;default, ru&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="190" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="u3AJ4Mv2oLsyqFLb0B4K-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="u3AJ4Mv2oLsyqFLb0B4K-2" target="u3AJ4Mv2oLsyqFLb0B4K-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="u3AJ4Mv2oLsyqFLb0B4K-2" value="Storage path" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-40" y="190" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="u3AJ4Mv2oLsyqFLb0B4K-6" value="Storage file" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="190" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="u3AJ4Mv2oLsyqFLb0B4K-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="u3AJ4Mv2oLsyqFLb0B4K-9" target="u3AJ4Mv2oLsyqFLb0B4K-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="u3AJ4Mv2oLsyqFLb0B4K-9" value="Resource storage&lt;div&gt;en,fr,de&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="310" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="u3AJ4Mv2oLsyqFLb0B4K-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="u3AJ4Mv2oLsyqFLb0B4K-10" target="u3AJ4Mv2oLsyqFLb0B4K-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="u3AJ4Mv2oLsyqFLb0B4K-10" value="Storage path" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-40" y="310" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="u3AJ4Mv2oLsyqFLb0B4K-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="u3AJ4Mv2oLsyqFLb0B4K-12" target="u3AJ4Mv2oLsyqFLb0B4K-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="u3AJ4Mv2oLsyqFLb0B4K-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="u3AJ4Mv2oLsyqFLb0B4K-12" target="u3AJ4Mv2oLsyqFLb0B4K-9">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="610" y="50" />
+              <mxPoint x="610" y="440" />
+              <mxPoint x="200" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="u3AJ4Mv2oLsyqFLb0B4K-12" value="Resource manager" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="20" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="u3AJ4Mv2oLsyqFLb0B4K-14" value="StoragePath, ResourcePath&lt;span style=&quot;background-color: initial;&quot;&gt;,&lt;/span&gt;&lt;div&gt;&lt;div&gt;ObjectiveQualifiers&lt;/div&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="240" y="120" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="u3AJ4Mv2oLsyqFLb0B4K-16" value="Storage file" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="310" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

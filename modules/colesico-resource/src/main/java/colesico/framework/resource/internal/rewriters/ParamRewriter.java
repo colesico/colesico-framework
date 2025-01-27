@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package colesico.framework.resource.rewriters.param;
+package colesico.framework.resource.internal.rewriters;
 
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.resource.PathRewriter;
 import colesico.framework.resource.RewritingPhase;
+import colesico.framework.resource.rewriters.param.ParamRewriterOptionsPrototype;
+import colesico.framework.resource.rewriters.param.ParamRewriterSettings;
 import jakarta.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 

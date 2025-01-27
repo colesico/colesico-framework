@@ -1,5 +1,7 @@
 package colesico.framework.resource.rewriters.prefix;
 
+import colesico.framework.resource.internal.rewriters.PrefixRewriter;
+
 /**
  * Settings for {@link PrefixRewriter}.
  * It rewrites the path by a partial prefix match.

@@ -18,10 +18,9 @@ package colesico.framework.resource.internal;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.resource.ResourceKit;
-import colesico.framework.resource.rewriters.localization.L10nRewriter;
-import colesico.framework.resource.rewriters.param.ParamRewriter;
-import colesico.framework.resource.rewriters.prefix.PrefixRewriter;
-import jakarta.inject.Singleton;
+import colesico.framework.resource.internal.rewriters.localization.L10nRewriter;
+import colesico.framework.resource.internal.rewriters.ParamRewriter;
+import colesico.framework.resource.internal.rewriters.PrefixRewriter;
 
 
 @Producer

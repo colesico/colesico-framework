@@ -19,5 +19,5 @@ abstract public class L10nConfigPrototype {
      */
     abstract public ObjectiveQualifiers getObjectiveQualifiers(Profile profile);
 
-    abstract public L10nMode getDefaultMode();
+
 }

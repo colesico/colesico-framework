@@ -18,7 +18,7 @@ package colesico.framework.test.resource;
 
 import colesico.framework.resource.ResourceOptionsPrototype;
 import colesico.framework.resource.RewriterRegistry;
-import colesico.framework.resource.rewriters.param.ParamRewriter;
+import colesico.framework.resource.internal.rewriters.ParamRewriter;
 
 import jakarta.inject.Inject;
 

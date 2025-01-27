@@ -4,7 +4,7 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.conditional.TestCondition;
 import colesico.framework.resource.rewriters.localization.L10nMode;
-import colesico.framework.resource.rewriters.localization.L10nRewriter;
+import colesico.framework.resource.internal.rewriters.localization.L10nRewriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;

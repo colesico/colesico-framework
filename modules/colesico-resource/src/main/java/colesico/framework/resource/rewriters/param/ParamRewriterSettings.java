@@ -1,5 +1,7 @@
 package colesico.framework.resource.rewriters.param;
 
+import colesico.framework.resource.internal.rewriters.ParamRewriter;
+
 /**
  * Settings for {@link ParamRewriter}.
  * It replaces parameter names in the path with their values
