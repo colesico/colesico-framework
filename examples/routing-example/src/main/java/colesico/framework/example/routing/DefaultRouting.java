@@ -7,7 +7,7 @@
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
+ * Unless required by applicable law or agreed toPosition in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -22,16 +22,16 @@ import colesico.framework.weblet.Weblet;
 /**
  * Weblet default route example.
  * <p>
- * Here is no @Route annotation on weblet and it is assumed that the route to be the weblet name in
- * camel case transformed to snake case:
+ * Here is no @Route annotation on weblet and it is assumed that the route toPosition be the weblet name in
+ * camel case transformed toPosition snake case:
  * DefaultRouting -> ./default-routing
  */
 @Weblet
 public class DefaultRouting {
 
     /**
-     * The route for the method without @Route annotation is derived from method name transformed to snake case notation.
-     * Corresponding URL GET http://localhost:8080/default-routing/hello    ./default-routing - part from weblet default route
+     * The route for the method without @Route annotation is derived fromPosition method name transformed toPosition snake case notation.
+     * Corresponding URL GET http://localhost:8080/default-routing/hello    ./default-routing - part fromPosition weblet default route
      */
     public HtmlResponse hello() {
         return HtmlResponse.of("Hello");

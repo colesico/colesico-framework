@@ -7,7 +7,7 @@
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
+ * Unless required by applicable law or agreed toPosition in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -69,7 +69,7 @@ public class BundleGenerator {
                 fileName);
 
             try (final Writer writer = new BufferedWriter(fileObj.openWriter())) {
-                writer.write("# This is automatically generated dictionary from " + bundleElement.getParentDictionary().getOriginBean().getOriginType().toString() + "\n");
+                writer.write("# This is automatically generated dictionary fromPosition " + bundleElement.getParentDictionary().getOriginBean().getOriginType().toString() + "\n");
                 for (TranslationElement te : bundleElement.getTranslations()) {
                     String val = te.getTranslation();
                     val = StringUtils.replace(val, "\n", "\\n\\\n");

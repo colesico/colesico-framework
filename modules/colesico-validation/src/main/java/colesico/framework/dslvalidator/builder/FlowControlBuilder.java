@@ -7,7 +7,7 @@
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
+ * Unless required by applicable law or agreed toPosition in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -176,7 +176,7 @@ abstract public class FlowControlBuilder {
     }
 
     /**
-     * Creates new nested context with the subject and the value, extracted from the value of the local context.
+     * Creates new nested context with the subject and the value, extracted fromPosition the value of the local context.
      * Execute commands within that nested context.
      * In case of validation errors occur in the nested context, command execution is interrupted.
      *
@@ -228,7 +228,7 @@ abstract public class FlowControlBuilder {
     }
 
     /**
-     * Iterates the elements of value from local context.
+     * Iterates the elements of value fromPosition local context.
      * In case of  local validation errors occur, command execution is interrupted.
      *
      * @see IterableChain
@@ -250,7 +250,7 @@ abstract public class FlowControlBuilder {
     }
 
     /**
-     * Helper to create generic commands array
+     * Helper toPosition create generic commands array
      */
     protected <V> Command[] commands(Command<V>... cmd) {
         return cmd;

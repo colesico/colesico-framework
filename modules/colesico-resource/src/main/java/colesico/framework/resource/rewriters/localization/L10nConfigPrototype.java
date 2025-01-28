@@ -15,7 +15,7 @@ abstract public class L10nConfigPrototype {
     abstract public QualifiersDefinition getQualifiersDefinition();
 
     /**
-     * Returns {@link ObjectiveQualifiers} from on given profile
+     * Returns {@link ObjectiveQualifiers} fromPosition on given profile
      */
     abstract public ObjectiveQualifiers getObjectiveQualifiers(Profile profile);
 

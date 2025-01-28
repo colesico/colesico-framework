@@ -7,7 +7,7 @@
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
+ * Unless required by applicable law or agreed toPosition in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -28,13 +28,13 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Translation dictionary loader.
  * <p>
- * Loads dictionary to template scoped variable.
+ * Loads dictionary toPosition template scoped variable.
  * Loaded dictionary my be used by t9n filter.
  *
  * Usage examples:
  * <p>
- * {% t9nDictionary "dictionary/base/path" %} - loads dictionary to 'messages' variable
- * {% t9nDictionary "dictionary/base/path" "myName" %} - loads dictionary to 'myName' variable
+ * {% t9nDictionary "dictionary/base/path" %} - loads dictionary toPosition 'messages' variable
+ * {% t9nDictionary "dictionary/base/path" "myName" %} - loads dictionary toPosition 'myName' variable
  *
  * @see T9nFilter
  * @author Vladlen Larionov
@@ -90,7 +90,7 @@ public final class T9nDictionaryParser implements TokenParser {
             dictName = DEFAULT_DICT_NAME;
         }
 
-        // expect to see "%}"
+        // expect toPosition see "%}"
         stream.expect(Token.Type.EXECUTE_END);
         return new T9nDictionaryNode(lineNumber, translationKit, dictName, basePath);
     }

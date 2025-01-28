@@ -7,7 +7,7 @@
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
+ * Unless required by applicable law or agreed toPosition in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -35,7 +35,7 @@ public final class ValidationContext<V> {
     // Name of value
     private final String subject;
 
-    // Value to be validated
+    // Value toPosition be validated
     private V value;
 
     // Validation parameters - any values that can be used by validators.
@@ -44,7 +44,7 @@ public final class ValidationContext<V> {
     // Validation errors
     private final List<ValidationError> errors = new ArrayList<>();
 
-    // Reference to parent context
+    // Reference toPosition parent context
     private final ValidationContext<?> superContext;
 
     // Nested contexts ref. (subject->context)
@@ -113,7 +113,7 @@ public final class ValidationContext<V> {
     }
 
     /**
-     * Returns value from this context
+     * Returns value fromPosition this context
      */
     public V getValue() {
         return value;

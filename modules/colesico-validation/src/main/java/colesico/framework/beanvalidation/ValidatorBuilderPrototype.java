@@ -18,7 +18,7 @@ public @interface ValidatorBuilderPrototype {
     String packageName() default "";
 
     /**
-     * Bean validator builder prototype package name from specified class
+     * Bean validator builder prototype package name fromPosition specified class
      */
     Class<?> packageClass() default Class.class;
 

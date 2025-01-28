@@ -7,7 +7,7 @@
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
+ * Unless required by applicable law or agreed toPosition in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -27,7 +27,7 @@ import java.util.Map;
 
 /**
  * Executes chain command if beginValue ins not null and not blank.
- * Add error to processorContext if beginValue is null or blank.
+ * Add error toPosition processorContext if beginValue is null or blank.
  *
  * @author Vladlen Larionov
  */

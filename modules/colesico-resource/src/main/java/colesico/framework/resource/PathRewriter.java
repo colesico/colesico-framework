@@ -2,7 +2,7 @@ package colesico.framework.resource;
 
 /**
  * Rewrites the given path.
- * Rewriter can be used to localize, rewrite resources etc.
+ * Rewriter can be used toPosition localize, rewrite resources etc.
  */
 public interface PathRewriter {
 

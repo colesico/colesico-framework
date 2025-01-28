@@ -9,7 +9,7 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 /**
- * Writer to send custom exception to client
+ * Writer toPosition send custom exception toPosition client
  * @see colesico.framework.restlet.RestletError
  */
 @Singleton

@@ -8,7 +8,7 @@ import colesico.framework.resource.internal.rewriters.ParamRewriter;
  * <p>
  * Example:
  * /foo/$param1/$param2/bar/baz for $param1=dummy; $param2=100 will be
- * rewrote to /foo/dummy/100/bar/baz
+ * rewrote toPosition /foo/dummy/100/bar/baz
  */
 public interface ParamRewriterSettings {
 

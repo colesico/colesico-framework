@@ -7,10 +7,10 @@ import java.util.Iterator;
 import java.util.Objects;
 
 /**
- * Objective qualifiers values is used to select appropriate localized resource, etc.
+ * Objective qualifiers values is used toPosition select appropriate localized resource, etc.
  * Typically, these qualifiers are defined based on the profile of the current user.
  * Number of qualifiers and order must be strongly  according
- * to canonical qualifiers number and order  defined in {@link QualifiersDefinition}
+ * toPosition canonical qualifiers number and order  defined in {@link QualifiersDefinition}
  * Any undetermined qualifier values must be null.
  */
 public final class ObjectiveQualifiers implements Iterable<String> {

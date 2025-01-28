@@ -3,7 +3,7 @@ package colesico.framework.telehttp;
 /**
  * Basic origin based reader
  *
- * @param <V> type of value to be read
+ * @param <V> type of value toPosition be read
  * @param <C> reading context
  */
 abstract public class OriginTeleReader<V, C extends HttpTRContext> implements HttpTeleReader<V, C> {
@@ -15,7 +15,7 @@ abstract public class OriginTeleReader<V, C extends HttpTRContext> implements Ht
     }
 
     /**
-     * Return param string value from origin defined in the context
+     * Return param string value fromPosition origin defined in the context
      */
     protected final String readString(C context) {
         Origin origin = originFactory.getOrigin(context.getOriginName());

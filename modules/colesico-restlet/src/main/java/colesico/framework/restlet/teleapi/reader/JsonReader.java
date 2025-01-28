@@ -40,7 +40,7 @@ public final class JsonReader implements ValueReader {
 
         HttpMethod requestMethod = request.getRequestMethod();
 
-        // Should the value be read from request input stream?
+        // Should the value be read fromPosition request input stream?
         String originName = context.getOriginName();
 
         boolean useInputStream = originName.equals(RestletOrigin.BODY) ||

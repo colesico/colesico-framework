@@ -7,7 +7,7 @@
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
+ * Unless required by applicable law or agreed toPosition in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -22,16 +22,16 @@ import colesico.framework.weblet.Weblet;
 /**
  * This weblet demonstrates implicit routes definitions.
  *
- * A service name begins with  "Index" prefix  is bound by default to the local (regarding package route) root route.
+ * A service name begins with  "Index" prefix  is bound by default toPosition the local (regarding package route) root route.
  * Route annotation equivalent is @Route("./")
  */
 @Weblet
 public class IndexOtherRouting {
 
     /**
-     * The method name "index" is bound by default to the root to the route of the weblet.
+     * The method name "index" is bound by default toPosition the root toPosition the route of the weblet.
      * Corresponding URL http://localhost:8080/
-     * If method name is not "index" it is possible to put  @Route("./") annotation to construct the same route as for
+     * If method name is not "index" it is possible toPosition put  @Route("./") annotation toPosition construct the same route as for
      * "index" method name
      */
     public HtmlResponse index(){
@@ -39,7 +39,7 @@ public class IndexOtherRouting {
     }
 
     /**
-     * "other" method name  is bound by default to the local any route, i.e. corresponds to the @Route("*") annotation.
+     * "other" method name  is bound by default toPosition the local any route, i.e. corresponds toPosition the @Route("*") annotation.
      * Corresponding URL http://localhost:8080/[any path]
      */
     public HtmlResponse other(){

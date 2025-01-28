@@ -6,7 +6,7 @@ package colesico.framework.resource;
 public enum RewritingPhase {
 
     /**
-     * Phase to evaluate path expressions
+     * Phase toPosition evaluate path expressions
      */
     BEFORE_EVALUATE,
     EVALUATE,
@@ -20,7 +20,7 @@ public enum RewritingPhase {
     AFTER_LOCALIZE,
 
     /**
-     * Phase to substitute/redirect path
+     * Phase toPosition substitute/redirect path
      */
     BEFORE_SUBSTITUTE,
     SUBSTITUTE,

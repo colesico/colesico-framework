@@ -7,7 +7,7 @@
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
+ * Unless required by applicable law or agreed toPosition in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -24,7 +24,7 @@ import colesico.framework.translation.assist.lang.Text;
 
 /**
  * An appropriate properties file will be generated for this interface.
- * Extends TranslationDictionary - is an optional, to ge access to dictionary API.
+ * Extends TranslationDictionary - is an optional, toPosition ge access toPosition dictionary API.
  */
 @Dictionary
 public interface AppDictionary extends TranslationDictionary {

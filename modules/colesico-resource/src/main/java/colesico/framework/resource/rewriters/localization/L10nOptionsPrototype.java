@@ -2,7 +2,6 @@ package colesico.framework.resource.rewriters.localization;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
-import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.assist.localization.Qualifier;
 import colesico.framework.resource.assist.localization.QualifiersDefinition;
 import colesico.framework.resource.assist.localization.SubjectQualifiers;
@@ -36,20 +35,6 @@ abstract public class L10nOptionsPrototype {
         }
 
         /**
-         * Set mode for current path
-         */
-        public Options mode(L10nMode mode) {
-            if (settings.mode == null) {
-                settings.mode = mode;
-            } else {
-                if (settings.mode != mode) {
-                    throw new ResourceException("L10nMode mismatch for path: " + settings.path);
-                }
-            }
-            return this;
-        }
-
-        /**
          * Specify qualifier for current path
          * Qualifiers order is unimportant, it will be ordered at parsing time
          */
@@ -80,7 +65,6 @@ abstract public class L10nOptionsPrototype {
 
     public static class PathSettings {
         private final String path;
-        private L10nMode mode;
         private final List<Qualifier[]> qualifiers = new ArrayList<>();
 
         public PathSettings(String path) {
@@ -91,19 +75,12 @@ abstract public class L10nOptionsPrototype {
             return path;
         }
 
-        public L10nMode mode(L10nMode defaultValue) {
-            if (mode == null) {
-                return defaultValue;
-            }
-            return mode;
-        }
-
         public SubjectQualifiers[] qualifiers(QualifiersDefinition definition) {
             int n = qualifiers.size();
             SubjectQualifiers[] result = new SubjectQualifiers[n];
             for (int i = 0; i < n; i++) {
                 Qualifier[] q = qualifiers.get(i);
-                SubjectQualifiers sq = SubjectQualifiers.of(definition.canonicalize(q));
+                SubjectQualifiers sq = SubjectQualifiers.of(definition, q);
                 result[i] = sq;
             }
             return result;

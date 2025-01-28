@@ -168,7 +168,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
 
             classBuilder.superclass(TypeName.get(builderElm.getExtendsClass().unwrap()));
 
-            classBuilder.addJavadoc("Validator Builder Prototype\nExtend this class to implement validation methods");
+            classBuilder.addJavadoc("Validator Builder Prototype\nExtend this class toPosition implement validation methods");
 
             generateValidatorBuildersFields();
             generateProxyConstructors(builderElm);

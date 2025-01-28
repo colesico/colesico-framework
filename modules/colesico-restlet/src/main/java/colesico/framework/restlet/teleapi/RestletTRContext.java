@@ -10,7 +10,7 @@ public final class RestletTRContext extends HttpTRContext {
 
     /**
      * Custom reader class or null.
-     * If null - default reader will be used to read the parameter
+     * If null - default reader will be used toPosition read the parameter
      */
     private final Class<? extends RestletTeleReader> readerClass;
 

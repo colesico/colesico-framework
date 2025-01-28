@@ -14,6 +14,7 @@ import colesico.framework.resource.rewriters.localization.L10nOptionsPrototype;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +25,7 @@ import org.slf4j.LoggerFactory;
 public class L10nRewriter implements PathRewriter {
 
     private static final Logger log = LoggerFactory.getLogger(L10nRewriter.class);
+
 
     private final PathTrie<PathRewriting> pathTrie = PathTrie.of();
 
@@ -42,7 +44,7 @@ public class L10nRewriter implements PathRewriter {
 
         QualifiersDefinition definition = config.getQualifiersDefinition();
         for (var pc : opt.pathSettings()) {
-            pathLocalization(pc.path(), pc.mode(config.getDefaultMode()), pc.qualifiers(definition));
+            addPathRewriting(pc.path(), pc.qualifiers(definition));
         }
     }
 
@@ -56,33 +58,38 @@ public class L10nRewriter implements PathRewriter {
      * The following placeholders can be used in the path template:
      * -   {Q_}  qualifiers prefix placeholder i.e. module/{Q_}messages.txt -> module/ru_RU_messages.txt
      * -   {_Q}  qualifiers suffix placeholder i.e. messages{_Q}.txt  messages_ru_RU.txt
-     * -   {{path part}}  path part for replacement :  /app/{{module}}/messages.txt -> /app/ext/messages.txt
+     * -   {str>substitution} path part for substitution :  /app/{module>ext}/messages.txt -> /app/ext/messages.txt
      *
      * @param pathTemplate      - resource path template
      * @param subjectQualifiers - subject qualifiers values
      */
-    private void pathLocalization(String pathTemplate,
-                                  SubjectQualifiers[] subjectQualifiers,
-                                  String replacement) {
-        final PathTrie.Node<PathRewriting> node = pathTrie.add(pathTemplate);
-        PathRewriting rewriting = node.getValue();
+    private void addPathRewriting(String pathTemplate,
+                                  SubjectQualifiers[] subjectQualifiers) {
+
+        PathTemplateParser pathTemplateParser = PathTemplateParser.parse(pathTemplate);
+        String path = pathTemplateParser.getPath();
+
+        final PathTrie.Node<PathRewriting> node = pathTrie.add(path);
+        PathRewriting pathRewriting = node.getValue();
         Matcher<QualifierRewriting> matcher;
-        if (rewriting == null) {
+        if (pathRewriting == null) {
             matcher = new Matcher<>();
-            rewriting = new PathRewriting(matcher, mode);
-            node.setValue(rewriting);
+            pathRewriting = new PathRewriting(matcher);
+            node.setValue(pathRewriting);
         } else {
-            matcher = rewriting.matcher();
-            if (!mode.equals(rewriting.mode())) {
-                throw new ResourceException("Localization mode mismatch");
+            matcher = pathRewriting.matcher();
+        }
+
+        PathTag[] tags = pathTemplateParser.getTags();
+        for (SubjectQualifiers sq : subjectQualifiers) {
+            var prvRewriting = matcher.addQualifiers(sq, new QualifierRewriting(tags));
+            if (prvRewriting != null) {
+                throw new ResourceException("Path rewriting already defined. Path=" + path + "; Qualifiers=" + sq);
             }
         }
 
-        for (SubjectQualifiers sq : subjectQualifiers) {
-            matcher.addQualifiers(sq, );
-        }
-
     }
+
 
     @Override
     public String rewrite(String path) {
@@ -99,29 +106,28 @@ public class L10nRewriter implements PathRewriter {
             return path;
         }
 
-        for (PathAction pathAction : matchResult.value().pathActions()) {
-            path = switch (pathAction) {
-                case QualifierSuffixAction qsa -> qualifierSuffixAction(path, qsa);
-                case QualifierPrefixAction qpa -> qualifierPrefixAction(path, qpa);
-                case SubstituteAction sa -> substituteAction(path, sa);
-                default -> throw new ResourceException("Unsupported path action: " + path);
+        for (PathTag tag : matchResult.value().tags()) {
+            path = switch (tag) {
+                case QualifiersTag qpa -> rewriteByQualifiers(path, qpa, matchResult.subjectQualifiers());
+                case SubstituteTag sa -> rewriteBySubstitute(path, sa);
+                default -> throw new ResourceException("Unsupported path tag. Path=" + path + "; Tag=" + tag);
             };
         }
 
         return path;
     }
 
-
-    private String qualifierSuffixAction(String path, QualifierSuffixAction action) {
-        return path;
+    private String rewriteByQualifiers(String path, QualifiersTag tag, SubjectQualifiers qualifiers) {
+        String suffix = qualifiers.toSuffix();
+        String partLeft = StringUtils.substring(path, 0, tag.position());
+        String partRight = StringUtils.substring(path, tag.position());
+        return partLeft + suffix + partRight;
     }
 
-    private String qualifierPrefixAction(String path, QualifierPrefixAction action) {
-        return path;
-    }
-
-    private String substituteAction(String path, SubstituteAction action) {
-        return path;
+    private String rewriteBySubstitute(String path, SubstituteTag tag) {
+        String partLeft = StringUtils.substring(path, 0, tag.fromPosition());
+        String partRight = StringUtils.substring(path, tag.toPosition());
+        return partLeft + tag.substitution() + partRight;
     }
 
     /**
@@ -134,7 +140,7 @@ public class L10nRewriter implements PathRewriter {
     /**
      * Rewriting config associated with qualifier
      */
-    private record QualifierRewriting(PathAction[] pathActions) {
+    private record QualifierRewriting(PathTag[] tags) {
 
     }
 

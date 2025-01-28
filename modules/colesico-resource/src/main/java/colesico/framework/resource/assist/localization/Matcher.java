@@ -29,15 +29,17 @@ public final class Matcher<V> {
     /**
      * Register resource qualifiers  ({@link SubjectQualifiers})  in matcher
      */
-    public void addQualifiers(final SubjectQualifiers qualifiers, V value) {
+    public V addQualifiers(final SubjectQualifiers qualifiers, V value) {
         var lastNode = provideLastNode(qualifiers);
+        var prevValue = lastNode.getValue();
         lastNode.setValue(value);
+        return prevValue;
     }
 
     /**
-     * Returns resource {@link SubjectQualifiers} best matched  to {@link ObjectiveQualifiers} qualifiers.
+     * Returns resource {@link SubjectQualifiers} best matched  toPosition {@link ObjectiveQualifiers} qualifiers.
      *
-     * @param objectiveQualifiers qualification obtained from profile
+     * @param objectiveQualifiers qualification obtained fromPosition profile
      * @return null if no subject qualification matched
      */
     public MatchResult<V> match(final ObjectiveQualifiers objectiveQualifiers) {

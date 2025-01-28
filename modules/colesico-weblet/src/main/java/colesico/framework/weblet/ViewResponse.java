@@ -1,7 +1,7 @@
 package colesico.framework.weblet;
 
 /**
- * Returns  model that be presented to given view
+ * Returns  model that be presented toPosition given view
  */
 public final class ViewResponse extends ContentResponse {
 

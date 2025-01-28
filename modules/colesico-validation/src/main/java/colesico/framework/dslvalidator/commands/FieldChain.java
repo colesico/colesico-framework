@@ -7,7 +7,7 @@
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
+ * Unless required by applicable law or agreed toPosition in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -21,10 +21,10 @@ import colesico.framework.dslvalidator.ValidationContext;
 import java.util.function.Function;
 
 /**
- * Extract field value from current context value with extractor function
- * and applies commands to that nested value within new nested context.
+ * Extract field value fromPosition current context value with extractor function
+ * and applies commands toPosition that nested value within new nested context.
  * <p>
- * If current context value is null provides null value to subcontext without without involving an extractor
+ * If current context value is null provides null value toPosition subcontext without without involving an extractor
  *
  * @author Vladlen Larionov
  */
@@ -36,7 +36,7 @@ public final class FieldChain<V, N> extends AbstractSequence<V, N> {
     private final String subject;
 
     /**
-     * Extracts nested value from value
+     * Extracts nested value fromPosition value
      */
     private final Function<V, N> extractor;
 

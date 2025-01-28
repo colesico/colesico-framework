@@ -7,7 +7,7 @@
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
+ * Unless required by applicable law or agreed toPosition in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -18,7 +18,7 @@ package colesico.framework.telehttp;
 
 /**
  * Data reading origin API and basic dictionary.
- * Origin defines strategy for reading string value from http context
+ * Origin defines strategy for reading string value fromPosition http context
  */
 public interface Origin {
 
@@ -53,7 +53,7 @@ public interface Origin {
     String BODY = "BODY";
 
     /**
-     * Return string value from the http request entity
+     * Return string value fromPosition the http request entity
      *
      * @param name value name  (e.g. query param name, cookie name, header name, e.t.c)
      * @return string value
