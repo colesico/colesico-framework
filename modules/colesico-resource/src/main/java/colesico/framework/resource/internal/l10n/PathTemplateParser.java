@@ -1,4 +1,4 @@
-package colesico.framework.resource.internal.rewriters.localization;
+package colesico.framework.resource.internal.l10n;
 
 import colesico.framework.resource.ResourceException;
 
@@ -35,7 +35,7 @@ public class PathTemplateParser {
 
     // Shift template index
     private void shiftIndex(int offset) {
-        templateIndex = templateLength + offset;
+        templateIndex = templateIndex + offset;
         if (templateIndex > templateLength) {
             templateIndex = templateLength;
         }
@@ -48,7 +48,7 @@ public class PathTemplateParser {
     // Char at current template index + offset
     private char charAt(int offset) {
         int i = templateIndex + offset;
-        if (templateLength < i) {
+        if (i < templateLength) {
             return template.charAt(i);
         } else {
             return '\0';

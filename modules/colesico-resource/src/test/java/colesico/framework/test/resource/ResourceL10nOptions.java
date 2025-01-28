@@ -18,16 +18,17 @@ package colesico.framework.test.resource;
 
 
 import colesico.framework.config.Config;
-import colesico.framework.resource.rewriters.localization.L10nRewriterOptionsPrototype;
+import colesico.framework.resource.rewriting.ResourceL10nOptionsPrototype;
 
 @Config
-public class L10nRewriterOptions extends L10nRewriterOptionsPrototype {
+public class ResourceL10nOptions extends ResourceL10nOptionsPrototype {
 
-    public static final String PATH1 = "root/dir/file{Q}.txt";
+    public static final String PATH1 = "root/dir/file.txt";
     public static final String PATH2 = "root/foo/file{Q}.txt";
     public static final String PATH3 = "root/folder/file{Q}.txt";
     public static final String PATH4 = "root/xxx/file{Q}.txt";
     public static final String PATH5 = "root{Q}/file.txt";
+    public static final String PATH6 = "{{app/module=app2/module2}}/dir{Q}/file{Q}.txt";
 
     @Override
     public void configure(Options options) {
@@ -36,7 +37,8 @@ public class L10nRewriterOptions extends L10nRewriterOptionsPrototype {
                 .path(PATH2).qualifiers().language("en")
                 .path(PATH3).qualifiers().country("RU")
                 .path(PATH4).qualifiers().language("en").country("RU")
-                .path(PATH5).qualifiers().country("GB");
+                .path(PATH5).qualifiers().country("RU")
+                .path(PATH6).qualifiers().country("RU").language("en");
 
     }
 }

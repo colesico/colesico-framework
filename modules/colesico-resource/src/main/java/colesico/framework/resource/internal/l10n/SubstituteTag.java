@@ -1,4 +1,4 @@
-package colesico.framework.resource.internal.rewriters.localization;
+package colesico.framework.resource.internal.l10n;
 
 public record SubstituteTag(int fromPosition, int toPosition, String substitution) implements PathTag {
     @Override

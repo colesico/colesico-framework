@@ -13,10 +13,7 @@ module colesico.framework.resource {
     exports colesico.framework.resource;
     exports colesico.framework.resource.assist;
     exports colesico.framework.resource.assist.localization;
-    exports colesico.framework.resource.rewriters.prefix;
-    exports colesico.framework.resource.rewriters.param;
-    exports colesico.framework.resource.rewriters.localization;
+    exports colesico.framework.resource.rewriting;
     exports colesico.framework.resource.internal to colesico.framework.ioc;
-    exports colesico.framework.resource.internal.rewriters.localization to colesico.framework.ioc;
-    exports colesico.framework.resource.internal.rewriters to colesico.framework.ioc;
+    exports colesico.framework.resource.internal.l10n to colesico.framework.ioc;
 }

@@ -16,9 +16,7 @@
 
 package colesico.framework.test.resource;
 
-import colesico.framework.ioc.conditional.Requires;
 import colesico.framework.ioc.conditional.Substitute;
-import colesico.framework.ioc.conditional.TestCondition;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.profile.ProfileUtils;

@@ -1,4 +1,4 @@
-package colesico.framework.resource.rewriters.localization;
+package colesico.framework.resource.rewriting;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
@@ -10,7 +10,7 @@ import colesico.framework.resource.assist.localization.SubjectQualifiers;
 import java.util.*;
 
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class L10nRewriterOptionsPrototype {
+abstract public class ResourceL10nOptionsPrototype {
 
     abstract public void configure(Options options);
 

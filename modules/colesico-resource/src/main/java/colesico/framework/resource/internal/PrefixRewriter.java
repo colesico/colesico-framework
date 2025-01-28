@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package colesico.framework.resource.internal.rewriters;
+package colesico.framework.resource.internal;
 
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.resource.PathRewriter;
 import colesico.framework.resource.ResourceException;
-import colesico.framework.resource.RewritingPhase;
 import colesico.framework.resource.assist.PathTrie;
-import colesico.framework.resource.rewriters.prefix.PrefixRewriterOptionsPrototype;
-import colesico.framework.resource.rewriters.prefix.PrefixRewriterSettings;
+import colesico.framework.resource.rewriting.PathRewriter;
+import colesico.framework.resource.rewriting.ResourcePrefixOptionsPrototype;
+import colesico.framework.resource.rewriting.RewritingPhase;
 import jakarta.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 
@@ -31,11 +30,11 @@ import org.apache.commons.lang3.StringUtils;
  * E.g for the rewriting  '/etc/srv'->'/foo'   path '/etc/srv/generator/x' will be rewritten to  '/foo/generator/x'
  */
 @Singleton
-public class PrefixRewriter implements PathRewriter, PrefixRewriterSettings {
+public class PrefixRewriter implements PathRewriter, ResourcePrefixOptionsPrototype.Options {
 
     private final PathTrie<Rewriting> pathTrie = PathTrie.of();
 
-    public PrefixRewriter(Polysupplier<PrefixRewriterOptionsPrototype> configSup) {
+    public PrefixRewriter(Polysupplier<ResourcePrefixOptionsPrototype> configSup) {
         configSup.forEach(conf -> conf.configure(this));
     }
 
@@ -57,7 +56,7 @@ public class PrefixRewriter implements PathRewriter, PrefixRewriterSettings {
      * Adds rewriting rule
      */
     @Override
-    public PrefixRewriterSettings rewriting(String originPathPrefix, String targetPathPrefix) {
+    public ResourcePrefixOptionsPrototype.Options rewriting(String originPathPrefix, String targetPathPrefix) {
         PathTrie.Node<Rewriting> node = pathTrie.add(originPathPrefix);
         if (node.getValue() != null) {
             throw new ResourceException("Duplicate path rewriting: " + originPathPrefix);

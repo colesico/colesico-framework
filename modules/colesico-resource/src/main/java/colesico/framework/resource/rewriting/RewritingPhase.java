@@ -1,4 +1,4 @@
-package colesico.framework.resource;
+package colesico.framework.resource.rewriting;
 
 /**
  * Rewriters applying order

@@ -16,7 +16,11 @@
 package colesico.framework.resource.internal;
 
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.resource.*;
+import colesico.framework.resource.ResourceException;
+import colesico.framework.resource.ResourceKit;
+import colesico.framework.resource.ResourceNotFoundException;
+import colesico.framework.resource.rewriting.PathRewriter;
+import colesico.framework.resource.rewriting.RewritingPhase;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;

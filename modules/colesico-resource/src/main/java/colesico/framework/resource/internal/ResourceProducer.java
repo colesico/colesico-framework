@@ -17,11 +17,9 @@ package colesico.framework.resource.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.resource.PathRewriter;
 import colesico.framework.resource.ResourceKit;
-import colesico.framework.resource.internal.rewriters.localization.L10nRewriter;
-import colesico.framework.resource.internal.rewriters.ParamRewriter;
-import colesico.framework.resource.internal.rewriters.PrefixRewriter;
+import colesico.framework.resource.internal.l10n.L10nRewriter;
+import colesico.framework.resource.rewriting.PathRewriter;
 
 
 @Producer

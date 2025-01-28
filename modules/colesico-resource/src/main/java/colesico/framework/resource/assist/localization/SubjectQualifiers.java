@@ -43,7 +43,7 @@ public final class SubjectQualifiers implements Iterable<String> {
 
     public static SubjectQualifiers of(QualifiersDefinition definition, Qualifier... qualifiers) {
         if (qualifiers == null || qualifiers.length == 0) {
-            throw new ResourceException("Subject qualifiers is empty: "+qualifiers);
+            throw new ResourceException("Subject qualifiers is empty: " + qualifiers);
         }
         if (definition == null) {
             throw new ResourceException("Qualifiers definition is null");

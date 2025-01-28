@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package colesico.framework.resource.internal.rewriters;
+package colesico.framework.resource.internal;
 
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.resource.PathRewriter;
-import colesico.framework.resource.RewritingPhase;
-import colesico.framework.resource.rewriters.param.ParamRewriterOptionsPrototype;
-import colesico.framework.resource.rewriters.param.ParamRewriterSettings;
+import colesico.framework.resource.rewriting.PathRewriter;
+import colesico.framework.resource.rewriting.ResourceParamOptionsPrototype;
+import colesico.framework.resource.rewriting.RewritingPhase;
 import jakarta.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 
@@ -38,14 +37,14 @@ import java.util.Map;
  * rewrote to  /foo/dummy/100/bar/baz
  */
 @Singleton
-public class ParamRewriter implements PathRewriter, ParamRewriterSettings {
+public class ParamRewriter implements PathRewriter, ResourceParamOptionsPrototype.Options {
 
     public static final char PARAM_PREFIX = '$';
     public static final char PATH_SEPARATOR = '/';
 
     private final Map<String, String> paramsMap = new HashMap<>();
 
-    public ParamRewriter(Polysupplier<ParamRewriterOptionsPrototype> configSup) {
+    public ParamRewriter(Polysupplier<ResourceParamOptionsPrototype> configSup) {
         configSup.forEach(conf -> conf.configure(this));
     }
 
@@ -58,7 +57,7 @@ public class ParamRewriter implements PathRewriter, ParamRewriterSettings {
      * Add parameter
      */
     @Override
-    public ParamRewriterSettings param(String name, String value) {
+    public ResourceParamOptionsPrototype.Options param(String name, String value) {
         if (name == null || name.isEmpty()) {
             throw new RuntimeException("Property name is empty or null");
         }

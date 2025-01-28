@@ -17,25 +17,14 @@
 package colesico.framework.example.web.pebble;
 
 import colesico.framework.config.Config;
-import colesico.framework.resource.ResourceOptionsPrototype;
-import colesico.framework.resource.RewriterRegistry;
-import colesico.framework.resource.internal.rewriters.ParamRewriter;
-
-import jakarta.inject.Inject;
+import colesico.framework.resource.rewriting.ResourceParamOptionsPrototype;
 
 @Config
-public class ResourceConf extends ResourceOptionsPrototype {
+public class ResourceParamOptions extends ResourceParamOptionsPrototype {
 
-    private ParamRewriter rewriter;
-
-    @Inject
-    public ResourceConf(ParamRewriter rewriter) {
-        this.rewriter = rewriter;
-    }
 
     @Override
-    public void setupRewriters(RewriterRegistry registry) {
-        rewriter.register(registry)
-                .param("$tmplRoot", "colesico/framework/example/web/pebble/tmpl");
+    public void configure(Options options) {
+        options.param("$tmplRoot", "colesico/framework/example/web/pebble/tmpl");
     }
 }

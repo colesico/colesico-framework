@@ -1,7 +1,7 @@
 package colesico.framework.resource.internal;
 
-import colesico.framework.resource.PathRewriter;
-import colesico.framework.resource.RewritingPhase;
+import colesico.framework.resource.rewriting.PathRewriter;
+import colesico.framework.resource.rewriting.RewritingPhase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
