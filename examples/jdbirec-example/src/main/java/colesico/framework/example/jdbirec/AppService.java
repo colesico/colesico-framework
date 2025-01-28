@@ -117,7 +117,7 @@ public class AppService {
 
         Handle handle = handleProv.get();
 
-        String query = sUserRk.sql("select count(*) as count, @record from @usr");
+        String query = sUserRk.sql("select 100500 as count, @record from @usr");
         System.out.println("SU: " + query);
 
         Optional<SUser> user = handle

@@ -47,7 +47,7 @@ public class JdbiRecExampleTest {
         AppService service = ioc.instance(AppService.class);
         SUser user = service.getSUser();
         assertEquals(user.getName(), "USER:Ivan");
-        assertEquals(user.getCount(), 1);
+        assertEquals(user.getCount(), 100500);
     }
 
     @Test
