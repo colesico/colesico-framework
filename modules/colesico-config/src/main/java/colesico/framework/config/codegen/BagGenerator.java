@@ -19,7 +19,6 @@ package colesico.framework.config.codegen;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
-import colesico.framework.introspection.Introspect;
 import com.palantir.javapoet.FieldSpec;
 import com.palantir.javapoet.MethodSpec;
 import com.palantir.javapoet.TypeName;
@@ -75,7 +74,6 @@ public class BagGenerator extends FrameworkAbstractGenerator {
         TypeSpec.Builder bagBuilder = TypeSpec.classBuilder(classSimpleName);
 
         bagBuilder.addAnnotation(CodegenUtils.generateGenstamp(BagGenerator.class.getName(), null, null));
-        bagBuilder.addAnnotation(Introspect.class);
 
         bagBuilder.addModifiers(Modifier.PUBLIC);
 

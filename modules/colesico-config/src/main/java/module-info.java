@@ -24,7 +24,6 @@ module colesico.framework.config {
 
     // Inherited in client projects
     requires transitive colesico.framework.ioc;
-    requires transitive colesico.framework.introspection;
 
     requires org.slf4j;
 
