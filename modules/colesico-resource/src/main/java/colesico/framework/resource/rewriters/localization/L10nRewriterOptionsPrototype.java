@@ -46,7 +46,7 @@ abstract public class L10nRewriterOptionsPrototype {
          */
         public Options qualifiers() {
             qualifiers = new HashSet<>();
-            options.qualifiers.add(qualifiers.toArray(Qualifier[]::new));
+            options.qualifiers.add(qualifiers);
             return this;
         }
 
@@ -87,7 +87,7 @@ abstract public class L10nRewriterOptionsPrototype {
 
     public static class PathOptions {
         private final String path;
-        private final List<Qualifier[]> qualifiers = new ArrayList<>();
+        private final List<Set<Qualifier>> qualifiers = new ArrayList<>();
 
         public PathOptions(String path) {
             this.path = path;
@@ -101,8 +101,8 @@ abstract public class L10nRewriterOptionsPrototype {
             int n = qualifiers.size();
             SubjectQualifiers[] result = new SubjectQualifiers[n];
             for (int i = 0; i < n; i++) {
-                Qualifier[] q = qualifiers.get(i);
-                SubjectQualifiers sq = SubjectQualifiers.of(definition, q);
+                Set<Qualifier> q = qualifiers.get(i);
+                SubjectQualifiers sq = SubjectQualifiers.of(definition, q.toArray(Qualifier[]::new));
                 result[i] = sq;
             }
             return result;

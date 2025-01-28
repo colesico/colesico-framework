@@ -36,7 +36,7 @@ public class L10nRewriterOptions extends L10nRewriterOptionsPrototype {
                 .path(PATH2).qualifiers().language("en")
                 .path(PATH3).qualifiers().country("RU")
                 .path(PATH4).qualifiers().language("en").country("RU")
-                .path(PATH5).qualifiers().country("RU");
+                .path(PATH5).qualifiers().country("GB");
 
     }
 }

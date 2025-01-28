@@ -32,7 +32,11 @@ public final class Matcher<V> {
     public V addQualifiers(final SubjectQualifiers qualifiers, V value) {
         var lastNode = provideLastNode(qualifiers);
         var prevValue = lastNode.getValue();
-        lastNode.setValue(value);
+        try {
+            lastNode.setValue(value);
+        } catch (Exception e) {
+            throw new ResourceException("Error  adding qualifiers. Qualifiers: " + qualifiers + "; value: " + value, e);
+        }
         return prevValue;
     }
 
