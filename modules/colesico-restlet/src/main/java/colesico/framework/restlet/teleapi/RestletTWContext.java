@@ -15,7 +15,7 @@ public final class RestletTWContext extends HttpTWContext {
     private final Class<? extends RestletTeleWriter> writerClass;
 
     /**
-     * Http code toPosition return toPosition client
+     * Http code to  return to  client
      */
     private Integer statusCode;
 

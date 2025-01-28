@@ -11,13 +11,13 @@ import java.util.List;
 /**
  * Localizing qualifiers linked with localization subject  (any resource, file, etc.)
  * Number of qualifiers and order must be strongly  according
- * toPosition canonical qualifiers number and order defined in {@link QualifiersDefinition}
+ * to  canonical qualifiers number and order defined in {@link QualifiersDefinition}
  * Some qualifiers can have null values, that is interpreted as any/undetermined value.
  */
 public final class SubjectQualifiers implements Iterable<String> {
 
     /**
-     * Qualifier values should be listed according toPosition canonical qualifiers order
+     * Qualifier values should be listed according to  canonical qualifiers order
      * {@see QualifiersDefinition}.
      * <p>
      * Some values can be null.
@@ -26,6 +26,10 @@ public final class SubjectQualifiers implements Iterable<String> {
 
     private SubjectQualifiers(String[] values) {
         this.values = values;
+    }
+
+    protected static SubjectQualifiers of(String[] values) {
+        return new SubjectQualifiers(values);
     }
 
     /**

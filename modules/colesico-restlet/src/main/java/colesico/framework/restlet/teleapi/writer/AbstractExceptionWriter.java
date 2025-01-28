@@ -22,7 +22,7 @@ abstract public class AbstractExceptionWriter<T extends Throwable> extends Restl
     abstract protected Object getDetails(T value, RestletTWContext context);
 
     /**
-     * HTTP response status code toPosition sent toPosition client
+     * HTTP response status code to  sent to  client
      */
     protected int getHttpStatus(T value, RestletTWContext context){
         return 500;

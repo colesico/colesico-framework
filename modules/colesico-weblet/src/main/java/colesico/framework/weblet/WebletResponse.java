@@ -1,7 +1,7 @@
 package colesico.framework.weblet;
 
 /**
- * Response wrapper. Used toPosition return dynamically produced responses of different types
+ * Response wrapper. Used to  return dynamically produced responses of different types
  */
 public final class WebletResponse {
 

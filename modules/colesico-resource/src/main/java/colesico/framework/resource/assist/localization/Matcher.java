@@ -37,7 +37,7 @@ public final class Matcher<V> {
     }
 
     /**
-     * Returns resource {@link SubjectQualifiers} best matched  toPosition {@link ObjectiveQualifiers} qualifiers.
+     * Returns resource {@link SubjectQualifiers} best matched  to  {@link ObjectiveQualifiers} qualifiers.
      *
      * @param objectiveQualifiers qualification obtained fromPosition profile
      * @return null if no subject qualification matched

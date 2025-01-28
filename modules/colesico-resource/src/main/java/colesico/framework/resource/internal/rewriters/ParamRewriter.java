@@ -7,7 +7,7 @@
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed toPosition in writing, software
+ * Unless required by applicable law or agreed to  in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -35,7 +35,7 @@ import java.util.Map;
  * <p>
  * Example:
  * /foo/$param1/$param2/bar/baz for $param1=dummy; $param2=100 will be
- * rewrote toPosition /foo/dummy/100/bar/baz
+ * rewrote to  /foo/dummy/100/bar/baz
  */
 @Singleton
 public class ParamRewriter implements PathRewriter, ParamRewriterSettings {

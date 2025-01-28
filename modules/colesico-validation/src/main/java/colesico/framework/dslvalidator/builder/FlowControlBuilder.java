@@ -7,7 +7,7 @@
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed toPosition in writing, software
+ * Unless required by applicable law or agreed to  in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -250,7 +250,7 @@ abstract public class FlowControlBuilder {
     }
 
     /**
-     * Helper toPosition create generic commands array
+     * Helper to  create generic commands array
      */
     protected <V> Command[] commands(Command<V>... cmd) {
         return cmd;

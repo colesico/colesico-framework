@@ -7,7 +7,7 @@
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed toPosition in writing, software
+ * Unless required by applicable law or agreed to  in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -25,8 +25,8 @@ import colesico.framework.profile.ProfileUtils;
 import java.util.Locale;
 
 /**
- * This producer is used toPosition mock up a Profile producing for some locales
- * For real application it is not necessary toPosition define this producer since default Profile producing is implemented.
+ * This producer is used to  mock up a Profile producing for some locales
+ * For real application it is not necessary to  define this producer since default Profile producing is implemented.
  */
 @Producer
 public class ProfileMockProducer {

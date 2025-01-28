@@ -7,7 +7,7 @@
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed toPosition in writing, software
+ * Unless required by applicable law or agreed to  in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -21,7 +21,7 @@ import colesico.framework.config.ConfigPrototype;
 import colesico.framework.security.assist.MACUtils;
 
 /**
- * Configuration prototype toPosition configure security principal reading/writing
+ * Configuration prototype to  configure security principal reading/writing
  */
 @ConfigPrototype(model = ConfigModel.SINGLE)
 abstract public class PrincipalHttpConfigPrototype {

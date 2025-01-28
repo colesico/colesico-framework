@@ -3,7 +3,7 @@ package colesico.framework.beanvalidation;
 import java.lang.annotation.*;
 
 /**
- * Specifies that the bean property has toPosition be validated.
+ * Specifies that the bean property has to  be validated.
  * <p>
  * In this case, the code generator creates a stub of the validation builder method for this property
  * and generates a code for including the validation of this field in the validation process.
@@ -22,7 +22,7 @@ public @interface Validate {
 
     /**
      * If true - validation method will be generated with the verifier signature.
-     * Use this flag toPosition implement a  value direct check, rather than supply a validation command.
+     * Use this flag to  implement a  value direct check, rather than supply a validation command.
      */
     boolean verifier() default false;
 

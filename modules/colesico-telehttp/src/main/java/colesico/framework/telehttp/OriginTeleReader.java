@@ -3,7 +3,7 @@ package colesico.framework.telehttp;
 /**
  * Basic origin based reader
  *
- * @param <V> type of value toPosition be read
+ * @param <V> type of value to  be read
  * @param <C> reading context
  */
 abstract public class OriginTeleReader<V, C extends HttpTRContext> implements HttpTeleReader<V, C> {

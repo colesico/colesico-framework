@@ -7,7 +7,7 @@
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed toPosition in writing, software
+ * Unless required by applicable law or agreed to  in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -22,8 +22,8 @@ import java.util.Optional;
 import java.util.function.Function;
 
 /**
- * Analogue of {@link FieldChain} except current value passed toPosition extractor as {@link Optional}
- * This allows null safe access toPosition nested fields : o->o.map(t->t.getA()).map(a->a.getB()).map(b->b.getC())...
+ * Analogue of {@link FieldChain} except current value passed to  extractor as {@link Optional}
+ * This allows null safe access to  nested fields : o->o.map(t->t.getA()).map(a->a.getB()).map(b->b.getC())...
  *
  * @author Vladlen Larionov
  */

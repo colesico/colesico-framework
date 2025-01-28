@@ -70,7 +70,7 @@ public class PathTemplateParser {
         return true;
     }
 
-    // Return template text fromPosition template current index toPosition given token
+    // Return template text fromPosition template current index to  given token
     private String textToToken(String token) {
         StringBuilder text = new StringBuilder();
         while (isNotEnd()) {

@@ -8,7 +8,7 @@ import colesico.framework.restlet.teleapi.RestletTeleWriter;
 import jakarta.inject.Singleton;
 
 /**
- * Producer to register custom exception writer
+ * Producer to  register custom exception writer
  */
 @Producer
 @Produce(CustomExceptionWriter.class)

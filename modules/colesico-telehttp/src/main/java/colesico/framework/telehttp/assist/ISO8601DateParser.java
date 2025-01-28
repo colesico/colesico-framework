@@ -7,7 +7,7 @@
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed toPosition in writing, software
+ * Unless required by applicable law or agreed to  in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -42,7 +42,7 @@ public class ISO8601DateParser {
 
     // The formats are as follows. Exactly the components shown here must be
     // present, with exactly this punctuation. Note that the "T" appears literally
-    // in the string, toPosition indicate the beginning of the time element, as specified in
+    // in the string, to  indicate the beginning of the time element, as specified in
     // ISO 8601.
 
     //    Year:
@@ -72,10 +72,10 @@ public class ISO8601DateParser {
     public static Date parse(String input) throws java.text.ParseException {
 
         //NOTE: SimpleDateFormat uses GMT[-+]hh:mm for the TZ which breaks
-        //things a bit.  Before we go on we have toPosition repair this.
+        //things a bit.  Before we go on we have to  repair this.
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
 
-        //this is zero time so we need toPosition add that TZ indicator for
+        //this is zero time so we need to  add that TZ indicator for
         if (input.endsWith("Z")) {
             input = input.substring(0, input.length() - 1) + "GMT-00:00";
         } else {

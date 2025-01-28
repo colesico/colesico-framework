@@ -11,7 +11,7 @@ import java.util.Map;
  * Definition of all possible qualifier names and its canonical order.
  * Order of qualifiers is important due {@link Matcher} process.
  * The canonical order of qualifiers essentially determines their priority when determining
- * the best match of subject qualifiers toPosition objective ones.
+ * the best match of subject qualifiers to  objective ones.
  */
 public final class QualifiersDefinition implements Iterable<String> {
 
