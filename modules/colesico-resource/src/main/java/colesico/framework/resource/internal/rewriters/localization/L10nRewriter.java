@@ -9,8 +9,8 @@ import colesico.framework.resource.assist.PathTrie;
 import colesico.framework.resource.assist.localization.Matcher;
 import colesico.framework.resource.assist.localization.QualifiersDefinition;
 import colesico.framework.resource.assist.localization.SubjectQualifiers;
-import colesico.framework.resource.rewriters.localization.L10nConfigPrototype;
-import colesico.framework.resource.rewriters.localization.L10nOptionsPrototype;
+import colesico.framework.resource.rewriters.localization.L10nRewriterConfigPrototype;
+import colesico.framework.resource.rewriters.localization.L10nRewriterOptionsPrototype;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -29,17 +29,17 @@ public class L10nRewriter implements PathRewriter {
 
     private final PathTrie<PathRewriting> pathTrie = PathTrie.of();
 
-    private final L10nConfigPrototype config;
+    private final L10nRewriterConfigPrototype config;
     private final Provider<Profile> profileProv;
 
     @Inject
-    public L10nRewriter(L10nConfigPrototype config,
-                        Polysupplier<L10nOptionsPrototype> options,
+    public L10nRewriter(L10nRewriterConfigPrototype config,
+                        Polysupplier<L10nRewriterOptionsPrototype> options,
                         Provider<Profile> profileProv) {
         this.config = config;
         this.profileProv = profileProv;
 
-        var opt = new L10nOptionsPrototype.Options();
+        var opt = new L10nRewriterOptionsPrototype.Options();
         options.forEach(o -> o.configure(opt));
 
         QualifiersDefinition definition = config.getQualifiersDefinition();

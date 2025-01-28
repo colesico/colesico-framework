@@ -19,18 +19,14 @@ package colesico.framework.test.resource;
 import colesico.framework.ioc.conditional.Requires;
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.conditional.TestCondition;
-import colesico.framework.ioc.production.Polyproduce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.profile.ProfileUtils;
-import colesico.framework.resource.ResourceOptionsPrototype;
-import colesico.framework.resource.internal.rewriters.ParamRewriter;
 import jakarta.inject.Singleton;
 
 import java.util.Locale;
 
 @Producer
-@Requires(TestCondition.class)
 @Substitute
 public class TestProducer {
 
@@ -39,11 +35,5 @@ public class TestProducer {
         return profileUtils.createProfile(Locale.of("en", "RU"));
     }
 
-    @Singleton
-    @Polyproduce
-    public ResourceOptionsPrototype getResourceConfig() {
-        ParamRewriter rewriter = new ParamRewriter();
-        return new ResourcesOptions(rewriter);
-    }
 }
 

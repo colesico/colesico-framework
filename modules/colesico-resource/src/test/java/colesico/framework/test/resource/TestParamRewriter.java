@@ -18,7 +18,6 @@ package colesico.framework.test.resource;
 
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
-import colesico.framework.ioc.conditional.TestCondition;
 import colesico.framework.resource.ResourceKit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,52 +29,49 @@ import static org.testng.Assert.assertEquals;
 public class TestParamRewriter {
 
     private Ioc ioc;
-    private ResourceKit rkit;
+    private ResourceKit resourceKit;
 
     Logger logger = LoggerFactory.getLogger(TestParamRewriter.class);
 
 
     @BeforeClass
     public void init() {
-        logger.info("Init resources test");
-        TestCondition.enable();
+        logger.info("Init ParamRewriter  test");
         ioc = IocBuilder.create().build();
-        rkit = ioc.instance(ResourceKit.class);
+        resourceKit = ioc.instance(ResourceKit.class);
     }
 
     @Test
     public void test1() {
         String path;
 
-        path = rkit.rewrite("/");
+        path = resourceKit.rewrite("/");
         assertEquals(path, "/");
 
-        path = rkit.rewrite("/home");
+        path = resourceKit.rewrite("/home");
         assertEquals(path, "/home");
 
-        path = rkit.rewrite("home");
+        path = resourceKit.rewrite("home");
         assertEquals(path, "home");
 
-        path = rkit.rewrite("$alias/home");
+        path = resourceKit.rewrite("$alias/home");
         assertEquals(path, "foo/dummy/home");
 
-        path = rkit.rewrite("/$alias/home");
+        path = resourceKit.rewrite("/$alias/home");
         assertEquals(path, "/foo/dummy/home");
 
-        path = rkit.rewrite("/$alias/home/");
+        path = resourceKit.rewrite("/$alias/home/");
         assertEquals(path, "/foo/dummy/home/");
 
-        System.out.println(path);
-
-
-        path = rkit.rewrite("/$alias");
+        path = resourceKit.rewrite("/$alias");
         assertEquals(path, "/foo/dummy");
 
-        path = rkit.rewrite("/$alias/");
+        path = resourceKit.rewrite("/$alias/");
         assertEquals(path, "/foo/dummy/");
 
-        path = rkit.rewrite("$alias");
+        path = resourceKit.rewrite("$alias");
         assertEquals(path, "foo/dummy");
+
         logger.info("Resource properties test passed");
     }
 }

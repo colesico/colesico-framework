@@ -1,8 +1,8 @@
 module colesico.framework.resource.test {
 
     requires org.slf4j;
-
     requires org.apache.commons.lang3;
+    requires org.testng;
 
     // Inherited in client projects
     requires transitive colesico.framework.config;
