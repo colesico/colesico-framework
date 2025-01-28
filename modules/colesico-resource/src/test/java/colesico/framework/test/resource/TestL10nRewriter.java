@@ -59,6 +59,6 @@ public class TestL10nRewriter {
 
         lpath = resourceKit.rewrite(PATH6);
         System.out.println("path=" + lpath);
-       // assertEquals(lpath, "app2/module2/dir_en_RU/file_en_RU.txt");
+        assertEquals(lpath, "app2/module2/dir_en_RU/file_en_RU.txt");
     }
 }

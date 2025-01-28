@@ -125,8 +125,8 @@ public class L10nRewriter implements PathRewriter {
     }
 
     private String rewriteBySubstitute(String path, SubstituteTag tag) {
-        String partLeft = StringUtils.substring(path, 0, tag.fromPosition());
-        String partRight = StringUtils.substring(path, tag.toPosition());
+        String partLeft = StringUtils.substring(path, 0, tag.startPosition());
+        String partRight = StringUtils.substring(path, tag.endPosition());
         return partLeft + tag.substitution() + partRight;
     }
 

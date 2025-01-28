@@ -2,8 +2,8 @@ package colesico.framework.resource.internal.l10n;
 
 import colesico.framework.resource.ResourceException;
 
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PathTemplateParser {
 
@@ -18,7 +18,7 @@ public class PathTemplateParser {
     private int templateIndex = 0;
     private final StringBuilder path = new StringBuilder();
 
-    private final Collection<PathTag> tags = new LinkedList<>();
+    private final List<PathTag> tags = new ArrayList<>();
 
     public static PathTemplateParser parse(String template) {
         return new PathTemplateParser(template).parseTemplate();
@@ -117,7 +117,8 @@ public class PathTemplateParser {
     }
 
     public PathTag[] getTags() {
-        return tags.toArray(PathTag[]::new);
+        // reverse to apply rewriting from path end to beginning
+        return tags.reversed().toArray(PathTag[]::new);
     }
 
     public String getPath() {
