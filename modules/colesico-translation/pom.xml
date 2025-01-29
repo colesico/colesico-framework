@@ -30,7 +30,7 @@
     <artifactId>colesico-translation</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico Translation Module</name>
+    <name>Colesico Translation</name>
     <description>
         Colesico framework  translation (localization) service.
     </description>

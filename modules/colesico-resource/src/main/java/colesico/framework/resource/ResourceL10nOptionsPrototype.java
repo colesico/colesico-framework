@@ -20,6 +20,13 @@ abstract public class ResourceL10nOptionsPrototype {
 
     public static final class Options {
 
+        public static final String PATH_METHOD="path";
+        public static final String QUALIFIERS_METHOD="qualifiers";
+        public static final String QUALIFIER_METHOD="qualifier";
+        public static final String LANGUAGE_METHOD="language";
+        public static final String COUNTRY_METHOD="country";
+        public static final String VARIANT_METHOD="variant";
+
         private final Map<String, PathOptions> pathsOptions = new HashMap<>();
 
         // Current path options

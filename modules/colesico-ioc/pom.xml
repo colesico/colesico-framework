@@ -30,7 +30,7 @@
     <artifactId>colesico-ioc</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico IoC Module</name>
+    <name>Colesico IoC</name>
     <description>
         Colesico framework dependencies injection container
     </description>

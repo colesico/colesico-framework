@@ -30,7 +30,7 @@
     <artifactId>colesico-pebble</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico Pebble Module</name>
+    <name>Colesico Pebble</name>
     <description>
         Colesico framework Pebble templating engine integration
     </description>

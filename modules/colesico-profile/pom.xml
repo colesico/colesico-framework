@@ -30,7 +30,7 @@
     <artifactId>colesico-profile</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico Profile Module</name>
+    <name>Colesico Profile</name>
     <description>
         Colesico framework localization profile service
     </description>

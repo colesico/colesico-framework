@@ -30,7 +30,7 @@
     <artifactId>colesico-resource</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico Resource Module</name>
+    <name>Colesico Resource</name>
     <description>
         Colesico framework resource services provides ability of resource rewriting and localization
     </description>

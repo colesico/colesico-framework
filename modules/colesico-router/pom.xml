@@ -28,7 +28,7 @@
     <artifactId>colesico-router</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico Router Module</name>
+    <name>Colesico Router</name>
     <description>
         Colesico framework web router - core service for binding http URIs to service methods
     </description>

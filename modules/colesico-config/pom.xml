@@ -30,7 +30,7 @@
     <artifactId>colesico-config</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico Configuration Module</name>
+    <name>Colesico Configuration</name>
     <description>
         Colesico framework configuration support module
     </description>

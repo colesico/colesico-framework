@@ -30,7 +30,7 @@
     <artifactId>colesico-undertow</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico Undertow Module</name>
+    <name>Colesico Undertow</name>
     <description>
         Colesico framework undertow http server integration.
     </description>

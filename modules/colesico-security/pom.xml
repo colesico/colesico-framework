@@ -30,7 +30,7 @@
     <artifactId>colesico-security</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico Security Module</name>
+    <name>Colesico Security</name>
     <description>
         Colesico framework security service
     </description>

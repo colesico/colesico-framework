@@ -34,7 +34,10 @@ public class DictionaryElement {
 
     private final ClassElement originBean;
     private final String basePath;
+
+    // Locale tag -> bundle
     private final Map<String, BundleElement> bundlesByLocale = new HashMap<>();
+
     private final Set<MethodElement> keyMethods = new LinkedHashSet<>();
 
     public DictionaryElement(ClassElement dictionaryInterface) {
@@ -60,11 +63,11 @@ public class DictionaryElement {
         keyMethods.add(keyMethod);
     }
 
-    public void addTranslation(MethodElement keyMethod, String localeKey, String translation) {
-        BundleElement translationsBundleElement = bundlesByLocale.get(localeKey);
+    public void addTranslation(MethodElement keyMethod, String localeTag, String translation) {
+        BundleElement translationsBundleElement = bundlesByLocale.get(localeTag);
         if (translationsBundleElement == null) {
-            translationsBundleElement = new BundleElement(this, localeKey);
-            bundlesByLocale.put(localeKey, translationsBundleElement);
+            translationsBundleElement = new BundleElement(this, localeTag);
+            bundlesByLocale.put(localeTag, translationsBundleElement);
         }
         translationsBundleElement.addTranslation(keyMethod, translation);
     }

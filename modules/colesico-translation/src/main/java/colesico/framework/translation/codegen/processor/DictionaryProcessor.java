@@ -29,13 +29,13 @@ import colesico.framework.translation.TranslationDictionary;
 import colesico.framework.translation.codegen.generator.BundleGenerator;
 import colesico.framework.translation.codegen.generator.DictionaryGenerator;
 import colesico.framework.translation.codegen.generator.IocGenerator;
+import colesico.framework.translation.codegen.generator.ResourceL10nOptionsGenerator;
 import colesico.framework.translation.codegen.model.DictionaryElement;
 import colesico.framework.translation.codegen.model.DictionaryRegistry;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.*;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import java.lang.annotation.Annotation;
@@ -44,10 +44,10 @@ import java.util.Set;
 
 public class DictionaryProcessor extends FrameworkAbstractProcessor {
 
-
     protected DictionaryGenerator dictionaryGenerator;
 
     protected DictionaryRegistry dictionaryRegistry;
+    protected ResourceL10nOptionsGenerator resourceL10NOptionsGenerator;
     protected IocGenerator iocGenerator;
     protected BundleGenerator bundleGenerator;
 
@@ -66,6 +66,7 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
         this.iocGenerator = new IocGenerator(processingEnv);
         this.bundleGenerator = new BundleGenerator(processingEnv);
         this.dictionaryRegistry = new DictionaryRegistry(processingEnv);
+        this.resourceL10NOptionsGenerator = new ResourceL10nOptionsGenerator(processingEnv);
     }
 
     @Override
@@ -83,6 +84,7 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
                 DictionaryElement dictionaryBeanElement = parseDictionaryFacade(ClassElement.fromElement(processingEnv, beanDefinitionElement));
                 dictionaryRegistry.register(dictionaryBeanElement);
                 dictionaryGenerator.generate(dictionaryBeanElement);
+                resourceL10NOptionsGenerator.generate(dictionaryBeanElement);
             } catch (CodegenException ce) {
                 String message = "Error processing dictionary bean '" + elm.toString() + "': " + ce.getMessage();
                 logger.debug(message);
@@ -128,9 +130,9 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
                 if (translationAnn == null) {
                     continue;
                 }
-                String localeKey = translationAnn.unwrap().value();
+                String localeTag = translationAnn.unwrap().value();
                 AnnotationValue value = ann.getValue("value");
-                dictionaryBeanElement.addTranslation(method, localeKey, value.getValue().toString());
+                dictionaryBeanElement.addTranslation(method, localeTag, value.getValue().toString());
             }
 
         }

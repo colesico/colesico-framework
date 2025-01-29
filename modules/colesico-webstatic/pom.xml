@@ -28,7 +28,7 @@
     <artifactId>colesico-webstatic</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico WebStatic Module</name>
+    <name>Colesico WebStatic</name>
     <description>
         Colesico framework web static resource assistant to publicate static resources.
     </description>

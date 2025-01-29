@@ -30,7 +30,7 @@
     <artifactId>colesico-restlet</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico Restlet Module</name>
+    <name>Colesico Restlet</name>
     <description>
         Colesico framework simple REST services support
     </description>

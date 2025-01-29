@@ -28,7 +28,7 @@
     <artifactId>colesico-weblet</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico Weblet Module</name>
+    <name>Colesico Weblet</name>
     <description>
         Colesico framework http requests handling service
     </description>

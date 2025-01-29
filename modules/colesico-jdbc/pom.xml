@@ -30,7 +30,7 @@
     <artifactId>colesico-jdbc</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico JDBC Integration</name>
+    <name>Colesico JDBC</name>
     <description>
         Colesico framework JDBC support for services
     </description>

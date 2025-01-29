@@ -30,7 +30,7 @@
     <artifactId>colesico-teleapi</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico TeleAPI Module</name>
+    <name>Colesico TeleAPI</name>
     <description>
         Colesico framework API for service bean remote calls
     </description>

@@ -30,7 +30,7 @@
     <artifactId>colesico-validation</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico Validation Module</name>
+    <name>Colesico Validation</name>
     <description>
         Colesico framework data bean validation assistant and simple dsl validator
     </description>

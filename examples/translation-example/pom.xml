@@ -29,7 +29,7 @@
     <artifactId>translation-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - Text translation for i18n</name>
+    <name>Colesico example - Text translation (I18n)</name>
 
     <properties>
     </properties>
