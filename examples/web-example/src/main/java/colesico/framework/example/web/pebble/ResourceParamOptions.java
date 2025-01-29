@@ -17,7 +17,7 @@
 package colesico.framework.example.web.pebble;
 
 import colesico.framework.config.Config;
-import colesico.framework.resource.rewriting.ResourceParamOptionsPrototype;
+import colesico.framework.resource.ResourceParamOptionsPrototype;
 
 @Config
 public class ResourceParamOptions extends ResourceParamOptionsPrototype {

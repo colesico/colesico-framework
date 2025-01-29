@@ -1,4 +1,4 @@
-package colesico.framework.resource.rewriting;
+package colesico.framework.resource;
 
 /**
  * Rewrites the given path.
@@ -12,7 +12,7 @@ public interface PathRewriter {
     String rewrite(String path);
 
     /**
-     * Phase of path rewriting  in which this rewriter will be called
+     * Phases of path rewriting  in which this rewriter will be called
      */
-    RewritingPhase phase();
+    RewritingPhase[] phases();
 }

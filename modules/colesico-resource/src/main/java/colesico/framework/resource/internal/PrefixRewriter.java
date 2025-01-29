@@ -17,11 +17,11 @@
 package colesico.framework.resource.internal;
 
 import colesico.framework.ioc.production.Polysupplier;
+import colesico.framework.resource.PathRewriter;
 import colesico.framework.resource.ResourceException;
+import colesico.framework.resource.ResourcePrefixOptionsPrototype;
+import colesico.framework.resource.RewritingPhase;
 import colesico.framework.resource.assist.PathTrie;
-import colesico.framework.resource.rewriting.PathRewriter;
-import colesico.framework.resource.rewriting.ResourcePrefixOptionsPrototype;
-import colesico.framework.resource.rewriting.RewritingPhase;
 import jakarta.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 
@@ -39,8 +39,8 @@ public class PrefixRewriter implements PathRewriter, ResourcePrefixOptionsProtot
     }
 
     @Override
-    public RewritingPhase phase() {
-        return RewritingPhase.SUBSTITUTE;
+    public RewritingPhase[] phases() {
+        return new RewritingPhase[]{RewritingPhase.EVALUATE, RewritingPhase.SUBSTITUTE};
     }
 
     @Override
@@ -48,6 +48,9 @@ public class PrefixRewriter implements PathRewriter, ResourcePrefixOptionsProtot
         Rewriting rewriting = pathTrie.find(path);
         if (rewriting == null) {
             return path;
+        }
+        if (path.charAt(0) == '/') {
+            return "/" + rewriting.getTargetPrefix() + StringUtils.substring(path, rewriting.getOriginPrefixLength()+1);
         }
         return rewriting.getTargetPrefix() + StringUtils.substring(path, rewriting.getOriginPrefixLength());
     }
@@ -61,6 +64,8 @@ public class PrefixRewriter implements PathRewriter, ResourcePrefixOptionsProtot
         if (node.getValue() != null) {
             throw new ResourceException("Duplicate path rewriting: " + originPathPrefix);
         }
+        String[] targetParts = StringUtils.split(targetPathPrefix, "/");
+        targetPathPrefix = StringUtils.joinWith("/", targetParts);
         Rewriting rewriting = new Rewriting(originPathPrefix.length(), targetPathPrefix);
         node.setValue(rewriting);
         return this;

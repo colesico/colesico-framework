@@ -13,6 +13,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
 
 public class JdbiRecExampleTest {
@@ -64,7 +65,7 @@ public class JdbiRecExampleTest {
         logger.info("Test full view");
         AppService service = ioc.instance(AppService.class);
         VUser user = service.getVUserFull();
-        assertEquals(user.getName(), null);
+        assertNull(user.getName());
         assertEquals(user.getExtra().getAddress(), "extra-address");
     }
 

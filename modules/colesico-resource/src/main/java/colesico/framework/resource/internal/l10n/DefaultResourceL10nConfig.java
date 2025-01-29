@@ -7,7 +7,7 @@ import colesico.framework.profile.Profile;
 import colesico.framework.resource.assist.localization.ObjectiveQualifiers;
 import colesico.framework.resource.assist.localization.Qualifier;
 import colesico.framework.resource.assist.localization.QualifiersDefinition;
-import colesico.framework.resource.rewriting.ResourceL10nConfigPrototype;
+import colesico.framework.resource.ResourceL10nConfigPrototype;
 
 import java.util.Locale;
 

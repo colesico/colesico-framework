@@ -26,17 +26,17 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
-public class TestParamRewriter {
+public class TestPrefixRewriter {
 
     private Ioc ioc;
     private ResourceKit resourceKit;
 
-    Logger logger = LoggerFactory.getLogger(TestParamRewriter.class);
+    Logger logger = LoggerFactory.getLogger(TestPrefixRewriter.class);
 
 
     @BeforeClass
     public void init() {
-        logger.info("Init ParamRewriter  test");
+        logger.info("Init PrefixRewriter  test");
         ioc = IocBuilder.create().build();
         resourceKit = ioc.instance(ResourceKit.class);
     }
@@ -48,29 +48,32 @@ public class TestParamRewriter {
         path = resourceKit.rewrite("/");
         assertEquals(path, "/");
 
-        path = resourceKit.rewrite("/home");
-        assertEquals(path, "/home");
+        path = resourceKit.rewrite("/home/foo");
+        assertEquals(path, "/home/foo");
 
-        path = resourceKit.rewrite("home");
-        assertEquals(path, "home");
+        path = resourceKit.rewrite("home/foo");
+        assertEquals(path, "home/foo");
 
-        path = resourceKit.rewrite("$alias/home");
-        assertEquals(path, "foo/dummy/home");
+        path = resourceKit.rewrite("alias");
+        assertEquals(path, "foo/dummy");
 
-        path = resourceKit.rewrite("/$alias/home");
-        assertEquals(path, "/foo/dummy/home");
-
-        path = resourceKit.rewrite("/$alias/home/");
-        assertEquals(path, "/foo/dummy/home/");
-
-        path = resourceKit.rewrite("/$alias");
+        path = resourceKit.rewrite("/alias");
         assertEquals(path, "/foo/dummy");
 
-        path = resourceKit.rewrite("/$alias/");
+        path = resourceKit.rewrite("/alias/");
         assertEquals(path, "/foo/dummy/");
 
-        path = resourceKit.rewrite("$alias");
+        path = resourceKit.rewrite("alias");
         assertEquals(path, "foo/dummy");
+
+        path = resourceKit.rewrite("alias/home");
+        assertEquals(path, "foo/dummy/home");
+
+        path = resourceKit.rewrite("/alias/home");
+        assertEquals(path, "/foo/dummy/home");
+
+        path = resourceKit.rewrite("/alias/home/");
+        assertEquals(path, "/foo/dummy/home/");
 
         logger.info("Resource properties test passed");
     }

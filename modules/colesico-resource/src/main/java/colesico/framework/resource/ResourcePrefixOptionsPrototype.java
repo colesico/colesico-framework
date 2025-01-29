@@ -1,4 +1,4 @@
-package colesico.framework.resource.rewriting;
+package colesico.framework.resource;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
@@ -6,6 +6,12 @@ import colesico.framework.resource.internal.PrefixRewriter;
 
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
 abstract public class ResourcePrefixOptionsPrototype {
+
+    /**
+     * To use in code generators
+     */
+    public static final String CONFIGURE_METHOD = "configure";
+
     abstract public void configure(Options options);
 
     /**
@@ -14,6 +20,12 @@ abstract public class ResourcePrefixOptionsPrototype {
      * E.g for the rewriting  '/etc/srv'->'/foo'   path '/etc/srv/generator/x' will be rewritten to  '/foo/generator/x'
      */
     public interface Options {
+        /**
+         * Specify pat prefix rewritings
+         *
+         * @param originPathPrefix example:  "bar", "foo/dummy", "root/dir/subdir"
+         * @param targetPathPrefix example:  "module", "module/dir"
+         */
         Options rewriting(String originPathPrefix, String targetPathPrefix);
     }
 }

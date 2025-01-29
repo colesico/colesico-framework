@@ -1,4 +1,4 @@
-package colesico.framework.resource.rewriting;
+package colesico.framework.resource;
 
 /**
  * Rewriters applying order
@@ -6,7 +6,7 @@ package colesico.framework.resource.rewriting;
 public enum RewritingPhase {
 
     /**
-     * Phase to  evaluate path expressions
+     * Phase to evaluate path expressions
      */
     BEFORE_EVALUATE,
     EVALUATE,
@@ -20,7 +20,7 @@ public enum RewritingPhase {
     AFTER_LOCALIZE,
 
     /**
-     * Phase to  substitute/redirect path
+     * Phase to substitute/redirect path
      */
     BEFORE_SUBSTITUTE,
     SUBSTITUTE,

@@ -16,6 +16,8 @@
 
 package colesico.framework.resource.assist;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -56,7 +58,9 @@ public class PathTrie<V> {
         Node<V> node = rootNode;
         while (pathTokenizer.hasMoreElements()) {
             String pathItem = pathTokenizer.nextToken();
-            node = node.provideChild(pathItem);
+            if (StringUtils.isNotBlank(pathItem)) {
+                node = node.provideChild(pathItem);
+            }
         }
         return node;
     }
@@ -85,7 +89,7 @@ public class PathTrie<V> {
         Node<V> currentNode = rootNode;
         while (pathTokenize.hasMoreElements()) {
             final String pathItem = pathTokenize.nextToken();
-            final Node child = currentNode.getChild(pathItem);
+            final var child = currentNode.getChild(pathItem);
             if (child == null) {
                 return currentNode.getValue();
             } else {
@@ -93,6 +97,10 @@ public class PathTrie<V> {
             }
         }
         return currentNode.getValue();
+    }
+
+    public String getDelimiter() {
+        return delimiter;
     }
 
     public static final class Node<V> {

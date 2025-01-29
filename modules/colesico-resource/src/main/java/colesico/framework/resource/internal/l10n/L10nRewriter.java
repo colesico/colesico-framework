@@ -2,15 +2,11 @@ package colesico.framework.resource.internal.l10n;
 
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.profile.Profile;
-import colesico.framework.resource.ResourceException;
+import colesico.framework.resource.*;
 import colesico.framework.resource.assist.PathTrie;
 import colesico.framework.resource.assist.localization.Matcher;
 import colesico.framework.resource.assist.localization.QualifiersDefinition;
 import colesico.framework.resource.assist.localization.SubjectQualifiers;
-import colesico.framework.resource.rewriting.PathRewriter;
-import colesico.framework.resource.rewriting.ResourceL10nConfigPrototype;
-import colesico.framework.resource.rewriting.ResourceL10nOptionsPrototype;
-import colesico.framework.resource.rewriting.RewritingPhase;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -49,8 +45,8 @@ public class L10nRewriter implements PathRewriter {
     }
 
     @Override
-    public RewritingPhase phase() {
-        return RewritingPhase.LOCALIZE;
+    public RewritingPhase[] phases() {
+        return new RewritingPhase[]{RewritingPhase.LOCALIZE};
     }
 
     /**

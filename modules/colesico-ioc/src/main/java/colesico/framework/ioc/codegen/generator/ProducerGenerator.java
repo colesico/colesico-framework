@@ -17,6 +17,7 @@
 package colesico.framework.ioc.codegen.generator;
 
 import colesico.framework.assist.codegen.CodegenUtils;
+import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.ioc.conditional.Requires;
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.conditional.Substitution;
@@ -27,31 +28,19 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.processing.Filer;
-import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProducerGenerator {
+public class ProducerGenerator extends FrameworkAbstractGenerator {
 
     public static final String PRODUCER_CLASS_NAME_SUFFIX = "Producer";
 
-    private static final Logger logger = LoggerFactory.getLogger(ProducerGenerator.class);
-
     protected final Class<?> masterGeneratorClass;
-
-    protected final ProcessingEnvironment processingEnv;
-    protected final Elements elementUtils;
-    protected final Types typeUtils;
-    protected final Messager messager;
-    protected final Filer filer;
 
     protected final String producerPackageName;
     protected final String producerClassSimpleName;
@@ -63,13 +52,11 @@ public class ProducerGenerator {
     protected final List<FieldSpec.Builder> producerFields = new ArrayList<>();
 
     public ProducerGenerator(String producerPackageName, String producerClassSimpleName, Class<?> masterGeneratorClass, ProcessingEnvironment processingEnv) {
+        super(processingEnv);
+
         logger.debug("Creating IoC producer generator: " + producerPackageName + "." + producerClassSimpleName);
+
         this.masterGeneratorClass = masterGeneratorClass;
-        this.processingEnv = processingEnv;
-        elementUtils = processingEnv.getElementUtils();
-        typeUtils = processingEnv.getTypeUtils();
-        messager = processingEnv.getMessager();
-        filer = processingEnv.getFiler();
 
         this.producerPackageName = producerPackageName;
         if (!producerClassSimpleName.endsWith(PRODUCER_CLASS_NAME_SUFFIX)) {
@@ -90,7 +77,7 @@ public class ProducerGenerator {
 
     public boolean isProducerExists() {
         try {
-            FileObject producerFile = filer.getResource(StandardLocation.SOURCE_OUTPUT, producerPackageName, producerClassSimpleName + ".java");
+            FileObject producerFile = getFiler().getResource(StandardLocation.SOURCE_OUTPUT, producerPackageName, producerClassSimpleName + ".java");
             producerFile.openInputStream();
             return true;
         } catch (Exception e) {

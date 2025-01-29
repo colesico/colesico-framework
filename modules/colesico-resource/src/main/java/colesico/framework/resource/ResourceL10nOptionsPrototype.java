@@ -1,8 +1,7 @@
-package colesico.framework.resource.rewriting;
+package colesico.framework.resource;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
-import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.assist.localization.Qualifier;
 import colesico.framework.resource.assist.localization.QualifiersDefinition;
 import colesico.framework.resource.assist.localization.SubjectQualifiers;
@@ -11,6 +10,11 @@ import java.util.*;
 
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
 abstract public class ResourceL10nOptionsPrototype {
+    /**
+     * To use in code generators
+     */
+    public static final String CONFIGURE_METHOD = "configure";
+    public static final String OPTIONS_PARAM = "options";
 
     abstract public void configure(Options options);
 

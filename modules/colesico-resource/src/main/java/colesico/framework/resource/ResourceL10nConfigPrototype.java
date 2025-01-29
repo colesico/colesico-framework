@@ -1,4 +1,4 @@
-package colesico.framework.resource.rewriting;
+package colesico.framework.resource;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
