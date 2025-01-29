@@ -24,6 +24,6 @@ public class MyPebbleHtmlPage {
 
     //  http://localhost:8080/my-pebble-html-page/print?val=10
     public ViewResponse print(Integer val) {
-        return ViewResponse.of("$tmplRoot/MyPebbleTemplate", val);
+        return ViewResponse.of("tmplRoot/MyPebbleTemplate", val);
     }
 }

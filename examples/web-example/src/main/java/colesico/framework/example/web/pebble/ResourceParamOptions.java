@@ -17,14 +17,14 @@
 package colesico.framework.example.web.pebble;
 
 import colesico.framework.config.Config;
-import colesico.framework.resource.ResourceParamOptionsPrototype;
+import colesico.framework.resource.ResourcePrefixOptionsPrototype;
 
 @Config
-public class ResourceParamOptions extends ResourceParamOptionsPrototype {
+public class ResourceParamOptions extends ResourcePrefixOptionsPrototype {
 
 
     @Override
     public void configure(Options options) {
-        options.param("$tmplRoot", "colesico/framework/example/web/pebble/tmpl");
+        options.rewriting("tmplRoot", "colesico/framework/example/web/pebble/tmpl");
     }
 }
