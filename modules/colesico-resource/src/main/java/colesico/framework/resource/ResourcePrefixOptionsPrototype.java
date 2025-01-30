@@ -20,12 +20,18 @@ abstract public class ResourcePrefixOptionsPrototype {
      * E.g for the rewriting  '/etc/srv'->'/foo'   path '/etc/srv/generator/x' will be rewritten to  '/foo/generator/x'
      */
     public interface Options {
+
         /**
          * Specify pat prefix rewritings
          *
+         * @param phase            supported phases: {@link RewritingPhase#EVALUATE}, {@link RewritingPhase#SUBSTITUTE}
          * @param originPathPrefix example:  "bar", "foo/dummy", "root/dir/subdir"
          * @param targetPathPrefix example:  "module", "module/dir"
          */
-        Options rewriting(String originPathPrefix, String targetPathPrefix);
+        Options rewriting(String originPathPrefix, String targetPathPrefix, RewritingPhase phase);
+
+        default Options rewriting(String originPathPrefix, String targetPathPrefix) {
+            return rewriting(originPathPrefix, targetPathPrefix, RewritingPhase.EVALUATE);
+        }
     }
 }

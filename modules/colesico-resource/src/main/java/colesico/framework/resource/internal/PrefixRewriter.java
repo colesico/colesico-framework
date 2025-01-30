@@ -32,10 +32,19 @@ import org.apache.commons.lang3.StringUtils;
 @Singleton
 public class PrefixRewriter implements PathRewriter, ResourcePrefixOptionsPrototype.Options {
 
-    private final PathTrie<Rewriting> pathTrie = PathTrie.of();
+    private final PathTrie<Rewriting> pathTrieEvaluate = PathTrie.of();
+    private final PathTrie<Rewriting> pathTrieSubstitute = PathTrie.of();
 
     public PrefixRewriter(Polysupplier<ResourcePrefixOptionsPrototype> configSup) {
         configSup.forEach(conf -> conf.configure(this));
+    }
+
+    private PathTrie<Rewriting> pathTrie(RewritingPhase phase) {
+        return switch (phase) {
+            case EVALUATE -> pathTrieEvaluate;
+            case SUBSTITUTE -> pathTrieSubstitute;
+            default -> throw new ResourceException("Unsupported rewriting phase: " + phase);
+        };
     }
 
     @Override
@@ -44,13 +53,13 @@ public class PrefixRewriter implements PathRewriter, ResourcePrefixOptionsProtot
     }
 
     @Override
-    public final String rewrite(String path) {
-        Rewriting rewriting = pathTrie.find(path);
+    public final String rewrite(String path, RewritingPhase phase) {
+        Rewriting rewriting = pathTrie(phase).find(path);
         if (rewriting == null) {
             return path;
         }
         if (path.charAt(0) == '/') {
-            return "/" + rewriting.getTargetPrefix() + StringUtils.substring(path, rewriting.getOriginPrefixLength()+1);
+            return "/" + rewriting.getTargetPrefix() + StringUtils.substring(path, rewriting.getOriginPrefixLength() + 1);
         }
         return rewriting.getTargetPrefix() + StringUtils.substring(path, rewriting.getOriginPrefixLength());
     }
@@ -59,8 +68,8 @@ public class PrefixRewriter implements PathRewriter, ResourcePrefixOptionsProtot
      * Adds rewriting rule
      */
     @Override
-    public ResourcePrefixOptionsPrototype.Options rewriting(String originPathPrefix, String targetPathPrefix) {
-        PathTrie.Node<Rewriting> node = pathTrie.add(originPathPrefix);
+    public ResourcePrefixOptionsPrototype.Options rewriting(String originPathPrefix, String targetPathPrefix, RewritingPhase phase) {
+        PathTrie.Node<Rewriting> node = pathTrie(phase).add(originPathPrefix);
         if (node.getValue() != null) {
             throw new ResourceException("Duplicate path rewriting: " + originPathPrefix);
         }

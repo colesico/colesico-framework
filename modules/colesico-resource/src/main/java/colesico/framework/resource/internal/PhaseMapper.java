@@ -10,18 +10,23 @@ import java.util.Map;
 
 public class PhaseMapper {
 
-    final Map<RewritingPhase, List<PathRewriter>> phaseMap = new HashMap<>();
+    final Map<RewritingPhase, List<RewriterRef>> phaseMap = new HashMap<>();
 
     public void add(PathRewriter rewriter) {
         RewritingPhase[] phaseSet = rewriter.phases();
-        for (RewritingPhase phase: phaseSet) {
-            List<PathRewriter> phaseRewriters = phaseMap.computeIfAbsent(phase, p -> new ArrayList<>());
-            phaseRewriters.add(rewriter);
+        for (RewritingPhase phase : phaseSet) {
+            var phaseRewriters = phaseMap.computeIfAbsent(phase, p -> new ArrayList<>());
+            phaseRewriters.add(new RewriterRef(phase, rewriter));
         }
     }
 
-    public List<PathRewriter> getRewriters(RewritingPhase phase) {
+    public List<RewriterRef> getRewriters(RewritingPhase phase) {
         return phaseMap.get(phase);
     }
 
+    public record RewriterRef(RewritingPhase phase, PathRewriter rewriter) {
+        public String rewrite(String path) {
+            return rewriter.rewrite(path, phase);
+        }
+    }
 }

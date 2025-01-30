@@ -9,7 +9,7 @@ public interface PathRewriter {
     /**
      * Rewrite path
      */
-    String rewrite(String path);
+    String rewrite(String path, RewritingPhase phase);
 
     /**
      * Phases of path rewriting  in which this rewriter will be called

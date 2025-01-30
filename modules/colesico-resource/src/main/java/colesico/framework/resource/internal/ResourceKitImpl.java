@@ -41,7 +41,7 @@ public class ResourceKitImpl implements ResourceKit {
 
     protected final Logger log = LoggerFactory.getLogger(ResourceKit.class);
 
-    protected List<PathRewriter> rewriters = new ArrayList<>();
+    protected List<PhaseMapper.RewriterRef> rewriters = new ArrayList<>();
 
     @Inject
     public ResourceKitImpl(Polysupplier<PathRewriter> rewritersSupp) {
@@ -50,7 +50,7 @@ public class ResourceKitImpl implements ResourceKit {
         rewritersSupp.forEach(phaseMapper::add);
 
         for (RewritingPhase ph : RewritingPhase.values()) {
-            List<PathRewriter> phaseRewList = phaseMapper.getRewriters(ph);
+            var phaseRewList = phaseMapper.getRewriters(ph);
             if (phaseRewList == null) {
                 continue;
             }
@@ -61,7 +61,7 @@ public class ResourceKitImpl implements ResourceKit {
 
     @Override
     public String rewrite(String path) {
-        for (PathRewriter rewriter : rewriters) {
+        for (PhaseMapper.RewriterRef rewriter : rewriters) {
             path = rewriter.rewrite(path);
         }
         return path;
