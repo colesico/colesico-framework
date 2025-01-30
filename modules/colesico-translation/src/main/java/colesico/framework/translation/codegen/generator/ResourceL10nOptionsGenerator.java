@@ -36,7 +36,7 @@ public class ResourceL10nOptionsGenerator extends FrameworkAbstractGenerator {
         MethodSpec.Builder mb = optionsGenerator.configureMethod();
         CodeBlock.Builder cb = CodeBlock.builder();
 
-        String pathTemplate = dictionaryElement.getBasePath() + "{Q}" + ".properties";
+        String pathTemplate = "!!!"+ dictionaryElement.getBasePath() + "{Q}" + ".properties";
 
         cb.add("$N.$N($S)", ResourceL10nOptionsPrototype.OPTIONS_PARAM,
                 ResourceL10nOptionsPrototype.Options.PATH_METHOD, pathTemplate
