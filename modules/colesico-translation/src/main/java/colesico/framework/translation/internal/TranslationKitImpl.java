@@ -70,7 +70,7 @@ public class TranslationKitImpl implements TranslationKit {
             return translationBundle;
         }
 
-        PropertyBundle propertyBundle = propertyBundleFactory.getBundle(baseName, localeProv.get());
+        PropertyBundle propertyBundle = propertyBundleFactory.getBundle(baseName);
 
         translationBundle = new TranslationBundleImpl(propertyBundle, formatter);
 
