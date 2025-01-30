@@ -33,4 +33,14 @@ public @interface Dictionary {
      * Resource path to  dictionary *.properties file without extension.
      */
     String baseName() default "";
+
+    /**
+     *  Language tags of additional translations that not specified
+     *  via {@link Translation} annotation in dictionary
+     *  but defied in  [dictionary_*_*].properties files
+     *  <p>
+     *
+     *  Example: {"ca","nl-BE","en-UK",""}
+     */
+    String[] extraTranslations() default {};
 }

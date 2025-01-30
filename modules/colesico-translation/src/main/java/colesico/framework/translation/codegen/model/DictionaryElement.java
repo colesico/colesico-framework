@@ -22,10 +22,7 @@ import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.translation.Dictionary;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Represents dictionary bean
@@ -38,6 +35,11 @@ public class DictionaryElement {
     // Locale tag -> bundle
     private final Map<String, BundleElement> bundlesByLocale = new HashMap<>();
 
+    /**
+     * @see Dictionary#extraTranslations()
+     */
+    private final Set<String> extraTranslations = new HashSet<>();
+
     private final Set<MethodElement> keyMethods = new LinkedHashSet<>();
 
     public DictionaryElement(ClassElement dictionaryInterface) {
@@ -47,27 +49,28 @@ public class DictionaryElement {
         }
         this.originBean = dictionaryInterface;
 
-        AnnotationAssist<Dictionary> beanAnn = dictionaryInterface.getAnnotation(Dictionary.class);
+        AnnotationAssist<Dictionary> dictAnn = dictionaryInterface.getAnnotation(Dictionary.class);
         String bPath;
-        if (StringUtils.isNoneBlank(beanAnn.unwrap().baseName())) {
-            bPath = beanAnn.unwrap().baseName();
+        if (StringUtils.isNoneBlank(dictAnn.unwrap().baseName())) {
+            bPath = dictAnn.unwrap().baseName();
         } else {
             bPath = dictionaryInterface.getPackageName() + '.' + dictionaryInterface.getSimpleName();
             bPath = bPath.replace('.', '/');
         }
         this.basePath = bPath;
 
+        this.extraTranslations.addAll(Arrays.asList(dictAnn.unwrap().extraTranslations()));
     }
 
     public void addTranslationMethod(MethodElement keyMethod) {
         keyMethods.add(keyMethod);
     }
 
-    public void addTranslation(MethodElement keyMethod, String localeTag, String translation) {
-        BundleElement translationsBundleElement = bundlesByLocale.get(localeTag);
+    public void addTranslation(MethodElement keyMethod, String languageTag, String translation) {
+        BundleElement translationsBundleElement = bundlesByLocale.get(languageTag);
         if (translationsBundleElement == null) {
-            translationsBundleElement = new BundleElement(this, localeTag);
-            bundlesByLocale.put(localeTag, translationsBundleElement);
+            translationsBundleElement = new BundleElement(this, languageTag);
+            bundlesByLocale.put(languageTag, translationsBundleElement);
         }
         translationsBundleElement.addTranslation(keyMethod, translation);
     }
@@ -90,6 +93,10 @@ public class DictionaryElement {
 
     public Map<String, BundleElement> getBundlesByLocale() {
         return bundlesByLocale;
+    }
+
+    public Set<String> getExtraTranslations() {
+        return extraTranslations;
     }
 
     @Override

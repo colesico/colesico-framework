@@ -27,7 +27,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface Translation {
     /**
-     * Locale tag (ru, en_US, etc.)
+     * Language tag (ru, en-US, etc.)
      */
     String value();
 }

@@ -54,10 +54,10 @@ public class BundleGenerator {
         String filePath = fp.path();
 
         String fileName;
-        if (StringUtils.isEmpty(bundleElement.getLocaleTag())) {
+        if (StringUtils.isEmpty(bundleElement.getLanguageTag())) {
             fileName = fp.fileName() + ".properties";
         } else {
-            fileName = fp.fileName() + '_' + bundleElement.getLocaleTag() + ".properties";
+            fileName = fp.fileName() + '_' + bundleElement.getLanguageTag() + ".properties";
         }
 
         String fullPath = filePath + '/' + fileName;

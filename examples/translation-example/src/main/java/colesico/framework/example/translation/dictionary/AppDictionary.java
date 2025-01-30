@@ -26,7 +26,7 @@ import colesico.framework.translation.assist.lang.Text;
  * An appropriate properties file will be generated for this interface.
  * Extends TranslationDictionary - is an optional, to  ge access to  dictionary API.
  */
-@Dictionary
+@Dictionary(extraTranslations = "fr-FR")
 public interface AppDictionary extends TranslationDictionary {
 
     @En("Hello")  // For en language

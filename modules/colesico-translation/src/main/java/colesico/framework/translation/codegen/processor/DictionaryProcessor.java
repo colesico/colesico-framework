@@ -130,9 +130,9 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
                 if (translationAnn == null) {
                     continue;
                 }
-                String localeTag = translationAnn.unwrap().value();
+                String languageTag = translationAnn.unwrap().value();
                 AnnotationValue value = ann.getValue("value");
-                dictionaryBeanElement.addTranslation(method, localeTag, value.getValue().toString());
+                dictionaryBeanElement.addTranslation(method, languageTag, value.getValue().toString());
             }
 
         }

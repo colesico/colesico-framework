@@ -10,6 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ResourceL10nOptionsGenerator extends FrameworkAbstractGenerator {
 
@@ -41,12 +43,18 @@ public class ResourceL10nOptionsGenerator extends FrameworkAbstractGenerator {
         );
 
         cb.indent();
-        for (BundleElement bundleElem : dictionaryElement.getBundlesByLocale().values()) {
-            if (StringUtils.isEmpty(bundleElem.getLocaleTag())) {
+
+        Set<String> languageTags = dictionaryElement.getBundlesByLocale().values()
+                .stream().map(BundleElement::getLanguageTag).collect(Collectors.toSet());
+
+        languageTags.addAll(dictionaryElement.getExtraTranslations());
+
+        for (String languageTag : languageTags) {
+            if (StringUtils.isEmpty(languageTag)) {
                 continue;
             }
             cb.add("\n.$N()", ResourceL10nOptionsPrototype.Options.QUALIFIERS_METHOD);
-            Locale locale = Locale.forLanguageTag(bundleElem.getLocaleTag());
+            Locale locale = Locale.forLanguageTag(languageTag);
             if (StringUtils.isNotEmpty(locale.getLanguage())) {
                 cb.add(".$N($S)",
                         ResourceL10nOptionsPrototype.Options.LANGUAGE_METHOD,

@@ -27,13 +27,13 @@ import java.util.Set;
 public class BundleElement {
 
     private final DictionaryElement parentDictionary;
-    private final String localeTag;
+    private final String languageTag;
 
     private final Set<TranslationElement> translations = new LinkedHashSet<>();
 
-    public BundleElement(DictionaryElement parentDictionary, String localeTag) {
+    public BundleElement(DictionaryElement parentDictionary, String languageTag) {
         this.parentDictionary = parentDictionary;
-        this.localeTag = localeTag;
+        this.languageTag = languageTag;
     }
 
     public void addTranslation(MethodElement keyMethod, String translation) {
@@ -45,8 +45,8 @@ public class BundleElement {
         return parentDictionary;
     }
 
-    public String getLocaleTag() {
-        return localeTag;
+    public String getLanguageTag() {
+        return languageTag;
     }
 
     public Set<TranslationElement> getTranslations() {
@@ -57,7 +57,7 @@ public class BundleElement {
     public String toString() {
         return "TranslationsBundleElement{" +
             " DictionaryBean=" + parentDictionary.getOriginBean().getOriginType().toString() +
-            ", Locale='" + localeTag + '\'' +
+            ", Locale='" + languageTag + '\'' +
             '}';
     }
 
@@ -69,13 +69,13 @@ public class BundleElement {
         BundleElement that = (BundleElement) o;
 
         if (!parentDictionary.equals(that.parentDictionary)) return false;
-        return localeTag.equals(that.localeTag);
+        return languageTag.equals(that.languageTag);
     }
 
     @Override
     public int hashCode() {
         int result = parentDictionary.hashCode();
-        result = 31 * result + localeTag.hashCode();
+        result = 31 * result + languageTag.hashCode();
         return result;
     }
 }
