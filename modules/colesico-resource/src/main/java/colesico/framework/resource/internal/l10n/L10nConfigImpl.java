@@ -4,10 +4,10 @@ import colesico.framework.config.Config;
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.profile.Profile;
-import colesico.framework.resource.assist.localization.ObjectiveQualifiers;
-import colesico.framework.resource.assist.localization.Qualifier;
-import colesico.framework.resource.assist.localization.QualifiersDefinition;
-import colesico.framework.resource.ResourceL10nConfigPrototype;
+import colesico.framework.resource.l10n.ObjectiveQualifiers;
+import colesico.framework.resource.l10n.Qualifier;
+import colesico.framework.resource.l10n.QualifiersDefinition;
+import colesico.framework.resource.l10n.L10nConfigPrototype;
 
 import java.util.Locale;
 
@@ -16,7 +16,7 @@ import java.util.Locale;
  */
 @Config
 @Substitute(Substitution.STUB)
-public class DefaultResourceL10nConfig extends ResourceL10nConfigPrototype {
+public class L10nConfigImpl extends L10nConfigPrototype {
 
     private static final QualifiersDefinition QUALIFIERS_DEFINITION = QualifiersDefinition.of(Qualifier.LANGUAGE_QUALIFIER, Qualifier.COUNTRY_QUALIFIER);
 

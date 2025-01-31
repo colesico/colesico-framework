@@ -18,13 +18,16 @@ package colesico.framework.resource.internal;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.resource.ResourceKit;
-import colesico.framework.resource.internal.l10n.L10nRewriter;
+import colesico.framework.resource.internal.l10n.LocalizerImpl;
 import colesico.framework.resource.PathRewriter;
+import colesico.framework.resource.l10n.Localizer;
 
 
 @Producer
 @Produce(value = PrefixRewriter.class, keyType = PathRewriter.class, polyproduce = true)
 @Produce(value = L10nRewriter.class, keyType = PathRewriter.class, polyproduce = true)
+
+@Produce(value = LocalizerImpl.class, keyType = Localizer.class)
 @Produce(value = ResourceKitImpl.class, keyType = ResourceKit.class)
 public class ResourceProducer {
 

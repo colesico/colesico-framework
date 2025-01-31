@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package colesico.framework.jdbi;
+package colesico.framework.jdbi.internal;
 
 import colesico.framework.config.Config;
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.production.Polysupplier;
 
+import colesico.framework.jdbi.AbstractJdbiConfig;
+import colesico.framework.jdbi.JdbiOptionsPrototype;
 import jakarta.inject.Inject;
 import javax.sql.DataSource;
 
@@ -30,10 +32,10 @@ import static colesico.framework.ioc.conditional.Substitution.STUB;
  */
 @Config
 @Substitute(STUB)
-public final class DefaultJdbiConfig extends AbstractJdbiConfig {
+public final class JdbiConfigImpl extends AbstractJdbiConfig {
 
     @Inject
-    public DefaultJdbiConfig(
+    public JdbiConfigImpl(
             // Jdbi will use default data source
             DataSource dataSource,
 

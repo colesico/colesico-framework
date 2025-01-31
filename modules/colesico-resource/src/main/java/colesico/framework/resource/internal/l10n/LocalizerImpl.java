@@ -2,11 +2,9 @@ package colesico.framework.resource.internal.l10n;
 
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.profile.Profile;
-import colesico.framework.resource.*;
+import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.assist.PathTrie;
-import colesico.framework.resource.assist.localization.Matcher;
-import colesico.framework.resource.assist.localization.QualifiersDefinition;
-import colesico.framework.resource.assist.localization.SubjectQualifiers;
+import colesico.framework.resource.l10n.*;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -14,28 +12,24 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Localization rewriter
- */
 @Singleton
-public class L10nRewriter implements PathRewriter {
+public class LocalizerImpl implements Localizer {
 
-    private static final Logger log = LoggerFactory.getLogger(L10nRewriter.class);
-
+    private static final Logger log = LoggerFactory.getLogger(LocalizerImpl.class);
 
     private final PathTrie<PathRewriting> pathTrie = PathTrie.of();
 
-    private final ResourceL10nConfigPrototype config;
+    private final L10nConfigPrototype config;
     private final Provider<Profile> profileProv;
 
     @Inject
-    public L10nRewriter(ResourceL10nConfigPrototype config,
-                        Polysupplier<ResourceL10nOptionsPrototype> options,
-                        Provider<Profile> profileProv) {
+    public LocalizerImpl(L10nConfigPrototype config,
+                         Polysupplier<L10nOptionsPrototype> options,
+                         Provider<Profile> profileProv) {
         this.config = config;
         this.profileProv = profileProv;
 
-        var opt = new ResourceL10nOptionsPrototype.Options();
+        var opt = new L10nOptionsPrototype.Options();
         options.forEach(o -> o.configure(opt));
 
         QualifiersDefinition definition = config.getQualifiersDefinition();
@@ -44,17 +38,12 @@ public class L10nRewriter implements PathRewriter {
         }
     }
 
-    @Override
-    public RewritingPhase[] phases() {
-        return new RewritingPhase[]{RewritingPhase.LOCALIZE};
-    }
 
     /**
      * Register path localization rewriting for specific resource path and qualifiers
      * The following placeholders can be used in the path template:
-     * -   {Q_}  qualifiers prefix placeholder i.e. module/{Q_}messages.txt -> module/ru_RU_messages.txt
-     * -   {_Q}  qualifiers suffix placeholder i.e. messages{_Q}.txt  messages_ru_RU.txt
-     * -   {str>substitution} path part for substitution :  /app/{module>ext}/messages.txt -> /app/ext/messages.txt
+     * -   {Q}  qualifiers suffix placeholder i.e. messages{Q}.txt  messages_ru_RU.txt
+     * -   {{str=substitution}} path part for substitution :  /app/{module>ext}/messages.txt -> /app/ext/messages.txt
      *
      * @param pathTemplate      - resource path template
      * @param subjectQualifiers - subject qualifiers values
@@ -86,9 +75,8 @@ public class L10nRewriter implements PathRewriter {
 
     }
 
-
     @Override
-    public String rewrite(String path, RewritingPhase phase) {
+    public String rewrite(String path) {
 
         PathRewriting rewriting = pathTrie.find(path);
 
@@ -130,15 +118,14 @@ public class L10nRewriter implements PathRewriter {
     /**
      * Rewriting config associated with path
      */
-    private record PathRewriting(Matcher<QualifierRewriting> matcher) {
+    record PathRewriting(Matcher<QualifierRewriting> matcher) {
 
     }
 
     /**
      * Rewriting config associated with qualifier
      */
-    private record QualifierRewriting(PathTag[] tags) {
+    record QualifierRewriting(PathTag[] tags) {
 
     }
-
 }

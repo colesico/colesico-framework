@@ -1,7 +1,7 @@
 package colesico.framework.translation.codegen.generator;
 
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
-import colesico.framework.resource.ResourceL10nOptionsPrototype;
+import colesico.framework.resource.l10n.L10nOptionsPrototype;
 import colesico.framework.translation.TranslationExceprion;
 import colesico.framework.translation.codegen.model.BundleElement;
 import colesico.framework.translation.codegen.model.DictionaryElement;
@@ -39,8 +39,8 @@ public class ResourceL10nOptionsGenerator extends FrameworkAbstractGenerator {
         // TODO: test
         String pathTemplate =   dictionaryElement.getBasePath() + "{Q}" + ".properties";
 
-        cb.add("$N.$N($S)", ResourceL10nOptionsPrototype.OPTIONS_PARAM,
-                ResourceL10nOptionsPrototype.Options.PATH_METHOD, pathTemplate
+        cb.add("$N.$N($S)", L10nOptionsPrototype.OPTIONS_PARAM,
+                L10nOptionsPrototype.Options.PATH_METHOD, pathTemplate
         );
 
         cb.indent();
@@ -54,27 +54,27 @@ public class ResourceL10nOptionsGenerator extends FrameworkAbstractGenerator {
             if (StringUtils.isEmpty(languageTag)) {
                 continue;
             }
-            cb.add("\n.$N()", ResourceL10nOptionsPrototype.Options.QUALIFIERS_METHOD);
+            cb.add("\n.$N()", L10nOptionsPrototype.Options.QUALIFIERS_METHOD);
             Locale locale = Locale.forLanguageTag(languageTag);
             boolean emptyQualifiers = true;
             if (StringUtils.isNotEmpty(locale.getLanguage())) {
                 emptyQualifiers = false;
                 cb.add(".$N($S)",
-                        ResourceL10nOptionsPrototype.Options.LANGUAGE_METHOD,
+                        L10nOptionsPrototype.Options.LANGUAGE_METHOD,
                         locale.getLanguage()
                 );
             }
             if (StringUtils.isNotEmpty(locale.getCountry())) {
                 emptyQualifiers = false;
                 cb.add("\n.$N($S)",
-                        ResourceL10nOptionsPrototype.Options.COUNTRY_METHOD,
+                        L10nOptionsPrototype.Options.COUNTRY_METHOD,
                         locale.getCountry()
                 );
             }
             if (StringUtils.isNotEmpty(locale.getVariant())) {
                 emptyQualifiers = false;
                 cb.add("\n.$N($S)",
-                        ResourceL10nOptionsPrototype.Options.VARIANT_METHOD,
+                        L10nOptionsPrototype.Options.VARIANT_METHOD,
                         locale.getVariant()
                 );
             }

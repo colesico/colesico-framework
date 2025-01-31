@@ -21,7 +21,6 @@ import colesico.framework.ioc.message.Message;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
-import colesico.framework.jdbi.DefaultJdbiConfig;
 import colesico.framework.jdbi.JdbiConfigPrototype;
 import colesico.framework.jdbi.JdbiTransactionalShell;
 import colesico.framework.transaction.TransactionalShell;
@@ -64,7 +63,7 @@ public class JdbiProducer {
      */
     @Singleton
     @Substitute(STUB)
-    public TransactionalShell getDefaultTransactionalShell(@Classed(DefaultJdbiConfig.class) Jdbi jdbi) {
+    public TransactionalShell getDefaultTransactionalShell(@Classed(JdbiConfigImpl.class) Jdbi jdbi) {
         return new JdbiTransactionalShell(jdbi);
     }
 

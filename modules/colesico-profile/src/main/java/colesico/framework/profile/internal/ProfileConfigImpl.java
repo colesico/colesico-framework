@@ -6,7 +6,7 @@ import colesico.framework.profile.ProfileConfigPrototype;
 
 import java.util.Locale;
 
-public class DefaultProfileConfig extends ProfileConfigPrototype {
+public class ProfileConfigImpl extends ProfileConfigPrototype {
 
     @Override
     public Profile profileInstance() {

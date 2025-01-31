@@ -3,7 +3,7 @@ package colesico.framework.resource.assist.codegen;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.config.Config;
-import colesico.framework.resource.ResourceL10nOptionsPrototype;
+import colesico.framework.resource.l10n.L10nOptionsPrototype;
 import com.palantir.javapoet.MethodSpec;
 import com.palantir.javapoet.TypeName;
 import com.palantir.javapoet.TypeSpec;
@@ -43,17 +43,17 @@ public class ResourceL10nOptionsGenerator extends FrameworkAbstractGenerator {
         if (configureMethodBuilder != null) {
             return configureMethodBuilder;
         }
-        configureMethodBuilder = MethodSpec.methodBuilder(ResourceL10nOptionsPrototype.CONFIGURE_METHOD);
+        configureMethodBuilder = MethodSpec.methodBuilder(L10nOptionsPrototype.CONFIGURE_METHOD);
         configureMethodBuilder.addModifiers(Modifier.PUBLIC);
         configureMethodBuilder.addAnnotation(Override.class);
-        configureMethodBuilder.addParameter(ResourceL10nOptionsPrototype.Options.class, ResourceL10nOptionsPrototype.OPTIONS_PARAM, Modifier.FINAL);
+        configureMethodBuilder.addParameter(L10nOptionsPrototype.Options.class, L10nOptionsPrototype.OPTIONS_PARAM, Modifier.FINAL);
         configureMethodBuilder.returns(TypeName.VOID);
         return configureMethodBuilder;
     }
 
     public TypeSpec.Builder typeBuilder() {
         TypeSpec.Builder optionsBuilder = TypeSpec.classBuilder(optionsClassSimpleName);
-        optionsBuilder.superclass(ResourceL10nOptionsPrototype.class);
+        optionsBuilder.superclass(L10nOptionsPrototype.class);
         optionsBuilder.addModifiers(Modifier.PUBLIC);
         optionsBuilder.addModifiers(Modifier.FINAL);
         optionsBuilder.addAnnotation(CodegenUtils.generateGenstamp(masterGeneratorClass.getName(), null, null));

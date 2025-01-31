@@ -1,15 +1,13 @@
-package colesico.framework.resource;
+package colesico.framework.resource.l10n;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
-import colesico.framework.resource.assist.localization.Qualifier;
-import colesico.framework.resource.assist.localization.QualifiersDefinition;
-import colesico.framework.resource.assist.localization.SubjectQualifiers;
+import colesico.framework.resource.ResourceException;
 
 import java.util.*;
 
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class ResourceL10nOptionsPrototype {
+abstract public class L10nOptionsPrototype {
     /**
      * To use in code generators
      */
@@ -20,12 +18,12 @@ abstract public class ResourceL10nOptionsPrototype {
 
     public static final class Options {
 
-        public static final String PATH_METHOD="path";
-        public static final String QUALIFIERS_METHOD="qualifiers";
-        public static final String QUALIFIER_METHOD="qualifier";
-        public static final String LANGUAGE_METHOD="language";
-        public static final String COUNTRY_METHOD="country";
-        public static final String VARIANT_METHOD="variant";
+        public static final String PATH_METHOD = "path";
+        public static final String QUALIFIERS_METHOD = "qualifiers";
+        public static final String QUALIFIER_METHOD = "qualifier";
+        public static final String LANGUAGE_METHOD = "language";
+        public static final String COUNTRY_METHOD = "country";
+        public static final String VARIANT_METHOD = "variant";
 
         private final Map<String, PathOptions> pathsOptions = new HashMap<>();
 
@@ -36,7 +34,10 @@ abstract public class ResourceL10nOptionsPrototype {
         private Set<Qualifier> qualifiers;
 
         /**
-         * Set current configuring path
+         * Register path localization rewriting for specific resource path and qualifiers
+         * The following placeholders can be used in the path template:
+         * -   {Q}  qualifiers suffix placeholder i.e. messages{Q}.txt  messages_ru_RU.txt
+         * -   {{str=substitution}} path part for substitution :  /app/{{module=ext}}/messages.txt -> /app/ext/messages.txt
          */
         public Options path(String path) {
             options = pathsOptions.computeIfAbsent(path, PathOptions::new);

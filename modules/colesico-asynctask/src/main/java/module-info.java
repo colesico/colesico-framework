@@ -26,9 +26,9 @@ module colesico.framework.asynctask {
     requires com.palantir.javapoet;
 
     // classes
-    exports colesico.framework.asynctask.internal to colesico.framework.ioc;
     exports colesico.framework.asynctask;
     exports colesico.framework.asynctask.registry;
+    exports colesico.framework.asynctask.internal to colesico.framework.ioc;
 
     provides Modulator with TaskModulator;
 }

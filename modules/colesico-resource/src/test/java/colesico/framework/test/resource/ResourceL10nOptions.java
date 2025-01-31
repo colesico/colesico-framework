@@ -18,10 +18,10 @@ package colesico.framework.test.resource;
 
 
 import colesico.framework.config.Config;
-import colesico.framework.resource.ResourceL10nOptionsPrototype;
+import colesico.framework.resource.l10n.L10nOptionsPrototype;
 
 @Config
-public class ResourceL10nOptions extends ResourceL10nOptionsPrototype {
+public class ResourceL10nOptions extends L10nOptionsPrototype {
 
     public static final String PATH1 = "root/dir/file.txt";
     public static final String PATH2 = "root/foo/file{Q}.txt";

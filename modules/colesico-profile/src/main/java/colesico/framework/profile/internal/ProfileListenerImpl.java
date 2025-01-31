@@ -24,7 +24,7 @@ import jakarta.inject.Singleton;
  * Default profile listener
  */
 @Singleton
-public class DefaultProfileListener implements ProfileListener {
+public class ProfileListenerImpl implements ProfileListener {
 
     @Override
     public Profile beforeWrite(Profile profile) {

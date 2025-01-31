@@ -1,13 +1,11 @@
-package colesico.framework.resource;
+package colesico.framework.resource.l10n;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
 import colesico.framework.profile.Profile;
-import colesico.framework.resource.assist.localization.ObjectiveQualifiers;
-import colesico.framework.resource.assist.localization.QualifiersDefinition;
 
 @ConfigPrototype(model = ConfigModel.SINGLE)
-abstract public class ResourceL10nConfigPrototype {
+abstract public class L10nConfigPrototype {
 
     /**
      * Setup {@link QualifiersDefinition} fo L10n rewriter

@@ -16,5 +16,5 @@ module colesico.framework.jdbi {
     exports colesico.framework.jdbi;
 
     // Internals
-    exports colesico.framework.jdbi.internal to colesico.framework.ioc;
+    exports colesico.framework.jdbi.internal;
 }

@@ -29,8 +29,8 @@ import java.util.Locale;
 @Produce(value = ProfileUtilsImpl.class, keyType = ProfileUtils.class)
 @Produce(value = LocaleValueUtils.class, keyType = ProfileValueUtils.class, polyproduce = true)
 @Produce(value = ProfileKitImpl.class, keyType = ProfileKit.class)
-@Produce(value = DefaultProfileListener.class, keyType = ProfileListener.class, substitute = Substitution.STUB)
-@Produce(value = DefaultProfileConfig.class, keyType = ProfileConfigPrototype.class, substitute = Substitution.STUB)
+@Produce(value = ProfileListenerImpl.class, keyType = ProfileListener.class, substitute = Substitution.STUB)
+@Produce(value = ProfileConfigImpl.class, keyType = ProfileConfigPrototype.class, substitute = Substitution.STUB)
 public class ProfileProducer {
 
     @Unscoped
