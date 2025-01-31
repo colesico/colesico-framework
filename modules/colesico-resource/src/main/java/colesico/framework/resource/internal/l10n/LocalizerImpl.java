@@ -34,13 +34,13 @@ public class LocalizerImpl implements Localizer {
 
         QualifiersDefinition definition = config.getQualifiersDefinition();
         for (var pc : opt.pathSettings()) {
-            addPathRewriting(pc.path(), pc.qualifiers(definition));
+            addLocalization(pc.path(), pc.qualifiers(definition));
         }
     }
 
 
     /**
-     * Register path localization rewriting for specific resource path and qualifiers
+     * Register path localization for specific resource path and qualifiers
      * The following placeholders can be used in the path template:
      * -   {Q}  qualifiers suffix placeholder i.e. messages{Q}.txt  messages_ru_RU.txt
      * -   {{str=substitution}} path part for substitution :  /app/{module>ext}/messages.txt -> /app/ext/messages.txt
@@ -48,8 +48,8 @@ public class LocalizerImpl implements Localizer {
      * @param pathTemplate      - resource path template
      * @param subjectQualifiers - subject qualifiers values
      */
-    private void addPathRewriting(String pathTemplate,
-                                  SubjectQualifiers[] subjectQualifiers) {
+    private void addLocalization(String pathTemplate,
+                                 SubjectQualifiers[] subjectQualifiers) {
 
         PathTemplateParser pathTemplateParser = PathTemplateParser.parse(pathTemplate);
         String path = pathTemplateParser.getPath();
@@ -76,7 +76,7 @@ public class LocalizerImpl implements Localizer {
     }
 
     @Override
-    public String rewrite(String path) {
+    public String localize(String path) {
 
         PathRewriting rewriting = pathTrie.find(path);
 
@@ -100,6 +100,11 @@ public class LocalizerImpl implements Localizer {
         }
 
         return path;
+    }
+
+    @Override
+    public String[] localizeHierarh(String path) {
+        return new String[0];
     }
 
     private String rewriteByQualifiers(String path, QualifiersTag tag, SubjectQualifiers qualifiers) {

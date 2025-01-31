@@ -5,7 +5,10 @@ package colesico.framework.resource.l10n;
  */
 public interface Localizer {
 
-    String rewrite(String path);
+    /**
+     * Return localized path
+     */
+    String localize(String path);
 
-
+    String[] localizeInheritance(String path);
 }

@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * Localization matcher.
+ * Localization qualifiers matcher.
  * Finds the best matched {@link SubjectQualifiers} for
  * given {@link ObjectiveQualifiers} qualifiers
  * <p>

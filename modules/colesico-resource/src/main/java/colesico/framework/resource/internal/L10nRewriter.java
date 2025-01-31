@@ -16,7 +16,7 @@ public class L10nRewriter implements PathRewriter {
 
     @Override
     public String rewrite(String path, RewritingPhase phase) {
-        return localizer.rewrite(path);
+        return localizer.localize(path);
     }
 
     @Override
