@@ -2,7 +2,7 @@ package colesico.framework.resource.internal;
 
 import colesico.framework.resource.PathRewriter;
 import colesico.framework.resource.RewritingPhase;
-import colesico.framework.resource.l10n.Localizer;
+import colesico.framework.resource.localization.Localizer;
 import jakarta.inject.Singleton;
 
 @Singleton

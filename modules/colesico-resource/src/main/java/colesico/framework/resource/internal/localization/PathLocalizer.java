@@ -1,10 +1,13 @@
-package colesico.framework.resource.internal.l10n;
+package colesico.framework.resource.internal.localization;
 
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.profile.Profile;
 import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.assist.PathTrie;
-import colesico.framework.resource.l10n.*;
+import colesico.framework.resource.localization.L10nConfigPrototype;
+import colesico.framework.resource.localization.L10nOptionsPrototype;
+import colesico.framework.resource.localization.QualifiersDefinition;
+import colesico.framework.resource.localization.SubjectQualifiers;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -13,9 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Singleton
-public class LocalizerImpl implements Localizer {
+public class PathLocalizer {
 
-    private static final Logger log = LoggerFactory.getLogger(LocalizerImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(PathLocalizer.class);
 
     private final PathTrie<PathRewriting> pathTrie = PathTrie.of();
 
@@ -23,7 +26,7 @@ public class LocalizerImpl implements Localizer {
     private final Provider<Profile> profileProv;
 
     @Inject
-    public LocalizerImpl(L10nConfigPrototype config,
+    public PathLocalizer(L10nConfigPrototype config,
                          Polysupplier<L10nOptionsPrototype> options,
                          Provider<Profile> profileProv) {
         this.config = config;
@@ -56,9 +59,9 @@ public class LocalizerImpl implements Localizer {
 
         final PathTrie.Node<PathRewriting> node = pathTrie.add(path);
         PathRewriting pathRewriting = node.getValue();
-        Matcher<QualifierRewriting> matcher;
+        QualifiersMatcher<QualifierRewriting> matcher;
         if (pathRewriting == null) {
-            matcher = new Matcher<>();
+            matcher = new QualifiersMatcher<>();
             pathRewriting = new PathRewriting(matcher);
             node.setValue(pathRewriting);
         } else {
@@ -75,7 +78,6 @@ public class LocalizerImpl implements Localizer {
 
     }
 
-    @Override
     public String localize(String path) {
 
         PathRewriting rewriting = pathTrie.find(path);
@@ -103,7 +105,7 @@ public class LocalizerImpl implements Localizer {
     }
 
     @Override
-    public String[] localizeHierarh(String path) {
+    public String[] localizeInheritance(String path) {
         return new String[0];
     }
 
@@ -123,7 +125,7 @@ public class LocalizerImpl implements Localizer {
     /**
      * Rewriting config associated with path
      */
-    record PathRewriting(Matcher<QualifierRewriting> matcher) {
+    record PathRewriting(QualifiersMatcher<QualifierRewriting> matcher) {
 
     }
 

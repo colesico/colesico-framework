@@ -1,4 +1,4 @@
-package colesico.framework.resource.internal.l10n;
+package colesico.framework.resource.internal.localization;
 
 public record QualifiersTag(int position) implements PathTag {
     @Override

@@ -60,7 +60,7 @@ public class ResourceKitImpl implements ResourceKit {
     }
 
     @Override
-    public String rewrite(String path) {
+    public String localize(String path) {
         for (PhaseMapper.RewriterRef rewriter : rewriters) {
             path = rewriter.rewrite(path);
         }
@@ -70,7 +70,7 @@ public class ResourceKitImpl implements ResourceKit {
     @Override
     public Enumeration<URL> getResourceURLs(String resourcePath) {
         try {
-            resourcePath = rewrite(resourcePath);
+            resourcePath = localize(resourcePath);
             return getClassLoader().getResources(resourcePath);
         } catch (IOException e) {
             throw new ResourceException("Error reading resource URLs", e);
@@ -79,7 +79,7 @@ public class ResourceKitImpl implements ResourceKit {
 
     @Override
     public InputStream getResourceStream(String resourcePath) {
-        resourcePath = rewrite(resourcePath);
+        resourcePath = localize(resourcePath);
         InputStream in = getClassLoader().getResourceAsStream(resourcePath);
         if (in == null) {
             throw new ResourceNotFoundException(resourcePath);

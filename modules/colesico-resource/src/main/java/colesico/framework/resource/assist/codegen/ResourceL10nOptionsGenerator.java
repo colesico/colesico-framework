@@ -3,7 +3,7 @@ package colesico.framework.resource.assist.codegen;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.config.Config;
-import colesico.framework.resource.l10n.L10nOptionsPrototype;
+import colesico.framework.resource.localization.L10nOptionsPrototype;
 import com.palantir.javapoet.MethodSpec;
 import com.palantir.javapoet.TypeName;
 import com.palantir.javapoet.TypeSpec;

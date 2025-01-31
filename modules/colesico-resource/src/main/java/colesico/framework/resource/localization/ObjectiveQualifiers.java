@@ -1,4 +1,4 @@
-package colesico.framework.resource.l10n;
+package colesico.framework.resource.localization;
 
 import colesico.framework.resource.ResourceException;
 

@@ -1,7 +1,7 @@
 package colesico.framework.translation.codegen.generator;
 
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
-import colesico.framework.resource.l10n.L10nOptionsPrototype;
+import colesico.framework.resource.localization.L10nOptionsPrototype;
 import colesico.framework.translation.TranslationExceprion;
 import colesico.framework.translation.codegen.model.BundleElement;
 import colesico.framework.translation.codegen.model.DictionaryElement;

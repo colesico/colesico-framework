@@ -15,6 +15,8 @@
  */
 package colesico.framework.resource;
 
+import colesico.framework.resource.localization.ObjectiveQualifiers;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
@@ -25,9 +27,17 @@ import java.util.Enumeration;
 public interface ResourceKit {
 
     /**
-     * Returns rewritten path
+     * Returns localized path best matched with {@link ObjectiveQualifiers}
+     * and rewrited with {@link PathRewriter}s
      */
-    String rewrite(String path);
+    String localize(String path);
+
+    /**
+     * Returns localized paths ordered  by degree of matching with {@link ObjectiveQualifiers}
+     * path[0] - best matching (same as {@link ResourceKit#localize(String)} )
+     * path[N] - worst matching  (default resource)
+     */
+    String[] localizeAlt(String path);
 
     /**
      * Rewrites resource path and returns resource URLs

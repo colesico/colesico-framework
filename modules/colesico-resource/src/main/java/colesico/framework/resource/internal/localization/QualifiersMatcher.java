@@ -1,6 +1,8 @@
-package colesico.framework.resource.l10n;
+package colesico.framework.resource.internal.localization;
 
 import colesico.framework.resource.ResourceException;
+import colesico.framework.resource.localization.ObjectiveQualifiers;
+import colesico.framework.resource.localization.SubjectQualifiers;
 
 import java.util.Deque;
 import java.util.HashMap;
@@ -14,7 +16,7 @@ import java.util.Map;
  * <p>
  * The match is finding by lookup the subject qualifier tree.
  */
-public final class Matcher<V> {
+public final class QualifiersMatcher<V> {
 
     /**
      * Represents any qualifier value for null values

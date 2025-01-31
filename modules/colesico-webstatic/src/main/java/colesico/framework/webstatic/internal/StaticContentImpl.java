@@ -45,7 +45,7 @@ public class StaticContentImpl implements StaticContent {
     public StaticContentImpl(Provider<HttpContext> httpContextProv, ResourceKit resourceKit, String resourcesRoot) {
         this.httpContextProv = httpContextProv;
         this.resourceKit = resourceKit;
-        this.resourcesRoot = resourceKit.rewrite(resourcesRoot);
+        this.resourcesRoot = resourceKit.localize(resourcesRoot);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class StaticContentImpl implements StaticContent {
         String resourcePath = resourcesRoot + '/' + resourceUri;
 
         if (rewrite) {
-            resourcePath = resourceKit.rewrite(resourcePath);
+            resourcePath = resourceKit.localize(resourcePath);
         }
 
         httpContext.getResponse().setContenType(MimeAssist.getContentType(resourcePath));

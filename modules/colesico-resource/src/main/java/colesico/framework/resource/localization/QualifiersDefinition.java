@@ -1,6 +1,7 @@
-package colesico.framework.resource.l10n;
+package colesico.framework.resource.localization;
 
 import colesico.framework.resource.ResourceException;
+import colesico.framework.resource.internal.localization.QualifiersMatcher;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,7 +10,7 @@ import java.util.Map;
 
 /**
  * Definition of all possible qualifier names and its canonical order.
- * Order of qualifiers is important due {@link Matcher} process.
+ * Order of qualifiers is important due {@link QualifiersMatcher} process.
  * The canonical order of qualifiers essentially determines their priority when determining
  * the best match of subject qualifiers to  objective ones.
  */
