@@ -47,7 +47,7 @@ public interface ValidatorMessages {
     // LengthVerifier
     //
 
-    @Text("Allowable number of characters fromPosition {0} to  {1}")
+    @Text("Allowable number of characters from {0} to  {1}")
     @Ru("Допустимое количество символов от {0} до {1}")
     String allowableNumberOfCharactersBetween(Integer lo, Integer hi);
 

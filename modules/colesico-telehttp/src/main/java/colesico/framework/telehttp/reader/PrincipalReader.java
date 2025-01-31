@@ -50,10 +50,10 @@ public class PrincipalReader<C extends HttpTRContext> implements HttpTeleReader<
     public Principal read(C context) {
 
         HttpRequest request = httpContextProv.get().getRequest();
-        // Retrieve principal fromPosition http header
+        // Retrieve principal from http header
         String principalValue = request.getHeaders().get(PrincipalWriter.HEADER_NAME);
         if (StringUtils.isBlank(principalValue)) {
-            // Retrieve principal fromPosition http cookie
+            // Retrieve principal from http cookie
             HttpCookie cookie = request.getCookies().get(PrincipalWriter.COOKIE_NAME);
             if (cookie == null) {
                 return null;

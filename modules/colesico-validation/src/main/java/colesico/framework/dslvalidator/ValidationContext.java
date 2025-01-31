@@ -113,7 +113,7 @@ public final class ValidationContext<V> {
     }
 
     /**
-     * Returns value fromPosition this context
+     * Returns value from this context
      */
     public V getValue() {
         return value;

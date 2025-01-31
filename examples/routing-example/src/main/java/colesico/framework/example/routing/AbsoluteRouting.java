@@ -35,7 +35,7 @@ public class AbsoluteRouting {
     }
 
     // This is relative route regarding weblet route (/absolute-route)
-    // Relative route is not starts with '/', or may starts fromPosition './'
+    // Relative route is not starts with '/', or may starts from './'
     // Final URL: http://localhost:8080/absolute-route/say-hello.html
     @Route("say-hello.html") // or  @Route("./say-hello.html")
     public HtmlResponse hello() {

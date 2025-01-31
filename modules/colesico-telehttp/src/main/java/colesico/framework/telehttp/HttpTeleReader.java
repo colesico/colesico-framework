@@ -3,7 +3,7 @@ package colesico.framework.telehttp;
 import colesico.framework.teleapi.TeleReader;
 
 /**
- * Basic tele-reader for reading param vales fromPosition remote client via http
+ * Basic tele-reader for reading param vales from remote client via http
  *
  * @param <V> the value type to  be read
  * @param <C> reading context

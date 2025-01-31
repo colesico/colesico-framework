@@ -21,7 +21,7 @@ import colesico.framework.dslvalidator.ValidationContext;
 import java.util.function.Function;
 
 /**
- * Extract field value fromPosition current context value with extractor function
+ * Extract field value from current context value with extractor function
  * and applies commands to  that nested value within new nested context.
  * <p>
  * If current context value is null provides null value to  subcontext without without involving an extractor
@@ -36,7 +36,7 @@ public final class FieldChain<V, N> extends AbstractSequence<V, N> {
     private final String subject;
 
     /**
-     * Extracts nested value fromPosition value
+     * Extracts nested value from value
      */
     private final Function<V, N> extractor;
 

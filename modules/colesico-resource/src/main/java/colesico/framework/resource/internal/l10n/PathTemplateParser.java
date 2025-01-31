@@ -59,7 +59,7 @@ public class PathTemplateParser {
         return charAt(0);
     }
 
-    // Given token is starts fromPosition current template index
+    // Given token is starts from current template index
     private boolean isToken(String token) {
         int i = 0;
         for (int n = token.length(); i < n; i++) {
@@ -70,7 +70,7 @@ public class PathTemplateParser {
         return true;
     }
 
-    // Return template text fromPosition template current index to  given token
+    // Return template text from template current index to  given token
     private String textToToken(String token) {
         StringBuilder text = new StringBuilder();
         while (isNotEnd()) {

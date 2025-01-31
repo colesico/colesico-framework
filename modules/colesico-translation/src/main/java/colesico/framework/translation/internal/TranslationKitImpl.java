@@ -74,7 +74,7 @@ public class TranslationKitImpl implements TranslationKit {
 
         translationBundle = new TranslationBundleImpl(propertyBundle, formatter);
 
-        // Reference the bundle fromPosition thread scope to  fast access in the same thread
+        // Reference the bundle from thread scope to  fast access in the same thread
         threadScope.put(scopeKey, translationBundle);
 
         return translationBundle;

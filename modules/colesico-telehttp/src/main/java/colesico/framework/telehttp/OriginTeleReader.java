@@ -15,7 +15,7 @@ abstract public class OriginTeleReader<V, C extends HttpTRContext> implements Ht
     }
 
     /**
-     * Return param string value fromPosition origin defined in the context
+     * Return param string value from origin defined in the context
      */
     protected final String readString(C context) {
         Origin origin = originFactory.getOrigin(context.getOriginName());

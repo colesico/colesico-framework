@@ -30,8 +30,8 @@ import colesico.framework.weblet.Weblet;
 public class DefaultRouting {
 
     /**
-     * The route for the method without @Route annotation is derived fromPosition method name transformed to  snake case notation.
-     * Corresponding URL GET http://localhost:8080/default-routing/hello    ./default-routing - part fromPosition weblet default route
+     * The route for the method without @Route annotation is derived from method name transformed to  snake case notation.
+     * Corresponding URL GET http://localhost:8080/default-routing/hello    ./default-routing - part from weblet default route
      */
     public HtmlResponse hello() {
         return HtmlResponse.of("Hello");

@@ -176,7 +176,7 @@ abstract public class FlowControlBuilder {
     }
 
     /**
-     * Creates new nested context with the subject and the value, extracted fromPosition the value of the local context.
+     * Creates new nested context with the subject and the value, extracted from the value of the local context.
      * Execute commands within that nested context.
      * In case of validation errors occur in the nested context, command execution is interrupted.
      *
@@ -228,7 +228,7 @@ abstract public class FlowControlBuilder {
     }
 
     /**
-     * Iterates the elements of value fromPosition local context.
+     * Iterates the elements of value from local context.
      * In case of  local validation errors occur, command execution is interrupted.
      *
      * @see IterableChain

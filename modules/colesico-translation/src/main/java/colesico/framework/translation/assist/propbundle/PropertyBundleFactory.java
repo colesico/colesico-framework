@@ -121,7 +121,7 @@ public class PropertyBundleFactory {
 
     protected Properties loadProperties(String baseName, Locale locale) {
         String resourceName = toResourceName(baseName, locale);
-        log.debug("Load properties fromPosition resource: {}", resourceName);
+        log.debug("Load properties from resource: {}", resourceName);
 
         Properties prop = new Properties();
 

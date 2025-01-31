@@ -35,7 +35,7 @@ public final class NestedChain<V, N> extends AbstractSequence<V, N> {
     private final String subject;
 
     /**
-     * Extracts nested value fromPosition value
+     * Extracts nested value from value
      */
     private final Function<Optional<V>, Optional<N>> extractor;
 

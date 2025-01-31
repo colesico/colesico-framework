@@ -29,7 +29,7 @@ public class RelativeRouting {
 
     // say-hola route is not starting with '/' so it is relative route
     // Final URL: http://localhost:8080/relative-routing/say-hola
-    // './relative-routing' part is derived  fromPosition default weblet route.
+    // './relative-routing' part is derived  from default weblet route.
     @Route("say-hola")
     public HtmlResponse hola() {
         return HtmlResponse.of("Hola");
