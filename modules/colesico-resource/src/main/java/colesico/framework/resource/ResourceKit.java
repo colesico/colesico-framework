@@ -22,13 +22,13 @@ import java.net.URL;
 import java.util.Enumeration;
 
 /**
- * Resources service  (localization, rewriting, etc.)
+ * Resources service  (path localization rewriting, etc.)
  */
 public interface ResourceKit {
 
     /**
      * Returns localized path best matched with {@link ObjectiveQualifiers}
-     * and rewrited with {@link PathRewriter}s
+     * and rewrote with other {@link PathRewriter}s
      */
     String localize(String path);
 
@@ -40,12 +40,12 @@ public interface ResourceKit {
     String[] localizeAlt(String path);
 
     /**
-     * Rewrites resource path and returns resource URLs
+     * Localize resource path and returns resource URLs
      */
     Enumeration<URL> getResourceURLs(String resourcePath);
 
     /**
-     * Rewrites resource path and returns resource input stream
+     * Localize resource path and returns resource input stream
      */
     InputStream getResourceStream(String resourcePath);
 

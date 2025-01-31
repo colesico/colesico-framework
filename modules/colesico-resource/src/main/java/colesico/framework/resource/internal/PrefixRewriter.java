@@ -68,7 +68,7 @@ public class PrefixRewriter implements PathRewriter, ResourcePrefixOptionsProtot
      * Adds rewriting rule
      */
     @Override
-    public ResourcePrefixOptionsPrototype.Options rewriting(String originPathPrefix, String targetPathPrefix, RewritingPhase phase) {
+    public ResourcePrefixOptionsPrototype.Options addRewriting(String originPathPrefix, String targetPathPrefix, RewritingPhase phase) {
         PathTrie.Node<Rewriting> node = pathTrie(phase).add(originPathPrefix);
         if (node.getValue() != null) {
             throw new ResourceException("Duplicate path rewriting: " + originPathPrefix);

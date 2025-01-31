@@ -25,6 +25,6 @@ public class ResourceParamOptions extends ResourcePrefixOptionsPrototype {
 
     @Override
     public void configure(Options options) {
-        options.rewriting("tmplRoot", "colesico/framework/example/web/pebble/tmpl");
+        options.addRewriting("tmplRoot", "colesico/framework/example/web/pebble/tmpl");
     }
 }

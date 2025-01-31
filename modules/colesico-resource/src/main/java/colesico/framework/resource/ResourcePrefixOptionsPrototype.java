@@ -28,10 +28,10 @@ abstract public class ResourcePrefixOptionsPrototype {
          * @param originPathPrefix example:  "bar", "foo/dummy", "root/dir/subdir"
          * @param targetPathPrefix example:  "module", "module/dir"
          */
-        Options rewriting(String originPathPrefix, String targetPathPrefix, RewritingPhase phase);
+        Options addRewriting(String originPathPrefix, String targetPathPrefix, RewritingPhase phase);
 
-        default Options rewriting(String originPathPrefix, String targetPathPrefix) {
-            return rewriting(originPathPrefix, targetPathPrefix, RewritingPhase.EVALUATE);
+        default Options addRewriting(String originPathPrefix, String targetPathPrefix) {
+            return addRewriting(originPathPrefix, targetPathPrefix, RewritingPhase.EVALUATE);
         }
     }
 }
