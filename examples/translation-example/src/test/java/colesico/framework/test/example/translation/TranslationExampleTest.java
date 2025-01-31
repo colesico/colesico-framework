@@ -48,35 +48,71 @@ public class TranslationExampleTest {
     }
 
     @Test(priority = 1)
+    public void testFormatter() {
+        threadScope.init();
+        ProfileMockProducer.en();
+        Profile profile = ioc.instance(Profile.class);
+        System.out.println("Bye Profile (en): " + profile);
+        assertEquals(profile.getLocale().getLanguage(), "en");
+
+        AppService srv = ioc.instance(AppService.class);
+        assertEquals(srv.sayBye(), "Bye Anonymous");
+        threadScope.destroy();
+    }
+
+    @Test(priority = 2)
+    public void testCustomFormatter() {
+        threadScope.init();
+
+        ProfileMockProducer.en();
+        Profile profile = ioc.instance(Profile.class);
+        System.out.println("Bye Profile (en): " + profile);
+        assertEquals(profile.getLocale().getLanguage(), "en");
+
+        AppService srv = ioc.instance(AppService.class);
+        assertEquals(srv.sayBye(), "Bye Anonymous");
+
+        CustomFormatter cf = (CustomFormatter) ioc.instance(TextFormatter.class);
+        assertEquals(cf.getText(), "Bye Anonymous");
+        threadScope.destroy();
+    }
+
+
+    @Test(priority = 3)
     public void testDe() {
+
         log.info("Test DE");
+        threadScope.init();
         ProfileMockProducer.de();
         Profile profile = ioc.instance(Profile.class);
         System.out.println("DE Profile: " + profile);
         assertEquals(profile.getLocale().getLanguage(), "de");
 
-        threadScope.init();
         AppService srv = ioc.instance(AppService.class);
         assertEquals(srv.sayHello(), "HI");
         threadScope.destroy();
+
     }
 
-    @Test(priority = 2)
+    @Test(priority = 4)
     public void testRu() {
+        threadScope.init();
+
         log.info("Test RU");
         ProfileMockProducer.ru();
         Profile profile = ioc.instance(Profile.class);
         System.out.println("RU Profile: " + profile);
         assertEquals(profile.getLocale().getLanguage(), "ru");
 
-        threadScope.init();
         AppService srv = ioc.instance(AppService.class);
         assertEquals(srv.sayHello(), "Привет");
         threadScope.destroy();
     }
 
-    @Test(priority = 3)
+    @Test(priority = 5)
     public void testEn() {
+        threadScope.init();
+
         log.info("Test EN");
         ProfileMockProducer.en();
         Profile profile = ioc.instance(Profile.class);
@@ -85,47 +121,24 @@ public class TranslationExampleTest {
 
         AppService srv = ioc.instance(AppService.class);
         assertEquals(srv.sayHello(), "Hello");
+
+        threadScope.destroy();
     }
 
-    @Test(priority = 4)
+    @Test(priority = 6)
     public void testFr() {
+        threadScope.init();
+
         ProfileMockProducer.fr();
         Profile profile = ioc.instance(Profile.class);
         System.out.println("FR Profile: " + profile);
         assertEquals(profile.getLocale().getLanguage(), "fr");
 
-        threadScope.init();
+
         AppService srv = ioc.instance(AppService.class);
         assertEquals(srv.sayHello(), "Salut");
         threadScope.destroy();
     }
 
-    @Test(priority = 5)
-    public void testFormatter() {
-        ProfileMockProducer.en();
-        Profile profile = ioc.instance(Profile.class);
-        System.out.println("Bye Profile: " + profile);
-        assertEquals(profile.getLocale().getLanguage(), "en");
 
-        threadScope.init();
-        AppService srv = ioc.instance(AppService.class);
-        assertEquals(srv.sayBye(), "Bye Anonymous");
-        threadScope.destroy();
-    }
-
-    @Test(priority = 6)
-    public void testCustomFormatter() {
-        ProfileMockProducer.en();
-        Profile profile = ioc.instance(Profile.class);
-        System.out.println("Bye Profile: " + profile);
-        assertEquals(profile.getLocale().getLanguage(), "en");
-
-        threadScope.init();
-        AppService srv = ioc.instance(AppService.class);
-        assertEquals(srv.sayBye(), "Bye Anonymous");
-
-        CustomFormatter cf = (CustomFormatter) ioc.instance(TextFormatter.class);
-        assertEquals(cf.getText(), "Bye Anonymous");
-        threadScope.destroy();
-    }
 }

@@ -50,4 +50,12 @@ public class PropertyBundle {
     public Locale getLocale() {
         return locale;
     }
+
+    @Override
+    public String toString() {
+        return "PropertyBundle{" +
+                "baseName='" + baseName + '\'' +
+                ", locale=" + locale +
+                '}';
+    }
 }

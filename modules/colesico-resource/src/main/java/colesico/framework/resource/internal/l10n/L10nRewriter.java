@@ -96,7 +96,8 @@ public class L10nRewriter implements PathRewriter {
             return path;
         }
 
-        var matchResult = rewriting.matcher().match(config.getObjectiveQualifiers(profileProv.get()));
+        var profile = profileProv.get();
+        var matchResult = rewriting.matcher().match(config.getObjectiveQualifiers(profile));
 
         if (matchResult == null) {
             return path;

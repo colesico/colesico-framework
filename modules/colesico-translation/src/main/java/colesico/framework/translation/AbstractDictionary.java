@@ -46,4 +46,11 @@ abstract public class AbstractDictionary implements TranslationDictionary {
     public final TranslationBundle getBundle() {
         return translationKit.getBundle(basePath);
     }
+
+    @Override
+    public String toString() {
+        return "Dictionary{" +
+                "basePath='" + basePath + '\'' +
+                '}';
+    }
 }
