@@ -45,34 +45,34 @@ public class TestPrefixRewriter {
     public void test1() {
         String path;
 
-        path = resourceKit.localize("/");
+        path = resourceKit.rewrite("/");
         assertEquals(path, "/");
 
-        path = resourceKit.localize("/home/foo");
+        path = resourceKit.rewrite("/home/foo");
         assertEquals(path, "/home/foo");
 
-        path = resourceKit.localize("home/foo");
+        path = resourceKit.rewrite("home/foo");
         assertEquals(path, "home/foo");
 
-        path = resourceKit.localize("alias");
+        path = resourceKit.rewrite("alias");
         assertEquals(path, "foo/dummy");
 
-        path = resourceKit.localize("/alias");
+        path = resourceKit.rewrite("/alias");
         assertEquals(path, "/foo/dummy");
 
-        path = resourceKit.localize("/alias/");
+        path = resourceKit.rewrite("/alias/");
         assertEquals(path, "/foo/dummy/");
 
-        path = resourceKit.localize("alias");
+        path = resourceKit.rewrite("alias");
         assertEquals(path, "foo/dummy");
 
-        path = resourceKit.localize("alias/home");
+        path = resourceKit.rewrite("alias/home");
         assertEquals(path, "foo/dummy/home");
 
-        path = resourceKit.localize("/alias/home");
+        path = resourceKit.rewrite("/alias/home");
         assertEquals(path, "/foo/dummy/home");
 
-        path = resourceKit.localize("/alias/home/");
+        path = resourceKit.rewrite("/alias/home/");
         assertEquals(path, "/foo/dummy/home/");
 
         logger.info("Resource properties test passed");

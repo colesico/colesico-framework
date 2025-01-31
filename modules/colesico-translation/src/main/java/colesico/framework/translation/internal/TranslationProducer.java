@@ -40,6 +40,6 @@ public class TranslationProducer {
 
     public PropertyBundleFactory getPropertyBundleFactory(ResourceKit resourceKit) {
         PropertyBundleCache cache = new PropertyBundleCacheSoft(0.3);
-        return new PropertyBundleFactory(cache, rn -> resourceKit.localize(rn));
+        return new PropertyBundleFactory(cache, rn -> resourceKit.rewrite(rn));
     }
 }

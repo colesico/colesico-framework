@@ -23,9 +23,8 @@ import colesico.framework.resource.ResourceKit;
 
 @Producer
 @Produce(value = PrefixRewriter.class, keyType = PathRewriter.class, polyproduce = true)
-@Produce(value = colesico.framework.resource.internal.L10nRewriter.class, keyType = PathRewriter.class, polyproduce = true)
+@Produce(value = L10nRewriter.class, keyType = PathRewriter.class, polyproduce = true)
 
-@Produce(value = colesico.framework.resource.internal.localization.L10nRewriter.class)
 @Produce(value = ResourceKitImpl.class, keyType = ResourceKit.class)
 public class ResourceProducer {
 

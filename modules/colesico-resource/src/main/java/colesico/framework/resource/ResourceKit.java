@@ -30,22 +30,22 @@ public interface ResourceKit {
      * Returns localized path best matched with {@link ObjectiveQualifiers}
      * and rewrote with other {@link PathRewriter}s
      */
-    String localize(String path);
+    String rewrite(String path);
 
     /**
      * Returns localized paths ordered  by degree of matching with {@link ObjectiveQualifiers}
-     * path[0] - best matching (same as {@link ResourceKit#localize(String)} )
+     * path[0] - best matching (same as {@link ResourceKit#rewrite(String)} )
      * path[N] - worst matching  (default resource)
      */
-    String[] localizeAlt(String path);
+    String[] localize(String path);
 
     /**
-     * Localize resource path and returns resource URLs
+     * Rewrite resource path and returns resource URLs
      */
     Enumeration<URL> getResourceURLs(String resourcePath);
 
     /**
-     * Localize resource path and returns resource input stream
+     * Rewrite resource path and returns resource input stream
      */
     InputStream getResourceStream(String resourcePath);
 

@@ -2,7 +2,9 @@ package colesico.framework.resource.internal.localization;
 
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.profile.Profile;
+import colesico.framework.resource.PathRewriter;
 import colesico.framework.resource.ResourceException;
+import colesico.framework.resource.RewritingPhase;
 import colesico.framework.resource.assist.PathTrie;
 import colesico.framework.resource.localization.L10nConfigPrototype;
 import colesico.framework.resource.localization.L10nOptionsPrototype;
@@ -16,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Singleton
-public class L10nRewriter {
+public class L10nRewriter implements PathRewriter {
 
     private static final Logger log = LoggerFactory.getLogger(L10nRewriter.class);
 
@@ -78,6 +80,7 @@ public class L10nRewriter {
 
     }
 
+
     public String rewrite(String path) {
 
         PathRewriting rewriting = pathTrie.find(path);
@@ -104,9 +107,8 @@ public class L10nRewriter {
         return path;
     }
 
-    @Override
-    public String[] localizeInheritance(String path) {
-        return new String[0];
+    public String[] localize(String path){
+
     }
 
     private String rewriteByQualifiers(String path, QualifiersTag tag, SubjectQualifiers qualifiers) {
@@ -120,6 +122,16 @@ public class L10nRewriter {
         String partLeft = StringUtils.substring(path, 0, tag.startPosition());
         String partRight = StringUtils.substring(path, tag.endPosition());
         return partLeft + tag.substitution() + partRight;
+    }
+
+    @Override
+    public String rewrite(String path, RewritingPhase phase) {
+        return rewrite(path);
+    }
+
+    @Override
+    public RewritingPhase[] phases() {
+        return new RewritingPhase[]{RewritingPhase.LOCALIZE};
     }
 
     /**

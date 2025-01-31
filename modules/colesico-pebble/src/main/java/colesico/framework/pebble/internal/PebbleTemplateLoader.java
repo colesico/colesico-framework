@@ -78,13 +78,13 @@ public class PebbleTemplateLoader implements Loader<String> {
     }
 
     protected String getResourcePath(String templatePath) {
-        String resourcePath = resourceKit.localize(templatePath);
+        String resourcePath = resourceKit.rewrite(templatePath);
 
         if (!StringUtils.endsWith(resourcePath, suffix)) {
             resourcePath = resourcePath + suffix;
         }
 
-        resourcePath = resourceKit.localize(resourcePath);
+        resourcePath = resourceKit.rewrite(resourcePath);
         return resourcePath;
     }
 
