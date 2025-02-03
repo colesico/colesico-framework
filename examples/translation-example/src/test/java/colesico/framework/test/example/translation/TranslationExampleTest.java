@@ -140,5 +140,20 @@ public class TranslationExampleTest {
         threadScope.destroy();
     }
 
+    @Test(priority = 7)
+    public void testEs() {
+        threadScope.init();
+
+        ProfileMockProducer.es();
+        Profile profile = ioc.instance(Profile.class);
+        System.out.println("ES Profile: " + profile);
+        assertEquals(profile.getLocale().getLanguage(), "es");
+
+
+        AppService srv = ioc.instance(AppService.class);
+        assertEquals(srv.sayHello(), "Hola");
+        threadScope.destroy();
+    }
+
 
 }

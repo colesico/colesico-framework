@@ -3,6 +3,7 @@ package colesico.framework.resource.l10n;
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
 import colesico.framework.resource.ResourceException;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -48,8 +49,12 @@ abstract public class L10nOptionsPrototype {
         /**
          * Set current configuration resource name via class
          */
-        public Options clazz(Class clazz) {
-            return baseName(clazz.getCanonicalName().replace('.', '/'));
+        public Options baseClass(Class baseClass, String searchString, String replacement) {
+            String baseName = baseClass.getCanonicalName();
+            if (searchString != null) {
+                baseName = StringUtils.replace(baseName, searchString, "{{" + searchString + "=" + replacement + "}}");
+            }
+            return baseName(baseName.replace('.', '/') + "{Q}");
         }
 
         /**

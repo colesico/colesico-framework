@@ -35,6 +35,7 @@ public class ProfileMockProducer {
     private static final Locale enLocale = Locale.of("en", "GB");
     private static final Locale ruLocale = Locale.of("ru");
     private static final Locale frLocale = Locale.of("fr", "FR");
+    private static final Locale esLocale = Locale.of("es", "ES");
 
 
     private static Locale curLocale = deLocale;
@@ -53,6 +54,10 @@ public class ProfileMockProducer {
 
     public static void fr() {
         curLocale = frLocale;
+    }
+
+    public static void es() {
+        curLocale = esLocale;
     }
 
     @Substitute

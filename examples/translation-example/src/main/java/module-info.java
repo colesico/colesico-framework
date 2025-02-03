@@ -9,6 +9,6 @@ module colesico.framework.example.translation {
 
     // Open package to  be able to  access .properties files
     opens colesico.framework.example.translation.dictionary;
-    opens colesico.framework.example.translation.dictionaryext;
+    opens colesico.framework.example.translation.dictionary2;
 
 }
