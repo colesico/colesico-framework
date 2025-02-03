@@ -51,6 +51,10 @@ public final class ObjectiveQualifiers implements Iterable<String> {
         return values;
     }
 
+    public String getValue(int index) {
+        return values[index];
+    }
+
     public int size() {
         return values.length;
     }

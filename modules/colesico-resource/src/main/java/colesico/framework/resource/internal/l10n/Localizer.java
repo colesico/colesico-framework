@@ -107,9 +107,9 @@ public class Localizer {
      * @param baseName resource base name
      */
     public String[] localizations(String baseName) {
-        NameConfig rewriting = pathTrie.find(baseName);
+        NameConfig resourceNameConfig = pathTrie.find(baseName);
 
-        if (rewriting == null) {
+        if (resourceNameConfig == null) {
             return new String[]{baseName};
         }
 
@@ -117,32 +117,32 @@ public class Localizer {
         var profile = profileProv.get();
         ObjectiveQualifiers objectiveQualifiers = config.getObjectiveQualifiers(profile);
 
-        int i = objectiveQualifiers.size();
+        ObjectiveQualifiers candidateQualifiers = ObjectiveQualifiers.of(config.getQualifiersDefinition());
+        String[] candidateValues = candidateQualifiers.getValues();
+
+        int i = -1;
+        int n = objectiveQualifiers.size();
         do {
-            var matchResult = rewriting.matcher().match(objectiveQualifiers);
+            if (i >= 0) {
+                candidateValues[i] = objectiveQualifiers.getValue(i);
+            }
+            i++;
+            var matchResult = resourceNameConfig.matcher().match(candidateQualifiers);
             String rewroteName;
             if (matchResult != null) {
                 rewroteName = rewriteByTags(baseName, matchResult);
             } else {
                 rewroteName = baseName;
             }
-
             result.add(rewroteName);
 
-            // Reduce qualifiers significant capacity
-            i--;
-            if (i >= 0) {
-                String[] values = objectiveQualifiers.getValues();
-                values[i] = null;
-                objectiveQualifiers = ObjectiveQualifiers.of(values);
-            }
-        } while (i >= 0);
+        } while (i < n);
 
         if (result.isEmpty()) {
             return new String[]{baseName};
         }
 
-        return result.reversed().toArray(String[]::new);
+        return result.toArray(String[]::new);
     }
 
     public ObjectiveQualifiers getObjectiveQualifiers() {
