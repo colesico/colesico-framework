@@ -41,17 +41,14 @@ public class ResourceKitImpl implements ResourceKit {
     private final PathLocalizer pathLocalizer;
     private final PrefixSubstitutor prefixSubstitutor;
 
-
+    @Inject
     public ResourceKitImpl(PathLocalizer pathLocalizer, PrefixSubstitutor prefixSubstitutor) {
         this.pathLocalizer = pathLocalizer;
         this.prefixSubstitutor = prefixSubstitutor;
     }
 
-    @Inject
-
-
     @Override
-    public String rewrite(String path) {
+    public String localizePath(String path) {
         path = prefixSubstitutor.substitutePrefix(path, ResourcePrefixOptionsPrototype.Phase.BEFORE_LOCALIZE);
         path = pathLocalizer.localizePath(path);
         path = prefixSubstitutor.substitutePrefix(path, ResourcePrefixOptionsPrototype.Phase.AFTER_LOCALIZE);
@@ -59,7 +56,7 @@ public class ResourceKitImpl implements ResourceKit {
     }
 
     @Override
-    public String[] localize(String path) {
+    public String[] localizedPaths(String path) {
         path = prefixSubstitutor.substitutePrefix(path, ResourcePrefixOptionsPrototype.Phase.BEFORE_LOCALIZE);
         String[] localizedPaths = pathLocalizer.localizedPaths(path);
         for (int i = 0; i < localizedPaths.length; i++) {
@@ -71,7 +68,7 @@ public class ResourceKitImpl implements ResourceKit {
     @Override
     public Enumeration<URL> getResourceURLs(String resourcePath) {
         try {
-            resourcePath = rewrite(resourcePath);
+            resourcePath = localizePath(resourcePath);
             return getClassLoader().getResources(resourcePath);
         } catch (IOException e) {
             throw new ResourceException("Error reading resource URLs", e);
@@ -80,7 +77,7 @@ public class ResourceKitImpl implements ResourceKit {
 
     @Override
     public InputStream getResourceStream(String resourcePath) {
-        resourcePath = rewrite(resourcePath);
+        resourcePath = localizePath(resourcePath);
         InputStream in = getClassLoader().getResourceAsStream(resourcePath);
         if (in == null) {
             throw new ResourceNotFoundException(resourcePath);

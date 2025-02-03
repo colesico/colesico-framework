@@ -32,22 +32,22 @@ public interface ResourceKit {
      *
      * @see colesico.framework.resource.l10n.L10nConfigPrototype#getObjectiveQualifiers(Profile)
      */
-    String rewrite(String path);
+    String localizePath(String path);
 
     /**
      * Returns localized paths ordered  by degree of matching with {@link ObjectiveQualifiers}
-     * path[0] - best matching (same as {@link ResourceKit#rewrite(String)} )
+     * path[0] - best matching (same as {@link ResourceKit#localizePath(String)} )
      * path[N] - worst matching  (default resource)
      */
-    String[] localize(String path);
+    String[] localizedPaths(String path);
 
     /**
-     * Rewrite resource path and returns resource URLs
+     * Localize resource path and returns resource URLs
      */
     Enumeration<URL> getResourceURLs(String resourcePath);
 
     /**
-     * Rewrite resource path and returns resource input stream
+     * Localize resource path and returns resource input stream
      */
     InputStream getResourceStream(String resourcePath);
 
