@@ -18,7 +18,7 @@ package colesico.framework.translation.internal;
 
 import colesico.framework.translation.TextFormatter;
 import colesico.framework.translation.TranslationBundle;
-import colesico.framework.translation.assist.propbundle.PropertyBundle;
+import colesico.framework.translation.internal.propertybundle.PropertyBundle;
 
 import java.util.ResourceBundle;
 
@@ -53,7 +53,7 @@ public final class TranslationBundleImpl implements TranslationBundle {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("TranslationBundle {\n");
-        sb.append("baseName=").append(bundle.getBaseName()).append("\n");
+        sb.append("name=").append(bundle.getName()).append("\n");
         for (var key : bundle.getKeys()) {
             sb.append(key).append('=').append(bundle.getString(key)).append("\n");
         }

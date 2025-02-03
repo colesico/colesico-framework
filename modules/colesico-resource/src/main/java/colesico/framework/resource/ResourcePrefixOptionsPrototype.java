@@ -16,22 +16,22 @@ abstract public class ResourcePrefixOptionsPrototype {
 
     /**
      * Settings for {@link PrefixSubstitutor}.
-     * It rewrites the path by a partial prefix match.
-     * E.g for the rewriting  '/etc/srv'->'/foo'   path '/etc/srv/generator/x' will be rewritten to  '/foo/generator/x'
+     * It rewrites the resource name by a partial prefix match.
+     * E.g for the rewriting  '/etc/srv'->'/foo'   resource name '/etc/srv/generator/x' will be rewritten to  '/foo/generator/x'
      */
     public interface Options {
 
         /**
-         * Specify pat prefix rewritings
+         * Specify resource name prefix rewritings
          *
          * @param phase            supported phases: {@link Phase#BEFORE_LOCALIZE}, {@link Phase#AFTER_LOCALIZE}
-         * @param originPathPrefix example:  "bar", "foo/dummy", "root/dir/subdir"
-         * @param targetPathPrefix example:  "module", "module/dir"
+         * @param originPrefix example:  "bar", "foo/dummy", "root/dir/subdir"
+         * @param targetPrefix example:  "module", "module/dir"
          */
-        Options addPrefixSubstitution(String originPathPrefix, String targetPathPrefix, Phase phase);
+        Options addPrefixSubstitution(String originPrefix, String targetPrefix, Phase phase);
 
-        default Options addPrefixSubstitution(String originPathPrefix, String targetPathPrefix) {
-            return addPrefixSubstitution(originPathPrefix, targetPathPrefix, Phase.BEFORE_LOCALIZE);
+        default Options addPrefixSubstitution(String originPrefix, String targetPrefix) {
+            return addPrefixSubstitution(originPrefix, targetPrefix, Phase.BEFORE_LOCALIZE);
         }
     }
 
@@ -41,12 +41,12 @@ abstract public class ResourcePrefixOptionsPrototype {
     public enum Phase {
 
         /**
-         * Phase to evaluate path expressions
+         * Phase before base name localized
          */
         BEFORE_LOCALIZE,
 
         /**
-         * Phase to substitute/redirect path
+         * Phase after base name localized
          */
         AFTER_LOCALIZE
     }

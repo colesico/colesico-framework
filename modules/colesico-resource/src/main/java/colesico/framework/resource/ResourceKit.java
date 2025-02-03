@@ -23,32 +23,37 @@ import java.net.URL;
 import java.util.Enumeration;
 
 /**
- * Resources service  (path localization rewriting, etc.)
+ * Resources service  (resource name localizations, rewriting, etc.)
  */
 public interface ResourceKit {
 
     /**
-     * Returns localized path best matched with current profile
+     * Returns localized resource name best matched with current profile
      *
      * @see colesico.framework.resource.l10n.L10nConfigPrototype#getObjectiveQualifiers(Profile)
      */
-    String localizePath(String path);
+    String localize(String baseName);
 
     /**
-     * Returns localized paths ordered  by degree of matching with {@link ObjectiveQualifiers}
-     * path[0] - best matching (same as {@link ResourceKit#localizePath(String)} )
-     * path[N] - worst matching  (default resource)
+     * Returns localized resource names ordered  by degree of matching with {@link ObjectiveQualifiers}
+     * name[0] - best matching (same as {@link ResourceKit#localize(String)} )
+     * name[N] - worst matching  (default resource)
      */
-    String[] localizedPaths(String path);
+    String[] localizations(String baseName);
 
     /**
-     * Localize resource path and returns resource URLs
+     *  Return current profile objective qualifiers
      */
-    Enumeration<URL> getResourceURLs(String resourcePath);
+    ObjectiveQualifiers getObjectiveQualifiers();
 
     /**
-     * Localize resource path and returns resource input stream
+     * Localize resource name and returns resource URLs
      */
-    InputStream getResourceStream(String resourcePath);
+    Enumeration<URL> getResourceURLs(String baseName);
+
+    /**
+     * Localize resource name and returns resource input stream
+     */
+    InputStream getResourceStream(String baseName);
 
 }

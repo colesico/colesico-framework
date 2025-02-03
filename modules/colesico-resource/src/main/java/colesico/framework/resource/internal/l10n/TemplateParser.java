@@ -5,7 +5,7 @@ import colesico.framework.resource.ResourceException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PathTemplateParser {
+public class TemplateParser {
 
     private static final String QUALIFIERS = "{Q}";
 
@@ -16,15 +16,15 @@ public class PathTemplateParser {
     private final String template;
     private final int templateLength;
     private int templateIndex = 0;
-    private final StringBuilder path = new StringBuilder();
+    private final StringBuilder resourceName = new StringBuilder();
 
-    private final List<PathTag> tags = new ArrayList<>();
+    private final List<Tag> tags = new ArrayList<>();
 
-    public static PathTemplateParser parse(String template) {
-        return new PathTemplateParser(template).parseTemplate();
+    public static TemplateParser parse(String template) {
+        return new TemplateParser(template).parseTemplate();
     }
 
-    private PathTemplateParser(String template) {
+    private TemplateParser(String template) {
         this.template = template;
         this.templateLength = template.length();
     }
@@ -82,47 +82,47 @@ public class PathTemplateParser {
                 shiftIndex();
             }
         }
-        throw new ResourceException("Invalid path template. Token '" + token + "' expected");
+        throw new ResourceException("Invalid template. Token '" + token + "' expected");
     }
 
     private void parseQualifiersSuffixOperator() {
-        QualifiersTag operator = new QualifiersTag(path.length());
+        QualifiersTag operator = new QualifiersTag(resourceName.length());
         this.tags.add(operator);
         shiftIndex(QUALIFIERS.length());
     }
 
     private void parseSubstituteOperator() {
-        int position = path.length();
+        int position = resourceName.length();
         shiftIndex(SUBSTITUTE_BEGIN.length());
         String part = textToToken(SUBSTITUTE_AS);
         int length = part.length();
-        path.append(part);
+        resourceName.append(part);
         String substitution = textToToken(SUBSTITUTE_END);
         SubstituteTag action = new SubstituteTag(position, position + length, substitution);
         tags.add(action);
     }
 
-    private PathTemplateParser parseTemplate() {
+    private TemplateParser parseTemplate() {
         while (isNotEnd()) {
             if (isToken(QUALIFIERS)) {
                 parseQualifiersSuffixOperator();
             } else if (isToken(SUBSTITUTE_BEGIN)) {
                 parseSubstituteOperator();
             } else {
-                path.append(charAt());
+                resourceName.append(charAt());
                 shiftIndex();
             }
         }
         return this;
     }
 
-    public PathTag[] getTags() {
-        // reverse to apply rewriting from path end to beginning
-        return tags.reversed().toArray(PathTag[]::new);
+    public Tag[] getTags() {
+        // reverse to apply rewriting from resource name end to beginning
+        return tags.reversed().toArray(Tag[]::new);
     }
 
-    public String getPath() {
-        return path.toString();
+    public String getResourceName() {
+        return resourceName.toString();
     }
 
 }

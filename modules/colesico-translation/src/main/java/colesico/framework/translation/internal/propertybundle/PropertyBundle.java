@@ -1,18 +1,16 @@
-package colesico.framework.translation.assist.propbundle;
+package colesico.framework.translation.internal.propertybundle;
 
 import java.util.*;
 
 public class PropertyBundle {
 
     private final PropertyBundle parent;
-    private final String baseName;
-    private final Locale locale;
+    private final String name;
     private final Properties properties;
 
-    public PropertyBundle(PropertyBundle parent, String baseName, Locale locale, Properties properties) {
+    public PropertyBundle(PropertyBundle parent, String name, Properties properties) {
         this.parent = parent;
-        this.baseName = baseName;
-        this.locale = locale;
+        this.name = name;
         this.properties = properties;
     }
 
@@ -43,19 +41,26 @@ public class PropertyBundle {
         return result;
     }
 
-    public String getBaseName() {
-        return baseName;
-    }
-
-    public Locale getLocale() {
-        return locale;
+    public String getName() {
+        return name;
     }
 
     @Override
     public String toString() {
         return "PropertyBundle{" +
-                "baseName='" + baseName + '\'' +
-                ", locale=" + locale +
+                "name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        PropertyBundle that = (PropertyBundle) o;
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
     }
 }

@@ -33,12 +33,12 @@ public class ResourceL10nOptions extends L10nOptionsPrototype {
     @Override
     public void configure(Options options) {
         options
-                .path(PATH1).qualifiers().language("en").country("GB")
-                .path(PATH2).qualifiers().language("en")
-                .path(PATH3).qualifiers().country("RU")
-                .path(PATH4).qualifiers().language("en").country("RU")
-                .path(PATH5).qualifiers().country("RU")
-                .path(PATH6).qualifiers().country("RU").language("en");
+                .baseName(PATH1).qualifiers().language("en").country("GB")
+                .baseName(PATH2).qualifiers().language("en")
+                .baseName(PATH3).qualifiers().country("RU")
+                .baseName(PATH4).qualifiers().language("en").country("RU")
+                .baseName(PATH5).qualifiers().country("RU")
+                .baseName(PATH6).qualifiers().country("RU").language("en");
 
     }
 }

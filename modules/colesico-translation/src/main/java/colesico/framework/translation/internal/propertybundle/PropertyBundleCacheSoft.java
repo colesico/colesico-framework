@@ -1,4 +1,4 @@
-package colesico.framework.translation.assist.propbundle;
+package colesico.framework.translation.internal.propertybundle;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;

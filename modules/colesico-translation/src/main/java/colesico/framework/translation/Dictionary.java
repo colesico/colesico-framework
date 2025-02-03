@@ -30,7 +30,7 @@ import java.lang.annotation.*;
 public @interface Dictionary {
 
     /**
-     * Resource path to  dictionary *.properties file without extension.
+     * Resource base name of dictionary *.properties file without extension.
      */
     String baseName() default "";
 

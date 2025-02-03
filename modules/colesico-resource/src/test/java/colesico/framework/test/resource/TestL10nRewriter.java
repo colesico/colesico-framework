@@ -37,27 +37,27 @@ public class TestL10nRewriter {
     public void test1() {
 
 
-        String lpath = resourceKit.localizePath(PATH1);
+        String lpath = resourceKit.localize(PATH1);
         System.out.println("path=" + lpath);
         assertEquals(lpath, "root/dir/file.txt");
 
-        lpath = resourceKit.localizePath(PATH2);
+        lpath = resourceKit.localize(PATH2);
         System.out.println("path=" + lpath);
         assertEquals(lpath, "root/foo/file_en.txt");
 
-        lpath = resourceKit.localizePath(PATH3);
+        lpath = resourceKit.localize(PATH3);
         System.out.println("path=" + lpath);
         assertEquals(lpath, "root/folder/file_RU.txt");
 
-        lpath = resourceKit.localizePath(PATH4);
+        lpath = resourceKit.localize(PATH4);
         System.out.println("path=" + lpath);
         assertEquals(lpath, "root/xxx/file_en_RU.txt");
 
-        lpath = resourceKit.localizePath(PATH5);
+        lpath = resourceKit.localize(PATH5);
         System.out.println("path=" + lpath);
         assertEquals(lpath, "root_RU/file.txt");
 
-        lpath = resourceKit.localizePath(PATH6);
+        lpath = resourceKit.localize(PATH6);
         System.out.println("path=" + lpath);
         assertEquals(lpath, "app2/module2/dir_en_RU/file_en_RU.txt");
     }

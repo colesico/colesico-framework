@@ -18,11 +18,11 @@ package colesico.framework.resource.internal;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.resource.ResourceKit;
-import colesico.framework.resource.internal.l10n.PathLocalizer;
+import colesico.framework.resource.internal.l10n.Localizer;
 
 
 @Producer
-@Produce(value = PathLocalizer.class)
+@Produce(value = Localizer.class)
 @Produce(value = PrefixSubstitutor.class)
 
 @Produce(value = ResourceKitImpl.class, keyType = ResourceKit.class)

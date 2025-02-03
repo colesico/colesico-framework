@@ -18,42 +18,42 @@ abstract public class L10nOptionsPrototype {
 
     public static final class Options {
 
-        public static final String PATH_METHOD = "path";
+        public static final String BASE_NAME_METHOD = "baseName";
         public static final String QUALIFIERS_METHOD = "qualifiers";
         public static final String QUALIFIER_METHOD = "qualifier";
         public static final String LANGUAGE_METHOD = "language";
         public static final String COUNTRY_METHOD = "country";
         public static final String VARIANT_METHOD = "variant";
 
-        private final Map<String, PathOptions> pathsOptions = new HashMap<>();
+        private final Map<String, NameOptions> baseNameOptions = new HashMap<>();
 
-        // Current path options
-        private PathOptions options;
+        // Current resource name options
+        private NameOptions options;
 
         // Current qualifiers set
         private Set<Qualifier> qualifiers;
 
         /**
-         * Register path localization rewriting for specific resource path and qualifiers
-         * The following placeholders can be used in the path template:
+         * Register resource name localization  for specific resource base name and qualifiers
+         * The following placeholders can be used in the resource name template:
          * -   {Q}  qualifiers suffix placeholder i.e. messages{Q}.txt  messages_ru_RU.txt
-         * -   {{str=substitution}} path part for substitution :  /app/{{module=ext}}/messages.txt -> /app/ext/messages.txt
+         * -   {{str=substitution}} resource name part for substitution :  /app/{{module=ext}}/messages.txt -> /app/ext/messages.txt
          */
-        public Options path(String path) {
-            options = pathsOptions.computeIfAbsent(path, PathOptions::new);
+        public Options baseName(String baseName) {
+            options = baseNameOptions.computeIfAbsent(baseName, NameOptions::new);
             qualifiers = null;
             return this;
         }
 
         /**
-         * Set current configuration path via class
+         * Set current configuration resource name via class
          */
         public Options clazz(Class clazz) {
-            return path(clazz.getCanonicalName().replace('.', '/'));
+            return baseName(clazz.getCanonicalName().replace('.', '/'));
         }
 
         /**
-         * Starts qualifiers set for current path
+         * Starts qualifiers set for current resource base name
          * Qualifiers order is unimportant, it will be ordered at parsing time
          */
         public Options qualifiers() {
@@ -91,22 +91,22 @@ abstract public class L10nOptionsPrototype {
             return qualifier(Qualifier.variant(variant));
         }
 
-        public Collection<PathOptions> pathSettings() {
-            return pathsOptions.values();
+        public Collection<NameOptions> baseNameOptions() {
+            return baseNameOptions.values();
         }
 
     }
 
-    public static class PathOptions {
-        private final String path;
+    public static class NameOptions {
+        private final String name;
         private final List<Set<Qualifier>> qualifiers = new ArrayList<>();
 
-        public PathOptions(String path) {
-            this.path = path;
+        public NameOptions(String name) {
+            this.name = name;
         }
 
-        public String path() {
-            return path;
+        public String name() {
+            return name;
         }
 
         public SubjectQualifiers[] qualifiers(QualifiersDefinition definition) {

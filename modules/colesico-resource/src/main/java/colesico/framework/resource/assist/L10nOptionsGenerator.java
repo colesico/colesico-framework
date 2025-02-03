@@ -4,6 +4,7 @@ import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.config.Config;
 import colesico.framework.resource.l10n.L10nOptionsPrototype;
+import com.palantir.javapoet.CodeBlock;
 import com.palantir.javapoet.MethodSpec;
 import com.palantir.javapoet.TypeName;
 import com.palantir.javapoet.TypeSpec;
@@ -24,6 +25,7 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
     protected final String optionsClassFilePath;
 
     protected MethodSpec.Builder configureMethodBuilder = null;
+    protected CodeBlock.Builder configureCodeBlockBuilder = null;
 
     public L10nOptionsGenerator(String optionsPackageName, String optionsClassSimpleName, Class<?> masterGeneratorClass, ProcessingEnvironment processingEnv) {
         super(processingEnv);
@@ -39,16 +41,19 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
     }
 
 
-    public MethodSpec.Builder configureMethod() {
-        if (configureMethodBuilder != null) {
-            return configureMethodBuilder;
+    public CodeBlock.Builder configureMethod() {
+        if (configureCodeBlockBuilder != null) {
+            return configureCodeBlockBuilder;
         }
         configureMethodBuilder = MethodSpec.methodBuilder(L10nOptionsPrototype.CONFIGURE_METHOD);
         configureMethodBuilder.addModifiers(Modifier.PUBLIC);
         configureMethodBuilder.addAnnotation(Override.class);
         configureMethodBuilder.addParameter(L10nOptionsPrototype.Options.class, L10nOptionsPrototype.OPTIONS_PARAM, Modifier.FINAL);
         configureMethodBuilder.returns(TypeName.VOID);
-        return configureMethodBuilder;
+
+        configureCodeBlockBuilder = CodeBlock.builder();
+
+        return configureCodeBlockBuilder;
     }
 
     public TypeSpec.Builder typeBuilder() {
@@ -59,28 +64,26 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
         optionsBuilder.addAnnotation(CodegenUtils.generateGenstamp(masterGeneratorClass.getName(), null, null));
         optionsBuilder.addAnnotation(Config.class);
 
-        optionsBuilder.addMethod(configureMethodBuilder.build());
-
         return optionsBuilder;
     }
 
     public L10nOptionsGenerator options() {
-        configureMethodBuilder.addCode("$N", L10nOptionsPrototype.OPTIONS_PARAM);
+        configureCodeBlockBuilder.add("$N", L10nOptionsPrototype.OPTIONS_PARAM);
         return this;
     }
 
-    public L10nOptionsGenerator path(String path) {
-        configureMethodBuilder.addCode(".$N($S)\n", L10nOptionsPrototype.Options.PATH_METHOD, path);
+    public L10nOptionsGenerator baseName(String baseName) {
+        configureCodeBlockBuilder.add(".$N($S)\n", L10nOptionsPrototype.Options.BASE_NAME_METHOD, baseName);
         return this;
     }
 
     public L10nOptionsGenerator qualifiers() {
-        configureMethodBuilder.addCode(".$N()", L10nOptionsPrototype.Options.QUALIFIERS_METHOD);
+        configureCodeBlockBuilder.add(".$N()", L10nOptionsPrototype.Options.QUALIFIERS_METHOD);
         return this;
     }
 
     public L10nOptionsGenerator language(String lang) {
-        configureMethodBuilder.addCode(".$N($S)",
+        configureCodeBlockBuilder.add(".$N($S)",
                 L10nOptionsPrototype.Options.LANGUAGE_METHOD,
                 lang
         );
@@ -88,7 +91,7 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
     }
 
     public L10nOptionsGenerator country(String country) {
-        configureMethodBuilder.addCode(".$N($S)",
+        configureCodeBlockBuilder.add(".$N($S)",
                 L10nOptionsPrototype.Options.COUNTRY_METHOD,
                 country
         );
@@ -96,7 +99,7 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
     }
 
     public L10nOptionsGenerator variant(String variant) {
-        configureMethodBuilder.addCode(".$N($S)",
+        configureCodeBlockBuilder.add(".$N($S)",
                 L10nOptionsPrototype.Options.VARIANT_METHOD,
                 variant
         );
@@ -105,6 +108,8 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
 
     public void generate(Element... originatingElements) {
         TypeSpec.Builder tb = typeBuilder();
+        configureMethodBuilder.addCode(configureCodeBlockBuilder.build());
+        tb.addMethod(configureMethodBuilder.build());
         final TypeSpec typeSpec = tb.build();
         CodegenUtils.createJavaFile(processingEnv, typeSpec, optionsPackageName, originatingElements);
     }

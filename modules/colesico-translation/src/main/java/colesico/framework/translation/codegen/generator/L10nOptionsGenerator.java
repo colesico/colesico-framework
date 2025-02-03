@@ -4,7 +4,7 @@ import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.translation.TranslationExceprion;
 import colesico.framework.translation.codegen.model.BundleElement;
 import colesico.framework.translation.codegen.model.DictionaryElement;
-import com.palantir.javapoet.MethodSpec;
+import com.palantir.javapoet.CodeBlock;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -31,12 +31,12 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
         logger.debug("Generate  resource L10n options: " + optionsPackage + "." + optionsClassSimpleName);
         optionsGenerator = new colesico.framework.resource.assist.L10nOptionsGenerator(optionsPackage, optionsClassSimpleName, this.getClass(), processingEnv);
 
-        MethodSpec.Builder mb = optionsGenerator.configureMethod();
+        CodeBlock.Builder cb = optionsGenerator.configureMethod();
 
-        // TODO: test
-        String pathTemplate = "!!!"+ dictionaryElement.getBasePath() + "{Q}" + ".properties";
+        String resourceNameTemplate = dictionaryElement.getBaseName() + "{Q}" + ".properties";
 
-        optionsGenerator.options().path(pathTemplate);
+        optionsGenerator.options().baseName(resourceNameTemplate);
+        cb.indent();
 
         Set<String> languageTags = dictionaryElement.getBundlesByLocale().values()
                 .stream().map(BundleElement::getLanguageTag).collect(Collectors.toSet());
@@ -68,7 +68,7 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
             }
         }
 
-        mb.addCode(";");
+        cb.add(";");
         optionsGenerator.generate(dictionaryElement.getOriginBean().unwrap());
 
     }

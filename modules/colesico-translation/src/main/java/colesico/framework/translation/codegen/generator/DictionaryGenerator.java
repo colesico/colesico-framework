@@ -38,7 +38,7 @@ import java.util.List;
 
 public class DictionaryGenerator {
 
-    public static final String BASE_PATH_FIELD = "BASE_PATH";
+    public static final String BASE_NAME_FIELD = "BASE_NAME";
 
     protected Logger logger = LoggerFactory.getLogger(DictionaryGenerator.class);
 
@@ -53,7 +53,7 @@ public class DictionaryGenerator {
         cob.addAnnotation(Inject.class);
         cob.addModifiers(Modifier.PUBLIC);
         cob.addParameter(ClassName.get(TranslationKit.class), AbstractDictionary.TRANSLATION_KIT_FIELD);
-        cob.addStatement("super($N,$S)", AbstractDictionary.TRANSLATION_KIT_FIELD, dictionaryElement.getBasePath());
+        cob.addStatement("super($N,$S)", AbstractDictionary.TRANSLATION_KIT_FIELD, dictionaryElement.getBaseName());
         dictionaryBuilder.addMethod(cob.build());
     }
 

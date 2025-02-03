@@ -24,14 +24,14 @@ import jakarta.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Rewrites the path by a partial prefix match.
- * E.g for the rewriting  '/etc/srv'->'/foo'   path '/etc/srv/generator/x' will be rewritten to  '/foo/generator/x'
+ * Rewrites the resource name by a partial prefix match.
+ * E.g for the rewriting  '/etc/srv'->'/foo'   resource name '/etc/srv/generator/x' will be rewritten to  '/foo/generator/x'
  */
 @Singleton
 public class PrefixSubstitutor implements ResourcePrefixOptionsPrototype.Options {
 
-    private final PathTrie<Rewriting> pathTrieEvaluate = PathTrie.of();
-    private final PathTrie<Rewriting> pathTrieSubstitute = PathTrie.of();
+    private final PathTrie<Rewriting> pathTrieBefore = PathTrie.of();
+    private final PathTrie<Rewriting> pathTrieAfter = PathTrie.of();
 
     public PrefixSubstitutor(Polysupplier<ResourcePrefixOptionsPrototype> configSup) {
         configSup.forEach(conf -> conf.configure(this));
@@ -39,35 +39,35 @@ public class PrefixSubstitutor implements ResourcePrefixOptionsPrototype.Options
 
     private PathTrie<Rewriting> pathTrie(ResourcePrefixOptionsPrototype.Phase phase) {
         return switch (phase) {
-            case BEFORE_LOCALIZE -> pathTrieEvaluate;
-            case AFTER_LOCALIZE -> pathTrieSubstitute;
+            case BEFORE_LOCALIZE -> pathTrieBefore;
+            case AFTER_LOCALIZE -> pathTrieAfter;
         };
     }
 
-    public final String substitutePrefix(String path, ResourcePrefixOptionsPrototype.Phase phase) {
-        Rewriting rewriting = pathTrie(phase).find(path);
+    public final String substitutePrefix(String resourceName, ResourcePrefixOptionsPrototype.Phase phase) {
+        Rewriting rewriting = pathTrie(phase).find(resourceName);
         if (rewriting == null) {
-            return path;
+            return resourceName;
         }
-        if (path.charAt(0) == '/') {
-            return "/" + rewriting.getTargetPrefix() + StringUtils.substring(path, rewriting.getOriginPrefixLength() + 1);
+        if (resourceName.charAt(0) == '/') {
+            return "/" + rewriting.getTargetPrefix() + StringUtils.substring(resourceName, rewriting.getOriginPrefixLength() + 1);
         }
-        return rewriting.getTargetPrefix() + StringUtils.substring(path, rewriting.getOriginPrefixLength());
+        return rewriting.getTargetPrefix() + StringUtils.substring(resourceName, rewriting.getOriginPrefixLength());
     }
 
     /**
      * Adds rewriting rule
      */
     @Override
-    public ResourcePrefixOptionsPrototype.Options addPrefixSubstitution(String originPathPrefix, String targetPathPrefix,
+    public ResourcePrefixOptionsPrototype.Options addPrefixSubstitution(String originPrefix, String targetPrefix,
                                                                         ResourcePrefixOptionsPrototype.Phase phase) {
-        PathTrie.Node<Rewriting> node = pathTrie(phase).add(originPathPrefix);
+        PathTrie.Node<Rewriting> node = pathTrie(phase).add(originPrefix);
         if (node.getValue() != null) {
-            throw new ResourceException("Duplicate path rewriting: " + originPathPrefix);
+            throw new ResourceException("Duplicate resource name prefix substitution: " + originPrefix);
         }
-        String[] targetParts = StringUtils.split(targetPathPrefix, "/");
-        targetPathPrefix = StringUtils.joinWith("/", targetParts);
-        Rewriting rewriting = new Rewriting(originPathPrefix.length(), targetPathPrefix);
+        String[] targetParts = StringUtils.split(targetPrefix, "/");
+        targetPrefix = StringUtils.joinWith("/", targetParts);
+        Rewriting rewriting = new Rewriting(originPrefix.length(), targetPrefix);
         node.setValue(rewriting);
         return this;
     }

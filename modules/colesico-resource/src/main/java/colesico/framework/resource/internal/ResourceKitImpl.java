@@ -19,7 +19,8 @@ import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.ResourceKit;
 import colesico.framework.resource.ResourceNotFoundException;
 import colesico.framework.resource.ResourcePrefixOptionsPrototype;
-import colesico.framework.resource.internal.l10n.PathLocalizer;
+import colesico.framework.resource.internal.l10n.Localizer;
+import colesico.framework.resource.l10n.ObjectiveQualifiers;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -38,49 +39,54 @@ public class ResourceKitImpl implements ResourceKit {
 
     protected final Logger log = LoggerFactory.getLogger(ResourceKit.class);
 
-    private final PathLocalizer pathLocalizer;
+    private final Localizer localizer;
     private final PrefixSubstitutor prefixSubstitutor;
 
     @Inject
-    public ResourceKitImpl(PathLocalizer pathLocalizer, PrefixSubstitutor prefixSubstitutor) {
-        this.pathLocalizer = pathLocalizer;
+    public ResourceKitImpl(Localizer localizer, PrefixSubstitutor prefixSubstitutor) {
+        this.localizer = localizer;
         this.prefixSubstitutor = prefixSubstitutor;
     }
 
     @Override
-    public String localizePath(String path) {
-        path = prefixSubstitutor.substitutePrefix(path, ResourcePrefixOptionsPrototype.Phase.BEFORE_LOCALIZE);
-        path = pathLocalizer.localizePath(path);
-        path = prefixSubstitutor.substitutePrefix(path, ResourcePrefixOptionsPrototype.Phase.AFTER_LOCALIZE);
-        return path;
+    public String localize(String baseName) {
+        baseName = prefixSubstitutor.substitutePrefix(baseName, ResourcePrefixOptionsPrototype.Phase.BEFORE_LOCALIZE);
+        baseName = localizer.localize(baseName);
+        baseName = prefixSubstitutor.substitutePrefix(baseName, ResourcePrefixOptionsPrototype.Phase.AFTER_LOCALIZE);
+        return baseName;
     }
 
     @Override
-    public String[] localizedPaths(String path) {
-        path = prefixSubstitutor.substitutePrefix(path, ResourcePrefixOptionsPrototype.Phase.BEFORE_LOCALIZE);
-        String[] localizedPaths = pathLocalizer.localizedPaths(path);
-        for (int i = 0; i < localizedPaths.length; i++) {
-            localizedPaths[i] = prefixSubstitutor.substitutePrefix(localizedPaths[i], ResourcePrefixOptionsPrototype.Phase.AFTER_LOCALIZE);
+    public String[] localizations(String baseName) {
+        baseName = prefixSubstitutor.substitutePrefix(baseName, ResourcePrefixOptionsPrototype.Phase.BEFORE_LOCALIZE);
+        String[] localizations = localizer.localizations(baseName);
+        for (int i = 0; i < localizations.length; i++) {
+            localizations[i] = prefixSubstitutor.substitutePrefix(localizations[i], ResourcePrefixOptionsPrototype.Phase.AFTER_LOCALIZE);
         }
-        return localizedPaths;
+        return localizations;
     }
 
     @Override
-    public Enumeration<URL> getResourceURLs(String resourcePath) {
+    public ObjectiveQualifiers getObjectiveQualifiers() {
+        return localizer.getObjectiveQualifiers();
+    }
+
+    @Override
+    public Enumeration<URL> getResourceURLs(String baseName) {
         try {
-            resourcePath = localizePath(resourcePath);
-            return getClassLoader().getResources(resourcePath);
+            baseName = localize(baseName);
+            return getClassLoader().getResources(baseName);
         } catch (IOException e) {
             throw new ResourceException("Error reading resource URLs", e);
         }
     }
 
     @Override
-    public InputStream getResourceStream(String resourcePath) {
-        resourcePath = localizePath(resourcePath);
-        InputStream in = getClassLoader().getResourceAsStream(resourcePath);
+    public InputStream getResourceStream(String baseName) {
+        baseName = localize(baseName);
+        InputStream in = getClassLoader().getResourceAsStream(baseName);
         if (in == null) {
-            throw new ResourceNotFoundException(resourcePath);
+            throw new ResourceNotFoundException(baseName);
         }
         return in;
     }

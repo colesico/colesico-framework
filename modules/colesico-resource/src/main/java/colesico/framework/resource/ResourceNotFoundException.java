@@ -20,15 +20,15 @@ package colesico.framework.resource;
  */
 public class ResourceNotFoundException extends ResourceException {
 
-    private final String resourcePath;
+    private final String resourceName;
 
-    public ResourceNotFoundException(String resourcePath) {
-        super("Resource '" + resourcePath + "' not found");
-        this.resourcePath = resourcePath;
+    public ResourceNotFoundException(String resourceName) {
+        super("Resource '" + resourceName + "' not found");
+        this.resourceName = resourceName;
     }
 
-    public String getResourcePath() {
-        return resourcePath;
+    public String getResourceName() {
+        return resourceName;
     }
 
 }

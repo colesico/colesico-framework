@@ -1,6 +1,7 @@
-package colesico.framework.translation.assist.propbundle;
+package colesico.framework.translation.internal.propertybundle;
 
-import java.util.Locale;
+import colesico.framework.resource.l10n.ObjectiveQualifiers;
+
 import java.util.Objects;
 
 public interface PropertyBundleCache {
@@ -16,11 +17,19 @@ public interface PropertyBundleCache {
     final class Key {
 
         private final String baseName;
-        private final Locale locale;
+        private final ObjectiveQualifiers qualifiers;
 
-        public Key(String baseName, Locale locale) {
+        public Key(String baseName, ObjectiveQualifiers qualifiers) {
             this.baseName = baseName;
-            this.locale = locale;
+            this.qualifiers = qualifiers;
+        }
+
+        @Override
+        public String toString() {
+            return "Key{" +
+                    "baseName='" + baseName + '\'' +
+                    ", qualifiers=" + qualifiers +
+                    '}';
         }
 
         @Override
@@ -29,12 +38,12 @@ public interface PropertyBundleCache {
             if (o == null || getClass() != o.getClass()) return false;
             Key key = (Key) o;
             return baseName.equals(key.baseName) &&
-                    locale.equals(key.locale);
+                    qualifiers.equals(key.qualifiers);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(baseName, locale);
+            return Objects.hash(baseName, qualifiers);
         }
     }
 }

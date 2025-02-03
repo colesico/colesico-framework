@@ -24,11 +24,11 @@ public interface TranslationDictionary {
 
     String TRANSLATE_METHOD = "translate";
     String GET_BUNDLE_METHOD = "getBundle";
-    String GET_BASE_PATH_METHOD = "getBasePath";
+    String GET_BASE_NAME_METHOD = "getBaseName";
 
     String translate(String key, String defaultValue, Object... params);
 
     TranslationBundle getBundle();
 
-    String getBasePath();
+    String getBaseName();
 }

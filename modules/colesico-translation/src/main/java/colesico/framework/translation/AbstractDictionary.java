@@ -21,36 +21,36 @@ abstract public class AbstractDictionary implements TranslationDictionary {
     public static final String TRANSLATE_OR_KEY_METHOD = "translateOrKey";
     public static final String TRANSLATION_KIT_FIELD = "translationKit";
 
-    protected final String basePath;
+    protected final String baseName;
     protected final TranslationKit translationKit;
 
-    public AbstractDictionary(TranslationKit translationKit, String basePath) {
-        this.basePath = basePath;
+    public AbstractDictionary(TranslationKit translationKit, String baseName) {
+        this.baseName = baseName;
         this.translationKit = translationKit;
     }
 
-    public final String getBasePath() {
-        return basePath;
+    public final String getBaseName() {
+        return baseName;
     }
 
     protected final String translateOrKey(final String key, Object... params) {
-        return translationKit.getBundle(basePath).get(key, key, params);
+        return translationKit.getBundle(baseName).get(key, key, params);
     }
 
     @Override
     public final String translate(final String key, final String defaultValue, Object... params) {
-        return translationKit.getBundle(basePath).get(key, defaultValue, params);
+        return translationKit.getBundle(baseName).get(key, defaultValue, params);
     }
 
     @Override
     public final TranslationBundle getBundle() {
-        return translationKit.getBundle(basePath);
+        return translationKit.getBundle(baseName);
     }
 
     @Override
     public String toString() {
         return "Dictionary{" +
-                "basePath='" + basePath + '\'' +
+                "baseName='" + baseName + '\'' +
                 '}';
     }
 }

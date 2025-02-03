@@ -50,7 +50,7 @@ public class BundleGenerator {
     }
 
     protected void generateBundle(BundleElement bundleElement) {
-        FileParser fp = new FileParser(bundleElement.getParentDictionary().getBasePath());
+        FileParser fp = new FileParser(bundleElement.getParentDictionary().getBaseName());
         String filePath = fp.path();
 
         String fileName;

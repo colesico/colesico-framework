@@ -30,7 +30,7 @@ import java.util.*;
 public class DictionaryElement {
 
     private final ClassElement originBean;
-    private final String basePath;
+    private final String baseName;
 
     // Locale tag -> bundle
     private final Map<String, BundleElement> bundlesByLocale = new HashMap<>();
@@ -50,14 +50,14 @@ public class DictionaryElement {
         this.originBean = dictionaryInterface;
 
         AnnotationAssist<Dictionary> dictAnn = dictionaryInterface.getAnnotation(Dictionary.class);
-        String bPath;
+        String bName;
         if (StringUtils.isNoneBlank(dictAnn.unwrap().baseName())) {
-            bPath = dictAnn.unwrap().baseName();
+            bName = dictAnn.unwrap().baseName();
         } else {
-            bPath = dictionaryInterface.getPackageName() + '.' + dictionaryInterface.getSimpleName();
-            bPath = bPath.replace('.', '/');
+            bName = dictionaryInterface.getPackageName() + '.' + dictionaryInterface.getSimpleName();
+            bName = bName.replace('.', '/');
         }
-        this.basePath = bPath;
+        this.baseName = bName;
 
         this.extraTranslations.addAll(Arrays.asList(dictAnn.unwrap().extraTranslations()));
     }
@@ -75,8 +75,8 @@ public class DictionaryElement {
         translationsBundleElement.addTranslation(keyMethod, translation);
     }
 
-    public String getBasePath() {
-        return basePath;
+    public String getBaseName() {
+        return baseName;
     }
 
     public ClassElement getOriginBean() {
@@ -103,7 +103,7 @@ public class DictionaryElement {
     public String toString() {
         return "DictionaryBeanElement{" +
                 "originBean=" + originBean.getOriginType().toString() +
-                ", basePath='" + basePath + '\'' +
+                ", baseName='" + baseName + '\'' +
                 '}';
     }
 
@@ -114,11 +114,11 @@ public class DictionaryElement {
 
         DictionaryElement that = (DictionaryElement) o;
 
-        return basePath.equals(that.basePath);
+        return baseName.equals(that.baseName);
     }
 
     @Override
     public int hashCode() {
-        return basePath.hashCode();
+        return baseName.hashCode();
     }
 }
