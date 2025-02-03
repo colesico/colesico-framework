@@ -18,7 +18,7 @@ package colesico.framework.test.resource;
 
 
 import colesico.framework.config.Config;
-import colesico.framework.resource.localization.L10nOptionsPrototype;
+import colesico.framework.resource.l10n.L10nOptionsPrototype;
 
 @Config
 public class ResourceL10nOptions extends L10nOptionsPrototype {

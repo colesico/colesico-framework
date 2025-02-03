@@ -1,4 +1,4 @@
-package colesico.framework.resource.localization;
+package colesico.framework.resource.l10n;
 
 import colesico.framework.resource.ResourceException;
 
@@ -22,6 +22,13 @@ public final class ObjectiveQualifiers implements Iterable<String> {
     }
 
     /**
+     * Method for fast instantiation. Does not check canonical order and number of qualifiers
+     */
+    public static ObjectiveQualifiers of(String[] values) {
+        return new ObjectiveQualifiers(values);
+    }
+
+    /**
      * Default objective qualifiers
      */
     public static ObjectiveQualifiers of(QualifiersDefinition definition) {
@@ -42,6 +49,10 @@ public final class ObjectiveQualifiers implements Iterable<String> {
 
     public String[] getValues() {
         return values;
+    }
+
+    public int size() {
+        return values.length;
     }
 
     @Override

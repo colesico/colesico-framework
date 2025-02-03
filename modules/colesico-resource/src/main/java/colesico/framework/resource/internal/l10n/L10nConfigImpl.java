@@ -1,13 +1,13 @@
-package colesico.framework.resource.internal.localization;
+package colesico.framework.resource.internal.l10n;
 
 import colesico.framework.config.Config;
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.profile.Profile;
-import colesico.framework.resource.localization.ObjectiveQualifiers;
-import colesico.framework.resource.localization.Qualifier;
-import colesico.framework.resource.localization.QualifiersDefinition;
-import colesico.framework.resource.localization.L10nConfigPrototype;
+import colesico.framework.resource.l10n.ObjectiveQualifiers;
+import colesico.framework.resource.l10n.Qualifier;
+import colesico.framework.resource.l10n.QualifiersDefinition;
+import colesico.framework.resource.l10n.L10nConfigPrototype;
 
 import java.util.Locale;
 

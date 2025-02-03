@@ -21,6 +21,7 @@ import colesico.framework.resource.ResourceKit;
 import colesico.framework.resource.ResourceNotFoundException;
 import colesico.framework.resource.PathRewriter;
 import colesico.framework.resource.RewritingPhase;
+import colesico.framework.resource.internal.l10n.PathLocalizer;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -41,29 +42,18 @@ public class ResourceKitImpl implements ResourceKit {
 
     protected final Logger log = LoggerFactory.getLogger(ResourceKit.class);
 
-    protected List<PhaseMapper.RewriterRef> rewriters = new ArrayList<>();
+    private final PathLocalizer pathLocalizer;
+
+    public ResourceKitImpl(PathLocalizer pathLocalizer) {
+        this.pathLocalizer = pathLocalizer;
+    }
 
     @Inject
-    public ResourceKitImpl(Polysupplier<PathRewriter> rewritersSupp) {
 
-        final PhaseMapper phaseMapper = new PhaseMapper();
-        rewritersSupp.forEach(phaseMapper::add);
-
-        for (RewritingPhase ph : RewritingPhase.values()) {
-            var phaseRewList = phaseMapper.getRewriters(ph);
-            if (phaseRewList == null) {
-                continue;
-            }
-            rewriters.addAll(phaseRewList);
-        }
-
-    }
 
     @Override
     public String rewrite(String path) {
-        for (PhaseMapper.RewriterRef rewriter : rewriters) {
-            path = rewriter.rewrite(path);
-        }
+        path = pathLocalizer.localization(path);
         return path;
     }
 

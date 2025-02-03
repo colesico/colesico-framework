@@ -29,7 +29,7 @@ import colesico.framework.translation.TranslationDictionary;
 import colesico.framework.translation.codegen.generator.BundleGenerator;
 import colesico.framework.translation.codegen.generator.DictionaryGenerator;
 import colesico.framework.translation.codegen.generator.IocGenerator;
-import colesico.framework.translation.codegen.generator.ResourceL10nOptionsGenerator;
+import colesico.framework.translation.codegen.generator.L10nOptionsGenerator;
 import colesico.framework.translation.codegen.model.DictionaryElement;
 import colesico.framework.translation.codegen.model.DictionaryRegistry;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -47,7 +47,7 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
     protected DictionaryGenerator dictionaryGenerator;
 
     protected DictionaryRegistry dictionaryRegistry;
-    protected ResourceL10nOptionsGenerator resourceL10NOptionsGenerator;
+    protected L10nOptionsGenerator resourceL10NOptionsGenerator;
     protected IocGenerator iocGenerator;
     protected BundleGenerator bundleGenerator;
 
@@ -66,7 +66,7 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
         this.iocGenerator = new IocGenerator(processingEnv);
         this.bundleGenerator = new BundleGenerator(processingEnv);
         this.dictionaryRegistry = new DictionaryRegistry(processingEnv);
-        this.resourceL10NOptionsGenerator = new ResourceL10nOptionsGenerator(processingEnv);
+        this.resourceL10NOptionsGenerator = new L10nOptionsGenerator(processingEnv);
     }
 
     @Override

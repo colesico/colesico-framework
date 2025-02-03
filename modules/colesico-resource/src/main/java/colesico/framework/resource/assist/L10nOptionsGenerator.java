@@ -1,9 +1,9 @@
-package colesico.framework.resource.assist.codegen;
+package colesico.framework.resource.assist;
 
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.config.Config;
-import colesico.framework.resource.localization.L10nOptionsPrototype;
+import colesico.framework.resource.l10n.L10nOptionsPrototype;
 import com.palantir.javapoet.MethodSpec;
 import com.palantir.javapoet.TypeName;
 import com.palantir.javapoet.TypeSpec;
@@ -13,7 +13,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 
-public class ResourceL10nOptionsGenerator extends FrameworkAbstractGenerator {
+public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
 
 
     protected final Class<?> masterGeneratorClass;
@@ -25,7 +25,7 @@ public class ResourceL10nOptionsGenerator extends FrameworkAbstractGenerator {
 
     protected MethodSpec.Builder configureMethodBuilder = null;
 
-    public ResourceL10nOptionsGenerator(String optionsPackageName, String optionsClassSimpleName, Class<?> masterGeneratorClass, ProcessingEnvironment processingEnv) {
+    public L10nOptionsGenerator(String optionsPackageName, String optionsClassSimpleName, Class<?> masterGeneratorClass, ProcessingEnvironment processingEnv) {
         super(processingEnv);
 
         logger.debug("Initializing resource l10n options generator: " + optionsPackageName + "." + optionsClassSimpleName);
@@ -62,6 +62,45 @@ public class ResourceL10nOptionsGenerator extends FrameworkAbstractGenerator {
         optionsBuilder.addMethod(configureMethodBuilder.build());
 
         return optionsBuilder;
+    }
+
+    public L10nOptionsGenerator options() {
+        configureMethodBuilder.addCode("$N()", L10nOptionsPrototype.OPTIONS_PARAM);
+        return this;
+    }
+
+    public L10nOptionsGenerator path(String path) {
+        configureMethodBuilder.addCode(".$N($S)\n", L10nOptionsPrototype.Options.PATH_METHOD, path);
+        return this;
+    }
+
+    public L10nOptionsGenerator qualifiers() {
+        configureMethodBuilder.addCode(".$N()", L10nOptionsPrototype.Options.QUALIFIERS_METHOD);
+        return this;
+    }
+
+    public L10nOptionsGenerator language(String lang) {
+        configureMethodBuilder.addCode(".$N($S)",
+                L10nOptionsPrototype.Options.LANGUAGE_METHOD,
+                lang
+        );
+        return this;
+    }
+
+    public L10nOptionsGenerator country(String country) {
+        configureMethodBuilder.addCode(".$N($S)",
+                L10nOptionsPrototype.Options.COUNTRY_METHOD,
+                country
+        );
+        return this;
+    }
+
+    public L10nOptionsGenerator variant(String variant) {
+        configureMethodBuilder.addCode(".$N($S)",
+                L10nOptionsPrototype.Options.VARIANT_METHOD,
+                variant
+        );
+        return this;
     }
 
     public void generate(Element... originatingElements) {

@@ -17,10 +17,8 @@
 package colesico.framework.resource.internal;
 
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.resource.PathRewriter;
 import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.ResourcePrefixOptionsPrototype;
-import colesico.framework.resource.RewritingPhase;
 import colesico.framework.resource.assist.PathTrie;
 import jakarta.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +28,7 @@ import org.apache.commons.lang3.StringUtils;
  * E.g for the rewriting  '/etc/srv'->'/foo'   path '/etc/srv/generator/x' will be rewritten to  '/foo/generator/x'
  */
 @Singleton
-public class PrefixRewriter implements PathRewriter, ResourcePrefixOptionsPrototype.Options {
+public class PrefixRewriter implements ResourcePrefixOptionsPrototype.Options {
 
     private final PathTrie<Rewriting> pathTrieEvaluate = PathTrie.of();
     private final PathTrie<Rewriting> pathTrieSubstitute = PathTrie.of();
@@ -39,21 +37,14 @@ public class PrefixRewriter implements PathRewriter, ResourcePrefixOptionsProtot
         configSup.forEach(conf -> conf.configure(this));
     }
 
-    private PathTrie<Rewriting> pathTrie(RewritingPhase phase) {
+    private PathTrie<Rewriting> pathTrie(ResourcePrefixOptionsPrototype.Phase phase) {
         return switch (phase) {
-            case EVALUATE -> pathTrieEvaluate;
-            case SUBSTITUTE -> pathTrieSubstitute;
-            default -> throw new ResourceException("Unsupported rewriting phase: " + phase);
+            case BEFORE_LOCALIZE -> pathTrieEvaluate;
+            case AFTER_LOCALIZE -> pathTrieSubstitute;
         };
     }
 
-    @Override
-    public RewritingPhase[] phases() {
-        return new RewritingPhase[]{RewritingPhase.EVALUATE, RewritingPhase.SUBSTITUTE};
-    }
-
-    @Override
-    public final String rewrite(String path, RewritingPhase phase) {
+    public final String rewrite(String path, ResourcePrefixOptionsPrototype.Phase phase) {
         Rewriting rewriting = pathTrie(phase).find(path);
         if (rewriting == null) {
             return path;
@@ -68,7 +59,8 @@ public class PrefixRewriter implements PathRewriter, ResourcePrefixOptionsProtot
      * Adds rewriting rule
      */
     @Override
-    public ResourcePrefixOptionsPrototype.Options addRewriting(String originPathPrefix, String targetPathPrefix, RewritingPhase phase) {
+    public ResourcePrefixOptionsPrototype.Options addRewriting(String originPathPrefix, String targetPathPrefix,
+                                                               ResourcePrefixOptionsPrototype.Phase phase) {
         PathTrie.Node<Rewriting> node = pathTrie(phase).add(originPathPrefix);
         if (node.getValue() != null) {
             throw new ResourceException("Duplicate path rewriting: " + originPathPrefix);

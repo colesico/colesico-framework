@@ -24,14 +24,30 @@ abstract public class ResourcePrefixOptionsPrototype {
         /**
          * Specify pat prefix rewritings
          *
-         * @param phase            supported phases: {@link RewritingPhase#EVALUATE}, {@link RewritingPhase#SUBSTITUTE}
+         * @param phase            supported phases: {@link Phase#BEFORE_LOCALIZE}, {@link Phase#AFTER_LOCALIZE}
          * @param originPathPrefix example:  "bar", "foo/dummy", "root/dir/subdir"
          * @param targetPathPrefix example:  "module", "module/dir"
          */
-        Options addRewriting(String originPathPrefix, String targetPathPrefix, RewritingPhase phase);
+        Options addRewriting(String originPathPrefix, String targetPathPrefix, Phase phase);
 
         default Options addRewriting(String originPathPrefix, String targetPathPrefix) {
-            return addRewriting(originPathPrefix, targetPathPrefix, RewritingPhase.EVALUATE);
+            return addRewriting(originPathPrefix, targetPathPrefix, Phase.BEFORE_LOCALIZE);
         }
+    }
+
+    /**
+     *
+     */
+    public enum Phase {
+
+        /**
+         * Phase to evaluate path expressions
+         */
+        BEFORE_LOCALIZE,
+
+        /**
+         * Phase to substitute/redirect path
+         */
+        AFTER_LOCALIZE
     }
 }

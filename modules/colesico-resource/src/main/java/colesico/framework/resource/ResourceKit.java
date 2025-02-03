@@ -15,7 +15,8 @@
  */
 package colesico.framework.resource;
 
-import colesico.framework.resource.localization.ObjectiveQualifiers;
+import colesico.framework.profile.Profile;
+import colesico.framework.resource.l10n.ObjectiveQualifiers;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -27,8 +28,9 @@ import java.util.Enumeration;
 public interface ResourceKit {
 
     /**
-     * Returns localized path best matched with {@link ObjectiveQualifiers}
-     * and rewrote with other {@link PathRewriter}s
+     * Returns localized path best matched with current profile
+     *
+     * @see colesico.framework.resource.l10n.L10nConfigPrototype#getObjectiveQualifiers(Profile)
      */
     String rewrite(String path);
 

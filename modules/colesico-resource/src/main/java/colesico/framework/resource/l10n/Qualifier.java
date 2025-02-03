@@ -1,4 +1,4 @@
-package colesico.framework.resource.localization;
+package colesico.framework.resource.l10n;
 
 import java.util.Objects;
 

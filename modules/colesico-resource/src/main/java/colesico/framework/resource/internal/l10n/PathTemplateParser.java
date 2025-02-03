@@ -1,4 +1,4 @@
-package colesico.framework.resource.internal.localization;
+package colesico.framework.resource.internal.l10n;
 
 import colesico.framework.resource.ResourceException;
 
@@ -124,4 +124,5 @@ public class PathTemplateParser {
     public String getPath() {
         return path.toString();
     }
+
 }

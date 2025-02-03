@@ -1,15 +1,10 @@
-package colesico.framework.resource.internal.localization;
+package colesico.framework.resource.internal.l10n;
 
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.profile.Profile;
-import colesico.framework.resource.PathRewriter;
 import colesico.framework.resource.ResourceException;
-import colesico.framework.resource.RewritingPhase;
 import colesico.framework.resource.assist.PathTrie;
-import colesico.framework.resource.localization.L10nConfigPrototype;
-import colesico.framework.resource.localization.L10nOptionsPrototype;
-import colesico.framework.resource.localization.QualifiersDefinition;
-import colesico.framework.resource.localization.SubjectQualifiers;
+import colesico.framework.resource.l10n.*;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -17,20 +12,23 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Singleton
-public class L10nRewriter implements PathRewriter {
+public class PathLocalizer {
 
-    private static final Logger log = LoggerFactory.getLogger(L10nRewriter.class);
+    private static final Logger log = LoggerFactory.getLogger(PathLocalizer.class);
 
-    private final PathTrie<PathRewriting> pathTrie = PathTrie.of();
+    private final PathTrie<PathConfig> pathTrie = PathTrie.of();
 
     private final L10nConfigPrototype config;
     private final Provider<Profile> profileProv;
 
     @Inject
-    public L10nRewriter(L10nConfigPrototype config,
-                        Polysupplier<L10nOptionsPrototype> options,
-                        Provider<Profile> profileProv) {
+    public PathLocalizer(L10nConfigPrototype config,
+                         Polysupplier<L10nOptionsPrototype> options,
+                         Provider<Profile> profileProv) {
         this.config = config;
         this.profileProv = profileProv;
 
@@ -39,13 +37,12 @@ public class L10nRewriter implements PathRewriter {
 
         QualifiersDefinition definition = config.getQualifiersDefinition();
         for (var pc : opt.pathSettings()) {
-            addRewriting(pc.path(), pc.qualifiers(definition));
+            addLocalization(pc.path(), pc.qualifiers(definition));
         }
     }
 
-
     /**
-     * Register path localization rewriting  for specific resource path and qualifiers
+     * Register path localization  for specific resource.
      * The following placeholders can be used in the path template:
      * -   {Q}  qualifiers suffix placeholder i.e. messages{Q}.txt  messages_ru_RU.txt
      * -   {{str=substitution}} path part for substitution :  /app/{module>ext}/messages.txt -> /app/ext/messages.txt
@@ -53,26 +50,26 @@ public class L10nRewriter implements PathRewriter {
      * @param pathTemplate      - resource path template
      * @param subjectQualifiers - subject qualifiers values
      */
-    private void addRewriting(String pathTemplate,
-                              SubjectQualifiers[] subjectQualifiers) {
+    private void addLocalization(String pathTemplate,
+                                 SubjectQualifiers[] subjectQualifiers) {
 
         PathTemplateParser pathTemplateParser = PathTemplateParser.parse(pathTemplate);
         String path = pathTemplateParser.getPath();
 
-        final PathTrie.Node<PathRewriting> node = pathTrie.add(path);
-        PathRewriting pathRewriting = node.getValue();
-        QualifiersMatcher<QualifierRewriting> matcher;
-        if (pathRewriting == null) {
+        final PathTrie.Node<PathConfig> node = pathTrie.add(path);
+        PathConfig pathConfig = node.getValue();
+        QualifiersMatcher<QualifierConfig> matcher;
+        if (pathConfig == null) {
             matcher = new QualifiersMatcher<>();
-            pathRewriting = new PathRewriting(matcher);
-            node.setValue(pathRewriting);
+            pathConfig = new PathConfig(matcher);
+            node.setValue(pathConfig);
         } else {
-            matcher = pathRewriting.matcher();
+            matcher = pathConfig.matcher();
         }
 
         PathTag[] tags = pathTemplateParser.getTags();
         for (SubjectQualifiers sq : subjectQualifiers) {
-            var prvRewriting = matcher.addQualifiers(sq, new QualifierRewriting(tags));
+            var prvRewriting = matcher.addQualifiers(sq, new QualifierConfig(tags));
             if (prvRewriting != null) {
                 throw new ResourceException("Path rewriting already defined. Path=" + path + "; Qualifiers=" + sq);
             }
@@ -80,10 +77,14 @@ public class L10nRewriter implements PathRewriter {
 
     }
 
+    /**
+     * Returns best suitable for current profile localized resource path
+     *
+     * @param path resource base path
+     */
+    public String localization(String path) {
 
-    public String rewrite(String path) {
-
-        PathRewriting rewriting = pathTrie.find(path);
+        PathConfig rewriting = pathTrie.find(path);
 
         if (rewriting == null) {
             return path;
@@ -96,6 +97,50 @@ public class L10nRewriter implements PathRewriter {
             return path;
         }
 
+        return rewriteByTags(path, matchResult);
+    }
+
+    /**
+     * Returns suitable localizations for path.
+     * The first path corresponds to the result of the method {@link #localization(String)} - the most suitable localization
+     * The last one path - default localization  (less suitable)
+     *
+     * @param path resource base path
+     */
+    public String[] suitableLocalizations(String path) {
+        PathConfig rewriting = pathTrie.find(path);
+
+        if (rewriting == null) {
+            return new String[]{path};
+        }
+
+        Set<String> result = new LinkedHashSet<>();
+        var profile = profileProv.get();
+        ObjectiveQualifiers objectiveQualifiers = config.getObjectiveQualifiers(profile);
+
+        int n = objectiveQualifiers.size();
+        for (int i = 0; i < n; i++) {
+            var matchResult = rewriting.matcher().match(objectiveQualifiers);
+            if (matchResult == null) {
+                continue;
+            }
+            String rewritedPath = rewriteByTags(path, matchResult);
+            result.add(rewritedPath);
+
+            // Reduce qualifiers significant capacity
+            String[] values = objectiveQualifiers.getValues();
+            values[n - i - 1] = null;
+            objectiveQualifiers = ObjectiveQualifiers.of(values);
+        }
+
+        if (result.isEmpty()) {
+            return new String[]{path};
+        }
+
+        return result.toArray(String[]::new);
+    }
+
+    private String rewriteByTags(String path, QualifiersMatcher.MatchResult<QualifierConfig> matchResult) {
         for (PathTag tag : matchResult.value().tags()) {
             path = switch (tag) {
                 case QualifiersTag qpa -> rewriteByQualifiers(path, qpa, matchResult.subjectQualifiers());
@@ -103,12 +148,7 @@ public class L10nRewriter implements PathRewriter {
                 default -> throw new ResourceException("Unsupported path tag. Path=" + path + "; Tag=" + tag);
             };
         }
-
         return path;
-    }
-
-    public String[] localize(String path){
-
     }
 
     private String rewriteByQualifiers(String path, QualifiersTag tag, SubjectQualifiers qualifiers) {
@@ -124,27 +164,17 @@ public class L10nRewriter implements PathRewriter {
         return partLeft + tag.substitution() + partRight;
     }
 
-    @Override
-    public String rewrite(String path, RewritingPhase phase) {
-        return rewrite(path);
-    }
-
-    @Override
-    public RewritingPhase[] phases() {
-        return new RewritingPhase[]{RewritingPhase.LOCALIZE};
-    }
-
     /**
-     * Rewriting config associated with path
+     * Config associated with path
      */
-    record PathRewriting(QualifiersMatcher<QualifierRewriting> matcher) {
+    record PathConfig(QualifiersMatcher<QualifierConfig> matcher) {
 
     }
 
     /**
-     * Rewriting config associated with qualifier
+     * Config associated with qualifier
      */
-    record QualifierRewriting(PathTag[] tags) {
+    record QualifierConfig(PathTag[] tags) {
 
     }
 }

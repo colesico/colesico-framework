@@ -1,4 +1,4 @@
-package colesico.framework.resource.localization;
+package colesico.framework.resource.l10n;
 
 import colesico.framework.resource.ResourceException;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +28,10 @@ public final class SubjectQualifiers implements Iterable<String> {
         this.values = values;
     }
 
-    protected static SubjectQualifiers of(String[] values) {
+    /**
+     * Method for fast instantiation. Does not check canonical order and number of qualifiers
+     */
+    public static SubjectQualifiers of(String[] values) {
         return new SubjectQualifiers(values);
     }
 

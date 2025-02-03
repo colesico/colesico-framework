@@ -1,4 +1,4 @@
-package colesico.framework.resource.localization;
+package colesico.framework.resource.l10n;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;

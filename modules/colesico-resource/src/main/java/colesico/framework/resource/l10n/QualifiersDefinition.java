@@ -1,7 +1,7 @@
-package colesico.framework.resource.localization;
+package colesico.framework.resource.l10n;
 
 import colesico.framework.resource.ResourceException;
-import colesico.framework.resource.internal.localization.QualifiersMatcher;
+import colesico.framework.resource.internal.l10n.QualifiersMatcher;
 
 import java.util.Arrays;
 import java.util.HashMap;

@@ -1,8 +1,8 @@
-package colesico.framework.resource.internal.localization;
+package colesico.framework.resource.internal.l10n;
 
 import colesico.framework.resource.ResourceException;
-import colesico.framework.resource.localization.ObjectiveQualifiers;
-import colesico.framework.resource.localization.SubjectQualifiers;
+import colesico.framework.resource.l10n.ObjectiveQualifiers;
+import colesico.framework.resource.l10n.SubjectQualifiers;
 
 import java.util.Deque;
 import java.util.HashMap;
