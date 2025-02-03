@@ -115,8 +115,12 @@ public class PebbleTemplateLoader implements Loader<String> {
 
     @Override
     public boolean resourceExists(String templateName) {
-        String resourcePath = getResourceName(templateName);
-        Enumeration<URL> resources = resourceKit.getResourceURLs(resourcePath);
-        return resources.hasMoreElements();
+        try {
+            String resourceName = getResourceName(templateName);
+            Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(resourceName);
+            return resources.hasMoreElements();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
