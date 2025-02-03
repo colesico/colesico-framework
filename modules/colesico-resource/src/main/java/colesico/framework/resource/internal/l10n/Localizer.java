@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Singleton
 public class Localizer {
@@ -102,8 +101,8 @@ public class Localizer {
 
     /**
      * Returns  localized resource names suitable for given base name.
-     * The first name corresponds to the result of the method {@link #localize(String)} - the most suitable localization
-     * The last one name - default localization  (less suitable)
+     * The first one name - default localization  (less suitable)
+     * The last one name corresponds to the result of the method {@link #localize(String)} - the most suitable localization
      *
      * @param baseName resource base name
      */
@@ -114,30 +113,36 @@ public class Localizer {
             return new String[]{baseName};
         }
 
-        Set<String> result = new LinkedHashSet<>();
+        LinkedHashSet<String> result = new LinkedHashSet<>();
         var profile = profileProv.get();
         ObjectiveQualifiers objectiveQualifiers = config.getObjectiveQualifiers(profile);
 
-        int n = objectiveQualifiers.size();
-        for (int i = 0; i < n; i++) {
+        int i = objectiveQualifiers.size();
+        do {
             var matchResult = rewriting.matcher().match(objectiveQualifiers);
-            if (matchResult == null) {
-                continue;
+            String rewroteName;
+            if (matchResult != null) {
+                rewroteName = rewriteByTags(baseName, matchResult);
+            } else {
+                rewroteName = baseName;
             }
-            String rewritedName = rewriteByTags(baseName, matchResult);
-            result.add(rewritedName);
+
+            result.add(rewroteName);
 
             // Reduce qualifiers significant capacity
-            String[] values = objectiveQualifiers.getValues();
-            values[n - i - 1] = null;
-            objectiveQualifiers = ObjectiveQualifiers.of(values);
-        }
+            i--;
+            if (i >= 0) {
+                String[] values = objectiveQualifiers.getValues();
+                values[i] = null;
+                objectiveQualifiers = ObjectiveQualifiers.of(values);
+            }
+        } while (i >= 0);
 
         if (result.isEmpty()) {
             return new String[]{baseName};
         }
 
-        return result.toArray(String[]::new);
+        return result.reversed().toArray(String[]::new);
     }
 
     public ObjectiveQualifiers getObjectiveQualifiers() {
@@ -153,7 +158,8 @@ public class Localizer {
             name = switch (tag) {
                 case QualifiersTag qpa -> rewriteByQualifiers(name, qpa, matchResult.subjectQualifiers());
                 case SubstituteTag sa -> rewriteBySubstitute(name, sa);
-                default -> throw new ResourceException("Unsupported template tag. Resource name template=" + name + "; Tag=" + tag);
+                default ->
+                        throw new ResourceException("Unsupported template tag. Resource name template=" + name + "; Tag=" + tag);
             };
         }
         return name;

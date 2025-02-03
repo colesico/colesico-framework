@@ -52,7 +52,7 @@ public class PropertyBundleFactory {
         String[] localizedNames = resourceKit.localizations(baseName);
 
         for (String localizedName : localizedNames) {
-            Properties properties = loadProperties(localizedName+".properties");
+            Properties properties = loadProperties(localizedName + ".properties");
             if (properties != null) {
                 bundle = new PropertyBundle(bundle, localizedName, properties);
             }

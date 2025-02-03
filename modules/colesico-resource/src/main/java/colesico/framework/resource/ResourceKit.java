@@ -36,8 +36,8 @@ public interface ResourceKit {
 
     /**
      * Returns localized resource names ordered  by degree of matching with {@link ObjectiveQualifiers}
-     * name[0] - best matching (same as {@link ResourceKit#localize(String)} )
-     * name[N] - worst matching  (default resource)
+     * name[N] - best matching (same as {@link ResourceKit#localize(String)} )
+     * name[0] - worst matching  (default resource)
      */
     String[] localizations(String baseName);
 

@@ -73,7 +73,7 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
     }
 
     public L10nOptionsGenerator baseName(String baseName) {
-        configureCodeBlockBuilder.add(".$N($S)\n", L10nOptionsPrototype.Options.BASE_NAME_METHOD, baseName);
+        configureCodeBlockBuilder.add(".$N($S)", L10nOptionsPrototype.Options.BASE_NAME_METHOD, baseName);
         return this;
     }
 
