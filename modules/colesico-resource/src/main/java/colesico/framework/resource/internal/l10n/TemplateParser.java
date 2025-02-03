@@ -20,13 +20,13 @@ public class TemplateParser {
 
     private final List<Tag> tags = new ArrayList<>();
 
-    public static TemplateParser parse(String template) {
-        return new TemplateParser(template).parseTemplate();
+    public static TemplateParser parse(String resourceNameTemplate) {
+        return new TemplateParser(resourceNameTemplate).parseTemplate();
     }
 
-    private TemplateParser(String template) {
-        this.template = template;
-        this.templateLength = template.length();
+    private TemplateParser(String resourceNameTemplate) {
+        this.template = resourceNameTemplate;
+        this.templateLength = resourceNameTemplate.length();
     }
 
     private boolean isNotEnd() {
