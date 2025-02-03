@@ -42,7 +42,7 @@ public interface ResourceKit {
     String[] localizations(String baseName);
 
     /**
-     *  Return current profile objective qualifiers
+     *  Return objective qualifiers for current profile
      */
     ObjectiveQualifiers getObjectiveQualifiers();
 

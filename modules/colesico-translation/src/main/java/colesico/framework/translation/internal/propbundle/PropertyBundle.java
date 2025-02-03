@@ -1,10 +1,11 @@
-package colesico.framework.translation.internal.propertybundle;
+package colesico.framework.translation.internal.propbundle;
 
 import java.util.*;
 
 public class PropertyBundle {
 
     private final PropertyBundle parent;
+    // resource name
     private final String name;
     private final Properties properties;
 

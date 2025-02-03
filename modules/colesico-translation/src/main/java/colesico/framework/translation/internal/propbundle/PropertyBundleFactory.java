@@ -1,4 +1,4 @@
-package colesico.framework.translation.internal.propertybundle;
+package colesico.framework.translation.internal.propbundle;
 
 import colesico.framework.resource.ResourceKit;
 import colesico.framework.resource.l10n.ObjectiveQualifiers;
@@ -70,10 +70,12 @@ public class PropertyBundleFactory {
 
         Properties prop = new Properties();
 
-        InputStream in = getClass().getClassLoader().getResourceAsStream(resourceName);
+        InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName);
+
         if (in == null) {
             return null;
         }
+
         try (InputStreamReader isr = new InputStreamReader(in, StandardCharsets.UTF_8);) {
             prop.load(isr);
             return prop;
