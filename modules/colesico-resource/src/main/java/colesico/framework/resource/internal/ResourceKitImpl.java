@@ -74,8 +74,8 @@ public class ResourceKitImpl implements ResourceKit {
     @Override
     public Enumeration<URL> getResourceURLs(String baseName) {
         try {
-            baseName = localize(baseName);
-            return getClassLoader().getResources(baseName);
+            String resourceName = localize(baseName);
+            return getClassLoader().getResources(resourceName);
         } catch (IOException e) {
             throw new ResourceException("Error reading resource URLs", e);
         }
@@ -83,10 +83,10 @@ public class ResourceKitImpl implements ResourceKit {
 
     @Override
     public InputStream getResourceStream(String baseName) {
-        baseName = localize(baseName);
-        InputStream in = getClassLoader().getResourceAsStream(baseName);
+        String resourceName = localize(baseName);
+        InputStream in = getClassLoader().getResourceAsStream(resourceName);
         if (in == null) {
-            throw new ResourceNotFoundException(baseName);
+            throw new ResourceNotFoundException(resourceName);
         }
         return in;
     }

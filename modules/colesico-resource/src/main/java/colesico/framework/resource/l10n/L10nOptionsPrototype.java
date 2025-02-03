@@ -50,9 +50,9 @@ abstract public class L10nOptionsPrototype {
         /**
          * Set current configuration resource name via class
          */
-        public Options baseClass(Class baseClass, String searchString, String replacement) {
+        public Options baseClass(Class baseClass, String searchString, String substitution) {
             String baseName = baseClass.getCanonicalName();
-            baseName = StringUtils.replace(baseName, searchString, "{{" + searchString + "=" + replacement + "}}");
+            baseName = StringUtils.replace(baseName, searchString, "{{" + searchString + "=" + substitution + "}}");
             return baseName(baseName.replace('.', '/') + "{Q}");
         }
 

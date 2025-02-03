@@ -20,12 +20,12 @@ import colesico.framework.resource.ResourceKit;
 import io.pebbletemplates.pebble.error.LoaderException;
 import io.pebbletemplates.pebble.loader.Loader;
 import io.pebbletemplates.pebble.utils.PathUtils;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -51,41 +51,40 @@ public class PebbleTemplateLoader implements Loader<String> {
     }
 
     @Override
-    public Reader getReader(String templatePath) throws LoaderException {
-        String resourcePath = getResourcePath(templatePath);
+    public Reader getReader(String templateName) throws LoaderException {
+        String resourceName = getResourceName(templateName);
         Reader reader = null;
         try {
-            Enumeration<URL> resources = resourceKit.getResourceURLs(resourcePath);
+            Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(resourceName);
             while (resources.hasMoreElements()) {
-                URL resource = resources.nextElement();
+                URL resourceUrl = resources.nextElement();
                 if (reader != null) {
-                    logger.warn("Duplicate template for " + resourcePath + " ignored: " + resource);
+                    logger.warn("Duplicate template for " + resourceName + " ignored: " + resourceUrl);
                 } else {
-                    InputStreamReader isr = new InputStreamReader(resource.openStream(), charset);
+                    InputStreamReader isr = new InputStreamReader(resourceUrl.openStream(), charset);
                     reader = new BufferedReader(isr);
-                    logger.debug("Template " + resourcePath + " located: " + resource);
+                    logger.debug("Template " + resourceName + " located: " + resourceUrl);
                 }
             }
             if (reader == null) {
-                throw new RuntimeException("Template not found: " + resourcePath);
+                throw new RuntimeException("Template not found: " + resourceName);
             }
         } catch (Exception e) {
-            throw new LoaderException(e, "Error loading template: " + templatePath);
+            throw new LoaderException(e, "Error loading template: " + templateName);
         }
 
 
         return reader;
     }
 
-    protected String getResourcePath(String templatePath) {
-        String resourcePath = resourceKit.localize(templatePath);
+    protected String getResourceName(String templateName) {
+        String resourceName = resourceKit.localize(templateName);
 
-        if (!StringUtils.endsWith(resourcePath, suffix)) {
-            resourcePath = resourcePath + suffix;
+        if (!StringUtils.endsWith(resourceName, suffix)) {
+            resourceName = resourceName + suffix;
         }
 
-        resourcePath = resourceKit.localize(resourcePath);
-        return resourcePath;
+        return resourceName;
     }
 
 
@@ -116,7 +115,7 @@ public class PebbleTemplateLoader implements Loader<String> {
 
     @Override
     public boolean resourceExists(String templateName) {
-        String resourcePath = getResourcePath(templateName);
+        String resourcePath = getResourceName(templateName);
         Enumeration<URL> resources = resourceKit.getResourceURLs(resourcePath);
         return resources.hasMoreElements();
     }
