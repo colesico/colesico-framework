@@ -4,10 +4,7 @@ import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.config.Config;
 import colesico.framework.resource.l10n.L10nOptionsPrototype;
-import com.palantir.javapoet.CodeBlock;
-import com.palantir.javapoet.MethodSpec;
-import com.palantir.javapoet.TypeName;
-import com.palantir.javapoet.TypeSpec;
+import com.palantir.javapoet.*;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -74,6 +71,12 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
 
     public L10nOptionsGenerator baseName(String baseName) {
         configureCodeBlockBuilder.add(".$N($S)", L10nOptionsPrototype.Options.BASE_NAME_METHOD, baseName);
+        return this;
+    }
+
+    public L10nOptionsGenerator baseClass(Class baseClass) {
+        configureCodeBlockBuilder.add(".$N($T.class)", L10nOptionsPrototype.Options.BASE_CLASS_METHOD,
+                ClassName.get(baseClass));
         return this;
     }
 

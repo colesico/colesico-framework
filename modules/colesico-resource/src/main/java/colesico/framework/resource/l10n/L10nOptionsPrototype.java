@@ -20,6 +20,7 @@ abstract public class L10nOptionsPrototype {
     public static final class Options {
 
         public static final String BASE_NAME_METHOD = "baseName";
+        public static final String BASE_CLASS_METHOD = "baseClass";
         public static final String QUALIFIERS_METHOD = "qualifiers";
         public static final String QUALIFIER_METHOD = "qualifier";
         public static final String LANGUAGE_METHOD = "language";
@@ -51,9 +52,12 @@ abstract public class L10nOptionsPrototype {
          */
         public Options baseClass(Class baseClass, String searchString, String replacement) {
             String baseName = baseClass.getCanonicalName();
-            if (searchString != null) {
-                baseName = StringUtils.replace(baseName, searchString, "{{" + searchString + "=" + replacement + "}}");
-            }
+            baseName = StringUtils.replace(baseName, searchString, "{{" + searchString + "=" + replacement + "}}");
+            return baseName(baseName.replace('.', '/') + "{Q}");
+        }
+
+        public Options baseClass(Class baseClass) {
+            String baseName = baseClass.getCanonicalName();
             return baseName(baseName.replace('.', '/') + "{Q}");
         }
 
