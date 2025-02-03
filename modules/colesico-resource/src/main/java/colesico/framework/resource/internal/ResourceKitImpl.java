@@ -15,12 +15,10 @@
  */
 package colesico.framework.resource.internal;
 
-import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.ResourceKit;
 import colesico.framework.resource.ResourceNotFoundException;
-import colesico.framework.resource.PathRewriter;
-import colesico.framework.resource.RewritingPhase;
+import colesico.framework.resource.ResourcePrefixOptionsPrototype;
 import colesico.framework.resource.internal.l10n.PathLocalizer;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -30,9 +28,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.List;
 
 /**
  * @author Vladlen Larionov
@@ -43,9 +39,12 @@ public class ResourceKitImpl implements ResourceKit {
     protected final Logger log = LoggerFactory.getLogger(ResourceKit.class);
 
     private final PathLocalizer pathLocalizer;
+    private final PrefixSubstitutor prefixSubstitutor;
 
-    public ResourceKitImpl(PathLocalizer pathLocalizer) {
+
+    public ResourceKitImpl(PathLocalizer pathLocalizer, PrefixSubstitutor prefixSubstitutor) {
         this.pathLocalizer = pathLocalizer;
+        this.prefixSubstitutor = prefixSubstitutor;
     }
 
     @Inject
@@ -53,13 +52,20 @@ public class ResourceKitImpl implements ResourceKit {
 
     @Override
     public String rewrite(String path) {
-        path = pathLocalizer.localization(path);
+        path = prefixSubstitutor.substitutePrefix(path, ResourcePrefixOptionsPrototype.Phase.BEFORE_LOCALIZE);
+        path = pathLocalizer.localizePath(path);
+        path = prefixSubstitutor.substitutePrefix(path, ResourcePrefixOptionsPrototype.Phase.AFTER_LOCALIZE);
         return path;
     }
 
     @Override
     public String[] localize(String path) {
-        
+        path = prefixSubstitutor.substitutePrefix(path, ResourcePrefixOptionsPrototype.Phase.BEFORE_LOCALIZE);
+        String[] localizedPaths = pathLocalizer.localizedPaths(path);
+        for (int i = 0; i < localizedPaths.length; i++) {
+            localizedPaths[i] = prefixSubstitutor.substitutePrefix(localizedPaths[i], ResourcePrefixOptionsPrototype.Phase.AFTER_LOCALIZE);
+        }
+        return localizedPaths;
     }
 
     @Override

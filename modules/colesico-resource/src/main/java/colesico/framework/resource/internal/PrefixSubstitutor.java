@@ -28,12 +28,12 @@ import org.apache.commons.lang3.StringUtils;
  * E.g for the rewriting  '/etc/srv'->'/foo'   path '/etc/srv/generator/x' will be rewritten to  '/foo/generator/x'
  */
 @Singleton
-public class PrefixRewriter implements ResourcePrefixOptionsPrototype.Options {
+public class PrefixSubstitutor implements ResourcePrefixOptionsPrototype.Options {
 
     private final PathTrie<Rewriting> pathTrieEvaluate = PathTrie.of();
     private final PathTrie<Rewriting> pathTrieSubstitute = PathTrie.of();
 
-    public PrefixRewriter(Polysupplier<ResourcePrefixOptionsPrototype> configSup) {
+    public PrefixSubstitutor(Polysupplier<ResourcePrefixOptionsPrototype> configSup) {
         configSup.forEach(conf -> conf.configure(this));
     }
 
@@ -44,7 +44,7 @@ public class PrefixRewriter implements ResourcePrefixOptionsPrototype.Options {
         };
     }
 
-    public final String rewrite(String path, ResourcePrefixOptionsPrototype.Phase phase) {
+    public final String substitutePrefix(String path, ResourcePrefixOptionsPrototype.Phase phase) {
         Rewriting rewriting = pathTrie(phase).find(path);
         if (rewriting == null) {
             return path;
@@ -59,8 +59,8 @@ public class PrefixRewriter implements ResourcePrefixOptionsPrototype.Options {
      * Adds rewriting rule
      */
     @Override
-    public ResourcePrefixOptionsPrototype.Options addRewriting(String originPathPrefix, String targetPathPrefix,
-                                                               ResourcePrefixOptionsPrototype.Phase phase) {
+    public ResourcePrefixOptionsPrototype.Options addPrefixSubstitution(String originPathPrefix, String targetPathPrefix,
+                                                                        ResourcePrefixOptionsPrototype.Phase phase) {
         PathTrie.Node<Rewriting> node = pathTrie(phase).add(originPathPrefix);
         if (node.getValue() != null) {
             throw new ResourceException("Duplicate path rewriting: " + originPathPrefix);

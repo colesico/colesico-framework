@@ -2,7 +2,7 @@ package colesico.framework.resource;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
-import colesico.framework.resource.internal.PrefixRewriter;
+import colesico.framework.resource.internal.PrefixSubstitutor;
 
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
 abstract public class ResourcePrefixOptionsPrototype {
@@ -15,7 +15,7 @@ abstract public class ResourcePrefixOptionsPrototype {
     abstract public void configure(Options options);
 
     /**
-     * Settings for {@link PrefixRewriter}.
+     * Settings for {@link PrefixSubstitutor}.
      * It rewrites the path by a partial prefix match.
      * E.g for the rewriting  '/etc/srv'->'/foo'   path '/etc/srv/generator/x' will be rewritten to  '/foo/generator/x'
      */
@@ -28,10 +28,10 @@ abstract public class ResourcePrefixOptionsPrototype {
          * @param originPathPrefix example:  "bar", "foo/dummy", "root/dir/subdir"
          * @param targetPathPrefix example:  "module", "module/dir"
          */
-        Options addRewriting(String originPathPrefix, String targetPathPrefix, Phase phase);
+        Options addPrefixSubstitution(String originPathPrefix, String targetPathPrefix, Phase phase);
 
-        default Options addRewriting(String originPathPrefix, String targetPathPrefix) {
-            return addRewriting(originPathPrefix, targetPathPrefix, Phase.BEFORE_LOCALIZE);
+        default Options addPrefixSubstitution(String originPathPrefix, String targetPathPrefix) {
+            return addPrefixSubstitution(originPathPrefix, targetPathPrefix, Phase.BEFORE_LOCALIZE);
         }
     }
 

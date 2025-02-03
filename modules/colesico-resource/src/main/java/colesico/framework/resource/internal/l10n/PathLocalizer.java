@@ -78,11 +78,11 @@ public class PathLocalizer {
     }
 
     /**
-     * Returns best suitable for current profile localized resource path
+     * Returns best suitable to current profile localized resource path
      *
      * @param path resource base path
      */
-    public String localization(String path) {
+    public String localizePath(String path) {
 
         PathConfig rewriting = pathTrie.find(path);
 
@@ -101,13 +101,13 @@ public class PathLocalizer {
     }
 
     /**
-     * Returns suitable localizations for path.
-     * The first path corresponds to the result of the method {@link #localization(String)} - the most suitable localization
+     * Returns  localized paths suitable for given base path.
+     * The first path corresponds to the result of the method {@link #localizePath(String)} - the most suitable localization
      * The last one path - default localization  (less suitable)
      *
      * @param path resource base path
      */
-    public String[] suitableLocalizations(String path) {
+    public String[] localizedPaths(String path) {
         PathConfig rewriting = pathTrie.find(path);
 
         if (rewriting == null) {
