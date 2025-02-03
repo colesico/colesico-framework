@@ -17,14 +17,13 @@ package colesico.framework.resource.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.resource.PathRewriter;
 import colesico.framework.resource.ResourceKit;
 import colesico.framework.resource.internal.l10n.PathLocalizer;
 
 
 @Producer
-@Produce(value = PrefixSubstitutor.class, keyType = PathRewriter.class, polyproduce = true)
 @Produce(value = PathLocalizer.class)
+@Produce(value = PrefixSubstitutor.class)
 
 @Produce(value = ResourceKitImpl.class, keyType = ResourceKit.class)
 public class ResourceProducer {

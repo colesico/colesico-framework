@@ -14,7 +14,6 @@ module colesico.framework.resource {
     // Exports
     exports colesico.framework.resource;
     exports colesico.framework.resource.assist;
-    exports colesico.framework.resource.assist.codegen;
     exports colesico.framework.resource.l10n;
     exports colesico.framework.resource.internal to colesico.framework.ioc;
     exports colesico.framework.resource.internal.l10n to colesico.framework.ioc;
