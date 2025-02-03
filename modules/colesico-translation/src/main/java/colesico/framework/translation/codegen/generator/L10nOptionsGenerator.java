@@ -33,7 +33,7 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
 
         CodeBlock.Builder cb = optionsGenerator.configureMethod();
 
-        String resourceNameTemplate = dictionaryElement.getBaseName() + "{Q}" + ".properties";
+        String resourceNameTemplate = dictionaryElement.getBaseName() + "{Q}";
 
         optionsGenerator.options().baseName(resourceNameTemplate);
         cb.indent();

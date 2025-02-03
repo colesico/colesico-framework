@@ -78,7 +78,7 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
     }
 
     public L10nOptionsGenerator qualifiers() {
-        configureCodeBlockBuilder.add(".$N()", L10nOptionsPrototype.Options.QUALIFIERS_METHOD);
+        configureCodeBlockBuilder.add("\n.$N()", L10nOptionsPrototype.Options.QUALIFIERS_METHOD);
         return this;
     }
 
