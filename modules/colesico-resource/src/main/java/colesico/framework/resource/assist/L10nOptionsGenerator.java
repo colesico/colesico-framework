@@ -65,7 +65,7 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
     }
 
     public L10nOptionsGenerator options() {
-        configureMethodBuilder.addCode("$N()", L10nOptionsPrototype.OPTIONS_PARAM);
+        configureMethodBuilder.addCode("$N", L10nOptionsPrototype.OPTIONS_PARAM);
         return this;
     }
 

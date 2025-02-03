@@ -34,7 +34,7 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
         MethodSpec.Builder mb = optionsGenerator.configureMethod();
 
         // TODO: test
-        String pathTemplate = dictionaryElement.getBasePath() + "{Q}" + ".properties";
+        String pathTemplate = "!!!"+ dictionaryElement.getBasePath() + "{Q}" + ".properties";
 
         optionsGenerator.options().path(pathTemplate);
 
@@ -47,7 +47,7 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
             if (StringUtils.isEmpty(languageTag)) {
                 continue;
             }
-            optionsGenerator.options();
+            optionsGenerator.qualifiers();
             Locale locale = Locale.forLanguageTag(languageTag);
             boolean emptyQualifiers = true;
             if (StringUtils.isNotEmpty(locale.getLanguage())) {
