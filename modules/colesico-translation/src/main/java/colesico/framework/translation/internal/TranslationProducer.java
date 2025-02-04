@@ -21,9 +21,9 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.translation.TextFormatter;
 import colesico.framework.translation.TranslationKit;
-import colesico.framework.translation.internal.propbundle.PropertyBundleCache;
-import colesico.framework.translation.internal.propbundle.PropertyBundleCacheSoft;
-import colesico.framework.translation.internal.propbundle.PropertyBundleFactory;
+import colesico.framework.translation.assist.propbundle.PropertyBundleCache;
+import colesico.framework.translation.assist.propbundle.PropertyBundleCacheSoft;
+import colesico.framework.translation.assist.propbundle.PropertyBundleFactory;
 import jakarta.inject.Singleton;
 
 

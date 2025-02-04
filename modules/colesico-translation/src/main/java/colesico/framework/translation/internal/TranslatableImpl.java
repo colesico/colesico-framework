@@ -19,7 +19,7 @@ package colesico.framework.translation.internal;
 import colesico.framework.translation.Translatable;
 import colesico.framework.translation.TranslationKit;
 
-public class TranslatableImpl implements Translatable {
+public final class TranslatableImpl implements Translatable {
 
     private final TranslationKit translationKit;
     private final String baseName;

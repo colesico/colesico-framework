@@ -28,10 +28,10 @@ abstract public class ResourcePrefixOptionsPrototype {
          * @param originPrefix example:  "bar", "foo/dummy", "root/dir/subdir"
          * @param targetPrefix example:  "module", "module/dir"
          */
-        Options addPrefixSubstitution(String originPrefix, String targetPrefix, Phase phase);
+        Options substitution(String originPrefix, String targetPrefix, Phase phase);
 
-        default Options addPrefixSubstitution(String originPrefix, String targetPrefix) {
-            return addPrefixSubstitution(originPrefix, targetPrefix, Phase.BEFORE_LOCALIZE);
+        default Options substitution(String originPrefix, String targetPrefix) {
+            return substitution(originPrefix, targetPrefix, Phase.BEFORE_LOCALIZE);
         }
     }
 

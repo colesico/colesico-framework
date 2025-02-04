@@ -1,4 +1,4 @@
-package colesico.framework.translation.internal.propbundle;
+package colesico.framework.translation.assist.propbundle;
 
 import colesico.framework.resource.l10n.ObjectiveQualifiers;
 

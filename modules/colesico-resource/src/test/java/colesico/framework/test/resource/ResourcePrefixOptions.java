@@ -8,7 +8,7 @@ public class ResourcePrefixOptions extends ResourcePrefixOptionsPrototype {
     @Override
     public void configure(Options options) {
         options
-                .addPrefixSubstitution("alias", "foo/dummy")
-                .addPrefixSubstitution("alias/ok","bar/bazz");
+                .substitution("alias", "foo/dummy")
+                .substitution("alias/ok","bar/bazz");
     }
 }

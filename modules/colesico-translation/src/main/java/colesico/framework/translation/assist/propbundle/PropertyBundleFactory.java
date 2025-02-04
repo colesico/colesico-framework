@@ -1,4 +1,4 @@
-package colesico.framework.translation.internal.propbundle;
+package colesico.framework.translation.assist.propbundle;
 
 import colesico.framework.resource.ResourceKit;
 import colesico.framework.resource.l10n.ObjectiveQualifiers;
@@ -18,10 +18,11 @@ import java.util.Properties;
 @Singleton
 public class PropertyBundleFactory {
 
-    private static final Logger log = LoggerFactory.getLogger(PropertyBundleFactory.class);
+    protected static final Logger log = LoggerFactory.getLogger(PropertyBundleFactory.class);
 
-    private final PropertyBundleCache cache;
-    private final ResourceKit resourceKit;
+    protected final PropertyBundleCache cache;
+
+    protected final ResourceKit resourceKit;
 
     public PropertyBundleFactory(PropertyBundleCache cache, ResourceKit resourceKit) {
         this.cache = cache;
@@ -29,7 +30,6 @@ public class PropertyBundleFactory {
     }
 
     @Inject
-
     public PropertyBundle getBundle(String baseName) {
         if (StringUtils.isEmpty(baseName)) {
             throw new IllegalArgumentException("Base name is empty");

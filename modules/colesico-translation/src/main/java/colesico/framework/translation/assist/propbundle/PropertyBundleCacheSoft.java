@@ -1,4 +1,4 @@
-package colesico.framework.translation.internal.propbundle;
+package colesico.framework.translation.assist.propbundle;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentMap;
 public final class PropertyBundleCacheSoft implements PropertyBundleCache {
 
     private final ConcurrentMap<Key, BundleReference> bundleMap = new ConcurrentHashMap<>();
-    private final ReferenceQueue referenceQueue = new ReferenceQueue<>();
+    private final ReferenceQueue<? super PropertyBundle> referenceQueue = new ReferenceQueue<>();
     private final double cleanUpFrequency;
 
     public PropertyBundleCacheSoft(double cleanUpFrequency) {

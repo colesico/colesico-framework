@@ -18,7 +18,7 @@ package colesico.framework.translation.internal;
 
 import colesico.framework.translation.TextFormatter;
 import colesico.framework.translation.TranslationBundle;
-import colesico.framework.translation.internal.propbundle.PropertyBundle;
+import colesico.framework.translation.assist.propbundle.PropertyBundle;
 
 import java.util.ResourceBundle;
 

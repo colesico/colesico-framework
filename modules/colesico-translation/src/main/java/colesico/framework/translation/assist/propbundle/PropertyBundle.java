@@ -1,12 +1,19 @@
-package colesico.framework.translation.internal.propbundle;
+package colesico.framework.translation.assist.propbundle;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Properties;
 
 public class PropertyBundle {
 
+    // Parent bundle
     private final PropertyBundle parent;
-    // resource name
+
+    // Resource name
     private final String name;
+
+    // Bundle properties
     private final Properties properties;
 
     public PropertyBundle(PropertyBundle parent, String name, Properties properties) {
@@ -35,7 +42,7 @@ public class PropertyBundle {
 
     public Collection<String> getKeys() {
         Collection<String> result = new ArrayList<>();
-        Enumeration e = properties.keys();
+        var e = properties.keys();
         while (e.hasMoreElements()) {
             result.add(e.nextElement().toString());
         }
