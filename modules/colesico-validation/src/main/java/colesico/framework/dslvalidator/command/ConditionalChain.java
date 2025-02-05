@@ -1,5 +1,6 @@
-package colesico.framework.dslvalidator.commands;
+package colesico.framework.dslvalidator.command;
 
+import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 
 import java.util.function.Predicate;
@@ -14,6 +15,11 @@ public class ConditionalChain<V> extends AbstractSequence<V, V> {
     private final Predicate<ValidationContext> condition;
 
     public ConditionalChain(Predicate<ValidationContext> condition) {
+        this.condition = condition;
+    }
+
+    public ConditionalChain(Predicate<ValidationContext> condition, Command<V>[] commands) {
+        super(commands);
         this.condition = condition;
     }
 

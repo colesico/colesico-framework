@@ -1,5 +1,6 @@
-package colesico.framework.dslvalidator.commands;
+package colesico.framework.dslvalidator.command;
 
+import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 
@@ -13,6 +14,11 @@ public class MandatoryChain<V> extends AbstractSequence<V, V> {
     private final ValidatorMessages msg;
 
     public MandatoryChain(ValidatorMessages msg) {
+        this.msg = msg;
+    }
+
+    public MandatoryChain(ValidatorMessages msg, Command<V>[] commands) {
+        super(commands);
         this.msg = msg;
     }
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.dslvalidator.commands;
+package colesico.framework.dslvalidator.command;
 
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;

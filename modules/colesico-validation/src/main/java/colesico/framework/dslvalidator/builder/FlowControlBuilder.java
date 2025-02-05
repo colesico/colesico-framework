@@ -18,9 +18,8 @@ package colesico.framework.dslvalidator.builder;
 
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.DSLValidator;
-import colesico.framework.dslvalidator.Sequence;
 import colesico.framework.dslvalidator.ValidationContext;
-import colesico.framework.dslvalidator.commands.*;
+import colesico.framework.dslvalidator.command.*;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 import colesico.framework.translation.Translatable;
 
@@ -42,34 +41,28 @@ abstract public class FlowControlBuilder {
         this.vrMessages = vrMessages;
     }
 
-    protected final <V> DSLValidator<V> validator(Sequence<V, V> commands) {
-        return new DSLValidator<>(commands, null);
-    }
-
     /**
-     * Defines validation algorithm based on {@link GroupSequence }
+     * Basic validator instance
      */
-    protected final <V> DSLValidator<V> validator(final Command<V>... commands) {
-        MandatoryGroup<V> sequence = new MandatoryGroup<>(vrMessages);
-        for (Command<V> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return new DSLValidator<>(sequence, null);
+    protected final <V> DSLValidator<V> basicValidator(final String subject, Command<V> program) {
+        return new DSLValidator<>(subject, program);
     }
 
-    protected final <V> DSLValidator<V> validator(final String subject, Sequence<V, V> commands) {
-        return new DSLValidator<>(commands, subject);
+    protected final <V> DSLValidator<V> basicValidator(Command<V> program) {
+        return new DSLValidator<>(program);
     }
 
     /**
-     * Defines validation algorithm based on {@link ChainSequence }
+     * Validator instance with program based on {@link MandatoryGroup }
      */
     protected final <V> DSLValidator<V> validator(final String subject, final Command<V>... commands) {
-        MandatoryChain<V> sequence = new MandatoryChain<>(vrMessages);
-        for (Command<V> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return new DSLValidator<>(sequence, subject);
+        var sequence = new MandatoryGroup<>(vrMessages, commands);
+        return new DSLValidator<>(subject, sequence);
+    }
+
+    protected final <V> DSLValidator<V> validator(final Command<V>... commands) {
+        var sequence = new MandatoryGroup<>(vrMessages, commands);
+        return new DSLValidator<>(sequence);
     }
 
     /**
@@ -80,11 +73,7 @@ abstract public class FlowControlBuilder {
      * @see GroupSequence
      */
     protected final <V> Command<V> group(final Command<V>... commands) {
-        GroupSequence<V> sequence = new GroupSequence<>();
-        for (Command<V> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
+        return new GroupSequence<>(commands);
     }
 
     /**
@@ -92,73 +81,49 @@ abstract public class FlowControlBuilder {
      * In case of local validation errors occur, command execution is NOT interrupted.
      */
     protected final <V> Command<V> optionalGroup(final Command<V>... commands) {
-        ConditionalGroup<V> sequence = new ConditionalGroup<>(c -> c.getValue() != null);
-        for (Command<V> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
+        return new ConditionalGroup<>(c -> c.getValue() != null, commands);
     }
 
+    /**
+     * @see ConditionalGroup
+     */
     protected final <V> Command<V> conditionalGroup(Predicate<ValidationContext> condition, final Command<V>... commands) {
-        ConditionalGroup<V> sequence = new ConditionalGroup<>(condition);
-        for (Command<V> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
+        return new ConditionalGroup<>(condition, commands);
     }
 
+    /**
+     * @see MandatoryGroup
+     */
     protected final <V> Command<V> mandatoryGroup(final Command<V>... commands) {
-        MandatoryGroup<V> sequence = new MandatoryGroup<>(vrMessages);
-        for (Command<V> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
+        return new MandatoryGroup<>(vrMessages, commands);
     }
 
     /**
      * Executes commands within the local context.
      * In case of local validation errors occur, command execution is interrupted.
      *
-     * @param commands
-     * @return
+     * @see ChainSequence
      */
     protected final <V> Command<V> chain(final Command<V>... commands) {
-        ChainSequence<V> sequence = new ChainSequence<>();
-        for (Command<V> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
+        return new ChainSequence<>(commands);
     }
 
     /**
      * @see ConditionalChain
      */
     protected final <V> Command<V> optionalChain(final Command<V>... commands) {
-        ConditionalChain<V> sequence = new ConditionalChain<>(c -> c.getValue() != null);
-        for (Command<V> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
+        return new ConditionalChain<>(c -> c.getValue() != null, commands);
     }
 
     protected final <V> Command<V> conditionalChain(Predicate<ValidationContext> condition, final Command<V>... commands) {
-        ConditionalChain<V> sequence = new ConditionalChain<>(condition);
-        for (Command<V> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
+        return new ConditionalChain<>(condition, commands);
     }
-
 
     /**
      * @see MandatoryChain
      */
     protected final <V> Command<V> mandatoryChain(final Command<V>... commands) {
-        MandatoryChain<V> sequence = new MandatoryChain<>(vrMessages);
-        for (Command<V> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
+        return new MandatoryChain<>(vrMessages, commands);
     }
 
     /**
@@ -168,11 +133,7 @@ abstract public class FlowControlBuilder {
      * @see SubjectChain
      */
     protected final <V> Command<V> subject(final String subject, final Command<V>... commands) {
-        SubjectChain<V> sequence = new SubjectChain<>(subject);
-        for (Command<V> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
+        return new SubjectChain<>(subject, commands);
     }
 
     /**
@@ -183,48 +144,36 @@ abstract public class FlowControlBuilder {
      * @see FieldChain
      */
     protected final <V, N> Command<V> field(final String subject, final Function<V, N> extractor, final Command<N>... commands) {
-        FieldChain<V, N> sequence = new FieldChain<>(subject, extractor);
-        for (Command<N> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
+        return new FieldChain<>(subject, extractor, commands);
+    }
+
+    protected final <V, N> Command<V> field(final FieldReference<V, N> filedRef, final Command<N>... commands) {
+        return new FieldChain<>(filedRef.subject(), filedRef.extractor(), commands);
     }
 
     /**
-     * Nested Chain
-     *
      * @see NestedChain
      */
     protected final <V, N> Command<V> nested(final String subject, final Function<Optional<V>, Optional<N>> extractor, final Command<N>... commands) {
-        NestedChain<V, N> sequence = new NestedChain<>(subject, extractor);
-        for (Command<N> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
+        return new NestedChain<>(subject, extractor, commands);
     }
 
     /**
-     * In case of local  validation errors occur, command execution is interrupted.
+     * Array/List item
      *
-     * @return
+     * @see ItemChain
      */
     protected final <V extends List<E>, E> Command<V> item(final String subject, final int index, final Command<E>... commands) {
-        ItemChain<V, E> sequence = new ItemChain<>(subject, index);
-        for (Command<E> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
+        return new ItemChain<>(subject, index, commands);
     }
 
     /**
-     * Map emtry
+     * Map entry
+     *
+     * @see EntryChain
      */
     protected final <V extends Map<K, E>, K, E> Command<V> entry(final String subject, final K key, final Command<E>... commands) {
-        EntryChain<V, K, E> sequence = new EntryChain<>(subject, key);
-        for (Command<E> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
+        return new EntryChain<>(subject, key, commands);
     }
 
     /**
@@ -234,19 +183,14 @@ abstract public class FlowControlBuilder {
      * @see IterableChain
      */
     protected final <V extends Iterable<I>, I> Command<V> forEach(final Command<I>... commands) {
-        IterableChain<V, I> sequence = new IterableChain<>();
-        for (Command<I> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
+        return new IterableChain<>(commands);
     }
 
+    /**
+     * @see HookErrorChain
+     */
     protected final <V> Command<V> hookError(String errorCode, Translatable errorMsg, final Command<V>... commands) {
-        HookErrorChain<V> sequence = new HookErrorChain<>(errorCode, errorMsg);
-        for (Command<V> cmd : commands) {
-            sequence.addCommand(cmd);
-        }
-        return sequence;
+        return new HookErrorChain<>(errorCode, errorMsg, commands);
     }
 
     /**

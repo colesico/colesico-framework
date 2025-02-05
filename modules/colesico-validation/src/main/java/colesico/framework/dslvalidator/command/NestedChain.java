@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package colesico.framework.dslvalidator.commands;
+package colesico.framework.dslvalidator.command;
 
+import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
- * Extract field value from current context value with extractor function
- * and applies commands to  that nested value within new nested context.
- * <p>
- * If current context value is null provides null value to  subcontext without without involving an extractor
+ * Analogue of {@link FieldChain} except current value is passing to extractor as {@link Optional}
+ * This allows null safe access to nested fields : o->o.map(t->t.getA()).map(a->a.getB()).map(b->b.getC())...
  *
  * @author Vladlen Larionov
  */
-public final class FieldChain<V, N> extends AbstractSequence<V, N> {
+public final class NestedChain<V, N> extends AbstractSequence<V, N> {
 
     /**
      * Nested context subject
@@ -38,23 +38,25 @@ public final class FieldChain<V, N> extends AbstractSequence<V, N> {
     /**
      * Extracts nested value from value
      */
-    private final Function<V, N> extractor;
+    private final Function<Optional<V>, Optional<N>> extractor;
 
-    public FieldChain(String subject, Function<V, N> extractor) {
+    public NestedChain(String subject, Function<Optional<V>, Optional<N>> extractor) {
+        this.subject = subject;
+        this.extractor = extractor;
+    }
+
+    public NestedChain(String subject, Function<Optional<V>, Optional<N>> extractor, Command<N>[] commands) {
+        super(commands);
         this.subject = subject;
         this.extractor = extractor;
     }
 
     @Override
     public void execute(ValidationContext<V> context) {
-        V currentValue = context.getValue();
-        N nestedValue;
-        if (currentValue != null) {
-            nestedValue = extractor.apply(currentValue);
-        } else {
-            nestedValue = null;
-        }
-        ValidationContext<N> nestedContext = ValidationContext.ofNested(context, subject, nestedValue);
+        Optional<V> value = Optional.ofNullable(context.getValue());
+        Optional<N> nestedValue = extractor.apply(value);
+        ValidationContext<N> nestedContext = ValidationContext.ofNested(context, subject, nestedValue.orElse(null));
         executeChain(nestedContext);
     }
 }
+

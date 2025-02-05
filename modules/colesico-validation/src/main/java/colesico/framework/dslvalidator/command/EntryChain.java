@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package colesico.framework.dslvalidator.commands;
+package colesico.framework.dslvalidator.command;
 
+import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 
 import java.util.Map;
@@ -39,6 +40,12 @@ public final class EntryChain<V extends Map<K, E>, K, E> extends AbstractSequenc
     private final K key;
 
     public EntryChain(String subject, K key) {
+        this.subject = subject;
+        this.key = key;
+    }
+
+    public EntryChain(String subject, K key, Command<E>[] commands) {
+        super(commands);
         this.subject = subject;
         this.key = key;
     }

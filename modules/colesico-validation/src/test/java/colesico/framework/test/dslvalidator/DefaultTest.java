@@ -29,24 +29,24 @@ import jakarta.inject.Provider;
 public class DefaultTest {
 
     private Ioc ioc;
-    private MyDataBean dataBean;
+    private DataBean dataBean;
 
     @BeforeClass
     public void init() {
         TestCondition.enable();
         ioc = IocBuilder.create().build();
-        dataBean = new MyDataBean(10L,"AName","AValue");
+        dataBean = new DataBean(10L,"AName","AValue");
     }
 
     @Test
     public void test1() {
-        Provider<MyValidatorBuilder> vbProv = ioc.provider(MyValidatorBuilder.class);
+        Provider<TestValidatorBuilder> vbProv = ioc.provider(TestValidatorBuilder.class);
         Validator validatorGroup = vbProv.get().buildGroup();
         ValidationIssue vi = validatorGroup.validate(dataBean);
         //System.out.println("Group");
         //System.out.println(vi);
 
-        Validator validatorSubj = vbProv.get().buildSubject();
+        Validator validatorSubj = vbProv.get().buildChain();
         ValidationIssue vi2 = validatorSubj.validate(dataBean);
         //System.out.println("Subj");
         //System.out.println(vi2);

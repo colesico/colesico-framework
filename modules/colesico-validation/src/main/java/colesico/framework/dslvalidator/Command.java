@@ -19,6 +19,7 @@ package colesico.framework.dslvalidator;
 /**
  * Basic validation command
  *
+ * @param <V> type of value to which the command applies
  * @author Vladlen Larionov
  */
 @FunctionalInterface

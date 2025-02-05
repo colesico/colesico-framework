@@ -31,11 +31,20 @@ public final class DSLValidator<V> implements Validator<V> {
      * Root context subject
      */
     private final String subject;
+
+    /**
+     * Validation program
+     */
     private final Command<V> program;
 
-    public DSLValidator(Command<V> program, String subject) {
+    public DSLValidator(String subject, Command<V> program) {
         this.subject = subject;
         this.program = program;
+    }
+
+    public DSLValidator(Command<V> program) {
+        this.program = program;
+        this.subject = null;
     }
 
     /**

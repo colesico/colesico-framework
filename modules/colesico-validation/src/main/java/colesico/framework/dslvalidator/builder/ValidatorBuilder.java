@@ -18,9 +18,8 @@ package colesico.framework.dslvalidator.builder;
 
 
 import colesico.framework.dslvalidator.Command;
-import colesico.framework.dslvalidator.DSLValidator;
 import colesico.framework.dslvalidator.ValidationContext;
-import colesico.framework.dslvalidator.commands.*;
+import colesico.framework.dslvalidator.command.*;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 import colesico.framework.translation.Translatable;
 
@@ -42,11 +41,6 @@ abstract public class ValidatorBuilder extends FlowControlBuilder {
 
     /**
      * Adds predicate verifier
-     *
-     * @param predicate
-     * @param errorCode
-     * @param errorMessage
-     * @param messageParam
      */
     protected <V> Command<V> predicate(final Predicate<ValidationContext<V>> predicate,
                                        final String errorCode,
@@ -57,11 +51,6 @@ abstract public class ValidatorBuilder extends FlowControlBuilder {
 
     /**
      * Verify by regexp match
-     *
-     * @param pattern
-     * @param errorCode
-     * @param errorMessage
-     * @param messageParam
      */
     protected final Command<String> regexp(final String pattern,
                                            final String errorCode,
@@ -72,10 +61,7 @@ abstract public class ValidatorBuilder extends FlowControlBuilder {
     }
 
     /**
-     * Verify string to
-     *
-     * @param min
-     * @param max
+     * Verify string length
      */
     protected final Command<String> length(final Integer min,
                                            final Integer max) {
@@ -85,39 +71,26 @@ abstract public class ValidatorBuilder extends FlowControlBuilder {
 
     /**
      * Verify number range
-     *
-     * @param min
-     * @param max
-     * @param includeEndpoints
-     * @return
      */
     protected final <V extends Number> Command<V> interval(final Number min,
                                                            final Number max,
                                                            final boolean includeEndpoints) {
 
-        return new IntervalVerifier(min, max, includeEndpoints, vrMessages);
+        return new IntervalVerifier<>(min, max, includeEndpoints, vrMessages);
     }
 
     /**
      * Verify collection size range
-     *
-     * @param min
-     * @param max
-     * @param includeEndpoints
-     * @return
      */
     protected final <V> Command<V> size(final Number min,
                                         final Number max,
                                         final boolean includeEndpoints) {
 
-        return new SizeVerifier(min, max, includeEndpoints, vrMessages);
+        return new SizeVerifier<>(min, max, includeEndpoints, vrMessages);
     }
 
     /**
      * Verify date format
-     *
-     * @param format
-     * @return
      */
     protected final Command<String> dateFormat(final String format) {
         return new DateFormatVerifier(format, vrMessages);

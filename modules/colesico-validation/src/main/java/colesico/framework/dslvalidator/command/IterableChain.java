@@ -14,20 +14,38 @@
  * limitations under the License.
  */
 
-package colesico.framework.dslvalidator.commands;
+package colesico.framework.dslvalidator.command;
 
+import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 
 /**
- * Executes all sequence commands within the current context
- * until first validation error occurs.
+ * Assumes that the current context value is iterable.
+ * Applies commands to  each iterated value within own sub context
  *
- * @see GroupSequence
+ * @param <V>
  */
-public final class ChainSequence<V> extends AbstractSequence<V, V> {
+public class IterableChain<V extends Iterable<I>, I> extends AbstractSequence<V, I> {
+
+    public IterableChain() {
+    }
+
+
+    public IterableChain(Command<I>[] commands) {
+        super(commands);
+    }
 
     @Override
     public void execute(ValidationContext<V> context) {
-        executeChain(context);
+        Iterable<I> items = context.getValue();
+        if (items == null) {
+            return;
+        }
+        int idx = 0;
+        for (I itemValue : items) {
+            ValidationContext<I> nestedContext = ValidationContext.ofNested(context, Integer.toString(idx++), itemValue);
+            executeChain(nestedContext);
+        }
     }
+
 }

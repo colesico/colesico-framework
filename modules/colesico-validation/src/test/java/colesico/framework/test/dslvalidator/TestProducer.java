@@ -30,7 +30,7 @@ import java.util.Locale;
 @Producer
 @Requires(TestCondition.class)
 @Substitute
-@Produce(MyValidatorBuilder.class)
+@Produce(TestValidatorBuilder.class)
 public class TestProducer {
 
     @Singleton

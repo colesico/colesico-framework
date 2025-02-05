@@ -14,29 +14,28 @@
  * limitations under the License.
  */
 
-package colesico.framework.dslvalidator.commands;
+package colesico.framework.dslvalidator.command;
 
+import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 
 /**
- * Executes sequence of commands within the new nested context with specified subject.
+ * Executes all sequence commands within the current context
+ * until first validation error occurs.
  *
- * @author Vladlen Larionov
+ * @see GroupSequence
  */
-public final class SubjectChain<V> extends AbstractSequence<V, V> {
+public final class ChainSequence<V> extends AbstractSequence<V, V> {
 
-    /**
-     * Nested context subject
-     */
-    private final String subject;
+    public ChainSequence() {
+    }
 
-    public SubjectChain(String subject) {
-        this.subject = subject;
+    public ChainSequence(Command<V>[] commands) {
+        super(commands);
     }
 
     @Override
     public void execute(ValidationContext<V> context) {
-        ValidationContext<V> nestedContext = ValidationContext.ofNested(context, subject, context.getValue());
-        executeChain(nestedContext);
+        executeChain(context);
     }
 }

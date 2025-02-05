@@ -14,43 +14,35 @@
  * limitations under the License.
  */
 
-package colesico.framework.dslvalidator.commands;
+package colesico.framework.dslvalidator.command;
 
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.translation.Translatable;
-import org.apache.commons.lang3.StringUtils;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.function.Predicate;
 
 /**
- * Validate String by regexp
- *
  * @author Vladlen Larionov
  */
-public final class RegexpVerifier implements Command<String> {
+public final class PredicateVerifier<V> implements Command<V> {
 
-    private final Pattern pattern;
+    private final Predicate<ValidationContext<V>> predicate;
     private final String errorCode;
-    private final Object[] messageParams;
     private final Translatable errorMessage;
+    private final Object[] messageParams;
 
-    public RegexpVerifier(String regexPattern, String errorCode, Translatable errorMessage, Object... messageParam) {
-        this.pattern = Pattern.compile(regexPattern);
+    public PredicateVerifier(Predicate<ValidationContext<V>> predicate, String errorCode, Translatable errorMessage, Object... messageParam) {
+        this.predicate = predicate;
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
         this.messageParams = messageParam;
     }
 
     @Override
-    public void execute(ValidationContext<String> context) {
-        String email = context.getValue();
-        if (StringUtils.isNotEmpty(email)) {
-            Matcher matcher = pattern.matcher(email);
-            if (!matcher.matches()) {
-                context.addError(errorCode, errorMessage.translate(messageParams));
-            }
+    public void execute(ValidationContext<V> context) {
+        if (!predicate.test(context)) {
+            context.addError(errorCode, errorMessage.translate(messageParams));
         }
     }
 }

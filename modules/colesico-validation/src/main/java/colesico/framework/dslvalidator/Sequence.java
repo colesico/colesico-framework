@@ -21,14 +21,23 @@ import java.util.List;
 /**
  * Sequence of commands
  *
+ * @param <V> type of value to which the sequence applies
+ * @param <N> type of nested value  (extracted from value) to which the sequence commands applies
  * @author Vladlen Larionov
  */
-public interface Sequence<V, C> extends Command<V> {
-    
-    List<Command<C>> getCommands();
+public interface Sequence<V, N> extends Command<V> {
 
-    default Sequence<V, C> addCommand(Command<C> command) {
+    List<Command<N>> getCommands();
+
+    default Sequence<V, N> addCommand(Command<N> command) {
         getCommands().add(command);
+        return this;
+    }
+
+    default Sequence<V, N> addCommands(Command<N>[] commands) {
+        for (Command<N> cmd : commands) {
+            addCommand(cmd);
+        }
         return this;
     }
 }

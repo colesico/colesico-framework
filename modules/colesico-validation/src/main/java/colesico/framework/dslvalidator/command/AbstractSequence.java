@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.dslvalidator.commands;
+package colesico.framework.dslvalidator.command;
 
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.Sequence;
@@ -25,25 +25,31 @@ import java.util.List;
 
 /**
  * Sequence basis
- * @param <V>
- * @param <C>
+ *
+ * @param <V> type of value to which the command applies
+ * @param <N> nested type to which the command sequence applies
  */
-abstract public class AbstractSequence<V, C> implements Sequence<V, C> {
+abstract public class AbstractSequence<V, N> implements Sequence<V, N> {
 
-    protected final ArrayList<Command<C>> commands = new ArrayList<>();
+    protected final List<Command<N>> commands = new ArrayList<>();
+
+    public AbstractSequence() {
+    }
+
+    public AbstractSequence(Command<N>[] commands) {
+        addCommands(commands);
+    }
 
     @Override
-    public List<Command<C>> getCommands() {
+    public List<Command<N>> getCommands() {
         return commands;
     }
 
     /**
      * Execute sequence commands until error occurred
-     *
-     * @param context
      */
-    protected void executeChain(ValidationContext<C> context) {
-        for (Command<C> command : commands) {
+    protected void executeChain(ValidationContext<N> context) {
+        for (Command<N> command : commands) {
             command.execute(context);
             if (context.hasErrors()) {
                 return;
@@ -56,8 +62,8 @@ abstract public class AbstractSequence<V, C> implements Sequence<V, C> {
      *
      * @param context
      */
-    protected void executeGroup(ValidationContext<C> context) {
-        for (Command<C> command : commands) {
+    protected void executeGroup(ValidationContext<N> context) {
+        for (Command<N> command : commands) {
             command.execute(context);
         }
     }

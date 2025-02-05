@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package colesico.framework.dslvalidator.commands;
+package colesico.framework.dslvalidator.command;
 
+import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.translation.Translatable;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * This sequence checks for nested contexts errors presents after commands execution.
@@ -40,6 +38,13 @@ public class HookErrorChain<V> extends AbstractSequence<V, V> {
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
         this.messageParams = messageParam;
+    }
+
+    public HookErrorChain(String errorCode, Translatable errorMessage, Object[] messageParams, Command<V>[] commands) {
+        super(commands);
+        this.errorCode = errorCode;
+        this.errorMessage = errorMessage;
+        this.messageParams = messageParams;
     }
 
     protected boolean hasNestedErrors(ValidationContext<V> context) {

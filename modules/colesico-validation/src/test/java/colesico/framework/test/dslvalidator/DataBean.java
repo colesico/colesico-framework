@@ -16,15 +16,16 @@
 
 package colesico.framework.test.dslvalidator;
 
-public class MyDataBean {
+public class DataBean {
+
     private Long id;
     private String name;
     private String value;
 
-    public MyDataBean() {
+    public DataBean() {
     }
 
-    public MyDataBean(Long id, String name, String value) {
+    public DataBean(Long id, String name, String value) {
         this.id = id;
         this.name = name;
         this.value = value;
