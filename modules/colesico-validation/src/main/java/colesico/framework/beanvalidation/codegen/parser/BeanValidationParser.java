@@ -64,6 +64,8 @@ public class BeanValidationParser extends FrameworkAbstractParser {
         }
 
         ValidatorBuilderElement fieldValidatorBuilder = createValidatorBuilderElement(targetBeanClass, targetBuilderSpec);
+        BeanElement validatedBean = new BeanElement(targetBeanClass.asClassType());
+        validatedBean.addValidatorBuilder(fieldValidatorBuilder);
 
         String subject = validateBeanSpec.unwrap().subject();
 
@@ -91,6 +93,9 @@ public class BeanValidationParser extends FrameworkAbstractParser {
                 parsePropertyValidation(validatorBuilder, field, validateSpec);
             } else {
                 AnnotationAssist<ValidateBean> validateBeanSpec = field.getAnnotation(ValidateBean.class);
+                if (validateBeanSpec != null) {
+                    parseBeanValidation(validatorBuilder, field, validateBeanSpec);
+                }
             }
         }
     }

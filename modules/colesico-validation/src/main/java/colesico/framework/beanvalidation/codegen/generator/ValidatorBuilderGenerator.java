@@ -111,12 +111,12 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         mb.returns(ArrayTypeName.of(returnsTypeName));
 
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("return $T(){\n", returnsTypeName);
+        cb.add("return group(\n");
         cb.indent();
         int i = 0;
         for (ValidationElement validation : validatorBuilder.getValidations()) {
             // field(FIELD_REF,
-            cb.add("$N( $N, ", ValidationFlowBuilder.FIELD_METHOD, validation.getPropertyReferenceName());
+            cb.add("$N($N, ", ValidationFlowBuilder.FIELD_METHOD, validation.getPropertyReferenceName());
             if (validation instanceof PropertyValidationElement propertyValidation) {
                 if (propertyValidation.getVerifier()) {
                     // this::verifyField1
@@ -125,16 +125,17 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
                     // validateField1()
                     cb.add("$N()", validation.getValidationMethodName());
                 }
+            } else {
+                cb.add("$N()", validation.getValidationMethodName());
             }
             cb.add(")");
             if (++i < validatorBuilder.getValidations().size()) {
                 cb.add(",");
             }
             cb.add("\n");
-
         }
         cb.unindent();
-        cb.add("};\n");
+        cb.add(");\n");
 
         mb.addCode(cb.build());
         classBuilder.addMethod(mb.build());
