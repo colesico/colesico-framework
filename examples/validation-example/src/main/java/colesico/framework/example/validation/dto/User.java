@@ -1,10 +1,21 @@
 package colesico.framework.example.validation.dto;
 
+import colesico.framework.beanvalidation.Validate;
+import colesico.framework.beanvalidation.ValidateAsBean;
+import colesico.framework.beanvalidation.ValidatorBuilder;
+
+@ValidatorBuilder
 public class User {
 
+    @Validate
     private Long id;
+
+    @Validate
     private String name;
+
+    @ValidateAsBean
     private Credentials credentials;
+
     private Contacts contacts;
 
     public Long getId() {

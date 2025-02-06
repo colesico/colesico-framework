@@ -1,16 +1,23 @@
 package colesico.framework.example.validation.dto;
 
+import colesico.framework.beanvalidation.Validate;
+import colesico.framework.beanvalidation.ValidatorBuilder;
+
+@ValidatorBuilder
 public class PostAddress {
 
-    private String postcode;
+    @Validate
+    private String postCode;
+
+    @Validate
     private String address;
 
-    public String getPostcode() {
-        return postcode;
+    public String getPostCode() {
+        return postCode;
     }
 
-    public void setPostcode(String postcode) {
-        this.postcode = postcode;
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
     }
 
     public String getAddress() {

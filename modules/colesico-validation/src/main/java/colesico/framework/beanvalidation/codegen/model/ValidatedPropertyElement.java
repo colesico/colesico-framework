@@ -2,6 +2,7 @@ package colesico.framework.beanvalidation.codegen.model;
 
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.model.FieldElement;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.type.TypeMirror;
 
@@ -52,6 +53,14 @@ public class ValidatedPropertyElement {
 
     public final String getPropertyGetterName() {
         return "get" + StrUtils.firstCharToUpperCase(getPropertyName());
+    }
+
+    public final String getPropertyReferenceName() {
+        if (originField != null) {
+            String kebabCase = StrUtils.toSeparatorNotation(originField.getName(),'_') ;
+            return StringUtils.toRootUpperCase(kebabCase);
+        }
+        return null;
     }
 
     public String getSubject() {

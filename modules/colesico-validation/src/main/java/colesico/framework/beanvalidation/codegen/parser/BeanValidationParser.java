@@ -22,7 +22,7 @@ import java.util.List;
 
 public class BeanValidationParser extends FrameworkAbstractParser {
 
-    public static final String VALIDATOR_BUILDER_PROTOTYPE_SUFFIX = "VBP";
+    public static final String VALIDATOR_BUILDER_PROTOTYPE_SUFFIX = "Validation";
 
     public BeanValidationParser(ProcessingEnvironment processingEnv) {
         super(processingEnv);

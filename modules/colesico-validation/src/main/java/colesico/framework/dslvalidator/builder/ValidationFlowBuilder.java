@@ -196,7 +196,8 @@ abstract public class ValidationFlowBuilder {
     /**
      * Helper to  create generic commands array
      */
-    protected <V> Command[] commands(Command<V>... cmd) {
+    @SafeVarargs
+    protected final <V> Command<V>[] commands(Command<V>... cmd) {
         return cmd;
     }
 }

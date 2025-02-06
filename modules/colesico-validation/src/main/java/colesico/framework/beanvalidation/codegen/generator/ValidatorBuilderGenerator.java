@@ -10,12 +10,14 @@ import colesico.framework.beanvalidation.codegen.model.ValidatedPropertyElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
+import colesico.framework.dslvalidator.builder.FieldReference;
 import colesico.framework.dslvalidator.builder.ValidationFlowBuilder;
 import com.palantir.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
 import java.util.List;
+import java.util.function.Function;
 
 
 /**
@@ -31,6 +33,49 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         super(processingEnv);
     }
 
+    private void generateFieldReferences(ValidatorBuilderElement validatorBuilder) {
+
+        for (ValidatedPropertyElement validatedProperty : validatorBuilder.getProperties()) {
+
+            TypeName refType = ParameterizedTypeName.get(
+                    ClassName.get(FieldReference.class),
+                    TypeName.get(validatorBuilder.getParentBean().getOriginType().unwrap()),
+                    TypeName.get(validatedProperty.getPropertyType())
+            );
+
+            FieldSpec.Builder refField = FieldSpec.builder(refType, validatedProperty.getPropertyReferenceName(), Modifier.PUBLIC, Modifier.FINAL);
+            refField.initializer("new $T($S,$T::$N)",
+                    refType,
+                    validatedProperty.getSubject(),
+                    TypeName.get(validatorBuilder.getParentBean().getOriginType().unwrap()), validatedProperty.getPropertyGetterName()
+                    );
+
+            TypeSpec.Builder refClassBuilder = TypeSpec.anonymousClassBuilder("");
+            refClassBuilder.superclass(refType);
+
+            MethodSpec.Builder subjectBuilder = MethodSpec.methodBuilder(FieldReference.SUBJECT_METHOD);
+            subjectBuilder.addModifiers(Modifier.PUBLIC);
+            subjectBuilder.returns(ClassName.get(String.class));
+            subjectBuilder.addAnnotation(Override.class);
+            subjectBuilder.addCode("return $S;", );
+            refClassBuilder.addMethod(subjectBuilder.build());
+
+            MethodSpec.Builder extractorBuilder = MethodSpec.methodBuilder(FieldReference.EXTRACTOR_METHOD);
+            extractorBuilder.addModifiers(Modifier.PUBLIC);
+            extractorBuilder.addAnnotation(Override.class);
+            TypeName extractorResultType = ParameterizedTypeName.get(
+                    ClassName.get(Function.class),
+                    TypeName.get(validatorBuilder.getParentBean().getOriginType().unwrap()),
+                    TypeName.get(validatedProperty.getPropertyType())
+            );
+            extractorBuilder.returns(extractorResultType);
+            extractorBuilder.addCode("return $T::$N;", TypeName.get(validatorBuilder.getParentBean().getOriginType().unwrap()), validatedProperty.getPropertyGetterName());
+            refClassBuilder.addMethod(extractorBuilder.build());
+
+            refField.initializer("$L", refClassBuilder.build());
+            classBuilder.addField(refField.build());
+        }
+    }
 
     private void generateValidateMethod(ValidatedPropertyElement propertyElm) {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(propertyElm.getMethodName());
@@ -57,19 +102,19 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    private void generateVerifyMethod(ValidatedPropertyElement propertyElm) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(propertyElm.getMethodName());
+    private void generateVerifyMethod(ValidatedPropertyElement validatedProperty) {
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(validatedProperty.getMethodName());
         mb.addModifiers(Modifier.ABSTRACT, Modifier.PROTECTED);
         mb.returns(TypeName.VOID);
-        TypeName paramType = ParameterizedTypeName.get(ClassName.get(ValidationContext.class), TypeName.get(propertyElm.getPropertyType()));
+        TypeName paramType = ParameterizedTypeName.get(ClassName.get(ValidationContext.class), TypeName.get(validatedProperty.getPropertyType()));
         mb.addParameter(paramType, "ctx", Modifier.FINAL);
-        mb.addJavadoc("Verify $N", propertyElm.getPropertyName());
+        mb.addJavadoc("Verify $N", validatedProperty.getPropertyName());
         classBuilder.addMethod(mb.build());
     }
 
 
-    private void generatePropertyValidationMethods(ValidatorBuilderElement builderElement) {
-        for (ValidatedPropertyElement propertyElm : builderElement.getProperties()) {
+    private void generatePropertyValidationMethods(ValidatorBuilderElement validatorBuilder) {
+        for (ValidatedPropertyElement propertyElm : validatorBuilder.getProperties()) {
             if (propertyElm.getVerifier()) {
                 generateVerifyMethod(propertyElm);
             } else {
@@ -78,20 +123,23 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         }
     }
 
-    private void generateCommandsMethod(ValidatorBuilderElement builderElement) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(builderElement.getCommandsMethodName());
+
+    private void generateCommandsMethod(ValidatorBuilderElement validatorBuilder) {
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(validatorBuilder.getCommandsMethodName());
         mb.addModifiers(Modifier.PUBLIC);
         mb.addAnnotation(Override.class);
-        mb.returns(ArrayTypeName.of(ClassName.get(Command.class)));
+
+        TypeName returnsTypeName = ParameterizedTypeName.get(
+                ClassName.get(Command.class),
+                TypeName.get(validatorBuilder.getParentBean().getOriginType().unwrap()));
+
+        mb.returns(ArrayTypeName.of(returnsTypeName));
 
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("return this.<$T>$N(\n",
-                TypeName.get(builderElement.getParentBean().getOriginType().unwrap()),
-                BeanValidatorBuilder.COMMANDS_METHOD
-        );
+        cb.add("return new $T[]{\n", returnsTypeName);
         cb.indent();
         int i = 0;
-        for (ValidatedPropertyElement propertyElement : builderElement.getProperties()) {
+        for (ValidatedPropertyElement propertyElement : validatorBuilder.getProperties()) {
             // field("name1", v->v.getField1(),
             cb.add("$N( $S, v->v.$N(), ", ValidationFlowBuilder.FIELD_METHOD, propertyElement.getSubject(), propertyElement.getPropertyGetterName());
             if (propertyElement.getVerifier()) {
@@ -102,14 +150,14 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
                 cb.add("$N()", propertyElement.getMethodName());
             }
             cb.add(")");
-            if (++i < builderElement.getProperties().size()) {
+            if (++i < validatorBuilder.getProperties().size()) {
                 cb.add(",");
             }
             cb.add("\n");
 
         }
         cb.unindent();
-        cb.add(");\n");
+        cb.add("};\n");
 
         mb.addCode(cb.build());
         classBuilder.addMethod(mb.build());
@@ -158,24 +206,27 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
     }
 
     public void generate(ValidatedBeanElement validatedBean) {
-        for (ValidatorBuilderElement builderElm : validatedBean.getBuilders()) {
+        for (ValidatorBuilderElement validatorBuilder : validatedBean.getBuilders()) {
 
-            this.builderElement = builderElm;
+            this.builderElement = validatorBuilder;
 
-            this.classBuilder = TypeSpec.classBuilder(builderElm.getClassSimpleName());
-
+            this.classBuilder = TypeSpec.classBuilder(validatorBuilder.getClassSimpleName());
             classBuilder.addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC);
 
-            classBuilder.superclass(TypeName.get(builderElm.getExtendsClass().unwrap()));
+            TypeName superClassName = ParameterizedTypeName.get(
+                    (ClassName) ClassName.get(validatorBuilder.getExtendsClass().unwrap()),
+                    TypeName.get(validatedBean.getOriginType().unwrap()));
+            classBuilder.superclass(superClassName);
 
             classBuilder.addJavadoc("Validator Builder Prototype\nExtend this class to  implement validation methods");
 
+            generateFieldReferences(validatorBuilder);
             generateValidatorBuildersFields();
-            generateProxyConstructors(builderElm);
-            generatePropertyValidationMethods(builderElm);
-            generateCommandsMethod(builderElm);
+            generateProxyConstructors(validatorBuilder);
+            generatePropertyValidationMethods(validatorBuilder);
+            generateCommandsMethod(validatorBuilder);
 
-            CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), builderElm.getPackageName(), builderElm.getParentBean().getOriginType().asTypeElement());
+            CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), validatorBuilder.getPackageName(), validatorBuilder.getParentBean().getOriginType().asTypeElement());
         }
     }
 }
