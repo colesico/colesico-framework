@@ -1,17 +1,20 @@
 package colesico.framework.beanvalidation.codegen.model;
 
 import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.beanvalidation.ValidatorBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Bean Validator Builder Prototype element
+ *
+ * @see ValidatorBuilder
  */
 public class ValidatorBuilderElement {
 
     /**
-     * Parent validated bean element
+     * Parent bean element (marked with {@link ValidatorBuilder})
      */
     private ValidatedBeanElement parentBean;
 
@@ -23,15 +26,15 @@ public class ValidatorBuilderElement {
     /**
      * Validator builder prototype class name
      */
-    private final String className;
+    private final String classSimpleName;
 
     private final ClassType extendsClass;
 
     private final List<ValidatedPropertyElement> properties = new ArrayList<>();
 
-    public ValidatorBuilderElement(String packageName, String className, ClassType extendsClass) {
+    public ValidatorBuilderElement(String packageName, String classSimpleName, ClassType extendsClass) {
         this.packageName = packageName;
-        this.className = className;
+        this.classSimpleName = classSimpleName;
         this.extendsClass = extendsClass;
     }
 
@@ -64,8 +67,8 @@ public class ValidatorBuilderElement {
         return packageName;
     }
 
-    public String getClassName() {
-        return className;
+    public String getClassSimpleName() {
+        return classSimpleName;
     }
 
     public ClassType getExtendsClass() {
@@ -74,10 +77,10 @@ public class ValidatorBuilderElement {
 
     @Override
     public String toString() {
-        return "ValidatorBuilderPrototypeElement{" +
-                "parentVB=" + parentBean +
+        return "ValidatorBuilderElement{" +
+                "parentBean=" + parentBean +
                 ", targetPackageName='" + packageName + '\'' +
-                ", targetClassName='" + className + '\'' +
+                ", targetClassName='" + classSimpleName + '\'' +
                 ", extendsClass=" + extendsClass +
                 ", properties=" + properties +
                 '}';

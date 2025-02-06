@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Inherited
 @Documented
-public @interface ValidateWithBuilder {
+public @interface ValidateAsBean {
 
     /**
      * Validator builder class full name.

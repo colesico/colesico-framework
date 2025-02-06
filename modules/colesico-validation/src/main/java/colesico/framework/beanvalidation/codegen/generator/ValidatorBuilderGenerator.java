@@ -4,13 +4,13 @@ import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.beanvalidation.BeanValidatorBuilder;
-import colesico.framework.beanvalidation.codegen.model.ValidateWithBuilderElement;
+import colesico.framework.beanvalidation.codegen.model.ValidateAsBeanElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatedBeanElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatedPropertyElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
-import colesico.framework.dslvalidator.builder.FlowControlBuilder;
+import colesico.framework.dslvalidator.builder.ValidationFlowBuilder;
 import com.palantir.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -45,9 +45,9 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         mb.addJavadoc("Validate $N", propertyElm.getPropertyName());
 
         if (propertyElm.getValidateWithBuilder() != null) {
-            ValidateWithBuilderElement vab = propertyElm.getValidateWithBuilder();
+            ValidateAsBeanElement vab = propertyElm.getValidateWithBuilder();
 
-            String groupCmd = vab.isOptional() ? FlowControlBuilder.OPTIONAL_GROUP_METHOD : FlowControlBuilder.MANDATORY_GROUP_METHOD;
+            String groupCmd = vab.isOptional() ? ValidationFlowBuilder.OPTIONAL_GROUP_METHOD : ValidationFlowBuilder.MANDATORY_GROUP_METHOD;
 
             // return optional(validatorBuilderField1.commands())
             // return mandatory(validatorBuilderField1.commands())
@@ -93,7 +93,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         int i = 0;
         for (ValidatedPropertyElement propertyElement : builderElement.getProperties()) {
             // field("name1", v->v.getField1(),
-            cb.add("$N( $S, v->v.$N(), ", FlowControlBuilder.FIELD_METHOD, propertyElement.getSubject(), propertyElement.getPropertyGetterName());
+            cb.add("$N( $S, v->v.$N(), ", ValidationFlowBuilder.FIELD_METHOD, propertyElement.getSubject(), propertyElement.getPropertyGetterName());
             if (propertyElement.getVerifier()) {
                 // this::verifyField1
                 cb.add("this::$N", propertyElement.getMethodName());
@@ -157,12 +157,12 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         }
     }
 
-    public void generate(ValidatedBeanElement beanElm) {
-        for (ValidatorBuilderElement builderElm : beanElm.getBuilders()) {
+    public void generate(ValidatedBeanElement validatedBean) {
+        for (ValidatorBuilderElement builderElm : validatedBean.getBuilders()) {
 
             this.builderElement = builderElm;
 
-            this.classBuilder = TypeSpec.classBuilder(builderElm.getClassName());
+            this.classBuilder = TypeSpec.classBuilder(builderElm.getClassSimpleName());
 
             classBuilder.addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC);
 

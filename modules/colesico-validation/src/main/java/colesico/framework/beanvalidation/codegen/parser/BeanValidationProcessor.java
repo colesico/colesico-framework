@@ -3,7 +3,7 @@ package colesico.framework.beanvalidation.codegen.parser;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.beanvalidation.ValidatorBuilderPrototype;
+import colesico.framework.beanvalidation.ValidatorBuilder;
 import colesico.framework.beanvalidation.codegen.generator.ValidatorBuilderGenerator;
 import colesico.framework.beanvalidation.codegen.model.ValidatedBeanElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -14,38 +14,44 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class BeanValidationProcessor extends FrameworkAbstractProcessor {
 
-    private BeanValidationParser vbParser;
-    private ValidatorBuilderGenerator vbpGenerator;
+    private BeanValidationParser parser;
+    private ValidatorBuilderGenerator generator;
+
+    private List<ValidatedBeanElement> validatedBeans;
 
     @Override
     protected Class<? extends Annotation>[] getSupportedAnnotations() {
-        return new Class[]{ValidatorBuilderPrototype.class};
+        return new Class[]{ValidatorBuilder.class};
     }
 
     @Override
     protected void onInit() {
-        vbParser = new BeanValidationParser(processingEnv);
-        vbpGenerator = new ValidatorBuilderGenerator(processingEnv);
+        parser = new BeanValidationParser(processingEnv);
+        generator = new ValidatorBuilderGenerator(processingEnv);
+        validatedBeans = new ArrayList<>();
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnv) {
-        for (Element elm : roundEnv.getElementsAnnotatedWith(ValidatorBuilderPrototype.class)) {
+        for (Element elm : roundEnv.getElementsAnnotatedWith(ValidatorBuilder.class)) {
             if (!(elm.getKind() == ElementKind.CLASS)) {
-                throw CodegenException.of().element(elm).message("Validate bean is not a Class").build();
+                throw CodegenException.of().element(elm).message("Validatable bean is not a Class").build();
             }
             TypeElement beanClass;
             try {
                 beanClass = (TypeElement) elm;
-                logger.debug("Processing validated bean class: " + beanClass.getSimpleName());
-                ValidatedBeanElement vbElement = vbParser.parse(ClassElement.fromElement(processingEnv, beanClass));
-                vbpGenerator.generate(vbElement);
+                logger.debug("Processing validatale bean class: " + beanClass.getSimpleName());
+                ValidatedBeanElement validatedBean = parser.parse(ClassElement.fromElement(processingEnv, beanClass));
+                validatedBeans.add(validatedBean);
+                generator.generate(validatedBean);
             } catch (CodegenException ce) {
-                String message = "Error processing validated bean class '" + elm.toString() + "': " + ce.getMessage();
+                String message = "Error processing validatale bean class '" + elm + "': " + ce.getMessage();
                 logger.debug(message);
                 ce.print(processingEnv, elm);
             } catch (Exception e) {

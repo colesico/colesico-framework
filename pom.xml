@@ -191,6 +191,7 @@
                 <module>examples/asynctask-example</module>
                 <module>examples/profile-example</module>
                 <module>examples/translation-example</module>
+                <module>examples/validation-example</module>
                 <module>examples/transaction-example</module>
                 <module>examples/jdbc-example</module>
                 <module>examples/jdbi-example</module>

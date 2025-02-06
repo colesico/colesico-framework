@@ -8,7 +8,7 @@ import java.lang.annotation.*;
  * In this case, the code generator creates a stub of the validation builder method for this property
  * and generates a code for including the validation of this field in the validation process.
  */
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.FIELD}) //TODO: support on getters
 @Inherited
 @Documented
@@ -28,7 +28,7 @@ public @interface Validate {
 
     /**
      * Name of the validation method in the validation builder.
-     * By default validation method name is constructed as follow: 'validate'|'verify' + [validated property name]
+     * By default validation method name is constructed as follow: 'validate'|'verify' + [validated property Name]
      */
     String methodName() default "";
 }

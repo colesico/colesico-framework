@@ -3,14 +3,14 @@ package colesico.framework.beanvalidation;
 import java.lang.annotation.*;
 
 /**
- * Declares the generating the bean validator builder prototype
+ * Declares bean validator builder prototype
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-@Repeatable(ValidatorBuilderPrototypes.class)
+@Repeatable(ValidatorBuilders.class)
 @Inherited
 @Documented
-public @interface ValidatorBuilderPrototype {
+public @interface ValidatorBuilder {
 
     /**
      * Bean validator builder prototype package name
@@ -23,11 +23,11 @@ public @interface ValidatorBuilderPrototype {
     Class<?> packageClass() default Class.class;
 
     /**
-     * Bean validator builder prototype simple class name.
+     * Bean validator builder prototype class simple name.
      * If not specified the prototype class name will be constructed in this way:
-     * '[validated property name] +'ValidatorBuilderPrototype':
+     * '[validated bean class name] +'ValidatorBuilderPrototype':
      */
-    String className() default "";
+    String classSimpleName() default "";
 
     Class<? extends BeanValidatorBuilder> extendsClass() default BeanValidatorBuilder.class;
 

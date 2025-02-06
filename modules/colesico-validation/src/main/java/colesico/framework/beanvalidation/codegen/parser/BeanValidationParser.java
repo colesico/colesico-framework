@@ -8,7 +8,7 @@ import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.beanvalidation.*;
-import colesico.framework.beanvalidation.codegen.model.ValidateWithBuilderElement;
+import colesico.framework.beanvalidation.codegen.model.ValidateAsBeanElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatedBeanElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatedPropertyElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
@@ -28,113 +28,113 @@ public class BeanValidationParser extends FrameworkAbstractParser {
         super(processingEnv);
     }
 
-    protected void parseValidatedFields(ValidatorBuilderElement builderElm) {
-        logger.debug("Parse validated fields : " + builderElm);
+    protected void parseValidatableFields(ValidatorBuilderElement validatorBuilder) {
+        logger.debug("Parse validatable bean fields : " + validatorBuilder);
 
-        ClassElement beanClassElm = builderElm.getParentBean().getOriginType().asClassElement();
-        List<FieldElement> fieldList = beanClassElm.getFieldsFiltered(
+        ClassElement beanClass = validatorBuilder.getParentBean().getOriginType().asClassElement();
+        List<FieldElement> fieldsList = beanClass.getFieldsFiltered(
                 f -> !f.unwrap().getModifiers().contains(Modifier.STATIC)
         );
 
-        for (FieldElement fieldElm : fieldList) {
-            logger.debug("Process validated field: {} of type {}", fieldElm.getName(), fieldElm.unwrap().asType());
-            AnnotationAssist<Validate> validateAst = fieldElm.getAnnotation(Validate.class);
-            AnnotationAssist<ValidateWithBuilder> validateWithBuilderAst = fieldElm.getAnnotation(ValidateWithBuilder.class);
-            if ((validateAst == null) && (validateWithBuilderAst == null)) {
+        for (FieldElement fieldElm : fieldsList) {
+            logger.debug("Process validatable bean field: {} of type {}", fieldElm.getName(), fieldElm.unwrap().asType());
+            AnnotationAssist<Validate> validateSpec = fieldElm.getAnnotation(Validate.class);
+            AnnotationAssist<ValidateAsBean> validateAsBeanSpec = fieldElm.getAnnotation(ValidateAsBean.class);
+            if ((validateSpec == null) && (validateAsBeanSpec == null)) {
                 continue;
             }
 
-            String subject = validateAst == null ? null : validateAst.unwrap().subject();
+            String subject = validateSpec == null ? null : validateSpec.unwrap().subject();
 
             if (StringUtils.isEmpty(subject)) {
                 subject = fieldElm.getName();
             }
 
-            String methodName = validateAst == null ? null : validateAst.unwrap().methodName();
+            String methodName = validateSpec == null ? null : validateSpec.unwrap().methodName();
             if (StringUtils.isEmpty(methodName)) {
                 methodName = null;
             }
 
-            boolean verifier = validateAst == null ? false : validateAst.unwrap().verifier();
+            boolean verifier = validateSpec == null ? false : validateSpec.unwrap().verifier();
 
-            ValidateWithBuilderElement validateBean = null;
-            if (validateWithBuilderAst != null) {
-                String builderClassName = validateWithBuilderAst.unwrap().builderClass();
+            ValidateAsBeanElement validateBean = null;
+            if (validateAsBeanSpec != null) {
+                String builderClassName = validateAsBeanSpec.unwrap().builderClass();
                 if (StringUtils.isEmpty(builderClassName)) {
-                    ClassElement fieldBean = fieldElm.asClassType().asClassElement();
-                    List<AnnotationAssist<ValidatorBuilderPrototype>> builderProtsAst = getBuildersPrototypesAst(fieldBean);
-                    ValidatorBuilderElement fieldBuilderElm = createBuilderElement(fieldBean, builderProtsAst.get(0));
-                    builderClassName = fieldBuilderElm.getPackageName() + '.' + fieldBuilderElm.getClassName();
+                    ClassElement fieldClass = fieldElm.asClassType().asClassElement();
+                    List<AnnotationAssist<ValidatorBuilder>> builderSpecList = getBuilderSpecs(fieldClass);
+                    ValidatorBuilderElement fieldValidatorBuilder = createValidatorBuilderElement(fieldClass, builderSpecList.get(0));
+                    builderClassName = fieldValidatorBuilder.getPackageName() + '.' + fieldValidatorBuilder.getClassSimpleName();
                 }
-                validateBean = new ValidateWithBuilderElement(builderClassName, validateWithBuilderAst.unwrap().optional());
+                validateBean = new ValidateAsBeanElement(builderClassName, validateAsBeanSpec.unwrap().optional());
             }
 
             ValidatedPropertyElement propertyElm = new ValidatedPropertyElement(fieldElm, subject, methodName, verifier, validateBean);
-            builderElm.addProperty(propertyElm);
+            validatorBuilder.addProperty(propertyElm);
         }
     }
 
-    protected ValidatorBuilderElement createBuilderElement(ClassElement beanElement, AnnotationAssist<ValidatorBuilderPrototype> builderProtAst) {
-        DeclaredType extendsClass = (DeclaredType) builderProtAst.getValueTypeMirror(a -> a.extendsClass());
-        DeclaredType packageFromClass = (DeclaredType) builderProtAst.getValueTypeMirror(a -> a.packageClass());
+    protected ValidatorBuilderElement createValidatorBuilderElement(ClassElement beanClass, AnnotationAssist<ValidatorBuilder> builderSpec) {
+        DeclaredType extendsClass = (DeclaredType) builderSpec.getValueTypeMirror(a -> a.extendsClass());
+        DeclaredType packageFromClass = (DeclaredType) builderSpec.getValueTypeMirror(a -> a.packageClass());
 
-        String packageName = builderProtAst.unwrap().packageName();
+        String packageName = builderSpec.unwrap().packageName();
         if (StringUtils.isBlank(packageName)) {
             if (!CodegenUtils.isAssignable(Class.class, packageFromClass, processingEnv)) {
                 packageName = (new ClassType(processingEnv, packageFromClass)).asClassElement().getPackageName();
             } else if (!CodegenUtils.isAssignable(BeanValidatorBuilder.class, extendsClass, processingEnv)) {
                 packageName = (new ClassType(processingEnv, extendsClass)).asClassElement().getPackageName();
             } else {
-                packageName = beanElement.getPackageName();
+                packageName = beanClass.getPackageName();
             }
         }
 
-        String className = builderProtAst.unwrap().className();
+        String className = builderSpec.unwrap().classSimpleName();
         if (StringUtils.isBlank(className)) {
-            className = beanElement.getSimpleName() + VALIDATOR_BUILDER_PROTOTYPE_SUFFIX;
+            className = beanClass.getSimpleName() + VALIDATOR_BUILDER_PROTOTYPE_SUFFIX;
         }
 
-        ValidatorBuilderElement builderElm = new ValidatorBuilderElement(
+        ValidatorBuilderElement validatorBuilder = new ValidatorBuilderElement(
                 packageName,
                 className,
                 new ClassType(processingEnv, extendsClass)
         );
 
-        return builderElm;
+        return validatorBuilder;
     }
 
-    protected void parseBuilder(ValidatedBeanElement beanElement, AnnotationAssist<ValidatorBuilderPrototype> builderProtAst) {
-        ValidatorBuilderElement builderElm = createBuilderElement(beanElement.getOriginType().asClassElement(), builderProtAst);
-        beanElement.addBuilder(builderElm);
-        parseValidatedFields(builderElm);
+    protected void parseBean(ValidatedBeanElement beanElement, AnnotationAssist<ValidatorBuilder> builderSpec) {
+        ValidatorBuilderElement validatorBuilder = createValidatorBuilderElement(beanElement.getOriginType().asClassElement(), builderSpec);
+        beanElement.addBuilder(validatorBuilder);
+        parseValidatableFields(validatorBuilder);
     }
 
-    protected List<AnnotationAssist<ValidatorBuilderPrototype>> getBuildersPrototypesAst(ClassElement beanClass) {
-        List<AnnotationAssist<ValidatorBuilderPrototype>> result = new ArrayList<>();
-        AnnotationAssist<ValidatorBuilderPrototype> builderProtAst = beanClass.getAnnotation(ValidatorBuilderPrototype.class);
-        if (builderProtAst != null) {
-            result.add(builderProtAst);
+    protected List<AnnotationAssist<ValidatorBuilder>> getBuilderSpecs(ClassElement beanClass) {
+        List<AnnotationAssist<ValidatorBuilder>> result = new ArrayList<>();
+        AnnotationAssist<ValidatorBuilder> builderSpec = beanClass.getAnnotation(ValidatorBuilder.class);
+        if (builderSpec != null) {
+            result.add(builderSpec);
         } else {
-            AnnotationAssist<ValidatorBuilderPrototypes> buildersAst = beanClass.getAnnotation(ValidatorBuilderPrototypes.class);
-            if (buildersAst != null) {
-                ValidatorBuilderPrototype[] buildersAnn = buildersAst.unwrap().value();
-                for (ValidatorBuilderPrototype builderAnn : buildersAnn) {
-                    builderProtAst = new AnnotationAssist<>(processingEnv, builderAnn);
-                    result.add(builderProtAst);
+            AnnotationAssist<ValidatorBuilders> buildersSpec = beanClass.getAnnotation(ValidatorBuilders.class);
+            if (buildersSpec != null) {
+                ValidatorBuilder[] builderSpecArr = buildersSpec.unwrap().value();
+                for (ValidatorBuilder builderAnn : builderSpecArr) {
+                    builderSpec = new AnnotationAssist<>(processingEnv, builderAnn);
+                    result.add(builderSpec);
                 }
             } else {
-                throw CodegenException.of().message("Annotation @" + ValidatorBuilderPrototype.class.getSimpleName() + " not specified").element(beanClass.unwrap()).build();
+                throw CodegenException.of().message("Annotation @" + ValidatorBuilder.class.getSimpleName() + " not specified").element(beanClass.unwrap()).build();
             }
         }
         return result;
     }
 
     public ValidatedBeanElement parse(ClassElement beanClass) {
-        ValidatedBeanElement builderElm = new ValidatedBeanElement(beanClass.asClassType());
-        List<AnnotationAssist<ValidatorBuilderPrototype>> builderProtsAst = getBuildersPrototypesAst(beanClass);
-        for (AnnotationAssist<ValidatorBuilderPrototype> builderProtAst : builderProtsAst) {
-            parseBuilder(builderElm, builderProtAst);
+        ValidatedBeanElement validatedBean = new ValidatedBeanElement(beanClass.asClassType());
+        List<AnnotationAssist<ValidatorBuilder>> builderSpecList = getBuilderSpecs(beanClass);
+        for (AnnotationAssist<ValidatorBuilder> builderSpec : builderSpecList) {
+            parseBean(validatedBean, builderSpec);
         }
-        return builderElm;
+        return validatedBean;
     }
 }

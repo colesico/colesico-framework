@@ -17,14 +17,14 @@
 package colesico.framework.test.dslvalidator;
 
 import colesico.framework.dslvalidator.Command;
-import colesico.framework.dslvalidator.builder.ValidatorBuilder;
+import colesico.framework.dslvalidator.builder.AbstractValidatorBuilder;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.validation.Validator;
 import jakarta.inject.Inject;
 
 @Unscoped
-public class TestValidatorBuilder extends ValidatorBuilder {
+public class TestValidatorBuilder extends AbstractValidatorBuilder {
 
     @Inject
     public TestValidatorBuilder(ValidatorMessages msg) {

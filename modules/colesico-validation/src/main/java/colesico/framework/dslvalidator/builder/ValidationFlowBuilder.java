@@ -29,7 +29,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-abstract public class FlowControlBuilder {
+abstract public class ValidationFlowBuilder {
 
     public static final String FIELD_METHOD = "field";
     public static final String OPTIONAL_GROUP_METHOD = "optionalGroup";
@@ -37,7 +37,7 @@ abstract public class FlowControlBuilder {
 
     protected final ValidatorMessages vrMessages;
 
-    public FlowControlBuilder(ValidatorMessages vrMessages) {
+    public ValidationFlowBuilder(ValidatorMessages vrMessages) {
         this.vrMessages = vrMessages;
     }
 

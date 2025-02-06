@@ -1,6 +1,9 @@
 package colesico.framework.beanvalidation.codegen.model;
 
-public class ValidateWithBuilderElement {
+/**
+ * @see colesico.framework.beanvalidation.ValidateAsBean
+ */
+public class ValidateAsBeanElement {
 
     private ValidatedPropertyElement parentProperty;
 
@@ -11,7 +14,7 @@ public class ValidateWithBuilderElement {
 
     private final boolean optional;
 
-    public ValidateWithBuilderElement(String builderClass, boolean optional) {
+    public ValidateAsBeanElement(String builderClass, boolean optional) {
         this.builderClass = builderClass;
         this.optional = optional;
     }

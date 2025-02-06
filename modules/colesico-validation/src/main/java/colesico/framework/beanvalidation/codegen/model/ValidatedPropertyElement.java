@@ -5,6 +5,9 @@ import colesico.framework.assist.codegen.model.FieldElement;
 
 import javax.lang.model.type.TypeMirror;
 
+/**
+ * @see colesico.framework.beanvalidation.Validate
+ */
 public class ValidatedPropertyElement {
 
     /**
@@ -20,16 +23,16 @@ public class ValidatedPropertyElement {
 
     private final Boolean verifier;
 
-    private final ValidateWithBuilderElement validateWithBuilder;
+    private final ValidateAsBeanElement validateWithBuilder;
 
-    public ValidatedPropertyElement(FieldElement originField, String subject, String methodName, Boolean verifier, ValidateWithBuilderElement validateWithBuilder) {
+    public ValidatedPropertyElement(FieldElement originField, String subject, String methodName, Boolean verifier, ValidateAsBeanElement validateAsBean) {
         this.originField = originField;
         this.subject = subject;
         this.methodName = methodName;
         this.verifier = verifier;
-        this.validateWithBuilder = validateWithBuilder;
-        if (validateWithBuilder != null) {
-            validateWithBuilder.setParentProperty(this);
+        this.validateWithBuilder = validateAsBean;
+        if (validateAsBean != null) {
+            validateAsBean.setParentProperty(this);
         }
     }
 
@@ -84,7 +87,7 @@ public class ValidatedPropertyElement {
         return verifier;
     }
 
-    public ValidateWithBuilderElement getValidateWithBuilder() {
+    public ValidateAsBeanElement getValidateWithBuilder() {
         return validateWithBuilder;
     }
 }

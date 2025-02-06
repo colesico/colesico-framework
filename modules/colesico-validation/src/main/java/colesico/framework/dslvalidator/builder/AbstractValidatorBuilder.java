@@ -25,10 +25,10 @@ import colesico.framework.translation.Translatable;
 
 import java.util.function.Predicate;
 
-abstract public class ValidatorBuilder extends FlowControlBuilder {
+abstract public class AbstractValidatorBuilder extends ValidationFlowBuilder {
 
 
-    public ValidatorBuilder(ValidatorMessages vrMessages) {
+    public AbstractValidatorBuilder(ValidatorMessages vrMessages) {
         super(vrMessages);
     }
 
