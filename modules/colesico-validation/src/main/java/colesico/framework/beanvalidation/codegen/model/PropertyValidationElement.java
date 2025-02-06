@@ -8,13 +8,10 @@ import colesico.framework.assist.codegen.model.FieldElement;
  */
 public class PropertyValidationElement extends ValidationElement {
 
-    protected final String subject;
-
     private final Boolean verifier;
 
     public PropertyValidationElement(FieldElement originField, String subject, Boolean verifier) {
-        super(originField);
-        this.subject = subject;
+        super(originField, subject);
         this.verifier = verifier;
     }
 
@@ -22,6 +19,11 @@ public class PropertyValidationElement extends ValidationElement {
         return subject;
     }
 
+    public Boolean getVerifier() {
+        return verifier;
+    }
+
+    @Override
     public String getValidationMethodName() {
         String prefix;
         if (verifier) {

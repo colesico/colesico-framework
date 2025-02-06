@@ -8,7 +8,10 @@ import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.beanvalidation.*;
-import colesico.framework.beanvalidation.codegen.model.*;
+import colesico.framework.beanvalidation.codegen.model.BeanElement;
+import colesico.framework.beanvalidation.codegen.model.BeanValidationElement;
+import colesico.framework.beanvalidation.codegen.model.PropertyValidationElement;
+import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -27,7 +30,7 @@ public class BeanValidationParser extends FrameworkAbstractParser {
                                            FieldElement field,
                                            AnnotationAssist<Validate> validateSpec) {
 
-        String subject = validateSpec == null ? null : validateSpec.unwrap().subject();
+        String subject = validateSpec.unwrap().subject();
 
         if (StringUtils.isEmpty(subject)) {
             subject = field.getName();
@@ -62,7 +65,13 @@ public class BeanValidationParser extends FrameworkAbstractParser {
 
         ValidatorBuilderElement fieldValidatorBuilder = createValidatorBuilderElement(targetBeanClass, targetBuilderSpec);
 
-        BeanValidationElement beanValidation = new BeanValidationElement(field,fieldValidatorBuilder);
+        String subject = validateBeanSpec.unwrap().subject();
+
+        if (StringUtils.isEmpty(subject)) {
+            subject = field.getName();
+        }
+
+        BeanValidationElement beanValidation = new BeanValidationElement(field, subject, fieldValidatorBuilder);
 
         validatorBuilder.addValidation(beanValidation);
     }

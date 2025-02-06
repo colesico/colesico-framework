@@ -58,10 +58,14 @@ public class ValidatorBuilderElement {
     /**
      * Validator builder class simple name
      */
-    public String getClassSimpleName() {
+    public String getBuilderClassSimpleName() {
         return parentBean.getOriginType().asClassElement().getSimpleName()
                 + StrUtils.firstCharToUpperCase(name)
                 + VALIDATOR_BUILDER_PROTOTYPE_SUFFIX;
+    }
+
+    public String getBuilderClassName() {
+        return packageName + "." + getBuilderClassSimpleName();
     }
 
     public List<ValidationElement> getValidations() {

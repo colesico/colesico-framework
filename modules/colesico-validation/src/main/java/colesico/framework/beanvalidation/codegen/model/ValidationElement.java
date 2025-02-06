@@ -18,9 +18,20 @@ abstract public class ValidationElement {
 
     protected final FieldElement originField;
 
-    public ValidationElement(FieldElement originField) {
+    /**
+     * Subject associated with this field
+     */
+    protected final String subject;
+
+    public ValidationElement(FieldElement originField, String subject) {
         this.originField = originField;
+        this.subject = subject;
     }
+
+    /**
+     * Method which will be called to obtain field validation
+     */
+    abstract public String getValidationMethodName();
 
     public final String getPropertyName() {
         if (originField != null) {
@@ -61,4 +72,7 @@ abstract public class ValidationElement {
         return originField;
     }
 
-  }
+    public String getSubject() {
+        return subject;
+    }
+}

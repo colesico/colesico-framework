@@ -4,10 +4,7 @@ import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.beanvalidation.BeanValidatorBuilder;
-import colesico.framework.beanvalidation.codegen.model.BeanValidationElement;
-import colesico.framework.beanvalidation.codegen.model.BeanElement;
-import colesico.framework.beanvalidation.codegen.model.ValidationElement;
-import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
+import colesico.framework.beanvalidation.codegen.model.*;
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.dslvalidator.builder.FieldReference;
@@ -34,67 +31,69 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
 
     private void generateFieldReferences(ValidatorBuilderElement validatorBuilder) {
 
-        for (ValidationElement validatedProperty : validatorBuilder.getValidations()) {
+        for (ValidationElement validation : validatorBuilder.getValidations()) {
 
             TypeName refType = ParameterizedTypeName.get(
                     ClassName.get(FieldReference.class),
                     TypeName.get(validatorBuilder.getParentBean().getOriginType().unwrap()),
-                    TypeName.get(validatedProperty.getPropertyType())
+                    TypeName.get(validation.getPropertyType())
             );
 
-            FieldSpec.Builder refField = FieldSpec.builder(refType, validatedProperty.getPropertyReferenceName(), Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL);
+            FieldSpec.Builder refField = FieldSpec.builder(refType, validation.getPropertyReferenceName(), Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL);
             refField.initializer("new $T($S,$T::$N)",
                     refType,
-                    validatedProperty.getSubject(),
-                    TypeName.get(validatorBuilder.getParentBean().getOriginType().unwrap()), validatedProperty.getPropertyGetterName()
+                    validation.getSubject(),
+                    TypeName.get(validatorBuilder.getParentBean().getOriginType().unwrap()),
+                    validation.getPropertyGetterName()
             );
 
             classBuilder.addField(refField.build());
         }
     }
 
-    private void generateValidateMethod(ValidationElement propertyElm) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(propertyElm.getMethodName());
-
-        if (propertyElm.getValidateWithBuilder() == null) {
-            mb.addModifiers(Modifier.ABSTRACT);
-        }
-
+    private void generateValidateBeanMethod(BeanValidationElement validation) {
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(validation.getValidationMethodName());
         mb.addModifiers(Modifier.PROTECTED);
-        TypeName returnType = ParameterizedTypeName.get(ClassName.get(Command.class), TypeName.get(propertyElm.getPropertyType()));
+        TypeName returnType = ParameterizedTypeName.get(ClassName.get(Command.class), TypeName.get(validation.getPropertyType()));
         mb.returns(returnType);
-        mb.addJavadoc("Validate $N", propertyElm.getPropertyName());
+        mb.addJavadoc("Validate $N", validation.getPropertyName());
 
-        if (propertyElm.getValidateWithBuilder() != null) {
-            BeanValidationElement vab = propertyElm.getValidateWithBuilder();
-
-            String groupCmd = vab.isOptional() ? ValidationFlowBuilder.OPTIONAL_GROUP_METHOD : ValidationFlowBuilder.MANDATORY_GROUP_METHOD;
-
-            // return optional(validatorBuilderField1.commands())
-            // return mandatory(validatorBuilderField1.commands())
-            mb.addStatement("return $N($N.$N())", groupCmd, vab.validatorFieldName(), BeanValidatorBuilder.COMMANDS_METHOD);
-        }
-
+        // return mandatory(validatorBuilderField1.validation())
+        mb.addStatement("return $N.$N()", validation.getValidatorBuilderFieldName(), BeanValidatorBuilder.VALIDATION_METHOD);
         classBuilder.addMethod(mb.build());
     }
 
-    private void generateVerifyMethod(ValidationElement validatedProperty) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(validatedProperty.getMethodName());
+    private void generateValidatePropertyMethod(PropertyValidationElement validation) {
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(validation.getValidationMethodName());
+        mb.addModifiers(Modifier.ABSTRACT);
+        mb.addModifiers(Modifier.PROTECTED);
+        TypeName returnType = ParameterizedTypeName.get(ClassName.get(Command.class), TypeName.get(validation.getPropertyType()));
+        mb.returns(returnType);
+        mb.addJavadoc("Validate $N", validation.getPropertyName());
+        classBuilder.addMethod(mb.build());
+    }
+
+    private void generateVerifyPropertyMethod(PropertyValidationElement validation) {
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(validation.getValidationMethodName());
         mb.addModifiers(Modifier.ABSTRACT, Modifier.PROTECTED);
         mb.returns(TypeName.VOID);
-        TypeName paramType = ParameterizedTypeName.get(ClassName.get(ValidationContext.class), TypeName.get(validatedProperty.getPropertyType()));
+        TypeName paramType = ParameterizedTypeName.get(ClassName.get(ValidationContext.class), TypeName.get(validation.getPropertyType()));
         mb.addParameter(paramType, "ctx", Modifier.FINAL);
-        mb.addJavadoc("Verify $N", validatedProperty.getPropertyName());
+        mb.addJavadoc("Verify $N", validation.getPropertyName());
         classBuilder.addMethod(mb.build());
     }
 
 
     private void generatePropertyValidationMethods(ValidatorBuilderElement validatorBuilder) {
-        for (ValidationElement propertyElm : validatorBuilder.getValidations()) {
-            if (propertyElm.getVerifier()) {
-                generateVerifyMethod(propertyElm);
+        for (ValidationElement validation : validatorBuilder.getValidations()) {
+            if (validation instanceof PropertyValidationElement propertyValidation) {
+                if (propertyValidation.getVerifier()) {
+                    generateVerifyPropertyMethod(propertyValidation);
+                } else {
+                    generateValidatePropertyMethod(propertyValidation);
+                }
             } else {
-                generateValidateMethod(propertyElm);
+                generateValidateBeanMethod((BeanValidationElement) validation);
             }
         }
     }
@@ -112,18 +111,20 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         mb.returns(ArrayTypeName.of(returnsTypeName));
 
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("return $N(){\n", returnsTypeName);
+        cb.add("return $T(){\n", returnsTypeName);
         cb.indent();
         int i = 0;
-        for (ValidationElement validationElement : validatorBuilder.getValidations()) {
-            // field("name1", v->v.getField1(),
-            cb.add("$N( $S, v->v.$N(), ", ValidationFlowBuilder.FIELD_METHOD, validationElement.getSubject(), validationElement.getPropertyGetterName());
-            if (validationElement.getVerifier()) {
-                // this::verifyField1
-                cb.add("this::$N", validationElement.getMethodName());
-            } else {
-                // validateField1()
-                cb.add("$N()", validationElement.getMethodName());
+        for (ValidationElement validation : validatorBuilder.getValidations()) {
+            // field(FIELD_REF,
+            cb.add("$N( $N, ", ValidationFlowBuilder.FIELD_METHOD, validation.getPropertyReferenceName());
+            if (validation instanceof PropertyValidationElement propertyValidation) {
+                if (propertyValidation.getVerifier()) {
+                    // this::verifyField1
+                    cb.add("this::$N", validation.getValidationMethodName());
+                } else {
+                    // validateField1()
+                    cb.add("$N()", validation.getValidationMethodName());
+                }
             }
             cb.add(")");
             if (++i < validatorBuilder.getValidations().size()) {
@@ -154,30 +155,28 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
             constructorBuilder.addCode(sucall);
 
             // Generate extra params
-            for (ValidationElement vpe : builderElement.getValidations()) {
-                if (vpe.getValidateWithBuilder() == null) {
-                    continue;
+            for (ValidationElement validation : builderElement.getValidations()) {
+                if (validation instanceof BeanValidationElement beanValidation) {
+                    TypeName builderType = ClassName.bestGuess(beanValidation.getFieldValidatorBuilder().getBuilderClassName());
+                    String builderVarName = beanValidation.getValidatorBuilderFieldName();
+                    constructorBuilder.addParameter(builderType, builderVarName, Modifier.FINAL);
+                    constructorBuilder.addStatement("this.$N = $N", builderVarName, builderVarName);
                 }
-                TypeName builderType = ClassName.bestGuess(vpe.getValidateWithBuilder().getBuilderClass());
-                String builderVarName = vpe.getValidateWithBuilder().validatorFieldName();
-                constructorBuilder.addParameter(builderType, builderVarName, Modifier.FINAL);
-                constructorBuilder.addStatement("this.$N = $N", builderVarName, builderVarName);
             }
 
             classBuilder.addMethod(constructorBuilder.build());
         }
     }
 
-    private void generateValidatorBuildersFields() {
-        for (ValidationElement vpe : builderElement.getValidations()) {
-            if (vpe.getValidateWithBuilder() == null) {
-                continue;
+    private void generateBuildersFields() {
+        for (ValidationElement validations : builderElement.getValidations()) {
+            if (validations instanceof BeanValidationElement beanValidation) {
+                TypeName builderType = ClassName.bestGuess(beanValidation.getFieldValidatorBuilder().getBuilderClassName());
+                String builderVarName = beanValidation.getValidatorBuilderFieldName();
+                FieldSpec.Builder fb = FieldSpec.builder(builderType, builderVarName, Modifier.PROTECTED, Modifier.FINAL);
+                fb.addJavadoc(" Validator Builder for " + validations.getPropertyName());
+                classBuilder.addField(fb.build());
             }
-            TypeName builderType = ClassName.bestGuess(vpe.getValidateWithBuilder().getBuilderClass());
-            String builderVarName = vpe.getValidateWithBuilder().validatorFieldName();
-            FieldSpec.Builder fb = FieldSpec.builder(builderType, builderVarName, Modifier.PROTECTED, Modifier.FINAL);
-            fb.addJavadoc(" Validator Builder for " + vpe.getPropertyName());
-            classBuilder.addField(fb.build());
         }
     }
 
@@ -186,7 +185,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
 
             this.builderElement = validatorBuilder;
 
-            this.classBuilder = TypeSpec.classBuilder(validatorBuilder.getClassSimpleName());
+            this.classBuilder = TypeSpec.classBuilder(validatorBuilder.getBuilderClassSimpleName());
             classBuilder.addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC);
 
             TypeName superClassName = ParameterizedTypeName.get(
@@ -197,7 +196,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
             classBuilder.addJavadoc("Validator Builder Prototype\nExtend this class to  implement validation methods");
 
             generateFieldReferences(validatorBuilder);
-            generateValidatorBuildersFields();
+            generateBuildersFields();
             generateProxyConstructors(validatorBuilder);
             generatePropertyValidationMethods(validatorBuilder);
             generateRootValidationMethod(validatorBuilder);

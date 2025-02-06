@@ -23,8 +23,6 @@ public class BeanValidationProcessor extends FrameworkAbstractProcessor {
     private BeanValidationParser parser;
     private ValidatorBuilderGenerator generator;
 
-    private List<BeanElement> validatedBeans;
-
     @Override
     protected Class<? extends Annotation>[] getSupportedAnnotations() {
         return new Class[]{ValidatorBuilder.class};
@@ -34,7 +32,6 @@ public class BeanValidationProcessor extends FrameworkAbstractProcessor {
     protected void onInit() {
         parser = new BeanValidationParser(processingEnv);
         generator = new ValidatorBuilderGenerator(processingEnv);
-        validatedBeans = new ArrayList<>();
     }
 
     @Override
@@ -48,7 +45,6 @@ public class BeanValidationProcessor extends FrameworkAbstractProcessor {
                 beanClass = (TypeElement) elm;
                 logger.debug("Processing validatale bean class: " + beanClass.getSimpleName());
                 BeanElement validatedBean = parser.parse(ClassElement.of(processingEnv, beanClass));
-                validatedBeans.add(validatedBean);
                 generator.generate(validatedBean);
             } catch (CodegenException ce) {
                 String message = "Error processing validatale bean class '" + elm + "': " + ce.getMessage();

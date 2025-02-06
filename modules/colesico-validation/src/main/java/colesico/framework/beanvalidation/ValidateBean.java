@@ -12,6 +12,12 @@ import java.lang.annotation.*;
 public @interface ValidateBean {
 
     /**
+     * Validation subject overriding.
+     * By default, subject is a name of validated property.
+     */
+    String subject() default "";
+
+    /**
      * Validator builders names this validation belongs to.
      *
      * @see ValidatorBuilder#name()
