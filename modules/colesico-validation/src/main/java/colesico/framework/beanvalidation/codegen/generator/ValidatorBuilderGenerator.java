@@ -108,7 +108,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
                 ClassName.get(Command.class),
                 TypeName.get(validatorBuilder.getParentBean().getOriginType().unwrap()));
 
-        mb.returns(ArrayTypeName.of(returnsTypeName));
+        mb.returns(returnsTypeName);
 
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("return group(\n");
