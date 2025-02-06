@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * The bin for which the validator builder prototype is generated
  */
-public class ValidatedBeanElement {
+public class BeanElement {
 
     /**
      * Bean origin type
@@ -18,19 +18,19 @@ public class ValidatedBeanElement {
     /**
      * Linked validator builders
      */
-    private final List<ValidatorBuilderElement> builders = new ArrayList<>();
+    private final List<ValidatorBuilderElement> validatorBuilders = new ArrayList<>();
 
-    public ValidatedBeanElement(ClassType originType) {
+    public BeanElement(ClassType originType) {
         this.originType = originType;
     }
 
-    public void addBuilder(ValidatorBuilderElement builderElm) {
-        builders.add(builderElm);
-        builderElm.setParentBean(this);
+    public void addValidatorBuilder(ValidatorBuilderElement validatorBuilder) {
+        validatorBuilders.add(validatorBuilder);
+        validatorBuilder.setParentBean(this);
     }
 
-    public List<ValidatorBuilderElement> getBuilders() {
-        return builders;
+    public List<ValidatorBuilderElement> getValidatorBuilders() {
+        return validatorBuilders;
     }
 
     public ClassType getOriginType() {

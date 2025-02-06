@@ -9,13 +9,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Inherited
 @Documented
-public @interface ValidateAsBean {
-
-    /**
-     * Property value may be null.
-     * If false - property value required.
-     */
-    boolean optional() default true;
+public @interface ValidateBean {
 
     /**
      * Validator builders names this validation belongs to.

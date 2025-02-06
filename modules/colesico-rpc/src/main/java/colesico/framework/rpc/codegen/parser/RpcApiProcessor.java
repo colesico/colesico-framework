@@ -50,7 +50,7 @@ public class RpcApiProcessor extends FrameworkAbstractProcessor {
             TypeElement producerElement;
             try {
                 producerElement = (TypeElement) elm;
-                RpcApiElement parsedElement = rpcApiParser.parse(ClassElement.fromElement(processingEnv, producerElement));
+                RpcApiElement parsedElement = rpcApiParser.parse(ClassElement.of(processingEnv, producerElement));
                 envelopeGenerator.generate(parsedElement);
                 clientGenerator.generate(parsedElement);
                 clientProducerGenerator.generate(parsedElement);

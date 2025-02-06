@@ -21,14 +21,9 @@ import colesico.framework.assist.codegen.CodegenException;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.function.Predicate;
 
 public class ClassType extends ParserType {
 
@@ -42,9 +37,13 @@ public class ClassType extends ParserType {
         this.originType = classType;
     }
 
-    public static ClassType fromElement(ProcessingEnvironment processingEnv, TypeElement typeElement) {
+    public static ClassType of(ProcessingEnvironment processingEnv, DeclaredType declaredType) {
+        return new ClassType(processingEnv, declaredType);
+    }
+
+    public static ClassType of(ProcessingEnvironment processingEnv, TypeElement typeElement) {
         if (typeElement == null) {
-            throw CodegenException.of().message("typeElement is null").build();
+            throw CodegenException.of().message("Type element is null").build();
         }
         return new ClassType(processingEnv, (DeclaredType) typeElement.asType());
     }
@@ -59,7 +58,7 @@ public class ClassType extends ParserType {
     }
 
     public ClassElement asClassElement() {
-        return ClassElement.fromType(getProcessingEnv(), originType);
+        return ClassElement.of(getProcessingEnv(), originType);
     }
 
     public DeclaredType getErasure() {

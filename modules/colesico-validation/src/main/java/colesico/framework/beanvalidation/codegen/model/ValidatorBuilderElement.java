@@ -14,10 +14,13 @@ import java.util.List;
  */
 public class ValidatorBuilderElement {
 
+    public static final String VALIDATOR_BUILDER_PROTOTYPE_SUFFIX = "Validation";
+
+
     /**
-     * Parent bean element (marked with {@link ValidatorBuilder})
+     * Parent bean element (annotated with {@link ValidatorBuilder})
      */
-    private ValidatedBeanElement parentBean;
+    private BeanElement parentBean;
 
     /**
      * Validator builder prototype  name
@@ -27,47 +30,49 @@ public class ValidatorBuilderElement {
     private final String name;
 
     /**
-     * @see ValidatorBuilder#sequence()
-     */
-    private final ClassType sequence;
-
-    /**
      * Validator builder prototype package name
      */
     private final String packageName;
 
     private final ClassType superclass;
 
-    private final List<ValidatedPropertyElement> properties = new ArrayList<>();
+    /**
+     * @see ValidatorBuilder#sequence()
+     */
+    private final ClassType sequence;
 
-    public ValidatorBuilderElement(String name, ClassType sequence, String packageName, ClassType superclass) {
+    private final List<ValidationElement> validations = new ArrayList<>();
+
+    public ValidatorBuilderElement(String name, String packageName, ClassType superclass, ClassType sequence) {
         this.name = name;
-        this.sequence = sequence;
         this.packageName = packageName;
         this.superclass = superclass;
+        this.sequence = sequence;
     }
 
-    public void addProperty(ValidatedPropertyElement property) {
-        properties.add(property);
-        property.setParentBuilder(this);
+    public void addValidation(ValidationElement validation) {
+        validations.add(validation);
+        validation.setParentBuilder(this);
     }
 
     /**
-     *  Validator builder class simple name
+     * Validator builder class simple name
      */
     public String getClassSimpleName() {
-        return parentBean.getOriginType().asClassElement().getSimpleName() + StrUtils.firstCharToUpperCase(name);
+        return parentBean.getOriginType().asClassElement().getSimpleName()
+                + StrUtils.firstCharToUpperCase(name)
+                + VALIDATOR_BUILDER_PROTOTYPE_SUFFIX;
     }
 
-    public List<ValidatedPropertyElement> getProperties() {
-        return properties;
+    public List<ValidationElement> getValidations() {
+        return validations;
     }
 
-    public ValidatedBeanElement getParentBean() {
+    public BeanElement getParentBean() {
         return parentBean;
     }
 
-    public void setParentBean(ValidatedBeanElement parentBean) {
+    public void setParentBean(BeanElement parentBean) {
         this.parentBean = parentBean;
     }
 
@@ -79,6 +84,14 @@ public class ValidatorBuilderElement {
         return superclass;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public ClassType getSequence() {
+        return sequence;
+    }
+
     @Override
     public String toString() {
         return "ValidatorBuilderElement{" +
@@ -87,7 +100,7 @@ public class ValidatorBuilderElement {
                 ", sequence=" + sequence +
                 ", packageName='" + packageName + '\'' +
                 ", superclass=" + superclass +
-                ", properties=" + properties +
+                ", properties=" + validations +
                 '}';
     }
 }

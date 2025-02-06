@@ -20,7 +20,7 @@ public @interface ValidatorBuilder {
     /**
      * For the bean to be validated, multiple validator builders can be generated.
      * Each such builder has its own name. Different validation builders may validate different  fields of one bean.
-     * This can be done by specifying the validator builder name in the annotations {@link Validate}, {@link ValidateAsBean}
+     * This can be done by specifying the validator builder name in the annotations {@link Validate}, {@link ValidateBean}
      * Builder name can contain only alphanumeric char since it will be a validation builder class name suffix
      */
     String name() default "";
@@ -31,14 +31,19 @@ public @interface ValidatorBuilder {
     Class<? extends Sequence> sequence() default MandatoryGroup.class;
 
     /**
-     * Bean validator builder package name
+     * Bean validator builder package name.
+     * Package name obtaining order:
+     * - packageName
+     * - packageOf
+     * - superclass
+     * - validated bean
      */
     String packageName() default "";
 
     /**
      * Bean validator builder prototype package name from specified class
      */
-    Class<?> packageOfClass() default Class.class;
+    Class<?> packageOf() default Class.class;
 
     /**
      * Validator builder superclass to be extended by generated builder prototype

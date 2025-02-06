@@ -47,7 +47,7 @@ public class ClassElement extends ParserElement {
         this.originType = originType;
     }
 
-    public static ClassElement fromClass(ProcessingEnvironment processingEnv, Class clazz) {
+    public static ClassElement of(ProcessingEnvironment processingEnv, Class clazz) {
         if (clazz == null) {
             throw CodegenException.of().message("class is  null").build();
         }
@@ -56,7 +56,7 @@ public class ClassElement extends ParserElement {
         return new ClassElement(processingEnv, element, type);
     }
 
-    public static ClassElement fromClassName(ProcessingEnvironment processingEnv, String className) {
+    public static ClassElement of(ProcessingEnvironment processingEnv, String className) {
         if (StringUtils.isEmpty(className)) {
             throw CodegenException.of().message("className is empty").build();
         }
@@ -68,7 +68,7 @@ public class ClassElement extends ParserElement {
         return new ClassElement(processingEnv, element, type);
     }
 
-    public static ClassElement fromElement(ProcessingEnvironment processingEnv, TypeElement element) {
+    public static ClassElement of(ProcessingEnvironment processingEnv, TypeElement element) {
         if (element == null) {
             throw CodegenException.of().message("classElement is null").build();
         }
@@ -79,7 +79,7 @@ public class ClassElement extends ParserElement {
         return new ClassElement(processingEnv, element, type);
     }
 
-    public static ClassElement fromType(ProcessingEnvironment processingEnv, DeclaredType type) {
+    public static ClassElement of(ProcessingEnvironment processingEnv, DeclaredType type) {
         if (type == null) {
             throw CodegenException.of().message("classType is null").build();
         }

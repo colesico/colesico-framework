@@ -9,7 +9,7 @@ import javax.lang.model.type.TypeMirror;
 /**
  * @see colesico.framework.beanvalidation.Validate
  */
-public class ValidatedPropertyElement {
+abstract public class ValidationElement {
 
     /**
      * Parent validator builder element
@@ -18,20 +18,8 @@ public class ValidatedPropertyElement {
 
     protected final FieldElement originField;
 
-    protected final String subject;
-
-    private final Boolean verifier;
-
-    private final ValidateAsBeanElement validateWithBuilder;
-
-    public ValidatedPropertyElement(FieldElement originField, String subject, Boolean verifier, ValidateAsBeanElement validateAsBean) {
+    public ValidationElement(FieldElement originField) {
         this.originField = originField;
-        this.subject = subject;
-        this.verifier = verifier;
-        this.validateWithBuilder = validateAsBean;
-        if (validateAsBean != null) {
-            validateAsBean.setParentProperty(this);
-        }
     }
 
     public final String getPropertyName() {
@@ -60,19 +48,6 @@ public class ValidatedPropertyElement {
         return null;
     }
 
-    public String getSubject() {
-        return subject;
-    }
-
-    public String getMethodName() {
-        String prefix;
-        if (verifier) {
-            prefix = "verify";
-        } else {
-            prefix = "validate";
-        }
-        return prefix + StrUtils.firstCharToUpperCase(getPropertyName());
-    }
 
     public ValidatorBuilderElement getParentBuilder() {
         return parentBuilder;
@@ -86,11 +61,4 @@ public class ValidatedPropertyElement {
         return originField;
     }
 
-    public Boolean getVerifier() {
-        return verifier;
-    }
-
-    public ValidateAsBeanElement getValidateWithBuilder() {
-        return validateWithBuilder;
-    }
-}
+  }

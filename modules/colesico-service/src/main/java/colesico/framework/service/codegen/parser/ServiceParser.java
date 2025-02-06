@@ -133,7 +133,7 @@ public class ServiceParser extends FrameworkAbstractParser {
 
     public ServiceElement parse(TypeElement serviceType) {
 
-        ClassElement serviceClass = ClassElement.fromElement(context.getProcessingEnv(), serviceType);
+        ClassElement serviceClass = ClassElement.of(context.getProcessingEnv(), serviceType);
 
         ServiceElement service = new ServiceElement(serviceClass, getServiceScope(serviceClass));
 

@@ -81,7 +81,7 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
             try {
                 beanDefinitionElement = (TypeElement) elm;
                 logger.debug("Processing dictionary bean: " + beanDefinitionElement.asType().toString());
-                DictionaryElement dictionaryBeanElement = parseDictionaryFacade(ClassElement.fromElement(processingEnv, beanDefinitionElement));
+                DictionaryElement dictionaryBeanElement = parseDictionaryFacade(ClassElement.of(processingEnv, beanDefinitionElement));
                 dictionaryRegistry.register(dictionaryBeanElement);
                 dictionaryGenerator.generate(dictionaryBeanElement);
                 resourceL10NOptionsGenerator.generate(dictionaryBeanElement);

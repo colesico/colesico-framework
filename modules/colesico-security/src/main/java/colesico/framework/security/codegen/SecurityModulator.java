@@ -60,14 +60,14 @@ public class SecurityModulator extends Modulator {
         List<SecurityAuditorElement> auditors = new ArrayList<>();
 
         if (requirePrincipal != null) {
-            SecurityAuditorElement se = new SecurityAuditorElement(ClassElement.fromClass(getProcessorContext().getProcessingEnv(), RequirePrincipalAudit.class));
+            SecurityAuditorElement se = new SecurityAuditorElement(ClassElement.of(getProcessorContext().getProcessingEnv(), RequirePrincipalAudit.class));
             auditors.add(se);
         }
 
         if (securityAudit != null) {
             TypeMirror[] tmArr = securityAudit.getValueTypeMirrors(a -> a.value());
             for (TypeMirror tm : tmArr) {
-                SecurityAuditorElement se = new SecurityAuditorElement(ClassElement.fromType(getProcessorContext().getProcessingEnv(), (DeclaredType) tm));
+                SecurityAuditorElement se = new SecurityAuditorElement(ClassElement.of(getProcessorContext().getProcessingEnv(), (DeclaredType) tm));
                 auditors.add(se);
             }
         }

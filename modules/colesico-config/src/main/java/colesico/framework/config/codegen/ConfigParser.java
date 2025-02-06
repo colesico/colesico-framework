@@ -59,7 +59,7 @@ public class ConfigParser extends FrameworkAbstractParser {
             superClass = (TypeElement) ((DeclaredType) superClass.getSuperclass()).asElement();
             ConfigPrototype cpAnn = superClass.getAnnotation(ConfigPrototype.class);
             if (cpAnn != null) {
-                return ClassElement.fromElement(processingEnv, superClass);
+                return ClassElement.of(processingEnv, superClass);
             }
         } while (!superClass.getSimpleName().toString().equals("Object"));
 
@@ -110,7 +110,7 @@ public class ConfigParser extends FrameworkAbstractParser {
             if (CodegenUtils.isAssignable(Object.class, targetMirror, processingEnv)) {
                 target = null;
             } else {
-                target = ClassElement.fromType(processingEnv, (DeclaredType) targetMirror);
+                target = ClassElement.of(processingEnv, (DeclaredType) targetMirror);
             }
         } else {
             target = null;

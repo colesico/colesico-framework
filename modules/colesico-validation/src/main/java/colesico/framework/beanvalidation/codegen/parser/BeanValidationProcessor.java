@@ -5,7 +5,7 @@ import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.beanvalidation.ValidatorBuilder;
 import colesico.framework.beanvalidation.codegen.generator.ValidatorBuilderGenerator;
-import colesico.framework.beanvalidation.codegen.model.ValidatedBeanElement;
+import colesico.framework.beanvalidation.codegen.model.BeanElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -23,7 +23,7 @@ public class BeanValidationProcessor extends FrameworkAbstractProcessor {
     private BeanValidationParser parser;
     private ValidatorBuilderGenerator generator;
 
-    private List<ValidatedBeanElement> validatedBeans;
+    private List<BeanElement> validatedBeans;
 
     @Override
     protected Class<? extends Annotation>[] getSupportedAnnotations() {
@@ -47,7 +47,7 @@ public class BeanValidationProcessor extends FrameworkAbstractProcessor {
             try {
                 beanClass = (TypeElement) elm;
                 logger.debug("Processing validatale bean class: " + beanClass.getSimpleName());
-                ValidatedBeanElement validatedBean = parser.parse(ClassElement.fromElement(processingEnv, beanClass));
+                BeanElement validatedBean = parser.parse(ClassElement.of(processingEnv, beanClass));
                 validatedBeans.add(validatedBean);
                 generator.generate(validatedBean);
             } catch (CodegenException ce) {

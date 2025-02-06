@@ -1,7 +1,7 @@
 package colesico.framework.example.validation.dto;
 
 import colesico.framework.beanvalidation.Validate;
-import colesico.framework.beanvalidation.ValidateAsBean;
+import colesico.framework.beanvalidation.ValidateBean;
 import colesico.framework.beanvalidation.ValidatorBuilder;
 
 @ValidatorBuilder
@@ -13,7 +13,7 @@ public class User {
     @Validate
     private String name;
 
-    @ValidateAsBean
+    @ValidateBean
     private Credentials credentials;
 
     private Contacts contacts;

@@ -69,7 +69,7 @@ public class ConfigProcessor extends FrameworkAbstractProcessor {
             TypeElement configClassElement;
             try {
                 configClassElement = (TypeElement) elm;
-                ClassElement classElement = ClassElement.fromElement(processingEnv, configClassElement);
+                ClassElement classElement = ClassElement.of(processingEnv, configClassElement);
                 logger.debug("Processing configuration: " + classElement.getName());
                 ConfigElement ce = configParser.parse(classElement);
                 configElements.add(ce);
