@@ -75,8 +75,8 @@ public class BeanValidationParser extends FrameworkAbstractParser {
     }
 
     protected ValidatorBuilderElement createValidatorBuilderElement(ClassElement beanClass, AnnotationAssist<ValidatorBuilder> builderSpec) {
-        DeclaredType extendsClass = (DeclaredType) builderSpec.getValueTypeMirror(a -> a.extendsClass());
-        DeclaredType packageFromClass = (DeclaredType) builderSpec.getValueTypeMirror(a -> a.packageClass());
+        DeclaredType extendsClass = (DeclaredType) builderSpec.getValueTypeMirror(a -> a.superclass());
+        DeclaredType packageFromClass = (DeclaredType) builderSpec.getValueTypeMirror(a -> a.packageOfClass());
 
         String packageName = builderSpec.unwrap().packageName();
         if (StringUtils.isBlank(packageName)) {

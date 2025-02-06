@@ -20,16 +20,13 @@ public class ValidatedPropertyElement {
 
     protected final String subject;
 
-    protected final String methodName;
-
     private final Boolean verifier;
 
     private final ValidateAsBeanElement validateWithBuilder;
 
-    public ValidatedPropertyElement(FieldElement originField, String subject, String methodName, Boolean verifier, ValidateAsBeanElement validateAsBean) {
+    public ValidatedPropertyElement(FieldElement originField, String subject, Boolean verifier, ValidateAsBeanElement validateAsBean) {
         this.originField = originField;
         this.subject = subject;
-        this.methodName = methodName;
         this.verifier = verifier;
         this.validateWithBuilder = validateAsBean;
         if (validateAsBean != null) {
@@ -57,7 +54,7 @@ public class ValidatedPropertyElement {
 
     public final String getPropertyReferenceName() {
         if (originField != null) {
-            String kebabCase = StrUtils.toSeparatorNotation(originField.getName(),'_') ;
+            String kebabCase = StrUtils.toSeparatorNotation(originField.getName(), '_');
             return StringUtils.toRootUpperCase(kebabCase);
         }
         return null;
@@ -68,16 +65,13 @@ public class ValidatedPropertyElement {
     }
 
     public String getMethodName() {
-        if (methodName == null) {
-            String prefix;
-            if (verifier) {
-                prefix = "verify";
-            } else {
-                prefix = "validate";
-            }
-            return prefix + StrUtils.firstCharToUpperCase(getPropertyName());
+        String prefix;
+        if (verifier) {
+            prefix = "verify";
+        } else {
+            prefix = "validate";
         }
-        return methodName;
+        return prefix + StrUtils.firstCharToUpperCase(getPropertyName());
     }
 
     public ValidatorBuilderElement getParentBuilder() {

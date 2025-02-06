@@ -12,14 +12,20 @@ import java.lang.annotation.*;
 public @interface ValidateAsBean {
 
     /**
-     * Validator builder class full name.
-     * If not specified will be used a builder prototype class name.
-     */
-    String builderClass() default "";
-
-    /**
      * Property value may be null.
      * If false - property value required.
      */
     boolean optional() default true;
+
+    /**
+     * Validator builders names this validation belongs to.
+     *
+     * @see ValidatorBuilder#name()
+     */
+    String[] builders() default {};
+
+    /**
+     * Target validation builder name that be used
+     */
+    String targetBuilder() default "";
 }

@@ -1,9 +1,14 @@
 package colesico.framework.beanvalidation;
 
+import colesico.framework.dslvalidator.Sequence;
+import colesico.framework.dslvalidator.command.MandatoryGroup;
+
 import java.lang.annotation.*;
 
 /**
- * Declares bean validator builder prototype
+ * Declares bean validator builder for given bean.
+ * A bean validator builder prototype will be generated that should be extended
+ * to implement the validation of the bean fields.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
@@ -13,22 +18,31 @@ import java.lang.annotation.*;
 public @interface ValidatorBuilder {
 
     /**
-     * Bean validator builder prototype package name
+     * For the bean to be validated, multiple validator builders can be generated.
+     * Each such builder has its own name. Different validation builders may validate different  fields of one bean.
+     * This can be done by specifying the validator builder name in the annotations {@link Validate}, {@link ValidateAsBean}
+     * Builder name can contain only alphanumeric char since it will be a validation builder class name suffix
+     */
+    String name() default "";
+
+    /**
+     * Validation sequence to be used to validate bean fields
+     */
+    Class<? extends Sequence> sequence() default MandatoryGroup.class;
+
+    /**
+     * Bean validator builder package name
      */
     String packageName() default "";
 
     /**
      * Bean validator builder prototype package name from specified class
      */
-    Class<?> packageClass() default Class.class;
+    Class<?> packageOfClass() default Class.class;
 
     /**
-     * Bean validator builder prototype class simple name.
-     * If not specified the prototype class name will be constructed in this way:
-     * '[validated bean class name] +'ValidatorBuilderPrototype':
+     * Validator builder superclass to be extended by generated builder prototype
      */
-    String classSimpleName() default "";
-
-    Class<? extends BeanValidatorBuilder> extendsClass() default BeanValidatorBuilder.class;
+    Class<? extends BeanValidatorBuilder> superclass() default BeanValidatorBuilder.class;
 
 }

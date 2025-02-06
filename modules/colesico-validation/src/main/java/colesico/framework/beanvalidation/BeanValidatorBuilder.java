@@ -7,23 +7,30 @@ import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 
 abstract public class BeanValidatorBuilder<V> extends AbstractValidatorBuilder {
 
-    public static final String COMMANDS_METHOD = "commands";
+    public static final String VALIDATION_METHOD = "validation";
 
     public BeanValidatorBuilder(ValidatorMessages vrMessages) {
         super(vrMessages);
     }
 
     /**
-     * Returns bean properties validation commands.
+     * Root validation subject
      */
-    abstract public Command<V>[] commands();
+    public String subject() {
+        return null;
+    }
+
+    /**
+     * Returns bean validation flow.
+     */
+    abstract public Command<V> validation();
 
     /**
      * Builds bean validator
      */
     @SuppressWarnings("unchecked")
     public DSLValidator<V> build() {
-        return validator(commands());
+        return validator(subject(), validation());
     }
 
 }

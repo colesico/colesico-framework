@@ -3,9 +3,9 @@ package colesico.framework.dslvalidator.builder;
 import java.util.function.Function;
 
 /**
- * Validated bean field reference
+ * Validated bean field reference to use in validator builder
  *
- * @param subject   Validation subject  associated with field.Typically, field name
+ * @param subject   Validation subject  associated with field. Typically, field name
  * @param extractor Field value extractor
  * @param <V>       class containing field
  * @param <N>       field type

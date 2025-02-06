@@ -3,7 +3,7 @@ package colesico.framework.beanvalidation;
 import java.lang.annotation.*;
 
 /**
- * Specifies that the bean property has to  be validated.
+ * Specifies that the bean property has to be validated.
  * <p>
  * In this case, the code generator creates a stub of the validation builder method for this property
  * and generates a code for including the validation of this field in the validation process.
@@ -16,7 +16,7 @@ public @interface Validate {
 
     /**
      * Validation subject overriding.
-     * By default subject is a name of validated property.
+     * By default, subject is a name of validated property.
      */
     String subject() default "";
 
@@ -27,8 +27,9 @@ public @interface Validate {
     boolean verifier() default false;
 
     /**
-     * Name of the validation method in the validation builder.
-     * By default validation method name is constructed as follow: 'validate'|'verify' + [validated property Name]
+     * Validator builders names this validation belongs to.
+     *
+     * @see ValidatorBuilder#name()
      */
-    String methodName() default "";
+    String[] builders() default {};
 }

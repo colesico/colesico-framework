@@ -29,14 +29,26 @@ public interface Sequence<V, N> extends Command<V> {
 
     List<Command<N>> getCommands();
 
-    default Sequence<V, N> addCommand(Command<N> command) {
+    default Sequence<V, N> append(Command<N> command) {
         getCommands().add(command);
         return this;
     }
 
-    default Sequence<V, N> addCommands(Command<N>[] commands) {
+    default Sequence<V, N> prepend(Command<N> command) {
+        getCommands().addFirst(command);
+        return this;
+    }
+
+    default Sequence<V, N> appendAll(Command<N>[] commands) {
         for (Command<N> cmd : commands) {
-            addCommand(cmd);
+            append(cmd);
+        }
+        return this;
+    }
+
+    default Sequence<V, N> prependAll(Command<N>[] commands) {
+        for (Command<N> cmd : commands) {
+            prepend(cmd);
         }
         return this;
     }

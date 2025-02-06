@@ -33,17 +33,23 @@ public final class DSLValidator<V> implements Validator<V> {
     private final String subject;
 
     /**
-     * Validation program
+     * Start validation command
      */
-    private final Command<V> program;
+    private final Command<V> validation;
 
-    public DSLValidator(String subject, Command<V> program) {
+    /**
+     * Constructor
+     *
+     * @param subject    root validation subject
+     * @param validation start validation command
+     */
+    public DSLValidator(String subject, Command<V> validation) {
         this.subject = subject;
-        this.program = program;
+        this.validation = validation;
     }
 
-    public DSLValidator(Command<V> program) {
-        this.program = program;
+    public DSLValidator(Command<V> validation) {
+        this.validation = validation;
         this.subject = null;
     }
 
@@ -53,7 +59,7 @@ public final class DSLValidator<V> implements Validator<V> {
     @Override
     public ValidationIssue validate(V value, Object... params) {
         ValidationContext<V> context = ValidationContext.ofRoot(subject, value, params);
-        program.execute(context);
+        validation.execute(context);
         return context.toIssue();
     }
 
@@ -65,15 +71,15 @@ public final class DSLValidator<V> implements Validator<V> {
     @Override
     public void accept(V value, Object... params) throws ValidationException {
         ValidationContext<V> context = ValidationContext.ofRoot(subject, value, params);
-        program.execute(context);
+        validation.execute(context);
         ValidationIssue issue = context.toIssue();
         if (issue != null) {
             throw new ValidationException(issue);
         }
     }
 
-    public Command<V> getProgram() {
-        return program;
+    public Command<V> getValidation() {
+        return validation;
     }
 
     public String getSubject() {

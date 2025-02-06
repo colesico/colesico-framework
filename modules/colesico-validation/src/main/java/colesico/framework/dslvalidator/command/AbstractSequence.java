@@ -37,7 +37,7 @@ abstract public class AbstractSequence<V, N> implements Sequence<V, N> {
     }
 
     public AbstractSequence(Command<N>[] commands) {
-        addCommands(commands);
+        appendAll(commands);
     }
 
     @Override
