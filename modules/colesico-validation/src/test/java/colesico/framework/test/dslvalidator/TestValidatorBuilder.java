@@ -33,9 +33,9 @@ public class TestValidatorBuilder extends AbstractValidatorBuilder {
 
     public Validator<DataBean> buildGroup() {
         return validator(
-                field("id", DataBean::getId, required(), interval(0L, 1L, true)),
-                field("name", DataBean::getName, required(), length(1, 2)),
-                field("value", DataBean::getValue, required(), length(1, 5))
+                map("id", DataBean::getId, required(), interval(0L, 1L, true)),
+                map("name", DataBean::getName, required(), length(1, 2)),
+                map("value", DataBean::getValue, required(), length(1, 5))
         );
     }
 
@@ -43,19 +43,19 @@ public class TestValidatorBuilder extends AbstractValidatorBuilder {
     public Validator<DataBean> buildChain() {
         return basicValidator(
                 "DataBean",
-                mandatoryChain(
-                        field("id", DataBean::getId,
+                mandatory(
+                        map("id", DataBean::getId,
                                 idValidor(),
                                 interval(0L, 1L, true)
                         ),
-                        field("name", DataBean::getName,
-                                group(
+                        map("name", DataBean::getName,
+                                series(
                                         required(),
                                         length(0, 1),
                                         length(1, 2)
                                 )
                         ),
-                        field("value", DataBean::getValue,
+                        map("value", DataBean::getValue,
                                 required(),
                                 length(1, 5)
                         )

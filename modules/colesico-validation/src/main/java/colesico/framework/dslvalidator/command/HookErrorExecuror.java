@@ -17,27 +17,30 @@
 package colesico.framework.dslvalidator.command;
 
 import colesico.framework.dslvalidator.Command;
+import colesico.framework.dslvalidator.Executor;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.translation.Translatable;
 
 /**
- * Checks for context nested errors presents n.
+ * Execute command and checks for context nested errors presents.
  * If nested errors is present adds error to current context
  */
-public class HookErrorCommand<V> implements Command<V> {
+public class HookErrorExecuror<V> extends Executor<V> {
 
     private final String errorCode;
     private final Translatable errorMessage;
     private final Object[] messageParams;
 
-    public HookErrorCommand(String errorCode, Translatable errorMessage, Object... messageParam) {
+    public HookErrorExecuror(String errorCode, Translatable errorMessage, Object[] messageParams, Command<V> command) {
+        super(command);
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
-        this.messageParams = messageParam;
+        this.messageParams = messageParams;
     }
 
     @Override
     public void execute(ValidationContext<V> context) {
+        command.execute(context);
         if (context.hasNestedErrors()) {
             context.addError(errorCode, errorMessage.translate(messageParams));
         }

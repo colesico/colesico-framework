@@ -23,79 +23,54 @@ import colesico.framework.dslvalidator.command.*;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 import colesico.framework.translation.Translatable;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 abstract public class ValidationFlowBuilder {
 
-    public static final String FIELD_METHOD = "field";
-    public static final String OPTIONAL_GROUP_METHOD = "optionalGroup";
-    public static final String MANDATORY_GROUP_METHOD = "mandatoryGroup";
+    public static final String MAP_METHOD = "map";
 
-    protected final ValidatorMessages vrMessages;
+    protected final ValidatorMessages msg;
 
-    public ValidationFlowBuilder(ValidatorMessages vrMessages) {
-        this.vrMessages = vrMessages;
+    public ValidationFlowBuilder(ValidatorMessages msg) {
+        this.msg = msg;
     }
 
     /**
      * Basic validator instance
      */
-    protected final <V> DSLValidator<V> basicValidator(final String subject, Command<V> program) {
-        return new DSLValidator<>(subject, program);
+    protected final <V> DSLValidator<V> basicValidator(final String subject, Command<V> command) {
+        return new DSLValidator<>(subject, command);
     }
 
-    protected final <V> DSLValidator<V> basicValidator(Command<V> program) {
-        return new DSLValidator<>(program);
+    protected final <V> DSLValidator<V> basicValidator(Command<V> command) {
+        return new DSLValidator<>(command);
     }
 
     /**
-     * Validator instance with program based on {@link MandatoryGroup }
+     * Validator instance with validation based on {@link MandatoryExecutor }
      */
     protected final <V> DSLValidator<V> validator(final String subject, final Command<V>... commands) {
-        var sequence = new MandatoryGroup<>(vrMessages, commands);
-        return new DSLValidator<>(subject, sequence);
+        SeriesIterator<V> seriesIterator = new SeriesIterator<>(commands);
+        MandatoryExecutor<V> mandatoryExecutor = new MandatoryExecutor<>(msg, seriesIterator);
+        return new DSLValidator<>(subject, mandatoryExecutor);
     }
 
     protected final <V> DSLValidator<V> validator(final Command<V>... commands) {
-        var sequence = new MandatoryGroup<>(vrMessages, commands);
-        return new DSLValidator<>(sequence);
+        SeriesIterator<V> seriesIterator = new SeriesIterator<>(commands);
+        MandatoryExecutor<V> mandatoryExecutor = new MandatoryExecutor<>(msg, seriesIterator);
+        return new DSLValidator<>(mandatoryExecutor);
     }
 
     /**
-     * Executes group commands  within the local context if context value is not null,
+     * Executes commands  within the local context if context value is not null,
      * otherwise throws validation error.
      * In case of local validation errors occur, command execution is NOT interrupted.
      *
-     * @see SequenceIterator
+     * @see SeriesIterator
      */
-    protected final <V> Command<V> group(final Command<V>... commands) {
-        return new SequenceIterator<>(commands);
-    }
-
-    /**
-     * Executes group commands if context value is not null.
-     * In case of local validation errors occur, command execution is NOT interrupted.
-     */
-    protected final <V> Command<V> optionalGroup(final Command<V>... commands) {
-        return new ConditionalGroup<>(c -> c.getValue() != null, commands);
-    }
-
-    /**
-     * @see ConditionalGroup
-     */
-    protected final <V> Command<V> conditionalGroup(Predicate<ValidationContext> condition, final Command<V>... commands) {
-        return new ConditionalGroup<>(condition, commands);
-    }
-
-    /**
-     * @see MandatoryGroup
-     */
-    protected final <V> Command<V> mandatoryGroup(final Command<V>... commands) {
-        return new MandatoryGroup<>(vrMessages, commands);
+    protected final <V> SeriesIterator<V> series(final Command<V>... commands) {
+        return new SeriesIterator<>(commands);
     }
 
     /**
@@ -104,26 +79,35 @@ abstract public class ValidationFlowBuilder {
      *
      * @see ChainIterator
      */
-    protected final <V> Command<V> chain(final Command<V>... commands) {
+    protected final <V> ChainIterator<V> chain(final Command<V>... commands) {
         return new ChainIterator<>(commands);
     }
 
     /**
-     * @see ConditionalExecutor
+     * @see OptionalExecutor
+     * @see ChainIterator
      */
-    protected final <V> Command<V> optionalChain(final Command<V>... commands) {
-        return new ConditionalExecutor<>(c -> c.getValue() != null, commands);
-    }
-
-    protected final <V> Command<V> conditionalChain(Predicate<ValidationContext> condition, final Command<V>... commands) {
-        return new ConditionalExecutor<>(condition, commands);
+    protected final <V> OptionalExecutor<V> optional(final Command<V>... commands) {
+        ChainIterator<V> chainIterator = new ChainIterator<>(commands);
+        return new OptionalExecutor<>(chainIterator);
     }
 
     /**
      * @see MandatoryExecutor
+     * @see ChainIterator
      */
-    protected final <V> Command<V> mandatoryChain(final Command<V>... commands) {
-        return new MandatoryExecutor<>(vrMessages, commands);
+    protected final <V> MandatoryExecutor<V> mandatory(final Command<V>... commands) {
+        ChainIterator<V> chainIterator = new ChainIterator<>(commands);
+        return new MandatoryExecutor<>(msg, chainIterator);
+    }
+
+    /**
+     * @see SeriesIterator
+     * @see ConditionalExecutor
+     */
+    protected final <V> ConditionalExecutor<V> conditional(Predicate<ValidationContext<V>> condition, final Command<V>... commands) {
+        SeriesIterator<V> seriesIterator = new SeriesIterator<>(commands);
+        return new ConditionalExecutor<>(condition, seriesIterator);
     }
 
     /**
@@ -131,9 +115,18 @@ abstract public class ValidationFlowBuilder {
      * In case of local validation errors occur, commands execution is interrupted.
      *
      * @see SubjectExecutor
+     * @see ChainIterator
      */
-    protected final <V> Command<V> subject(final String subject, final Command<V>... commands) {
-        return new SubjectExecutor<>(subject, commands);
+    protected final <V> SubjectExecutor<V> subject(final String subject, final Command<V>... commands) {
+        ChainIterator<V> chainIterator = new ChainIterator<>(commands);
+        return new SubjectExecutor<>(subject, chainIterator);
+    }
+
+    /**
+     * Creates new nested context with the subject and the value, extracted from the value of the local context.
+     */
+    protected final <V, N> ValueMapper<V, N> map(final String subject, final Function<V, N> mapper, final Command<N> command) {
+        return new ValueMapper<>(subject, mapper, command);
     }
 
     /**
@@ -142,38 +135,16 @@ abstract public class ValidationFlowBuilder {
      * In case of validation errors occur in the nested context, command execution is interrupted.
      *
      * @see ValueMapper
+     * @see ChainIterator
      */
-    protected final <V, N> Command<V> field(final String subject, final Function<V, N> extractor, final Command<N>... commands) {
-        return new ValueMapper<>(subject, extractor, commands);
+    protected final <V, N> ValueMapper<V, N> map(final String subject, final Function<V, N> mapper, final Command<N>... commands) {
+        ChainIterator<N> chainIterator = new ChainIterator<>(commands);
+        return new ValueMapper<>(subject, mapper, chainIterator);
     }
 
-    protected final <V, N> Command<V> field(final FieldReference<V, N> filedRef, final Command<N>... commands) {
-        return new ValueMapper<>(filedRef.subject(), filedRef.mapper(), commands);
-    }
-
-    /**
-     * @see OptionalValueMapper
-     */
-    protected final <V, N> Command<V> nested(final String subject, final Function<Optional<V>, Optional<N>> extractor, final Command<N>... commands) {
-        return new OptionalValueMapper<>(subject, extractor, commands);
-    }
-
-    /**
-     * Array/List item
-     *
-     * @see ItemMapper
-     */
-    protected final <V extends List<E>, E> Command<V> item(final String subject, final int index, final Command<E>... commands) {
-        return new ItemMapper<>(subject, index, commands);
-    }
-
-    /**
-     * Map entry
-     *
-     * @see EntryMapper
-     */
-    protected final <V extends Map<K, E>, K, E> Command<V> entry(final String subject, final K key, final Command<E>... commands) {
-        return new EntryMapper<>(subject, key, commands);
+    protected final <V, N> ValueMapper<V, N> map(final FieldReference<V, N> filedRef, final Command<N>... commands) {
+        ChainIterator<N> chainIterator = new ChainIterator<>(commands);
+        return new ValueMapper<>(filedRef.subject(), filedRef.mapper(), chainIterator);
     }
 
     /**
@@ -182,15 +153,17 @@ abstract public class ValidationFlowBuilder {
      *
      * @see IterableMapper
      */
-    protected final <V extends Iterable<I>, I> Command<V> forEach(final Command<I>... commands) {
-        return new IterableMapper<>(commands);
+    protected final <V extends Iterable<I>, I> Command<V> forEach(String subject, final Command<I>... commands) {
+        ChainIterator<I> chainIterator = new ChainIterator<>(commands);
+        return new IterableMapper<>(subject, chainIterator);
     }
 
     /**
-     * @see HookErrorCommand
+     * @see HookErrorExecuror
      */
-    protected final <V> Command<V> hookError(String errorCode, Translatable errorMsg, final Command<V>... commands) {
-        return new HookErrorCommand<>(errorCode, errorMsg, commands);
+    protected final <V> HookErrorExecuror<V> hookError(String errorCode, Translatable errorMsg, final Command<V>... commands) {
+        ChainIterator<V> chainIterator = new ChainIterator<>(commands);
+        return new HookErrorExecuror<>(errorCode, errorMsg, null, chainIterator);
     }
 
     /**

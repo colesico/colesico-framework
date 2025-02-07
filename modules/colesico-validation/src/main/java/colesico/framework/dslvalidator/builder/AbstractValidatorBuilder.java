@@ -36,7 +36,7 @@ abstract public class AbstractValidatorBuilder extends ValidationFlowBuilder {
      * Verify value exists (string is not blank, collection is not empty, etc)
      */
     protected <V> Command<V> required() {
-        return new RequiredVerifier<>(vrMessages);
+        return new RequiredVerifier<>(msg);
     }
 
     /**
@@ -66,7 +66,7 @@ abstract public class AbstractValidatorBuilder extends ValidationFlowBuilder {
     protected final Command<String> length(final Integer min,
                                            final Integer max) {
 
-        return new LengthVerifier(min, max, vrMessages);
+        return new LengthVerifier(min, max, msg);
     }
 
     /**
@@ -76,7 +76,7 @@ abstract public class AbstractValidatorBuilder extends ValidationFlowBuilder {
                                                            final Number max,
                                                            final boolean includeEndpoints) {
 
-        return new IntervalVerifier<>(min, max, includeEndpoints, vrMessages);
+        return new IntervalVerifier<>(min, max, includeEndpoints, msg);
     }
 
     /**
@@ -86,14 +86,14 @@ abstract public class AbstractValidatorBuilder extends ValidationFlowBuilder {
                                         final Number max,
                                         final boolean includeEndpoints) {
 
-        return new SizeVerifier<>(min, max, includeEndpoints, vrMessages);
+        return new SizeVerifier<>(min, max, includeEndpoints, msg);
     }
 
     /**
      * Verify date format
      */
     protected final Command<String> dateFormat(final String format) {
-        return new DateFormatVerifier(format, vrMessages);
+        return new DateFormatVerifier(format, msg);
     }
 
 }

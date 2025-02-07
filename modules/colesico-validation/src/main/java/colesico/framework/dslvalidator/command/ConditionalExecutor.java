@@ -15,10 +15,6 @@ public class ConditionalExecutor<V> extends Executor<V> {
 
     private final Predicate<ValidationContext<V>> condition;
 
-    public ConditionalExecutor(Predicate<ValidationContext<V>> condition) {
-        this.condition = condition;
-    }
-
     public ConditionalExecutor(Predicate<ValidationContext<V>> condition, Command<V> command) {
         super(command);
         this.condition = condition;
@@ -27,7 +23,7 @@ public class ConditionalExecutor<V> extends Executor<V> {
     @Override
     public void execute(ValidationContext<V> context) {
         if (condition.test(context)) {
-            super.execute(context);
+            command.execute(context);
         }
     }
 

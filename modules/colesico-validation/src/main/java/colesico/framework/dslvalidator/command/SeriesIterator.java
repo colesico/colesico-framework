@@ -8,12 +8,12 @@ import colesico.framework.dslvalidator.ValidationContext;
  * Successively executes all commands within the current context.
  * Commands execution is not interrupted when validation errors occur.
  */
-public class SequenceIterator<V> extends Iterator<V> {
+public class SeriesIterator<V> extends Iterator<V> {
 
-    public SequenceIterator() {
+    public SeriesIterator() {
     }
 
-    public SequenceIterator(Command<V>[] commands) {
+    public SeriesIterator(Command<V>[] commands) {
         super(commands);
     }
 

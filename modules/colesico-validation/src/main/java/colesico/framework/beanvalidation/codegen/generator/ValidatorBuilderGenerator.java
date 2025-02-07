@@ -112,12 +112,12 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
 
         CodeBlock.Builder cb = CodeBlock.builder();
         // TODO: sequence command from spec
-        cb.add("return group(\n");
+        cb.add("return series(\n");
         cb.indent();
         int i = 0;
         for (ValidationElement validation : validatorBuilder.getValidations()) {
             // field(FIELD_REF,
-            cb.add("$N($N, ", ValidationFlowBuilder.FIELD_METHOD, validation.getPropertyReferenceName());
+            cb.add("$N($N, ", ValidationFlowBuilder.MAP_METHOD, validation.getPropertyReferenceName());
             if (validation instanceof PropertyValidationElement propertyValidation) {
                 if (propertyValidation.getVerifier()) {
                     // this::verifyField1
