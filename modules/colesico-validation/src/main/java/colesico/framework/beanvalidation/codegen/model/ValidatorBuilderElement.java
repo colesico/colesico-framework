@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class ValidatorBuilderElement {
 
-    public static final String VALIDATOR_BUILDER_PROTOTYPE_SUFFIX = "Validation";
+    public static final String VALIDATOR_BUILDER_PROTOTYPE_SUFFIX = "ValidatorBuilder";
 
 
     /**
