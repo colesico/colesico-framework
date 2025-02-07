@@ -118,12 +118,10 @@ public class BeanValidationParser extends FrameworkAbstractParser {
         }
 
         String name = builderSpec.unwrap().name();
-        DeclaredType sequence = (DeclaredType) builderSpec.getValueTypeMirror(a -> a.sequence());
-
+        String command = builderSpec.unwrap().command();
 
         ValidatorBuilderElement validatorBuilder = new ValidatorBuilderElement(name, packageName,
-                ClassType.of(processingEnv, superclass), ClassType.of(processingEnv, sequence));
-
+                ClassType.of(processingEnv, superclass), command);
 
         return validatorBuilder;
     }

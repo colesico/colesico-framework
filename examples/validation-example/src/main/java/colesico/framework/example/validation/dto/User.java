@@ -16,6 +16,7 @@ public class User {
     @ValidateBean
     private Credentials credentials;
 
+    @ValidateBean
     private Contacts contacts;
 
     public Long getId() {

@@ -37,17 +37,17 @@ public class ValidatorBuilderElement {
     private final ClassType superclass;
 
     /**
-     * @see ValidatorBuilder#sequence()
+     * @see ValidatorBuilder#command()
      */
-    private final ClassType sequence;
+    private final String command;
 
     private final List<ValidationElement> validations = new ArrayList<>();
 
-    public ValidatorBuilderElement(String name, String packageName, ClassType superclass, ClassType sequence) {
+    public ValidatorBuilderElement(String name, String packageName, ClassType superclass, String command) {
         this.name = name;
         this.packageName = packageName;
         this.superclass = superclass;
-        this.sequence = sequence;
+        this.command = command;
     }
 
     public void addValidation(ValidationElement validation) {
@@ -92,8 +92,8 @@ public class ValidatorBuilderElement {
         return name;
     }
 
-    public ClassType getSequence() {
-        return sequence;
+    public String getCommand() {
+        return command;
     }
 
     @Override
@@ -101,7 +101,7 @@ public class ValidatorBuilderElement {
         return "ValidatorBuilderElement{" +
                 "parentBean=" + parentBean +
                 ", name='" + name + '\'' +
-                ", sequence=" + sequence +
+                ", command=" + command +
                 ", packageName='" + packageName + '\'' +
                 ", superclass=" + superclass +
                 ", properties=" + validations +

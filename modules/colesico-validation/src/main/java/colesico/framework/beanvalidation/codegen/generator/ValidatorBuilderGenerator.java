@@ -111,8 +111,8 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         mb.returns(returnsTypeName);
 
         CodeBlock.Builder cb = CodeBlock.builder();
-        // TODO: sequence command from spec
-        cb.add("return series(\n");
+
+        cb.add("return $N(\n", validatorBuilder.getCommand());
         cb.indent();
         int i = 0;
         for (ValidationElement validation : validatorBuilder.getValidations()) {

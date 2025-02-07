@@ -1,8 +1,5 @@
 package colesico.framework.beanvalidation;
 
-import colesico.framework.dslvalidator.Iterator;
-import colesico.framework.dslvalidator.command.ChainIterator;
-
 import java.lang.annotation.*;
 
 /**
@@ -26,9 +23,12 @@ public @interface ValidatorBuilder {
     String name() default "";
 
     /**
-     * Validation sequence to be used to validate bean fields
+     * Validation root command to be used to iterate fields
+     * possible values = chain, optional, mandatory, series , etc.
+     *
+     * @see colesico.framework.dslvalidator.builder.ValidationFlowBuilder
      */
-    Class<? extends Iterator> sequence() default ChainIterator.class;
+    String command() default "mandatory";
 
     /**
      * Bean validator builder package name.
