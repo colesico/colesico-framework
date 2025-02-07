@@ -143,9 +143,9 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
     }
 
 
-    private void generateProxyConstructors(ValidatorBuilderElement builderElement) {
+    private void generateProxyConstructors(ValidatorBuilderElement validatorBuilder) {
 
-        List<MethodElement> constructors = builderElement.getSuperclass().asClassElement().getConstructorsFiltered(
+        List<MethodElement> constructors = validatorBuilder.getSuperclass().asClassElement().getConstructorsFiltered(
                 c -> c.unwrap().getModifiers().contains(Modifier.PUBLIC)
         );
 
@@ -153,11 +153,11 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
             MethodSpec.Builder constructorBuilder = CodegenUtils.createProxyMethodBuilder(
                     constructor, null, null, false
             );
-            CodeBlock sucall = CodegenUtils.generateSuperMethodCall(constructor, null, null);
-            constructorBuilder.addCode(sucall);
+            CodeBlock suCall = CodegenUtils.generateSuperMethodCall(constructor, null, null);
+            constructorBuilder.addCode(suCall);
 
             // Generate extra params
-            for (ValidationElement validation : builderElement.getValidations()) {
+            for (ValidationElement validation : validatorBuilder.getValidations()) {
                 if (validation instanceof BeanValidationElement beanValidation) {
                     TypeName builderType = ClassName.bestGuess(beanValidation.getFieldValidatorBuilder().getBuilderClassName());
                     String builderVarName = beanValidation.getValidatorBuilderFieldName();

@@ -5,4 +5,5 @@ module colesico.framework.example.validation {
 
     exports colesico.framework.example.validation;
     exports colesico.framework.example.validation.dto;
+    exports colesico.framework.example.validation.validations;
 }

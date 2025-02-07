@@ -9,8 +9,8 @@ abstract public class BeanValidatorBuilder<V> extends AbstractValidatorBuilder {
 
     public static final String VALIDATION_METHOD = "validation";
 
-    public BeanValidatorBuilder(ValidatorMessages vrMessages) {
-        super(vrMessages);
+    public BeanValidatorBuilder(ValidatorMessages msg) {
+        super(msg);
     }
 
     /**
