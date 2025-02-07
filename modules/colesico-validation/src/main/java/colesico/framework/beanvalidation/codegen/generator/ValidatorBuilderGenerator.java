@@ -111,6 +111,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         mb.returns(returnsTypeName);
 
         CodeBlock.Builder cb = CodeBlock.builder();
+        // TODO: sequence command from spec
         cb.add("return group(\n");
         cb.indent();
         int i = 0;

@@ -20,49 +20,25 @@ import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.translation.Translatable;
 
-import java.util.Collection;
-
 /**
- * This sequence checks for nested contexts errors presents after commands execution.
- * If nested exceptions is present adds error to  current context
- *
- * @param
+ * Checks for context nested errors presents n.
+ * If nested errors is present adds error to current context
  */
-public class HookErrorChain<V> extends AbstractSequence<V, V> {
+public class HookErrorCommand<V> implements Command<V> {
 
     private final String errorCode;
     private final Translatable errorMessage;
     private final Object[] messageParams;
 
-    public HookErrorChain(String errorCode, Translatable errorMessage, Object... messageParam) {
+    public HookErrorCommand(String errorCode, Translatable errorMessage, Object... messageParam) {
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
         this.messageParams = messageParam;
     }
 
-    public HookErrorChain(String errorCode, Translatable errorMessage, Object[] messageParams, Command<V>[] commands) {
-        super(commands);
-        this.errorCode = errorCode;
-        this.errorMessage = errorMessage;
-        this.messageParams = messageParams;
-    }
-
-    protected boolean hasNestedErrors(ValidationContext<V> context) {
-        Collection<ValidationContext> nestedContexts = context.getNestedContexts().values();
-        for (ValidationContext nestedCtx : nestedContexts) {
-            if (nestedCtx.hasErrors()) {
-                return true;
-            } else if (hasNestedErrors(nestedCtx)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     public void execute(ValidationContext<V> context) {
-        executeChain(context);
-        if (hasNestedErrors(context)) {
+        if (context.hasNestedErrors()) {
             context.addError(errorCode, errorMessage.translate(messageParams));
         }
     }

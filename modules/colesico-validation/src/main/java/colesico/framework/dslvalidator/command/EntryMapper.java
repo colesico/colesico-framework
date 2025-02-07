@@ -17,26 +17,39 @@
 package colesico.framework.dslvalidator.command;
 
 import colesico.framework.dslvalidator.Command;
+import colesico.framework.dslvalidator.Mapper;
 import colesico.framework.dslvalidator.ValidationContext;
 
+import java.util.Map;
+
 /**
- * Executes all  commands within the current context.
- * Commands execution is not interrupted when validation errors occur.
+ * Perform command execution on a map entry  determined by key.
+ * Assumes entry value is null if the map value is null .
  *
- * @see ChainSequence
+ * @author Vladlen Larionov
  */
-public final class GroupSequence<V> extends AbstractSequence<V, V> {
+public final class EntryMapper<V extends Map<K, E>, K, E> extends Mapper<V, E> {
 
-    public GroupSequence() {
-    }
+    /**
+     * Map key
+     */
+    private final K key;
 
-    public GroupSequence(Command<V>[] commands) {
-        super(commands);
+    public EntryMapper(String subject, K key, Command<E> command) {
+        super(subject, command);
+        this.key = key;
     }
 
     @Override
     public void execute(ValidationContext<V> context) {
-        executeGroup(context);
+        V currentValue = context.getValue();
+        E entryValue;
+        if (currentValue == null) {
+            entryValue = null;
+        } else {
+            entryValue = currentValue.get(key);
+        }
+        ValidationContext<E> nestedContext = ValidationContext.ofNested(context, subject, entryValue);
+        command.execute(nestedContext);
     }
-
 }

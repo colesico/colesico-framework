@@ -17,49 +17,42 @@
 package colesico.framework.dslvalidator.command;
 
 import colesico.framework.dslvalidator.Command;
+import colesico.framework.dslvalidator.Mapper;
 import colesico.framework.dslvalidator.ValidationContext;
 
-import java.util.Map;
+import java.util.function.Function;
 
 /**
- * Perform command execution on a map entry  determined by key.
- * Assumes entry value is null if the map value is null .
+ * Extract nested value from current context value with mapper function
+ * and applies command to  that nested value within new nested context.
+ * <p>
+ * If current context value is null provides null value to subcontext
+ * without involving an mapper
  *
  * @author Vladlen Larionov
  */
-public final class EntryChain<V extends Map<K, E>, K, E> extends AbstractSequence<V, E> {
+public final class ValueMapper<V, N> extends Mapper<V, N> {
 
     /**
-     * Nested context subject
+     * Extracts nested value from value
      */
-    private final String subject;
+    private final Function<V, N> mapper;
 
-    /**
-     * Element index
-     */
-    private final K key;
-
-    public EntryChain(String subject, K key) {
-        this.subject = subject;
-        this.key = key;
-    }
-
-    public EntryChain(String subject, K key, Command<E>[] commands) {
-        super(commands);
-        this.subject = subject;
-        this.key = key;
+    public ValueMapper(String subject, Function<V, N> mapper, Command<N> command) {
+        super(subject, command);
+        this.mapper = mapper;
     }
 
     @Override
     public void execute(ValidationContext<V> context) {
         V currentValue = context.getValue();
-        E entryValue;
-        if (currentValue == null) {
-            entryValue = null;
+        N nestedValue;
+        if (currentValue != null) {
+            nestedValue = mapper.apply(currentValue);
         } else {
-            entryValue = currentValue.get(key);
+            nestedValue = null;
         }
-        ValidationContext<E> nestedContext = ValidationContext.ofNested(context, subject, entryValue);
-        executeChain(nestedContext);
+        ValidationContext<N> nestedContext = ValidationContext.ofNested(context, subject, nestedValue);
+        command.execute(nestedContext);
     }
 }

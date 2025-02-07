@@ -1,6 +1,6 @@
 package colesico.framework.beanvalidation;
 
-import colesico.framework.dslvalidator.Sequence;
+import colesico.framework.dslvalidator.Iterator;
 import colesico.framework.dslvalidator.command.MandatoryGroup;
 
 import java.lang.annotation.*;
@@ -28,7 +28,7 @@ public @interface ValidatorBuilder {
     /**
      * Validation sequence to be used to validate bean fields
      */
-    Class<? extends Sequence> sequence() default MandatoryGroup.class;
+    Class<? extends Iterator> sequence() default MandatoryGroup.class;
 
     /**
      * Bean validator builder package name.

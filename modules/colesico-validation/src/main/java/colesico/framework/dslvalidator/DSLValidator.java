@@ -33,19 +33,19 @@ public final class DSLValidator<V> implements Validator<V> {
     private final String subject;
 
     /**
-     * Start validation command
+     * Root validation command
      */
     private final Command<V> validation;
 
     /**
      * Constructor
      *
-     * @param subject    root validation subject
-     * @param validation start validation command
+     * @param subject root validation subject
+     * @param command root validation command
      */
-    public DSLValidator(String subject, Command<V> validation) {
+    public DSLValidator(String subject, Command<V> command) {
         this.subject = subject;
-        this.validation = validation;
+        this.validation = command;
     }
 
     public DSLValidator(Command<V> validation) {

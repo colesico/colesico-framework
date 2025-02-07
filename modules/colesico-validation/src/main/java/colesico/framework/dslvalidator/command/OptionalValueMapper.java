@@ -17,46 +17,36 @@
 package colesico.framework.dslvalidator.command;
 
 import colesico.framework.dslvalidator.Command;
+import colesico.framework.dslvalidator.Mapper;
 import colesico.framework.dslvalidator.ValidationContext;
 
 import java.util.Optional;
 import java.util.function.Function;
 
 /**
- * Analogue of {@link FieldChain} except current value is passing to extractor as {@link Optional}
+ * Analogue of {@link ValueMapper} except current value is passing to mapper as {@link Optional}
  * This allows null safe access to nested fields : o->o.map(t->t.getA()).map(a->a.getB()).map(b->b.getC())...
  *
  * @author Vladlen Larionov
  */
-public final class NestedChain<V, N> extends AbstractSequence<V, N> {
-
-    /**
-     * Nested context subject
-     */
-    private final String subject;
+public final class OptionalValueMapper<V, N> extends Mapper<V, N> {
 
     /**
      * Extracts nested value from value
      */
-    private final Function<Optional<V>, Optional<N>> extractor;
+    private final Function<Optional<V>, Optional<N>> mapper;
 
-    public NestedChain(String subject, Function<Optional<V>, Optional<N>> extractor) {
-        this.subject = subject;
-        this.extractor = extractor;
-    }
-
-    public NestedChain(String subject, Function<Optional<V>, Optional<N>> extractor, Command<N>[] commands) {
-        super(commands);
-        this.subject = subject;
-        this.extractor = extractor;
+    public OptionalValueMapper(String subject, Function<Optional<V>, Optional<N>> mapper, Command<N> command) {
+        super(subject, command);
+        this.mapper = mapper;
     }
 
     @Override
     public void execute(ValidationContext<V> context) {
         Optional<V> value = Optional.ofNullable(context.getValue());
-        Optional<N> nestedValue = extractor.apply(value);
+        Optional<N> nestedValue = mapper.apply(value);
         ValidationContext<N> nestedContext = ValidationContext.ofNested(context, subject, nestedValue.orElse(null));
-        executeChain(nestedContext);
+        command.execute(nestedContext);
     }
 }
 

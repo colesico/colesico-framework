@@ -18,12 +18,8 @@ package colesico.framework.dslvalidator;
 
 import colesico.framework.validation.ValidationError;
 import colesico.framework.validation.ValidationIssue;
-import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Validation context
@@ -154,10 +150,27 @@ public final class ValidationContext<V> {
         return !errors.isEmpty();
     }
 
+    public boolean hasNestedErrors() {
+        return hasNestedErrors(this);
+    }
+
+    protected boolean hasNestedErrors(ValidationContext<V> context) {
+        Collection<ValidationContext> nestedContexts = context.getNestedContexts().values();
+        for (ValidationContext nestedCtx : nestedContexts) {
+            if (nestedCtx.hasErrors()) {
+                return true;
+            } else if (hasNestedErrors(nestedCtx)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void addError(String code, String message) {
         ValidationError error = new ValidationError(code, message);
         errors.add(error);
     }
+
 
     public Map<String, ValidationContext> getNestedContexts() {
         return nestedContexts;
@@ -194,4 +207,11 @@ public final class ValidationContext<V> {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "ValidationContext{" +
+                "subject='" + subject + '\'' +
+                ", value=" + value +
+                '}';
+    }
 }

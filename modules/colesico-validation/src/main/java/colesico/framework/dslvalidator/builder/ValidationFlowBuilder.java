@@ -70,10 +70,10 @@ abstract public class ValidationFlowBuilder {
      * otherwise throws validation error.
      * In case of local validation errors occur, command execution is NOT interrupted.
      *
-     * @see GroupSequence
+     * @see SequenceIterator
      */
     protected final <V> Command<V> group(final Command<V>... commands) {
-        return new GroupSequence<>(commands);
+        return new SequenceIterator<>(commands);
     }
 
     /**
@@ -102,38 +102,38 @@ abstract public class ValidationFlowBuilder {
      * Executes commands within the local context.
      * In case of local validation errors occur, command execution is interrupted.
      *
-     * @see ChainSequence
+     * @see ChainIterator
      */
     protected final <V> Command<V> chain(final Command<V>... commands) {
-        return new ChainSequence<>(commands);
+        return new ChainIterator<>(commands);
     }
 
     /**
-     * @see ConditionalChain
+     * @see ConditionalExecutor
      */
     protected final <V> Command<V> optionalChain(final Command<V>... commands) {
-        return new ConditionalChain<>(c -> c.getValue() != null, commands);
+        return new ConditionalExecutor<>(c -> c.getValue() != null, commands);
     }
 
     protected final <V> Command<V> conditionalChain(Predicate<ValidationContext> condition, final Command<V>... commands) {
-        return new ConditionalChain<>(condition, commands);
+        return new ConditionalExecutor<>(condition, commands);
     }
 
     /**
-     * @see MandatoryChain
+     * @see MandatoryExecutor
      */
     protected final <V> Command<V> mandatoryChain(final Command<V>... commands) {
-        return new MandatoryChain<>(vrMessages, commands);
+        return new MandatoryExecutor<>(vrMessages, commands);
     }
 
     /**
      * Executes commands within the new nested context with specified subject.
      * In case of local validation errors occur, commands execution is interrupted.
      *
-     * @see SubjectChain
+     * @see SubjectExecutor
      */
     protected final <V> Command<V> subject(final String subject, final Command<V>... commands) {
-        return new SubjectChain<>(subject, commands);
+        return new SubjectExecutor<>(subject, commands);
     }
 
     /**
@@ -141,56 +141,56 @@ abstract public class ValidationFlowBuilder {
      * Execute commands within that nested context.
      * In case of validation errors occur in the nested context, command execution is interrupted.
      *
-     * @see FieldChain
+     * @see ValueMapper
      */
     protected final <V, N> Command<V> field(final String subject, final Function<V, N> extractor, final Command<N>... commands) {
-        return new FieldChain<>(subject, extractor, commands);
+        return new ValueMapper<>(subject, extractor, commands);
     }
 
     protected final <V, N> Command<V> field(final FieldReference<V, N> filedRef, final Command<N>... commands) {
-        return new FieldChain<>(filedRef.subject(), filedRef.extractor(), commands);
+        return new ValueMapper<>(filedRef.subject(), filedRef.mapper(), commands);
     }
 
     /**
-     * @see NestedChain
+     * @see OptionalValueMapper
      */
     protected final <V, N> Command<V> nested(final String subject, final Function<Optional<V>, Optional<N>> extractor, final Command<N>... commands) {
-        return new NestedChain<>(subject, extractor, commands);
+        return new OptionalValueMapper<>(subject, extractor, commands);
     }
 
     /**
      * Array/List item
      *
-     * @see ItemChain
+     * @see ItemMapper
      */
     protected final <V extends List<E>, E> Command<V> item(final String subject, final int index, final Command<E>... commands) {
-        return new ItemChain<>(subject, index, commands);
+        return new ItemMapper<>(subject, index, commands);
     }
 
     /**
      * Map entry
      *
-     * @see EntryChain
+     * @see EntryMapper
      */
     protected final <V extends Map<K, E>, K, E> Command<V> entry(final String subject, final K key, final Command<E>... commands) {
-        return new EntryChain<>(subject, key, commands);
+        return new EntryMapper<>(subject, key, commands);
     }
 
     /**
      * Iterates the elements of value from local context.
      * In case of  local validation errors occur, command execution is interrupted.
      *
-     * @see IterableChain
+     * @see IterableMapper
      */
     protected final <V extends Iterable<I>, I> Command<V> forEach(final Command<I>... commands) {
-        return new IterableChain<>(commands);
+        return new IterableMapper<>(commands);
     }
 
     /**
-     * @see HookErrorChain
+     * @see HookErrorCommand
      */
     protected final <V> Command<V> hookError(String errorCode, Translatable errorMsg, final Command<V>... commands) {
-        return new HookErrorChain<>(errorCode, errorMsg, commands);
+        return new HookErrorCommand<>(errorCode, errorMsg, commands);
     }
 
     /**

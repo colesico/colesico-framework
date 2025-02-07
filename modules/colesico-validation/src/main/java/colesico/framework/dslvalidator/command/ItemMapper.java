@@ -17,32 +17,39 @@
 package colesico.framework.dslvalidator.command;
 
 import colesico.framework.dslvalidator.Command;
+import colesico.framework.dslvalidator.Mapper;
 import colesico.framework.dslvalidator.ValidationContext;
 
+import java.util.List;
+
 /**
- * Executes sequence of commands within the new nested context with specified subject.
+ * Perform command execution on a list element determined by index.
+ * Assumes element value is null if the list value is null or the index is outside the list
  *
  * @author Vladlen Larionov
  */
-public final class SubjectChain<V> extends AbstractSequence<V, V> {
+public final class ItemMapper<V extends List<E>, E> extends Mapper<V, E> {
 
     /**
-     * Nested context subject
+     * Element index
      */
-    private final String subject;
+    private final int index;
 
-    public SubjectChain(String subject) {
-        this.subject = subject;
-    }
-
-    public SubjectChain(String subject, Command<V>[] commands) {
-        super(commands);
-        this.subject = subject;
+    public ItemMapper(String subject, int index, Command<E> command) {
+        super(subject, command);
+        this.index = index;
     }
 
     @Override
     public void execute(ValidationContext<V> context) {
-        ValidationContext<V> nestedContext = ValidationContext.ofNested(context, subject, context.getValue());
-        executeChain(nestedContext);
+        V currentValue = context.getValue();
+        E elementValue;
+        if (currentValue == null || index >= currentValue.size() || index < 0) {
+            elementValue = null;
+        } else {
+            elementValue = currentValue.get(index);
+        }
+        ValidationContext<E> nestedContext = ValidationContext.ofNested(context, subject, elementValue);
+        command.execute(nestedContext);
     }
 }

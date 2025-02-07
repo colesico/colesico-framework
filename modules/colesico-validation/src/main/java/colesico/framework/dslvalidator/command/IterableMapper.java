@@ -17,6 +17,7 @@
 package colesico.framework.dslvalidator.command;
 
 import colesico.framework.dslvalidator.Command;
+import colesico.framework.dslvalidator.Mapper;
 import colesico.framework.dslvalidator.ValidationContext;
 
 /**
@@ -25,14 +26,10 @@ import colesico.framework.dslvalidator.ValidationContext;
  *
  * @param <V>
  */
-public class IterableChain<V extends Iterable<I>, I> extends AbstractSequence<V, I> {
+public class IterableMapper<V extends Iterable<I>, I> extends Mapper<V, I> {
 
-    public IterableChain() {
-    }
-
-
-    public IterableChain(Command<I>[] commands) {
-        super(commands);
+    public IterableMapper(String subject, Command<I> command) {
+        super(subject, command);
     }
 
     @Override
@@ -44,7 +41,7 @@ public class IterableChain<V extends Iterable<I>, I> extends AbstractSequence<V,
         int idx = 0;
         for (I itemValue : items) {
             ValidationContext<I> nestedContext = ValidationContext.ofNested(context, Integer.toString(idx++), itemValue);
-            executeChain(nestedContext);
+            command.execute(nestedContext);
         }
     }
 
