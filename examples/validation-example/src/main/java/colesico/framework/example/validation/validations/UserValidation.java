@@ -11,7 +11,10 @@ public class UserValidation extends UserValidatorBuilder {
 
     @Override
     protected Command<Long> validateId() {
-        return null;
+        return chain(
+                required(),
+                interval(0,100)
+        );
     }
 
     @Override

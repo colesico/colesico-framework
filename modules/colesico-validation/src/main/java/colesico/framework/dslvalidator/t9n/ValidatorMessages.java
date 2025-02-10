@@ -43,6 +43,10 @@ public interface ValidatorMessages {
     @Ru("Неверный числовой формат")
     String invalidNumberFormat();
 
+    @Text("Positive value required")
+    @Ru("Треуется позитивное значение")
+    String positiveValueRequired();
+
     //
     // LengthVerifier
     //

@@ -79,6 +79,15 @@ abstract public class AbstractValidatorBuilder extends ValidationFlowBuilder {
         return new IntervalVerifier<>(min, max, includeEndpoints, msg);
     }
 
+    protected final <V extends Number> Command<V> interval(final Number min,
+                                                           final Number max) {
+        return new IntervalVerifier<>(min, max, true, msg);
+    }
+
+    protected final <V extends Number> Command<V> positive() {
+        return new PositiveVerifier<>(msg);
+    }
+
     /**
      * Verify collection size range
      */
