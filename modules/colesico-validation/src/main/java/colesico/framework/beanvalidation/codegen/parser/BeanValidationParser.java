@@ -42,9 +42,9 @@ public class BeanValidationParser extends FrameworkAbstractParser {
 
         boolean verifier = validateSpec == null ? false : validateSpec.unwrap().verifier();
 
-        String command = validateSpec.unwrap().command();
+        String mapper = validateSpec.unwrap().mapper();
 
-        PropertyValidationElement propertyValidation = new PropertyValidationElement(field, subject, command, verifier);
+        PropertyValidationElement propertyValidation = new PropertyValidationElement(field, subject, mapper, verifier);
         validatorBuilder.addValidation(propertyValidation);
     }
 
@@ -84,9 +84,9 @@ public class BeanValidationParser extends FrameworkAbstractParser {
             subject = field.getName();
         }
 
-        String command = validateBeanSpec.unwrap().command();
+        String mapper = validateBeanSpec.unwrap().mapper();
 
-        BeanValidationElement beanValidation = new BeanValidationElement(field, subject, command, fieldValidatorBuilder);
+        BeanValidationElement beanValidation = new BeanValidationElement(field, subject, mapper, fieldValidatorBuilder);
 
         validatorBuilder.addValidation(beanValidation);
     }

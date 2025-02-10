@@ -116,7 +116,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         int i = 0;
         for (ValidationElement validation : validatorBuilder.getValidations()) {
             // map(FIELD_REF,
-            cb.add("$N($N, ", validation.getCommand(), validation.getPropertyReferenceName());
+            cb.add("$N($N, ", validation.getMapper(), validation.getPropertyReferenceName());
             if (validation instanceof PropertyValidationElement propertyValidation) {
                 if (propertyValidation.getVerifier()) {
                     // this::verifyField1

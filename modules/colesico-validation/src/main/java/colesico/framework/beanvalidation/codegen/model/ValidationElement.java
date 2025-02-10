@@ -28,17 +28,17 @@ abstract public class ValidationElement {
     protected final String subject;
 
     /**
-     * Element mapper
+     * Field mapper command
      *
-     * @see Validate#command()
-     * @see ValidateBean#command()
+     * @see Validate#mapper()
+     * @see ValidateBean#mapper()
      */
-    protected final String command;
+    protected final String mapper;
 
-    public ValidationElement(FieldElement originField, String subject, String command) {
+    public ValidationElement(FieldElement originField, String subject, String mapper) {
         this.originField = originField;
         this.subject = subject;
-        this.command = command;
+        this.mapper = mapper;
     }
 
     /**
@@ -88,8 +88,8 @@ abstract public class ValidationElement {
         return subject;
     }
 
-    public String getCommand() {
-        return command;
+    public String getMapper() {
+        return mapper;
     }
 
 }

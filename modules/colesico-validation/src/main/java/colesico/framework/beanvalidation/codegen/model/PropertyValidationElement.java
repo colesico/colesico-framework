@@ -12,8 +12,8 @@ public class PropertyValidationElement extends ValidationElement {
 
     private final Boolean verifier;
 
-    public PropertyValidationElement(FieldElement originField, String subject, String command, Boolean verifier) {
-        super(originField, subject, command);
+    public PropertyValidationElement(FieldElement originField, String subject, String mapper, Boolean verifier) {
+        super(originField, subject, mapper);
         this.verifier = verifier;
     }
 

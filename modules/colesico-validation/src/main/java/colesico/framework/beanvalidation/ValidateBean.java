@@ -24,7 +24,7 @@ public @interface ValidateBean {
      *
      * @see colesico.framework.dslvalidator.builder.ValidationFlowBuilder
      */
-    String command() default "map";
+    String mapper() default "map";
 
     /**
      * Validator builders names this validation belongs to.
