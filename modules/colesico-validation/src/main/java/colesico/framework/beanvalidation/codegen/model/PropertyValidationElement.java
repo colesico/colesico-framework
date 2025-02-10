@@ -10,8 +10,8 @@ public class PropertyValidationElement extends ValidationElement {
 
     private final Boolean verifier;
 
-    public PropertyValidationElement(FieldElement originField, String subject, Boolean verifier) {
-        super(originField, subject);
+    public PropertyValidationElement(FieldElement originField, String subject, String command, Boolean verifier) {
+        super(originField, subject, command);
         this.verifier = verifier;
     }
 

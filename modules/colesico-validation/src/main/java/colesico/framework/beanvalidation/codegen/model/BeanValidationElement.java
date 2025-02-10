@@ -14,8 +14,8 @@ public class BeanValidationElement extends ValidationElement {
      */
     private ValidatorBuilderElement fieldValidatorBuilder;
 
-    public BeanValidationElement(FieldElement originField, String subject, ValidatorBuilderElement fieldValidatorBuilder) {
-        super(originField, subject);
+    public BeanValidationElement(FieldElement originField, String subject, String command, ValidatorBuilderElement fieldValidatorBuilder) {
+        super(originField, subject, command);
         this.fieldValidatorBuilder = fieldValidatorBuilder;
     }
 

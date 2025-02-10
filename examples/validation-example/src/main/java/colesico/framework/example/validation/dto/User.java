@@ -5,7 +5,7 @@ import colesico.framework.beanvalidation.ValidateBean;
 import colesico.framework.beanvalidation.ValidatorBuilder;
 import colesico.framework.example.validation.validations.AppValidatorBuilder;
 
-@ValidatorBuilder(superclass = AppValidatorBuilder.class)
+@ValidatorBuilder(superclass = AppValidatorBuilder.class, command = "series")
 public class User {
 
     @Validate
@@ -20,7 +20,7 @@ public class User {
     @ValidateBean
     private Contacts contacts;
 
-    public Long getId() {
+     public Long getId() {
         return id;
     }
 

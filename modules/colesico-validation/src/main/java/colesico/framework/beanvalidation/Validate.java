@@ -9,7 +9,7 @@ import java.lang.annotation.*;
  * and generates a code for including the validation of this field in the validation process.
  */
 @Retention(RetentionPolicy.SOURCE)
-@Target({ElementType.FIELD}) //TODO: support on getters
+@Target({ElementType.FIELD})
 @Inherited
 @Documented
 public @interface Validate {
@@ -25,6 +25,13 @@ public @interface Validate {
      * Use this flag to  implement a  value direct check, rather than supply a validation command.
      */
     boolean verifier() default false;
+
+    /**
+     * Command to map field value to validation context
+     *
+     * @see colesico.framework.dslvalidator.builder.ValidationFlowBuilder
+     */
+    String command() default "map";
 
     /**
      * Validator builders names this validation belongs to.

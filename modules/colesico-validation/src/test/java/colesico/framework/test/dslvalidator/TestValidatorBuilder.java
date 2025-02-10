@@ -33,9 +33,9 @@ public class TestValidatorBuilder extends AbstractValidatorBuilder {
 
     public Validator<DataBean> buildGroup() {
         return validator(
-                map("id", DataBean::getId, required(), interval(0L, 1L, true)),
-                map("name", DataBean::getName, required(), length(1, 2)),
-                map("value", DataBean::getValue, required(), length(1, 5))
+                field("id", DataBean::getId, required(), interval(0L, 1L, true)),
+                field("name", DataBean::getName, required(), length(1, 2)),
+                field("value", DataBean::getValue, required(), length(1, 5))
         );
     }
 
@@ -44,7 +44,7 @@ public class TestValidatorBuilder extends AbstractValidatorBuilder {
         return basicValidator(
                 "DataBean",
                 mandatory(
-                        map("id", DataBean::getId,
+                        field("id", DataBean::getId,
                                 idValidor(),
                                 interval(0L, 1L, true)
                         ),
@@ -55,7 +55,7 @@ public class TestValidatorBuilder extends AbstractValidatorBuilder {
                                         length(1, 2)
                                 )
                         ),
-                        map("value", DataBean::getValue,
+                        field("value", DataBean::getValue,
                                 required(),
                                 length(1, 5)
                         )

@@ -24,7 +24,7 @@ public @interface ValidatorBuilder {
 
     /**
      * Validation root command to be used to iterate fields
-     * possible values = chain, optional, mandatory, series , etc.
+     * possible values = series, chain, optional, mandatory, etc.
      *
      * @see colesico.framework.dslvalidator.builder.ValidationFlowBuilder
      */
@@ -34,16 +34,10 @@ public @interface ValidatorBuilder {
      * Bean validator builder package name.
      * Package name obtaining order:
      * - packageName
-     * - packageOf
      * - superclass
      * - validated bean
      */
     String packageName() default "";
-
-    /**
-     * Bean validator builder prototype package name from specified class
-     */
-    Class<?> packageOf() default Class.class;
 
     /**
      * Validator builder superclass to be extended by generated builder prototype

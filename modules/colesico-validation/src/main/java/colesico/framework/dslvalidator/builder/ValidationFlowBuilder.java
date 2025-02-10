@@ -84,6 +84,7 @@ abstract public class ValidationFlowBuilder {
     }
 
     /**
+     * Optional chain
      * @see OptionalExecutor
      * @see ChainIterator
      */
@@ -93,6 +94,7 @@ abstract public class ValidationFlowBuilder {
     }
 
     /**
+     * Mandatory chain
      * @see MandatoryExecutor
      * @see ChainIterator
      */
@@ -102,6 +104,7 @@ abstract public class ValidationFlowBuilder {
     }
 
     /**
+     * Conditional chain
      * @see SeriesIterator
      * @see ConditionalExecutor
      */
@@ -129,6 +132,11 @@ abstract public class ValidationFlowBuilder {
         return new ValueMapper<>(subject, mapper, command);
     }
 
+    protected final <V, N> ValueMapper<V, N> map(final FieldReference<V, N> filedRef, final Command<N> command) {
+        return new ValueMapper<>(filedRef.subject(), filedRef.mapper(), command);
+    }
+
+
     /**
      * Creates new nested context with the subject and the value, extracted from the value of the local context.
      * Execute commands within that nested context.
@@ -137,12 +145,12 @@ abstract public class ValidationFlowBuilder {
      * @see ValueMapper
      * @see ChainIterator
      */
-    protected final <V, N> ValueMapper<V, N> map(final String subject, final Function<V, N> mapper, final Command<N>... commands) {
+    protected final <V, N> ValueMapper<V, N> field(final String subject, final Function<V, N> mapper, final Command<N>... commands) {
         ChainIterator<N> chainIterator = new ChainIterator<>(commands);
         return new ValueMapper<>(subject, mapper, chainIterator);
     }
 
-    protected final <V, N> ValueMapper<V, N> map(final FieldReference<V, N> filedRef, final Command<N>... commands) {
+    protected final <V, N> ValueMapper<V, N> field(final FieldReference<V, N> filedRef, final Command<N>... commands) {
         ChainIterator<N> chainIterator = new ChainIterator<>(commands);
         return new ValueMapper<>(filedRef.subject(), filedRef.mapper(), chainIterator);
     }
@@ -159,6 +167,7 @@ abstract public class ValidationFlowBuilder {
     }
 
     /**
+     * Hook error chain
      * @see HookErrorExecuror
      */
     protected final <V> HookErrorExecuror<V> hookError(String errorCode, Translatable errorMsg, final Command<V>... commands) {

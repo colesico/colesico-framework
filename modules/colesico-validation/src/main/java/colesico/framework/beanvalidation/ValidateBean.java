@@ -18,6 +18,13 @@ public @interface ValidateBean {
     String subject() default "";
 
     /**
+     * Command to map field value to validation context
+     *
+     * @see colesico.framework.dslvalidator.builder.ValidationFlowBuilder
+     */
+    String command() default "map";
+
+    /**
      * Validator builders names this validation belongs to.
      *
      * @see ValidatorBuilder#name()

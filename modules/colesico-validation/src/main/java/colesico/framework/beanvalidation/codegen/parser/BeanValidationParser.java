@@ -38,7 +38,9 @@ public class BeanValidationParser extends FrameworkAbstractParser {
 
         boolean verifier = validateSpec == null ? false : validateSpec.unwrap().verifier();
 
-        PropertyValidationElement propertyValidation = new PropertyValidationElement(field, subject, verifier);
+        String command = validateSpec.unwrap().command();
+
+        PropertyValidationElement propertyValidation = new PropertyValidationElement(field, subject, command, verifier);
         validatorBuilder.addValidation(propertyValidation);
     }
 
@@ -73,7 +75,9 @@ public class BeanValidationParser extends FrameworkAbstractParser {
             subject = field.getName();
         }
 
-        BeanValidationElement beanValidation = new BeanValidationElement(field, subject, fieldValidatorBuilder);
+        String command = validateBeanSpec.unwrap().command();
+
+        BeanValidationElement beanValidation = new BeanValidationElement(field, subject, command, fieldValidatorBuilder);
 
         validatorBuilder.addValidation(beanValidation);
     }
@@ -103,14 +107,10 @@ public class BeanValidationParser extends FrameworkAbstractParser {
     protected ValidatorBuilderElement createValidatorBuilderElement(ClassElement beanClass, AnnotationAssist<ValidatorBuilder> builderSpec) {
 
         DeclaredType superclass = (DeclaredType) builderSpec.getValueTypeMirror(a -> a.superclass());
-
-        DeclaredType packageOf = (DeclaredType) builderSpec.getValueTypeMirror(a -> a.packageOf());
-
         String packageName = builderSpec.unwrap().packageName();
+
         if (StringUtils.isBlank(packageName)) {
-            if (!CodegenUtils.isAssignable(Class.class, packageOf, processingEnv)) {
-                packageName = (new ClassType(processingEnv, packageOf)).asClassElement().getPackageName();
-            } else if (!CodegenUtils.isAssignable(BeanValidatorBuilder.class, superclass, processingEnv)) {
+            if (!CodegenUtils.isAssignable(BeanValidatorBuilder.class, superclass, processingEnv)) {
                 packageName = (new ClassType(processingEnv, superclass)).asClassElement().getPackageName();
             } else {
                 packageName = beanClass.getPackageName();

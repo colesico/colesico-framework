@@ -2,11 +2,14 @@ package colesico.framework.beanvalidation.codegen.model;
 
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.model.FieldElement;
+import colesico.framework.beanvalidation.Validate;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.type.TypeMirror;
 
 /**
+ * Element to be validated  (property field, bean field)
+ *
  * @see colesico.framework.beanvalidation.Validate
  */
 abstract public class ValidationElement {
@@ -23,9 +26,17 @@ abstract public class ValidationElement {
      */
     protected final String subject;
 
-    public ValidationElement(FieldElement originField, String subject) {
+    /**
+     * Element mapper
+     *
+     * @see Validate#command()
+     */
+    protected final String command;
+
+    public ValidationElement(FieldElement originField, String subject, String command) {
         this.originField = originField;
         this.subject = subject;
+        this.command = command;
     }
 
     /**

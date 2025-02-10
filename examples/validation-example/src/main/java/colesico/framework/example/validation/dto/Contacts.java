@@ -1,6 +1,7 @@
 package colesico.framework.example.validation.dto;
 
 import colesico.framework.beanvalidation.Validate;
+import colesico.framework.beanvalidation.ValidateBean;
 import colesico.framework.beanvalidation.ValidatorBuilder;
 import colesico.framework.example.validation.validations.AppValidatorBuilder;
 
@@ -15,6 +16,9 @@ public class Contacts {
 
     @Validate
     private String email;
+
+    @ValidateBean
+    private Credentials credentials;
 
     public PostAddress getPostAddress() {
         return postAddress;
@@ -38,5 +42,13 @@ public class Contacts {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Credentials getCredentials() {
+        return credentials;
+    }
+
+    public void setCredentials(Credentials credentials) {
+        this.credentials = credentials;
     }
 }
