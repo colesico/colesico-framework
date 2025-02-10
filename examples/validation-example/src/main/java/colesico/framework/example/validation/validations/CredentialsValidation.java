@@ -10,6 +10,9 @@ public class CredentialsValidation extends CredentialsValidatorBuilder {
 
     @Override
     protected Command<String> validatePassword() {
-        return null;
+        return chain(
+                required(),
+                length(5, 32)
+        );
     }
 }

@@ -23,6 +23,8 @@ import colesico.framework.dslvalidator.command.*;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 import colesico.framework.translation.Translatable;
 
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -85,6 +87,7 @@ abstract public class ValidationFlowBuilder {
 
     /**
      * Optional chain
+     *
      * @see OptionalExecutor
      * @see ChainIterator
      */
@@ -95,6 +98,7 @@ abstract public class ValidationFlowBuilder {
 
     /**
      * Mandatory chain
+     *
      * @see MandatoryExecutor
      * @see ChainIterator
      */
@@ -105,6 +109,7 @@ abstract public class ValidationFlowBuilder {
 
     /**
      * Conditional chain
+     *
      * @see SeriesIterator
      * @see ConditionalExecutor
      */
@@ -136,7 +141,6 @@ abstract public class ValidationFlowBuilder {
         return new ValueMapper<>(filedRef.subject(), filedRef.mapper(), command);
     }
 
-
     /**
      * Creates new nested context with the subject and the value, extracted from the value of the local context.
      * Execute commands within that nested context.
@@ -155,6 +159,16 @@ abstract public class ValidationFlowBuilder {
         return new ValueMapper<>(filedRef.subject(), filedRef.mapper(), chainIterator);
     }
 
+    protected final <V extends List<E>, E> ItemMapper<V, E> item(final String subject, final int index, final Command<E>... commands) {
+        ChainIterator<E> chainIterator = new ChainIterator<>(commands);
+        return new ItemMapper<>(subject, index, chainIterator);
+    }
+
+    protected final <V extends Map<K, E>, K, E> EntryMapper<V, K, E> entry(final String subject, final K key, final Command<E>... commands) {
+        ChainIterator<E> chainIterator = new ChainIterator<>(commands);
+        return new EntryMapper<>(subject, key, chainIterator);
+    }
+
     /**
      * Iterates the elements of value from local context.
      * In case of  local validation errors occur, command execution is interrupted.
@@ -168,6 +182,7 @@ abstract public class ValidationFlowBuilder {
 
     /**
      * Hook error chain
+     *
      * @see HookErrorExecuror
      */
     protected final <V> HookErrorExecuror<V> hookError(String errorCode, Translatable errorMsg, final Command<V>... commands) {

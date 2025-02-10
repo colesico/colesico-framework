@@ -5,7 +5,10 @@ import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 import colesico.framework.example.validation.dto.PostAddress;
 
-public class ContactsValidation extends ContactsValidatorBuilder{
+import static colesico.framework.example.validation.validations.PostAddressValidatorBuilder.ADDRESS;
+import static colesico.framework.example.validation.validations.PostAddressValidatorBuilder.POST_CODE;
+
+public class ContactsValidation extends ContactsValidatorBuilder {
 
     public ContactsValidation(ValidatorMessages msg, CredentialsValidatorBuilder credentialsValidation) {
         super(msg, credentialsValidation);
@@ -13,16 +16,24 @@ public class ContactsValidation extends ContactsValidatorBuilder{
 
     @Override
     protected Command<PostAddress> validatePostAddress() {
-        return null;
+        return series(
+                field(ADDRESS, required()),
+                field(POST_CODE, required(), length(10, 100))
+        );
     }
 
     @Override
     protected void verifyPhone(ValidationContext<String> ctx) {
-
+        if (ctx.getValue() == null) {
+            ctx.addError("PhoneError", "Invalid format");
+        }
     }
 
     @Override
     protected Command<String> validateEmail() {
-        return null;
+        return chain(
+                required(),
+                length(5, 200)
+        );
     }
 }
