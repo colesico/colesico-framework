@@ -58,7 +58,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         mb.addJavadoc("Validate $N", validation.getPropertyName());
 
         // return mandatory(validatorBuilderField1.validation())
-        mb.addStatement("return $N.$N()", validation.getValidatorBuilderFieldName(), BeanValidatorBuilder.VALIDATION_METHOD);
+        mb.addStatement("return $N.$N()", validation.getValidatorBuilderFieldName(), BeanValidatorBuilder.VALIDATE_METHOD);
         classBuilder.addMethod(mb.build());
     }
 
@@ -99,7 +99,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
 
 
     private void generateRootValidationMethod(ValidatorBuilderElement validatorBuilder) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(BeanValidatorBuilder.VALIDATION_METHOD);
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(BeanValidatorBuilder.VALIDATE_METHOD);
         mb.addModifiers(Modifier.PUBLIC);
         mb.addAnnotation(Override.class);
 
