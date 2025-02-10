@@ -14,13 +14,15 @@ import java.lang.annotation.*;
 @Documented
 public @interface ValidatorBuilder {
 
+    String DEFAULT_BUILDER ="default";
+
     /**
      * For the bean to be validated, multiple validator builders can be generated.
      * Each such builder has its own name. Different validation builders may validate different  fields of one bean.
      * This can be done by specifying the validator builder name in the annotations {@link Validate}, {@link ValidateBean}
      * Builder name can contain only alphanumeric char since it will be a validation builder class name suffix
      */
-    String name() default "";
+    String name() default DEFAULT_BUILDER;
 
     /**
      * Validation root command to be used to iterate fields

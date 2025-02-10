@@ -27,6 +27,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -83,6 +84,11 @@ abstract public class FrameworkAbstractProcessor extends AbstractProcessor {
             System.out.print("Error initializing " + this.getClass().getName() + " annotation processor ");
             System.out.println(e);
         }
+    }
+
+    protected Set<Class<? extends Annotation>> toAnnotationsSet(Class<? extends Annotation>... annotations) {
+        Set<Class<? extends Annotation>> result = new HashSet<>(Arrays.asList(annotations));
+        return result;
     }
 
     protected Elements getElementUtils() {

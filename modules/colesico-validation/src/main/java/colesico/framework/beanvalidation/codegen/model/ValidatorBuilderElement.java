@@ -23,14 +23,14 @@ public class ValidatorBuilderElement {
     private BeanElement parentBean;
 
     /**
-     * Validator builder prototype  name
+     * Validator builder  name
      *
      * @see ValidatorBuilder#name()
      */
     private final String name;
 
     /**
-     * Validator builder prototype package name
+     * Validator builder  package name
      */
     private final String packageName;
 
@@ -59,8 +59,14 @@ public class ValidatorBuilderElement {
      * Validator builder class simple name
      */
     public String getBuilderClassSimpleName() {
+        String nameSuffix;
+        if (ValidatorBuilder.DEFAULT_BUILDER.equals(name)) {
+            nameSuffix = "";
+        } else {
+            nameSuffix = StrUtils.firstCharToUpperCase(name);
+        }
         return parentBean.getOriginType().asClassElement().getSimpleName()
-                + StrUtils.firstCharToUpperCase(name)
+                + nameSuffix
                 + VALIDATOR_BUILDER_PROTOTYPE_SUFFIX;
     }
 

@@ -17,8 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.DeclaredType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class BeanValidationParser extends FrameworkAbstractParser {
 
@@ -29,6 +28,11 @@ public class BeanValidationParser extends FrameworkAbstractParser {
     protected void parsePropertyValidation(ValidatorBuilderElement validatorBuilder,
                                            FieldElement field,
                                            AnnotationAssist<Validate> validateSpec) {
+
+        Set<String> builders = new HashSet<>(Arrays.asList(validateSpec.unwrap().builders()));
+        if (!builders.contains(validatorBuilder.getName())) {
+            return;
+        }
 
         String subject = validateSpec.unwrap().subject();
 
@@ -47,6 +51,11 @@ public class BeanValidationParser extends FrameworkAbstractParser {
     protected void parseBeanValidation(ValidatorBuilderElement validatorBuilder,
                                        FieldElement field,
                                        AnnotationAssist<ValidateBean> validateBeanSpec) {
+
+        Set<String> builders = new HashSet<>(Arrays.asList(validateBeanSpec.unwrap().builders()));
+        if (!builders.contains(validatorBuilder.getName())) {
+            return;
+        }
 
         String targetBuilder = validateBeanSpec.unwrap().targetBuilder();
 
@@ -118,6 +127,10 @@ public class BeanValidationParser extends FrameworkAbstractParser {
         }
 
         String name = builderSpec.unwrap().name();
+        if (StringUtils.isBlank(name)) {
+            name = ValidatorBuilder.DEFAULT_BUILDER;
+        }
+
         String command = builderSpec.unwrap().command();
 
         ValidatorBuilderElement validatorBuilder = new ValidatorBuilderElement(name, packageName,

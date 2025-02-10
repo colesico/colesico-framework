@@ -3,6 +3,7 @@ package colesico.framework.beanvalidation.codegen.model;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.beanvalidation.Validate;
+import colesico.framework.beanvalidation.ValidateBean;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.type.TypeMirror;
@@ -30,6 +31,7 @@ abstract public class ValidationElement {
      * Element mapper
      *
      * @see Validate#command()
+     * @see ValidateBean#command()
      */
     protected final String command;
 
@@ -70,7 +72,6 @@ abstract public class ValidationElement {
         return null;
     }
 
-
     public ValidatorBuilderElement getParentBuilder() {
         return parentBuilder;
     }
@@ -86,4 +87,9 @@ abstract public class ValidationElement {
     public String getSubject() {
         return subject;
     }
+
+    public String getCommand() {
+        return command;
+    }
+
 }

@@ -3,6 +3,8 @@ package colesico.framework.beanvalidation.codegen.model;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.model.FieldElement;
 
+import java.util.Set;
+
 /**
  * @see colesico.framework.beanvalidation.Validate
  */

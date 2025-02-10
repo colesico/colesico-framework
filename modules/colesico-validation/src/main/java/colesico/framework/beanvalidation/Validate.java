@@ -2,6 +2,8 @@ package colesico.framework.beanvalidation;
 
 import java.lang.annotation.*;
 
+import static colesico.framework.beanvalidation.ValidatorBuilder.DEFAULT_BUILDER;
+
 /**
  * Specifies that the bean property has to be validated.
  * <p>
@@ -38,5 +40,5 @@ public @interface Validate {
      *
      * @see ValidatorBuilder#name()
      */
-    String[] builders() default {};
+    String[] builders() default {DEFAULT_BUILDER};
 }

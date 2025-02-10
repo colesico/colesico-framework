@@ -8,7 +8,6 @@ import colesico.framework.beanvalidation.codegen.model.*;
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.dslvalidator.builder.FieldReference;
-import colesico.framework.dslvalidator.builder.ValidationFlowBuilder;
 import com.palantir.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -116,8 +115,8 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         cb.indent();
         int i = 0;
         for (ValidationElement validation : validatorBuilder.getValidations()) {
-            // field(FIELD_REF,
-            cb.add("$N($N, ", ValidationFlowBuilder.MAP_METHOD, validation.getPropertyReferenceName());
+            // map(FIELD_REF,
+            cb.add("$N($N, ", validation.getCommand(), validation.getPropertyReferenceName());
             if (validation instanceof PropertyValidationElement propertyValidation) {
                 if (propertyValidation.getVerifier()) {
                     // this::verifyField1

@@ -25,7 +25,7 @@ public class ContactsValidation extends ContactsValidatorBuilder {
     @Override
     protected void verifyPhone(ValidationContext<String> ctx) {
         if (ctx.getValue() == null) {
-            ctx.addError("PhoneError", "Invalid format");
+            ctx.addError("PhoneError", "Invalid phone");
         }
     }
 
