@@ -15,7 +15,7 @@ public class User {
     @Validate(builders = {"default", "brief"})
     private String name;
 
-    @ValidateBean
+    @ValidateBean(builders = {"default", "brief"})
     private Credentials credentials;
 
     @ValidateBean

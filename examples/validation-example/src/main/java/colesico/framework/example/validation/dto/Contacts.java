@@ -17,7 +17,7 @@ public class Contacts {
     @Validate
     private String email;
 
-    @ValidateBean
+    @ValidateBean(targetBuilder = "brief")
     private Credentials credentials;
 
     public PostAddress getPostAddress() {

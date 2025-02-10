@@ -10,7 +10,7 @@ import static colesico.framework.example.validation.validations.PostAddressValid
 
 public class ContactsValidation extends ContactsValidatorBuilder {
 
-    public ContactsValidation(ValidatorMessages msg, CredentialsValidatorBuilder credentialsValidation) {
+    public ContactsValidation(ValidatorMessages msg, CredentialsBriefValidatorBuilder credentialsValidation) {
         super(msg, credentialsValidation);
     }
 

@@ -5,10 +5,11 @@ import colesico.framework.beanvalidation.ValidatorBuilder;
 import colesico.framework.example.validation.validations.AppValidatorBuilder;
 
 @ValidatorBuilder(superclass = AppValidatorBuilder.class)
+@ValidatorBuilder(name = "brief", superclass = AppValidatorBuilder.class)
 public class Credentials {
 
     @Validate
-    private String  password;
+    private String password;
 
     public String getPassword() {
         return password;
