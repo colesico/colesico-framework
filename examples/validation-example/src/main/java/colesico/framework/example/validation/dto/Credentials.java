@@ -8,7 +8,7 @@ import colesico.framework.example.validation.validations.AppValidatorBuilder;
 @ValidatorBuilderPrototype(name = "brief", superclass = AppValidatorBuilder.class)
 public class Credentials {
 
-    @Validate
+    @Validate(builders = {"default","brief"})
     private String password;
 
     public String getPassword() {

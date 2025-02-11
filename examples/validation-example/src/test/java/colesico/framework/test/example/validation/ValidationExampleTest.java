@@ -16,26 +16,30 @@
 
 package colesico.framework.test.example.validation;
 
+import colesico.framework.dslvalidator.DSLValidator;
+import colesico.framework.example.validation.dto.User;
+import colesico.framework.example.validation.validations.UserValidatorBuilder;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertTrue;
-
 public class ValidationExampleTest {
 
     private Ioc ioc;
+    private DSLValidator<User> userValidator;
 
     @BeforeClass
     public void init() {
         ioc = IocBuilder.create().build();
+        UserValidatorBuilder userValidatorBuilder = ioc.instance(UserValidatorBuilder.class);
+        userValidator = userValidatorBuilder.build();
     }
 
     @Test
-    public void testLog() throws Exception{
+    public void testLog() throws Exception {
 
-       // assertTrue(StringUtils.contains(logText,MainBean.class.getName()));
+        // assertTrue(StringUtils.contains(logText,MainBean.class.getName()));
     }
 
 }
