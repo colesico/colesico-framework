@@ -9,7 +9,6 @@ import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.dslvalidator.builder.FieldReference;
 import com.palantir.javapoet.*;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
@@ -19,23 +18,23 @@ import java.util.List;
 /**
  * Bean Validator Prototype Builder generator
  */
-public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
+public class BuilderPrototypeGenerator extends FrameworkAbstractGenerator {
 
 
     protected TypeSpec.Builder classBuilder;
     protected BuilderPrototypeElement builderElement;
 
-    public ValidatorBuilderGenerator(ProcessingEnvironment processingEnv) {
+    public BuilderPrototypeGenerator(ProcessingEnvironment processingEnv) {
         super(processingEnv);
     }
 
-    private void generateFieldReferences(BuilderPrototypeElement validatorBuilder) {
+    private void generateFieldReferences(BuilderPrototypeElement builderPrototype) {
 
-        for (ValidateElement validation : validatorBuilder.getValidations()) {
+        for (ValidateElement validation : builderPrototype.getValidations()) {
 
             TypeName refType = ParameterizedTypeName.get(
                     ClassName.get(FieldReference.class),
-                    TypeName.get(validatorBuilder.getParentBean().getOriginType().unwrap()),
+                    TypeName.get(builderPrototype.getParentBean().getOriginType().unwrap()),
                     TypeName.get(validation.getPropertyType())
             );
 
@@ -43,7 +42,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
             refField.initializer("new $T($S,$T::$N)",
                     refType,
                     validation.getSubject(),
-                    TypeName.get(validatorBuilder.getParentBean().getOriginType().unwrap()),
+                    TypeName.get(builderPrototype.getParentBean().getOriginType().unwrap()),
                     validation.getPropertyGetterName()
             );
 
@@ -58,7 +57,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         mb.returns(returnType);
         mb.addJavadoc("Validate $N", validation.getPropertyName());
 
-        // return mandatory(validatorBuilderField1.validation())
+        // return mandatory(builderPrototypeField1.validation())
         mb.addStatement("return $N.$N()", validation.getValidatorBuilderFieldName(), BeanValidatorBuilder.VALIDATION_METHOD);
         classBuilder.addMethod(mb.build());
     }
@@ -84,8 +83,8 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
     }
 
 
-    private void generatePropertyValidationMethods(BuilderPrototypeElement validatorBuilder) {
-        for (ValidateElement validation : validatorBuilder.getValidations()) {
+    private void generatePropertyValidationMethods(BuilderPrototypeElement builderPrototype) {
+        for (ValidateElement validation : builderPrototype.getValidations()) {
             if (validation instanceof PropertyValidateElement propertyValidation) {
                 if (propertyValidation.getVerifier()) {
                     generateVerifyPropertyMethod(propertyValidation);
@@ -98,34 +97,34 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         }
     }
 
-    private void generateSubjectMethod(BuilderPrototypeElement validatorBuilder) {
-        if (StringUtils.isBlank(validatorBuilder.getSubject())) {
+    private void generateSubjectMethod(BuilderPrototypeElement builderPrototype) {
+        if (builderPrototype.getSubject() != null) {
             MethodSpec.Builder mb = MethodSpec.methodBuilder(BeanValidatorBuilder.SUBJECT_METHOD);
             mb.addAnnotation(Override.class);
             mb.returns(ClassName.get(String.class));
             mb.addModifiers(Modifier.PUBLIC);
-            mb.addStatement("return $S", validatorBuilder.getSubject());
+            mb.addStatement("return $S", builderPrototype.getSubject());
             classBuilder.addMethod(mb.build());
         }
     }
 
-    private void generateRootValidationMethod(BuilderPrototypeElement validatorBuilder) {
+    private void generateRootValidationMethod(BuilderPrototypeElement builderPrototype) {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(BeanValidatorBuilder.VALIDATION_METHOD);
         mb.addModifiers(Modifier.PUBLIC);
         mb.addAnnotation(Override.class);
 
         TypeName returnsTypeName = ParameterizedTypeName.get(
                 ClassName.get(Command.class),
-                TypeName.get(validatorBuilder.getParentBean().getOriginType().unwrap()));
+                TypeName.get(builderPrototype.getParentBean().getOriginType().unwrap()));
 
         mb.returns(returnsTypeName);
 
         CodeBlock.Builder cb = CodeBlock.builder();
 
-        cb.add("return $N(\n", validatorBuilder.getCommand());
+        cb.add("return $N(\n", builderPrototype.getCommand());
         cb.indent();
         int i = 0;
-        for (ValidateElement validation : validatorBuilder.getValidations()) {
+        for (ValidateElement validation : builderPrototype.getValidations()) {
             // map(FIELD_REF,
             cb.add("$N($N, ", validation.getMapper(), validation.getPropertyReferenceName());
             if (validation instanceof PropertyValidateElement propertyValidation) {
@@ -140,7 +139,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
                 cb.add("$N()", validation.getValidationMethodName());
             }
             cb.add(")");
-            if (++i < validatorBuilder.getValidations().size()) {
+            if (++i < builderPrototype.getValidations().size()) {
                 cb.add(",");
             }
             cb.add("\n");
@@ -153,9 +152,9 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
     }
 
 
-    private void generateProxyConstructors(BuilderPrototypeElement validatorBuilder) {
+    private void generateProxyConstructors(BuilderPrototypeElement builderPrototype) {
 
-        List<MethodElement> constructors = validatorBuilder.getSuperclass().asClassElement().getConstructorsFiltered(
+        List<MethodElement> constructors = builderPrototype.getSuperclass().asClassElement().getConstructorsFiltered(
                 c -> c.unwrap().getModifiers().contains(Modifier.PUBLIC)
         );
 
@@ -167,7 +166,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
             constructorBuilder.addCode(suCall);
 
             // Generate extra params
-            for (ValidateElement validation : validatorBuilder.getValidations()) {
+            for (ValidateElement validation : builderPrototype.getValidations()) {
                 if (validation instanceof BeanValidateElement beanValidation) {
                     TypeName builderType = ClassName.bestGuess(beanValidation.getFieldValidatorBuilder().getBuilderClassName());
                     String builderVarName = beanValidation.getValidatorBuilderFieldName();
@@ -193,28 +192,28 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
     }
 
     public void generate(BeanElement validatedBean) {
-        for (BuilderPrototypeElement validatorBuilder : validatedBean.getValidatorBuilders()) {
+        for (BuilderPrototypeElement builderPrototype : validatedBean.getValidatorBuilders()) {
 
-            this.builderElement = validatorBuilder;
+            this.builderElement = builderPrototype;
 
-            this.classBuilder = TypeSpec.classBuilder(validatorBuilder.getBuilderClassSimpleName());
+            this.classBuilder = TypeSpec.classBuilder(builderPrototype.getBuilderClassSimpleName());
             classBuilder.addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC);
 
             TypeName superClassName = ParameterizedTypeName.get(
-                    (ClassName) ClassName.get(validatorBuilder.getSuperclass().unwrap()),
+                    (ClassName) ClassName.get(builderPrototype.getSuperclass().unwrap()),
                     TypeName.get(validatedBean.getOriginType().unwrap()));
             classBuilder.superclass(superClassName);
 
             classBuilder.addJavadoc("Validator Builder Prototype\nExtend this class to  implement validation methods");
 
-            generateFieldReferences(validatorBuilder);
+            generateFieldReferences(builderPrototype);
             generateBuildersFields();
-            generateProxyConstructors(validatorBuilder);
-            generatePropertyValidationMethods(validatorBuilder);
-            generateSubjectMethod(validatorBuilder);
-            generateRootValidationMethod(validatorBuilder);
+            generateProxyConstructors(builderPrototype);
+            generatePropertyValidationMethods(builderPrototype);
+            generateSubjectMethod(builderPrototype);
+            generateRootValidationMethod(builderPrototype);
 
-            CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), validatorBuilder.getPackageName(), validatorBuilder.getParentBean().getOriginType().asTypeElement());
+            CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), builderPrototype.getPackageName(), builderPrototype.getParentBean().getOriginType().asTypeElement());
         }
     }
 }

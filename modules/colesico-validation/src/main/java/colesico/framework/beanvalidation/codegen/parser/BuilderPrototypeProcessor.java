@@ -5,7 +5,7 @@ import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.beanvalidation.ValidatorBuilderPrototype;
 import colesico.framework.beanvalidation.ValidatorBuilderPrototypes;
-import colesico.framework.beanvalidation.codegen.generator.ValidatorBuilderGenerator;
+import colesico.framework.beanvalidation.codegen.generator.BuilderPrototypeGenerator;
 import colesico.framework.beanvalidation.codegen.model.BeanElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -20,7 +20,7 @@ import java.util.Set;
 public class BuilderPrototypeProcessor extends FrameworkAbstractProcessor {
 
     private ValidatedBeanParser parser;
-    private ValidatorBuilderGenerator generator;
+    private BuilderPrototypeGenerator generator;
 
     @Override
     protected Class<? extends Annotation>[] getSupportedAnnotations() {
@@ -30,7 +30,7 @@ public class BuilderPrototypeProcessor extends FrameworkAbstractProcessor {
     @Override
     protected void onInit() {
         parser = new ValidatedBeanParser(processingEnv);
-        generator = new ValidatorBuilderGenerator(processingEnv);
+        generator = new BuilderPrototypeGenerator(processingEnv);
     }
 
     @Override

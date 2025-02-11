@@ -130,6 +130,9 @@ public class ValidatedBeanParser extends FrameworkAbstractParser {
         }
 
         String subject = builderSpec.unwrap().subject();
+        if (StringUtils.isBlank(subject)) {
+            subject = null;
+        }
 
         String command = builderSpec.unwrap().command();
 

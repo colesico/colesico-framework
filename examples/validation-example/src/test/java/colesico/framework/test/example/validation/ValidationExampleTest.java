@@ -19,14 +19,14 @@ package colesico.framework.test.example.validation;
 import colesico.framework.dslvalidator.DSLValidator;
 import colesico.framework.example.validation.dto.User;
 import colesico.framework.example.validation.validations.UserValidation;
-import colesico.framework.example.validation.validations.UserValidatorBuilder;
-import colesico.framework.example.validation.validations.ValidationIoclet;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.teleapi.assist.SimpleDataPort;
 import colesico.framework.validation.ValidationIssue;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import static org.testng.Assert.assertEquals;
 
 public class ValidationExampleTest {
 
@@ -47,7 +47,8 @@ public class ValidationExampleTest {
 
         User user = new User();
         ValidationIssue issue = userValidator.validate(user);
-        // assertTrue(StringUtils.contains(logText,MainBean.class.getName()));
+        assertEquals(issue.getSubject(), "user");
+        assertEquals(issue.getSubissues().size(), 4);
     }
 
 }
