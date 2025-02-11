@@ -86,9 +86,9 @@ abstract public class FrameworkAbstractProcessor extends AbstractProcessor {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected Set<Class<? extends Annotation>> toAnnotationsSet(Class<? extends Annotation>... annotations) {
-        Set<Class<? extends Annotation>> result = new HashSet<>(Arrays.asList(annotations));
-        return result;
+        return new HashSet<>(Arrays.asList(annotations));
     }
 
     protected Elements getElementUtils() {

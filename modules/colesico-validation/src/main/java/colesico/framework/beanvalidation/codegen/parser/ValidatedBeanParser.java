@@ -11,7 +11,7 @@ import colesico.framework.beanvalidation.*;
 import colesico.framework.beanvalidation.codegen.model.BeanElement;
 import colesico.framework.beanvalidation.codegen.model.BeanValidateElement;
 import colesico.framework.beanvalidation.codegen.model.PropertyValidateElement;
-import colesico.framework.beanvalidation.codegen.model.BuilderPrototypeElement;
+import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderPrototypeElement;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -19,13 +19,13 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.type.DeclaredType;
 import java.util.*;
 
-public class BeanValidationParser extends FrameworkAbstractParser {
+public class ValidatedBeanParser extends FrameworkAbstractParser {
 
-    public BeanValidationParser(ProcessingEnvironment processingEnv) {
+    public ValidatedBeanParser(ProcessingEnvironment processingEnv) {
         super(processingEnv);
     }
 
-    protected void parsePropertyValidation(BuilderPrototypeElement validatorBuilder,
+    protected void parsePropertyValidation(ValidatorBuilderPrototypeElement validatorBuilder,
                                            FieldElement field,
                                            AnnotationAssist<Validate> validateSpec) {
 
@@ -47,7 +47,7 @@ public class BeanValidationParser extends FrameworkAbstractParser {
         validatorBuilder.addValidation(propertyValidation);
     }
 
-    protected void parseBeanValidation(BuilderPrototypeElement validatorBuilder,
+    protected void parseBeanValidation(ValidatorBuilderPrototypeElement validatorBuilder,
                                        FieldElement field,
                                        AnnotationAssist<ValidateBean> validateBeanSpec) {
 
@@ -73,7 +73,7 @@ public class BeanValidationParser extends FrameworkAbstractParser {
                     .build();
         }
 
-        BuilderPrototypeElement fieldValidatorBuilder = createValidatorBuilderElement(targetBeanClass, targetBuilderSpec);
+        ValidatorBuilderPrototypeElement fieldValidatorBuilder = createValidatorBuilderElement(targetBeanClass, targetBuilderSpec);
         BeanElement validatedBean = new BeanElement(targetBeanClass.asClassType());
         validatedBean.addValidatorBuilder(fieldValidatorBuilder);
 
@@ -89,7 +89,7 @@ public class BeanValidationParser extends FrameworkAbstractParser {
         validatorBuilder.addValidation(beanValidation);
     }
 
-    protected void parseFieldsValidations(BuilderPrototypeElement validatorBuilder) {
+    protected void parseFieldsValidations(ValidatorBuilderPrototypeElement validatorBuilder) {
         logger.debug("Parse fields validations : " + validatorBuilder);
 
         ClassElement beanClass = validatorBuilder.getParentBean().getOriginType().asClassElement();
@@ -111,7 +111,7 @@ public class BeanValidationParser extends FrameworkAbstractParser {
         }
     }
 
-    protected BuilderPrototypeElement createValidatorBuilderElement(ClassElement beanClass, AnnotationAssist<ValidatorBuilderPrototype> builderSpec) {
+    protected ValidatorBuilderPrototypeElement createValidatorBuilderElement(ClassElement beanClass, AnnotationAssist<ValidatorBuilderPrototype> builderSpec) {
 
         DeclaredType superclass = (DeclaredType) builderSpec.getValueTypeMirror(a -> a.superclass());
         String packageName = builderSpec.unwrap().packageName();
@@ -131,14 +131,14 @@ public class BeanValidationParser extends FrameworkAbstractParser {
 
         String command = builderSpec.unwrap().command();
 
-        BuilderPrototypeElement validatorBuilder = new BuilderPrototypeElement(name, packageName,
+        ValidatorBuilderPrototypeElement validatorBuilder = new ValidatorBuilderPrototypeElement(name, packageName,
                 ClassType.of(processingEnv, superclass), command);
 
         return validatorBuilder;
     }
 
     protected void parseValidatedBean(BeanElement validatedBean, AnnotationAssist<ValidatorBuilderPrototype> builderSpec) {
-        BuilderPrototypeElement validatorBuilder = createValidatorBuilderElement(validatedBean.getOriginType().asClassElement(), builderSpec);
+        ValidatorBuilderPrototypeElement validatorBuilder = createValidatorBuilderElement(validatedBean.getOriginType().asClassElement(), builderSpec);
         validatedBean.addValidatorBuilder(validatorBuilder);
         parseFieldsValidations(validatorBuilder);
     }

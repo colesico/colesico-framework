@@ -22,13 +22,13 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
 
 
     protected TypeSpec.Builder classBuilder;
-    protected BuilderPrototypeElement builderElement;
+    protected ValidatorBuilderPrototypeElement builderElement;
 
     public ValidatorBuilderGenerator(ProcessingEnvironment processingEnv) {
         super(processingEnv);
     }
 
-    private void generateFieldReferences(BuilderPrototypeElement validatorBuilder) {
+    private void generateFieldReferences(ValidatorBuilderPrototypeElement validatorBuilder) {
 
         for (ValidateElement validation : validatorBuilder.getValidations()) {
 
@@ -83,7 +83,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
     }
 
 
-    private void generatePropertyValidationMethods(BuilderPrototypeElement validatorBuilder) {
+    private void generatePropertyValidationMethods(ValidatorBuilderPrototypeElement validatorBuilder) {
         for (ValidateElement validation : validatorBuilder.getValidations()) {
             if (validation instanceof PropertyValidateElement propertyValidation) {
                 if (propertyValidation.getVerifier()) {
@@ -98,7 +98,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
     }
 
 
-    private void generateRootValidationMethod(BuilderPrototypeElement validatorBuilder) {
+    private void generateRootValidationMethod(ValidatorBuilderPrototypeElement validatorBuilder) {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(BeanValidatorBuilder.VALIDATE_METHOD);
         mb.addModifiers(Modifier.PUBLIC);
         mb.addAnnotation(Override.class);
@@ -142,7 +142,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
     }
 
 
-    private void generateProxyConstructors(BuilderPrototypeElement validatorBuilder) {
+    private void generateProxyConstructors(ValidatorBuilderPrototypeElement validatorBuilder) {
 
         List<MethodElement> constructors = validatorBuilder.getSuperclass().asClassElement().getConstructorsFiltered(
                 c -> c.unwrap().getModifiers().contains(Modifier.PUBLIC)
@@ -182,7 +182,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
     }
 
     public void generate(BeanElement validatedBean) {
-        for (BuilderPrototypeElement validatorBuilder : validatedBean.getValidatorBuilders()) {
+        for (ValidatorBuilderPrototypeElement validatorBuilder : validatedBean.getValidatorBuilders()) {
 
             this.builderElement = validatorBuilder;
 

@@ -18,7 +18,7 @@ abstract public class ValidateElement {
     /**
      * Parent validator builder element
      */
-    protected BuilderPrototypeElement parentBuilder;
+    protected ValidatorBuilderPrototypeElement parentBuilder;
 
     protected final FieldElement originField;
 
@@ -72,11 +72,11 @@ abstract public class ValidateElement {
         return null;
     }
 
-    public BuilderPrototypeElement getParentBuilder() {
+    public ValidatorBuilderPrototypeElement getParentBuilder() {
         return parentBuilder;
     }
 
-    public void setParentBuilder(BuilderPrototypeElement parentBuilder) {
+    public void setParentBuilder(ValidatorBuilderPrototypeElement parentBuilder) {
         this.parentBuilder = parentBuilder;
     }
 

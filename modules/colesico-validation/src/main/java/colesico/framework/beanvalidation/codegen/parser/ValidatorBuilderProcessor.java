@@ -3,10 +3,13 @@ package colesico.framework.beanvalidation.codegen.parser;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
+import colesico.framework.beanvalidation.ValidatorBuilder;
 import colesico.framework.beanvalidation.ValidatorBuilderPrototype;
 import colesico.framework.beanvalidation.ValidatorBuilderPrototypes;
+import colesico.framework.beanvalidation.codegen.generator.IocGenerator;
 import colesico.framework.beanvalidation.codegen.generator.ValidatorBuilderGenerator;
 import colesico.framework.beanvalidation.codegen.model.BeanElement;
+import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -17,35 +20,36 @@ import javax.tools.Diagnostic;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-public class BeanValidationProcessor extends FrameworkAbstractProcessor {
+public class ValidatorBuilderProcessor extends FrameworkAbstractProcessor {
 
-    private BeanValidationParser parser;
-    private ValidatorBuilderGenerator generator;
+    private ValidatedBeanParser parser;
+    private IocGenerator generator;
 
     @Override
     protected Class<? extends Annotation>[] getSupportedAnnotations() {
-        return new Class[]{ValidatorBuilderPrototypes.class, ValidatorBuilderPrototype.class};
+        return new Class[]{ValidatorBuilder.class};
     }
 
     @Override
     protected void onInit() {
-        parser = new BeanValidationParser(processingEnv);
-        generator = new ValidatorBuilderGenerator(processingEnv);
+        parser = new ValidatedBeanParser(processingEnv);
+        generator = new IocGenerator(processingEnv);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnv) {
 
         for (Element elm : roundEnv.getElementsAnnotatedWithAny(toAnnotationsSet(ValidatorBuilderPrototype.class, ValidatorBuilderPrototypes.class))) {
             if (!(elm.getKind() == ElementKind.CLASS)) {
-                throw CodegenException.of().element(elm).message("Validatable bean is not a Class").build();
+                throw CodegenException.of().element(elm).message("Validator builder bean is not a Class").build();
             }
             TypeElement beanClass;
             try {
                 beanClass = (TypeElement) elm;
-                logger.debug("Processing validatale bean class: " + beanClass.getSimpleName());
-                BeanElement validatedBean = parser.parse(ClassElement.of(processingEnv, beanClass));
-                generator.generate(validatedBean);
+                logger.debug("Processing validator builder bean class: " + beanClass.getSimpleName());
+                ValidatorBuilderElement valBldBean = parser.parse(ClassElement.of(processingEnv, beanClass));
+                generator.generate(valBldBean);
             } catch (CodegenException ce) {
                 String message = "Error processing validatale bean class '" + elm + "': " + ce.getMessage();
                 logger.debug(message);
