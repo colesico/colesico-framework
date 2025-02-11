@@ -1,8 +1,10 @@
 package colesico.framework.example.validation.validations;
 
+import colesico.framework.beanvalidation.ValidatorBuilder;
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 
+@ValidatorBuilder
 public class CredentialsValidation extends AbstractCredentialsValidatorBuilder {
     public CredentialsValidation(ValidatorMessages msg) {
         super(msg);

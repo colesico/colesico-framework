@@ -1,2 +1,2 @@
-colesico.framework.beanvalidation.codegen.parser.ValidatorBuilderPrototypeProcessor
+colesico.framework.beanvalidation.codegen.parser.BuilderPrototypeProcessor
 colesico.framework.beanvalidation.codegen.parser.ValidatorBuilderProcessor

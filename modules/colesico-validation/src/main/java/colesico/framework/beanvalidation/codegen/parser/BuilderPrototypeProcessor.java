@@ -17,7 +17,7 @@ import javax.tools.Diagnostic;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-public class ValidatorBuilderPrototypeProcessor extends FrameworkAbstractProcessor {
+public class BuilderPrototypeProcessor extends FrameworkAbstractProcessor {
 
     private ValidatedBeanParser parser;
     private ValidatorBuilderGenerator generator;

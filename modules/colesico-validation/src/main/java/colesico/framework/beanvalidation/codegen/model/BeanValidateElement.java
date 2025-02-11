@@ -12,9 +12,9 @@ public class BeanValidateElement extends ValidateElement {
     /**
      * Validator builder that be used for this field validation
      */
-    private ValidatorBuilderPrototypeElement fieldValidatorBuilder;
+    private BuilderPrototypeElement fieldValidatorBuilder;
 
-    public BeanValidateElement(FieldElement originField, String subject, String mapper, ValidatorBuilderPrototypeElement fieldValidatorBuilder) {
+    public BeanValidateElement(FieldElement originField, String subject, String mapper, BuilderPrototypeElement fieldValidatorBuilder) {
         super(originField, subject, mapper);
         this.fieldValidatorBuilder = fieldValidatorBuilder;
     }
@@ -28,7 +28,7 @@ public class BeanValidateElement extends ValidateElement {
         return getPropertyName() + "VB";
     }
 
-    public ValidatorBuilderPrototypeElement getFieldValidatorBuilder() {
+    public BuilderPrototypeElement getFieldValidatorBuilder() {
         return fieldValidatorBuilder;
     }
 }

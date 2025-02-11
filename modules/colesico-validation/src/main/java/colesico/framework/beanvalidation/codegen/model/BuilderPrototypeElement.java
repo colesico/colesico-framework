@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @see ValidatorBuilderPrototype
  */
-public class ValidatorBuilderPrototypeElement {
+public class BuilderPrototypeElement {
 
     public static final String VALIDATOR_BUILDER_PROTOTYPE_PREFIX = "Abstract";
     public static final String VALIDATOR_BUILDER_PROTOTYPE_SUFFIX = "ValidatorBuilder";
@@ -43,7 +43,7 @@ public class ValidatorBuilderPrototypeElement {
 
     private final List<ValidateElement> validations = new ArrayList<>();
 
-    public ValidatorBuilderPrototypeElement(String name, String packageName, ClassType superclass, String command) {
+    public BuilderPrototypeElement(String name, String packageName, ClassType superclass, String command) {
         this.name = name;
         this.packageName = packageName;
         this.superclass = superclass;
