@@ -7,8 +7,6 @@ import colesico.framework.beanvalidation.ValidatorBuilder;
 import colesico.framework.beanvalidation.ValidatorBuilderPrototype;
 import colesico.framework.beanvalidation.ValidatorBuilderPrototypes;
 import colesico.framework.beanvalidation.codegen.generator.IocGenerator;
-import colesico.framework.beanvalidation.codegen.generator.ValidatorBuilderGenerator;
-import colesico.framework.beanvalidation.codegen.model.BeanElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -22,7 +20,7 @@ import java.util.Set;
 
 public class ValidatorBuilderProcessor extends FrameworkAbstractProcessor {
 
-    private ValidatedBeanParser parser;
+    private ValidatorBuilderParser parser;
     private IocGenerator generator;
 
     @Override
@@ -32,7 +30,7 @@ public class ValidatorBuilderProcessor extends FrameworkAbstractProcessor {
 
     @Override
     protected void onInit() {
-        parser = new ValidatedBeanParser(processingEnv);
+        parser = new ValidatorBuilderParser(processingEnv);
         generator = new IocGenerator(processingEnv);
     }
 
@@ -48,10 +46,10 @@ public class ValidatorBuilderProcessor extends FrameworkAbstractProcessor {
             try {
                 beanClass = (TypeElement) elm;
                 logger.debug("Processing validator builder bean class: " + beanClass.getSimpleName());
-                ValidatorBuilderElement valBldBean = parser.parse(ClassElement.of(processingEnv, beanClass));
-                generator.generate(valBldBean);
+                ValidatorBuilderElement validatorBuilder = parser.parse(ClassElement.of(processingEnv, beanClass));
+                generator.generate(validatorBuilder);
             } catch (CodegenException ce) {
-                String message = "Error processing validatale bean class '" + elm + "': " + ce.getMessage();
+                String message = "Error processing validator builder class '" + elm + "': " + ce.getMessage();
                 logger.debug(message);
                 ce.print(processingEnv, elm);
             } catch (Exception e) {
