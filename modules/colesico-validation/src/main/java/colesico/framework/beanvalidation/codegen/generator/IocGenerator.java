@@ -1,13 +1,15 @@
 package colesico.framework.beanvalidation.codegen.generator;
 
+import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.ioc.production.Produce;
+import colesico.framework.ioc.scope.Unscoped;
 import com.palantir.javapoet.AnnotationSpec;
 import com.palantir.javapoet.ClassName;
+import com.palantir.javapoet.MethodSpec;
 import com.palantir.javapoet.TypeName;
-import jakarta.inject.Singleton;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import java.util.ArrayList;
@@ -41,11 +43,15 @@ public class IocGenerator extends FrameworkAbstractGenerator {
             List<ValidatorBuilderElement> vbs = entry.getValue();
             for (ValidatorBuilderElement vb : vbs) {
                 logger.debug("Generating validator builders  producer: " + producerGenerator.getProducerClassFilePath());
-                AnnotationSpec.Builder produceAnn = producerGenerator.addProduceAnnotation(TypeName.get(vb.getOriginClass().asClassType().unwrap()));
+                TypeName builderType = TypeName.get(vb.getOriginClass().asClassType().unwrap());
+                AnnotationSpec.Builder produceAnn = producerGenerator.addProduceAnnotation(builderType);
                 TypeName keyType = TypeName.get(vb.getPrototypeType().unwrap());
-                produceAnn.addMember(Produce.KEY_TYPE_METHOD, "$T.class", keyType);
-                produceAnn.addMember(Produce.SCOPED_METHOD, "$T.class", ClassName.get(Singleton.class));
-
+                produceAnn.addMember(Produce.SCOPED_METHOD, "$T.class", ClassName.get(Unscoped.class));
+                String methodName = "get" + StrUtils.firstCharToUpperCase(vb.getOriginClass().getSimpleName());
+                MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, keyType);
+                mb.addAnnotation(Unscoped.class);
+                mb.addParameter(builderType, "vb");
+                mb.addStatement("return vb");
             }
             producerGenerator.generate();
         }

@@ -12,6 +12,7 @@ import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 abstract public class BeanValidatorBuilder<V> extends AbstractValidatorBuilder {
 
     public static final String VALIDATION_METHOD = "validation";
+    public static final String SUBJECT_METHOD = "subject";
 
     public BeanValidatorBuilder(ValidatorMessages msg) {
         super(msg);

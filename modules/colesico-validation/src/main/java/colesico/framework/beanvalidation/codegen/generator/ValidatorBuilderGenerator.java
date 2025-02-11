@@ -9,6 +9,7 @@ import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.dslvalidator.builder.FieldReference;
 import com.palantir.javapoet.*;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
@@ -97,6 +98,16 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
         }
     }
 
+    private void generateSubjectMethod(BuilderPrototypeElement validatorBuilder) {
+        if (StringUtils.isBlank(validatorBuilder.getSubject())) {
+            MethodSpec.Builder mb = MethodSpec.methodBuilder(BeanValidatorBuilder.SUBJECT_METHOD);
+            mb.addAnnotation(Override.class);
+            mb.returns(ClassName.get(String.class));
+            mb.addModifiers(Modifier.PUBLIC);
+            mb.addStatement("return $S", validatorBuilder.getSubject());
+            classBuilder.addMethod(mb.build());
+        }
+    }
 
     private void generateRootValidationMethod(BuilderPrototypeElement validatorBuilder) {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(BeanValidatorBuilder.VALIDATION_METHOD);
@@ -200,6 +211,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
             generateBuildersFields();
             generateProxyConstructors(validatorBuilder);
             generatePropertyValidationMethods(validatorBuilder);
+            generateSubjectMethod(validatorBuilder);
             generateRootValidationMethod(validatorBuilder);
 
             CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), validatorBuilder.getPackageName(), validatorBuilder.getParentBean().getOriginType().asTypeElement());

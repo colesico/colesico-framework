@@ -37,16 +37,22 @@ public class BuilderPrototypeElement {
     private final ClassType superclass;
 
     /**
+     * Bean default root subject
+     */
+    private final String subject;
+
+    /**
      * @see ValidatorBuilderPrototype#command()
      */
     private final String command;
 
     private final List<ValidateElement> validations = new ArrayList<>();
 
-    public BuilderPrototypeElement(String name, String packageName, ClassType superclass, String command) {
+    public BuilderPrototypeElement(String name, String packageName, ClassType superclass, String subject, String command) {
         this.name = name;
         this.packageName = packageName;
         this.superclass = superclass;
+        this.subject = subject;
         this.command = command;
     }
 
@@ -97,6 +103,10 @@ public class BuilderPrototypeElement {
 
     public String getName() {
         return name;
+    }
+
+    public String getSubject() {
+        return subject;
     }
 
     public String getCommand() {

@@ -18,9 +18,13 @@ package colesico.framework.test.example.validation;
 
 import colesico.framework.dslvalidator.DSLValidator;
 import colesico.framework.example.validation.dto.User;
+import colesico.framework.example.validation.validations.UserValidation;
 import colesico.framework.example.validation.validations.UserValidatorBuilder;
+import colesico.framework.example.validation.validations.ValidationIoclet;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
+import colesico.framework.teleapi.assist.SimpleDataPort;
+import colesico.framework.validation.ValidationIssue;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -32,13 +36,17 @@ public class ValidationExampleTest {
     @BeforeClass
     public void init() {
         ioc = IocBuilder.create().build();
-        UserValidatorBuilder userValidatorBuilder = ioc.instance(UserValidatorBuilder.class);
-        userValidator = userValidatorBuilder.build();
+        ioc.instance(SimpleDataPort.class).provide();
+
+        UserValidation userValidation = ioc.instance(UserValidation.class);
+        userValidator = userValidation.build();
     }
 
     @Test
-    public void testLog() throws Exception {
+    public void testValidation() throws Exception {
 
+        User user = new User();
+        ValidationIssue issue = userValidator.validate(user);
         // assertTrue(StringUtils.contains(logText,MainBean.class.getName()));
     }
 

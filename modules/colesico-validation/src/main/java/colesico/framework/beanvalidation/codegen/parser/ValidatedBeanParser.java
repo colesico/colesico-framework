@@ -10,8 +10,8 @@ import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.beanvalidation.*;
 import colesico.framework.beanvalidation.codegen.model.BeanElement;
 import colesico.framework.beanvalidation.codegen.model.BeanValidateElement;
-import colesico.framework.beanvalidation.codegen.model.PropertyValidateElement;
 import colesico.framework.beanvalidation.codegen.model.BuilderPrototypeElement;
+import colesico.framework.beanvalidation.codegen.model.PropertyValidateElement;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -129,10 +129,12 @@ public class ValidatedBeanParser extends FrameworkAbstractParser {
             name = ValidatorBuilderPrototype.DEFAULT_BUILDER;
         }
 
+        String subject = builderSpec.unwrap().subject();
+
         String command = builderSpec.unwrap().command();
 
         BuilderPrototypeElement builderPrototype = new BuilderPrototypeElement(name, packageName,
-                ClassType.of(processingEnv, superclass), command);
+                ClassType.of(processingEnv, superclass), subject, command);
 
         return builderPrototype;
     }

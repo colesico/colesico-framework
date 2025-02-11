@@ -25,6 +25,11 @@ public @interface ValidatorBuilderPrototype {
     String name() default DEFAULT_BUILDER;
 
     /**
+     *  Bean root subject
+     */
+    String subject() default "";
+
+    /**
      * Validation root command to be used to iterate fields
      * possible values = series, chain, optional, mandatory, etc.
      *

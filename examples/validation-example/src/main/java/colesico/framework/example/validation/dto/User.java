@@ -5,8 +5,8 @@ import colesico.framework.beanvalidation.ValidateBean;
 import colesico.framework.beanvalidation.ValidatorBuilderPrototype;
 import colesico.framework.example.validation.validations.AppValidatorBuilder;
 
-@ValidatorBuilderPrototype(superclass = AppValidatorBuilder.class, command = "series")
-@ValidatorBuilderPrototype(name = "brief", superclass = AppValidatorBuilder.class, command = "series")
+@ValidatorBuilderPrototype( subject = "user", superclass = AppValidatorBuilder.class, command = "series")
+@ValidatorBuilderPrototype(name = "brief", subject = "user", superclass = AppValidatorBuilder.class, command = "series")
 public class User {
 
     @Validate(builders = {"default", "brief"})
