@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class IocGenerator extends FrameworkAbstractGenerator {
 
-    public static final String PRODUCER_SIMPLE_NAME = "ValidationBuildersProducer";
+    public static final String PRODUCER_SIMPLE_NAME = "ValidationProducer";
 
     public IocGenerator(ProcessingEnvironment processingEnv) {
         super(processingEnv);

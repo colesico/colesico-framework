@@ -5,15 +5,14 @@ import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 import colesico.framework.example.validation.dto.PostAddress;
+import  static colesico.framework.example.validation.validations.PostAddressValidatorBuilder.*;
 
-import static colesico.framework.example.validation.validations.AbstractPostAddressValidatorBuilder.ADDRESS;
-import static colesico.framework.example.validation.validations.AbstractPostAddressValidatorBuilder.POST_CODE;
 
 @ValidatorBuilder
-public class ContactsValidation extends AbstractContactsValidatorBuilder {
+public class ContactsValidation extends ContactsValidatorBuilder {
 
     public ContactsValidation(ValidatorMessages msg,
-                              AbstractCredentialsBriefValidatorBuilder credentialsVB) {
+                              CredentialsBriefValidatorBuilder credentialsVB) {
         super(msg, credentialsVB);
     }
 

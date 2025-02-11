@@ -5,11 +5,11 @@ import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 
 @ValidatorBuilder
-public class UserValidation extends AbstractUserValidatorBuilder {
+public class UserValidation extends UserValidatorBuilder {
 
     public UserValidation(ValidatorMessages msg,
-                          AbstractCredentialsValidatorBuilder credentialsVB,
-                          AbstractContactsValidatorBuilder contactsVB) {
+                          CredentialsValidatorBuilder credentialsVB,
+                          ContactsValidatorBuilder contactsVB) {
         super(msg, credentialsVB, contactsVB);
     }
 
