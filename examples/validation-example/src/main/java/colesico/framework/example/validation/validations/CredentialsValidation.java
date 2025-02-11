@@ -3,7 +3,7 @@ package colesico.framework.example.validation.validations;
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 
-public class CredentialsValidation extends CredentialsValidatorBuilder {
+public class CredentialsValidation extends AbstractCredentialsValidatorBuilder {
     public CredentialsValidation(ValidatorMessages msg) {
         super(msg);
     }

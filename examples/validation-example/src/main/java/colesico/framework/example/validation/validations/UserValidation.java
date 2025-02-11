@@ -3,10 +3,12 @@ package colesico.framework.example.validation.validations;
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
 
-public class UserValidation extends UserValidatorBuilder {
+public class UserValidation extends AbstractUserValidatorBuilder {
 
-    public UserValidation(ValidatorMessages msg, CredentialsValidatorBuilder credentialsValidation, ContactsValidatorBuilder contactsValidation) {
-        super(msg, credentialsValidation, contactsValidation);
+    public UserValidation(ValidatorMessages msg,
+                          AbstractCredentialsValidatorBuilder credentialsVB,
+                          AbstractContactsValidatorBuilder contactsVB) {
+        super(msg, credentialsVB, contactsVB);
     }
 
     @Override

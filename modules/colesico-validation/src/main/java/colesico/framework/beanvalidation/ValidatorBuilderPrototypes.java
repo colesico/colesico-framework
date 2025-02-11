@@ -9,6 +9,6 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Inherited
 @Documented
-public @interface ValidatorBuilders {
-    ValidatorBuilder[] value();
+public @interface ValidatorBuilderPrototypes {
+    ValidatorBuilderPrototype[] value();
 }

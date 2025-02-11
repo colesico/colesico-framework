@@ -2,7 +2,7 @@ package colesico.framework.beanvalidation;
 
 import java.lang.annotation.*;
 
-import static colesico.framework.beanvalidation.ValidatorBuilder.DEFAULT_BUILDER;
+import static colesico.framework.beanvalidation.ValidatorBuilderPrototype.DEFAULT_BUILDER;
 
 /**
  * Validate this property as a bean with validation form another validator builder
@@ -29,7 +29,7 @@ public @interface ValidateBean {
     /**
      * Validator builders names this validation belongs to.
      *
-     * @see ValidatorBuilder#name()
+     * @see ValidatorBuilderPrototype#name()
      */
     String[] builders() default {DEFAULT_BUILDER};
 

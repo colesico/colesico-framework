@@ -18,18 +18,18 @@ public class BeanElement {
     /**
      * Linked validator builders
      */
-    private final List<ValidatorBuilderElement> validatorBuilders = new ArrayList<>();
+    private final List<BuilderPrototypeElement> validatorBuilders = new ArrayList<>();
 
     public BeanElement(ClassType originType) {
         this.originType = originType;
     }
 
-    public void addValidatorBuilder(ValidatorBuilderElement validatorBuilder) {
+    public void addValidatorBuilder(BuilderPrototypeElement validatorBuilder) {
         validatorBuilders.add(validatorBuilder);
         validatorBuilder.setParentBean(this);
     }
 
-    public List<ValidatorBuilderElement> getValidatorBuilders() {
+    public List<BuilderPrototypeElement> getValidatorBuilders() {
         return validatorBuilders;
     }
 

@@ -13,12 +13,12 @@ import javax.lang.model.type.TypeMirror;
  *
  * @see colesico.framework.beanvalidation.Validate
  */
-abstract public class ValidationElement {
+abstract public class ValidateElement {
 
     /**
      * Parent validator builder element
      */
-    protected ValidatorBuilderElement parentBuilder;
+    protected BuilderPrototypeElement parentBuilder;
 
     protected final FieldElement originField;
 
@@ -35,7 +35,7 @@ abstract public class ValidationElement {
      */
     protected final String mapper;
 
-    public ValidationElement(FieldElement originField, String subject, String mapper) {
+    public ValidateElement(FieldElement originField, String subject, String mapper) {
         this.originField = originField;
         this.subject = subject;
         this.mapper = mapper;
@@ -72,11 +72,11 @@ abstract public class ValidationElement {
         return null;
     }
 
-    public ValidatorBuilderElement getParentBuilder() {
+    public BuilderPrototypeElement getParentBuilder() {
         return parentBuilder;
     }
 
-    public void setParentBuilder(ValidatorBuilderElement parentBuilder) {
+    public void setParentBuilder(BuilderPrototypeElement parentBuilder) {
         this.parentBuilder = parentBuilder;
     }
 

@@ -3,16 +3,14 @@ package colesico.framework.beanvalidation.codegen.model;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.model.FieldElement;
 
-import java.util.Set;
-
 /**
  * @see colesico.framework.beanvalidation.Validate
  */
-public class PropertyValidationElement extends ValidationElement {
+public class PropertyValidateElement extends ValidateElement {
 
     private final Boolean verifier;
 
-    public PropertyValidationElement(FieldElement originField, String subject, String mapper, Boolean verifier) {
+    public PropertyValidateElement(FieldElement originField, String subject, String mapper, Boolean verifier) {
         super(originField, subject, mapper);
         this.verifier = verifier;
     }

@@ -2,7 +2,7 @@ package colesico.framework.beanvalidation.codegen.model;
 
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.model.ClassType;
-import colesico.framework.beanvalidation.ValidatorBuilder;
+import colesico.framework.beanvalidation.ValidatorBuilderPrototype;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,47 +10,47 @@ import java.util.List;
 /**
  * Bean Validator Builder Prototype element
  *
- * @see ValidatorBuilder
+ * @see ValidatorBuilderPrototype
  */
-public class ValidatorBuilderElement {
+public class BuilderPrototypeElement {
 
+    public static final String VALIDATOR_BUILDER_PROTOTYPE_PREFIX = "Abstract";
     public static final String VALIDATOR_BUILDER_PROTOTYPE_SUFFIX = "ValidatorBuilder";
 
-
     /**
-     * Parent bean element (annotated with {@link ValidatorBuilder})
+     * Parent bean element (annotated with {@link ValidatorBuilderPrototype})
      */
     private BeanElement parentBean;
 
     /**
-     * Validator builder  name
+     * Validator builder prototype name
      *
-     * @see ValidatorBuilder#name()
+     * @see ValidatorBuilderPrototype#name()
      */
     private final String name;
 
     /**
-     * Validator builder  package name
+     * Validator builder  prototype package name
      */
     private final String packageName;
 
     private final ClassType superclass;
 
     /**
-     * @see ValidatorBuilder#command()
+     * @see ValidatorBuilderPrototype#command()
      */
     private final String command;
 
-    private final List<ValidationElement> validations = new ArrayList<>();
+    private final List<ValidateElement> validations = new ArrayList<>();
 
-    public ValidatorBuilderElement(String name, String packageName, ClassType superclass, String command) {
+    public BuilderPrototypeElement(String name, String packageName, ClassType superclass, String command) {
         this.name = name;
         this.packageName = packageName;
         this.superclass = superclass;
         this.command = command;
     }
 
-    public void addValidation(ValidationElement validation) {
+    public void addValidation(ValidateElement validation) {
         validations.add(validation);
         validation.setParentBuilder(this);
     }
@@ -60,12 +60,13 @@ public class ValidatorBuilderElement {
      */
     public String getBuilderClassSimpleName() {
         String nameSuffix;
-        if (ValidatorBuilder.DEFAULT_BUILDER.equals(name)) {
+        if (ValidatorBuilderPrototype.DEFAULT_BUILDER.equals(name)) {
             nameSuffix = "";
         } else {
             nameSuffix = StrUtils.firstCharToUpperCase(name);
         }
-        return parentBean.getOriginType().asClassElement().getSimpleName()
+        return VALIDATOR_BUILDER_PROTOTYPE_PREFIX
+                + parentBean.getOriginType().asClassElement().getSimpleName()
                 + nameSuffix
                 + VALIDATOR_BUILDER_PROTOTYPE_SUFFIX;
     }
@@ -74,7 +75,7 @@ public class ValidatorBuilderElement {
         return packageName + "." + getBuilderClassSimpleName();
     }
 
-    public List<ValidationElement> getValidations() {
+    public List<ValidateElement> getValidations() {
         return validations;
     }
 

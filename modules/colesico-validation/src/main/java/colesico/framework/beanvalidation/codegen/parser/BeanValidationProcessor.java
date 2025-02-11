@@ -3,8 +3,8 @@ package colesico.framework.beanvalidation.codegen.parser;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.beanvalidation.ValidatorBuilder;
-import colesico.framework.beanvalidation.ValidatorBuilders;
+import colesico.framework.beanvalidation.ValidatorBuilderPrototype;
+import colesico.framework.beanvalidation.ValidatorBuilderPrototypes;
 import colesico.framework.beanvalidation.codegen.generator.ValidatorBuilderGenerator;
 import colesico.framework.beanvalidation.codegen.model.BeanElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -24,7 +24,7 @@ public class BeanValidationProcessor extends FrameworkAbstractProcessor {
 
     @Override
     protected Class<? extends Annotation>[] getSupportedAnnotations() {
-        return new Class[]{ValidatorBuilders.class, ValidatorBuilder.class};
+        return new Class[]{ValidatorBuilderPrototypes.class, ValidatorBuilderPrototype.class};
     }
 
     @Override
@@ -36,7 +36,7 @@ public class BeanValidationProcessor extends FrameworkAbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnv) {
 
-        for (Element elm : roundEnv.getElementsAnnotatedWithAny(toAnnotationsSet(ValidatorBuilder.class, ValidatorBuilders.class))) {
+        for (Element elm : roundEnv.getElementsAnnotatedWithAny(toAnnotationsSet(ValidatorBuilderPrototype.class, ValidatorBuilderPrototypes.class))) {
             if (!(elm.getKind() == ElementKind.CLASS)) {
                 throw CodegenException.of().element(elm).message("Validatable bean is not a Class").build();
             }

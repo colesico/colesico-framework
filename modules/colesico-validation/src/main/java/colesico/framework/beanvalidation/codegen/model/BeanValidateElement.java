@@ -7,14 +7,14 @@ import colesico.framework.beanvalidation.ValidateBean;
 /**
  * @see ValidateBean
  */
-public class BeanValidationElement extends ValidationElement {
+public class BeanValidateElement extends ValidateElement {
 
     /**
      * Validator builder that be used for this field validation
      */
-    private ValidatorBuilderElement fieldValidatorBuilder;
+    private BuilderPrototypeElement fieldValidatorBuilder;
 
-    public BeanValidationElement(FieldElement originField, String subject, String mapper, ValidatorBuilderElement fieldValidatorBuilder) {
+    public BeanValidateElement(FieldElement originField, String subject, String mapper, BuilderPrototypeElement fieldValidatorBuilder) {
         super(originField, subject, mapper);
         this.fieldValidatorBuilder = fieldValidatorBuilder;
     }
@@ -25,10 +25,10 @@ public class BeanValidationElement extends ValidationElement {
     }
 
     public String getValidatorBuilderFieldName() {
-        return getPropertyName() + "Validation";
+        return getPropertyName() + "VB";
     }
 
-    public ValidatorBuilderElement getFieldValidatorBuilder() {
+    public BuilderPrototypeElement getFieldValidatorBuilder() {
         return fieldValidatorBuilder;
     }
 }

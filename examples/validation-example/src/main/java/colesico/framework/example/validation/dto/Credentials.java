@@ -1,11 +1,11 @@
 package colesico.framework.example.validation.dto;
 
 import colesico.framework.beanvalidation.Validate;
-import colesico.framework.beanvalidation.ValidatorBuilder;
+import colesico.framework.beanvalidation.ValidatorBuilderPrototype;
 import colesico.framework.example.validation.validations.AppValidatorBuilder;
 
-@ValidatorBuilder(superclass = AppValidatorBuilder.class)
-@ValidatorBuilder(name = "brief", superclass = AppValidatorBuilder.class)
+@ValidatorBuilderPrototype(superclass = AppValidatorBuilder.class)
+@ValidatorBuilderPrototype(name = "brief", superclass = AppValidatorBuilder.class)
 public class Credentials {
 
     @Validate
