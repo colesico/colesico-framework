@@ -69,17 +69,17 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- Maven plugins -->
-        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
         <maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
-        <asciidoctor-maven-plugin.version>3.1.1</asciidoctor-maven-plugin.version>
+        <asciidoctor-maven-plugin.version>3.2.0</asciidoctor-maven-plugin.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
         <versions-maven-plugin.version>2.18.0</versions-maven-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.11.1</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
         <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
-        <spotbugs-maven-plugin.version>4.8.6.6</spotbugs-maven-plugin.version>
+        <spotbugs-maven-plugin.version>4.9.3.0</spotbugs-maven-plugin.version>
 
         <!-- Other -->
         <commons-lang3.version>3.17.0</commons-lang3.version>
@@ -90,26 +90,26 @@
         <logback.verion>1.5.12</logback.verion>
 
         <!-- DB -->
-        <hikaricp.version>6.2.0</hikaricp.version>
-        <jdbi3.version>3.47.0</jdbi3.version>
+        <hikaricp.version>6.3.0</hikaricp.version>
+        <jdbi3.version>3.49.0</jdbi3.version>
 
         <!-- Mix -->
         <typesafe-config.version>1.4.3</typesafe-config.version>
-        <pebble.version>3.2.2</pebble.version>
-        <gson.version>2.11.0</gson.version>
+        <pebble.version>3.2.4</pebble.version>
+        <gson.version>2.13.0</gson.version>
 
-        <palantir-javapoet.version>0.5.0</palantir-javapoet.version>
+        <palantir-javapoet.version>0.7.0</palantir-javapoet.version>
         <undertow.version>2.3.18.Final</undertow.version>
         <kryo.version>5.6.2</kryo.version>
 
         <jakarta.inject-api.version>2.0.1</jakarta.inject-api.version>
 
         <!-- Tests -->
-        <org-testng.version>7.10.2</org-testng.version>
+        <org-testng.version>7.11.0</org-testng.version>
         <h2database.version>2.3.232</h2database.version>
 
         <!-- Code analyze -->
-        <spotbugs.version>4.8.6</spotbugs.version>
+        <spotbugs.version>4.9.3</spotbugs.version>
     </properties>
 
     <modules>
