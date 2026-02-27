@@ -16,7 +16,7 @@
 
 package colesico.framework.example.web.localization;
 
-import colesico.framework.profile.ProfileKit;
+import colesico.framework.profile.ProfileSource;
 import colesico.framework.weblet.HtmlResponse;
 import colesico.framework.weblet.Weblet;
 
@@ -25,11 +25,11 @@ import java.util.Locale;
 @Weblet
 public class MyLocalization {
 
-    private final ProfileKit profileKit;
+    private final ProfileSource profileSource;
     private final MyDictionary translations;
 
-    public MyLocalization(ProfileKit profileKit, MyDictionary translations) {
-        this.profileKit = profileKit;
+    public MyLocalization(ProfileSource profileSource, MyDictionary translations) {
+        this.profileSource = profileSource;
         this.translations = translations;
     }
 
@@ -40,25 +40,25 @@ public class MyLocalization {
 
     // http://localhost:8080/my-localization/ru
     public HtmlResponse ru() {
-        var profile = profileKit.profile();
+        var profile = profileSource.profile();
         profile.setLocale(Locale.of("ru", "RU"));
-        profileKit.commit(profile);
+        profileSource.commit(profile);
         return HtmlResponse.of("Русский");
     }
 
     // http://localhost:8080/my-localization/en
     public HtmlResponse en() {
-        var profile = profileKit.profile();
+        var profile = profileSource.profile();
         profile.setLocale(Locale.of("en", "GB"));
-        profileKit.commit(profile);
+        profileSource.commit(profile);
         return HtmlResponse.of("English");
     }
 
     // http://localhost:8080/my-localization/inherit
     public HtmlResponse inherit() {
-        var profile = profileKit.profile();
+        var profile = profileSource.profile();
         profile.setLocale(Locale.of("ru", "RU"));
-        profileKit.commit(profile);
+        profileSource.commit(profile);
         return HtmlResponse.of(translations.hello3());
     }
 }

@@ -7,7 +7,7 @@ package colesico.framework.profile;
  * Profile port instance should be explicitly assign with current thread by
  * putting it to {@link colesico.framework.ioc.scope.ThreadScope}
  */
-public interface ProfileKit<P extends Profile> {
+public interface ProfileSource<P extends Profile> {
 
     /**
      * Obtain profile form source.

@@ -49,12 +49,12 @@ public interface ProfileUtils {
     Map<String, Object> getPreferences(Profile profile);
 
     /**
-     * Converts profile  fields values to properties map: property-name=> value
+     * Converts profile  fields object values to string properties map: property-name=> value
      */
     Map<String, String> toProperties(Map<String, Object> values);
 
     /**
-     * Converts profile properties to fields values
+     * Converts profile string properties to fields object values
      */
     Map<String, Object> fromProperties(Map<String, String> properties);
 
@@ -75,6 +75,4 @@ public interface ProfileUtils {
     default Profile deserialize(byte[] bytes) {
         return createProfile(fromBytes(bytes));
     }
-
-
 }

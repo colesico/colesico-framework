@@ -28,7 +28,7 @@ public interface ProfileListener<P extends Profile> {
     /**
      * Controls the profile after read from the source.
      * Override this method to get more specific control.
-     * This method is used to fine grained control of profile: check validity,
+     * This method is used to fine-grained control of profile: check validity,
      * enrich with extra data, e.t.c.
      *
      * @return Valid profile or null

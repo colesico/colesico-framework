@@ -28,14 +28,14 @@ import java.util.Locale;
 @Producer
 @Produce(value = ProfileUtilsImpl.class, keyType = ProfileUtils.class)
 @Produce(value = LocaleValueUtils.class, keyType = ProfileValueUtils.class, polyproduce = true)
-@Produce(value = ProfileKitImpl.class, keyType = ProfileKit.class)
+@Produce(value = ProfileSourceImpl.class, keyType = ProfileSource.class)
 @Produce(value = ProfileListenerImpl.class, keyType = ProfileListener.class, substitute = Substitution.STUB)
 @Produce(value = ProfileConfigImpl.class, keyType = ProfileConfigPrototype.class, substitute = Substitution.STUB)
 public class ProfileProducer {
 
     @Unscoped
-    public Profile getProfile(ProfileKit pk) {
-        return pk.profile();
+    public Profile getProfile(ProfileSource ps) {
+        return ps.profile();
     }
 
     /**

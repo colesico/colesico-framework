@@ -7,7 +7,7 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 @Singleton
-public class ProfileKitImpl implements ProfileKit {
+public class ProfileSourceImpl implements ProfileSource {
 
     protected final Provider<DataPort> dataPortProv;
 
@@ -20,7 +20,7 @@ public class ProfileKitImpl implements ProfileKit {
     // Profile cache
     protected final ThreadScope threadScope;
 
-    public ProfileKitImpl(Provider<DataPort> dataPortProv, ProfileListener listener, ProfileUtils profileUtils, ProfileConfigPrototype config, ThreadScope threadScope) {
+    public ProfileSourceImpl(Provider<DataPort> dataPortProv, ProfileListener listener, ProfileUtils profileUtils, ProfileConfigPrototype config, ThreadScope threadScope) {
         this.dataPortProv = dataPortProv;
         this.listener = listener;
         this.profileUtils = profileUtils;
