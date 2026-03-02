@@ -21,8 +21,6 @@ import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.profile.DefaultProfile;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileConfigPrototype;
-import colesico.framework.profile.ProfileUtils;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTeleReader;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
@@ -57,11 +55,11 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
         var attributesProp = TeleHttpUtils.parseProperties(attributesStr);
         var attributes = profileUtils.fromProperties(attributesProp);
 
-        if (!attributes.containsKey(DefaultProfile.LOCALE_PROPERTY)) {
+        if (!attributes.containsKey(DefaultProfile.LOCALE_ATTRIBUTE)) {
             String acceptLangs = request.getHeaders().get(ACCEPT_LANGUAGE_HEADER);
             Locale locale = TeleHttpUtils.getAcceptedLanguage(acceptLangs);
             if (locale != null) {
-                attributes.put(DefaultProfile.LOCALE_PROPERTY, locale);
+                attributes.put(DefaultProfile.LOCALE_ATTRIBUTE, locale);
             }
         }
 

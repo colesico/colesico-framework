@@ -19,7 +19,6 @@ package colesico.framework.example.rpc;
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileUtils;
 import colesico.framework.security.DefaultPrincipal;
 import colesico.framework.security.Principal;
 

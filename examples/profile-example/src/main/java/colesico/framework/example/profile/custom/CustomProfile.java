@@ -6,12 +6,10 @@ import java.util.TimeZone;
 
 public class CustomProfile extends DefaultProfile {
 
-    public static final String TIMEZONE_PROPERTY="timezone";
-
-    private TimeZone timeZone;
+    protected TimeZone timeZone;
 
     // filled in from the listener
-    private String apiVersion;
+    protected String apiVersion;
 
     public TimeZone getTimeZone() {
         return timeZone;

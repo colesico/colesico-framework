@@ -32,22 +32,21 @@ import java.util.Locale;
  * The specific implementation depends on the needs of the application and
  * has to be implemented in the application.
  * <p>
- * Attributes are assigned on the calling side or with {@link ProfileListener}
  */
 public interface Profile {
 
     /**
-     * Scope key for caching profile
+     * Thread scope key for caching profile
      */
     Key<Profile> SCOPE_KEY = new TypeKey<>(Profile.class);
 
     /**
-     * Returns user locale.
+     * Returns locale.
      */
     Locale getLocale();
 
     /**
-     * Set profile locale
+     * Set  locale
      */
     void setLocale(Locale locale);
 

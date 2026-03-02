@@ -1,38 +1,25 @@
-/*
- * Copyright © 2014-2025 Vladlen V. Larionov and others as noted.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package colesico.framework.profile;
-
 
 public interface ProfileListener<P extends Profile> {
 
     /**
-     * Controls the profile before write it to the source.
-     * Override this method to get more specific control.
+     * Controls the profile before write it to data port.
+     * Implement this method to get more specific control.
      */
-    Profile beforeWrite(P profile);
+    default P beforeWrite(P profile) {
+        return profile;
+    }
 
     /**
-     * Controls the profile after read from the source.
-     * Override this method to get more specific control.
+     * Controls the profile after read from data port.
+     * Implement this method to get more specific control.
      * This method is used to fine-grained control of profile: check validity,
-     * enrich with extra data, e.t.c.
+     * enrich with extra data from database, e.t.c.
      *
      * @return Valid profile or null
      */
-    Profile afterRead(P profile);
+    default P afterRead(P profile) {
+        return profile;
+    }
 
 }

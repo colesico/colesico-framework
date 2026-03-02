@@ -15,27 +15,27 @@
  */
 package colesico.framework.profile.internal;
 
-import colesico.framework.ioc.conditional.Substitution;
+import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.profile.*;
 import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 import java.util.Locale;
 
+import static colesico.framework.ioc.conditional.Substitution.STUB;
+
 
 @Producer
-@Produce(value = ProfileUtilsImpl.class, keyType = ProfileUtils.class)
-@Produce(value = LocaleValueUtils.class, keyType = ProfileValueUtils.class, polyproduce = true)
 @Produce(value = ProfileSourceImpl.class, keyType = ProfileSource.class)
-@Produce(value = ProfileListenerImpl.class, keyType = ProfileListener.class, substitute = Substitution.STUB)
-@Produce(value = ProfileConfigImpl.class, keyType = ProfileConfigPrototype.class, substitute = Substitution.STUB)
+@Produce(value = DefaultProfileFactory.class, keyType = ProfileFactory.class, substitute = STUB)
 public class ProfileProducer {
 
     @Unscoped
     public Profile getProfile(ProfileSource ps) {
-        return ps.profile();
+        return ps.read();
     }
 
     /**
@@ -45,6 +45,13 @@ public class ProfileProducer {
     public Locale getLocale(Provider<Profile> profileProv) {
         Profile profile = profileProv.get();
         return profile != null ? profile.getLocale() : Locale.getDefault();
+    }
+
+    @Singleton
+    @Substitute(STUB)
+    public ProfileListener getProfileListener() {
+        return new ProfileListener() {
+        };
     }
 
 }

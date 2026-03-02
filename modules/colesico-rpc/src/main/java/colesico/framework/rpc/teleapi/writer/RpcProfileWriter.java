@@ -1,7 +1,6 @@
 package colesico.framework.rpc.teleapi.writer;
 
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileUtils;
 import colesico.framework.rpc.teleapi.BasicEnvelope;
 import colesico.framework.rpc.teleapi.RpcTWContext;
 import colesico.framework.rpc.teleapi.RpcTeleWriter;

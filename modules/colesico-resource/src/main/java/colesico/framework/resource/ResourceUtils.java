@@ -23,9 +23,9 @@ import java.net.URL;
 import java.util.Enumeration;
 
 /**
- * Resources service  (resource name localizations, rewriting, etc.)
+ * Resources utilities  (resource name localizations, rewriting, etc.)
  */
-public interface ResourceKit {
+public interface ResourceUtils {
 
     /**
      * Returns localized resource name best matched with current profile
@@ -36,7 +36,7 @@ public interface ResourceKit {
 
     /**
      * Returns localized resource names ordered  by degree of matching with {@link ObjectiveQualifiers}
-     * name[N] - best matching (same as {@link ResourceKit#localize(String)} )
+     * name[N] - best matching (same as {@link ResourceUtils#localize(String)} )
      * name[0] - worst matching  (default resource)
      */
     String[] localizations(String baseName);

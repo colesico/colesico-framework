@@ -43,7 +43,6 @@ public class JdbiProducer {
     @Classed(JdbiConfigPrototype.class)
     public Jdbi jdbiFactory(@Message JdbiConfigPrototype config) {
         final Jdbi jdbi = Jdbi.create(config.getDataSource());
-        jdbi.installPlugins();
         if (config.getOptions() != null) {
             config.getOptions().forEach(o -> o.applyOptions(jdbi));
         }

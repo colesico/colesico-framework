@@ -1,7 +1,6 @@
 package colesico.framework.rpc.clientapi.handler;
 
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileUtils;
 import colesico.framework.rpc.clientapi.RpcRequestHandler;
 import colesico.framework.rpc.teleapi.BasicEnvelope;
 import colesico.framework.security.Principal;

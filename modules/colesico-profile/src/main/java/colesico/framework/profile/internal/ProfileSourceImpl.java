@@ -2,6 +2,7 @@ package colesico.framework.profile.internal;
 
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.profile.*;
+import colesico.framework.profile.ProfileListener;
 import colesico.framework.teleapi.DataPort;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -9,27 +10,28 @@ import jakarta.inject.Singleton;
 @Singleton
 public class ProfileSourceImpl implements ProfileSource {
 
+    protected final ProfileFactory profileFactory;
+
+    protected final ProfileListener sourceListener;
+
     protected final Provider<DataPort> dataPortProv;
-
-    protected final ProfileListener listener;
-
-    protected final ProfileUtils profileUtils;
-
-    protected final ProfileConfigPrototype config;
 
     // Profile cache
     protected final ThreadScope threadScope;
 
-    public ProfileSourceImpl(Provider<DataPort> dataPortProv, ProfileListener listener, ProfileUtils profileUtils, ProfileConfigPrototype config, ThreadScope threadScope) {
+    public ProfileSourceImpl(ProfileFactory profileFactory,
+                             ProfileListener sourceListener,
+                             Provider<DataPort> dataPortProv,
+                             ThreadScope threadScope) {
+
+        this.profileFactory = profileFactory;
+        this.sourceListener = sourceListener;
         this.dataPortProv = dataPortProv;
-        this.listener = listener;
-        this.profileUtils = profileUtils;
-        this.config = config;
         this.threadScope = threadScope;
     }
 
     @Override
-    public Profile profile() {
+    public Profile read() {
         Profile profile = threadScope.get(Profile.SCOPE_KEY);
         if (profile != null) {
             return profile;
@@ -37,18 +39,19 @@ public class ProfileSourceImpl implements ProfileSource {
 
         profile = (Profile) dataPortProv.get().read(Profile.class);
         if (profile == null) {
-            profile = profileUtils.createProfile();
+            profile = profileFactory.newInstance();
+            profileFactory.initDefault(profile);
         }
 
-        profile = listener.afterRead(profile);
+        profile = sourceListener.afterRead(profile);
         threadScope.put(Profile.SCOPE_KEY, profile);
 
         return profile;
     }
 
     @Override
-    public void commit(Profile profile) {
-        profile = listener.beforeWrite(profile);
+    public void write(Profile profile) {
+        profile = sourceListener.beforeWrite(profile);
         dataPortProv.get().write(profile, Profile.class);
         threadScope.put(Profile.SCOPE_KEY, profile);
     }

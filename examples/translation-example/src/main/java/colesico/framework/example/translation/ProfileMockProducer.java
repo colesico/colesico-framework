@@ -20,7 +20,6 @@ import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileUtils;
 
 import java.util.Locale;
 

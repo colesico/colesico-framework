@@ -16,7 +16,7 @@
 package colesico.framework.resource.internal;
 
 import colesico.framework.resource.ResourceException;
-import colesico.framework.resource.ResourceKit;
+import colesico.framework.resource.ResourceUtils;
 import colesico.framework.resource.ResourceNotFoundException;
 import colesico.framework.resource.ResourcePrefixOptionsPrototype;
 import colesico.framework.resource.internal.l10n.Localizer;
@@ -35,15 +35,15 @@ import java.util.Enumeration;
  * @author Vladlen Larionov
  */
 @Singleton
-public class ResourceKitImpl implements ResourceKit {
+public class ResourceUtilsImpl implements ResourceUtils {
 
-    protected final Logger log = LoggerFactory.getLogger(ResourceKit.class);
+    protected final Logger log = LoggerFactory.getLogger(ResourceUtils.class);
 
     private final Localizer localizer;
     private final PrefixSubstitutor prefixSubstitutor;
 
     @Inject
-    public ResourceKitImpl(Localizer localizer, PrefixSubstitutor prefixSubstitutor) {
+    public ResourceUtilsImpl(Localizer localizer, PrefixSubstitutor prefixSubstitutor) {
         this.localizer = localizer;
         this.prefixSubstitutor = prefixSubstitutor;
     }

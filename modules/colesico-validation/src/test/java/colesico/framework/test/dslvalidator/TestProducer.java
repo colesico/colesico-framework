@@ -22,7 +22,6 @@ import colesico.framework.ioc.conditional.TestCondition;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileUtils;
 import jakarta.inject.Singleton;
 
 import java.util.Locale;

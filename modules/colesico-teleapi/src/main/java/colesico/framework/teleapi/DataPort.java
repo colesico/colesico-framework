@@ -50,7 +50,7 @@ public interface DataPort<R extends TRContext, W extends TWContext> {
     <V> V read(R context);
 
     /**
-     * Read value from remote request.
+     * Read value by type from remote request.
      * Internally must create appropriate reading context and forward to {@link DataPort#read(R)}
      */
     <V> V read(Type valueType);
@@ -64,6 +64,7 @@ public interface DataPort<R extends TRContext, W extends TWContext> {
     <V> void write(V value, W context);
 
     /**
+     * Write data by type to the response
      * Internally must create appropriate writing context and forward to {@link DataPort#write(Object, Type)}
      */
     <V> void write(V value, Type valueType);

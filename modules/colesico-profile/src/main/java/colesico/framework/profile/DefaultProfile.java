@@ -8,8 +8,6 @@ import java.util.Objects;
  */
 public class DefaultProfile implements Profile {
 
-    public static String LOCALE_PROPERTY = "locale";
-
     protected Locale locale;
 
     @Override

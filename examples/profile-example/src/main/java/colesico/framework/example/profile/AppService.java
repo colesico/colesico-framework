@@ -34,18 +34,18 @@ public class AppService {
     }
 
     public CustomProfile getProfile() {
-        return profileSource.profile();
+        return profileSource.read();
     }
 
     public void setLocale(Locale locale) {
-        CustomProfile profile = profileSource.profile();
+        CustomProfile profile = profileSource.read();
         profile.setLocale(locale);
-        profileSource.commit(profile);
+        profileSource.write(profile);
     }
 
     public void setTimezone(TimeZone tz) {
-        CustomProfile profile = profileSource.profile();
+        CustomProfile profile = profileSource.read();
         profile.setTimeZone(tz);
-        profileSource.commit(profile);
+        profileSource.write(profile);
     }
 }

@@ -17,7 +17,7 @@ package colesico.framework.webstatic.internal;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.resource.ResourceException;
-import colesico.framework.resource.ResourceKit;
+import colesico.framework.resource.ResourceUtils;
 import colesico.framework.resource.ResourceNotFoundException;
 import colesico.framework.webstatic.MimeAssist;
 import colesico.framework.webstatic.StaticContent;
@@ -38,14 +38,14 @@ public class StaticContentImpl implements StaticContent {
     protected final Logger log = LoggerFactory.getLogger(StaticContent.class);
 
     protected final Provider<HttpContext> httpContextProv;
-    protected final ResourceKit resourceKit;
+    protected final ResourceUtils resourceUtils;
 
     protected final String resourcesRoot;
 
-    public StaticContentImpl(Provider<HttpContext> httpContextProv, ResourceKit resourceKit, String resourcesRoot) {
+    public StaticContentImpl(Provider<HttpContext> httpContextProv, ResourceUtils resourceUtils, String resourcesRoot) {
         this.httpContextProv = httpContextProv;
-        this.resourceKit = resourceKit;
-        this.resourcesRoot = resourceKit.localize(resourcesRoot);
+        this.resourceUtils = resourceUtils;
+        this.resourcesRoot = resourceUtils.localize(resourcesRoot);
     }
 
     @Override
@@ -56,12 +56,12 @@ public class StaticContentImpl implements StaticContent {
         String resourcePath = resourcesRoot + '/' + resourceUri;
 
         if (rewrite) {
-            resourcePath = resourceKit.localize(resourcePath);
+            resourcePath = resourceUtils.localize(resourcePath);
         }
 
         httpContext.getResponse().setContenType(MimeAssist.getContentType(resourcePath));
 
-        try (InputStream is = resourceKit.getResourceStream(resourcePath);
+        try (InputStream is = resourceUtils.getResourceStream(resourcePath);
              OutputStream os = httpContext.getResponse().getOutputStream()) {
             byte[] buf = new byte[SEND_BUFFER_SIZE];
             int c;
