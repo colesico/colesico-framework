@@ -27,7 +27,9 @@ import colesico.framework.telehttp.writer.ProfileWriter;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -47,7 +49,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
     }
 
     protected void readLocale(HttpRequest request, ProfileAttribute<Locale> attribute) {
-        HttpCookie prefCookie = request.getCookies().get(ProfileWriter.PREFERENCE_COOKIE_NAME);
+        HttpCookie prefCookie = request.getCookies().get(ProfileWriter.LOCALE_COOKIE_NAME);
         if (prefCookie != null) {
             attribute.setString(prefCookie.getValue());
         } else {
@@ -60,7 +62,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
     }
 
     protected void readAttribute(HttpRequest request, ProfileAttribute attribute) {
-        String headerName=""
+        String cookieName = "";
     }
 
     protected AttributeReader getAttributeReader(ProfileAttribute attribute) {
@@ -75,6 +77,23 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
     public final P read(C context) {
         HttpRequest request = httpContextProv.get().getRequest();
         P profile = profileUtils.newInstance();
+
+        Map<String, String> cookieProperties = null;
+        HttpCookie profileCookie = request.getCookies().get(ProfileWriter.PROFILE_COOKIE_NAME);
+        if (profileCookie != null) {
+            cookieProperties = TeleHttpUtils.parseProperties(profileCookie.getValue());
+        } else {
+            cookieProperties = new HashMap<>();
+        }
+
+        Map<String, String> headerProperties = null;
+        HttpCookie profileHeader = request.getCookies().get(ProfileWriter.PROFILE_HEADER_NAME);
+        if (profileCookie != null) {
+            headerProperties = TeleHttpUtils.parseProperties(profileHeader.getValue());
+        } else {
+            headerProperties = new HashMap<>();
+        }
+
         Set<ProfileAttribute> attributes = profileUtils.getAttributes(profile);
         for (ProfileAttribute attribute : attributes) {
             var attributeReader = getAttributeReader(attribute);

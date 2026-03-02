@@ -14,12 +14,6 @@ public interface ProfileUtils<P extends Profile> {
      */
     void initDefault(P profile);
 
-    default P newDefaultInstance() {
-        P profile = newInstance();
-        initDefault(profile);
-        return profile;
-    }
-
     /**
      * Profile attributes accessors
      */

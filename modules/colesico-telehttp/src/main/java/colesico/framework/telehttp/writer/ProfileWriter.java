@@ -33,8 +33,8 @@ import java.util.Calendar;
 @Singleton
 public final class ProfileWriter<P extends Profile, C extends HttpTWContext> extends HttpTeleWriter<P, C> {
 
-    public static final String PREFERENCE_COOKIE_NAME = "profile";
-    public static final String ATTRIBUTES_HEADER_NAME = "X-Profile";
+    public static final String PROFILE_COOKIE_NAME = "profile";
+    public static final String PROFILE_HEADER_NAME = "X-Profile";
 
     protected final ProfileHttpConfigPrototype config;
     protected final ProfileUtils profileUtils;
@@ -64,12 +64,12 @@ public final class ProfileWriter<P extends Profile, C extends HttpTWContext> ext
             expires.add(Calendar.DAY_OF_MONTH, -1);
         }
 
-        HttpCookie cookie = cookieFactory.create(PREFERENCE_COOKIE_NAME, preferenceStr);
+        HttpCookie cookie = cookieFactory.create(LOCALE_COOKIE_NAME, preferenceStr);
         cookie.setExpires(expires.getTime()).setSameSite(HttpCookie.SameSite.STRICT);
 
         HttpResponse response = httpContextProv.get().getResponse();
         response.setCookie(cookie);
-        response.setHeader(ATTRIBUTES_HEADER_NAME, preferenceStr);
+        response.setHeader(ATTRIBUTES_PREFIX, preferenceStr);
 
     }
 }
