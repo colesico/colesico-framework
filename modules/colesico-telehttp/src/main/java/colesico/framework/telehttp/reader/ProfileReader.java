@@ -48,11 +48,9 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
         this.httpContextProv = httpContextProv;
     }
 
-    protected void readLocale(HttpRequest request, ProfileAttribute<Locale> attribute) {
-        HttpCookie prefCookie = request.getCookies().get(ProfileWriter.LOCALE_COOKIE_NAME);
-        if (prefCookie != null) {
-            attribute.setString(prefCookie.getValue());
-        } else {
+    protected void readLocale(ProfileAttribute<Locale> attribute, HttpRequest request, Map<String, String> properties) {
+        readAttribute(attribute, request, properties);
+        if (!attribute.hasValue()) {
             String acceptLangs = request.getHeaders().get(ACCEPT_LANGUAGE_HEADER);
             Locale locale = TeleHttpUtils.getAcceptedLanguage(acceptLangs);
             if (locale != null) {
@@ -61,8 +59,11 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
         }
     }
 
-    protected void readAttribute(HttpRequest request, ProfileAttribute attribute) {
-        String cookieName = "";
+    protected void readAttribute(ProfileAttribute<?> attribute, HttpRequest request, Map<String, String> properties) {
+        var value = properties.get(attribute.name());
+        if (value != null) {
+            attribute.setString(value);
+        }
     }
 
     protected AttributeReader getAttributeReader(ProfileAttribute attribute) {
@@ -78,31 +79,26 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
         HttpRequest request = httpContextProv.get().getRequest();
         P profile = profileUtils.newInstance();
 
-        Map<String, String> cookieProperties = null;
+        Map<String, String> properties = new HashMap<>();
         HttpCookie profileCookie = request.getCookies().get(ProfileWriter.PROFILE_COOKIE_NAME);
         if (profileCookie != null) {
-            cookieProperties = TeleHttpUtils.parseProperties(profileCookie.getValue());
-        } else {
-            cookieProperties = new HashMap<>();
+            properties.putAll(TeleHttpUtils.parseProperties(profileCookie.getValue()));
         }
 
-        Map<String, String> headerProperties = null;
         HttpCookie profileHeader = request.getCookies().get(ProfileWriter.PROFILE_HEADER_NAME);
         if (profileCookie != null) {
-            headerProperties = TeleHttpUtils.parseProperties(profileHeader.getValue());
-        } else {
-            headerProperties = new HashMap<>();
+            properties.putAll(TeleHttpUtils.parseProperties(profileHeader.getValue()));
         }
 
         Set<ProfileAttribute> attributes = profileUtils.getAttributes(profile);
         for (ProfileAttribute attribute : attributes) {
             var attributeReader = getAttributeReader(attribute);
-            attributeReader.read(request, attribute);
+            attributeReader.read(attribute, request, properties);
         }
         return profile;
     }
 
     public interface AttributeReader<V> {
-        void read(HttpRequest request, ProfileAttribute<V> attribute);
+        void read(ProfileAttribute<V> attribute, HttpRequest request, Map<String, String> properties);
     }
 }

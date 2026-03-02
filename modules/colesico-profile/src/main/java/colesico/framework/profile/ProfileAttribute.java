@@ -22,6 +22,10 @@ public interface ProfileAttribute<V> {
      */
     V getValue();
 
+    default boolean hasValue() {
+        return getValue() != null;
+    }
+
     /**
      * Set profile attribute value
      */
