@@ -19,8 +19,7 @@ package colesico.framework.telehttp.reader;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpRequest;
-import colesico.framework.profile.DefaultProfile;
-import colesico.framework.profile.Profile;
+import colesico.framework.profile.*;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTeleReader;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
@@ -29,7 +28,7 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.util.Locale;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * Default profile reader
@@ -39,49 +38,52 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
 
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
 
-    protected final ProfileUtils profileUtils;
-    protected final ProfileConfigPrototype profileConfig;
+    protected final ProfileUtils<P> profileUtils;
     protected final Provider<HttpContext> httpContextProv;
 
-    public ProfileReader(ProfileUtils profileUtils, ProfileConfigPrototype profileConfig, Provider<HttpContext> httpContextProv) {
+    public ProfileReader(ProfileUtils profileUtils, Provider<HttpContext> httpContextProv) {
         this.profileUtils = profileUtils;
-        this.profileConfig = profileConfig;
         this.httpContextProv = httpContextProv;
     }
 
-    protected P buildProfile(HttpRequest request) {
-
-        var attributesStr = request.getHeaders().get(ProfileWriter.ATTRIBUTES_HEADER_NAME);
-        var attributesProp = TeleHttpUtils.parseProperties(attributesStr);
-        var attributes = profileUtils.fromProperties(attributesProp);
-
-        if (!attributes.containsKey(DefaultProfile.LOCALE_ATTRIBUTE)) {
+    protected void readLocale(HttpRequest request, ProfileAttribute<Locale> attribute) {
+        HttpCookie prefCookie = request.getCookies().get(ProfileWriter.PREFERENCE_COOKIE_NAME);
+        if (prefCookie != null) {
+            attribute.setString(prefCookie.getValue());
+        } else {
             String acceptLangs = request.getHeaders().get(ACCEPT_LANGUAGE_HEADER);
             Locale locale = TeleHttpUtils.getAcceptedLanguage(acceptLangs);
             if (locale != null) {
-                attributes.put(DefaultProfile.LOCALE_ATTRIBUTE, locale);
+                attribute.setValue(locale);
             }
         }
-
-        HttpCookie preferenceTagCookie = request.getCookies().get(ProfileWriter.PREFERENCE_COOKIE_NAME);
-        if (preferenceTagCookie != null) {
-            attributesProp = TeleHttpUtils.parseProperties(preferenceTagCookie.getValue());
-        } else {
-            attributesProp = Map.of();
-        }
-        var preferences = profileUtils.fromProperties(attributesProp);
-
-        @SuppressWarnings("unchecked")
-        P profile = (P) profileUtils.createProfile(attributes, preferences);
-
-        return profile;
     }
 
+    protected void readAttribute(HttpRequest request, ProfileAttribute attribute) {
+        String headerName=""
+    }
+
+    protected AttributeReader getAttributeReader(ProfileAttribute attribute) {
+        if (attribute instanceof LocaleAttribute) {
+            return this::readLocale;
+        } else {
+            return this::readAttribute;
+        }
+    }
 
     @Override
     public final P read(C context) {
         HttpRequest request = httpContextProv.get().getRequest();
-        P profile = buildProfile(request);
+        P profile = profileUtils.newInstance();
+        Set<ProfileAttribute> attributes = profileUtils.getAttributes(profile);
+        for (ProfileAttribute attribute : attributes) {
+            var attributeReader = getAttributeReader(attribute);
+            attributeReader.read(request, attribute);
+        }
         return profile;
+    }
+
+    public interface AttributeReader<V> {
+        void read(HttpRequest request, ProfileAttribute<V> attribute);
     }
 }

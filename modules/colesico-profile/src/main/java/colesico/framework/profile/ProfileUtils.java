@@ -2,7 +2,7 @@ package colesico.framework.profile;
 
 import java.util.Set;
 
-public interface ProfileFactory<P extends Profile> {
+public interface ProfileUtils<P extends Profile> {
 
     /**
      * Create empty profile instance
@@ -14,8 +14,14 @@ public interface ProfileFactory<P extends Profile> {
      */
     void initDefault(P profile);
 
+    default P newDefaultInstance() {
+        P profile = newInstance();
+        initDefault(profile);
+        return profile;
+    }
+
     /**
      * Profile attributes accessors
      */
-    Set<ProfileAttribute<?>> getAttributes(P profile);
+    Set<ProfileAttribute> getAttributes(P profile);
 }

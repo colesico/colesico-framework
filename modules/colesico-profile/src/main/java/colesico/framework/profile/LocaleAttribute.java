@@ -9,7 +9,7 @@ public class LocaleAttribute<P extends Profile> extends AbstractProfileAttribute
      */
     static final String ATTRIBUTE_NAME = "locale";
 
-    public static <P extends Profile> LocaleAttribute<P> of(P profile) {
+    public static ProfileAttribute<Locale> of(Profile profile) {
         return new LocaleAttribute<>(profile);
     }
 

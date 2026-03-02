@@ -10,7 +10,7 @@ import jakarta.inject.Singleton;
 @Singleton
 public class ProfileSourceImpl implements ProfileSource {
 
-    protected final ProfileFactory profileFactory;
+    protected final ProfileUtils profileUtils;
 
     protected final ProfileListener sourceListener;
 
@@ -19,12 +19,12 @@ public class ProfileSourceImpl implements ProfileSource {
     // Profile cache
     protected final ThreadScope threadScope;
 
-    public ProfileSourceImpl(ProfileFactory profileFactory,
+    public ProfileSourceImpl(ProfileUtils profileUtils,
                              ProfileListener sourceListener,
                              Provider<DataPort> dataPortProv,
                              ThreadScope threadScope) {
 
-        this.profileFactory = profileFactory;
+        this.profileUtils = profileUtils;
         this.sourceListener = sourceListener;
         this.dataPortProv = dataPortProv;
         this.threadScope = threadScope;
@@ -39,8 +39,8 @@ public class ProfileSourceImpl implements ProfileSource {
 
         profile = (Profile) dataPortProv.get().read(Profile.class);
         if (profile == null) {
-            profile = profileFactory.newInstance();
-            profileFactory.initDefault(profile);
+            profile = profileUtils.newInstance();
+            profileUtils.initDefault(profile);
         }
 
         profile = sourceListener.afterRead(profile);

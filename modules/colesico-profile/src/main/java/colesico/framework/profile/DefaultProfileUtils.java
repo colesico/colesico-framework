@@ -9,7 +9,7 @@ import java.util.Set;
  * Default profile factory implementation
  */
 @Singleton
-public class DefaultProfileFactory implements ProfileFactory<DefaultProfile> {
+public class DefaultProfileUtils implements ProfileUtils<DefaultProfile> {
 
     @Override
     public DefaultProfile newInstance() {
@@ -22,7 +22,7 @@ public class DefaultProfileFactory implements ProfileFactory<DefaultProfile> {
     }
 
     @Override
-    public Set<ProfileAttribute<?>> getAttributes(DefaultProfile profile) {
+    public Set<ProfileAttribute> getAttributes(DefaultProfile profile) {
         return Set.of(LocaleAttribute.of(profile));
     }
 

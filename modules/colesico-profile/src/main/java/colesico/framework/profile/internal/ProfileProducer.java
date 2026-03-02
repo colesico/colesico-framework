@@ -30,7 +30,7 @@ import static colesico.framework.ioc.conditional.Substitution.STUB;
 
 @Producer
 @Produce(value = ProfileSourceImpl.class, keyType = ProfileSource.class)
-@Produce(value = DefaultProfileFactory.class, keyType = ProfileFactory.class, substitute = STUB)
+@Produce(value = DefaultProfileUtils.class, keyType = ProfileUtils.class, substitute = STUB)
 public class ProfileProducer {
 
     @Unscoped
