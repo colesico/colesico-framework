@@ -36,7 +36,8 @@ public class ApiVersionAttribute extends AbstractProfileAttribute<CustomProfile,
     }
 
     @Override
-    public boolean readonly() {
-        return true;
+    protected void initMetadata() {
+        super.initMetadata();
+        metadata.dataPortWritable = false;
     }
 }

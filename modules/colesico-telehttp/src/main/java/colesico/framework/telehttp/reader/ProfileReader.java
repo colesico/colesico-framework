@@ -69,7 +69,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
     }
 
     /**
-     *  Override this method to dispatch reading
+     * Override this method to dispatch reading
      */
     protected AttributeReader getAttributeReader(ProfileAttribute attribute) {
         if (attribute instanceof LocaleAttribute) {
@@ -97,6 +97,9 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
 
         Set<ProfileAttribute> attributes = profileUtils.getAttributes(profile);
         for (ProfileAttribute attribute : attributes) {
+            if (!attribute.metadata().dataPortReadable) {
+                continue;
+            }
             var attributeReader = getAttributeReader(attribute);
             attributeReader.read(attribute, request, profileProperties);
         }

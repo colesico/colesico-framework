@@ -12,10 +12,9 @@ public interface ProfileAttribute<V> {
     String name();
 
     /**
-     * Is readonly attribute.
-     * Readonly attribute not intended for writing to {@link  ProfileSource}
+     * Attribute accessor metadata
      */
-    boolean readonly();
+    Metadata metadata();
 
     /**
      * Return profile attribute value
@@ -50,4 +49,16 @@ public interface ProfileAttribute<V> {
      * Set  profile attribute value from bytes
      */
     void setBytes(byte[] bytes);
+
+    /**
+     * Profile attribute metadata
+     */
+    class Metadata {
+        public boolean dataPortReadable;
+        public boolean dataPortWritable;
+
+        // Reserved for profile storage support
+        public boolean storageReadable;
+        public boolean storageWritable;
+    }
 }

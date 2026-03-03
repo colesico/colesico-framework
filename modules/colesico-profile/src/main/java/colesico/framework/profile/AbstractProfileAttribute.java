@@ -9,9 +9,22 @@ import java.util.Objects;
 abstract public class AbstractProfileAttribute<P extends Profile, V> implements ProfileAttribute<V> {
 
     protected final P profile;
+    protected Metadata metadata;
 
     public AbstractProfileAttribute(P profile) {
         this.profile = profile;
+        initMetadata();
+    }
+
+    /**
+     * Override this method to change profile attribute metainformation
+     */
+    protected void initMetadata() {
+        this.metadata = new Metadata();
+        metadata.dataPortWritable = true;
+        metadata.dataPortReadable = true;
+        metadata.storageReadable = false;
+        metadata.storageWritable = false;
     }
 
     public P getProfile() {
@@ -19,8 +32,8 @@ abstract public class AbstractProfileAttribute<P extends Profile, V> implements 
     }
 
     @Override
-    public boolean readonly() {
-        return false;
+    public Metadata metadata() {
+        return metadata;
     }
 
     @Override
