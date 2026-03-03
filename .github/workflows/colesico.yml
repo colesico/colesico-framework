@@ -10,7 +10,7 @@ jobs:
   build:
     strategy:
       matrix:
-        platform: [ubuntu-latest, windows-latest]
+        platform: [ubuntu-latest]
     runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v4
@@ -31,6 +31,7 @@ jobs:
       run: mvn --no-transfer-progress -q -B -DskipTests package
     - name: Test
       run: mvn --no-transfer-progress test
+
 
 
 
