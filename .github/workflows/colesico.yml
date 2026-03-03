@@ -19,6 +19,7 @@ jobs:
       name: Configure Java
       with:
         java-version: 25
+        distribution: 'temurin'
         java-package: jdk
         architecture: x64
     - uses: actions/cache@v4
@@ -31,6 +32,7 @@ jobs:
       run: mvn --no-transfer-progress -q -B -DskipTests package
     - name: Test
       run: mvn --no-transfer-progress test
+
 
 
 
