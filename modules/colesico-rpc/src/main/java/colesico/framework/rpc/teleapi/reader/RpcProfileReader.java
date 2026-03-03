@@ -1,6 +1,7 @@
 package colesico.framework.rpc.teleapi.reader;
 
 import colesico.framework.profile.Profile;
+import colesico.framework.profile.ProfileUtils;
 import colesico.framework.rpc.teleapi.BasicEnvelope;
 import colesico.framework.rpc.teleapi.RpcTRContext;
 import colesico.framework.rpc.teleapi.RpcTeleReader;
