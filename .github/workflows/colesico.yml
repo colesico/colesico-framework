@@ -3,7 +3,9 @@ name: colesico
 on:
   push:
     branches:
-      - main 
+      - main
+  workflow_dispatch:
+  
 jobs:
   build:
     strategy:
@@ -29,5 +31,6 @@ jobs:
       run: mvn --no-transfer-progress -q -B -DskipTests package
     - name: Test
       run: mvn --no-transfer-progress test
+
 
 
