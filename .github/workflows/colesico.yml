@@ -1,7 +1,9 @@
 name: colesico
 
 on:
-  [push]
+  push:
+    branches:
+      - main 
 jobs:
   build:
     strategy:
@@ -14,7 +16,7 @@ jobs:
     - uses: actions/setup-java@v1
       name: Configure Java
       with:
-        java-version: 17
+        java-version: 25
         java-package: jdk
         architecture: x64
     - uses: actions/cache@v2
@@ -27,3 +29,4 @@ jobs:
       run: mvn --no-transfer-progress -q -B -DskipTests package
     - name: Test
       run: mvn --no-transfer-progress test
+
