@@ -43,7 +43,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
         for (RecordViewElement view : recordKit.getRecord().getViews()) {
             logger.debug("Generating JDBI Rec producer: " + producerGenerator.getProducerClassFilePath());
-            String implPackageStr = view.getType().asClassElement().getPackageName();
+            String implPackageStr = recordKit.getOriginClass().getPackageName();
             String implClassStr = RecordKitGeneratorUtils.buildRecordKitInstanceClassName(view);
             ClassName implClassName = ClassName.bestGuess(implPackageStr + "." + implClassStr);
             AnnotationSpec.Builder produceAnn = producerGenerator.addProduceAnnotation(implClassName);
