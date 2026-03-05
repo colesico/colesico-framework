@@ -8,6 +8,8 @@ import colesico.framework.telehttp.assist.TeleHttpUtils;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.List;
 
 @Singleton
 public class BodyOrigin implements Origin {
@@ -19,10 +21,10 @@ public class BodyOrigin implements Origin {
     }
 
     @Override
-    public String getString(String name) {
+    public Collection<String> getStrings(String name) {
         try (InputStream is = httpContextProv.get().getRequest().getInputStream()) {
             String content = TeleHttpUtils.inputStreamToString(is);
-            return content;
+            return List.of(content);
         } catch (Exception e) {
             throw new HttpException(e, 500);
         }

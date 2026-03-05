@@ -20,7 +20,7 @@ public class RestletAutoOrigin implements RestletOrigin {
     }
 
     @Override
-    public String getString(String name) {
+    public String getStrings(String name) {
         HttpRequest httpRequest = httpContextProv.get().getRequest();
         if (httpRequest.getQueryParameters().hasKey(name)) {
             return httpRequest.getQueryParameters().get(name);

@@ -16,6 +16,8 @@
 
 package colesico.framework.telehttp;
 
+import java.util.Collection;
+
 /**
  * Data reading origin API and basic dictionary.
  * Origin defines strategy for reading string value from http context
@@ -59,5 +61,5 @@ public interface Origin {
      * @return string value
      * @see colesico.framework.http.HttpRequest
      */
-    String getString(String name);
+    Collection<String> getStrings(String name);
 }

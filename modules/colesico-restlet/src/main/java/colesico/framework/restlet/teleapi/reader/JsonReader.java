@@ -64,7 +64,7 @@ public final class JsonReader implements ValueReader {
         } else {
             try {
                 Origin origin = originFactory.getOrigin(context.getOriginName());
-                String strValue = origin.getString(context.getParamName());
+                String strValue = origin.getStrings(context.getParamName());
                 if (StringUtils.isBlank(strValue)) {
                     return null;
                 }

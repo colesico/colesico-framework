@@ -21,7 +21,7 @@ public class WebletAutoOrigin implements WebletOrigin {
     }
 
     @Override
-    public String getString(String name) {
+    public String getStrings(String name) {
         String value = null;
         HttpRequest httpRequest = httpContextProv.get().getRequest();
         switch (httpRequest.getRequestMethod().getName()) {

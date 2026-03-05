@@ -6,6 +6,10 @@ import colesico.framework.telehttp.Origin;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 @Singleton
 public class RouteOrigin implements Origin {
 
@@ -16,7 +20,12 @@ public class RouteOrigin implements Origin {
     }
 
     @Override
-    public String getString(String name) {
-        return routerContextProv.get().getParameters().get(name);
+    public Collection<String> getStrings(String name) {
+        List<String> result = new ArrayList<>();
+        var value = routerContextProv.get().getParameters().get(name);
+        if (value != null) {
+            result.add(value);
+        }
+        return result;
     }
 }

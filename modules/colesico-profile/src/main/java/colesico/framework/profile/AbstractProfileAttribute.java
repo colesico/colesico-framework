@@ -23,12 +23,11 @@ abstract public class AbstractProfileAttribute<P extends Profile, V> implements 
         this.metadata = new DefaultMetadata();
         metadata.dataPortWritable = true;
         metadata.dataPortReadable = true;
-        metadata.useCookie = true;
         metadata.storageReadable = false;
         metadata.storageWritable = false;
     }
 
-    public P getProfile() {
+    public P profile() {
         return profile;
     }
 
@@ -64,7 +63,6 @@ abstract public class AbstractProfileAttribute<P extends Profile, V> implements 
     public int hashCode() {
         return Objects.hashCode(name());
     }
-
 
     public static class DefaultMetadata implements Metadata{
         public boolean dataPortReadable;

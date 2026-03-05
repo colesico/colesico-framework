@@ -1,5 +1,7 @@
 package colesico.framework.telehttp;
 
+import java.util.Collection;
+
 /**
  * Basic origin based reader
  *
@@ -17,14 +19,22 @@ abstract public class OriginTeleReader<V, C extends HttpTRContext> implements Ht
     /**
      * Return param string value from origin defined in the context
      */
-    protected final String readString(C context) {
+    protected final Collection<String> readStrings(C context) {
         Origin origin = originFactory.getOrigin(context.getOriginName());
-        return origin.getString(context.getParamName());
+        return origin.getStrings(context.getParamName());
+    }
+
+    protected final Collection<String> readStrings(String originName, String paramName) {
+        Origin origin = originFactory.getOrigin(originName);
+        return origin.getStrings(paramName);
+    }
+
+    protected final String readString(C context) {
+        return readStrings(context).stream().findFirst().orElse(null);
     }
 
     protected final String readString(String originName, String paramName) {
-        Origin origin = originFactory.getOrigin(originName);
-        return origin.getString(paramName);
+        return readStrings(originName, paramName).stream().findFirst().orElse(null);
     }
 
 }
