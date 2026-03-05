@@ -2,6 +2,7 @@ package colesico.framework.profile;
 
 import jakarta.inject.Singleton;
 
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
 
@@ -9,7 +10,7 @@ import java.util.Set;
  * Default profile factory implementation
  */
 @Singleton
-public class DefaultProfileUtils implements ProfileUtils<DefaultProfile> {
+public class DefaultProfileManager implements ProfileManager<DefaultProfile> {
 
     @Override
     public DefaultProfile newInstance() {
@@ -22,7 +23,7 @@ public class DefaultProfileUtils implements ProfileUtils<DefaultProfile> {
     }
 
     @Override
-    public Set<ProfileAttribute> getAttributes(DefaultProfile profile) {
+    public Collection<ProfileAttribute> getAttributes(DefaultProfile profile) {
         return Set.of(LocaleAttribute.of(profile));
     }
 

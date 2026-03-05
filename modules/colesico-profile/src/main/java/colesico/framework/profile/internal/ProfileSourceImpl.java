@@ -2,7 +2,6 @@ package colesico.framework.profile.internal;
 
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.profile.*;
-import colesico.framework.profile.ProfileListener;
 import colesico.framework.teleapi.DataPort;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -10,22 +9,18 @@ import jakarta.inject.Singleton;
 @Singleton
 public class ProfileSourceImpl implements ProfileSource {
 
-    protected final ProfileUtils profileUtils;
-
-    protected final ProfileListener sourceListener;
+    protected final ProfileManager profileManager;
 
     protected final Provider<DataPort> dataPortProv;
 
     // Profile cache
     protected final ThreadScope threadScope;
 
-    public ProfileSourceImpl(ProfileUtils profileUtils,
-                             ProfileListener sourceListener,
+    public ProfileSourceImpl(ProfileManager profileManager,
                              Provider<DataPort> dataPortProv,
                              ThreadScope threadScope) {
 
-        this.profileUtils = profileUtils;
-        this.sourceListener = sourceListener;
+        this.profileManager = profileManager;
         this.dataPortProv = dataPortProv;
         this.threadScope = threadScope;
     }
@@ -39,11 +34,11 @@ public class ProfileSourceImpl implements ProfileSource {
 
         profile = (Profile) dataPortProv.get().read(Profile.class);
         if (profile == null) {
-            profile = profileUtils.newInstance();
-            profileUtils.initDefault(profile);
+            profile = profileManager.newInstance();
+            profileManager.initDefault(profile);
         }
 
-        profile = sourceListener.afterRead(profile);
+        profile = profileManager.afterRead(profile);
         threadScope.put(Profile.SCOPE_KEY, profile);
 
         return profile;
@@ -51,7 +46,7 @@ public class ProfileSourceImpl implements ProfileSource {
 
     @Override
     public void write(Profile profile) {
-        profile = sourceListener.beforeWrite(profile);
+        profile = profileManager.beforeWrite(profile);
         dataPortProv.get().write(profile, Profile.class);
         threadScope.put(Profile.SCOPE_KEY, profile);
     }

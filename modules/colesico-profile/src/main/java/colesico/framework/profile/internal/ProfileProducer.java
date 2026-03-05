@@ -30,7 +30,7 @@ import static colesico.framework.ioc.conditional.Substitution.STUB;
 
 @Producer
 @Produce(value = ProfileSourceImpl.class, keyType = ProfileSource.class)
-@Produce(value = DefaultProfileUtils.class, keyType = ProfileUtils.class, substitute = STUB)
+@Produce(value = DefaultProfileManager.class, keyType = ProfileManager.class, substitute = STUB)
 public class ProfileProducer {
 
     @Unscoped
@@ -45,13 +45,6 @@ public class ProfileProducer {
     public Locale getLocale(Provider<Profile> profileProv) {
         Profile profile = profileProv.get();
         return profile != null ? profile.getLocale() : Locale.getDefault();
-    }
-
-    @Singleton
-    @Substitute(STUB)
-    public ProfileListener getProfileListener() {
-        return new ProfileListener() {
-        };
     }
 
 }

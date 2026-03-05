@@ -22,7 +22,7 @@ import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.profile.Profile;
 import colesico.framework.profile.ProfileAttribute;
-import colesico.framework.profile.ProfileUtils;
+import colesico.framework.profile.ProfileManager;
 import colesico.framework.telehttp.HttpTWContext;
 import colesico.framework.telehttp.HttpTeleWriter;
 import colesico.framework.telehttp.ProfileHttpConfigPrototype;
@@ -42,15 +42,15 @@ public final class ProfileWriter<P extends Profile, C extends HttpTWContext> ext
     public static final String PROFILE_HEADER = "X-Profile";
 
     protected final ProfileHttpConfigPrototype config;
-    protected final ProfileUtils profileUtils;
+    protected final ProfileManager profileManager;
     protected final CookieFactory cookieFactory;
 
     public ProfileWriter(Provider<HttpContext> httpContextProv,
-                         ProfileHttpConfigPrototype config, ProfileUtils profileUtils,
+                         ProfileHttpConfigPrototype config, ProfileManager profileManager,
                          CookieFactory cookieFactory) {
         super(httpContextProv);
         this.config = config;
-        this.profileUtils = profileUtils;
+        this.profileManager = profileManager;
         this.cookieFactory = cookieFactory;
     }
 
@@ -61,7 +61,7 @@ public final class ProfileWriter<P extends Profile, C extends HttpTWContext> ext
         String profileStr;
         if (profile != null) {
             Map<String, String> profileProperties = new HashMap<>();
-            Set<ProfileAttribute> attributes = profileUtils.getAttributes(profile);
+            Set<ProfileAttribute> attributes = profileManager.getAttributes(profile);
             for (ProfileAttribute attribute : attributes) {
                 if (!attribute.metadata().dataPortWritable()) {
                     continue;

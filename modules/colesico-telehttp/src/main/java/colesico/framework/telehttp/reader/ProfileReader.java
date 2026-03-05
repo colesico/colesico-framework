@@ -42,11 +42,11 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
 
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
 
-    protected final ProfileUtils<P> profileUtils;
+    protected final ProfileManager<P> profileManager;
     protected final Provider<HttpContext> httpContextProv;
 
-    public ProfileReader(ProfileUtils profileUtils, Provider<HttpContext> httpContextProv) {
-        this.profileUtils = profileUtils;
+    public ProfileReader(ProfileManager profileManager, Provider<HttpContext> httpContextProv) {
+        this.profileManager = profileManager;
         this.httpContextProv = httpContextProv;
     }
 
@@ -82,7 +82,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
     @Override
     public final P read(C context) {
         HttpRequest request = httpContextProv.get().getRequest();
-        P profile = profileUtils.newInstance();
+        P profile = profileManager.newInstance();
 
         Map<String, String> profileProperties = new HashMap<>();
         HttpCookie profileCookie = request.getCookies().get(ProfileWriter.PROFILE_COOKIE);
@@ -95,7 +95,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
             profileProperties.putAll(TeleHttpUtils.parseProperties(profileHeader.getValue()));
         }
 
-        Set<ProfileAttribute> attributes = profileUtils.getAttributes(profile);
+        Set<ProfileAttribute> attributes = profileManager.getAttributes(profile);
         for (ProfileAttribute attribute : attributes) {
             if (!attribute.metadata().dataPortReadable()) {
                 continue;
