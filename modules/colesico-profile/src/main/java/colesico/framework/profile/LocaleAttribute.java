@@ -2,7 +2,7 @@ package colesico.framework.profile;
 
 import java.util.Locale;
 
-public class LocaleAttribute<P extends Profile> extends AbstractProfileAttribute<P, Locale> {
+public class LocaleAttribute extends AbstractProfileAttribute<Profile, Locale> {
 
     /**
      * Locale attribute name
@@ -10,10 +10,10 @@ public class LocaleAttribute<P extends Profile> extends AbstractProfileAttribute
     static final String ATTRIBUTE_NAME = "locale";
 
     public static ProfileAttribute<Locale> of(Profile profile) {
-        return new LocaleAttribute<>(profile);
+        return new LocaleAttribute(profile);
     }
 
-    public LocaleAttribute(P profile) {
+    public LocaleAttribute(Profile profile) {
         super(profile);
     }
 

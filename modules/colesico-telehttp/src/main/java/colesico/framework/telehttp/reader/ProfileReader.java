@@ -97,7 +97,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
 
         Set<ProfileAttribute> attributes = profileUtils.getAttributes(profile);
         for (ProfileAttribute attribute : attributes) {
-            if (!attribute.metadata().dataPortReadable) {
+            if (!attribute.metadata().dataPortReadable()) {
                 continue;
             }
             var attributeReader = getAttributeReader(attribute);

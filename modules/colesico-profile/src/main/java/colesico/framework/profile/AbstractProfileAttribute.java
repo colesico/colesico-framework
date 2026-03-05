@@ -9,7 +9,7 @@ import java.util.Objects;
 abstract public class AbstractProfileAttribute<P extends Profile, V> implements ProfileAttribute<V> {
 
     protected final P profile;
-    protected Metadata metadata;
+    protected DefaultMetadata metadata;
 
     public AbstractProfileAttribute(P profile) {
         this.profile = profile;
@@ -20,9 +20,10 @@ abstract public class AbstractProfileAttribute<P extends Profile, V> implements 
      * Override this method to change profile attribute metainformation
      */
     protected void initMetadata() {
-        this.metadata = new Metadata();
+        this.metadata = new DefaultMetadata();
         metadata.dataPortWritable = true;
         metadata.dataPortReadable = true;
+        metadata.useCookie = true;
         metadata.storageReadable = false;
         metadata.storageWritable = false;
     }
@@ -62,5 +63,33 @@ abstract public class AbstractProfileAttribute<P extends Profile, V> implements 
     @Override
     public int hashCode() {
         return Objects.hashCode(name());
+    }
+
+
+    public static class DefaultMetadata implements Metadata{
+        public boolean dataPortReadable;
+        public boolean dataPortWritable;
+        public boolean storageReadable;
+        public boolean storageWritable;
+
+        @Override
+        public boolean dataPortReadable() {
+            return dataPortReadable;
+        }
+
+        @Override
+        public boolean dataPortWritable() {
+            return dataPortWritable;
+        }
+
+        @Override
+        public boolean storageReadable() {
+            return storageReadable;
+        }
+
+        @Override
+        public boolean storageWritable() {
+            return storageWritable;
+        }
     }
 }

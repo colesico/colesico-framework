@@ -51,14 +51,24 @@ public interface ProfileAttribute<V> {
     void setBytes(byte[] bytes);
 
     /**
-     * Profile attribute metadata
+     * Profile attribute meta information
      */
-    class Metadata {
-        public boolean dataPortReadable;
-        public boolean dataPortWritable;
+    interface Metadata {
+        /**
+         * Read attribute from dataport
+         */
+        boolean dataPortReadable();
 
-        // Reserved for profile storage support
-        public boolean storageReadable;
-        public boolean storageWritable;
+        /**
+         * Write attribute to dataport
+         */
+        boolean dataPortWritable();
+
+        /**
+         * Reserved for profile storage support
+         */
+        boolean storageReadable();
+
+        boolean storageWritable();
     }
 }
