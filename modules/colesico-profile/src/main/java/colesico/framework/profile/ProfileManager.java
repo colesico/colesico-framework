@@ -11,9 +11,9 @@ import java.util.Collection;
 public interface ProfileManager<P extends Profile> {
 
     /**
-     * Create empty profile instance
+     * Create profile default instance
      */
-    P newInstance();
+    P createProfile();
 
     /**
      * Profile attributes accessors
@@ -29,7 +29,8 @@ public interface ProfileManager<P extends Profile> {
      * @return Valid profile or null
      */
     default P readProfile(DataPort dataPort) {
-        return (P) dataPort.read(Profile.class);
+        var profile = (P) dataPort.read(Profile.class);
+        return profile != null ? profile : createProfile();
     }
 
     /**

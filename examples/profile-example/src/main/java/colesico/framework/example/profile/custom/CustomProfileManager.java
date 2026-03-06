@@ -1,35 +1,39 @@
 package colesico.framework.example.profile.custom;
 
+import colesico.framework.profile.DefaultProfileManager;
 import colesico.framework.profile.LocaleAttribute;
 import colesico.framework.profile.ProfileAttribute;
-import colesico.framework.profile.ProfileManager;
+import colesico.framework.teleapi.DataPort;
 
-import java.util.Locale;
+import java.util.Collection;
 import java.util.Set;
 import java.util.TimeZone;
 
-public class CustomProfileManager implements ProfileManager<CustomProfile> {
+public class CustomProfileManager extends DefaultProfileManager<CustomProfile> {
 
     @Override
-    public CustomProfile newInstance() {
-        return new CustomProfile();
+    public CustomProfile createProfile() {
+        return initProfile(new CustomProfile());
     }
 
     @Override
-    public void initDefault(CustomProfile profile) {
+    protected CustomProfile initProfile(CustomProfile profile) {
+        profile = super.initProfile(profile);
         profile.setTimeZone(TimeZone.getDefault());
-        profile.setLocale(Locale.getDefault());
+        return profile;
     }
 
     @Override
-    public Set<ProfileAttribute> getAttributes(CustomProfile profile) {
-        return Set.of(LocaleAttribute.of(profile),
-                new TimezoneAttribute(profile),
-                new ApiVersionAttribute(profile));
+    public Collection<ProfileAttribute> getAttributes(CustomProfile profile) {
+        var attributes = super.getAttributes(profile);
+        attributes.add(new TimezoneAttribute(profile));
+        attributes.add(new ApiVersionAttribute(profile));
+        return attributes;
     }
 
     @Override
-    public CustomProfile readDataPort(CustomProfile profile) {
+    public CustomProfile readProfile(DataPort dataPort) {
+        var profile = super.readProfile(dataPort);
         profile.setApiVersion("2.0");
         return profile;
     }

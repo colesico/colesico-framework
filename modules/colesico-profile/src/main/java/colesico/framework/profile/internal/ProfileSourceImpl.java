@@ -31,11 +31,8 @@ public class ProfileSourceImpl implements ProfileSource {
         if (profile != null) {
             return profile;
         }
-
         profile = profileManager.readProfile(dataPortProv.get());
-
         threadScope.put(Profile.SCOPE_KEY, profile);
-
         return profile;
     }
 

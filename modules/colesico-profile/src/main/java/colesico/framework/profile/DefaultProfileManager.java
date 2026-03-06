@@ -1,42 +1,32 @@
 package colesico.framework.profile;
 
-import colesico.framework.teleapi.DataPort;
 import jakarta.inject.Singleton;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
-import java.util.Set;
 
 /**
  * Default profile factory implementation
  */
 @Singleton
-public class DefaultProfileManager implements ProfileManager<DefaultProfile> {
+public class DefaultProfileManager<P extends DefaultProfile> implements ProfileManager<P> {
 
     @Override
-    public DefaultProfile newInstance() {
-        return new DefaultProfile();
+    public P createProfile() {
+        return initProfile((P) new DefaultProfile());
     }
 
-    @Override
-    public Collection<ProfileAttribute> getAttributes(DefaultProfile profile) {
-        return Set.of(LocaleAttribute.of(profile));
-    }
-
-    @Override
-    public DefaultProfile readProfile(DataPort dataPort) {
-        var profile = ProfileManager.super.readProfile(dataPort);
-
-        if (profile == null){
-            profile = newInstance();
-            profile.setLocale(Locale.getDefault());
-            return profile;
-        }
-
-        if (profile.getLocale() == null) {
-            profile.setLocale(Locale.getDefault());
-        }
-
+    protected P initProfile(P profile) {
+        profile.setLocale(Locale.getDefault());
         return profile;
     }
+
+    @Override
+    public Collection<ProfileAttribute> getAttributes(P profile) {
+        var attributes = new ArrayList<ProfileAttribute>();
+        attributes.add(LocaleAttribute.of(profile));
+        return attributes;
+    }
+
 }

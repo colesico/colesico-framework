@@ -82,7 +82,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
     @Override
     public final P read(C context) {
         HttpRequest request = httpContextProv.get().getRequest();
-        P profile = profileManager.newInstance();
+        P profile = profileManager.createProfile();
 
         Map<String, String> profileProperties = new HashMap<>();
         HttpCookie profileCookie = request.getCookies().get(ProfileWriter.PROFILE_COOKIE);
