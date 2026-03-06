@@ -33,10 +33,6 @@ public class ProfileSourceImpl implements ProfileSource {
         }
 
         profile = profileManager.readProfile(dataPortProv.get());
-        if (profile == null) {
-            profile = profileManager.newInstance();
-            profileManager.initDefault(profile);
-        }
 
         threadScope.put(Profile.SCOPE_KEY, profile);
 

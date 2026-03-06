@@ -16,11 +16,6 @@ public interface ProfileManager<P extends Profile> {
     P newInstance();
 
     /**
-     * Initialize profile instance with default values
-     */
-    void initDefault(P profile);
-
-    /**
      * Profile attributes accessors
      */
     Collection<ProfileAttribute> getAttributes(P profile);

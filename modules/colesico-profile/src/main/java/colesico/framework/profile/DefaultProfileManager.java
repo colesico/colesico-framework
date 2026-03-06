@@ -1,5 +1,6 @@
 package colesico.framework.profile;
 
+import colesico.framework.teleapi.DataPort;
 import jakarta.inject.Singleton;
 
 import java.util.Collection;
@@ -18,13 +19,16 @@ public class DefaultProfileManager implements ProfileManager<DefaultProfile> {
     }
 
     @Override
-    public void initDefault(DefaultProfile profile) {
-        profile.setLocale(Locale.getDefault());
-    }
-
-    @Override
     public Collection<ProfileAttribute> getAttributes(DefaultProfile profile) {
         return Set.of(LocaleAttribute.of(profile));
     }
 
+    @Override
+    public DefaultProfile readProfile(DataPort dataPort) {
+        var profile = ProfileManager.super.readProfile(dataPort);
+        if (profile.getLocale() == null) {
+            profile.setLocale(Locale.getDefault());
+        }
+        return profile;
+    }
 }

@@ -10,7 +10,8 @@ package colesico.framework.profile;
 public interface ProfileSource<P extends Profile> {
 
     /**
-     * Return current profile
+     * Return current profile.
+     *
      */
     P read();
 
