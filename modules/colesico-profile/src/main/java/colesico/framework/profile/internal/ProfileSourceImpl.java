@@ -32,13 +32,12 @@ public class ProfileSourceImpl implements ProfileSource {
             return profile;
         }
 
-        profile = (Profile) dataPortProv.get().read(Profile.class);
+        profile = profileManager.readProfile(dataPortProv.get());
         if (profile == null) {
             profile = profileManager.newInstance();
             profileManager.initDefault(profile);
         }
 
-        profile = profileManager.afterRead(profile);
         threadScope.put(Profile.SCOPE_KEY, profile);
 
         return profile;
@@ -46,8 +45,7 @@ public class ProfileSourceImpl implements ProfileSource {
 
     @Override
     public void write(Profile profile) {
-        profile = profileManager.beforeWrite(profile);
-        dataPortProv.get().write(profile, Profile.class);
+        profile = profileManager.writeProfile(profile, dataPortProv.get());
         threadScope.put(Profile.SCOPE_KEY, profile);
     }
 }

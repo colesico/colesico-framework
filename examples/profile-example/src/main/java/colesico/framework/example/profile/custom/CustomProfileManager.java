@@ -29,7 +29,7 @@ public class CustomProfileManager implements ProfileManager<CustomProfile> {
     }
 
     @Override
-    public CustomProfile afterRead(CustomProfile profile) {
+    public CustomProfile readDataPort(CustomProfile profile) {
         profile.setApiVersion("2.0");
         return profile;
     }
