@@ -217,6 +217,10 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
     protected Set<AnnotationAssist<Composition>> findTypeCompositions(ClassType type) {
         final Set<AnnotationAssist<Composition>> result = new HashSet<>();
 
+        if (type == null) {
+            return result;
+        }
+
         AnnotationAssist<Composition> composition = type.asClassElement().getAnnotation(Composition.class);
         if (composition != null) {
             result.add(composition);
