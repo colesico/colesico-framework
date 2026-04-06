@@ -27,15 +27,12 @@ import colesico.framework.telehttp.writer.ProfileWriter;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static colesico.framework.telehttp.writer.ProfileWriter.PROFILE_HEADER;
 
 /**
- * Default profile reader
+ * Profile default reader
  */
 @Singleton
 public class ProfileReader<P extends Profile, C extends HttpTRContext> implements HttpTeleReader<P, C> {
@@ -85,18 +82,18 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
         P profile = profileManager.createProfile();
 
         Map<String, String> profileProperties = new HashMap<>();
-        HttpCookie profileCookie = request.getCookies().get(ProfileWriter.PROFILE_COOKIE);
+        var profileCookie = request.getCookies().get(ProfileWriter.PROFILE_COOKIE);
         if (profileCookie != null) {
             profileProperties.putAll(TeleHttpUtils.parseProperties(profileCookie.getValue()));
         }
 
-        HttpCookie profileHeader = request.getCookies().get(PROFILE_HEADER);
-        if (profileCookie != null) {
+        var profileHeader = request.getCookies().get(PROFILE_HEADER);
+        if (profileHeader != null) {
             profileProperties.putAll(TeleHttpUtils.parseProperties(profileHeader.getValue()));
         }
 
-        Set<ProfileAttribute> attributes = profileManager.getAttributes(profile);
-        for (ProfileAttribute attribute : attributes) {
+        var attributes = profileManager.getAttributes(profile);
+        for (var attribute : attributes) {
             if (!attribute.metadata().dataPortReadable()) {
                 continue;
             }

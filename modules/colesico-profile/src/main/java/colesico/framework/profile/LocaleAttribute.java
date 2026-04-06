@@ -2,6 +2,9 @@ package colesico.framework.profile;
 
 import java.util.Locale;
 
+/**
+ * Locale attribute accessor
+ */
 public class LocaleAttribute extends AbstractProfileAttribute<Profile, Locale> {
 
     /**

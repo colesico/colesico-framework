@@ -5,7 +5,7 @@ import colesico.framework.teleapi.DataPort;
 import java.util.Collection;
 
 /**
- * Framework level Profile API.
+ * Profile management API.
  * Implement this API to customize profile management logic.
  */
 public interface ProfileManager<P extends Profile> {
@@ -16,17 +16,16 @@ public interface ProfileManager<P extends Profile> {
     P createProfile();
 
     /**
-     * Profile attributes accessors
+     * Returns profile attributes accessors
      */
     Collection<ProfileAttribute> getAttributes(P profile);
 
     /**
-     * Read profile from phisical source.
+     * Read profile from data port.
      * Implement this method to get more specific read control.
      * This method also is used to fine-grained  read control of profile: check validity,
      * enrich with extra data from database, e.t.c.
-     *
-     * @return Valid profile or null
+     * If the profile is not read form data port, it should return the default instance.
      */
     default P readProfile(DataPort dataPort) {
         var profile = (P) dataPort.read(Profile.class);
@@ -34,7 +33,7 @@ public interface ProfileManager<P extends Profile> {
     }
 
     /**
-     * Writes profile to phisical source.
+     * Writes profile to data port.
      * Implement this method to get more specific control.
      */
     default P writeProfile(P profile, DataPort dataPort) {

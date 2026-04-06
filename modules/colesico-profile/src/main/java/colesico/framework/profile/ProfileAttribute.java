@@ -12,7 +12,7 @@ public interface ProfileAttribute<V> {
     String name();
 
     /**
-     * Attribute accessor metadata
+     * Returns attribute metadata
      */
     Metadata metadata();
 
@@ -55,12 +55,12 @@ public interface ProfileAttribute<V> {
      */
     interface Metadata {
         /**
-         * Read attribute from dataport
+         * Read attribute from DataPort
          */
         boolean dataPortReadable();
 
         /**
-         * Write attribute to dataport
+         * Write attribute to DataPort
          */
         boolean dataPortWritable();
 

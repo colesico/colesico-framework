@@ -1,22 +1,20 @@
 package colesico.framework.profile;
 
 /**
- * Application level Profile API.
+ * Profile source API.
  * Represents a source that is used for read/write Profile instance.
- * The Source of the Profile can be anything, for example, a config, database, a HTTP/RPC request/response, Kafka message etc.
- * Profile instance should be explicitly assign with current thread by
- * putting it to {@link colesico.framework.ioc.scope.ThreadScope}
+ * The Source of the Profile can be anything, for example, a config, database, HTTP/RPC request/response, Kafka message etc.
+ * Associates current profile instance to the current thread.
  */
 public interface ProfileSource<P extends Profile> {
 
     /**
-     * Return current profile.
-     *
+     * Read profile from source.
      */
     P read();
 
     /**
-     * Save profile preferences
+     * Save profile preferences to source
      */
     void write(P profile);
 
