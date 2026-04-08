@@ -15,13 +15,11 @@
  */
 package colesico.framework.profile.internal;
 
-import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.profile.*;
 import jakarta.inject.Provider;
-import jakarta.inject.Singleton;
 
 import java.util.Locale;
 
@@ -29,13 +27,13 @@ import static colesico.framework.ioc.conditional.Substitution.STUB;
 
 
 @Producer
-@Produce(value = ProfileSourceImpl.class, keyType = ProfileSource.class)
+@Produce(value = DefaultProfileContext.class, keyType = ProfileContext.class, substitute = STUB)
 @Produce(value = DefaultProfileManager.class, keyType = ProfileManager.class, substitute = STUB)
 public class ProfileProducer {
 
     @Unscoped
-    public Profile getProfile(ProfileSource ps) {
-        return ps.read();
+    public Profile getProfile(ProfileContext context) {
+        return context.get();
     }
 
     /**

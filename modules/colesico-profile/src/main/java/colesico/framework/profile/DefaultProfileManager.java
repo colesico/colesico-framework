@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.Locale;
 
 /**
- * Default profile factory implementation
+ * Default profile manager implementation
  */
 @Singleton
 public class DefaultProfileManager<P extends DefaultProfile> implements ProfileManager<P> {

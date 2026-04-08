@@ -1,6 +1,6 @@
 package colesico.framework.rpc.clientapi.handler;
 
-import colesico.framework.profile.ProfileSource;
+import colesico.framework.profile.ProfileContext;
 import colesico.framework.rpc.clientapi.RpcResponseHandler;
 import colesico.framework.rpc.teleapi.BasicEnvelope;
 import colesico.framework.security.Principal;
@@ -12,13 +12,13 @@ import jakarta.inject.Singleton;
 public class BasicResponseHandler implements RpcResponseHandler<BasicEnvelope> {
 
 
-    private final ProfileSource profileSource;
-    private final ProfileSource profileUtils;
+    private final ProfileContext profileContext;
+    private final ProfileContext profileUtils;
     private final SecurityKit securityKit;
     private final PrincipalSerializer principalSerializer;
 
-    public BasicResponseHandler(ProfileSource profileSource, ProfileSource profileUtils, SecurityKit securityKit, PrincipalSerializer principalSerializer) {
-        this.profileSource = profileSource;
+    public BasicResponseHandler(ProfileContext profileContext, ProfileContext profileUtils, SecurityKit securityKit, PrincipalSerializer principalSerializer) {
+        this.profileContext = profileContext;
         this.profileUtils = profileUtils;
         this.securityKit = securityKit;
         this.principalSerializer = principalSerializer;
@@ -39,7 +39,7 @@ public class BasicResponseHandler implements RpcResponseHandler<BasicEnvelope> {
             if (response.getProfile().length != 0) {
                 // Response contains profile preferences only
                 var profile = profileUtils.deserialize(response.getProfile());
-                profileSource.commit(profile);
+                profileContext.commit(profile);
             }
         }
     }
