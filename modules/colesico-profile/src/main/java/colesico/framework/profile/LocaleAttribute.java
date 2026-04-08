@@ -5,19 +5,23 @@ import java.util.Locale;
 /**
  * Locale attribute accessor
  */
-public class LocaleAttribute extends AbstractProfileAttribute<Profile, Locale> {
+public class LocaleAttribute extends AbstractProfileAttribute<Profile, Locale, ProfileAttribute.Metadata> {
 
     /**
      * Locale attribute name
      */
     static final String ATTRIBUTE_NAME = "locale";
 
-    public static ProfileAttribute<Locale> of(Profile profile) {
-        return new LocaleAttribute(profile);
+    public static ProfileAttribute<Locale,Metadata> of(Profile profile) {
+        return new LocaleAttribute(profile, new AttributeMetadata(true, true));
     }
 
-    public LocaleAttribute(Profile profile) {
-        super(profile);
+    public static ProfileAttribute<Locale,Metadata> of(Profile profile, Metadata metadata) {
+        return new LocaleAttribute(profile, metadata);
+    }
+
+    public LocaleAttribute(Profile profile, Metadata metadata) {
+        super(profile, metadata);
     }
 
     @Override

@@ -28,5 +28,4 @@ public class DefaultProfileManager<P extends DefaultProfile> implements ProfileM
         attributes.add(LocaleAttribute.of(profile));
         return attributes;
     }
-
 }

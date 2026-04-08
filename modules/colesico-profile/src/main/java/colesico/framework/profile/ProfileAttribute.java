@@ -3,7 +3,7 @@ package colesico.framework.profile;
 /**
  * Profile attribute accessor
  */
-public interface ProfileAttribute<V> {
+public interface ProfileAttribute<V,M extends ProfileAttribute.Metadata> {
 
     /**
      * Attribute name.
@@ -14,7 +14,7 @@ public interface ProfileAttribute<V> {
     /**
      * Returns attribute metadata
      */
-    Metadata metadata();
+    M metadata();
 
     /**
      * Return profile attribute value
@@ -51,7 +51,8 @@ public interface ProfileAttribute<V> {
     void setBytes(byte[] bytes);
 
     /**
-     * Profile attribute meta information
+     * Profile attribute meta information for
+     * attribute processing configuration
      */
     interface Metadata {
 
@@ -61,9 +62,8 @@ public interface ProfileAttribute<V> {
         boolean readable();
 
         /**
-         * Allow write attribute to source
+         * Allow to write attribute to source
          */
         boolean writable();
-
     }
 }

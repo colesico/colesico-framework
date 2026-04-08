@@ -7,7 +7,7 @@ abstract public class AbstractProfileContext<P extends Profile> implements Profi
     protected final ProfileManager<P> profileManager;
 
     /**
-     * Cache
+     * Profile association with thread
      */
     protected final ThreadScope threadScope;
 

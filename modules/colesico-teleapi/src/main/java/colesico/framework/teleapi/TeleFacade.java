@@ -40,7 +40,7 @@ abstract public class TeleFacade<T, D extends TeleDriver, L> {
     /**
      * Target provider.
      * Target - this is an object whose method will be invoked.
-     * Typically this is a service object.
+     * Typically, this is a service object.
      */
     protected final Provider<T> targetProv;
 

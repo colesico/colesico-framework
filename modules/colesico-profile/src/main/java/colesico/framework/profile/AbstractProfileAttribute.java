@@ -6,23 +6,16 @@ import java.util.Objects;
 /**
  * Profile attribute common accessor
  */
-abstract public class AbstractProfileAttribute<P extends Profile, V> implements ProfileAttribute<V> {
+abstract public class AbstractProfileAttribute<P
+        extends Profile, V, M extends ProfileAttribute.Metadata>
+        implements ProfileAttribute<V,M> {
 
     protected final P profile;
-    protected DefaultMetadata metadata;
+    protected final M metadata;
 
-    public AbstractProfileAttribute(P profile) {
+    public AbstractProfileAttribute(P profile, M metadata) {
         this.profile = profile;
-        initMetadata();
-    }
-
-    /**
-     * Override this method to change profile attribute metainformation
-     */
-    protected void initMetadata() {
-        this.metadata = new DefaultMetadata();
-        metadata.writable = true;
-        metadata.readable = true;
+        this.metadata = metadata;
     }
 
     public P profile() {
@@ -30,7 +23,7 @@ abstract public class AbstractProfileAttribute<P extends Profile, V> implements 
     }
 
     @Override
-    public Metadata metadata() {
+    public M metadata() {
         return metadata;
     }
 
@@ -53,7 +46,7 @@ abstract public class AbstractProfileAttribute<P extends Profile, V> implements 
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof ProfileAttribute<?> that)) return false;
+        if (!(o instanceof ProfileAttribute<?,?> that)) return false;
         return Objects.equals(name(), that.name());
     }
 
@@ -62,19 +55,9 @@ abstract public class AbstractProfileAttribute<P extends Profile, V> implements 
         return Objects.hashCode(name());
     }
 
-    public static class DefaultMetadata implements Metadata {
-        public boolean readable;
-        public boolean writable;
-
-        @Override
-        public boolean readable() {
-            return readable;
-        }
-
-        @Override
-        public boolean writable() {
-            return writable;
-        }
-
+    public record AttributeMetadata(
+            boolean readable,
+            boolean writable
+    ) implements Metadata {
     }
 }
