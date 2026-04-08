@@ -63,7 +63,7 @@ public final class ProfileWriter<P extends Profile, C extends HttpTWContext> ext
             Map<String, String> profileProperties = new HashMap<>();
             Set<ProfileAttribute> attributes = profileManager.getAttributes(profile);
             for (ProfileAttribute attribute : attributes) {
-                if (!attribute.metadata().dataPortWritable()) {
+                if (!attribute.metadata().writable()) {
                     continue;
                 }
                 profileProperties.put(attribute.name(), attribute.getString());

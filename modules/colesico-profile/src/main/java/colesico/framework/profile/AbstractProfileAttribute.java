@@ -21,10 +21,8 @@ abstract public class AbstractProfileAttribute<P extends Profile, V> implements 
      */
     protected void initMetadata() {
         this.metadata = new DefaultMetadata();
-        metadata.dataPortWritable = true;
-        metadata.dataPortReadable = true;
-        metadata.storageReadable = false;
-        metadata.storageWritable = false;
+        metadata.writable = true;
+        metadata.readable = true;
     }
 
     public P profile() {
@@ -64,30 +62,19 @@ abstract public class AbstractProfileAttribute<P extends Profile, V> implements 
         return Objects.hashCode(name());
     }
 
-    public static class DefaultMetadata implements Metadata{
-        public boolean dataPortReadable;
-        public boolean dataPortWritable;
-        public boolean storageReadable;
-        public boolean storageWritable;
+    public static class DefaultMetadata implements Metadata {
+        public boolean readable;
+        public boolean writable;
 
         @Override
-        public boolean dataPortReadable() {
-            return dataPortReadable;
+        public boolean readable() {
+            return readable;
         }
 
         @Override
-        public boolean dataPortWritable() {
-            return dataPortWritable;
+        public boolean writable() {
+            return writable;
         }
 
-        @Override
-        public boolean storageReadable() {
-            return storageReadable;
-        }
-
-        @Override
-        public boolean storageWritable() {
-            return storageWritable;
-        }
     }
 }

@@ -54,21 +54,16 @@ public interface ProfileAttribute<V> {
      * Profile attribute meta information
      */
     interface Metadata {
-        /**
-         * Read attribute from DataPort
-         */
-        boolean dataPortReadable();
 
         /**
-         * Write attribute to DataPort
+         * Allow read attribute from source
          */
-        boolean dataPortWritable();
+        boolean readable();
 
         /**
-         * Reserved for profile storage support
+         * Allow write attribute to source
          */
-        boolean storageReadable();
+        boolean writable();
 
-        boolean storageWritable();
     }
 }

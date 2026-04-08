@@ -17,7 +17,6 @@
 package colesico.framework.telehttp.reader;
 
 import colesico.framework.http.HttpContext;
-import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.profile.*;
 import colesico.framework.telehttp.HttpTRContext;
@@ -94,7 +93,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
 
         var attributes = profileManager.getAttributes(profile);
         for (var attribute : attributes) {
-            if (!attribute.metadata().dataPortReadable()) {
+            if (!attribute.metadata().readable()) {
                 continue;
             }
             var attributeReader = getAttributeReader(attribute);
