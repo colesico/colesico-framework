@@ -1,20 +1,24 @@
 package colesico.framework.profile;
 
+import java.util.Map;
+
 /**
- * Profile attribute accessor
+ * Profile attribute accessor.
+ * Used to serialize and deserialize an attribute value,
+ * obtain metadata of attribute
  */
-public interface ProfileAttribute<V,M extends ProfileAttribute.Metadata> {
+public interface ProfileAttribute<P extends Profile, V> {
+
+    /**
+     * Returns parent profile
+     */
+    P profile();
 
     /**
      * Attribute name.
      * Use snake_case notation.
      */
     String name();
-
-    /**
-     * Returns attribute metadata
-     */
-    M metadata();
 
     /**
      * Return profile attribute value
@@ -51,19 +55,8 @@ public interface ProfileAttribute<V,M extends ProfileAttribute.Metadata> {
     void setBytes(byte[] bytes);
 
     /**
-     * Profile attribute meta information for
-     * attribute processing configuration
+     * Attribute meta information
+     * to configure attribute processing
      */
-    interface Metadata {
-
-        /**
-         * Allow read attribute from source
-         */
-        boolean readable();
-
-        /**
-         * Allow to write attribute to source
-         */
-        boolean writable();
-    }
+    Map<String, Object> metadata();
 }

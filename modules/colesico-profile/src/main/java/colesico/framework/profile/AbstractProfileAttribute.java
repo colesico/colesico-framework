@@ -1,29 +1,38 @@
 package colesico.framework.profile;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
  * Profile attribute common accessor
  */
-abstract public class AbstractProfileAttribute<P
-        extends Profile, V, M extends ProfileAttribute.Metadata>
-        implements ProfileAttribute<V,M> {
+abstract public class AbstractProfileAttribute<P extends Profile, V>
+        implements ProfileAttribute<P, V> {
 
     protected final P profile;
-    protected final M metadata;
+    protected final String name;
+    protected final Map<String, Object> metadata;
 
-    public AbstractProfileAttribute(P profile, M metadata) {
+    public AbstractProfileAttribute(P profile, String name, Map<String, Object> metadata) {
         this.profile = profile;
-        this.metadata = metadata;
+        this.name = name;
+        this.metadata = Objects.requireNonNullElseGet(metadata, HashMap::new);
     }
 
+    @Override
     public P profile() {
         return profile;
     }
 
     @Override
-    public M metadata() {
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public Map<String, Object> metadata() {
         return metadata;
     }
 
@@ -46,18 +55,19 @@ abstract public class AbstractProfileAttribute<P
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof ProfileAttribute<?,?> that)) return false;
-        return Objects.equals(name(), that.name());
+        if (!(o instanceof AbstractProfileAttribute<?, ?> that)) return false;
+        return Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(name());
+        return Objects.hashCode(name);
     }
 
-    public record AttributeMetadata(
-            boolean readable,
-            boolean writable
-    ) implements Metadata {
+    @Override
+    public String toString() {
+        return "ProfileAttribute{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }
