@@ -37,6 +37,7 @@ import static colesico.framework.telehttp.writer.ProfileWriter.PROFILE_HEADER;
 public class ProfileReader<P extends Profile, C extends HttpTRContext> implements HttpTeleReader<P, C> {
 
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
+    public static final String UNREADABLE_ATTRIBUTE = "TeleHttpUnreadbale";
 
     protected final ProfileManager<P> profileManager;
     protected final Provider<HttpContext> httpContextProv;
@@ -46,7 +47,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
         this.httpContextProv = httpContextProv;
     }
 
-    protected void readLocale(ProfileAttribute<Locale> attribute, HttpRequest request, Map<String, String> profileProperties) {
+    protected void readLocale(ProfileAttribute<Profile, Locale> attribute, HttpRequest request, Map<String, String> profileProperties) {
         readAttribute(attribute, request, profileProperties);
         if (!attribute.hasValue()) {
             String acceptLangs = request.getHeaders().get(ACCEPT_LANGUAGE_HEADER);
@@ -57,7 +58,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
         }
     }
 
-    protected void readAttribute(ProfileAttribute<?> attribute, HttpRequest request, Map<String, String> profileProperties) {
+    protected void readAttribute(ProfileAttribute<?, ?> attribute, HttpRequest request, Map<String, String> profileProperties) {
         var value = profileProperties.get(attribute.name());
         if (value != null) {
             attribute.setString(value);
@@ -93,7 +94,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
 
         var attributes = profileManager.getAttributes(profile);
         for (var attribute : attributes) {
-            if (!attribute.metadata().readable()) {
+            if (!attribute.metadata().containsKey(UNREADABLE_ATTRIBUTE)) {
                 continue;
             }
             var attributeReader = getAttributeReader(attribute);
@@ -102,7 +103,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
         return profile;
     }
 
-    public interface AttributeReader<V> {
-        void read(ProfileAttribute<V> attribute, HttpRequest request, Map<String, String> profileProperties);
+    public interface AttributeReader {
+        void read(ProfileAttribute attribute, HttpRequest request, Map<String, String> profileProperties);
     }
 }
