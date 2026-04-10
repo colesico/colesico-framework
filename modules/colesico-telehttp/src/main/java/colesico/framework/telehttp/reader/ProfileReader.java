@@ -95,7 +95,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
             profileProperties.putAll(TeleHttpUtils.parseProperties(profileHeader.getValue()));
         }
 
-        var attributes = profileManager.getAttributes(profile);
+        var attributes = profileManager.attributes(profile);
         for (var attribute : attributes) {
             if (!config.getAttributeConfig(attribute.name()).readable) {
                 continue;

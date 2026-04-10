@@ -11,16 +11,16 @@ import jakarta.inject.Singleton;
 @Singleton
 public final class RequirePrincipalAudit implements AuditInterceptor {
 
-    private final SecurityKit securityKit;
+    private final SecurityContext securityContext;
 
     @Inject
-    public RequirePrincipalAudit(SecurityKit securityKit) {
-        this.securityKit = securityKit;
+    public RequirePrincipalAudit(SecurityContext securityContext) {
+        this.securityContext = securityContext;
     }
 
     @Override
     public Object audit(InvocationContext context) {
-        securityKit.requirePrincipal();
+        securityContext.requirePrincipal();
         return context.proceed();
     }
 }

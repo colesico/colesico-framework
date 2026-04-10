@@ -24,7 +24,7 @@ import colesico.framework.security.teleapi.PrincipalSerializer;
 import jakarta.inject.Singleton;
 
 @Producer
-@Produce(DefaultSecurityKit.class)
+@Produce(DefaultSecurityContext.class)
 @Produce(PrincipalSerializerImpl.class)
 @Produce(RequirePrincipalAudit.class)
 public class SecurityProducer {
@@ -33,15 +33,15 @@ public class SecurityProducer {
      * Default security kit producer
      */
     @Singleton
-    public SecurityKit getSecurityKit(DefaultSecurityKit impl) {
+    public SecurityContext getSecurityKit(DefaultSecurityContext impl) {
         return impl;
     }
 
     /**
      * Current principal producer
      */
-    public Principal getPrincipal(SecurityKit kit) {
-        return kit.getPrincipal();
+    public Principal getPrincipal(SecurityContext kit) {
+        return kit.principal();
     }
 
     @Singleton

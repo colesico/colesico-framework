@@ -16,6 +16,6 @@ public interface ProfileManager<P extends Profile> {
     /**
      * Returns profile attributes accessors
      */
-    Collection<ProfileAttribute> getAttributes(P profile);
+    Collection<ProfileAttribute> attributes(P profile);
 
 }

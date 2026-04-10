@@ -21,10 +21,10 @@ public interface ProfileAttribute<P extends Profile, V> {
     /**
      * Return profile attribute value
      */
-    V getValue();
+    V value();
 
     default boolean hasValue() {
-        return getValue() != null;
+        return value() != null;
     }
 
     /**
@@ -35,7 +35,7 @@ public interface ProfileAttribute<P extends Profile, V> {
     /**
      * Returns profile attribute value as string
      */
-    String getString();
+    String asString();
 
     /**
      * Set  profile attribute value from string
@@ -45,7 +45,7 @@ public interface ProfileAttribute<P extends Profile, V> {
     /**
      * Returns profile attribute value as bytes
      */
-    byte[] getBytes();
+    byte[] asBytes();
 
     /**
      * Set  profile attribute value from bytes

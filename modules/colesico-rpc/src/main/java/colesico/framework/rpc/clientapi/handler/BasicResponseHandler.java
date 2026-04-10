@@ -4,7 +4,7 @@ import colesico.framework.profile.ProfileContext;
 import colesico.framework.rpc.clientapi.RpcResponseHandler;
 import colesico.framework.rpc.teleapi.BasicEnvelope;
 import colesico.framework.security.Principal;
-import colesico.framework.security.SecurityKit;
+import colesico.framework.security.SecurityContext;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 import jakarta.inject.Singleton;
 
@@ -14,13 +14,13 @@ public class BasicResponseHandler implements RpcResponseHandler<BasicEnvelope> {
 
     private final ProfileContext profileContext;
     private final ProfileContext profileUtils;
-    private final SecurityKit securityKit;
+    private final SecurityContext securityContext;
     private final PrincipalSerializer principalSerializer;
 
-    public BasicResponseHandler(ProfileContext profileContext, ProfileContext profileUtils, SecurityKit securityKit, PrincipalSerializer principalSerializer) {
+    public BasicResponseHandler(ProfileContext profileContext, ProfileContext profileUtils, SecurityContext securityContext, PrincipalSerializer principalSerializer) {
         this.profileContext = profileContext;
         this.profileUtils = profileUtils;
-        this.securityKit = securityKit;
+        this.securityContext = securityContext;
         this.principalSerializer = principalSerializer;
     }
 
@@ -28,10 +28,10 @@ public class BasicResponseHandler implements RpcResponseHandler<BasicEnvelope> {
     public void onResponse(BasicEnvelope response) {
         if (response.getPrincipal() != null) {
             if (response.getPrincipal().length == 0) {
-                securityKit.setPrincipal(null);
+                securityContext.setPrincipal(null);
             } else {
                 Principal principal = principalSerializer.deserialize(response.getPrincipal());
-                securityKit.setPrincipal(principal);
+                securityContext.setPrincipal(principal);
             }
         }
 

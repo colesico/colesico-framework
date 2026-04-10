@@ -24,7 +24,7 @@ import java.util.Locale;
 /**
  * User localization profile.
  * <p>
- * Extends this class to add more profile properties.
+ * Extends this class to add more properties.
  * </p>
  * The profile contains information necessary to adapt
  * the application to the user. For example - locale, time zone,
@@ -43,7 +43,7 @@ public interface Profile {
     /**
      * Returns locale.
      */
-    Locale getLocale();
+    Locale locale();
 
     /**
      * Set  locale

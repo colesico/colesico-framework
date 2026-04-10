@@ -27,7 +27,7 @@ public class L10nConfigImpl extends L10nConfigPrototype {
 
     @Override
     public ObjectiveQualifiers getObjectiveQualifiers(Profile profile) {
-        Locale locale = profile.getLocale();
+        Locale locale = profile.locale();
         return ObjectiveQualifiers.of(
                 QUALIFIERS_DEFINITION,
                 Qualifier.language(locale.getLanguage()),

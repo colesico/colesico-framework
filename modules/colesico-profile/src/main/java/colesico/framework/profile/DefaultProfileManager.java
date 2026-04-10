@@ -23,7 +23,7 @@ public class DefaultProfileManager<P extends DefaultProfile> implements ProfileM
     }
 
     @Override
-    public Collection<ProfileAttribute> getAttributes(P profile) {
+    public Collection<ProfileAttribute> attributes(P profile) {
         var attributes = new ArrayList<ProfileAttribute>();
         attributes.add(LocaleAttribute.of(profile));
         return attributes;

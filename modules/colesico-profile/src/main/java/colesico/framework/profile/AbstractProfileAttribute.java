@@ -28,8 +28,8 @@ abstract public class AbstractProfileAttribute<P extends Profile, V>
     }
 
     @Override
-    public byte[] getBytes() {
-        var value = getString();
+    public byte[] asBytes() {
+        var value = asString();
         if (value == null) {
             return null;
         }

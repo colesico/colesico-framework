@@ -11,7 +11,7 @@ public class DefaultProfile implements Profile {
     protected Locale locale;
 
     @Override
-    public Locale getLocale() {
+    public Locale locale() {
         return locale;
     }
 

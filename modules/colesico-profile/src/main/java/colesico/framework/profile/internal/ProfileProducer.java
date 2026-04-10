@@ -42,7 +42,7 @@ public class ProfileProducer {
     @Unscoped
     public Locale getLocale(Provider<Profile> profileProv) {
         Profile profile = profileProv.get();
-        return profile != null ? profile.getLocale() : Locale.getDefault();
+        return profile != null ? profile.locale() : Locale.getDefault();
     }
 
 }

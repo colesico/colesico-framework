@@ -58,12 +58,12 @@ public final class ProfileWriter<P extends Profile, C extends HttpTWContext> ext
         String profileStr;
         if (profile != null) {
             Map<String, String> profileProperties = new HashMap<>();
-            Collection<ProfileAttribute> attributes = profileManager.getAttributes(profile);
+            Collection<ProfileAttribute> attributes = profileManager.attributes(profile);
             for (ProfileAttribute attribute : attributes) {
                 if (!config.getAttributeConfig(attribute.name()).writable) {
                     continue;
                 }
-                profileProperties.put(attribute.name(), attribute.getString());
+                profileProperties.put(attribute.name(), attribute.asString());
             }
             profileStr = TeleHttpUtils.stringifyProperties(profileProperties);
             expires.add(Calendar.DAY_OF_MONTH, config.getCookieValidityDays());

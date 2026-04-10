@@ -25,8 +25,8 @@ public class LocaleAttribute extends AbstractProfileAttribute<Profile, Locale> {
     }
 
     @Override
-    public Locale getValue() {
-        return profile.getLocale();
+    public Locale value() {
+        return profile.locale();
     }
 
     @Override
@@ -35,8 +35,8 @@ public class LocaleAttribute extends AbstractProfileAttribute<Profile, Locale> {
     }
 
     @Override
-    public String getString() {
-        var value = profile.getLocale();
+    public String asString() {
+        var value = profile.locale();
         if (value == null) {
             return null;
         }
