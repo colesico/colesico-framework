@@ -4,7 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 /**
- * Profile attribute common accessor
+ * Profile attribute basic implementation
  */
 abstract public class AbstractProfileAttribute<P extends Profile, V>
         implements ProfileAttribute<P, V> {

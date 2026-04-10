@@ -16,7 +16,7 @@
 
 package colesico.framework.security.internal;
 
-import colesico.framework.security.DefaultPrincipal;
+import colesico.framework.security.AbsractPrincipal;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 
 import jakarta.inject.Singleton;
@@ -26,16 +26,16 @@ import java.nio.charset.StandardCharsets;
  * Default principal serializer
  */
 @Singleton
-public class PrincipalSerializerImpl implements PrincipalSerializer<DefaultPrincipal> {
+public class PrincipalSerializerImpl implements PrincipalSerializer<AbsractPrincipal> {
 
     @Override
-    public byte[] serialize(DefaultPrincipal principal) {
+    public byte[] serialize(AbsractPrincipal principal) {
         return principal.getId().getBytes(StandardCharsets.UTF_8);
     }
 
     @Override
-    public DefaultPrincipal deserialize(byte[] principalBytes) {
+    public AbsractPrincipal deserialize(byte[] principalBytes) {
         String id = new String(principalBytes, StandardCharsets.UTF_8);
-        return new DefaultPrincipal(id);
+        return new AbsractPrincipal(id);
     }
 }

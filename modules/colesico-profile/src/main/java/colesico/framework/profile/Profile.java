@@ -36,11 +36,6 @@ import java.util.Locale;
 public interface Profile {
 
     /**
-     * Thread scope key for caching profile
-     */
-    Key<Profile> SCOPE_KEY = new TypeKey<>(Profile.class);
-
-    /**
      * Returns locale.
      */
     Locale locale();

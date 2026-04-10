@@ -11,7 +11,8 @@ package colesico.framework.profile;
 public interface ProfileContext<P extends Profile> {
 
     /**
-     * Obtain current profile instance
+     * Obtain current profile instance.
+     * Possible null response
      */
     P get();
 

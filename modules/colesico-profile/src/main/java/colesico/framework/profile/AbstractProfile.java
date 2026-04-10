@@ -4,11 +4,14 @@ import java.util.Locale;
 import java.util.Objects;
 
 /**
- * Profile default implementation
+ * Profile basic implementation
  */
-public class DefaultProfile implements Profile {
+abstract public class AbstractProfile implements Profile {
 
     protected Locale locale;
+
+    public AbstractProfile() {
+    }
 
     @Override
     public Locale locale() {
@@ -22,7 +25,7 @@ public class DefaultProfile implements Profile {
 
     @Override
     public String toString() {
-        return "DefaultProfile{" +
+        return "Profile{" +
                 "locale=" + locale +
                 '}';
     }
@@ -30,7 +33,7 @@ public class DefaultProfile implements Profile {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        DefaultProfile that = (DefaultProfile) o;
+        AbstractProfile that = (AbstractProfile) o;
         return Objects.equals(locale, that.locale);
     }
 

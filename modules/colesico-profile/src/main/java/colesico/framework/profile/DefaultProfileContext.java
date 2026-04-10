@@ -6,7 +6,7 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 @Singleton
-public class DefaultProfileContext extends AbstractProfileContext<DefaultProfile> {
+public class DefaultProfileContext extends AbstractProfileContext<AbstractProfile> {
 
     protected final Provider<DataPort> dataPortProv;
 
@@ -16,12 +16,12 @@ public class DefaultProfileContext extends AbstractProfileContext<DefaultProfile
     }
 
     @Override
-    protected DefaultProfile read() {
-        return (DefaultProfile) dataPortProv.get().read(Profile.class);
+    protected AbstractProfile read() {
+        return (AbstractProfile) dataPortProv.get().read(Profile.class);
     }
 
     @Override
-    protected DefaultProfile write(DefaultProfile profile) {
+    protected AbstractProfile write(AbstractProfile profile) {
         dataPortProv.get().write(profile, Profile.class);
         return profile;
     }

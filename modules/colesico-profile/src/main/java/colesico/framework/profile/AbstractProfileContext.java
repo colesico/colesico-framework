@@ -1,5 +1,7 @@
 package colesico.framework.profile;
 
+import colesico.framework.ioc.key.Key;
+import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.scope.ThreadScope;
 
 abstract public class AbstractProfileContext<P extends Profile> implements ProfileContext<P> {
@@ -31,21 +33,32 @@ abstract public class AbstractProfileContext<P extends Profile> implements Profi
 
     @Override
     public P get() {
-        P profile = (P) threadScope.get(Profile.SCOPE_KEY);
-        if (profile != null) {
-            return profile;
+        ProfileHolder holder = threadScope.get(ProfileHolder.SCOPE_KEY);
+        if (holder != null) {
+            return holder.profile != null ? (P) holder.profile : profileManager.createProfile();
+        } else {
+            // Recursive calls protection
+            threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(null));
         }
-        profile = read();
+        P profile = read();
         if (profile == null) {
             profile = profileManager.createProfile();
         }
-        threadScope.put(Profile.SCOPE_KEY, profile);
+        threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
         return profile;
     }
 
     @Override
     public void set(P profile) {
         profile = write(profile);
-        threadScope.put(Profile.SCOPE_KEY, profile);
+        threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
     }
+
+    public record ProfileHolder(Profile profile) {
+        /**
+         * Thread scope key for caching profile
+         */
+        public static final Key<ProfileHolder> SCOPE_KEY = new TypeKey<>(ProfileHolder.class);
+    }
+
 }

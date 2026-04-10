@@ -10,11 +10,11 @@ import java.util.Locale;
  * Default profile manager implementation
  */
 @Singleton
-public class DefaultProfileManager<P extends DefaultProfile> implements ProfileManager<P> {
+public class DefaultProfileManager<P extends AbstractProfile> implements ProfileManager<P> {
 
     @Override
     public P createProfile() {
-        return initProfile((P) new DefaultProfile());
+        return initProfile((P) new AbstractProfile(){});
     }
 
     protected P initProfile(P profile) {

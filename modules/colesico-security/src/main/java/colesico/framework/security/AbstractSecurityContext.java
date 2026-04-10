@@ -30,38 +30,14 @@ import jakarta.inject.Provider;
  * Security kit default implementation.
  * Extend this class to customize principal control.
  */
-public class DefaultSecurityContext implements SecurityContext {
+abstract public class AbstractSecurityContext<P extends Principal> implements SecurityContext<P> {
 
     protected final ThreadScope threadScope;
-    protected final Provider<DataPort> dataPortProv;
 
-    @Inject
-    public DefaultSecurityContext(ThreadScope threadScope, Provider<DataPort> dataPortProv) {
-        this.threadScope = threadScope;
-        this.dataPortProv = dataPortProv;
-    }
 
-    /**
-     * Controls the principal read from the data port.
-     * Override this method to get more specific control.
-     * This method is used to fine grained control of principal: check validity, enrich with extra data, e.t.c.
-     *
-     * @return Valid principal or null
-     */
-    protected InputControlResult controlInputPrincipal(Principal principal) {
-        return InputControlResult.accept(principal);
-    }
-
-    /**
-     * Controls the principal before write to the data port.
-     * Override this method to get more specific control.
-     */
-    protected Principal controlOutputPrincipal(Principal principal) {
-        return principal;
-    }
 
     @Override
-    public <P extends Principal> P principal() {
+    public  P principal() {
         // Check thread cache at first
         PrincipalHolder holder = threadScope.get(PrincipalHolder.SCOPE_KEY);
         if (holder != null) {
