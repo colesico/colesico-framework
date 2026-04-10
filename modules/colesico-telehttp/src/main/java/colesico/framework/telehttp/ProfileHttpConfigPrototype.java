@@ -22,7 +22,7 @@ import colesico.framework.config.ConfigPrototype;
 @ConfigPrototype(model = ConfigModel.SINGLE)
 abstract public class ProfileHttpConfigPrototype {
 
-    protected static AttributeConfig DEFAULT_ATTRIBUTE_CONFIG = new AttributeConfig(true, true);
+    protected static AttributeConfig DEFAULT_ATTRIBUTE_CONFIG = new AttributeConfig();
 
     /**
      * Profile cookie validity days
@@ -37,13 +37,17 @@ abstract public class ProfileHttpConfigPrototype {
 
     /**
      * Profile attribute configuration
-     *
-     * @param readable - attribute will not be read from the data port
-     * @param writable - will not be written to the data port
      */
-    public record AttributeConfig(
-            boolean readable,
-            boolean writable
-    ) {
+    public static class AttributeConfig {
+
+        /**
+         * Allow read attribute from the data port
+         */
+        public boolean readable = true;
+
+        /**
+         * Allow to write attribute to the data port
+         */
+        public boolean writable = true;
     }
 }

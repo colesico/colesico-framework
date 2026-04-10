@@ -97,7 +97,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
 
         var attributes = profileManager.getAttributes(profile);
         for (var attribute : attributes) {
-            if (!config.getAttributeConfig(attribute.name()).readable()) {
+            if (!config.getAttributeConfig(attribute.name()).readable) {
                 continue;
             }
             var attributeReader = getAttributeReader(attribute);
