@@ -1,7 +1,5 @@
 package colesico.framework.profile;
 
-import java.util.Map;
-
 /**
  * Profile attribute accessor.
  * Used to serialize and deserialize an attribute value,
@@ -54,9 +52,4 @@ public interface ProfileAttribute<P extends Profile, V> {
      */
     void setBytes(byte[] bytes);
 
-    /**
-     * Attribute meta information
-     * to configure attribute processing
-     */
-    Map<String, Object> metadata();
 }

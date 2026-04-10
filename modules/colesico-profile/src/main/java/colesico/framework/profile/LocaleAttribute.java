@@ -1,7 +1,6 @@
 package colesico.framework.profile;
 
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Locale attribute accessor
@@ -12,18 +11,17 @@ public class LocaleAttribute extends AbstractProfileAttribute<Profile, Locale> {
      * Locale attribute name
      */
     static final String ATTRIBUTE_NAME = "locale";
-    static final Map<String, Object> METADATA = Map.of();
 
     public static ProfileAttribute<Profile, Locale> of(Profile profile) {
-        return new LocaleAttribute(profile, ATTRIBUTE_NAME, METADATA);
+        return new LocaleAttribute(profile, ATTRIBUTE_NAME);
     }
 
-    public static ProfileAttribute<Profile, Locale> of(Profile profile, String name, Map<String, Object> metadata) {
-        return new LocaleAttribute(profile, name, metadata);
+    public static ProfileAttribute<Profile, Locale> of(Profile profile, String name) {
+        return new LocaleAttribute(profile, name);
     }
 
-    public LocaleAttribute(Profile profile, String name, Map<String, Object> metadata) {
-        super(profile, name, metadata);
+    public LocaleAttribute(Profile profile, String name) {
+        super(profile, name);
     }
 
     @Override

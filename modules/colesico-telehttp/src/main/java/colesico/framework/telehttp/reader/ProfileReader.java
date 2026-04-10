@@ -19,8 +19,10 @@ package colesico.framework.telehttp.reader;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.profile.*;
+import colesico.framework.profile.LocaleAttribute;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTeleReader;
+import colesico.framework.telehttp.ProfileHttpConfigPrototype;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
 import colesico.framework.telehttp.writer.ProfileWriter;
 import jakarta.inject.Provider;
@@ -37,14 +39,15 @@ import static colesico.framework.telehttp.writer.ProfileWriter.PROFILE_HEADER;
 public class ProfileReader<P extends Profile, C extends HttpTRContext> implements HttpTeleReader<P, C> {
 
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
-    public static final String UNREADABLE_ATTRIBUTE = "TeleHttpUnreadbale";
 
     protected final ProfileManager<P> profileManager;
     protected final Provider<HttpContext> httpContextProv;
+    protected final ProfileHttpConfigPrototype config;
 
-    public ProfileReader(ProfileManager profileManager, Provider<HttpContext> httpContextProv) {
+    public ProfileReader(ProfileManager<P> profileManager, Provider<HttpContext> httpContextProv, ProfileHttpConfigPrototype config) {
         this.profileManager = profileManager;
         this.httpContextProv = httpContextProv;
+        this.config = config;
     }
 
     protected void readLocale(ProfileAttribute<Profile, Locale> attribute, HttpRequest request, Map<String, String> profileProperties) {
@@ -94,7 +97,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
 
         var attributes = profileManager.getAttributes(profile);
         for (var attribute : attributes) {
-            if (!attribute.metadata().containsKey(UNREADABLE_ATTRIBUTE)) {
+            if (!config.getAttributeConfig(attribute.name()).readable()) {
                 continue;
             }
             var attributeReader = getAttributeReader(attribute);

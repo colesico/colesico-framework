@@ -20,13 +20,17 @@ import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
 import colesico.framework.security.assist.MACUtils;
 
+import java.nio.charset.StandardCharsets;
+
 /**
- * Configuration prototype to  configure security principal reading/writing
+ * Configuration prototype to configure security principal reading/writing
  */
 @ConfigPrototype(model = ConfigModel.SINGLE)
 abstract public class PrincipalHttpConfigPrototype {
 
-    abstract public byte[] getSignatureKey();
+    public byte[] getSignatureKey() {
+        return "0123456789ABCDEF".getBytes(StandardCharsets.UTF_8);
+    }
 
     public String getSignatureAlgorithm() {
         return MACUtils.HmacSHA256;

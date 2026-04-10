@@ -22,6 +22,28 @@ import colesico.framework.config.ConfigPrototype;
 @ConfigPrototype(model = ConfigModel.SINGLE)
 abstract public class ProfileHttpConfigPrototype {
 
-    abstract public int getCookieValidityDays();
+    protected static AttributeConfig DEFAULT_ATTRIBUTE_CONFIG = new AttributeConfig(true, true);
 
+    /**
+     * Profile cookie validity days
+     */
+    public int getCookieValidityDays() {
+        return 365;
+    }
+
+    public AttributeConfig getAttributeConfig(String attributeName) {
+        return DEFAULT_ATTRIBUTE_CONFIG;
+    }
+
+    /**
+     * Profile attribute configuration
+     *
+     * @param readable - attribute will not be read from the data port
+     * @param writable - will not be written to the data port
+     */
+    public record AttributeConfig(
+            boolean readable,
+            boolean writable
+    ) {
+    }
 }

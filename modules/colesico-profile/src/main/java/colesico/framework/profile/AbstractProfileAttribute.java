@@ -1,8 +1,6 @@
 package colesico.framework.profile;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -13,12 +11,10 @@ abstract public class AbstractProfileAttribute<P extends Profile, V>
 
     protected final P profile;
     protected final String name;
-    protected final Map<String, Object> metadata;
 
-    public AbstractProfileAttribute(P profile, String name, Map<String, Object> metadata) {
+    public AbstractProfileAttribute(P profile, String name) {
         this.profile = profile;
         this.name = name;
-        this.metadata = Objects.requireNonNullElseGet(metadata, HashMap::new);
     }
 
     @Override
@@ -29,11 +25,6 @@ abstract public class AbstractProfileAttribute<P extends Profile, V>
     @Override
     public String name() {
         return name;
-    }
-
-    @Override
-    public Map<String, Object> metadata() {
-        return metadata;
     }
 
     @Override

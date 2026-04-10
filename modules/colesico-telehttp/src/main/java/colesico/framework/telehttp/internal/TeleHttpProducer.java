@@ -18,22 +18,12 @@ public class TeleHttpProducer {
     // Default config
     @Singleton
     public PrincipalHttpConfigPrototype getPrincipalWriterConfig() {
-        return new PrincipalHttpConfigPrototype() {
-            @Override
-            public byte[] getSignatureKey() {
-                return "0123456789ABCDEF".getBytes(StandardCharsets.UTF_8);
-            }
-        };
+        return new PrincipalHttpConfigPrototype() {};
     }
 
     // Default config
     @Singleton
     public ProfileHttpConfigPrototype getProfileWriterConfig() {
-        return new ProfileHttpConfigPrototype() {
-            @Override
-            public int getCookieValidityDays() {
-                return 365;
-            }
-        };
+        return new ProfileHttpConfigPrototype() {};
     }
 }

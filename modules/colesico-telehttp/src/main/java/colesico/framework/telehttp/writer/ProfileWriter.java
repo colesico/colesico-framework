@@ -30,10 +30,7 @@ import colesico.framework.telehttp.assist.TeleHttpUtils;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Singleton
 public final class ProfileWriter<P extends Profile, C extends HttpTWContext> extends HttpTeleWriter<P, C> {
@@ -61,9 +58,9 @@ public final class ProfileWriter<P extends Profile, C extends HttpTWContext> ext
         String profileStr;
         if (profile != null) {
             Map<String, String> profileProperties = new HashMap<>();
-            Set<ProfileAttribute> attributes = profileManager.getAttributes(profile);
+            Collection<ProfileAttribute> attributes = profileManager.getAttributes(profile);
             for (ProfileAttribute attribute : attributes) {
-                if (!attribute.metadata().writable()) {
+                if (!config.getAttributeConfig(attribute.name()).writable()) {
                     continue;
                 }
                 profileProperties.put(attribute.name(), attribute.getString());
