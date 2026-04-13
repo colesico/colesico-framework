@@ -16,8 +16,6 @@
 
 package colesico.framework.security;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Objects;
 
 /**
@@ -25,17 +23,14 @@ import java.util.Objects;
  */
 abstract public class AbsractPrincipal implements Principal {
 
-    protected final String id;
-
-    public AbsractPrincipal(String id) {
-        if (StringUtils.isBlank(id)) {
-            throw new SecurityException("Principal ID is blank");
-        }
-        this.id = id;
-    }
+    protected String id;
 
     public String id() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override

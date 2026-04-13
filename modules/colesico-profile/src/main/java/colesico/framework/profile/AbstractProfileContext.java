@@ -32,7 +32,7 @@ abstract public class AbstractProfileContext<P extends Profile> implements Profi
     abstract protected P write(P profile);
 
     @Override
-    public P get() {
+    public P profile() {
         ProfileHolder holder = threadScope.get(ProfileHolder.SCOPE_KEY);
         if (holder != null) {
             return holder.profile != null ? (P) holder.profile : profileManager.createProfile();
@@ -40,6 +40,7 @@ abstract public class AbstractProfileContext<P extends Profile> implements Profi
             // Recursive calls protection
             threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(null));
         }
+        // No profile in cache. Retrieve profile from source
         P profile = read();
         if (profile == null) {
             profile = profileManager.createProfile();
@@ -49,7 +50,7 @@ abstract public class AbstractProfileContext<P extends Profile> implements Profi
     }
 
     @Override
-    public void set(P profile) {
+    public void save(P profile) {
         profile = write(profile);
         threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
     }

@@ -34,67 +34,58 @@ abstract public class AbstractSecurityContext<P extends Principal> implements Se
 
     protected final ThreadScope threadScope;
 
+    public AbstractSecurityContext(ThreadScope threadScope) {
+        this.threadScope = threadScope;
+    }
+
+    /**
+     * Read principle from source.
+     * Override this method to fine-grained principle read control: check validity,
+     * enrich with extra data from database, e.t.c.
+     */
+    abstract protected P read();
+
+    /**
+     * Writes principal to source.
+     * Override this method to get more specific control.
+     */
+    abstract protected P write(P principle);
 
 
     @Override
-    public  P principal() {
+    public P principal() {
         // Check thread cache at first
         PrincipalHolder holder = threadScope.get(PrincipalHolder.SCOPE_KEY);
         if (holder != null) {
             return (P) holder.principal();
         } else {
             // Create temporary empty principal holder
-            // for possible subsequent recursive getPrincipal() invocations
+            // for possible subsequent recursive principal() invocations
             threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(null));
         }
 
-        // No principal in cache. Retrieve principal from data port
-
-        DataPort<TRContext, TWContext> port = dataPortProv.get();
-        Principal principal = port.read(Principal.class);
-
-        // Control principal
-        InputControlResult result = controlInputPrincipal(principal);
-        principal = result.principal;
-
-        // Update principal on client
-        if (!result.accepted) {
-            port.write(principal, Principal.class);
-        }
-
+        // No principal in cache. Retrieve principal from source
+        P principal = read();
         // Store principal to cache
         threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(principal));
 
-        return (P) principal;
+        return principal;
     }
 
     @Override
-    public void setPrincipal(Principal principal) {
-        DataPort port = dataPortProv.get();
-        principal = controlOutputPrincipal(principal);
-        port.write(principal, Principal.class);
+    public void setPrincipal(P principal) {
+        principal = write(principal);
         threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(principal));
     }
 
     @Override
-    public <T> T invokeAs(Invocable<T> invocable, Principal principal) {
+    public <T> T invokeAs(Invocable<T> invocable, P principal) {
         PrincipalHolder holder = threadScope.get(PrincipalHolder.SCOPE_KEY);
         threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(principal));
         try {
             return invocable.invoke();
         } finally {
             threadScope.put(PrincipalHolder.SCOPE_KEY, holder);
-        }
-    }
-
-    public record InputControlResult(Principal principal, boolean accepted) {
-
-        public static InputControlResult reset(Principal principal) {
-            return new InputControlResult(principal, false);
-        }
-
-        public static InputControlResult accept(Principal principal) {
-            return new InputControlResult(principal, true);
         }
     }
 

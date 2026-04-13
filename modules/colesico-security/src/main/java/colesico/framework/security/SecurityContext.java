@@ -24,10 +24,11 @@ package colesico.framework.security;
 public interface SecurityContext<P extends Principal> {
 
     /**
-     * Returns the valid principal associated with the current process if the principal is present or null if absent.
+     * Returns the valid principal associated with the current process for authenticated
+     * client or null for an anonymous.
      * Method must retrieve the principal from any source (eg from the data port)
-     * then validate, enrich (if needed) and cache it for a subsequent quick return within the current thread.
-     * Can throw an exception in case the principal is inconsistent.
+     * then validate, enrich (if needed) and cache it for a subsequent quick return
+     * within the current thread.
      */
     P principal();
 
@@ -46,6 +47,8 @@ public interface SecurityContext<P extends Principal> {
             throw new PrincipalRequiredException();
         }
     }
+
+
 
     @FunctionalInterface
     interface Invocable<T> {

@@ -33,7 +33,7 @@ public class ProfileProducer {
 
     @Unscoped
     public Profile getProfile(ProfileContext context) {
-        return context.get();
+        return context.profile();
     }
 
     /**

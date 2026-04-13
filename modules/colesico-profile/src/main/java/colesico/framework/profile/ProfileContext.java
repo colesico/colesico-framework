@@ -12,13 +12,13 @@ public interface ProfileContext<P extends Profile> {
 
     /**
      * Obtain current profile instance.
-     * Possible null response
+     * Returns not null value.
      */
-    P get();
+    P profile();
 
     /**
      * Save profile preferences to context
      */
-    void set(P profile);
+    void save(P profile);
 
 }
