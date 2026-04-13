@@ -1,6 +1,6 @@
 package colesico.framework.security.authorization;
 
-public interface AuthorizationResolution<D> {
+public interface AuthorizationResult<D> {
     PermissionStatus status();
     D details();
 }
