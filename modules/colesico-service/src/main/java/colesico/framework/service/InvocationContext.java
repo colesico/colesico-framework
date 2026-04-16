@@ -21,9 +21,9 @@ package colesico.framework.service;
  */
 public final class InvocationContext<T, R> {
 
-    public static final String GET_SERVICE_METHOD = "getTarget";
-    public static final String GET_METHOD_NAME_METHOD = "getMethodName";
-    public static final String GET_PARAMETERS_METHOD = "getParameters";
+    public static final String SERVICE_METHOD = "target";
+    public static final String METHOD_NAME_METHOD = "methodName";
+    public static final String PARAMETERS_METHOD = "parameters";
     public static final String PROCEED_METHOD = "proceed";
 
     /**
@@ -44,11 +44,11 @@ public final class InvocationContext<T, R> {
     /**
      * Interceptors to be invoked to intercept method invocation
      */
-    private final InterceptorsChain<T,R> interceptors;
+    private final InterceptorsChain<T, R> interceptors;
 
-    private InterceptorsChain.Interception<T,R,Object> interception;
+    private InterceptorsChain.Interception<T, R, ?> interception;
 
-    public InvocationContext(T target, String methodName, Object[] parameters, InterceptorsChain<T,R> interceptors) {
+    public InvocationContext(T target, String methodName, Object[] parameters, InterceptorsChain<T, R> interceptors) {
         this.target = target;
         this.methodName = methodName;
         this.parameters = parameters;
@@ -57,34 +57,32 @@ public final class InvocationContext<T, R> {
 
     /**
      * The target object whose method is executed
-     *
-     * @return
      */
-    public T getTarget() {
+    public T target() {
         return target;
     }
 
     /**
      * Executing method name
      */
-    public String getMethodName() {
+    public String methodName() {
         return methodName;
     }
 
     /**
      * Method parameters values
      */
-    public Object[] getParameters() {
+    public Object[] parameters() {
         return parameters;
     }
 
-    public InterceptorsChain.Interception getInterception() {
+    public InterceptorsChain.Interception<T, R, ?> interception() {
         return interception;
     }
 
     public R proceed() {
         interception = interceptors.next();
-        return (R) interception.getInterceptor().intercept(this);
+        return interception.interceptor().intercept(this);
     }
 
 

@@ -197,7 +197,7 @@ public class ServiceGenerator {
         List<ParameterElement> methodParams = serviceMethodElm.getParameters();
 
         if (!methodParams.isEmpty()) {
-            codeBlock.addStatement("$T[] p = " + Interceptor.INVOCATION_CONTEXT_PARAM + "." + InvocationContext.GET_PARAMETERS_METHOD + "()", ClassName.get(Object.class));
+            codeBlock.addStatement("$T[] p = " + Interceptor.INVOCATION_CONTEXT_PARAM + "." + InvocationContext.PARAMETERS_METHOD + "()", ClassName.get(Object.class));
         }
 
         List paramItems = new ArrayList();

@@ -29,8 +29,6 @@ public interface ServiceProxy {
 
     /**
      * Returns service origin class (i.e. class on which this proxy is based)
-     *
-     * @return
      */
     Class<?> getServiceOrigin();
 

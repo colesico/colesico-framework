@@ -19,8 +19,9 @@ package colesico.framework.service;
 import java.lang.annotation.*;
 
 /**
+ * Not for manual use.
  * This annotation is automatically added by service proxy code generator to service proxy
- * class to have a ability to determine service origin class from proxy class.
+ * class to have an ability to determine service origin class from proxy class.
  *
  * @author Vladlen Larionov
  */

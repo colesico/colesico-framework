@@ -20,8 +20,6 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
 import colesico.framework.service.BatchField;
-import colesico.framework.service.Compound;
-import colesico.framework.service.LocalField;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.*;
 import org.apache.commons.lang3.StringUtils;

@@ -24,19 +24,25 @@ import java.util.Queue;
  */
 public final class InterceptorsChain<T, R> {
 
-    private Queue<Interception> queue = new ArrayDeque();
+    /**
+     * Interceptors queue
+     */
+    private final Queue<Interception<T, R, ?>> queue = new ArrayDeque<>();
 
     /**
      * Add interceptor to chain
      */
     public <P> void add(Interceptor<T, R> interceptor, P parameters) {
-        queue.add(new Interception(interceptor, parameters));
+        queue.add(new Interception<>(interceptor, parameters));
     }
 
-    public Interception next() {
+    public Interception<T, R, ?> next() {
         return queue.poll();
     }
 
+    /**
+     * Interceptors chain element
+     */
     public static final class Interception<T, R, P> {
         private final Interceptor<T, R> interceptor;
         private final P parameters;
@@ -46,11 +52,11 @@ public final class InterceptorsChain<T, R> {
             this.parameters = parameters;
         }
 
-        public Interceptor getInterceptor() {
+        public Interceptor<T, R> interceptor() {
             return interceptor;
         }
 
-        public P getParameters() {
+        public P parameters() {
             return parameters;
         }
     }
