@@ -29,7 +29,7 @@ import java.lang.annotation.Annotation;
 import java.util.Set;
 
 /**
- * Service extra parser/code generator
+ * Service parser/code generator
  */
 abstract public class Modulator {
 
@@ -48,7 +48,7 @@ abstract public class Modulator {
 
     /**
      * When this modulator should receive events before or after the
-     * specified modulator or it doesn't matter
+     * specified modulator, or it doesn't matter
      */
     public ListenOrder listenOrder(Class<? extends Modulator> thatModulator) {
         return ListenOrder.NO_MATTER;

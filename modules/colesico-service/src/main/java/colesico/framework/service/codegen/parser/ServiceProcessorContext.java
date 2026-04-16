@@ -19,8 +19,7 @@ package colesico.framework.service.codegen.parser;
 import colesico.framework.assist.codegen.CodegenMode;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.service.codegen.model.InterceptionPhases;
-import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.service.codegen.modulator.ModulatorKit;
+import colesico.framework.service.codegen.modulator.ModulatorManager;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
@@ -29,7 +28,6 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Service processor context
@@ -38,7 +36,7 @@ public final class ServiceProcessorContext {
 
     private final ProcessingEnvironment processingEnv;
 
-    private final ModulatorKit modulatorKit;
+    private final ModulatorManager modulatorManager;
 
     private final InterceptionPhases interceptionPhases;
 
@@ -52,9 +50,9 @@ public final class ServiceProcessorContext {
      */
     private final CodegenMode codegenMode;
 
-    public ServiceProcessorContext(ModulatorKit modulatorKit, ProcessingEnvironment processingEnv) {
+    public ServiceProcessorContext(ModulatorManager modulatorManager, ProcessingEnvironment processingEnv) {
         this.processingEnv = processingEnv;
-        this.modulatorKit = modulatorKit;
+        this.modulatorManager = modulatorManager;
         this.interceptionPhases = new InterceptionPhases();
         this.codegenMode = CodegenMode.fromKey(processingEnv.getOptions().get(CodegenUtils.OPTION_CODEGEN));
     }
@@ -75,8 +73,8 @@ public final class ServiceProcessorContext {
         return processingEnv;
     }
 
-    public ModulatorKit getModulatorKit() {
-        return modulatorKit;
+    public ModulatorManager getModulatorKit() {
+        return modulatorManager;
     }
 
     public InterceptionPhases getInterceptionPhases() {

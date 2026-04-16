@@ -92,11 +92,7 @@ public class ServiceParser extends FrameworkAbstractParser {
             return false;
         }
 
-        if (isPublic) {
-            return false;
-        }
-
-        return true;
+        return !isPublic;
     }
 
     protected void parseServiceMethods(ServiceElement serviceElement) {

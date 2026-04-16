@@ -22,7 +22,7 @@ import colesico.framework.assist.codegen.Genstamp;
 import colesico.framework.service.codegen.generator.IocGenerator;
 import colesico.framework.service.codegen.generator.ServiceGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.service.codegen.modulator.ModulatorKit;
+import colesico.framework.service.codegen.modulator.ModulatorManager;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ import java.util.Set;
 public class ServiceProcessor extends FrameworkAbstractProcessor {
 
     protected final Logger logger;
-    protected final ModulatorKit modulatorKit;
+    protected final ModulatorManager modulatorManager;
     protected ServiceProcessorContext context;
 
     public ServiceProcessor() {
@@ -56,8 +56,8 @@ public class ServiceProcessor extends FrameworkAbstractProcessor {
         logger = LoggerFactory.getLogger(ServiceProcessorContext.class);
         logger.debug("Creating modulator kit...");
 
-        modulatorKit = new ModulatorKit();
-        modulatorKit.lookup();
+        modulatorManager = new ModulatorManager();
+        modulatorManager.lookup();
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ServiceProcessor extends FrameworkAbstractProcessor {
     @Override
     protected Class<? extends Annotation>[] getSupportedAnnotations() {
         Set<Class<? extends Annotation>> result = new HashSet<>();
-        for (Class<? extends Annotation> ac : modulatorKit.getServiceAnnotations()) {
+        for (Class<? extends Annotation> ac : modulatorManager.getServiceAnnotations()) {
             logger.debug("Use service annotation: " + ac.getName());
             result.add(ac);
         }
@@ -79,8 +79,8 @@ public class ServiceProcessor extends FrameworkAbstractProcessor {
     public synchronized void init(ProcessingEnvironment processingEnv) {
         try {
             super.init(processingEnv);
-            context = new ServiceProcessorContext(modulatorKit, processingEnv);
-            modulatorKit.notifyInit(context);
+            context = new ServiceProcessorContext(modulatorManager, processingEnv);
+            modulatorManager.notifyInit(context);
         } catch (Exception e) {
             String msg = ExceptionUtils.getRootCauseMessage(e);
             processingEnv.getMessager().printMessage(Kind.ERROR, msg);
@@ -94,9 +94,9 @@ public class ServiceProcessor extends FrameworkAbstractProcessor {
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         try {
             RoundContext roundContext = new RoundContext(annotations, roundEnv);
-            modulatorKit.notifyRoundStart(roundContext);
+            modulatorManager.notifyRoundStart(roundContext);
             processClasses(annotations, roundEnv);
-            modulatorKit.notifyRoundStop();
+            modulatorManager.notifyRoundStop();
             return true;
         } catch (Exception e) {
             String msg = ExceptionUtils.getRootCauseMessage(e);
@@ -114,7 +114,7 @@ public class ServiceProcessor extends FrameworkAbstractProcessor {
 
         Set<String> serviceTypsNames = new HashSet<>();
 
-        for (Class<? extends Annotation> serviceAnnotation : modulatorKit.getServiceAnnotations()) {
+        for (Class<? extends Annotation> serviceAnnotation : modulatorManager.getServiceAnnotations()) {
             for (Element elm : roundEnv.getElementsAnnotatedWith(serviceAnnotation)) {
                 if (elm.getKind() != ElementKind.CLASS) {
                     continue;

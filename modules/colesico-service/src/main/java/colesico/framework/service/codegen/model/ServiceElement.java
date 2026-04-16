@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Represents a service
+ * Represents a service proxy
  *
  * @author Vladlen Larionov
  */
@@ -43,29 +43,29 @@ public final class ServiceElement {
     private final ClassElement originClass;
 
     /**
-     * Service auxiliary interfaces
+     * Service proxy class auxiliary interfaces
      */
     private final Elements<TypeName> customInterfaces;
 
     /**
-     * Service auxiliary fields
+     * Service proxy class auxiliary fields
      */
     private final Elements<ServiceFieldElement> customFields;
 
     /**
-     * Service methods
+     * Service class methods
      */
     private final Elements<ServiceMethodElement> serviceMethods;
 
     /**
-     * Extra methods
+     * Service proxy class auxiliary methods
      */
     private final Elements<CustomMethodElement> customMethods;
 
     /**
-     * Constructor extra code
+     * Constructor auxiliary code
      */
-    private final Elements<CodeBlock> constructorExtraCode;
+    private final Elements<CodeBlock> constructorCustomCode;
 
     /**
      * Service tele-facade if specified
@@ -75,7 +75,7 @@ public final class ServiceElement {
     /**
      * Common purpose properties
      */
-    private final Map<Class, Object> properties;
+    private final Map<Class<?>, Object> properties;
 
     /**
      * Service custom scope
@@ -89,8 +89,8 @@ public final class ServiceElement {
         this.serviceMethods = new Elements<>();
         this.customFields = new Elements<>();
         this.customMethods = new Elements<>();
-        this.constructorExtraCode = new Elements<>();
-        this.properties = new HashMap();
+        this.constructorCustomCode = new Elements<>();
+        this.properties = new HashMap<>();
     }
 
     public void addCustomField(final ServiceFieldElement field) {
@@ -138,8 +138,8 @@ public final class ServiceElement {
         this.teleFacade = teleFacade;
     }
 
-    public void addConstructorExtraCode(CodeBlock cb) {
-        constructorExtraCode.add(cb);
+    public void addConstructorCustomCode(CodeBlock cb) {
+        constructorCustomCode.add(cb);
     }
 
     public Elements<TypeName> getCustomInterfaces() {
@@ -166,8 +166,8 @@ public final class ServiceElement {
         properties.put(property.getClass(), property);
     }
 
-    public Elements<CodeBlock> getConstructorExtraCode() {
-        return constructorExtraCode;
+    public Elements<CodeBlock> getConstructorCustomCode() {
+        return constructorCustomCode;
     }
 
     public TeleFacadeElement getTeleFacade() {

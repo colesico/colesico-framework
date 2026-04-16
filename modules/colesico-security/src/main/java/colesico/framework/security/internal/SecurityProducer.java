@@ -33,7 +33,7 @@ public class SecurityProducer {
      * Default security kit producer
      */
     @Singleton
-    public SecurityContext getSecurityKit(AbstractSecurityContext impl) {
+    public SecurityContext getSecurityContext(AbstractSecurityContext impl) {
         return impl;
     }
 

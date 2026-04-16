@@ -21,7 +21,7 @@ import java.util.Objects;
 /**
  * Principal basic implementation
  */
-abstract public class AbsractPrincipal implements Principal {
+abstract public class AbsractPrincipal implements Principal<String> {
 
     protected String id;
 

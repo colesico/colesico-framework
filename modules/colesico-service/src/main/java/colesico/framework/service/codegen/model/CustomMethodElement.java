@@ -22,14 +22,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents service custom method
+ * Represents service proxy auxiliary custom method
  */
 public final class CustomMethodElement {
 
     /**
-     * Parent service ref
+     * Parent service element ref
      */
-    protected ServiceElement parentService;
+    ServiceElement parentService;
 
     /**
      * Method spec

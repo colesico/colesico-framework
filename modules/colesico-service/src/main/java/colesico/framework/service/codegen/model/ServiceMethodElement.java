@@ -30,7 +30,7 @@ public final class ServiceMethodElement {
     /**
      * Parent service
      */
-    protected ServiceElement parentService;
+    ServiceElement parentService;
 
     /**
      * Origin service method reference

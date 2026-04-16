@@ -98,12 +98,12 @@ public final class InterceptionPhases {
         phaseOrder.add(phaseIndex, newPhase);
     }
 
-    private void checkAddPhase(String exisingPhase, String newPhase) {
+    private void checkAddPhase(String existingPhase, String newPhase) {
         if (checkPhaseExists(newPhase)) {
             throw new RuntimeException("Interception phase already exists: " + newPhase);
         }
-        if (!checkPhaseExists(exisingPhase)) {
-            throw new RuntimeException("Interception doesn't  exists: " + exisingPhase);
+        if (!checkPhaseExists(existingPhase)) {
+            throw new RuntimeException("Interception doesn't  exists: " + existingPhase);
         }
     }
 

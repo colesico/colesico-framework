@@ -20,14 +20,14 @@ import com.palantir.javapoet.FieldSpec;
 import com.palantir.javapoet.TypeName;
 
 /**
- * Represents service custom filed
+ * Represents service proxy custom filed
  */
 public final class ServiceFieldElement {
 
     /**
      * Parent service ref
      */
-    protected ServiceElement parentService;
+    ServiceElement parentService;
 
     /**
      * Field spec
@@ -53,13 +53,16 @@ public final class ServiceFieldElement {
         this.spec = spec;
     }
 
+    /**
+     *  Mark field to be injected
+     */
     public ServiceFieldElement inject() {
         this.injectAs = spec.type();
         return this;
     }
 
-    public ServiceFieldElement setInjectAs(TypeName injectingTypenName) {
-        this.injectAs = injectingTypenName;
+    public ServiceFieldElement setInjectAs(TypeName injectingTypeName) {
+        this.injectAs = injectingTypeName;
         return this;
     }
 

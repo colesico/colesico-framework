@@ -16,12 +16,18 @@
 
 package colesico.framework.security;
 
+import colesico.framework.security.authorization.AuthorizationContext;
+import colesico.framework.security.authorization.AuthorizationResult;
+import colesico.framework.security.authorization.Authorizer;
+import colesico.framework.security.authorization.DefaultAuthorizationContext;
+import colesico.framework.security.authorization.authorizers.PrincipalRequiredAuthorizer;
+
 /**
  * Security context to provide basic security service.
  * Context can store/obtain principal from different sources.
  * Context associates current principal instance to the current thread.
  */
-public interface SecurityContext<P extends Principal> {
+public interface SecurityContext<P extends Principal<?>> {
 
     /**
      * Returns the valid principal associated with the current process for authenticated
@@ -48,7 +54,10 @@ public interface SecurityContext<P extends Principal> {
         }
     }
 
-
+    default <D, R> AuthorizationResult<D> hasPermission(Authorizer<P, R, D> authorizer, R resource) {
+        AuthorizationContext<P, R> context = new DefaultAuthorizationContext<>(principal(), resource);
+        return authorizer.authorize(context);
+    }
 
     @FunctionalInterface
     interface Invocable<T> {

@@ -169,7 +169,7 @@ public class ServiceGenerator {
         }
 
         // Generate constructor body extra code
-        for (CodeBlock cb : serviceElm.getConstructorExtraCode()) {
+        for (CodeBlock cb : serviceElm.getConstructorCustomCode()) {
             constructorBuilder.addCode(cb);
         }
 

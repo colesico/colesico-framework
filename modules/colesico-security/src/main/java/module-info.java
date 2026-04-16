@@ -14,9 +14,11 @@ module colesico.framework.security {
 
     // Exports
     exports colesico.framework.security;
+    exports colesico.framework.security.authorization;
     exports colesico.framework.security.assist;
     exports colesico.framework.security.teleapi;
 
     exports colesico.framework.security.internal to colesico.framework.ioc;
+    exports colesico.framework.security.authorization.authorizers;
 
 }

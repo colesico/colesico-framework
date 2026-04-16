@@ -16,24 +16,16 @@
 
 package colesico.framework.security;
 
-import colesico.framework.ioc.key.Key;
-import colesico.framework.ioc.key.TypeKey;
-
 /**
  * Principal interface.
  * Principal is used to identify a user. The specific implementation depends
  * on the needs of the application and has to be implemented in the application.
  * Framework provides default implementation {@link AbsractPrincipal}
  */
-public interface Principal {
-
-    /**
-     * Thread scope key for caching principle
-     */
-    Key<Principal> SCOPE_KEY = new TypeKey<>(Principal.class);
+public interface Principal<I> {
 
     /**
      * Principal ID
      */
-    String id();
+    I id();
 }
