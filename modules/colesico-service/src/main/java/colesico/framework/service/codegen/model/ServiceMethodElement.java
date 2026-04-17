@@ -83,7 +83,7 @@ public final class ServiceMethodElement {
         properties.put(property.getClass(), property);
     }
 
-    public final void addInterception(String interceptionPhase, InterceptionElement interception) {
+    public void addInterception(String interceptionPhase, InterceptionElement interception) {
         List<InterceptionElement> phaseInterceptions = this.interceptionsByPhase.computeIfAbsent(interceptionPhase, k -> new ArrayList<>());
         phaseInterceptions.add(interception);
     }
@@ -96,15 +96,15 @@ public final class ServiceMethodElement {
         this.interception = interception;
     }
 
-    public final String getName() {
+    public String getName() {
         return originMethod.getName();
     }
 
-    public final MethodElement getOriginMethod() {
+    public MethodElement getOriginMethod() {
         return originMethod;
     }
 
-    public final boolean isLocal() {
+    public boolean isLocal() {
         return isLocal;
     }
 
@@ -116,7 +116,7 @@ public final class ServiceMethodElement {
         return isPostConstructListener;
     }
 
-    public final List<InterceptionElement> getPhaseInterceptions(String interceptionPhase) {
+    public List<InterceptionElement> getPhaseInterceptions(String interceptionPhase) {
         List<InterceptionElement> phaseInterceptions = interceptionsByPhase.get(interceptionPhase);
         if (phaseInterceptions == null) {
             return new ArrayList<>();

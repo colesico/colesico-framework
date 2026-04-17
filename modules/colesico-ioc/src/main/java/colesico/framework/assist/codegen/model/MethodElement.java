@@ -70,6 +70,10 @@ public class MethodElement extends ParserElement {
         return getOriginType().getReturnType();
     }
 
+    public boolean isVoidReturnType(){
+        return getOriginType().getReturnType() instanceof NoType;
+    }
+
     public ClassType getReturnClassType() {
         if (getReturnType().getKind() == TypeKind.DECLARED) {
             return new ClassType(getProcessingEnv(), (DeclaredType) getReturnType());
