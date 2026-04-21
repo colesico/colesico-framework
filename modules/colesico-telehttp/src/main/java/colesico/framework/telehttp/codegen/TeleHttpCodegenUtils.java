@@ -1,7 +1,6 @@
 package colesico.framework.telehttp.codegen;
 
 import colesico.framework.assist.codegen.model.AnnotationAssist;
-import colesico.framework.service.codegen.model.teleapi.TeleEntryElement;
 import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
 import colesico.framework.service.codegen.model.teleapi.TeleParameterElement;
 import colesico.framework.telehttp.ParamName;

@@ -1,9 +1,9 @@
 package colesico.framework.teleapi.assist;
 
 import colesico.framework.ioc.scope.ThreadScope;
-import colesico.framework.teleapi.DataPort;
-import colesico.framework.teleapi.TRContext;
-import colesico.framework.teleapi.TWContext;
+import colesico.framework.teleapi.dataport.DataPort;
+import colesico.framework.teleapi.dataport.TRContext;
+import colesico.framework.teleapi.dataport.TWContext;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

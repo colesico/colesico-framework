@@ -32,7 +32,7 @@ public final class TeleMethodElement {
     /**
      * Parent tele-facade ref
      */
-    protected TeleFacadeElement parentTeleFacade;
+    TeleFacadeElement parentTeleFacade;
 
     /**
      * Service method reference
@@ -40,19 +40,14 @@ public final class TeleMethodElement {
     private final ServiceMethodElement serviceMethod;
 
     /**
-     * Direct parameters, batch parameters and compounds
+     * Method parameters
      */
-    private final List<TeleEntryElement> parameters;
-
-    /**
-     * Parameter batches
-     */
-    protected final Map<String, TeleBatchElement> batches;
+    private final List<TeleParameterElement> parameters;
 
     /**
      * Tele-method index within tele-facade
      */
-    protected Integer index;
+    Integer index;
 
     /**
      * Method result writing context
@@ -67,38 +62,27 @@ public final class TeleMethodElement {
     /**
      * Common purpose props
      */
-    private final Map<Class, Object> properties;
+    private final Map<Class<?>, ?> properties;
 
     public TeleMethodElement(ServiceMethodElement serviceMethod) {
         this.serviceMethod = serviceMethod;
         this.parameters = new ArrayList<>();
         this.properties = new HashMap<>();
-        this.batches = new HashMap<>();
     }
 
     public <C> C getProperty(Class<C> propertyClass) {
         return (C) properties.get(propertyClass);
     }
 
-    public void setProperty(Class<?> propertyClass, Object property) {
+    public <C> void setProperty(Class<C> propertyClass, C property) {
         properties.put(propertyClass, property);
     }
 
     /**
      * Add parameter of tele-method
      */
-    public void addParameter(TeleEntryElement entry) {
-        parameters.add(entry);
-    }
-
-    public TeleBatchElement getOrCreateBatch(String name) {
-        TeleBatchElement batch = batches.get(name);
-        if (batch == null) {
-            batch = new TeleBatchElement(this, name);
-            batches.put(name, batch);
-            parentTeleFacade.getBatchPack().addBatch(batch);
-        }
-        return batch;
+    public void addParameter(TeleParameterElement param) {
+        parameters.add(param);
     }
 
     /**
@@ -120,7 +104,7 @@ public final class TeleMethodElement {
         return parentTeleFacade;
     }
 
-    public List<TeleEntryElement> getParameters() {
+    public List<TeleParameterElement> getParameters() {
         return parameters;
     }
 

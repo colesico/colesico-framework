@@ -1,12 +1,10 @@
 package colesico.framework.example.profile.custom;
 
 import colesico.framework.profile.DefaultProfileManager;
-import colesico.framework.profile.LocaleAttribute;
 import colesico.framework.profile.ProfileAttribute;
-import colesico.framework.teleapi.DataPort;
+import colesico.framework.teleapi.dataport.DataPort;
 
 import java.util.Collection;
-import java.util.Set;
 import java.util.TimeZone;
 
 public class CustomProfileManager extends DefaultProfileManager<CustomProfile> {

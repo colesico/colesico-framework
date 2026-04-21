@@ -21,7 +21,6 @@ import colesico.framework.assist.spi.ServiceLocatorFactory;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.ServiceMethodElement;
-import colesico.framework.service.codegen.model.teleapi.TeleEntryElement;
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
 import colesico.framework.service.codegen.parser.RoundContext;

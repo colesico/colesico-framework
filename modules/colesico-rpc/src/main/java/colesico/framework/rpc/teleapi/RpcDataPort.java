@@ -16,7 +16,7 @@
 
 package colesico.framework.rpc.teleapi;
 
-import colesico.framework.teleapi.DataPort;
+import colesico.framework.teleapi.dataport.DataPort;
 
 public interface RpcDataPort extends DataPort<RpcTRContext, RpcTWContext> {
 

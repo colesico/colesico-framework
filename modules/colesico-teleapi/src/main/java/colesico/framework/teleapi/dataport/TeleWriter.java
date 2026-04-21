@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-package colesico.framework.rpc.teleapi;
+package colesico.framework.teleapi.dataport;
 
-import colesico.framework.teleapi.invocation.TeleController;
-
-public interface RpcTeleDriver extends TeleController<RpcTRContext, RpcTWContext, RpcTIContext, RpcDataPort> {
-
+/**
+ * Remote data writer.
+ * Writer is used to send responses to remote client.
+ *
+ * @param <V> the value type to be written
+ * @param <C> the write context
+ */
+public interface TeleWriter<V, C extends TWContext> {
+    void write(V value, C context);
 }

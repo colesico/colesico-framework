@@ -2,9 +2,8 @@ package colesico.framework.rpc.internal;
 
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.rpc.teleapi.*;
-import colesico.framework.teleapi.DataPort;
-import colesico.framework.teleapi.MethodInvoker;
-import colesico.framework.teleapi.TRWFactory;
+import colesico.framework.teleapi.dataport.DataPort;
+import colesico.framework.teleapi.dataport.TRWFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

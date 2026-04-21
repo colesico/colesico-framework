@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
-package colesico.framework.rpc.teleapi;
+package colesico.framework.teleapi.dataport;
 
-import colesico.framework.teleapi.invocation.TeleController;
-
-public interface RpcTeleDriver extends TeleController<RpcTRContext, RpcTWContext, RpcTIContext, RpcDataPort> {
-
+/**
+ * Remote data reader.
+ * For cases that the data port is built on a pluggable/modular architecture in which a separate data
+ * reader or writer is used for given data type.
+ * <p>
+ * Reader is used to read param values from remote client.
+ * Reader must be a stateless  (maybe a singleton but stateless)
+ *
+ * @param <V> the value  type to be read
+ * @param <C> the reading context
+ */
+public interface TeleReader<V, C extends TRContext> {
+    V read(C context);
 }

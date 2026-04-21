@@ -3,7 +3,7 @@ package colesico.framework.rpc.internal;
 import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.RpcException;
 import colesico.framework.rpc.teleapi.*;
-import colesico.framework.teleapi.TRWFactory;
+import colesico.framework.teleapi.dataport.TRWFactory;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.lang.reflect.Type;

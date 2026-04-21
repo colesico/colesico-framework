@@ -1,6 +1,6 @@
 package colesico.framework.telehttp;
 
-import colesico.framework.teleapi.TRContext;
+import colesico.framework.teleapi.dataport.TRContext;
 
 import java.lang.reflect.Type;
 

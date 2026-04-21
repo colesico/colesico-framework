@@ -3,7 +3,7 @@ package colesico.framework.telehttp;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.http.HttpResponse;
-import colesico.framework.teleapi.TeleWriter;
+import colesico.framework.teleapi.dataport.TeleWriter;
 
 import jakarta.inject.Provider;
 

@@ -21,9 +21,11 @@ import colesico.framework.assist.Elements;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.teleapi.DataPort;
-import colesico.framework.teleapi.TeleDriver;
-import colesico.framework.teleapi.TeleFacade;
+import colesico.framework.teleapi.dataport.DataPort;
+import colesico.framework.teleapi.dataport.TRContext;
+import colesico.framework.teleapi.dataport.TWContext;
+import colesico.framework.teleapi.invocation.TeleController;
+import colesico.framework.teleapi.invocation.TeleFacade;
 import com.palantir.javapoet.CodeBlock;
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,7 +36,7 @@ import java.util.Map;
  * Tele-facade representation
  * This class can be extended to use with concrete tele-type modulator
  */
-public class TeleFacadeElement {
+public class TeleFacadeElement<R extends TRContext, W extends TWContext, I, P extends DataPort<R, W>> {
 
     /**
      * Parent service ref
@@ -49,12 +51,12 @@ public class TeleFacadeElement {
     /**
      * Tele-driver type
      */
-    private final Class<? extends TeleDriver> teleDriverClass;
+    private final Class<? extends TeleController<R, W, I, P>> teleDriverClass;
 
     /**
      * Data port type
      */
-    private final Class<? extends DataPort> dataPortClass;
+    private final Class<? extends DataPort<R, W>> dataPortClass;
 
     /**
      * Ligature class
@@ -78,25 +80,6 @@ public class TeleFacadeElement {
     private final IocQualifier iocQualifier;
 
     /**
-     * Compound params support enabled
-     *
-     * @see colesico.framework.service.Compound
-     */
-    private Boolean compoundParams = false;
-
-    /**
-     * Batch params support enabled
-     *
-     * @see colesico.framework.service.BatchField
-     */
-    private Boolean batchParams = false;
-
-    /**
-     * Tele-facade associated batches
-     */
-    private final TeleBatchPackElement batchPack;
-
-    /**
      * Tele schemas for the facade
      */
     private final Map<Class, TeleSchemeElement> teleSchemes;
@@ -107,7 +90,7 @@ public class TeleFacadeElement {
     private final Map<Class, Object> properties;
 
     public TeleFacadeElement(Class<?> teleType,
-                             Class<? extends TeleDriver> teleDriverClass,
+                             Class<? extends TeleController> teleDriverClass,
                              Class<? extends DataPort> dataPortClass,
                              Class<?> ligatureClass,
                              IocQualifier iocQualifier) {
@@ -120,7 +103,6 @@ public class TeleFacadeElement {
 
         this.teleSchemes = new HashMap<>();
         this.properties = new HashMap<>();
-        this.batchPack = new TeleBatchPackElement(this);
     }
 
     public ServiceElement getParentService() {
@@ -143,8 +125,6 @@ public class TeleFacadeElement {
 
     /**
      * Returns tele-facade class full name
-     *
-     * @return
      */
     public String getFacadeClassName() {
         return parentService.getOriginClass().getPackageName() + '.' + getFacadeClassSimpleName();
@@ -180,7 +160,7 @@ public class TeleFacadeElement {
         properties.put(propertyClass, property);
     }
 
-    public Class<? extends TeleDriver> getTeleDriverClass() {
+    public Class<? extends TeleController> getTeleDriverClass() {
         return teleDriverClass;
     }
 
@@ -205,26 +185,6 @@ public class TeleFacadeElement {
 
     public IocQualifier getIocQualifier() {
         return iocQualifier;
-    }
-
-    public Boolean getCompoundParams() {
-        return compoundParams;
-    }
-
-    public void setCompoundParams(Boolean compoundParams) {
-        this.compoundParams = compoundParams;
-    }
-
-    public Boolean getBatchParams() {
-        return batchParams;
-    }
-
-    public void setBatchParams(Boolean batchParams) {
-        this.batchParams = batchParams;
-    }
-
-    public TeleBatchPackElement getBatchPack() {
-        return batchPack;
     }
 
     public void setParentService(ServiceElement parentService) {
@@ -264,6 +224,4 @@ public class TeleFacadeElement {
             return new IocQualifier(null, classed.getName());
         }
     }
-
-
 }

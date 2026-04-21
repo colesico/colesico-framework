@@ -16,8 +16,8 @@
 
 package colesico.framework.restlet.teleapi;
 
-import colesico.framework.teleapi.TeleDriver;
+import colesico.framework.teleapi.invocation.TeleController;
 
-public interface RestletTeleDriver extends TeleDriver<RestletTRContext, RestletTWContext, RestletTIContext, RestletDataPort> {
+public interface RestletTeleDriver extends TeleController<RestletTRContext, RestletTWContext, RestletTIContext, RestletDataPort> {
 
 }

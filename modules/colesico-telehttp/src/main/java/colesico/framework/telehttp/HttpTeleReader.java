@@ -1,6 +1,6 @@
 package colesico.framework.telehttp;
 
-import colesico.framework.teleapi.TeleReader;
+import colesico.framework.teleapi.dataport.TeleReader;
 
 /**
  * Basic tele-reader for reading param vales from remote client via http

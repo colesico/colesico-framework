@@ -6,8 +6,8 @@ import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterBuilder;
-import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.TeleMethod;
+import colesico.framework.teleapi.invocation.TeleFacade;
+import colesico.framework.teleapi.invocation.TeleMethodReference;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -32,7 +32,7 @@ public class RouterBuilderImpl implements RouterBuilder {
     @Override
     public void addCustomAction(HttpMethod httpMethod,
                                 String route,
-                                TeleMethod teleMethod,
+                                TeleMethodReference teleMethod,
                                 Class<?> targetClass,
                                 String targetMethod,
                                 Map<String, String> routeAttributes) {
@@ -59,14 +59,14 @@ public class RouterBuilderImpl implements RouterBuilder {
     private static final class CustomRouteAction {
         private final HttpMethod httpMethod;
         private final String route;
-        private final TeleMethod teleMethod;
+        private final TeleMethodReference teleMethod;
         private final Class<?> targetClass;
         private final String targetMethod;
         private final Map<String, String> routeAttributes;
 
         public CustomRouteAction(HttpMethod httpMethod,
                                  String route,
-                                 TeleMethod teleMethod,
+                                 TeleMethodReference teleMethod,
                                  Class<?> targetClass,
                                  String targetMethod,
                                  Map<String, String> routeAttributes) {
@@ -90,7 +90,7 @@ public class RouterBuilderImpl implements RouterBuilder {
             return targetClass;
         }
 
-        public TeleMethod getTeleMethod() {
+        public TeleMethodReference getTeleMethod() {
             return teleMethod;
         }
 

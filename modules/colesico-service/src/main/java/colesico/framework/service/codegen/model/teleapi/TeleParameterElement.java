@@ -21,13 +21,9 @@ import colesico.framework.assist.codegen.model.VarElement;
 /**
  * Tele-method  parameter that can be directly read from data port
  */
-public final class TeleParameterElement extends TeleEntryElement implements TeleInputElement {
+public final class TeleParameterElement  {
 
-    protected TRContextElement readingContext;
-
-    public TeleParameterElement(TeleMethodElement parentTeleMethod, VarElement originElement) {
-        super(parentTeleMethod, originElement);
-    }
+    TRContextElement readingContext;
 
     public TRContextElement getReadingContext() {
         return readingContext;

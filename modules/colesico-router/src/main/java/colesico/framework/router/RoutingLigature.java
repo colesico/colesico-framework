@@ -16,7 +16,7 @@
 
 package colesico.framework.router;
 
-import colesico.framework.teleapi.TeleMethod;
+import colesico.framework.teleapi.invocation.TeleMethodReference;
 
 import java.util.Collection;
 import java.util.Map;
@@ -33,6 +33,10 @@ public final class RoutingLigature {
     public static final String TARGET_METHOD_PARAM = "targetMethod";
     public static final String ATTRIBUTES_PARAM = "attributes";
 
+    /**
+     * The class whose method will be called via tele-api
+     * Usually a service class ({@link colesico.framework.service.Service})
+     */
     private final Class<?> targetClass;
 
     private final Map<String, RouteInfo> routesMap = new TreeMap<>();
@@ -49,7 +53,7 @@ public final class RoutingLigature {
      * @param targetMethod handler method name
      * @param attributes   route attributes (see {@link RouteAttribute})
      */
-    public void add(String route, TeleMethod teleMethod, String targetMethod, Map<String, String> attributes) {
+    public void add(String route, TeleMethodReference teleMethod, String targetMethod, Map<String, String> attributes) {
         RouteInfo routeInfo = new RouteInfo(route, teleMethod, targetMethod, attributes);
         RouteInfo oldRouteInfo = routesMap.put(route, routeInfo);
         if (oldRouteInfo != null) {
@@ -75,7 +79,7 @@ public final class RoutingLigature {
         /**
          * Action handler method
          */
-        private final TeleMethod teleMethod;
+        private final TeleMethodReference teleMethod;
 
         /**
          * Target action handler method name
@@ -90,7 +94,7 @@ public final class RoutingLigature {
         private final Map<String, String> attributes;
 
         public RouteInfo(String route,
-                         TeleMethod teleMethod,
+                         TeleMethodReference teleMethod,
                          String targetMethod,
                          Map<String, String> attributes) {
 
@@ -104,7 +108,7 @@ public final class RoutingLigature {
             return route;
         }
 
-        public TeleMethod getTeleMethod() {
+        public TeleMethodReference getTeleMethod() {
             return teleMethod;
         }
 

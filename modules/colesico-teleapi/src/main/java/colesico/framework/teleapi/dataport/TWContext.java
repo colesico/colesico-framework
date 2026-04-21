@@ -1,4 +1,4 @@
-package colesico.framework.teleapi;
+package colesico.framework.teleapi.dataport;
 
 import java.lang.reflect.Type;
 

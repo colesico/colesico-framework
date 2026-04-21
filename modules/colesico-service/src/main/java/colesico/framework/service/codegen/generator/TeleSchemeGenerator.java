@@ -14,8 +14,8 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import javax.lang.model.element.Modifier;
 
-import static colesico.framework.teleapi.TeleFacade.TARGET_PROV_FIELD;
-import static colesico.framework.teleapi.TeleFacade.TELE_DRIVER_FIELD;
+import static colesico.framework.teleapi.invocation.TeleFacade.TARGET_PROV_FIELD;
+import static colesico.framework.teleapi.invocation.TeleFacade.TELE_DRIVER_FIELD;
 
 public class TeleSchemeGenerator extends FrameworkAbstractGenerator {
     public TeleSchemeGenerator(ProcessingEnvironment processingEnv) {

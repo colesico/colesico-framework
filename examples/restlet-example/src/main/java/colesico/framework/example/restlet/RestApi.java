@@ -25,7 +25,6 @@ import colesico.framework.router.RequestMethod;
 import colesico.framework.router.Route;
 import colesico.framework.router.RouteAttribute;
 import colesico.framework.restlet.teleapi.writer.PlainTextWriter;
-import colesico.framework.service.BatchField;
 import colesico.framework.service.Compound;
 import colesico.framework.telehttp.Origin;
 import colesico.framework.telehttp.ParamName;
@@ -97,8 +96,8 @@ public class RestApi {
      * @see BatchField
      */
     @RequestMethod(HttpMethod.POST)
-    public Map<String, Object> jsonFields(@BatchField("id") Long idValue,
-                                          @BatchField String name,
+    public Map<String, Object> jsonFields(Long idValue,
+                                          String name,
                                           @ParamOrigin(Origin.QUERY) String val) {
         return Map.of("id", idValue, "name", name, "val", val);
     }

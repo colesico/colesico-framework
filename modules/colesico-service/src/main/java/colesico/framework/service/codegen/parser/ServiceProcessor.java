@@ -20,7 +20,7 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.Genstamp;
 import colesico.framework.service.codegen.generator.IocGenerator;
-import colesico.framework.service.codegen.generator.ServiceGenerator;
+import colesico.framework.service.codegen.generator.ServiceProxyGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.modulator.ModulatorManager;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -142,8 +142,8 @@ public class ServiceProcessor extends FrameworkAbstractProcessor {
                     serviceTypsNames.add(serviceType.asType().toString());
 
                     logger.debug("Generate service proxy: " + serviceType.toString());
-                    ServiceGenerator serviceGenerator = new ServiceGenerator(context);
-                    serviceGenerator.generate(serviceElement);
+                    ServiceProxyGenerator serviceProxyGenerator = new ServiceProxyGenerator(context);
+                    serviceProxyGenerator.generate(serviceElement);
 
                     logger.debug("Generate IoC producer for: " + serviceType.toString());
                     IocGenerator iocGenerator = new IocGenerator(context);

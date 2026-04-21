@@ -16,7 +16,7 @@
 
 package colesico.framework.rpc.teleapi;
 
-import colesico.framework.teleapi.TRContext;
+import colesico.framework.teleapi.dataport.TRContext;
 
 import java.lang.reflect.Type;
 

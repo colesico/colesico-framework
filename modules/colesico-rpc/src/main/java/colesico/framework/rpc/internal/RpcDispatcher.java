@@ -6,8 +6,8 @@ import colesico.framework.rpc.RpcError;
 import colesico.framework.rpc.teleapi.Rpc;
 import colesico.framework.rpc.teleapi.RpcExchange;
 import colesico.framework.rpc.teleapi.RpcLigature;
-import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.TeleMethod;
+import colesico.framework.teleapi.invocation.TeleFacade;
+import colesico.framework.teleapi.invocation.TeleMethodReference;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class RpcDispatcher {
 
     public void dispatch(RpcExchange exchange) {
 
-        TeleMethod teleMethod = resolveTeleMethod(exchange);
+        TeleMethodReference teleMethod = resolveTeleMethod(exchange);
 
         if (teleMethod != null) {
             // Invoke
@@ -47,7 +47,7 @@ public class RpcDispatcher {
      *
      * @return tele method or null if mappings not found
      */
-    protected TeleMethod resolveTeleMethod(RpcExchange exchange) {
+    protected TeleMethodReference resolveTeleMethod(RpcExchange exchange) {
         try {
             RpcExchange.Operation operation = exchange.resolveOperation();
             logger.debug("RPC operation: {}", operation);
@@ -60,7 +60,7 @@ public class RpcDispatcher {
                 return null;
             }
 
-            Map<String, TeleMethod> apiMethods = rpcNamespace.getApiMethods(operation.rpcApiName());
+            Map<String, TeleMethodReference> apiMethods = rpcNamespace.getApiMethods(operation.rpcApiName());
             if (apiMethods == null) {
                 String errMsg = "RPC API not found: " + operation.rpcApiName();
                 logger.error(errMsg);
@@ -68,7 +68,7 @@ public class RpcDispatcher {
                 return null;
             }
 
-            TeleMethod teleMethod = apiMethods.get(operation.rpcMethodName());
+            TeleMethodReference teleMethod = apiMethods.get(operation.rpcMethodName());
             if (teleMethod == null) {
                 String errMsg = "RPC method not found: " + operation.rpcMethodName();
                 logger.error(errMsg);
@@ -93,7 +93,7 @@ public class RpcDispatcher {
         while (it.hasNext()) {
             TeleFacade teleFacade = it.next();
             logger.debug("Found RPC tele-facade: {}", teleFacade.getClass().getName());
-            RpcLigature ligature = (RpcLigature) teleFacade.getLigature();
+            RpcLigature ligature = (RpcLigature) teleFacade.ligature();
 
             List<RpcLigature.RpcApiSpec> rpcApiList = ligature.getRpcApiList();
             for (RpcLigature.RpcApiSpec rpcApi : rpcApiList) {
@@ -107,14 +107,14 @@ public class RpcDispatcher {
         /**
          * RPC API name to tele-methods map
          */
-        protected final Map<String, Map<String, TeleMethod>> rpcApiMap = new HashMap<>();
+        protected final Map<String, Map<String, TeleMethodReference>> rpcApiMap = new HashMap<>();
 
-        public Map<String, TeleMethod> getApiMethods(String rpcApiName) {
+        public Map<String, TeleMethodReference> getApiMethods(String rpcApiName) {
             return rpcApiMap.get(rpcApiName);
         }
 
-        public void addMethods(String rpcApiName, Map<String, TeleMethod> rpcMethods) {
-            Map<String, TeleMethod> allMethods = rpcApiMap.computeIfAbsent(rpcApiName, k -> new HashMap<>());
+        public void addMethods(String rpcApiName, Map<String, TeleMethodReference> rpcMethods) {
+            Map<String, TeleMethodReference> allMethods = rpcApiMap.computeIfAbsent(rpcApiName, k -> new HashMap<>());
             allMethods.putAll(rpcMethods);
         }
     }

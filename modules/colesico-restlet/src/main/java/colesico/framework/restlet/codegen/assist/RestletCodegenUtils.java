@@ -2,7 +2,6 @@ package colesico.framework.restlet.codegen.assist;
 
 import colesico.framework.restlet.teleapi.RestletOrigin;
 import colesico.framework.restlet.teleapi.RestletParamReader;
-import colesico.framework.service.codegen.model.teleapi.TeleEntryElement;
 import colesico.framework.service.codegen.model.teleapi.TeleParameterElement;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
 

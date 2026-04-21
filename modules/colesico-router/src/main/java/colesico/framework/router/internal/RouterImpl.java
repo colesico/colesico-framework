@@ -22,8 +22,8 @@ import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.*;
 import colesico.framework.router.assist.RouteTrie;
-import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.TeleMethod;
+import colesico.framework.teleapi.invocation.TeleFacade;
+import colesico.framework.teleapi.invocation.TeleMethodReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +59,7 @@ public class RouterImpl implements Router {
         while (it.hasNext()) {
             TeleFacade teleFacade = it.next();
             log.debug("Found http router tele-facade: " + teleFacade.getClass().getName());
-            RoutingLigature ligature = (RoutingLigature) teleFacade.getLigature();
+            RoutingLigature ligature = (RoutingLigature) teleFacade.ligature();
 
             for (RoutingLigature.RouteInfo routeInfo : ligature.getRoutesInfo()) {
                 if (log.isDebugEnabled()) {
@@ -78,7 +78,7 @@ public class RouterImpl implements Router {
         }
     }
 
-    protected void addCustomAction(HttpMethod httpMethod, String route, TeleMethod teleMethod, Class<?> targetClass, String targetMethod, Map<String, String> routeAttributes) {
+    protected void addCustomAction(HttpMethod httpMethod, String route, TeleMethodReference teleMethod, Class<?> targetClass, String targetMethod, Map<String, String> routeAttributes) {
         String fullRoute = httpMethod.getName() + RouteTrie.SEGMENT_DELEMITER + route;
         RouteTrie.Node<RouteAction> node = routeTrie.addRoute(fullRoute, new RouteAction(teleMethod, routeAttributes));
         routesIndex.addNode(toRouteId(targetClass, targetMethod, httpMethod), node);
@@ -120,7 +120,7 @@ public class RouterImpl implements Router {
         RouterContext routerContext = new RouterContext(resolution.getRequestUri(), resolution.getRouteParameters());
         threadScope.put(RouterContext.SCOPE_KEY, routerContext);
 
-        TeleMethod teleMethod = resolution.getRouteAction().getTeleMethod();
+        TeleMethodReference teleMethod = resolution.getRouteAction().getTeleMethod();
         teleMethod.invoke();
     }
 

@@ -20,7 +20,7 @@ import colesico.framework.restlet.RestletError;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.reader.ValueReader;
 import colesico.framework.restlet.teleapi.writer.ObjectWriter;
-import colesico.framework.teleapi.TRWFactory;
+import colesico.framework.teleapi.dataport.TRWFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;

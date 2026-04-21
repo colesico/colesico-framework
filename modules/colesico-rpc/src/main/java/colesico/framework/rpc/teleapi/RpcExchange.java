@@ -25,7 +25,7 @@ public interface RpcExchange {
     void sendError(RpcError error);
 
     /**
-     * Rpc namespce, api and method name to be invoked
+     * Rpc namespace, api and method name to be invoked
      */
     record Operation(String rpcNamespace, String rpcApiName, String rpcMethodName) {
 

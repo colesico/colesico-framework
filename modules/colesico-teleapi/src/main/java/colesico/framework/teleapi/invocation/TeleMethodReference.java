@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-package colesico.framework.rpc.teleapi;
+package colesico.framework.teleapi.invocation;
 
-import colesico.framework.teleapi.invocation.TeleController;
+/**
+ * Tele-method reference.
+ * Allows to identify and call it.
+ */
+public interface TeleMethodReference {
 
-public interface RpcTeleDriver extends TeleController<RpcTRContext, RpcTWContext, RpcTIContext, RpcDataPort> {
+    /**
+     * Tele-method closure
+     */
+    TeleMethod method();
 
 }
