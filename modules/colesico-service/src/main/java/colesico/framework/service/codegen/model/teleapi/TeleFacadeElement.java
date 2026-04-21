@@ -36,6 +36,8 @@ import java.util.Map;
 /**
  * Tele-facade representation
  * This class can be extended to use with concrete tele-type modulator
+ *
+ * @param <P> Protocol context class
  */
 public class TeleFacadeElement<P,
         D extends MethodDescriptor,
@@ -86,22 +88,22 @@ public class TeleFacadeElement<P,
     /**
      * Tele schemas for the facade
      */
-    private final Map<Class, TeleSchemeElement> teleSchemes;
+    private final Map<Class<?>, TeleSchemeElement<?>> teleSchemes;
 
     /**
      * Common purpose properties
      */
-    private final Map<Class, Object> properties;
+    private final Map<Class<?>, Object> properties;
 
     public TeleFacadeElement(Class<?> teleType,
-                             Class<? extends TeleController> teleControllerClass,
-                             Class<? extends DataPort> dataPortClass,
+                             Class<? extends TeleController<P, D, R, W>> teleControllerClass,
+                             Class<? extends DataPort<R, W>> dataPortClass,
                              Class<D> descriptorClass,
                              IocQualifier iocQualifier) {
         this.teleType = teleType;
-        this.teleControllerClass = (Class<? extends TeleController<P, D, R, W>>) teleControllerClass;
+        this.teleControllerClass = teleControllerClass;
         this.descriptorClass = descriptorClass;
-        this.dataPortClass = (Class<? extends DataPort<R, W>>) dataPortClass;
+        this.dataPortClass = dataPortClass;
         this.teleMethods = new Elements<>();
         this.iocQualifier = iocQualifier;
 
