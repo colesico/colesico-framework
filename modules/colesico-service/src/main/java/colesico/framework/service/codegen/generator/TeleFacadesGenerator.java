@@ -28,7 +28,7 @@ import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.teleapi.TeleController;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.TeleMethodReference;
+import colesico.framework.teleapi.MethodDescriptor;
 import com.palantir.javapoet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +70,7 @@ public class TeleFacadesGenerator {
                 TARGET_PROV_FIELD,
                 Modifier.FINAL);
 
-        mb.addParameter(ClassName.get(teleFacade.getTeleDriverClass()), TELE_DRIVER_FIELD, Modifier.FINAL);
+        mb.addParameter(ClassName.get(teleFacade.getTeleControllerClass()), TELE_DRIVER_FIELD, Modifier.FINAL);
         mb.addStatement("super($N, $N)", TARGET_PROV_FIELD, TELE_DRIVER_FIELD);
         classBuilder.addMethod(mb.build());
     }
@@ -209,9 +209,9 @@ public class TeleFacadesGenerator {
         ServiceElement service = teleFacade.getParentService();
         for (TeleMethodElement teleMethod : teleFacade.getTeleMethods()) {
             MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(teleMethod.getBuilderName());
-            methodBuilder.addJavadoc("Returns $T instance for target method '$N'", ClassName.get(TeleMethodReference.class), teleMethod.getServiceMethod().getName());
+            methodBuilder.addJavadoc("Returns $T instance for target method '$N'", ClassName.get(MethodDescriptor.class), teleMethod.getServiceMethod().getName());
             methodBuilder.addModifiers(Modifier.PRIVATE);
-            methodBuilder.returns(ClassName.get(TeleMethodReference.class));
+            methodBuilder.returns(ClassName.get(MethodDescriptor.class));
 
             // Subroutine definition
             CodeBlock.Builder cb = CodeBlock.builder();
@@ -240,8 +240,8 @@ public class TeleFacadesGenerator {
     protected void generateGetLigatureMethod(TeleFacadeElement teleFacade, TypeSpec.Builder classBuilder) {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(TeleFacade.LIGATURE_METHOD);
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-        mb.returns(ClassName.get(teleFacade.getLigatureClass()));
-        mb.addCode(teleFacade.getLigatureMethodBody());
+        mb.returns(ClassName.get(teleFacade.getDescriptorClass()));
+        mb.addCode(teleFacade.getDescriptorsMethodBody());
         classBuilder.addMethod(mb.build());
     }
 
@@ -268,8 +268,8 @@ public class TeleFacadesGenerator {
 
         classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(TeleFacade.class),
                 TypeName.get(service.getOriginClass().getOriginType()),
-                ClassName.get(teleFacade.getTeleDriverClass()),
-                ClassName.get(teleFacade.getLigatureClass())));
+                ClassName.get(teleFacade.getTeleControllerClass()),
+                ClassName.get(teleFacade.getDescriptorClass())));
 
         generateConstructor(teleFacade, classBuilder);
         generateTeleMethodBuilders(teleFacade, classBuilder);

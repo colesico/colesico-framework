@@ -127,7 +127,7 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
             return;
         }
         processTeleFacade(teleFacade);
-        teleFacade.setLigatureMethodBody(generateLigatureMethodBody((T) teleFacade));
+        teleFacade.setDescriptorsMethodBody(generateLigatureMethodBody((T) teleFacade));
     }
 
     protected TIContextElement createInvocationContext(TeleMethodElement teleMethod) {

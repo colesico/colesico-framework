@@ -30,7 +30,7 @@ public class TeleSchemeGenerator extends FrameworkAbstractGenerator {
                 TARGET_PROV_FIELD,
                 Modifier.FINAL);
 
-        mb.addParameter(ClassName.get(teleFacade.getTeleDriverClass()), TELE_DRIVER_FIELD, Modifier.FINAL);
+        mb.addParameter(ClassName.get(teleFacade.getTeleControllerClass()), TELE_DRIVER_FIELD, Modifier.FINAL);
         mb.addStatement("super($N, $N)", TARGET_PROV_FIELD, TELE_DRIVER_FIELD);
         classBuilder.addMethod(mb.build());
     }

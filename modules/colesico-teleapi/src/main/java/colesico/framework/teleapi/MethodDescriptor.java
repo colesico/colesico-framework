@@ -17,10 +17,10 @@
 package colesico.framework.teleapi;
 
 /**
- * Tele-method reference.
+ * Tele-method descriptor.
  * Allows to identify and call it.
  */
-public interface TeleMethodReference {
+public interface MethodDescriptor {
 
     /**
      * Tele-method closure

@@ -19,7 +19,7 @@ package colesico.framework.rpc.teleapi;
 import colesico.framework.rpc.RpcApi;
 import colesico.framework.rpc.RpcException;
 import colesico.framework.rpc.RpcMethod;
-import colesico.framework.teleapi.TeleMethodReference;
+import colesico.framework.teleapi.MethodDescriptor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,7 +74,7 @@ public final class RpcLigature {
         /**
          * Map RPC method name to tele-method.
          */
-        private final Map<String, TeleMethodReference> rpcMethods = new HashMap<>();
+        private final Map<String, MethodDescriptor> rpcMethods = new HashMap<>();
 
         /**
          * Constructor
@@ -98,7 +98,7 @@ public final class RpcLigature {
             return rpcName;
         }
 
-        public Map<String, TeleMethodReference> getRpcMethods() {
+        public Map<String, MethodDescriptor> getRpcMethods() {
             return rpcMethods;
         }
 
@@ -107,8 +107,8 @@ public final class RpcLigature {
          *
          * @param rpcName method RPC name. By default it is a APC API interface method name
          */
-        public RpcApiSpec addRpcMethod(String rpcName, TeleMethodReference teleMethod) {
-            TeleMethodReference prev = rpcMethods.put(rpcName, teleMethod);
+        public RpcApiSpec addRpcMethod(String rpcName, MethodDescriptor teleMethod) {
+            MethodDescriptor prev = rpcMethods.put(rpcName, teleMethod);
             if (prev != null) {
                 throw new RpcException("Method with name '" + rpcName + "' has already registered");
             }

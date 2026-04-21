@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory;
  * @param <P> - Protocol context API  (request + response)
  */
 abstract public class TeleMethodResolver<P,
-        F extends TeleFacade<?, M, R, W>,
-        M extends TeleMethodReference,
+        F extends TeleFacade<?, D, R, W>,
+        D extends MethodDescriptor,
         R extends TRContext,
         W extends TWContext> {
 
@@ -22,21 +22,21 @@ abstract public class TeleMethodResolver<P,
 
     abstract protected void addTeleFacade(F teleFacade);
 
-    abstract protected void addTeleMethod(M teleMethodRef);
+    abstract protected void addMethodDescriptor(D descriptor);
 
     /**
      * Resolve target method based on exchange data
      */
-    abstract public TeleMethod resolve(P protocolContext) throws TeleMethodNotFoundException;
+    abstract public TeleMethod resolve(P protocolContext) throws DescriptorNotFoundException;
 
     public void lookupTeleFacades(Polysupplier<F> teleFacadeSupp) {
         log.debug("Lookup tele-facades...");
         for (F teleFacade : teleFacadeSupp) {
             log.debug("Found tele-facade: {}", teleFacade.getClass().getName());
             addTeleFacade(teleFacade);
-            for (M teleMethodRef : teleFacade.methods()) {
-                addTeleMethod(teleMethodRef);
-                log.debug(" > tele-method: {}", teleMethodRef);
+            for (D descriptor : teleFacade.descriptors()) {
+                addMethodDescriptor(descriptor);
+                log.debug(" > descriptor: {}", descriptor);
             }
         }
     }

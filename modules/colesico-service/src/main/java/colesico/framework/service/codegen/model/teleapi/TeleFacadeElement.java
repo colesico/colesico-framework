@@ -21,6 +21,7 @@ import colesico.framework.assist.Elements;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.service.codegen.model.ServiceElement;
+import colesico.framework.teleapi.MethodDescriptor;
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.teleapi.dataport.TRContext;
 import colesico.framework.teleapi.dataport.TWContext;
@@ -36,7 +37,10 @@ import java.util.Map;
  * Tele-facade representation
  * This class can be extended to use with concrete tele-type modulator
  */
-public class TeleFacadeElement<R extends TRContext, W extends TWContext, I, P extends DataPort<R, W>> {
+public class TeleFacadeElement<P,
+        D extends MethodDescriptor,
+        R extends TRContext,
+        W extends TWContext> {
 
     /**
      * Parent service ref
@@ -49,9 +53,9 @@ public class TeleFacadeElement<R extends TRContext, W extends TWContext, I, P ex
     private final Class<?> teleType;
 
     /**
-     * Tele-driver type
+     * Tele-controller type
      */
-    private final Class<? extends TeleController<R, W, I, P>> teleDriverClass;
+    private final Class<? extends TeleController<P, D, R, W>> teleControllerClass;
 
     /**
      * Data port type
@@ -59,9 +63,9 @@ public class TeleFacadeElement<R extends TRContext, W extends TWContext, I, P ex
     private final Class<? extends DataPort<R, W>> dataPortClass;
 
     /**
-     * Ligature class
+     * Method descriptor class
      */
-    private final Class<?> ligatureClass;
+    private final Class<D> descriptorClass;
 
     /**
      * Tele methods.
@@ -70,9 +74,9 @@ public class TeleFacadeElement<R extends TRContext, W extends TWContext, I, P ex
     private final Elements<TeleMethodElement> teleMethods;
 
     /**
-     * Ligature method code
+     * Descriptors method code
      */
-    private CodeBlock ligatureMethodBody;
+    private CodeBlock descriptorsMethodBody;
 
     /**
      * IoC Qualifier for  producer method
@@ -90,14 +94,14 @@ public class TeleFacadeElement<R extends TRContext, W extends TWContext, I, P ex
     private final Map<Class, Object> properties;
 
     public TeleFacadeElement(Class<?> teleType,
-                             Class<? extends TeleController> teleDriverClass,
+                             Class<? extends TeleController> teleControllerClass,
                              Class<? extends DataPort> dataPortClass,
-                             Class<?> ligatureClass,
+                             Class<D> descriptorClass,
                              IocQualifier iocQualifier) {
         this.teleType = teleType;
-        this.teleDriverClass = teleDriverClass;
-        this.ligatureClass = ligatureClass;
-        this.dataPortClass = dataPortClass;
+        this.teleControllerClass = (Class<? extends TeleController<P, D, R, W>>) teleControllerClass;
+        this.descriptorClass = descriptorClass;
+        this.dataPortClass = (Class<? extends DataPort<R, W>>) dataPortClass;
         this.teleMethods = new Elements<>();
         this.iocQualifier = iocQualifier;
 
@@ -160,27 +164,27 @@ public class TeleFacadeElement<R extends TRContext, W extends TWContext, I, P ex
         properties.put(propertyClass, property);
     }
 
-    public Class<? extends TeleController> getTeleDriverClass() {
-        return teleDriverClass;
+    public Class<? extends TeleController> getTeleControllerClass() {
+        return teleControllerClass;
     }
 
     public Class<? extends DataPort> getDataPortClass() {
         return dataPortClass;
     }
 
-    public CodeBlock getLigatureMethodBody() {
-        if (ligatureMethodBody == null) {
+    public CodeBlock getDescriptorsMethodBody() {
+        if (descriptorsMethodBody == null) {
             CodegenException.of().message("Tele-ligature code is null");
         }
-        return ligatureMethodBody;
+        return descriptorsMethodBody;
     }
 
-    public void setLigatureMethodBody(CodeBlock ligatureMethodBody) {
-        this.ligatureMethodBody = ligatureMethodBody;
+    public void setDescriptorsMethodBody(CodeBlock descriptorsMethodBody) {
+        this.descriptorsMethodBody = descriptorsMethodBody;
     }
 
-    public Class<?> getLigatureClass() {
-        return ligatureClass;
+    public Class<?> getDescriptorClass() {
+        return descriptorClass;
     }
 
     public IocQualifier getIocQualifier() {

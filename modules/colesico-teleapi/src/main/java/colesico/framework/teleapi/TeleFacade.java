@@ -27,14 +27,14 @@ import jakarta.inject.Provider;
  * @param <T> Target whose method will be invoked (usually a service)
  */
 abstract public class TeleFacade<T,
-        M extends TeleMethodReference,
+        D extends MethodDescriptor,
         R extends TRContext,
         W extends TWContext> {
 
     public static final String TELE_FACADE_SUFFIX = "Facade";
     public static final String TARGET_PROV_FIELD = "targetProvider";
     public static final String DATA_PORT_PROV_FIELD = "dataPortProvider";
-    public static final String METHODS_METHOD = "methods";
+    public static final String DESCRIPTORS_METHOD = "descriptors";
 
     /**
      * Target provider.
@@ -55,7 +55,7 @@ abstract public class TeleFacade<T,
     }
 
     /**
-     * References of tele-methods  implemented in this tele facade
+     * Descriptors of tele-methods  implemented in this tele facade
      */
-    abstract public Iterable<M> methods();
+    abstract public Iterable<D> descriptors();
 }

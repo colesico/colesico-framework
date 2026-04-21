@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * @param <P> Protocol context API (request-response)
  */
 abstract public class TeleController<P,
-        M extends TeleMethodReference,
+        D extends MethodDescriptor,
         R extends TRContext,
         W extends TWContext> {
 
@@ -38,9 +38,9 @@ abstract public class TeleController<P,
 
     protected final ThreadScope threadScope;
 
-    protected final TeleMethodResolver<P, ?, M, R, W> resolver;
+    protected final TeleMethodResolver<P, ?, D, R, W> resolver;
 
-    public TeleController(ThreadScope threadScope, TeleMethodResolver<P, ?, M, R, W> resolver) {
+    public TeleController(ThreadScope threadScope, TeleMethodResolver<P, ?, D, R, W> resolver) {
         this.threadScope = threadScope;
         this.resolver = resolver;
     }
