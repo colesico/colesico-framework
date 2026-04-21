@@ -6,8 +6,8 @@ import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterBuilder;
-import colesico.framework.teleapi.invocation.TeleFacade;
-import colesico.framework.teleapi.invocation.TeleMethodReference;
+import colesico.framework.teleapi.TeleFacade;
+import colesico.framework.teleapi.TeleMethodReference;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

@@ -24,8 +24,8 @@ import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.teleapi.dataport.TRContext;
 import colesico.framework.teleapi.dataport.TWContext;
-import colesico.framework.teleapi.invocation.TeleController;
-import colesico.framework.teleapi.invocation.TeleFacade;
+import colesico.framework.teleapi.TeleController;
+import colesico.framework.teleapi.TeleFacade;
 import com.palantir.javapoet.CodeBlock;
 import org.apache.commons.lang3.StringUtils;
 

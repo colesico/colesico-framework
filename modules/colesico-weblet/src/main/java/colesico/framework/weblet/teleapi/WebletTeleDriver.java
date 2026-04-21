@@ -16,7 +16,7 @@
 
 package colesico.framework.weblet.teleapi;
 
-import colesico.framework.teleapi.invocation.TeleController;
+import colesico.framework.teleapi.TeleController;
 
 public interface WebletTeleDriver extends TeleController<WebletTRContext, WebletTWContext, WebletTIContext,WebletDataPort> {
 }

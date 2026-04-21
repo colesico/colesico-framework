@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.teleapi.invocation;
+package colesico.framework.teleapi;
 
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.teleapi.dataport.TRContext;

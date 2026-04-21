@@ -2,7 +2,7 @@ package colesico.framework.router.codegen;
 
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.teleapi.dataport.DataPort;
-import colesico.framework.teleapi.invocation.TeleController;
+import colesico.framework.teleapi.TeleController;
 
 /**
  * Custom tele facade

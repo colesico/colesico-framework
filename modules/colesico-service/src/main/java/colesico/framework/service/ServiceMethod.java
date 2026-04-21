@@ -20,7 +20,7 @@ import java.lang.annotation.*;
 /**
  * Indicates that the method is a service automated method.
  * <p>
- * This annotation (for example) can marks a protected methods that must be acts as public service methods
+ * This annotation (for example) can mark a protected methods that must be acts as public service methods
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})

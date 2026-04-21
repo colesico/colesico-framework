@@ -19,7 +19,7 @@ package colesico.framework.service.codegen.modulator;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.*;
-import colesico.framework.teleapi.invocation.TeleFacade;
+import colesico.framework.teleapi.TeleFacade;
 import com.palantir.javapoet.CodeBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

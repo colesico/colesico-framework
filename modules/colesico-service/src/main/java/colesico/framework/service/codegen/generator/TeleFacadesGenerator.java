@@ -26,9 +26,9 @@ import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.*;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import colesico.framework.teleapi.dataport.DataPort;
-import colesico.framework.teleapi.invocation.TeleController;
-import colesico.framework.teleapi.invocation.TeleFacade;
-import colesico.framework.teleapi.invocation.TeleMethodReference;
+import colesico.framework.teleapi.TeleController;
+import colesico.framework.teleapi.TeleFacade;
+import colesico.framework.teleapi.TeleMethodReference;
 import com.palantir.javapoet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +40,8 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
 
-import static colesico.framework.teleapi.invocation.TeleFacade.TARGET_PROV_FIELD;
-import static colesico.framework.teleapi.invocation.TeleFacade.TELE_DRIVER_FIELD;
+import static colesico.framework.teleapi.TeleFacade.TARGET_PROV_FIELD;
+import static colesico.framework.teleapi.TeleFacade.TELE_DRIVER_FIELD;
 
 /**
  * Generate tele-facade class

@@ -1,4 +1,4 @@
-package colesico.framework.teleapi.invocation;
+package colesico.framework.teleapi;
 
 //TODO: implement telefilter mecanic
 public interface TeleFilter<X> {

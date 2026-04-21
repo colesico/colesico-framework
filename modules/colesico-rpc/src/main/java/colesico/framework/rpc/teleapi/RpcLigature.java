@@ -19,7 +19,7 @@ package colesico.framework.rpc.teleapi;
 import colesico.framework.rpc.RpcApi;
 import colesico.framework.rpc.RpcException;
 import colesico.framework.rpc.RpcMethod;
-import colesico.framework.teleapi.invocation.TeleMethodReference;
+import colesico.framework.teleapi.TeleMethodReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;

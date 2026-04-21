@@ -23,7 +23,7 @@ import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
 import colesico.framework.service.codegen.modulator.TeleFacadeModulator;
 import colesico.framework.teleapi.dataport.DataPort;
-import colesico.framework.teleapi.invocation.TeleController;
+import colesico.framework.teleapi.TeleController;
 import com.palantir.javapoet.ClassName;
 import com.palantir.javapoet.CodeBlock;
 import com.palantir.javapoet.TypeName;

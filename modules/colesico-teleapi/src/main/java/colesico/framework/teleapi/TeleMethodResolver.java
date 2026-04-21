@@ -1,4 +1,4 @@
-package colesico.framework.teleapi.invocation;
+package colesico.framework.teleapi;
 
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.teleapi.dataport.TRContext;

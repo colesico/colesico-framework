@@ -1,4 +1,4 @@
-package colesico.framework.teleapi.invocation;
+package colesico.framework.teleapi;
 
 /**
  * Tele-method closure.

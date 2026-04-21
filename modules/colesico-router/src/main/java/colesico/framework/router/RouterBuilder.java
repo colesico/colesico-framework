@@ -1,7 +1,7 @@
 package colesico.framework.router;
 
 import colesico.framework.http.HttpMethod;
-import colesico.framework.teleapi.invocation.TeleMethodReference;
+import colesico.framework.teleapi.TeleMethodReference;
 
 import java.util.Map;
 

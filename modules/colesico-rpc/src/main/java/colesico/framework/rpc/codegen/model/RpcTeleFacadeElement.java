@@ -18,7 +18,7 @@ package colesico.framework.rpc.codegen.model;
 
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.teleapi.dataport.DataPort;
-import colesico.framework.teleapi.invocation.TeleController;
+import colesico.framework.teleapi.TeleController;
 
 public class RpcTeleFacadeElement extends TeleFacadeElement {
 
