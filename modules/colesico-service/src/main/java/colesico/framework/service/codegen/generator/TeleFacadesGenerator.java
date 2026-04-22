@@ -239,7 +239,7 @@ public class TeleFacadesGenerator {
     protected void generateGetLigatureMethod(TeleFacadeElement teleFacade, TypeSpec.Builder classBuilder) {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(TeleFacade.LIGATURE_METHOD);
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-        mb.returns(ClassName.get(teleFacade.getDescriptorClass()));
+        mb.returns(ClassName.get(teleFacade.getDescriptorsClass()));
         mb.addCode(teleFacade.getDescriptorsMethodBody());
         classBuilder.addMethod(mb.build());
     }
@@ -268,7 +268,7 @@ public class TeleFacadesGenerator {
         classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(TeleFacade.class),
                 TypeName.get(service.getOriginClass().getOriginType()),
                 ClassName.get(teleFacade.getTeleControllerClass()),
-                ClassName.get(teleFacade.getDescriptorClass())));
+                ClassName.get(teleFacade.getDescriptorsClass())));
 
         generateConstructor(teleFacade, classBuilder);
         generateTeleMethodBuilders(teleFacade, classBuilder);

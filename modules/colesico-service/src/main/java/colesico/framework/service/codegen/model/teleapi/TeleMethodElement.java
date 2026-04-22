@@ -62,7 +62,7 @@ public final class TeleMethodElement {
     /**
      * Common purpose props
      */
-    private final Map<Class<?>, ?> properties;
+    private final Map<Class<?>, Object> properties;
 
     public TeleMethodElement(ServiceMethodElement serviceMethod) {
         this.serviceMethod = serviceMethod;
@@ -126,10 +126,6 @@ public final class TeleMethodElement {
 
     public Integer getIndex() {
         return index;
-    }
-
-    public Map<String, TeleBatchElement> getBatches() {
-        return batches;
     }
 
     @Override

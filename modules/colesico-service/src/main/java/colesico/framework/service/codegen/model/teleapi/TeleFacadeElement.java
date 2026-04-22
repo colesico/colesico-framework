@@ -21,10 +21,6 @@ import colesico.framework.assist.Elements;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.teleapi.dataport.DataPort;
-import colesico.framework.teleapi.dataport.TRContext;
-import colesico.framework.teleapi.dataport.TWContext;
-import colesico.framework.teleapi.TeleController;
 import colesico.framework.teleapi.TeleFacade;
 import com.palantir.javapoet.CodeBlock;
 import org.apache.commons.lang3.StringUtils;
@@ -35,13 +31,8 @@ import java.util.Map;
 /**
  * Tele-facade representation
  * This class can be extended to use with concrete tele-type modulator
- *
- * @param <P> Protocol context class
  */
-public class TeleFacadeElement<P,
-        D extends MethodDescriptor,
-        R extends TRContext,
-        W extends TWContext> {
+public class TeleFacadeElement {
 
     /**
      * Parent service ref
@@ -54,19 +45,9 @@ public class TeleFacadeElement<P,
     private final Class<?> teleType;
 
     /**
-     * Tele-controller type
+     * Descriptors registry class
      */
-    private final Class<? extends TeleController<P, D, R, W>> teleControllerClass;
-
-    /**
-     * Data port type
-     */
-    private final Class<? extends DataPort<R, W>> dataPortClass;
-
-    /**
-     * Method descriptor class
-     */
-    private final Class<D> descriptorClass;
+    private final Class<?> descriptorsClass;
 
     /**
      * Tele methods.
@@ -75,12 +56,12 @@ public class TeleFacadeElement<P,
     private final Elements<TeleMethodElement> teleMethods;
 
     /**
-     * Descriptors method code
+     * Descriptors registry method code
      */
     private CodeBlock descriptorsMethodBody;
 
     /**
-     * IoC Qualifier for  producer method
+     * IoC Qualifier for producer method
      */
     private final IocQualifier iocQualifier;
 
@@ -95,14 +76,10 @@ public class TeleFacadeElement<P,
     private final Map<Class<?>, Object> properties;
 
     public TeleFacadeElement(Class<?> teleType,
-                             Class<? extends TeleController<P, D, R, W>> teleControllerClass,
-                             Class<? extends DataPort<R, W>> dataPortClass,
-                             Class<D> descriptorClass,
+                             Class<?> descriptorsClass,
                              IocQualifier iocQualifier) {
         this.teleType = teleType;
-        this.teleControllerClass = teleControllerClass;
-        this.descriptorClass = descriptorClass;
-        this.dataPortClass = dataPortClass;
+        this.descriptorsClass = descriptorsClass;
         this.teleMethods = new Elements<>();
         this.iocQualifier = iocQualifier;
 
@@ -150,7 +127,7 @@ public class TeleFacadeElement<P,
     }
 
     public <B> TeleSchemeElement<B> getTeleScheme(Class<B> schemeType) {
-        return teleSchemes.get(schemeType);
+        return (TeleSchemeElement<B>) teleSchemes.get(schemeType);
     }
 
     public <B> void setTeleScheme(Class<B> schemeType, TeleSchemeElement<B> schemeBuilder) {
@@ -165,14 +142,6 @@ public class TeleFacadeElement<P,
         properties.put(propertyClass, property);
     }
 
-    public Class<? extends TeleController> getTeleControllerClass() {
-        return teleControllerClass;
-    }
-
-    public Class<? extends DataPort> getDataPortClass() {
-        return dataPortClass;
-    }
-
     public CodeBlock getDescriptorsMethodBody() {
         if (descriptorsMethodBody == null) {
             CodegenException.of().message("Tele-ligature code is null");
@@ -184,8 +153,8 @@ public class TeleFacadeElement<P,
         this.descriptorsMethodBody = descriptorsMethodBody;
     }
 
-    public Class<?> getDescriptorClass() {
-        return descriptorClass;
+    public Class<?> getDescriptorsClass() {
+        return descriptorsClass;
     }
 
     public IocQualifier getIocQualifier() {
