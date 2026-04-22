@@ -8,22 +8,22 @@ import com.palantir.javapoet.CodeBlock;
 public class TRContextElement {
 
     /**
-     * Parent tele-input ref
+     * Parent tele-readable ref
      */
-    private final TeleParameterElement parentParameter;
+    private final TeleReadableElement parentReadable;
 
     /**
      * Reading context creation code
      */
     private final CodeBlock creationCode;
 
-    public TRContextElement(TeleParameterElement parentParameter, CodeBlock creationCode) {
-        this.parentParameter = parentParameter;
+    public TRContextElement(TeleParameterElement parentReadable, CodeBlock creationCode) {
+        this.parentReadable = parentReadable;
         this.creationCode = creationCode;
     }
 
-    public TeleParameterElement getParentParameter() {
-        return parentParameter;
+    public TeleParameterElement getParentReadable() {
+        return parentReadable;
     }
 
     public CodeBlock getCreationCode() {

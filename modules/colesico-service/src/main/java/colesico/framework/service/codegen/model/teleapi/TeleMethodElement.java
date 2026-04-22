@@ -42,7 +42,12 @@ public final class TeleMethodElement {
     /**
      * Method parameters
      */
-    private final List<TeleParameterElement> parameters;
+    private final List<TeleVarElement> parameters = new ArrayList<>();
+
+    /**
+     * Parameter batches
+     */
+    private final Map<String, TeleBatchElement> batches = new HashMap<>();
 
     /**
      * Tele-method index within tele-facade
@@ -62,12 +67,10 @@ public final class TeleMethodElement {
     /**
      * Common purpose props
      */
-    private final Map<Class<?>, Object> properties;
+    private final Map<Class<?>, Object> properties = new HashMap<>();
 
     public TeleMethodElement(ServiceMethodElement serviceMethod) {
         this.serviceMethod = serviceMethod;
-        this.parameters = new ArrayList<>();
-        this.properties = new HashMap<>();
     }
 
     public <C> C getProperty(Class<C> propertyClass) {
@@ -81,7 +84,7 @@ public final class TeleMethodElement {
     /**
      * Add parameter of tele-method
      */
-    public void addParameter(TeleParameterElement param) {
+    public void addParameter(TeleVarElement param) {
         parameters.add(param);
     }
 
@@ -96,6 +99,16 @@ public final class TeleMethodElement {
         return "get" + StrUtils.firstCharToUpperCase(serviceMethod.getName()) + "TM" + index;
     }
 
+    public TeleBatchElement getOrCreateBatch(String name) {
+        TeleBatchElement batch = batches.get(name);
+        if (batch == null) {
+            batch = new TeleBatchElement(this, name);
+            batches.put(name, batch);
+            parentTeleFacade.getBatchPack().addBatch(batch);
+        }
+        return batch;
+    }
+
     public ServiceMethodElement getServiceMethod() {
         return serviceMethod;
     }
@@ -104,7 +117,7 @@ public final class TeleMethodElement {
         return parentTeleFacade;
     }
 
-    public List<TeleParameterElement> getParameters() {
+    public List<TeleVarElement> getParameters() {
         return parameters;
     }
 

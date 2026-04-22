@@ -66,6 +66,18 @@ public class TeleFacadeElement {
     private final IocQualifier iocQualifier;
 
     /**
+     * Batch params support enabled
+     *
+     * @see colesico.framework.service.BatchField
+     */
+    private Boolean batchParams = false;
+
+    /**
+     * Tele-facade associated batches
+     */
+    private final TeleBatchPackElement batchPack;
+
+    /**
      * Tele schemas for the facade
      */
     private final Map<Class<?>, TeleSchemeElement<?>> teleSchemes;
@@ -85,6 +97,8 @@ public class TeleFacadeElement {
 
         this.teleSchemes = new HashMap<>();
         this.properties = new HashMap<>();
+
+        this.batchPack = new TeleBatchPackElement(this);
     }
 
     public ServiceElement getParentService() {
@@ -163,6 +177,18 @@ public class TeleFacadeElement {
 
     public void setParentService(ServiceElement parentService) {
         this.parentService = parentService;
+    }
+
+    public Boolean getBatchParams() {
+        return batchParams;
+    }
+
+    public void setBatchParams(Boolean batchParams) {
+        this.batchParams = batchParams;
+    }
+
+    public TeleBatchPackElement getBatchPack() {
+        return batchPack;
     }
 
     public static final class IocQualifier {

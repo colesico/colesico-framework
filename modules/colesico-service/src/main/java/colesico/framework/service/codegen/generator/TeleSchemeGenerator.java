@@ -5,6 +5,7 @@ import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.service.codegen.model.teleapi.TeleSchemeElement;
+import colesico.framework.teleapi.TeleScheme;
 import com.palantir.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;

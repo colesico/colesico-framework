@@ -16,14 +16,19 @@
 
 package colesico.framework.service.codegen.model.teleapi;
 
+import colesico.framework.assist.codegen.model.ParameterElement;
 import colesico.framework.assist.codegen.model.VarElement;
 
 /**
- * Tele-method  parameter that can be directly read from data port
+ * Tele-method parameter that can be directly read from data port
  */
-public final class TeleParameterElement  {
+public final class TeleParameterElement extends TeleVarElement implements TeleReadableElement {
 
-    TRContextElement readingContext;
+    private TRContextElement readingContext;
+
+    public TeleParameterElement(TeleMethodElement parentTeleMethod, VarElement originElement) {
+        super(parentTeleMethod, originElement);
+    }
 
     public TRContextElement getReadingContext() {
         return readingContext;
@@ -35,8 +40,8 @@ public final class TeleParameterElement  {
 
     @Override
     public String toString() {
-        return "TeleParamElement{" +
-                "originParam=" + originElement +
+        return "TeleParameterElement{" +
+                "originElement=" + originElement +
                 '}';
     }
 }

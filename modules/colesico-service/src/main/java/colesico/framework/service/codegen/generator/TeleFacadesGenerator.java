@@ -40,7 +40,6 @@ import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
 
 import static colesico.framework.teleapi.TeleFacade.TARGET_PROV_FIELD;
-import static colesico.framework.teleapi.TeleFacade.TELE_DRIVER_FIELD;
 
 /**
  * Generate tele-facade class

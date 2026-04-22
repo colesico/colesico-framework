@@ -19,12 +19,11 @@ package colesico.framework.service.codegen.parser;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
+import colesico.framework.service.BatchField;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.*;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.lang.model.element.Modifier;
-import java.util.Iterator;
 import java.util.List;
 
 public final class TeleFacadeParser extends FrameworkAbstractParser {
@@ -36,51 +35,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
         this.context = context;
     }
 
-    private void parseCompound(TeleMethodElement teleMethod, TeleCompoundElement parentCompound, VarElement variable) {
-        if (variable.asClassType() == null) {
-            throw CodegenException.of().message("Unsupported type kind for tele-compound " + variable.asClassType().asClassElement().getName() + " " + variable.getName())
-                    .element(variable.unwrap())
-                    .build();
-        }
-
-        TeleCompoundElement compound = new TeleCompoundElement(teleMethod, variable);
-
-        if (parentCompound == null) {
-            teleMethod.addParameter(compound);
-        } else {
-            // Check recursive objects
-            Iterator<TeleEntryElement> it = parentCompound.getIterator();
-            while (it.hasNext()) {
-                TeleEntryElement curComp = it.next();
-                if (curComp.equals(compound)) {
-                    TeleFacadeElement teleFacade = teleMethod.getParentTeleFacade();
-                    throw CodegenException.of().message("Recursive compound for: "
-                                    + compound.getOriginElement().getOriginType()
-                                    + " "
-                                    + compound.getOriginElement().getName()
-                                    + " in: "
-                                    + teleFacade.getParentService().getOriginClass().getOriginType()
-                                    + "->" + teleMethod.getServiceMethod().getName())
-                            .element(variable)
-                            .build();
-                }
-            }
-            compound.setParentCompound(parentCompound);
-        }
-
-        // Parse compound fields
-        List<FieldElement> fields = variable.asClassType().asClassElement().getFieldsFiltered(
-                f -> !f.unwrap().getModifiers().contains(Modifier.FINAL)
-                        && !f.unwrap().getModifiers().contains(Modifier.STATIC)
-        );
-
-        parseVariables(teleMethod, compound, fields);
-
-        context.getModulatorKit().notifyTeleEntryParsed(compound);
-    }
-
     private void parseBatchField(TeleMethodElement teleMethod,
-                                 TeleCompoundElement parentCompound,
                                  VarElement variable,
                                  AnnotationAssist<BatchField> paramBatchAnn,
                                  AnnotationAssist<BatchField> methodBatchAnn) {
@@ -105,71 +60,46 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
 
         TeleBatchElement batch = teleMethod.getOrCreateBatch(batchName);
         batch.addField(batchField);
-        if (parentCompound == null) {
-            teleMethod.addParameter(batchField);
-        } else {
-            parentCompound.addField(batchField);
-        }
-        context.getModulatorKit().notifyTeleEntryParsed(batchField);
+        teleMethod.addParameter(batchField);
+
+        context.getModulatorKit().notifyTeleVarParsed(batchField);
     }
 
-    private void parseParameter(TeleMethodElement teleMethod, TeleCompoundElement parentCompound, VarElement variable) {
+    private void parseParameter(TeleMethodElement teleMethod, VarElement variable) {
         // Process simple param
         TeleParameterElement parameter = new TeleParameterElement(teleMethod, variable);
-        if (parentCompound == null) {
-            teleMethod.addParameter(parameter);
-        } else {
-            parentCompound.addField(parameter);
-        }
-        context.getModulatorKit().notifyTeleEntryParsed(parameter);
+        teleMethod.addParameter(parameter);
+        context.getModulatorKit().notifyTeleVarParsed(parameter);
     }
 
-    private void parseVariables(TeleMethodElement teleMethod, TeleCompoundElement parentCompound, List<? extends VarElement> variables) {
+    private void parseVariables(TeleMethodElement teleMethod, List<? extends VarElement> variables) {
         for (VarElement variable : variables) {
-            AnnotationAssist<LocalField> localFieldAnn = variable.getAnnotation(LocalField.class);
 
-            // Skip local fields for compounds
-            if (parentCompound != null && localFieldAnn != null) {
-                continue;
-            }
+            AnnotationAssist<BatchField> paramBatchAnn = variable.getAnnotation(BatchField.class);
+            AnnotationAssist<BatchField> methodBatchAnn = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(BatchField.class);
 
-            AnnotationAssist<Compound> compoundAnn = variable.getAnnotation(Compound.class);
-
-            if (compoundAnn != null) {
-                // Check compound support
-                if (!teleMethod.getParentTeleFacade().getCompoundParams()) {
+            if (paramBatchAnn != null || methodBatchAnn != null) {
+                // Check batch support
+                if (!teleMethod.getParentTeleFacade().getBatchParams()) {
                     throw CodegenException.of()
-                            .message("Compound parameters not supported by tele-facade " + teleMethod.getParentTeleFacade().getTeleType().getCanonicalName())
+                            .message("Batch parameters not supported by tele-facade " + teleMethod.getParentTeleFacade().getTeleType().getCanonicalName())
                             .element(variable.unwrap())
                             .build();
-                }
-                parseCompound(teleMethod, parentCompound, variable);
-            } else {
-                AnnotationAssist<BatchField> paramBatchAnn = variable.getAnnotation(BatchField.class);
-                AnnotationAssist<BatchField> methodBatchAnn = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(BatchField.class);
-                if (paramBatchAnn != null || methodBatchAnn != null) {
-                    // Check batch support
-                    if (!teleMethod.getParentTeleFacade().getBatchParams()) {
-                        throw CodegenException.of()
-                                .message("Batch parameters not supported by tele-facade " + teleMethod.getParentTeleFacade().getTeleType().getCanonicalName())
-                                .element(variable.unwrap())
-                                .build();
-                    } else {
-                        parseBatchField(teleMethod, parentCompound, variable, paramBatchAnn, methodBatchAnn);
-                    }
                 } else {
-                    parseParameter(teleMethod, parentCompound, variable);
+                    parseBatchField(teleMethod, variable, paramBatchAnn, methodBatchAnn);
                 }
+            } else {
+                parseParameter(teleMethod, variable);
             }
         }
     }
 
-    protected void parseTeleMethodParams(TeleMethodElement teleMethod) {
+    private void parseTeleMethodParams(TeleMethodElement teleMethod) {
         MethodElement method = teleMethod.getServiceMethod().getOriginMethod();
-        parseVariables(teleMethod, null, method.getParameters());
+        parseVariables(teleMethod, method.getParameters());
     }
 
-    protected void parseTeleMethods(TeleFacadeElement teleFacade) {
+    private void parseTeleMethods(TeleFacadeElement teleFacade) {
         ServiceElement service = teleFacade.getParentService();
         for (ServiceMethodElement serviceMethod : service.getServiceMethods()) {
             if (serviceMethod.isLocal()) {
