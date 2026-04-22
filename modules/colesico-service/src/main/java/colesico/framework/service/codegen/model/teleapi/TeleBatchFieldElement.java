@@ -8,7 +8,7 @@ import colesico.framework.assist.codegen.model.VarElement;
  *
  * @see colesico.framework.service.BatchField
  */
-public class TeleBatchFieldElement extends TeleVarElement {
+public class TeleBatchFieldElement extends TeleInputElement {
 
     private TeleBatchElement parentBatch;
 

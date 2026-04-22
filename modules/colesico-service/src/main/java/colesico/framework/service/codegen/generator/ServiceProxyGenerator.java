@@ -54,8 +54,8 @@ public class ServiceProxyGenerator {
     private Logger logger = LoggerFactory.getLogger(ServiceProxyGenerator.class);
 
     public static final String METHOD_PARAM_PREFIX = "param";
-    public static final String INTERCEPTORS_CHAIN_VARIABLE = "interceptors";
-    public static final String INV_CONTEXT_VARIABLE = "ctx";
+    public static final String INTERCEPTORS_CHAIN_VAR = "interceptors";
+    public static final String INV_CONTEXT_VAR = "ctx";
 
     protected final ServiceProcessorContext context;
     protected final TeleFacadesGenerator teleFacadesGenerator;
@@ -232,7 +232,7 @@ public class ServiceProxyGenerator {
         }
         String paramsArrayLiteral = "{" + String.join(",", paramNames) + "}";
 
-        serviceMethodBuilder.addStatement("final $T " + INV_CONTEXT_VARIABLE + "= new $T(this,$S,new $T[]$L," + INTERCEPTORS_CHAIN_VARIABLE + ")",
+        serviceMethodBuilder.addStatement("final $T " + INV_CONTEXT_VAR + "= new $T(this,$S,new $T[]$L," + INTERCEPTORS_CHAIN_VAR + ")",
                 ClassName.get(InvocationContext.class),
                 ClassName.get(InvocationContext.class),
                 methodElement.getName(),
@@ -241,9 +241,9 @@ public class ServiceProxyGenerator {
         boolean voidResult = returnType instanceof NoType;
 
         if (voidResult) {
-            serviceMethodBuilder.addStatement(INV_CONTEXT_VARIABLE + "." + InvocationContext.PROCEED_METHOD + "()");
+            serviceMethodBuilder.addStatement(INV_CONTEXT_VAR + "." + InvocationContext.PROCEED_METHOD + "()");
         } else {
-            serviceMethodBuilder.addStatement("return ($T)" + INV_CONTEXT_VARIABLE + "." + InvocationContext.PROCEED_METHOD + "()",
+            serviceMethodBuilder.addStatement("return ($T)" + INV_CONTEXT_VAR + "." + InvocationContext.PROCEED_METHOD + "()",
                     TypeName.get(methodElement.getReturnType()));
         }
     }
@@ -271,7 +271,7 @@ public class ServiceProxyGenerator {
                 returnTypeName = TypeName.get(methodElement.getOriginMethod().getReturnType());
             }
 
-            methodBuilder.addStatement("final $T " + INTERCEPTORS_CHAIN_VARIABLE + " = new $T<>()",
+            methodBuilder.addStatement("final $T " + INTERCEPTORS_CHAIN_VAR + " = new $T<>()",
                     ParameterizedTypeName.get(ClassName.get(InterceptorsChain.class),
                             TypeName.get(serviceElement.getOriginClass().getOriginType()),
                             returnTypeName),
@@ -301,7 +301,7 @@ public class ServiceProxyGenerator {
 
     private void generateInterceptorBindings(InterceptionElement interceptionElement, MethodSpec.Builder serviceMethodBuilder) {
         CodeBlock.Builder interceptorBindings = CodeBlock.builder();
-        interceptorBindings.add(INTERCEPTORS_CHAIN_VARIABLE + ".add(");
+        interceptorBindings.add(INTERCEPTORS_CHAIN_VAR + ".add(");
         interceptorBindings.add(interceptionElement.getInterceptorCode());
         interceptorBindings.add(",");
 

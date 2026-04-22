@@ -17,7 +17,7 @@ public class TRContextElement {
      */
     private final CodeBlock creationCode;
 
-    public TRContextElement(TeleParameterElement parentReadable, CodeBlock creationCode) {
+    public TRContextElement(TeleReadableElement parentReadable, CodeBlock creationCode) {
         this.parentReadable = parentReadable;
         this.creationCode = creationCode;
     }

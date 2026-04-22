@@ -17,7 +17,6 @@
 package colesico.framework.service.codegen.generator;
 
 
-import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
@@ -25,8 +24,8 @@ import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.*;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
+import colesico.framework.teleapi.TeleMethod;
 import colesico.framework.teleapi.dataport.DataPort;
-import colesico.framework.teleapi.TeleController;
 import colesico.framework.teleapi.TeleFacade;
 import com.palantir.javapoet.*;
 import org.slf4j.Logger;
@@ -35,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
@@ -68,8 +68,7 @@ public class TeleFacadesGenerator {
                 TARGET_PROV_FIELD,
                 Modifier.FINAL);
 
-        mb.addParameter(ClassName.get(teleFacade.getTeleControllerClass()), TELE_DRIVER_FIELD, Modifier.FINAL);
-        mb.addStatement("super($N, $N)", TARGET_PROV_FIELD, TELE_DRIVER_FIELD);
+        mb.addStatement("super($N)", TARGET_PROV_FIELD);
         classBuilder.addMethod(mb.build());
     }
 
@@ -82,27 +81,27 @@ public class TeleFacadesGenerator {
                         .element(teleMethod.getServiceMethod().getOriginMethod())
                         .build();
             }
-            // BatchType batch = dataPort.read()
+            // Read batch: BatchType batch = dataPort.read()
             cb.add("\n// Read batch \n");
-            cb.add("$T $N = $N.$N(",
+            cb.add("final $T $N = $N.$N(",
                     ClassName.bestGuess(batch.getBatchClassName()),
                     batch.getBatchVarName(),
-                    MethodInvoker.DATA_PORT_PARAM, DataPort.READ_METHOD);
+                    TeleMethod.DATA_PORT_PARAM, DataPort.READ_METHOD);
             cb.add(batch.getReadingContext().getCreationCode());
             cb.add(");\n");
         }
         return cb.build();
     }
 
-    protected CodeBlock generateParamRetrieving(TeleEntryElement entry, CodeBlock.Builder invokerBuilder) {
+    protected CodeBlock generateParamRetrieving(TeleInputElement parameter, CodeBlock.Builder invokerBuilder) {
 
         // ==== For simple param
 
-        if (entry instanceof TeleParameterElement) {
-            CodeBlock ctx = ((TeleParameterElement) entry).getReadingContext().getCreationCode();
+        if (parameter instanceof TeleParameterElement) {
+            CodeBlock ctx = ((TeleParameterElement) parameter).getReadingContext().getCreationCode();
             // dataPot.read(new Context(...));
             CodeBlock.Builder cb = CodeBlock.builder();
-            cb.add("$N.$N(", MethodInvoker.DATA_PORT_PARAM, DataPort.READ_METHOD);
+            cb.add("$N.$N(", TeleMethod.DATA_PORT_PARAM, DataPort.READ_METHOD);
             cb.add(ctx);
             cb.add(")");
             return cb.build();
@@ -110,63 +109,32 @@ public class TeleFacadesGenerator {
 
         // ==== For batch filed param
 
-        if (entry instanceof TeleBatchFieldElement) {
-            TeleBatchFieldElement batchParam = (TeleBatchFieldElement) entry;
+        if (parameter instanceof TeleBatchFieldElement) {
+            TeleBatchFieldElement batchParam = (TeleBatchFieldElement) parameter;
             // batch.getFiled();
             CodeBlock.Builder cb = CodeBlock.builder();
             cb.add("$N.$N()", batchParam.getParentBatch().getBatchVarName(), batchParam.getterName());
             return cb.build();
         }
 
-        // ==== For compound
-
-        final String compVar = varNames.getNextTempVariable(entry.getOriginElement().getName());
-        invokerBuilder.add("\n// Init compound\n");
-        TypeMirror paramType = entry.getOriginElement().asClassType().unwrap();
-        invokerBuilder.addStatement("$T $N = new $T()",
-                TypeName.get(paramType),
-                compVar, TypeName.get(entry.getOriginElement().getOriginType()));
-
-        // Generate compound fields
-
-        for (TeleEntryElement field : ((TeleCompoundElement) entry).getFields()) {
-            CodeBlock value = generateParamRetrieving(field, invokerBuilder);
-            String setterName = "set" + StrUtils.firstCharToUpperCase(field.getOriginElement().getName());
-            invokerBuilder.add("$N.$N(", compVar, setterName);
-            invokerBuilder.add(value);
-            invokerBuilder.add(");\n");
-        }
-        invokerBuilder.add("\n");
-        CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add(compVar);
-        return cb.build();
+        throw CodegenException.of().message("Unsupported tele parameter element: " + parameter).build();
     }
 
-    protected CodeBlock generateInvoker(TeleMethodElement teleMethod) {
+    protected CodeBlock generateInvocation(TeleMethodElement teleMethod) {
         MethodElement originMethod = teleMethod.getServiceMethod().getOriginMethod();
         CodeBlock.Builder cb = CodeBlock.builder();
 
-        // Generate invoker variable
-        cb.add("\n// Create invoker closure \n");
-        ParameterizedTypeName invokerType = ParameterizedTypeName.get(
-                ClassName.get(MethodInvoker.class),
-                TypeName.get(teleMethod.getParentTeleFacade().getParentService().getOriginClass().getOriginType()),
-                ClassName.get(teleMethod.getParentTeleFacade().getDataPortClass())
-        );
-        cb.add("$T $N = ($N, $N) -> {\n", invokerType, TeleController.INVOKER_PARAM, MethodInvoker.TARGET_PARAM, MethodInvoker.DATA_PORT_PARAM);
-        cb.indent();
-
-        // ============= Generate Batches retrieving
+        // ============= Generate Batches retrieving from data port
         cb.add(generateBatches(teleMethod));
 
-        // ============= Generate params retrieving
+        // ============= Generate params retrieving from data port
         ArrayCodegen serviceMethodArgs = new ArrayCodegen();
-        for (TeleEntryElement entry : teleMethod.getParameters()) {
-            CodeBlock value = generateParamRetrieving(entry, cb);
-            String paramName = entry.getOriginElement().getName() + PARAM_SUFFIX;
+        for (TeleInputElement param : teleMethod.getParameters()) {
+            CodeBlock value = generateParamRetrieving(param, cb);
+            String paramName = param.getOriginElement().getName() + PARAM_SUFFIX;
             serviceMethodArgs.add("$N", paramName);
             cb.add("\n// Assign tele-method parameter value from remote client or batch\n");
-            cb.add("$T $N = ", TypeName.get(entry.getOriginElement().getOriginType()), paramName);
+            cb.add("final $T $N = ", TypeName.get(param.getOriginElement().getOriginType()), paramName);
             cb.add(value);
             cb.add(";\n");
         }
@@ -176,57 +144,54 @@ public class TeleFacadesGenerator {
 
         //======================== Get service instance and call service method
 
+        // Get service instance:  TargetType target = targetProvider.get();
+        ServiceElement service = teleMethod.getParentTeleFacade().getParentService();
+        TypeName serviceTypeName = TypeName.get(service.getOriginClass().getOriginType());
+        cb.addStatement("final $T $N = $N.get()", serviceTypeName,
+                TeleMethod.TARGET_INSTANCE_VAR,
+                TeleFacade.TARGET_PROV_FIELD);
+
         // Create writer variable
-        //   MyResult result =
+        //   ResultType result =
         CodeBlock.Builder callMethodCb = CodeBlock.builder();
         callMethodCb.add("\n// Invoke target service method\n");
         if (!voidResult) {
-            callMethodCb.add("$T $N = ", TypeName.get(returnType), TeleController.RESULT_PARAM);
+            callMethodCb.add("final $T $N = ", TypeName.get(returnType), TeleMethod.RESULT_VAR);
         }
 
         // Call service method
-        //   target.myMethod(...);
-        callMethodCb.add(MethodInvoker.TARGET_PARAM + "." + teleMethod.getServiceMethod().getName() + "(" + serviceMethodArgs.toFormat() + ");\n", serviceMethodArgs.toValues());
+        //   target.method(...);
+        callMethodCb.add(TeleMethod.TARGET_INSTANCE_VAR + "." + teleMethod.getServiceMethod().getName()
+                + "(" + serviceMethodArgs.toFormat() + ");\n", serviceMethodArgs.toValues());
         cb.add(callMethodCb.build());
 
         // Send result to client via data port dataPort.write(result,new Context());
         if (!voidResult) {
             cb.add("\n// Send result to remote client\n");
-            cb.add("$N.$N($N,", MethodInvoker.DATA_PORT_PARAM, DataPort.WRITE_METHOD, TeleController.RESULT_PARAM);
+            cb.add("$N.$N($N,", TeleMethod.DATA_PORT_PARAM, DataPort.WRITE_METHOD, TeleMethod.RESULT_VAR);
             CodeBlock writeCtx = teleMethod.getWritingContext().getCreationCode();
             cb.add(writeCtx);
             cb.add(");\n");
         }
 
-        cb.unindent();
-        cb.add("};\n\n");
+
         return cb.build();
     }
 
     protected void generateTeleMethodBuilders(TeleFacadeElement teleFacade, TypeSpec.Builder classBuilder) {
-        ServiceElement service = teleFacade.getParentService();
         for (TeleMethodElement teleMethod : teleFacade.getTeleMethods()) {
             MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(teleMethod.getBuilderName());
-            methodBuilder.addJavadoc("Returns $T instance for target method '$N'", ClassName.get(MethodDescriptor.class), teleMethod.getServiceMethod().getName());
+            methodBuilder.addJavadoc("Returns  $T<R,W> instance for target method '$N'",
+                    ClassName.get(TeleMethod.class),
+                    teleMethod.getServiceMethod().getName());
             methodBuilder.addModifiers(Modifier.PRIVATE);
-            methodBuilder.returns(ClassName.get(MethodDescriptor.class));
+            methodBuilder.returns(ClassName.get(teleFacade.getTeleMethodClass()));
 
             // Subroutine definition
             CodeBlock.Builder cb = CodeBlock.builder();
-            cb.add("return () -> {\n");
+            cb.add("return ($N) -> {\n", TeleMethod.DATA_PORT_PARAM);
             cb.indent();
-            cb.add(generateInvoker(teleMethod));
-            // Get service instance:  Service service=serviceProv.get();
-            TypeName serviceTypeName = TypeName.get(service.getOriginClass().getOriginType());
-            cb.addStatement("$T $N = $N.get()", serviceTypeName, TeleController.TARGET_PARAM, TeleFacade.TARGET_PROV_FIELD);
-
-            // Call teleDriver
-            cb.add("$N.$N($N, $N, ", TeleFacade.TELE_DRIVER_FIELD, TeleController.INVOKE_METHOD,
-                    TeleController.TARGET_PARAM,
-                    TeleController.INVOKER_PARAM);
-            CodeBlock invCtx = teleMethod.getInvocationContext().getCreationCode();
-            cb.add(invCtx);
-            cb.add(");\n");
+            cb.add(generateInvocation(teleMethod));
             cb.unindent();
             cb.add("};\n");
 
@@ -235,8 +200,8 @@ public class TeleFacadesGenerator {
         }
     }
 
-    protected void generateGetLigatureMethod(TeleFacadeElement teleFacade, TypeSpec.Builder classBuilder) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(TeleFacade.LIGATURE_METHOD);
+    protected void generateDescriptorsMethod(TeleFacadeElement teleFacade, TypeSpec.Builder classBuilder) {
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(TeleFacade.DESCRIPTORS_METHOD);
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         mb.returns(ClassName.get(teleFacade.getDescriptorsClass()));
         mb.addCode(teleFacade.getDescriptorsMethodBody());
@@ -266,12 +231,11 @@ public class TeleFacadesGenerator {
 
         classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(TeleFacade.class),
                 TypeName.get(service.getOriginClass().getOriginType()),
-                ClassName.get(teleFacade.getTeleControllerClass()),
                 ClassName.get(teleFacade.getDescriptorsClass())));
 
         generateConstructor(teleFacade, classBuilder);
         generateTeleMethodBuilders(teleFacade, classBuilder);
-        generateGetLigatureMethod(teleFacade, classBuilder);
+        generateDescriptorsMethod(teleFacade, classBuilder);
 
         createTeleFacade(service, teleFacade, classBuilder);
 

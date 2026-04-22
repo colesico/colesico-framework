@@ -215,7 +215,7 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
         RpcApiParamElement apiParam = teleParam.getProperty(RpcApiParamElement.class);
         // RpcTRContext.of(EnvelopeClass.RequestClass::getterMethod)
         cb.add("$T.$N(", ClassName.get(RpcTRContext.class), RpcTRContext.OF_METHOD);
-        ServiceCodegenUtils.generateTeleEntryType(teleParam, cb);
+        ServiceCodegenUtils.generateTeleInputType(teleParam, cb);
         cb.add(", $T::$N)", ClassName.bestGuess(rpcApiMethod.getRequestClassName()), apiParam.getterName());
         return new TRContextElement(teleParam, cb.build());
     }

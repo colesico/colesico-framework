@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Represents tele-method variable: parameter, batch param
  */
-abstract public class TeleVarElement {
+abstract public class TeleInputElement {
 
     /**
      * Parent tele-method ref
@@ -25,7 +25,7 @@ abstract public class TeleVarElement {
      */
     protected final Map<Class<?>, Object> properties = new HashMap<>();
 
-    public TeleVarElement(TeleMethodElement parentTeleMethod, VarElement originElement) {
+    public TeleInputElement(TeleMethodElement parentTeleMethod, VarElement originElement) {
         this.parentTeleMethod = parentTeleMethod;
         this.originElement = originElement;
     }

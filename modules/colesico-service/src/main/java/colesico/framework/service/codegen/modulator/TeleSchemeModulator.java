@@ -5,6 +5,7 @@ import colesico.framework.service.codegen.generator.TeleSchemeGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.service.codegen.model.teleapi.TeleSchemeElement;
+import colesico.framework.teleapi.TeleScheme;
 
 abstract public class TeleSchemeModulator extends Modulator {
 

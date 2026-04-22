@@ -79,7 +79,7 @@ public final class WebletModulator extends RoutesModulator {
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("$T.$N(", ClassName.get(WebletTRContext.class), WebletTRContext.OF_METHOD);
 
-        ServiceCodegenUtils.generateTeleEntryType(teleParam, cb);
+        ServiceCodegenUtils.generateTeleInputType(teleParam, cb);
         cb.add(",");
 
         String originName = TeleHttpCodegenUtils.getOriginName(teleParam, WebletOrigin.AUTO);

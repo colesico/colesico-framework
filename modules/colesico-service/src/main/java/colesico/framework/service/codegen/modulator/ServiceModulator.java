@@ -29,6 +29,6 @@ public class ServiceModulator extends Modulator {
 
     @Override
     public Set<Class<? extends Annotation>> serviceAnnotations() {
-        return CollectionUtils.annotationClassSet(Service.class);
+        return Set.of(Service.class);
     }
 }

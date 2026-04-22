@@ -23,7 +23,7 @@ import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.ServiceMethodElement;
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
-import colesico.framework.service.codegen.model.teleapi.TeleVarElement;
+import colesico.framework.service.codegen.model.teleapi.TeleInputElement;
 import colesico.framework.service.codegen.parser.RoundContext;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import org.slf4j.Logger;
@@ -140,9 +140,9 @@ public class ModulatorManager {
         }
     }
 
-    public void notifyTeleVarParsed(TeleVarElement teleEntry) {
+    public void notifyTeleInputParsed(TeleInputElement teleInput) {
         for (Modulator modulator : modulators) {
-            modulator.onTeleEntryParsed(teleEntry);
+            modulator.onTeleInputParsed(teleInput);
         }
     }
 

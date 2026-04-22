@@ -42,10 +42,12 @@ public final class TeleMethodElement {
     /**
      * Method parameters
      */
-    private final List<TeleVarElement> parameters = new ArrayList<>();
+    private final List<TeleInputElement> parameters = new ArrayList<>();
 
     /**
-     * Parameter batches
+     * Parameter batches.
+     *
+     * batch name -> batch element
      */
     private final Map<String, TeleBatchElement> batches = new HashMap<>();
 
@@ -84,8 +86,8 @@ public final class TeleMethodElement {
     /**
      * Add parameter of tele-method
      */
-    public void addParameter(TeleVarElement param) {
-        parameters.add(param);
+    public void addParameter(TeleInputElement parameter) {
+        parameters.add(parameter);
     }
 
     /**
@@ -117,7 +119,7 @@ public final class TeleMethodElement {
         return parentTeleFacade;
     }
 
-    public List<TeleVarElement> getParameters() {
+    public List<TeleInputElement> getParameters() {
         return parameters;
     }
 
@@ -139,6 +141,10 @@ public final class TeleMethodElement {
 
     public Integer getIndex() {
         return index;
+    }
+
+    public Map<String, TeleBatchElement> getBatches() {
+        return batches;
     }
 
     @Override

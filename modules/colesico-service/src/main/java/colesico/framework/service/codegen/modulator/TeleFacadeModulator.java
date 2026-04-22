@@ -39,7 +39,7 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
     public static final String LIGATURE_VAR = "ligature";
 
     /**
-     * Tele type id.
+     * Tele-type id.
      * Usually, it is the service alias annotation.
      */
     abstract protected Class<?> getTeleType();
@@ -85,23 +85,19 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
         serviceElm.setTeleFacade(teleFacade);
     }
 
-    private void createParamReadingContexts(List<TeleEntryElement> entries) {
-        for (TeleEntryElement entry : entries) {
+    private void createParamReadingContexts(List<TeleInputElement> params) {
+        for (var param : params) {
+
             // Skip batch fields
-            if (entry instanceof TeleBatchFieldElement) {
-                TeleBatchFieldElement batchField = (TeleBatchFieldElement) entry;
+            if (param instanceof TeleBatchFieldElement) {
+                TeleBatchFieldElement batchField = (TeleBatchFieldElement) param;
                 if (batchField.getParentBatch().getReadingContext() == null) {
                     batchField.getParentBatch().setReadingContext(createReadingContext(batchField.getParentBatch()));
                 }
                 continue;
             }
 
-            if (entry instanceof TeleCompoundElement) {
-                createParamReadingContexts(((TeleCompoundElement) entry).getFields());
-                continue;
-            }
-
-            TeleParameterElement teleParam = (TeleParameterElement) entry;
+            TeleParameterElement teleParam = (TeleParameterElement) param;
             teleParam.setReadingContext(createReadingContext(teleParam));
 
         }
@@ -144,7 +140,7 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
 
     protected TRContextElement createReadingContext(TeleParameterElement teleParam) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        ServiceCodegenUtils.generateTeleEntryType(teleParam, cb);
+        ServiceCodegenUtils.generateTeleInputType(teleParam, cb);
         return new TRContextElement(teleParam, cb.build());
     }
 

@@ -28,47 +28,26 @@ public class CollectionUtils {
 
     /**
      * Builds the list with arguments as its elements
-     *
-     * @param objs
-     * @param <T>
-     * @return
      */
     @SuppressWarnings("unchecked")
     public static <T> List<T> toList(Object... objs) {
         List<T> result = new ArrayList<>();
         for (Object o : objs) {
-            if (o.getClass().isArray()) {
-                Object[] oa = (Object[]) o;
-                for (Object i:oa){
-                    result.add((T) i);
-                }
+            if (o instanceof Object[] oa) {
+                result.addAll((List<T>) Arrays.asList(oa));
             } else {
                 result.add((T) o);
             }
         }
         return result;
     }
-
     /**
      * Builds the array with arguments as its elements
-     *
-     * @param objs
-     * @return
      */
-    public static Object[] toArray(Object... objs) {
-        List result = toList(objs);
-        return result.toArray();
+    @SuppressWarnings("unchecked")
+    public static <T> T[] toArray(T... objs) {
+        List<T> result = toList(objs);
+        return (T[]) result.toArray();
     }
 
-    /**
-     * Builds set of annotation from arguments
-     *
-     * @param ann
-     * @return
-     */
-    public static Set<Class<? extends Annotation>> annotationClassSet(Class<? extends Annotation>... ann) {
-        Set<Class<? extends Annotation>> result = new HashSet<>();
-        result.addAll(Arrays.asList(ann));
-        return result;
-    }
 }

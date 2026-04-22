@@ -18,7 +18,6 @@ package colesico.framework.restlet.codegen;
 
 
 import colesico.framework.assist.CollectionUtils;
-import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.restlet.Restlet;
@@ -93,7 +92,7 @@ public final class RestletModulator extends RoutesModulator {
         // new RestletTRContext(
         cb.add("$T.$N(", ClassName.get(RestletTRContext.class), RestletTRContext.OF_METHOD);
 
-        ServiceCodegenUtils.generateTeleEntryType(teleParam, cb);
+        ServiceCodegenUtils.generateTeleInputType(teleParam, cb);
 
         cb.add(", $S", paramName);
 
@@ -146,7 +145,7 @@ public final class RestletModulator extends RoutesModulator {
 
     @Override
     public void onTeleEntryParsed(TeleEntryElement teleEntry) {
-        super.onTeleEntryParsed(teleEntry);
+        super.onTeleInputParsed(teleEntry);
         if (teleEntry instanceof TeleBatchFieldElement) {
             AnnotationAssist<ParamName> paramNameAnn = teleEntry.getOriginElement().getAnnotation(ParamName.class);
             if (paramNameAnn == null) {

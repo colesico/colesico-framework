@@ -16,13 +16,12 @@
 
 package colesico.framework.service.codegen.model.teleapi;
 
-import colesico.framework.assist.codegen.model.ParameterElement;
 import colesico.framework.assist.codegen.model.VarElement;
 
 /**
  * Tele-method parameter that can be directly read from data port
  */
-public final class TeleParameterElement extends TeleVarElement implements TeleReadableElement {
+public final class TeleParameterElement extends TeleInputElement implements TeleReadableElement {
 
     private TRContextElement readingContext;
 

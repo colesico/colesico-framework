@@ -62,14 +62,14 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
         batch.addField(batchField);
         teleMethod.addParameter(batchField);
 
-        context.getModulatorKit().notifyTeleVarParsed(batchField);
+        context.getModulatorKit().notifyTeleInputParsed(batchField);
     }
 
     private void parseParameter(TeleMethodElement teleMethod, VarElement variable) {
         // Process simple param
         TeleParameterElement parameter = new TeleParameterElement(teleMethod, variable);
         teleMethod.addParameter(parameter);
-        context.getModulatorKit().notifyTeleVarParsed(parameter);
+        context.getModulatorKit().notifyTeleInputParsed(parameter);
     }
 
     private void parseVariables(TeleMethodElement teleMethod, List<? extends VarElement> variables) {

@@ -22,6 +22,7 @@ import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.teleapi.TeleFacade;
+import colesico.framework.teleapi.TeleMethod;
 import com.palantir.javapoet.CodeBlock;
 import org.apache.commons.lang3.StringUtils;
 
@@ -45,6 +46,11 @@ public class TeleFacadeElement {
     private final Class<?> teleType;
 
     /**
+     * Tele method class
+     */
+    private final Class<? extends TeleMethod> teleMethodClass;
+
+    /**
      * Descriptors registry class
      */
     private final Class<?> descriptorsClass;
@@ -53,7 +59,8 @@ public class TeleFacadeElement {
      * Tele methods.
      * This list can be different with the methods of service due to  {@link colesico.framework.service.LocalMethod}
      */
-    private final Elements<TeleMethodElement> teleMethods;
+    private final Elements<TeleMethodElement> teleMethods = new Elements<>();
+    ;
 
     /**
      * Descriptors registry method code
@@ -80,29 +87,24 @@ public class TeleFacadeElement {
     /**
      * Tele schemas for the facade
      */
-    private final Map<Class<?>, TeleSchemeElement<?>> teleSchemes;
+    private final Map<Class<?>, TeleSchemeElement<?>> teleSchemes = new HashMap<>();
+    ;
 
     /**
      * Common purpose properties
      */
-    private final Map<Class<?>, Object> properties;
+    private final Map<Class<?>, Object> properties = new HashMap<>();
 
     public TeleFacadeElement(Class<?> teleType,
+                             Class<? extends TeleMethod> teleMethodClass,
                              Class<?> descriptorsClass,
                              IocQualifier iocQualifier) {
         this.teleType = teleType;
+        this.teleMethodClass = teleMethodClass;
         this.descriptorsClass = descriptorsClass;
-        this.teleMethods = new Elements<>();
         this.iocQualifier = iocQualifier;
 
-        this.teleSchemes = new HashMap<>();
-        this.properties = new HashMap<>();
-
         this.batchPack = new TeleBatchPackElement(this);
-    }
-
-    public ServiceElement getParentService() {
-        return parentService;
     }
 
     /**
@@ -132,14 +134,6 @@ public class TeleFacadeElement {
         teleMethod.index = teleMethods.size();
     }
 
-    public Elements<TeleMethodElement> getTeleMethods() {
-        return teleMethods;
-    }
-
-    public Class<?> getTeleType() {
-        return teleType;
-    }
-
     public <B> TeleSchemeElement<B> getTeleScheme(Class<B> schemeType) {
         return (TeleSchemeElement<B>) teleSchemes.get(schemeType);
     }
@@ -161,6 +155,22 @@ public class TeleFacadeElement {
             CodegenException.of().message("Tele-ligature code is null");
         }
         return descriptorsMethodBody;
+    }
+
+    public ServiceElement getParentService() {
+        return parentService;
+    }
+
+    public Class<? extends TeleMethod> getTeleMethodClass() {
+        return teleMethodClass;
+    }
+
+    public Elements<TeleMethodElement> getTeleMethods() {
+        return teleMethods;
+    }
+
+    public Class<?> getTeleType() {
+        return teleType;
     }
 
     public void setDescriptorsMethodBody(CodeBlock descriptorsMethodBody) {

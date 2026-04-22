@@ -9,13 +9,14 @@ import colesico.framework.teleapi.TeleScheme;
 import com.palantir.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+
 import javax.lang.model.element.Modifier;
 
 import static colesico.framework.teleapi.TeleFacade.TARGET_PROV_FIELD;
-import static colesico.framework.teleapi.TeleFacade.TELE_DRIVER_FIELD;
 
 public class TeleSchemeGenerator extends FrameworkAbstractGenerator {
     public TeleSchemeGenerator(ProcessingEnvironment processingEnv) {
@@ -30,10 +31,12 @@ public class TeleSchemeGenerator extends FrameworkAbstractGenerator {
                 ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(teleFacade.getParentService().getOriginClass().getOriginType())),
                 TARGET_PROV_FIELD,
                 Modifier.FINAL);
-
+        /*
         mb.addParameter(ClassName.get(teleFacade.getTeleControllerClass()), TELE_DRIVER_FIELD, Modifier.FINAL);
         mb.addStatement("super($N, $N)", TARGET_PROV_FIELD, TELE_DRIVER_FIELD);
+        */
         classBuilder.addMethod(mb.build());
+
     }
 
     protected void generateBuildMethod(TeleSchemeElement schemeBuilder, TypeSpec.Builder classBuilder) {
