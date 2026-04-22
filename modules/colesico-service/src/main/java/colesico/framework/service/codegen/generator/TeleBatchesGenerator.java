@@ -32,7 +32,7 @@ public class TeleBatchesGenerator extends FrameworkAbstractGenerator {
             rb.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
 
             for (TeleBatchFieldElement batchField : batch.getFields()) {
-                TypeName filedTypeName = TypeName.get(batchField.getOriginParameter().getOriginType());
+                TypeName filedTypeName = TypeName.get(batchField.getOriginElement().getOriginType());
                 String filedName = batchField.getName();
                 FieldSpec.Builder fb = FieldSpec.builder(filedTypeName, filedName, Modifier.PRIVATE);
                 rb.addField(fb.build());

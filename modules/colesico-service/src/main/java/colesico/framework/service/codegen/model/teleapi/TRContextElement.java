@@ -22,7 +22,7 @@ public class TRContextElement {
         this.creationCode = creationCode;
     }
 
-    public TeleParameterElement getParentReadable() {
+    public TeleReadableElement getParentReadable() {
         return parentReadable;
     }
 

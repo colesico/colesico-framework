@@ -4,7 +4,7 @@ import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.model.VarElement;
 
 /**
- * Represents field of batch class
+ * Represents field of batch class and corresponding method parameter
  *
  * @see colesico.framework.service.BatchField
  */

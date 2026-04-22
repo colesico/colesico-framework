@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents tele-method entry variable: parameter, batch field etc
+ * Represents tele-method variable: parameter, batch param
  */
 abstract public class TeleVarElement {
 
