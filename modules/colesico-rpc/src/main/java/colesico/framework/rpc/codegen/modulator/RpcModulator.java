@@ -164,20 +164,20 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
 
 
     @Override
-    protected CodeBlock generateLigatureMethodBody(RpcTeleFacadeElement teleFacade) {
+    protected CodeBlock generateDescriptorsMethodBody(RpcTeleFacadeElement teleFacade) {
         CodeBlock.Builder cb = CodeBlock.builder();
 
         // RpcLigature ligature = new RpcLigature();
         cb.addStatement("$T $N = new $T()",
                 ClassName.get(RpcLigature.class),
-                LIGATURE_VAR,
+                DESCRIPTORS_VAR,
                 ClassName.get(RpcLigature.class)
         );
 
         RpcServiceElement rpcServiceElm = teleFacade.getRpcService();
 
         // ligature
-        cb.add("$N", LIGATURE_VAR);
+        cb.add("$N", DESCRIPTORS_VAR);
         cb.indent();
         for (RpcApiElement rpcApi : rpcServiceElm.getAllRpcApi()) {
             // .addApi(
@@ -204,7 +204,7 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
         }
         cb.add(";\n");
         cb.unindent();
-        cb.addStatement("return $N", LIGATURE_VAR);
+        cb.addStatement("return $N", DESCRIPTORS_VAR);
         return cb.build();
     }
 

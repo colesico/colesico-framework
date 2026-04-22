@@ -8,6 +8,7 @@ import colesico.framework.router.Router;
 import colesico.framework.router.RouterBuilder;
 import colesico.framework.teleapi.TeleFacade;
 
+import colesico.framework.teleapi.TeleMethod;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class RouterBuilderImpl implements RouterBuilder {
     @Override
     public void addCustomAction(HttpMethod httpMethod,
                                 String route,
-                                MethodDescriptor teleMethod,
+                                TeleMethod<?, ?> teleMethod,
                                 Class<?> targetClass,
                                 String targetMethod,
                                 Map<String, String> routeAttributes) {
@@ -58,14 +59,14 @@ public class RouterBuilderImpl implements RouterBuilder {
     private static final class CustomRouteAction {
         private final HttpMethod httpMethod;
         private final String route;
-        private final MethodDescriptor teleMethod;
+        private final TeleMethod<?,?> teleMethod;
         private final Class<?> targetClass;
         private final String targetMethod;
         private final Map<String, String> routeAttributes;
 
         public CustomRouteAction(HttpMethod httpMethod,
                                  String route,
-                                 MethodDescriptor teleMethod,
+                                 TeleMethod<?,?> teleMethod,
                                  Class<?> targetClass,
                                  String targetMethod,
                                  Map<String, String> routeAttributes) {
@@ -89,7 +90,7 @@ public class RouterBuilderImpl implements RouterBuilder {
             return targetClass;
         }
 
-        public MethodDescriptor getTeleMethod() {
+        public TeleMethod<?,?> getTeleMethod() {
             return teleMethod;
         }
 

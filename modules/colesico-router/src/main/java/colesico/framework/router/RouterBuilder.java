@@ -1,6 +1,7 @@
 package colesico.framework.router;
 
 import colesico.framework.http.HttpMethod;
+import colesico.framework.teleapi.TeleMethod;
 
 import java.util.Map;
 
@@ -19,7 +20,7 @@ public interface RouterBuilder {
      */
     void addCustomAction(HttpMethod httpMethod,
                          String route,
-                         MethodDescriptor teleMethod,
+                         TeleMethod<?,?> teleMethod,
                          Class<?> targetClass,
                          String targetMethod,
                          Map<String, String> routeAttributes);

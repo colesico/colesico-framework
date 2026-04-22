@@ -23,6 +23,7 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.*;
 import colesico.framework.router.assist.RouteTrie;
 import colesico.framework.teleapi.TeleFacade;
+import colesico.framework.teleapi.TeleMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,9 +59,9 @@ public class RouterImpl implements Router {
         while (it.hasNext()) {
             TeleFacade teleFacade = it.next();
             log.debug("Found http router tele-facade: " + teleFacade.getClass().getName());
-            RoutingLigature ligature = (RoutingLigature) teleFacade.ligature();
+            RoutingDescriptors ligature = (RoutingDescriptors) teleFacade.ligature();
 
-            for (RoutingLigature.RouteInfo routeInfo : ligature.getRoutesInfo()) {
+            for (RoutingDescriptors.RouteInfo routeInfo : ligature.getRoutesInfo()) {
                 if (log.isDebugEnabled()) {
                     log.debug("Route '" + routeInfo.getRoute() + "' mapped to target method '" +
                             ligature.getTargetClass().getName() + "->" + routeInfo.getTargetMethod());
@@ -77,7 +78,7 @@ public class RouterImpl implements Router {
         }
     }
 
-    protected void addCustomAction(HttpMethod httpMethod, String route, MethodDescriptor teleMethod, Class<?> targetClass, String targetMethod, Map<String, String> routeAttributes) {
+    protected void addCustomAction(HttpMethod httpMethod, String route, TeleMethod<?,?> teleMethod, Class<?> targetClass, String targetMethod, Map<String, String> routeAttributes) {
         String fullRoute = httpMethod.getName() + RouteTrie.SEGMENT_DELEMITER + route;
         RouteTrie.Node<RouteAction> node = routeTrie.addRoute(fullRoute, new RouteAction(teleMethod, routeAttributes));
         routesIndex.addNode(toRouteId(targetClass, targetMethod, httpMethod), node);

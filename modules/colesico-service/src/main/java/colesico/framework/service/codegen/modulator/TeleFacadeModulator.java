@@ -36,7 +36,7 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
 
     private final Logger log = LoggerFactory.getLogger(TeleFacadeModulator.class);
 
-    public static final String LIGATURE_VAR = "ligature";
+    public static final String DESCRIPTORS_VAR = "descriptors";
 
     /**
      * Tele-type id.
@@ -72,7 +72,7 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
 
     }
 
-    abstract protected CodeBlock generateLigatureMethodBody(T teleFacade);
+    abstract protected CodeBlock generateDescriptorsMethodBody(T teleFacade);
 
     @Override
     public void onInitTeleFacade(ServiceElement serviceElm) {
@@ -123,7 +123,7 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
             return;
         }
         processTeleFacade(teleFacade);
-        teleFacade.setDescriptorsMethodBody(generateLigatureMethodBody((T) teleFacade));
+        teleFacade.setDescriptorsMethodBody(generateDescriptorsMethodBody((T) teleFacade));
     }
 
     protected TIContextElement createInvocationContext(TeleMethodElement teleMethod) {

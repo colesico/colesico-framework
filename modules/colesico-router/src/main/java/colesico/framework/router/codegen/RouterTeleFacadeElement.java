@@ -1,6 +1,7 @@
 package colesico.framework.router.codegen;
 
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
+import colesico.framework.teleapi.TeleMethod;
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.teleapi.TeleController;
 
@@ -12,16 +13,13 @@ public final class RouterTeleFacadeElement extends TeleFacadeElement {
     private final RoutesBuilder routesBuilder;
 
     public RouterTeleFacadeElement(Class<?> teleType,
-                                   Class<? extends TeleController> teleDriverClass,
-                                   Class<? extends DataPort> dataPortClass,
-                                   Class<?> ligatureClass,
+                                   Class<?> descriptorsClass,
+                                   Class<? extends TeleMethod<?,?>> teleMethodClass,
                                    IocQualifier iocQualifier,
                                    RoutesBuilder routesBuilder) {
 
-        super(teleType, teleDriverClass, dataPortClass, ligatureClass, iocQualifier);
+        super(teleType, teleMethodClass, descriptorsClass, iocQualifier);
         this.routesBuilder = routesBuilder;
-        // Enable compound support
-        this.setCompoundParams(true);
     }
 
     public RoutesBuilder getRoutesBuilder() {

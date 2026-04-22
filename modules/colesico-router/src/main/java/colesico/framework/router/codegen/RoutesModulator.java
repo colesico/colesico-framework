@@ -17,13 +17,12 @@ package colesico.framework.router.codegen;
 
 import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.router.Router;
-import colesico.framework.router.RoutingLigature;
+import colesico.framework.router.RoutingDescriptors;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
 import colesico.framework.service.codegen.modulator.TeleFacadeModulator;
-import colesico.framework.teleapi.dataport.DataPort;
-import colesico.framework.teleapi.TeleController;
+import colesico.framework.teleapi.TeleMethod;
 import com.palantir.javapoet.ClassName;
 import com.palantir.javapoet.CodeBlock;
 import com.palantir.javapoet.TypeName;
@@ -39,9 +38,9 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
 
     protected final Logger logger = LoggerFactory.getLogger(RoutesModulator.class);
 
-    abstract protected Class<? extends TeleController> getTeleDriverClass();
+    abstract protected Class<?> descriptorsClass();
 
-    abstract protected Class<? extends DataPort> getDataPortClass();
+    abstract protected Class<? extends TeleMethod<?, ?>> teleMethodClass();
 
     @Override
     protected void processTeleMethod(TeleMethodElement teleMethodElement) {
@@ -54,21 +53,20 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
     protected RouterTeleFacadeElement createTeleFacade(ServiceElement serviceElm) {
         return new RouterTeleFacadeElement(
                 getTeleType(),
-                getTeleDriverClass(),
-                getDataPortClass(),
-                RoutingLigature.class,
+                descriptorsClass(),
+                teleMethodClass(),
                 TeleFacadeElement.IocQualifier.ofClassed(Router.class),
                 new RoutesBuilder(serviceElm)
         );
     }
 
-    protected CodeBlock generateLigatureMethodBody(RouterTeleFacadeElement teleFacade) {
+    protected CodeBlock generateDescriptorsMethodBody(RouterTeleFacadeElement teleFacade) {
         CodeBlock.Builder cb = CodeBlock.builder();
 
         cb.addStatement("$T $N = new $T($T.class)",
-                ClassName.get(RoutingLigature.class),
-                LIGATURE_VAR,
-                ClassName.get(RoutingLigature.class),
+                ClassName.get(RoutingDescriptors.class),
+                DESCRIPTORS_VAR,
+                ClassName.get(RoutingDescriptors.class),
                 TypeName.get(teleFacade.getParentService().getOriginClass().getOriginType())
         );
 
@@ -78,7 +76,7 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
             cb.add(generateRouteMapping(teleFacade, routedTeleMethod));
         }
 
-        cb.addStatement("return $N", LIGATURE_VAR);
+        cb.addStatement("return $N", DESCRIPTORS_VAR);
         return cb.build();
     }
 
@@ -87,8 +85,8 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
         CodeBlock.Builder cb = CodeBlock.builder();
 
         cb.add("$N.$N($S,$N(),$S,",
-                LIGATURE_VAR,
-                RoutingLigature.ADD_METHOD,
+                DESCRIPTORS_VAR,
+                RoutingDescriptors.ADD_METHOD,
                 routedTeleMethod.getRoute(),
                 routedTeleMethod.getTeleMethod().getBuilderName(),
                 routedTeleMethod.getTeleMethod().getName()

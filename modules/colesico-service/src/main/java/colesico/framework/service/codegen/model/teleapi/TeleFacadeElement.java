@@ -48,7 +48,7 @@ public class TeleFacadeElement {
     /**
      * Tele method class
      */
-    private final Class<? extends TeleMethod> teleMethodClass;
+    private final Class<? extends TeleMethod<?,?>> teleMethodClass;
 
     /**
      * Descriptors registry class
@@ -96,7 +96,7 @@ public class TeleFacadeElement {
     private final Map<Class<?>, Object> properties = new HashMap<>();
 
     public TeleFacadeElement(Class<?> teleType,
-                             Class<? extends TeleMethod> teleMethodClass,
+                             Class<? extends TeleMethod<?,?>> teleMethodClass,
                              Class<?> descriptorsClass,
                              IocQualifier iocQualifier) {
         this.teleType = teleType;
@@ -161,7 +161,7 @@ public class TeleFacadeElement {
         return parentService;
     }
 
-    public Class<? extends TeleMethod> getTeleMethodClass() {
+    public Class<? extends TeleMethod<?,?>> getTeleMethodClass() {
         return teleMethodClass;
     }
 
@@ -230,7 +230,7 @@ public class TeleFacadeElement {
             return new IocQualifier(null, classed);
         }
 
-        public static IocQualifier ofClassed(Class classed) {
+        public static IocQualifier ofClassed(Class<?> classed) {
             return new IocQualifier(null, classed.getName());
         }
     }
