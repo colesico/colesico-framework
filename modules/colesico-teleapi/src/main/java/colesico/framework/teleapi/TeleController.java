@@ -30,41 +30,42 @@ import org.slf4j.LoggerFactory;
  * @param <P> Protocol context API (request-response)
  */
 abstract public class TeleController<P,
-        D extends MethodDescriptor,
         R extends TRContext,
-        W extends TWContext> {
+        W extends TWContext,
+        F extends TeleFacade<?, ?>,
+        M extends TeleMethod<R, W>> {
 
     protected final Logger log = LoggerFactory.getLogger(TeleController.class);
 
     protected final ThreadScope threadScope;
 
-    protected final TeleMethodResolver<P, ?, D, R, W> resolver;
+    protected final TeleResolver<P, F, M> resolver;
 
-    public TeleController(ThreadScope threadScope, TeleMethodResolver<P, ?, D, R, W> resolver) {
+    public TeleController(ThreadScope threadScope, TeleResolver<P, F, M> resolver) {
         this.threadScope = threadScope;
         this.resolver = resolver;
     }
 
     abstract DataPort<R, W> createDataPort(P protocolContext);
 
-    protected void invoke(TeleMethod teleMethod) {
-        teleMethod.invoke();
+    protected void invoke(M teleMethod, DataPort<R, W> dataPort) {
+        teleMethod.invoke(dataPort);
     }
 
-    protected void handleError(Throwable throwable, TeleMethod teleMethod, DataPort<R, W> dataPort) {
+    protected void handleError(Throwable throwable, M teleMethod, DataPort<R, W> dataPort) {
         log.error("Tele-invocation error: '{}'; tele-method: '{}'", throwable.getMessage(), teleMethod);
         dataPort.write(throwable, Throwable.class);
     }
 
-
     public void invoke(P protocolContext) {
 
-        TeleMethod teleMethod = resolver.resolve(protocolContext);
-        DataPort<R, W> dataPort = createDataPort(protocolContext);
+        var dataPort = createDataPort(protocolContext);
         threadScope.put(DataPort.SCOPE_KEY, dataPort);
 
+        M teleMethod = null;
         try {
-            invoke(teleMethod);
+            teleMethod = resolver.resolve(protocolContext);
+            invoke(teleMethod, dataPort);
         } catch (Throwable t) {
             handleError(t, teleMethod, dataPort);
         } finally {

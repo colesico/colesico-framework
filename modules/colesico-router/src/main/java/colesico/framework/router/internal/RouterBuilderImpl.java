@@ -7,7 +7,6 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterBuilder;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.MethodDescriptor;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

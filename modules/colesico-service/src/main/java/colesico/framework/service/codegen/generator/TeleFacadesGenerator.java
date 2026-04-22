@@ -28,7 +28,6 @@ import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.teleapi.TeleController;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.MethodDescriptor;
 import com.palantir.javapoet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

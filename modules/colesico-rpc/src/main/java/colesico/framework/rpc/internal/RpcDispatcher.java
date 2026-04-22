@@ -7,7 +7,6 @@ import colesico.framework.rpc.teleapi.Rpc;
 import colesico.framework.rpc.teleapi.RpcExchange;
 import colesico.framework.rpc.teleapi.RpcLigature;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.MethodDescriptor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

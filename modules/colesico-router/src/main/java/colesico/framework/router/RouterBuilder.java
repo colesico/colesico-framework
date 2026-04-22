@@ -1,7 +1,6 @@
 package colesico.framework.router;
 
 import colesico.framework.http.HttpMethod;
-import colesico.framework.teleapi.MethodDescriptor;
 
 import java.util.Map;
 

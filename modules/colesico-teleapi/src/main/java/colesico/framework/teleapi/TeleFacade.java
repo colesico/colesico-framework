@@ -16,24 +16,18 @@
 
 package colesico.framework.teleapi;
 
-import colesico.framework.teleapi.dataport.DataPort;
-import colesico.framework.teleapi.dataport.TRContext;
-import colesico.framework.teleapi.dataport.TWContext;
 import jakarta.inject.Provider;
 
 /**
  * Unified facade for tele-method invocations.
  *
  * @param <T> Target whose method will be invoked (usually a service)
+ * @param <D> Descriptors registry mapping bet
  */
-abstract public class TeleFacade<T,
-        D extends MethodDescriptor,
-        R extends TRContext,
-        W extends TWContext> {
+abstract public class TeleFacade<T, D> {
 
     public static final String TELE_FACADE_SUFFIX = "Facade";
     public static final String TARGET_PROV_FIELD = "targetProvider";
-    public static final String DATA_PORT_PROV_FIELD = "dataPortProvider";
     public static final String DESCRIPTORS_METHOD = "descriptors";
 
     /**
@@ -43,19 +37,13 @@ abstract public class TeleFacade<T,
      */
     protected final Provider<T> targetProvider;
 
-    /**
-     * Data port provider
-     */
-    protected final Provider<DataPort<R, W>> dataPortProvider;
-
-    @SuppressWarnings("unchecked")
-    public TeleFacade(Provider<T> targetProvider, Provider<DataPort> dataPortProvider) {
+    public TeleFacade(Provider<T> targetProvider) {
         this.targetProvider = targetProvider;
-        this.dataPortProvider = (Provider<DataPort<R, W>>) (Provider) dataPortProvider;
     }
 
     /**
-     * Descriptors of tele-methods  implemented in this tele facade
+     * Descriptors registry of tele-methods implemented in this tele facade.
+     * Descriptor is used to resolve target methods that are called with tele-api.
      */
-    abstract public Iterable<D> descriptors();
+    abstract public D descriptors();
 }

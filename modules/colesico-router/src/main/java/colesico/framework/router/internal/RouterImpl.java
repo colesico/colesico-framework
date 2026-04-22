@@ -23,7 +23,6 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.*;
 import colesico.framework.router.assist.RouteTrie;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.MethodDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

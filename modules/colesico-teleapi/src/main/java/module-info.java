@@ -6,6 +6,7 @@ module colesico.framework.teleapi {
     requires org.slf4j;
 
     requires org.apache.commons.lang3;
+    requires jdk.httpserver;
 
     // Exports
 

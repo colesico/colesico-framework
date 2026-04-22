@@ -2,6 +2,7 @@ package colesico.framework.service.codegen.model.teleapi;
 
 import colesico.framework.assist.StrUtils;
 import com.palantir.javapoet.CodeBlock;
+import colesico.framework.teleapi.TeleScheme;
 
 /**
  * Tele-scheme element

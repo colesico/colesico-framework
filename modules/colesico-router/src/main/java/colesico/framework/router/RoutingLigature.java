@@ -16,8 +16,6 @@
 
 package colesico.framework.router;
 
-import colesico.framework.teleapi.MethodDescriptor;
-
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
