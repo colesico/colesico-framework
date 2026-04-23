@@ -44,7 +44,7 @@ public class RouterBuilderImpl implements RouterBuilder {
     @Override
     public Router build() {
         RouterImpl router = new RouterImpl(threadScope);
-        router.loadRoutesMapping(teleFacadesSupp);
+        router.addRoutesMapping(teleFacadesSupp);
         for (CustomRouteAction cra : customRouteActions) {
             router.addCustomAction(cra.getHttpMethod(),
                     cra.getRoute(),

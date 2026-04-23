@@ -49,7 +49,7 @@ public class RouterImpl implements Router {
         this.threadScope = threadScope;
     }
 
-    protected void loadRoutesMapping(Polysupplier<TeleFacade> teleFacadeSupp) {
+    protected void addRoutesMapping(Polysupplier<TeleFacade> teleFacadeSupp) {
         log.debug("Lookup http router tele-facades... ");
 
         routeTrie = new RouteTrie<>(null);
