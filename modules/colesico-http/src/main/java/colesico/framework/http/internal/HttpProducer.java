@@ -36,10 +36,10 @@ public class HttpProducer {
     }
 
     public HttpRequest getHttpRequest(HttpContext ctx) {
-        return ctx.getRequest();
+        return ctx.request();
     }
 
     public HttpResponse getHttpResponse(HttpContext ctx) {
-        return ctx.getResponse();
+        return ctx.response();
     }
 }

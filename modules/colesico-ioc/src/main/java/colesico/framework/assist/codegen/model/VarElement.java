@@ -38,7 +38,7 @@ abstract public class VarElement extends ParserElement {
     }
 
     @Override
-    public TypeMirror getOriginType() {
+    public TypeMirror originType() {
         return originType;
     }
 

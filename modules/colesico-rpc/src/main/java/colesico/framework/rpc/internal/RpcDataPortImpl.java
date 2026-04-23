@@ -34,7 +34,7 @@ public class RpcDataPortImpl implements RpcDataPort {
         }
 
         // Try to get accurate reader
-        RpcTeleReader<V> reader = trwFactory.findReader(RpcTeleReader.class, context.getValueType());
+        RpcTeleReader<V> reader = trwFactory.findReader(RpcTeleReader.class, context.valueType());
         if (reader != null) {
             // Ctx can be null for reading by type  (Principal reading, etc.)
             context.setRequest(request);
@@ -46,7 +46,7 @@ public class RpcDataPortImpl implements RpcDataPort {
         RpcTRContext.ValueGetter<RpcRequest, V> valueGetter = context.getValueGetter();
 
         if (valueGetter == null) {
-            throw new RpcException("RPC value getter required read type: " + context.getValueType().getTypeName());
+            throw new RpcException("RPC value getter required read type: " + context.valueType().getTypeName());
         }
 
         return valueGetter.get(request);
@@ -61,7 +61,7 @@ public class RpcDataPortImpl implements RpcDataPort {
     public <V> void write(V value, RpcTWContext context) {
 
         // Try to get accurate writer
-        RpcTeleWriter<V> writer = trwFactory.findWriter(RpcTeleWriter.class, context.getValueType());
+        RpcTeleWriter<V> writer = trwFactory.findWriter(RpcTeleWriter.class, context.valueType());
         if (writer != null) {
             context.setResponse(response);
             writer.write(value, context);

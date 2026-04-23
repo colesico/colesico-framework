@@ -101,7 +101,7 @@ abstract public class FactoryElement {
         this.postConstructListeners = postConstructListeners;
     }
 
-    abstract public Element getOriginElement();
+    abstract public Element originElement();
 
     public void addParameter(InjectableElement paramElm) {
         this.parameters.add(paramElm);
@@ -111,7 +111,7 @@ abstract public class FactoryElement {
         keyTypes.add(st);
     }
 
-    public final String getFactoryMethodName() {
+    public final String factoryMethodName() {
         return factoryMethodBaseName + "Factory" + factoryIndex;
     }
 
@@ -119,47 +119,47 @@ abstract public class FactoryElement {
         this.factoryIndex = factoryIndex;
     }
 
-    public ClassType getSuppliedType() {
+    public ClassType suppliedType() {
         return suppliedType;
     }
 
-    public String getFactoryMethodBaseName() {
+    public String factoryMethodBaseName() {
         return factoryMethodBaseName;
     }
 
-    public ScopeElement getScope() {
+    public ScopeElement scope() {
         return scope;
     }
 
-    public ConditionElement getCondition() {
+    public ConditionElement condition() {
         return condition;
     }
 
-    public SubstitutionElement getSubstitution() {
+    public SubstitutionElement substitution() {
         return substitution;
     }
 
-    public Boolean getPolyproduce() {
+    public Boolean polyproduce() {
         return polyproduce;
     }
 
-    public String getNamed() {
+    public String named() {
         return named;
     }
 
-    public ClassifierType getClassed() {
+    public ClassifierType classed() {
         return classed;
     }
 
-    public PostProduceElement getPostProduce() {
+    public PostProduceElement postProduce() {
         return postProduce;
     }
 
-    public List<InjectableElement> getParameters() {
+    public List<InjectableElement> parameters() {
         return parameters;
     }
 
-    public List<MethodElement> getPostConstructListeners() {
+    public List<MethodElement> postConstructListeners() {
         return postConstructListeners;
     }
 
@@ -171,11 +171,11 @@ abstract public class FactoryElement {
         return notifyPostProduce;
     }
 
-    public int getFactoryIndex() {
+    public int factoryIndex() {
         return factoryIndex;
     }
 
-    public List<ClassType> getKeyTypes() {
+    public List<ClassType> keyTypes() {
         return keyTypes;
     }
 

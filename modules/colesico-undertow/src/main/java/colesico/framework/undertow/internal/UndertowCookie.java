@@ -21,42 +21,42 @@ public class UndertowCookie implements HttpCookie {
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return undertowCookie.getName();
     }
 
     @Override
-    public String getValue() {
+    public String setValue() {
         return undertowCookie.getValue();
     }
 
     @Override
-    public String getDomain() {
+    public String domain() {
         return undertowCookie.getDomain();
     }
 
     @Override
-    public String getPath() {
+    public String path() {
         return undertowCookie.getPath();
     }
 
     @Override
-    public Integer getMaxAge() {
+    public Integer maxAge() {
         return undertowCookie.getMaxAge();
     }
 
     @Override
-    public Date getExpires() {
+    public Date expires() {
         return undertowCookie.getExpires();
     }
 
     @Override
-    public Boolean getSecure() {
+    public Boolean secure() {
         return undertowCookie.isSecure();
     }
 
     @Override
-    public SameSite getSameSite() {
+    public SameSite sameSite() {
         String ssm = undertowCookie.getSameSiteMode();
         if (ssm != null) {
             switch (ssm) {
@@ -72,7 +72,7 @@ public class UndertowCookie implements HttpCookie {
     }
 
     @Override
-    public Boolean getHttpOnly() {
+    public Boolean httpOnly() {
         return undertowCookie.isHttpOnly();
     }
 

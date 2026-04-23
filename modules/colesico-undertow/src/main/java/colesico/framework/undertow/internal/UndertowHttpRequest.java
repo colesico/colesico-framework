@@ -140,22 +140,22 @@ public final class UndertowHttpRequest implements HttpRequest {
     }
 
     @Override
-    public HttpMethod getRequestMethod() {
+    public HttpMethod requestMethod() {
         return HttpMethod.of(exchange.getRequestMethod().toString());
     }
 
     @Override
-    public String getRequestScheme() {
+    public String requestScheme() {
         return exchange.getRequestScheme();
     }
 
     @Override
-    public String getQueryString() {
+    public String queryString() {
         return exchange.getQueryString();
     }
 
     @Override
-    public HttpValues<String, String> getHeaders() {
+    public HttpValues<String, String> headers() {
         if (headers == null) {
             headers = createHeaders();
         }
@@ -163,7 +163,7 @@ public final class UndertowHttpRequest implements HttpRequest {
     }
 
     @Override
-    public HttpValues<String, HttpCookie> getCookies() {
+    public HttpValues<String, HttpCookie> cookies() {
         if (cookies == null) {
             cookies = createCookies();
         }
@@ -171,7 +171,7 @@ public final class UndertowHttpRequest implements HttpRequest {
     }
 
     @Override
-    public HttpValues<String, String> getQueryParameters() {
+    public HttpValues<String, String> queryParameters() {
         if (queryParams == null) {
             queryParams = createQueryParams();
         }
@@ -179,7 +179,7 @@ public final class UndertowHttpRequest implements HttpRequest {
     }
 
     @Override
-    public HttpValues<String, String> getPostParameters() {
+    public HttpValues<String, String> postParameters() {
         if (postParams == null) {
             createPostValues();
         }
@@ -187,7 +187,7 @@ public final class UndertowHttpRequest implements HttpRequest {
     }
 
     @Override
-    public HttpValues<String, HttpFile> getPostFiles() {
+    public HttpValues<String, HttpFile> postFiles() {
         if (postFiles == null) {
             createPostValues();
         }
@@ -195,22 +195,22 @@ public final class UndertowHttpRequest implements HttpRequest {
     }
 
     @Override
-    public String getRequestURI() {
+    public String requestURI() {
         return StringUtils.substringBefore(exchange.getRequestURI(), "?");
     }
 
     @Override
-    public String getHost() {
+    public String host() {
         return exchange.getHostName();
     }
 
     @Override
-    public Integer getPort() {
+    public Integer port() {
         return exchange.getHostPort();
     }
 
     @Override
-    public InputStream getInputStream() {
+    public InputStream inputStream() {
         if (inputStream == null) {
             exchange.startBlocking();
             inputStream = exchange.getInputStream();
@@ -221,7 +221,7 @@ public final class UndertowHttpRequest implements HttpRequest {
     @Override
     public void dump(final Writer out) {
         try {
-            out.append(getRequestMethod().getName() + " " + getRequestScheme() + "://"
+            out.append(requestMethod().name() + " " + requestScheme() + "://"
                     + exchange.getHostName()
                     + ":" + exchange.getDestinationAddress().getPort()
                     + exchange.getRequestURI()

@@ -59,10 +59,10 @@ public class StaticContentImpl implements StaticContent {
             resourcePath = resourceUtils.localize(resourcePath);
         }
 
-        httpContext.getResponse().setContenType(MimeAssist.getContentType(resourcePath));
+        httpContext.response().setContenType(MimeAssist.getContentType(resourcePath));
 
         try (InputStream is = resourceUtils.getResourceStream(resourcePath);
-             OutputStream os = httpContext.getResponse().getOutputStream()) {
+             OutputStream os = httpContext.response().outputStream()) {
             byte[] buf = new byte[SEND_BUFFER_SIZE];
             int c;
             while ((c = is.read(buf, 0, buf.length)) > 0) {

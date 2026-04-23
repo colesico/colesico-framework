@@ -61,7 +61,7 @@ public class DefaultErrorHandler implements ErrorHandler {
         out.append("</body>");
         out.append("</html>");
 
-        HttpResponse response = httpContext.getResponse();
+        HttpResponse response = httpContext.response();
         try {
             if (exception instanceof UnknownRouteException) {
                 response.sendText(out.toString(), HTML_CONTENT_TYPE, 404);

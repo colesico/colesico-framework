@@ -34,7 +34,7 @@ public class RpcApiProcessor extends FrameworkAbstractProcessor {
     }
 
     @Override
-    protected Class<? extends Annotation>[] getSupportedAnnotations() {
+    protected Class<? extends Annotation>[] supportedAnnotations() {
         return new Class[]{RpcApi.class};
     }
 

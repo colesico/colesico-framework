@@ -66,9 +66,9 @@ public class ServiceProcessor extends FrameworkAbstractProcessor {
     }
 
     @Override
-    protected Class<? extends Annotation>[] getSupportedAnnotations() {
+    protected Class<? extends Annotation>[] supportedAnnotations() {
         Set<Class<? extends Annotation>> result = new HashSet<>();
-        for (Class<? extends Annotation> ac : modulatorManager.getServiceAnnotations()) {
+        for (Class<? extends Annotation> ac : modulatorManager.serviceAnnotations()) {
             logger.debug("Use service annotation: " + ac.getName());
             result.add(ac);
         }
@@ -100,7 +100,7 @@ public class ServiceProcessor extends FrameworkAbstractProcessor {
             return true;
         } catch (Exception e) {
             String msg = ExceptionUtils.getRootCauseMessage(e);
-            context.getMessager().printMessage(Kind.ERROR, msg);
+            context.messager().printMessage(Kind.ERROR, msg);
             if (logger.isDebugEnabled()) {
                 e.printStackTrace();
             }
@@ -114,7 +114,7 @@ public class ServiceProcessor extends FrameworkAbstractProcessor {
 
         Set<String> serviceTypsNames = new HashSet<>();
 
-        for (Class<? extends Annotation> serviceAnnotation : modulatorManager.getServiceAnnotations()) {
+        for (Class<? extends Annotation> serviceAnnotation : modulatorManager.serviceAnnotations()) {
             for (Element elm : roundEnv.getElementsAnnotatedWith(serviceAnnotation)) {
                 if (elm.getKind() != ElementKind.CLASS) {
                     continue;

@@ -68,7 +68,7 @@ public final class RefreshScopeImpl implements RefreshScope {
     }
 
     @Override
-    public Set<Key<?>> getKeys() {
+    public Set<Key<?>> keys() {
         return beans.keySet();
     }
 

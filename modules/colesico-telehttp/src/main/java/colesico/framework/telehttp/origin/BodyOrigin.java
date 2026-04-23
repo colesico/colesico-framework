@@ -22,7 +22,7 @@ public class BodyOrigin implements Origin {
 
     @Override
     public Collection<String> getStrings(String name) {
-        try (InputStream is = httpContextProv.get().getRequest().getInputStream()) {
+        try (InputStream is = httpContextProv.get().request().inputStream()) {
             String content = TeleHttpUtils.inputStreamToString(is);
             return List.of(content);
         } catch (Exception e) {

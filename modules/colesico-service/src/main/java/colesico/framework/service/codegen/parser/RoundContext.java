@@ -36,11 +36,11 @@ public final class RoundContext {
         this.properties = new HashMap();
     }
 
-    public Set<? extends TypeElement> getAnnotations() {
+    public Set<? extends TypeElement> annotations() {
         return annotations;
     }
 
-    public RoundEnvironment getRoundEnv() {
+    public RoundEnvironment roundEnv() {
         return roundEnv;
     }
 

@@ -16,7 +16,7 @@ abstract public class TRContext {
         this.valueType = valueType;
     }
 
-    public Type getValueType() {
+    public Type valueType() {
         return valueType;
     }
 

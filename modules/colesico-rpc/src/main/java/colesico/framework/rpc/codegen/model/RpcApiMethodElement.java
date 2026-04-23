@@ -45,21 +45,21 @@ public class RpcApiMethodElement {
     }
 
     public String getRequestClassSimpleName() {
-        return StrUtils.firstCharToUpperCase(originMethod.getName()) + RPC_REQUEST_CLASS_SUFFIX+index;
+        return StrUtils.firstCharToUpperCase(originMethod.name()) + RPC_REQUEST_CLASS_SUFFIX+index;
     }
 
     public String getRequestClassName() {
-        return parentApi.getOriginInterface().getPackageName() + '.' +
+        return parentApi.getOriginInterface().packageName() + '.' +
                 parentApi.getEnvelopePackClassSimpleName() + '.' +
                 getRequestClassSimpleName();
     }
 
     public String getResponseClassSimpleName() {
-        return StrUtils.firstCharToUpperCase(originMethod.getName()) + RPC_RESPONSE_CLASS_SUFFIX+index;
+        return StrUtils.firstCharToUpperCase(originMethod.name()) + RPC_RESPONSE_CLASS_SUFFIX+index;
     }
 
     public String getResponseClassName() {
-        return parentApi.getOriginInterface().getPackageName() + '.' +
+        return parentApi.getOriginInterface().packageName() + '.' +
                 parentApi.getEnvelopePackClassSimpleName() + '.' +
                 getResponseClassSimpleName();
     }
@@ -71,7 +71,7 @@ public class RpcApiMethodElement {
 
     public String rpcMethodName() {
         if (StringUtils.isBlank(rpcName)) {
-            return originMethod.getName()+"_"+index;
+            return originMethod.name()+"_"+index;
         } else {
             return rpcName;
         }

@@ -46,7 +46,7 @@ public class WebletDataPortImpl implements WebletDataPort {
             reader = trwFactory.getReader(context.getReaderClass());
         } else {
             // Get reader by value type
-            reader = trwFactory.findReader(WebletTeleReader.class, context.getValueType());
+            reader = trwFactory.findReader(WebletTeleReader.class, context.valueType());
             if (reader == null) {
                 // Get default reader
                 reader = trwFactory.getReader(WebletTeleReader.class, Object.class);
@@ -63,7 +63,7 @@ public class WebletDataPortImpl implements WebletDataPort {
     @Override
     public <V> void write(V value, WebletTWContext context) {
 
-        boolean isWebletResponse = context.getValueType().equals(WebletResponse.class);
+        boolean isWebletResponse = context.valueType().equals(WebletResponse.class);
 
         // Obtain writer
         WebletTeleWriter writer;
@@ -75,7 +75,7 @@ public class WebletDataPortImpl implements WebletDataPort {
             if (isWebletResponse) {
                 responseType = ((WebletResponse) value).unwrap().getClass();
             } else {
-                responseType = context.getValueType();
+                responseType = context.valueType();
             }
             // Get reader by response type
             writer = trwFactory.getWriter(WebletTeleWriter.class, responseType);

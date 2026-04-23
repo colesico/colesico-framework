@@ -106,19 +106,19 @@ abstract public class Modulator {
 
     }
 
-    public final ServiceProcessorContext getProcessorContext() {
+    public final ServiceProcessorContext processorContext() {
         return processorContext;
     }
 
-    public final RoundContext getRoundContext() {
+    public final RoundContext roundContext() {
         return roundContext;
     }
 
-    public ServiceElement getService() {
+    public ServiceElement service() {
         return service;
     }
 
-    public ServiceMethodElement getServiceMethod() {
+    public ServiceMethodElement serviceMethod() {
         return serviceMethod;
     }
 

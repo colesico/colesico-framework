@@ -32,7 +32,7 @@ public class TeleBatchesGenerator extends FrameworkAbstractGenerator {
             rb.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
 
             for (TeleBatchFieldElement batchField : batch.fields()) {
-                TypeName filedTypeName = TypeName.get(batchField.originElement().getOriginType());
+                TypeName filedTypeName = TypeName.get(batchField.originElement().originType());
                 String filedName = batchField.name();
                 FieldSpec.Builder fb = FieldSpec.builder(filedTypeName, filedName, Modifier.PRIVATE);
                 rb.addField(fb.build());
@@ -54,7 +54,7 @@ public class TeleBatchesGenerator extends FrameworkAbstractGenerator {
             pb.addType(rb.build());
         }
 
-        String packageName = batchPack.parentTeleFacade().parentService().originClass().getPackageName();
+        String packageName = batchPack.parentTeleFacade().parentService().originClass().packageName();
         CodegenUtils.createJavaFile(processingEnv, pb.build(), packageName, batchPack.parentTeleFacade().parentService().originClass().unwrap());
     }
 }

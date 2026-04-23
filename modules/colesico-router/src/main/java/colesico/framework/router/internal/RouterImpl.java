@@ -57,10 +57,10 @@ public class RouterImpl implements Router {
 
         var descriptors = teleFacade.descriptors();
 
-        for (var routeInfo : descriptors.getRoutesInfo()) {
+        for (var routeInfo : descriptors.routesInfo()) {
             if (log.isDebugEnabled()) {
                 log.debug("Route '" + routeInfo.route() + "' mapped to target method '" +
-                        descriptors.getTargetClass().getName() + "->" + routeInfo.targetMethod());
+                        descriptors.targetClass().getName() + "->" + routeInfo.targetMethod());
 
             }
             RouteTrie.Node<RouteAction> node = routeTrie.addRoute(
@@ -68,8 +68,8 @@ public class RouterImpl implements Router {
                     new RouteAction(routeInfo.teleMethod(), routeInfo.attributes())
             );
 
-            HttpMethod httpMethod = HttpMethod.of(node.getRoot().getName());
-            routesIndex.addNode(toRouteId(descriptors.getTargetClass(), routeInfo.targetMethod(), httpMethod), node);
+            HttpMethod httpMethod = HttpMethod.of(node.root().name());
+            routesIndex.addNode(toRouteId(descriptors.targetClass(), routeInfo.targetMethod(), httpMethod), node);
         }
     }
 
@@ -85,14 +85,14 @@ public class RouterImpl implements Router {
     }
 
     void addCustomAction(HttpMethod httpMethod, String route, TeleMethod<?, ?> teleMethod, Class<?> targetClass, String targetMethod, Map<String, String> routeAttributes) {
-        String fullRoute = httpMethod.getName() + RouteTrie.SEGMENT_DELEMITER + route;
+        String fullRoute = httpMethod.name() + RouteTrie.SEGMENT_DELEMITER + route;
         RouteTrie.Node<RouteAction> node = routeTrie.addRoute(fullRoute, new RouteAction(teleMethod, routeAttributes));
         routesIndex.addNode(toRouteId(targetClass, targetMethod, httpMethod), node);
-        log.debug("Route '{}{}' mapped to custom action method '{}->{}()'", httpMethod.getName(), route, targetClass.getName(), targetMethod);
+        log.debug("Route '{}{}' mapped to custom action method '{}->{}()'", httpMethod.name(), route, targetClass.getName(), targetMethod);
     }
 
     String toRouteId(Class<?> targetClass, String targetMethod, HttpMethod httpMethod) {
-        return targetClass.getName() + ':' + targetMethod + ':' + httpMethod.getName();
+        return targetClass.getName() + ':' + targetMethod + ':' + httpMethod.name();
     }
 
     @Override
@@ -105,12 +105,12 @@ public class RouterImpl implements Router {
         var requestMethod = context.requestMethod();
         var requestUri = context.requestUri();
 
-        RouteTrie.RouteResolution<RouteAction> routeResolution = routeTrie.resolveRoute(StrUtils.concatPath(requestMethod.getName(), requestUri, RouteTrie.SEGMENT_DELEMITER));
+        RouteTrie.RouteResolution<RouteAction> routeResolution = routeTrie.resolveRoute(StrUtils.concatPath(requestMethod.name(), requestUri, RouteTrie.SEGMENT_DELEMITER));
 
         if (routeResolution == null
-                || routeResolution.getNode() == null
-                || routeResolution.getNode().getValue() == null
-                || routeResolution.getNode().getValue().teleMethod() == null) {
+                || routeResolution.node() == null
+                || routeResolution.node().value() == null
+                || routeResolution.node().value().teleMethod() == null) {
             return Optional.empty();
         }
 
@@ -118,8 +118,8 @@ public class RouterImpl implements Router {
                 new RouteInvocation(this,
                         requestMethod,
                         requestUri,
-                        routeResolution.getNode().getValue(),
-                        routeResolution.getParams())
+                        routeResolution.node().value(),
+                        routeResolution.params())
         );
     }
 
@@ -128,8 +128,8 @@ public class RouterImpl implements Router {
         if (invocation == null){
             throw new TeleException("Undetermined invocation target");
         }
-        RouterContext routerContext = new RouterContext(invocation.getRequestUri(), invocation.getRouteParameters());
+        RouterContext routerContext = new RouterContext(invocation.requestUri(), invocation.routeParameters());
         threadScope.put(RouterContext.SCOPE_KEY, routerContext);
-        invocation.getController().invoke(invocation);
+        invocation.controller().invoke(invocation);
     }
 }

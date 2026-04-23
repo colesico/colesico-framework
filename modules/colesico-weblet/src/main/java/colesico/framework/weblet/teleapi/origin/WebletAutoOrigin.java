@@ -23,26 +23,26 @@ public class WebletAutoOrigin implements WebletOrigin {
     @Override
     public String getStrings(String name) {
         String value = null;
-        HttpRequest httpRequest = httpContextProv.get().getRequest();
-        switch (httpRequest.getRequestMethod().getName()) {
+        HttpRequest httpRequest = httpContextProv.get().request();
+        switch (httpRequest.requestMethod().name()) {
             case HttpMethod.GET:
             case HttpMethod.HEAD:
-                if (httpRequest.getQueryParameters().hasKey(name)) {
-                    return httpRequest.getQueryParameters().get(name);
+                if (httpRequest.queryParameters().hasKey(name)) {
+                    return httpRequest.queryParameters().get(name);
                 }
-                return routerContextProv.get().getParameters().get(name);
+                return routerContextProv.get().parameters().get(name);
             case HttpMethod.POST:
             case HttpMethod.PATCH:
             case HttpMethod.DELETE:
             case HttpMethod.PUT:
-                if (httpRequest.getPostParameters().hasKey(name)) {
-                    return httpRequest.getPostParameters().get(name);
+                if (httpRequest.postParameters().hasKey(name)) {
+                    return httpRequest.postParameters().get(name);
                 }
-                if (httpRequest.getQueryParameters().hasKey(name)) {
-                    return httpRequest.getQueryParameters().get(name);
+                if (httpRequest.queryParameters().hasKey(name)) {
+                    return httpRequest.queryParameters().get(name);
                 }
                 RouterContext routerContext = routerContextProv.get();
-                return routerContext.getParameters().get(name);
+                return routerContext.parameters().get(name);
             default:
                 return value;
         }

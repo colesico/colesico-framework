@@ -57,7 +57,7 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
 
     protected void generateProducerField() {
         //log.info("Generate field: "+PRODUCER_FIELD);
-        TypeName producerTypeName = TypeName.get(iocletElement.getOriginProducer().asClassType().unwrap());
+        TypeName producerTypeName = TypeName.get(iocletElement.originProducer().asClassType().unwrap());
 
         TypeName fieldType = ParameterizedTypeName.get(ClassName.get(LazySingleton.class), producerTypeName);
 
@@ -83,39 +83,39 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
 
     protected void generateGetProducerIdMethod() {
         //log.info("Generate  method: "+Ioclet.GET_PRODUCER_NAME_METHOD);
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(Ioclet.GET_ID_METHOD);
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(Ioclet.ID_METHOD);
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         mb.returns(ClassName.get(String.class));
         mb.addAnnotation(Override.class);
-        mb.addStatement("return $S", iocletElement.getIocletId());
+        mb.addStatement("return $S", iocletElement.iocletId());
         classBuilder.addMethod(mb.build());
     }
 
     protected void generateSupplierFactoryMethods() {
-        for (FactoryElement fe : iocletElement.getFactories()) {
-            MethodSpec.Builder mb = MethodSpec.methodBuilder(fe.getFactoryMethodName());
+        for (FactoryElement fe : iocletElement.factories()) {
+            MethodSpec.Builder mb = MethodSpec.methodBuilder(fe.factoryMethodName());
 
-            if (fe.getPostProduce() == null) {
-                mb.addJavadoc("Factory to produce " + fe.getSuppliedType().unwrap().toString() + " class instance\n");
-                mb.addJavadoc("Scope: " + fe.getScope().getKind() + "; Custom: " + fe.getScope().getCustomScopeClass() + '\n');
-                if (fe.getNamed() != null) {
-                    mb.addJavadoc("Named: " + fe.getNamed() + '\n');
+            if (fe.postProduce() == null) {
+                mb.addJavadoc("Factory to produce " + fe.suppliedType().unwrap().toString() + " class instance\n");
+                mb.addJavadoc("Scope: " + fe.scope().kind() + "; Custom: " + fe.scope().customScopeClass() + '\n');
+                if (fe.named() != null) {
+                    mb.addJavadoc("Named: " + fe.named() + '\n');
                 }
-                if (fe.getClassed() != null) {
-                    mb.addJavadoc("Classed: " + fe.getClassed().getErasure().toString() + '\n');
+                if (fe.classed() != null) {
+                    mb.addJavadoc("Classed: " + fe.classed().erasure().toString() + '\n');
                 }
-                if (fe.getPolyproduce()) {
+                if (fe.polyproduce()) {
                     mb.addJavadoc("Polyproduce: true" + '\n');
                 }
             } else {
-                mb.addJavadoc("Factory of post produce listener for class " + fe.getSuppliedType().asClassElement().getName() + '\n');
-                mb.addJavadoc("WithNamed: " + fe.getPostProduce().getWithNamed() + '\n');
-                mb.addJavadoc("WithClassed: " + fe.getPostProduce().getWithClassed() + '\n');
+                mb.addJavadoc("Factory of post produce listener for class " + fe.suppliedType().asClassElement().name() + '\n');
+                mb.addJavadoc("WithNamed: " + fe.postProduce().withNamed() + '\n');
+                mb.addJavadoc("WithClassed: " + fe.postProduce().withClassed() + '\n');
             }
 
             mb.returns(ParameterizedTypeName.get(
                             ClassName.get(Factory.class),
-                            TypeName.get(fe.getSuppliedType().unwrap())
+                            TypeName.get(fe.suppliedType().unwrap())
                     )
             );
             mb.addModifiers(Modifier.PUBLIC);
@@ -129,13 +129,13 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         mb.addParameter(ClassName.get(Catalog.class), Ioclet.CATALOG_PARAM, Modifier.FINAL);
         mb.addAnnotation(Override.class);
-        for (FactoryElement factoryElm : iocletElement.getFactories()) {
+        for (FactoryElement factoryElm : iocletElement.factories()) {
 
             // All supplied types by given factory: type itself and supertypes
             List<ClassType> suppliedTypeList = new ArrayList<>();
-            suppliedTypeList.addAll(factoryElm.getKeyTypes());
+            suppliedTypeList.addAll(factoryElm.keyTypes());
             if (suppliedTypeList.isEmpty()) {
-                suppliedTypeList.add(factoryElm.getSuppliedType());
+                suppliedTypeList.add(factoryElm.suppliedType());
             }
 
             // Loop for all factory supplied types  (supplied type itself and supertypes)
@@ -146,27 +146,27 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
 
                 // new Key(), condition, substitute, polyproduce
                 cb.add(keyGenerator.forFactory(factoryElm, suppliedType));
-                if (factoryElm.getCondition() != null) {
-                    cb.add(", new $T()", TypeName.get(factoryElm.getCondition().getConditionClass().unwrap()));
+                if (factoryElm.condition() != null) {
+                    cb.add(", new $T()", TypeName.get(factoryElm.condition().conditionClass().unwrap()));
                 } else {
                     cb.add(", null");
                 }
 
                 // Substitution
-                if (factoryElm.getSubstitution() != null) {
-                    cb.add(", $T.$N", ClassName.get(Substitution.class), factoryElm.getSubstitution().getSubstitutionType().name());
+                if (factoryElm.substitution() != null) {
+                    cb.add(", $T.$N", ClassName.get(Substitution.class), factoryElm.substitution().substitutionType().name());
                 } else {
                     cb.add(", $T.$N", ClassName.get(Substitution.class), Substitution.REGULAR.name());
                 }
 
                 // Polyproduce
-                cb.add(", $L", factoryElm.getPolyproduce());
+                cb.add(", $L", factoryElm.polyproduce());
 
                 cb.add(")){\n");
 
                 // catalog.add(factoryX())
                 cb.indent();
-                cb.addStatement("$N.$N($N())", Ioclet.CATALOG_PARAM, Catalog.ADD_METHOD, factoryElm.getFactoryMethodName());
+                cb.addStatement("$N.$N($N())", Ioclet.CATALOG_PARAM, Catalog.ADD_METHOD, factoryElm.factoryMethodName());
                 cb.unindent();
                 cb.add("}\n\n");
                 mb.addCode(cb.build());
@@ -179,12 +179,12 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
         log.debug("Generate Ioclet based on: " + iocletElement);
         this.iocletElement = iocletElement;
 
-        classBuilder = TypeSpec.classBuilder(iocletElement.getIocletClassSimpleName());
+        classBuilder = TypeSpec.classBuilder(iocletElement.iocletClassSimpleName());
         classBuilder.addSuperinterface(ClassName.get(Ioclet.class));
         classBuilder.addModifiers(Modifier.PUBLIC);
         classBuilder.addModifiers(Modifier.FINAL);
 
-        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "Producer: " + iocletElement.getOriginProducer().getName());
+        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "Producer: " + iocletElement.originProducer().name());
         classBuilder.addAnnotation(genstamp);
 
         generateProducerField();

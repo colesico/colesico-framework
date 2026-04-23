@@ -31,15 +31,15 @@ abstract public class Assist {
         this.processingEnv = processingEnv;
     }
 
-    protected ProcessingEnvironment getProcessingEnv() {
+    protected ProcessingEnvironment processingEnv() {
         return processingEnv;
     }
 
-    protected Elements getElementUtils() {
+    protected Elements elementUtils() {
         return processingEnv.getElementUtils();
     }
 
-    protected Types getTypeUtils() {
+    protected Types typeUtils() {
         return processingEnv.getTypeUtils();
     }
 

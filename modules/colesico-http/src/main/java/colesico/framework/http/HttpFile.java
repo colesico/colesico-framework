@@ -27,9 +27,9 @@ public interface HttpFile {
      */
     void release();
 
-    String getFileName();
+    String fileName();
 
-    String getContentType();
+    String contentType();
 
-    InputStream getInputStream();
+    InputStream inputStream();
 }

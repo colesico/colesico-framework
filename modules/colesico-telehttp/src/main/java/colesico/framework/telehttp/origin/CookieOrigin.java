@@ -24,9 +24,9 @@ public class CookieOrigin implements Origin {
     @Override
     public Collection<String> getStrings(String name) {
         List<String> result = new ArrayList<>();
-        MultiValue<HttpCookie> cookies = httpContextProv.get().getRequest().getCookies().getAll(name);
+        MultiValue<HttpCookie> cookies = httpContextProv.get().request().cookies().getAll(name);
         if (cookies != null) {
-            cookies.iterator().forEachRemaining(c -> result.add(c.getValue()));
+            cookies.iterator().forEachRemaining(c -> result.add(c.setValue()));
         }
         return result;
     }

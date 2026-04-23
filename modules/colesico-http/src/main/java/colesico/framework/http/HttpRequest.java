@@ -17,7 +17,6 @@ package colesico.framework.http;
 
 import java.io.InputStream;
 import java.io.Writer;
-import java.util.Map;
 
 /**
  * Http request model
@@ -27,63 +26,63 @@ public interface HttpRequest {
     /**
      * Returns the http method. e.g. GET, POST, etc.
      */
-    HttpMethod getRequestMethod();
+    HttpMethod requestMethod();
 
     /**
      * Http protocol string: http, https etc.
      */
-    String getRequestScheme();
+    String requestScheme();
 
     /**
      * Requested host
      */
-    String getHost();
+    String host();
 
     /**
      * Requested port
      */
-    Integer getPort();
+    Integer port();
 
     /**
      * The part of request's URL from the domain(port) name up to the query string
      */
-    String getRequestURI();
+    String requestURI();
 
     /**
      * Query URL part after '?' char
      */
-    String getQueryString();
+    String queryString();
 
     /**
      * Returns read-only http headers
      */
-    HttpValues<String, String> getHeaders();
+    HttpValues<String, String> headers();
 
     /**
      * Returns read-only cookies
      */
-    HttpValues<String, HttpCookie> getCookies();
+    HttpValues<String, HttpCookie> cookies();
 
     /**
      * Returns read-only query string parameters
      */
-    HttpValues<String,String> getQueryParameters();
+    HttpValues<String,String> queryParameters();
 
     /**
      * Returns read-only string parameters model from post map with Content-Type: application/x-www-form-urlencoded
      * or  multipart/form-data except files
      */
-    HttpValues<String,String> getPostParameters();
+    HttpValues<String,String> postParameters();
 
     /**
      * Returns read-only file model from post map with Content-Type: multipart/form-data
      */
-    HttpValues<String, HttpFile> getPostFiles();
+    HttpValues<String, HttpFile> postFiles();
 
     /**
      * Returns body input stream
        */
-    InputStream getInputStream();
+    InputStream inputStream();
 
     /**
      * Dump request data to characters output for further logging

@@ -25,7 +25,7 @@ public class SubstitutionElement {
         this.substitutionType = substitutionType;
     }
 
-    public Substitution getSubstitutionType() {
+    public Substitution substitutionType() {
         return substitutionType;
     }
 }

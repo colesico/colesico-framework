@@ -27,7 +27,7 @@ import colesico.framework.ioc.scope.ThreadScope;
  */
 public final class IocIoclet implements Ioclet {
 
-    private Factory<Ioc> getIOCContainerFactory() {
+    private Factory<Ioc> iocContainerFactory() {
         return new SingletonFactory<>() {
             private Ioc ioc;
 
@@ -43,7 +43,7 @@ public final class IocIoclet implements Ioclet {
         };
     }
 
-    private Factory<ThreadScope> getThreadScopeFactory() {
+    private Factory<ThreadScope> threadScopeFactory() {
         return new SingletonFactory<>() {
 
             @Override
@@ -53,7 +53,7 @@ public final class IocIoclet implements Ioclet {
         };
     }
 
-    private Factory<RefreshScope> getRefreshScopeFactory() {
+    private Factory<RefreshScope> refreshScopeFactory() {
         return new SingletonFactory<>() {
             private Ioc ioc;
 
@@ -70,22 +70,22 @@ public final class IocIoclet implements Ioclet {
     }
 
     @Override
-    public String getId() {
+    public String id() {
         return IocIoclet.class.getName();
     }
 
     @Override
     public void addFactories(Catalog catalog) {
         if (catalog.accept(new TypeKey<>(Ioc.class), null, null, false)) {
-            catalog.add(getIOCContainerFactory());
+            catalog.add(iocContainerFactory());
         }
 
         if (catalog.accept(new TypeKey<>(ThreadScope.class), null, null, false)) {
-            catalog.add(getThreadScopeFactory());
+            catalog.add(threadScopeFactory());
         }
 
         if (catalog.accept(new TypeKey<>(RefreshScope.class), null, null, false)) {
-            catalog.add(getRefreshScopeFactory());
+            catalog.add(refreshScopeFactory());
         }
     }
 

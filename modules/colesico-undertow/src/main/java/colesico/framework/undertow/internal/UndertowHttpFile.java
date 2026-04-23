@@ -33,19 +33,19 @@ public class UndertowHttpFile implements HttpFile {
     }
 
     @Override
-    public String getFileName() {
+    public String fileName() {
         return value.getFileName();
     }
 
     @Override
-    public String getContentType() {
+    public String contentType() {
         HeaderValues hv = value.getHeaders().get("Content-Type");
         String contentType = hv != null ? hv.getFirst() : "";
         return contentType;
     }
 
     @Override
-    public InputStream getInputStream() {
+    public InputStream inputStream() {
         try {
             return new FileInputStream(getFilePath().toFile());
         } catch (Exception e) {

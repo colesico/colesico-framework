@@ -42,7 +42,7 @@ public final class ThreadScopeImpl implements ThreadScope {
     }
 
     @Override
-    public Set<Key<?>> getKeys() {
+    public Set<Key<?>> keys() {
         return beansHolder.get().keySet();
     }
 

@@ -56,7 +56,7 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
     }
 
     @Override
-    protected Class<? extends Annotation>[] getSupportedAnnotations() {
+    protected Class<? extends Annotation>[] supportedAnnotations() {
         return new Class[]{Dictionary.class};
     }
 
@@ -111,7 +111,7 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
         DictionaryElement dictionaryBeanElement = new DictionaryElement(dictionaryBeanInterface);
 
 
-        List<MethodElement> methods = dictionaryBeanInterface.getMethodsFiltered(
+        List<MethodElement> methods = dictionaryBeanInterface.methodsFiltered(
                 m -> !m.unwrap().getModifiers().contains(Modifier.DEFAULT) &&
                         CodegenUtils.isAssignable(String.class, m.unwrap().getReturnType(), processingEnv)
         );
@@ -124,7 +124,7 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
             dictionaryBeanElement.addTranslationMethod(method);
 
             // Find translations
-            List<AnnotationType> annList = method.getAnnotationTypes();
+            List<AnnotationType> annList = method.annotationTypes();
             for (AnnotationType ann : annList) {
                 AnnotationAssist<Translation> translationAnn = ann.asElement().getAnnotation(Translation.class);
                 if (translationAnn == null) {

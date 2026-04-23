@@ -18,10 +18,7 @@ package colesico.framework.assist.codegen.model;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import java.util.Objects;
 
 public class ParameterElement extends VarElement {
 
@@ -32,7 +29,7 @@ public class ParameterElement extends VarElement {
         this.parentMethod = parentMethod;
     }
 
-    public MethodElement getParentMethod() {
+    public MethodElement parentMethod() {
         return parentMethod;
     }
 

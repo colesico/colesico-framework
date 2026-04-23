@@ -43,7 +43,7 @@ public class CSRFProtector<V> {
     }
 
     protected static String getRequestedHostName(HttpRequest request) {
-        return request.getHost();
+        return request.host();
     }
 
     protected static String getHostFromUrl(String url) {
@@ -65,13 +65,13 @@ public class CSRFProtector<V> {
     public void check(HttpRequest request) {
 
         // Skip GET requests for referer check
-        if (HttpMethod.HTTP_METHOD_GET.equals(request.getRequestMethod())) {
+        if (HttpMethod.HTTP_METHOD_GET.equals(request.requestMethod())) {
             return;
         }
 
         // Check ORIGIN Http Header
         String requestHost = getRequestedHostName(request);
-        String originHeader = request.getHeaders().get(ORIGIN_HEADER);
+        String originHeader = request.headers().get(ORIGIN_HEADER);
         if (originHeader != null) {
             String host = getHostFromUrl(originHeader);
             if (!requestHost.equals(host)) {
@@ -81,7 +81,7 @@ public class CSRFProtector<V> {
         }
 
         // Check REFERER Http Header
-        String refererHeader = request.getHeaders().get(REFERER_HEADER);
+        String refererHeader = request.headers().get(REFERER_HEADER);
         if (refererHeader != null) {
             String host = getHostFromUrl(refererHeader);
             if (!requestHost.equals(host)) {
@@ -91,13 +91,13 @@ public class CSRFProtector<V> {
         }
 
         // Check Double submit token
-        HttpCookie cookie = request.getCookies().get(CSRF_COOKIE);
+        HttpCookie cookie = request.cookies().get(CSRF_COOKIE);
         if (cookie == null) {
             return;
         }
 
-        String csrfCookieToken = cookie.getValue();
-        String csrfHeaderToken = request.getHeaders().get(CSRF_HEADER);
+        String csrfCookieToken = cookie.setValue();
+        String csrfHeaderToken = request.headers().get(CSRF_HEADER);
 
         if (!StringUtils.equals(csrfCookieToken, csrfHeaderToken)) {
             throw new ApplicationException("CSRF token mismatch:" + csrfCookieToken + " != " + csrfHeaderToken);

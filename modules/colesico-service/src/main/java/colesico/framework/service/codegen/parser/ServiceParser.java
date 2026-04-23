@@ -39,13 +39,13 @@ public class ServiceParser extends FrameworkAbstractParser {
     protected final TeleFacadeParser teleFacadeParser;
 
     public ServiceParser(ServiceProcessorContext context) {
-        super(context.getProcessingEnv());
+        super(context.processingEnv());
         this.context = context;
         this.teleFacadeParser = new TeleFacadeParser(context);
     }
 
     protected ClassType getServiceScope(ClassElement serviceElement) {
-        List<AnnotationType> allAnnotations = serviceElement.getAnnotationTypes();
+        List<AnnotationType> allAnnotations = serviceElement.annotationTypes();
         DeclaredType scopeType = null;
         for (AnnotationType annotation : allAnnotations) {
             AnnotationElement annotationElement = annotation.asElement();
@@ -60,14 +60,14 @@ public class ServiceParser extends FrameworkAbstractParser {
                 }
             }
         }
-        return scopeType == null ? null : new ClassType(context.getProcessingEnv(), scopeType);
+        return scopeType == null ? null : new ClassType(context.processingEnv(), scopeType);
     }
 
 
     protected boolean isPlainMethod(MethodElement m, ClassElement classElement) {
         AnnotationAssist<PlainMethod> classPlainAnn = classElement.getAnnotation(PlainMethod.class);
         AnnotationAssist<ServiceMethod> classServAnn = classElement.getAnnotation(ServiceMethod.class);
-        List<AnnotationAssist<PlainMethod>> plainMethodAnns = m.getAnnotationsInherited(PlainMethod.class);
+        List<AnnotationAssist<PlainMethod>> plainMethodAnns = m.annotationsInherited(PlainMethod.class);
         AnnotationAssist<ServiceMethod> serviceMethodAnn = m.getAnnotation(ServiceMethod.class);
 
         final boolean isFinal = m.unwrap().getModifiers().contains(Modifier.FINAL);
@@ -99,11 +99,11 @@ public class ServiceParser extends FrameworkAbstractParser {
         ClassElement classElement = serviceElement.originClass();
         AnnotationAssist<LocalMethod> classLocalAnn = classElement.getAnnotation(LocalMethod.class);
 
-        List<MethodElement> methods = classElement.getMethods();
+        List<MethodElement> methods = classElement.methods();
 
         for (MethodElement method : methods) {
             if (method.unwrap().getModifiers().contains(Modifier.STATIC)) {
-                logger.debug("Skip static method: {}", method.getName());
+                logger.debug("Skip static method: {}", method.name());
                 continue;
             }
 
@@ -123,20 +123,20 @@ public class ServiceParser extends FrameworkAbstractParser {
             ServiceMethodElement serviceMethod = new ServiceMethodElement(method, isPlain, isLocal, isPCListener);
             serviceElement.addServiceMethod(serviceMethod);
 
-            context.getModulatorKit().notifyServiceMethodParsed(serviceMethod);
+            context.modulatorKit().notifyServiceMethodParsed(serviceMethod);
         }
     }
 
     public ServiceElement parse(TypeElement serviceType) {
 
-        ClassElement serviceClass = ClassElement.of(context.getProcessingEnv(), serviceType);
+        ClassElement serviceClass = ClassElement.of(context.processingEnv(), serviceType);
 
         ServiceElement service = new ServiceElement(serviceClass, getServiceScope(serviceClass));
 
-        context.getModulatorKit().notifyBeforeParseService(service);
+        context.modulatorKit().notifyBeforeParseService(service);
         parseServiceMethods(service);
         teleFacadeParser.parse(service);
-        context.getModulatorKit().notifyServiceParsed(service);
+        context.modulatorKit().notifyServiceParsed(service);
 
         return service;
     }

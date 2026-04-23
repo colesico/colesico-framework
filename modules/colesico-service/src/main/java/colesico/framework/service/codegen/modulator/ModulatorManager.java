@@ -88,7 +88,7 @@ public class ModulatorManager {
         });
     }
 
-    public Set<Class<? extends Annotation>> getServiceAnnotations() {
+    public Set<Class<? extends Annotation>> serviceAnnotations() {
         return serviceAnnotations;
     }
 

@@ -18,14 +18,14 @@ public class ClientProducerGenerator extends FrameworkAbstractGenerator {
 
     public void generate(RpcApiElement rpcApiElm) {
         String classSimpleName = rpcApiElm.getClientClassSimpleName();
-        String packageName = rpcApiElm.getOriginInterface().getPackageName();
+        String packageName = rpcApiElm.getOriginInterface().packageName();
 
-        ProducerGenerator prodGen = new ProducerGenerator(packageName, classSimpleName, this.getClass(), getProcessingEnv());
+        ProducerGenerator prodGen = new ProducerGenerator(packageName, classSimpleName, this.getClass(), processingEnv());
 
         prodGen.addProduceAnnotation(ClassName.bestGuess(rpcApiElm.getClientClassName()));
 
-        MethodSpec.Builder pmb = prodGen.addImplementMethod("get" + rpcApiElm.getOriginInterface().getSimpleName(),
-                TypeName.get(rpcApiElm.getOriginInterface().getOriginType()),
+        MethodSpec.Builder pmb = prodGen.addImplementMethod("get" + rpcApiElm.getOriginInterface().simpleName(),
+                TypeName.get(rpcApiElm.getOriginInterface().originType()),
                 ClassName.bestGuess(rpcApiElm.getClientClassName()));
         pmb.addAnnotation(Singleton.class);
 

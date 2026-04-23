@@ -29,7 +29,7 @@ public class EnvelopeGenerator extends FrameworkAbstractGenerator {
         for (RpcApiParamElement param : method.getParameters()) {
             FieldSpec.Builder field = FieldSpec.builder(TypeName.get(param.getParamType()), param.fieldName(), Modifier.PRIVATE);
 
-            field.addJavadoc(param.getOriginParam().getName() + " method parameter");
+            field.addJavadoc(param.getOriginParam().name() + " method parameter");
             requestBuilder.addField(field.build());
 
             MethodSpec.Builder getter = MethodSpec.methodBuilder(param.getterName());
@@ -84,8 +84,8 @@ public class EnvelopeGenerator extends FrameworkAbstractGenerator {
 
     private void generateRequestEnvelope(TypeSpec.Builder envelopeBuilder, RpcApiMethodElement method) {
         TypeSpec.Builder requestBuilder = TypeSpec.classBuilder(method.getRequestClassSimpleName());
-        requestBuilder.addJavadoc("RPC request for method " + method.getParentApi().getOriginInterface().getName() +
-                "->" + method.getOriginMethod().getName());
+        requestBuilder.addJavadoc("RPC request for method " + method.getParentApi().getOriginInterface().name() +
+                "->" + method.getOriginMethod().name());
         requestBuilder.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
         requestBuilder.superclass(ClassName.get(RpcRequest.class));
         generateParams(requestBuilder, method);
@@ -100,9 +100,9 @@ public class EnvelopeGenerator extends FrameworkAbstractGenerator {
         responseBuilder.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
 
         ParameterizedTypeName responseType;
-        if (method.getOriginMethod().getReturnType().getKind() != TypeKind.VOID) {
+        if (method.getOriginMethod().teturnType().getKind() != TypeKind.VOID) {
             responseType = ParameterizedTypeName.get(ClassName.get(RpcResponse.class),
-                    TypeName.get(method.getOriginMethod().getReturnType()));
+                    TypeName.get(method.getOriginMethod().teturnType()));
         } else {
             responseType = ParameterizedTypeName.get(ClassName.get(RpcResponse.class), ClassName.get(Object.class));
         }
@@ -122,12 +122,12 @@ public class EnvelopeGenerator extends FrameworkAbstractGenerator {
 
     public void generate(RpcApiElement rpcApiElm) {
         String classSimpleName = rpcApiElm.getEnvelopePackClassSimpleName();
-        String packageName = rpcApiElm.getOriginInterface().getPackageName();
+        String packageName = rpcApiElm.getOriginInterface().packageName();
 
         TypeSpec.Builder envelopeBuilder = TypeSpec.classBuilder(classSimpleName);
         envelopeBuilder.addModifiers(Modifier.PUBLIC);
 
-        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "RPC interface: " + rpcApiElm.getOriginInterface().getName());
+        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "RPC interface: " + rpcApiElm.getOriginInterface().name());
         envelopeBuilder.addAnnotation(genstamp);
 
 

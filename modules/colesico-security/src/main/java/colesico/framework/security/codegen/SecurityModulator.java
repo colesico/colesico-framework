@@ -77,8 +77,8 @@ public class SecurityModulator extends Modulator {
             auditorIdx++;
 
             // Add auditor field
-            String fieldName = StrUtils.firstCharToLowerCase(sae.getAuditorClass().getSimpleName()) + auditorIdx;
-            FieldSpec fieldSpec = FieldSpec.builder(TypeName.get(sae.getAuditorClass().getOriginType()), fieldName).addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
+            String fieldName = StrUtils.firstCharToLowerCase(sae.getAuditorClass().simpleName()) + auditorIdx;
+            FieldSpec fieldSpec = FieldSpec.builder(TypeName.get(sae.getAuditorClass().originType()), fieldName).addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
             ServiceFieldElement fieldElement = new ServiceFieldElement(fieldSpec).inject();
             service.addCustomField(fieldElement);
 

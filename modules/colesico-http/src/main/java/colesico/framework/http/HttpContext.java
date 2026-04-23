@@ -35,12 +35,12 @@ public final class HttpContext {
         this.response = response;
     }
 
-    public HttpRequest getRequest() {
+    public HttpRequest request() {
         return request;
     }
 
 
-    public HttpResponse getResponse() {
+    public HttpResponse response() {
         return response;
     }
 

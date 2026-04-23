@@ -33,7 +33,7 @@ public class FieldElement extends VarElement {
         this.parentClass = parentClass;
     }
 
-    public ClassElement getParentClass() {
+    public ClassElement parentClass() {
         return parentClass;
     }
 

@@ -117,11 +117,11 @@ public class CodegenUtils {
         }
 
         // Process method parameters
-        List<ParameterElement> methodParams = method.getParameters();
+        List<ParameterElement> methodParams = method.parameters();
         ArrayCodegen paramsGen = new ArrayCodegen();
 
         for (ParameterElement param : methodParams) {
-            String paramName = param.getNameWithPrefix(paramPrefix);
+            String paramName = param.nameWithPrefix(paramPrefix);
             paramsGen.add("$N", paramName);
         }
 
@@ -130,14 +130,14 @@ public class CodegenUtils {
             cb.addStatement("super(" + paramsGen.toFormat() + ")", paramsGen.toValues());
             return cb.build();
         } else {
-            TypeMirror retType = method.getReturnType();
+            TypeMirror retType = method.teturnType();
             if (retType instanceof NoType) {
-                cb.add("super.$N(", method.getName());
+                cb.add("super.$N(", method.name());
                 cb.add(paramsGen.toFormat(), paramsGen.toValues());
                 cb.add(");\n");
                 return cb.build();
             } else {
-                cb.add("$N = super.$N(", resultVarName, method.getName());
+                cb.add("$N = super.$N(", resultVarName, method.name());
                 cb.add(paramsGen.toFormat(), paramsGen.toValues());
                 cb.add(");\n");
                 return cb.build();
@@ -150,7 +150,7 @@ public class CodegenUtils {
         if (method.isConstractor()) {
             mb = MethodSpec.constructorBuilder();
         } else {
-            String proxyMethodName = method.getNameWithPrefix(methodPrefix);
+            String proxyMethodName = method.nameWithPrefix(methodPrefix);
             mb = MethodSpec.methodBuilder(proxyMethodName);
             mb.addAnnotation(Override.class);
 
@@ -159,7 +159,7 @@ public class CodegenUtils {
                 mb.addTypeVariable(TypeVariableName.get(tpe));
             }
 
-            TypeMirror returnType = method.getReturnType();
+            TypeMirror returnType = method.teturnType();
             mb.returns(TypeName.get(returnType));
 
         }
@@ -180,14 +180,14 @@ public class CodegenUtils {
     public static List<ParameterSpec> generateProxyMethodParams(MethodElement method, String paramPrefix, boolean skipAnnotations) {
         List<ParameterSpec> result = new ArrayList<>();
 
-        List<ParameterElement> methodParams = method.getParameters();
+        List<ParameterElement> methodParams = method.parameters();
         for (ParameterElement param : methodParams) {
             Set<Modifier> modifiersSet = new HashSet<>(param.unwrap().getModifiers());
             modifiersSet.add(Modifier.FINAL);
 
             Modifier[] modifiers = modifiersSet.toArray(new Modifier[modifiersSet.size()]);
-            String paramName = param.getNameWithPrefix(paramPrefix);
-            TypeMirror paramType = param.getOriginType();
+            String paramName = param.nameWithPrefix(paramPrefix);
+            TypeMirror paramType = param.originType();
 
             ParameterSpec.Builder paramBilder = ParameterSpec.builder(TypeName.get(paramType), paramName, modifiers);
 

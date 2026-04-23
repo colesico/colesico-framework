@@ -54,12 +54,12 @@ public class DictionaryRegistry {
 
     public DictionaryElement register(DictionaryElement dictionaryElement) {
 
-        String packageName = dictionaryElement.getOriginBean().getPackageName();
+        String packageName = dictionaryElement.getOriginBean().packageName();
 
         List<DictionaryElement> packageDictBeans = byPackageMap.computeIfAbsent(packageName, k -> new ArrayList<>());
         packageDictBeans.add(dictionaryElement);
 
-        logger.debug("Dictionary bean " + dictionaryElement.getOriginBean().getOriginType().toString() + " has been registered");
+        logger.debug("Dictionary bean " + dictionaryElement.getOriginBean().originType().toString() + " has been registered");
         return dictionaryElement;
     }
 }

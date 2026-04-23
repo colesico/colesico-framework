@@ -43,31 +43,31 @@ abstract public class ParserElement extends Assist {
      */
     abstract public Element unwrap();
 
-    abstract public TypeMirror getOriginType();
+    abstract public TypeMirror originType();
 
-    public String getName() {
+    public String name() {
         return unwrap().getSimpleName().toString();
     }
 
     public ClassType asClassType() {
-        if (getOriginType().getKind() == TypeKind.DECLARED) {
-            return new ClassType(getProcessingEnv(), (DeclaredType) getOriginType());
+        if (originType().getKind() == TypeKind.DECLARED) {
+            return new ClassType(processingEnv(), (DeclaredType) originType());
         }
         return null;
     }
 
-    public String getNameWithPrefix(String prefix) {
+    public String nameWithPrefix(String prefix) {
         if (StringUtils.isEmpty(prefix)) {
-            return getName();
+            return name();
         }
-        return StrUtils.addPrefix(prefix, getName());
+        return StrUtils.addPrefix(prefix, name());
     }
 
-    public ModuleElement getModule() {
-        return getElementUtils().getModuleOf(unwrap());
+    public ModuleElement module() {
+        return elementUtils().getModuleOf(unwrap());
     }
 
-    public PackageElement getPackage() {
+    public PackageElement packageElement() {
         Element enclosingElement = unwrap().getEnclosingElement();
         while (!(enclosingElement instanceof PackageElement)) {
             enclosingElement = enclosingElement.getEnclosingElement();
@@ -76,8 +76,8 @@ abstract public class ParserElement extends Assist {
         return packageElement;
     }
 
-    public String getPackageName() {
-        PackageElement packageElement = getPackage();
+    public String packageName() {
+        PackageElement packageElement = packageElement();
         return packageElement.getQualifiedName().toString();
     }
 
@@ -90,7 +90,7 @@ abstract public class ParserElement extends Assist {
         return new AnnotationAssist<>(processingEnv, annotation);
     }
 
-    public List<AnnotationType> getAnnotationTypes() {
+    public List<AnnotationType> annotationTypes() {
         List<? extends AnnotationMirror> ams = unwrap().getAnnotationMirrors();
         List<AnnotationType> result = new ArrayList<>();
         for (AnnotationMirror am : ams) {
@@ -100,15 +100,15 @@ abstract public class ParserElement extends Assist {
     }
 
     public boolean checkPackageAccessibility(String targetModule) {
-        if (getModule().isOpen()) {
+        if (module().isOpen()) {
             return true;
         }
 
-        if (getModule().isUnnamed()) {
+        if (module().isUnnamed()) {
             return true;
         }
 
-        List<? extends ModuleElement.Directive> directives = getModule().getDirectives();
+        List<? extends ModuleElement.Directive> directives = module().getDirectives();
 
         for (ModuleElement.Directive d : directives) {
             if (d.getKind() != ModuleElement.DirectiveKind.EXPORTS) {
@@ -116,7 +116,7 @@ abstract public class ParserElement extends Assist {
             }
             ModuleElement.ExportsDirective ed = (ModuleElement.ExportsDirective) d;
             String pkgName = ed.getPackage().getQualifiedName().toString();
-            if (!getPackage().getQualifiedName().toString().equals(pkgName)) {
+            if (!packageElement().getQualifiedName().toString().equals(pkgName)) {
                 continue;
             }
             List<? extends ModuleElement> targetModules = ed.getTargetModules();

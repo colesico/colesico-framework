@@ -36,9 +36,9 @@ public final class JsonReader implements ValueReader {
 
     @Override
     public Object read(RestletTRContext context) {
-        HttpRequest request = httpContextProv.get().getRequest();
+        HttpRequest request = httpContextProv.get().request();
 
-        HttpMethod requestMethod = request.getRequestMethod();
+        HttpMethod requestMethod = request.requestMethod();
 
         // Should the value be read from request input stream?
         String originName = context.getOriginName();
@@ -56,8 +56,8 @@ public final class JsonReader implements ValueReader {
                 );
 
         if (useInputStream) {
-            try (InputStream is = request.getInputStream()) {
-                return jsonConverter.fromJson(is, context.getValueType());
+            try (InputStream is = request.inputStream()) {
+                return jsonConverter.fromJson(is, context.valueType());
             } catch (Exception e) {
                 throw new RestletException(new RestletError("ReadJsonError", ExceptionUtils.getRootCauseMessage(e), null));
             }
@@ -68,7 +68,7 @@ public final class JsonReader implements ValueReader {
                 if (StringUtils.isBlank(strValue)) {
                     return null;
                 }
-                return jsonConverter.fromJson(strValue, context.getValueType());
+                return jsonConverter.fromJson(strValue, context.valueType());
             } catch (Exception e) {
                 throw new RestletException(new RestletError("ReadJsonError", ExceptionUtils.getRootCauseMessage(e), null));
             }

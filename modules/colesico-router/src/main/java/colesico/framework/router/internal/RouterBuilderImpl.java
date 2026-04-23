@@ -47,12 +47,12 @@ public class RouterBuilderImpl implements RouterBuilder {
         RouterImpl router = new RouterImpl(threadScope);
         router.register((TeleFacade<?, RouterDescriptors>) teleFacadesSupp);
         for (CustomRouteAction cra : customRouteActions) {
-            router.addCustomAction(cra.getHttpMethod(),
-                    cra.getRoute(),
-                    cra.getTeleMethod(),
-                    cra.getTargetClass(),
-                    cra.getTargetMethod(),
-                    cra.getRouteAttributes());
+            router.addCustomAction(cra.httpMethod(),
+                    cra.route(),
+                    cra.teleMethod(),
+                    cra.targetClass(),
+                    cra.targetMethod(),
+                    cra.grouteAttributes());
         }
         return router;
     }
@@ -79,27 +79,27 @@ public class RouterBuilderImpl implements RouterBuilder {
             this.routeAttributes = routeAttributes;
         }
 
-        public HttpMethod getHttpMethod() {
+        public HttpMethod httpMethod() {
             return httpMethod;
         }
 
-        public String getRoute() {
+        public String route() {
             return route;
         }
 
-        public Class<?> getTargetClass() {
+        public Class<?> targetClass() {
             return targetClass;
         }
 
-        public TeleMethod<?,?> getTeleMethod() {
+        public TeleMethod<?,?> teleMethod() {
             return teleMethod;
         }
 
-        public String getTargetMethod() {
+        public String targetMethod() {
             return targetMethod;
         }
 
-        public Map<String, String> getRouteAttributes() {
+        public Map<String, String> grouteAttributes() {
             return routeAttributes;
         }
     }

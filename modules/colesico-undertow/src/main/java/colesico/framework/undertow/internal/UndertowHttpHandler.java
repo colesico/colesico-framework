@@ -69,7 +69,7 @@ public class UndertowHttpHandler extends RequestProcessor<HttpServerExchange> im
 
         if (routeInvocation != null) {
             // Check  blocking|non-blocking processing
-            Map<String, String> routeAttributes = routeInvocation.getRouteAction().attributes();
+            Map<String, String> routeAttributes = routeInvocation.routeAction().attributes();
 
             boolean blockingProcessing = routeAttributes == null
                     || (!"true".equals(routeAttributes.get(HttpServerAttribute.NON_BLOCKING)));

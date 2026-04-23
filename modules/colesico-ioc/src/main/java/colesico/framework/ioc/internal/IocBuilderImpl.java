@@ -82,7 +82,7 @@ public class IocBuilderImpl implements IocBuilder {
     }
 
     @Override
-    public ConditionContext getConditionContext() {
+    public ConditionContext conditionContext() {
         return conditionContext;
     }
 
@@ -109,10 +109,10 @@ public class IocBuilderImpl implements IocBuilder {
                 ioclet.addFactories(catalog);
             }
         } catch (Exception e) {
-            throw new IocException("Error loading ioclet: " + (curIoclet != null ? curIoclet.getId() : "?") + "; message: " + ExceptionUtils.getRootCauseMessage(e));
+            throw new IocException("Error loading ioclet: " + (curIoclet != null ? curIoclet.id() : "?") + "; message: " + ExceptionUtils.getRootCauseMessage(e));
         }
 
-        Map<Key<?>, Factory<?>> factories = catalog.getFactories();
+        Map<Key<?>, Factory<?>> factories = catalog.factories();
 
         AdvancedIoc ioc = new IocContainerImpl(factories);
 
@@ -142,7 +142,7 @@ public class IocBuilderImpl implements IocBuilder {
         log.debug("Lookup ioclets...");
         ServiceLocator<Ioclet> ioclets = serviceLocatorFactory.locator(this.getClass(), Ioclet.class);
         for (Ioclet ioclet : ioclets) {
-            log.debug("Found ioclet '" + ioclet.getClass().getName() + "' with id: '" + ioclet.getId() + "'");
+            log.debug("Found ioclet '" + ioclet.getClass().getName() + "' with id: '" + ioclet.id() + "'");
             result.add(ioclet);
         }
         return result;

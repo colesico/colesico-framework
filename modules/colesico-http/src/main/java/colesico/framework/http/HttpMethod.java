@@ -59,7 +59,7 @@ public class HttpMethod {
         this.name = name;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 

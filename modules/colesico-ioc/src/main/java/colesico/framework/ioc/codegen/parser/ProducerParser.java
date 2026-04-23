@@ -61,7 +61,7 @@ public class ProducerParser extends FrameworkAbstractParser {
     }
 
     protected MethodElement getInjectableConstructor(ClassElement producer) {
-        List<MethodElement> methods = producer.getConstructorsFiltered(
+        List<MethodElement> methods = producer.constructorsFiltered(
                 m -> m.unwrap().getModifiers().contains(Modifier.PUBLIC)
                         && !m.unwrap().getModifiers().contains(Modifier.FINAL)
         );
@@ -99,13 +99,13 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         // Find custom scope
         ScopeElement result = null;
-        for (AnnotationType am : element.getAnnotationTypes()) {
+        for (AnnotationType am : element.annotationTypes()) {
             ScopeElement scopeElm = null;
 
             AnnotationAssist<CustomScope> customScope = am.asElement().getAnnotation(CustomScope.class);
             if (customScope != null) {
                 TypeMirror scopeClass = customScope.getValueTypeMirror(CustomScope::value);
-                scopeElm = new ScopeElement(ScopeElement.ScopeKind.CUSTOM, new ClassType(getProcessingEnv(), (DeclaredType) scopeClass));
+                scopeElm = new ScopeElement(ScopeElement.ScopeKind.CUSTOM, new ClassType(processingEnv(), (DeclaredType) scopeClass));
             }
 
             if (scopeElm != null) {
@@ -133,11 +133,11 @@ public class ProducerParser extends FrameworkAbstractParser {
             return new ScopeElement(ScopeElement.ScopeKind.UNSCOPED, null);
         }
 
-        ClassType scopeAnn = new ClassType(getProcessingEnv(), (DeclaredType) scopeMirror);
+        ClassType scopeAnn = new ClassType(processingEnv(), (DeclaredType) scopeMirror);
         AnnotationAssist<CustomScope> customScope = scopeAnn.asClassElement().getAnnotation(CustomScope.class);
         if (customScope != null) {
             TypeMirror scopeClass = customScope.getValueTypeMirror(CustomScope::value);
-            return new ScopeElement(ScopeElement.ScopeKind.CUSTOM, new ClassType(getProcessingEnv(), (DeclaredType) scopeClass));
+            return new ScopeElement(ScopeElement.ScopeKind.CUSTOM, new ClassType(processingEnv(), (DeclaredType) scopeClass));
         }
 
         throw CodegenException.of()
@@ -150,19 +150,19 @@ public class ProducerParser extends FrameworkAbstractParser {
     private List<MethodElement> parsePostConstructListeners(ClassType suppliedType) {
         List<MethodElement> listeners = new ArrayList<>();
         ClassElement suppliedTypeElement = suppliedType.asClassElement();
-        for (MethodElement me : suppliedTypeElement.getMethods()) {
+        for (MethodElement me : suppliedTypeElement.methods()) {
             if (me.getAnnotation(PostConstruct.class) == null) {
                 continue;
             }
-            if (!me.getParameters().isEmpty()) {
+            if (!me.parameters().isEmpty()) {
                 throw CodegenException.of().message("Post construct method '"
-                        + suppliedTypeElement.getName()
-                        + "." + me.getName() + "(...)'  should not have arguments").element(me.unwrap()).build();
+                        + suppliedTypeElement.name()
+                        + "." + me.name() + "(...)'  should not have arguments").element(me.unwrap()).build();
             }
             if (!me.unwrap().getModifiers().contains(Modifier.PUBLIC)) {
                 throw CodegenException.of().message("Post construct method '"
-                        + suppliedTypeElement.getName()
-                        + "." + me.getName() + "(...)'  should be a public").element(me.unwrap()).build();
+                        + suppliedTypeElement.name()
+                        + "." + me.name() + "(...)'  should be a public").element(me.unwrap()).build();
             }
             listeners.add(me);
         }
@@ -173,8 +173,8 @@ public class ProducerParser extends FrameworkAbstractParser {
         logger.debug("Create injectable element for: " + parameter);
         if (parameter.asClassType() == null) {
             throw CodegenException.of()
-                    .message("Unsupported type kind for parameter " + parameter.getName()
-                            + "; Type: " + parameter.getOriginType()
+                    .message("Unsupported type kind for parameter " + parameter.name()
+                            + "; Type: " + parameter.originType()
                             + "; Type kind: " + parameter.unwrap().getKind()
 
                     )
@@ -185,7 +185,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         AnnotationAssist<Message> messageAnn = parameter.getAnnotation(Message.class);
         boolean isMessage = messageAnn != null;
 
-        String parameterClassName = parameter.asClassType().getErasure().toString();
+        String parameterClassName = parameter.asClassType().erasure().toString();
         boolean isSupplier = parameterClassName.equals(Supplier.class.getName());
         boolean isProvider = parameterClassName.equals(Provider.class.getName());
         boolean isPolysupplier = parameterClassName.equals(Polysupplier.class.getName());
@@ -203,7 +203,7 @@ public class ProducerParser extends FrameworkAbstractParser {
                 throw CodegenException.of().message("Unable to determine injecting type").element(parameter).build();
             }
             TypeMirror genericType = generics.get(0);
-            injectedType = new ClassType(getProcessingEnv(), (DeclaredType) genericType);
+            injectedType = new ClassType(processingEnv(), (DeclaredType) genericType);
             if (isSupplier) {
                 injectionKind = InjectableElement.InjectionKind.SUPPLIER;
             } else if (isProvider) {
@@ -241,7 +241,7 @@ public class ProducerParser extends FrameworkAbstractParser {
                 throw CodegenException.of().message("@Classed message injection").element(parameter.unwrap()).build();
             }
             TypeMirror classifier = classedAnn.getValueTypeMirror(Classed::value);
-            classed = new ClassifierType(getProcessingEnv(), classifier);
+            classed = new ClassifierType(processingEnv(), classifier);
             // TODO: check  injectionKind
         } else {
             classed = null;
@@ -255,18 +255,18 @@ public class ProducerParser extends FrameworkAbstractParser {
     }
 
     protected DefaultFactoryElement createDefaultFactoryElement(IocletElement iocletElement, AnnotationAssist<Produce> produceAnn) {
-        TypeMirror suppliedMirror = getTypeUtils().erasure(produceAnn.getValueTypeMirror(Produce::value));
+        TypeMirror suppliedMirror = typeUtils().erasure(produceAnn.getValueTypeMirror(Produce::value));
 
         logger.debug("Parsing default factory for : " + suppliedMirror);
 
         TypeElement typeElement = (TypeElement) ((DeclaredType) suppliedMirror).asElement();
         if (!(typeElement.getKind().isClass() || typeElement.getKind().isInterface())) {
-            throw CodegenException.of().message("Unsupported type kind for:" + suppliedMirror).element(iocletElement.getOriginProducer().unwrap()).build();
+            throw CodegenException.of().message("Unsupported type kind for:" + suppliedMirror).element(iocletElement.originProducer().unwrap()).build();
         }
 
-        final ClassType suppliedType = new ClassType(getProcessingEnv(), (DeclaredType) suppliedMirror);
+        final ClassType suppliedType = new ClassType(processingEnv(), (DeclaredType) suppliedMirror);
 
-        final String factoryMethodBaseName = "get" + suppliedType.asClassElement().getSimpleName();
+        final String factoryMethodBaseName = "get" + suppliedType.asClassElement().simpleName();
 
         MethodElement constructor = getInjectableConstructor(suppliedType.asClassElement());
         if (constructor == null) {
@@ -322,8 +322,8 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         if (BooleanUtils.toInteger(named != null)
                 + BooleanUtils.toInteger(classed != null) > 1) {
-            throw CodegenException.of().message("Ambiguous injection qualifiers for " + suppliedType.asClassElement().getName())
-                    .element(iocletElement.getOriginProducer().unwrap()).build();
+            throw CodegenException.of().message("Ambiguous injection qualifiers for " + suppliedType.asClassElement().name())
+                    .element(iocletElement.originProducer().unwrap()).build();
         }
 
         // Condition
@@ -331,18 +331,18 @@ public class ProducerParser extends FrameworkAbstractParser {
         ConditionElement condition = null;
         TypeMirror conditionClass = produceAnn.getValueTypeMirror(Produce::requires);
         if (!CodegenUtils.isAssignable(Condition.class, conditionClass, processingEnv)) {
-            condition = new ConditionElement(new ClassType(getProcessingEnv(), (DeclaredType) conditionClass));
+            condition = new ConditionElement(new ClassType(processingEnv(), (DeclaredType) conditionClass));
         } else {
-            AnnotationAssist<Requires> reqAnn = iocletElement.getOriginProducer().getAnnotation(Requires.class);
+            AnnotationAssist<Requires> reqAnn = iocletElement.originProducer().getAnnotation(Requires.class);
             if (reqAnn != null) {
-                condition = new ConditionElement(new ClassType(getProcessingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(Requires::value)));
+                condition = new ConditionElement(new ClassType(processingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(Requires::value)));
             }
         }
 
         // Substitute
         Substitution substitute = produceAnn.unwrap().substitute();
         if (substitute == Substitution.REGULAR) {
-            AnnotationAssist<Substitute> subsAnn = iocletElement.getOriginProducer().getAnnotation(Substitute.class);
+            AnnotationAssist<Substitute> subsAnn = iocletElement.originProducer().getAnnotation(Substitute.class);
             if (subsAnn != null) {
                 substitute = subsAnn.unwrap().value();
             }
@@ -366,7 +366,7 @@ public class ProducerParser extends FrameworkAbstractParser {
                         constructor,
                         produceAnn);
 
-        for (ParameterElement param : constructor.getParameters()) {
+        for (ParameterElement param : constructor.parameters()) {
             factory.addParameter(createInjectableElement(factory, param));
         }
 
@@ -382,15 +382,15 @@ public class ProducerParser extends FrameworkAbstractParser {
     protected CustomFactoryElement createCustomFactoryElement(MethodElement method) {
         logger.debug("Parse custom factory element: " + method);
 
-        if (method.getReturnClassType() == null) {
+        if (method.returnClassType() == null) {
             throw CodegenException.of().message("Producing method returns not a class or interface instance").element(method.unwrap()).build();
         }
 
         // suppliedType
-        final ClassType suppliedType = method.getReturnClassType();
+        final ClassType suppliedType = method.returnClassType();
 
         // factoryMethodBaseName
-        final String factoryMethodBaseName = method.getName();
+        final String factoryMethodBaseName = method.name();
 
         // Detect post produce listener
         final PostProduceElement postProduce;
@@ -488,17 +488,17 @@ public class ProducerParser extends FrameworkAbstractParser {
         // Condition
         AnnotationAssist<Requires> reqAnn = method.getAnnotation(Requires.class);
         if (reqAnn == null) {
-            reqAnn = method.getParentClass().getAnnotation(Requires.class);
+            reqAnn = method.parentClass().getAnnotation(Requires.class);
         }
         ConditionElement condition = null;
         if (reqAnn != null) {
-            condition = new ConditionElement(new ClassType(getProcessingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(Requires::value)));
+            condition = new ConditionElement(new ClassType(processingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(Requires::value)));
         }
 
         // Substitution
         AnnotationAssist<Substitute> subsAnn = method.getAnnotation(Substitute.class);
         if (subsAnn == null) {
-            subsAnn = method.getParentClass().getAnnotation(Substitute.class);
+            subsAnn = method.parentClass().getAnnotation(Substitute.class);
         }
         SubstitutionElement substitution = null;
         if (subsAnn != null) {
@@ -520,7 +520,7 @@ public class ProducerParser extends FrameworkAbstractParser {
                 postConstructListeners,
                 method);
 
-        for (ParameterElement param : method.getParameters()) {
+        for (ParameterElement param : method.parameters()) {
             factory.addParameter(createInjectableElement(factory, param));
         }
 
@@ -540,14 +540,14 @@ public class ProducerParser extends FrameworkAbstractParser {
 
     protected void parseProducingMethods(IocletElement iocletElement) {
         // Scan producer methods
-        List<MethodElement> methods = iocletElement.getOriginProducer().getMethodsFiltered(
+        List<MethodElement> methods = iocletElement.originProducer().methodsFiltered(
                 m -> !m.unwrap().getModifiers().contains(Modifier.FINAL)
                         && m.unwrap().getModifiers().contains(Modifier.PUBLIC)
                         && !m.unwrap().getModifiers().contains(Modifier.STATIC)
         );
 
         for (MethodElement method : methods) {
-            logger.debug("Found custom factory method: " + method.getName());
+            logger.debug("Found custom factory method: " + method.name());
             CustomFactoryElement factoryElm = createCustomFactoryElement(method);
             iocletElement.addFactory(factoryElm);
             checkSupertypes(factoryElm);
@@ -556,12 +556,12 @@ public class ProducerParser extends FrameworkAbstractParser {
 
     protected void paresProducingAnnotations(IocletElement iocletElement) {
         // Scan @Produce annotation
-        ClassElement producer = iocletElement.getOriginProducer();
+        ClassElement producer = iocletElement.originProducer();
         List<AnnotationAssist<Produce>> produceList = new ArrayList<>();
         AnnotationAssist<Produces> produces = producer.getAnnotation(Produces.class);
         if (produces != null) {
             for (Produce produce : produces.unwrap().value()) {
-                produceList.add(new AnnotationAssist<>(getProcessingEnv(), produce));
+                produceList.add(new AnnotationAssist<>(processingEnv(), produce));
             }
         } else {
             AnnotationAssist<Produce> produce = producer.getAnnotation(Produce.class);
@@ -589,12 +589,12 @@ public class ProducerParser extends FrameworkAbstractParser {
     }
 
     protected void checkSupertypes(FactoryElement facElm) {
-        Types typeUtils = getTypeUtils();
-        for (ClassType supType : facElm.getKeyTypes()) {
-            if (!typeUtils.isAssignable(facElm.getSuppliedType().unwrap(), supType.unwrap())) {
+        Types typeUtils = typeUtils();
+        for (ClassType supType : facElm.keyTypes()) {
+            if (!typeUtils.isAssignable(facElm.suppliedType().unwrap(), supType.unwrap())) {
                 throw CodegenException.of()
-                        .message("Not a subtype for: " + facElm.getSuppliedType().getName() + " extends/implements " + supType.unwrap().toString())
-                        .element(facElm.getOriginElement())
+                        .message("Not a subtype for: " + facElm.suppliedType().name() + " extends/implements " + supType.unwrap().toString())
+                        .element(facElm.originElement())
                         .build();
             }
         }
@@ -605,23 +605,23 @@ public class ProducerParser extends FrameworkAbstractParser {
         logger.debug("Parse producer: " + producerElement);
         logGenstamp(producerElement);
 
-        String packageName = producerElement.getPackageName();
+        String packageName = producerElement.packageName();
 
         if (!producerElement.checkPackageAccessibility(IOC_MODULE_NAME)) {
-            ModuleElement producerModule = producerElement.getModule();
+            ModuleElement producerModule = producerElement.module();
             String errMsg = String.format("Package %s must be exported from module %s to %s", packageName, producerModule.toString(), IOC_MODULE_NAME);
             logger.info(errMsg);
             //throw CodegenException.of().message(errMsg).element(producerModule).create();
         }
 
-        String producerClassSimpleName = producerElement.getSimpleName();
+        String producerClassSimpleName = producerElement.simpleName();
         if (producerClassSimpleName.endsWith(IocletElement.PRODUCER_SUFFIX)) {
             producerClassSimpleName = producerClassSimpleName.substring(0, producerClassSimpleName.length() - IocletElement.PRODUCER_SUFFIX.length());
         }
 
         String iocletClassSimpleName = producerClassSimpleName + IocletElement.IOCLET_SUFFIX;
 
-        String iocletId = producerElement.getName();
+        String iocletId = producerElement.name();
 
         IocletElement iocletElement = new IocletElement(producerElement, iocletId, iocletClassSimpleName, packageName);
 

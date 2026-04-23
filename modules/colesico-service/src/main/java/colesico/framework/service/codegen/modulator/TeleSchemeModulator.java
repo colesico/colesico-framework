@@ -19,7 +19,7 @@ abstract public class TeleSchemeModulator extends Modulator {
      *
      * @see TeleScheme
      */
-    abstract protected Class<?> getSchemeType();
+    abstract protected Class<?> schemeType();
 
     /**
      * Called to process tele facade after parsing completed.
@@ -33,7 +33,7 @@ abstract public class TeleSchemeModulator extends Modulator {
      * for concrete tele-scheme element
      */
     protected TeleSchemeElement createTeleScheme(TeleFacadeElement teleFacade) {
-        TeleSchemeElement schemeBuilder = new TeleSchemeElement(teleFacade, getSchemeType(), getTeleSchemeBaseClass());
+        TeleSchemeElement schemeBuilder = new TeleSchemeElement(teleFacade, schemeType(), teleSchemeBaseClass());
         return schemeBuilder;
     }
 
@@ -41,18 +41,18 @@ abstract public class TeleSchemeModulator extends Modulator {
      * Returns not null value to override scheme builder base class that be extended by generated tele scheme builder.
      * Default base class - {@link TeleScheme <?>}
      */
-    protected Class<? extends TeleScheme> getTeleSchemeBaseClass() {
+    protected Class<? extends TeleScheme> teleSchemeBaseClass() {
         return null;
     }
 
     /**
      * Helper for scheme builder element obtaining from tele-facade
      */
-    protected TeleSchemeElement getTeleScheme() {
+    protected TeleSchemeElement teleScheme() {
         if (service.teleFacade() == null) {
             return null;
         }
-        return service.teleFacade().teleScheme(getSchemeType());
+        return service.teleFacade().teleScheme(schemeType());
     }
 
     @Override
@@ -62,7 +62,7 @@ abstract public class TeleSchemeModulator extends Modulator {
             return;
         }
         TeleSchemeElement teleScheme = createTeleScheme(teleFacade);
-        teleFacade.setTeleScheme(getSchemeType(), teleScheme);
+        teleFacade.setTeleScheme(schemeType(), teleScheme);
     }
 
     @Override
@@ -77,18 +77,18 @@ abstract public class TeleSchemeModulator extends Modulator {
     @Override
     public void onServiceGenerated(ServiceElement service) {
         super.onServiceGenerated(service);
-        TeleSchemeElement schemeBuilder = getTeleScheme();
+        TeleSchemeElement schemeBuilder = teleScheme();
         if (schemeBuilder == null) {
             return;
         }
-        TeleSchemeGenerator teleSchemeGenerator = new TeleSchemeGenerator(getProcessorContext().getProcessingEnv());
+        TeleSchemeGenerator teleSchemeGenerator = new TeleSchemeGenerator(processorContext().processingEnv());
         teleSchemeGenerator.generate(schemeBuilder);
     }
 
     @Override
     public void onGenerateIocProducer(ProducerGenerator generator, ServiceElement service) {
         super.onGenerateIocProducer(generator, service);
-        TeleSchemeElement<?> schemeBuilder = getTeleScheme();
+        TeleSchemeElement<?> schemeBuilder = teleScheme();
         if (schemeBuilder == null) {
             return;
         }

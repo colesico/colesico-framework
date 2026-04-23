@@ -61,11 +61,11 @@ public final class RouterDescriptors {
         }
     }
 
-    public Class<?> getTargetClass() {
+    public Class<?> targetClass() {
         return targetClass;
     }
 
-    public Collection<RouteInfo> getRoutesInfo() {
+    public Collection<RouteInfo> routesInfo() {
         return routesMap.values();
     }
 

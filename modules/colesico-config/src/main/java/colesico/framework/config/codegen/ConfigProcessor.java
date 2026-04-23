@@ -46,7 +46,7 @@ public class ConfigProcessor extends FrameworkAbstractProcessor {
     }
 
     @Override
-    protected Class<? extends Annotation>[] getSupportedAnnotations() {
+    protected Class<? extends Annotation>[] supportedAnnotations() {
         return new Class[]{Config.class};
     }
 
@@ -70,7 +70,7 @@ public class ConfigProcessor extends FrameworkAbstractProcessor {
             try {
                 configClassElement = (TypeElement) elm;
                 ClassElement classElement = ClassElement.of(processingEnv, configClassElement);
-                logger.debug("Processing configuration: " + classElement.getName());
+                logger.debug("Processing configuration: " + classElement.name());
                 ConfigElement ce = configParser.parse(classElement);
                 configElements.add(ce);
             } catch (CodegenException ce) {

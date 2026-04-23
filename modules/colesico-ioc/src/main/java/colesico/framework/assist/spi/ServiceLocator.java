@@ -13,10 +13,10 @@ public interface ServiceLocator<S> extends Iterable<S> {
     /**
      * Scan application classpath/modules for find service providers
      */
-    Set<S> getProviders();
+    Set<S> providers();
 
     @Override
     default Iterator<S> iterator() {
-        return getProviders().iterator();
+        return providers().iterator();
     }
 }

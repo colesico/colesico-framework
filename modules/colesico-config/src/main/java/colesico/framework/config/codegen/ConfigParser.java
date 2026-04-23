@@ -63,7 +63,7 @@ public class ConfigParser extends FrameworkAbstractParser {
             }
         } while (!superClass.getSimpleName().toString().equals("Object"));
 
-        logger.debug("Unable to determine configuration prototype for: " + config.getName());
+        logger.debug("Unable to determine configuration prototype for: " + config.name());
 
         return null;
     }
@@ -74,26 +74,26 @@ public class ConfigParser extends FrameworkAbstractParser {
 
         AnnotationAssist<Unscoped> unscAnn = config.getAnnotation(Unscoped.class);
         if (unscAnn != null) {
-            scoped = new ClassType(getProcessingEnv(), (DeclaredType) CodegenUtils.classToTypeMirror(Unscoped.class, getElementUtils()));
+            scoped = new ClassType(processingEnv(), (DeclaredType) CodegenUtils.classToTypeMirror(Unscoped.class, elementUtils()));
             return new ConfigScopedElement(scoped, true);
         }
 
         AnnotationAssist<Singleton> singAnn = config.getAnnotation(Singleton.class);
         if (singAnn != null) {
-            scoped = new ClassType(getProcessingEnv(), (DeclaredType) CodegenUtils.classToTypeMirror(Singleton.class, getElementUtils()));
+            scoped = new ClassType(processingEnv(), (DeclaredType) CodegenUtils.classToTypeMirror(Singleton.class, elementUtils()));
             return new ConfigScopedElement(scoped, true);
         }
 
         // Find custom scope declaration
-        for (AnnotationType am : config.getAnnotationTypes()) {
+        for (AnnotationType am : config.annotationTypes()) {
             AnnotationAssist<CustomScope> customScope = am.asElement().getAnnotation(CustomScope.class);
             if (customScope != null) {
-                scoped = new ClassType(getProcessingEnv(), (DeclaredType) am.unwrap());
+                scoped = new ClassType(processingEnv(), (DeclaredType) am.unwrap());
                 return new ConfigScopedElement(scoped, true);
             }
         }
 
-        scoped = new ClassType(getProcessingEnv(), (DeclaredType) CodegenUtils.classToTypeMirror(Singleton.class, getElementUtils()));
+        scoped = new ClassType(processingEnv(), (DeclaredType) CodegenUtils.classToTypeMirror(Singleton.class, elementUtils()));
         return new ConfigScopedElement(scoped, false);
     }
 
@@ -146,7 +146,7 @@ public class ConfigParser extends FrameworkAbstractParser {
         AnnotationAssist<Requires> reqAnn = config.getAnnotation(Requires.class);
         ClassType condition = null;
         if (reqAnn != null) {
-            condition = new ClassType(getProcessingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(a -> a.value()));
+            condition = new ClassType(processingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(a -> a.value()));
         }
 
         // Substitution
@@ -220,7 +220,7 @@ public class ConfigParser extends FrameworkAbstractParser {
     }
 
     private ConfigSourceElement parseSourceValues(ClassElement configImplementation, ConfigSourceElement confSourceElm) {
-        for (FieldElement me : configImplementation.getFields()) {
+        for (FieldElement me : configImplementation.fields()) {
             AnnotationAssist<FromSource> fromSrcAnn = me.getAnnotation(FromSource.class);
             AnnotationAssist<NotFromSource> notFromSrcAnn = me.getAnnotation(NotFromSource.class);
             if (fromSrcAnn != null && notFromSrcAnn != null) {
@@ -235,7 +235,7 @@ public class ConfigParser extends FrameworkAbstractParser {
 
     public ConfigElement parse(ClassElement configImplElement) {
         ConfigElement configElement = parseConfigElement(configImplElement);
-        logger.debug("Configuration " + configElement.getOriginClass().getName() + " has been parsed");
+        logger.debug("Configuration " + configElement.getOriginClass().name() + " has been parsed");
         return configElement;
     }
 

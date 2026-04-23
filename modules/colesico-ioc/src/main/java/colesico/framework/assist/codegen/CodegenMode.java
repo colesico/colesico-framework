@@ -37,7 +37,7 @@ public enum CodegenMode {
         this.key = key;
     }
 
-    public String getKey() {
+    public String key() {
         return key;
     }
 
@@ -57,7 +57,7 @@ public enum CodegenMode {
 
         // find out specified mode
         for (CodegenMode mode : CodegenMode.values()) {
-            if (mode.getKey().equals(key)) {
+            if (mode.key().equals(key)) {
                 return mode;
             }
         }

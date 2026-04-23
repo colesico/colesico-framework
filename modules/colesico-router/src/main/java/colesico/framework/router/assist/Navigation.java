@@ -70,7 +70,7 @@ public class Navigation<N extends Navigation> {
     }
 
     public N service(Object serviceInstance) {
-        this.serviceClass = ((ServiceProxy) serviceInstance).getServiceOrigin();
+        this.serviceClass = ((ServiceProxy) serviceInstance).serviceOrigin();
         return (N) this;
     }
 
@@ -235,7 +235,7 @@ public class Navigation<N extends Navigation> {
      */
     public void redirect(Router router, HttpContext context) {
         String location = toLocation(router);
-        HttpResponse response = context.getResponse();
+        HttpResponse response = context.response();
         HttpUtils.setHeaders(response,headers);
         HttpUtils.setCookies(response,cookies);
         response.sendRedirect(location, statusCode);
@@ -246,9 +246,9 @@ public class Navigation<N extends Navigation> {
      */
     public void forward(Router router, HttpContext context) {
         String location = toLocation(router);
-        ForwardRequest request = new ForwardRequest(context.getRequest(), location);
+        ForwardRequest request = new ForwardRequest(context.request(), location);
         context.setRequest(request);
-        Optional<RouteInvocation> invocation = router.resolve(new Router.ResolutionContext(httpMethod, request.getRequestURI()));
+        Optional<RouteInvocation> invocation = router.resolve(new Router.ResolutionContext(httpMethod, request.requestURI()));
         router.invoke(invocation.get());
     }
 

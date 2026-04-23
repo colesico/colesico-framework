@@ -37,7 +37,7 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
     protected static String buildColumnName(AnnotationAssist<Column> columnAnn, FieldElement columnField) {
         String name = StringUtils.trim(columnAnn.unwrap().name());
         if (Column.AS_FIELD.equals(name) || StringUtils.isBlank(name)) {
-            name = StrUtils.toSeparatorNotation(columnField.getName(), '_');
+            name = StrUtils.toSeparatorNotation(columnField.name(), '_');
         }
         return name;
     }
@@ -47,7 +47,7 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
         if (StringUtils.isNotBlank(compAnn.unwrap().name())) {
             name = StringUtils.trim(compAnn.unwrap().name());
         } else {
-            name = field.getName();
+            name = field.name();
         }
         return name;
     }
@@ -112,7 +112,7 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
         ContainerElement c = container;
         while (c != null) {
             if (c instanceof CompositionElement comp) {
-                namesStack.push(comp.getField().getName());
+                namesStack.push(comp.getField().name());
                 c = comp.getContainer();
             } else {
                 c = null;
@@ -298,7 +298,7 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
         String nameTag = "#" + buildContainerPath(container, name);
         result.add(nameTag);
 
-        String fieldTag = "#field:" + buildContainerPath(container, field.getName());
+        String fieldTag = "#field:" + buildContainerPath(container, field.name());
         result.add(fieldTag);
 
         if (DEFAULT_TAGS_SIZE == 0) {
@@ -323,9 +323,9 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
     protected ClassType getRecordTypeFromKit(ClassElement recordKitInterface) {
 
         ClassType superClass = null;
-        List<ClassType> interfaces = recordKitInterface.getInterfaces();
+        List<ClassType> interfaces = recordKitInterface.interfaces();
         for (ClassType iface : interfaces) {
-            if (iface.getErasure().toString().equals(RecordKitApi.class.getCanonicalName())) {
+            if (iface.erasure().toString().equals(RecordKitApi.class.getCanonicalName())) {
                 superClass = iface;
                 break;
             }

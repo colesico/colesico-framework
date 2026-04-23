@@ -22,7 +22,7 @@ public class RpcApiParser extends FrameworkAbstractParser {
     }
 
     protected void parseParams(RpcApiMethodElement method) {
-        List<ParameterElement> params = method.getOriginMethod().getParameters();
+        List<ParameterElement> params = method.getOriginMethod().parameters();
         int ind = 0;
         for (ParameterElement param : params) {
             RpcApiParamElement p = new RpcApiParamElement(param, ind++);
@@ -36,9 +36,9 @@ public class RpcApiParser extends FrameworkAbstractParser {
         String rpcApiName = rpcApi.name();
         RpcApiElement rpcApiElm = new RpcApiElement(originIface, rpcApiNamespace, rpcApiName);
 
-        List<MethodElement> methods = originIface.getMethods();
+        List<MethodElement> methods = originIface.methods();
         for (MethodElement method : methods) {
-            TypeKind retTypeKind = method.getReturnType().getKind();
+            TypeKind retTypeKind = method.teturnType().getKind();
             if (!(retTypeKind == TypeKind.DECLARED
                     || retTypeKind == TypeKind.ARRAY
                     || retTypeKind == TypeKind.VOID

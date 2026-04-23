@@ -63,23 +63,23 @@ public class InjectableElement {
         this.classed = classed;
     }
 
-    public FactoryElement getParentFactory() {
+    public FactoryElement parentFactory() {
         return parentFactory;
     }
 
-    public ParameterElement getOriginParameter() {
+    public ParameterElement originParameter() {
         return originParameter;
     }
 
-    public ClassType getInjectedType() {
+    public ClassType injectedType() {
         return injectedType;
     }
 
-    public InjectionKind getInjectionKind() {
+    public InjectionKind injectionKind() {
         return injectionKind;
     }
 
-    public MessageKind getMessageKind() {
+    public MessageKind messageKind() {
         return messageKind;
     }
 
@@ -87,11 +87,11 @@ public class InjectableElement {
         return optional;
     }
 
-    public String getNamed() {
+    public String named() {
         return named;
     }
 
-    public ClassifierType getClassed() {
+    public ClassifierType classed() {
         return classed;
     }
 

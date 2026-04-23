@@ -61,7 +61,7 @@ public interface IocBuilder {
      *
      * @see colesico.framework.ioc.conditional.Requires
      */
-    ConditionContext getConditionContext();
+    ConditionContext conditionContext();
 
     /**
      * Builds an IoC container instance based on builder configuration

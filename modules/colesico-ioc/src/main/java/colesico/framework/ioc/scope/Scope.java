@@ -67,5 +67,5 @@ public interface Scope {
      *
      * @return
      */
-    Set<Key<?>> getKeys();
+    Set<Key<?>> keys();
 }

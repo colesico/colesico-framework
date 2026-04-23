@@ -40,15 +40,15 @@ public final class CatalogEntry<T> {
         this.action = EntryAction.NONE;
     }
 
-    public Key<T> getKey() {
+    public Key<T> key() {
         return key;
     }
 
-    public Condition getCondition() {
+    public Condition condition() {
         return condition;
     }
 
-    public Substitution getSubstitution() {
+    public Substitution substitution() {
         return substitution;
     }
 
@@ -56,7 +56,7 @@ public final class CatalogEntry<T> {
         return polyproducing;
     }
 
-    public Factory<T> getFactory() {
+    public Factory<T> gfactory() {
         return factory;
     }
 
@@ -64,7 +64,7 @@ public final class CatalogEntry<T> {
         this.factory = factory;
     }
 
-    public EntryAction getAction() {
+    public EntryAction action() {
         return action;
     }
 

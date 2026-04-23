@@ -33,6 +33,6 @@ public class TeleBatchPackElement {
     }
 
     public String batchPackClassSimpleName() {
-        return parentTeleFacade.parentService().originClass().getSimpleName() + BATCH_PACK_CLASS_SUFFIX;
+        return parentTeleFacade.parentService().originClass().simpleName() + BATCH_PACK_CLASS_SUFFIX;
     }
 }

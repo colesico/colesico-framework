@@ -52,27 +52,27 @@ public class IocletElement {
         factories.add(factoryElement);
     }
 
-    public List<FactoryElement> getFactories() {
+    public List<FactoryElement> factories() {
         return factories;
     }
 
-    public String getIocletId() {
+    public String iocletId() {
         return iocletId;
     }
 
-    public ClassElement getOriginProducer() {
+    public ClassElement originProducer() {
         return originProducer;
     }
 
-    public String getIocletClassName() {
+    public String iocletClassName() {
         return iocletPackageName + '.' + iocletClassSimpleName;
     }
 
-    public String getIocletClassSimpleName() {
+    public String iocletClassSimpleName() {
         return iocletClassSimpleName;
     }
 
-    public String getIocletPackageName() {
+    public String iocletPackageName() {
         return iocletPackageName;
     }
 

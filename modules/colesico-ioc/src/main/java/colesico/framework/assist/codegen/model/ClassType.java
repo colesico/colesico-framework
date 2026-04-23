@@ -58,18 +58,18 @@ public class ClassType extends ParserType {
     }
 
     public ClassElement asClassElement() {
-        return ClassElement.of(getProcessingEnv(), originType);
+        return ClassElement.of(processingEnv(), originType);
     }
 
-    public DeclaredType getErasure() {
-        return (DeclaredType) getTypeUtils().erasure(originType);
+    public DeclaredType erasure() {
+        return (DeclaredType) typeUtils().erasure(originType);
     }
 
-    public TypeMirror getMemberType(Element element) {
-        return getTypeUtils().asMemberOf(originType, element);
+    public TypeMirror memberType(Element element) {
+        return typeUtils().asMemberOf(originType, element);
     }
 
-    public String getName() {
+    public String name() {
         return originType.toString();
     }
 

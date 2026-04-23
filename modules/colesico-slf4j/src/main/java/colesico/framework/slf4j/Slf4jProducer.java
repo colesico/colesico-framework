@@ -31,11 +31,11 @@ public class Slf4jProducer {
         if (ip==null){
             throw new RuntimeException("Undetermined target class for Logger injection");
         }
-        if (ServiceProxy.class.isAssignableFrom(ip.getTargetClass())) {
-            ServiceOrigin so = ip.getTargetClass().getAnnotation(ServiceOrigin.class);
+        if (ServiceProxy.class.isAssignableFrom(ip.targetClass())) {
+            ServiceOrigin so = ip.targetClass().getAnnotation(ServiceOrigin.class);
             return LoggerFactory.getLogger(so.value());
         }
-        return LoggerFactory.getLogger(ip.getTargetClass());
+        return LoggerFactory.getLogger(ip.targetClass());
     }
 
 }

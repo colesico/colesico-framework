@@ -72,7 +72,7 @@ public class BuilderPrototypeElement {
             nameSuffix = StrUtils.firstCharToUpperCase(name);
         }
         return VALIDATOR_BUILDER_PROTOTYPE_PREFIX
-                + parentBean.getOriginType().asClassElement().getSimpleName()
+                + parentBean.getOriginType().asClassElement().simpleName()
                 + nameSuffix
                 + VALIDATOR_BUILDER_PROTOTYPE_SUFFIX;
     }

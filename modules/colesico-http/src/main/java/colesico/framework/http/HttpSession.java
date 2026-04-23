@@ -35,5 +35,5 @@ public interface HttpSession {
 
     void remove(String attrName);
 
-    Set<String> getNames();
+    Set<String> names();
 }

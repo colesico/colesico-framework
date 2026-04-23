@@ -14,7 +14,7 @@ public class ValidatorBuilderParser  extends FrameworkAbstractParser {
 
     public ValidatorBuilderElement parse(ClassElement validatorBuilderClass){
 
-        ClassType prototypeType=  validatorBuilderClass.getSuperClass();
+        ClassType prototypeType=  validatorBuilderClass.superClass();
 
         ValidatorBuilderElement validatorBuilder = new ValidatorBuilderElement(validatorBuilderClass,prototypeType);
         return validatorBuilder;

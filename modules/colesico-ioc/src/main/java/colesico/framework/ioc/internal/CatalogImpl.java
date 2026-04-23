@@ -70,12 +70,12 @@ public class CatalogImpl implements Catalog {
         }
 
         // Check substitution
-        if (curEntry.getSubstitution().getRank() > prevEntry.getSubstitution().getRank()) {
+        if (curEntry.substitution().rank() > prevEntry.substitution().rank()) {
             curEntry.setAction(EntryAction.SUBSTITUTE);
             return true;
         }
 
-        if (curEntry.getSubstitution().getRank() < prevEntry.getSubstitution().getRank()) {
+        if (curEntry.substitution().rank() < prevEntry.substitution().rank()) {
             curEntry.setAction(EntryAction.NONE);
             return false;
         }
@@ -96,26 +96,26 @@ public class CatalogImpl implements Catalog {
     @Override
     public <T> void add(Factory<T> factory) {
         curEntry.setFactory(factory);
-        switch (curEntry.getAction()) {
+        switch (curEntry.action()) {
             case NONE:
                 throw new IocException("Cataloging is not permitted");
             case PUT:
             case SUBSTITUTE:
-                entriesMap.put(curEntry.getKey(), curEntry);
+                entriesMap.put(curEntry.key(), curEntry);
                 return;
             case APPEND:
-                CatalogEntry<?> prevEntry = entriesMap.put(curEntry.getKey(), curEntry);
-                curEntry.getFactory().setNext(prevEntry.getFactory());
+                CatalogEntry<?> prevEntry = entriesMap.put(curEntry.key(), curEntry);
+                curEntry.gfactory().setNext(prevEntry.gfactory());
                 return;
             default:
-                throw new IocException("Unsupported catalog action: " + curEntry.getAction());
+                throw new IocException("Unsupported catalog action: " + curEntry.action());
         }
     }
 
-    public Map<Key<?>, Factory<?>> getFactories() {
+    public Map<Key<?>, Factory<?>> factories() {
         Map<Key<?>, Factory<?>> result = new HashMap<>();
         for (CatalogEntry entry : entriesMap.values()) {
-            result.put(entry.getKey(), entry.getFactory());
+            result.put(entry.key(), entry.gfactory());
         }
         return result;
     }

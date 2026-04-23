@@ -75,7 +75,7 @@ public final class ProfileWriter<P extends Profile, C extends HttpTWContext> ext
         HttpCookie cookie = cookieFactory.create(PROFILE_COOKIE, profileStr);
         cookie.setExpires(expires.getTime()).setSameSite(HttpCookie.SameSite.STRICT);
 
-        HttpResponse response = httpContextProv.get().getResponse();
+        HttpResponse response = httpContextProv.get().response();
         response.setCookie(cookie);
         response.setHeader(PROFILE_HEADER, profileStr);
 

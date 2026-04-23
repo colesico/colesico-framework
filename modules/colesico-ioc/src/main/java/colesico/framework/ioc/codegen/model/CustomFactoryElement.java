@@ -58,16 +58,16 @@ public class CustomFactoryElement extends FactoryElement {
         this.producerMethod = producerMethod;
     }
 
-    public MethodElement getProducerMethod() {
+    public MethodElement producerMethod() {
         return producerMethod;
     }
 
-    public SubstitutionElement getSubstitution() {
+    public SubstitutionElement substitution() {
         return substitution;
     }
 
     @Override
-    public Element getOriginElement() {
+    public Element originElement() {
         return producerMethod.unwrap();
     }
 

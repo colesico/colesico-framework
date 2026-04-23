@@ -7,10 +7,10 @@ import colesico.framework.jdbirec.codegen.model.RecordViewElement;
 public class RecordKitGeneratorUtils {
     public static String buildRecordKitInstanceClassName(RecordViewElement view) {
         if (view.isDefaultView()) {
-            return view.getRecord().getRecordKit().getOriginClass().getSimpleName() + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
+            return view.getRecord().getRecordKit().getOriginClass().simpleName() + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
         } else {
             String namePart = StrUtils.firstCharToUpperCase(view.getName());
-            return view.getRecord().getRecordKit().getOriginClass().getSimpleName() + namePart + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
+            return view.getRecord().getRecordKit().getOriginClass().simpleName() + namePart + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
         }
     }
 }

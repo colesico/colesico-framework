@@ -26,23 +26,23 @@ public interface HttpCookie {
 
     String DEFAULT_PATH = "/";
 
-    String getName();
+    String name();
 
-    String getValue();
+    String setValue();
 
-    String getDomain();
+    String domain();
 
-    String getPath();
+    String path();
 
-    Integer getMaxAge();
+    Integer maxAge();
 
-    Date getExpires();
+    Date expires();
 
-    Boolean getSecure();
+    Boolean secure();
 
-    SameSite getSameSite();
+    SameSite sameSite();
 
-    Boolean getHttpOnly();
+    Boolean httpOnly();
 
     HttpCookie setValue(String value);
 

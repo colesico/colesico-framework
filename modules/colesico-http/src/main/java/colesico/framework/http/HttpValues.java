@@ -45,7 +45,7 @@ public final class HttpValues<K, V> {
         return multiValue.value();
     }
 
-    public Set<K> getKeys() {
+    public Set<K> keys() {
         return Collections.unmodifiableSet(valuesMap.keySet());
     }
 

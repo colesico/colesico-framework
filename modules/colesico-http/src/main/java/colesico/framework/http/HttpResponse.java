@@ -51,7 +51,7 @@ public interface HttpResponse {
         sendRedirect(location, 302);
     }
 
-    OutputStream getOutputStream();
+    OutputStream outputStream();
 
     /**
      * Returns true if the server has sent any data to a client

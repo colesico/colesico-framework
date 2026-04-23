@@ -41,8 +41,8 @@ public class BagGenerator extends FrameworkAbstractGenerator {
     private void generateBagProperties(TypeSpec.Builder bagBuilder, ConfigElement confElement) {
         for (SourceValueElement sve : confElement.getSource().getSourceValues()) {
 
-            String fieldName = sve.getOriginField().getName();
-            TypeName fieldTypeName = TypeName.get(sve.getOriginField().getOriginType());
+            String fieldName = sve.getOriginField().name();
+            TypeName fieldTypeName = TypeName.get(sve.getOriginField().originType());
             FieldSpec.Builder fb = FieldSpec.builder(fieldTypeName, fieldName, Modifier.PRIVATE);
             bagBuilder.addField(fb.build());
 
@@ -69,7 +69,7 @@ public class BagGenerator extends FrameworkAbstractGenerator {
 
     public void generateConfigBag(ConfigElement confElement) {
         String classSimpleName = confElement.getSource().getBagClassSimpleName();
-        String packageName = confElement.getOriginClass().getPackageName();
+        String packageName = confElement.getOriginClass().packageName();
 
         TypeSpec.Builder bagBuilder = TypeSpec.classBuilder(classSimpleName);
 

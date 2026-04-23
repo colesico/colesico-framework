@@ -23,7 +23,7 @@ public class LogRestletListener implements RestletRequestListener, RestletRespon
 
         StringWriter out = new StringWriter();
         out.append("\n==== REQUEST BEGIN ====\n");
-        ctx.getRequest().dump(out);
+        ctx.request().dump(out);
         out.append("\n==== REQUEST END ====\n");
         log.debug(out.toString());
     }
@@ -36,7 +36,7 @@ public class LogRestletListener implements RestletRequestListener, RestletRespon
 
         StringWriter out = new StringWriter();
         out.append("\n==== RESPONSE BEGIN ====\n");
-        ctx.getResponse().dump(out);
+        ctx.response().dump(out);
         out.append("\n==== RESPONSE END ====\n");
         log.debug(out.toString());
     }

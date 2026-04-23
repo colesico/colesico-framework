@@ -19,11 +19,9 @@ package colesico.framework.ioc.codegen.model;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.MethodElement;
-import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Produce;
 
 import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
 import java.util.List;
 
 /**
@@ -65,16 +63,16 @@ public class DefaultFactoryElement extends FactoryElement {
     }
 
     @Override
-    public Element getOriginElement() {
+    public Element originElement() {
         // TODO
         return null;
     }
 
-    public MethodElement getConstructor() {
+    public MethodElement constructor() {
         return constructor;
     }
 
-    public AnnotationAssist<Produce> getProduce() {
+    public AnnotationAssist<Produce> produce() {
         return produce;
     }
 }

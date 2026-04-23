@@ -53,7 +53,7 @@ public class AnnotationType extends ParserType {
         return null;
     }
 
-    public Map<? extends ExecutableElement, ? extends AnnotationValue> getValuesWithDefaults() {
+    public Map<? extends ExecutableElement, ? extends AnnotationValue> valuesWithDefaults() {
         Map<ExecutableElement, AnnotationValue> valMap = new HashMap<>();
         if (originAnnotation.getElementValues() != null) {
             valMap.putAll(originAnnotation.getElementValues());

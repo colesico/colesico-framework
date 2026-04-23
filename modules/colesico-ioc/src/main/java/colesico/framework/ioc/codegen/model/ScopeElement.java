@@ -30,11 +30,11 @@ public class ScopeElement {
         this.customScopeClass = customScopeClass;
     }
 
-    public ClassType getCustomScopeClass() {
+    public ClassType customScopeClass() {
         return customScopeClass;
     }
 
-    public ScopeKind getKind() {
+    public ScopeKind kind() {
         return kind;
     }
 

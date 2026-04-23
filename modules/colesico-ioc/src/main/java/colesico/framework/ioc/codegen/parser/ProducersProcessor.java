@@ -54,7 +54,7 @@ public class ProducersProcessor extends FrameworkAbstractProcessor {
 
     @Override
     @SuppressWarnings("unchecked")
-    protected Class<? extends Annotation>[] getSupportedAnnotations() {
+    protected Class<? extends Annotation>[] supportedAnnotations() {
         return new Class[]{Producer.class};
     }
 
@@ -111,11 +111,11 @@ public class ProducersProcessor extends FrameworkAbstractProcessor {
         try {
             final TypeSpec typeSpec = iocletGenerator.generate(iocletElement);
             // Create class source file
-            String packageName = iocletElement.getOriginProducer().getPackageName();
-            CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, iocletElement.getOriginProducer().unwrap());
+            String packageName = iocletElement.originProducer().packageName();
+            CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, iocletElement.originProducer().unwrap());
         } catch (CodegenException ce) {
             logger.error("Error generating ioclet: " + ExceptionUtils.getRootCauseMessage(ce));
-            ce.print(processingEnv, Optional.ofNullable(iocletElement).map(IocletElement::getOriginProducer).map(ClassElement::unwrap).orElse(null));
+            ce.print(processingEnv, Optional.ofNullable(iocletElement).map(IocletElement::originProducer).map(ClassElement::unwrap).orElse(null));
             throw ce;
         } catch (Exception e) {
             logger.debug("Error generating ioclet: " + ExceptionUtils.getRootCauseMessage(e));

@@ -29,7 +29,7 @@ public class ConditionElement {
         this.conditionClass = conditionClass;
     }
 
-    public ClassType getConditionClass() {
+    public ClassType conditionClass() {
         return conditionClass;
     }
 }

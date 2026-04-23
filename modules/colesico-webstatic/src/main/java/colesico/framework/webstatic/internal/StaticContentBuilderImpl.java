@@ -45,7 +45,7 @@ public class StaticContentBuilderImpl implements StaticContent.Builder {
         this.resourceUtils = resourceUtils;
 
         if (injectionPoint != null) {
-            String moduleName = injectionPoint.getTargetClass().getModule().getName();
+            String moduleName = injectionPoint.targetClass().getModule().getName();
             if (moduleName != null) {
                 String contentRootPkg = moduleName.replace('.', '/') + "/" + DEFAULT_RESOURCES_DIR;
                 this.resourcesRoot = contentRootPkg;

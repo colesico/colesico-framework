@@ -61,7 +61,7 @@ public class TaskModulator extends Modulator {
             return;
         }
 
-        List<ParameterElement> params = proxyMethod.originMethod().getParameters();
+        List<ParameterElement> params = proxyMethod.originMethod().parameters();
 
         if (params.size() != 1) {
             throw CodegenException.of().
@@ -99,7 +99,7 @@ public class TaskModulator extends Modulator {
             return;
         }
 
-        String listnerFacadeClassName = service.originClass().getPackageName() + '.' +
+        String listnerFacadeClassName = service.originClass().packageName() + '.' +
                 facadeGenerator.getWorkersFacadeClassName(service);
 
         TypeName facadeType = ClassName.bestGuess(listnerFacadeClassName);

@@ -154,7 +154,7 @@ public class BuilderPrototypeGenerator extends FrameworkAbstractGenerator {
 
     private void generateProxyConstructors(BuilderPrototypeElement builderPrototype) {
 
-        List<MethodElement> constructors = builderPrototype.getSuperclass().asClassElement().getConstructorsFiltered(
+        List<MethodElement> constructors = builderPrototype.getSuperclass().asClassElement().constructorsFiltered(
                 c -> c.unwrap().getModifiers().contains(Modifier.PUBLIC)
         );
 

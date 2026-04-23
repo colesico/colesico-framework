@@ -42,12 +42,12 @@ public class IocGenerator extends FrameworkAbstractGenerator {
             ProducerGenerator producerGenerator = new ProducerGenerator(packageName, producerClassSimpleName, this.getClass(), processingEnv);
             List<ValidatorBuilderElement> vbs = entry.getValue();
             for (ValidatorBuilderElement vb : vbs) {
-                logger.debug("Generating validator builders  producer: " + producerGenerator.getProducerClassFilePath());
+                logger.debug("Generating validator builders  producer: " + producerGenerator.producerClassFilePath());
                 TypeName builderType = TypeName.get(vb.getOriginClass().asClassType().unwrap());
                 AnnotationSpec.Builder produceAnn = producerGenerator.addProduceAnnotation(builderType);
                 TypeName keyType = TypeName.get(vb.getPrototypeType().unwrap());
                 produceAnn.addMember(Produce.SCOPED_METHOD, "$T.class", ClassName.get(Unscoped.class));
-                String methodName = "get" + StrUtils.firstCharToUpperCase(vb.getOriginClass().getSimpleName());
+                String methodName = "get" + StrUtils.firstCharToUpperCase(vb.getOriginClass().simpleName());
                 MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, keyType);
                 mb.addAnnotation(Unscoped.class);
                 mb.addParameter(builderType, "vb");

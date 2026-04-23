@@ -43,7 +43,7 @@ public class TeleSchemeElement<S> {
      * Returns tele-scheme implementation class simple name
      */
     public String teleSchemeClassSimpleName() {
-        String originClassName = parentTeleFacade.parentService().originClass().getSimpleName();
+        String originClassName = parentTeleFacade.parentService().originClass().simpleName();
         String schemeTypeSuffix = StrUtils.firstCharToUpperCase(schemeType.getSimpleName());
         return originClassName + schemeTypeSuffix+TeleScheme.SCHEME_IMPL_SUFFIX;
     }

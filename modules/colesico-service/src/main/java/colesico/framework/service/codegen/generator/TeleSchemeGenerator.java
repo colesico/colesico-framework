@@ -28,7 +28,7 @@ public class TeleSchemeGenerator extends FrameworkAbstractGenerator {
         mb.addAnnotation(ClassName.get(Inject.class));
         mb.addModifiers(Modifier.PUBLIC);
         mb.addParameter(
-                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(teleFacade.parentService().originClass().getOriginType())),
+                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(teleFacade.parentService().originClass().originType())),
                 TARGET_PROV_FIELD,
                 Modifier.FINAL);
         /*
@@ -49,9 +49,9 @@ public class TeleSchemeGenerator extends FrameworkAbstractGenerator {
 
     protected void createSchemeBuilderClassFile(TeleSchemeElement schemeBuilder, TypeSpec.Builder classBuilder) {
         final TypeSpec typeSpec = classBuilder.build();
-        String packageName = schemeBuilder.parentTeleFacade().parentService().originClass().getPackageName();
+        String packageName = schemeBuilder.parentTeleFacade().parentService().originClass().packageName();
         ServiceElement service = schemeBuilder.parentTeleFacade().parentService();
-        CodegenUtils.createJavaFile(getProcessingEnv(), typeSpec, packageName, service.originClass().unwrap());
+        CodegenUtils.createJavaFile(processingEnv(), typeSpec, packageName, service.originClass().unwrap());
     }
 
     public void generate(TeleSchemeElement schemeBuilder) {

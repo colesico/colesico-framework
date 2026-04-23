@@ -30,6 +30,6 @@ public class LoggerProducer {
         if (ip == null) {
             return new Logger("NonameLogger");
         }
-        return new Logger(ip.getTargetClass().getName() + "Logger");
+        return new Logger(ip.targetClass().getName() + "Logger");
     }
 }

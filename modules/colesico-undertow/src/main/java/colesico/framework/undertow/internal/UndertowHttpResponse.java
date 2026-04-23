@@ -47,7 +47,7 @@ public class UndertowHttpResponse implements HttpResponse {
     }
 
     @Override
-    public OutputStream getOutputStream() {
+    public OutputStream outputStream() {
         exchange.startBlocking();
         return exchange.getOutputStream();
     }

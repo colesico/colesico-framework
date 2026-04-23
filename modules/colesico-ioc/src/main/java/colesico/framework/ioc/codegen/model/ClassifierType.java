@@ -18,8 +18,8 @@ public class ClassifierType extends ParserType {
         return originType;
     }
 
-    public TypeMirror getErasure() {
-        return getTypeUtils().erasure(originType);
+    public TypeMirror erasure() {
+        return typeUtils().erasure(originType);
     }
 
 }

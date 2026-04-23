@@ -33,11 +33,11 @@ public class PostProduceElement {
         this.withClassed = withClassed;
     }
 
-    public String getWithNamed() {
+    public String withNamed() {
         return withNamed;
     }
 
-    public ClassifierType getWithClassed() {
+    public ClassifierType withClassed() {
         return withClassed;
     }
 }

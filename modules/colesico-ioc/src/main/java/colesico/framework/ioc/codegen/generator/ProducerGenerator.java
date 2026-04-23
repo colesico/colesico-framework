@@ -25,8 +25,6 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import com.palantir.javapoet.*;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -67,17 +65,17 @@ public class ProducerGenerator extends FrameworkAbstractGenerator {
         this.producerClassFilePath = "/" + StringUtils.replace(producerClassName, ".", "/") + ".java";
     }
 
-    public String getProducerClassName() {
+    public String producerClassName() {
         return producerClassName;
     }
 
-    public String getProducerClassFilePath() {
+    public String producerClassFilePath() {
         return producerClassFilePath;
     }
 
     public boolean isProducerExists() {
         try {
-            FileObject producerFile = getFiler().getResource(StandardLocation.SOURCE_OUTPUT, producerPackageName, producerClassSimpleName + ".java");
+            FileObject producerFile = filer().getResource(StandardLocation.SOURCE_OUTPUT, producerPackageName, producerClassSimpleName + ".java");
             producerFile.openInputStream();
             return true;
         } catch (Exception e) {

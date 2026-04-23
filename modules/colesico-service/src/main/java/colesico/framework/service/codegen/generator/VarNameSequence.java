@@ -8,7 +8,7 @@ public class VarNameSequence {
 
     private int tmpVarIndex = 0;
 
-    public String getNextTempVariable() {
+    public String nextTempVariable() {
         return TMP_VAR + (tmpVarIndex++);
     }
 
@@ -16,7 +16,7 @@ public class VarNameSequence {
         return namePrefix + (tmpVarIndex++);
     }
 
-    public void reset(){
+    public void reset() {
         tmpVarIndex = 0;
     }
 }

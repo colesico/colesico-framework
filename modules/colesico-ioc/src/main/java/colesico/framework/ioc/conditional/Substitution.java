@@ -59,7 +59,7 @@ public enum Substitution {
         this.rank = rank;
     }
 
-    public int getRank() {
+    public int rank() {
         return rank;
     }
 }

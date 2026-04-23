@@ -24,7 +24,7 @@ public class ValidatorBuilderProcessor extends FrameworkAbstractProcessor {
     private IocGenerator generator;
 
     @Override
-    protected Class<? extends Annotation>[] getSupportedAnnotations() {
+    protected Class<? extends Annotation>[] supportedAnnotations() {
         return new Class[]{ValidatorBuilder.class};
     }
 

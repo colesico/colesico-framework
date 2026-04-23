@@ -75,7 +75,7 @@ public class RecordKitParser extends RecordKitHelpers {
             final AnnotationAssist<Column> columnAnn
     ) {
 
-        logger.debug("Parse column:{} on field: {} of container: {}", columnAnn, field.getName(), container);
+        logger.debug("Parse column:{} on field: {} of container: {}", columnAnn, field.name(), container);
 
         // Construct origin column name
         String name = buildColumnName(columnAnn, field);
@@ -220,12 +220,12 @@ public class RecordKitParser extends RecordKitHelpers {
     }
 
     private void parseContainerFields(ContainerElement cont) {
-        List<FieldElement> fields = cont.getType().asClassElement().getFieldsFiltered(
+        List<FieldElement> fields = cont.getType().asClassElement().fieldsFiltered(
                 f -> !f.unwrap().getModifiers().contains(Modifier.STATIC)
         );
 
         for (FieldElement field : fields) {
-            logger.debug("Parse field: {} of type {}", field.getName(), field.unwrap().asType());
+            logger.debug("Parse field: {} of type {}", field.name(), field.unwrap().asType());
 
             // Parse field columns
             final Set<AnnotationAssist<Column>> columnsAnn = findFieldColumns(field);
@@ -237,7 +237,7 @@ public class RecordKitParser extends RecordKitHelpers {
                         column = c;
                     } else {
                         throw CodegenException.of()
-                                .message("Multiple columns for field: " + field.getName())
+                                .message("Multiple columns for field: " + field.name())
                                 .build();
                     }
                 }
@@ -255,7 +255,7 @@ public class RecordKitParser extends RecordKitHelpers {
                         if (comp == null) {
                             comp = c;
                         } else {
-                            throw CodegenException.of().message("Multiple compositions for field: " + field.getName()).build();
+                            throw CodegenException.of().message("Multiple compositions for field: " + field.name()).build();
                         }
                     }
 

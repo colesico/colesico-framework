@@ -61,7 +61,7 @@ public class WebletTeleDriverImpl implements WebletTeleDriver {
     public <T> void invoke(T target, MethodInvoker<T, WebletDataPort> invoker, WebletTIContext context) {
         try {
             threadScope.put(DataPort.SCOPE_KEY, dataPort);
-            HttpRequest request = httpContextProv.get().getRequest();
+            HttpRequest request = httpContextProv.get().request();
             csrfProtector.check(request);
             invoker.invoke(target, dataPort);
         } catch (PrincipalRequiredException pre) {

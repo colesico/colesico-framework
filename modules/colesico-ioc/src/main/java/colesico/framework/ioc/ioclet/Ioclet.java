@@ -25,7 +25,7 @@ import colesico.framework.ioc.production.Producer;
  * @author Vladlen Larionov
  */
 public interface Ioclet {
-    String GET_ID_METHOD = "getId";
+    String ID_METHOD = "id";
     String ADD_FACTORIES_METHOD = "addFactories";
     String CATALOG_PARAM = "catalog";
 
@@ -33,10 +33,9 @@ public interface Ioclet {
      * Unique ioclet ID.
      * Typically it is a full name of producer class on which the ioclet is based on.
      *
-     * @return
      * @see Producer
      */
-    String getId();
+    String id();
 
     /**
      * This method implementation should register the factories

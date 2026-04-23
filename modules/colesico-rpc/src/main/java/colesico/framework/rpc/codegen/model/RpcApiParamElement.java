@@ -40,7 +40,7 @@ public class RpcApiParamElement {
     }
 
     public TypeMirror getParamType() {
-        return originParam.getOriginType();
+        return originParam.originType();
     }
 
     public ParameterElement getOriginParam() {

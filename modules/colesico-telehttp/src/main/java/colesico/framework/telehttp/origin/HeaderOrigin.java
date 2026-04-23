@@ -1,7 +1,6 @@
 package colesico.framework.telehttp.origin;
 
 import colesico.framework.http.HttpContext;
-import colesico.framework.http.HttpCookie;
 import colesico.framework.http.MultiValue;
 import colesico.framework.telehttp.Origin;
 
@@ -24,7 +23,7 @@ public class HeaderOrigin implements Origin {
     @Override
     public Collection<String> getStrings(String name) {
         List<String> result = new ArrayList<>();
-        MultiValue<String> headers = httpContextProv.get().getRequest().getHeaders().getAll(name);
+        MultiValue<String> headers = httpContextProv.get().request().headers().getAll(name);
         if (headers != null) {
             headers.iterator().forEachRemaining(result::add);
         }

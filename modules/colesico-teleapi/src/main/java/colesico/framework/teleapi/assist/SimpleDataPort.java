@@ -27,7 +27,7 @@ public final class SimpleDataPort implements DataPort<TRContext, TWContext> {
         threadScope.put(DataPort.SCOPE_KEY, this);
     }
 
-    public Map<Type, ? super Object> getValues() {
+    public Map<Type, ? super Object> values() {
         return values;
     }
 
@@ -38,7 +38,7 @@ public final class SimpleDataPort implements DataPort<TRContext, TWContext> {
     @Override
     public Object read(TRContext context) {
         log.debug("Read for context: {}", context);
-        return values.get(context.getValueType());
+        return values.get(context.valueType());
     }
 
     @Override
@@ -50,7 +50,7 @@ public final class SimpleDataPort implements DataPort<TRContext, TWContext> {
     @Override
     public void write(Object value, TWContext context) {
         log.debug("Write value: {}; context: {}", value, context);
-        values.put(context.getValueType(), value);
+        values.put(context.valueType(), value);
     }
 
     @Override

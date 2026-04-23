@@ -22,11 +22,11 @@ public class TRContextElement {
         this.creationCode = creationCode;
     }
 
-    public TeleReadableElement getParentReadable() {
+    public TeleReadableElement parentReadable() {
         return parentReadable;
     }
 
-    public CodeBlock getCreationCode() {
+    public CodeBlock creationCode() {
         return creationCode;
     }
 }

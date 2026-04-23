@@ -46,7 +46,7 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
 
     @Override
     protected boolean isTeleFacadeSupported(ServiceElement service) {
-        List<ClassType> allInterfaces = service.originClass().getInterfaces();
+        List<ClassType> allInterfaces = service.originClass().interfaces();
         for (ClassType iface : allInterfaces) {
             if (null != iface.asTypeElement().getAnnotation(RpcApi.class)) {
                 return true;
@@ -56,8 +56,8 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
     }
 
     protected RpcServiceElement createRpcServiceElement(ServiceElement serviceElm) {
-        logger.debug("Create RpcServiceElement for service " + serviceElm.originClass().getName());
-        List<ClassType> allInterfaces = serviceElm.originClass().getInterfaces();
+        logger.debug("Create RpcServiceElement for service " + serviceElm.originClass().name());
+        List<ClassType> allInterfaces = serviceElm.originClass().interfaces();
         List<ClassType> rpcInterfaces = allInterfaces.stream()
                 .filter(iface -> iface.asTypeElement().getAnnotation(RpcApi.class) != null)
                 .collect(Collectors.toList());
@@ -66,7 +66,7 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
         List<RpcApiElement> rpcApiList = new ArrayList<>();
         RpcApiParser rpcApiParser = new RpcApiParser(processorContext.getProcessingEnv());
         for (ClassType ifaceType : rpcInterfaces) {
-            logger.debug("Found RPC interface: " + ifaceType.getName());
+            logger.debug("Found RPC interface: " + ifaceType.name());
             RpcApiElement rpcApi = rpcApiParser.parse(ifaceType.asClassElement());
             rpcApiList.add(rpcApi);
         }
@@ -130,11 +130,11 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
                         TeleParameterElement teleParam = (TeleParameterElement) teleParams.get(i);
                         RpcApiParamElement apiParam = rpcApiParams.get(i);
                         if (!getProcessorContext().getTypeUtils().isAssignable(
-                                teleParam.originElement().getOriginType(),
-                                apiParam.getOriginParam().getOriginType()
+                                teleParam.originElement().originType(),
+                                apiParam.getOriginParam().originType()
                         )) {
                             throw CodegenException.of()
-                                    .message("RPC API parameter type mismatch for " + teleParam.originElement().getName() +
+                                    .message("RPC API parameter type mismatch for " + teleParam.originElement().name() +
                                             "; service param " + teleParam.originElement().unwrap().asType() + " -> api param " +
                                             apiParam.getOriginParam().unwrap().asType())
                                     .element(teleMethodElm.serviceMethod().originMethod().unwrap())
@@ -147,11 +147,11 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
                     // Debug log
                     if (logger.isDebugEnabled()) {
                         StringBuilder sb = new StringBuilder("Bind RPC API method ");
-                        sb.append(rpcApi.getOriginInterface().getName())
-                                .append(rpcApiMethod.getOriginMethod().getName())
+                        sb.append(rpcApi.getOriginInterface().name())
+                                .append(rpcApiMethod.getOriginMethod().name())
                                 .append("( ");
-                        for (ParameterElement param : rpcApiMethod.getOriginMethod().getParameters()) {
-                            sb.append(param.getName()).append(", ");
+                        for (ParameterElement param : rpcApiMethod.getOriginMethod().parameters()) {
+                            sb.append(param.name()).append(", ");
                         }
                         sb.append(" )");
                         logger.debug(sb.toString());
@@ -236,7 +236,7 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
         if (rpcApiMethod == null) {
             throw CodegenException.of()
                     .message("Unknown RPC API method for service method " +
-                            teleMethod.parentTeleFacade().parentService().originClass().getName() +
+                            teleMethod.parentTeleFacade().parentService().originClass().name() +
                             "->" + teleMethod.name() + "(...)")
                     .element(teleMethod.serviceMethod().originMethod().unwrap())
                     .build();

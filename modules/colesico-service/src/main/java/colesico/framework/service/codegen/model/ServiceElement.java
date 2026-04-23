@@ -183,7 +183,7 @@ public final class ServiceElement {
     }
 
     public String proxyClassSimpleName() {
-        String originClassName = originClass.getSimpleName();
+        String originClassName = originClass.simpleName();
 
         if (StringUtils.endsWith(originClassName, ServiceProxy.SERVICE_CLASS_SUFFIX)) {
             return originClassName + ServiceProxy.PROXY_CLASS_SUFFIX;
@@ -193,7 +193,7 @@ public final class ServiceElement {
     }
 
     public String proxyClassName() {
-        return originClass.getPackageName() + '.' + proxyClassSimpleName();
+        return originClass.packageName() + '.' + proxyClassSimpleName();
     }
 
     @Override

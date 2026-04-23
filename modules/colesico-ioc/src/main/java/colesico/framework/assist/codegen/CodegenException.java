@@ -40,11 +40,11 @@ public class CodegenException extends RuntimeException {
         this.annotation = a;
     }
 
-    public Element getElement() {
+    public Element element() {
         return element;
     }
 
-    public AnnotationMirror getAnnotation() {
+    public AnnotationMirror annotation() {
         return annotation;
     }
 

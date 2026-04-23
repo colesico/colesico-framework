@@ -36,7 +36,7 @@ public class AnnotationElement extends ParserElement {
     }
 
     @Override
-    public TypeMirror getOriginType() {
+    public TypeMirror originType() {
         return originAnnotation.asType();
     }
 }

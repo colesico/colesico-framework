@@ -92,33 +92,33 @@ public class ClassElement extends ParserElement {
         return originElement;
     }
 
-    public String getName() {
+    public String name() {
         return originElement.getQualifiedName().toString();
     }
 
-    public String getSimpleName() {
+    public String simpleName() {
         return originElement.getSimpleName().toString();
     }
 
     @Override
-    public DeclaredType getOriginType() {
+    public DeclaredType originType() {
         return originType;
     }
 
     public TypeMirror getMemberType(Element element) {
-        return getTypeUtils().asMemberOf(originType, element);
+        return typeUtils().asMemberOf(originType, element);
     }
 
     public ClassType asClassType() {
-        return new ClassType(getProcessingEnv(), getOriginType());
+        return new ClassType(processingEnv(), originType());
     }
 
     /**
      * Return all class fields  (whether inherited or declared directly)
      */
-    public List<FieldElement> getFields() {
+    public List<FieldElement> fields() {
         List<FieldElement> result = new ArrayList<>();
-        List<? extends Element> members = getElementUtils().getAllMembers(originElement);
+        List<? extends Element> members = elementUtils().getAllMembers(originElement);
         List<VariableElement> fields = ElementFilter.fieldsIn(members);
         for (VariableElement field : fields) {
             result.add(new FieldElement(processingEnv, this, field));
@@ -126,8 +126,8 @@ public class ClassElement extends ParserElement {
         return result;
     }
 
-    public List<FieldElement> getFieldsFiltered(Predicate<FieldElement> filter) {
-        List<FieldElement> fields = getFields();
+    public List<FieldElement> fieldsFiltered(Predicate<FieldElement> filter) {
+        List<FieldElement> fields = fields();
         List<FieldElement> result = new ArrayList<>();
         for (FieldElement field : fields) {
             if (filter.test(field)) {
@@ -137,9 +137,9 @@ public class ClassElement extends ParserElement {
         return result;
     }
 
-    public List<MethodElement> getConstructors() {
+    public List<MethodElement> constructors() {
         List<MethodElement> result = new ArrayList<>();
-        List<? extends Element> members = getElementUtils().getAllMembers(originElement);
+        List<? extends Element> members = elementUtils().getAllMembers(originElement);
         List<ExecutableElement> methods = ElementFilter.constructorsIn(members);
         for (ExecutableElement method : methods) {
             TypeElement methodClass = (TypeElement) method.getEnclosingElement();
@@ -152,8 +152,8 @@ public class ClassElement extends ParserElement {
         return result;
     }
 
-    public List<MethodElement> getConstructorsFiltered(Predicate<MethodElement> filter) {
-        List<MethodElement> constrs = getConstructors();
+    public List<MethodElement> constructorsFiltered(Predicate<MethodElement> filter) {
+        List<MethodElement> constrs = constructors();
         List<MethodElement> result = new ArrayList<>();
         for (MethodElement method : constrs) {
             if (filter.test(method)) {
@@ -166,16 +166,16 @@ public class ClassElement extends ParserElement {
     /**
      * Return all class methods  (whether inherited or declared directly)
      */
-    public List<MethodElement> getMethods() {
+    public List<MethodElement> methods() {
         List<MethodElement> result = new ArrayList<>();
-        List<? extends Element> members = getElementUtils().getAllMembers(originElement);
+        List<? extends Element> members = elementUtils().getAllMembers(originElement);
         List<ExecutableElement> methods = ElementFilter.methodsIn(members);
         for (ExecutableElement method : methods) {
             TypeElement methodClass = (TypeElement) method.getEnclosingElement();
             if (CodegenUtils.isAssignable(Object.class, methodClass.asType(), processingEnv)) {
                 continue;
             }
-            ExecutableType methodType = (ExecutableType) getTypeUtils().asMemberOf(originType, method);
+            ExecutableType methodType = (ExecutableType) typeUtils().asMemberOf(originType, method);
             result.add(new MethodElement(processingEnv, this, method, methodType));
         }
         return result;
@@ -184,7 +184,7 @@ public class ClassElement extends ParserElement {
     /**
      * Return class declared directly methods (not inherited)
      */
-    public List<MethodElement> getDeclaredMethods() {
+    public List<MethodElement> declaredMethods() {
         List<MethodElement> result = new ArrayList<>();
         List<? extends Element> members = originElement.getEnclosedElements();
         List<ExecutableElement> methods = ElementFilter.methodsIn(members);
@@ -193,14 +193,14 @@ public class ClassElement extends ParserElement {
             if (CodegenUtils.isAssignable(Object.class, methodClass.asType(), processingEnv)) {
                 continue;
             }
-            ExecutableType methodType = (ExecutableType) getTypeUtils().asMemberOf(originType, method);
+            ExecutableType methodType = (ExecutableType) typeUtils().asMemberOf(originType, method);
             result.add(new MethodElement(processingEnv, this, method, methodType));
         }
         return result;
     }
 
-    public List<MethodElement> getMethodsFiltered(Predicate<MethodElement> filter) {
-        List<MethodElement> methods = getMethods();
+    public List<MethodElement> methodsFiltered(Predicate<MethodElement> filter) {
+        List<MethodElement> methods = methods();
         List<MethodElement> result = new ArrayList<>();
         for (MethodElement method : methods) {
             if (filter.test(method)) {
@@ -210,7 +210,7 @@ public class ClassElement extends ParserElement {
         return result;
     }
 
-    public ClassType getSuperClass() {
+    public ClassType superClass() {
         if (originElement.getSuperclass().getKind() == TypeKind.NONE) {
             return null;
         }
@@ -220,7 +220,7 @@ public class ClassElement extends ParserElement {
     /**
      * Returns all direct and inherited interfaces
      */
-    public List<ClassType> getInterfaces() {
+    public List<ClassType> interfaces() {
         List<ClassType> result = new ArrayList<>();
         ClassElement classElm = this;
         while (null != classElm) {
@@ -230,15 +230,15 @@ public class ClassElement extends ParserElement {
                     .collect(Collectors.toList());
             result.addAll(ifacesClassTypes);
 
-            ClassType superClass = classElm.getSuperClass();
+            ClassType superClass = classElm.superClass();
             classElm = superClass == null ? null : superClass.asClassElement();
         }
         return result;
     }
 
     public boolean isSameType(Class clazz) {
-        TypeMirror clazzTypeMirror = getElementUtils().getTypeElement(clazz.getCanonicalName()).asType();
-        return getTypeUtils().isSameType(clazzTypeMirror, originType);
+        TypeMirror clazzTypeMirror = elementUtils().getTypeElement(clazz.getCanonicalName()).asType();
+        return typeUtils().isSameType(clazzTypeMirror, originType);
     }
 
     @Override

@@ -97,7 +97,7 @@ public final class ServiceMethodElement {
     }
 
     public String name() {
-        return originMethod.getName();
+        return originMethod.name();
     }
 
     public MethodElement originMethod() {

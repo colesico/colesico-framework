@@ -27,7 +27,6 @@ import colesico.framework.security.Principal;
 import colesico.framework.security.assist.MACUtils;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 
-import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import java.util.Base64;
@@ -87,7 +86,7 @@ public final class PrincipalWriter<C extends HttpTWContext> extends HttpTeleWrit
                 //.setSecure(true)
                 .setSameSite(HttpCookie.SameSite.STRICT);
 
-        HttpResponse response = httpContextProv.get().getResponse();
+        HttpResponse response = httpContextProv.get().response();
         response.setCookie(cookie);
         response.setHeader(HEADER_NAME, principalValue);
     }

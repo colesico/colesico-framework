@@ -18,7 +18,7 @@ public class ValidatorBuilderElement {
     }
 
     public String getPackageName() {
-        return originClass.getPackageName();
+        return originClass.packageName();
     }
 
     public ClassType getPrototypeType() {

@@ -29,7 +29,7 @@ public class ClientGenerator extends FrameworkAbstractGenerator {
             mb.addStatement("$N.$N($N)",
                     RpcClient.REQUEST_PARAM,
                     param.setterName(),
-                    param.getOriginParam().getName()
+                    param.getOriginParam().name()
             );
         }
     }
@@ -50,9 +50,9 @@ public class ClientGenerator extends FrameworkAbstractGenerator {
             generateParamAssignment(mb, methodElm);
 
             TypeName returnTypeName;
-            boolean notVoidReturn = methodElm.getOriginMethod().getReturnType().getKind() != TypeKind.VOID;
+            boolean notVoidReturn = methodElm.getOriginMethod().teturnType().getKind() != TypeKind.VOID;
             if (notVoidReturn) {
-                returnTypeName = ParameterizedTypeName.get(ClassName.get(RpcResponse.class), TypeName.get(methodElm.getOriginMethod().getReturnType()));
+                returnTypeName = ParameterizedTypeName.get(ClassName.get(RpcResponse.class), TypeName.get(methodElm.getOriginMethod().teturnType()));
             } else {
                 returnTypeName = ParameterizedTypeName.get(ClassName.get(RpcResponse.class), ClassName.get(Object.class));
             }
@@ -96,7 +96,7 @@ public class ClientGenerator extends FrameworkAbstractGenerator {
 
     public void generate(RpcApiElement rpcApiElm) {
         String classSimpleName = rpcApiElm.getClientClassSimpleName();
-        String packageName = rpcApiElm.getOriginInterface().getPackageName();
+        String packageName = rpcApiElm.getOriginInterface().packageName();
 
         TypeSpec.Builder clientBuilder = TypeSpec.classBuilder(classSimpleName);
         clientBuilder.addAnnotation(Singleton.class);
@@ -104,7 +104,7 @@ public class ClientGenerator extends FrameworkAbstractGenerator {
         clientBuilder.addSuperinterface(TypeName.get(rpcApiElm.getOriginInterface().unwrap().asType()));
 
 
-        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "RPC interface: " + rpcApiElm.getOriginInterface().getName());
+        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "RPC interface: " + rpcApiElm.getOriginInterface().name());
         clientBuilder.addAnnotation(genstamp);
 
         generateDependencies(clientBuilder, rpcApiElm);

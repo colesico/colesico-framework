@@ -58,15 +58,15 @@ public class RoutesBuilder {
         String targetMethodName = teleMethod.name();
         final String route = buildMethodRoute(teleMethod);
 
-        RoutedTeleMethodElement rtme = teleMethods.find(rte -> rte.getRoute().equals(route));
+        RoutedTeleMethodElement rtme = teleMethods.find(rte -> rte.route().equals(route));
         if (null != rtme) {
             throw CodegenException.of()
-                    .message("Duplicate router path: " + route + "->" + targetMethodName + "(...). Route already bound to " + rtme.getTeleMethod().serviceMethod().name() + "(...)")
+                    .message("Duplicate router path: " + route + "->" + targetMethodName + "(...). Route already bound to " + rtme.teleMethod().serviceMethod().name() + "(...)")
                     .element(teleMethod.serviceMethod().originMethod()).build();
         }
 
         Map<String, String> methodRouteAttrs = parseRouteAttributes(teleMethod.serviceMethod().originMethod());
-        Map<String, String> classRouteAttrs = parseRouteAttributes(teleMethod.serviceMethod().originMethod().getParentClass());
+        Map<String, String> classRouteAttrs = parseRouteAttributes(teleMethod.serviceMethod().originMethod().parentClass());
         classRouteAttrs.putAll(methodRouteAttrs);
 
         RoutedTeleMethodElement routedTeleMethod = new RoutedTeleMethodElement(teleMethod, route, classRouteAttrs);
@@ -108,7 +108,7 @@ public class RoutesBuilder {
             httpMethod = HttpMethod.of(methodAnnotation.unwrap().value());
         }
 
-        return StrUtils.concatPath(httpMethod.getName(), methodRoute, RouteTrie.SEGMENT_DELEMITER);
+        return StrUtils.concatPath(httpMethod.name(), methodRoute, RouteTrie.SEGMENT_DELEMITER);
     }
 
     protected String buildServiceRoute(ServiceElement service) {
@@ -127,10 +127,10 @@ public class RoutesBuilder {
                 srvRoute = srvRoute.substring(2);
             }
 
-            String pkgRoute = buildPackageRoute(service.originClass().getPackage());
+            String pkgRoute = buildPackageRoute(service.originClass().packageElement());
             return StrUtils.concatPath(pkgRoute, srvRoute, RouteTrie.SEGMENT_DELEMITER);
         } else {
-            String serviceBeanName = service.originClass().getSimpleName();
+            String serviceBeanName = service.originClass().simpleName();
             // Local root route
             if (serviceBeanName.startsWith(INDEX_SERVICE_PREFIX)) {
                 srvRoute = "";
@@ -138,7 +138,7 @@ public class RoutesBuilder {
                 // Bean route from bean simple class name
                 srvRoute = StrUtils.toSeparatorNotation(serviceBeanName, '-');
             }
-            String pkgRoute = buildPackageRoute(service.originClass().getPackage());
+            String pkgRoute = buildPackageRoute(service.originClass().packageElement());
             return StrUtils.concatPath(pkgRoute, srvRoute, RouteTrie.SEGMENT_DELEMITER);
         }
     }
@@ -174,7 +174,7 @@ public class RoutesBuilder {
         return result;
     }
 
-    public final Elements<RoutedTeleMethodElement> getTeleMethods() {
+    public final Elements<RoutedTeleMethodElement> teleMethods() {
         return teleMethods;
     }
 
@@ -189,24 +189,24 @@ public class RoutesBuilder {
             this.routeAttributes = routeAttributes;
         }
 
-        public final String getRoute() {
+        public final String route() {
             return route;
         }
 
-        public TeleMethodElement getTeleMethod() {
+        public TeleMethodElement teleMethod() {
             return teleMethod;
         }
 
-        public Map<String, String> getRouteAttributes() {
+        public Map<String, String> routeAttributes() {
             return routeAttributes;
         }
 
-        public String getHttpMethodName() {
+        public String httpMethodName() {
             int i = route.indexOf(RouteTrie.SEGMENT_DELEMITER);
             return route.substring(0, i);
         }
 
-        public String getRoutePath() {
+        public String routePath() {
             int i = route.indexOf(RouteTrie.SEGMENT_DELEMITER);
             return '/'+route.substring(i + 1);
         }

@@ -54,48 +54,48 @@ public class MethodElement extends ParserElement {
         return originElement;
     }
 
-    public ClassElement getParentClass() {
+    public ClassElement parentClass() {
         return parentClass;
     }
 
-    public ExecutableType getOriginType() {
+    public ExecutableType originType() {
         return originType;
     }
 
     public TypeMirror getMemberType(Element element) {
-        return getTypeUtils().asMemberOf((DeclaredType) getOriginType(), element);
+        return typeUtils().asMemberOf((DeclaredType) originType(), element);
     }
 
-    public TypeMirror getReturnType() {
-        return getOriginType().getReturnType();
+    public TypeMirror teturnType() {
+        return originType().getReturnType();
     }
 
     public boolean isVoidReturnType(){
-        return getOriginType().getReturnType() instanceof NoType;
+        return originType().getReturnType() instanceof NoType;
     }
 
-    public ClassType getReturnClassType() {
-        if (getReturnType().getKind() == TypeKind.DECLARED) {
-            return new ClassType(getProcessingEnv(), (DeclaredType) getReturnType());
+    public ClassType returnClassType() {
+        if (teturnType().getKind() == TypeKind.DECLARED) {
+            return new ClassType(processingEnv(), (DeclaredType) teturnType());
         }
         return null;
     }
 
-    public String getName() {
+    public String name() {
         return originElement.getSimpleName().toString();
     }
 
-    public String getNameWithPrefix(String prefix) {
+    public String nameWithPrefix(String prefix) {
         if (StringUtils.isEmpty(prefix)) {
-            return getName();
+            return name();
         }
-        return StrUtils.addPrefix(prefix, getName());
+        return StrUtils.addPrefix(prefix, name());
     }
 
-    public List<ParameterElement> getParameters() {
+    public List<ParameterElement> parameters() {
         List<? extends VariableElement> params = originElement.getParameters();
 
-        List<? extends TypeMirror> paramTypes = getOriginType().getParameterTypes();
+        List<? extends TypeMirror> paramTypes = originType().getParameterTypes();
 
         List<ParameterElement> result = new ArrayList<>();
         int i = 0;
@@ -106,7 +106,7 @@ public class MethodElement extends ParserElement {
         return result;
     }
 
-    public List<ParameterElement> getParametersFiltered(Predicate<ParserElement> filter) {
+    public List<ParameterElement> parametersFiltered(Predicate<ParserElement> filter) {
         throw new NotImplementedException("getParametersFiltered not implemented yet");
     }
 
@@ -115,27 +115,27 @@ public class MethodElement extends ParserElement {
     }
 
     public boolean isGetter() {
-        return StringUtils.startsWith(getName(), "get") && getParameters().isEmpty()
-                && !(getReturnType() instanceof NoType);
+        return StringUtils.startsWith(name(), "get") && parameters().isEmpty()
+                && !(teturnType() instanceof NoType);
     }
 
     public boolean isSetter() {
-        return StringUtils.startsWith(getName(), "set") && (getParameters().size() == 1)
-                && (getReturnType() instanceof NoType);
+        return StringUtils.startsWith(name(), "set") && (parameters().size() == 1)
+                && (teturnType() instanceof NoType);
     }
 
     /**
      * Returns supper method  (if this method overrides another)
      */
-    public MethodElement getSuperMethod() {
+    public MethodElement superMethod() {
         ClassElement classElm = parentClass;
         ClassType superType;
-        while (null != (superType = classElm.getSuperClass())) {
+        while (null != (superType = classElm.superClass())) {
             ClassElement superClass = superType.asClassElement();
-            for (MethodElement superMethodElm : superClass.getDeclaredMethods()) {
+            for (MethodElement superMethodElm : superClass.declaredMethods()) {
                 ExecutableElement method = superMethodElm.unwrap();
-                if (getElementUtils().overrides(originElement, method, classElm.unwrap())) {
-                    ExecutableType methodType = (ExecutableType) getTypeUtils().asMemberOf(superType.unwrap(), method);
+                if (elementUtils().overrides(originElement, method, classElm.unwrap())) {
+                    ExecutableType methodType = (ExecutableType) typeUtils().asMemberOf(superType.unwrap(), method);
                     return new MethodElement(processingEnv, superClass, method, methodType);
                 }
             }
@@ -147,7 +147,7 @@ public class MethodElement extends ParserElement {
     /**
      * Returns declared and inherited from super classes annotations
      */
-    public <A extends Annotation> List<AnnotationAssist<A>> getAnnotationsInherited(Class<A> annClass) {
+    public <A extends Annotation> List<AnnotationAssist<A>> annotationsInherited(Class<A> annClass) {
         List<AnnotationAssist<A>> result = new ArrayList<>();
         MethodElement superMethod = this;
         do {
@@ -155,31 +155,31 @@ public class MethodElement extends ParserElement {
             if (ann != null) {
                 result.add(ann);
             }
-        } while ((superMethod = superMethod.getSuperMethod()) != null);
+        } while ((superMethod = superMethod.superMethod()) != null);
         return result;
     }
 
     /**
      * Returns interface method  that is implemented by this method
      */
-    public List<MethodElement> getInterfaceMethods() {
+    public List<MethodElement> interfaceMethods() {
         List<MethodElement> result = new ArrayList<>();
         ClassElement classElement = parentClass;
 
         while (classElement != null) {
-            List<ClassType> interfaces = classElement.getInterfaces();
+            List<ClassType> interfaces = classElement.interfaces();
             for (ClassType ifaceType : interfaces) {
                 ClassElement ifaceElement = ifaceType.asClassElement();
-                for (MethodElement methodElement : ifaceElement.getDeclaredMethods()) {
+                for (MethodElement methodElement : ifaceElement.declaredMethods()) {
                     ExecutableElement method = methodElement.unwrap();
-                    if (getElementUtils().overrides(originElement, method, classElement.unwrap())) {
-                        ExecutableType methodType = (ExecutableType) getTypeUtils().asMemberOf(ifaceType.unwrap(), method);
+                    if (elementUtils().overrides(originElement, method, classElement.unwrap())) {
+                        ExecutableType methodType = (ExecutableType) typeUtils().asMemberOf(ifaceType.unwrap(), method);
                         result.add(new MethodElement(processingEnv, ifaceElement, method, methodType));
                         break;
                     }
                 }
             }
-            ClassType superClass = classElement.getSuperClass();
+            ClassType superClass = classElement.superClass();
             classElement = superClass == null ? null : superClass.asClassElement();
         }
 

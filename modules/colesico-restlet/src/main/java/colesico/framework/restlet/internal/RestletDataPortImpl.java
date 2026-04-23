@@ -59,7 +59,7 @@ public class RestletDataPortImpl implements RestletDataPort {
             reader = (RestletTeleReader<V>) trwFactory.getReader(context.getReaderClass());
         } else {
             // Use reader by param type
-            reader = trwFactory.findReader(RestletTeleReader.class, context.getValueType());
+            reader = trwFactory.findReader(RestletTeleReader.class, context.valueType());
 
             // No accurate reader here so are reading data as object
             if (reader == null) {
@@ -83,7 +83,7 @@ public class RestletDataPortImpl implements RestletDataPort {
             writer = trwFactory.getWriter(context.getWriterClass());
         } else {
             // By type writer
-            writer = trwFactory.findWriter(RestletTeleWriter.class, context.getValueType());
+            writer = trwFactory.findWriter(RestletTeleWriter.class, context.valueType());
         }
 
         if (writer == null) {

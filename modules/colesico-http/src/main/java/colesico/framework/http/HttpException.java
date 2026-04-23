@@ -32,7 +32,7 @@ public class HttpException extends RuntimeException {
         this.statusCode = statusCode;
     }
 
-    public int getStatusCode() {
+    public int statusCode() {
         return statusCode;
     }
 }

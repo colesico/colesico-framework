@@ -29,7 +29,7 @@ public final class InjectionPoint {
         this.targetClass = targetClass;
     }
 
-    public Class<?> getTargetClass() {
+    public Class<?> targetClass() {
         return targetClass;
     }
 

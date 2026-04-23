@@ -45,23 +45,23 @@ public final class RouteInvocation {
         this.routeParameters = routeParameters;
     }
 
-    public HttpMethod getRequestMethod() {
+    public HttpMethod requestMethod() {
         return requestMethod;
     }
 
-    public String getRequestUri() {
+    public String requestUri() {
         return requestUri;
     }
 
-    public RouteAction getRouteAction() {
+    public RouteAction routeAction() {
         return routeAction;
     }
 
-    public Map<String, String> getRouteParameters() {
+    public Map<String, String> routeParameters() {
         return routeParameters;
     }
 
-    public TeleController<?, RouteInvocation, ?> getController() {
+    public TeleController<?, RouteInvocation, ?> controller() {
         return controller;
     }
 }

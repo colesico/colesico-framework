@@ -54,7 +54,7 @@ public class DictionaryElement {
         if (StringUtils.isNoneBlank(dictAnn.unwrap().baseName())) {
             bName = dictAnn.unwrap().baseName();
         } else {
-            bName = dictionaryInterface.getPackageName() + '.' + dictionaryInterface.getSimpleName();
+            bName = dictionaryInterface.packageName() + '.' + dictionaryInterface.simpleName();
             bName = bName.replace('.', '/');
         }
         this.baseName = bName;
@@ -88,7 +88,7 @@ public class DictionaryElement {
     }
 
     public String getImplClassSimpleName() {
-        return getOriginBean().getSimpleName() + "Impl";
+        return getOriginBean().simpleName() + "Impl";
     }
 
     public Map<String, BundleElement> getBundlesByLocale() {
@@ -102,7 +102,7 @@ public class DictionaryElement {
     @Override
     public String toString() {
         return "DictionaryBeanElement{" +
-                "originBean=" + originBean.getOriginType().toString() +
+                "originBean=" + originBean.originType().toString() +
                 ", baseName='" + baseName + '\'' +
                 '}';
     }

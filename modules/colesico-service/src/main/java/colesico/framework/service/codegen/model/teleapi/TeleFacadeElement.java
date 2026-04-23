@@ -118,7 +118,7 @@ public class TeleFacadeElement {
      * Returns tele-facade class simple name
      */
     public String facadeClassSimpleName() {
-        String originClassName = parentService.originClass().getSimpleName();
+        String originClassName = parentService.originClass().simpleName();
         String teleTypeSuffix = StrUtils.firstCharToUpperCase(teleType.getSimpleName());
 
         if (StringUtils.endsWith(originClassName, teleTypeSuffix)) {
@@ -132,7 +132,7 @@ public class TeleFacadeElement {
      * Returns tele-facade class full name
      */
     public String facadeClassName() {
-        return parentService.originClass().getPackageName() + '.' + facadeClassSimpleName();
+        return parentService.originClass().packageName() + '.' + facadeClassSimpleName();
     }
 
     public void addTeleMethod(TeleMethodElement teleMethod) {

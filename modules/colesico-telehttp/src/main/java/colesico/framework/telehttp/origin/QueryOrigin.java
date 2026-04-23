@@ -23,7 +23,7 @@ public class QueryOrigin implements Origin {
     @Override
     public Collection<String> getStrings(String name) {
         List<String> result = new ArrayList<>();
-        MultiValue<String> headers = httpContextProv.get().getRequest().getQueryParameters().getAll(name);
+        MultiValue<String> headers = httpContextProv.get().request().queryParameters().getAll(name);
         if (headers != null) {
             headers.iterator().forEachRemaining(result::add);
         }

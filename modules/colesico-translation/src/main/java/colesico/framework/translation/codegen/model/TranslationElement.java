@@ -49,13 +49,13 @@ public class TranslationElement {
             return tk.unwrap().value();
         } else {
             //return StrUtils.firstCharToUpperCase(keyMethod.getSimpleName().toString());
-            return keyMethod.getName();
+            return keyMethod.name();
         }
     }
 
     @Override
     public String toString() {
-        return "TranslationElement{ method=" + keyMethod.getName() + ", translation='" + translation + "' }";
+        return "TranslationElement{ method=" + keyMethod.name() + ", translation='" + translation + "' }";
     }
 
     @Override

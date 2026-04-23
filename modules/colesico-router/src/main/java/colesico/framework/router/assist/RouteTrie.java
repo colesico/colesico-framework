@@ -53,7 +53,7 @@ public class RouteTrie<V> {
                 node = node.addSegment(routeItem);
             }
         }
-        if (node.getValue() != null) {
+        if (node.value() != null) {
             throw new DuplicateRouteException(route);
         }
         node.setValue(value);
@@ -71,17 +71,17 @@ public class RouteTrie<V> {
             String routeItem = routeTokenize.nextToken();
             Node<V> child = node.getSegment(routeItem);
             if (child == null) {
-                child = node.getParameter();
+                child = node.parameter();
                 if (child == null) {
                     return null;
                 }
 
-                if (child.getName().equals(SUFFIX_PARAM_NAME)) {
+                if (child.name().equals(SUFFIX_PARAM_NAME)) {
                     routeItem = route.substring(routeOffset);
                     proceedRoute = false;
                 }
 
-                params.put(child.getName(), routeItem);
+                params.put(child.name(), routeItem);
             }
             node = child;
             routeOffset += routeItem.length() + 1;
@@ -89,7 +89,7 @@ public class RouteTrie<V> {
         return new RouteResolution<>(node, params);
     }
 
-    public Node<V> getRootNode() {
+    public Node<V> rootNode() {
         return rootNode;
     }
 
@@ -102,11 +102,11 @@ public class RouteTrie<V> {
             this.params = params;
         }
 
-        public Node<V> getNode() {
+        public Node<V> node() {
             return node;
         }
 
-        public Map<String, String> getParams() {
+        public Map<String, String> params() {
             return params;
         }
     }
@@ -119,7 +119,7 @@ public class RouteTrie<V> {
             this.route = route;
         }
 
-        public String getRoute() {
+        public String route() {
             return route;
         }
     }
@@ -133,7 +133,7 @@ public class RouteTrie<V> {
             this.parameter = parameter;
         }
 
-        public String getParameter() {
+        public String parameter() {
             return parameter;
         }
     }
@@ -162,7 +162,7 @@ public class RouteTrie<V> {
             this.isParameter = isParameter;
         }
 
-        public V getValue() {
+        public V value() {
             return this.value;
         }
 
@@ -191,8 +191,8 @@ public class RouteTrie<V> {
             if (this.parameter == null) {
                 this.parameter = new Node<>(this, name, true);
             } else {
-                if (!this.parameter.getName().equals(name)) {
-                    throw new RouteParameterMismutch(name, this.parameter.getName());
+                if (!this.parameter.name().equals(name)) {
+                    throw new RouteParameterMismutch(name, this.parameter.name());
                 }
             }
             return this.parameter;
@@ -213,15 +213,15 @@ public class RouteTrie<V> {
          *
          * @return
          */
-        public Node<V> getParameter() {
+        public Node<V> parameter() {
             return this.parameter;
         }
 
-        public Node<V> getParent() {
+        public Node<V> parent() {
             return this.parent;
         }
 
-        public Node<V> getRoot() {
+        public Node<V> root() {
             Node<V> root = this;
             while (root.parent != null) {
                 if (root.parent.parent == null) {
@@ -232,7 +232,7 @@ public class RouteTrie<V> {
             return root;
         }
 
-        public String getName() {
+        public String name() {
             return name;
         }
 

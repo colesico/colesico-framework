@@ -48,7 +48,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
     protected final ServiceProcessorContext context;
 
     public IocGenerator(ServiceProcessorContext context) {
-        super(context.getProcessingEnv());
+        super(context.processingEnv());
         this.context = context;
     }
 
@@ -60,8 +60,8 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         producerGenerator.addProduceAnnotation(serviceProxyTypeName);
 
         // Add produce method
-        String methodName = "get" + serviceElm.originClass().getSimpleName();
-        MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, TypeName.get(serviceElm.originClass().getOriginType()));
+        String methodName = "get" + serviceElm.originClass().simpleName();
+        MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, TypeName.get(serviceElm.originClass().originType()));
 
         if (serviceElm.customScopeType() == null) {
             AnnotationSpec.Builder scopeAnnBuilder = AnnotationSpec.builder(ClassName.get(Singleton.class));
@@ -102,10 +102,10 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
     public void generate(ServiceElement serviceElm) {
 
-        String producerClassSimpleName = serviceElm.originClass().getSimpleName();
-        String packageName = serviceElm.originClass().getPackageName();
+        String producerClassSimpleName = serviceElm.originClass().simpleName();
+        String packageName = serviceElm.originClass().packageName();
 
-        ProducerGenerator producerGenerator = new ProducerGenerator(packageName, producerClassSimpleName, this.getClass(), context.getProcessingEnv());
+        ProducerGenerator producerGenerator = new ProducerGenerator(packageName, producerClassSimpleName, this.getClass(), context.processingEnv());
 
         // Service producing
         generateProduceService(producerGenerator, serviceElm);
@@ -117,10 +117,10 @@ public class IocGenerator extends FrameworkAbstractGenerator {
             generateProduceTeleFacade(producerGenerator, teleFacadeElm);
         }
 
-        context.getModulatorKit().notifyGenerateIocProducer(producerGenerator, serviceElm);
+        context.modulatorKit().notifyGenerateIocProducer(producerGenerator, serviceElm);
 
         final TypeSpec typeSpec = producerGenerator.typeBuilder().build();
-        CodegenUtils.createJavaFile(context.getProcessingEnv(), typeSpec, packageName, serviceElm.originClass().unwrap());
+        CodegenUtils.createJavaFile(context.processingEnv(), typeSpec, packageName, serviceElm.originClass().unwrap());
     }
 
 }

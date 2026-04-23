@@ -19,11 +19,11 @@ public class TWContextElement {
         this.creationCode = creationCode;
     }
 
-    public TeleMethodElement getParentTeleMethod() {
+    public TeleMethodElement parentTeleMethod() {
         return parentTeleMethod;
     }
 
-    public CodeBlock getCreationCode() {
+    public CodeBlock creationCode() {
         return creationCode;
     }
 }

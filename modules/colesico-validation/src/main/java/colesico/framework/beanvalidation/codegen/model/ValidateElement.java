@@ -48,14 +48,14 @@ abstract public class ValidateElement {
 
     public final String getPropertyName() {
         if (originField != null) {
-            return originField.getName();
+            return originField.name();
         }
         return null;
     }
 
     public final TypeMirror getPropertyType() {
         if (originField != null) {
-            return originField.getOriginType();
+            return originField.originType();
         }
         return null;
     }
@@ -66,7 +66,7 @@ abstract public class ValidateElement {
 
     public final String getPropertyReferenceName() {
         if (originField != null) {
-            String kebabCase = StrUtils.toSeparatorNotation(originField.getName(), '_');
+            String kebabCase = StrUtils.toSeparatorNotation(originField.name(), '_');
             return StringUtils.toRootUpperCase(kebabCase);
         }
         return null;

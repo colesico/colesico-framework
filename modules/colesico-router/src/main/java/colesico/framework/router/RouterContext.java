@@ -41,14 +41,14 @@ public final class RouterContext {
         this.parameters = Collections.unmodifiableMap(routeParameters);
     }
 
-    public String getRequestUri() {
+    public String requestUri() {
         return requestUri;
     }
 
     /**
      * Returns unmodifiable route deserialize model
      */
-    public Map<String, String> getParameters() {
+    public Map<String, String> parameters() {
         return parameters;
     }
 }

@@ -53,7 +53,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
     protected void readLocale(ProfileAttribute<Profile, Locale> attribute, HttpRequest request, Map<String, String> profileProperties) {
         readAttribute(attribute, request, profileProperties);
         if (!attribute.hasValue()) {
-            String acceptLangs = request.getHeaders().get(ACCEPT_LANGUAGE_HEADER);
+            String acceptLangs = request.headers().get(ACCEPT_LANGUAGE_HEADER);
             Locale locale = TeleHttpUtils.getAcceptedLanguage(acceptLangs);
             if (locale != null) {
                 attribute.setValue(locale);
@@ -81,18 +81,18 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
 
     @Override
     public final P read(C context) {
-        HttpRequest request = httpContextProv.get().getRequest();
+        HttpRequest request = httpContextProv.get().request();
         P profile = profileManager.createProfile();
 
         Map<String, String> profileProperties = new HashMap<>();
-        var profileCookie = request.getCookies().get(ProfileWriter.PROFILE_COOKIE);
+        var profileCookie = request.cookies().get(ProfileWriter.PROFILE_COOKIE);
         if (profileCookie != null) {
-            profileProperties.putAll(TeleHttpUtils.parseProperties(profileCookie.getValue()));
+            profileProperties.putAll(TeleHttpUtils.parseProperties(profileCookie.setValue()));
         }
 
-        var profileHeader = request.getCookies().get(PROFILE_HEADER);
+        var profileHeader = request.cookies().get(PROFILE_HEADER);
         if (profileHeader != null) {
-            profileProperties.putAll(TeleHttpUtils.parseProperties(profileHeader.getValue()));
+            profileProperties.putAll(TeleHttpUtils.parseProperties(profileHeader.setValue()));
         }
 
         var attributes = profileManager.attributes(profile);

@@ -27,16 +27,16 @@ public class UnknownRouteException extends RouterException {
     private final String uri;
 
     public UnknownRouteException(HttpMethod httpMethod, String uri) {
-        super("Route '" + httpMethod.getName() + uri + "' is not mapped to any controller");
+        super("Route '" + httpMethod.name() + uri + "' is not mapped to any controller");
         this.uri = uri;
         this.httpMethod = httpMethod;
     }
 
-    public String getUri() {
+    public String uri() {
         return uri;
     }
 
-    public HttpMethod getHttpMethod() {
+    public HttpMethod httpMethod() {
         return httpMethod;
     }
 }

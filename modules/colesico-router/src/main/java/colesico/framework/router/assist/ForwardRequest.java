@@ -52,63 +52,63 @@ public class ForwardRequest implements HttpRequest {
     }
 
     @Override
-    public HttpMethod getRequestMethod() {
-        return parentRequest.getRequestMethod();
+    public HttpMethod requestMethod() {
+        return parentRequest.requestMethod();
     }
 
     @Override
-    public String getRequestScheme() {
-        return parentRequest.getRequestScheme();
+    public String requestScheme() {
+        return parentRequest.requestScheme();
     }
 
     @Override
-    public String getHost() {
-        return parentRequest.getHost();
+    public String host() {
+        return parentRequest.host();
     }
 
     @Override
-    public Integer getPort() {
-        return parentRequest.getPort();
+    public Integer port() {
+        return parentRequest.port();
     }
 
     @Override
-    public String getRequestURI() {
+    public String requestURI() {
         return requestURI;
     }
 
     @Override
-    public String getQueryString() {
+    public String queryString() {
         return queryString;
     }
 
     @Override
-    public HttpValues<String, String> getHeaders() {
-        return parentRequest.getHeaders();
+    public HttpValues<String, String> headers() {
+        return parentRequest.headers();
     }
 
     @Override
-    public HttpValues<String, HttpCookie> getCookies() {
-        return parentRequest.getCookies();
+    public HttpValues<String, HttpCookie> cookies() {
+        return parentRequest.cookies();
     }
 
     @Override
-    public HttpValues<String, String> getQueryParameters() {
+    public HttpValues<String, String> queryParameters() {
         return queryParameters;
     }
 
     @Override
-    public HttpValues<String, String> getPostParameters() {
-        return parentRequest.getPostParameters();
+    public HttpValues<String, String> postParameters() {
+        return parentRequest.postParameters();
     }
 
     @Override
-    public HttpValues<String, HttpFile> getPostFiles() {
-        return parentRequest.getPostFiles();
+    public HttpValues<String, HttpFile> postFiles() {
+        return parentRequest.postFiles();
     }
 
     @Override
-    public InputStream getInputStream() {
-        return parentRequest.getInputStream();
+    public InputStream inputStream() {
+        return parentRequest.inputStream();
     }
 
     @Override
@@ -116,7 +116,7 @@ public class ForwardRequest implements HttpRequest {
         parentRequest.dump(out);
     }
 
-    public HttpRequest getParentRequest() {
+    public HttpRequest parentRequest() {
         return parentRequest;
     }
 }

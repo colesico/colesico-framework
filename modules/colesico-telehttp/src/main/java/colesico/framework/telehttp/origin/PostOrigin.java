@@ -23,7 +23,7 @@ public class PostOrigin implements Origin {
     @Override
     public Collection<String> getStrings(String name) {
         List<String> result = new ArrayList<>();
-        MultiValue<String> headers = httpContextProv.get().getRequest().getPostParameters().getAll(name);
+        MultiValue<String> headers = httpContextProv.get().request().postParameters().getAll(name);
         if (headers != null) {
             headers.iterator().forEachRemaining(result::add);
         }

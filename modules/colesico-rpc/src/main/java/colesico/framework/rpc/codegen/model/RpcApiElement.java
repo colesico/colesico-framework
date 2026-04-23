@@ -47,22 +47,22 @@ public class RpcApiElement {
 
     public String rpcName() {
         if (StringUtils.isBlank(rpcName)) {
-            return originInterface.getName();
+            return originInterface.name();
         } else {
             return rpcName;
         }
     }
 
     public String getEnvelopePackClassSimpleName() {
-        return originInterface.getSimpleName() + ENVELOPE_PACK_CLASS_SUFFIX;
+        return originInterface.simpleName() + ENVELOPE_PACK_CLASS_SUFFIX;
     }
 
     public String getClientClassSimpleName() {
-        return originInterface.getSimpleName() + CLIENT_CLASS_SUFFIX;
+        return originInterface.simpleName() + CLIENT_CLASS_SUFFIX;
     }
 
     public String getClientClassName() {
-        return originInterface.getPackageName() + '.' + originInterface.getSimpleName() + CLIENT_CLASS_SUFFIX;
+        return originInterface.packageName() + '.' + originInterface.simpleName() + CLIENT_CLASS_SUFFIX;
     }
 
     public ClassElement getOriginInterface() {

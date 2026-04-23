@@ -58,7 +58,7 @@ public class TeleFacadesGenerator {
 
     public TeleFacadesGenerator(ServiceProcessorContext context) {
         this.context = context;
-        this.batchesGenerator = new TeleBatchesGenerator(context.getProcessingEnv());
+        this.batchesGenerator = new TeleBatchesGenerator(context.processingEnv());
     }
 
     protected void generateConstructor(TeleFacadeElement teleFacade, TypeSpec.Builder classBuilder) {
@@ -66,7 +66,7 @@ public class TeleFacadesGenerator {
         mb.addAnnotation(ClassName.get(Inject.class));
         mb.addModifiers(Modifier.PUBLIC);
         mb.addParameter(
-                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(teleFacade.parentService().originClass().getOriginType())),
+                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(teleFacade.parentService().originClass().originType())),
                 TARGET_PROV_FIELD,
                 Modifier.FINAL);
 
@@ -77,7 +77,7 @@ public class TeleFacadesGenerator {
     protected CodeBlock generateBatches(TeleMethodElement teleMethod) {
         CodeBlock.Builder cb = CodeBlock.builder();
         for (TeleBatchElement batch : teleMethod.batches().values()) {
-            if (batch.readContext() == null || batch.readContext().getCreationCode() == null) {
+            if (batch.readContext() == null || batch.readContext().creationCode() == null) {
                 throw CodegenException.of()
                         .message("Batch read context code not defined")
                         .element(teleMethod.serviceMethod().originMethod())
@@ -89,7 +89,7 @@ public class TeleFacadesGenerator {
                     ClassName.bestGuess(batch.batchClassName()),
                     batch.batchVarName(),
                     TeleMethod.DATA_PORT_PARAM, DataPort.READ_METHOD);
-            cb.add(batch.readContext().getCreationCode());
+            cb.add(batch.readContext().creationCode());
             cb.add(");\n");
         }
         return cb.build();
@@ -100,7 +100,7 @@ public class TeleFacadesGenerator {
         // ==== For simple param
 
         if (parameter instanceof TeleParameterElement) {
-            CodeBlock ctx = ((TeleParameterElement) parameter).readContext().getCreationCode();
+            CodeBlock ctx = ((TeleParameterElement) parameter).readContext().creationCode();
             // dataPot.read(new Context(...));
             CodeBlock.Builder cb = CodeBlock.builder();
             cb.add("$N.$N(", TeleMethod.DATA_PORT_PARAM, DataPort.READ_METHOD);
@@ -133,22 +133,22 @@ public class TeleFacadesGenerator {
         ArrayCodegen serviceMethodArgs = new ArrayCodegen();
         for (TeleInputElement param : teleMethod.parameters()) {
             CodeBlock value = generateParamRetrieving(param, cb);
-            String paramName = param.originElement().getName() + PARAM_SUFFIX;
+            String paramName = param.originElement().name() + PARAM_SUFFIX;
             serviceMethodArgs.add("$N", paramName);
             cb.add("\n// Assign tele-method parameter value from remote client or batch\n");
-            cb.add("final $T $N = ", TypeName.get(param.originElement().getOriginType()), paramName);
+            cb.add("final $T $N = ", TypeName.get(param.originElement().originType()), paramName);
             cb.add(value);
             cb.add(";\n");
         }
 
-        TypeMirror returnType = originMethod.getReturnType();
+        TypeMirror returnType = originMethod.teturnType();
         boolean voidResult = returnType instanceof NoType;
 
         //======================== Get service instance and call service method
 
         // Get service instance:  TargetType target = targetProvider.get();
         ServiceElement service = teleMethod.parentTeleFacade().parentService();
-        TypeName serviceTypeName = TypeName.get(service.originClass().getOriginType());
+        TypeName serviceTypeName = TypeName.get(service.originClass().originType());
         cb.addStatement("final $T $N = $N.get()", serviceTypeName,
                 TARGET_INSTANCE_VAR,
                 TeleFacade.TARGET_PROV_FIELD);
@@ -171,7 +171,7 @@ public class TeleFacadesGenerator {
         if (!voidResult) {
             cb.add("\n// Send result to remote client\n");
             cb.add("$N.$N($N,", TeleMethod.DATA_PORT_PARAM, DataPort.WRITE_METHOD, RESULT_VAR);
-            CodeBlock writeCtx = teleMethod.writingContext().getCreationCode();
+            CodeBlock writeCtx = teleMethod.writingContext().creationCode();
             cb.add(writeCtx);
             cb.add(");\n");
         }
@@ -217,8 +217,8 @@ public class TeleFacadesGenerator {
 
     protected void createTeleFacade(ServiceElement service, TeleFacadeElement teleFacade, TypeSpec.Builder classBuilder) {
         final TypeSpec typeSpec = classBuilder.build();
-        String packageName = service.originClass().getPackageName();
-        CodegenUtils.createJavaFile(context.getProcessingEnv(), typeSpec, packageName, service.originClass().unwrap());
+        String packageName = service.originClass().packageName();
+        CodegenUtils.createJavaFile(context.processingEnv(), typeSpec, packageName, service.originClass().unwrap());
     }
 
     public void generate(ServiceElement service) {
@@ -237,7 +237,7 @@ public class TeleFacadesGenerator {
         classBuilder.addAnnotation(ClassName.get(Singleton.class));
 
         classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(TeleFacade.class),
-                TypeName.get(service.originClass().getOriginType()),
+                TypeName.get(service.originClass().originType()),
                 ClassName.get(teleFacade.descriptorsClass())));
 
         generateConstructor(teleFacade, classBuilder);

@@ -50,7 +50,7 @@ public class WorkersFacadeGenerator {
         mb.addAnnotation(ClassName.get(Inject.class));
         mb.addModifiers(Modifier.PUBLIC);
         mb.addParameter(
-                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(service.originClass().getOriginType())),
+                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(service.originClass().originType())),
                 ServiceWorkers.SERVICE_PROV_FIELD,
                 Modifier.FINAL);
 
@@ -59,7 +59,7 @@ public class WorkersFacadeGenerator {
     }
 
     protected void generateHandlerProxy(ServiceElement service, TaskWorkerElement handler, TypeSpec.Builder classBuilder) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(handler.getOriginMethod().getName());
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(handler.getOriginMethod().name());
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         mb.returns(ClassName.get(Object.class));
 
@@ -67,20 +67,20 @@ public class WorkersFacadeGenerator {
         mb.addParameter(pb.build());
 
         mb.addStatement("$T $N=this.$N.get()",
-                TypeName.get(service.originClass().getOriginType()),
+                TypeName.get(service.originClass().originType()),
                 TARGET_VAR,
                 ServiceWorkers.SERVICE_PROV_FIELD);
 
-        if (handler.getOriginMethod().getReturnType().getKind() != TypeKind.VOID) {
+        if (handler.getOriginMethod().teturnType().getKind() != TypeKind.VOID) {
             mb.addStatement("return $N.$N($N)",
                     TARGET_VAR,
-                    handler.getOriginMethod().getName(),
+                    handler.getOriginMethod().name(),
                     TASK_PARAM
             );
         } else {
             mb.addStatement("$N.$N($N)",
                     TARGET_VAR,
-                    handler.getOriginMethod().getName(),
+                    handler.getOriginMethod().name(),
                     TASK_PARAM
             );
             mb.addStatement("return null");
@@ -112,7 +112,7 @@ public class WorkersFacadeGenerator {
             cb.add("new $T<>($T.class, this::$L)",
                     ClassName.get(TaskBinding.class),
                     TypeName.get(ele.getTaskType().unwrap()),
-                    ele.getOriginMethod().getName()
+                    ele.getOriginMethod().name()
             );
             if (i < handlers.size()) {
                 cb.add(",\n");
@@ -130,17 +130,17 @@ public class WorkersFacadeGenerator {
     }
 
     public String getWorkersFacadeClassName(ServiceElement service) {
-        String facadeClassSimpleName = service.originClass().getSimpleName() + FACADE_SUFFIX;
+        String facadeClassSimpleName = service.originClass().simpleName() + FACADE_SUFFIX;
         return facadeClassSimpleName;
     }
 
     public void generateWorkersFacade(ServiceElement service, List<TaskWorkerElement> handlers) {
         String facadeClassSimpleName = getWorkersFacadeClassName(service);
-        logger.debug("Generate Tasks worker facade '" + facadeClassSimpleName + "' for service: " + service.originClass().getName());
+        logger.debug("Generate Tasks worker facade '" + facadeClassSimpleName + "' for service: " + service.originClass().name());
 
         TypeSpec.Builder classBuilder = TypeSpec.classBuilder(facadeClassSimpleName);
         classBuilder.addModifiers(Modifier.PUBLIC);
-        classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(ServiceWorkers.class), TypeName.get(service.originClass().getOriginType())));
+        classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(ServiceWorkers.class), TypeName.get(service.originClass().originType())));
 
         classBuilder.addAnnotation(CodegenUtils.generateGenstamp(this.getClass().getName(), null, null));
         classBuilder.addAnnotation(Singleton.class);
@@ -150,7 +150,7 @@ public class WorkersFacadeGenerator {
         generateGetBindingsMethod(service, handlers, classBuilder);
 
         final TypeSpec typeSpec = classBuilder.build();
-        String packageName = service.originClass().getPackageName();
+        String packageName = service.originClass().packageName();
         CodegenUtils.createJavaFile(context.getProcessingEnv(), typeSpec, packageName, service.originClass().unwrap());
     }
 }

@@ -58,21 +58,21 @@ public class RoutesIndex {
         if (parameters == null) {
             parameters = new HashMap<>();
         }
-        while ((node != null) && (node.getParent() != null)) {
+        while ((node != null) && (node.parent() != null)) {
             String segmentName;
             if (node.isParameter()) {
-                segmentName = parameters.get(node.getName());
+                segmentName = parameters.get(node.name());
                 if (segmentName == null) {
-                    if (!node.getName().equals(RouteTrie.SUFFIX_PARAM_NAME)) {
-                        throw new RouterException("Undetermined value of route parameter :" + node.getName() + " for routeId: " + routeId);
+                    if (!node.name().equals(RouteTrie.SUFFIX_PARAM_NAME)) {
+                        throw new RouterException("Undetermined value of route parameter :" + node.name() + " for routeId: " + routeId);
                     }
                     segmentName = "";
                 }
             } else {
-                segmentName = node.getName();
+                segmentName = node.name();
             }
             segments.add(0, segmentName);
-            node = node.getParent();
+            node = node.parent();
         }
         return segments;
     }

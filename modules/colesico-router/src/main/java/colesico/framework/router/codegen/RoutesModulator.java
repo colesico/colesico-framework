@@ -48,7 +48,7 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
     @Override
     protected void processTeleMethod(TeleMethodElement teleMethodElement) {
         ((RouterTeleFacadeElement) teleMethodElement.parentTeleFacade())
-                .getRoutesBuilder()
+                .routesBuilder()
                 .addTeleMethod(teleMethodElement);
     }
 
@@ -71,12 +71,12 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
                 ClassName.get(RouterDescriptors.class),
                 DESCRIPTORS_VAR,
                 ClassName.get(RouterDescriptors.class),
-                TypeName.get(teleFacade.parentService().originClass().getOriginType())
+                TypeName.get(teleFacade.parentService().originClass().originType())
         );
 
-        RoutesBuilder routesBuilder = teleFacade.getRoutesBuilder();
+        RoutesBuilder routesBuilder = teleFacade.routesBuilder();
 
-        for (RoutesBuilder.RoutedTeleMethodElement routedTeleMethod : routesBuilder.getTeleMethods()) {
+        for (RoutesBuilder.RoutedTeleMethodElement routedTeleMethod : routesBuilder.teleMethods()) {
             cb.add(generateRouteMapping(teleFacade, routedTeleMethod));
         }
 
@@ -91,16 +91,16 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
         cb.add("$N.$N($S,$N(),$S,",
                 DESCRIPTORS_VAR,
                 RouterDescriptors.ADD_METHOD,
-                routedTeleMethod.getRoute(),
-                routedTeleMethod.getTeleMethod().builderName(),
-                routedTeleMethod.getTeleMethod().name()
+                routedTeleMethod.route(),
+                routedTeleMethod.teleMethod().builderName(),
+                routedTeleMethod.teleMethod().name()
         );
 
-        if (routedTeleMethod.getRouteAttributes().isEmpty()) {
+        if (routedTeleMethod.routeAttributes().isEmpty()) {
             cb.add("null");
         } else {
             ArrayCodegen attrCodegen = new ArrayCodegen();
-            for (Map.Entry<String, String> param : routedTeleMethod.getRouteAttributes().entrySet()) {
+            for (Map.Entry<String, String> param : routedTeleMethod.routeAttributes().entrySet()) {
                 attrCodegen.add("$S", param.getKey());
                 attrCodegen.add("$S", param.getValue());
             }

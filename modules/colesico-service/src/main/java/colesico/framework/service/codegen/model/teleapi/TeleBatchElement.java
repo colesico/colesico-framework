@@ -52,7 +52,7 @@ public class TeleBatchElement implements TeleReadableElement {
     }
 
     public String batchClassName() {
-        return parentPack.parentTeleFacade().parentService().originClass().getPackageName() + '.' +
+        return parentPack.parentTeleFacade().parentService().originClass().packageName() + '.' +
                 parentPack.batchPackClassSimpleName() + '.' +
                 batchClassSimpleName();
     }

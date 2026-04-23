@@ -57,7 +57,7 @@ public final class ServiceProcessorContext {
         this.codegenMode = CodegenMode.fromKey(processingEnv.getOptions().get(CodegenUtils.OPTION_CODEGEN));
     }
 
-    public CodegenMode getCodegenMode() {
+    public CodegenMode codegenMode() {
         return codegenMode;
     }
 
@@ -69,31 +69,31 @@ public final class ServiceProcessorContext {
         properties.put(property.getClass(), property);
     }
 
-    public ProcessingEnvironment getProcessingEnv() {
+    public ProcessingEnvironment processingEnv() {
         return processingEnv;
     }
 
-    public ModulatorManager getModulatorKit() {
+    public ModulatorManager modulatorKit() {
         return modulatorManager;
     }
 
-    public InterceptionPhases getInterceptionPhases() {
+    public InterceptionPhases interceptionPhases() {
         return interceptionPhases;
     }
 
-    public Elements getElementUtils() {
+    public Elements elementUtils() {
         return processingEnv.getElementUtils();
     }
 
-    public Messager getMessager() {
+    public Messager messager() {
         return processingEnv.getMessager();
     }
 
-    public Filer getFiler() {
+    public Filer filer() {
         return processingEnv.getFiler();
     }
 
-    public Types getTypeUtils() {
+    public Types typeUtils() {
         return processingEnv.getTypeUtils();
     }
 

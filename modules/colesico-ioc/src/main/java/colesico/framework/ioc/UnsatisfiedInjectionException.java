@@ -35,7 +35,7 @@ public class UnsatisfiedInjectionException extends IocException {
         this.key = key;
     }
 
-    public Key getKey() {
+    public Key key() {
         return key;
     }
 }

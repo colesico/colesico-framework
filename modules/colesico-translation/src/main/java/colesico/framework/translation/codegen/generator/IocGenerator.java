@@ -38,15 +38,15 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
     private void generateIocProduccer(String packageName, String producerClassSimpleName, List<DictionaryElement> dictionaryElements) {
         ProducerGenerator producerGenerator = new ProducerGenerator(packageName, producerClassSimpleName, this.getClass(), processingEnv);
-        logger.debug("Generating t9n producer: " + producerGenerator.getProducerClassFilePath());
+        logger.debug("Generating t9n producer: " + producerGenerator.producerClassFilePath());
 
         int i = 0;
         for (DictionaryElement dbe : dictionaryElements) {
             TypeName implTypeName = ClassName.bestGuess(packageName + '.' + dbe.getImplClassSimpleName());
             producerGenerator.addProduceAnnotation(implTypeName);
 
-            String methodName = "get" + dbe.getOriginBean().getSimpleName() + i;
-            TypeName retTypeName = TypeName.get(dbe.getOriginBean().getOriginType());
+            String methodName = "get" + dbe.getOriginBean().simpleName() + i;
+            TypeName retTypeName = TypeName.get(dbe.getOriginBean().originType());
             producerGenerator.addImplementMethod(methodName, retTypeName, implTypeName);
             i++;
         }
@@ -58,11 +58,11 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         for (Map.Entry<String, List<DictionaryElement>> entry : dictionaryRegistry.getByPackageMap().entrySet()) {
             String packageName = entry.getKey();
             List<DictionaryElement> dictElements = entry.getValue();
-            if (getCodegenMode().isOptimized()) {
+            if (codegenMode().isOptimized()) {
                 generateIocProduccer(packageName, T9N_PRODUCER, dictElements);
             } else {
                 for (DictionaryElement dictElm : dictElements) {
-                    String t9nProducerName = dictElm.getOriginBean().getSimpleName() + T9N_PRODUCER;
+                    String t9nProducerName = dictElm.getOriginBean().simpleName() + T9N_PRODUCER;
                     generateIocProduccer(packageName, t9nProducerName, List.of(dictElm));
                 }
             }

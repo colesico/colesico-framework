@@ -52,7 +52,7 @@ abstract public class FrameworkAbstractProcessor extends AbstractProcessor {
         return SourceVersion.latestSupported();
     }
 
-    abstract protected Class<? extends Annotation>[] getSupportedAnnotations();
+    abstract protected Class<? extends Annotation>[] supportedAnnotations();
 
     @Override
     public Set<String> getSupportedOptions() {
@@ -64,7 +64,7 @@ abstract public class FrameworkAbstractProcessor extends AbstractProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> result = new HashSet<>();
-        Class<? extends Annotation>[] annClasses = getSupportedAnnotations();
+        Class<? extends Annotation>[] annClasses = supportedAnnotations();
         for (Class<? extends Annotation> c : annClasses) {
             result.add(c.getName());
         }
@@ -91,27 +91,27 @@ abstract public class FrameworkAbstractProcessor extends AbstractProcessor {
         return new HashSet<>(Arrays.asList(annotations));
     }
 
-    protected Elements getElementUtils() {
+    protected Elements elementUtils() {
         return processingEnv.getElementUtils();
     }
 
-    protected Messager getMessager() {
+    protected Messager messager() {
         return processingEnv.getMessager();
     }
 
-    protected Filer getFiler() {
+    protected Filer filer() {
         return processingEnv.getFiler();
     }
 
-    protected Types getTypeUtils() {
+    protected Types typeUtils() {
         return processingEnv.getTypeUtils();
     }
 
-    protected Map<String, String> getOptions() {
+    protected Map<String, String> options() {
         return processingEnv.getOptions();
     }
 
-    protected CodegenMode getCodegenMode() {
+    protected CodegenMode codegenMode() {
         String codegenModeKey = processingEnv.getOptions().get(CodegenUtils.OPTION_CODEGEN);
         return CodegenMode.fromKey(codegenModeKey);
     }

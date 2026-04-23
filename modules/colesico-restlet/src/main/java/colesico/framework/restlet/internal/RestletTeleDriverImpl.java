@@ -73,7 +73,7 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
         // Retrieve http context
         HttpContext httpContext = httpContextProv.get();
         // Retrieve http request
-        HttpRequest httpRequest = httpContext.getRequest();
+        HttpRequest httpRequest = httpContext.request();
         try {
             // Request listener notification
             notifyRequestListener(httpContext, service);
@@ -104,7 +104,7 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
 
 
     protected void guardCSFR(HttpRequest httpRequest) {
-        String xRequestedWith = httpRequest.getHeaders().get(X_REQUESTED_WITH_HEADER);
+        String xRequestedWith = httpRequest.headers().get(X_REQUESTED_WITH_HEADER);
         if (!X_REQUESTED_WITH_HEADER_VAL.equals(xRequestedWith)) {
             throw new ApplicationException("Http header '" + X_REQUESTED_WITH_HEADER + "=" + X_REQUESTED_WITH_HEADER_VAL + "' required");
         }

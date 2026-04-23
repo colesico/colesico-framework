@@ -129,7 +129,7 @@ public class DefaultServiceLocator<S> implements ServiceLocator<S> {
     }
 
     @Override
-    public Set<S> getProviders() {
+    public Set<S> providers() {
         return getProvidersImpl(service.getName(), classLoader, classFilter);
     }
 

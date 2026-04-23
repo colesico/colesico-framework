@@ -22,7 +22,7 @@ public class RouteOrigin implements Origin {
     @Override
     public Collection<String> getStrings(String name) {
         List<String> result = new ArrayList<>();
-        var value = routerContextProv.get().getParameters().get(name);
+        var value = routerContextProv.get().parameters().get(name);
         if (value != null) {
             result.add(value);
         }

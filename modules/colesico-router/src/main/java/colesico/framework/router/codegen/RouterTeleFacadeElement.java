@@ -21,7 +21,7 @@ public final class RouterTeleFacadeElement extends TeleFacadeElement {
         this.routesBuilder = routesBuilder;
     }
 
-    public RoutesBuilder getRoutesBuilder() {
+    public RoutesBuilder routesBuilder() {
         return routesBuilder;
     }
 }

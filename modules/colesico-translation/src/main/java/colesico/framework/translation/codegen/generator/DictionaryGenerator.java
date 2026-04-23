@@ -72,15 +72,15 @@ public class DictionaryGenerator {
             t9nKey = t9nKeyAnn.unwrap().value();
         } else {
             //t9nKey = StrUtils.firstCharToUpperCase(keyMethod.getSimpleName().toString());
-            t9nKey = keyMethod.getName();
+            t9nKey = keyMethod.name();
         }
 
         cb.add("$S", t9nKey);
         // translation params
-        List<ParameterElement> params = keyMethod.getParameters();
+        List<ParameterElement> params = keyMethod.parameters();
         if (!params.isEmpty()) {
             for (ParameterElement param : params) {
-                cb.add(",$N", param.getName());
+                cb.add(",$N", param.name());
             }
         }
         cb.add(")");
@@ -93,10 +93,10 @@ public class DictionaryGenerator {
         String beanClassName = dictionaryElement.getImplClassSimpleName();
         logger.debug("Generate  dictionary bean: " + beanClassName);
         TypeSpec.Builder dictionaryBuilder = TypeSpec.classBuilder(beanClassName);
-        dictionaryBuilder.addSuperinterface(TypeName.get(dictionaryElement.getOriginBean().getOriginType()));
+        dictionaryBuilder.addSuperinterface(TypeName.get(dictionaryElement.getOriginBean().originType()));
         dictionaryBuilder.superclass(ClassName.get(AbstractDictionary.class));
 
-        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "Origin: " + dictionaryElement.getOriginBean().getOriginType().toString());
+        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "Origin: " + dictionaryElement.getOriginBean().originType().toString());
         dictionaryBuilder.addAnnotation(genstamp);
 
         dictionaryBuilder.addAnnotation(Singleton.class);
@@ -114,7 +114,7 @@ public class DictionaryGenerator {
             final TypeSpec typeSpec = dictionaryBuilder.build();
             // Create class source file
             Element[] linkedElm = new Element[]{dictionaryElement.getOriginBean().unwrap()};
-            String packageName = dictionaryElement.getOriginBean().getPackageName();
+            String packageName = dictionaryElement.getOriginBean().packageName();
             CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, linkedElm);
         } catch (Exception e) {
             logger.debug("Error generating dictionary bean:" + ExceptionUtils.getRootCauseMessage(e));

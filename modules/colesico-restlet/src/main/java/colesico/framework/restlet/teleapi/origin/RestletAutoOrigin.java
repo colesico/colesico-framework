@@ -21,13 +21,13 @@ public class RestletAutoOrigin implements RestletOrigin {
 
     @Override
     public String getStrings(String name) {
-        HttpRequest httpRequest = httpContextProv.get().getRequest();
-        if (httpRequest.getQueryParameters().hasKey(name)) {
-            return httpRequest.getQueryParameters().get(name);
+        HttpRequest httpRequest = httpContextProv.get().request();
+        if (httpRequest.queryParameters().hasKey(name)) {
+            return httpRequest.queryParameters().get(name);
         }
         RouterContext routerContext = routerContextProv.get();
 
         // return param value  or null
-        return routerContext.getParameters().get(name);
+        return routerContext.parameters().get(name);
     }
 }

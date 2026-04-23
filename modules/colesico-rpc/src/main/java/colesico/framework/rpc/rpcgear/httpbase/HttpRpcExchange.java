@@ -17,7 +17,6 @@ import jakarta.inject.Provider;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
-import java.util.Map;
 
 /**
  * Http based exchange
@@ -38,7 +37,7 @@ abstract public class HttpRpcExchange implements RpcExchange {
 
     @Override
     public Operation resolveOperation() {
-        HttpValues<String, String> headers = httpContextProv.get().getRequest().getHeaders();
+        HttpValues<String, String> headers = httpContextProv.get().request().headers();
         String rpcNamespace = headers.get(HttpRpcClient.RPC_NAMESPACE_HEADER);
 
         if (StrUtils.isEmpty(rpcNamespace)){
@@ -55,20 +54,20 @@ abstract public class HttpRpcExchange implements RpcExchange {
     @Override
     public <Q extends RpcRequest> Q readRequest(Type requestType) {
         HttpContext ctx = httpContextProv.get();
-        Q request = deserialize(ctx.getRequest().getInputStream(), (Class<Q>) requestType);
+        Q request = deserialize(ctx.request().inputStream(), (Class<Q>) requestType);
         return request;
     }
 
     @Override
     public void writeResponse(RpcResponse response) {
         HttpContext ctx = httpContextProv.get();
-        ctx.getResponse().setContenType(HttpRpcClient.RPC_CONTENT_TYPE);
-        serialize(response, ctx.getResponse().getOutputStream());
+        ctx.response().setContenType(HttpRpcClient.RPC_CONTENT_TYPE);
+        serialize(response, ctx.response().outputStream());
     }
 
     @Override
     public void sendError(RpcError error) {
-        HttpResponse response = httpContextProv.get().getResponse();
+        HttpResponse response = httpContextProv.get().response();
         response.setContenType(HttpRpcClient.RPC_CONTENT_TYPE);
         String exceptionType = StringUtils.isBlank(error.getExceptionType()) ? "" : error.getExceptionType();
         String message = StringUtils.isBlank(error.getMessage()) ? "" : error.getMessage();

@@ -31,7 +31,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
     private final ServiceProcessorContext context;
 
     public TeleFacadeParser(ServiceProcessorContext context) {
-        super(context.getProcessingEnv());
+        super(context.processingEnv());
         this.context = context;
     }
 
@@ -49,7 +49,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
         }
 
         if (StringUtils.isBlank(fieldName)) {
-            fieldName = variable.getName();
+            fieldName = variable.name();
         }
 
         if (batchName.equals(BatchField.DEFAULT_BATCH) && methodBatchAnn != null) {
@@ -62,14 +62,14 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
         batch.addField(batchField);
         teleMethod.addParameter(batchField);
 
-        context.getModulatorKit().notifyTeleInputParsed(batchField);
+        context.modulatorKit().notifyTeleInputParsed(batchField);
     }
 
     private void parseParameter(TeleMethodElement teleMethod, VarElement variable) {
         // Process simple param
         TeleParameterElement parameter = new TeleParameterElement(teleMethod, variable);
         teleMethod.addParameter(parameter);
-        context.getModulatorKit().notifyTeleInputParsed(parameter);
+        context.modulatorKit().notifyTeleInputParsed(parameter);
     }
 
     private void parseVariables(TeleMethodElement teleMethod, List<? extends VarElement> variables) {
@@ -96,7 +96,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
 
     private void parseTeleMethodParams(TeleMethodElement teleMethod) {
         MethodElement method = teleMethod.serviceMethod().originMethod();
-        parseVariables(teleMethod, method.getParameters());
+        parseVariables(teleMethod, method.parameters());
     }
 
     private void parseTeleMethods(TeleFacadeElement teleFacade) {
@@ -108,9 +108,9 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
 
             TeleMethodElement teleMethod = new TeleMethodElement(serviceMethod);
             teleFacade.addTeleMethod(teleMethod);
-            context.getModulatorKit().notifyBeforeParseTeleMethod(teleMethod);
+            context.modulatorKit().notifyBeforeParseTeleMethod(teleMethod);
             parseTeleMethodParams(teleMethod);
-            context.getModulatorKit().notifyTeleMethodParsed(teleMethod);
+            context.modulatorKit().notifyTeleMethodParsed(teleMethod);
         }
     }
 
@@ -118,14 +118,14 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
      * Perform tele-facades parsing
      */
     public void parse(ServiceElement service) {
-        context.getModulatorKit().notifyInitTeleFacade(service);
+        context.modulatorKit().notifyInitTeleFacade(service);
         TeleFacadeElement teleFacade = service.teleFacade();
         if (teleFacade == null) {
             return;
         }
-        context.getModulatorKit().notifyBeforeParseTeleFacade(teleFacade);
+        context.modulatorKit().notifyBeforeParseTeleFacade(teleFacade);
         parseTeleMethods(teleFacade);
-        context.getModulatorKit().notifyTeleFacadeParsed(teleFacade);
+        context.modulatorKit().notifyTeleFacadeParsed(teleFacade);
     }
 
 }

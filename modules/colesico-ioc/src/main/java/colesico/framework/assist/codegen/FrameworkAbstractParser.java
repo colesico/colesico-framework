@@ -35,31 +35,31 @@ abstract public class FrameworkAbstractParser {
         logger = LoggerFactory.getLogger(this.getClass());
     }
 
-    protected ProcessingEnvironment getProcessingEnv() {
+    protected ProcessingEnvironment processingEnv() {
         return processingEnv;
     }
 
-    protected Elements getElementUtils() {
+    protected Elements elementUtils() {
         return processingEnv.getElementUtils();
     }
 
-    protected Messager getMessager() {
+    protected Messager messager() {
         return processingEnv.getMessager();
     }
 
-    protected Filer getFiler() {
+    protected Filer filer() {
         return processingEnv.getFiler();
     }
 
-    protected Types getTypeUtils() {
+    protected Types typeUtils() {
         return processingEnv.getTypeUtils();
     }
 
-    protected Map<String, String> getOptions() {
+    protected Map<String, String> options() {
         return processingEnv.getOptions();
     }
 
-    protected CodegenMode getCodegenMode() {
+    protected CodegenMode codegenMode() {
         String codegenModeKey = processingEnv.getOptions().get(CodegenUtils.OPTION_CODEGEN);
         return CodegenMode.fromKey(codegenModeKey);
     }

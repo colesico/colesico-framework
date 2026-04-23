@@ -25,8 +25,8 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
 
         colesico.framework.resource.assist.L10nOptionsGenerator optionsGenerator;
 
-        String optionsClassSimpleName = dictionaryElement.getOriginBean().getSimpleName() + L10N_OPTIONS_CLASS_SUFFIX;
-        String optionsPackage = dictionaryElement.getOriginBean().getPackageName();
+        String optionsClassSimpleName = dictionaryElement.getOriginBean().simpleName() + L10N_OPTIONS_CLASS_SUFFIX;
+        String optionsPackage = dictionaryElement.getOriginBean().packageName();
 
         logger.debug("Generate  resource L10n options: " + optionsPackage + "." + optionsClassSimpleName);
         optionsGenerator = new colesico.framework.resource.assist.L10nOptionsGenerator(optionsPackage, optionsClassSimpleName, this.getClass(), processingEnv);

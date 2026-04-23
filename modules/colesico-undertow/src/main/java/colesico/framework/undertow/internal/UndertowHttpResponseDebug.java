@@ -42,9 +42,9 @@ public class UndertowHttpResponseDebug extends UndertowHttpResponse {
     }
 
     @Override
-    public OutputStream getOutputStream() {
+    public OutputStream outputStream() {
         log.debug("getOutputStream(); responded=" + isResponded() + "; responseId=" + responseId);
-        return super.getOutputStream();
+        return super.outputStream();
     }
 
     @Override
