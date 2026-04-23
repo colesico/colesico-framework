@@ -27,6 +27,8 @@ import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import colesico.framework.teleapi.TeleMethod;
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.teleapi.TeleFacade;
+import colesico.framework.teleapi.dataport.TRContext;
+import colesico.framework.teleapi.dataport.TWContext;
 import com.palantir.javapoet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,8 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
 
+import java.lang.reflect.Type;
+
 import static colesico.framework.teleapi.TeleFacade.TARGET_PROV_FIELD;
 
 /**
@@ -47,6 +51,8 @@ import static colesico.framework.teleapi.TeleFacade.TARGET_PROV_FIELD;
 public class TeleFacadesGenerator {
 
     public static final String PARAM_SUFFIX = "Param";
+    public static final String TARGET_INSTANCE_VAR = "target";
+    public static final String RESULT_VAR = "result";
     protected final Logger logger = LoggerFactory.getLogger(TeleFacadesGenerator.class);
 
     protected final ServiceProcessorContext context;
@@ -148,7 +154,7 @@ public class TeleFacadesGenerator {
         ServiceElement service = teleMethod.getParentTeleFacade().getParentService();
         TypeName serviceTypeName = TypeName.get(service.getOriginClass().getOriginType());
         cb.addStatement("final $T $N = $N.get()", serviceTypeName,
-                TeleMethod.TARGET_INSTANCE_VAR,
+                TARGET_INSTANCE_VAR,
                 TeleFacade.TARGET_PROV_FIELD);
 
         // Create writer variable
@@ -156,19 +162,19 @@ public class TeleFacadesGenerator {
         CodeBlock.Builder callMethodCb = CodeBlock.builder();
         callMethodCb.add("\n// Invoke target service method\n");
         if (!voidResult) {
-            callMethodCb.add("final $T $N = ", TypeName.get(returnType), TeleMethod.RESULT_VAR);
+            callMethodCb.add("final $T $N = ", TypeName.get(returnType), RESULT_VAR);
         }
 
         // Call service method
         //   target.method(...);
-        callMethodCb.add(TeleMethod.TARGET_INSTANCE_VAR + "." + teleMethod.getServiceMethod().getName()
+        callMethodCb.add(TARGET_INSTANCE_VAR + "." + teleMethod.getServiceMethod().getName()
                 + "(" + serviceMethodArgs.toFormat() + ");\n", serviceMethodArgs.toValues());
         cb.add(callMethodCb.build());
 
         // Send result to client via data port dataPort.write(result,new Context());
         if (!voidResult) {
             cb.add("\n// Send result to remote client\n");
-            cb.add("$N.$N($N,", TeleMethod.DATA_PORT_PARAM, DataPort.WRITE_METHOD, TeleMethod.RESULT_VAR);
+            cb.add("$N.$N($N,", TeleMethod.DATA_PORT_PARAM, DataPort.WRITE_METHOD, RESULT_VAR);
             CodeBlock writeCtx = teleMethod.getWritingContext().getCreationCode();
             cb.add(writeCtx);
             cb.add(");\n");
@@ -185,7 +191,12 @@ public class TeleFacadesGenerator {
                     ClassName.get(TeleMethod.class),
                     teleMethod.getServiceMethod().getName());
             methodBuilder.addModifiers(Modifier.PRIVATE);
-            methodBuilder.returns(ClassName.get(teleFacade.getTeleMethodClass()));
+            methodBuilder.returns(
+                    ParameterizedTypeName.get(ClassName.get(TeleMethod.class),
+                            ClassName.get(teleFacade.getReadingContextClass()),
+                            ClassName.get(teleFacade.getWritingContextClass())
+                    )
+            );
 
             // Subroutine definition
             CodeBlock.Builder cb = CodeBlock.builder();

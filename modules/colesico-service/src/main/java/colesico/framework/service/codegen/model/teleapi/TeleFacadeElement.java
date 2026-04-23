@@ -23,6 +23,8 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.TeleMethod;
+import colesico.framework.teleapi.dataport.TRContext;
+import colesico.framework.teleapi.dataport.TWContext;
 import com.palantir.javapoet.CodeBlock;
 import org.apache.commons.lang3.StringUtils;
 
@@ -46,26 +48,30 @@ public class TeleFacadeElement {
     private final Class<?> teleType;
 
     /**
-     * Tele method class
-     */
-    private final Class<? extends TeleMethod<?,?>> teleMethodClass;
-
-    /**
      * Descriptors registry class
      */
     private final Class<?> descriptorsClass;
+
+    /**
+     * Descriptors registry method code
+     */
+    private CodeBlock descriptorsMethodBody;
+
+    /**
+     * Tele reading context class
+     */
+    private final Class<? extends TRContext> readingContextClass;
+
+    /**
+     * Tele writing context class
+     */
+    private final Class<? extends TWContext> writingContextClass;
 
     /**
      * Tele methods.
      * This list can be different with the methods of service due to  {@link colesico.framework.service.LocalMethod}
      */
     private final Elements<TeleMethodElement> teleMethods = new Elements<>();
-    ;
-
-    /**
-     * Descriptors registry method code
-     */
-    private CodeBlock descriptorsMethodBody;
 
     /**
      * IoC Qualifier for producer method
@@ -96,12 +102,14 @@ public class TeleFacadeElement {
     private final Map<Class<?>, Object> properties = new HashMap<>();
 
     public TeleFacadeElement(Class<?> teleType,
-                             Class<? extends TeleMethod<?,?>> teleMethodClass,
                              Class<?> descriptorsClass,
+                             Class<? extends TRContext> readingContextClass,
+                             Class<? extends TWContext> writingContextClass,
                              IocQualifier iocQualifier) {
         this.teleType = teleType;
-        this.teleMethodClass = teleMethodClass;
         this.descriptorsClass = descriptorsClass;
+        this.readingContextClass = readingContextClass;
+        this.writingContextClass = writingContextClass;
         this.iocQualifier = iocQualifier;
 
         this.batchPack = new TeleBatchPackElement(this);
@@ -161,10 +169,6 @@ public class TeleFacadeElement {
         return parentService;
     }
 
-    public Class<? extends TeleMethod<?,?>> getTeleMethodClass() {
-        return teleMethodClass;
-    }
-
     public Elements<TeleMethodElement> getTeleMethods() {
         return teleMethods;
     }
@@ -199,6 +203,14 @@ public class TeleFacadeElement {
 
     public TeleBatchPackElement getBatchPack() {
         return batchPack;
+    }
+
+    public Class<? extends TRContext> getReadingContextClass() {
+        return readingContextClass;
+    }
+
+    public Class<? extends TWContext> getWritingContextClass() {
+        return writingContextClass;
     }
 
     public static final class IocQualifier {
