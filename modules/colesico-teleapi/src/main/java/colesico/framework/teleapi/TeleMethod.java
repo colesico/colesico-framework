@@ -12,8 +12,6 @@ import colesico.framework.teleapi.dataport.TWContext;
 public interface TeleMethod<R extends TRContext, W extends TWContext> {
 
     String DATA_PORT_PARAM = "dataPort";
-    String TARGET_INSTANCE_VAR = "target";
-    String RESULT_VAR = "result";
 
     void invoke(DataPort<R, W> dataPort);
     
