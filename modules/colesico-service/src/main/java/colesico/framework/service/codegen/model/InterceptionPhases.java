@@ -78,7 +78,7 @@ public final class InterceptionPhases {
         phaseOrder.add(PREPROCESS);
     }
 
-    public List<String> getPhaseOrder() {
+    public List<String> phaseOrder() {
         return Collections.unmodifiableList(phaseOrder);
     }
 

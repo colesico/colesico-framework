@@ -55,18 +55,18 @@ public class RoutesBuilder {
     }
 
     public final void addTeleMethod(TeleMethodElement teleMethod) {
-        String targetMethodName = teleMethod.getName();
+        String targetMethodName = teleMethod.name();
         final String route = buildMethodRoute(teleMethod);
 
         RoutedTeleMethodElement rtme = teleMethods.find(rte -> rte.getRoute().equals(route));
         if (null != rtme) {
             throw CodegenException.of()
-                    .message("Duplicate router path: " + route + "->" + targetMethodName + "(...). Route already bound to " + rtme.getTeleMethod().getServiceMethod().getName() + "(...)")
-                    .element(teleMethod.getServiceMethod().getOriginMethod()).build();
+                    .message("Duplicate router path: " + route + "->" + targetMethodName + "(...). Route already bound to " + rtme.getTeleMethod().serviceMethod().name() + "(...)")
+                    .element(teleMethod.serviceMethod().originMethod()).build();
         }
 
-        Map<String, String> methodRouteAttrs = parseRouteAttributes(teleMethod.getServiceMethod().getOriginMethod());
-        Map<String, String> classRouteAttrs = parseRouteAttributes(teleMethod.getServiceMethod().getOriginMethod().getParentClass());
+        Map<String, String> methodRouteAttrs = parseRouteAttributes(teleMethod.serviceMethod().originMethod());
+        Map<String, String> classRouteAttrs = parseRouteAttributes(teleMethod.serviceMethod().originMethod().getParentClass());
         classRouteAttrs.putAll(methodRouteAttrs);
 
         RoutedTeleMethodElement routedTeleMethod = new RoutedTeleMethodElement(teleMethod, route, classRouteAttrs);
@@ -76,7 +76,7 @@ public class RoutesBuilder {
 
     protected String buildMethodRoute(TeleMethodElement teleMethod) {
 
-        AnnotationAssist<Route> routeAnn = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(Route.class);
+        AnnotationAssist<Route> routeAnn = teleMethod.serviceMethod().originMethod().getAnnotation(Route.class);
         String methodRoute;
         if (routeAnn != null) {
             methodRoute = StringUtils.trim(routeAnn.unwrap().value());
@@ -89,7 +89,7 @@ public class RoutesBuilder {
                 methodRoute = StrUtils.concatPath(serviceRoute, methodRoute, RouteTrie.SEGMENT_DELEMITER);
             }
         } else {
-            String methodName = teleMethod.getName();
+            String methodName = teleMethod.name();
             if (methodName.equals(INDEX_METHOD_NAME)) {
                 // Local root route
                 methodRoute = "";
@@ -103,7 +103,7 @@ public class RoutesBuilder {
         }
 
         HttpMethod httpMethod = HttpMethod.HTTP_METHOD_GET;
-        AnnotationAssist<RequestMethod> methodAnnotation = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(RequestMethod.class);
+        AnnotationAssist<RequestMethod> methodAnnotation = teleMethod.serviceMethod().originMethod().getAnnotation(RequestMethod.class);
         if (methodAnnotation != null) {
             httpMethod = HttpMethod.of(methodAnnotation.unwrap().value());
         }
@@ -112,7 +112,7 @@ public class RoutesBuilder {
     }
 
     protected String buildServiceRoute(ServiceElement service) {
-        AnnotationAssist<Route> routeAnn = service.getOriginClass().getAnnotation(Route.class);
+        AnnotationAssist<Route> routeAnn = service.originClass().getAnnotation(Route.class);
         String srvRoute;
         if (routeAnn != null) {
             srvRoute = StringUtils.trim(routeAnn.unwrap().value());
@@ -127,10 +127,10 @@ public class RoutesBuilder {
                 srvRoute = srvRoute.substring(2);
             }
 
-            String pkgRoute = buildPackageRoute(service.getOriginClass().getPackage());
+            String pkgRoute = buildPackageRoute(service.originClass().getPackage());
             return StrUtils.concatPath(pkgRoute, srvRoute, RouteTrie.SEGMENT_DELEMITER);
         } else {
-            String serviceBeanName = service.getOriginClass().getSimpleName();
+            String serviceBeanName = service.originClass().getSimpleName();
             // Local root route
             if (serviceBeanName.startsWith(INDEX_SERVICE_PREFIX)) {
                 srvRoute = "";
@@ -138,7 +138,7 @@ public class RoutesBuilder {
                 // Bean route from bean simple class name
                 srvRoute = StrUtils.toSeparatorNotation(serviceBeanName, '-');
             }
-            String pkgRoute = buildPackageRoute(service.getOriginClass().getPackage());
+            String pkgRoute = buildPackageRoute(service.originClass().getPackage());
             return StrUtils.concatPath(pkgRoute, srvRoute, RouteTrie.SEGMENT_DELEMITER);
         }
     }

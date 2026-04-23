@@ -16,6 +16,8 @@
 
 package colesico.framework.router.assist;
 
+import colesico.framework.router.RouterException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -109,7 +111,7 @@ public class RouteTrie<V> {
         }
     }
 
-    public static class DuplicateRouteException extends RuntimeException {
+    public static class DuplicateRouteException extends RouterException {
         private final String route;
 
         public DuplicateRouteException(String route) {
@@ -123,7 +125,7 @@ public class RouteTrie<V> {
     }
 
 
-    public static class RouteParameterMismutch extends RuntimeException {
+    public static class RouteParameterMismutch extends RouterException {
         private final String parameter;
 
         public RouteParameterMismutch(String parameter, String existingParameter) {

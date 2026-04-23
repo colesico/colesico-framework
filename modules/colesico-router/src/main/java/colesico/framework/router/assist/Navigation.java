@@ -20,7 +20,7 @@ import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
-import colesico.framework.router.ActionResolution;
+import colesico.framework.router.RouteInvocation;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterException;
 import colesico.framework.service.ServiceProxy;
@@ -212,7 +212,7 @@ public class Navigation<N extends Navigation> {
         if (StringUtils.isNotBlank(this.uri)) {
             targetURI = uri;
         } else if (this.serviceClass != null && this.targetMethod != null) {
-            List<String> slicedRoute = router.getSlicedRoute(this.serviceClass, this.targetMethod, this.httpMethod, this.routeParameters);
+            List<String> slicedRoute = router.slicedRoute(this.serviceClass, this.targetMethod, this.httpMethod, this.routeParameters);
             if (slicedRoute == null) {
                 throw new NavigationException("Unknown uri for service '" + serviceClass.getName() + "' and method name '" + targetMethod + "'");
             }
@@ -248,8 +248,8 @@ public class Navigation<N extends Navigation> {
         String location = toLocation(router);
         ForwardRequest request = new ForwardRequest(context.getRequest(), location);
         context.setRequest(request);
-        ActionResolution resolution = router.resolveAction(httpMethod, request.getRequestURI());
-        router.performAction(resolution);
+        Optional<RouteInvocation> invocation = router.resolve(new Router.ResolutionContext(httpMethod, request.getRequestURI()));
+        router.invoke(invocation.get());
     }
 
     protected StringBuilder buildParamsStr() {
@@ -267,7 +267,7 @@ public class Navigation<N extends Navigation> {
         return paramsStrBuilder;
     }
 
-    public static class NavigationException extends RuntimeException {
+    public static class NavigationException extends RouterException {
         public NavigationException(String message) {
             super(message);
         }

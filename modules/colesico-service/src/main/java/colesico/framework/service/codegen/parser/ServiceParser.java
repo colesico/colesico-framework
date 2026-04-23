@@ -96,7 +96,7 @@ public class ServiceParser extends FrameworkAbstractParser {
     }
 
     protected void parseServiceMethods(ServiceElement serviceElement) {
-        ClassElement classElement = serviceElement.getOriginClass();
+        ClassElement classElement = serviceElement.originClass();
         AnnotationAssist<LocalMethod> classLocalAnn = classElement.getAnnotation(LocalMethod.class);
 
         List<MethodElement> methods = classElement.getMethods();

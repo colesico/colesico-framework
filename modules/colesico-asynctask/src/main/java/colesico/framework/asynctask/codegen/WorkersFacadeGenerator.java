@@ -50,7 +50,7 @@ public class WorkersFacadeGenerator {
         mb.addAnnotation(ClassName.get(Inject.class));
         mb.addModifiers(Modifier.PUBLIC);
         mb.addParameter(
-                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(service.getOriginClass().getOriginType())),
+                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(service.originClass().getOriginType())),
                 ServiceWorkers.SERVICE_PROV_FIELD,
                 Modifier.FINAL);
 
@@ -67,7 +67,7 @@ public class WorkersFacadeGenerator {
         mb.addParameter(pb.build());
 
         mb.addStatement("$T $N=this.$N.get()",
-                TypeName.get(service.getOriginClass().getOriginType()),
+                TypeName.get(service.originClass().getOriginType()),
                 TARGET_VAR,
                 ServiceWorkers.SERVICE_PROV_FIELD);
 
@@ -130,17 +130,17 @@ public class WorkersFacadeGenerator {
     }
 
     public String getWorkersFacadeClassName(ServiceElement service) {
-        String facadeClassSimpleName = service.getOriginClass().getSimpleName() + FACADE_SUFFIX;
+        String facadeClassSimpleName = service.originClass().getSimpleName() + FACADE_SUFFIX;
         return facadeClassSimpleName;
     }
 
     public void generateWorkersFacade(ServiceElement service, List<TaskWorkerElement> handlers) {
         String facadeClassSimpleName = getWorkersFacadeClassName(service);
-        logger.debug("Generate Tasks worker facade '" + facadeClassSimpleName + "' for service: " + service.getOriginClass().getName());
+        logger.debug("Generate Tasks worker facade '" + facadeClassSimpleName + "' for service: " + service.originClass().getName());
 
         TypeSpec.Builder classBuilder = TypeSpec.classBuilder(facadeClassSimpleName);
         classBuilder.addModifiers(Modifier.PUBLIC);
-        classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(ServiceWorkers.class), TypeName.get(service.getOriginClass().getOriginType())));
+        classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(ServiceWorkers.class), TypeName.get(service.originClass().getOriginType())));
 
         classBuilder.addAnnotation(CodegenUtils.generateGenstamp(this.getClass().getName(), null, null));
         classBuilder.addAnnotation(Singleton.class);
@@ -150,7 +150,7 @@ public class WorkersFacadeGenerator {
         generateGetBindingsMethod(service, handlers, classBuilder);
 
         final TypeSpec typeSpec = classBuilder.build();
-        String packageName = service.getOriginClass().getPackageName();
-        CodegenUtils.createJavaFile(context.getProcessingEnv(), typeSpec, packageName, service.getOriginClass().unwrap());
+        String packageName = service.originClass().getPackageName();
+        CodegenUtils.createJavaFile(context.getProcessingEnv(), typeSpec, packageName, service.originClass().unwrap());
     }
 }

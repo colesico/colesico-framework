@@ -24,7 +24,7 @@ import colesico.framework.httpserver.HttpServerAttribute;
 import colesico.framework.httpserver.RequestProcessor;
 import colesico.framework.ioc.production.Supplier;
 import colesico.framework.ioc.scope.ThreadScope;
-import colesico.framework.router.ActionResolution;
+import colesico.framework.router.RouteInvocation;
 import colesico.framework.router.Router;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -65,11 +65,11 @@ public class UndertowHttpHandler extends RequestProcessor<HttpServerExchange> im
         HttpMethod requestMethod = HttpMethod.of(exchange.getRequestMethod().toString());
         String requestUri = StringUtils.substringBefore(exchange.getRequestURI(), "?");
         // 
-        ActionResolution actionResolution = resolveAction(requestMethod, requestUri, exchange);
+        RouteInvocation routeInvocation = resolveAction(requestMethod, requestUri, exchange);
 
-        if (actionResolution != null) {
+        if (routeInvocation != null) {
             // Check  blocking|non-blocking processing
-            Map<String, String> routeAttributes = actionResolution.getRouteAction().getAttributes();
+            Map<String, String> routeAttributes = routeInvocation.getRouteAction().attributes();
 
             boolean blockingProcessing = routeAttributes == null
                     || (!"true".equals(routeAttributes.get(HttpServerAttribute.NON_BLOCKING)));
@@ -79,12 +79,12 @@ public class UndertowHttpHandler extends RequestProcessor<HttpServerExchange> im
                 exchange.startBlocking();
                 if (exchange.isInIoThread()) {
                     // Create blocking handler
-                    HttpHandler blockingHandler = blockingHandlerSup.get(actionResolution);
+                    HttpHandler blockingHandler = blockingHandlerSup.get(routeInvocation);
                     exchange.dispatch(blockingHandler);
                     return;
                 }
             }
-            performAction(actionResolution, exchange);
+            performAction(routeInvocation, exchange);
         }
         exchange.endExchange();
     }

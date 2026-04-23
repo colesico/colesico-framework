@@ -42,7 +42,7 @@ public class TeleHttpCodegenUtils {
         String originName = defaultOrigin;
         AnnotationAssist<ParamOrigin> originAnn = teleArg.getOriginElement().getAnnotation(ParamOrigin.class);
         if (originAnn == null) {
-            originAnn = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(ParamOrigin.class);
+            originAnn = teleMethod.serviceMethod().originMethod().getAnnotation(ParamOrigin.class);
         }
 
         if (originAnn != null) {

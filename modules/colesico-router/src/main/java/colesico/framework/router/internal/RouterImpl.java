@@ -22,15 +22,17 @@ import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.*;
 import colesico.framework.router.assist.RouteTrie;
+import colesico.framework.teleapi.TeleException;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.TeleMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Inject;
-import java.util.Iterator;
+
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Router default implementation
@@ -49,79 +51,85 @@ public class RouterImpl implements Router {
         this.threadScope = threadScope;
     }
 
-    protected void addRoutesMapping(Polysupplier<TeleFacade> teleFacadeSupp) {
-        log.debug("Lookup http router tele-facades... ");
+    @Override
+    public void register(TeleFacade<?, RouterDescriptors> teleFacade) {
+        log.debug("Register http router tele-facade: {}", teleFacade.getClass().getName());
+
+        var descriptors = teleFacade.descriptors();
+
+        for (var routeInfo : descriptors.getRoutesInfo()) {
+            if (log.isDebugEnabled()) {
+                log.debug("Route '" + routeInfo.route() + "' mapped to target method '" +
+                        descriptors.getTargetClass().getName() + "->" + routeInfo.targetMethod());
+
+            }
+            RouteTrie.Node<RouteAction> node = routeTrie.addRoute(
+                    routeInfo.route(),
+                    new RouteAction(routeInfo.teleMethod(), routeInfo.attributes())
+            );
+
+            HttpMethod httpMethod = HttpMethod.of(node.getRoot().getName());
+            routesIndex.addNode(toRouteId(descriptors.getTargetClass(), routeInfo.targetMethod(), httpMethod), node);
+        }
+    }
+
+    void register(Polysupplier<TeleFacade<?, RouterDescriptors>> teleFacadeSupp) {
+        log.debug("Register http router tele-facades...");
 
         routeTrie = new RouteTrie<>(null);
         routesIndex = new RoutesIndex();
 
-        Iterator<TeleFacade> it = teleFacadeSupp.iterator(null);
-        while (it.hasNext()) {
-            TeleFacade teleFacade = it.next();
-            log.debug("Found http router tele-facade: " + teleFacade.getClass().getName());
-            RoutingDescriptors ligature = (RoutingDescriptors) teleFacade.ligature();
-
-            for (RoutingDescriptors.RouteInfo routeInfo : ligature.getRoutesInfo()) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Route '" + routeInfo.getRoute() + "' mapped to target method '" +
-                            ligature.getTargetClass().getName() + "->" + routeInfo.getTargetMethod());
-
-                }
-                RouteTrie.Node<RouteAction> node = routeTrie.addRoute(
-                        routeInfo.getRoute(),
-                        new RouteAction(routeInfo.getTeleMethod(), routeInfo.getAttributes())
-                );
-
-                HttpMethod httpMethod = HttpMethod.of(node.getRoot().getName());
-                routesIndex.addNode(toRouteId(ligature.getTargetClass(), routeInfo.getTargetMethod(), httpMethod), node);
-            }
+        for (var teleFacade : teleFacadeSupp) {
+            register(teleFacade);
         }
     }
 
-    protected void addCustomAction(HttpMethod httpMethod, String route, TeleMethod<?,?> teleMethod, Class<?> targetClass, String targetMethod, Map<String, String> routeAttributes) {
+    void addCustomAction(HttpMethod httpMethod, String route, TeleMethod<?, ?> teleMethod, Class<?> targetClass, String targetMethod, Map<String, String> routeAttributes) {
         String fullRoute = httpMethod.getName() + RouteTrie.SEGMENT_DELEMITER + route;
         RouteTrie.Node<RouteAction> node = routeTrie.addRoute(fullRoute, new RouteAction(teleMethod, routeAttributes));
         routesIndex.addNode(toRouteId(targetClass, targetMethod, httpMethod), node);
-        if (log.isDebugEnabled()) {
-            log.debug("Route '" + httpMethod.getName() + route + "' mapped to custom action method '" +
-                    targetClass.getName() + "->" + targetMethod + "()");
-
-        }
+        log.debug("Route '{}{}' mapped to custom action method '{}->{}()'", httpMethod.getName(), route, targetClass.getName(), targetMethod);
     }
 
-    protected String toRouteId(Class<?> targetClass, String targetMethod, HttpMethod httpMethod) {
+    String toRouteId(Class<?> targetClass, String targetMethod, HttpMethod httpMethod) {
         return targetClass.getName() + ':' + targetMethod + ':' + httpMethod.getName();
     }
 
     @Override
-    public List<String> getSlicedRoute(Class<?> targetClass, String targetMethod, HttpMethod httpMethod, Map<String, String> parameters) {
+    public List<String> slicedRoute(Class<?> targetClass, String targetMethod, HttpMethod httpMethod, Map<String, String> parameters) {
         return routesIndex.getSlicedRoute(toRouteId(targetClass, targetMethod, httpMethod), parameters);
     }
 
     @Override
-    public ActionResolution resolveAction(HttpMethod requestMethod, String requestUri) {
+    public Optional<RouteInvocation> resolve(ResolutionContext context) {
+        var requestMethod = context.requestMethod();
+        var requestUri = context.requestUri();
+
         RouteTrie.RouteResolution<RouteAction> routeResolution = routeTrie.resolveRoute(StrUtils.concatPath(requestMethod.getName(), requestUri, RouteTrie.SEGMENT_DELEMITER));
 
         if (routeResolution == null
                 || routeResolution.getNode() == null
                 || routeResolution.getNode().getValue() == null
-                || routeResolution.getNode().getValue().getTeleMethod() == null) {
-            throw new UnknownRouteException(requestMethod, requestUri);
+                || routeResolution.getNode().getValue().teleMethod() == null) {
+            return Optional.empty();
         }
 
-        return new ActionResolution(requestMethod,
-                requestUri,
-                routeResolution.getNode().getValue(),
-                routeResolution.getParams());
+        return Optional.of(
+                new RouteInvocation(this,
+                        requestMethod,
+                        requestUri,
+                        routeResolution.getNode().getValue(),
+                        routeResolution.getParams())
+        );
     }
 
     @Override
-    public void performAction(ActionResolution resolution) {
-        RouterContext routerContext = new RouterContext(resolution.getRequestUri(), resolution.getRouteParameters());
+    public void invoke(RouteInvocation invocation) {
+        if (invocation == null){
+            throw new TeleException("Undetermined invocation target");
+        }
+        RouterContext routerContext = new RouterContext(invocation.getRequestUri(), invocation.getRouteParameters());
         threadScope.put(RouterContext.SCOPE_KEY, routerContext);
-
-        MethodDescriptor teleMethod = resolution.getRouteAction().getTeleMethod();
-        teleMethod.invoke();
+        invocation.getController().invoke(invocation);
     }
-
 }

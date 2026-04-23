@@ -1,10 +1,16 @@
 package colesico.framework.router;
 
 import colesico.framework.http.HttpMethod;
+import colesico.framework.teleapi.TeleController;
 
 import java.util.Map;
 
-public final class ActionResolution {
+public final class RouteInvocation {
+
+    /**
+     * Target controller
+     */
+    private final TeleController<?, RouteInvocation, ?> controller;
 
     /**
      * Request http method
@@ -26,7 +32,13 @@ public final class ActionResolution {
      */
     private final Map<String, String> routeParameters;
 
-    public ActionResolution(HttpMethod requestMethod, String requestUri, RouteAction routeAction, Map<String, String> routeParameters) {
+    public RouteInvocation(TeleController<?, RouteInvocation, ?> controller,
+                           HttpMethod requestMethod,
+                           String requestUri,
+                           RouteAction routeAction,
+                           Map<String, String> routeParameters) {
+
+        this.controller = controller;
         this.requestMethod = requestMethod;
         this.requestUri = requestUri;
         this.routeAction = routeAction;
@@ -47,5 +59,9 @@ public final class ActionResolution {
 
     public Map<String, String> getRouteParameters() {
         return routeParameters;
+    }
+
+    public TeleController<?, RouteInvocation, ?> getController() {
+        return controller;
     }
 }

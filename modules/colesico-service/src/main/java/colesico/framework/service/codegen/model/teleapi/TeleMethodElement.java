@@ -75,7 +75,7 @@ public final class TeleMethodElement {
         this.serviceMethod = serviceMethod;
     }
 
-    public <C> C getProperty(Class<C> propertyClass) {
+    public <C> C property(Class<C> propertyClass) {
         return (C) properties.get(propertyClass);
     }
 
@@ -93,12 +93,12 @@ public final class TeleMethodElement {
     /**
      * Return origin service method name
      */
-    public String getName() {
-        return serviceMethod.getName();
+    public String name() {
+        return serviceMethod.name();
     }
 
-    public String getBuilderName() {
-        return "get" + StrUtils.firstCharToUpperCase(serviceMethod.getName()) + "TM" + index;
+    public String builderName() {
+        return "get" + StrUtils.firstCharToUpperCase(serviceMethod.name()) + "TM" + index;
     }
 
     public TeleBatchElement getOrCreateBatch(String name) {
@@ -106,24 +106,24 @@ public final class TeleMethodElement {
         if (batch == null) {
             batch = new TeleBatchElement(this, name);
             batches.put(name, batch);
-            parentTeleFacade.getBatchPack().addBatch(batch);
+            parentTeleFacade.batchPack().addBatch(batch);
         }
         return batch;
     }
 
-    public ServiceMethodElement getServiceMethod() {
+    public ServiceMethodElement serviceMethod() {
         return serviceMethod;
     }
 
-    public TeleFacadeElement getParentTeleFacade() {
+    public TeleFacadeElement parentTeleFacade() {
         return parentTeleFacade;
     }
 
-    public List<TeleInputElement> getParameters() {
+    public List<TeleInputElement> parameters() {
         return parameters;
     }
 
-    public TWContextElement getWritingContext() {
+    public TWContextElement writingContext() {
         return writingContext;
     }
 
@@ -131,7 +131,7 @@ public final class TeleMethodElement {
         this.writingContext = writingContext;
     }
 
-    public TIContextElement getInvocationContext() {
+    public TIContextElement invocationContext() {
         return invocationContext;
     }
 
@@ -139,11 +139,11 @@ public final class TeleMethodElement {
         this.invocationContext = invocationContext;
     }
 
-    public Integer getIndex() {
+    public Integer index() {
         return index;
     }
 
-    public Map<String, TeleBatchElement> getBatches() {
+    public Map<String, TeleBatchElement> batches() {
         return batches;
     }
 

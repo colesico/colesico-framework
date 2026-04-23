@@ -70,7 +70,7 @@ public class ServiceProxyGenerator {
      */
     protected MethodElement findInjectableConstructor(ServiceElement serviceElement) {
 
-        List<MethodElement> constructors = serviceElement.getOriginClass().getConstructorsFiltered(
+        List<MethodElement> constructors = serviceElement.originClass().getConstructorsFiltered(
                 c -> c.unwrap().getModifiers().contains(Modifier.PUBLIC) && !c.unwrap().getModifiers().contains(Modifier.FINAL)
         );
         MethodElement constructor = null;
@@ -98,15 +98,15 @@ public class ServiceProxyGenerator {
     protected ParameterElement findSimilarParam(ServiceFieldElement fieldElement, List<ParameterElement> constructorParams) {
 
         ParameterElement similarParam = null;
-        String fieldNamedVal = fieldElement.getNamed() != null ? fieldElement.getNamed() : "";
-        TypeName fieldClassedVal = fieldElement.getClassed() != null ? fieldElement.getClassed() : ClassName.get(Object.class);
+        String fieldNamedVal = fieldElement.named() != null ? fieldElement.named() : "";
+        TypeName fieldClassedVal = fieldElement.classed() != null ? fieldElement.classed() : ClassName.get(Object.class);
 
         for (ParameterElement paramElm : constructorParams) {
             TypeName paramType = TypeName.get(paramElm.getOriginType());
             AnnotationAssist<Named> namedAnn = paramElm.getAnnotation(Named.class);
             AnnotationAssist<Classed> classedAnn = paramElm.getAnnotation(Classed.class);
 
-            if (paramType.equals(fieldElement.getInjectAs())) {
+            if (paramType.equals(fieldElement.injectAs())) {
 
                 String annNamedVal = namedAnn != null ? namedAnn.unwrap().value() : "";
                 TypeName annClassedVal = classedAnn != null ? TypeName.get(classedAnn.getValueTypeMirror(Classed::value))
@@ -135,8 +135,8 @@ public class ServiceProxyGenerator {
 
         // Generate extra fields initialization
         List<ParameterElement> constructorParams = constructor.getParameters();
-        for (ServiceFieldElement fieldElm : serviceElement.getCustomFields()) {
-            if (fieldElm.getInjectAs() == null) {
+        for (ServiceFieldElement fieldElm : serviceElement.customFields()) {
+            if (fieldElm.injectAs() == null) {
                 continue;
             }
 
@@ -146,27 +146,27 @@ public class ServiceProxyGenerator {
             ParameterElement similarParam = findSimilarParam(fieldElm, constructorParams);
 
             if (similarParam == null) {
-                ParameterSpec.Builder pb = ParameterSpec.builder(fieldElm.getInjectAs(), fieldElm.getSpec().name());
-                if (StringUtils.isNotEmpty(fieldElm.getNamed())) {
+                ParameterSpec.Builder pb = ParameterSpec.builder(fieldElm.injectAs(), fieldElm.spec().name());
+                if (StringUtils.isNotEmpty(fieldElm.named())) {
                     AnnotationSpec.Builder named = AnnotationSpec.builder(Named.class);
-                    named.addMember("value", "$S", fieldElm.getNamed());
+                    named.addMember("value", "$S", fieldElm.named());
                     pb.addAnnotation(named.build());
-                } else if (fieldElm.getClassed() != null) {
+                } else if (fieldElm.classed() != null) {
                     AnnotationSpec.Builder named = AnnotationSpec.builder(Classed.class);
-                    named.addMember("value", "$T", fieldElm.getClassed());
+                    named.addMember("value", "$T", fieldElm.classed());
                     pb.addAnnotation(named.build());
                 }
 
                 constructorBuilder.addParameter(pb.build());
-                constructorBuilder.addStatement("this.$N = $N", fieldElm.getSpec().name(), fieldElm.getSpec().name());
+                constructorBuilder.addStatement("this.$N = $N", fieldElm.spec().name(), fieldElm.spec().name());
             } else {
                 String paramName = StrUtils.addPrefix(METHOD_PARAM_PREFIX, similarParam.getName());
-                constructorBuilder.addStatement("this.$N = $N", fieldElm.getSpec().name(), paramName);
+                constructorBuilder.addStatement("this.$N = $N", fieldElm.spec().name(), paramName);
             }
         }
 
         // Generate constructor body extra code
-        for (CodeBlock cb : serviceElement.getConstructorCustomCode()) {
+        for (CodeBlock cb : serviceElement.constructorCustomCode()) {
             constructorBuilder.addCode(cb);
         }
 
@@ -178,7 +178,7 @@ public class ServiceProxyGenerator {
         mb.addAnnotation(Override.class)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(ParameterizedTypeName.get(ClassName.get(Class.class), WildcardTypeName.subtypeOf(Object.class)))
-                .addStatement("return $T.class", TypeName.get(serviceElm.getOriginClass().getOriginType()));
+                .addStatement("return $T.class", TypeName.get(serviceElm.originClass().getOriginType()));
 
         serviceElm.addCustomMethod(new CustomMethodElement(mb.build()));
     }
@@ -249,15 +249,15 @@ public class ServiceProxyGenerator {
     }
 
     protected void generateServiceMethods(ServiceElement serviceElement, TypeSpec.Builder serviceBuilder) {
-        for (ServiceMethodElement methodElement : serviceElement.getServiceMethods()) {
-            logger.debug("Generate proxy method:{}; isPlain={}; isLocal={}; isPCListener={}", methodElement.getName(), methodElement.isPlain(), methodElement.isLocal(), methodElement.isPostConstructListener());
+        for (ServiceMethodElement methodElement : serviceElement.serviceMethods()) {
+            logger.debug("Generate proxy method:{}; isPlain={}; isLocal={}; isPCListener={}", methodElement.name(), methodElement.isPlain(), methodElement.isLocal(), methodElement.isPostConstructListener());
             if (methodElement.isPlain()) {
-                logger.debug("Skip plain method: {}", methodElement.getName());
+                logger.debug("Skip plain method: {}", methodElement.name());
                 continue;
             }
 
             MethodSpec.Builder methodBuilder = CodegenUtils.createProxyMethodBuilder(
-                    methodElement.getOriginMethod(), null, METHOD_PARAM_PREFIX, true
+                    methodElement.originMethod(), null, METHOD_PARAM_PREFIX, true
             );
 
             if (methodElement.isPostConstructListener()) {
@@ -265,36 +265,36 @@ public class ServiceProxyGenerator {
             }
 
             TypeName returnTypeName;
-            if (methodElement.getOriginMethod().isVoidReturnType()) {
+            if (methodElement.originMethod().isVoidReturnType()) {
                 returnTypeName = TypeName.get(Object.class);
             } else {
-                returnTypeName = TypeName.get(methodElement.getOriginMethod().getReturnType());
+                returnTypeName = TypeName.get(methodElement.originMethod().getReturnType());
             }
 
             methodBuilder.addStatement("final $T " + INTERCEPTORS_CHAIN_VAR + " = new $T<>()",
                     ParameterizedTypeName.get(ClassName.get(InterceptorsChain.class),
-                            TypeName.get(serviceElement.getOriginClass().getOriginType()),
+                            TypeName.get(serviceElement.originClass().getOriginType()),
                             returnTypeName),
                     ClassName.get(InterceptorsChain.class));
 
 
             // Adds interceptors code for each interception  phase
-            for (String intrcPhase : context.getInterceptionPhases().getPhaseOrder()) {
-                for (InterceptionElement intrcBinding : methodElement.getPhaseInterceptions(intrcPhase)) {
+            for (String intrcPhase : context.getInterceptionPhases().phaseOrder()) {
+                for (InterceptionElement intrcBinding : methodElement.phaseInterceptions(intrcPhase)) {
                     generateInterceptorBindings(intrcBinding, methodBuilder);
                 }
             }
 
             // Super method call
-            if (methodElement.getInterception() != null) {
-                generateInterceptorBindings(methodElement.getInterception(), methodBuilder);
+            if (methodElement.interception() != null) {
+                generateInterceptorBindings(methodElement.interception(), methodBuilder);
             } else {
-                InterceptionElement ihe = generateSuperMethodInterception(methodElement.getOriginMethod());
+                InterceptionElement ihe = generateSuperMethodInterception(methodElement.originMethod());
                 generateInterceptorBindings(ihe, methodBuilder);
             }
 
             // Add invContext.proceed...
-            generateInvocationContextExec(methodElement.getOriginMethod(), methodBuilder);
+            generateInvocationContextExec(methodElement.originMethod(), methodBuilder);
             serviceBuilder.addMethod(methodBuilder.build());
         }
     }
@@ -302,11 +302,11 @@ public class ServiceProxyGenerator {
     private void generateInterceptorBindings(InterceptionElement interceptionElement, MethodSpec.Builder serviceMethodBuilder) {
         CodeBlock.Builder interceptorBindings = CodeBlock.builder();
         interceptorBindings.add(INTERCEPTORS_CHAIN_VAR + ".add(");
-        interceptorBindings.add(interceptionElement.getInterceptorCode());
+        interceptorBindings.add(interceptionElement.interceptorCode());
         interceptorBindings.add(",");
 
-        if (interceptionElement.getParametersCode() != null) {
-            interceptorBindings.add(interceptionElement.getParametersCode());
+        if (interceptionElement.parametersCode() != null) {
+            interceptorBindings.add(interceptionElement.parametersCode());
         } else {
             interceptorBindings.add("null");
         }
@@ -316,30 +316,30 @@ public class ServiceProxyGenerator {
 
     public void generate(ServiceElement serviceElement) {
 
-        TypeSpec.Builder serviceBuilder = TypeSpec.classBuilder(serviceElement.getProxyClassSimpleName()).superclass(TypeName.get(serviceElement.getOriginClass().getOriginType()));
+        TypeSpec.Builder serviceBuilder = TypeSpec.classBuilder(serviceElement.proxyClassSimpleName()).superclass(TypeName.get(serviceElement.originClass().getOriginType()));
         serviceBuilder.addSuperinterface(ClassName.get(ServiceProxy.class));
         serviceBuilder.addModifiers(Modifier.PUBLIC);
         serviceBuilder.addModifiers(Modifier.FINAL);
 
         // Proxy class annotations
-        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "Origin: " + serviceElement.getOriginClass().unwrap().getQualifiedName().toString());
+        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "Origin: " + serviceElement.originClass().unwrap().getQualifiedName().toString());
         serviceBuilder.addAnnotation(genstamp);
 
         AnnotationSpec.Builder scopeAnnBuilder = AnnotationSpec.builder(ClassName.get(Unscoped.class));
         serviceBuilder.addAnnotation(scopeAnnBuilder.build());
 
         AnnotationSpec.Builder originAnnBuilder = AnnotationSpec.builder(ClassName.get(ServiceOrigin.class));
-        originAnnBuilder.addMember("value", "$T.class", TypeName.get(serviceElement.getOriginClass().getOriginType()));
+        originAnnBuilder.addMember("value", "$T.class", TypeName.get(serviceElement.originClass().getOriginType()));
         serviceBuilder.addAnnotation(originAnnBuilder.build());
 
         // Custom interfaces
-        for (TypeName extraInterface : serviceElement.getCustomInterfaces()) {
+        for (TypeName extraInterface : serviceElement.customInterfaces()) {
             serviceBuilder.addSuperinterface(extraInterface);
         }
 
         // Generate class fields
-        for (ServiceFieldElement fh : serviceElement.getCustomFields()) {
-            serviceBuilder.addField(fh.getSpec());
+        for (ServiceFieldElement fh : serviceElement.customFields()) {
+            serviceBuilder.addField(fh.spec());
         }
 
         // Custom constructor
@@ -351,12 +351,12 @@ public class ServiceProxyGenerator {
         generateServiceMethods(serviceElement, serviceBuilder);
 
         // Custom methods
-        for (CustomMethodElement customMethod : serviceElement.getCustomMethods()) {
-            serviceBuilder.addMethod(customMethod.getSpec());
+        for (CustomMethodElement customMethod : serviceElement.customMethods()) {
+            serviceBuilder.addMethod(customMethod.spec());
         }
 
         // Build class file
-        ClassElement originClass = serviceElement.getOriginClass();
+        ClassElement originClass = serviceElement.originClass();
         final TypeSpec typeSpec = serviceBuilder.build();
         String packageName = originClass.getPackageName();
         CodegenUtils.createJavaFile(context.getProcessingEnv(), typeSpec, packageName, originClass.unwrap());

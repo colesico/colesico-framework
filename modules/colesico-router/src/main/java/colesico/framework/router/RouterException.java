@@ -18,10 +18,14 @@ package colesico.framework.router;
 /**
  * Basic router exception
  */
-public class RouterException extends RuntimeException{
+public class RouterException extends RuntimeException {
 
     public RouterException(String message) {
         super(message);
+    }
+
+    public RouterException(Throwable cause) {
+        super(cause);
     }
 
     public RouterException(String message, Throwable cause) {

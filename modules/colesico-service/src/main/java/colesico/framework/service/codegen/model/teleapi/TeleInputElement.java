@@ -30,7 +30,7 @@ abstract public class TeleInputElement {
         this.originElement = originElement;
     }
 
-    public <C> C getProperty(Class<C> propertyClass) {
+    public <C> C property(Class<C> propertyClass) {
         return (C) properties.get(propertyClass);
     }
 
@@ -38,11 +38,11 @@ abstract public class TeleInputElement {
         properties.put(propertyClass, property);
     }
 
-    public TeleMethodElement getParentTeleMethod() {
+    public TeleMethodElement parentTeleMethod() {
         return parentTeleMethod;
     }
 
-    public VarElement getOriginElement() {
+    public VarElement originElement() {
         return originElement;
     }
 }

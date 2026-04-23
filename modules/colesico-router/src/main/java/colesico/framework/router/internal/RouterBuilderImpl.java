@@ -6,6 +6,7 @@ import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterBuilder;
+import colesico.framework.router.RouterDescriptors;
 import colesico.framework.teleapi.TeleFacade;
 
 import colesico.framework.teleapi.TeleMethod;
@@ -44,7 +45,7 @@ public class RouterBuilderImpl implements RouterBuilder {
     @Override
     public Router build() {
         RouterImpl router = new RouterImpl(threadScope);
-        router.addRoutesMapping(teleFacadesSupp);
+        router.register((TeleFacade<?, RouterDescriptors>) teleFacadesSupp);
         for (CustomRouteAction cra : customRouteActions) {
             router.addCustomAction(cra.getHttpMethod(),
                     cra.getRoute(),

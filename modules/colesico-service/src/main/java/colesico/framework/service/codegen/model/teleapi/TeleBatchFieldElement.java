@@ -27,14 +27,14 @@ public class TeleBatchFieldElement extends TeleInputElement {
     }
 
     public String getterName() {
-        return "get" + StrUtils.firstCharToUpperCase(getName());
+        return "get" + StrUtils.firstCharToUpperCase(name());
     }
 
     public String setterName() {
-        return "set" + StrUtils.firstCharToUpperCase(getName());
+        return "set" + StrUtils.firstCharToUpperCase(name());
     }
 
-    public TeleBatchElement getParentBatch() {
+    public TeleBatchElement parentBatch() {
         return parentBatch;
     }
 
@@ -42,7 +42,7 @@ public class TeleBatchFieldElement extends TeleInputElement {
         this.parentBatch = parentBatch;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 

@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package colesico.framework.router;
+package colesico.framework.router.assist;
 
 import colesico.framework.http.HttpMethod;
+import colesico.framework.router.RouterException;
 
 /**
- * When requested route action is not defined
+ * Utility exception to raise when route is  not resolved
  */
-public class UnknownRouteException extends RuntimeException {
+public class UnknownRouteException extends RouterException {
     private final HttpMethod httpMethod;
     private final String uri;
 

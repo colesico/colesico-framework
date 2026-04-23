@@ -21,8 +21,9 @@ import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.ioc.scope.ThreadScope;
-import colesico.framework.router.ActionResolution;
+import colesico.framework.router.RouteInvocation;
 import colesico.framework.router.Router;
+import colesico.framework.router.assist.UnknownRouteException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,14 +57,14 @@ abstract public class RequestProcessor<C> {
      * Resolve given request uri to action resolution
      * The method isolates and handles the possible exception with an {@link ErrorHandler}.
      * Invoker of this method should not attempt to catch exceptions from this method,
-     * but rather hang upon on a non-null {@link ActionResolution} result.
+     * but rather hang upon on a non-null {@link RouteInvocation} result.
      *
      * @return appropriate action resolution of null if any error occurred
-     * (including {@link colesico.framework.router.UnknownRouteException})
+     * (including {@link UnknownRouteException})
      */
-    protected ActionResolution resolveAction(HttpMethod requestMethod, String requestUri, C context) {
+    protected RouteInvocation resolveAction(HttpMethod requestMethod, String requestUri, C context) {
         try {
-            return router.resolveAction(requestMethod, requestUri);
+            return router.resolve(requestMethod, requestUri);
         } catch (Exception e) {
             // Init http context and perform error handling
             threadScope.init();
@@ -81,13 +82,13 @@ abstract public class RequestProcessor<C> {
      * Performs action referenced by action resolution.
      * The method isolates and handles the possible exception with an {@link ErrorHandler}.
      */
-    protected void performAction(ActionResolution resolution, C context) {
+    protected void performAction(RouteInvocation resolution, C context) {
         // Init http context
         threadScope.init();
         final HttpContext httpContext = initHttpContext(context);
         try {
             // Perform router action
-            router.performAction(resolution);
+            router.invoke(resolution);
         } catch (Exception e) {
             handleException(e, httpContext);
         } finally {

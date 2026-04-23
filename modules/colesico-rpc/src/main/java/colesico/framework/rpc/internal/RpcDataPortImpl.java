@@ -30,7 +30,7 @@ public class RpcDataPortImpl implements RpcDataPort {
     public <V> V read(RpcTRContext context) {
 
         if (context == null) {
-            throw new RpcException("RPC value reading context required for reading value ");
+            throw new RpcException("RPC value read context required for read value ");
         }
 
         // Try to get accurate reader
@@ -46,7 +46,7 @@ public class RpcDataPortImpl implements RpcDataPort {
         RpcTRContext.ValueGetter<RpcRequest, V> valueGetter = context.getValueGetter();
 
         if (valueGetter == null) {
-            throw new RpcException("RPC value getter required reading type: " + context.getValueType().getTypeName());
+            throw new RpcException("RPC value getter required read type: " + context.getValueType().getTypeName());
         }
 
         return valueGetter.get(request);

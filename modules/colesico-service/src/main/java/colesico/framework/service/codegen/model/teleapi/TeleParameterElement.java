@@ -23,18 +23,18 @@ import colesico.framework.assist.codegen.model.VarElement;
  */
 public final class TeleParameterElement extends TeleInputElement implements TeleReadableElement {
 
-    private TRContextElement readingContext;
+    private TRContextElement readContext;
 
     public TeleParameterElement(TeleMethodElement parentTeleMethod, VarElement originElement) {
         super(parentTeleMethod, originElement);
     }
 
-    public TRContextElement getReadingContext() {
-        return readingContext;
+    public TRContextElement readContext() {
+        return readContext;
     }
 
-    public void setReadingContext(TRContextElement readingContext) {
-        this.readingContext = readingContext;
+    public void setReadContext(TRContextElement readContext) {
+        this.readContext = readContext;
     }
 
     @Override

@@ -56,17 +56,17 @@ public class TaskModulator extends Modulator {
     public void onServiceMethodParsed(ServiceMethodElement proxyMethod) {
         super.onServiceMethodParsed(proxyMethod);
 
-        AnnotationAssist<OnTask> handlerAnn = proxyMethod.getOriginMethod().getAnnotation(OnTask.class);
+        AnnotationAssist<OnTask> handlerAnn = proxyMethod.originMethod().getAnnotation(OnTask.class);
         if (handlerAnn == null) {
             return;
         }
 
-        List<ParameterElement> params = proxyMethod.getOriginMethod().getParameters();
+        List<ParameterElement> params = proxyMethod.originMethod().getParameters();
 
         if (params.size() != 1) {
             throw CodegenException.of().
                     message("Task handler must have only one argument")
-                    .element(proxyMethod.getOriginMethod())
+                    .element(proxyMethod.originMethod())
                     .build();
         }
 
@@ -74,7 +74,7 @@ public class TaskModulator extends Modulator {
         if (taskType == null) {
             throw CodegenException.of().message("Unsupported task type kind").element(params.get(0).unwrap()).build();
         }
-        TaskWorkerElement evlElement = new TaskWorkerElement(proxyMethod.getOriginMethod(), taskType);
+        TaskWorkerElement evlElement = new TaskWorkerElement(proxyMethod.originMethod(), taskType);
         proxyMethod.setProperty(evlElement);
     }
 
@@ -99,7 +99,7 @@ public class TaskModulator extends Modulator {
             return;
         }
 
-        String listnerFacadeClassName = service.getOriginClass().getPackageName() + '.' +
+        String listnerFacadeClassName = service.originClass().getPackageName() + '.' +
                 facadeGenerator.getWorkersFacadeClassName(service);
 
         TypeName facadeType = ClassName.bestGuess(listnerFacadeClassName);
@@ -114,8 +114,8 @@ public class TaskModulator extends Modulator {
 
     protected List<TaskWorkerElement> getTaskHandlers(ServiceElement service) {
         List<TaskWorkerElement> handlers = new ArrayList<>();
-        for (ServiceMethodElement pm : service.getServiceMethods()) {
-            TaskWorkerElement el = pm.getProperty(TaskWorkerElement.class);
+        for (ServiceMethodElement pm : service.serviceMethods()) {
+            TaskWorkerElement el = pm.property(TaskWorkerElement.class);
             if (el != null) {
                 handlers.add(el);
             }

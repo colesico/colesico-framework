@@ -76,13 +76,13 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
         for (VarElement variable : variables) {
 
             AnnotationAssist<BatchField> paramBatchAnn = variable.getAnnotation(BatchField.class);
-            AnnotationAssist<BatchField> methodBatchAnn = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(BatchField.class);
+            AnnotationAssist<BatchField> methodBatchAnn = teleMethod.serviceMethod().originMethod().getAnnotation(BatchField.class);
 
             if (paramBatchAnn != null || methodBatchAnn != null) {
                 // Check batch support
-                if (!teleMethod.getParentTeleFacade().getBatchParams()) {
+                if (!teleMethod.parentTeleFacade().batchParams()) {
                     throw CodegenException.of()
-                            .message("Batch parameters not supported by tele-facade " + teleMethod.getParentTeleFacade().getTeleType().getCanonicalName())
+                            .message("Batch parameters not supported by tele-facade " + teleMethod.parentTeleFacade().teleType().getCanonicalName())
                             .element(variable.unwrap())
                             .build();
                 } else {
@@ -95,13 +95,13 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
     }
 
     private void parseTeleMethodParams(TeleMethodElement teleMethod) {
-        MethodElement method = teleMethod.getServiceMethod().getOriginMethod();
+        MethodElement method = teleMethod.serviceMethod().originMethod();
         parseVariables(teleMethod, method.getParameters());
     }
 
     private void parseTeleMethods(TeleFacadeElement teleFacade) {
-        ServiceElement service = teleFacade.getParentService();
-        for (ServiceMethodElement serviceMethod : service.getServiceMethods()) {
+        ServiceElement service = teleFacade.parentService();
+        for (ServiceMethodElement serviceMethod : service.serviceMethods()) {
             if (serviceMethod.isLocal()) {
                 continue;
             }
@@ -119,7 +119,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
      */
     public void parse(ServiceElement service) {
         context.getModulatorKit().notifyInitTeleFacade(service);
-        TeleFacadeElement teleFacade = service.getTeleFacade();
+        TeleFacadeElement teleFacade = service.teleFacade();
         if (teleFacade == null) {
             return;
         }

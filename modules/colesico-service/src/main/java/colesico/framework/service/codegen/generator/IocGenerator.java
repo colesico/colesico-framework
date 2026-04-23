@@ -54,16 +54,16 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
     private void generateProduceService(ProducerGenerator producerGenerator, ServiceElement serviceElm) {
 
-        TypeName serviceProxyTypeName = ClassName.bestGuess(serviceElm.getProxyClassName());
+        TypeName serviceProxyTypeName = ClassName.bestGuess(serviceElm.proxyClassName());
 
         // Add  @Produce annotation
         producerGenerator.addProduceAnnotation(serviceProxyTypeName);
 
         // Add produce method
-        String methodName = "get" + serviceElm.getOriginClass().getSimpleName();
-        MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, TypeName.get(serviceElm.getOriginClass().getOriginType()));
+        String methodName = "get" + serviceElm.originClass().getSimpleName();
+        MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, TypeName.get(serviceElm.originClass().getOriginType()));
 
-        if (serviceElm.getCustomScopeType() == null) {
+        if (serviceElm.customScopeType() == null) {
             AnnotationSpec.Builder scopeAnnBuilder = AnnotationSpec.builder(ClassName.get(Singleton.class));
             mb.addAnnotation(scopeAnnBuilder.build());
         }
@@ -77,23 +77,23 @@ public class IocGenerator extends FrameworkAbstractGenerator {
     private void generateProduceTeleFacade(ProducerGenerator producerGenerator, TeleFacadeElement teleFacadeElement) {
 
         // Generate @Produce annotation
-        producerGenerator.addProduceAnnotation(ClassName.bestGuess(teleFacadeElement.getFacadeClassName()));
+        producerGenerator.addProduceAnnotation(ClassName.bestGuess(teleFacadeElement.facadeClassName()));
 
         // Generate produce method
-        String methodName = "get" + TeleFacade.class.getSimpleName() + StrUtils.firstCharToUpperCase(teleFacadeElement.getTeleType().getSimpleName());
+        String methodName = "get" + TeleFacade.class.getSimpleName() + StrUtils.firstCharToUpperCase(teleFacadeElement.teleType().getSimpleName());
         MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, TypeName.get(TeleFacade.class));
-        mb.addParameter(ClassName.bestGuess(teleFacadeElement.getFacadeClassName()), IMPLEMENTATION_PARAM, Modifier.FINAL);
+        mb.addParameter(ClassName.bestGuess(teleFacadeElement.facadeClassName()), IMPLEMENTATION_PARAM, Modifier.FINAL);
 
         mb.addAnnotation(Polyproduce.class);
 
         // Add IOC qualifiers
-        if (StringUtils.isNotEmpty(teleFacadeElement.getIocQualifier().getNamed())) {
+        if (StringUtils.isNotEmpty(teleFacadeElement.iocQualifier().named())) {
             AnnotationSpec.Builder anb = AnnotationSpec.builder(Named.class);
-            anb.addMember("value", "$S", teleFacadeElement.getIocQualifier().getNamed());
+            anb.addMember("value", "$S", teleFacadeElement.iocQualifier().named());
             mb.addAnnotation(anb.build());
-        } else if (teleFacadeElement.getIocQualifier().getClassed() != null) {
+        } else if (teleFacadeElement.iocQualifier().classed() != null) {
             AnnotationSpec.Builder anb = AnnotationSpec.builder(Classed.class);
-            anb.addMember("value", "$T.class", ClassName.bestGuess(teleFacadeElement.getIocQualifier().getClassed()));
+            anb.addMember("value", "$T.class", ClassName.bestGuess(teleFacadeElement.iocQualifier().classed()));
             mb.addAnnotation(anb.build());
         }
 
@@ -102,8 +102,8 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
     public void generate(ServiceElement serviceElm) {
 
-        String producerClassSimpleName = serviceElm.getOriginClass().getSimpleName();
-        String packageName = serviceElm.getOriginClass().getPackageName();
+        String producerClassSimpleName = serviceElm.originClass().getSimpleName();
+        String packageName = serviceElm.originClass().getPackageName();
 
         ProducerGenerator producerGenerator = new ProducerGenerator(packageName, producerClassSimpleName, this.getClass(), context.getProcessingEnv());
 
@@ -111,16 +111,16 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         generateProduceService(producerGenerator, serviceElm);
 
         // Tele-facade producing
-        TeleFacadeElement teleFacadeElm = serviceElm.getTeleFacade();
+        TeleFacadeElement teleFacadeElm = serviceElm.teleFacade();
         if (teleFacadeElm != null) {
-            logger.debug("Generate tele-facade producing: " + serviceElm.getProxyClassName());
+            logger.debug("Generate tele-facade producing: " + serviceElm.proxyClassName());
             generateProduceTeleFacade(producerGenerator, teleFacadeElm);
         }
 
         context.getModulatorKit().notifyGenerateIocProducer(producerGenerator, serviceElm);
 
         final TypeSpec typeSpec = producerGenerator.typeBuilder().build();
-        CodegenUtils.createJavaFile(context.getProcessingEnv(), typeSpec, packageName, serviceElm.getOriginClass().unwrap());
+        CodegenUtils.createJavaFile(context.getProcessingEnv(), typeSpec, packageName, serviceElm.originClass().unwrap());
     }
 
 }

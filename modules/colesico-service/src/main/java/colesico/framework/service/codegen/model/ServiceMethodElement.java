@@ -75,7 +75,7 @@ public final class ServiceMethodElement {
         this.properties = new HashMap();
     }
 
-    public <P> P getProperty(Class<P> propertyClass) {
+    public <P> P property(Class<P> propertyClass) {
         return (P) properties.get(propertyClass);
     }
 
@@ -88,7 +88,7 @@ public final class ServiceMethodElement {
         phaseInterceptions.add(interception);
     }
 
-    public InterceptionElement getInterception() {
+    public InterceptionElement interception() {
         return interception;
     }
 
@@ -96,11 +96,11 @@ public final class ServiceMethodElement {
         this.interception = interception;
     }
 
-    public String getName() {
+    public String name() {
         return originMethod.getName();
     }
 
-    public MethodElement getOriginMethod() {
+    public MethodElement originMethod() {
         return originMethod;
     }
 
@@ -116,7 +116,7 @@ public final class ServiceMethodElement {
         return isPostConstructListener;
     }
 
-    public List<InterceptionElement> getPhaseInterceptions(String interceptionPhase) {
+    public List<InterceptionElement> phaseInterceptions(String interceptionPhase) {
         List<InterceptionElement> phaseInterceptions = interceptionsByPhase.get(interceptionPhase);
         if (phaseInterceptions == null) {
             return new ArrayList<>();
@@ -124,7 +124,7 @@ public final class ServiceMethodElement {
         return Collections.unmodifiableList(phaseInterceptions);
     }
 
-    public ServiceElement getParentService() {
+    public ServiceElement parentService() {
         return parentService;
     }
 

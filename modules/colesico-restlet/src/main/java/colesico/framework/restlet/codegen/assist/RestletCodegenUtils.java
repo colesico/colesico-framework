@@ -19,9 +19,9 @@ public class RestletCodegenUtils {
     }
 
     public static TypeMirror getCustomReaderClass(TeleParameterElement teleParam, Elements elementUtils) {
-        var rdAnn = teleParam.getOriginElement().getAnnotation(RestletParamReader.class);
+        var rdAnn = teleParam.originElement().getAnnotation(RestletParamReader.class);
         if (rdAnn == null) {
-            rdAnn = teleParam.getParentTeleMethod().getServiceMethod().getOriginMethod().getAnnotation(RestletParamReader.class);
+            rdAnn = teleParam.parentTeleMethod().serviceMethod().originMethod().getAnnotation(RestletParamReader.class);
         }
         if (rdAnn == null) {
             return null;

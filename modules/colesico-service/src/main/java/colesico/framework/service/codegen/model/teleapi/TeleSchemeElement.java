@@ -42,25 +42,25 @@ public class TeleSchemeElement<S> {
     /**
      * Returns tele-scheme implementation class simple name
      */
-    public String getTeleSchemeClassSimpleName() {
-        String originClassName = parentTeleFacade.getParentService().getOriginClass().getSimpleName();
+    public String teleSchemeClassSimpleName() {
+        String originClassName = parentTeleFacade.parentService().originClass().getSimpleName();
         String schemeTypeSuffix = StrUtils.firstCharToUpperCase(schemeType.getSimpleName());
         return originClassName + schemeTypeSuffix+TeleScheme.SCHEME_IMPL_SUFFIX;
     }
 
-    public TeleFacadeElement getParentTeleFacade() {
+    public TeleFacadeElement parentTeleFacade() {
         return parentTeleFacade;
     }
 
-    public Class<S> getSchemeType() {
+    public Class<S> schemeType() {
         return schemeType;
     }
 
-    public Class<? extends TeleScheme<S>> getBaseClass() {
+    public Class<? extends TeleScheme<S>> baseClass() {
         return baseClass;
     }
 
-    public CodeBlock getBuildMethodBody() {
+    public CodeBlock buildMethodBody() {
         return buildMethodBody;
     }
 

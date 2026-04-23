@@ -32,11 +32,11 @@ public class InterceptionElement {
         this.parametersCode = null;
     }
 
-    public CodeBlock getInterceptorCode() {
+    public CodeBlock interceptorCode() {
         return interceptorCode;
     }
 
-    public CodeBlock getParametersCode() {
+    public CodeBlock parametersCode() {
         return parametersCode;
     }
 }

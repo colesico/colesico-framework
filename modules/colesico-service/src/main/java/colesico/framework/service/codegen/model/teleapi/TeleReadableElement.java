@@ -5,7 +5,7 @@ package colesico.framework.service.codegen.model.teleapi;
  */
 public interface TeleReadableElement {
 
-    TRContextElement getReadingContext();
+    TRContextElement readContext();
 
-    void setReadingContext(TRContextElement readingContext);
+    void setReadContext(TRContextElement readContext);
 }

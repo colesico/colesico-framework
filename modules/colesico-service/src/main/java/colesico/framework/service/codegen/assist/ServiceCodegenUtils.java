@@ -11,19 +11,19 @@ import javax.lang.model.type.TypeMirror;
 public final class ServiceCodegenUtils {
 
     public static void generateTeleResultType(TeleMethodElement teleMethod, CodeBlock.Builder cb) {
-        TypeMirror returnType = teleMethod.getServiceMethod().getOriginMethod().getReturnType();
+        TypeMirror returnType = teleMethod.serviceMethod().originMethod().getReturnType();
         CodegenUtils.generateTypePick(returnType, cb);
     }
 
     public static void generateTeleInputType(TeleInputElement teleInput, CodeBlock.Builder cb) {
         // Detect param type considering generics
-        TypeMirror paramType = teleInput.getOriginElement().getOriginType();
+        TypeMirror paramType = teleInput.originElement().getOriginType();
         // ParamType.class or  for generics: new TypeWrapper<TheType>(){}.unwrap()
         CodegenUtils.generateTypePick(paramType, cb);
     }
 
     public static void generateTeleBatchType(TeleBatchElement teleBatch, CodeBlock.Builder cb) {
-        TypeName batchTypeName = ClassName.bestGuess(teleBatch.getBatchClassName());
+        TypeName batchTypeName = ClassName.bestGuess(teleBatch.batchClassName());
         cb.add("$T.class", batchTypeName);
     }
 }

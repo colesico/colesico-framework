@@ -28,7 +28,7 @@ public class TeleSchemeGenerator extends FrameworkAbstractGenerator {
         mb.addAnnotation(ClassName.get(Inject.class));
         mb.addModifiers(Modifier.PUBLIC);
         mb.addParameter(
-                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(teleFacade.getParentService().getOriginClass().getOriginType())),
+                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(teleFacade.parentService().originClass().getOriginType())),
                 TARGET_PROV_FIELD,
                 Modifier.FINAL);
         /*
@@ -42,37 +42,37 @@ public class TeleSchemeGenerator extends FrameworkAbstractGenerator {
     protected void generateBuildMethod(TeleSchemeElement schemeBuilder, TypeSpec.Builder classBuilder) {
         MethodSpec.Builder mb = MethodSpec.methodBuilder(TeleScheme.BUILD_METHOD);
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-        mb.returns(ClassName.get(schemeBuilder.getSchemeType()));
-        mb.addCode(schemeBuilder.getBuildMethodBody());
+        mb.returns(ClassName.get(schemeBuilder.schemeType()));
+        mb.addCode(schemeBuilder.buildMethodBody());
         classBuilder.addMethod(mb.build());
     }
 
     protected void createSchemeBuilderClassFile(TeleSchemeElement schemeBuilder, TypeSpec.Builder classBuilder) {
         final TypeSpec typeSpec = classBuilder.build();
-        String packageName = schemeBuilder.getParentTeleFacade().getParentService().getOriginClass().getPackageName();
-        ServiceElement service = schemeBuilder.getParentTeleFacade().getParentService();
-        CodegenUtils.createJavaFile(getProcessingEnv(), typeSpec, packageName, service.getOriginClass().unwrap());
+        String packageName = schemeBuilder.parentTeleFacade().parentService().originClass().getPackageName();
+        ServiceElement service = schemeBuilder.parentTeleFacade().parentService();
+        CodegenUtils.createJavaFile(getProcessingEnv(), typeSpec, packageName, service.originClass().unwrap());
     }
 
     public void generate(TeleSchemeElement schemeBuilder) {
 
-        TypeSpec.Builder classBuilder = TypeSpec.classBuilder(schemeBuilder.getTeleSchemeClassSimpleName());
+        TypeSpec.Builder classBuilder = TypeSpec.classBuilder(schemeBuilder.teleSchemeClassSimpleName());
         classBuilder.addModifiers(Modifier.PUBLIC);
         classBuilder.addModifiers(Modifier.FINAL);
 
         AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null,
-                "Service: " + schemeBuilder.getParentTeleFacade().getParentService().getOriginClass().unwrap().getQualifiedName().toString());
+                "Service: " + schemeBuilder.parentTeleFacade().parentService().originClass().unwrap().getQualifiedName().toString());
         classBuilder.addAnnotation(genstamp);
 
         classBuilder.addAnnotation(ClassName.get(Singleton.class));
 
-        if (schemeBuilder.getBaseClass() == null) {
+        if (schemeBuilder.baseClass() == null) {
             classBuilder.addSuperinterface(ParameterizedTypeName.get(
                     ClassName.get(TeleScheme.class),
-                    ClassName.get(schemeBuilder.getSchemeType())
+                    ClassName.get(schemeBuilder.schemeType())
             ));
         } else {
-            classBuilder.superclass(ClassName.get(schemeBuilder.getBaseClass()));
+            classBuilder.superclass(ClassName.get(schemeBuilder.baseClass()));
         }
 
         // generateConstructor(teleFacade, classBuilder);

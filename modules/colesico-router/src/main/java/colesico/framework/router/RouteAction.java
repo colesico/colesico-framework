@@ -10,7 +10,7 @@ import java.util.Map;
 public final class RouteAction {
 
     /**
-     * Action method, invoked to handle the request.
+     * Target method, invoked to handle the request.
      * This is the method of tele-facade for the appropriate service (weblet, restlet)
      */
     private final TeleMethod<?,?> teleMethod;
@@ -28,11 +28,11 @@ public final class RouteAction {
         this.attributes = attributes;
     }
 
-    public TeleMethod<?,?> getTeleMethod() {
+    public TeleMethod<?,?> teleMethod() {
         return teleMethod;
     }
 
-    public Map<String, String> getAttributes() {
+    public Map<String, String> attributes() {
         return attributes;
     }
 }

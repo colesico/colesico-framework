@@ -17,12 +17,13 @@ package colesico.framework.router.codegen;
 
 import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.router.Router;
-import colesico.framework.router.RoutingDescriptors;
+import colesico.framework.router.RouterDescriptors;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
 import colesico.framework.service.codegen.modulator.TeleFacadeModulator;
-import colesico.framework.teleapi.TeleMethod;
+import colesico.framework.teleapi.dataport.TRContext;
+import colesico.framework.teleapi.dataport.TWContext;
 import com.palantir.javapoet.ClassName;
 import com.palantir.javapoet.CodeBlock;
 import com.palantir.javapoet.TypeName;
@@ -40,11 +41,13 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
 
     abstract protected Class<?> descriptorsClass();
 
-    abstract protected Class<? extends TeleMethod<?, ?>> teleMethodClass();
+    abstract protected Class<? extends TRContext> readContextClass();
+
+    abstract protected Class<? extends TWContext> writeContextClass();
 
     @Override
     protected void processTeleMethod(TeleMethodElement teleMethodElement) {
-        ((RouterTeleFacadeElement) teleMethodElement.getParentTeleFacade())
+        ((RouterTeleFacadeElement) teleMethodElement.parentTeleFacade())
                 .getRoutesBuilder()
                 .addTeleMethod(teleMethodElement);
     }
@@ -52,9 +55,10 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
     @Override
     protected RouterTeleFacadeElement createTeleFacade(ServiceElement serviceElm) {
         return new RouterTeleFacadeElement(
-                getTeleType(),
+                teleType(),
                 descriptorsClass(),
-                teleMethodClass(),
+                readContextClass(),
+                writeContextClass(),
                 TeleFacadeElement.IocQualifier.ofClassed(Router.class),
                 new RoutesBuilder(serviceElm)
         );
@@ -64,10 +68,10 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
         CodeBlock.Builder cb = CodeBlock.builder();
 
         cb.addStatement("$T $N = new $T($T.class)",
-                ClassName.get(RoutingDescriptors.class),
+                ClassName.get(RouterDescriptors.class),
                 DESCRIPTORS_VAR,
-                ClassName.get(RoutingDescriptors.class),
-                TypeName.get(teleFacade.getParentService().getOriginClass().getOriginType())
+                ClassName.get(RouterDescriptors.class),
+                TypeName.get(teleFacade.parentService().originClass().getOriginType())
         );
 
         RoutesBuilder routesBuilder = teleFacade.getRoutesBuilder();
@@ -86,10 +90,10 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
 
         cb.add("$N.$N($S,$N(),$S,",
                 DESCRIPTORS_VAR,
-                RoutingDescriptors.ADD_METHOD,
+                RouterDescriptors.ADD_METHOD,
                 routedTeleMethod.getRoute(),
-                routedTeleMethod.getTeleMethod().getBuilderName(),
-                routedTeleMethod.getTeleMethod().getName()
+                routedTeleMethod.getTeleMethod().builderName(),
+                routedTeleMethod.getTeleMethod().name()
         );
 
         if (routedTeleMethod.getRouteAttributes().isEmpty()) {

@@ -29,12 +29,12 @@ public final class RouterContext {
 
     public static final Key<RouterContext> SCOPE_KEY = new TypeKey<>(RouterContext.class);
 
-    protected final String requestUri;
+    private final String requestUri;
 
     /**
-     * Route params values  (ex:  /foo/1/boo/2 -> 1 and 2)
+     * Route params values  (ex: /foo/{a}/boo/{b} -> /foo/1/boo/2 -> a=1 and b=2)
      */
-    protected final Map<String, String> parameters;
+    private final Map<String, String> parameters;
 
     public RouterContext(String requestUri, Map<String, String> routeParameters) {
         this.requestUri = requestUri;
@@ -47,8 +47,6 @@ public final class RouterContext {
 
     /**
      * Returns unmodifiable route deserialize model
-     *
-     * @return
      */
     public Map<String, String> getParameters() {
         return parameters;

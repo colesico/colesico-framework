@@ -22,7 +22,7 @@ import jakarta.inject.Provider;
  * Unified facade for tele-method invocations.
  *
  * @param <T> Target whose method will be invoked (usually a service)
- * @param <D> Descriptors registry mapping bet
+ * @param <D> Descriptors registry (references to target methods)
  */
 abstract public class TeleFacade<T, D> {
 

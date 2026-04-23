@@ -44,7 +44,7 @@ public class TxModulator extends Modulator {
     }
 
     protected TxModulatorContext getModulatorContext() {
-        return getService().getProperty(TxModulatorContext.class);
+        return getService().property(TxModulatorContext.class);
     }
 
     protected String getPropogationMethodName(TransactionPropagation propogation) {
@@ -72,9 +72,9 @@ public class TxModulator extends Modulator {
     public void onServiceMethodParsed(ServiceMethodElement proxyMethod) {
         super.onServiceMethodParsed(proxyMethod);
 
-        AnnotationAssist<Transactional> txAnnotation = proxyMethod.getOriginMethod().getAnnotation(Transactional.class);
+        AnnotationAssist<Transactional> txAnnotation = proxyMethod.originMethod().getAnnotation(Transactional.class);
         if (txAnnotation == null) {
-            txAnnotation = proxyMethod.getParentService().getOriginClass().getAnnotation(Transactional.class);
+            txAnnotation = proxyMethod.parentService().originClass().getAnnotation(Transactional.class);
             if (txAnnotation == null) {
                 return;
             }
@@ -91,7 +91,7 @@ public class TxModulator extends Modulator {
         if (StringUtils.isNotEmpty(txAnnotation.unwrap().shell())) {
             txShellFe.setNamed(txAnnotation.unwrap().shell());
         }
-        proxyMethod.getParentService().addCustomField(txShellFe);
+        proxyMethod.parentService().addCustomField(txShellFe);
 
         // Add interceptor
 

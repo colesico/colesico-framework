@@ -42,7 +42,7 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
      * Tele-type id.
      * Usually, it is the service alias annotation.
      */
-    abstract protected Class<?> getTeleType();
+    abstract protected Class<?> teleType();
 
     /**
      * Checks that the modulator can handle given service to produce tele-facade
@@ -85,20 +85,20 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
         serviceElm.setTeleFacade(teleFacade);
     }
 
-    private void createParamReadingContexts(List<TeleInputElement> params) {
+    private void createParamReadContexts(List<TeleInputElement> params) {
         for (var param : params) {
 
             // Skip batch fields
             if (param instanceof TeleBatchFieldElement) {
                 TeleBatchFieldElement batchField = (TeleBatchFieldElement) param;
-                if (batchField.getParentBatch().getReadingContext() == null) {
-                    batchField.getParentBatch().setReadingContext(createReadingContext(batchField.getParentBatch()));
+                if (batchField.parentBatch().readContext() == null) {
+                    batchField.parentBatch().setReadContext(createReadContext(batchField.parentBatch()));
                 }
                 continue;
             }
 
             TeleParameterElement teleParam = (TeleParameterElement) param;
-            teleParam.setReadingContext(createReadingContext(teleParam));
+            teleParam.setReadContext(createReadContext(teleParam));
 
         }
     }
@@ -106,20 +106,20 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
     @Override
     public void onTeleMethodParsed(TeleMethodElement teleMethod) {
         super.onTeleMethodParsed(teleMethod);
-        TeleFacadeElement teleFacade = teleMethod.getParentTeleFacade();
-        if (!teleFacade.getTeleType().equals(getTeleType())) {
+        TeleFacadeElement teleFacade = teleMethod.parentTeleFacade();
+        if (!teleFacade.teleType().equals(teleType())) {
             return;
         }
         processTeleMethod(teleMethod);
-        createParamReadingContexts(teleMethod.getParameters());
+        createParamReadContexts(teleMethod.parameters());
         teleMethod.setInvocationContext(createInvocationContext(teleMethod));
-        teleMethod.setWritingContext(createWritingContext(teleMethod));
+        teleMethod.setWritingContext(createWriteContext(teleMethod));
     }
 
     @Override
     public void onTeleFacadeParsed(TeleFacadeElement teleFacade) {
         super.onTeleFacadeParsed(teleFacade);
-        if (!teleFacade.getTeleType().equals(getTeleType())) {
+        if (!teleFacade.teleType().equals(teleType())) {
             return;
         }
         processTeleFacade(teleFacade);
@@ -132,19 +132,19 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
         return new TIContextElement(teleMethod, cb.build());
     }
 
-    protected TWContextElement createWritingContext(TeleMethodElement teleMethod) {
+    protected TWContextElement createWriteContext(TeleMethodElement teleMethod) {
         CodeBlock.Builder cb = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleResultType(teleMethod, cb);
         return new TWContextElement(teleMethod, cb.build());
     }
 
-    protected TRContextElement createReadingContext(TeleParameterElement teleParam) {
+    protected TRContextElement createReadContext(TeleParameterElement teleParam) {
         CodeBlock.Builder cb = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleInputType(teleParam, cb);
         return new TRContextElement(teleParam, cb.build());
     }
 
-    protected TRContextElement createReadingContext(TeleBatchElement teleBatch) {
+    protected TRContextElement createReadContext(TeleBatchElement teleBatch) {
         CodeBlock.Builder cb = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleBatchType(teleBatch, cb);
         return new TRContextElement(teleBatch, cb.build());

@@ -22,7 +22,7 @@ public class TeleBatchElement implements TeleReadableElement {
     private final TeleMethodElement parentTeleMethod;
 
 
-    protected TRContextElement readingContext;
+    protected TRContextElement readContext;
 
     /**
      * Batch pack ref
@@ -47,24 +47,24 @@ public class TeleBatchElement implements TeleReadableElement {
         field.setParentBatch(this);
     }
 
-    public String getBatchClassSimpleName() {
-        return StrUtils.firstCharToUpperCase(parentTeleMethod.getName()) + StrUtils.firstCharToUpperCase(name);
+    public String batchClassSimpleName() {
+        return StrUtils.firstCharToUpperCase(parentTeleMethod.name()) + StrUtils.firstCharToUpperCase(name);
     }
 
-    public String getBatchClassName() {
-        return parentPack.getParentTeleFacade().getParentService().getOriginClass().getPackageName() + '.' +
-                parentPack.getBatchPackClassSimpleName() + '.' +
-                getBatchClassSimpleName();
+    public String batchClassName() {
+        return parentPack.parentTeleFacade().parentService().originClass().getPackageName() + '.' +
+                parentPack.batchPackClassSimpleName() + '.' +
+                batchClassSimpleName();
     }
 
     /**
      * Batch variable name
      */
-    public String getBatchVarName() {
+    public String batchVarName() {
         return StrUtils.firstCharToLowerCase(name) + BATCH_VAR_SUFFIX;
     }
 
-    public TeleBatchPackElement getParentPack() {
+    public TeleBatchPackElement parentPack() {
         return parentPack;
     }
 
@@ -72,21 +72,21 @@ public class TeleBatchElement implements TeleReadableElement {
         this.parentPack = parentPack;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public List<TeleBatchFieldElement> getFields() {
+    public List<TeleBatchFieldElement> fields() {
         return fields;
     }
 
     @Override
-    public TRContextElement getReadingContext() {
-        return readingContext;
+    public TRContextElement readContext() {
+        return readContext;
     }
 
     @Override
-    public void setReadingContext(TRContextElement readingContext) {
-        this.readingContext = readingContext;
+    public void setReadContext(TRContextElement readContext) {
+        this.readContext = readContext;
     }
 }

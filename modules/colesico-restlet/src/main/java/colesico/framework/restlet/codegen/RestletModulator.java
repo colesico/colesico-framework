@@ -17,7 +17,6 @@
 package colesico.framework.restlet.codegen;
 
 
-import colesico.framework.assist.CollectionUtils;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.restlet.Restlet;
@@ -46,13 +45,13 @@ import java.util.Set;
 public final class RestletModulator extends RoutesModulator {
 
     @Override
-    protected Class<?> getTeleType() {
+    protected Class<?> teleType() {
         return Restlet.class;
     }
 
     @Override
     protected boolean isTeleFacadeSupported(ServiceElement service) {
-        AnnotationAssist teleAnn = service.getOriginClass().getAnnotation(Restlet.class);
+        var teleAnn = service.originClass().getAnnotation(Restlet.class);
         return teleAnn != null;
     }
 
@@ -68,7 +67,7 @@ public final class RestletModulator extends RoutesModulator {
 
     @Override
     public Set<Class<? extends Annotation>> serviceAnnotations() {
-        return CollectionUtils.annotationClassSet(Restlet.class);
+        return Set.of(Restlet.class);
     }
 
     /**
@@ -83,7 +82,7 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     @Override
-    protected TRContextElement createReadingContext(TeleParameterElement teleParam) {
+    protected TRContextElement createReadContext(TeleParameterElement teleParam) {
 
         String paramName = RestletCodegenUtils.getParamName(teleParam);
 
@@ -116,7 +115,7 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     @Override
-    protected TWContextElement createWritingContext(TeleMethodElement teleMethod) {
+    protected TWContextElement createWriteContext(TeleMethodElement teleMethod) {
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("$T.$N(", ClassName.get(RestletTWContext.class), RestletTWContext.OF_METHOD);
 
@@ -133,9 +132,9 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     protected TypeMirror getCustomWriterClass(TeleMethodElement teleMethod) {
-        var wrAnn = teleMethod.getServiceMethod().getOriginMethod().getAnnotation(RestletResponseWriter.class);
+        var wrAnn = teleMethod.serviceMethod().originMethod().getAnnotation(RestletResponseWriter.class);
         if (wrAnn == null) {
-            wrAnn = teleMethod.getParentTeleFacade().getParentService().getOriginClass().getAnnotation(RestletResponseWriter.class);
+            wrAnn = teleMethod.parentTeleFacade().parentService().originClass().getAnnotation(RestletResponseWriter.class);
         }
         if (wrAnn == null) {
             return null;

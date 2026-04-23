@@ -25,7 +25,7 @@ import java.util.TreeMap;
 /**
  * Binds routes with route action methods  (tele-facade methods)
  */
-public final class RoutingDescriptors {
+public final class RouterDescriptors {
 
     public static final String ADD_METHOD = "add";
     public static final String ROUTE_PARAM = "route";
@@ -41,12 +41,12 @@ public final class RoutingDescriptors {
 
     private final Map<String, RouteInfo> routesMap = new TreeMap<>();
 
-    public RoutingDescriptors(Class<?> targetClass) {
+    public RouterDescriptors(Class<?> targetClass) {
         this.targetClass = targetClass;
     }
 
     /**
-     * Add route to ligature
+     * Add route to this descriptors
      *
      * @param route        route definition with http method (ex: GET/my/foo )
      * @param teleMethod   action handler
@@ -69,64 +69,22 @@ public final class RoutingDescriptors {
         return routesMap.values();
     }
 
-    public static final class RouteInfo {
-
-        /**
-         * Route with http method
-         */
-        private final String route;
-
-        /**
-         * Action handler method
-         */
-        private final TeleMethod<?,?> teleMethod;
-
-        /**
-         * Target action handler method name
-         */
-        private final String targetMethod;
-
-        /**
-         * Route attributes
-         *
-         * @see RouteAttribute
-         */
-        private final Map<String, String> attributes;
-
-        public RouteInfo(String route,
-                         TeleMethod<?,?> teleMethod,
-                         String targetMethod,
-                         Map<String, String> attributes) {
-
-            this.route = route;
-            this.teleMethod = teleMethod;
-            this.targetMethod = targetMethod;
-            this.attributes = attributes;
-        }
-
-        public String getRoute() {
-            return route;
-        }
-
-        public TeleMethod<?,?> getTeleMethod() {
-            return teleMethod;
-        }
-
-        public String getTargetMethod() {
-            return targetMethod;
-        }
-
-        public Map<String, String> getAttributes() {
-            return attributes;
-        }
+    /**
+     * @param route        Route with http method
+     * @param teleMethod   Action handler method
+     * @param targetMethod Target action handler method name
+     * @param attributes   Route attributes
+     */
+    public record RouteInfo(String route, TeleMethod<?, ?> teleMethod, String targetMethod,
+                            Map<String, String> attributes) {
 
         @Override
-        public String toString() {
-            return "RouteInfo{" +
-                    "route='" + route + '\'' +
-                    ", targetMethod='" + targetMethod + '\'' +
-                    '}';
+            public String toString() {
+                return "RouteInfo{" +
+                        "route='" + route + '\'' +
+                        ", targetMethod='" + targetMethod + '\'' +
+                        '}';
+            }
         }
-    }
 
 }

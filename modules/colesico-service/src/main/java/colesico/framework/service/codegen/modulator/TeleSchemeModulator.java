@@ -49,10 +49,10 @@ abstract public class TeleSchemeModulator extends Modulator {
      * Helper for scheme builder element obtaining from tele-facade
      */
     protected TeleSchemeElement getTeleScheme() {
-        if (service.getTeleFacade() == null) {
+        if (service.teleFacade() == null) {
             return null;
         }
-        return service.getTeleFacade().getTeleScheme(getSchemeType());
+        return service.teleFacade().teleScheme(getSchemeType());
     }
 
     @Override

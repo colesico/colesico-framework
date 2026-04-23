@@ -66,7 +66,7 @@ public final class ServiceFieldElement {
         return this;
     }
 
-    public String getNamed() {
+    public String named() {
         return named;
     }
 
@@ -75,7 +75,7 @@ public final class ServiceFieldElement {
         return this;
     }
 
-    public TypeName getClassed() {
+    public TypeName classed() {
         return classed;
     }
 
@@ -84,23 +84,23 @@ public final class ServiceFieldElement {
         return this;
     }
 
-    public String getName() {
+    public String name() {
         return spec.name();
     }
 
-    public String getTypeName() {
+    public String typeName() {
         return spec.type().toString();
     }
 
-    public FieldSpec getSpec() {
+    public FieldSpec spec() {
         return spec;
     }
 
-    public TypeName getInjectAs() {
+    public TypeName injectAs() {
         return injectAs;
     }
 
-    public ServiceElement getParentService() {
+    public ServiceElement parentService() {
         return parentService;
     }
 

@@ -45,8 +45,8 @@ public class SecurityModulator extends Modulator {
     @Override
     public void onServiceMethodParsed(ServiceMethodElement serviceMethod) {
         super.onServiceMethodParsed(serviceMethod);
-        final AnnotationAssist<RequirePrincipal> requirePrincipal = serviceMethod.getOriginMethod().getAnnotation(RequirePrincipal.class);
-        final AnnotationAssist<SecurityAudit> securityAudit = serviceMethod.getOriginMethod().getAnnotation(SecurityAudit.class);
+        final AnnotationAssist<RequirePrincipal> requirePrincipal = serviceMethod.originMethod().getAnnotation(RequirePrincipal.class);
+        final AnnotationAssist<SecurityAudit> securityAudit = serviceMethod.originMethod().getAnnotation(SecurityAudit.class);
 
         if (requirePrincipal == null && securityAudit == null) {
             return;
@@ -54,7 +54,7 @@ public class SecurityModulator extends Modulator {
 
         if (serviceMethod.isPlain()) {
             throw CodegenException.of().message("To use @" + RequirePrincipal.class.getSimpleName() + " or @"
-                    + SecurityAudit.class.getSimpleName() + " method should not be a plain method").element(this.serviceMethod.getOriginMethod()).build();
+                    + SecurityAudit.class.getSimpleName() + " method should not be a plain method").element(this.serviceMethod.originMethod()).build();
         }
 
         List<SecurityAuditorElement> auditors = new ArrayList<>();

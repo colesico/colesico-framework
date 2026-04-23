@@ -47,19 +47,19 @@ public final class CustomMethodElement {
         this.properties = new HashMap();
     }
 
-    public MethodSpec getSpec() {
+    public MethodSpec spec() {
         return spec;
     }
 
-    public String getName() {
+    public String name() {
         return spec.name();
     }
 
-    public ServiceElement getParentService() {
+    public ServiceElement parentService() {
         return parentService;
     }
 
-    public <P> P getProperty(Class<P> propertyClass) {
+    public <P> P property(Class<P> propertyClass) {
         return (P) properties.get(propertyClass);
     }
 

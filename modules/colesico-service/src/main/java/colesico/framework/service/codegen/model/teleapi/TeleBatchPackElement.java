@@ -24,15 +24,15 @@ public class TeleBatchPackElement {
         batch.setParentPack(this);
     }
 
-    public TeleFacadeElement getParentTeleFacade() {
+    public TeleFacadeElement parentTeleFacade() {
         return parentTeleFacade;
     }
 
-    public List<TeleBatchElement> getBatches() {
+    public List<TeleBatchElement> batches() {
         return batches;
     }
 
-    public String getBatchPackClassSimpleName() {
-        return parentTeleFacade.getParentService().getOriginClass().getSimpleName() + BATCH_PACK_CLASS_SUFFIX;
+    public String batchPackClassSimpleName() {
+        return parentTeleFacade.parentService().originClass().getSimpleName() + BATCH_PACK_CLASS_SUFFIX;
     }
 }

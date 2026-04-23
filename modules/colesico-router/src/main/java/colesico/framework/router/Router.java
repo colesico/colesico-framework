@@ -16,17 +16,21 @@
 
 package colesico.framework.router;
 
+import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
+import colesico.framework.teleapi.TeleController;
+import colesico.framework.teleapi.TeleFacade;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Router API
  * <p>
  * Router allows to bind any action to given route and perform it
  */
-public interface Router {
+public interface Router extends TeleController<Router.ResolutionContext, RouteInvocation, TeleFacade<?, RouterDescriptors>> {
 
     /**
      * Returns route parts associated with given handler
@@ -36,22 +40,14 @@ public interface Router {
      * @param httpMethod   http request method
      * @param parameters   route parameters
      */
-    List<String> getSlicedRoute(Class<?> targetClass, String targetMethod, HttpMethod httpMethod, Map<String, String> parameters);
+    List<String> slicedRoute(Class<?> targetClass, String targetMethod, HttpMethod httpMethod, Map<String, String> parameters);
 
     /**
-     * Resolve action from request uri and http method.
-     * Returns resolution bean for tuning the processing of the request based on the
-     * values of the attributes as well as the subsequent call of the tele-method -
-     * the request handler
+     * Route invocation resolving context
      *
      * @param requestUri request url part from hostname(port) to query string (before '?' char)
-     * @throws UnknownRouteException if request uri not match any route
      */
-    ActionResolution resolveAction(HttpMethod requestMethod, String requestUri);
-
-    /**
-     * Calls handler associated with   (e.g. service method or custom handler)
-     */
-    void performAction(ActionResolution resolution);
+    record ResolutionContext(HttpMethod requestMethod, String requestUri) {
+    }
 
 }

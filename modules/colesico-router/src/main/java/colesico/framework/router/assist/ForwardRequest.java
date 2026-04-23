@@ -1,6 +1,7 @@
 package colesico.framework.router.assist;
 
 import colesico.framework.http.*;
+import colesico.framework.router.RouterException;
 
 import java.io.InputStream;
 import java.io.Writer;
@@ -46,7 +47,7 @@ public class ForwardRequest implements HttpRequest {
             }
             queryParameters = new HttpValues<>(paramsMap);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RouterException(e);
         }
     }
 

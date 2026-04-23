@@ -22,7 +22,6 @@ import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.TeleMethod;
 import colesico.framework.teleapi.dataport.TRContext;
 import colesico.framework.teleapi.dataport.TWContext;
 import com.palantir.javapoet.CodeBlock;
@@ -58,14 +57,14 @@ public class TeleFacadeElement {
     private CodeBlock descriptorsMethodBody;
 
     /**
-     * Tele reading context class
+     * Tele write context class
      */
-    private final Class<? extends TRContext> readingContextClass;
+    private final Class<? extends TRContext> readContextClass;
 
     /**
-     * Tele writing context class
+     * Tele read context class
      */
-    private final Class<? extends TWContext> writingContextClass;
+    private final Class<? extends TWContext> writeContextClass;
 
     /**
      * Tele methods.
@@ -103,13 +102,13 @@ public class TeleFacadeElement {
 
     public TeleFacadeElement(Class<?> teleType,
                              Class<?> descriptorsClass,
-                             Class<? extends TRContext> readingContextClass,
-                             Class<? extends TWContext> writingContextClass,
+                             Class<? extends TRContext> readContextClass,
+                             Class<? extends TWContext> writeContextClass,
                              IocQualifier iocQualifier) {
         this.teleType = teleType;
         this.descriptorsClass = descriptorsClass;
-        this.readingContextClass = readingContextClass;
-        this.writingContextClass = writingContextClass;
+        this.readContextClass = readContextClass;
+        this.writeContextClass = writeContextClass;
         this.iocQualifier = iocQualifier;
 
         this.batchPack = new TeleBatchPackElement(this);
@@ -118,8 +117,8 @@ public class TeleFacadeElement {
     /**
      * Returns tele-facade class simple name
      */
-    public String getFacadeClassSimpleName() {
-        String originClassName = parentService.getOriginClass().getSimpleName();
+    public String facadeClassSimpleName() {
+        String originClassName = parentService.originClass().getSimpleName();
         String teleTypeSuffix = StrUtils.firstCharToUpperCase(teleType.getSimpleName());
 
         if (StringUtils.endsWith(originClassName, teleTypeSuffix)) {
@@ -132,8 +131,8 @@ public class TeleFacadeElement {
     /**
      * Returns tele-facade class full name
      */
-    public String getFacadeClassName() {
-        return parentService.getOriginClass().getPackageName() + '.' + getFacadeClassSimpleName();
+    public String facadeClassName() {
+        return parentService.originClass().getPackageName() + '.' + facadeClassSimpleName();
     }
 
     public void addTeleMethod(TeleMethodElement teleMethod) {
@@ -142,7 +141,7 @@ public class TeleFacadeElement {
         teleMethod.index = teleMethods.size();
     }
 
-    public <B> TeleSchemeElement<B> getTeleScheme(Class<B> schemeType) {
+    public <B> TeleSchemeElement<B> teleScheme(Class<B> schemeType) {
         return (TeleSchemeElement<B>) teleSchemes.get(schemeType);
     }
 
@@ -150,7 +149,7 @@ public class TeleFacadeElement {
         teleSchemes.put(schemeType, schemeBuilder);
     }
 
-    public <C> C getProperty(Class<C> propertyClass) {
+    public <C> C property(Class<C> propertyClass) {
         return (C) properties.get(propertyClass);
     }
 
@@ -158,22 +157,22 @@ public class TeleFacadeElement {
         properties.put(propertyClass, property);
     }
 
-    public CodeBlock getDescriptorsMethodBody() {
+    public CodeBlock descriptorsMethodBody() {
         if (descriptorsMethodBody == null) {
             CodegenException.of().message("Tele-ligature code is null");
         }
         return descriptorsMethodBody;
     }
 
-    public ServiceElement getParentService() {
+    public ServiceElement parentService() {
         return parentService;
     }
 
-    public Elements<TeleMethodElement> getTeleMethods() {
+    public Elements<TeleMethodElement> teleMethods() {
         return teleMethods;
     }
 
-    public Class<?> getTeleType() {
+    public Class<?> teleType() {
         return teleType;
     }
 
@@ -181,11 +180,11 @@ public class TeleFacadeElement {
         this.descriptorsMethodBody = descriptorsMethodBody;
     }
 
-    public Class<?> getDescriptorsClass() {
+    public Class<?> descriptorsClass() {
         return descriptorsClass;
     }
 
-    public IocQualifier getIocQualifier() {
+    public IocQualifier iocQualifier() {
         return iocQualifier;
     }
 
@@ -193,7 +192,7 @@ public class TeleFacadeElement {
         this.parentService = parentService;
     }
 
-    public Boolean getBatchParams() {
+    public Boolean batchParams() {
         return batchParams;
     }
 
@@ -201,27 +200,27 @@ public class TeleFacadeElement {
         this.batchParams = batchParams;
     }
 
-    public TeleBatchPackElement getBatchPack() {
+    public TeleBatchPackElement batchPack() {
         return batchPack;
     }
 
-    public Class<? extends TRContext> getReadingContextClass() {
-        return readingContextClass;
+    public Class<? extends TRContext> readContextClass() {
+        return readContextClass;
     }
 
-    public Class<? extends TWContext> getWritingContextClass() {
-        return writingContextClass;
+    public Class<? extends TWContext> writeContextClass() {
+        return writeContextClass;
     }
 
     public static final class IocQualifier {
         private final String named;
         private final String classed;
 
-        public String getNamed() {
+        public String named() {
             return named;
         }
 
-        public String getClassed() {
+        public String classed() {
             return classed;
         }
 

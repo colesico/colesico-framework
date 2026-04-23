@@ -94,12 +94,12 @@ public final class ServiceElement {
     }
 
     public void addCustomField(final ServiceFieldElement field) {
-        ServiceFieldElement mfe = customFields.find(f -> f.getName().equals(field.getName()));
+        ServiceFieldElement mfe = customFields.find(f -> f.name().equals(field.name()));
         if (mfe != null) {
-            if (mfe.getTypeName().equals(field.getTypeName())) {
+            if (mfe.typeName().equals(field.typeName())) {
                 return;
             }
-            throw CodegenException.of().message("Duplicate field name:" + field.getName()).element(getOriginClass()).build();
+            throw CodegenException.of().message("Duplicate field name:" + field.name()).element(originClass()).build();
         }
         customFields.add(field);
         field.parentService = this;
@@ -119,9 +119,9 @@ public final class ServiceElement {
     }
 
     public void addCustomMethod(final CustomMethodElement customMethod) {
-        CustomMethodElement cme = customMethods.find(m -> m.getName().equals(customMethod.getName()));
+        CustomMethodElement cme = customMethods.find(m -> m.name().equals(customMethod.name()));
         if (cme != null) {
-            throw CodegenException.of().message("Duplicate method name:" + customMethod.getName()).element(getOriginClass()).build();
+            throw CodegenException.of().message("Duplicate method name:" + customMethod.name()).element(originClass()).build();
         }
         customMethods.add(customMethod);
         customMethod.parentService = this;
@@ -130,8 +130,8 @@ public final class ServiceElement {
     public void setTeleFacade(TeleFacadeElement teleFacade) {
         if (this.teleFacade != null) {
             throw CodegenException.of()
-                    .message("Tele-facade has already been set: " + teleFacade.getTeleType())
-                    .element(getOriginClass())
+                    .message("Tele-facade has already been set: " + teleFacade.teleType())
+                    .element(originClass())
                     .build();
         }
         teleFacade.setParentService(this);
@@ -142,23 +142,23 @@ public final class ServiceElement {
         constructorCustomCode.add(cb);
     }
 
-    public Elements<TypeName> getCustomInterfaces() {
+    public Elements<TypeName> customInterfaces() {
         return customInterfaces;
     }
 
-    public Elements<ServiceFieldElement> getCustomFields() {
+    public Elements<ServiceFieldElement> customFields() {
         return customFields;
     }
 
-    public Elements<CustomMethodElement> getCustomMethods() {
+    public Elements<CustomMethodElement> customMethods() {
         return customMethods;
     }
 
-    public Elements<ServiceMethodElement> getServiceMethods() {
+    public Elements<ServiceMethodElement> serviceMethods() {
         return serviceMethods;
     }
 
-    public <T> T getProperty(Class<T> propertyClass) {
+    public <T> T property(Class<T> propertyClass) {
         return (T) properties.get(propertyClass);
     }
 
@@ -166,23 +166,23 @@ public final class ServiceElement {
         properties.put(property.getClass(), property);
     }
 
-    public Elements<CodeBlock> getConstructorCustomCode() {
+    public Elements<CodeBlock> constructorCustomCode() {
         return constructorCustomCode;
     }
 
-    public TeleFacadeElement getTeleFacade() {
+    public TeleFacadeElement teleFacade() {
         return teleFacade;
     }
 
-    public ClassType getCustomScopeType() {
+    public ClassType customScopeType() {
         return customScopeType;
     }
 
-    public ClassElement getOriginClass() {
+    public ClassElement originClass() {
         return originClass;
     }
 
-    public String getProxyClassSimpleName() {
+    public String proxyClassSimpleName() {
         String originClassName = originClass.getSimpleName();
 
         if (StringUtils.endsWith(originClassName, ServiceProxy.SERVICE_CLASS_SUFFIX)) {
@@ -192,8 +192,8 @@ public final class ServiceElement {
         }
     }
 
-    public String getProxyClassName() {
-        return originClass.getPackageName() + '.' + getProxyClassSimpleName();
+    public String proxyClassName() {
+        return originClass.getPackageName() + '.' + proxyClassSimpleName();
     }
 
     @Override

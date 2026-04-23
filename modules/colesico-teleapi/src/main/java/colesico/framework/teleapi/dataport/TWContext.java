@@ -3,7 +3,7 @@ package colesico.framework.teleapi.dataport;
 import java.lang.reflect.Type;
 
 /**
- * Basic tele data-writing context
+ * Basic tele data write context
  */
 abstract public class TWContext {
 

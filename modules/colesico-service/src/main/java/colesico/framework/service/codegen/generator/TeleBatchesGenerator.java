@@ -24,16 +24,16 @@ public class TeleBatchesGenerator extends FrameworkAbstractGenerator {
             return;
         }
 
-        TypeSpec.Builder pb = TypeSpec.classBuilder(batchPack.getBatchPackClassSimpleName());
+        TypeSpec.Builder pb = TypeSpec.classBuilder(batchPack.batchPackClassSimpleName());
         pb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
-        for (TeleBatchElement batch : batchPack.getBatches()) {
-            TypeSpec.Builder rb = TypeSpec.classBuilder(batch.getBatchClassSimpleName());
+        for (TeleBatchElement batch : batchPack.batches()) {
+            TypeSpec.Builder rb = TypeSpec.classBuilder(batch.batchClassSimpleName());
             rb.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
 
-            for (TeleBatchFieldElement batchField : batch.getFields()) {
-                TypeName filedTypeName = TypeName.get(batchField.getOriginElement().getOriginType());
-                String filedName = batchField.getName();
+            for (TeleBatchFieldElement batchField : batch.fields()) {
+                TypeName filedTypeName = TypeName.get(batchField.originElement().getOriginType());
+                String filedName = batchField.name();
                 FieldSpec.Builder fb = FieldSpec.builder(filedTypeName, filedName, Modifier.PRIVATE);
                 rb.addField(fb.build());
 
@@ -54,7 +54,7 @@ public class TeleBatchesGenerator extends FrameworkAbstractGenerator {
             pb.addType(rb.build());
         }
 
-        String packageName = batchPack.getParentTeleFacade().getParentService().getOriginClass().getPackageName();
-        CodegenUtils.createJavaFile(processingEnv, pb.build(), packageName, batchPack.getParentTeleFacade().getParentService().getOriginClass().unwrap());
+        String packageName = batchPack.parentTeleFacade().parentService().originClass().getPackageName();
+        CodegenUtils.createJavaFile(processingEnv, pb.build(), packageName, batchPack.parentTeleFacade().parentService().originClass().unwrap());
     }
 }
