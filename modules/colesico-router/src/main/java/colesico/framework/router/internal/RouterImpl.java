@@ -112,7 +112,9 @@ public class RouterImpl implements Router {
             log.debug("Route '{}' mapped to target method '{}->{}", routeInfo.route(), descriptors.targetClass().getName(), routeInfo.targetMethod());
             RouteTrie.Node<RouteAction> node = routeTrie.addRoute(
                     routeInfo.route(),
-                    new RouteAction(teleController, routeInfo.teleMethod(), routeInfo.attributes())
+                    new RouteAction(teleController,
+                            routeInfo.teleMethod(),
+                            routeInfo.attributes())
             );
 
             HttpMethod httpMethod = HttpMethod.of(node.root().name());

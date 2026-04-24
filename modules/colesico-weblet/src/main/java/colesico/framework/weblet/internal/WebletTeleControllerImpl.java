@@ -23,12 +23,14 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterContext;
 import colesico.framework.router.RouterDescriptors;
-import colesico.framework.router.RouterInvocation;
 import colesico.framework.security.PrincipalRequiredException;
 import colesico.framework.teleapi.TeleFacade;
+import colesico.framework.teleapi.TeleMethod;
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.telehttp.assist.CSRFProtector;
 import colesico.framework.weblet.teleapi.Authenticator;
+import colesico.framework.weblet.teleapi.WebletTRContext;
+import colesico.framework.weblet.teleapi.WebletTWContext;
 import colesico.framework.weblet.teleapi.WebletTeleController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,20 +70,20 @@ public class WebletTeleControllerImpl implements WebletTeleController {
     }
 
     @Override
-    public Optional<RouterInvocation> resolve(Router.Criteria criteria) {
-        throw new UnsupportedOperationException("Not supported");
+    public Optional<Router.Invocation> resolve(Router.Criteria criteria) {
+        return Optional.empty();
     }
 
     @Override
-    public void perform(RouterInvocation invocation) {
+    public void perform(Router.Invocation invocation) {
         try {
             threadScope.put(DataPort.SCOPE_KEY, dataPort);
             HttpRequest request = httpContextProv.get().request();
             csrfProtector.check(request);
-            invoker.invoke(target, dataPort);
+            invocation.action().teleMethod().execute(dataPort);
         } catch (PrincipalRequiredException pre) {
             if (authenticatorProv.get().authenticate()) {
-                invoker.invoke(target, dataPort);
+                invocation.action().teleMethod().execute(dataPort);
             } else {
                 throw pre;
             }
