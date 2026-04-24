@@ -41,7 +41,7 @@ public class AnnotationAssist<A extends Annotation> extends Assist {
         return originAnnotation;
     }
 
-    public TypeMirror getValueTypeMirror(Consumer<A> fieldAccessor) {
+    public TypeMirror valueTypeMirror(Consumer<A> fieldAccessor) {
         TypeMirror typeMirror = null;
         try {
             fieldAccessor.accept(originAnnotation);
@@ -51,7 +51,7 @@ public class AnnotationAssist<A extends Annotation> extends Assist {
         return typeMirror;
     }
 
-    public TypeMirror[] getValueTypeMirrors(Consumer<A> fieldAccessor) {
+    public TypeMirror[] valueTypeMirrors(Consumer<A> fieldAccessor) {
         try {
             fieldAccessor.accept(originAnnotation);
         } catch (javax.lang.model.type.MirroredTypesException mte) {

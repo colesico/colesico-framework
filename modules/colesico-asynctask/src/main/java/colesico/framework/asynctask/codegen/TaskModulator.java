@@ -56,7 +56,7 @@ public class TaskModulator extends Modulator {
     public void onServiceMethodParsed(ServiceMethodElement proxyMethod) {
         super.onServiceMethodParsed(proxyMethod);
 
-        AnnotationAssist<OnTask> handlerAnn = proxyMethod.originMethod().getAnnotation(OnTask.class);
+        AnnotationAssist<OnTask> handlerAnn = proxyMethod.originMethod().annotation(OnTask.class);
         if (handlerAnn == null) {
             return;
         }

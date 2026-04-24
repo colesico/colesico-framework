@@ -48,7 +48,7 @@ public final class WebletTWContext extends HttpTWContext {
         return new WebletTWContext(valueType, writerClass);
     }
 
-    public Class<? extends WebletTeleWriter> getWriterClass() {
+    public Class<? extends WebletTeleWriter> writerClass() {
         return writerClass;
     }
 }

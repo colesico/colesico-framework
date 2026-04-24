@@ -130,7 +130,7 @@ public class CodegenUtils {
             cb.addStatement("super(" + paramsGen.toFormat() + ")", paramsGen.toValues());
             return cb.build();
         } else {
-            TypeMirror retType = method.teturnType();
+            TypeMirror retType = method.returnType();
             if (retType instanceof NoType) {
                 cb.add("super.$N(", method.name());
                 cb.add(paramsGen.toFormat(), paramsGen.toValues());
@@ -159,7 +159,7 @@ public class CodegenUtils {
                 mb.addTypeVariable(TypeVariableName.get(tpe));
             }
 
-            TypeMirror returnType = method.teturnType();
+            TypeMirror returnType = method.returnType();
             mb.returns(TypeName.get(returnType));
 
         }

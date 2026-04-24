@@ -66,7 +66,7 @@ public class MethodElement extends ParserElement {
         return typeUtils().asMemberOf((DeclaredType) originType(), element);
     }
 
-    public TypeMirror teturnType() {
+    public TypeMirror returnType() {
         return originType().getReturnType();
     }
 
@@ -75,8 +75,8 @@ public class MethodElement extends ParserElement {
     }
 
     public ClassType returnClassType() {
-        if (teturnType().getKind() == TypeKind.DECLARED) {
-            return new ClassType(processingEnv(), (DeclaredType) teturnType());
+        if (returnType().getKind() == TypeKind.DECLARED) {
+            return new ClassType(processingEnv(), (DeclaredType) returnType());
         }
         return null;
     }
@@ -116,12 +116,12 @@ public class MethodElement extends ParserElement {
 
     public boolean isGetter() {
         return StringUtils.startsWith(name(), "get") && parameters().isEmpty()
-                && !(teturnType() instanceof NoType);
+                && !(returnType() instanceof NoType);
     }
 
     public boolean isSetter() {
         return StringUtils.startsWith(name(), "set") && (parameters().size() == 1)
-                && (teturnType() instanceof NoType);
+                && (returnType() instanceof NoType);
     }
 
     /**
@@ -151,7 +151,7 @@ public class MethodElement extends ParserElement {
         List<AnnotationAssist<A>> result = new ArrayList<>();
         MethodElement superMethod = this;
         do {
-            AnnotationAssist<A> ann = superMethod.getAnnotation(annClass);
+            AnnotationAssist<A> ann = superMethod.annotation(annClass);
             if (ann != null) {
                 result.add(ann);
             }

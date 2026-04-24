@@ -44,7 +44,7 @@ public class TranslationElement {
     }
 
     public String translationKey() {
-        AnnotationAssist<TranslationKey> tk = keyMethod.getAnnotation(TranslationKey.class);
+        AnnotationAssist<TranslationKey> tk = keyMethod.annotation(TranslationKey.class);
         if (tk != null) {
             return tk.unwrap().value();
         } else {

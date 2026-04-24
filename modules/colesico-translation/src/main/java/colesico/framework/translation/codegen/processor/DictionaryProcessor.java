@@ -126,12 +126,12 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
             // Find translations
             List<AnnotationType> annList = method.annotationTypes();
             for (AnnotationType ann : annList) {
-                AnnotationAssist<Translation> translationAnn = ann.asElement().getAnnotation(Translation.class);
+                AnnotationAssist<Translation> translationAnn = ann.asElement().annotation(Translation.class);
                 if (translationAnn == null) {
                     continue;
                 }
                 String languageTag = translationAnn.unwrap().value();
-                AnnotationValue value = ann.getValue("value");
+                AnnotationValue value = ann.value("value");
                 dictionaryBeanElement.addTranslation(method, languageTag, value.getValue().toString());
             }
 

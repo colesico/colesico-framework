@@ -71,7 +71,7 @@ public class WorkersFacadeGenerator {
                 TARGET_VAR,
                 ServiceWorkers.SERVICE_PROV_FIELD);
 
-        if (handler.originMethod().teturnType().getKind() != TypeKind.VOID) {
+        if (handler.originMethod().returnType().getKind() != TypeKind.VOID) {
             mb.addStatement("return $N.$N($N)",
                     TARGET_VAR,
                     handler.originMethod().name(),

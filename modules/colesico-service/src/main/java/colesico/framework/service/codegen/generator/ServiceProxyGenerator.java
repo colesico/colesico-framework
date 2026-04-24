@@ -79,7 +79,7 @@ public class ServiceProxyGenerator {
             if (firstConstructor == null) {
                 firstConstructor = method;
             }
-            AnnotationAssist<Inject> constructMarker = method.getAnnotation(Inject.class);
+            AnnotationAssist<Inject> constructMarker = method.annotation(Inject.class);
             if (constructMarker == null) {
                 continue;
             }
@@ -103,13 +103,13 @@ public class ServiceProxyGenerator {
 
         for (ParameterElement paramElm : constructorParams) {
             TypeName paramType = TypeName.get(paramElm.originType());
-            AnnotationAssist<Named> namedAnn = paramElm.getAnnotation(Named.class);
-            AnnotationAssist<Classed> classedAnn = paramElm.getAnnotation(Classed.class);
+            AnnotationAssist<Named> namedAnn = paramElm.annotation(Named.class);
+            AnnotationAssist<Classed> classedAnn = paramElm.annotation(Classed.class);
 
             if (paramType.equals(fieldElement.injectAs())) {
 
                 String annNamedVal = namedAnn != null ? namedAnn.unwrap().value() : "";
-                TypeName annClassedVal = classedAnn != null ? TypeName.get(classedAnn.getValueTypeMirror(Classed::value))
+                TypeName annClassedVal = classedAnn != null ? TypeName.get(classedAnn.valueTypeMirror(Classed::value))
                         : ClassName.get(Object.class);
 
                 if (annNamedVal.equals(fieldNamedVal) && annClassedVal.equals(fieldClassedVal)) {
@@ -210,7 +210,7 @@ public class ServiceProxyGenerator {
         }
 
         String methodName = methodElement.name();
-        TypeMirror retType = methodElement.teturnType();
+        TypeMirror retType = methodElement.returnType();
         paramItems.add(0, methodName);
         Object[] statementArgs = paramItems.toArray(new Object[paramItems.size()]);
         if (retType instanceof NoType) {
@@ -237,14 +237,14 @@ public class ServiceProxyGenerator {
                 ClassName.get(InvocationContext.class),
                 methodElement.name(),
                 ArrayTypeName.get(Object.class), paramsArrayLiteral);
-        TypeMirror returnType = methodElement.teturnType();
+        TypeMirror returnType = methodElement.returnType();
         boolean voidResult = returnType instanceof NoType;
 
         if (voidResult) {
             serviceMethodBuilder.addStatement(INV_CONTEXT_VAR + "." + InvocationContext.PROCEED_METHOD + "()");
         } else {
             serviceMethodBuilder.addStatement("return ($T)" + INV_CONTEXT_VAR + "." + InvocationContext.PROCEED_METHOD + "()",
-                    TypeName.get(methodElement.teturnType()));
+                    TypeName.get(methodElement.returnType()));
         }
     }
 
@@ -268,7 +268,7 @@ public class ServiceProxyGenerator {
             if (methodElement.originMethod().isVoidReturnType()) {
                 returnTypeName = TypeName.get(Object.class);
             } else {
-                returnTypeName = TypeName.get(methodElement.originMethod().teturnType());
+                returnTypeName = TypeName.get(methodElement.originMethod().returnType());
             }
 
             methodBuilder.addStatement("final $T " + INTERCEPTORS_CHAIN_VAR + " = new $T<>()",

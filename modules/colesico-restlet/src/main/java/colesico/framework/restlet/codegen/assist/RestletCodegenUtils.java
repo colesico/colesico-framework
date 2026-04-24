@@ -19,14 +19,14 @@ public class RestletCodegenUtils {
     }
 
     public static TypeMirror getCustomReaderClass(TeleParameterElement teleParam, Elements elementUtils) {
-        var rdAnn = teleParam.originElement().getAnnotation(RestletParamReader.class);
+        var rdAnn = teleParam.originElement().annotation(RestletParamReader.class);
         if (rdAnn == null) {
-            rdAnn = teleParam.parentTeleMethod().serviceMethod().originMethod().getAnnotation(RestletParamReader.class);
+            rdAnn = teleParam.parentTeleMethod().serviceMethod().originMethod().annotation(RestletParamReader.class);
         }
         if (rdAnn == null) {
             return null;
         }
-        return rdAnn.getValueTypeMirror(a -> a.value());
+        return rdAnn.valueTypeMirror(a -> a.value());
     }
 
 }

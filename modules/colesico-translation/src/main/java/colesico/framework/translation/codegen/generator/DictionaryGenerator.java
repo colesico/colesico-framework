@@ -67,7 +67,7 @@ public class DictionaryGenerator {
         cb.add("return $N(", AbstractDictionary.TRANSLATE_OR_KEY_METHOD);
 
         String t9nKey;
-        AnnotationAssist<TranslationKey> t9nKeyAnn = keyMethod.getAnnotation(TranslationKey.class);
+        AnnotationAssist<TranslationKey> t9nKeyAnn = keyMethod.annotation(TranslationKey.class);
         if (t9nKeyAnn != null) {
             t9nKey = t9nKeyAnn.unwrap().value();
         } else {

@@ -82,7 +82,7 @@ abstract public class ParserElement extends Assist {
     }
 
 
-    public <A extends Annotation> AnnotationAssist<A> getAnnotation(Class<A> annClass) {
+    public <A extends Annotation> AnnotationAssist<A> annotation(Class<A> annClass) {
         A annotation = unwrap().getAnnotation(annClass);
         if (annotation == null) {
             return null;

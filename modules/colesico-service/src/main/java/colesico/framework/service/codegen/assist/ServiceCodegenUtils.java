@@ -11,7 +11,7 @@ import javax.lang.model.type.TypeMirror;
 public final class ServiceCodegenUtils {
 
     public static void generateTeleResultType(TeleMethodElement teleMethod, CodeBlock.Builder cb) {
-        TypeMirror returnType = teleMethod.serviceMethod().originMethod().teturnType();
+        TypeMirror returnType = teleMethod.serviceMethod().originMethod().returnType();
         CodegenUtils.generateTypePick(returnType, cb);
     }
 

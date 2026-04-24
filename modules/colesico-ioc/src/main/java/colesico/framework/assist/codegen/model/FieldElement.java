@@ -26,7 +26,7 @@ public class FieldElement extends VarElement {
     protected final ClassElement parentClass;
 
     public FieldElement(ProcessingEnvironment processingEnv, ClassElement parentClass, VariableElement fieldElement) {
-        super(processingEnv, fieldElement, parentClass.getMemberType(fieldElement));
+        super(processingEnv, fieldElement, parentClass.memberType(fieldElement));
         if (!originElement.getKind().isField()) {
             throw CodegenException.of().message("Unsupported element kind:" + originElement.getKind()).element(originElement).build();
         }

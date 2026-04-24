@@ -48,13 +48,13 @@ public final class StringWriter extends WebletTeleWriter<StringResponse> {
             return;
         }
 
-        HttpUtils.setHeaders(response, value.getHeaders());
-        HttpUtils.setCookies(response, value.getCookies());
+        HttpUtils.setHeaders(response, value.headers());
+        HttpUtils.setCookies(response, value.cookies());
 
-        if (value.getContent() == null) {
+        if (value.content() == null) {
             response.sendText("", TextResponse.DEFAULT_CONTENT_TYPE, 204);
         } else {
-            response.sendText(value.getContent(), value.getContentType(), value.getStatusCode());
+            response.sendText(value.content(), value.contentType(), value.statusCode());
         }
     }
 }

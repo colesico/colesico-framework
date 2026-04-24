@@ -50,9 +50,9 @@ public class ClientGenerator extends FrameworkAbstractGenerator {
             generateParamAssignment(mb, methodElm);
 
             TypeName returnTypeName;
-            boolean notVoidReturn = methodElm.getOriginMethod().teturnType().getKind() != TypeKind.VOID;
+            boolean notVoidReturn = methodElm.getOriginMethod().returnType().getKind() != TypeKind.VOID;
             if (notVoidReturn) {
-                returnTypeName = ParameterizedTypeName.get(ClassName.get(RpcResponse.class), TypeName.get(methodElm.getOriginMethod().teturnType()));
+                returnTypeName = ParameterizedTypeName.get(ClassName.get(RpcResponse.class), TypeName.get(methodElm.getOriginMethod().returnType()));
             } else {
                 returnTypeName = ParameterizedTypeName.get(ClassName.get(RpcResponse.class), ClassName.get(Object.class));
             }

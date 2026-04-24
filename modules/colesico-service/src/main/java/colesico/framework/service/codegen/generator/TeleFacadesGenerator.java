@@ -141,7 +141,7 @@ public class TeleFacadesGenerator {
             cb.add(";\n");
         }
 
-        TypeMirror returnType = originMethod.teturnType();
+        TypeMirror returnType = originMethod.returnType();
         boolean voidResult = returnType instanceof NoType;
 
         //======================== Get service instance and call service method

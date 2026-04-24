@@ -76,7 +76,7 @@ public class RoutesBuilder {
 
     protected String buildMethodRoute(TeleMethodElement teleMethod) {
 
-        AnnotationAssist<Route> routeAnn = teleMethod.serviceMethod().originMethod().getAnnotation(Route.class);
+        AnnotationAssist<Route> routeAnn = teleMethod.serviceMethod().originMethod().annotation(Route.class);
         String methodRoute;
         if (routeAnn != null) {
             methodRoute = StringUtils.trim(routeAnn.unwrap().value());
@@ -103,7 +103,7 @@ public class RoutesBuilder {
         }
 
         HttpMethod httpMethod = HttpMethod.HTTP_METHOD_GET;
-        AnnotationAssist<RequestMethod> methodAnnotation = teleMethod.serviceMethod().originMethod().getAnnotation(RequestMethod.class);
+        AnnotationAssist<RequestMethod> methodAnnotation = teleMethod.serviceMethod().originMethod().annotation(RequestMethod.class);
         if (methodAnnotation != null) {
             httpMethod = HttpMethod.of(methodAnnotation.unwrap().value());
         }
@@ -112,7 +112,7 @@ public class RoutesBuilder {
     }
 
     protected String buildServiceRoute(ServiceElement service) {
-        AnnotationAssist<Route> routeAnn = service.originClass().getAnnotation(Route.class);
+        AnnotationAssist<Route> routeAnn = service.originClass().annotation(Route.class);
         String srvRoute;
         if (routeAnn != null) {
             srvRoute = StringUtils.trim(routeAnn.unwrap().value());
@@ -160,9 +160,9 @@ public class RoutesBuilder {
 
     protected Map<String, String> parseRouteAttributes(ParserElement methodOrClass) {
         Map<String, String> result = new HashMap<>();
-        AnnotationAssist<RouteAttributes> routeAttributesAnn = methodOrClass.getAnnotation(RouteAttributes.class);
+        AnnotationAssist<RouteAttributes> routeAttributesAnn = methodOrClass.annotation(RouteAttributes.class);
         if (routeAttributesAnn == null) {
-            AnnotationAssist<RouteAttribute> routeAttrAnn = methodOrClass.getAnnotation(RouteAttribute.class);
+            AnnotationAssist<RouteAttribute> routeAttrAnn = methodOrClass.annotation(RouteAttribute.class);
             if (routeAttrAnn != null) {
                 result.put(routeAttrAnn.unwrap().name(), routeAttrAnn.unwrap().value());
             }

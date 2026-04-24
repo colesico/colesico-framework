@@ -75,8 +75,8 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
     private void parseVariables(TeleMethodElement teleMethod, List<? extends VarElement> variables) {
         for (VarElement variable : variables) {
 
-            AnnotationAssist<BatchField> paramBatchAnn = variable.getAnnotation(BatchField.class);
-            AnnotationAssist<BatchField> methodBatchAnn = teleMethod.serviceMethod().originMethod().getAnnotation(BatchField.class);
+            AnnotationAssist<BatchField> paramBatchAnn = variable.annotation(BatchField.class);
+            AnnotationAssist<BatchField> methodBatchAnn = teleMethod.serviceMethod().originMethod().annotation(BatchField.class);
 
             if (paramBatchAnn != null || methodBatchAnn != null) {
                 // Check batch support

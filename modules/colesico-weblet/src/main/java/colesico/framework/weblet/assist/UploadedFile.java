@@ -31,7 +31,7 @@ public class UploadedFile {
     public UploadedFile() {
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
@@ -39,7 +39,7 @@ public class UploadedFile {
         this.name = name;
     }
 
-    public String getMimeType() {
+    public String mimeType() {
         return mimeType;
     }
 
@@ -47,7 +47,7 @@ public class UploadedFile {
         this.mimeType = mimeType;
     }
 
-    public Integer getSize() {
+    public Integer size() {
         return size;
     }
 
@@ -55,7 +55,7 @@ public class UploadedFile {
         this.size = size;
     }
 
-    public Date getLastModified() {
+    public Date lastModified() {
         return lastModified;
     }
 
@@ -63,7 +63,7 @@ public class UploadedFile {
         this.lastModified = lastModified;
     }
 
-    public byte[] getContent() {
+    public byte[] content() {
         return content;
     }
 

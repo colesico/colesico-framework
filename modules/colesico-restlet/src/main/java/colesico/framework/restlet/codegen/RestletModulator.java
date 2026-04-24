@@ -51,7 +51,7 @@ public final class RestletModulator extends RoutesModulator {
 
     @Override
     protected boolean isTeleFacadeSupported(ServiceElement service) {
-        var teleAnn = service.originClass().getAnnotation(Restlet.class);
+        var teleAnn = service.originClass().annotation(Restlet.class);
         return teleAnn != null;
     }
 
@@ -132,14 +132,14 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     protected TypeMirror getCustomWriterClass(TeleMethodElement teleMethod) {
-        var wrAnn = teleMethod.serviceMethod().originMethod().getAnnotation(RestletResponseWriter.class);
+        var wrAnn = teleMethod.serviceMethod().originMethod().annotation(RestletResponseWriter.class);
         if (wrAnn == null) {
-            wrAnn = teleMethod.parentTeleFacade().parentService().originClass().getAnnotation(RestletResponseWriter.class);
+            wrAnn = teleMethod.parentTeleFacade().parentService().originClass().annotation(RestletResponseWriter.class);
         }
         if (wrAnn == null) {
             return null;
         }
-        return wrAnn.getValueTypeMirror(a -> a.value());
+        return wrAnn.valueTypeMirror(a -> a.value());
     }
 
     @Override

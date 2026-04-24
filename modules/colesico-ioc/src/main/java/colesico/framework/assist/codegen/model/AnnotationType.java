@@ -44,7 +44,7 @@ public class AnnotationType extends ParserType {
         return new AnnotationElement(processingEnv, (TypeElement) originAnnotation.getAnnotationType().asElement());
     }
 
-    public AnnotationValue getValue(String fieldName) {
+    public AnnotationValue value(String fieldName) {
         for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : originAnnotation.getElementValues().entrySet()) {
             if (fieldName.equals(entry.getKey().getSimpleName().toString())) {
                 return entry.getValue();

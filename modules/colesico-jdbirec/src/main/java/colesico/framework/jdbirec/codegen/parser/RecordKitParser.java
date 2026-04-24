@@ -88,7 +88,7 @@ public class RecordKitParser extends RecordKitHelpers {
         }
 
         // Construct mediator type
-        TypeMirror mediatorTypeMirror = columnAnn.getValueTypeMirror(Column::mediator);
+        TypeMirror mediatorTypeMirror = columnAnn.valueTypeMirror(Column::mediator);
         ClassType mediator = null;
 
         // Test mediatorTypeMirror!=FieldMediator.calss
@@ -210,7 +210,7 @@ public class RecordKitParser extends RecordKitHelpers {
             }
 
             // mediator overriding
-            TypeMirror mediatorType = overridingAnn.getValueTypeMirror(ColumnOverriding::mediator);
+            TypeMirror mediatorType = overridingAnn.valueTypeMirror(ColumnOverriding::mediator);
             if (!CodegenUtils.isAssignable(FieldMediator.class, mediatorType, processingEnv)) {
                 overriding.setMediator(new ClassType(processingEnv, (DeclaredType) mediatorType));
             }
@@ -269,7 +269,7 @@ public class RecordKitParser extends RecordKitHelpers {
      */
     protected JointRecord parseJoinRecord(ClassType compositionType) {
 
-        AnnotationAssist<Record> jointRecordKitAnn = compositionType.asClassElement().getAnnotation(Record.class);
+        AnnotationAssist<Record> jointRecordKitAnn = compositionType.asClassElement().annotation(Record.class);
         if (jointRecordKitAnn == null) {
             throw CodegenException.of().message("No @Record annotation on joint composition: " + compositionType).build();
         }
@@ -377,7 +377,7 @@ public class RecordKitParser extends RecordKitHelpers {
 
     protected RecordElement parseRecord(ClassType recordType) {
 
-        AnnotationAssist<Record> recordAnn = recordType.asClassElement().getAnnotation(Record.class);
+        AnnotationAssist<Record> recordAnn = recordType.asClassElement().annotation(Record.class);
 
         String tableName = StringUtils.trim(recordAnn.unwrap().table());
         if (StringUtils.isBlank(tableName)) {
@@ -410,9 +410,9 @@ public class RecordKitParser extends RecordKitHelpers {
     public RecordKitElement parseRecordKit(ClassElement recordKitClass) {
         logger.debug("Parse record kit: {} ", recordKitClass);
 
-        AnnotationAssist<RecordKit> recordKitAnn = recordKitClass.getAnnotation(RecordKit.class);
+        AnnotationAssist<RecordKit> recordKitAnn = recordKitClass.annotation(RecordKit.class);
 
-        TypeMirror superclassMirror = recordKitAnn.getValueTypeMirror(RecordKit::superclass);
+        TypeMirror superclassMirror = recordKitAnn.valueTypeMirror(RecordKit::superclass);
         ClassType superclassType = new ClassType(processingEnv, (DeclaredType) superclassMirror);
         recordKit = new RecordKitElement(recordKitClass, superclassType);
 

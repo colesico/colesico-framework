@@ -17,7 +17,6 @@
 package colesico.framework.weblet.teleapi;
 
 import colesico.framework.telehttp.HttpTRContext;
-import colesico.framework.telehttp.Origin;
 
 import java.lang.reflect.Type;
 
@@ -57,7 +56,7 @@ public final class WebletTRContext extends HttpTRContext {
         return new WebletTRContext(valueType, paramName, originName, readerClass);
     }
 
-    public Class<? extends WebletTeleReader> getReaderClass() {
+    public Class<? extends WebletTeleReader> readerClass() {
         return readerClass;
     }
 

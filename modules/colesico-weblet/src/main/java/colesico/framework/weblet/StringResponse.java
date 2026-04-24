@@ -35,7 +35,7 @@ abstract public class StringResponse extends ContentResponse {
         return WebletResponse.of(this);
     }
 
-    public String getContent() {
+    public String content() {
         return content;
     }
 }

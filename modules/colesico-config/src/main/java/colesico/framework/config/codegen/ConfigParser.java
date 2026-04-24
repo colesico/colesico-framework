@@ -72,13 +72,13 @@ public class ConfigParser extends FrameworkAbstractParser {
 
         ClassType scoped;
 
-        AnnotationAssist<Unscoped> unscAnn = config.getAnnotation(Unscoped.class);
+        AnnotationAssist<Unscoped> unscAnn = config.annotation(Unscoped.class);
         if (unscAnn != null) {
             scoped = new ClassType(processingEnv(), (DeclaredType) CodegenUtils.classToTypeMirror(Unscoped.class, elementUtils()));
             return new ConfigScopedElement(scoped, true);
         }
 
-        AnnotationAssist<Singleton> singAnn = config.getAnnotation(Singleton.class);
+        AnnotationAssist<Singleton> singAnn = config.annotation(Singleton.class);
         if (singAnn != null) {
             scoped = new ClassType(processingEnv(), (DeclaredType) CodegenUtils.classToTypeMirror(Singleton.class, elementUtils()));
             return new ConfigScopedElement(scoped, true);
@@ -86,7 +86,7 @@ public class ConfigParser extends FrameworkAbstractParser {
 
         // Find custom scope declaration
         for (AnnotationType am : config.annotationTypes()) {
-            AnnotationAssist<CustomScope> customScope = am.asElement().getAnnotation(CustomScope.class);
+            AnnotationAssist<CustomScope> customScope = am.asElement().annotation(CustomScope.class);
             if (customScope != null) {
                 scoped = new ClassType(processingEnv(), (DeclaredType) am.unwrap());
                 return new ConfigScopedElement(scoped, true);
@@ -104,9 +104,9 @@ public class ConfigParser extends FrameworkAbstractParser {
         ConfigModel model;
         ClassElement target;
         if (configPrototype != null) {
-            AnnotationAssist<ConfigPrototype> prototypeAnn = configPrototype.getAnnotation(ConfigPrototype.class);
+            AnnotationAssist<ConfigPrototype> prototypeAnn = configPrototype.annotation(ConfigPrototype.class);
             model = prototypeAnn.unwrap().model();
-            TypeMirror targetMirror = prototypeAnn.getValueTypeMirror(ConfigPrototype::target);
+            TypeMirror targetMirror = prototypeAnn.valueTypeMirror(ConfigPrototype::target);
             if (CodegenUtils.isAssignable(Object.class, targetMirror, processingEnv)) {
                 target = null;
             } else {
@@ -117,7 +117,7 @@ public class ConfigParser extends FrameworkAbstractParser {
             model = ConfigModel.SINGLE;
         }
 
-        AnnotationAssist<DefaultConfig> defaultAnn = config.getAnnotation(DefaultConfig.class);
+        AnnotationAssist<DefaultConfig> defaultAnn = config.annotation(DefaultConfig.class);
         boolean defaultMessage;
         if (defaultAnn != null) {
             if (!ConfigModel.MESSAGE.equals(model)) {
@@ -130,27 +130,27 @@ public class ConfigParser extends FrameworkAbstractParser {
         }
 
         // Classed
-        AnnotationAssist<Classed> classedAnn = config.getAnnotation(Classed.class);
+        AnnotationAssist<Classed> classedAnn = config.annotation(Classed.class);
         TypeMirror classed;
         if (classedAnn != null) {
-            classed = classedAnn.getValueTypeMirror(Classed::value);
+            classed = classedAnn.valueTypeMirror(Classed::value);
         } else {
             classed = null;
         }
 
         // Named
-        AnnotationAssist<Named> namedAnn = config.getAnnotation(Named.class);
+        AnnotationAssist<Named> namedAnn = config.annotation(Named.class);
         String named = namedAnn == null ? null : namedAnn.unwrap().value();
 
         // Condition
-        AnnotationAssist<Requires> reqAnn = config.getAnnotation(Requires.class);
+        AnnotationAssist<Requires> reqAnn = config.annotation(Requires.class);
         ClassType condition = null;
         if (reqAnn != null) {
-            condition = new ClassType(processingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(a -> a.value()));
+            condition = new ClassType(processingEnv(), (DeclaredType) reqAnn.valueTypeMirror(a -> a.value()));
         }
 
         // Substitution
-        AnnotationAssist<Substitute> subsAnn = config.getAnnotation(Substitute.class);
+        AnnotationAssist<Substitute> subsAnn = config.annotation(Substitute.class);
         Substitution substitution = null;
         if (subsAnn != null) {
             substitution = subsAnn.unwrap().value();
@@ -162,17 +162,17 @@ public class ConfigParser extends FrameworkAbstractParser {
         ConfigElement configElement = new ConfigElement(config, configPrototype, condition, substitution, model, scope, target, defaultMessage, classed, named);
 
         // Config source
-        AnnotationAssist<UseSource> useSourceAnn = config.getAnnotation(UseSource.class);
-        AnnotationAssist<UseFileSource> useFileSourceAnn = config.getAnnotation(UseFileSource.class);
+        AnnotationAssist<UseSource> useSourceAnn = config.annotation(UseSource.class);
+        AnnotationAssist<UseFileSource> useFileSourceAnn = config.annotation(UseFileSource.class);
         ConfigSourceElement sourceElm = null;
         if (useSourceAnn != null || useFileSourceAnn != null) {
             TypeMirror sourceType;
             boolean bindAll;
             if (useSourceAnn != null) {
-                sourceType = useSourceAnn.getValueTypeMirror(UseSource::type);
+                sourceType = useSourceAnn.valueTypeMirror(UseSource::type);
                 bindAll = useSourceAnn.unwrap().bindAll();
             } else {
-                sourceType = useFileSourceAnn.getValueTypeMirror(UseFileSource::type);
+                sourceType = useFileSourceAnn.valueTypeMirror(UseFileSource::type);
                 bindAll = useFileSourceAnn.unwrap().bindAll();
             }
             ClassType sourceClassType = new ClassType(processingEnv, (DeclaredType) sourceType);
@@ -188,7 +188,7 @@ public class ConfigParser extends FrameworkAbstractParser {
     private Map<String, String> parseSourceOptions(ClassElement configImpl) {
         Map<String, String> result = new HashMap<>();
 
-        AnnotationAssist<UseFileSource> fileSourceAnn = configImpl.getAnnotation(UseFileSource.class);
+        AnnotationAssist<UseFileSource> fileSourceAnn = configImpl.annotation(UseFileSource.class);
         if (fileSourceAnn != null) {
             if (StringUtils.isNotBlank(fileSourceAnn.unwrap().file())) {
                 result.put(FILE_OPTION, fileSourceAnn.unwrap().file());
@@ -204,9 +204,9 @@ public class ConfigParser extends FrameworkAbstractParser {
             }
         }
 
-        AnnotationAssist<SourceOptions> sourceOptionsAnn = configImpl.getAnnotation(SourceOptions.class);
+        AnnotationAssist<SourceOptions> sourceOptionsAnn = configImpl.annotation(SourceOptions.class);
         if (sourceOptionsAnn == null) {
-            AnnotationAssist<SourceOption> sourceOptAnn = configImpl.getAnnotation(SourceOption.class);
+            AnnotationAssist<SourceOption> sourceOptAnn = configImpl.annotation(SourceOption.class);
             if (sourceOptAnn != null) {
                 result.put(sourceOptAnn.unwrap().name(), sourceOptAnn.unwrap().value());
             }
@@ -221,8 +221,8 @@ public class ConfigParser extends FrameworkAbstractParser {
 
     private ConfigSourceElement parseSourceValues(ClassElement configImplementation, ConfigSourceElement confSourceElm) {
         for (FieldElement me : configImplementation.fields()) {
-            AnnotationAssist<FromSource> fromSrcAnn = me.getAnnotation(FromSource.class);
-            AnnotationAssist<NotFromSource> notFromSrcAnn = me.getAnnotation(NotFromSource.class);
+            AnnotationAssist<FromSource> fromSrcAnn = me.annotation(FromSource.class);
+            AnnotationAssist<NotFromSource> notFromSrcAnn = me.annotation(NotFromSource.class);
             if (fromSrcAnn != null && notFromSrcAnn != null) {
                 throw CodegenException.of().message("Simultaneous usage of @FromSource ana @NotFromSource").element(confSourceElm.sourceType().asClassElement()).build();
             }

@@ -105,7 +105,7 @@ public class ClassElement extends ParserElement {
         return originType;
     }
 
-    public TypeMirror getMemberType(Element element) {
+    public TypeMirror memberType(Element element) {
         return typeUtils().asMemberOf(originType, element);
     }
 

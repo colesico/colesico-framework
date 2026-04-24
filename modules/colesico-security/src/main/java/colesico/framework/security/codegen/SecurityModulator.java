@@ -45,8 +45,8 @@ public class SecurityModulator extends Modulator {
     @Override
     public void onServiceMethodParsed(ServiceMethodElement serviceMethod) {
         super.onServiceMethodParsed(serviceMethod);
-        final AnnotationAssist<RequirePrincipal> requirePrincipal = serviceMethod.originMethod().getAnnotation(RequirePrincipal.class);
-        final AnnotationAssist<SecurityAudit> securityAudit = serviceMethod.originMethod().getAnnotation(SecurityAudit.class);
+        final AnnotationAssist<RequirePrincipal> requirePrincipal = serviceMethod.originMethod().annotation(RequirePrincipal.class);
+        final AnnotationAssist<SecurityAudit> securityAudit = serviceMethod.originMethod().annotation(SecurityAudit.class);
 
         if (requirePrincipal == null && securityAudit == null) {
             return;
@@ -65,7 +65,7 @@ public class SecurityModulator extends Modulator {
         }
 
         if (securityAudit != null) {
-            TypeMirror[] tmArr = securityAudit.getValueTypeMirrors(a -> a.value());
+            TypeMirror[] tmArr = securityAudit.valueTypeMirrors(a -> a.value());
             for (TypeMirror tm : tmArr) {
                 SecurityAuditorElement se = new SecurityAuditorElement(ClassElement.of(getProcessorContext().getProcessingEnv(), (DeclaredType) tm));
                 auditors.add(se);

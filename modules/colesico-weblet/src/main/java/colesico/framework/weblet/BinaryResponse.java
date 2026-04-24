@@ -53,11 +53,11 @@ public final class BinaryResponse extends ContentResponse {
         return WebletResponse.of(this);
     }
 
-    public byte[] getContent() {
+    public byte[] content() {
         return content;
     }
 
-    public String getFileName() {
+    public String fileName() {
         return fileName;
     }
 }

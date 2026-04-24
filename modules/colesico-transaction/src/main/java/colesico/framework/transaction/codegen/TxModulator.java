@@ -72,9 +72,9 @@ public class TxModulator extends Modulator {
     public void onServiceMethodParsed(ServiceMethodElement proxyMethod) {
         super.onServiceMethodParsed(proxyMethod);
 
-        AnnotationAssist<Transactional> txAnnotation = proxyMethod.originMethod().getAnnotation(Transactional.class);
+        AnnotationAssist<Transactional> txAnnotation = proxyMethod.originMethod().annotation(Transactional.class);
         if (txAnnotation == null) {
-            txAnnotation = proxyMethod.parentService().originClass().getAnnotation(Transactional.class);
+            txAnnotation = proxyMethod.parentService().originClass().annotation(Transactional.class);
             if (txAnnotation == null) {
                 return;
             }

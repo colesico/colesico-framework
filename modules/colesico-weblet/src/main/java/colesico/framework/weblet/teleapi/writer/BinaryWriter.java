@@ -49,19 +49,19 @@ public final class BinaryWriter extends WebletTeleWriter<BinaryResponse> {
             return;
         }
 
-        HttpUtils.setHeaders(response, value.getHeaders());
-        HttpUtils.setCookies(response, value.getCookies());
+        HttpUtils.setHeaders(response, value.headers());
+        HttpUtils.setCookies(response, value.cookies());
 
         // Force download?
-        if (value.getFileName() != null) {
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + value.getFileName() + "\"");
+        if (value.fileName() != null) {
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + value.fileName() + "\"");
         }
 
-        if (value.getContent() == null || value.getContent().length == 0) {
+        if (value.content() == null || value.content().length == 0) {
             response.sendData(ByteBuffer.allocate(0), BinaryResponse.DEFAULT_CONTENT_TYPE, 204);
         } else {
-            ByteBuffer buffer = ByteBuffer.wrap(value.getContent());
-            response.sendData(buffer, value.getContentType(), value.getStatusCode());
+            ByteBuffer buffer = ByteBuffer.wrap(value.content());
+            response.sendData(buffer, value.contentType(), value.statusCode());
         }
     }
 }

@@ -72,7 +72,7 @@ public class ProducerParser extends FrameworkAbstractParser {
             if (firstConstructor == null) {
                 firstConstructor = method;
             }
-            AnnotationAssist<Inject> injectAnn = method.getAnnotation(Inject.class);
+            AnnotationAssist<Inject> injectAnn = method.annotation(Inject.class);
             if (injectAnn == null) {
                 continue;
             }
@@ -87,12 +87,12 @@ public class ProducerParser extends FrameworkAbstractParser {
 
     protected ScopeElement obtainScopeFromElementAnn(ParserElement element) {
 
-        AnnotationAssist<Singleton> singleton = element.getAnnotation(Singleton.class);
+        AnnotationAssist<Singleton> singleton = element.annotation(Singleton.class);
         if (singleton != null) {
             return new ScopeElement(ScopeElement.ScopeKind.SINGLETON, null);
         }
 
-        AnnotationAssist<Unscoped> unscoped = element.getAnnotation(Unscoped.class);
+        AnnotationAssist<Unscoped> unscoped = element.annotation(Unscoped.class);
         if (unscoped != null) {
             return new ScopeElement(ScopeElement.ScopeKind.UNSCOPED, null);
         }
@@ -102,9 +102,9 @@ public class ProducerParser extends FrameworkAbstractParser {
         for (AnnotationType am : element.annotationTypes()) {
             ScopeElement scopeElm = null;
 
-            AnnotationAssist<CustomScope> customScope = am.asElement().getAnnotation(CustomScope.class);
+            AnnotationAssist<CustomScope> customScope = am.asElement().annotation(CustomScope.class);
             if (customScope != null) {
-                TypeMirror scopeClass = customScope.getValueTypeMirror(CustomScope::value);
+                TypeMirror scopeClass = customScope.valueTypeMirror(CustomScope::value);
                 scopeElm = new ScopeElement(ScopeElement.ScopeKind.CUSTOM, new ClassType(processingEnv(), (DeclaredType) scopeClass));
             }
 
@@ -120,7 +120,7 @@ public class ProducerParser extends FrameworkAbstractParser {
     }
 
     protected ScopeElement obtainScopeProduceAnn(AnnotationAssist<Produce> produceAnn) {
-        TypeMirror scopeMirror = produceAnn.getValueTypeMirror(Produce::scoped);
+        TypeMirror scopeMirror = produceAnn.valueTypeMirror(Produce::scoped);
         if (CodegenUtils.isAssignable(Annotation.class, scopeMirror, processingEnv)) {
             return null;
         }
@@ -134,9 +134,9 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         ClassType scopeAnn = new ClassType(processingEnv(), (DeclaredType) scopeMirror);
-        AnnotationAssist<CustomScope> customScope = scopeAnn.asClassElement().getAnnotation(CustomScope.class);
+        AnnotationAssist<CustomScope> customScope = scopeAnn.asClassElement().annotation(CustomScope.class);
         if (customScope != null) {
-            TypeMirror scopeClass = customScope.getValueTypeMirror(CustomScope::value);
+            TypeMirror scopeClass = customScope.valueTypeMirror(CustomScope::value);
             return new ScopeElement(ScopeElement.ScopeKind.CUSTOM, new ClassType(processingEnv(), (DeclaredType) scopeClass));
         }
 
@@ -151,7 +151,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         List<MethodElement> listeners = new ArrayList<>();
         ClassElement suppliedTypeElement = suppliedType.asClassElement();
         for (MethodElement me : suppliedTypeElement.methods()) {
-            if (me.getAnnotation(PostConstruct.class) == null) {
+            if (me.annotation(PostConstruct.class) == null) {
                 continue;
             }
             if (!me.parameters().isEmpty()) {
@@ -182,7 +182,7 @@ public class ProducerParser extends FrameworkAbstractParser {
                     .build();
         }
 
-        AnnotationAssist<Message> messageAnn = parameter.getAnnotation(Message.class);
+        AnnotationAssist<Message> messageAnn = parameter.annotation(Message.class);
         boolean isMessage = messageAnn != null;
 
         String parameterClassName = parameter.asClassType().erasure().toString();
@@ -217,14 +217,14 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         // Messaging
-        AnnotationAssist<Contextual> contextualAnn = parameter.getAnnotation(Contextual.class);
+        AnnotationAssist<Contextual> contextualAnn = parameter.annotation(Contextual.class);
         InjectableElement.MessageKind messageKind = contextualAnn != null ?
                 InjectableElement.MessageKind.INJECTION_POINT :
                 InjectableElement.MessageKind.OUTER_MESSAGE;
 
         // Extra key types
         String named;
-        AnnotationAssist<Named> namedAnn = parameter.getAnnotation(Named.class);
+        AnnotationAssist<Named> namedAnn = parameter.annotation(Named.class);
         if (namedAnn != null) {
             if (injectionKind == InjectableElement.InjectionKind.MESSAGE) {
                 throw CodegenException.of().message("@Named message injection").element(parameter.unwrap()).build();
@@ -235,12 +235,12 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         ClassifierType classed;
-        AnnotationAssist<Classed> classedAnn = parameter.getAnnotation(Classed.class);
+        AnnotationAssist<Classed> classedAnn = parameter.annotation(Classed.class);
         if (classedAnn != null) {
             if (injectionKind == InjectableElement.InjectionKind.MESSAGE) {
                 throw CodegenException.of().message("@Classed message injection").element(parameter.unwrap()).build();
             }
-            TypeMirror classifier = classedAnn.getValueTypeMirror(Classed::value);
+            TypeMirror classifier = classedAnn.valueTypeMirror(Classed::value);
             classed = new ClassifierType(processingEnv(), classifier);
             // TODO: check  injectionKind
         } else {
@@ -248,14 +248,14 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         // Optional injection
-        AnnotationAssist<OptionalInject> optionalAnn = parameter.getAnnotation(OptionalInject.class);
+        AnnotationAssist<OptionalInject> optionalAnn = parameter.annotation(OptionalInject.class);
         boolean optional = optionalAnn != null;
 
         return new InjectableElement(parentFactory, parameter, injectedType, injectionKind, messageKind, optional, named, classed);
     }
 
     protected DefaultFactoryElement createDefaultFactoryElement(IocletElement iocletElement, AnnotationAssist<Produce> produceAnn) {
-        TypeMirror suppliedMirror = typeUtils().erasure(produceAnn.getValueTypeMirror(Produce::value));
+        TypeMirror suppliedMirror = typeUtils().erasure(produceAnn.valueTypeMirror(Produce::value));
 
         logger.debug("Parsing default factory for : " + suppliedMirror);
 
@@ -291,7 +291,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         String named = StringUtils.isEmpty(produceAnn.unwrap().named()) ? null : produceAnn.unwrap().named();
         if (named == null) {
             // Get @Named from class definition
-            AnnotationAssist<Named> namedAnn = suppliedType.asClassElement().getAnnotation(Named.class);
+            AnnotationAssist<Named> namedAnn = suppliedType.asClassElement().annotation(Named.class);
             if (namedAnn != null) {
                 named = namedAnn.unwrap().value();
             }
@@ -300,14 +300,14 @@ public class ProducerParser extends FrameworkAbstractParser {
         // Classed
 
         ClassifierType classed = null;
-        TypeMirror classifier = produceAnn.getValueTypeMirror(Produce::classed);
+        TypeMirror classifier = produceAnn.valueTypeMirror(Produce::classed);
         if (!CodegenUtils.isAssignable(Class.class, classifier, processingEnv)) {
             classed = new ClassifierType(processingEnv, classifier);
         } else {
             // Get @Classed from class definition
-            AnnotationAssist<Classed> classedAnn = suppliedType.asClassElement().getAnnotation(Classed.class);
+            AnnotationAssist<Classed> classedAnn = suppliedType.asClassElement().annotation(Classed.class);
             if (classedAnn != null) {
-                classifier = classedAnn.getValueTypeMirror(Classed::value);
+                classifier = classedAnn.valueTypeMirror(Classed::value);
                 classed = new ClassifierType(processingEnv, classifier);
             }
         }
@@ -329,20 +329,20 @@ public class ProducerParser extends FrameworkAbstractParser {
         // Condition
 
         ConditionElement condition = null;
-        TypeMirror conditionClass = produceAnn.getValueTypeMirror(Produce::requires);
+        TypeMirror conditionClass = produceAnn.valueTypeMirror(Produce::requires);
         if (!CodegenUtils.isAssignable(Condition.class, conditionClass, processingEnv)) {
             condition = new ConditionElement(new ClassType(processingEnv(), (DeclaredType) conditionClass));
         } else {
-            AnnotationAssist<Requires> reqAnn = iocletElement.originProducer().getAnnotation(Requires.class);
+            AnnotationAssist<Requires> reqAnn = iocletElement.originProducer().annotation(Requires.class);
             if (reqAnn != null) {
-                condition = new ConditionElement(new ClassType(processingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(Requires::value)));
+                condition = new ConditionElement(new ClassType(processingEnv(), (DeclaredType) reqAnn.valueTypeMirror(Requires::value)));
             }
         }
 
         // Substitute
         Substitution substitute = produceAnn.unwrap().substitute();
         if (substitute == Substitution.REGULAR) {
-            AnnotationAssist<Substitute> subsAnn = iocletElement.originProducer().getAnnotation(Substitute.class);
+            AnnotationAssist<Substitute> subsAnn = iocletElement.originProducer().annotation(Substitute.class);
             if (subsAnn != null) {
                 substitute = subsAnn.unwrap().value();
             }
@@ -371,7 +371,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         // Supertypes
-        TypeMirror[] supertypes = produceAnn.getValueTypeMirrors(a -> a.keyType());
+        TypeMirror[] supertypes = produceAnn.valueTypeMirrors(a -> a.keyType());
         for (TypeMirror st : supertypes) {
             factory.addSupertype(new ClassType(processingEnv, (DeclaredType) st));
         }
@@ -394,10 +394,10 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         // Detect post produce listener
         final PostProduceElement postProduce;
-        AnnotationAssist<PostProduce> postProduceAnn = method.getAnnotation(PostProduce.class);
+        AnnotationAssist<PostProduce> postProduceAnn = method.annotation(PostProduce.class);
         if (postProduceAnn != null) {
             // Process withClassed
-            TypeMirror classifier = postProduceAnn.getValueTypeMirror(PostProduce::withClassed);
+            TypeMirror classifier = postProduceAnn.valueTypeMirror(PostProduce::withClassed);
             ClassifierType withClassed = null;
             if (!CodegenUtils.isAssignable(Class.class, classifier, processingEnv)) {
                 withClassed = new ClassifierType(processingEnv, classifier);
@@ -425,17 +425,17 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         // Polyproduce
-        boolean polyproduce = method.getAnnotation(Polyproduce.class) != null;
+        boolean polyproduce = method.annotation(Polyproduce.class) != null;
 
         // Named
         String named = null;
-        AnnotationAssist<Named> methodNamedAnn = method.getAnnotation(Named.class);
+        AnnotationAssist<Named> methodNamedAnn = method.annotation(Named.class);
         if (methodNamedAnn != null) {
             named = methodNamedAnn.unwrap().value();
         } else {
             if (postProduce == null) {
                 // Get @Named from class definition
-                AnnotationAssist<Named> classNamedAnn = suppliedType.asClassElement().getAnnotation(Named.class);
+                AnnotationAssist<Named> classNamedAnn = suppliedType.asClassElement().annotation(Named.class);
                 if (classNamedAnn != null) {
                     named = classNamedAnn.unwrap().value();
                 }
@@ -443,18 +443,18 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         // Classed
-        AnnotationAssist<Classed> methodClassedAnn = method.getAnnotation(Classed.class);
+        AnnotationAssist<Classed> methodClassedAnn = method.annotation(Classed.class);
         ClassifierType classed = null;
         TypeMirror classifier;
         if (methodClassedAnn != null) {
-            classifier = methodClassedAnn.getValueTypeMirror(Classed::value);
+            classifier = methodClassedAnn.valueTypeMirror(Classed::value);
             classed = new ClassifierType(processingEnv, classifier);
         } else {
             if (postProduce == null) {
                 // Get @Classed from class definition
-                AnnotationAssist<Classed> classClassedAnn = suppliedType.asClassElement().getAnnotation(Classed.class);
+                AnnotationAssist<Classed> classClassedAnn = suppliedType.asClassElement().annotation(Classed.class);
                 if (classClassedAnn != null) {
-                    classifier = classClassedAnn.getValueTypeMirror(Classed::value);
+                    classifier = classClassedAnn.valueTypeMirror(Classed::value);
                     classed = new ClassifierType(processingEnv, classifier);
                 }
             }
@@ -463,7 +463,7 @@ public class ProducerParser extends FrameworkAbstractParser {
         // notifyPostProduce notifyPostConstruct
         final boolean notifyPostProduce;
         final boolean notifyPostConstruct;
-        AnnotationAssist<ListenersControl> listenersControlAnn = method.getAnnotation(ListenersControl.class);
+        AnnotationAssist<ListenersControl> listenersControlAnn = method.annotation(ListenersControl.class);
         if (listenersControlAnn != null) {
             notifyPostProduce = listenersControlAnn.unwrap().postProduce();
             notifyPostConstruct = listenersControlAnn.unwrap().postConstruct();
@@ -486,19 +486,19 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         // Condition
-        AnnotationAssist<Requires> reqAnn = method.getAnnotation(Requires.class);
+        AnnotationAssist<Requires> reqAnn = method.annotation(Requires.class);
         if (reqAnn == null) {
-            reqAnn = method.parentClass().getAnnotation(Requires.class);
+            reqAnn = method.parentClass().annotation(Requires.class);
         }
         ConditionElement condition = null;
         if (reqAnn != null) {
-            condition = new ConditionElement(new ClassType(processingEnv(), (DeclaredType) reqAnn.getValueTypeMirror(Requires::value)));
+            condition = new ConditionElement(new ClassType(processingEnv(), (DeclaredType) reqAnn.valueTypeMirror(Requires::value)));
         }
 
         // Substitution
-        AnnotationAssist<Substitute> subsAnn = method.getAnnotation(Substitute.class);
+        AnnotationAssist<Substitute> subsAnn = method.annotation(Substitute.class);
         if (subsAnn == null) {
-            subsAnn = method.parentClass().getAnnotation(Substitute.class);
+            subsAnn = method.parentClass().annotation(Substitute.class);
         }
         SubstitutionElement substitution = null;
         if (subsAnn != null) {
@@ -525,9 +525,9 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         // Supertypes
-        AnnotationAssist<KeyType> supertypesAnn = method.getAnnotation(KeyType.class);
+        AnnotationAssist<KeyType> supertypesAnn = method.annotation(KeyType.class);
         if (supertypesAnn != null) {
-            TypeMirror[] supertypes = supertypesAnn.getValueTypeMirrors(a -> a.value());
+            TypeMirror[] supertypes = supertypesAnn.valueTypeMirrors(a -> a.value());
             for (TypeMirror st : supertypes) {
                 factory.addSupertype(new ClassType(processingEnv, (DeclaredType) st));
             }
@@ -558,13 +558,13 @@ public class ProducerParser extends FrameworkAbstractParser {
         // Scan @Produce annotation
         ClassElement producer = iocletElement.originProducer();
         List<AnnotationAssist<Produce>> produceList = new ArrayList<>();
-        AnnotationAssist<Produces> produces = producer.getAnnotation(Produces.class);
+        AnnotationAssist<Produces> produces = producer.annotation(Produces.class);
         if (produces != null) {
             for (Produce produce : produces.unwrap().value()) {
                 produceList.add(new AnnotationAssist<>(processingEnv(), produce));
             }
         } else {
-            AnnotationAssist<Produce> produce = producer.getAnnotation(Produce.class);
+            AnnotationAssist<Produce> produce = producer.annotation(Produce.class);
             if (produce != null) {
                 produceList.add(produce);
             }

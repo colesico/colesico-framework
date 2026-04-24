@@ -38,11 +38,11 @@ public final class ViewResponse extends ContentResponse {
         return WebletResponse.of(this);
     }
 
-    public String getViewName() {
+    public String viewName() {
         return viewName;
     }
 
-    public Object getModel() {
+    public Object model() {
         return model;
     }
 

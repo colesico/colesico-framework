@@ -49,7 +49,7 @@ public class DictionaryElement {
         }
         this.originBean = dictionaryInterface;
 
-        AnnotationAssist<Dictionary> dictAnn = dictionaryInterface.getAnnotation(Dictionary.class);
+        AnnotationAssist<Dictionary> dictAnn = dictionaryInterface.annotation(Dictionary.class);
         String bName;
         if (StringUtils.isNoneBlank(dictAnn.unwrap().baseName())) {
             bName = dictAnn.unwrap().baseName();

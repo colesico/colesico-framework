@@ -41,9 +41,9 @@ public class WebletDataPortImpl implements WebletDataPort {
     @Override
     public <V> V read(WebletTRContext context) {
         WebletTeleReader reader;
-        if (context.getReaderClass() != null) {
+        if (context.readerClass() != null) {
             // Get specified reader
-            reader = trwFactory.getReader(context.getReaderClass());
+            reader = trwFactory.getReader(context.readerClass());
         } else {
             // Get reader by value type
             reader = trwFactory.findReader(WebletTeleReader.class, context.valueType());
@@ -67,9 +67,9 @@ public class WebletDataPortImpl implements WebletDataPort {
 
         // Obtain writer
         WebletTeleWriter writer;
-        if (context.getWriterClass() != null) {
+        if (context.writerClass() != null) {
             // Get specified reader
-            writer = trwFactory.getWriter(context.getWriterClass());
+            writer = trwFactory.getWriter(context.writerClass());
         } else {
             Type responseType;
             if (isWebletResponse) {

@@ -198,11 +198,11 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
         Set<AnnotationAssist<Composition>> typeCompsAnn = findTypeCompositions(field.asClassType());
         result.addAll(typeCompsAnn);
 
-        AnnotationAssist<Composition> composition = field.getAnnotation(Composition.class);
+        AnnotationAssist<Composition> composition = field.annotation(Composition.class);
         if (composition != null) {
             result.add(composition);
         } else {
-            AnnotationAssist<Compositions> compositions = field.getAnnotation(Compositions.class);
+            AnnotationAssist<Compositions> compositions = field.annotation(Compositions.class);
             if (compositions != null) {
                 for (Composition comp : compositions.unwrap().value()) {
                     composition = new AnnotationAssist<>(processingEnv, comp);
@@ -221,11 +221,11 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
             return result;
         }
 
-        AnnotationAssist<Composition> composition = type.asClassElement().getAnnotation(Composition.class);
+        AnnotationAssist<Composition> composition = type.asClassElement().annotation(Composition.class);
         if (composition != null) {
             result.add(composition);
         } else {
-            AnnotationAssist<Compositions> compositions = type.asClassElement().getAnnotation(Compositions.class);
+            AnnotationAssist<Compositions> compositions = type.asClassElement().annotation(Compositions.class);
             if (compositions != null) {
                 for (Composition comp : compositions.unwrap().value()) {
                     composition = new AnnotationAssist<>(processingEnv, comp);
@@ -239,11 +239,11 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
     protected Set<AnnotationAssist<Column>> findFieldColumns(FieldElement field) {
         final Set<AnnotationAssist<Column>> result = new HashSet<>();
 
-        AnnotationAssist<Column> column = field.getAnnotation(Column.class);
+        AnnotationAssist<Column> column = field.annotation(Column.class);
         if (column != null) {
             result.add(column);
         } else {
-            AnnotationAssist<Columns> columns = field.getAnnotation(Columns.class);
+            AnnotationAssist<Columns> columns = field.annotation(Columns.class);
             if (columns != null) {
                 for (Column col : columns.unwrap().value()) {
                     column = new AnnotationAssist<>(processingEnv, col);

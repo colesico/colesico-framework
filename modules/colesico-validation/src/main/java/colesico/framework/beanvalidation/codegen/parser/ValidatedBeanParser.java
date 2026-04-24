@@ -99,11 +99,11 @@ public class ValidatedBeanParser extends FrameworkAbstractParser {
 
         for (FieldElement field : fieldsList) {
             logger.debug("Process bean field: {} of type {}", field.name(), field.unwrap().asType());
-            AnnotationAssist<Validate> validateSpec = field.getAnnotation(Validate.class);
+            AnnotationAssist<Validate> validateSpec = field.annotation(Validate.class);
             if (validateSpec != null) {
                 parsePropertyValidation(builderPrototype, field, validateSpec);
             } else {
-                AnnotationAssist<ValidateBean> validateBeanSpec = field.getAnnotation(ValidateBean.class);
+                AnnotationAssist<ValidateBean> validateBeanSpec = field.annotation(ValidateBean.class);
                 if (validateBeanSpec != null) {
                     parseBeanValidation(builderPrototype, field, validateBeanSpec);
                 }
@@ -113,7 +113,7 @@ public class ValidatedBeanParser extends FrameworkAbstractParser {
 
     protected BuilderPrototypeElement createBuilderPrototypeElement(ClassElement beanClass, AnnotationAssist<ValidatorBuilderPrototype> builderSpec) {
 
-        DeclaredType superclass = (DeclaredType) builderSpec.getValueTypeMirror(a -> a.superclass());
+        DeclaredType superclass = (DeclaredType) builderSpec.valueTypeMirror(a -> a.superclass());
         String packageName = builderSpec.unwrap().packageName();
 
         if (StringUtils.isBlank(packageName)) {
@@ -150,11 +150,11 @@ public class ValidatedBeanParser extends FrameworkAbstractParser {
 
     protected List<AnnotationAssist<ValidatorBuilderPrototype>> getBuilderSpecs(ClassElement beanClass) {
         List<AnnotationAssist<ValidatorBuilderPrototype>> result = new ArrayList<>();
-        AnnotationAssist<ValidatorBuilderPrototype> builderSpec = beanClass.getAnnotation(ValidatorBuilderPrototype.class);
+        AnnotationAssist<ValidatorBuilderPrototype> builderSpec = beanClass.annotation(ValidatorBuilderPrototype.class);
         if (builderSpec != null) {
             result.add(builderSpec);
         } else {
-            AnnotationAssist<ValidatorBuilderPrototypes> buildersSpec = beanClass.getAnnotation(ValidatorBuilderPrototypes.class);
+            AnnotationAssist<ValidatorBuilderPrototypes> buildersSpec = beanClass.annotation(ValidatorBuilderPrototypes.class);
             if (buildersSpec != null) {
                 ValidatorBuilderPrototype[] builderSpecArr = buildersSpec.unwrap().value();
                 for (ValidatorBuilderPrototype builderAnn : builderSpecArr) {

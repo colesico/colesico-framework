@@ -83,19 +83,19 @@ public class PebbleTemplater extends ViewWriter implements HtmlRenderer {
 
     @Override
     public void write(ViewResponse viewResponse, WebletTWContext context) {
-        Writer writer = evaluate(viewResponse.getViewName(), viewResponse.getModel());
+        Writer writer = evaluate(viewResponse.viewName(), viewResponse.model());
 
         HttpResponse httpResponse = httpContextProv.get().response();
 
-        HttpUtils.setHeaders(httpResponse, viewResponse.getHeaders());
-        HttpUtils.setCookies(httpResponse, viewResponse.getCookies());
+        HttpUtils.setHeaders(httpResponse, viewResponse.headers());
+        HttpUtils.setCookies(httpResponse, viewResponse.cookies());
 
-        String contentType = viewResponse.getContentType();
+        String contentType = viewResponse.contentType();
         if (StringUtils.isEmpty(contentType)) {
             contentType = HtmlResponse.DEFAULT_CONTENT_TYPE;
         }
 
-        httpResponse.sendText(writer.toString(), contentType, viewResponse.getStatusCode());
+        httpResponse.sendText(writer.toString(), contentType, viewResponse.statusCode());
     }
 
     /**

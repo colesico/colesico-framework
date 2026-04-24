@@ -38,7 +38,7 @@ public class RpcApiParser extends FrameworkAbstractParser {
 
         List<MethodElement> methods = originIface.methods();
         for (MethodElement method : methods) {
-            TypeKind retTypeKind = method.teturnType().getKind();
+            TypeKind retTypeKind = method.returnType().getKind();
             if (!(retTypeKind == TypeKind.DECLARED
                     || retTypeKind == TypeKind.ARRAY
                     || retTypeKind == TypeKind.VOID

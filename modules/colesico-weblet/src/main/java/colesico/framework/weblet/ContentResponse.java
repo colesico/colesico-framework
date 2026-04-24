@@ -36,19 +36,19 @@ abstract public class ContentResponse {
         cookies.add(cookie);
     }
 
-    public String getContentType() {
+    public String contentType() {
         return contentType;
     }
 
-    public int getStatusCode() {
+    public int statusCode() {
         return statusCode;
     }
 
-    public Map<String, List<String>> getHeaders() {
+    public Map<String, List<String>> headers() {
         return headers;
     }
 
-    public Set<HttpCookie> getCookies() {
+    public Set<HttpCookie> cookies() {
         return cookies;
     }
 }
