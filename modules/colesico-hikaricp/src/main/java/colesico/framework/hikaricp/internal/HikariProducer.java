@@ -46,7 +46,7 @@ public class HikariProducer {
     @Unscoped
     public DataSource hikariDataSourceFactory(@Message HikariConfigPrototype config) {
         try {
-            HikariDataSource dataSource = new HikariDataSource(config.getHikariConfig());
+            HikariDataSource dataSource = new HikariDataSource(config.hikariConfig());
             log.debug("Hikari DB connection pool has been created with configuration: " + config);
             return dataSource;
         } catch (Exception e) {

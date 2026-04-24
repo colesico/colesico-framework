@@ -34,7 +34,7 @@ import jakarta.inject.Singleton;
 public class TranslationProducer {
 
     @Singleton
-    public PropertyBundleCache getPropertyBundleCache() {
+    public PropertyBundleCache propertyBundleCache() {
         return new PropertyBundleCacheSoft(0.3);
     }
 }

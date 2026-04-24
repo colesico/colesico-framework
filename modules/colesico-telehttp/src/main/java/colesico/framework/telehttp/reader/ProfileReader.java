@@ -44,7 +44,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
     protected final Provider<HttpContext> httpContextProv;
     protected final ProfileHttpConfigPrototype config;
 
-    public ProfileReader(ProfileManager<P> profileManager, Provider<HttpContext> httpContextProv, ProfileHttpConfigPrototype config) {
+    public ProfileReader(ProfileManager profileManager, Provider<HttpContext> httpContextProv, ProfileHttpConfigPrototype config) {
         this.profileManager = profileManager;
         this.httpContextProv = httpContextProv;
         this.config = config;
@@ -97,7 +97,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
 
         var attributes = profileManager.attributes(profile);
         for (var attribute : attributes) {
-            if (!config.getAttributeConfig(attribute.name()).readable) {
+            if (!config.attributeConfig(attribute.name()).readable) {
                 continue;
             }
             var attributeReader = getAttributeReader(attribute);

@@ -49,7 +49,7 @@ public final class DoubleReader<C extends HttpTRContext> extends OriginTeleReade
             }
             return Double.parseDouble(val);
         } catch (Exception ex) {
-            throw new TeleException(messages.invalidNumberFormat(ctx.getParamName()));
+            throw new TeleException(messages.invalidNumberFormat(ctx.paramName()));
         }
     }
 }

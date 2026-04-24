@@ -42,11 +42,11 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
         int i = 0;
         for (DictionaryElement dbe : dictionaryElements) {
-            TypeName implTypeName = ClassName.bestGuess(packageName + '.' + dbe.getImplClassSimpleName());
+            TypeName implTypeName = ClassName.bestGuess(packageName + '.' + dbe.implClassSimpleName());
             producerGenerator.addProduceAnnotation(implTypeName);
 
-            String methodName = "get" + dbe.getOriginBean().simpleName() + i;
-            TypeName retTypeName = TypeName.get(dbe.getOriginBean().originType());
+            String methodName = "get" + dbe.originBean().simpleName() + i;
+            TypeName retTypeName = TypeName.get(dbe.originBean().originType());
             producerGenerator.addImplementMethod(methodName, retTypeName, implTypeName);
             i++;
         }
@@ -55,14 +55,14 @@ public class IocGenerator extends FrameworkAbstractGenerator {
     }
 
     public void generate(DictionaryRegistry dictionaryRegistry) {
-        for (Map.Entry<String, List<DictionaryElement>> entry : dictionaryRegistry.getByPackageMap().entrySet()) {
+        for (Map.Entry<String, List<DictionaryElement>> entry : dictionaryRegistry.byPackageMap().entrySet()) {
             String packageName = entry.getKey();
             List<DictionaryElement> dictElements = entry.getValue();
             if (codegenMode().isOptimized()) {
                 generateIocProduccer(packageName, T9N_PRODUCER, dictElements);
             } else {
                 for (DictionaryElement dictElm : dictElements) {
-                    String t9nProducerName = dictElm.getOriginBean().simpleName() + T9N_PRODUCER;
+                    String t9nProducerName = dictElm.originBean().simpleName() + T9N_PRODUCER;
                     generateIocProduccer(packageName, t9nProducerName, List.of(dictElm));
                 }
             }

@@ -73,7 +73,7 @@ public class PrincipalReader<C extends HttpTRContext> implements HttpTeleReader<
         byte[] principalBytes = decoder.decode(principalBase64);
         byte[] signatureBytes = decoder.decode(signatureBase64);
 
-        boolean valid = MACUtils.verify(config.getSignatureAlgorithm(), principalBytes, config.getSignatureKey(), signatureBytes);
+        boolean valid = MACUtils.verify(config.signatureAlgorithm(), principalBytes, config.signatureKey(), signatureBytes);
 
         if (!valid) {
             throw new SecurityException("Invalid principal signature");

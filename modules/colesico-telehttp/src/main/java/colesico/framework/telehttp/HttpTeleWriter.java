@@ -30,11 +30,11 @@ abstract public class HttpTeleWriter<V, C extends HttpTWContext> implements Tele
         this.httpContextProv = writer.httpContextProv;
     }
 
-    protected final HttpRequest getRequest() {
+    protected final HttpRequest request() {
         return httpContextProv.get().request();
     }
 
-    protected final HttpResponse getResponse() {
+    protected final HttpResponse response() {
         return httpContextProv.get().response();
     }
 

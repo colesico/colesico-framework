@@ -50,14 +50,14 @@ public class BundleGenerator {
     }
 
     protected void generateBundle(BundleElement bundleElement) {
-        FileParser fp = new FileParser(bundleElement.getParentDictionary().getBaseName());
+        FileParser fp = new FileParser(bundleElement.parentDictionary().baseName());
         String filePath = fp.path();
 
         String fileName;
-        if (StringUtils.isEmpty(bundleElement.getLanguageTag())) {
+        if (StringUtils.isEmpty(bundleElement.languageTag())) {
             fileName = fp.fileName() + ".properties";
         } else {
-            fileName = fp.fileName() + '_' + bundleElement.getLanguageTag() + ".properties";
+            fileName = fp.fileName() + '_' + bundleElement.languageTag() + ".properties";
         }
 
         String fullPath = filePath + '/' + fileName;
@@ -69,11 +69,11 @@ public class BundleGenerator {
                 fileName);
 
             try (final Writer writer = new BufferedWriter(fileObj.openWriter())) {
-                writer.write("# This is automatically generated dictionary from " + bundleElement.getParentDictionary().getOriginBean().originType().toString() + "\n");
-                for (TranslationElement te : bundleElement.getTranslations()) {
-                    String val = te.getTranslation();
+                writer.write("# This is automatically generated dictionary from " + bundleElement.parentDictionary().originBean().originType().toString() + "\n");
+                for (TranslationElement te : bundleElement.translations()) {
+                    String val = te.translation();
                     val = StringUtils.replace(val, "\n", "\\n\\\n");
-                    String line = te.getTranslationKey() + '=' + val + "\n";
+                    String line = te.translationKey() + '=' + val + "\n";
                     writer.append(line);
                 }
             }
@@ -85,9 +85,9 @@ public class BundleGenerator {
     }
 
     public void generate(DictionaryRegistry dictionaryRegistry) {
-        for (List<DictionaryElement> dictElements : dictionaryRegistry.getByPackageMap().values()) {
+        for (List<DictionaryElement> dictElements : dictionaryRegistry.byPackageMap().values()) {
             for (DictionaryElement dictElm : dictElements) {
-                for (BundleElement bundleElem : dictElm.getBundlesByLocale().values()) {
+                for (BundleElement bundleElem : dictElm.bundlesByLocale().values()) {
                     generateBundle(bundleElem);
                 }
             }

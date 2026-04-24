@@ -39,12 +39,12 @@ abstract public class AbstractJdbiConfig extends JdbiConfigPrototype {
         this.options = null;
     }
 
-    public final DataSource getDataSource() {
+    public final DataSource dataSource() {
         return dataSource;
     }
 
     @Override
-    public final Polysupplier<JdbiOptionsPrototype> getOptions() {
+    public final Polysupplier<JdbiOptionsPrototype> options() {
         return options;
     }
 

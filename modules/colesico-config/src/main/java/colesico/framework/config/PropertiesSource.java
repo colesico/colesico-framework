@@ -88,7 +88,7 @@ public class PropertiesSource implements ConfigSource {
         final String classpath = params.getOrDefault(CLASSPATH_OPTION, "META-INF");
         String fullPath = StrUtils.concatPath(classpath, fileName, "/");
 
-        try (InputStream is = getClassLoader().getResourceAsStream(fullPath)) {
+        try (InputStream is = classLoader().getResourceAsStream(fullPath)) {
             if (is != null) {
                 logger.debug("Read configuration from resource: " + fullPath);
                 final Properties props = new Properties();
@@ -104,7 +104,7 @@ public class PropertiesSource implements ConfigSource {
         }
     }
 
-    protected ClassLoader getClassLoader() {
+    protected ClassLoader classLoader() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         return classLoader;
     }

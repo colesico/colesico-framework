@@ -224,7 +224,7 @@ public class ConfigParser extends FrameworkAbstractParser {
             AnnotationAssist<FromSource> fromSrcAnn = me.getAnnotation(FromSource.class);
             AnnotationAssist<NotFromSource> notFromSrcAnn = me.getAnnotation(NotFromSource.class);
             if (fromSrcAnn != null && notFromSrcAnn != null) {
-                throw CodegenException.of().message("Simultaneous usage of @FromSource ana @NotFromSource").element(confSourceElm.getSourceType().asClassElement()).build();
+                throw CodegenException.of().message("Simultaneous usage of @FromSource ana @NotFromSource").element(confSourceElm.sourceType().asClassElement()).build();
             }
             if ((fromSrcAnn != null) || (confSourceElm.isBindAll() && (notFromSrcAnn == null))) {
                 confSourceElm.addSourceValue(new SourceValueElement(me));
@@ -235,7 +235,7 @@ public class ConfigParser extends FrameworkAbstractParser {
 
     public ConfigElement parse(ClassElement configImplElement) {
         ConfigElement configElement = parseConfigElement(configImplElement);
-        logger.debug("Configuration " + configElement.getOriginClass().name() + " has been parsed");
+        logger.debug("Configuration " + configElement.originClass().name() + " has been parsed");
         return configElement;
     }
 

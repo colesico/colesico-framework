@@ -53,8 +53,8 @@ public final class TranslationBundleImpl implements TranslationBundle {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("TranslationBundle {\n");
-        sb.append("name=").append(bundle.getName()).append("\n");
-        for (var key : bundle.getKeys()) {
+        sb.append("name=").append(bundle.name()).append("\n");
+        for (var key : bundle.keys()) {
             sb.append(key).append('=').append(bundle.getString(key)).append("\n");
         }
         sb.append("}");

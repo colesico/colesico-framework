@@ -74,7 +74,7 @@ public final class WebletModulator extends RoutesModulator {
     @Override
     protected TRContextElement createReadContext(TeleParameterElement teleParam) {
 
-        String paramName = TeleHttpCodegenUtils.getParamName(teleParam);
+        String paramName = TeleHttpCodegenUtils.paramName(teleParam);
 
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("$T.$N(", ClassName.get(WebletTRContext.class), WebletTRContext.OF_METHOD);
@@ -82,7 +82,7 @@ public final class WebletModulator extends RoutesModulator {
         ServiceCodegenUtils.generateTeleInputType(teleParam, cb);
         cb.add(",");
 
-        String originName = TeleHttpCodegenUtils.getOriginName(teleParam, WebletOrigin.AUTO);
+        String originName = TeleHttpCodegenUtils.originName(teleParam, WebletOrigin.AUTO);
 
         TypeMirror customReader = getCustomReaderClass(teleParam);
 

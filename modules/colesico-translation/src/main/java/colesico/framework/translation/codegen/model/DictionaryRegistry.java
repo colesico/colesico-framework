@@ -47,19 +47,19 @@ public class DictionaryRegistry {
         byPackageMap.clear();
     }
 
-    public Map<String, List<DictionaryElement>> getByPackageMap() {
+    public Map<String, List<DictionaryElement>> byPackageMap() {
         return byPackageMap;
     }
 
 
     public DictionaryElement register(DictionaryElement dictionaryElement) {
 
-        String packageName = dictionaryElement.getOriginBean().packageName();
+        String packageName = dictionaryElement.originBean().packageName();
 
         List<DictionaryElement> packageDictBeans = byPackageMap.computeIfAbsent(packageName, k -> new ArrayList<>());
         packageDictBeans.add(dictionaryElement);
 
-        logger.debug("Dictionary bean " + dictionaryElement.getOriginBean().originType().toString() + " has been registered");
+        logger.debug("Dictionary bean " + dictionaryElement.originBean().originType().toString() + " has been registered");
         return dictionaryElement;
     }
 }

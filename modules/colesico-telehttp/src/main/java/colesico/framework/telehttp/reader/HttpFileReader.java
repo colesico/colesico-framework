@@ -39,6 +39,6 @@ public final class HttpFileReader<C extends HttpTRContext> implements HttpTeleRe
 
     @Override
     public HttpFile read(C context) {
-        return requestProv.get().postFiles().get(context.getParamName());
+        return requestProv.get().postFiles().get(context.paramName());
     }
 }

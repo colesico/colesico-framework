@@ -23,12 +23,12 @@ package colesico.framework.translation;
 public interface TranslationDictionary {
 
     String TRANSLATE_METHOD = "translate";
-    String GET_BUNDLE_METHOD = "getBundle";
-    String GET_BASE_NAME_METHOD = "getBaseName";
+    String BUNDLE_METHOD = "bundle";
+    String BASE_NAME_METHOD = "baseName";
 
     String translate(String key, String defaultValue, Object... params);
 
-    TranslationBundle getBundle();
+    TranslationBundle bundle();
 
-    String getBaseName();
+    String baseName();
 }

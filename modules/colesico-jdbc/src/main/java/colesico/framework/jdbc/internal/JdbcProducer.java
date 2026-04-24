@@ -29,6 +29,6 @@ public class JdbcProducer {
     @Requires(JdbcConditions.DefaultConnection.class)
     @Unscoped
     public Connection getDefaultConnection(TransactionalShell txShell) {
-        return ((JdbcTransactionalShell) txShell).getConnection();
+        return ((JdbcTransactionalShell) txShell).connection();
     }
 }

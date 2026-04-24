@@ -25,23 +25,23 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
 
         colesico.framework.resource.assist.L10nOptionsGenerator optionsGenerator;
 
-        String optionsClassSimpleName = dictionaryElement.getOriginBean().simpleName() + L10N_OPTIONS_CLASS_SUFFIX;
-        String optionsPackage = dictionaryElement.getOriginBean().packageName();
+        String optionsClassSimpleName = dictionaryElement.originBean().simpleName() + L10N_OPTIONS_CLASS_SUFFIX;
+        String optionsPackage = dictionaryElement.originBean().packageName();
 
         logger.debug("Generate  resource L10n options: " + optionsPackage + "." + optionsClassSimpleName);
         optionsGenerator = new colesico.framework.resource.assist.L10nOptionsGenerator(optionsPackage, optionsClassSimpleName, this.getClass(), processingEnv);
 
         CodeBlock.Builder cb = optionsGenerator.configureMethod();
 
-        String resourceNameTemplate = dictionaryElement.getBaseName() + "{Q}";
+        String resourceNameTemplate = dictionaryElement.baseName() + "{Q}";
 
         optionsGenerator.options().baseName(resourceNameTemplate);
         cb.indent();
 
-        Set<String> languageTags = dictionaryElement.getBundlesByLocale().values()
-                .stream().map(BundleElement::getLanguageTag).collect(Collectors.toSet());
+        Set<String> languageTags = dictionaryElement.bundlesByLocale().values()
+                .stream().map(BundleElement::languageTag).collect(Collectors.toSet());
 
-        languageTags.addAll(dictionaryElement.getExtraTranslations());
+        languageTags.addAll(dictionaryElement.extraTranslations());
 
         for (String languageTag : languageTags) {
             if (StringUtils.isEmpty(languageTag)) {
@@ -69,7 +69,7 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
         }
 
         cb.add(";");
-        optionsGenerator.generate(dictionaryElement.getOriginBean().unwrap());
+        optionsGenerator.generate(dictionaryElement.originBean().unwrap());
 
     }
 

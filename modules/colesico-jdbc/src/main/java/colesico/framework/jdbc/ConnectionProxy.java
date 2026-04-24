@@ -26,305 +26,305 @@ import java.util.concurrent.Executor;
  */
 abstract public class ConnectionProxy implements Connection {
 
-    abstract public Connection getPrimaryConnection();
+    abstract public Connection primaryConnection();
 
     @Override
     public Statement createStatement() throws SQLException {
-        return getPrimaryConnection().createStatement();
+        return primaryConnection().createStatement();
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        return getPrimaryConnection().prepareStatement(sql);
+        return primaryConnection().prepareStatement(sql);
     }
 
     @Override
     public CallableStatement prepareCall(String sql) throws SQLException {
-        return getPrimaryConnection().prepareCall(sql);
+        return primaryConnection().prepareCall(sql);
     }
 
     @Override
     public String nativeSQL(String sql) throws SQLException {
-        return getPrimaryConnection().nativeSQL(sql);
+        return primaryConnection().nativeSQL(sql);
     }
 
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
-        getPrimaryConnection().setAutoCommit(autoCommit);
+        primaryConnection().setAutoCommit(autoCommit);
     }
 
     @Override
     public boolean getAutoCommit() throws SQLException {
-        return getPrimaryConnection().getAutoCommit();
+        return primaryConnection().getAutoCommit();
     }
 
     @Override
     public void commit() throws SQLException {
-        getPrimaryConnection().commit();
+        primaryConnection().commit();
     }
 
     @Override
     public void rollback() throws SQLException {
-        getPrimaryConnection().rollback();
+        primaryConnection().rollback();
     }
 
     @Override
     public void close() throws SQLException {
-        getPrimaryConnection().close();
+        primaryConnection().close();
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        return getPrimaryConnection().isClosed();
+        return primaryConnection().isClosed();
     }
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
-        return getPrimaryConnection().getMetaData();
+        return primaryConnection().getMetaData();
     }
 
     @Override
     public void setReadOnly(boolean readOnly) throws SQLException {
-        getPrimaryConnection().setReadOnly(readOnly);
+        primaryConnection().setReadOnly(readOnly);
     }
 
     @Override
     public boolean isReadOnly() throws SQLException {
-        return getPrimaryConnection().isReadOnly();
+        return primaryConnection().isReadOnly();
     }
 
     @Override
     public void setCatalog(String catalog) throws SQLException {
-        getPrimaryConnection().setCatalog(catalog);
+        primaryConnection().setCatalog(catalog);
     }
 
     @Override
     public String getCatalog() throws SQLException {
-        return getPrimaryConnection().getCatalog();
+        return primaryConnection().getCatalog();
     }
 
     @Override
     public void setTransactionIsolation(int level) throws SQLException {
-        getPrimaryConnection().setTransactionIsolation(level);
+        primaryConnection().setTransactionIsolation(level);
     }
 
     @Override
     public int getTransactionIsolation() throws SQLException {
-        return getPrimaryConnection().getTransactionIsolation();
+        return primaryConnection().getTransactionIsolation();
     }
 
     @Override
     public SQLWarning getWarnings() throws SQLException {
-        return getPrimaryConnection().getWarnings();
+        return primaryConnection().getWarnings();
     }
 
     @Override
     public void clearWarnings() throws SQLException {
-        getPrimaryConnection().clearWarnings();
+        primaryConnection().clearWarnings();
     }
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-        return getPrimaryConnection().createStatement(resultSetType, resultSetConcurrency);
+        return primaryConnection().createStatement(resultSetType, resultSetConcurrency);
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-        return getPrimaryConnection().prepareStatement(sql, resultSetType, resultSetConcurrency);
+        return primaryConnection().prepareStatement(sql, resultSetType, resultSetConcurrency);
     }
 
     @Override
     public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-        return getPrimaryConnection().prepareCall(sql, resultSetType, resultSetConcurrency);
+        return primaryConnection().prepareCall(sql, resultSetType, resultSetConcurrency);
     }
 
     @Override
     public Map<String, Class<?>> getTypeMap() throws SQLException {
-        return getPrimaryConnection().getTypeMap();
+        return primaryConnection().getTypeMap();
     }
 
     @Override
     public void setTypeMap(Map<String, Class<?>> map) throws SQLException {
-        getPrimaryConnection().setTypeMap(map);
+        primaryConnection().setTypeMap(map);
     }
 
     @Override
     public void setHoldability(int holdability) throws SQLException {
-        getPrimaryConnection().setHoldability(holdability);
+        primaryConnection().setHoldability(holdability);
     }
 
     @Override
     public int getHoldability() throws SQLException {
-        return getPrimaryConnection().getHoldability();
+        return primaryConnection().getHoldability();
     }
 
     @Override
     public Savepoint setSavepoint() throws SQLException {
-        return getPrimaryConnection().setSavepoint();
+        return primaryConnection().setSavepoint();
     }
 
     @Override
     public Savepoint setSavepoint(String name) throws SQLException {
-        return getPrimaryConnection().setSavepoint(name);
+        return primaryConnection().setSavepoint(name);
     }
 
     @Override
     public void rollback(Savepoint savepoint) throws SQLException {
-        getPrimaryConnection().rollback(savepoint);
+        primaryConnection().rollback(savepoint);
     }
 
     @Override
     public void releaseSavepoint(Savepoint savepoint) throws SQLException {
-        getPrimaryConnection().releaseSavepoint(savepoint);
+        primaryConnection().releaseSavepoint(savepoint);
     }
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        return getPrimaryConnection().createStatement(resultSetType, resultSetConcurrency, resultSetHoldability);
+        return primaryConnection().createStatement(resultSetType, resultSetConcurrency, resultSetHoldability);
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        return getPrimaryConnection().prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+        return primaryConnection().prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
     }
 
     @Override
     public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        return getPrimaryConnection().prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+        return primaryConnection().prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
-        return getPrimaryConnection().prepareStatement(sql, autoGeneratedKeys);
+        return primaryConnection().prepareStatement(sql, autoGeneratedKeys);
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int[] columnIndexes) throws SQLException {
-        return getPrimaryConnection().prepareStatement(sql, columnIndexes);
+        return primaryConnection().prepareStatement(sql, columnIndexes);
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, String[] columnNames) throws SQLException {
-        return getPrimaryConnection().prepareStatement(sql, columnNames);
+        return primaryConnection().prepareStatement(sql, columnNames);
     }
 
     @Override
     public Clob createClob() throws SQLException {
-        return getPrimaryConnection().createClob();
+        return primaryConnection().createClob();
     }
 
     @Override
     public Blob createBlob() throws SQLException {
-        return getPrimaryConnection().createBlob();
+        return primaryConnection().createBlob();
     }
 
     @Override
     public NClob createNClob() throws SQLException {
-        return getPrimaryConnection().createNClob();
+        return primaryConnection().createNClob();
     }
 
     @Override
     public SQLXML createSQLXML() throws SQLException {
-        return getPrimaryConnection().createSQLXML();
+        return primaryConnection().createSQLXML();
     }
 
     @Override
     public boolean isValid(int timeout) throws SQLException {
-        return getPrimaryConnection().isValid(timeout);
+        return primaryConnection().isValid(timeout);
     }
 
     @Override
     public void setClientInfo(String name, String value) throws SQLClientInfoException {
-        getPrimaryConnection().setClientInfo(name, value);
+        primaryConnection().setClientInfo(name, value);
     }
 
     @Override
     public void setClientInfo(Properties properties) throws SQLClientInfoException {
-        getPrimaryConnection().setClientInfo(properties);
+        primaryConnection().setClientInfo(properties);
     }
 
     @Override
     public String getClientInfo(String name) throws SQLException {
-        return getPrimaryConnection().getClientInfo(name);
+        return primaryConnection().getClientInfo(name);
     }
 
     @Override
     public Properties getClientInfo() throws SQLException {
-        return getPrimaryConnection().getClientInfo();
+        return primaryConnection().getClientInfo();
     }
 
     @Override
     public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
-        return getPrimaryConnection().createArrayOf(typeName, elements);
+        return primaryConnection().createArrayOf(typeName, elements);
     }
 
     @Override
     public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
-        return getPrimaryConnection().createStruct(typeName, attributes);
+        return primaryConnection().createStruct(typeName, attributes);
     }
 
     @Override
     public void setSchema(String schema) throws SQLException {
-        getPrimaryConnection().setSchema(schema);
+        primaryConnection().setSchema(schema);
     }
 
     @Override
     public String getSchema() throws SQLException {
-        return getPrimaryConnection().getSchema();
+        return primaryConnection().getSchema();
     }
 
     @Override
     public void abort(Executor executor) throws SQLException {
-        getPrimaryConnection().abort(executor);
+        primaryConnection().abort(executor);
     }
 
     @Override
     public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
-        getPrimaryConnection().setNetworkTimeout(executor, milliseconds);
+        primaryConnection().setNetworkTimeout(executor, milliseconds);
     }
 
     @Override
     public int getNetworkTimeout() throws SQLException {
-        return getPrimaryConnection().getNetworkTimeout();
+        return primaryConnection().getNetworkTimeout();
     }
 
     @Override
     public void beginRequest() throws SQLException {
-        getPrimaryConnection().beginRequest();
+        primaryConnection().beginRequest();
     }
 
     @Override
     public void endRequest() throws SQLException {
-        getPrimaryConnection().endRequest();
+        primaryConnection().endRequest();
     }
 
     @Override
     public boolean setShardingKeyIfValid(ShardingKey shardingKey, ShardingKey superShardingKey, int timeout) throws SQLException {
-        return getPrimaryConnection().setShardingKeyIfValid(shardingKey, superShardingKey, timeout);
+        return primaryConnection().setShardingKeyIfValid(shardingKey, superShardingKey, timeout);
     }
 
     @Override
     public boolean setShardingKeyIfValid(ShardingKey shardingKey, int timeout) throws SQLException {
-        return getPrimaryConnection().setShardingKeyIfValid(shardingKey, timeout);
+        return primaryConnection().setShardingKeyIfValid(shardingKey, timeout);
     }
 
     @Override
     public void setShardingKey(ShardingKey shardingKey, ShardingKey superShardingKey) throws SQLException {
-        getPrimaryConnection().setShardingKey(shardingKey, superShardingKey);
+        primaryConnection().setShardingKey(shardingKey, superShardingKey);
     }
 
     @Override
     public void setShardingKey(ShardingKey shardingKey) throws SQLException {
-        getPrimaryConnection().setShardingKey(shardingKey);
+        primaryConnection().setShardingKey(shardingKey);
     }
 
     @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
-        return getPrimaryConnection().unwrap(iface);
+        return primaryConnection().unwrap(iface);
     }
 
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return getPrimaryConnection().isWrapperFor(iface);
+        return primaryConnection().isWrapperFor(iface);
     }
 }

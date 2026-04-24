@@ -34,6 +34,6 @@ public class ExtraJdbiProducer {
     @Unscoped
     @Named(EXTRA)
     public Handle getHandle(@Named(EXTRA) TransactionalShell txShell) {
-        return ((JdbiTransactionalShell) txShell).getHandle();
+        return ((JdbiTransactionalShell) txShell).handle();
     }
 }

@@ -26,7 +26,7 @@ public final class JsonWriter extends ObjectWriter {
     @Override
     public void write(Object value, RestletTWContext context) {
         if (value == null) {
-            getResponse().sendText("", JSON_CONTENT_TYPE, 204);
+            response().sendText("", JSON_CONTENT_TYPE, 204);
             return;
         }
 
@@ -35,6 +35,6 @@ public final class JsonWriter extends ObjectWriter {
         if (code==null){
             code = 200;
         }
-        getResponse().sendData(ByteBuffer.wrap(json.getBytes(StandardCharsets.UTF_8)), JSON_CONTENT_TYPE, code);
+        response().sendData(ByteBuffer.wrap(json.getBytes(StandardCharsets.UTF_8)), JSON_CONTENT_TYPE, code);
     }
 }

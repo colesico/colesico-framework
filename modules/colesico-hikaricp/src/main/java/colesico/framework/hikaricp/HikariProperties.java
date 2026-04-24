@@ -46,7 +46,7 @@ abstract public class HikariProperties extends HikariConfigPrototype {
      * Properties file name.
      * Default: hikari.properties
      */
-    protected String getFileName() {
+    protected String fileName() {
         return "hikari.properties";
     }
 
@@ -54,7 +54,7 @@ abstract public class HikariProperties extends HikariConfigPrototype {
      * Properties file  directory
      * Default: ./config
      */
-    protected String getDirectory() {
+    protected String directory() {
         return "./config";
     }
 
@@ -62,15 +62,15 @@ abstract public class HikariProperties extends HikariConfigPrototype {
      * Properties file classpath directory
      * Default: META-INF
      */
-    protected String getClasspath() {
+    protected String classpath() {
         return "META-INF";
     }
 
     @Override
-    public final HikariConfig getHikariConfig() {
+    public final HikariConfig hikariConfig() {
 
         final Properties props = new Properties();
-        String fullPath = StrUtils.concatPath(getDirectory(), getFileName(), "/");
+        String fullPath = StrUtils.concatPath(directory(), fileName(), "/");
         final File directoryFile = new File(fullPath);
         if (directoryFile.exists()) {
             logger.info("Read HikariCP configuration from file: " + fullPath);
@@ -84,7 +84,7 @@ abstract public class HikariProperties extends HikariConfigPrototype {
             }
         }
 
-        fullPath = StrUtils.concatPath(getClasspath(), getFileName(), "/");
+        fullPath = StrUtils.concatPath(classpath(), fileName(), "/");
 
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         try (InputStream is = loader.getResourceAsStream(fullPath)) {
@@ -105,8 +105,8 @@ abstract public class HikariProperties extends HikariConfigPrototype {
 
     @Override
     public String toString() {
-        return "HikariProperties{" + getDirectory() + "/" + getFileName()
-                + " | " + getClasspath() + "/" + getFileName() + "}";
+        return "HikariProperties{" + directory() + "/" + fileName()
+                + " | " + classpath() + "/" + fileName() + "}";
     }
 
 }

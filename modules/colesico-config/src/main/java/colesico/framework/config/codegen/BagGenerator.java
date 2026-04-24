@@ -39,10 +39,10 @@ public class BagGenerator extends FrameworkAbstractGenerator {
     }
 
     private void generateBagProperties(TypeSpec.Builder bagBuilder, ConfigElement confElement) {
-        for (SourceValueElement sve : confElement.getSource().getSourceValues()) {
+        for (SourceValueElement sve : confElement.source().sourceValues()) {
 
-            String fieldName = sve.getOriginField().name();
-            TypeName fieldTypeName = TypeName.get(sve.getOriginField().originType());
+            String fieldName = sve.originField().name();
+            TypeName fieldTypeName = TypeName.get(sve.originField().originType());
             FieldSpec.Builder fb = FieldSpec.builder(fieldTypeName, fieldName, Modifier.PRIVATE);
             bagBuilder.addField(fb.build());
 
@@ -68,8 +68,8 @@ public class BagGenerator extends FrameworkAbstractGenerator {
     }
 
     public void generateConfigBag(ConfigElement confElement) {
-        String classSimpleName = confElement.getSource().getBagClassSimpleName();
-        String packageName = confElement.getOriginClass().packageName();
+        String classSimpleName = confElement.source().bagClassSimpleName();
+        String packageName = confElement.originClass().packageName();
 
         TypeSpec.Builder bagBuilder = TypeSpec.classBuilder(classSimpleName);
 
@@ -81,13 +81,13 @@ public class BagGenerator extends FrameworkAbstractGenerator {
         generateBagProperties(bagBuilder, confElement);
 
         final TypeSpec typeSpec = bagBuilder.build();
-        CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, confElement.getOriginClass().unwrap());
+        CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, confElement.originClass().unwrap());
     }
 
     public void generate(List<ConfigElement> configElements) {
         for (ConfigElement confElement : configElements) {
             logger.debug("Generate config bag for: " + confElement.toString());
-            if (confElement.getSource() != null) {
+            if (confElement.source() != null) {
                 generateConfigBag(confElement);
             }
         }

@@ -44,15 +44,15 @@ public class ConfigSourceElement {
         sourceValues.add(sv);
     }
 
-    public ClassType getSourceType() {
+    public ClassType sourceType() {
         return sourceType;
     }
 
-    public Map<String, String> getOptions() {
+    public Map<String, String> options() {
         return options;
     }
 
-    public List<SourceValueElement> getSourceValues() {
+    public List<SourceValueElement> sourceValues() {
         return sourceValues;
     }
 
@@ -60,8 +60,8 @@ public class ConfigSourceElement {
         return bindAll;
     }
 
-    public String getBagClassSimpleName() {
-        return parentConfig.getOriginClass().simpleName() + BAG_CLASS_SUFFIX;
+    public String bagClassSimpleName() {
+        return parentConfig.originClass().simpleName() + BAG_CLASS_SUFFIX;
     }
 
 }

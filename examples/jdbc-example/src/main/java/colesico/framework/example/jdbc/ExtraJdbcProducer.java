@@ -50,7 +50,7 @@ public class ExtraJdbcProducer {
     @Unscoped
     @Named(EXTRA)
     public Connection getConnection(@Named(EXTRA) TransactionalShell txShell) {
-        return ((JdbcTransactionalShell) txShell).getConnection();
+        return ((JdbcTransactionalShell) txShell).connection();
     }
 
     /**
@@ -59,6 +59,6 @@ public class ExtraJdbcProducer {
     @Unscoped
     @Named(EXTRA)
     public DataSource getDataSource(@Named(EXTRA) TransactionalShell txShell) {
-        return ((JdbcTransactionalShell) txShell).getDataSource();
+        return ((JdbcTransactionalShell) txShell).dataSource();
     }
 }

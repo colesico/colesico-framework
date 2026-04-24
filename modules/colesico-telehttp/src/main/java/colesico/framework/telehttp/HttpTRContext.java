@@ -36,14 +36,14 @@ abstract public class HttpTRContext extends TRContext {
     /**
      * Http value name
      */
-    public final String getParamName() {
+    public final String paramName() {
         return paramName;
     }
 
     /**
      * Origin name
      */
-    public String getOriginName() {
+    public String originName() {
         return originName;
     }
 

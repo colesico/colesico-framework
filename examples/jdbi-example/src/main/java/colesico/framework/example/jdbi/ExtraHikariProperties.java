@@ -7,7 +7,7 @@ import colesico.framework.hikaricp.HikariProperties;
 public class ExtraHikariProperties extends HikariProperties {
 
     @Override
-    protected String getFileName() {
+    protected String fileName() {
         return "extra-hikari.properties";
     }
 }

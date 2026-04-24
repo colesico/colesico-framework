@@ -53,7 +53,7 @@ public class DictionaryGenerator {
         cob.addAnnotation(Inject.class);
         cob.addModifiers(Modifier.PUBLIC);
         cob.addParameter(ClassName.get(TranslationKit.class), AbstractDictionary.TRANSLATION_KIT_FIELD);
-        cob.addStatement("super($N,$S)", AbstractDictionary.TRANSLATION_KIT_FIELD, dictionaryElement.getBaseName());
+        cob.addStatement("super($N,$S)", AbstractDictionary.TRANSLATION_KIT_FIELD, dictionaryElement.baseName());
         dictionaryBuilder.addMethod(cob.build());
     }
 
@@ -90,13 +90,13 @@ public class DictionaryGenerator {
     }
 
     public void generate(DictionaryElement dictionaryElement) {
-        String beanClassName = dictionaryElement.getImplClassSimpleName();
+        String beanClassName = dictionaryElement.implClassSimpleName();
         logger.debug("Generate  dictionary bean: " + beanClassName);
         TypeSpec.Builder dictionaryBuilder = TypeSpec.classBuilder(beanClassName);
-        dictionaryBuilder.addSuperinterface(TypeName.get(dictionaryElement.getOriginBean().originType()));
+        dictionaryBuilder.addSuperinterface(TypeName.get(dictionaryElement.originBean().originType()));
         dictionaryBuilder.superclass(ClassName.get(AbstractDictionary.class));
 
-        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "Origin: " + dictionaryElement.getOriginBean().originType().toString());
+        AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null, "Origin: " + dictionaryElement.originBean().originType().toString());
         dictionaryBuilder.addAnnotation(genstamp);
 
         dictionaryBuilder.addAnnotation(Singleton.class);
@@ -105,7 +105,7 @@ public class DictionaryGenerator {
 
         generateConstructor(dictionaryBuilder, dictionaryElement);
 
-        for (MethodElement keyMethod : dictionaryElement.getKeyMethods()) {
+        for (MethodElement keyMethod : dictionaryElement.keyMethods()) {
             MethodSpec ms = generateProxyMethod(dictionaryElement, keyMethod);
             dictionaryBuilder.addMethod(ms);
         }
@@ -113,8 +113,8 @@ public class DictionaryGenerator {
         try {
             final TypeSpec typeSpec = dictionaryBuilder.build();
             // Create class source file
-            Element[] linkedElm = new Element[]{dictionaryElement.getOriginBean().unwrap()};
-            String packageName = dictionaryElement.getOriginBean().packageName();
+            Element[] linkedElm = new Element[]{dictionaryElement.originBean().unwrap()};
+            String packageName = dictionaryElement.originBean().packageName();
             CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, linkedElm);
         } catch (Exception e) {
             logger.debug("Error generating dictionary bean:" + ExceptionUtils.getRootCauseMessage(e));

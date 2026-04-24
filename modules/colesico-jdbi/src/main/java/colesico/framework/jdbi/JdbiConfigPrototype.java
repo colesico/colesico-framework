@@ -29,7 +29,7 @@ import javax.sql.DataSource;
 @ConfigPrototype(model = ConfigModel.MESSAGE, target = Jdbi.class)
 abstract public class JdbiConfigPrototype {
 
-    abstract public DataSource getDataSource();
+    abstract public DataSource dataSource();
 
-    abstract public Polysupplier<JdbiOptionsPrototype> getOptions();
+    abstract public Polysupplier<JdbiOptionsPrototype> options();
 }

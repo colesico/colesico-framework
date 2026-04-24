@@ -11,11 +11,11 @@ import javax.lang.model.util.Elements;
 public class RestletCodegenUtils {
 
     public static String getParamName(TeleEntryElement entry) {
-        return TeleHttpCodegenUtils.getParamName(entry);
+        return TeleHttpCodegenUtils.paramName(entry);
     }
 
     public static String getOriginName(TeleEntryElement teleArg) {
-        return TeleHttpCodegenUtils.getOriginName(teleArg, RestletOrigin.AUTO);
+        return TeleHttpCodegenUtils.originName(teleArg, RestletOrigin.AUTO);
     }
 
     public static TypeMirror getCustomReaderClass(TeleParameterElement teleParam, Elements elementUtils) {

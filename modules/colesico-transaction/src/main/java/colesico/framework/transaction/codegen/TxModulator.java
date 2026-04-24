@@ -43,11 +43,11 @@ public class TxModulator extends Modulator {
         service.setProperty(context);
     }
 
-    protected TxModulatorContext getModulatorContext() {
-        return getService().property(TxModulatorContext.class);
+    protected TxModulatorContext modulatorContext() {
+        return service().property(TxModulatorContext.class);
     }
 
-    protected String getPropogationMethodName(TransactionPropagation propogation) {
+    protected String propogationMethodName(TransactionPropagation propogation) {
         switch (propogation) {
             case REQUIRED:
                 return TransactionalShell.REQUIRED_METHOD;
@@ -82,7 +82,7 @@ public class TxModulator extends Modulator {
 
         // Add shell field
 
-        TxModulatorContext ctx = getModulatorContext();
+        TxModulatorContext ctx = modulatorContext();
         Integer exIdx = ctx.getShellIndex(txAnnotation.unwrap().shell());
         String shellFieldName = TX_SHELL_FIELD_PREFIX + exIdx;
 
@@ -95,7 +95,7 @@ public class TxModulator extends Modulator {
 
         // Add interceptor
 
-        String propogationMethodName = getPropogationMethodName(txAnnotation.unwrap().propagation());
+        String propogationMethodName = propogationMethodName(txAnnotation.unwrap().propagation());
 
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("$N->", Interceptor.INVOCATION_CONTEXT_PARAM);

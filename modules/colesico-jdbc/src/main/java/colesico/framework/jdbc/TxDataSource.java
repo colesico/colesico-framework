@@ -33,8 +33,8 @@ public class TxDataSource extends DataSourceProxy {
     }
 
     @Override
-    public DataSource getPrimaryDataSource() {
-        return txShell.getDataSource();
+    public DataSource primaryDataSource() {
+        return txShell.dataSource();
     }
 
     @Override
@@ -51,8 +51,8 @@ public class TxDataSource extends DataSourceProxy {
         }
 
         @Override
-        public Connection getPrimaryConnection() {
-            return txShell.getConnection();
+        public Connection primaryConnection() {
+            return txShell.connection();
         }
 
         @Override

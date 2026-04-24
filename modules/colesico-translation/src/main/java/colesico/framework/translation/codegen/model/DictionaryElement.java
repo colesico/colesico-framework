@@ -75,27 +75,27 @@ public class DictionaryElement {
         translationsBundleElement.addTranslation(keyMethod, translation);
     }
 
-    public String getBaseName() {
+    public String baseName() {
         return baseName;
     }
 
-    public ClassElement getOriginBean() {
+    public ClassElement originBean() {
         return originBean;
     }
 
-    public Set<MethodElement> getKeyMethods() {
+    public Set<MethodElement> keyMethods() {
         return keyMethods;
     }
 
-    public String getImplClassSimpleName() {
-        return getOriginBean().simpleName() + "Impl";
+    public String implClassSimpleName() {
+        return originBean().simpleName() + "Impl";
     }
 
-    public Map<String, BundleElement> getBundlesByLocale() {
+    public Map<String, BundleElement> bundlesByLocale() {
         return bundlesByLocale;
     }
 
-    public Set<String> getExtraTranslations() {
+    public Set<String> extraTranslations() {
         return extraTranslations;
     }
 

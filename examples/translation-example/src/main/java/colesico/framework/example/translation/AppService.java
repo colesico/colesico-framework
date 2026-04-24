@@ -18,7 +18,6 @@ package colesico.framework.example.translation;
 
 import colesico.framework.example.translation.dictionary.AppDictionary;
 import colesico.framework.service.Service;
-import jakarta.inject.Singleton;
 
 @Service
 public class AppService {
@@ -30,7 +29,7 @@ public class AppService {
     }
 
     public String sayHello() {
-        System.out.println("Bundle: " + dictionary.getBundle());
+        System.out.println("Bundle: " + dictionary.bundle());
         return dictionary.hello();
     }
 

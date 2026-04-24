@@ -29,7 +29,7 @@ abstract public class AbstractDictionary implements TranslationDictionary {
         this.translationKit = translationKit;
     }
 
-    public final String getBaseName() {
+    public final String baseName() {
         return baseName;
     }
 
@@ -43,7 +43,7 @@ abstract public class AbstractDictionary implements TranslationDictionary {
     }
 
     @Override
-    public final TranslationBundle getBundle() {
+    public final TranslationBundle bundle() {
         return translationKit.getBundle(baseName);
     }
 

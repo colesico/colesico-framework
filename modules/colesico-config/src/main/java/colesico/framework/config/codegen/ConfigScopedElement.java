@@ -16,7 +16,7 @@ public class ConfigScopedElement {
         this.specifiedExplicitly = specifiedExplicitly;
     }
 
-    public ClassType getScopedAnnotation() {
+    public ClassType scopedAnnotation() {
         return scopedAnnotation;
     }
 

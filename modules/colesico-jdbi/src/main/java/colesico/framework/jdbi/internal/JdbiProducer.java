@@ -42,9 +42,9 @@ public class JdbiProducer {
     @Unscoped
     @Classed(JdbiConfigPrototype.class)
     public Jdbi jdbiFactory(@Message JdbiConfigPrototype config) {
-        final Jdbi jdbi = Jdbi.create(config.getDataSource());
-        if (config.getOptions() != null) {
-            config.getOptions().forEach(o -> o.applyOptions(jdbi));
+        final Jdbi jdbi = Jdbi.create(config.dataSource());
+        if (config.options() != null) {
+            config.options().forEach(o -> o.applyOptions(jdbi));
         }
         return jdbi;
     }
@@ -54,7 +54,7 @@ public class JdbiProducer {
      */
     @Unscoped
     public Handle getHandle(TransactionalShell txShell) {
-        return ((JdbiTransactionalShell) txShell).getHandle();
+        return ((JdbiTransactionalShell) txShell).handle();
     }
 
     /**
@@ -73,6 +73,6 @@ public class JdbiProducer {
     @Unscoped
     @Substitute(STUB)
     public Connection getDefaultConnection(TransactionalShell txShell) {
-        return ((JdbiTransactionalShell) txShell).getHandle().getConnection();
+        return ((JdbiTransactionalShell) txShell).handle().getConnection();
     }
 }

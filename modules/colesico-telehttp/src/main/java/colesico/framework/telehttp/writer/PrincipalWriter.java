@@ -63,7 +63,7 @@ public final class PrincipalWriter<C extends HttpTWContext> extends HttpTeleWrit
         if (principal != null) {
 
             byte[] principalBytes = principalSerializer.serialize(principal);
-            byte[] signatureBytes = MACUtils.sign(config.getSignatureAlgorithm(), principalBytes, config.getSignatureKey());
+            byte[] signatureBytes = MACUtils.sign(config.signatureAlgorithm(), principalBytes, config.signatureKey());
 
             Base64.Encoder encoder = Base64.getEncoder();
             String principalBas64 = encoder.encodeToString(principalBytes);
@@ -72,7 +72,7 @@ public final class PrincipalWriter<C extends HttpTWContext> extends HttpTeleWrit
             StringBuilder sb = new StringBuilder();
             sb.append(principalBas64).append(ITEM_DELIMITER).append(signatureBase64);
             principalValue = sb.toString();
-            expires.add(Calendar.DAY_OF_MONTH, config.getCookieValidityDays());
+            expires.add(Calendar.DAY_OF_MONTH, config.cookieValidityDays());
         } else {
             principalValue = null;
             expires.add(Calendar.DAY_OF_MONTH, -1);

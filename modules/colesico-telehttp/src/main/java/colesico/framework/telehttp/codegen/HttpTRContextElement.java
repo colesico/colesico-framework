@@ -20,15 +20,15 @@ public class HttpTRContextElement extends TRContextElement {
         this.customReader = customReader;
     }
 
-    public String getParamName() {
+    public String paramName() {
         return paramName;
     }
 
-    public String getOriginName() {
+    public String originName() {
         return originName;
     }
 
-    public ClassType getCustomReader() {
+    public ClassType customReader() {
         return customReader;
     }
 }

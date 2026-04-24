@@ -67,7 +67,7 @@ abstract public class ParserElement extends Assist {
         return elementUtils().getModuleOf(unwrap());
     }
 
-    public PackageElement packageElement() {
+    public PackageElement packageElm() {
         Element enclosingElement = unwrap().getEnclosingElement();
         while (!(enclosingElement instanceof PackageElement)) {
             enclosingElement = enclosingElement.getEnclosingElement();
@@ -77,7 +77,7 @@ abstract public class ParserElement extends Assist {
     }
 
     public String packageName() {
-        PackageElement packageElement = packageElement();
+        PackageElement packageElement = packageElm();
         return packageElement.getQualifiedName().toString();
     }
 
@@ -116,7 +116,7 @@ abstract public class ParserElement extends Assist {
             }
             ModuleElement.ExportsDirective ed = (ModuleElement.ExportsDirective) d;
             String pkgName = ed.getPackage().getQualifiedName().toString();
-            if (!packageElement().getQualifiedName().toString().equals(pkgName)) {
+            if (!packageElm().getQualifiedName().toString().equals(pkgName)) {
                 continue;
             }
             List<? extends ModuleElement> targetModules = ed.getTargetModules();

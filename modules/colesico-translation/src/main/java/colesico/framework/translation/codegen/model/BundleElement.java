@@ -41,22 +41,22 @@ public class BundleElement {
         translations.add(translationElement);
     }
 
-    public DictionaryElement getParentDictionary() {
+    public DictionaryElement parentDictionary() {
         return parentDictionary;
     }
 
-    public String getLanguageTag() {
+    public String languageTag() {
         return languageTag;
     }
 
-    public Set<TranslationElement> getTranslations() {
+    public Set<TranslationElement> translations() {
         return translations;
     }
 
     @Override
     public String toString() {
         return "TranslationsBundleElement{" +
-            " DictionaryBean=" + parentDictionary.getOriginBean().originType().toString() +
+            " DictionaryBean=" + parentDictionary.originBean().originType().toString() +
             ", Locale='" + languageTag + '\'' +
             '}';
     }

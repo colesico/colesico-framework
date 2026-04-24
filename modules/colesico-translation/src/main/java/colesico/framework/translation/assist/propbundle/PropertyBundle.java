@@ -40,7 +40,7 @@ public class PropertyBundle {
         return null;
     }
 
-    public Collection<String> getKeys() {
+    public Collection<String> keys() {
         Collection<String> result = new ArrayList<>();
         var e = properties.keys();
         while (e.hasMoreElements()) {
@@ -49,7 +49,7 @@ public class PropertyBundle {
         return result;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 

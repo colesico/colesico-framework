@@ -26,51 +26,51 @@ import java.util.logging.Logger;
  */
 abstract public class DataSourceProxy implements DataSource {
 
-    abstract public DataSource getPrimaryDataSource();
+    abstract public DataSource primaryDataSource();
 
     @Override
     public Connection getConnection() throws SQLException {
-        return getPrimaryDataSource().getConnection();
+        return primaryDataSource().getConnection();
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        return getPrimaryDataSource().getConnection(username, password);
+        return primaryDataSource().getConnection(username, password);
     }
 
     @Override
     public PrintWriter getLogWriter() throws SQLException {
-        return getPrimaryDataSource().getLogWriter();
+        return primaryDataSource().getLogWriter();
     }
 
     @Override
     public void setLogWriter(PrintWriter out) throws SQLException {
-        getPrimaryDataSource().setLogWriter(out);
+        primaryDataSource().setLogWriter(out);
     }
 
     @Override
     public void setLoginTimeout(int seconds) throws SQLException {
-        getPrimaryDataSource().setLoginTimeout(seconds);
+        primaryDataSource().setLoginTimeout(seconds);
     }
 
     @Override
     public int getLoginTimeout() throws SQLException {
-        return getPrimaryDataSource().getLoginTimeout();
+        return primaryDataSource().getLoginTimeout();
     }
 
     @Override
     public ConnectionBuilder createConnectionBuilder() throws SQLException {
-        return getPrimaryDataSource().createConnectionBuilder();
+        return primaryDataSource().createConnectionBuilder();
     }
 
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        return getPrimaryDataSource().getParentLogger();
+        return primaryDataSource().getParentLogger();
     }
 
     @Override
     public ShardingKeyBuilder createShardingKeyBuilder() throws SQLException {
-        return getPrimaryDataSource().createShardingKeyBuilder();
+        return primaryDataSource().createShardingKeyBuilder();
     }
 
     @Override
@@ -78,11 +78,11 @@ abstract public class DataSourceProxy implements DataSource {
         if (iface.isInstance(this)) {
             return (T) this;
         }
-        return getPrimaryDataSource().unwrap(iface);
+        return primaryDataSource().unwrap(iface);
     }
 
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return (iface.isInstance(this) || getPrimaryDataSource().isWrapperFor(iface));
+        return (iface.isInstance(this) || primaryDataSource().isWrapperFor(iface));
     }
 }

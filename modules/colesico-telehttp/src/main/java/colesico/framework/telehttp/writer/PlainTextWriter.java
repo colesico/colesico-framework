@@ -21,7 +21,7 @@ public final class PlainTextWriter<C extends HttpTWContext> extends HttpTeleWrit
     @Override
     public void write(Object value, C context) {
         if (value == null) {
-            getResponse().sendText("", CONTENT_TYPE, 204);
+            response().sendText("", CONTENT_TYPE, 204);
         }
 
         String str = "";
@@ -41,6 +41,6 @@ public final class PlainTextWriter<C extends HttpTWContext> extends HttpTeleWrit
             str = value.toString();
         }
 
-        getResponse().sendText(str, CONTENT_TYPE, 200);
+        response().sendText(str, CONTENT_TYPE, 200);
     }
 }

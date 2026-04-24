@@ -81,11 +81,11 @@ public class JdbcTransactionalShell extends AbstractTransactionalShell<JdbcTrans
             try {
                 result = unitOfWork.execute();
             } finally {
-                connection = tx.getConnection();
+                connection = tx.connection();
             }
 
             if (connection != null) {
-                if (tx.getRollbackOnly()) {
+                if (tx.rollbackOnly()) {
                     connection.rollback();
                 } else {
                     connection.commit();
@@ -116,7 +116,7 @@ public class JdbcTransactionalShell extends AbstractTransactionalShell<JdbcTrans
 
     @Override
     public void setRollbackOnly() {
-        JdbcTransaction tx = getTransaction();
+        JdbcTransaction tx = transaction();
         tx.setRollbackOnly(true);
     }
 
@@ -126,7 +126,7 @@ public class JdbcTransactionalShell extends AbstractTransactionalShell<JdbcTrans
      *
      * @return
      */
-    public DataSource getDataSource() {
+    public DataSource dataSource() {
         return dataSource;
     }
 
@@ -136,9 +136,9 @@ public class JdbcTransactionalShell extends AbstractTransactionalShell<JdbcTrans
      *
      * @return
      */
-    public Connection getConnection() {
-        JdbcTransaction tx = getTransaction();
-        Connection connection = tx.getConnection();
+    public Connection connection() {
+        JdbcTransaction tx = transaction();
+        Connection connection = tx.connection();
         if (connection == null) {
             try {
                 connection = dataSource.getConnection();
@@ -146,8 +146,8 @@ public class JdbcTransactionalShell extends AbstractTransactionalShell<JdbcTrans
                     connection.setAutoCommit(false);
                 }
 
-                if (tx.getTuning() != null) {
-                    tx.getTuning().applyTuning(connection);
+                if (tx.tuning() != null) {
+                    tx.tuning().applyTuning(connection);
                 }
 
             } catch (Exception e) {

@@ -42,7 +42,7 @@ public final class BinaryWriter extends WebletTeleWriter<BinaryResponse> {
     @Override
     public void write(BinaryResponse value, WebletTWContext ctx) {
 
-        HttpResponse response = getResponse();
+        HttpResponse response = response();
 
         if (value == null) {
             response.sendData(ByteBuffer.allocate(0), BinaryResponse.DEFAULT_CONTENT_TYPE, 204);

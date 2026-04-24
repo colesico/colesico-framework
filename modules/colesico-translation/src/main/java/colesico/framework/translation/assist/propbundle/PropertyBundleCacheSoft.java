@@ -38,7 +38,7 @@ public final class PropertyBundleCacheSoft implements PropertyBundleCache {
     public void cleanup() {
         BundleReference ref;
         while ((ref = (BundleReference) referenceQueue.poll()) != null) {
-            bundleMap.remove(ref.getKey());
+            bundleMap.remove(ref.key());
         }
     }
 
@@ -61,7 +61,7 @@ public final class PropertyBundleCacheSoft implements PropertyBundleCache {
             this.key = key;
         }
 
-        public Key getKey() {
+        public Key key() {
             return key;
         }
     }

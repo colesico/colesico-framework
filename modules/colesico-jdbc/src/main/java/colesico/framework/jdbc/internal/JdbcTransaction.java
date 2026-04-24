@@ -20,7 +20,6 @@ import colesico.framework.transaction.Transaction;
 import colesico.framework.transaction.Tuning;
 
 import java.sql.Connection;
-import java.util.Random;
 
 public class JdbcTransaction implements Transaction {
 
@@ -30,7 +29,7 @@ public class JdbcTransaction implements Transaction {
     private Tuning<Connection> tuning;
     private boolean rollbackOnly = false;
 
-    public Connection getConnection() {
+    public Connection connection() {
         return connection;
     }
 
@@ -39,7 +38,7 @@ public class JdbcTransaction implements Transaction {
         return this;
     }
 
-    public Tuning<Connection> getTuning() {
+    public Tuning<Connection> tuning() {
         return tuning;
     }
 
@@ -48,7 +47,7 @@ public class JdbcTransaction implements Transaction {
         return this;
     }
 
-    public boolean getRollbackOnly() {
+    public boolean rollbackOnly() {
         return rollbackOnly;
     }
 
@@ -57,7 +56,7 @@ public class JdbcTransaction implements Transaction {
     }
 
     @Override
-    public String getId() {
+    public String id() {
         return id;
     }
 

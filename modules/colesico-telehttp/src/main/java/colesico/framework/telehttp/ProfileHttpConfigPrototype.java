@@ -27,11 +27,11 @@ abstract public class ProfileHttpConfigPrototype {
     /**
      * Profile cookie validity days
      */
-    public int getCookieValidityDays() {
+    public int cookieValidityDays() {
         return 365;
     }
 
-    public AttributeConfig getAttributeConfig(String attributeName) {
+    public AttributeConfig attributeConfig(String attributeName) {
         return DEFAULT_ATTRIBUTE_CONFIG;
     }
 

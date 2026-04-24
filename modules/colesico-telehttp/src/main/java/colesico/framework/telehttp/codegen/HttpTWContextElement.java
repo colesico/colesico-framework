@@ -14,7 +14,7 @@ public class HttpTWContextElement extends TWContextElement {
         this.customWriter = customWriter;
     }
 
-    public ClassType getCustomWriter() {
+    public ClassType customWriter() {
         return customWriter;
     }
 }

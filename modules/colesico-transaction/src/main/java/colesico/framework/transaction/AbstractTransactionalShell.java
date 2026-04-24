@@ -37,15 +37,15 @@ abstract public class AbstractTransactionalShell<T extends Transaction, U> imple
 
     abstract protected <R> R createNew(UnitOfWork<R> unitOfWork, U tuning);
 
-    protected String getTxId(T transaction) {
-        return transaction == null ? null : transaction.getId();
+    protected String txId(T transaction) {
+        return transaction == null ? null : transaction.id();
     }
 
     @Override
     public <R> R required(UnitOfWork<R> unitOfWork, U tuning) {
         T tx = transactions.get();
         if (logger.isDebugEnabled()) {
-            logger.debug("TX-Required begin thId:{}", getTxId(tx));
+            logger.debug("TX-Required begin thId:{}", txId(tx));
         }
         R result = null;
         try {
@@ -56,7 +56,7 @@ abstract public class AbstractTransactionalShell<T extends Transaction, U> imple
             }
         } catch (Throwable e) {
             if (logger.isDebugEnabled()) {
-                logger.debug("TX-Required exception: {}; txId:{}", ExceptionUtils.getRootCauseMessage(e), getTxId(tx));
+                logger.debug("TX-Required exception: {}; txId:{}", ExceptionUtils.getRootCauseMessage(e), txId(tx));
             }
            rethrow(e);
         } finally {
@@ -69,7 +69,7 @@ abstract public class AbstractTransactionalShell<T extends Transaction, U> imple
     public <R> R requiresNew(UnitOfWork<R> unitOfWork, U tuning) {
         T tx = transactions.get();
         if (logger.isDebugEnabled()) {
-            logger.debug("TX-RequiresNew begin thId:{}", getTxId(tx));
+            logger.debug("TX-RequiresNew begin thId:{}", txId(tx));
         }
         R result = null;
         try {
@@ -85,7 +85,7 @@ abstract public class AbstractTransactionalShell<T extends Transaction, U> imple
             }
         } catch (Throwable e) {
             if (logger.isDebugEnabled()) {
-                logger.debug("TX-RequiresNew exception: {}; txId:{}", ExceptionUtils.getRootCauseMessage(e), getTxId(tx));
+                logger.debug("TX-RequiresNew exception: {}; txId:{}", ExceptionUtils.getRootCauseMessage(e), txId(tx));
             }
            rethrow(e);
         } finally {
@@ -99,7 +99,7 @@ abstract public class AbstractTransactionalShell<T extends Transaction, U> imple
         R result = null;
         T tx = transactions.get();
         if (logger.isDebugEnabled()) {
-            logger.debug("TX-Mandatory begin thId:{}", getTxId(tx));
+            logger.debug("TX-Mandatory begin thId:{}", txId(tx));
         }
         try {
             if (tx == null) {
@@ -108,7 +108,7 @@ abstract public class AbstractTransactionalShell<T extends Transaction, U> imple
             result = unitOfWork.execute();
         } catch (Throwable e) {
             if (logger.isDebugEnabled()) {
-                logger.debug("TX-Mandatory exception: {}; txId:{}", ExceptionUtils.getRootCauseMessage(e), getTxId(tx));
+                logger.debug("TX-Mandatory exception: {}; txId:{}", ExceptionUtils.getRootCauseMessage(e), txId(tx));
             }
            rethrow(e);
         } finally {
@@ -121,7 +121,7 @@ abstract public class AbstractTransactionalShell<T extends Transaction, U> imple
     public <R> R notSupported(UnitOfWork<R> unitOfWork, U tuning) {
         T tx = transactions.get();
         if (logger.isDebugEnabled()) {
-            logger.debug("TX-NotSupported begin thId:{}", getTxId(tx));
+            logger.debug("TX-NotSupported begin thId:{}", txId(tx));
         }
         R result = null;
         try {
@@ -137,7 +137,7 @@ abstract public class AbstractTransactionalShell<T extends Transaction, U> imple
             }
         } catch (Throwable e) {
             if (logger.isDebugEnabled()) {
-                logger.debug("TX-NotSupported exception: {}; txId:{}", ExceptionUtils.getRootCauseMessage(e), getTxId(tx));
+                logger.debug("TX-NotSupported exception: {}; txId:{}", ExceptionUtils.getRootCauseMessage(e), txId(tx));
             }
            rethrow(e);
         } finally {
@@ -151,13 +151,13 @@ abstract public class AbstractTransactionalShell<T extends Transaction, U> imple
         R result = null;
         T tx = transactions.get();
         if (logger.isDebugEnabled()) {
-            logger.debug("TX-Supports begin thId:{}", getTxId(tx));
+            logger.debug("TX-Supports begin thId:{}", txId(tx));
         }
         try {
             result = unitOfWork.execute();
         } catch (Throwable e) {
             if (logger.isDebugEnabled()) {
-                logger.debug("TX-Supports exception: {}; txId:{}", ExceptionUtils.getRootCauseMessage(e), getTxId(tx));
+                logger.debug("TX-Supports exception: {}; txId:{}", ExceptionUtils.getRootCauseMessage(e), txId(tx));
             }
            rethrow(e);
         } finally {
@@ -170,7 +170,7 @@ abstract public class AbstractTransactionalShell<T extends Transaction, U> imple
     public <R> R never(UnitOfWork<R> unitOfWork, U tuning) {
         T tx = transactions.get();
         if (logger.isDebugEnabled()) {
-            logger.debug("TX-Never begin thId:{}", getTxId(tx));
+            logger.debug("TX-Never begin thId:{}", txId(tx));
         }
         R result = null;
         try {
@@ -180,7 +180,7 @@ abstract public class AbstractTransactionalShell<T extends Transaction, U> imple
             result = unitOfWork.execute();
         } catch (Throwable e) {
             if (logger.isDebugEnabled()) {
-                logger.debug("TX-Never exception: {}; txId:{}", ExceptionUtils.getRootCauseMessage(e), getTxId(tx));
+                logger.debug("TX-Never exception: {}; txId:{}", ExceptionUtils.getRootCauseMessage(e), txId(tx));
             }
            rethrow(e);
         } finally {
@@ -200,7 +200,7 @@ abstract public class AbstractTransactionalShell<T extends Transaction, U> imple
      *
      * @return
      */
-    public T getTransaction() {
+    public T transaction() {
         T tx = transactions.get();
         if (tx == null) {
             throw new IllegalStateException("No active transaction");
@@ -210,10 +210,8 @@ abstract public class AbstractTransactionalShell<T extends Transaction, U> imple
 
     /**
      * Returns active transaction or null
-     *
-     * @return
      */
-    public T getTransactionOrNull() {
+    public T transactionOrNull() {
         return transactions.get();
     }
 

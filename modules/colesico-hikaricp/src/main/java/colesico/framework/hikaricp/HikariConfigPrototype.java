@@ -28,5 +28,5 @@ import javax.sql.DataSource;
  */
 @ConfigPrototype(model = ConfigModel.MESSAGE, target = DataSource.class)
 abstract public class HikariConfigPrototype {
-    abstract public HikariConfig getHikariConfig();
+    abstract public HikariConfig hikariConfig();
 }

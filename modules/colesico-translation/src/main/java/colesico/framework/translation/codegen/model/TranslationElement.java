@@ -31,19 +31,19 @@ public class TranslationElement {
         this.translation = translation;
     }
 
-    public BundleElement getParentDictionary() {
+    public BundleElement parentDictionary() {
         return parentDictionary;
     }
 
-    public MethodElement getKeyMethod() {
+    public MethodElement keyMethod() {
         return keyMethod;
     }
 
-    public String getTranslation() {
+    public String translation() {
         return translation;
     }
 
-    public String getTranslationKey() {
+    public String translationKey() {
         AnnotationAssist<TranslationKey> tk = keyMethod.getAnnotation(TranslationKey.class);
         if (tk != null) {
             return tk.unwrap().value();

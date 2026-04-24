@@ -41,7 +41,7 @@ public final class JsonReader implements ValueReader {
         HttpMethod requestMethod = request.requestMethod();
 
         // Should the value be read from request input stream?
-        String originName = context.getOriginName();
+        String originName = context.originName();
 
         boolean useInputStream = originName.equals(RestletOrigin.BODY) ||
                 (
@@ -63,8 +63,8 @@ public final class JsonReader implements ValueReader {
             }
         } else {
             try {
-                Origin origin = originFactory.getOrigin(context.getOriginName());
-                String strValue = origin.getStrings(context.getParamName());
+                Origin origin = originFactory.getOrigin(context.originName());
+                String strValue = origin.getStrings(context.paramName());
                 if (StringUtils.isBlank(strValue)) {
                     return null;
                 }

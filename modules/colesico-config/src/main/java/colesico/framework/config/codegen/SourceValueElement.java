@@ -19,15 +19,14 @@ package colesico.framework.config.codegen;
 import colesico.framework.assist.codegen.model.FieldElement;
 
 public class SourceValueElement {
+    
     private final FieldElement originField;
 
     public SourceValueElement(FieldElement originField) {
         this.originField = originField;
     }
 
-    public FieldElement getOriginField() {
+    public FieldElement originField() {
         return originField;
     }
-
-
 }

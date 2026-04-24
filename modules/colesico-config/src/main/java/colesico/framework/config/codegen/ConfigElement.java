@@ -110,47 +110,47 @@ public class ConfigElement {
         this.namedQualifier = namedQualifier;
     }
 
-    public ClassElement getOriginClass() {
+    public ClassElement originClass() {
         return originClass;
     }
 
-    public ClassElement getPrototype() {
+    public ClassElement prototype() {
         return prototype;
     }
 
-    public ClassType getCondition() {
+    public ClassType condition() {
         return condition;
     }
 
-    public Substitution getSubstitution() {
+    public Substitution substitution() {
         return substitution;
     }
 
-    public ConfigModel getModel() {
+    public ConfigModel model() {
         return model;
     }
 
-    public ConfigScopedElement getScoped() {
+    public ConfigScopedElement scoped() {
         return scoped;
     }
 
-    public ClassElement getTarget() {
+    public ClassElement target() {
         return target;
     }
 
-    public boolean getDefaultMessage() {
+    public boolean defaultMessage() {
         return defaultMessage;
     }
 
-    public TypeMirror getClassedQualifier() {
+    public TypeMirror classedQualifier() {
         return classedQualifier;
     }
 
-    public String getNamedQualifier() {
+    public String namedQualifier() {
         return namedQualifier;
     }
 
-    public ConfigSourceElement getSource() {
+    public ConfigSourceElement source() {
         return source;
     }
 

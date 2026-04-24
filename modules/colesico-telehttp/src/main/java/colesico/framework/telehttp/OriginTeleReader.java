@@ -20,8 +20,8 @@ abstract public class OriginTeleReader<V, C extends HttpTRContext> implements Ht
      * Return param string value from origin defined in the context
      */
     protected final Collection<String> readStrings(C context) {
-        Origin origin = originFactory.getOrigin(context.getOriginName());
-        return origin.getStrings(context.getParamName());
+        Origin origin = originFactory.getOrigin(context.originName());
+        return origin.getStrings(context.paramName());
     }
 
     protected final Collection<String> readStrings(String originName, String paramName) {

@@ -41,7 +41,7 @@ public final class StringWriter extends WebletTeleWriter<StringResponse> {
 
     @Override
     public void write(StringResponse value, WebletTWContext ctx) {
-        HttpResponse response = getResponse();
+        HttpResponse response = response();
 
         if (value == null) {
             response.sendText("", TextResponse.DEFAULT_CONTENT_TYPE, 204);

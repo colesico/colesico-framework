@@ -127,7 +127,7 @@ public class RoutesBuilder {
                 srvRoute = srvRoute.substring(2);
             }
 
-            String pkgRoute = buildPackageRoute(service.originClass().packageElement());
+            String pkgRoute = buildPackageRoute(service.originClass().packageElm());
             return StrUtils.concatPath(pkgRoute, srvRoute, RouteTrie.SEGMENT_DELEMITER);
         } else {
             String serviceBeanName = service.originClass().simpleName();
@@ -138,7 +138,7 @@ public class RoutesBuilder {
                 // Bean route from bean simple class name
                 srvRoute = StrUtils.toSeparatorNotation(serviceBeanName, '-');
             }
-            String pkgRoute = buildPackageRoute(service.originClass().packageElement());
+            String pkgRoute = buildPackageRoute(service.originClass().packageElm());
             return StrUtils.concatPath(pkgRoute, srvRoute, RouteTrie.SEGMENT_DELEMITER);
         }
     }

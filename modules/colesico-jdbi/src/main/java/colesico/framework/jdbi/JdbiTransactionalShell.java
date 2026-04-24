@@ -18,7 +18,6 @@ package colesico.framework.jdbi;
 
 import colesico.framework.jdbi.internal.JdbiTransaction;
 import colesico.framework.transaction.AbstractTransactionalShell;
-import colesico.framework.transaction.Transaction;
 import colesico.framework.transaction.Tuning;
 import colesico.framework.transaction.UnitOfWork;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -48,7 +47,7 @@ public class JdbiTransactionalShell extends AbstractTransactionalShell<JdbiTrans
 
     @Override
     public void setRollbackOnly() {
-        JdbiTransaction tx = getTransaction();
+        JdbiTransaction tx = transaction();
         tx.setRollbackOnly(true);
     }
 
@@ -57,7 +56,7 @@ public class JdbiTransactionalShell extends AbstractTransactionalShell<JdbiTrans
         logger.debug("TX-New-JDBI begin");
         JdbiTransaction tx = transactions.get();
         if (tx != null) {
-            throw new IllegalStateException("Active Jdbi transaction exists; txId:" + getTxId(tx));
+            throw new IllegalStateException("Active Jdbi transaction exists; txId:" + txId(tx));
         }
 
         String txId = null;
@@ -78,11 +77,11 @@ public class JdbiTransactionalShell extends AbstractTransactionalShell<JdbiTrans
             try {
                 result = unitOfWork.execute();
             } finally {
-                handle = tx.getHandle();
+                handle = tx.handle();
             }
 
             if (handle != null) {
-                if (tx.getRollbackOnly()) {
+                if (tx.rollbackOnly()) {
                     logger.debug("TX-New-JDBI rollback handle (on success)");
                     handle.rollback();
                 } else {
@@ -129,14 +128,14 @@ public class JdbiTransactionalShell extends AbstractTransactionalShell<JdbiTrans
      *
      * @return Jdbi handle
      */
-    public Handle getHandle() {
-        JdbiTransaction tx = getTransaction();
-        Handle handle = tx.getHandle();
+    public Handle handle() {
+        JdbiTransaction tx = transaction();
+        Handle handle = tx.handle();
         if (handle == null) {
             handle = jdbi.open();
             handle.begin();
-            if (tx.getTuning() != null) {
-                tx.getTuning().applyTuning(handle);
+            if (tx.tuning() != null) {
+                tx.tuning().applyTuning(handle);
             }
             tx.setHandle(handle);
         }
@@ -145,20 +144,16 @@ public class JdbiTransactionalShell extends AbstractTransactionalShell<JdbiTrans
 
     /**
      * Get shell bound jdbi instance
-     *
-     * @return
      */
-    public Jdbi getJdbi() {
+    public Jdbi jdbi() {
         return jdbi;
     }
 
     /**
      * Return underlying jdbc connection bound to active transaction
-     *
-     * @return
      */
-    public Connection getConnection() {
-        return getHandle().getConnection();
+    public Connection connection() {
+        return handle().getConnection();
     }
 
 }

@@ -8,7 +8,6 @@ import colesico.framework.telehttp.ProfileHttpConfigPrototype;
 import colesico.framework.telehttp.assist.CSRFProtector;
 
 import jakarta.inject.Singleton;
-import java.nio.charset.StandardCharsets;
 
 @Producer
 @Produce(CSRFProtector.class)
@@ -17,13 +16,13 @@ public class TeleHttpProducer {
 
     // Default config
     @Singleton
-    public PrincipalHttpConfigPrototype getPrincipalWriterConfig() {
+    public PrincipalHttpConfigPrototype principalWriterConfig() {
         return new PrincipalHttpConfigPrototype() {};
     }
 
     // Default config
     @Singleton
-    public ProfileHttpConfigPrototype getProfileWriterConfig() {
+    public ProfileHttpConfigPrototype profileWriterConfig() {
         return new ProfileHttpConfigPrototype() {};
     }
 }

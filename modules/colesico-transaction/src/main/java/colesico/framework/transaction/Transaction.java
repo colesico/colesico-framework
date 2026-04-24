@@ -4,5 +4,5 @@ public interface Transaction {
     /**
      * Transaction id
      */
-    String getId();
+    String id();
 }

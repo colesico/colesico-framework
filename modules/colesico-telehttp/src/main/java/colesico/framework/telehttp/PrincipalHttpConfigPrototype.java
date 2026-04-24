@@ -28,15 +28,15 @@ import java.nio.charset.StandardCharsets;
 @ConfigPrototype(model = ConfigModel.SINGLE)
 abstract public class PrincipalHttpConfigPrototype {
 
-    public byte[] getSignatureKey() {
+    public byte[] signatureKey() {
         return "0123456789ABCDEF".getBytes(StandardCharsets.UTF_8);
     }
 
-    public String getSignatureAlgorithm() {
+    public String signatureAlgorithm() {
         return MACUtils.HmacSHA256;
     }
 
-    public int getCookieValidityDays() {
+    public int cookieValidityDays() {
         return 14;
     }
 

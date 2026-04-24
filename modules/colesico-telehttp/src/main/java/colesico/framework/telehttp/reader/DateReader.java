@@ -50,7 +50,7 @@ public final class DateReader<C extends HttpTRContext> extends OriginTeleReader<
             }
             return ISO8601DateParser.parse(val);
         } catch (Exception ex) {
-            throw new TeleException(messages.invalidDateFormat(ctx.getParamName()));
+            throw new TeleException(messages.invalidDateFormat(ctx.paramName()));
         }
     }
 }
