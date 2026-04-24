@@ -29,11 +29,11 @@ public class TaskWorkerElement {
         this.taskType = taskType;
     }
 
-    public MethodElement getOriginMethod() {
+    public MethodElement originMethod() {
         return originMethod;
     }
 
-    public ClassType getTaskType() {
+    public ClassType taskType() {
         return taskType;
     }
 }

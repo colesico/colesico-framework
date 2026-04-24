@@ -24,7 +24,7 @@ public class DefaultTaskRegistry implements TaskRegistry {
     protected void initTaskWorkers(Polysupplier<ServiceWorkers> workersSupp) {
         workersSupp.forEach(
                 worker -> {
-                    var bindings = worker.getTaskBindings();
+                    var bindings = worker.taskBindings();
                     for (var binding : bindings) {
                         var workers = taskWorkers.computeIfAbsent(binding.taskClass(), c -> new WorkersGroup<>());
                         workers.add(binding.worker());
@@ -44,7 +44,7 @@ public class DefaultTaskRegistry implements TaskRegistry {
     }
 
     @Override
-    public Collection<Class<?>> getTaskTypes() {
+    public Collection<Class<?>> taskTypes() {
         return taskWorkers.keySet();
     }
 

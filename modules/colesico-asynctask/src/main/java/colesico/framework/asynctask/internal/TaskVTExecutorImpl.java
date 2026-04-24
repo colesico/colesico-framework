@@ -28,12 +28,12 @@ public final class TaskVTExecutorImpl extends AbstractTaskExecutor implements Ta
     }
 
     @Override
-    protected ExecutorService getExecutorService() {
+    protected ExecutorService executorService() {
         return executorService;
     }
 
     @Override
-    protected AbstractTaskExecutorConfig getConfig() {
+    protected AbstractTaskExecutorConfig config() {
         return config;
     }
 

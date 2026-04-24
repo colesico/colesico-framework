@@ -27,16 +27,16 @@ public final class TaskSchedulerImpl extends AbstractTaskExecutor implements Tas
         this.config = config;
 
         ThreadFactory threadFactory = new TaskThreadFactory("COLESICO-TASKS-SHEDULED");
-        this.executorService = new ScheduledThreadPoolExecutor(config.getCorePoolSize(), threadFactory);
+        this.executorService = new ScheduledThreadPoolExecutor(config.corePoolSize(), threadFactory);
     }
 
     @Override
-    protected ExecutorService getExecutorService() {
+    protected ExecutorService executorService() {
         return executorService;
     }
 
     @Override
-    protected AbstractTaskExecutorConfig getConfig() {
+    protected AbstractTaskExecutorConfig config() {
         return config;
     }
 

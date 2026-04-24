@@ -11,7 +11,7 @@ public interface TaskRegistry {
 
     <T, R> WorkersGroup<T, R> getTaskWorkers(Class<T> taskClass);
 
-    Collection<Class<?>> getTaskTypes();
+    Collection<Class<?>> taskTypes();
 
     <T, R, O> Collection<O> applyReturn(Class<T> taskClass, Function<TaskWorker<T, R>, O> action);
 

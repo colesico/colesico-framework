@@ -7,7 +7,7 @@ abstract public class AbstractTaskExecutorConfig {
 
     protected Integer awaitTerminationSeconds = 5;
 
-    public Integer getAwaitTerminationSeconds() {
+    public Integer awaitTerminationSeconds() {
         return awaitTerminationSeconds;
     }
 

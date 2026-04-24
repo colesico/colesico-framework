@@ -42,7 +42,7 @@ abstract public class TaskExecutorConfigPrototype extends AbstractTaskExecutorCo
 
     protected Long keepAliveTime = 0L;
 
-    public Integer getQueueCapacity() {
+    public Integer queueCapacity() {
         return queueCapacity;
     }
 
@@ -50,7 +50,7 @@ abstract public class TaskExecutorConfigPrototype extends AbstractTaskExecutorCo
         this.queueCapacity = queueCapacity;
     }
 
-    public Integer getCorePoolSize() {
+    public Integer corePoolSize() {
         return corePoolSize;
     }
 
@@ -58,7 +58,7 @@ abstract public class TaskExecutorConfigPrototype extends AbstractTaskExecutorCo
         this.corePoolSize = corePoolSize;
     }
 
-    public Integer getMaximumPoolSize() {
+    public Integer maximumPoolSize() {
         return maximumPoolSize;
     }
 
@@ -66,7 +66,7 @@ abstract public class TaskExecutorConfigPrototype extends AbstractTaskExecutorCo
         this.maximumPoolSize = maximumPoolSize;
     }
 
-    public Long getKeepAliveTime() {
+    public Long keepAliveTime() {
         return keepAliveTime;
     }
 

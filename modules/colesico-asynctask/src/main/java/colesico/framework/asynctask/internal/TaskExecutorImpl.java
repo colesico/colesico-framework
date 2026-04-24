@@ -27,28 +27,28 @@ public final class TaskExecutorImpl extends AbstractTaskExecutor implements Task
         ThreadFactory threadFactory = new TaskThreadFactory("COLESICO-TASKS-ASYNC");
 
         BlockingQueue<Runnable> queue;
-        if (config.getQueueCapacity() <= 0) {
+        if (config.queueCapacity() <= 0) {
             queue = new LinkedBlockingQueue<>();
         } else {
-            queue = new ArrayBlockingQueue<>(config.getQueueCapacity());
+            queue = new ArrayBlockingQueue<>(config.queueCapacity());
         }
 
         executorService = new ThreadPoolExecutor(
-                config.getCorePoolSize(),
-                config.getMaximumPoolSize(),
-                config.getKeepAliveTime(),
+                config.corePoolSize(),
+                config.maximumPoolSize(),
+                config.keepAliveTime(),
                 TimeUnit.MILLISECONDS,
                 queue,
                 threadFactory);
     }
 
     @Override
-    protected ExecutorService getExecutorService() {
+    protected ExecutorService executorService() {
         return executorService;
     }
 
     @Override
-    protected AbstractTaskExecutorConfig getConfig() {
+    protected AbstractTaskExecutorConfig config() {
         return config;
     }
 

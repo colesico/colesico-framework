@@ -24,9 +24,9 @@ abstract public class AbstractTaskExecutor {
 
     private volatile boolean running = false;
 
-    abstract protected ExecutorService getExecutorService();
+    abstract protected ExecutorService executorService();
 
-    abstract protected AbstractTaskExecutorConfig getConfig();
+    abstract protected AbstractTaskExecutorConfig config();
 
     public AbstractTaskExecutor(TaskRegistry registry) {
         this.registry = registry;
@@ -69,14 +69,14 @@ abstract public class AbstractTaskExecutor {
     public <T> void submit(final T task) {
         checkRunning();
         registry.applyVoid(task.getClass(),
-                worker -> getExecutorService().execute(createRunnableTask((TaskWorker<T, ?>) worker, task))
+                worker -> executorService().execute(createRunnableTask((TaskWorker<T, ?>) worker, task))
         );
     }
 
     public <T, R> Collection<Future<R>> submitReturn(final T task) {
         checkRunning();
         return registry.applyReturn(task.getClass(),
-                worker -> getExecutorService().submit(createCallableTask((TaskWorker<T, R>) worker, task))
+                worker -> executorService().submit(createCallableTask((TaskWorker<T, R>) worker, task))
         );
     }
 
@@ -93,14 +93,14 @@ abstract public class AbstractTaskExecutor {
         logger.debug("Stopping '{}' task executor...", this.getClass().getSimpleName());
         checkRunning();
         // Stop
-        getExecutorService().shutdown();
+        executorService().shutdown();
 
         // Await termination
         try {
-            boolean taskCompleted = getExecutorService().awaitTermination(getConfig().getAwaitTerminationSeconds(), TimeUnit.SECONDS);
+            boolean taskCompleted = executorService().awaitTermination(config().awaitTerminationSeconds(), TimeUnit.SECONDS);
             if (!taskCompleted) {
                 logger.info("Some tasks were not completed for task executor");
-                final List<Runnable> rejected = getExecutorService().shutdownNow();
+                final List<Runnable> rejected = executorService().shutdownNow();
                 logger.info("Rejected tasks: " + rejected.size());
             }
         } catch (InterruptedException t) {

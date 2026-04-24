@@ -59,11 +59,11 @@ public class WorkersFacadeGenerator {
     }
 
     protected void generateHandlerProxy(ServiceElement service, TaskWorkerElement handler, TypeSpec.Builder classBuilder) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(handler.getOriginMethod().name());
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(handler.originMethod().name());
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         mb.returns(ClassName.get(Object.class));
 
-        ParameterSpec.Builder pb = ParameterSpec.builder(TypeName.get(handler.getTaskType().unwrap()), TASK_PARAM, Modifier.FINAL);
+        ParameterSpec.Builder pb = ParameterSpec.builder(TypeName.get(handler.taskType().unwrap()), TASK_PARAM, Modifier.FINAL);
         mb.addParameter(pb.build());
 
         mb.addStatement("$T $N=this.$N.get()",
@@ -71,16 +71,16 @@ public class WorkersFacadeGenerator {
                 TARGET_VAR,
                 ServiceWorkers.SERVICE_PROV_FIELD);
 
-        if (handler.getOriginMethod().teturnType().getKind() != TypeKind.VOID) {
+        if (handler.originMethod().teturnType().getKind() != TypeKind.VOID) {
             mb.addStatement("return $N.$N($N)",
                     TARGET_VAR,
-                    handler.getOriginMethod().name(),
+                    handler.originMethod().name(),
                     TASK_PARAM
             );
         } else {
             mb.addStatement("$N.$N($N)",
                     TARGET_VAR,
-                    handler.getOriginMethod().name(),
+                    handler.originMethod().name(),
                     TASK_PARAM
             );
             mb.addStatement("return null");
@@ -111,8 +111,8 @@ public class WorkersFacadeGenerator {
             i++;
             cb.add("new $T<>($T.class, this::$L)",
                     ClassName.get(TaskBinding.class),
-                    TypeName.get(ele.getTaskType().unwrap()),
-                    ele.getOriginMethod().name()
+                    TypeName.get(ele.taskType().unwrap()),
+                    ele.originMethod().name()
             );
             if (i < handlers.size()) {
                 cb.add(",\n");
@@ -151,6 +151,6 @@ public class WorkersFacadeGenerator {
 
         final TypeSpec typeSpec = classBuilder.build();
         String packageName = service.originClass().packageName();
-        CodegenUtils.createJavaFile(context.getProcessingEnv(), typeSpec, packageName, service.originClass().unwrap());
+        CodegenUtils.createJavaFile(context.processingEnv(), typeSpec, packageName, service.originClass().unwrap());
     }
 }

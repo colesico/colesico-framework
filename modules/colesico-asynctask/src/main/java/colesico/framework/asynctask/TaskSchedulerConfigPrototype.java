@@ -14,7 +14,7 @@ abstract public class TaskSchedulerConfigPrototype extends AbstractTaskExecutorC
      */
     protected Integer corePoolSize = 5;
 
-    public Integer getCorePoolSize() {
+    public Integer corePoolSize() {
         return corePoolSize;
     }
 
