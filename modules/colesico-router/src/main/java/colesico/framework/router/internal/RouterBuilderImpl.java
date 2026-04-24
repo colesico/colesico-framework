@@ -1,15 +1,10 @@
 package colesico.framework.router.internal;
 
 import colesico.framework.http.HttpMethod;
-import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
-import colesico.framework.router.RouterInvocation;
-import colesico.framework.router.Router;
-import colesico.framework.router.RouterBuilder;
-import colesico.framework.router.RouterDescriptors;
+import colesico.framework.router.*;
 import colesico.framework.teleapi.TeleController;
-import colesico.framework.teleapi.TeleFacade;
 
 import colesico.framework.teleapi.TeleMethod;
 import jakarta.inject.Inject;
@@ -23,32 +18,38 @@ import java.util.Map;
 public class RouterBuilderImpl implements RouterBuilder {
 
     private final ThreadScope threadScope;
-    private final Map<, Polysupplier<TeleFacade>> teleFacades;
+    private final Polysupplier<RouterTargetController<?>> targetControllers;
     private final List<CustomRouteAction> customRouteActions = new ArrayList<>();
 
     @Inject
-    public RouterBuilderImpl(@Classed(Router.class) Polysupplier<TeleFacade> teleFacades,
+    public RouterBuilderImpl(Polysupplier<RouterTargetController> targetControllers,
                              ThreadScope threadScope) {
-        this.teleFacades = teleFacades;
+        this.targetControllers = (Polysupplier) targetControllers;
         this.threadScope = threadScope;
     }
 
     @Override
     public void addCustomAction(HttpMethod httpMethod,
                                 String route,
+                                TeleController<?, RouterInvocation, ?> teleController,
                                 TeleMethod<?, ?> teleMethod,
                                 Class<?> targetClass,
                                 String targetMethod,
                                 Map<String, String> routeAttributes) {
 
-        customRouteActions.add(new CustomRouteAction(httpMethod, route, teleMethod, targetClass,
+        customRouteActions.add(new CustomRouteAction(httpMethod,
+                route, teleController, teleMethod, targetClass,
                 targetMethod, routeAttributes));
     }
 
     @Override
     public Router build() {
         RouterImpl router = new RouterImpl(threadScope);
-        router.register((TeleFacade<?, RouterDescriptors>) teleFacades);
+
+        for (var teleController : targetControllers) {
+            router.register(teleController);
+        }
+
         for (CustomRouteAction cra : customRouteActions) {
             router.addCustomAction(cra.httpMethod(),
                     cra.route(),

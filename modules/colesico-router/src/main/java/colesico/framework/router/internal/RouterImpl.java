@@ -18,7 +18,6 @@ package colesico.framework.router.internal;
 
 import colesico.framework.assist.StrUtils;
 import colesico.framework.http.HttpMethod;
-import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.*;
 import colesico.framework.router.assist.RouteTrie;
@@ -110,11 +109,7 @@ public class RouterImpl implements Router {
         var descriptors = teleFacade.descriptors();
 
         for (var routeInfo : descriptors.routesInfo()) {
-            if (log.isDebugEnabled()) {
-                log.debug("Route '" + routeInfo.route() + "' mapped to target method '" +
-                        descriptors.targetClass().getName() + "->" + routeInfo.targetMethod());
-
-            }
+            log.debug("Route '{}' mapped to target method '{}->{}", routeInfo.route(), descriptors.targetClass().getName(), routeInfo.targetMethod());
             RouteTrie.Node<RouteAction> node = routeTrie.addRoute(
                     routeInfo.route(),
                     new RouteAction(teleController, routeInfo.teleMethod(), routeInfo.attributes())
@@ -125,10 +120,10 @@ public class RouterImpl implements Router {
         }
     }
 
-    void registerAll(TeleController<?, RouterInvocation, ?> teleController, Polysupplier<TeleFacade<?, RouterDescriptors>> teleFacades) {
-        log.debug("Register http router tele-facades...");
+    void register(RouterTargetController<?> teleController) {
+        log.debug("Register http router tele-facades for target controller {}", teleController.getClass().getName());
 
-        for (var teleFacade : teleFacades) {
+        for (var teleFacade : teleController.teleFacades()) {
             register(teleController, teleFacade);
         }
     }
