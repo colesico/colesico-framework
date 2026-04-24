@@ -28,7 +28,7 @@ import jakarta.inject.Singleton;
 
 @Producer
 @Produce(WebletDataPortImpl.class)
-@Produce(WebletTeleDriverImpl.class)
+@Produce(WebletTeleControllerImpl.class)
 @Produce(AuthenticatorImpl.class)
 @Produce(WebletAutoOrigin.class)
 public class WebletProducer {
@@ -39,7 +39,7 @@ public class WebletProducer {
     }
 
     @Singleton
-    public WebletTeleDriver getWebTeledriver(WebletTeleDriverImpl impl) {
+    public WebletTeleController getWebTeledriver(WebletTeleControllerImpl impl) {
         return impl;
     }
 
