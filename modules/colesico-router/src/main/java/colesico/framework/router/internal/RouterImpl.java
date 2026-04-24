@@ -63,9 +63,9 @@ public class RouterImpl implements Router {
     }
 
     @Override
-    public Optional<RouterInvocation> resolve(ResolveContext context) {
-        var requestMethod = context.requestMethod();
-        var requestUri = context.requestUri();
+    public Optional<Router.Invocation> resolve(Criteria criteria) {
+        var requestMethod = criteria.requestMethod();
+        var requestUri = criteria.requestUri();
 
         RouteTrie.RouteResolution<RouteAction> routeResolution = routeTrie.resolveRoute(StrUtils.concatPath(requestMethod.name(), requestUri, RouteTrie.SEGMENT_DELEMITER));
 
@@ -77,7 +77,7 @@ public class RouterImpl implements Router {
         }
 
         return Optional.of(
-                new RouterInvocation(
+                new Router.Invocation(
                         requestMethod,
                         requestUri,
                         routeResolution.node().value(),
@@ -86,7 +86,7 @@ public class RouterImpl implements Router {
     }
 
     @Override
-    public void perform(RouterInvocation invocation) {
+    public void perform(Router.Invocation invocation) {
         if (invocation == null) {
             throw new TeleException("Undetermined invocation target");
         }
@@ -102,7 +102,7 @@ public class RouterImpl implements Router {
         }
     }
 
-    void register(TeleController<?, RouterInvocation, ?> teleController,
+    void register(TeleController<Router.Criteria, Router.Invocation, RouterDescriptors> teleController,
                   TeleFacade<?, RouterDescriptors> teleFacade) {
         log.debug("Register http router tele-facade: {}", teleFacade.getClass().getName());
 
@@ -120,17 +120,17 @@ public class RouterImpl implements Router {
         }
     }
 
-    void register(RouterTargetController<?> teleController) {
-        log.debug("Register http router tele-facades for target controller {}", teleController.getClass().getName());
+    void register(RouterTargetController targetController) {
+        log.debug("Register http router tele-facades for target controller {}", targetController.getClass().getName());
 
-        for (var teleFacade : teleController.teleFacades()) {
-            register(teleController, teleFacade);
+        for (var teleFacade : targetController.teleFacades()) {
+            register(targetController, teleFacade);
         }
     }
 
     void addCustomAction(HttpMethod httpMethod,
                          String route,
-                         TeleController<?, RouterInvocation, ?> teleController,
+                         TeleController<Router.Criteria, Router.Invocation, RouterDescriptors> teleController,
                          TeleMethod<?, ?> teleMethod,
                          Class<?> targetClass,
                          String targetMethod,

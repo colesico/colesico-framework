@@ -18,20 +18,25 @@ package colesico.framework.weblet.internal;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpRequest;
+import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.router.Router;
 import colesico.framework.router.RouterContext;
+import colesico.framework.router.RouterDescriptors;
+import colesico.framework.router.RouterInvocation;
 import colesico.framework.security.PrincipalRequiredException;
+import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.telehttp.assist.CSRFProtector;
 import colesico.framework.weblet.teleapi.Authenticator;
-import colesico.framework.weblet.teleapi.WebletTIContext;
-import colesico.framework.weblet.teleapi.WebletDataPort;
 import colesico.framework.weblet.teleapi.WebletTeleController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+
+import java.util.Optional;
 
 /**
  * @author Vladlen Larionov
@@ -58,7 +63,17 @@ public class WebletTeleControllerImpl implements WebletTeleController {
     }
 
     @Override
-    public <T> void invoke(T target, MethodInvoker<T, WebletDataPort> invoker, WebletTIContext context) {
+    public Polysupplier<TeleFacade<?, RouterDescriptors>> teleFacades() {
+        return null;
+    }
+
+    @Override
+    public Optional<RouterInvocation> resolve(Router.Criteria criteria) {
+        throw new UnsupportedOperationException("Not supported");
+    }
+
+    @Override
+    public void perform(RouterInvocation invocation) {
         try {
             threadScope.put(DataPort.SCOPE_KEY, dataPort);
             HttpRequest request = httpContextProv.get().request();
@@ -71,5 +86,10 @@ public class WebletTeleControllerImpl implements WebletTeleController {
                 throw pre;
             }
         }
+    }
+
+    @Override
+    public void register(TeleFacade<?, RouterDescriptors> teleFacade) {
+        throw new UnsupportedOperationException("Not supported");
     }
 }

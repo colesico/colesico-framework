@@ -18,5 +18,5 @@ package colesico.framework.weblet.teleapi;
 
 import colesico.framework.router.RouterTargetController;
 
-public interface WebletTeleController extends RouterTargetController<?> {
+public interface WebletTeleController extends RouterTargetController {
 }

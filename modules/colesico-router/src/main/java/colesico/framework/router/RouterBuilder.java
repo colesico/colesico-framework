@@ -22,8 +22,8 @@ public interface RouterBuilder {
      */
     void addCustomAction(HttpMethod httpMethod,
                          String route,
-                         TeleController<?, RouterInvocation, ?> teleController,
-                         TeleMethod<?,?> teleMethod,
+                         TeleController<Router.Criteria, Router.Invocation, RouterDescriptors> teleController,
+                         TeleMethod<?, ?> teleMethod,
                          Class<?> targetClass,
                          String targetMethod,
                          Map<String, String> routeAttributes);

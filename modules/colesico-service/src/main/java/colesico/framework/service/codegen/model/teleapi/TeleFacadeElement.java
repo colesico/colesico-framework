@@ -93,7 +93,6 @@ public class TeleFacadeElement {
      * Tele schemas for the facade
      */
     private final Map<Class<?>, TeleSchemeElement<?>> teleSchemes = new HashMap<>();
-    ;
 
     /**
      * Common purpose properties

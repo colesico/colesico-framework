@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+
 import javax.lang.model.element.Modifier;
 
 /**
@@ -80,7 +81,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         producerGenerator.addProduceAnnotation(ClassName.bestGuess(teleFacadeElement.facadeClassName()));
 
         // Generate produce method
-        String methodName = "get" + TeleFacade.class.getSimpleName() + StrUtils.firstCharToUpperCase(teleFacadeElement.teleType().getSimpleName());
+        String methodName = StrUtils.firstCharToLowerCase(teleFacadeElement.facadeClassSimpleName());
         MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, TypeName.get(TeleFacade.class));
         mb.addParameter(ClassName.bestGuess(teleFacadeElement.facadeClassName()), IMPLEMENTATION_PARAM, Modifier.FINAL);
 
@@ -94,6 +95,11 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         } else if (teleFacadeElement.iocQualifier().classed() != null) {
             AnnotationSpec.Builder anb = AnnotationSpec.builder(Classed.class);
             anb.addMember("value", "$T.class", ClassName.bestGuess(teleFacadeElement.iocQualifier().classed()));
+            mb.addAnnotation(anb.build());
+        } else {
+            // Default add classed as tele-type
+            AnnotationSpec.Builder anb = AnnotationSpec.builder(Classed.class);
+            anb.addMember("value", "$T.class", ClassName.get(teleFacadeElement.teleType()));
             mb.addAnnotation(anb.build());
         }
 

@@ -59,7 +59,7 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
                 descriptorsClass(),
                 readContextClass(),
                 writeContextClass(),
-                TeleFacadeElement.IocQualifier.ofClassed(Router.class),
+                TeleFacadeElement.IocQualifier.ofEmpty(),
                 new RoutesBuilder(serviceElm)
         );
     }

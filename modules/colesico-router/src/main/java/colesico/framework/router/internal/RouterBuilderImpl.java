@@ -18,20 +18,20 @@ import java.util.Map;
 public class RouterBuilderImpl implements RouterBuilder {
 
     private final ThreadScope threadScope;
-    private final Polysupplier<RouterTargetController<?>> targetControllers;
+    private final Polysupplier<RouterTargetController> targetControllers;
     private final List<CustomRouteAction> customRouteActions = new ArrayList<>();
 
     @Inject
     public RouterBuilderImpl(Polysupplier<RouterTargetController> targetControllers,
                              ThreadScope threadScope) {
-        this.targetControllers = (Polysupplier) targetControllers;
+        this.targetControllers = targetControllers;
         this.threadScope = threadScope;
     }
 
     @Override
     public void addCustomAction(HttpMethod httpMethod,
                                 String route,
-                                TeleController<?, RouterInvocation, ?> teleController,
+                                TeleController<Router.Criteria, Router.Invocation, RouterDescriptors> teleController,
                                 TeleMethod<?, ?> teleMethod,
                                 Class<?> targetClass,
                                 String targetMethod,
@@ -39,7 +39,8 @@ public class RouterBuilderImpl implements RouterBuilder {
 
         customRouteActions.add(new CustomRouteAction(httpMethod,
                 route, teleController, teleMethod, targetClass,
-                targetMethod, routeAttributes));
+                targetMethod, routeAttributes)
+        );
     }
 
     @Override
@@ -62,8 +63,12 @@ public class RouterBuilderImpl implements RouterBuilder {
         return router;
     }
 
-    private record CustomRouteAction(HttpMethod httpMethod, String route,
-                                     TeleController<?, RouterInvocation, ?> teleController, TeleMethod<?, ?> teleMethod,
-                                     Class<?> targetClass, String targetMethod, Map<String, String> attributes) {
+    private record CustomRouteAction(HttpMethod httpMethod,
+                                     String route,
+                                     TeleController<Router.Criteria, Router.Invocation, RouterDescriptors> teleController,
+                                     TeleMethod<?, ?> teleMethod,
+                                     Class<?> targetClass,
+                                     String targetMethod,
+                                     Map<String, String> attributes) {
     }
 }

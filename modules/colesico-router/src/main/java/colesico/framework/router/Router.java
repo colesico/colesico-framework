@@ -18,7 +18,6 @@ package colesico.framework.router;
 
 import colesico.framework.http.HttpMethod;
 import colesico.framework.teleapi.TeleController;
-import colesico.framework.teleapi.TeleFacade;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,7 @@ import java.util.Map;
  * <p>
  * Router allows to bind any action to given route and perform it
  */
-public interface Router extends TeleController<Router.ResolveContext, RouterInvocation, TeleFacade<?, RouterDescriptors>> {
+public interface Router extends TeleController<Router.Criteria, Router.Invocation, RouterDescriptors> {
 
     /**
      * Returns route parts associated with given handler
@@ -41,11 +40,24 @@ public interface Router extends TeleController<Router.ResolveContext, RouterInvo
     List<String> slicedRoute(Class<?> targetClass, String targetMethod, HttpMethod httpMethod, Map<String, String> parameters);
 
     /**
-     * Route invocation resolving context
+     * Route invocation resolving criteria
      *
      * @param requestUri request url part from hostname(port) to query string (before '?' char)
      */
-    record ResolveContext(HttpMethod requestMethod, String requestUri) {
+    record Criteria(HttpMethod requestMethod, String requestUri) {
+    }
+
+    /**
+     * @param requestMethod Request http method
+     * @param requestUri    Request URI
+     * @param action        Route Action
+     * @param parameters    Route parameters
+     */
+    record Invocation(HttpMethod requestMethod,
+                      String requestUri,
+                      RouteAction action,
+                      Map<String, String> parameters) {
+
     }
 
 }
