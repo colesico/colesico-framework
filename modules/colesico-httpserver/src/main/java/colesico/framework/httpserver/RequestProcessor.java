@@ -21,7 +21,6 @@ import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.ioc.scope.ThreadScope;
-import colesico.framework.router.RouterInvocation;
 import colesico.framework.router.Router;
 import colesico.framework.router.assist.UnknownRouteException;
 import org.apache.commons.lang3.exception.ExceptionUtils;

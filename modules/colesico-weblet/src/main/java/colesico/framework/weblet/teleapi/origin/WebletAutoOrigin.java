@@ -9,6 +9,9 @@ import colesico.framework.weblet.teleapi.WebletOrigin;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
+import java.util.Collection;
+import java.util.List;
+
 @Singleton
 public class WebletAutoOrigin implements WebletOrigin {
 
@@ -21,30 +24,30 @@ public class WebletAutoOrigin implements WebletOrigin {
     }
 
     @Override
-    public String getStrings(String name) {
+    public Iterable<String> getStrings(String name) {
         String value = null;
         HttpRequest httpRequest = httpContextProv.get().request();
         switch (httpRequest.requestMethod().name()) {
             case HttpMethod.GET:
             case HttpMethod.HEAD:
                 if (httpRequest.queryParameters().hasKey(name)) {
-                    return httpRequest.queryParameters().get(name);
+                    return httpRequest.queryParameters().getAll(name);
                 }
-                return routerContextProv.get().parameters().get(name);
+                return List.of(routerContextProv.get().parameters().get(name));
             case HttpMethod.POST:
             case HttpMethod.PATCH:
             case HttpMethod.DELETE:
             case HttpMethod.PUT:
                 if (httpRequest.postParameters().hasKey(name)) {
-                    return httpRequest.postParameters().get(name);
+                    return httpRequest.postParameters().getAll(name);
                 }
                 if (httpRequest.queryParameters().hasKey(name)) {
-                    return httpRequest.queryParameters().get(name);
+                    return httpRequest.queryParameters().getAll(name);
                 }
                 RouterContext routerContext = routerContextProv.get();
-                return routerContext.parameters().get(name);
+                return List.of(routerContext.parameters().get(name));
             default:
-                return value;
+                return List.of(value);
         }
     }
 }

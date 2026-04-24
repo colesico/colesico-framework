@@ -61,5 +61,5 @@ public interface Origin {
      * @return string value
      * @see colesico.framework.http.HttpRequest
      */
-    Collection<String> getStrings(String name);
+    Iterable<String> getStrings(String name);
 }

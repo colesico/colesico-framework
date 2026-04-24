@@ -88,13 +88,6 @@
                             <artifactId>colesico-bundle-web</artifactId>
                             <version>${project.version}</version>
                         </path>
-                        <!--
-                        <path>
-                            <groupId>net.colesico.framework</groupId>
-                            <artifactId>colesico-openapi</artifactId>
-                            <version>${project.version}</version>
-                        </path>
-                        -->
                         <!-- To disable compile debug log remove or comment this dependency-->
                         <dependency>
                             <groupId>org.slf4j</groupId>
