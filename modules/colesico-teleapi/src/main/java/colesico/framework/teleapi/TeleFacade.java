@@ -44,6 +44,7 @@ abstract public class TeleFacade<T, D> {
     /**
      * Descriptors registry of tele-methods implemented in this tele facade.
      * Descriptor is used to resolve target methods that are called with tele-api.
+     * @see TeleController#resolve(Object) 
      */
     abstract public D descriptors();
 }

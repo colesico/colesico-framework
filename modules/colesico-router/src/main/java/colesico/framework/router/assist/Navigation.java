@@ -20,7 +20,7 @@ import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
-import colesico.framework.router.RouteInvocation;
+import colesico.framework.router.RouterInvocation;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterException;
 import colesico.framework.service.ServiceProxy;
@@ -248,8 +248,8 @@ public class Navigation<N extends Navigation> {
         String location = toLocation(router);
         ForwardRequest request = new ForwardRequest(context.request(), location);
         context.setRequest(request);
-        Optional<RouteInvocation> invocation = router.resolve(new Router.ResolutionContext(httpMethod, request.requestURI()));
-        router.invoke(invocation.get());
+        Optional<RouterInvocation> invocation = router.resolve(new Router.ResolveContext(httpMethod, request.requestURI()));
+        router.perform(invocation.get());
     }
 
     protected StringBuilder buildParamsStr() {

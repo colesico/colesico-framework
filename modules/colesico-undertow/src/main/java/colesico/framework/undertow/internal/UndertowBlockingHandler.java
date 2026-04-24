@@ -7,7 +7,7 @@ import colesico.framework.httpserver.RequestProcessor;
 import colesico.framework.ioc.message.Message;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.ioc.scope.Unscoped;
-import colesico.framework.router.RouteInvocation;
+import colesico.framework.router.RouterInvocation;
 import colesico.framework.router.Router;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -21,10 +21,10 @@ import jakarta.inject.Inject;
 @Unscoped
 public class UndertowBlockingHandler extends RequestProcessor<HttpServerExchange> implements HttpHandler {
 
-    private final RouteInvocation resolution;
+    private final RouterInvocation resolution;
 
     @Inject
-    public UndertowBlockingHandler(@Message RouteInvocation resolution, ThreadScope threadScope, Router router, ErrorHandler errorHandler) {
+    public UndertowBlockingHandler(@Message RouterInvocation resolution, ThreadScope threadScope, Router router, ErrorHandler errorHandler) {
         super(threadScope, router, errorHandler);
         this.resolution = resolution;
     }

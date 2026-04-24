@@ -22,6 +22,7 @@ import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.*;
 import colesico.framework.router.assist.RouteTrie;
+import colesico.framework.teleapi.TeleController;
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.TeleMethod;
@@ -43,8 +44,9 @@ public class RouterImpl implements Router {
 
     protected final ThreadScope threadScope;
 
-    protected RouteTrie<RouteAction> routeTrie;
-    protected RoutesIndex routesIndex;
+    protected RouteTrie<RouteAction> routeTrie = new RouteTrie<>(null);
+
+    protected RoutesIndex routesIndex = new RoutesIndex();
 
     @Inject
     public RouterImpl(ThreadScope threadScope) {
@@ -53,46 +55,7 @@ public class RouterImpl implements Router {
 
     @Override
     public void register(TeleFacade<?, RouterDescriptors> teleFacade) {
-        log.debug("Register http router tele-facade: {}", teleFacade.getClass().getName());
-
-        var descriptors = teleFacade.descriptors();
-
-        for (var routeInfo : descriptors.routesInfo()) {
-            if (log.isDebugEnabled()) {
-                log.debug("Route '" + routeInfo.route() + "' mapped to target method '" +
-                        descriptors.targetClass().getName() + "->" + routeInfo.targetMethod());
-
-            }
-            RouteTrie.Node<RouteAction> node = routeTrie.addRoute(
-                    routeInfo.route(),
-                    new RouteAction(routeInfo.teleMethod(), routeInfo.attributes())
-            );
-
-            HttpMethod httpMethod = HttpMethod.of(node.root().name());
-            routesIndex.addNode(toRouteId(descriptors.targetClass(), routeInfo.targetMethod(), httpMethod), node);
-        }
-    }
-
-    void register(Polysupplier<TeleFacade<?, RouterDescriptors>> teleFacadeSupp) {
-        log.debug("Register http router tele-facades...");
-
-        routeTrie = new RouteTrie<>(null);
-        routesIndex = new RoutesIndex();
-
-        for (var teleFacade : teleFacadeSupp) {
-            register(teleFacade);
-        }
-    }
-
-    void addCustomAction(HttpMethod httpMethod, String route, TeleMethod<?, ?> teleMethod, Class<?> targetClass, String targetMethod, Map<String, String> routeAttributes) {
-        String fullRoute = httpMethod.name() + RouteTrie.SEGMENT_DELEMITER + route;
-        RouteTrie.Node<RouteAction> node = routeTrie.addRoute(fullRoute, new RouteAction(teleMethod, routeAttributes));
-        routesIndex.addNode(toRouteId(targetClass, targetMethod, httpMethod), node);
-        log.debug("Route '{}{}' mapped to custom action method '{}->{}()'", httpMethod.name(), route, targetClass.getName(), targetMethod);
-    }
-
-    String toRouteId(Class<?> targetClass, String targetMethod, HttpMethod httpMethod) {
-        return targetClass.getName() + ':' + targetMethod + ':' + httpMethod.name();
+        register(this, teleFacade);
     }
 
     @Override
@@ -101,7 +64,7 @@ public class RouterImpl implements Router {
     }
 
     @Override
-    public Optional<RouteInvocation> resolve(ResolutionContext context) {
+    public Optional<RouterInvocation> resolve(ResolveContext context) {
         var requestMethod = context.requestMethod();
         var requestUri = context.requestUri();
 
@@ -115,7 +78,7 @@ public class RouterImpl implements Router {
         }
 
         return Optional.of(
-                new RouteInvocation(this,
+                new RouterInvocation(
                         requestMethod,
                         requestUri,
                         routeResolution.node().value(),
@@ -124,12 +87,66 @@ public class RouterImpl implements Router {
     }
 
     @Override
-    public void invoke(RouteInvocation invocation) {
-        if (invocation == null){
+    public void perform(RouterInvocation invocation) {
+        if (invocation == null) {
             throw new TeleException("Undetermined invocation target");
         }
-        RouterContext routerContext = new RouterContext(invocation.requestUri(), invocation.routeParameters());
+        RouterContext routerContext = new RouterContext(invocation.requestUri(), invocation.parameters());
         threadScope.put(RouterContext.SCOPE_KEY, routerContext);
-        invocation.controller().invoke(invocation);
+
+        var teleController = invocation.action().teleController();
+        if (teleController == null || teleController == this) {
+            //TODO: create data port
+            invocation.action().teleMethod().invoke(null);
+        } else {
+            teleController.perform(invocation);
+        }
+    }
+
+    void register(TeleController<?, RouterInvocation, ?> teleController,
+                  TeleFacade<?, RouterDescriptors> teleFacade) {
+        log.debug("Register http router tele-facade: {}", teleFacade.getClass().getName());
+
+        var descriptors = teleFacade.descriptors();
+
+        for (var routeInfo : descriptors.routesInfo()) {
+            if (log.isDebugEnabled()) {
+                log.debug("Route '" + routeInfo.route() + "' mapped to target method '" +
+                        descriptors.targetClass().getName() + "->" + routeInfo.targetMethod());
+
+            }
+            RouteTrie.Node<RouteAction> node = routeTrie.addRoute(
+                    routeInfo.route(),
+                    new RouteAction(teleController, routeInfo.teleMethod(), routeInfo.attributes())
+            );
+
+            HttpMethod httpMethod = HttpMethod.of(node.root().name());
+            routesIndex.addNode(toRouteId(descriptors.targetClass(), routeInfo.targetMethod(), httpMethod), node);
+        }
+    }
+
+    void registerAll(TeleController<?, RouterInvocation, ?> teleController, Polysupplier<TeleFacade<?, RouterDescriptors>> teleFacades) {
+        log.debug("Register http router tele-facades...");
+
+        for (var teleFacade : teleFacades) {
+            register(teleController, teleFacade);
+        }
+    }
+
+    void addCustomAction(HttpMethod httpMethod,
+                         String route,
+                         TeleController<?, RouterInvocation, ?> teleController,
+                         TeleMethod<?, ?> teleMethod,
+                         Class<?> targetClass,
+                         String targetMethod,
+                         Map<String, String> attributes) {
+        String fullRoute = httpMethod.name() + RouteTrie.SEGMENT_DELEMITER + route;
+        RouteTrie.Node<RouteAction> node = routeTrie.addRoute(fullRoute, new RouteAction(teleController, teleMethod, attributes));
+        routesIndex.addNode(toRouteId(targetClass, targetMethod, httpMethod), node);
+        log.debug("Route '{}{}' mapped to custom action method '{}->{}()'", httpMethod.name(), route, targetClass.getName(), targetMethod);
+    }
+
+    String toRouteId(Class<?> targetClass, String targetMethod, HttpMethod httpMethod) {
+        return targetClass.getName() + ':' + targetMethod + ':' + httpMethod.name();
     }
 }

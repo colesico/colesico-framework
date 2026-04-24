@@ -4,14 +4,17 @@ import colesico.framework.http.HttpMethod;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.router.RouterInvocation;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterBuilder;
 import colesico.framework.router.RouterDescriptors;
+import colesico.framework.teleapi.TeleController;
 import colesico.framework.teleapi.TeleFacade;
 
 import colesico.framework.teleapi.TeleMethod;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +23,13 @@ import java.util.Map;
 public class RouterBuilderImpl implements RouterBuilder {
 
     private final ThreadScope threadScope;
-    private final Polysupplier<TeleFacade> teleFacadesSupp;
+    private final Map<, Polysupplier<TeleFacade>> teleFacades;
     private final List<CustomRouteAction> customRouteActions = new ArrayList<>();
 
     @Inject
-    public RouterBuilderImpl(@Classed(Router.class) Polysupplier<TeleFacade> teleFacadesSupp,
+    public RouterBuilderImpl(@Classed(Router.class) Polysupplier<TeleFacade> teleFacades,
                              ThreadScope threadScope) {
-        this.teleFacadesSupp = teleFacadesSupp;
+        this.teleFacades = teleFacades;
         this.threadScope = threadScope;
     }
 
@@ -45,62 +48,21 @@ public class RouterBuilderImpl implements RouterBuilder {
     @Override
     public Router build() {
         RouterImpl router = new RouterImpl(threadScope);
-        router.register((TeleFacade<?, RouterDescriptors>) teleFacadesSupp);
+        router.register((TeleFacade<?, RouterDescriptors>) teleFacades);
         for (CustomRouteAction cra : customRouteActions) {
             router.addCustomAction(cra.httpMethod(),
                     cra.route(),
+                    cra.teleController(),
                     cra.teleMethod(),
                     cra.targetClass(),
                     cra.targetMethod(),
-                    cra.grouteAttributes());
+                    cra.attributes());
         }
         return router;
     }
 
-    private static final class CustomRouteAction {
-        private final HttpMethod httpMethod;
-        private final String route;
-        private final TeleMethod<?,?> teleMethod;
-        private final Class<?> targetClass;
-        private final String targetMethod;
-        private final Map<String, String> routeAttributes;
-
-        public CustomRouteAction(HttpMethod httpMethod,
-                                 String route,
-                                 TeleMethod<?,?> teleMethod,
-                                 Class<?> targetClass,
-                                 String targetMethod,
-                                 Map<String, String> routeAttributes) {
-            this.httpMethod = httpMethod;
-            this.route = route;
-            this.targetClass = targetClass;
-            this.teleMethod = teleMethod;
-            this.targetMethod = targetMethod;
-            this.routeAttributes = routeAttributes;
-        }
-
-        public HttpMethod httpMethod() {
-            return httpMethod;
-        }
-
-        public String route() {
-            return route;
-        }
-
-        public Class<?> targetClass() {
-            return targetClass;
-        }
-
-        public TeleMethod<?,?> teleMethod() {
-            return teleMethod;
-        }
-
-        public String targetMethod() {
-            return targetMethod;
-        }
-
-        public Map<String, String> grouteAttributes() {
-            return routeAttributes;
-        }
+    private record CustomRouteAction(HttpMethod httpMethod, String route,
+                                     TeleController<?, RouterInvocation, ?> teleController, TeleMethod<?, ?> teleMethod,
+                                     Class<?> targetClass, String targetMethod, Map<String, String> attributes) {
     }
 }

@@ -16,21 +16,19 @@
 
 package colesico.framework.router;
 
-import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.teleapi.TeleController;
 import colesico.framework.teleapi.TeleFacade;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Router API
  * <p>
  * Router allows to bind any action to given route and perform it
  */
-public interface Router extends TeleController<Router.ResolutionContext, RouteInvocation, TeleFacade<?, RouterDescriptors>> {
+public interface Router extends TeleController<Router.ResolveContext, RouterInvocation, TeleFacade<?, RouterDescriptors>> {
 
     /**
      * Returns route parts associated with given handler
@@ -47,7 +45,7 @@ public interface Router extends TeleController<Router.ResolutionContext, RouteIn
      *
      * @param requestUri request url part from hostname(port) to query string (before '?' char)
      */
-    record ResolutionContext(HttpMethod requestMethod, String requestUri) {
+    record ResolveContext(HttpMethod requestMethod, String requestUri) {
     }
 
 }
