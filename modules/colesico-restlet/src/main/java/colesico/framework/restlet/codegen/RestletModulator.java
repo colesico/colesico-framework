@@ -56,7 +56,7 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     @Override
-    protected Class<RestletTeleDriver> descriptorsClass() {
+    protected Class<RestletTeleDriver> commandsClass() {
         return RestletTeleDriver.class;
     }
 

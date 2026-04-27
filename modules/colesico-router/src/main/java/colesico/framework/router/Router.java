@@ -27,7 +27,7 @@ import java.util.Map;
  * <p>
  * Router allows to bind any action to given route and perform it
  */
-public interface Router extends TeleController<Router.Criteria, Router.Invocation, RouterDescriptors> {
+public interface Router extends TeleController<Router.Criteria, Router.Invocation, RouterCommands> {
 
     /**
      * Returns route parts associated with given handler

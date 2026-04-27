@@ -16,7 +16,7 @@
 package colesico.framework.router.codegen;
 
 import colesico.framework.assist.codegen.ArrayCodegen;
-import colesico.framework.router.RouterDescriptors;
+import colesico.framework.router.RouterCommands;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
@@ -38,7 +38,7 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
 
     protected final Logger logger = LoggerFactory.getLogger(RoutesModulator.class);
 
-    abstract protected Class<?> descriptorsClass();
+    abstract protected Class<?> commandsClass();
 
     abstract protected Class<? extends TRContext> readContextClass();
 
@@ -55,7 +55,7 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
     protected RouterTeleFacadeElement createTeleFacade(ServiceElement serviceElm) {
         return new RouterTeleFacadeElement(
                 teleType(),
-                descriptorsClass(),
+                commandsClass(),
                 readContextClass(),
                 writeContextClass(),
                 TeleFacadeElement.IocQualifier.ofEmpty(),
@@ -63,13 +63,13 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
         );
     }
 
-    protected CodeBlock generateDescriptorsMethodBody(RouterTeleFacadeElement teleFacade) {
+    protected CodeBlock generatecommandsMethodBody(RouterTeleFacadeElement teleFacade) {
         CodeBlock.Builder cb = CodeBlock.builder();
 
         cb.addStatement("$T $N = new $T($T.class)",
-                ClassName.get(RouterDescriptors.class),
-                DESCRIPTORS_VAR,
-                ClassName.get(RouterDescriptors.class),
+                ClassName.get(RouterCommands.class),
+                COMMANDS_VAR,
+                ClassName.get(RouterCommands.class),
                 TypeName.get(teleFacade.parentService().originClass().originType())
         );
 
@@ -79,7 +79,7 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
             cb.add(generateRouteMapping(teleFacade, routedTeleCommand));
         }
 
-        cb.addStatement("return $N", DESCRIPTORS_VAR);
+        cb.addStatement("return $N", COMMANDS_VAR);
         return cb.build();
     }
 
@@ -88,8 +88,8 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
         CodeBlock.Builder cb = CodeBlock.builder();
 
         cb.add("$N.$N($S,$N(),$S,",
-                DESCRIPTORS_VAR,
-                RouterDescriptors.ADD_METHOD,
+                COMMANDS_VAR,
+                RouterCommands.ADD_METHOD,
                 routedTeleCommand.route(),
                 routedTeleCommand.teleCommand().builderName(),
                 routedTeleCommand.teleCommand().name()

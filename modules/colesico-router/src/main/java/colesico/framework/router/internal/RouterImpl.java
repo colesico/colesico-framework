@@ -53,7 +53,7 @@ public class RouterImpl implements Router {
     }
 
     @Override
-    public void register(TeleFacade<?, RouterDescriptors> teleFacade) {
+    public void register(TeleFacade<?, RouterCommands> teleFacade) {
         register(this, teleFacade);
     }
 
@@ -102,14 +102,14 @@ public class RouterImpl implements Router {
         }
     }
 
-    void register(TeleController<Router.Criteria, Router.Invocation, RouterDescriptors> teleController,
-                  TeleFacade<?, RouterDescriptors> teleFacade) {
+    void register(TeleController<Router.Criteria, Router.Invocation, RouterCommands> teleController,
+                  TeleFacade<?, RouterCommands> teleFacade) {
         log.debug("Register http router tele-facade: {}", teleFacade.getClass().getName());
 
-        var descriptors = teleFacade.commands();
+        var commands = teleFacade.commands();
 
-        for (var routeInfo : descriptors.routesInfo()) {
-            log.debug("Route '{}' mapped to target method '{}->{}", routeInfo.route(), descriptors.targetClass().getName(), routeInfo.targetMethod());
+        for (var routeInfo : commands.routesInfo()) {
+            log.debug("Route '{}' mapped to target method '{}->{}", routeInfo.route(), commands.targetClass().getName(), routeInfo.targetMethod());
             RouteTrie.Node<RouteAction> node = routeTrie.addRoute(
                     routeInfo.route(),
                     new RouteAction(teleController,
@@ -118,7 +118,7 @@ public class RouterImpl implements Router {
             );
 
             HttpMethod httpMethod = HttpMethod.of(node.root().name());
-            routesIndex.addNode(toRouteId(descriptors.targetClass(), routeInfo.targetMethod(), httpMethod), node);
+            routesIndex.addNode(toRouteId(commands.targetClass(), routeInfo.targetMethod(), httpMethod), node);
         }
     }
 
@@ -132,7 +132,7 @@ public class RouterImpl implements Router {
 
     void addCustomAction(HttpMethod httpMethod,
                          String route,
-                         TeleController<Router.Criteria, Router.Invocation, RouterDescriptors> teleController,
+                         TeleController<Router.Criteria, Router.Invocation, RouterCommands> teleController,
                          TeleCommand<?, ?> teleCommand,
                          Class<?> targetClass,
                          String targetMethod,

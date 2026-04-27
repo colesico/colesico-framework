@@ -22,7 +22,7 @@ import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterContext;
-import colesico.framework.router.RouterDescriptors;
+import colesico.framework.router.RouterCommands;
 import colesico.framework.security.PrincipalRequiredException;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.dataport.DataPort;
@@ -62,7 +62,7 @@ public class WebletTeleControllerImpl implements WebletTeleController {
     }
 
     @Override
-    public Polysupplier<TeleFacade<?, RouterDescriptors>> teleFacades() {
+    public Polysupplier<TeleFacade<?, RouterCommands>> teleFacades() {
         return null;
     }
 
@@ -88,7 +88,7 @@ public class WebletTeleControllerImpl implements WebletTeleController {
     }
 
     @Override
-    public void register(TeleFacade<?, RouterDescriptors> teleFacade) {
+    public void register(TeleFacade<?, RouterCommands> teleFacade) {
         throw new UnsupportedOperationException("Not supported");
     }
 }

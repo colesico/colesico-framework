@@ -25,7 +25,7 @@ import java.util.TreeMap;
 /**
  * Binds routes with route action methods  (tele-facade methods)
  */
-public final class RouterDescriptors {
+public final class RouterCommands {
 
     public static final String ADD_METHOD = "add";
     public static final String ROUTE_PARAM = "route";
@@ -41,12 +41,12 @@ public final class RouterDescriptors {
 
     private final Map<String, RouteInfo> routesMap = new TreeMap<>();
 
-    public RouterDescriptors(Class<?> targetClass) {
+    public RouterCommands(Class<?> targetClass) {
         this.targetClass = targetClass;
     }
 
     /**
-     * Add route to this descriptors
+     * Add route to this commands registry
      *
      * @param route        route definition with http method (ex: GET/my/foo )
      * @param teleCommand   action handler

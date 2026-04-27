@@ -207,11 +207,11 @@ public class TeleFacadesGenerator {
         }
     }
 
-    protected void generateDescriptorsMethod(TeleFacadeElement teleFacade, TypeSpec.Builder classBuilder) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(TeleFacade.DESCRIPTORS_METHOD);
+    protected void generateCommandsMethod(TeleFacadeElement teleFacade, TypeSpec.Builder classBuilder) {
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(TeleFacade.COMMANDS_METHOD);
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-        mb.returns(ClassName.get(teleFacade.descriptorsClass()));
-        mb.addCode(teleFacade.descriptorsMethodBody());
+        mb.returns(ClassName.get(teleFacade.commandsClass()));
+        mb.addCode(teleFacade.commandsMethodBody());
         classBuilder.addMethod(mb.build());
     }
 
@@ -238,11 +238,11 @@ public class TeleFacadesGenerator {
 
         classBuilder.superclass(ParameterizedTypeName.get(ClassName.get(TeleFacade.class),
                 TypeName.get(service.originClass().originType()),
-                ClassName.get(teleFacade.descriptorsClass())));
+                ClassName.get(teleFacade.commandsClass())));
 
         generateConstructor(teleFacade, classBuilder);
         generateTeleCommandBuilders(teleFacade, classBuilder);
-        generateDescriptorsMethod(teleFacade, classBuilder);
+        generateCommandsMethod(teleFacade, classBuilder);
 
         createTeleFacade(service, teleFacade, classBuilder);
 

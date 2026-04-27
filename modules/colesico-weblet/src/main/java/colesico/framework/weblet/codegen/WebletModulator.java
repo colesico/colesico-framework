@@ -57,7 +57,7 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected Class<WebletTeleController> descriptorsClass() {
+    protected Class<WebletTeleController> commandsClass() {
         return WebletTeleController.class;
     }
 

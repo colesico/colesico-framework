@@ -8,7 +8,7 @@ import java.util.Optional;
  *
  * @param <C> Criteria to resolve an invocation (e.g. HTTP URL, method name, etc.)
  * @param <I> Invocation to execute
- * @param <D> Descriptors registry of tele-facade (references to target methods)
+ * @param <D> commands registry of tele-facade (references to target methods)
  */
 public interface TeleController<C, I, D> {
 

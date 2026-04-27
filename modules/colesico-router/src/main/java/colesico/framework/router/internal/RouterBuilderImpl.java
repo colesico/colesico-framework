@@ -31,7 +31,7 @@ public class RouterBuilderImpl implements RouterBuilder {
     @Override
     public void addCustomAction(HttpMethod httpMethod,
                                 String route,
-                                TeleController<Router.Criteria, Router.Invocation, RouterDescriptors> teleController,
+                                TeleController<Router.Criteria, Router.Invocation, RouterCommands> teleController,
                                 TeleCommand<?, ?> teleCommand,
                                 Class<?> targetClass,
                                 String targetMethod,
@@ -65,7 +65,7 @@ public class RouterBuilderImpl implements RouterBuilder {
 
     private record CustomRouteAction(HttpMethod httpMethod,
                                      String route,
-                                     TeleController<Router.Criteria, Router.Invocation, RouterDescriptors> teleController,
+                                     TeleController<Router.Criteria, Router.Invocation, RouterCommands> teleController,
                                      TeleCommand<?, ?> teleCommand,
                                      Class<?> targetClass,
                                      String targetMethod,

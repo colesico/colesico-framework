@@ -12,12 +12,12 @@ public final class RouterTeleFacadeElement extends TeleFacadeElement {
     private final RoutesBuilder routesBuilder;
 
     public RouterTeleFacadeElement(Class<?> teleType,
-                                   Class<?> descriptorsClass,
+                                   Class<?> commandsClass,
                                    Class<? extends TRContext> readContextClass,
                                    Class<? extends TWContext> writeContextClass,
                                    IocQualifier iocQualifier,
                                    RoutesBuilder routesBuilder) {
-        super(teleType, descriptorsClass, readContextClass, writeContextClass, iocQualifier);
+        super(teleType, commandsClass, readContextClass, writeContextClass, iocQualifier);
         this.routesBuilder = routesBuilder;
     }
 

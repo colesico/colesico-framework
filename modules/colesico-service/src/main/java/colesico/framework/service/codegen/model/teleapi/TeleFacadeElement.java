@@ -47,14 +47,14 @@ public class TeleFacadeElement {
     private final Class<?> teleType;
 
     /**
-     * Descriptors registry class
+     * commands registry class
      */
-    private final Class<?> descriptorsClass;
+    private final Class<?> commandsClass;
 
     /**
-     * Descriptors registry method code
+     * Commands registry method code
      */
-    private CodeBlock descriptorsMethodBody;
+    private CodeBlock commandsMethodBody;
 
     /**
      * Tele write context class
@@ -100,12 +100,12 @@ public class TeleFacadeElement {
     private final Map<Class<?>, Object> properties = new HashMap<>();
 
     public TeleFacadeElement(Class<?> teleType,
-                             Class<?> descriptorsClass,
+                             Class<?> commandsClass,
                              Class<? extends TRContext> readContextClass,
                              Class<? extends TWContext> writeContextClass,
                              IocQualifier iocQualifier) {
         this.teleType = teleType;
-        this.descriptorsClass = descriptorsClass;
+        this.commandsClass = commandsClass;
         this.readContextClass = readContextClass;
         this.writeContextClass = writeContextClass;
         this.iocQualifier = iocQualifier;
@@ -156,11 +156,11 @@ public class TeleFacadeElement {
         properties.put(propertyClass, property);
     }
 
-    public CodeBlock descriptorsMethodBody() {
-        if (descriptorsMethodBody == null) {
-            CodegenException.of().message("Tele-ligature code is null");
+    public CodeBlock commandsMethodBody() {
+        if (commandsMethodBody == null) {
+            CodegenException.of().message("Tele commands registry method body code is null");
         }
-        return descriptorsMethodBody;
+        return commandsMethodBody;
     }
 
     public ServiceElement parentService() {
@@ -175,12 +175,12 @@ public class TeleFacadeElement {
         return teleType;
     }
 
-    public void setDescriptorsMethodBody(CodeBlock descriptorsMethodBody) {
-        this.descriptorsMethodBody = descriptorsMethodBody;
+    public void setCommandsMethodBody(CodeBlock commandsMethodBody) {
+        this.commandsMethodBody = commandsMethodBody;
     }
 
-    public Class<?> descriptorsClass() {
-        return descriptorsClass;
+    public Class<?> commandsClass() {
+        return commandsClass;
     }
 
     public IocQualifier iocQualifier() {
