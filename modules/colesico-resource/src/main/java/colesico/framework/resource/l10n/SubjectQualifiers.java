@@ -39,7 +39,7 @@ public final class SubjectQualifiers implements Iterable<String> {
      * Default subject qualifiers
      */
     public static SubjectQualifiers of(QualifiersDefinition definition) {
-        String[] values = new String[definition.getSize()];
+        String[] values = new String[definition.size()];
         Arrays.fill(values, null);
         return new SubjectQualifiers(values);
     }
@@ -54,11 +54,11 @@ public final class SubjectQualifiers implements Iterable<String> {
         return new SubjectQualifiers(definition.canonicalize(qualifiers));
     }
 
-    public String[] getValues() {
+    public String[] values() {
         return values;
     }
 
-    public List<String> getNotNullValues() {
+    public List<String> notNullValues() {
         List<String> result = new ArrayList<>();
 
         for (String val : values) {
@@ -71,7 +71,7 @@ public final class SubjectQualifiers implements Iterable<String> {
     }
 
     public String toSuffix() {
-        List<String> vals = getNotNullValues();
+        List<String> vals = notNullValues();
         if (vals.isEmpty()) {
             return "";
         } else {

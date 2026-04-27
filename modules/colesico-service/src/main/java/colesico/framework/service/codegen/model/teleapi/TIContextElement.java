@@ -8,22 +8,22 @@ import com.palantir.javapoet.CodeBlock;
 public class TIContextElement {
 
     /**
-     * Parent tele-method ref
+     * Parent tele-command ref
      */
-    protected final TeleMethodElement parentTeleMethod;
+    protected final TeleCommandElement parentTeleCommand;
 
     /**
      * Invocation context creation code
      */
     private final CodeBlock creationCode;
 
-    public TIContextElement(TeleMethodElement parentTeleMethod, CodeBlock creationCode) {
-        this.parentTeleMethod = parentTeleMethod;
+    public TIContextElement(TeleCommandElement parentTeleCommand, CodeBlock creationCode) {
+        this.parentTeleCommand = parentTeleCommand;
         this.creationCode = creationCode;
     }
 
-    public TeleMethodElement parentTeleMethod() {
-        return parentTeleMethod;
+    public TeleCommandElement parentTeleCommand() {
+        return parentTeleCommand;
     }
 
     public CodeBlock creationCode() {

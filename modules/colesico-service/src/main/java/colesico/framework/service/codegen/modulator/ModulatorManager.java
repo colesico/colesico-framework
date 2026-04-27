@@ -22,7 +22,7 @@ import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.ServiceMethodElement;
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
-import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
+import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import colesico.framework.service.codegen.model.teleapi.TeleInputElement;
 import colesico.framework.service.codegen.parser.RoundContext;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
@@ -134,9 +134,9 @@ public class ModulatorManager {
         }
     }
 
-    public void notifyBeforeParseTeleMethod(TeleMethodElement teleMethod) {
+    public void notifyBeforeParseTeleCommand(TeleCommandElement teleCommand) {
         for (Modulator modulator : modulators) {
-            modulator.onBeforeParseTeleMethod(teleMethod);
+            modulator.onBeforeParseTeleCommand(teleCommand);
         }
     }
 
@@ -146,9 +146,9 @@ public class ModulatorManager {
         }
     }
 
-    public void notifyTeleMethodParsed(TeleMethodElement teleMethod) {
+    public void notifyTeleCommandParsed(TeleCommandElement teleCommand) {
         for (Modulator modulator : modulators) {
-            modulator.onTeleMethodParsed(teleMethod);
+            modulator.onTeleCommandParsed(teleCommand);
         }
     }
 

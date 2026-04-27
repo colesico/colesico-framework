@@ -2,7 +2,7 @@ package colesico.framework.telehttp.codegen;
 
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.service.codegen.model.teleapi.TeleInputElement;
-import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
+import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.ParamOrigin;
 
@@ -18,11 +18,11 @@ public class TeleHttpCodegenUtils {
     }
 
     public static String originName(TeleInputElement teleInput, String defaultOrigin) {
-        TeleMethodElement teleMethod = teleInput.parentTeleMethod();
+        TeleCommandElement teleCommand = teleInput.parentTeleCommand();
         String originName = defaultOrigin;
         AnnotationAssist<ParamOrigin> originAnn = teleInput.originElement().annotation(ParamOrigin.class);
         if (originAnn == null) {
-            originAnn = teleMethod.serviceMethod().originMethod().annotation(ParamOrigin.class);
+            originAnn = teleCommand.serviceMethod().originMethod().annotation(ParamOrigin.class);
         }
 
         if (originAnn != null) {

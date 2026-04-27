@@ -34,7 +34,7 @@ public class PropertyBundleFactory {
         if (StringUtils.isEmpty(baseName)) {
             throw new IllegalArgumentException("Base name is empty");
         }
-        ObjectiveQualifiers qualifiers = resourceUtils.getObjectiveQualifiers();
+        ObjectiveQualifiers qualifiers = resourceUtils.objectiveQualifiers();
         PropertyBundleCache.Key key = new PropertyBundleCache.Key(baseName, qualifiers);
         PropertyBundle bundle = cache.get(key);
         if (bundle == null) {

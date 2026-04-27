@@ -10,8 +10,8 @@ import javax.lang.model.type.TypeMirror;
 
 public final class ServiceCodegenUtils {
 
-    public static void generateTeleResultType(TeleMethodElement teleMethod, CodeBlock.Builder cb) {
-        TypeMirror returnType = teleMethod.serviceMethod().originMethod().returnType();
+    public static void generateTeleResultType(TeleCommandElement teleCommand, CodeBlock.Builder cb) {
+        TypeMirror returnType = teleCommand.serviceMethod().originMethod().returnType();
         CodegenUtils.generateTypePick(returnType, cb);
     }
 

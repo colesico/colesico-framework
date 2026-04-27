@@ -22,7 +22,7 @@ import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.TRContextElement;
 import colesico.framework.service.codegen.model.teleapi.TWContextElement;
-import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
+import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import colesico.framework.service.codegen.model.teleapi.TeleParameterElement;
 import colesico.framework.teleapi.dataport.TRContext;
 import colesico.framework.teleapi.dataport.TWContext;
@@ -115,26 +115,26 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected TWContextElement createWriteContext(TeleMethodElement teleMethod) {
+    protected TWContextElement createWriteContext(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("$T.$N(", ClassName.get(WebletTWContext.class), WebletTWContext.OF_METHOD);
 
-        ServiceCodegenUtils.generateTeleResultType(teleMethod, cb);
+        ServiceCodegenUtils.generateTeleResultType(teleCommand, cb);
 
-        TypeMirror customWriter = getCustomWriterClass(teleMethod);
+        TypeMirror customWriter = getCustomWriterClass(teleCommand);
         ClassType customWriterCT = null;
         if (customWriter != null) {
             cb.add(", $T.class", TypeName.get(customWriter));
             customWriterCT = new ClassType(processorContext().processingEnv(), (DeclaredType) customWriter);
         }
         cb.add(")");
-        return new HttpTWContextElement(teleMethod, cb.build(), customWriterCT);
+        return new HttpTWContextElement(teleCommand, cb.build(), customWriterCT);
     }
 
-    private TypeMirror getCustomWriterClass(TeleMethodElement teleMethod) {
-        var wrAnn = teleMethod.serviceMethod().originMethod().annotation(WebletResponseWriter.class);
+    private TypeMirror getCustomWriterClass(TeleCommandElement teleCommand) {
+        var wrAnn = teleCommand.serviceMethod().originMethod().annotation(WebletResponseWriter.class);
         if (wrAnn == null) {
-            wrAnn = teleMethod.parentTeleFacade().parentService().originClass().annotation(WebletResponseWriter.class);
+            wrAnn = teleCommand.parentTeleFacade().parentService().originClass().annotation(WebletResponseWriter.class);
         }
         if (wrAnn == null) {
             return null;
@@ -146,7 +146,7 @@ public final class WebletModulator extends RoutesModulator {
         var rdAnn = teleParam.originElement().annotation(WebletParamReader.class);
 
         if (rdAnn == null) {
-            rdAnn = teleParam.parentTeleMethod().serviceMethod().originMethod().annotation(WebletParamReader.class);
+            rdAnn = teleParam.parentTeleCommand().serviceMethod().originMethod().annotation(WebletParamReader.class);
         }
         return rdAnn.valueTypeMirror(a -> a.value());
     }

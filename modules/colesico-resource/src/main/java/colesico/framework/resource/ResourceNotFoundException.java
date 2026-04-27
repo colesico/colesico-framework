@@ -27,7 +27,7 @@ public class ResourceNotFoundException extends ResourceException {
         this.resourceName = resourceName;
     }
 
-    public String getResourceName() {
+    public String resourceName() {
         return resourceName;
     }
 

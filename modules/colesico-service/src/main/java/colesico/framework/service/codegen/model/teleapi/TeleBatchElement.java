@@ -17,9 +17,9 @@ public class TeleBatchElement implements TeleReadableElement {
     private static final String BATCH_VAR_SUFFIX = "Batch";
 
     /**
-     * Parent tele-method ref
+     * Parent tele-command ref
      */
-    private final TeleMethodElement parentTeleMethod;
+    private final TeleCommandElement parentTeleCommand;
 
 
     protected TRContextElement readContext;
@@ -37,8 +37,8 @@ public class TeleBatchElement implements TeleReadableElement {
 
     protected final List<TeleBatchFieldElement> fields = new ArrayList<>();
 
-    public TeleBatchElement(TeleMethodElement parentTeleMethod, String name) {
-        this.parentTeleMethod = parentTeleMethod;
+    public TeleBatchElement(TeleCommandElement parentTeleCommand, String name) {
+        this.parentTeleCommand = parentTeleCommand;
         this.name = name;
     }
 
@@ -48,7 +48,7 @@ public class TeleBatchElement implements TeleReadableElement {
     }
 
     public String batchClassSimpleName() {
-        return StrUtils.firstCharToUpperCase(parentTeleMethod.name()) + StrUtils.firstCharToUpperCase(name);
+        return StrUtils.firstCharToUpperCase(parentTeleCommand.name()) + StrUtils.firstCharToUpperCase(name);
     }
 
     public String batchClassName() {

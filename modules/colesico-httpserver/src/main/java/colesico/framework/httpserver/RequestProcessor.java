@@ -87,7 +87,7 @@ abstract public class RequestProcessor<C> {
         final HttpContext httpContext = initHttpContext(context);
         try {
             // Perform router action
-            router.perform(resolution);
+            router.execute(resolution);
         } catch (Exception e) {
             handleException(e, httpContext);
         } finally {

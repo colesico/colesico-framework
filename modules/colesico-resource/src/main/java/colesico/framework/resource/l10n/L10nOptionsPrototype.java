@@ -17,6 +17,9 @@ abstract public class L10nOptionsPrototype {
 
     abstract public void configure(Options options);
 
+    /**
+     * L10N Options
+     */
     public static final class Options {
 
         public static final String BASE_NAME_METHOD = "baseName";

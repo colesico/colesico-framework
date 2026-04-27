@@ -25,8 +25,8 @@ public final class TeleParameterElement extends TeleInputElement implements Tele
 
     private TRContextElement readContext;
 
-    public TeleParameterElement(TeleMethodElement parentTeleMethod, VarElement originElement) {
-        super(parentTeleMethod, originElement);
+    public TeleParameterElement(TeleCommandElement parentTeleCommand, VarElement originElement) {
+        super(parentTeleCommand, originElement);
     }
 
     public TRContextElement readContext() {

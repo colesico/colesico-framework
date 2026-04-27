@@ -50,9 +50,9 @@ public class PrefixSubstitutor implements ResourcePrefixOptionsPrototype.Options
             return resourceName;
         }
         if (resourceName.charAt(0) == '/') {
-            return "/" + rewriting.getTargetPrefix() + StringUtils.substring(resourceName, rewriting.getOriginPrefixLength() + 1);
+            return "/" + rewriting.targetPrefix() + StringUtils.substring(resourceName, rewriting.originPrefixLength() + 1);
         }
-        return rewriting.getTargetPrefix() + StringUtils.substring(resourceName, rewriting.getOriginPrefixLength());
+        return rewriting.targetPrefix() + StringUtils.substring(resourceName, rewriting.originPrefixLength());
     }
 
     @Override
@@ -68,7 +68,7 @@ public class PrefixSubstitutor implements ResourcePrefixOptionsPrototype.Options
     public void addPrefixSubstitution(String originPrefix, String targetPrefix,
                                       ResourcePrefixOptionsPrototype.Phase phase) {
         PathTrie.Node<Rewriting> node = pathTrie(phase).add(originPrefix);
-        if (node.getValue() != null) {
+        if (node.value() != null) {
             throw new ResourceException("Duplicate resource name prefix substitution: " + originPrefix);
         }
         String[] targetParts = StringUtils.split(targetPrefix, "/");
@@ -90,11 +90,11 @@ public class PrefixSubstitutor implements ResourcePrefixOptionsPrototype.Options
             this.targetPrefix = targetPrefix;
         }
 
-        public String getTargetPrefix() {
+        public String targetPrefix() {
             return targetPrefix;
         }
 
-        public int getOriginPrefixLength() {
+        public int originPrefixLength() {
             return originPrefixLength;
         }
     }

@@ -115,26 +115,26 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     @Override
-    protected TWContextElement createWriteContext(TeleMethodElement teleMethod) {
+    protected TWContextElement createWriteContext(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("$T.$N(", ClassName.get(RestletTWContext.class), RestletTWContext.OF_METHOD);
 
-        ServiceCodegenUtils.generateTeleResultType(teleMethod, cb);
+        ServiceCodegenUtils.generateTeleResultType(teleCommand, cb);
 
-        TypeMirror customWriter = getCustomWriterClass(teleMethod);
+        TypeMirror customWriter = getCustomWriterClass(teleCommand);
         ClassType customWriterCT = null;
         if (customWriter != null) {
             cb.add(", $T.class", TypeName.get(customWriter));
             customWriterCT = new ClassType(getProcessorContext().getProcessingEnv(), (DeclaredType) customWriter);
         }
         cb.add(")");
-        return new HttpTWContextElement(teleMethod, cb.build(), customWriterCT);
+        return new HttpTWContextElement(teleCommand, cb.build(), customWriterCT);
     }
 
-    protected TypeMirror getCustomWriterClass(TeleMethodElement teleMethod) {
-        var wrAnn = teleMethod.serviceMethod().originMethod().annotation(RestletResponseWriter.class);
+    protected TypeMirror getCustomWriterClass(TeleCommandElement teleCommand) {
+        var wrAnn = teleCommand.serviceMethod().originMethod().annotation(RestletResponseWriter.class);
         if (wrAnn == null) {
-            wrAnn = teleMethod.parentTeleFacade().parentService().originClass().annotation(RestletResponseWriter.class);
+            wrAnn = teleCommand.parentTeleFacade().parentService().originClass().annotation(RestletResponseWriter.class);
         }
         if (wrAnn == null) {
             return null;

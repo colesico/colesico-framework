@@ -248,7 +248,7 @@ public class Navigation<N extends Navigation> {
         ForwardRequest request = new ForwardRequest(context.request(), location);
         context.setRequest(request);
         Optional<Router.Invocation> invocation = router.resolve(new Router.Criteria(httpMethod, request.requestURI()));
-        router.perform(invocation.get());
+        router.execute(invocation.get());
     }
 
     protected StringBuilder buildParamsStr() {

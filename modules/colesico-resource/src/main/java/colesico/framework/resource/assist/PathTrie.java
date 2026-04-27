@@ -73,15 +73,15 @@ public class PathTrie<V> {
             final String pathItem = pathTokenize.nextToken();
             final Node child = currentNode.getChild(pathItem);
             if (child == null) {
-                return selectedNode == null ? null : selectedNode.getValue();
+                return selectedNode == null ? null : selectedNode.value();
             } else {
                 currentNode = child;
-                if (filter.accept(currentNode.getValue())) {
+                if (filter.accept(currentNode.value())) {
                     selectedNode = currentNode;
                 }
             }
         }
-        return selectedNode == null ? null : selectedNode.getValue();
+        return selectedNode == null ? null : selectedNode.value();
     }
 
     public final V find(String path) {
@@ -91,15 +91,15 @@ public class PathTrie<V> {
             final String pathItem = pathTokenize.nextToken();
             final var child = currentNode.getChild(pathItem);
             if (child == null) {
-                return currentNode.getValue();
+                return currentNode.value();
             } else {
                 currentNode = child;
             }
         }
-        return currentNode.getValue();
+        return currentNode.value();
     }
 
-    public String getDelimiter() {
+    public String delimiter() {
         return delimiter;
     }
 
@@ -107,7 +107,7 @@ public class PathTrie<V> {
         private V value;
         private final Map<String, Node<V>> children = new HashMap<>();
 
-        public V getValue() {
+        public V value() {
             return value;
         }
 

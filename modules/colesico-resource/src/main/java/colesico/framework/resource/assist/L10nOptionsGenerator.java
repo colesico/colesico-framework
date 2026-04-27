@@ -64,7 +64,7 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
         return optionsBuilder;
     }
 
-    public L10nOptionsGenerator options() {
+    public L10nOptionsGenerator l10nOptions() {
         configureCodeBlockBuilder.add("$N", L10nOptionsPrototype.OPTIONS_PARAM);
         return this;
     }

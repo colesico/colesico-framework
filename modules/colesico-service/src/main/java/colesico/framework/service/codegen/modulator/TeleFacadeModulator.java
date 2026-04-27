@@ -57,10 +57,10 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
     abstract protected T createTeleFacade(ServiceElement serviceElm);
 
     /**
-     * Called to process tele method after parsing completed.
+     * Called to process tele-command after parsing completed.
      * Override this method to custom processing.
      */
-    protected void processTeleMethod(TeleMethodElement teleMethod) {
+    protected void processTeleCommand(TeleCommandElement teleCommand) {
 
     }
 
@@ -104,16 +104,16 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
     }
 
     @Override
-    public void onTeleMethodParsed(TeleMethodElement teleMethod) {
-        super.onTeleMethodParsed(teleMethod);
-        TeleFacadeElement teleFacade = teleMethod.parentTeleFacade();
+    public void onTeleCommandParsed(TeleCommandElement teleCommand) {
+        super.onTeleCommandParsed(teleCommand);
+        TeleFacadeElement teleFacade = teleCommand.parentTeleFacade();
         if (!teleFacade.teleType().equals(teleType())) {
             return;
         }
-        processTeleMethod(teleMethod);
-        createParamReadContexts(teleMethod.parameters());
-        teleMethod.setInvocationContext(createInvocationContext(teleMethod));
-        teleMethod.setWritingContext(createWriteContext(teleMethod));
+        processTeleCommand(teleCommand);
+        createParamReadContexts(teleCommand.parameters());
+        teleCommand.setInvocationContext(createInvocationContext(teleCommand));
+        teleCommand.setWritingContext(createWriteContext(teleCommand));
     }
 
     @Override
@@ -126,16 +126,16 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
         teleFacade.setDescriptorsMethodBody(generateDescriptorsMethodBody((T) teleFacade));
     }
 
-    protected TIContextElement createInvocationContext(TeleMethodElement teleMethod) {
+    protected TIContextElement createInvocationContext(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("null");
-        return new TIContextElement(teleMethod, cb.build());
+        return new TIContextElement(teleCommand, cb.build());
     }
 
-    protected TWContextElement createWriteContext(TeleMethodElement teleMethod) {
+    protected TWContextElement createWriteContext(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        ServiceCodegenUtils.generateTeleResultType(teleMethod, cb);
-        return new TWContextElement(teleMethod, cb.build());
+        ServiceCodegenUtils.generateTeleResultType(teleCommand, cb);
+        return new TWContextElement(teleCommand, cb.build());
     }
 
     protected TRContextElement createReadContext(TeleParameterElement teleParam) {

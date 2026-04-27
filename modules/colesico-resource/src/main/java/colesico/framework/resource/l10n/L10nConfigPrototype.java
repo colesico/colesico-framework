@@ -10,12 +10,12 @@ abstract public class L10nConfigPrototype {
     /**
      * Setup {@link QualifiersDefinition} fo L10n rewriter
      */
-    abstract public QualifiersDefinition getQualifiersDefinition();
+    abstract public QualifiersDefinition qualifiersDefinition();
 
     /**
      * Returns {@link ObjectiveQualifiers} from on given profile
      */
-    abstract public ObjectiveQualifiers getObjectiveQualifiers(Profile profile);
+    abstract public ObjectiveQualifiers objectiveQualifiers(Profile profile);
 
 
 }

@@ -29,15 +29,15 @@ public final class QualifiersDefinition implements Iterable<String> {
         return new QualifiersDefinition(names);
     }
 
-    public String[] getNames() {
+    public String[] names() {
         return names;
     }
 
-    public int getSize() {
+    public int size() {
         return names.length;
     }
 
-    public String getName(int i) {
+    public String name(int i) {
         return names[i];
     }
 

@@ -33,7 +33,7 @@ public final class QualifiersMatcher<V> {
      */
     public V addQualifiers(final SubjectQualifiers qualifiers, V value) {
         var lastNode = provideLastNode(qualifiers);
-        var prevValue = lastNode.getValue();
+        var prevValue = lastNode.value();
         try {
             lastNode.setValue(value);
         } catch (Exception e) {
@@ -76,7 +76,7 @@ public final class QualifiersMatcher<V> {
         }
 
         SubjectQualifiers subjectQualifiers = SubjectQualifiers.of(subjectValueQueue.toArray(String[]::new));
-        return new MatchResult<>(subjectQualifiers, curNode.getValue());
+        return new MatchResult<>(subjectQualifiers, curNode.value());
     }
 
     private QualifierNode<V> provideLastNode(SubjectQualifiers qualifiers) {
@@ -112,7 +112,7 @@ public final class QualifiersMatcher<V> {
             return descendants.computeIfAbsent(name, key -> new QualifierNode<>());
         }
 
-        public V getValue() {
+        public V value() {
             return value;
         }
 

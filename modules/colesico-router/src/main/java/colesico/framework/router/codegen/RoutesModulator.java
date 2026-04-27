@@ -16,11 +16,10 @@
 package colesico.framework.router.codegen;
 
 import colesico.framework.assist.codegen.ArrayCodegen;
-import colesico.framework.router.Router;
 import colesico.framework.router.RouterDescriptors;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
-import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
+import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import colesico.framework.service.codegen.modulator.TeleFacadeModulator;
 import colesico.framework.teleapi.dataport.TRContext;
 import colesico.framework.teleapi.dataport.TWContext;
@@ -46,10 +45,10 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
     abstract protected Class<? extends TWContext> writeContextClass();
 
     @Override
-    protected void processTeleMethod(TeleMethodElement teleMethodElement) {
-        ((RouterTeleFacadeElement) teleMethodElement.parentTeleFacade())
+    protected void processTeleCommand(TeleCommandElement teleCommandElement) {
+        ((RouterTeleFacadeElement) teleCommandElement.parentTeleFacade())
                 .routesBuilder()
-                .addTeleMethod(teleMethodElement);
+                .addTeleCommand(teleCommandElement);
     }
 
     @Override
@@ -76,31 +75,31 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
 
         RoutesBuilder routesBuilder = teleFacade.routesBuilder();
 
-        for (RoutesBuilder.RoutedTeleMethodElement routedTeleMethod : routesBuilder.teleMethods()) {
-            cb.add(generateRouteMapping(teleFacade, routedTeleMethod));
+        for (RoutesBuilder.RoutedTeleCommandElement routedTeleCommand : routesBuilder.teleCommands()) {
+            cb.add(generateRouteMapping(teleFacade, routedTeleCommand));
         }
 
         cb.addStatement("return $N", DESCRIPTORS_VAR);
         return cb.build();
     }
 
-    protected CodeBlock generateRouteMapping(TeleFacadeElement teleFacade, RoutesBuilder.RoutedTeleMethodElement routedTeleMethod) {
+    protected CodeBlock generateRouteMapping(TeleFacadeElement teleFacade, RoutesBuilder.RoutedTeleCommandElement routedTeleCommand) {
 
         CodeBlock.Builder cb = CodeBlock.builder();
 
         cb.add("$N.$N($S,$N(),$S,",
                 DESCRIPTORS_VAR,
                 RouterDescriptors.ADD_METHOD,
-                routedTeleMethod.route(),
-                routedTeleMethod.teleMethod().builderName(),
-                routedTeleMethod.teleMethod().name()
+                routedTeleCommand.route(),
+                routedTeleCommand.teleCommand().builderName(),
+                routedTeleCommand.teleCommand().name()
         );
 
-        if (routedTeleMethod.routeAttributes().isEmpty()) {
+        if (routedTeleCommand.routeAttributes().isEmpty()) {
             cb.add("null");
         } else {
             ArrayCodegen attrCodegen = new ArrayCodegen();
-            for (Map.Entry<String, String> param : routedTeleMethod.routeAttributes().entrySet()) {
+            for (Map.Entry<String, String> param : routedTeleCommand.routeAttributes().entrySet()) {
                 attrCodegen.add("$S", param.getKey());
                 attrCodegen.add("$S", param.getValue());
             }

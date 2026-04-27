@@ -2,7 +2,7 @@ package colesico.framework.router;
 
 import colesico.framework.http.HttpMethod;
 import colesico.framework.teleapi.TeleController;
-import colesico.framework.teleapi.TeleMethod;
+import colesico.framework.teleapi.TeleCommand;
 
 import java.util.Map;
 
@@ -15,7 +15,7 @@ public interface RouterBuilder {
      * @param httpMethod      HTTP methods for route   (e.g. GET, POST ,etc)
      * @param route           route definition  (ex: /my/foo )
      * @param teleController  controller to perform action
-     * @param teleMethod      action class method
+     * @param teleCommand      action class method
      * @param targetClass     route action class
      * @param targetMethod    action method name
      * @param routeAttributes route attributes {@link RouteAttribute}
@@ -23,7 +23,7 @@ public interface RouterBuilder {
     void addCustomAction(HttpMethod httpMethod,
                          String route,
                          TeleController<Router.Criteria, Router.Invocation, RouterDescriptors> teleController,
-                         TeleMethod<?, ?> teleMethod,
+                         TeleCommand<?, ?> teleCommand,
                          Class<?> targetClass,
                          String targetMethod,
                          Map<String, String> routeAttributes);

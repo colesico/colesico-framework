@@ -6,7 +6,7 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.*;
 import colesico.framework.teleapi.TeleController;
 
-import colesico.framework.teleapi.TeleMethod;
+import colesico.framework.teleapi.TeleCommand;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -32,13 +32,13 @@ public class RouterBuilderImpl implements RouterBuilder {
     public void addCustomAction(HttpMethod httpMethod,
                                 String route,
                                 TeleController<Router.Criteria, Router.Invocation, RouterDescriptors> teleController,
-                                TeleMethod<?, ?> teleMethod,
+                                TeleCommand<?, ?> teleCommand,
                                 Class<?> targetClass,
                                 String targetMethod,
                                 Map<String, String> routeAttributes) {
 
         customRouteActions.add(new CustomRouteAction(httpMethod,
-                route, teleController, teleMethod, targetClass,
+                route, teleController, teleCommand, targetClass,
                 targetMethod, routeAttributes)
         );
     }
@@ -55,7 +55,7 @@ public class RouterBuilderImpl implements RouterBuilder {
             router.addCustomAction(cra.httpMethod(),
                     cra.route(),
                     cra.teleController(),
-                    cra.teleMethod(),
+                    cra.teleCommand(),
                     cra.targetClass(),
                     cra.targetMethod(),
                     cra.attributes());
@@ -66,7 +66,7 @@ public class RouterBuilderImpl implements RouterBuilder {
     private record CustomRouteAction(HttpMethod httpMethod,
                                      String route,
                                      TeleController<Router.Criteria, Router.Invocation, RouterDescriptors> teleController,
-                                     TeleMethod<?, ?> teleMethod,
+                                     TeleCommand<?, ?> teleCommand,
                                      Class<?> targetClass,
                                      String targetMethod,
                                      Map<String, String> attributes) {

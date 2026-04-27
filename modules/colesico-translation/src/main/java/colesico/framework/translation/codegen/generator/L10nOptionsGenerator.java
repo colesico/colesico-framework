@@ -35,7 +35,7 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
 
         String resourceNameTemplate = dictionaryElement.baseName() + "{Q}";
 
-        optionsGenerator.options().baseName(resourceNameTemplate);
+        optionsGenerator.l10nOptions().baseName(resourceNameTemplate);
         cb.indent();
 
         Set<String> languageTags = dictionaryElement.bundlesByLocale().values()

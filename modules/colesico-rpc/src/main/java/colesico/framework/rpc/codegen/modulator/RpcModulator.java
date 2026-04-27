@@ -88,35 +88,35 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
     }
 
     @Override
-    protected void processTeleMethod(TeleMethodElement teleMethodElm) {
+    protected void processTeleCommand(TeleCommandElement teleCommandElm) {
 
-        logger.debug("RPC API parser processing service method: " + teleMethodElm.serviceMethod().originMethod().unwrap().getSimpleName());
+        logger.debug("RPC API parser processing service method: " + teleCommandElm.serviceMethod().originMethod().unwrap().getSimpleName());
 
-        List<RpcApiElement> rpcApiList = ((RpcTeleFacadeElement) teleMethodElm.parentTeleFacade()).getRpcService().getAllRpcApi();
+        List<RpcApiElement> rpcApiList = ((RpcTeleFacadeElement) teleCommandElm.parentTeleFacade()).getRpcService().getAllRpcApi();
         for (RpcApiElement rpcApi : rpcApiList) {
             List<RpcApiMethodElement> rpcApiMethods = rpcApi.getRpcMethods();
             for (RpcApiMethodElement rpcApiMethod : rpcApiMethods) {
                 boolean overrides = getProcessorContext()
                         .getElementUtils()
-                        .overrides(teleMethodElm.serviceMethod().originMethod().unwrap(),
+                        .overrides(teleCommandElm.serviceMethod().originMethod().unwrap(),
                                 rpcApiMethod.getOriginMethod().unwrap(),
-                                teleMethodElm.parentTeleFacade().parentService().originClass().unwrap()
+                                teleCommandElm.parentTeleFacade().parentService().originClass().unwrap()
                         );
                 if (overrides) {
 
                     // Rpc method
-                    rpcApiMethod.setTeleMethod(teleMethodElm);
-                    teleMethodElm.setProperty(RpcApiMethodElement.class, rpcApiMethod);
+                    rpcApiMethod.setTeleCommand(teleCommandElm);
+                    teleCommandElm.setProperty(RpcApiMethodElement.class, rpcApiMethod);
 
                     // Rpc params
                     List<RpcApiParamElement> rpcApiParams = rpcApiMethod.getParameters();
                     // Method params
-                    List<TeleEntryElement> teleParams = teleMethodElm.parameters();
+                    List<TeleEntryElement> teleParams = teleCommandElm.parameters();
 
                     if (rpcApiParams.size() != teleParams.size()) {
                         throw CodegenException.of()
                                 .message("RPC API parameters number mismatch")
-                                .element(teleMethodElm.serviceMethod().originMethod().unwrap())
+                                .element(teleCommandElm.serviceMethod().originMethod().unwrap())
                                 .build();
                     }
 
@@ -137,7 +137,7 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
                                     .message("RPC API parameter type mismatch for " + teleParam.originElement().name() +
                                             "; service param " + teleParam.originElement().unwrap().asType() + " -> api param " +
                                             apiParam.getOriginParam().unwrap().asType())
-                                    .element(teleMethodElm.serviceMethod().originMethod().unwrap())
+                                    .element(teleCommandElm.serviceMethod().originMethod().unwrap())
                                     .build();
                         }
                         apiParam.setTeleParam(teleParam);
@@ -191,11 +191,11 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
             }
             cb.indent();
             for (RpcApiMethodElement rpcApiMethod : rpcApi.getRpcMethods()) {
-                // .addMethod("rpcMethodName", teleMethodFactory()
+                // .addMethod("rpcMethodName", teleCommandFactory()
                 cb.add(".$N($S, $N())\n",
                         RpcLigature.RpcApiSpec.ADD_RPC_METHOD,
                         rpcApiMethod.rpcMethodName(),
-                        rpcApiMethod.getTeleMethod().builderName()
+                        rpcApiMethod.getTeleCommand().builderName()
                 );
             }
             cb.unindent();
@@ -211,7 +211,7 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
     @Override
     protected TRContextElement createReadContext(TeleParameterElement teleParam) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        RpcApiMethodElement rpcApiMethod = getRpcApiMethod(teleParam.parentTeleMethod());
+        RpcApiMethodElement rpcApiMethod = getRpcApiMethod(teleParam.parentTeleCommand());
         RpcApiParamElement apiParam = teleParam.property(RpcApiParamElement.class);
         // RpcTRContext.of(EnvelopeClass.RequestClass::getterMethod)
         cb.add("$T.$N(", ClassName.get(RpcTRContext.class), RpcTRContext.OF_METHOD);
@@ -221,24 +221,24 @@ public class RpcModulator extends TeleFacadeModulator<RpcTeleFacadeElement> {
     }
 
     @Override
-    protected TIContextElement createInvocationContext(TeleMethodElement teleMethod) {
-        RpcApiMethodElement rpcApiMethod = getRpcApiMethod(teleMethod);
+    protected TIContextElement createInvocationContext(TeleCommandElement teleCommand) {
+        RpcApiMethodElement rpcApiMethod = getRpcApiMethod(teleCommand);
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("new $T($T.class, $T.class)", ClassName.get(RpcTIContext.class),
                 ClassName.bestGuess(rpcApiMethod.getRequestClassName()),
                 ClassName.bestGuess(rpcApiMethod.getResponseClassName())
         );
-        return new TIContextElement(teleMethod, cb.build());
+        return new TIContextElement(teleCommand, cb.build());
     }
 
-    protected RpcApiMethodElement getRpcApiMethod(TeleMethodElement teleMethod) {
-        RpcApiMethodElement rpcApiMethod = teleMethod.property(RpcApiMethodElement.class);
+    protected RpcApiMethodElement getRpcApiMethod(TeleCommandElement teleCommand) {
+        RpcApiMethodElement rpcApiMethod = teleCommand.property(RpcApiMethodElement.class);
         if (rpcApiMethod == null) {
             throw CodegenException.of()
                     .message("Unknown RPC API method for service method " +
-                            teleMethod.parentTeleFacade().parentService().originClass().name() +
-                            "->" + teleMethod.name() + "(...)")
-                    .element(teleMethod.serviceMethod().originMethod().unwrap())
+                            teleCommand.parentTeleFacade().parentService().originClass().name() +
+                            "->" + teleCommand.name() + "(...)")
+                    .element(teleCommand.serviceMethod().originMethod().unwrap())
                     .build();
         }
         return rpcApiMethod;

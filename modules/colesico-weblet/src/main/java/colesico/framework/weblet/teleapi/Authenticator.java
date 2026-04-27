@@ -23,9 +23,9 @@ package colesico.framework.weblet.teleapi;
 public interface Authenticator {
     /**
      * Auto-authenticate method.
-     * This method is invoked if first tele-method invocation trowed PrincipalRequiredException exception to  try authenticate user automatically
+     * This method is invoked if first tele-command invocation trowed PrincipalRequiredException exception to  try authenticate user automatically
      *
-     * @return true - to  retry tele-method invoking
+     * @return true - to  retry tele-command invoking
      */
     boolean authenticate();
 }

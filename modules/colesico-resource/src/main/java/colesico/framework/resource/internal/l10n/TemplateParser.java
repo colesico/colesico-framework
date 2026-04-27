@@ -116,12 +116,12 @@ public class TemplateParser {
         return this;
     }
 
-    public Tag[] getTags() {
+    public Tag[] tags() {
         // reverse to apply rewriting from resource name end to beginning
         return tags.reversed().toArray(Tag[]::new);
     }
 
-    public String getResourceName() {
+    public String resourceName() {
         return resourceName.toString();
     }
 

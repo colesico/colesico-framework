@@ -18,7 +18,7 @@ package colesico.framework.service;
 import java.lang.annotation.*;
 
 /**
- * Indicates that the method is not a tele-method.
+ * Indicates that the method is not a tele-command.
  * <p>
  * Local method will not present in a service tele-facades and can't be invoked remotely
  */

@@ -83,7 +83,7 @@ public class RestletTeleDriverImpl implements RestletTeleDriver {
                 guardCSFR(httpRequest);
             }
 
-            // Invoke tele-method
+            // Invoke tele-command
             invoker.invoke(service, dataPort);
 
         } catch (Exception ex) {

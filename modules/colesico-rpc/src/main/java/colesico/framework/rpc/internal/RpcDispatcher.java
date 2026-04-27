@@ -33,20 +33,20 @@ public class RpcDispatcher {
 
     public void dispatch(RpcExchange exchange) {
 
-        MethodDescriptor teleMethod = resolveTeleMethod(exchange);
+        MethodDescriptor teleCommand = resolveTeleCommand(exchange);
 
-        if (teleMethod != null) {
+        if (teleCommand != null) {
             // Invoke
-            teleMethod.invoke();
+            teleCommand.invoke();
         }
     }
 
     /**
-     * Resolve tele method
+     * Resolve tele-command
      *
-     * @return tele method or null if mappings not found
+     * @return tele-command or null if mappings not found
      */
-    protected MethodDescriptor resolveTeleMethod(RpcExchange exchange) {
+    protected MethodDescriptor resolveTeleCommand(RpcExchange exchange) {
         try {
             RpcExchange.Operation operation = exchange.resolveOperation();
             logger.debug("RPC operation: {}", operation);
@@ -67,15 +67,15 @@ public class RpcDispatcher {
                 return null;
             }
 
-            MethodDescriptor teleMethod = apiMethods.get(operation.rpcMethodName());
-            if (teleMethod == null) {
+            MethodDescriptor teleCommand = apiMethods.get(operation.rpcMethodName());
+            if (teleCommand == null) {
                 String errMsg = "RPC method not found: " + operation.rpcMethodName();
                 logger.error(errMsg);
                 exchange.sendError(RpcError.of(errMsg));
                 return null;
             }
 
-            return teleMethod;
+            return teleCommand;
         } catch (Throwable t) {
             String errMsg = "RPC resolve operation error: " + ExceptionUtils.getRootCauseMessage(t);
             logger.error(errMsg);

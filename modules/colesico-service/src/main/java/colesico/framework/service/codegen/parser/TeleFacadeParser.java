@@ -35,7 +35,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
         this.context = context;
     }
 
-    private void parseBatchField(TeleMethodElement teleMethod,
+    private void parseBatchField(TeleCommandElement teleCommand,
                                  VarElement variable,
                                  AnnotationAssist<BatchField> paramBatchAnn,
                                  AnnotationAssist<BatchField> methodBatchAnn) {
@@ -56,61 +56,61 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
             batchName = methodBatchAnn.unwrap().batch();
         }
 
-        TeleBatchFieldElement batchField = new TeleBatchFieldElement(teleMethod, variable, fieldName);
+        TeleBatchFieldElement batchField = new TeleBatchFieldElement(teleCommand, variable, fieldName);
 
-        TeleBatchElement batch = teleMethod.getOrCreateBatch(batchName);
+        TeleBatchElement batch = teleCommand.getOrCreateBatch(batchName);
         batch.addField(batchField);
-        teleMethod.addParameter(batchField);
+        teleCommand.addParameter(batchField);
 
         context.modulatorKit().notifyTeleInputParsed(batchField);
     }
 
-    private void parseParameter(TeleMethodElement teleMethod, VarElement variable) {
+    private void parseParameter(TeleCommandElement teleCommand, VarElement variable) {
         // Process simple param
-        TeleParameterElement parameter = new TeleParameterElement(teleMethod, variable);
-        teleMethod.addParameter(parameter);
+        TeleParameterElement parameter = new TeleParameterElement(teleCommand, variable);
+        teleCommand.addParameter(parameter);
         context.modulatorKit().notifyTeleInputParsed(parameter);
     }
 
-    private void parseVariables(TeleMethodElement teleMethod, List<? extends VarElement> variables) {
+    private void parseVariables(TeleCommandElement teleCommand, List<? extends VarElement> variables) {
         for (VarElement variable : variables) {
 
             AnnotationAssist<BatchField> paramBatchAnn = variable.annotation(BatchField.class);
-            AnnotationAssist<BatchField> methodBatchAnn = teleMethod.serviceMethod().originMethod().annotation(BatchField.class);
+            AnnotationAssist<BatchField> methodBatchAnn = teleCommand.serviceMethod().originMethod().annotation(BatchField.class);
 
             if (paramBatchAnn != null || methodBatchAnn != null) {
                 // Check batch support
-                if (!teleMethod.parentTeleFacade().batchParams()) {
+                if (!teleCommand.parentTeleFacade().batchParams()) {
                     throw CodegenException.of()
-                            .message("Batch parameters not supported by tele-facade " + teleMethod.parentTeleFacade().teleType().getCanonicalName())
+                            .message("Batch parameters not supported by tele-facade " + teleCommand.parentTeleFacade().teleType().getCanonicalName())
                             .element(variable.unwrap())
                             .build();
                 } else {
-                    parseBatchField(teleMethod, variable, paramBatchAnn, methodBatchAnn);
+                    parseBatchField(teleCommand, variable, paramBatchAnn, methodBatchAnn);
                 }
             } else {
-                parseParameter(teleMethod, variable);
+                parseParameter(teleCommand, variable);
             }
         }
     }
 
-    private void parseTeleMethodParams(TeleMethodElement teleMethod) {
-        MethodElement method = teleMethod.serviceMethod().originMethod();
-        parseVariables(teleMethod, method.parameters());
+    private void parseTeleCommandParams(TeleCommandElement teleCommand) {
+        MethodElement method = teleCommand.serviceMethod().originMethod();
+        parseVariables(teleCommand, method.parameters());
     }
 
-    private void parseTeleMethods(TeleFacadeElement teleFacade) {
+    private void parseTeleCommands(TeleFacadeElement teleFacade) {
         ServiceElement service = teleFacade.parentService();
         for (ServiceMethodElement serviceMethod : service.serviceMethods()) {
             if (serviceMethod.isLocal()) {
                 continue;
             }
 
-            TeleMethodElement teleMethod = new TeleMethodElement(serviceMethod);
-            teleFacade.addTeleMethod(teleMethod);
-            context.modulatorKit().notifyBeforeParseTeleMethod(teleMethod);
-            parseTeleMethodParams(teleMethod);
-            context.modulatorKit().notifyTeleMethodParsed(teleMethod);
+            TeleCommandElement teleCommand = new TeleCommandElement(serviceMethod);
+            teleFacade.addTeleCommand(teleCommand);
+            context.modulatorKit().notifyBeforeParseTeleCommand(teleCommand);
+            parseTeleCommandParams(teleCommand);
+            context.modulatorKit().notifyTeleCommandParsed(teleCommand);
         }
     }
 
@@ -124,7 +124,7 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
             return;
         }
         context.modulatorKit().notifyBeforeParseTeleFacade(teleFacade);
-        parseTeleMethods(teleFacade);
+        parseTeleCommands(teleFacade);
         context.modulatorKit().notifyTeleFacadeParsed(teleFacade);
     }
 

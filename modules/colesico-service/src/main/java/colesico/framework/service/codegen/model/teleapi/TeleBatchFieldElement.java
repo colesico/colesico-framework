@@ -17,8 +17,8 @@ public class TeleBatchFieldElement extends TeleInputElement {
      */
     private String name;
 
-    public TeleBatchFieldElement(TeleMethodElement parentTeleMethod, VarElement originElement, String name) {
-        super(parentTeleMethod, originElement);
+    public TeleBatchFieldElement(TeleCommandElement parentTeleCommand, VarElement originElement, String name) {
+        super(parentTeleCommand, originElement);
         this.name = name;
     }
 

@@ -29,7 +29,7 @@ import colesico.framework.router.RouteAttribute;
 import colesico.framework.router.RouteAttributes;
 import colesico.framework.router.assist.RouteTrie;
 import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
+import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.element.PackageElement;
@@ -46,7 +46,7 @@ public class RoutesBuilder {
     protected static final String INDEX_METHOD_NAME = "index";
     protected static final String OTHER_METHOD_NAME = "other";
 
-    protected final Elements<RoutedTeleMethodElement> teleMethods = new Elements<>();
+    protected final Elements<RoutedTeleCommandElement> teleCommands = new Elements<>();
 
     protected final String serviceRoute;
 
@@ -54,29 +54,29 @@ public class RoutesBuilder {
         this.serviceRoute = buildServiceRoute(service);
     }
 
-    public final void addTeleMethod(TeleMethodElement teleMethod) {
-        String targetMethodName = teleMethod.name();
-        final String route = buildMethodRoute(teleMethod);
+    public final void addTeleCommand(TeleCommandElement teleCommand) {
+        String targetMethodName = teleCommand.name();
+        final String route = buildMethodRoute(teleCommand);
 
-        RoutedTeleMethodElement rtme = teleMethods.find(rte -> rte.route().equals(route));
+        RoutedTeleCommandElement rtme = teleCommands.find(rte -> rte.route().equals(route));
         if (null != rtme) {
             throw CodegenException.of()
-                    .message("Duplicate router path: " + route + "->" + targetMethodName + "(...). Route already bound to " + rtme.teleMethod().serviceMethod().name() + "(...)")
-                    .element(teleMethod.serviceMethod().originMethod()).build();
+                    .message("Duplicate router path: " + route + "->" + targetMethodName + "(...). Route already bound to " + rtme.teleCommand().serviceMethod().name() + "(...)")
+                    .element(teleCommand.serviceMethod().originMethod()).build();
         }
 
-        Map<String, String> methodRouteAttrs = parseRouteAttributes(teleMethod.serviceMethod().originMethod());
-        Map<String, String> classRouteAttrs = parseRouteAttributes(teleMethod.serviceMethod().originMethod().parentClass());
+        Map<String, String> methodRouteAttrs = parseRouteAttributes(teleCommand.serviceMethod().originMethod());
+        Map<String, String> classRouteAttrs = parseRouteAttributes(teleCommand.serviceMethod().originMethod().parentClass());
         classRouteAttrs.putAll(methodRouteAttrs);
 
-        RoutedTeleMethodElement routedTeleMethod = new RoutedTeleMethodElement(teleMethod, route, classRouteAttrs);
-        teleMethods.add(routedTeleMethod);
-        teleMethod.setProperty(RoutedTeleMethodElement.class, routedTeleMethod);
+        RoutedTeleCommandElement routedTeleCommand = new RoutedTeleCommandElement(teleCommand, route, classRouteAttrs);
+        teleCommands.add(routedTeleCommand);
+        teleCommand.setProperty(RoutedTeleCommandElement.class, routedTeleCommand);
     }
 
-    protected String buildMethodRoute(TeleMethodElement teleMethod) {
+    protected String buildMethodRoute(TeleCommandElement teleCommand) {
 
-        AnnotationAssist<Route> routeAnn = teleMethod.serviceMethod().originMethod().annotation(Route.class);
+        AnnotationAssist<Route> routeAnn = teleCommand.serviceMethod().originMethod().annotation(Route.class);
         String methodRoute;
         if (routeAnn != null) {
             methodRoute = StringUtils.trim(routeAnn.unwrap().value());
@@ -89,7 +89,7 @@ public class RoutesBuilder {
                 methodRoute = StrUtils.concatPath(serviceRoute, methodRoute, RouteTrie.SEGMENT_DELEMITER);
             }
         } else {
-            String methodName = teleMethod.name();
+            String methodName = teleCommand.name();
             if (methodName.equals(INDEX_METHOD_NAME)) {
                 // Local root route
                 methodRoute = "";
@@ -103,7 +103,7 @@ public class RoutesBuilder {
         }
 
         HttpMethod httpMethod = HttpMethod.HTTP_METHOD_GET;
-        AnnotationAssist<RequestMethod> methodAnnotation = teleMethod.serviceMethod().originMethod().annotation(RequestMethod.class);
+        AnnotationAssist<RequestMethod> methodAnnotation = teleCommand.serviceMethod().originMethod().annotation(RequestMethod.class);
         if (methodAnnotation != null) {
             httpMethod = HttpMethod.of(methodAnnotation.unwrap().value());
         }
@@ -174,17 +174,17 @@ public class RoutesBuilder {
         return result;
     }
 
-    public final Elements<RoutedTeleMethodElement> teleMethods() {
-        return teleMethods;
+    public final Elements<RoutedTeleCommandElement> teleCommands() {
+        return teleCommands;
     }
 
-    public static class RoutedTeleMethodElement {
-        protected final TeleMethodElement teleMethod;
+    public static class RoutedTeleCommandElement {
+        protected final TeleCommandElement teleCommand;
         protected final String route;
         protected final Map<String, String> routeAttributes;
 
-        public RoutedTeleMethodElement(TeleMethodElement teleMethod, String route, Map<String, String> routeAttributes) {
-            this.teleMethod = teleMethod;
+        public RoutedTeleCommandElement(TeleCommandElement teleCommand, String route, Map<String, String> routeAttributes) {
+            this.teleCommand = teleCommand;
             this.route = route;
             this.routeAttributes = routeAttributes;
         }
@@ -193,8 +193,8 @@ public class RoutesBuilder {
             return route;
         }
 
-        public TeleMethodElement teleMethod() {
-            return teleMethod;
+        public TeleCommandElement teleCommand() {
+            return teleCommand;
         }
 
         public Map<String, String> routeAttributes() {

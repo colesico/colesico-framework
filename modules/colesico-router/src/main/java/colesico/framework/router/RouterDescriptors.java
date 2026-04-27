@@ -16,7 +16,7 @@
 
 package colesico.framework.router;
 
-import colesico.framework.teleapi.TeleMethod;
+import colesico.framework.teleapi.TeleCommand;
 
 import java.util.Collection;
 import java.util.Map;
@@ -29,7 +29,7 @@ public final class RouterDescriptors {
 
     public static final String ADD_METHOD = "add";
     public static final String ROUTE_PARAM = "route";
-    public static final String TELE_METHOD_PARAM = "teleMethod";
+    public static final String TELE_METHOD_PARAM = "teleCommand";
     public static final String TARGET_METHOD_PARAM = "targetMethod";
     public static final String ATTRIBUTES_PARAM = "attributes";
 
@@ -49,12 +49,12 @@ public final class RouterDescriptors {
      * Add route to this descriptors
      *
      * @param route        route definition with http method (ex: GET/my/foo )
-     * @param teleMethod   action handler
+     * @param teleCommand   action handler
      * @param targetMethod handler method name
      * @param attributes   route attributes (see {@link RouteAttribute})
      */
-    public void add(String route, TeleMethod<?,?> teleMethod, String targetMethod, Map<String, String> attributes) {
-        RouteInfo routeInfo = new RouteInfo(route, teleMethod, targetMethod, attributes);
+    public void add(String route, TeleCommand<?,?> teleCommand, String targetMethod, Map<String, String> attributes) {
+        RouteInfo routeInfo = new RouteInfo(route, teleCommand, targetMethod, attributes);
         RouteInfo oldRouteInfo = routesMap.put(route, routeInfo);
         if (oldRouteInfo != null) {
             throw new RouterException("Duplicate route: " + route + " -> " + routeInfo + " | " + oldRouteInfo);
@@ -71,11 +71,11 @@ public final class RouterDescriptors {
 
     /**
      * @param route        Route with http method
-     * @param teleMethod   Action handler method
+     * @param teleCommand   Action handler method
      * @param targetMethod Target action handler method name
      * @param attributes   Route attributes
      */
-    public record RouteInfo(String route, TeleMethod<?, ?> teleMethod, String targetMethod,
+    public record RouteInfo(String route, TeleCommand<?, ?> teleCommand, String targetMethod,
                             Map<String, String> attributes) {
 
         @Override

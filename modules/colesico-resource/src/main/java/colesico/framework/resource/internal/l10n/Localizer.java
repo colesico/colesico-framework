@@ -34,7 +34,7 @@ public class Localizer {
         var opt = new L10nOptionsPrototype.Options();
         options.forEach(o -> o.configure(opt));
 
-        QualifiersDefinition definition = config.getQualifiersDefinition();
+        QualifiersDefinition definition = config.qualifiersDefinition();
         for (var pc : opt.baseNameOptions()) {
             addLocalization(pc.name(), pc.qualifiers(definition));
         }
@@ -53,10 +53,10 @@ public class Localizer {
                                  SubjectQualifiers[] subjectQualifiers) {
 
         TemplateParser templateParser = TemplateParser.parse(nameTemplate);
-        String resourceName = templateParser.getResourceName();
+        String resourceName = templateParser.resourceName();
 
         final PathTrie.Node<NameConfig> node = pathTrie.add(resourceName);
-        NameConfig nameConfig = node.getValue();
+        NameConfig nameConfig = node.value();
         QualifiersMatcher<QualifierConfig> matcher;
         if (nameConfig == null) {
             matcher = new QualifiersMatcher<>();
@@ -66,7 +66,7 @@ public class Localizer {
             matcher = nameConfig.matcher();
         }
 
-        Tag[] tags = templateParser.getTags();
+        Tag[] tags = templateParser.tags();
         for (SubjectQualifiers sq : subjectQualifiers) {
             var prvRewriting = matcher.addQualifiers(sq, new QualifierConfig(tags));
             if (prvRewriting != null) {
@@ -90,7 +90,7 @@ public class Localizer {
         }
 
         var profile = profileProv.get();
-        var matchResult = rewriting.matcher().match(config.getObjectiveQualifiers(profile));
+        var matchResult = rewriting.matcher().match(config.objectiveQualifiers(profile));
 
         if (matchResult == null) {
             return baseName;
@@ -115,10 +115,10 @@ public class Localizer {
 
         LinkedHashSet<String> result = new LinkedHashSet<>();
         var profile = profileProv.get();
-        ObjectiveQualifiers objectiveQualifiers = config.getObjectiveQualifiers(profile);
+        ObjectiveQualifiers objectiveQualifiers = config.objectiveQualifiers(profile);
 
-        ObjectiveQualifiers candidateQualifiers = ObjectiveQualifiers.of(config.getQualifiersDefinition());
-        String[] candidateValues = candidateQualifiers.getValues();
+        ObjectiveQualifiers candidateQualifiers = ObjectiveQualifiers.of(config.qualifiersDefinition());
+        String[] candidateValues = candidateQualifiers.values();
 
         int i = -1;
         int n = objectiveQualifiers.size();
@@ -145,12 +145,12 @@ public class Localizer {
         return result.toArray(String[]::new);
     }
 
-    public ObjectiveQualifiers getObjectiveQualifiers() {
-        return config.getObjectiveQualifiers(profileProv.get());
+    public ObjectiveQualifiers objectiveQualifiers() {
+        return config.objectiveQualifiers(profileProv.get());
     }
 
-    public ObjectiveQualifiers getObjectiveQualifiers(Profile profile) {
-        return config.getObjectiveQualifiers(profile);
+    public ObjectiveQualifiers objectiveQualifiers(Profile profile) {
+        return config.objectiveQualifiers(profile);
     }
 
     private String rewriteByTags(String name, QualifiersMatcher.MatchResult<QualifierConfig> matchResult) {

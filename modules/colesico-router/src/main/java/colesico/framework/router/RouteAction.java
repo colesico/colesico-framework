@@ -1,7 +1,7 @@
 package colesico.framework.router;
 
 import colesico.framework.teleapi.TeleController;
-import colesico.framework.teleapi.TeleMethod;
+import colesico.framework.teleapi.TeleCommand;
 
 import java.util.Map;
 
@@ -19,7 +19,7 @@ public final class RouteAction {
      * Target method, invoked to handle the request.
      * This is the method of tele-facade for the appropriate service (weblet, restlet)
      */
-    private final TeleMethod<?, ?> teleMethod;
+    private final TeleCommand<?, ?> teleCommand;
 
     /**
      * Extra attributes bound to action method
@@ -30,11 +30,11 @@ public final class RouteAction {
     private final Map<String, String> attributes;
 
     public RouteAction(TeleController<Router.Criteria, Router.Invocation, RouterDescriptors> teleController,
-                       TeleMethod<?, ?> teleMethod,
+                       TeleCommand<?, ?> teleCommand,
                        Map<String, String> attributes) {
 
         this.teleController = teleController;
-        this.teleMethod = teleMethod;
+        this.teleCommand = teleCommand;
         this.attributes = attributes;
     }
 
@@ -42,8 +42,8 @@ public final class RouteAction {
         return teleController;
     }
 
-    public TeleMethod<?, ?> teleMethod() {
-        return teleMethod;
+    public TeleCommand<?, ?> teleCommand() {
+        return teleCommand;
     }
 
     public Map<String, String> attributes() {

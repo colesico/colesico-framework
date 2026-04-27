@@ -19,10 +19,10 @@ package colesico.framework.teleapi;
 import jakarta.inject.Provider;
 
 /**
- * Unified facade for tele-method invocations.
+ * Unified facade for tele-command invocations.
  *
  * @param <T> Target whose method will be invoked (usually a service)
- * @param <D> Descriptors registry (references to target methods)
+ * @param <D> Tele-commands registry (references to target methods)
  */
 abstract public class TeleFacade<T, D> {
 
@@ -42,9 +42,9 @@ abstract public class TeleFacade<T, D> {
     }
 
     /**
-     * Descriptors registry of tele-methods implemented in this tele facade.
-     * Descriptor is used to resolve target methods that are called with tele-api.
+     * Tele-commands registry  implemented in this tele facade.
+     * Registry entries is used to resolve target methods that are called with tele-api.
      * @see TeleController#resolve(Object) 
      */
-    abstract public D descriptors();
+    abstract public D commands();
 }

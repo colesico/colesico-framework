@@ -71,7 +71,7 @@ public final class RpcLigature {
         private final String rpcName;
 
         /**
-         * Map RPC method name to tele-method.
+         * Map RPC method name to tele-command.
          */
         private final Map<String, MethodDescriptor> rpcMethods = new HashMap<>();
 
@@ -106,8 +106,8 @@ public final class RpcLigature {
          *
          * @param rpcName method RPC name. By default it is a APC API interface method name
          */
-        public RpcApiSpec addRpcMethod(String rpcName, MethodDescriptor teleMethod) {
-            MethodDescriptor prev = rpcMethods.put(rpcName, teleMethod);
+        public RpcApiSpec addRpcMethod(String rpcName, MethodDescriptor teleCommand) {
+            MethodDescriptor prev = rpcMethods.put(rpcName, teleCommand);
             if (prev != null) {
                 throw new RpcException("Method with name '" + rpcName + "' has already registered");
             }

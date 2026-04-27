@@ -32,18 +32,18 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class RefreshScopeImpl implements RefreshScope {
 
-    private final Map<Key<?>, Object> beans;
+    private final Map<Key<?>, Object> objectsHolder;
     private final Ioc ioc;
 
     public RefreshScopeImpl(Ioc ioc) {
-        beans = new ConcurrentHashMap();
+        objectsHolder = new ConcurrentHashMap();
         this.ioc = ioc;
     }
 
     @Override
     public <T,M> T refresh(Key<T> key, M message) {
-        T bean = (T) beans.remove(key);
-        if (bean != null) {
+        T obj = (T) objectsHolder.remove(key);
+        if (obj != null) {
             return ioc.instance(key, message);
         }
         return null;
@@ -56,7 +56,7 @@ public final class RefreshScopeImpl implements RefreshScope {
 
     @Override
     public void refreshAll() {
-        for (Key<?> key : beans.keySet()) {
+        for (Key<?> key : objectsHolder.keySet()) {
             remove(key);
         }
     }
@@ -64,30 +64,30 @@ public final class RefreshScopeImpl implements RefreshScope {
 
     @Override
     public <T> void remove(Key<T> key) {
-        beans.remove(key);
+        objectsHolder.remove(key);
     }
 
     @Override
     public Set<Key<?>> keys() {
-        return beans.keySet();
+        return objectsHolder.keySet();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T, C> T get(Key<T> key, Fabricator<T, C> fabricator, C fabricationContext) {
-        Object obj = beans.computeIfAbsent(key, k -> fabricator.fabricate(fabricationContext));
+        Object obj = objectsHolder.computeIfAbsent(key, k -> fabricator.fabricate(fabricationContext));
         return (T) obj;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(Key<T> key) {
-        return (T) beans.get(key);
+        return (T) objectsHolder.get(key);
     }
 
     @Override
     public <T> void put(Key<T> key, T value) {
-        beans.put(key, value);
+        objectsHolder.put(key, value);
     }
 
 }

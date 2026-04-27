@@ -67,24 +67,24 @@ public class ResourceUtilsImpl implements ResourceUtils {
     }
 
     @Override
-    public ObjectiveQualifiers getObjectiveQualifiers() {
-        return localizer.getObjectiveQualifiers();
+    public ObjectiveQualifiers objectiveQualifiers() {
+        return localizer.objectiveQualifiers();
     }
 
     @Override
-    public Enumeration<URL> getResourceURLs(String baseName) {
+    public Enumeration<URL> resourceURLs(String baseName) {
         try {
             String resourceName = localize(baseName);
-            return getClassLoader().getResources(resourceName);
+            return classLoader().getResources(resourceName);
         } catch (IOException e) {
             throw new ResourceException("Error reading resource URLs", e);
         }
     }
 
     @Override
-    public InputStream getResourceStream(String baseName) {
+    public InputStream resourceStream(String baseName) {
         String resourceName = localize(baseName);
-        InputStream in = getClassLoader().getResourceAsStream(resourceName);
+        InputStream in = classLoader().getResourceAsStream(resourceName);
         if (in == null) {
             throw new ResourceNotFoundException(resourceName);
         }
@@ -92,7 +92,7 @@ public class ResourceUtilsImpl implements ResourceUtils {
     }
 
 
-    private ClassLoader getClassLoader() {
+    private ClassLoader classLoader() {
         return Thread.currentThread().getContextClassLoader();
     }
 

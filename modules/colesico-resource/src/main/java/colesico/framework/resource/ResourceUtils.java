@@ -30,7 +30,7 @@ public interface ResourceUtils {
     /**
      * Returns localized resource name best matched with current profile
      *
-     * @see colesico.framework.resource.l10n.L10nConfigPrototype#getObjectiveQualifiers(Profile)
+     * @see colesico.framework.resource.l10n.L10nConfigPrototype#objectiveQualifiers(Profile)
      */
     String localize(String baseName);
 
@@ -44,16 +44,16 @@ public interface ResourceUtils {
     /**
      *  Return objective qualifiers for current profile
      */
-    ObjectiveQualifiers getObjectiveQualifiers();
+    ObjectiveQualifiers objectiveQualifiers();
 
     /**
      * Localize resource name and returns resource URLs
      */
-    Enumeration<URL> getResourceURLs(String baseName);
+    Enumeration<URL> resourceURLs(String baseName);
 
     /**
      * Localize resource name and returns resource input stream
      */
-    InputStream getResourceStream(String baseName);
+    InputStream resourceStream(String baseName);
 
 }

@@ -25,12 +25,9 @@ import colesico.framework.router.RouterContext;
 import colesico.framework.router.RouterDescriptors;
 import colesico.framework.security.PrincipalRequiredException;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.TeleMethod;
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.telehttp.assist.CSRFProtector;
 import colesico.framework.weblet.teleapi.Authenticator;
-import colesico.framework.weblet.teleapi.WebletTRContext;
-import colesico.framework.weblet.teleapi.WebletTWContext;
 import colesico.framework.weblet.teleapi.WebletTeleController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,15 +72,15 @@ public class WebletTeleControllerImpl implements WebletTeleController {
     }
 
     @Override
-    public void perform(Router.Invocation invocation) {
+    public void execute(Router.Invocation invocation) {
         try {
             threadScope.put(DataPort.SCOPE_KEY, dataPort);
             HttpRequest request = httpContextProv.get().request();
             csrfProtector.check(request);
-            invocation.action().teleMethod().execute(dataPort);
+            invocation.action().teleCommand().execute(dataPort);
         } catch (PrincipalRequiredException pre) {
             if (authenticatorProv.get().authenticate()) {
-                invocation.action().teleMethod().execute(dataPort);
+                invocation.action().teleCommand().execute(dataPort);
             } else {
                 throw pre;
             }

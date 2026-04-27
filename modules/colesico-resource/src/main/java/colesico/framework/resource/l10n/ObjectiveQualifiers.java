@@ -32,7 +32,7 @@ public final class ObjectiveQualifiers implements Iterable<String> {
      * Default objective qualifiers
      */
     public static ObjectiveQualifiers of(QualifiersDefinition definition) {
-        String[] values = new String[definition.getSize()];
+        String[] values = new String[definition.size()];
         Arrays.fill(values, null);
         return new ObjectiveQualifiers(values);
     }
@@ -47,7 +47,7 @@ public final class ObjectiveQualifiers implements Iterable<String> {
         return new ObjectiveQualifiers(definition.canonicalize(qualifiers));
     }
 
-    public String[] getValues() {
+    public String[] values() {
         return values;
     }
 

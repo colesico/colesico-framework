@@ -20,6 +20,7 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.ioclet.*;
 import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.scope.RefreshScope;
+import colesico.framework.ioc.scope.RequestScope;
 import colesico.framework.ioc.scope.ThreadScope;
 
 /**
@@ -49,6 +50,16 @@ public final class IocIoclet implements Ioclet {
             @Override
             public ThreadScope create(Object message) {
                 return new ThreadScopeImpl();
+            }
+        };
+    }
+
+    private Factory<RequestScope> requestScopeFactory() {
+        return new SingletonFactory<>() {
+
+            @Override
+            public RequestScope create(Object message) {
+                return new RequestScopeImpl();
             }
         };
     }

@@ -45,7 +45,7 @@ public final class ServiceMethodElement {
     private final boolean isPlain;
 
     /**
-     * Indicates that the method is not tele-method
+     * Indicates that the method is not tele-command
      */
     private final boolean isLocal;
 

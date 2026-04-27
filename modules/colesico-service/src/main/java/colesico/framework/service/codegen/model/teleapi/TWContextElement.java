@@ -5,22 +5,22 @@ import com.palantir.javapoet.CodeBlock;
 public class TWContextElement {
 
     /**
-     * Parent tele-method ref
+     * Parent tele-command ref
      */
-    protected final TeleMethodElement parentTeleMethod;
+    protected final TeleCommandElement parentTeleCommand;
 
     /**
      * Method result writing context creation code
      */
     private final CodeBlock creationCode;
 
-    public TWContextElement(TeleMethodElement parentTeleMethod, CodeBlock creationCode) {
-        this.parentTeleMethod = parentTeleMethod;
+    public TWContextElement(TeleCommandElement parentTeleCommand, CodeBlock creationCode) {
+        this.parentTeleCommand = parentTeleCommand;
         this.creationCode = creationCode;
     }
 
-    public TeleMethodElement parentTeleMethod() {
-        return parentTeleMethod;
+    public TeleCommandElement parentTeleCommand() {
+        return parentTeleCommand;
     }
 
     public CodeBlock creationCode() {

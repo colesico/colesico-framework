@@ -67,10 +67,10 @@ public class TeleFacadeElement {
     private final Class<? extends TWContext> writeContextClass;
 
     /**
-     * Tele methods.
+     * Tele commands.
      * This list can be different with the methods of service due to  {@link colesico.framework.service.LocalMethod}
      */
-    private final Elements<TeleMethodElement> teleMethods = new Elements<>();
+    private final Elements<TeleCommandElement> teleCommands = new Elements<>();
 
     /**
      * IoC Qualifier for producer method
@@ -134,10 +134,10 @@ public class TeleFacadeElement {
         return parentService.originClass().packageName() + '.' + facadeClassSimpleName();
     }
 
-    public void addTeleMethod(TeleMethodElement teleMethod) {
-        teleMethods.add(teleMethod);
-        teleMethod.parentTeleFacade = this;
-        teleMethod.index = teleMethods.size();
+    public void addTeleCommand(TeleCommandElement teleCommand) {
+        teleCommands.add(teleCommand);
+        teleCommand.parentTeleFacade = this;
+        teleCommand.index = teleCommands.size();
     }
 
     public <B> TeleSchemeElement<B> teleScheme(Class<B> schemeType) {
@@ -167,8 +167,8 @@ public class TeleFacadeElement {
         return parentService;
     }
 
-    public Elements<TeleMethodElement> teleMethods() {
-        return teleMethods;
+    public Elements<TeleCommandElement> teleCommands() {
+        return teleCommands;
     }
 
     public Class<?> teleType() {

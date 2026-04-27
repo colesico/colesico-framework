@@ -6,14 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents tele-method variable: parameter, batch param
+ * Represents tele-command variable: parameter, batch param
  */
 abstract public class TeleInputElement {
 
     /**
-     * Parent tele-method ref
+     * Parent tele-command ref
      */
-    protected final TeleMethodElement parentTeleMethod;
+    protected final TeleCommandElement parentTeleCommand;
 
     /**
      * Optional origin element
@@ -25,8 +25,8 @@ abstract public class TeleInputElement {
      */
     protected final Map<Class<?>, Object> properties = new HashMap<>();
 
-    public TeleInputElement(TeleMethodElement parentTeleMethod, VarElement originElement) {
-        this.parentTeleMethod = parentTeleMethod;
+    public TeleInputElement(TeleCommandElement parentTeleCommand, VarElement originElement) {
+        this.parentTeleCommand = parentTeleCommand;
         this.originElement = originElement;
     }
 
@@ -38,8 +38,8 @@ abstract public class TeleInputElement {
         properties.put(propertyClass, property);
     }
 
-    public TeleMethodElement parentTeleMethod() {
-        return parentTeleMethod;
+    public TeleCommandElement parentTeleCommand() {
+        return parentTeleCommand;
     }
 
     public VarElement originElement() {

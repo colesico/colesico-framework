@@ -30,49 +30,49 @@ import java.util.Set;
  */
 public final class ThreadScopeImpl implements ThreadScope {
 
-    private final ThreadLocal<Map<Key<?>, Object>> beansHolder;
+    private final ThreadLocal<Map<Key<?>, Object>> objectsHolder;
 
     public ThreadScopeImpl() {
-        beansHolder = ThreadLocal.withInitial(HashMap::new);
+        objectsHolder = ThreadLocal.withInitial(HashMap::new);
     }
 
     @Override
     public <T> void remove(Key<T> key) {
-        beansHolder.get().remove(key);
+        objectsHolder.get().remove(key);
     }
 
     @Override
     public Set<Key<?>> keys() {
-        return beansHolder.get().keySet();
+        return objectsHolder.get().keySet();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T, C> T get(Key<T> key, Fabricator<T, C> fabricator, C fabricationContext) {
-        Map beans = beansHolder.get();
-        Object obj = beans.computeIfAbsent(key, k -> fabricator.fabricate(fabricationContext));
+        var objects = objectsHolder.get();
+        Object obj = objects.computeIfAbsent(key, k -> fabricator.fabricate(fabricationContext));
         return (T) obj;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(Key<T> key) {
-        return (T) beansHolder.get().get(key);
+        return (T) objectsHolder.get().get(key);
     }
 
     @Override
     public <T> void put(Key<T> key, T value) {
-        beansHolder.get().put(key, value);
+        objectsHolder.get().put(key, value);
     }
 
     @Override
     public void init() {
-        beansHolder.get().clear();
+        objectsHolder.get().clear();
     }
 
     @Override
     public void destroy() {
-        beansHolder.remove();
+        objectsHolder.remove();
     }
 
 }

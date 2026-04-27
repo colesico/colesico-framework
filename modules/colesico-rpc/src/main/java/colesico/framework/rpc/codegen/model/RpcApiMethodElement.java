@@ -3,7 +3,7 @@ package colesico.framework.rpc.codegen.model;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.rpc.RpcMethod;
-import colesico.framework.service.codegen.model.teleapi.TeleMethodElement;
+import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -23,9 +23,9 @@ public class RpcApiMethodElement {
     private final List<RpcApiParamElement> parameters = new ArrayList<>();
 
     /**
-     * Bound tele method
+     * Bound tele-command
      */
-    private TeleMethodElement teleMethod;
+    private TeleCommandElement teleCommand;
 
     /**
      * Custom RPC name
@@ -89,12 +89,12 @@ public class RpcApiMethodElement {
         return originMethod;
     }
 
-    public TeleMethodElement getTeleMethod() {
-        return teleMethod;
+    public TeleCommandElement getTeleCommand() {
+        return teleCommand;
     }
 
-    public void setTeleMethod(TeleMethodElement teleMethod) {
-        this.teleMethod = teleMethod;
+    public void setTeleCommand(TeleCommandElement teleCommand) {
+        this.teleCommand = teleCommand;
     }
 
     public List<RpcApiParamElement> getParameters() {
