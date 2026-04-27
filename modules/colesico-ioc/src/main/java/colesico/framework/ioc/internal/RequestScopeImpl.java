@@ -4,6 +4,7 @@ import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.scope.Fabricator;
 import colesico.framework.ioc.scope.RequestScope;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -27,12 +28,6 @@ public class RequestScopeImpl implements RequestScope {
     public void init(UUID requestId) {
         requestIdHolder.set(requestId);
         objectsHolder.computeIfAbsent(requestId, k -> new ConcurrentHashMap<>());
-    }
-
-    @Override
-    public void destroy() {
-        objectsHolder.remove(requestId());
-        requestIdHolder.remove();
     }
 
     @Override
@@ -65,5 +60,11 @@ public class RequestScopeImpl implements RequestScope {
     @Override
     public UUID requestId() {
         return requestIdHolder.get();
+    }
+
+    @Override
+    public void close() {
+        objectsHolder.remove(requestId());
+        requestIdHolder.remove();
     }
 }

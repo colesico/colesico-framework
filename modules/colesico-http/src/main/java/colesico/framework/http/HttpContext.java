@@ -20,11 +20,14 @@ import colesico.framework.ioc.key.TypeKey;
 
 /**
  * Contains data relating to the current http request processing.
- * This context must be placed to thread scope to be accessible for other framework components
+ * This context must be placed to {@link colesico.framework.ioc.scope.RequestScope}
+ * to be accessible for other framework components
  */
 public final class HttpContext {
 
-    // Thread scope key to hold this context
+    /**
+     * {@link colesico.framework.ioc.scope.RequestScope}  key to hold this context
+     */
     public static final Key<HttpContext> SCOPE_KEY = new TypeKey<>(HttpContext.class);
 
     private HttpRequest request;

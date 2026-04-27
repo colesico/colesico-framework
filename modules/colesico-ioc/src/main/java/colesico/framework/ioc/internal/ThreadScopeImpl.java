@@ -19,6 +19,7 @@ import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.scope.Fabricator;
 import colesico.framework.ioc.scope.ThreadScope;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -71,8 +72,7 @@ public final class ThreadScopeImpl implements ThreadScope {
     }
 
     @Override
-    public void destroy() {
+    public void close() {
         objectsHolder.remove();
     }
-
 }

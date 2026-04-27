@@ -28,7 +28,7 @@
     <artifactId>colesico-httpservice</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico Http Service</name>
+    <name>Colesico HTTP Service</name>
     <description>
         Colesico Framework Http Service common library
     </description>

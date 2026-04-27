@@ -16,22 +16,21 @@
 
 package colesico.framework.ioc.scope;
 
+import java.io.Closeable;
+import java.io.IOException;
+
 /**
  * Thread scope interface
+ * {@link  ThreadScope#close()}  should be called by the "dispatcher" after processing the request
  *
  * @author Vladlen Larionov
  */
-public interface ThreadScope extends Scope {
+public interface ThreadScope extends Scope, AutoCloseable  {
 
     /**
      * Should be called by the "dispatcher" before processing the request.
      * For example, the dispatcher of http request  (servlet) must call this method before processing the request.
      */
     void init();
-
-    /**
-     * Should be called by the "dispatcher" after processing the request
-     */
-    void destroy();
 
 }

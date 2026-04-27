@@ -53,16 +53,6 @@ public class RouterImpl implements Router {
     }
 
     @Override
-    public void register(TeleFacade<?, RouterCommands> teleFacade) {
-        register(this, teleFacade);
-    }
-
-    @Override
-    public List<String> slicedRoute(Class<?> targetClass, String targetMethod, HttpMethod httpMethod, Map<String, String> parameters) {
-        return routesIndex.getSlicedRoute(toRouteId(targetClass, targetMethod, httpMethod), parameters);
-    }
-
-    @Override
     public Optional<Router.Invocation> resolve(Criteria criteria) {
         var requestMethod = criteria.requestMethod();
         var requestUri = criteria.requestUri();
@@ -95,11 +85,21 @@ public class RouterImpl implements Router {
 
         var teleController = invocation.action().teleController();
         if (teleController == null || teleController == this) {
-            //TODO: create data port
-            invocation.action().teleCommand().invoke(null);
+            //TODO: create default data port
+            invocation.action().teleCommand().execute(null);
         } else {
             teleController.execute(invocation);
         }
+    }
+
+    @Override
+    public List<String> slicedRoute(Class<?> targetClass, String targetMethod, HttpMethod httpMethod, Map<String, String> parameters) {
+        return routesIndex.getSlicedRoute(toRouteId(targetClass, targetMethod, httpMethod), parameters);
+    }
+
+    @Override
+    public void register(TeleFacade<?, RouterCommands> teleFacade) {
+        register(this, teleFacade);
     }
 
     void register(TeleController<?, Router.Invocation, RouterCommands> teleController,
@@ -146,4 +146,5 @@ public class RouterImpl implements Router {
     String toRouteId(Class<?> targetClass, String targetMethod, HttpMethod httpMethod) {
         return targetClass.getName() + ':' + targetMethod + ':' + httpMethod.name();
     }
+
 }
