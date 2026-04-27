@@ -13,7 +13,7 @@ public final class RouteAction {
     /**
      * Target controller
      */
-    private final TeleController<?, Router.Invocation, ?> teleController;
+    private final TeleController<?, Router.Invocation, RouterCommands> teleController;
 
     /**
      * Target method, invoked to handle the request.
@@ -29,7 +29,7 @@ public final class RouteAction {
      */
     private final Map<String, String> attributes;
 
-    public RouteAction(TeleController<Router.Criteria, Router.Invocation, RouterCommands> teleController,
+    public RouteAction(TeleController<?, Router.Invocation, RouterCommands> teleController,
                        TeleCommand<?, ?> teleCommand,
                        Map<String, String> attributes) {
 
@@ -38,7 +38,7 @@ public final class RouteAction {
         this.attributes = attributes;
     }
 
-    public TeleController<Router.Criteria, Router.Invocation, RouterCommands> teleController() {
+    public TeleController<?, Router.Invocation, RouterCommands> teleController() {
         return teleController;
     }
 

@@ -24,7 +24,7 @@ import colesico.framework.ioc.scope.ThreadScope;
  * Security kit default implementation.
  * Extend this class to customize principal control.
  */
-abstract public class AbstractSecurityContext<P extends Principal> implements SecurityContext<P> {
+abstract public class AbstractSecurityContext<P extends Principal<?>> implements SecurityContext<P> {
 
     protected final ThreadScope threadScope;
 
@@ -66,12 +66,13 @@ abstract public class AbstractSecurityContext<P extends Principal> implements Se
         return principal;
     }
 
+    /*
     @Override
     public void setPrincipal(P principal) {
         principal = write(principal);
         threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(principal));
     }
-
+*/
     @Override
     public <T> T invokeAs(Invocable<T> invocable, P principal) {
         PrincipalHolder holder = threadScope.get(PrincipalHolder.SCOPE_KEY);

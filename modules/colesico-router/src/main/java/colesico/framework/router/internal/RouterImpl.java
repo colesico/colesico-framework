@@ -102,7 +102,7 @@ public class RouterImpl implements Router {
         }
     }
 
-    void register(TeleController<Router.Criteria, Router.Invocation, RouterCommands> teleController,
+    void register(TeleController<?, Router.Invocation, RouterCommands> teleController,
                   TeleFacade<?, RouterCommands> teleFacade) {
         log.debug("Register http router tele-facade: {}", teleFacade.getClass().getName());
 
@@ -122,7 +122,7 @@ public class RouterImpl implements Router {
         }
     }
 
-    void register(RouterTargetController targetController) {
+    void register(RouterTargetController<?> targetController) {
         log.debug("Register http router tele-facades for target controller {}", targetController.getClass().getName());
 
         for (var teleFacade : targetController.teleFacades()) {

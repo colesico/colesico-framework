@@ -10,7 +10,7 @@ public class SecurityAuditorElement {
         this.auditorClass = auditorClass;
     }
 
-    public ClassElement getAuditorClass() {
+    public ClassElement auditorClass() {
         return auditorClass;
     }
 }

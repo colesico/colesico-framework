@@ -6,18 +6,18 @@ import java.util.Optional;
  * Controls tele-methods invocation process considering invocation environment (protocol etc.),
  * performs error handling, etc.
  *
- * @param <C> Criteria to resolve an invocation (e.g. HTTP URL, method name, etc.)
+ * @param <Q> Criteria to resolve an invocation (e.g. HTTP URL, method name, etc.)
  * @param <I> Invocation to execute
- * @param <D> commands registry of tele-facade (references to target methods)
+ * @param <M> Commands registry of tele-facade (references to target methods)
  */
-public interface TeleController<C, I, D> {
+public interface TeleController<Q, I, M> {
 
     /**
      * Resolve invocation with protocol context.
      *
      * @return invocation to be executed or empty result.
      */
-    Optional<I> resolve(C criteria);
+    Optional<I> resolve(Q criteria);
 
     /**
      * Execute an invocation.
@@ -29,9 +29,9 @@ public interface TeleController<C, I, D> {
     /**
      * Register tele-facade
      */
-    void register(TeleFacade<?, D> teleFacade);
+    void register(TeleFacade<?, M> teleFacade);
 
-    default void register(Iterable<TeleFacade<?, D>> teleFacades) {
+    default void register(Iterable<TeleFacade<?, M>> teleFacades) {
         for (var teleFacade : teleFacades) {
             register(teleFacade);
         }

@@ -60,14 +60,14 @@ public class SecurityModulator extends Modulator {
         List<SecurityAuditorElement> auditors = new ArrayList<>();
 
         if (requirePrincipal != null) {
-            SecurityAuditorElement se = new SecurityAuditorElement(ClassElement.of(getProcessorContext().getProcessingEnv(), RequirePrincipalAudit.class));
+            SecurityAuditorElement se = new SecurityAuditorElement(ClassElement.of(processorContext().processingEnv(), RequirePrincipalAudit.class));
             auditors.add(se);
         }
 
         if (securityAudit != null) {
             TypeMirror[] tmArr = securityAudit.valueTypeMirrors(a -> a.value());
             for (TypeMirror tm : tmArr) {
-                SecurityAuditorElement se = new SecurityAuditorElement(ClassElement.of(getProcessorContext().getProcessingEnv(), (DeclaredType) tm));
+                SecurityAuditorElement se = new SecurityAuditorElement(ClassElement.of(processorContext().processingEnv(), (DeclaredType) tm));
                 auditors.add(se);
             }
         }
@@ -77,8 +77,8 @@ public class SecurityModulator extends Modulator {
             auditorIdx++;
 
             // Add auditor field
-            String fieldName = StrUtils.firstCharToLowerCase(sae.getAuditorClass().simpleName()) + auditorIdx;
-            FieldSpec fieldSpec = FieldSpec.builder(TypeName.get(sae.getAuditorClass().originType()), fieldName).addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
+            String fieldName = StrUtils.firstCharToLowerCase(sae.auditorClass().simpleName()) + auditorIdx;
+            FieldSpec fieldSpec = FieldSpec.builder(TypeName.get(sae.auditorClass().originType()), fieldName).addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
             ServiceFieldElement fieldElement = new ServiceFieldElement(fieldSpec).inject();
             service.addCustomField(fieldElement);
 

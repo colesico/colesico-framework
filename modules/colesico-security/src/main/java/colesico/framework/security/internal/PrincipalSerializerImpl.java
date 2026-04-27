@@ -30,12 +30,13 @@ public class PrincipalSerializerImpl implements PrincipalSerializer<AbsractPrinc
 
     @Override
     public byte[] serialize(AbsractPrincipal principal) {
-        return principal.getId().getBytes(StandardCharsets.UTF_8);
+        return principal.id().getBytes(StandardCharsets.UTF_8);
     }
 
     @Override
     public AbsractPrincipal deserialize(byte[] principalBytes) {
         String id = new String(principalBytes, StandardCharsets.UTF_8);
-        return new AbsractPrincipal(id);
+        // return new AbsractPrincipal(id){};
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 }

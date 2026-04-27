@@ -24,7 +24,7 @@ import colesico.framework.security.teleapi.PrincipalSerializer;
 import jakarta.inject.Singleton;
 
 @Producer
-@Produce(AbstractSecurityContext.class)
+//@Produce(AbstractSecurityContext.class)
 @Produce(PrincipalSerializerImpl.class)
 @Produce(RequirePrincipalAudit.class)
 public class SecurityProducer {
