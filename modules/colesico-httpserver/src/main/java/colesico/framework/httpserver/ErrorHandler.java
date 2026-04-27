@@ -22,5 +22,5 @@ import colesico.framework.http.HttpContext;
  * @author Vladlen Larionov
  */
 public interface ErrorHandler {
-    void handleException(Exception exception, HttpContext httpContext);
+    void handleException(Throwable throwable, HttpContext httpContext);
 }

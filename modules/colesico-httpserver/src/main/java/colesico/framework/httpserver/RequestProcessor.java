@@ -56,20 +56,20 @@ abstract public class RequestProcessor<C> {
      * Resolve given request uri to action resolution
      * The method isolates and handles the possible exception with an {@link ErrorHandler}.
      * Invoker of this method should not attempt to catch exceptions from this method,
-     * but rather hang upon on a non-null {@link RouterInvocation} result.
+     * but rather hang upon on a non-null {@link Router.Invocation} result.
      *
      * @return appropriate action resolution of null if any error occurred
      * (including {@link UnknownRouteException})
      */
-    protected RouterInvocation resolveAction(HttpMethod requestMethod, String requestUri, C context) {
+    protected Router.Invocation resolve(HttpMethod requestMethod, String requestUri, C context) {
         try {
-            return router.resolve(requestMethod, requestUri);
-        } catch (Exception e) {
+            return router.resolve(Router.Criteria.of(requestMethod, requestUri));
+        } catch (Throwable t) {
             // Init http context and perform error handling
             threadScope.init();
             try {
                 final HttpContext httpContext = initHttpContext(context);
-                handleException(e, httpContext);
+                handleException(t, httpContext);
             } finally {
                 threadScope.destroy();
             }
@@ -95,10 +95,10 @@ abstract public class RequestProcessor<C> {
         }
     }
 
-    protected void handleException(Exception ex, HttpContext httpContext) {
-        log.error("Request processing error: {}", ExceptionUtils.getRootCauseMessage(ex));
+    protected void handleException(Throwable t, HttpContext httpContext) {
+        log.error("Request processing error: {}", ExceptionUtils.getRootCauseMessage(t));
         try {
-            errorHandler.handleException(ex, httpContext);
+            errorHandler.handleException(t, httpContext);
         } catch (Exception ex2) {
             log.error("Handling exception error: {}", ExceptionUtils.getRootCauseMessage(ex2));
         }

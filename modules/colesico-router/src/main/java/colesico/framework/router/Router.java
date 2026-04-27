@@ -21,6 +21,7 @@ import colesico.framework.teleapi.TeleController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Router API
@@ -39,12 +40,19 @@ public interface Router extends TeleController<Router.Criteria, Router.Invocatio
      */
     List<String> slicedRoute(Class<?> targetClass, String targetMethod, HttpMethod httpMethod, Map<String, String> parameters);
 
+    default Optional<Invocation> resolve(HttpMethod requestMethod, String requestUri) {
+        return resolve(Criteria.of(requestMethod, requestUri));
+    }
+
     /**
      * Route invocation resolving criteria
      *
      * @param requestUri request url part from hostname(port) to query string (before '?' char)
      */
     record Criteria(HttpMethod requestMethod, String requestUri) {
+        public static Criteria of(HttpMethod requestMethod, String requestUri) {
+            return new Criteria(requestMethod, requestUri);
+        }
     }
 
     /**

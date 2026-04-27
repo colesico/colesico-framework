@@ -65,7 +65,7 @@ public class UndertowHttpHandler extends RequestProcessor<HttpServerExchange> im
         HttpMethod requestMethod = HttpMethod.of(exchange.getRequestMethod().toString());
         String requestUri = StringUtils.substringBefore(exchange.getRequestURI(), "?");
         // 
-        RouterInvocation routerInvocation = resolveAction(requestMethod, requestUri, exchange);
+        RouterInvocation routerInvocation = resolve(requestMethod, requestUri, exchange);
 
         if (routerInvocation != null) {
             // Check  blocking|non-blocking processing
