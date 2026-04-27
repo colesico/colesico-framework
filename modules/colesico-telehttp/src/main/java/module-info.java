@@ -3,10 +3,13 @@ module colesico.framework.telehttp {
 
     requires org.slf4j;
     requires org.apache.commons.lang3;
-    requires jdk.compiler;
-    requires com.palantir.javapoet;
 
-    requires transitive colesico.framework.router;
+    requires com.palantir.javapoet;
+    requires java.compiler;
+
+    requires transitive colesico.framework.config;
+    requires transitive colesico.framework.service;
+    requires transitive colesico.framework.http;
     requires transitive colesico.framework.translation;
     requires transitive colesico.framework.security;
 
@@ -21,4 +24,10 @@ module colesico.framework.telehttp {
     exports colesico.framework.telehttp.t9n;
     opens colesico.framework.telehttp.t9n;
 
+    //=== Router ===
+
+    exports colesico.framework.router;
+    exports colesico.framework.router.assist;
+    exports colesico.framework.router.internal to colesico.framework.ioc;
+    exports colesico.framework.router.codegen;
 }

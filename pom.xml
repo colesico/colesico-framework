@@ -153,7 +153,6 @@
                 <!-- Web -->
                 <module>modules/colesico-http</module>
                 <module>modules/colesico-telehttp</module>
-                <module>modules/colesico-router</module>
                 <module>modules/colesico-httpserver</module>
                 <module>modules/colesico-weblet</module>
                 <module>modules/colesico-webstatic</module>
