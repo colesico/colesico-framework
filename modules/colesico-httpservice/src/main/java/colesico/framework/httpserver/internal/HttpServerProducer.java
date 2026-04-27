@@ -26,7 +26,7 @@ import colesico.framework.ioc.production.Producer;
 @Producer
 @Produce(DefaultErrorHandler.class)
 public class HttpServerProducer {
-    public ErrorHandler getDefaultErrorHandler(DefaultErrorHandler impl) {
+    public ErrorHandler defaultErrorHandler(DefaultErrorHandler impl) {
         return impl;
     }
 }

@@ -20,6 +20,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.http.HttpResponse;
+import colesico.framework.ioc.scope.RequestScope;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.Router;
 import colesico.framework.router.assist.UnknownRouteException;
@@ -39,13 +40,12 @@ abstract public class RequestProcessor<C> {
 
     protected final Logger log = LoggerFactory.getLogger(HttpServer.class);
 
-    protected final ThreadScope threadScope;
+    protected final RequestScope requestScope;
     protected final Router router;
     protected final ErrorHandler errorHandler;
 
-
-    public RequestProcessor(ThreadScope threadScope, Router router, ErrorHandler errorHandler) {
-        this.threadScope = threadScope;
+    public RequestProcessor(RequestScope requestScope, Router router, ErrorHandler errorHandler) {
+        this.requestScope = requestScope;
         this.router = router;
         this.errorHandler = errorHandler;
     }
@@ -55,27 +55,18 @@ abstract public class RequestProcessor<C> {
     abstract protected HttpResponse createHttpResponse(C context);
 
     /**
-     * Resolve given request uri to action resolution
+     * Resolve given request uri.
      * The method isolates and handles the possible exception with an {@link ErrorHandler}.
-     * Invoker of this method should not attempt to catch exceptions from this method,
-     * but rather hang upon on a non-null {@link Router.Invocation} result.
+     * Invoker of this method should not attempt to catch exceptions from this method.
      *
-     * @return appropriate action resolution of null if any error occurred
-     * (including {@link UnknownRouteException})
+     * @return appropriate invocation or empty result
      */
     protected Optional<Router.Invocation> resolve(HttpMethod requestMethod, String requestUri, C context) {
         try {
             return router.resolve(requestMethod, requestUri);
         } catch (Throwable t) {
-            // Init http context and perform error handling
-            threadScope.init();
-            try (threadScope) {
-                final HttpContext httpContext = createHttpContext(context);
-                handleException(t, httpContext);
-            } catch (Throwable t2){
-
-            }
-            return null;
+            handleException(t, createHttpContext(context));
+            return Optional.empty();
         }
     }
 
@@ -83,13 +74,13 @@ abstract public class RequestProcessor<C> {
      * Performs action referenced by action resolution.
      * The method isolates and handles the possible exception with an {@link ErrorHandler}.
      */
-    protected void perform(Router.Invocation resolution, C context) {
+    protected void perform(Router.Invocation invocation, C context) {
         // Init http context
-        threadScope.init();
+        requestScope.init();
         final HttpContext httpContext = createHttpContext(context);
-        try (threadScope){
-            // Perform router action
-            router.execute(resolution);
+        requestScope.put(HttpContext.SCOPE_KEY, httpContext);
+        try (requestScope) {
+            router.execute(invocation);
         } catch (Exception e) {
             handleException(e, httpContext);
         }
