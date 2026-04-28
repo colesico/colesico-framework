@@ -1,5 +1,5 @@
 
-module colesico.framework.telehttp {
+module colesico.framework.httpservice {
 
     requires org.slf4j;
     requires org.apache.commons.lang3;

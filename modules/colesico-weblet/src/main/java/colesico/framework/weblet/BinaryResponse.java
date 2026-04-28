@@ -23,9 +23,9 @@ public final class BinaryResponse extends ContentResponse {
 
     public static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
 
-    protected final byte[] content;
+    private final byte[] content;
 
-    protected final String fileName;
+    private final String fileName;
 
     private BinaryResponse(byte[] content, String contentType, String fileName, int statusCode) {
         super(contentType, statusCode);

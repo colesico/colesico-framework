@@ -43,7 +43,7 @@ import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.List;
 
-import static colesico.framework.service.ServiceProxy.GET_SERVICE_ORIGIN_METHOD;
+import static colesico.framework.service.ServiceProxy.SERVICE_ORIGIN_METHOD;
 
 /**
  * Service proxy class generator
@@ -174,7 +174,7 @@ public class ServiceProxyGenerator {
     }
 
     protected void generateGetSuperClassMethod(ServiceElement serviceElm) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(GET_SERVICE_ORIGIN_METHOD);
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(SERVICE_ORIGIN_METHOD);
         mb.addAnnotation(Override.class)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(ParameterizedTypeName.get(ClassName.get(Class.class), WildcardTypeName.subtypeOf(Object.class)))

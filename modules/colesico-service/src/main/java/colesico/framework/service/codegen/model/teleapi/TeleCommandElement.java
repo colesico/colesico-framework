@@ -27,6 +27,7 @@ import java.util.Map;
 /**
  * Tele-command representation.
  * Tele command is an executable command which invoke taget service method
+ *
  * @see colesico.framework.teleapi.TeleCommand
  */
 public final class TeleCommandElement {
@@ -48,7 +49,7 @@ public final class TeleCommandElement {
 
     /**
      * Parameter batches.
-     *
+     * <p>
      * batch name -> batch element
      */
     private final Map<String, TeleBatchElement> batches = new HashMap<>();
@@ -100,7 +101,7 @@ public final class TeleCommandElement {
     }
 
     public String builderName() {
-        return "get" + StrUtils.firstCharToUpperCase(serviceMethod.name()) + "TM" + index;
+        return "" + StrUtils.firstCharToLowerCase(serviceMethod.name()) + "TC" + index;
     }
 
     public TeleBatchElement getOrCreateBatch(String name) {

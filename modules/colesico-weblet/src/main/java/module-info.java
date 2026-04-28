@@ -21,7 +21,7 @@ module colesico.framework.weblet {
     requires static java.compiler;
     requires static com.palantir.javapoet;
 
-    requires transitive colesico.framework.telehttp;
+    requires transitive colesico.framework.httpservice;
 
     requires org.slf4j;
 

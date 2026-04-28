@@ -25,7 +25,7 @@ public interface ServiceProxy {
 
     String SERVICE_CLASS_SUFFIX = "Service";
     String PROXY_CLASS_SUFFIX = "Proxy";
-    String GET_SERVICE_ORIGIN_METHOD = "getServiceOrigin";
+    String SERVICE_ORIGIN_METHOD = "serviceOrigin";
 
     /**
      * Returns service origin class (i.e. class on which this proxy is based)
