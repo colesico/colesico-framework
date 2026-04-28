@@ -16,7 +16,7 @@ public class UndertowCookie implements HttpCookie {
         this.undertowCookie = undertowCookie;
     }
 
-    public Cookie getUndertowCookie() {
+    public Cookie undertowCookie() {
         return undertowCookie;
     }
 

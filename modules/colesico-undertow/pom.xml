@@ -49,7 +49,7 @@
 
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-httpserver</artifactId>
+            <artifactId>colesico-httpservice</artifactId>
             <version>${project.version}</version>
         </dependency>
 

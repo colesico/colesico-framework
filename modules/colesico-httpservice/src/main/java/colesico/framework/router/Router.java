@@ -56,7 +56,7 @@ public interface Router extends TeleController<Router.Criteria, Router.Invocatio
     }
 
     /**
-     * @param requestMethod Request http method
+     * @param requestMethod    Request http method
      * @param requestUri    Request URI
      * @param action        Route Action
      * @param parameters    Route parameters
@@ -65,7 +65,6 @@ public interface Router extends TeleController<Router.Criteria, Router.Invocatio
                       String requestUri,
                       RouteAction action,
                       Map<String, String> parameters) {
-
     }
 
 }

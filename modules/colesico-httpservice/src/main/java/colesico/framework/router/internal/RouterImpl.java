@@ -94,7 +94,7 @@ public class RouterImpl implements Router {
 
     @Override
     public List<String> slicedRoute(Class<?> targetClass, String targetMethod, HttpMethod httpMethod, Map<String, String> parameters) {
-        return routesIndex.getSlicedRoute(toRouteId(targetClass, targetMethod, httpMethod), parameters);
+        return routesIndex.slicedRoute(toRouteId(targetClass, targetMethod, httpMethod), parameters);
     }
 
     @Override

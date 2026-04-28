@@ -20,9 +20,10 @@ import colesico.framework.http.HttpMethod;
 import colesico.framework.router.RouterException;
 
 /**
- * Utility exception to raise when route is  not resolved
+ * Utility exception to raise when route is not resolved
  */
 public class UnknownRouteException extends RouterException {
+
     private final HttpMethod httpMethod;
     private final String uri;
 

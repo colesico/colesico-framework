@@ -27,6 +27,5 @@ public interface RouterBuilder {
                          Class<?> targetClass,
                          String targetMethod,
                          Map<String, String> routeAttributes);
-
     Router build();
 }

@@ -30,7 +30,7 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Producer
-@Produce(UndertowHttpHandler.class)
+@Produce(UndertowNonBlockingHandler.class)
 @Produce(UndertowBlockingHandler.class)
 @Produce(UndertowConfigImpl.class)
 @Produce(UndertowHttpServer.class)
@@ -38,12 +38,12 @@ import jakarta.inject.Singleton;
 public class UndertowProducer {
 
     @Singleton
-    public HttpServer getHttpServer(UndertowHttpServer impl) {
+    public HttpServer httpServer(UndertowHttpServer impl) {
         return impl;
     }
 
     // Default configuration
-    public UndertowConfigPrototype getUndertowConfig(UndertowConfigImpl impl) {
+    public UndertowConfigPrototype undertowConfig(UndertowConfigImpl impl) {
         return impl;
     }
 

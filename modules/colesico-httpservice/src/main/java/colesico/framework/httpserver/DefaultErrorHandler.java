@@ -35,7 +35,7 @@ public class DefaultErrorHandler implements ErrorHandler {
 
     protected final Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
 
-    protected String toStackTrace(Exception cause) {
+    protected String toStackTrace(Throwable cause) {
         if (cause == null) return "";
         StringWriter sw = new StringWriter(1024);
         final PrintWriter pw = new PrintWriter(sw);
@@ -45,11 +45,11 @@ public class DefaultErrorHandler implements ErrorHandler {
     }
 
     @Override
-    public void handleException(Exception exception, HttpContext httpContext) {
-        String rootMessage = ExceptionUtils.getRootCauseMessage(exception);
+    public void handleException(Throwable throwable, HttpContext httpContext) {
+        String rootMessage = ExceptionUtils.getRootCauseMessage(throwable);
 
         logger.error("Unexpected error: " + rootMessage);
-        logger.error(toStackTrace(exception));
+        logger.error(toStackTrace(throwable));
 
         StringBuilder out = new StringBuilder("<!doctype html>");
         out.append("<html>");
@@ -63,7 +63,7 @@ public class DefaultErrorHandler implements ErrorHandler {
 
         HttpResponse response = httpContext.response();
         try {
-            if (exception instanceof UnknownRouteException) {
+            if (throwable instanceof UnknownRouteException) {
                 response.sendText(out.toString(), HTML_CONTENT_TYPE, 404);
             } else {
                 response.sendText(out.toString(), HTML_CONTENT_TYPE, 500);

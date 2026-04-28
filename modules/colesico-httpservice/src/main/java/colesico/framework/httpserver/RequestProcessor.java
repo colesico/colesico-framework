@@ -18,10 +18,7 @@ package colesico.framework.httpserver;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
-import colesico.framework.http.HttpRequest;
-import colesico.framework.http.HttpResponse;
 import colesico.framework.ioc.scope.RequestScope;
-import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.Router;
 import colesico.framework.router.assist.UnknownRouteException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -34,12 +31,11 @@ import java.util.Optional;
  * Basic abstract http request processor.
  * This class to be used for http server implementations.
  *
- * @param <C> Context to build http response and request from it
+ * @param <C> Raw context to build http response and request from it
  */
 abstract public class RequestProcessor<C> {
 
-    protected final Logger log = LoggerFactory.getLogger(HttpServer.class);
-
+    protected final Logger log = LoggerFactory.getLogger(RequestProcessor.class);
     protected final RequestScope requestScope;
     protected final Router router;
     protected final ErrorHandler errorHandler;
@@ -50,40 +46,55 @@ abstract public class RequestProcessor<C> {
         this.errorHandler = errorHandler;
     }
 
-    abstract protected HttpRequest createHttpRequest(C context);
+    abstract protected HttpContext createHttpContext(C rawContext);
 
-    abstract protected HttpResponse createHttpResponse(C context);
-
-    /**
-     * Resolve given request uri.
-     * The method isolates and handles the possible exception with an {@link ErrorHandler}.
-     * Invoker of this method should not attempt to catch exceptions from this method.
-     *
-     * @return appropriate invocation or empty result
-     */
-    protected Optional<Router.Invocation> resolve(HttpMethod requestMethod, String requestUri, C context) {
-        try {
-            return router.resolve(requestMethod, requestUri);
-        } catch (Throwable t) {
-            handleException(t, createHttpContext(context));
-            return Optional.empty();
+    protected void handleRequest(C rawContext) {
+        requestScope.open();
+        try (requestScope) {
+            var httpContext = bindHttpContext(rawContext);
+            var invocation = resolve(httpContext);
+            if (invocation != null) {
+                execute(invocation, httpContext);
+            }
+        } catch (Throwable fatal) {
+            log.error("Fatal error during request processing: {}", fatal.getMessage());
         }
     }
 
-    /**
-     * Performs action referenced by action resolution.
-     * The method isolates and handles the possible exception with an {@link ErrorHandler}.
-     */
-    protected void perform(Router.Invocation invocation, C context) {
-        // Init http context
-        requestScope.init();
-        final HttpContext httpContext = createHttpContext(context);
-        requestScope.put(HttpContext.SCOPE_KEY, httpContext);
-        try (requestScope) {
-            router.execute(invocation);
-        } catch (Exception e) {
-            handleException(e, httpContext);
+    protected Router.Invocation resolve(HttpContext httpContext) {
+        HttpMethod httpMethod = httpContext.request().requestMethod();
+        String requestUri = httpContext.request().requestURI();
+        Optional<Router.Invocation> resolution;
+        try {
+            resolution = router.resolve(httpMethod, requestUri);
+        } catch (Throwable t) {
+            handleException(t, httpContext);
+            return null;
         }
+
+        if (resolution.isEmpty()) {
+            handleException(new UnknownRouteException(httpMethod, requestUri), httpContext);
+            return null;
+        }
+
+        return resolution.get();
+    }
+
+    /**
+     * Override this method to custom execute invocation
+     */
+    protected void execute(Router.Invocation invocation, HttpContext httpContext) {
+        try {
+            router.execute(invocation);
+        } catch (Throwable t) {
+            handleException(t, httpContext);
+        }
+    }
+
+    protected HttpContext bindHttpContext(C rawContext) {
+        var httpContext = createHttpContext(rawContext);
+        requestScope.put(HttpContext.SCOPE_KEY, httpContext);
+        return httpContext;
     }
 
     protected void handleException(Throwable t, HttpContext httpContext) {
@@ -91,13 +102,7 @@ abstract public class RequestProcessor<C> {
         try {
             errorHandler.handleException(t, httpContext);
         } catch (Throwable t2) {
-            log.error("Handling exception error: {}", ExceptionUtils.getRootCauseMessage(t2));
+            log.error("Error handler failed: {}", ExceptionUtils.getRootCauseMessage(t2));
         }
     }
-
-    /**
-     * Creates http context instance from any request context
-     */
-    abstract HttpContext createHttpContext(C context);
-
 }

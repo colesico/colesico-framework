@@ -16,8 +16,8 @@ public final class RouteAction {
     private final TeleController<?, Router.Invocation, RouterCommands> teleController;
 
     /**
-     * Target method, invoked to handle the request.
-     * This is the method of tele-facade for the appropriate service (weblet, restlet)
+     * Tele-command invoked to proceed the request.
+     * This is the command of tele-facade for the appropriate service (weblet, restlet)
      */
     private final TeleCommand<?, ?> teleCommand;
 

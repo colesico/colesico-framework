@@ -18,13 +18,13 @@ package colesico.framework.httpserver.internal;
 
 import colesico.framework.httpserver.DefaultErrorHandler;
 import colesico.framework.httpserver.ErrorHandler;
+import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 
 
-
 @Producer
-@Produce(DefaultErrorHandler.class)
+@Produce(value = DefaultErrorHandler.class, substitute = Substitution.STUB)
 public class HttpServerProducer {
     public ErrorHandler defaultErrorHandler(DefaultErrorHandler impl) {
         return impl;

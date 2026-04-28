@@ -67,7 +67,7 @@ public final class ThreadScopeImpl implements ThreadScope {
     }
 
     @Override
-    public void init() {
+    public void open() {
         objectsHolder.get().clear();
     }
 

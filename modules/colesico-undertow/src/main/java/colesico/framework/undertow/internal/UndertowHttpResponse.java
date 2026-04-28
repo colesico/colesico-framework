@@ -20,7 +20,6 @@ import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.Cookie;
-import io.undertow.server.handlers.CookieImpl;
 import io.undertow.util.HeaderValues;
 import io.undertow.util.Headers;
 import io.undertow.util.HttpString;
@@ -29,7 +28,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.ByteBuffer;
-import java.util.Map;
 
 /**
  * @author Vladlen Larionov
@@ -42,7 +40,7 @@ public class UndertowHttpResponse implements HttpResponse {
         this.exchange = exchange;
     }
 
-    public HttpServerExchange getExchange() {
+    public HttpServerExchange exchange() {
         return exchange;
     }
 
@@ -90,7 +88,7 @@ public class UndertowHttpResponse implements HttpResponse {
 
     @Override
     public void setCookie(HttpCookie cookie) {
-        exchange.setResponseCookie(((UndertowCookie) cookie).getUndertowCookie());
+        exchange.setResponseCookie(((UndertowCookie) cookie).undertowCookie());
     }
 
     @Override

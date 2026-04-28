@@ -4,7 +4,6 @@ import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.scope.Fabricator;
 import colesico.framework.ioc.scope.RequestScope;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -18,43 +17,52 @@ public class RequestScopeImpl implements RequestScope {
     private static final Map<UUID, Map<Key<?>, Object>> objectsHolder = new ConcurrentHashMap<>();
     private static final ThreadLocal<UUID> requestIdHolder = new ThreadLocal<>();
 
-
-    @Override
-    public void init() {
-        init(UUID.randomUUID());
+    private Map<Key<?>, Object> objectsHolder() {
+        UUID id = requestIdHolder.get();
+        if (id == null) throw new IllegalStateException("Scope not opened");
+        Map<Key<?>, Object> map = objectsHolder.get(id);
+        if (map == null) throw new IllegalStateException("Scope data already cleared");
+        return map;
     }
 
     @Override
-    public void init(UUID requestId) {
+    public void open() {
+        open(UUID.randomUUID());
+    }
+
+    @Override
+    public void open(UUID requestId) {
+        if (requestIdHolder.get() != null) {
+            throw new IllegalStateException("Request scope already open in this thread");
+        }
         requestIdHolder.set(requestId);
         objectsHolder.computeIfAbsent(requestId, k -> new ConcurrentHashMap<>());
     }
 
     @Override
     public <T> T get(Key<T> key) {
-        return (T) objectsHolder.get(requestId()).get(key);
+        return (T) objectsHolder().get(key);
     }
 
     @Override
     public <T> void put(Key<T> key, T value) {
-        objectsHolder.get(requestId()).put(key, value);
+        objectsHolder().put(key, value);
     }
 
     @Override
     public <T, C> T get(Key<T> key, Fabricator<T, C> fabricator, C fabricationContext) {
-        var objects = objectsHolder.get(requestId());
-        Object obj = objects.computeIfAbsent(key, k -> fabricator.fabricate(fabricationContext));
+        Object obj = objectsHolder().computeIfAbsent(key, k -> fabricator.fabricate(fabricationContext));
         return (T) obj;
     }
 
     @Override
     public <T> void remove(Key<T> key) {
-        objectsHolder.get(requestId()).remove(key);
+        objectsHolder().remove(key);
     }
 
     @Override
     public Set<Key<?>> keys() {
-        return objectsHolder.get(requestId()).keySet();
+        return objectsHolder().keySet();
     }
 
     @Override
@@ -64,7 +72,10 @@ public class RequestScopeImpl implements RequestScope {
 
     @Override
     public void close() {
-        objectsHolder.remove(requestId());
-        requestIdHolder.remove();
+        UUID requestId = requestIdHolder.get();
+        if (requestId != null) {
+            objectsHolder.remove(requestId);
+            requestIdHolder.remove();
+        }
     }
 }

@@ -49,7 +49,7 @@ public class RoutesIndex {
      * @param parameters route params
      * @return
      */
-    public List<String> getSlicedRoute(String routeId, Map<String, String> parameters) {
+    public List<String> slicedRoute(String routeId, Map<String, String> parameters) {
         RouteTrie.Node node = nodesMap.get(routeId);
         if (node == null) {
             return null;

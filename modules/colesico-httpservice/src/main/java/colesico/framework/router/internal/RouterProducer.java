@@ -35,17 +35,17 @@ import jakarta.inject.Singleton;
 public class RouterProducer {
 
     @Singleton
-    public RouterBuilder getRouterBuilder(final RouterBuilderImpl impl, Polysupplier<RouterOptions> options) {
+    public RouterBuilder routerBuilder(final RouterBuilderImpl impl, Polysupplier<RouterOptions> options) {
         options.forEach(o -> o.applyOptions(impl));
         return impl;
     }
 
     @Singleton
-    public Router getRouter(RouterBuilder builder) {
+    public Router router(RouterBuilder builder) {
         return builder.build();
     }
 
-    public RouterContext getRouterContext(ThreadScope threadScope) {
+    public RouterContext routerContext(ThreadScope threadScope) {
         return threadScope.get(RouterContext.SCOPE_KEY);
     }
 

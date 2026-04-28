@@ -16,14 +16,14 @@ public class UndertowHttpFile implements HttpFile {
         this.value = value;
     }
 
-    protected Path getFilePath() {
+    protected Path filePath() {
         return value.getFileItem().getFile();
     }
 
     @Override
     public void release() {
         try {
-            boolean res = getFilePath().toFile().delete();
+            boolean res = filePath().toFile().delete();
             if (!res) {
                 throw new RuntimeException("Cant's release uploaded file");
             }
@@ -47,7 +47,7 @@ public class UndertowHttpFile implements HttpFile {
     @Override
     public InputStream inputStream() {
         try {
-            return new FileInputStream(getFilePath().toFile());
+            return new FileInputStream(filePath().toFile());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

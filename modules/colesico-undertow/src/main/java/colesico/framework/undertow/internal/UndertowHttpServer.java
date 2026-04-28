@@ -46,10 +46,10 @@ public class UndertowHttpServer implements HttpServer {
 
     protected final UndertowConfigPrototype config;
 
-    protected final UndertowHttpHandler requestProcessor;
+    protected final UndertowNonBlockingHandler requestProcessor;
 
     @Inject
-    public UndertowHttpServer(UndertowConfigPrototype config, UndertowHttpHandler requestProcessor) {
+    public UndertowHttpServer(UndertowConfigPrototype config, UndertowNonBlockingHandler requestProcessor) {
         this.config = config;
         this.requestProcessor = requestProcessor;
     }
@@ -60,7 +60,7 @@ public class UndertowHttpServer implements HttpServer {
         form.setDefaultEncoding(ENCODING);
         MultiPartParserDefinition mult = new MultiPartParserDefinition();
         mult.setDefaultEncoding(ENCODING);
-        mult.setMaxIndividualFileSize(config.getMaxIndividualFileSize());
+        mult.setMaxIndividualFileSize(config.maxIndividualFileSize());
         builder.addParsers(form, mult);
         EagerFormParsingHandler efp = new EagerFormParsingHandler(builder.build());
         return efp.setNext(nextHandler);
@@ -73,7 +73,7 @@ public class UndertowHttpServer implements HttpServer {
             if (config.enableStoredResponses()) {
                 rootHandler = new StoreResponseConduit.StoreResponseHandler(rootHandler);
             }
-            builder.setHandler(config.getRootHandler(rootHandler));
+            builder.setHandler(config.rootHandler(rootHandler));
             config.applyOptions(builder);
             server = builder.build();
             return server;
@@ -82,7 +82,7 @@ public class UndertowHttpServer implements HttpServer {
         }
     }
 
-    public Undertow getServer() {
+    public Undertow server() {
         return server;
     }
 

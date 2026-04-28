@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Binds routes with route action methods  (tele-facade methods)
+ * Binds routes with route actions  (tele-facade methods)
  */
 public final class RouterCommands {
 
@@ -49,11 +49,11 @@ public final class RouterCommands {
      * Add route to this commands registry
      *
      * @param route        route definition with http method (ex: GET/my/foo )
-     * @param teleCommand   action handler
+     * @param teleCommand  action handler
      * @param targetMethod handler method name
      * @param attributes   route attributes (see {@link RouteAttribute})
      */
-    public void add(String route, TeleCommand<?,?> teleCommand, String targetMethod, Map<String, String> attributes) {
+    public void add(String route, TeleCommand<?, ?> teleCommand, String targetMethod, Map<String, String> attributes) {
         RouteInfo routeInfo = new RouteInfo(route, teleCommand, targetMethod, attributes);
         RouteInfo oldRouteInfo = routesMap.put(route, routeInfo);
         if (oldRouteInfo != null) {
@@ -71,20 +71,20 @@ public final class RouterCommands {
 
     /**
      * @param route        Route with http method
-     * @param teleCommand   Action handler method
-     * @param targetMethod Target action handler method name
+     * @param teleCommand  Tele-command to execute
+     * @param targetMethod Target method name
      * @param attributes   Route attributes
      */
     public record RouteInfo(String route, TeleCommand<?, ?> teleCommand, String targetMethod,
                             Map<String, String> attributes) {
 
         @Override
-            public String toString() {
-                return "RouteInfo{" +
-                        "route='" + route + '\'' +
-                        ", targetMethod='" + targetMethod + '\'' +
-                        '}';
-            }
+        public String toString() {
+            return "RouteInfo{" +
+                    "route='" + route + '\'' +
+                    ", targetMethod='" + targetMethod + '\'' +
+                    '}';
         }
+    }
 
 }

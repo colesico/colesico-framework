@@ -36,7 +36,7 @@ abstract public class UndertowConfigPrototype {
     /**
      * This option allow to set custom root http handler.
      */
-    public HttpHandler getRootHandler(HttpHandler nextHandler) {
+    public HttpHandler rootHandler(HttpHandler nextHandler) {
         return nextHandler; // use default root handler
     }
 
@@ -49,7 +49,7 @@ abstract public class UndertowConfigPrototype {
         return false;
     }
 
-    public int getMaxIndividualFileSize() {
+    public int maxIndividualFileSize() {
         return 1024 * 1024 * 10; // 10 MB
     }
 }

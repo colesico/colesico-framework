@@ -49,7 +49,7 @@ public class TranslationExampleTest {
 
     @Test(priority = 1)
     public void testFormatter() {
-        threadScope.init();
+        threadScope.open();
         ProfileMockProducer.en();
         Profile profile = ioc.instance(Profile.class);
         System.out.println("Bye Profile (en): " + profile);
@@ -62,7 +62,7 @@ public class TranslationExampleTest {
 
     @Test(priority = 2)
     public void testCustomFormatter() {
-        threadScope.init();
+        threadScope.open();
 
         ProfileMockProducer.en();
         Profile profile = ioc.instance(Profile.class);
@@ -82,7 +82,7 @@ public class TranslationExampleTest {
     public void testDe() {
 
         log.info("Test DE");
-        threadScope.init();
+        threadScope.open();
         ProfileMockProducer.de();
         Profile profile = ioc.instance(Profile.class);
         System.out.println("DE Profile: " + profile);
@@ -96,7 +96,7 @@ public class TranslationExampleTest {
 
     @Test(priority = 4)
     public void testRu() {
-        threadScope.init();
+        threadScope.open();
 
         log.info("Test RU");
         ProfileMockProducer.ru();
@@ -111,7 +111,7 @@ public class TranslationExampleTest {
 
     @Test(priority = 5)
     public void testEn() {
-        threadScope.init();
+        threadScope.open();
 
         log.info("Test EN");
         ProfileMockProducer.en();
@@ -127,7 +127,7 @@ public class TranslationExampleTest {
 
     @Test(priority = 6)
     public void testFr() {
-        threadScope.init();
+        threadScope.open();
 
         ProfileMockProducer.fr();
         Profile profile = ioc.instance(Profile.class);
@@ -142,7 +142,7 @@ public class TranslationExampleTest {
 
     @Test(priority = 7)
     public void testEs() {
-        threadScope.init();
+        threadScope.open();
 
         ProfileMockProducer.es();
         Profile profile = ioc.instance(Profile.class);

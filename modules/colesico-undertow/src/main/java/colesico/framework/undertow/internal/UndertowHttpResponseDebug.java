@@ -37,7 +37,7 @@ public class UndertowHttpResponseDebug extends UndertowHttpResponse {
         this.responseId = UUID.randomUUID().toString();
     }
 
-    public HttpServerExchange getExchange() {
+    public HttpServerExchange exchange() {
         return exchange;
     }
 

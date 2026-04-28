@@ -17,7 +17,6 @@
 package colesico.framework.telehttp.assist;
 
 import colesico.framework.http.*;
-import colesico.framework.service.ApplicationException;
 import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Singleton;
@@ -42,11 +41,11 @@ public class CSRFProtector<V> {
         this.cookieFactory = cookieFactory;
     }
 
-    protected static String getRequestedHostName(HttpRequest request) {
+    protected static String requestedHostName(HttpRequest request) {
         return request.host();
     }
 
-    protected static String getHostFromUrl(String url) {
+    protected static String hostFromUrl(String url) {
         if (StringUtils.isBlank(url)) {
             return null;
         }
@@ -70,12 +69,12 @@ public class CSRFProtector<V> {
         }
 
         // Check ORIGIN Http Header
-        String requestHost = getRequestedHostName(request);
+        String requestHost = requestedHostName(request);
         String originHeader = request.headers().get(ORIGIN_HEADER);
         if (originHeader != null) {
-            String host = getHostFromUrl(originHeader);
+            String host = hostFromUrl(originHeader);
             if (!requestHost.equals(host)) {
-                throw new ApplicationException("Origin host mismatch:" + host + "->" + requestHost);
+                throw new RuntimeException("Origin host mismatch:" + host + "->" + requestHost);
             }
             return;
         }
@@ -83,9 +82,9 @@ public class CSRFProtector<V> {
         // Check REFERER Http Header
         String refererHeader = request.headers().get(REFERER_HEADER);
         if (refererHeader != null) {
-            String host = getHostFromUrl(refererHeader);
+            String host = hostFromUrl(refererHeader);
             if (!requestHost.equals(host)) {
-                throw new ApplicationException("Referer host mismatch:" + host + "->" + requestHost);
+                throw new RuntimeException("Referer host mismatch:" + host + "->" + requestHost);
             }
             return;
         }
@@ -100,7 +99,7 @@ public class CSRFProtector<V> {
         String csrfHeaderToken = request.headers().get(CSRF_HEADER);
 
         if (!StringUtils.equals(csrfCookieToken, csrfHeaderToken)) {
-            throw new ApplicationException("CSRF token mismatch:" + csrfCookieToken + " != " + csrfHeaderToken);
+            throw new RuntimeException("CSRF token mismatch:" + csrfCookieToken + " != " + csrfHeaderToken);
         }
     }
 

@@ -49,11 +49,11 @@ public final class UndertowHttpRequest implements HttpRequest {
         this.exchange = exchange;
     }
 
-    public HttpServerExchange getExchange() {
+    public HttpServerExchange exchange() {
         return exchange;
     }
 
-    public FormData getFormData() {
+    public FormData formData() {
         return formData;
     }
 

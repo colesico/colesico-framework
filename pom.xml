@@ -134,7 +134,6 @@
                 <module>modules/colesico-security</module>
                 <module>modules/colesico-profile</module>
                 <module>modules/colesico-translation</module>
-                <module>modules/colesico-rpc</module>
                 <module>modules/colesico-validation</module>
                 <module>modules/colesico-asynctask</module>
 
