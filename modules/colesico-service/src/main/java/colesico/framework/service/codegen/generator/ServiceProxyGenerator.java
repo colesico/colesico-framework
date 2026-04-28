@@ -232,7 +232,7 @@ public class ServiceProxyGenerator {
         }
         String paramsArrayLiteral = "{" + String.join(",", paramNames) + "}";
 
-        serviceMethodBuilder.addStatement("final $T " + INV_CONTEXT_VAR + "= new $T(this,$S,new $T[]$L," + INTERCEPTORS_CHAIN_VAR + ")",
+        serviceMethodBuilder.addStatement("final $T " + INV_CONTEXT_VAR + " = new $T(this,$S,new $T[]$L," + INTERCEPTORS_CHAIN_VAR + ")",
                 ClassName.get(InvocationContext.class),
                 ClassName.get(InvocationContext.class),
                 methodElement.name(),
