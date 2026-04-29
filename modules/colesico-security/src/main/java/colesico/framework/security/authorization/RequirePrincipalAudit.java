@@ -1,5 +1,6 @@
-package colesico.framework.security;
+package colesico.framework.security.authorization;
 
+import colesico.framework.security.SecurityManager;
 import colesico.framework.service.InvocationContext;
 
 import jakarta.inject.Inject;
@@ -11,7 +12,7 @@ import jakarta.inject.Singleton;
 @Singleton
 public final class RequirePrincipalAudit implements AuditInterceptor {
 
-    private final SecurityManager securityManager;
+    private final colesico.framework.security.SecurityManager securityManager;
 
     @Inject
     public RequirePrincipalAudit(SecurityManager securityManager) {

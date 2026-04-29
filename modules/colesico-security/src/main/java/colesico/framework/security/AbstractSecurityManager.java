@@ -20,6 +20,8 @@ import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.scope.ThreadScope;
 
+import java.util.concurrent.Callable;
+
 /**
  * Security context default implementation.
  * Extend this class to customize principal control.
@@ -73,11 +75,13 @@ abstract public class AbstractSecurityManager<P extends Principal<?>> implements
     }
 
     @Override
-    public <T> T invokeAs(Invocable<T> invocable, P principal) {
+    public <T> T callAs(Callable<T> callable, P principal) {
         PrincipalHolder holder = threadScope.get(PrincipalHolder.SCOPE_KEY);
         threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(principal));
         try {
-            return invocable.invoke();
+            return callable.call();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         } finally {
             threadScope.put(PrincipalHolder.SCOPE_KEY, holder);
         }

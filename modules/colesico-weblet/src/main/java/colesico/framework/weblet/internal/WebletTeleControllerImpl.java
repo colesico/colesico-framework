@@ -24,7 +24,7 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterContext;
 import colesico.framework.router.RouterCommands;
-import colesico.framework.security.PrincipalRequiredException;
+import colesico.framework.security.authorization.PrincipalRequiredException;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.telehttp.assist.CSRFProtector;

@@ -20,6 +20,7 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.security.*;
 import colesico.framework.security.SecurityManager;
+import colesico.framework.security.authorization.RequirePrincipalAudit;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 
 import jakarta.inject.Singleton;

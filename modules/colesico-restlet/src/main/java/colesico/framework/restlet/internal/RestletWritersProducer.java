@@ -24,7 +24,7 @@ import colesico.framework.restlet.RestletException;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 import colesico.framework.restlet.teleapi.writer.*;
 import colesico.framework.security.Principal;
-import colesico.framework.security.PrincipalRequiredException;
+import colesico.framework.security.authorization.PrincipalRequiredException;
 import colesico.framework.telehttp.writer.PrincipalWriter;
 import colesico.framework.telehttp.writer.ProfileWriter;
 

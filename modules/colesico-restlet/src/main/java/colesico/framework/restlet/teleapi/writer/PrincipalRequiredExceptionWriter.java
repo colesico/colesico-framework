@@ -2,7 +2,7 @@ package colesico.framework.restlet.teleapi.writer;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.restlet.teleapi.RestletTWContext;
-import colesico.framework.security.PrincipalRequiredException;
+import colesico.framework.security.authorization.PrincipalRequiredException;
 
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;

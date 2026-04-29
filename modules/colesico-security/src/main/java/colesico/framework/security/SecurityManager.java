@@ -16,10 +16,7 @@
 
 package colesico.framework.security;
 
-import colesico.framework.security.authorization.AuthorizationContext;
-import colesico.framework.security.authorization.AuthorizationResult;
-import colesico.framework.security.authorization.Authorizer;
-import colesico.framework.security.authorization.DefaultAuthorizationContext;
+import colesico.framework.security.authorization.*;
 
 import java.util.concurrent.Callable;
 
