@@ -1,7 +1,5 @@
 package colesico.framework.example.profile.custom;
 
-import colesico.framework.profile.DefaultProfileManager;
-import colesico.framework.profile.ProfileAttribute;
 import colesico.framework.teleapi.dataport.DataPort;
 
 import java.util.Collection;

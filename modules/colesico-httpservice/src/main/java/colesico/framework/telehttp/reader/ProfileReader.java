@@ -19,7 +19,7 @@ package colesico.framework.telehttp.reader;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.profile.*;
-import colesico.framework.profile.LocaleAttribute;
+import colesico.framework.profile.assist.LocaleAttribute;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTeleReader;
 import colesico.framework.telehttp.ProfileHttpConfigPrototype;

@@ -25,14 +25,12 @@ import java.util.Locale;
 
 import static colesico.framework.ioc.conditional.Substitution.STUB;
 
-
 @Producer
 @Produce(value = DefaultProfileContext.class, keyType = ProfileContext.class, substitute = STUB)
-@Produce(value = DefaultProfileManager.class, keyType = ProfileManager.class, substitute = STUB)
 public class ProfileProducer {
 
     @Unscoped
-    public Profile getProfile(ProfileContext context) {
+    public Profile profile(ProfileContext context) {
         return context.profile();
     }
 
@@ -40,7 +38,7 @@ public class ProfileProducer {
      * Get current locale
      */
     @Unscoped
-    public Locale getLocale(Provider<Profile> profileProv) {
+    public Locale locale(Provider<Profile> profileProv) {
         Profile profile = profileProv.get();
         return profile != null ? profile.locale() : Locale.getDefault();
     }

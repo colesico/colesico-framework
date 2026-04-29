@@ -6,28 +6,30 @@ import colesico.framework.ioc.scope.ThreadScope;
 
 abstract public class AbstractProfileContext<P extends Profile> implements ProfileContext<P> {
 
-    protected final ProfileManager<P> profileManager;
-
     /**
      * Profile association with thread
      */
     protected final ThreadScope threadScope;
 
-    public AbstractProfileContext(ProfileManager profileManager, ThreadScope threadScope) {
-        this.profileManager = profileManager;
+    public AbstractProfileContext(ThreadScope threadScope) {
         this.threadScope = threadScope;
     }
 
     /**
+     * Profile instance factory
+     */
+    abstract protected P createProfile();
+
+    /**
      * Read profile from source.
-     * Override this method to fine-grained profile read control: check validity,
+     * Implement this method to fine-grained profile read: check validity,
      * enrich with extra data from database, e.t.c.
      */
     abstract protected P read();
 
     /**
      * Writes profile to source.
-     * Override this method to get more specific control.
+     * Implement this method to get more specific control.
      */
     abstract protected P write(P profile);
 
@@ -35,7 +37,7 @@ abstract public class AbstractProfileContext<P extends Profile> implements Profi
     public P profile() {
         ProfileHolder holder = threadScope.get(ProfileHolder.SCOPE_KEY);
         if (holder != null) {
-            return holder.profile != null ? (P) holder.profile : profileManager.createProfile();
+            return holder.profile != null ? (P) holder.profile : createProfile();
         } else {
             // Recursive calls protection
             threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(null));
@@ -43,7 +45,7 @@ abstract public class AbstractProfileContext<P extends Profile> implements Profi
         // No profile in cache. Retrieve profile from source
         P profile = read();
         if (profile == null) {
-            profile = profileManager.createProfile();
+            profile = createProfile();
         }
         threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
         return profile;

@@ -1,7 +1,11 @@
-package colesico.framework.profile;
+package colesico.framework.profile.assist;
+
+import colesico.framework.profile.Profile;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+
+
 
 /**
  * Profile attribute basic implementation

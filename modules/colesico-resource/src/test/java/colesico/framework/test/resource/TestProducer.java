@@ -19,7 +19,6 @@ package colesico.framework.test.resource;
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileManager;
 import jakarta.inject.Singleton;
 
 import java.util.Locale;

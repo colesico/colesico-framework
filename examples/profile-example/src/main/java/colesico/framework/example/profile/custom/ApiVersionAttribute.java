@@ -1,7 +1,5 @@
 package colesico.framework.example.profile.custom;
 
-import colesico.framework.profile.AbstractProfileAttribute;
-
 public class ApiVersionAttribute extends AbstractProfileAttribute<CustomProfile, String> {
 
     static final String ATTRIBUTE_NAME = "api_version";

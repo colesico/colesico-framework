@@ -6,11 +6,11 @@ import java.util.Objects;
 /**
  * Profile basic implementation
  */
-abstract public class AbstractProfile implements Profile {
+public class DefaultProfile implements Profile {
 
     protected Locale locale;
 
-    public AbstractProfile() {
+    public DefaultProfile() {
     }
 
     @Override
@@ -33,7 +33,7 @@ abstract public class AbstractProfile implements Profile {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        AbstractProfile that = (AbstractProfile) o;
+        DefaultProfile that = (DefaultProfile) o;
         return Objects.equals(locale, that.locale);
     }
 

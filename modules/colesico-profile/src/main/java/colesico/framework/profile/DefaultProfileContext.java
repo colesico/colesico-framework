@@ -5,23 +5,35 @@ import colesico.framework.teleapi.dataport.DataPort;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
+import java.util.Locale;
+
+/**
+ * Data port as source for profile
+ */
 @Singleton
-public class DefaultProfileContext extends AbstractProfileContext<AbstractProfile> {
+public class DefaultProfileContext extends AbstractProfileContext<DefaultProfile> {
 
     protected final Provider<DataPort> dataPortProv;
 
-    public DefaultProfileContext(ProfileManager profileManager, ThreadScope threadScope, Provider<DataPort> dataPortProv) {
-        super(profileManager, threadScope);
+    public DefaultProfileContext(ThreadScope threadScope, Provider<DataPort> dataPortProv) {
+        super(threadScope);
         this.dataPortProv = dataPortProv;
     }
 
     @Override
-    protected AbstractProfile read() {
-        return (AbstractProfile) dataPortProv.get().read(Profile.class);
+    public DefaultProfile createProfile() {
+        var profile = new DefaultProfile();
+        profile.setLocale(Locale.getDefault());
+        return profile;
     }
 
     @Override
-    protected AbstractProfile write(AbstractProfile profile) {
+    protected DefaultProfile read() {
+        return (DefaultProfile) dataPortProv.get().read(Profile.class);
+    }
+
+    @Override
+    protected DefaultProfile write(DefaultProfile profile) {
         dataPortProv.get().write(profile, Profile.class);
         return profile;
     }

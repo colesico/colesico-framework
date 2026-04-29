@@ -1,6 +1,5 @@
 package colesico.framework.example.profile.custom;
 
-import colesico.framework.profile.AbstractProfileAttribute;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.TimeZone;

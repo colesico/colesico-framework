@@ -1,7 +1,9 @@
-package colesico.framework.profile;
+package colesico.framework.profile.assist;
+
+import colesico.framework.profile.Profile;
 
 /**
- * Profile attribute accessor.
+ * Profile attribute helper.
  * Used to serialize and deserialize an attribute value,
  * obtain metadata of attribute
  */
@@ -53,3 +55,4 @@ public interface ProfileAttribute<P extends Profile, V> {
     void setBytes(byte[] bytes);
 
 }
+
