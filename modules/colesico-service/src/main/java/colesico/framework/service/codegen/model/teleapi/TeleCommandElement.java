@@ -100,8 +100,11 @@ public final class TeleCommandElement {
         return serviceMethod.name();
     }
 
-    public String factoryMethodName() {
-        return "" + StrUtils.firstCharToLowerCase(serviceMethod.name()) + "TCF" + index;
+    /**
+     *  Tele-command method name to generate in tele-facade
+     */
+    public String commandMethodName() {
+        return "" + StrUtils.firstCharToLowerCase(serviceMethod.name()) + "TC" + index;
     }
 
     public TeleBatchElement getOrCreateBatch(String name) {

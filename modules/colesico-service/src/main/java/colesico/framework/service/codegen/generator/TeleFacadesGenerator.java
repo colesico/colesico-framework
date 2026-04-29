@@ -170,7 +170,7 @@ public class TeleFacadesGenerator {
         // Send result to client via data port dataPort.write(result,new Context());
         if (!voidResult) {
             cb.add("\n// Send result to remote client\n");
-            cb.add("$N.$N($N,", TeleCommand.DATA_PORT_PARAM, DataPort.WRITE_METHOD, RESULT_VAR);
+            cb.add("$N.$N($N, ", TeleCommand.DATA_PORT_PARAM, DataPort.WRITE_METHOD, RESULT_VAR);
             CodeBlock writeCtx = teleCommand.writingContext().creationCode();
             cb.add(writeCtx);
             cb.add(");\n");
@@ -180,29 +180,22 @@ public class TeleFacadesGenerator {
         return cb.build();
     }
 
-    protected void generateTeleCommandBuilders(TeleFacadeElement teleFacade, TypeSpec.Builder classBuilder) {
+    protected void generateTeleCommandsMethods(TeleFacadeElement teleFacade, TypeSpec.Builder classBuilder) {
         for (TeleCommandElement teleCommand : teleFacade.teleCommands()) {
-            MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(teleCommand.factoryMethodName());
-            methodBuilder.addJavadoc("Returns  $T<R,W> instance for target method '$N'",
-                    ClassName.get(TeleCommand.class),
-                    teleCommand.serviceMethod().name());
-            methodBuilder.addModifiers(Modifier.PRIVATE);
-            methodBuilder.returns(
-                    ParameterizedTypeName.get(ClassName.get(TeleCommand.class),
+            MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(teleCommand.commandMethodName());
+            methodBuilder.addJavadoc("Tele-command method for target method '$N'", teleCommand.serviceMethod().name());
+            methodBuilder.addModifiers(Modifier.PUBLIC);
+            methodBuilder.returns(TypeName.VOID);
+
+            // Param DataPort<R,W> dataPort
+            methodBuilder.addParameter(
+                    ParameterizedTypeName.get(ClassName.get(DataPort.class),
                             ClassName.get(teleFacade.readContextClass()),
                             ClassName.get(teleFacade.writeContextClass())
-                    )
+                    ), TeleCommand.DATA_PORT_PARAM
             );
 
-            // Subroutine definition
-            CodeBlock.Builder cb = CodeBlock.builder();
-            cb.add("return ($N) -> {\n", TeleCommand.DATA_PORT_PARAM);
-            cb.indent();
-            cb.add(generateInvocation(teleCommand));
-            cb.unindent();
-            cb.add("};\n");
-
-            methodBuilder.addCode(cb.build());
+            methodBuilder.addCode(generateInvocation(teleCommand));
             classBuilder.addMethod(methodBuilder.build());
         }
     }
@@ -241,7 +234,7 @@ public class TeleFacadesGenerator {
                 ClassName.get(teleFacade.commandsClass())));
 
         generateConstructor(teleFacade, classBuilder);
-        generateTeleCommandBuilders(teleFacade, classBuilder);
+        generateTeleCommandsMethods(teleFacade, classBuilder);
         generateCommandsMethod(teleFacade, classBuilder);
 
         createTeleFacade(service, teleFacade, classBuilder);

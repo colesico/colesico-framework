@@ -87,11 +87,12 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
 
         CodeBlock.Builder cb = CodeBlock.builder();
 
-        cb.add("$N.$N($S,$N(),$S,",
+        // commands.add("GET/foo/bla",this:commandMethod,"targetMethodName")
+        cb.add("$N.$N($S, this::$N, $S, ",
                 COMMANDS_VAR,
                 RouterCommands.ADD_METHOD,
                 routedTeleCommand.route(),
-                routedTeleCommand.teleCommand().factoryMethodName(),
+                routedTeleCommand.teleCommand().commandMethodName(),
                 routedTeleCommand.teleCommand().targetMethodName()
         );
 

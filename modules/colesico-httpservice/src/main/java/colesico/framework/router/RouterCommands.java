@@ -17,6 +17,8 @@
 package colesico.framework.router;
 
 import colesico.framework.teleapi.TeleCommand;
+import colesico.framework.teleapi.dataport.TRContext;
+import colesico.framework.teleapi.dataport.TWContext;
 
 import java.util.Collection;
 import java.util.Map;
@@ -53,7 +55,7 @@ public final class RouterCommands {
      * @param targetMethod handler method name
      * @param attributes   route attributes (see {@link RouteAttribute})
      */
-    public void add(String route, TeleCommand<?, ?> teleCommand, String targetMethod, Map<String, String> attributes) {
+    public <R extends TRContext, W extends TWContext> void add(String route, TeleCommand<R, W> teleCommand, String targetMethod, Map<String, String> attributes) {
         RouteInfo routeInfo = new RouteInfo(route, teleCommand, targetMethod, attributes);
         RouteInfo oldRouteInfo = routesMap.put(route, routeInfo);
         if (oldRouteInfo != null) {
