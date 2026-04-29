@@ -20,5 +20,6 @@ module colesico.framework.security {
 
     exports colesico.framework.security.internal to colesico.framework.ioc;
     exports colesico.framework.security.authorization.authorizers;
+    exports colesico.framework.security.authentication;
 
 }

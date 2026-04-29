@@ -21,6 +21,7 @@ import colesico.framework.ioc.key.ClassedKey;
 import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.security.authentication.AuthenticationProvider;
 
 import java.util.concurrent.Callable;
 
@@ -31,7 +32,7 @@ import java.util.concurrent.Callable;
 abstract public class AbstractSecurityManager<P extends Principal<?>> implements SecurityManager<P> {
 
     protected final ThreadScope threadScope;
-    protected final Ioc ioc;
+
 
     public AbstractSecurityManager(ThreadScope threadScope, Ioc ioc) {
         this.threadScope = threadScope;
@@ -53,13 +54,7 @@ abstract public class AbstractSecurityManager<P extends Principal<?>> implements
 
     @Override
     public P authenticate(Credentials credentials) {
-        AuthenticationProvider<P, Credentials> authProvider = ioc.instance(new ClassedKey<>(AuthenticationProvider.class, credentials.getClass()));
-        var principleOpt = authProvider.authenticate(credentials);
-        if (principleOpt.isPresent()) {
-            write(principleOpt.get());
-            return principleOpt.get();
-        }
-        return null;
+
     }
 
     @Override

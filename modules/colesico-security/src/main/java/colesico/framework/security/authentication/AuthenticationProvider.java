@@ -1,4 +1,7 @@
-package colesico.framework.security;
+package colesico.framework.security.authentication;
+
+import colesico.framework.security.Principal;
+import colesico.framework.security.SecurityManager;
 
 import java.util.Optional;
 
