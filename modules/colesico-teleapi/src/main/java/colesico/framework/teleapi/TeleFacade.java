@@ -24,7 +24,7 @@ import jakarta.inject.Provider;
  * @param <T> Target whose method will be invoked (usually a service)
  * @param <M> Tele-commands registry (references to target methods)
  */
-abstract public class TeleFacade<T, M> {
+abstract public class TeleFacade<T, M extends TeleCommands> {
 
     public static final String TELE_FACADE_SUFFIX = "TeleFacade";
     public static final String TARGET_PROV_FIELD = "targetProvider";

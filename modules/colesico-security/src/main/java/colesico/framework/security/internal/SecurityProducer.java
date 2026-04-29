@@ -19,6 +19,7 @@ package colesico.framework.security.internal;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.security.*;
+import colesico.framework.security.SecurityManager;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 
 import jakarta.inject.Singleton;
@@ -33,14 +34,14 @@ public class SecurityProducer {
      * Default security kit producer
      */
     @Singleton
-    public SecurityContext getSecurityContext(AbstractSecurityContext impl) {
+    public SecurityManager getSecurityContext(AbstractSecurityManager impl) {
         return impl;
     }
 
     /**
      * Current principal producer
      */
-    public Principal getPrincipal(SecurityContext kit) {
+    public Principal getPrincipal(SecurityManager kit) {
         return kit.principal();
     }
 

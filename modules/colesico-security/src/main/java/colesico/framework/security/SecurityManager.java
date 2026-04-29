@@ -20,14 +20,23 @@ import colesico.framework.security.authorization.AuthorizationContext;
 import colesico.framework.security.authorization.AuthorizationResult;
 import colesico.framework.security.authorization.Authorizer;
 import colesico.framework.security.authorization.DefaultAuthorizationContext;
-import colesico.framework.security.authorization.authorizers.PrincipalRequiredAuthorizer;
+
+import java.util.concurrent.Callable;
 
 /**
- * Security context to provide basic security service.
- * Context can store/obtain principal from different sources.
- * Context associates current principal instance to the current thread.
+ * Security manager to provide basic security service.
+ * Manager can store/obtain principal from different sources,
+ * associates current principal instance to the current thread.
  */
-public interface SecurityContext<P extends Principal<?>> {
+public interface SecurityManager<P extends Principal<?>> {
+
+    /**
+     * Authenticates the client using the provided credentials.
+     * If authentication is successful, the method should associate
+     * the resulting principal with the current thread and return it.
+     * In case of failure, should return null
+     */
+    P authenticate(Credentials credentials);
 
     /**
      * Returns the valid principal associated with the current process for authenticated
@@ -38,10 +47,26 @@ public interface SecurityContext<P extends Principal<?>> {
      */
     P principal();
 
+    default boolean isAuthenticated() {
+        return principal() != null;
+    }
+
     /**
-     * Invokes given closure as specified principal
+     * Call given closure as specified principal
      */
-    <T> T invokeAs(Invocable<T> invocable, P principal);
+    <T> T callAs(Callable<T> callable, P principal);
+
+    default void runAs(P principal, Runnable runnable) {
+        callAs(() -> {
+            runnable.run();
+            return null;
+        }, principal);
+    }
+
+    /**
+     *  Complete reset of current authentication.
+     */
+    void logout();
 
     /**
      * Checks the presence of active valid principal.
@@ -59,9 +84,10 @@ public interface SecurityContext<P extends Principal<?>> {
         return authorizer.authorize(context);
     }
 
-    @FunctionalInterface
-    interface Invocable<T> {
-        T invoke();
+    /**
+     * Marker interface for any credentials
+     */
+    interface Credentials {
     }
 
 }

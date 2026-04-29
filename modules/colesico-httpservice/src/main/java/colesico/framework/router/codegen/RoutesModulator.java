@@ -21,6 +21,7 @@ import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import colesico.framework.service.codegen.modulator.TeleFacadeModulator;
+import colesico.framework.teleapi.TeleCommands;
 import colesico.framework.teleapi.dataport.TRContext;
 import colesico.framework.teleapi.dataport.TWContext;
 import com.palantir.javapoet.ClassName;
@@ -38,7 +39,7 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
 
     protected final Logger logger = LoggerFactory.getLogger(RoutesModulator.class);
 
-    abstract protected Class<?> commandsClass();
+    abstract protected Class<? extends TeleCommands> commandsClass();
 
     abstract protected Class<? extends TRContext> readContextClass();
 

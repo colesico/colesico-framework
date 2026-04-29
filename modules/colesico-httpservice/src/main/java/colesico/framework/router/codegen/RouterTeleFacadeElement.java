@@ -1,6 +1,7 @@
 package colesico.framework.router.codegen;
 
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
+import colesico.framework.teleapi.TeleCommands;
 import colesico.framework.teleapi.dataport.TRContext;
 import colesico.framework.teleapi.dataport.TWContext;
 
@@ -12,7 +13,7 @@ public final class RouterTeleFacadeElement extends TeleFacadeElement {
     private final RoutesBuilder routesBuilder;
 
     public RouterTeleFacadeElement(Class<?> teleType,
-                                   Class<?> commandsClass,
+                                   Class<? extends TeleCommands> commandsClass,
                                    Class<? extends TRContext> readContextClass,
                                    Class<? extends TWContext> writeContextClass,
                                    IocQualifier iocQualifier,

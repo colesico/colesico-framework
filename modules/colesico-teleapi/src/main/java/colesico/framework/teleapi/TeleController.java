@@ -10,7 +10,7 @@ import java.util.Optional;
  * @param <I> Invocation to execute
  * @param <M> Commands registry of tele-facade (references to target methods)
  */
-public interface TeleController<Q, I, M> {
+public interface TeleController<Q extends TeleCriteria, I extends TeleInvocation, M extends TeleCommands> {
 
     /**
      * Resolve invocation with protocol context.

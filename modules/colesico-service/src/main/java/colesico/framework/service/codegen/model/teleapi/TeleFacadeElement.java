@@ -21,6 +21,7 @@ import colesico.framework.assist.Elements;
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.service.codegen.model.ServiceElement;
+import colesico.framework.teleapi.TeleCommands;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.dataport.TRContext;
 import colesico.framework.teleapi.dataport.TWContext;
@@ -49,7 +50,7 @@ public class TeleFacadeElement {
     /**
      * commands registry class
      */
-    private final Class<?> commandsClass;
+    private final Class<? extends TeleCommands> commandsClass;
 
     /**
      * Commands registry method code
@@ -100,7 +101,7 @@ public class TeleFacadeElement {
     private final Map<Class<?>, Object> properties = new HashMap<>();
 
     public TeleFacadeElement(Class<?> teleType,
-                             Class<?> commandsClass,
+                             Class<? extends TeleCommands> commandsClass,
                              Class<? extends TRContext> readContextClass,
                              Class<? extends TWContext> writeContextClass,
                              IocQualifier iocQualifier) {
@@ -179,7 +180,7 @@ public class TeleFacadeElement {
         this.commandsMethodBody = commandsMethodBody;
     }
 
-    public Class<?> commandsClass() {
+    public Class<? extends TeleCommands> commandsClass() {
         return commandsClass;
     }
 
