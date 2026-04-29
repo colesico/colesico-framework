@@ -16,6 +16,7 @@
 
 package colesico.framework.ioc.codegen.parser;
 
+import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
@@ -266,7 +267,7 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         final ClassType suppliedType = new ClassType(processingEnv(), (DeclaredType) suppliedMirror);
 
-        final String factoryMethodBaseName = "get" + suppliedType.asClassElement().simpleName();
+        final String factoryMethodBaseName = StrUtils.firstCharToLowerCase(suppliedType.asClassElement().simpleName());
 
         MethodElement constructor = getInjectableConstructor(suppliedType.asClassElement());
         if (constructor == null) {

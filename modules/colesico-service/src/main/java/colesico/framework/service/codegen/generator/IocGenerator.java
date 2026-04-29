@@ -61,7 +61,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         producerGenerator.addProduceAnnotation(serviceProxyTypeName);
 
         // Add produce method
-        String methodName = "get" + serviceElm.originClass().simpleName();
+        String methodName = StrUtils.firstCharToLowerCase(serviceElm.originClass().simpleName());
         MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, TypeName.get(serviceElm.originClass().originType()));
 
         if (serviceElm.customScopeType() == null) {

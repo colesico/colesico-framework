@@ -16,6 +16,7 @@
 
 package colesico.framework.security;
 
+import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.scope.ThreadScope;
@@ -29,9 +30,11 @@ import java.util.concurrent.Callable;
 abstract public class AbstractSecurityManager<P extends Principal<?>> implements SecurityManager<P> {
 
     protected final ThreadScope threadScope;
+    protected final Ioc ioc;
 
-    public AbstractSecurityManager(ThreadScope threadScope) {
+    public AbstractSecurityManager(ThreadScope threadScope, Ioc ioc) {
         this.threadScope = threadScope;
+        this.ioc = ioc;
     }
 
     /**
@@ -47,6 +50,10 @@ abstract public class AbstractSecurityManager<P extends Principal<?>> implements
      */
     abstract protected P write(P principle);
 
+    @Override
+    public P authenticate(Credentials credentials) {
+        AuthenticationProvider authProvider  = ioc.instance(credentials.getClass());
+    }
 
     @Override
     public P principal() {
@@ -68,11 +75,6 @@ abstract public class AbstractSecurityManager<P extends Principal<?>> implements
         return principal;
     }
 
-
-    public void setPrincipal(P principal) {
-        principal = write(principal);
-        threadScope.put(PrincipalHolder.SCOPE_KEY, new PrincipalHolder(principal));
-    }
 
     @Override
     public <T> T callAs(Callable<T> callable, P principal) {
