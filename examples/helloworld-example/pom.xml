@@ -32,7 +32,7 @@
     <name>Colesico example - Hello World</name>
 
     <dependencies>
-        <!-- Colesico web bundle -->
+        <!-- Colesico common http -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-weblet</artifactId>
@@ -60,6 +60,15 @@
             <version>${org-testng.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Fix test dependency -->
+        <dependency>
+            <groupId>org.wildfly.common</groupId>
+            <artifactId>wildfly-common</artifactId>
+            <version>2.0.1</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
