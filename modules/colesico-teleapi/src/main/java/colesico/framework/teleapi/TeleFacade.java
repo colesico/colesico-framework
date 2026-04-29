@@ -24,7 +24,7 @@ import jakarta.inject.Provider;
  * @param <T> Target whose method will be invoked (usually a service)
  * @param <M> Tele-commands registry (references to target methods)
  */
-abstract public class TeleFacade<T, M extends TeleCommands> {
+abstract public class TeleFacade<T, M extends TeleFacade.Commands> {
 
     public static final String TELE_FACADE_SUFFIX = "TeleFacade";
     public static final String TARGET_PROV_FIELD = "targetProvider";
@@ -44,7 +44,14 @@ abstract public class TeleFacade<T, M extends TeleCommands> {
     /**
      * Tele-commands registry  implemented in this tele facade.
      * Registry entries is used to resolve target methods that are called with tele-api.
-     * @see TeleController#resolve(Object) 
+     *
+     * @see TeleController#resolve(TeleController.Criteria)
      */
     abstract public M commands();
+
+    /**
+     * Marker interface for {@link TeleFacade}
+     */
+    public interface Commands {
+    }
 }

@@ -18,8 +18,6 @@ package colesico.framework.router;
 
 import colesico.framework.http.HttpMethod;
 import colesico.framework.teleapi.TeleController;
-import colesico.framework.teleapi.TeleCriteria;
-import colesico.framework.teleapi.TeleInvocation;
 
 import java.util.List;
 import java.util.Map;
@@ -43,7 +41,7 @@ public interface Router extends TeleController<Router.Criteria, Router.Invocatio
     List<String> slicedRoute(Class<?> targetClass, String targetMethod, HttpMethod httpMethod, Map<String, String> parameters);
 
     default Optional<Invocation> resolve(HttpMethod requestMethod, String requestUri) {
-        return resolve(Criteria.of(requestMethod, requestUri));
+        return resolve(Router.Criteria.of(requestMethod, requestUri));
     }
 
     /**
@@ -51,7 +49,7 @@ public interface Router extends TeleController<Router.Criteria, Router.Invocatio
      *
      * @param requestUri request url part from hostname(port) to query string (before '?' char)
      */
-    record Criteria(HttpMethod requestMethod, String requestUri) implements TeleCriteria {
+    record Criteria(HttpMethod requestMethod, String requestUri) implements TeleController.Criteria {
         public static Criteria of(HttpMethod requestMethod, String requestUri) {
             return new Criteria(requestMethod, requestUri);
         }
@@ -66,7 +64,7 @@ public interface Router extends TeleController<Router.Criteria, Router.Invocatio
     record Invocation(HttpMethod requestMethod,
                       String requestUri,
                       RouteAction action,
-                      Map<String, String> parameters) implements TeleInvocation {
+                      Map<String, String> parameters) implements TeleController.Invocation {
     }
 
 }

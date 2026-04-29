@@ -17,7 +17,7 @@
 package colesico.framework.router;
 
 import colesico.framework.teleapi.TeleCommand;
-import colesico.framework.teleapi.TeleCommands;
+import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.dataport.TRContext;
 import colesico.framework.teleapi.dataport.TWContext;
 
@@ -28,7 +28,7 @@ import java.util.TreeMap;
 /**
  * Binds routes with route actions  (tele-facade methods)
  */
-public final class RouterCommands implements TeleCommands {
+public final class RouterCommands implements TeleFacade.Commands {
 
     public static final String ADD_METHOD = "add";
     public static final String ROUTE_PARAM = "route";
