@@ -47,17 +47,29 @@ public interface Ioc {
      */
     <T, M> T instance(Key<T> key, M message) throws UnsatisfiedInjectionException;
 
+    default <T> T instance(Key<T> key) throws UnsatisfiedInjectionException {
+        return instance(key, null);
+    }
+
     /**
      * Returns instance of T by its class or null if the appropriate factory is not found.
      */
     <T, M> T instanceOrNull(Key<T> key, M message);
+
+    default <T> T instanceOrNull(Key<T> key) {
+        return instanceOrNull(key, null);
+    }
 
     /**
      * Returns provider for instance of T by key
      *
      * @return the provider if the appropriate factory is found, exception otherwise
      */
-    <T,M> Provider<T> provider(Key<T> key, M message) throws UnsatisfiedInjectionException;
+    <T, M> Provider<T> provider(Key<T> key, M message) throws UnsatisfiedInjectionException;
+
+    default <T> Provider<T> provider(Key<T> key) throws UnsatisfiedInjectionException {
+        return provider(key, null);
+    }
 
     /**
      * Returns provider if exists or null if the appropriate factory is not found.
@@ -65,9 +77,12 @@ public interface Ioc {
      * @param key
      * @param message
      * @param <T>
-     * @return
      */
-    <T,M> Provider<T> providerOrNull(Key<T> key, M message);
+    <T, M> Provider<T> providerOrNull(Key<T> key, M message);
+
+    default <T> Provider<T> providerOrNull(Key<T> key) {
+        return providerOrNull(key, null);
+    }
 
     /**
      * Returns supplier by key
@@ -105,7 +120,6 @@ public interface Ioc {
      *
      * @param type
      * @param <T>
-     * @return
      */
     default <T> T instance(Class<T> type) throws UnsatisfiedInjectionException {
         return instance(new TypeKey<>(type), null);

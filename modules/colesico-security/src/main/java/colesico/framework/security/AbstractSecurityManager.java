@@ -17,6 +17,7 @@
 package colesico.framework.security;
 
 import colesico.framework.ioc.Ioc;
+import colesico.framework.ioc.key.ClassedKey;
 import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.scope.ThreadScope;
@@ -52,7 +53,13 @@ abstract public class AbstractSecurityManager<P extends Principal<?>> implements
 
     @Override
     public P authenticate(Credentials credentials) {
-        AuthenticationProvider authProvider  = ioc.instance(credentials.getClass());
+        AuthenticationProvider<P, Credentials> authProvider = ioc.instance(new ClassedKey<>(AuthenticationProvider.class, credentials.getClass()));
+        var principleOpt = authProvider.authenticate(credentials);
+        if (principleOpt.isPresent()) {
+
+            return principleOpt.get();
+        }
+        return null;
     }
 
     @Override
