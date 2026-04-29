@@ -55,7 +55,7 @@ public class RoutesBuilder {
     }
 
     public final void addTeleCommand(TeleCommandElement teleCommand) {
-        String targetMethodName = teleCommand.name();
+        String targetMethodName = teleCommand.targetMethodName();
         final String route = buildMethodRoute(teleCommand);
 
         RoutedTeleCommandElement rtme = teleCommands.find(rte -> rte.route().equals(route));
@@ -89,7 +89,7 @@ public class RoutesBuilder {
                 methodRoute = StrUtils.concatPath(serviceRoute, methodRoute, RouteTrie.SEGMENT_DELEMITER);
             }
         } else {
-            String methodName = teleCommand.name();
+            String methodName = teleCommand.targetMethodName();
             if (methodName.equals(INDEX_METHOD_NAME)) {
                 // Local root route
                 methodRoute = "";

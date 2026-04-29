@@ -182,7 +182,7 @@ public class TeleFacadesGenerator {
 
     protected void generateTeleCommandBuilders(TeleFacadeElement teleFacade, TypeSpec.Builder classBuilder) {
         for (TeleCommandElement teleCommand : teleFacade.teleCommands()) {
-            MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(teleCommand.builderName());
+            MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(teleCommand.factoryMethodName());
             methodBuilder.addJavadoc("Returns  $T<R,W> instance for target method '$N'",
                     ClassName.get(TeleCommand.class),
                     teleCommand.serviceMethod().name());

@@ -94,14 +94,14 @@ public final class TeleCommandElement {
     }
 
     /**
-     * Return origin service method name
+     * Return target service method name
      */
-    public String name() {
+    public String targetMethodName() {
         return serviceMethod.name();
     }
 
-    public String builderName() {
-        return "" + StrUtils.firstCharToLowerCase(serviceMethod.name()) + "TC" + index;
+    public String factoryMethodName() {
+        return "" + StrUtils.firstCharToLowerCase(serviceMethod.name()) + "TCF" + index;
     }
 
     public TeleBatchElement getOrCreateBatch(String name) {

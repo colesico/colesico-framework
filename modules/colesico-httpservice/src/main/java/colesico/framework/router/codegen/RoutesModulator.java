@@ -91,8 +91,8 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
                 COMMANDS_VAR,
                 RouterCommands.ADD_METHOD,
                 routedTeleCommand.route(),
-                routedTeleCommand.teleCommand().builderName(),
-                routedTeleCommand.teleCommand().name()
+                routedTeleCommand.teleCommand().factoryMethodName(),
+                routedTeleCommand.teleCommand().targetMethodName()
         );
 
         if (routedTeleCommand.routeAttributes().isEmpty()) {

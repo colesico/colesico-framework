@@ -48,7 +48,7 @@ public class TeleBatchElement implements TeleReadableElement {
     }
 
     public String batchClassSimpleName() {
-        return StrUtils.firstCharToUpperCase(parentTeleCommand.name()) + StrUtils.firstCharToUpperCase(name);
+        return StrUtils.firstCharToUpperCase(parentTeleCommand.targetMethodName()) + StrUtils.firstCharToUpperCase(name);
     }
 
     public String batchClassName() {
