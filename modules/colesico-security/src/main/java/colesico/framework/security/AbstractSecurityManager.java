@@ -56,7 +56,7 @@ abstract public class AbstractSecurityManager<P extends Principal<?>> implements
         AuthenticationProvider<P, Credentials> authProvider = ioc.instance(new ClassedKey<>(AuthenticationProvider.class, credentials.getClass()));
         var principleOpt = authProvider.authenticate(credentials);
         if (principleOpt.isPresent()) {
-
+            write(principleOpt.get());
             return principleOpt.get();
         }
         return null;
