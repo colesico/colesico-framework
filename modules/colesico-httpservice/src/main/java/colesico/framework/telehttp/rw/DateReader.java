@@ -14,42 +14,43 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.reader;
+package colesico.framework.telehttp.rw;
 
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.OriginFactory;
 import colesico.framework.telehttp.OriginTeleReader;
+import colesico.framework.telehttp.assist.ISO8601DateParser;
 import colesico.framework.telehttp.t9n.Messages;
 import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import java.util.Date;
 
 /**
  * @author Vladlen Larionov
  */
 @Singleton
-public final class LongReader<C extends HttpTRContext> extends OriginTeleReader<Long, C> {
-
+public final class DateReader<C extends HttpTRContext> extends OriginTeleReader<Date, C> {
     private final Messages messages;
 
     @Inject
-    public LongReader(OriginFactory originFactory, Messages messages) {
+    public DateReader(OriginFactory originFactory, Messages messages) {
         super(originFactory);
         this.messages = messages;
     }
 
     @Override
-    public Long read(C ctx) {
+    public Date read(C ctx) {
         try {
             String val = readString(ctx);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }
-            return Long.parseLong(val);
+            return ISO8601DateParser.parse(val);
         } catch (Exception ex) {
-            throw new TeleException(messages.invalidNumberFormat(ctx.paramName()));
+            throw new TeleException(messages.invalidDateFormat(ctx.paramName()));
         }
     }
 }

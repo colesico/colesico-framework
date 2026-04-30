@@ -37,5 +37,8 @@ module colesico.framework.httpservice {
 
     exports colesico.framework.httpserver;
     exports colesico.framework.httpserver.internal to colesico.framework.ioc;
+    exports colesico.framework.telehttp.rw.profile;
+    exports colesico.framework.telehttp.rw;
+    exports colesico.framework.telehttp.rw.principal;
 
 }

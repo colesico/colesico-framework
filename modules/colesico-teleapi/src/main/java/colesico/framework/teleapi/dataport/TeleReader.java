@@ -27,6 +27,6 @@ package colesico.framework.teleapi.dataport;
  * @param <V> the value  type to be read
  * @param <C> the reading context
  */
-public interface TeleReader<V, C extends TRContext> {
+public interface TeleReader<V, C extends TRContext<?,?>> {
     V read(C context);
 }

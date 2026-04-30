@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 abstract public class TWContext<T extends Type, A> {
 
     /**
-     * Result type
+     * Type of value to be written
      */
     protected final T valueType;
 
@@ -17,11 +17,7 @@ abstract public class TWContext<T extends Type, A> {
      * that can be used by the {@link TeleWriter}
      * to value specific write
      */
-    protected A attributes;
-
-    public TWContext(T valueType) {
-        this.valueType = valueType;
-    }
+    protected final A attributes;
 
     public TWContext(T valueType, A attributes) {
         this.valueType = valueType;
@@ -36,7 +32,4 @@ abstract public class TWContext<T extends Type, A> {
         return attributes;
     }
 
-    public void setAttributes(A attributes) {
-        this.attributes = attributes;
-    }
 }

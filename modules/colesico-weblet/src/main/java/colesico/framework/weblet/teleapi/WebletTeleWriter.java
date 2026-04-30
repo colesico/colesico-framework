@@ -17,19 +17,19 @@
 package colesico.framework.weblet.teleapi;
 
 import colesico.framework.http.HttpContext;
-import colesico.framework.telehttp.HttpTeleWriter;
+import colesico.framework.telehttp.AbstractHttpTeleWriter;
 
 import jakarta.inject.Provider;
 
 /**
  * Weblet writer base class
  */
-abstract public class WebletTeleWriter<V> extends HttpTeleWriter<V, WebletTWContext> {
+abstract public class WebletTeleWriter<V> extends AbstractHttpTeleWriter<V, WebletTWContext> {
     public WebletTeleWriter(Provider<HttpContext> httpContextProv) {
         super(httpContextProv);
     }
 
-    public WebletTeleWriter(HttpTeleWriter writer) {
+    public WebletTeleWriter(AbstractHttpTeleWriter writer) {
         super(writer);
     }
 }

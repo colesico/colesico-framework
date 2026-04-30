@@ -14,39 +14,48 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.writer;
+package colesico.framework.telehttp.rw.profile;
 
 import colesico.framework.http.CookieFactory;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.profile.Profile;
+import colesico.framework.profile.assist.LocaleProperty;
 import colesico.framework.telehttp.HttpTWContext;
-import colesico.framework.telehttp.HttpTeleWriter;
-import colesico.framework.telehttp.ProfileHttpConfigPrototype;
+import colesico.framework.telehttp.AbstractHttpTeleWriter;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.util.*;
 
+/**
+ *  Profile default writer
+ */
 @Singleton
-public final class ProfileWriter<P extends Profile, C extends HttpTWContext> extends HttpTeleWriter<P, C> {
+public class ProfileWriter<P extends Profile, C extends HttpTWContext<?, ?>> extends AbstractHttpTeleWriter<P, C> {
 
     public static final String PROFILE_COOKIE = "profile";
     public static final String PROFILE_HEADER = "X-Profile";
 
     protected final ProfileHttpConfigPrototype config;
-    protected final ProfileManager profileManager;
     protected final CookieFactory cookieFactory;
 
     public ProfileWriter(Provider<HttpContext> httpContextProv,
-                         ProfileHttpConfigPrototype config, ProfileManager profileManager,
+                         ProfileHttpConfigPrototype config,
                          CookieFactory cookieFactory) {
         super(httpContextProv);
         this.config = config;
-        this.profileManager = profileManager;
         this.cookieFactory = cookieFactory;
+    }
+
+    /**
+     *  Override this method to process different profile type
+     */
+    protected void exportToProperties(P profile, Map<String, String> properties) {
+        var localeProperty = LocaleProperty.of(profile);
+        properties.put(localeProperty.name(), localeProperty.asString());
     }
 
     @Override
@@ -55,15 +64,9 @@ public final class ProfileWriter<P extends Profile, C extends HttpTWContext> ext
         Calendar expires = Calendar.getInstance();
         String profileStr;
         if (profile != null) {
-            Map<String, String> profileProperties = new HashMap<>();
-            Collection<ProfileAttribute> attributes = profileManager.attributes(profile);
-            for (ProfileAttribute attribute : attributes) {
-                if (!config.attributeConfig(attribute.name()).writable) {
-                    continue;
-                }
-                profileProperties.put(attribute.name(), attribute.asString());
-            }
-            profileStr = TeleHttpUtils.stringifyProperties(profileProperties);
+            Map<String, String> properties = new HashMap<>();
+            exportToProperties(profile, properties);
+            profileStr = TeleHttpUtils.stringifyProperties(properties);
             expires.add(Calendar.DAY_OF_MONTH, config.cookieValidityDays());
         } else {
             profileStr = null;

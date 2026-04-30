@@ -4,11 +4,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.TimeZone;
 
-public class TimezoneAttribute extends AbstractProfileAttribute<CustomProfile, TimeZone> {
+public class TimezoneProperty extends AbstractProfileAttribute<CustomProfile, TimeZone> {
 
     static final String ATTRIBUTE_NAME = "timezone";
 
-    public TimezoneAttribute(CustomProfile profile) {
+    public TimezoneProperty(CustomProfile profile) {
         super(profile);
     }
 

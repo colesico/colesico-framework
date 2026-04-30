@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.reader;
+package colesico.framework.telehttp.rw;
 
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.telehttp.HttpTRContext;
@@ -25,36 +25,31 @@ import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.util.OptionalLong;
 
 /**
  * @author Vladlen Larionov
  */
 @Singleton
-public final class OptionalLongReader<C extends HttpTRContext> extends OriginTeleReader<OptionalLong,C> {
+public final class BooleanReader<C extends HttpTRContext> extends OriginTeleReader<Boolean, C> {
 
     private final Messages messages;
 
     @Inject
-    public OptionalLongReader(OriginFactory originFactory, Messages messages) {
+    public BooleanReader(OriginFactory originFactory, Messages messages) {
         super(originFactory);
         this.messages = messages;
     }
 
     @Override
-    public OptionalLong read(C ctx) {
+    public Boolean read(C ctx) {
         try {
-            String val = readString(ctx);
-            if (StringUtils.isBlank(val)) {
+            String str = readString(ctx);
+            if (StringUtils.isBlank(str)) {
                 return null;
             }
-            if (val.equals("null")) {
-                return OptionalLong.empty();
-            } else {
-                return OptionalLong.of(Long.parseLong(val));
-            }
-        } catch (Exception var3) {
-            throw new TeleException(messages.invalidNumberFormat(ctx.paramName()));
+            return Boolean.parseBoolean(str);
+        } catch (Exception ex) {
+            throw new TeleException(messages.invalidBooleanFormat(ctx.paramName()));
         }
     }
 }

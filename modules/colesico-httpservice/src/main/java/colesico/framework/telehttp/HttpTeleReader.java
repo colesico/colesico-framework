@@ -8,6 +8,6 @@ import colesico.framework.teleapi.dataport.TeleReader;
  * @param <V> the value type to  be read
  * @param <C> reading context
  */
-public interface HttpTeleReader<V, C extends HttpTRContext> extends TeleReader<V, C> {
+public interface HttpTeleReader<V, C extends HttpTRContext<?,?>> extends TeleReader<V, C> {
 
 }

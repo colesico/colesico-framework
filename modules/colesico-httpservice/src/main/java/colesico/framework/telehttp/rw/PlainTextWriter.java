@@ -1,15 +1,15 @@
-package colesico.framework.telehttp.writer;
+package colesico.framework.telehttp.rw;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.telehttp.HttpTWContext;
-import colesico.framework.telehttp.HttpTeleWriter;
+import colesico.framework.telehttp.AbstractHttpTeleWriter;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 @Singleton
-public final class PlainTextWriter<C extends HttpTWContext> extends HttpTeleWriter<Object, C> {
+public final class PlainTextWriter<C extends HttpTWContext<?,?>> extends AbstractHttpTeleWriter<Object, C> {
 
     private static final String CONTENT_TYPE = "text/plain; charset=utf-8";
 

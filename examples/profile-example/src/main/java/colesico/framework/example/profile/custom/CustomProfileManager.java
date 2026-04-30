@@ -21,8 +21,8 @@ public class CustomProfileManager extends DefaultProfileManager<CustomProfile> {
     @Override
     public Collection<ProfileAttribute> getAttributes(CustomProfile profile) {
         var attributes = super.getAttributes(profile);
-        attributes.add(new TimezoneAttribute(profile));
-        attributes.add(new ApiVersionAttribute(profile));
+        attributes.add(new TimezoneProperty(profile));
+        attributes.add(new ApiVersionProperty(profile));
         return attributes;
     }
 

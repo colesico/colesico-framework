@@ -1,7 +1,7 @@
 package colesico.framework.weblet.teleapi.writer;
 
 import colesico.framework.http.HttpContext;
-import colesico.framework.telehttp.HttpTeleWriter;
+import colesico.framework.telehttp.AbstractHttpTeleWriter;
 import colesico.framework.weblet.ViewResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 
@@ -16,7 +16,7 @@ abstract public class ViewWriter extends WebletTeleWriter<ViewResponse> {
         super(httpContextProv);
     }
 
-    public ViewWriter(HttpTeleWriter writer) {
+    public ViewWriter(AbstractHttpTeleWriter writer) {
         super(writer);
     }
 }

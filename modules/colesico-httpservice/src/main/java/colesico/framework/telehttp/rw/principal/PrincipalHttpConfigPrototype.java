@@ -14,28 +14,30 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.reader;
+package colesico.framework.telehttp.rw.principal;
 
-import colesico.framework.telehttp.HttpTRContext;
-import colesico.framework.telehttp.OriginFactory;
-import colesico.framework.telehttp.OriginTeleReader;
+import colesico.framework.config.ConfigModel;
+import colesico.framework.config.ConfigPrototype;
+import colesico.framework.security.assist.MACUtils;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+import java.nio.charset.StandardCharsets;
 
 /**
- * @author Vladlen Larionov
+ * Configuration prototype to configure security principal reading/writing
  */
-@Singleton
-public final class StringReader<C extends HttpTRContext> extends OriginTeleReader<String, C> {
+@ConfigPrototype(model = ConfigModel.SINGLE)
+abstract public class PrincipalHttpConfigPrototype {
 
-    @Inject
-    public StringReader(OriginFactory originFactory) {
-        super(originFactory);
+    public byte[] signatureKey() {
+        return "0123456789ABCDEF".getBytes(StandardCharsets.UTF_8);
     }
 
-    @Override
-    public String read(C ctx) {
-        return readString(ctx);
+    public String signatureAlgorithm() {
+        return MACUtils.HmacSHA256;
     }
+
+    public int cookieValidityDays() {
+        return 14;
+    }
+
 }

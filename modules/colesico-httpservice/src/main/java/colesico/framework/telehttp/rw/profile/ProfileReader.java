@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.reader;
+package colesico.framework.telehttp.rw.profile;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.profile.*;
-import colesico.framework.profile.assist.LocaleAttribute;
+import colesico.framework.profile.assist.LocaleProperty;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTeleReader;
-import colesico.framework.telehttp.ProfileHttpConfigPrototype;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
-import colesico.framework.telehttp.writer.ProfileWriter;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.util.*;
 
-import static colesico.framework.telehttp.writer.ProfileWriter.PROFILE_HEADER;
+import static colesico.framework.telehttp.rw.profile.ProfileWriter.PROFILE_HEADER;
 
 /**
  * Profile default reader
@@ -40,12 +38,10 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
 
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
 
-    protected final ProfileManager<P> profileManager;
     protected final Provider<HttpContext> httpContextProv;
     protected final ProfileHttpConfigPrototype config;
 
-    public ProfileReader(ProfileManager profileManager, Provider<HttpContext> httpContextProv, ProfileHttpConfigPrototype config) {
-        this.profileManager = profileManager;
+    public ProfileReader(Provider<HttpContext> httpContextProv, ProfileHttpConfigPrototype config) {
         this.httpContextProv = httpContextProv;
         this.config = config;
     }
@@ -69,44 +65,31 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
     }
 
     /**
-     * Override this method to dispatch reading
+     *  Override this method to process different profile type
      */
-    protected AttributeReader getAttributeReader(ProfileAttribute attribute) {
-        if (attribute instanceof LocaleAttribute) {
-            return this::readLocale;
-        } else {
-            return this::readAttribute;
-        }
+    protected void importFromProperties(P profile, Map<String, String> properties,HttpRequest request) {
+        var localeProperty = LocaleProperty.of(profile);
+        properties.put(localeProperty.name(), localeProperty.asString());
     }
 
     @Override
     public final P read(C context) {
         HttpRequest request = httpContextProv.get().request();
-        P profile = profileManager.createProfile();
 
-        Map<String, String> profileProperties = new HashMap<>();
+        Map<String, String> properties = new HashMap<>();
         var profileCookie = request.cookies().get(ProfileWriter.PROFILE_COOKIE);
         if (profileCookie != null) {
-            profileProperties.putAll(TeleHttpUtils.parseProperties(profileCookie.setValue()));
+            properties.putAll(TeleHttpUtils.parseProperties(profileCookie.setValue()));
         }
 
         var profileHeader = request.cookies().get(PROFILE_HEADER);
         if (profileHeader != null) {
-            profileProperties.putAll(TeleHttpUtils.parseProperties(profileHeader.setValue()));
+            properties.putAll(TeleHttpUtils.parseProperties(profileHeader.setValue()));
         }
 
-        var attributes = profileManager.attributes(profile);
-        for (var attribute : attributes) {
-            if (!config.attributeConfig(attribute.name()).readable) {
-                continue;
-            }
-            var attributeReader = getAttributeReader(attribute);
-            attributeReader.read(attribute, request, profileProperties);
-        }
+        P profile = (P) context.attributes();
+        importFromProperties(profile,properties);
         return profile;
     }
 
-    public interface AttributeReader {
-        void read(ProfileAttribute attribute, HttpRequest request, Map<String, String> profileProperties);
-    }
 }

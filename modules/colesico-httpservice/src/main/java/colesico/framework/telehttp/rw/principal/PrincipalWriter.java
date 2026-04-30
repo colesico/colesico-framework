@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.writer;
+package colesico.framework.telehttp.rw.principal;
 
 import colesico.framework.http.CookieFactory;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.telehttp.HttpTWContext;
-import colesico.framework.telehttp.HttpTeleWriter;
-import colesico.framework.telehttp.PrincipalHttpConfigPrototype;
+import colesico.framework.telehttp.AbstractHttpTeleWriter;
 import colesico.framework.security.Principal;
 import colesico.framework.security.assist.MACUtils;
 import colesico.framework.security.teleapi.PrincipalSerializer;
@@ -34,7 +33,7 @@ import java.util.Calendar;
 
 
 @Singleton
-public final class PrincipalWriter<C extends HttpTWContext> extends HttpTeleWriter<Principal, C> {
+public final class PrincipalWriter<C extends HttpTWContext> extends AbstractHttpTeleWriter<Principal, C> {
 
     public static final String COOKIE_NAME = "principal";
     public static final String HEADER_NAME = "X-Principal";

@@ -19,7 +19,7 @@ package colesico.framework.restlet.teleapi.writer;
 import colesico.framework.restlet.teleapi.RestletTWContext;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 import colesico.framework.telehttp.HttpTWContext;
-import colesico.framework.telehttp.HttpTeleWriter;
+import colesico.framework.telehttp.AbstractHttpTeleWriter;
 
 /**
  * Proxy to  use any http writer as restlet writer
@@ -28,9 +28,9 @@ import colesico.framework.telehttp.HttpTeleWriter;
  */
 public final class RestletWriterProxy<V> extends RestletTeleWriter<V> {
 
-    private final HttpTeleWriter<V, HttpTWContext> writer;
+    private final AbstractHttpTeleWriter<V, HttpTWContext> writer;
 
-    private RestletWriterProxy(HttpTeleWriter<V, HttpTWContext> writer) {
+    private RestletWriterProxy(AbstractHttpTeleWriter<V, HttpTWContext> writer) {
         super(writer);
         this.writer = writer;
     }
@@ -40,7 +40,7 @@ public final class RestletWriterProxy<V> extends RestletTeleWriter<V> {
         writer.write(value, context);
     }
 
-    public static <V> RestletWriterProxy of(HttpTeleWriter<V, HttpTWContext> writer) {
+    public static <V> RestletWriterProxy of(AbstractHttpTeleWriter<V, HttpTWContext> writer) {
         return new RestletWriterProxy(writer);
     }
 

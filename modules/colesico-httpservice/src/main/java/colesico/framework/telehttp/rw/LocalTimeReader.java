@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.reader;
+package colesico.framework.telehttp.rw;
 
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.telehttp.HttpTRContext;
@@ -25,31 +25,34 @@ import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author Vladlen Larionov
  */
 @Singleton
-public final class IntegerReader<C extends HttpTRContext> extends OriginTeleReader<Integer, C> {
+public final class LocalTimeReader<C extends HttpTRContext> extends OriginTeleReader<LocalTime,C> {
 
+    private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
     private final Messages messages;
 
     @Inject
-    public IntegerReader(OriginFactory originFactory, Messages messages) {
+    public LocalTimeReader(OriginFactory originFactory, Messages messages) {
         super(originFactory);
         this.messages = messages;
     }
 
     @Override
-    public Integer read(C ctx) {
+    public LocalTime read(C ctx) {
         try {
             String val = readString(ctx);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }
-            return Integer.parseInt(val);
+            return LocalTime.parse(val, dtf);
         } catch (Exception ex) {
-            throw new TeleException(messages.invalidNumberFormat(ctx.paramName()));
+            throw new TeleException(messages.invalidDateFormat(ctx.paramName()));
         }
     }
 }

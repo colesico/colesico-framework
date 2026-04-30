@@ -1,10 +1,10 @@
 package colesico.framework.example.profile.custom;
 
-public class ApiVersionAttribute extends AbstractProfileAttribute<CustomProfile, String> {
+public class ApiVersionProperty extends AbstractProfileAttribute<CustomProfile, String> {
 
     static final String ATTRIBUTE_NAME = "api_version";
 
-    public ApiVersionAttribute(CustomProfile profile) {
+    public ApiVersionProperty(CustomProfile profile) {
         super(profile);
     }
 

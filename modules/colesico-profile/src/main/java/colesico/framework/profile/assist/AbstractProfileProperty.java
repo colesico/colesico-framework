@@ -8,15 +8,15 @@ import java.util.Objects;
 
 
 /**
- * Profile attribute basic implementation
+ * Profile property helper basic implementation
  */
-abstract public class AbstractProfileAttribute<P extends Profile, V>
-        implements ProfileAttribute<P, V> {
+abstract public class AbstractProfileProperty<P extends Profile, V>
+        implements ProfileProperty<P, V> {
 
     protected final P profile;
     protected final String name;
 
-    public AbstractProfileAttribute(P profile, String name) {
+    public AbstractProfileProperty(P profile, String name) {
         this.profile = profile;
         this.name = name;
     }
@@ -50,7 +50,7 @@ abstract public class AbstractProfileAttribute<P extends Profile, V>
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof AbstractProfileAttribute<?, ?> that)) return false;
+        if (!(o instanceof AbstractProfileProperty<?, ?> that)) return false;
         return Objects.equals(name, that.name);
     }
 

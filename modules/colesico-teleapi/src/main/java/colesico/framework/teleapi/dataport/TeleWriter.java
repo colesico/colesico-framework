@@ -23,6 +23,6 @@ package colesico.framework.teleapi.dataport;
  * @param <V> the value type to be written
  * @param <C> the write context
  */
-public interface TeleWriter<V, C extends TWContext> {
+public interface TeleWriter<V, C extends TWContext<?,?>> {
     void write(V value, C context);
 }

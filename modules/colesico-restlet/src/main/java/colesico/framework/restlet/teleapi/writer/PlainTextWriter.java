@@ -12,10 +12,10 @@ import jakarta.inject.Singleton;
 @Singleton
 public final class PlainTextWriter extends RestletTeleWriter<Object> {
 
-    private final colesico.framework.telehttp.writer.PlainTextWriter<RestletTWContext> writer;
+    private final colesico.framework.telehttp.rw.PlainTextWriter<RestletTWContext> writer;
 
     @Inject
-    public PlainTextWriter(colesico.framework.telehttp.writer.PlainTextWriter writer) {
+    public PlainTextWriter(colesico.framework.telehttp.rw.PlainTextWriter writer) {
         super(writer);
         this.writer = writer;
     }

@@ -1,7 +1,5 @@
 package colesico.framework.telehttp;
 
-import java.util.Collection;
-
 /**
  * Basic origin based reader
  *

@@ -17,11 +17,7 @@ abstract public class TRContext<T extends Type, A> {
      * that can be used by the {@link TeleReader}
      * to value specific read
      */
-    protected A attributes;
-
-    public TRContext(T valueType) {
-        this.valueType = valueType;
-    }
+    protected final A attributes;
 
     public TRContext(T valueType, A attributes) {
         this.valueType = valueType;
@@ -36,7 +32,4 @@ abstract public class TRContext<T extends Type, A> {
         return attributes;
     }
 
-    public void setAttributes(A attributes) {
-        this.attributes = attributes;
-    }
 }
