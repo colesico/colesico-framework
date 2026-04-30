@@ -14,44 +14,42 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.readwrite;
+package colesico.framework.telehttp.reader;
 
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.OriginFactory;
 import colesico.framework.telehttp.OriginTeleReader;
-import colesico.framework.telehttp.assist.ISO8601DateParser;
 import colesico.framework.telehttp.t9n.Messages;
 import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.util.Date;
-
 /**
  * @author Vladlen Larionov
  */
 @Singleton
-public final class DateReader extends OriginTeleReader<Date, HttpTRContext<?, ?>> {
+public final class BooleanReader extends OriginTeleReader<Boolean, HttpTRContext<?, ?>> {
+
     private final Messages messages;
 
     @Inject
-    public DateReader(OriginFactory originFactory, Messages messages) {
+    public BooleanReader(OriginFactory originFactory, Messages messages) {
         super(originFactory);
         this.messages = messages;
     }
 
     @Override
-    public Date read(HttpTRContext<?, ?> ctx) {
+    public Boolean read(HttpTRContext<?, ?> ctx) {
         try {
-            String val = readString(ctx);
-            if (StringUtils.isEmpty(val)) {
+            String str = readString(ctx);
+            if (StringUtils.isBlank(str)) {
                 return null;
             }
-            return ISO8601DateParser.parse(val);
+            return Boolean.parseBoolean(str);
         } catch (Exception ex) {
-            throw new TeleException(messages.invalidDateFormat(ctx.paramName()));
+            throw new TeleException(messages.invalidBooleanFormat(ctx.paramName()));
         }
     }
 }

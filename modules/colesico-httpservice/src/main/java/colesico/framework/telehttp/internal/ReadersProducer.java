@@ -3,12 +3,12 @@ package colesico.framework.telehttp.internal;
 import colesico.framework.http.HttpFile;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.telehttp.HttpTeleReader;
-import colesico.framework.telehttp.readwrite.principal.PrincipalReader;
-import colesico.framework.telehttp.readwrite.profile.ProfileReader;
+import colesico.framework.telehttp.reader.PrincipalReader;
+import colesico.framework.telehttp.reader.ProfileReader;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 
-import colesico.framework.telehttp.readwrite.*;
+import colesico.framework.telehttp.reader.*;
 import jakarta.inject.Singleton;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

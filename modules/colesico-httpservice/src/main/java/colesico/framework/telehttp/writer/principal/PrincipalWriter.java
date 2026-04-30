@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.readwrite.principal;
+package colesico.framework.telehttp.writer.principal;
 
 import colesico.framework.http.CookieFactory;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
-import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTWContext;
 import colesico.framework.telehttp.AbstractHttpTeleWriter;
 import colesico.framework.security.Principal;
@@ -40,10 +39,10 @@ public final class PrincipalWriter extends AbstractHttpTeleWriter<Principal, Htt
     public static final String HEADER_NAME = "X-Principal";
     public static final String ITEM_DELIMITER = ":";
 
-    protected final PrincipalHttpConfigPrototype config;
-    protected final Provider<HttpContext> httpContextProv;
-    protected final PrincipalSerializer principalSerializer;
-    protected final CookieFactory cookieFactory;
+    private final PrincipalHttpConfigPrototype config;
+    private final Provider<HttpContext> httpContextProv;
+    private final PrincipalSerializer principalSerializer;
+    private final CookieFactory cookieFactory;
 
     public PrincipalWriter(Provider<HttpContext> httpContextProv, PrincipalHttpConfigPrototype config, Provider<HttpContext> httpContextProv1, PrincipalSerializer principalSerializer, CookieFactory cookieFactory) {
         super(httpContextProv);

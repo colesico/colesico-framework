@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.readwrite.principal;
+package colesico.framework.telehttp.reader;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
@@ -23,6 +23,8 @@ import colesico.framework.security.Principal;
 import colesico.framework.security.assist.MACUtils;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 import colesico.framework.telehttp.*;
+import colesico.framework.telehttp.writer.principal.PrincipalHttpConfigPrototype;
+import colesico.framework.telehttp.writer.principal.PrincipalWriter;
 import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Inject;

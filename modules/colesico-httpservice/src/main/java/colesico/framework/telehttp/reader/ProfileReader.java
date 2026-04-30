@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.readwrite.profile;
+package colesico.framework.telehttp.reader;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpRequest;
@@ -24,27 +24,27 @@ import colesico.framework.profile.assist.ProfileAttribute;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTeleReader;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
+import colesico.framework.telehttp.writer.profile.ProfileHttpConfigPrototype;
+import colesico.framework.telehttp.writer.profile.ProfileWriter;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.util.*;
 
-import static colesico.framework.telehttp.readwrite.profile.ProfileWriter.PROFILE_HEADER;
+import static colesico.framework.telehttp.writer.profile.ProfileWriter.PROFILE_HEADER;
 
 /**
  * Profile default reader
  */
 @Singleton
-public class ProfileReader<P extends Profile, C extends HttpTRContext<?,?>> implements HttpTeleReader<P, C> {
+public class ProfileReader<P extends Profile, C extends HttpTRContext<?, ?>> implements HttpTeleReader<P, C> {
 
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
 
     protected final Provider<HttpContext> httpContextProv;
-    protected final ProfileHttpConfigPrototype config;
 
-    public ProfileReader(Provider<HttpContext> httpContextProv, ProfileHttpConfigPrototype config) {
+    public ProfileReader(Provider<HttpContext> httpContextProv) {
         this.httpContextProv = httpContextProv;
-        this.config = config;
     }
 
     protected void readLocale(LocaleAttribute<?> attribute, Map<String, String> attributes, HttpRequest request) {

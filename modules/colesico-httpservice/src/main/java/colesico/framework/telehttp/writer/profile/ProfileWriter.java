@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.readwrite.profile;
+package colesico.framework.telehttp.writer.profile;
 
 import colesico.framework.http.CookieFactory;
 import colesico.framework.http.HttpContext;

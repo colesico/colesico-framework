@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.readwrite;
+package colesico.framework.telehttp.reader;
 
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.OriginFactory;

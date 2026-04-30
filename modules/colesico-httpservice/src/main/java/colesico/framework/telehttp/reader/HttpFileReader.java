@@ -14,30 +14,31 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.readwrite;
+package colesico.framework.telehttp.reader;
 
+import colesico.framework.http.HttpFile;
+import colesico.framework.http.HttpRequest;
 import colesico.framework.telehttp.HttpTRContext;
-import colesico.framework.telehttp.OriginFactory;
-import colesico.framework.telehttp.OriginTeleReader;
-import org.apache.commons.lang3.StringUtils;
+import colesico.framework.telehttp.HttpTeleReader;
 
-import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+
 
 /**
  * @author Vladlen Larionov
  */
 @Singleton
-public final class CharacterReader extends OriginTeleReader<Character, HttpTRContext<?, ?>> {
+public final class HttpFileReader implements HttpTeleReader<HttpFile, HttpTRContext<?, ?>> {
 
-    @Inject
-    public CharacterReader(OriginFactory originFactory) {
-        super(originFactory);
+    private final Provider<HttpRequest> requestProv;
+
+    public HttpFileReader(Provider<HttpRequest> requestProv) {
+        this.requestProv = requestProv;
     }
 
     @Override
-    public Character read(HttpTRContext<?, ?> ctx) {
-        String str = StringUtils.trim(readString(ctx));
-        return StringUtils.isNotEmpty(str) ? str.charAt(0) : null;
+    public HttpFile read(HttpTRContext<?, ?> context) {
+        return requestProv.get().postFiles().get(context.paramName());
     }
 }

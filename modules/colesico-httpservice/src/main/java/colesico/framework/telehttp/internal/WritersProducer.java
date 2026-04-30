@@ -1,8 +1,8 @@
 package colesico.framework.telehttp.internal;
 
-import colesico.framework.telehttp.readwrite.PlainTextWriter;
-import colesico.framework.telehttp.readwrite.principal.PrincipalWriter;
-import colesico.framework.telehttp.readwrite.profile.ProfileWriter;
+import colesico.framework.telehttp.writer.PlainTextWriter;
+import colesico.framework.telehttp.writer.principal.PrincipalWriter;
+import colesico.framework.telehttp.writer.profile.ProfileWriter;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 

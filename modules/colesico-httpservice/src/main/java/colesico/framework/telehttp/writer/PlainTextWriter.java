@@ -1,7 +1,6 @@
-package colesico.framework.telehttp.readwrite;
+package colesico.framework.telehttp.writer;
 
 import colesico.framework.http.HttpContext;
-import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTWContext;
 import colesico.framework.telehttp.AbstractHttpTeleWriter;
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.readwrite;
+package colesico.framework.telehttp.reader;
 
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.telehttp.HttpTRContext;
@@ -25,33 +25,32 @@ import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.util.OptionalLong;
+import java.util.OptionalInt;
 
 /**
  * @author Vladlen Larionov
  */
 @Singleton
-public final class OptionalLongReader extends OriginTeleReader<OptionalLong,HttpTRContext<?, ?>> {
+public final class OptionalIntReader extends OriginTeleReader<OptionalInt,HttpTRContext<?, ?>> {
 
     private final Messages messages;
-
     @Inject
-    public OptionalLongReader(OriginFactory originFactory, Messages messages) {
+    public OptionalIntReader(OriginFactory originFactory, Messages messages) {
         super(originFactory);
         this.messages = messages;
     }
 
     @Override
-    public OptionalLong read(HttpTRContext<?, ?> ctx) {
+    public OptionalInt read(HttpTRContext<?, ?> ctx) {
         try {
             String val = readString(ctx);
             if (StringUtils.isBlank(val)) {
                 return null;
             }
             if (val.equals("null")) {
-                return OptionalLong.empty();
+                return OptionalInt.empty();
             } else {
-                return OptionalLong.of(Long.parseLong(val));
+                return OptionalInt.of(Integer.parseInt(val));
             }
         } catch (Exception var3) {
             throw new TeleException(messages.invalidNumberFormat(ctx.paramName()));
