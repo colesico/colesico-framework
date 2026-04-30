@@ -72,7 +72,7 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
 
     }
 
-    abstract protected CodeBlock generatecommandsMethodBody(T teleFacade);
+    abstract protected CodeBlock generateCommandsMethodBody(T teleFacade);
 
     @Override
     public void onInitTeleFacade(ServiceElement serviceElm) {
@@ -123,7 +123,7 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
             return;
         }
         processTeleFacade(teleFacade);
-        teleFacade.setCommandsMethodBody(generatecommandsMethodBody((T) teleFacade));
+        teleFacade.setCommandsMethodBody(generateCommandsMethodBody((T) teleFacade));
     }
 
     protected TIContextElement createInvocationContext(TeleCommandElement teleCommand) {

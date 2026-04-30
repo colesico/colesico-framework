@@ -16,20 +16,19 @@
 
 package colesico.framework.weblet.response;
 
+import colesico.framework.telehttp.HttpTeleResponse;
+
 /**
  * Binary data to  returned to  client
  */
-public final class BinaryResponse extends ContentResponse {
+public final class BinaryResponse extends HttpTeleResponse<byte[]> {
 
     public static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
 
-    private final byte[] content;
-
     private final String fileName;
 
-    private BinaryResponse(byte[] content, String contentType, String fileName, int statusCode) {
-        super(contentType, statusCode);
-        this.content = content;
+    public BinaryResponse(byte[] content, String contentType, String fileName, int statusCode) {
+        super(content, contentType, statusCode);
         this.fileName = fileName;
     }
 
@@ -51,10 +50,6 @@ public final class BinaryResponse extends ContentResponse {
 
     public WebletResponse wrap() {
         return WebletResponse.of(this);
-    }
-
-    public byte[] content() {
-        return content;
     }
 
     public String fileName() {

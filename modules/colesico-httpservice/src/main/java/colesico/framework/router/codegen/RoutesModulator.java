@@ -64,7 +64,7 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
         );
     }
 
-    protected CodeBlock generatecommandsMethodBody(RouterTeleFacadeElement teleFacade) {
+    protected CodeBlock generateCommandsMethodBody(RouterTeleFacadeElement teleFacade) {
         CodeBlock.Builder cb = CodeBlock.builder();
 
         cb.addStatement("$T $N = new $T($T.class)",

@@ -3,7 +3,7 @@ package colesico.framework.weblet.response;
 /**
  * Returns  model that be presented to  given view
  */
-public final class ViewResponse extends ContentResponse {
+public final class ViewResponse extends colesico.framework.telehttp.HttpTeleResponse {
 
     private final String viewName;
     private final Object model;

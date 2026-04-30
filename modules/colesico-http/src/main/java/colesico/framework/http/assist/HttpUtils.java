@@ -10,15 +10,15 @@ import java.util.Set;
 public final class HttpUtils {
 
     public static void setCookies(HttpResponse response, Set<HttpCookie> cookies) {
-        for (HttpCookie cookie : cookies) {
+        for (var cookie : cookies) {
             response.setCookie(cookie);
         }
     }
 
     public static void setHeaders(HttpResponse response, Map<String, List<String>> headers) {
-        for (Map.Entry<String, List<String>> h : headers.entrySet()) {
-            for (String v : h.getValue()) {
-                response.setHeader(h.getKey(), v);
+        for (var header : headers.entrySet()) {
+            for (String v : header.getValue()) {
+                response.setHeader(header.getKey(), v);
             }
         }
     }

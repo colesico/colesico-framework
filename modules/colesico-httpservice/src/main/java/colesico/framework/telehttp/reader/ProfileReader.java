@@ -50,7 +50,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext<?, ?>> ext
         readAttribute(attribute, attributes);
         if (!attribute.hasValue()) {
             String acceptLangs = request.headers().get(ACCEPT_LANGUAGE_HEADER);
-            Locale locale = TeleHttpUtils.getAcceptedLanguage(acceptLangs);
+            Locale locale = TeleHttpUtils.acceptedLanguage(acceptLangs);
             if (locale != null) {
                 attribute.setValue(locale);
             }

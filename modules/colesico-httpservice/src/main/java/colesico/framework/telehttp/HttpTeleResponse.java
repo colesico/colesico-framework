@@ -1,12 +1,17 @@
-package colesico.framework.weblet.response;
+package colesico.framework.telehttp;
 
 import colesico.framework.http.HttpCookie;
 
 import java.util.*;
 
-abstract public class ContentResponse {
+/**
+ * Basic response model
+ */
+abstract public class HttpTeleResponse<C> {
 
     public static final int DEFAULT_STATUS_CODE = 200;
+
+    protected final C content;
 
     /**
      * Http response content type
@@ -18,11 +23,12 @@ abstract public class ContentResponse {
      */
     protected final int statusCode;
 
-    private Map<String, List<String>> headers = new HashMap<>();
+    protected Map<String, List<String>> headers = new HashMap<>();
 
-    private Set<HttpCookie> cookies = new HashSet<>();
+    protected Set<HttpCookie> cookies = new HashSet<>();
 
-    public ContentResponse(String contentType, int statusCode) {
+    protected HttpTeleResponse(C content, String contentType, int statusCode) {
+        this.content = content;
         this.contentType = contentType;
         this.statusCode = statusCode;
     }
@@ -32,8 +38,12 @@ abstract public class ContentResponse {
         hValues.add(vale);
     }
 
-    public void setCookie(HttpCookie cookie) {
+    public void addCookie(HttpCookie cookie) {
         cookies.add(cookie);
+    }
+
+    public C content() {
+        return content;
     }
 
     public String contentType() {

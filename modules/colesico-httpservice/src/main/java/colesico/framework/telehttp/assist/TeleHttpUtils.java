@@ -13,13 +13,13 @@ import java.util.StringTokenizer;
 
 public class TeleHttpUtils {
 
-    public static Locale getAcceptedLanguage(String acceptLanguage) {
-        if (StringUtils.isBlank(acceptLanguage)) {
+    public static Locale acceptedLanguage(String acceptLanguageHeader) {
+        if (StringUtils.isBlank(acceptLanguageHeader)) {
             return null;
         }
 
         try {
-            StringTokenizer langTokenizer = new StringTokenizer(acceptLanguage, ",");
+            StringTokenizer langTokenizer = new StringTokenizer(acceptLanguageHeader, ",");
 
             double maxQ = Double.MIN_VALUE;
             String maxTag = null;

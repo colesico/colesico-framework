@@ -39,4 +39,8 @@ abstract public class HttpTeleWriter<V, C extends HttpTWContext<?, ?>> implement
         return httpContextProv.get().response();
     }
 
+    @Override
+    public void write(V value, C context) {
+
+    }
 }

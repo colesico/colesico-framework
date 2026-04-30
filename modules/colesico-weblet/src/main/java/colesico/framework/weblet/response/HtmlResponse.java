@@ -27,6 +27,10 @@ public final class HtmlResponse extends StringResponse {
         super(content, contentType, statusCode);
     }
 
+    public static HtmlResponse of() {
+        return new HtmlResponse(null, DEFAULT_CONTENT_TYPE, 204);
+    }
+
     public static HtmlResponse of(String content) {
         return new HtmlResponse(content, DEFAULT_CONTENT_TYPE, DEFAULT_STATUS_CODE);
     }

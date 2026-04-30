@@ -34,7 +34,7 @@ import java.util.*;
  *
  * @author Vladlen Larionov
  */
-public class Navigation<N extends Navigation> {
+public class Navigation<N extends Navigation<?>> {
 
     protected String uri;
     protected Class<?> serviceClass;
@@ -247,8 +247,8 @@ public class Navigation<N extends Navigation> {
         String location = toLocation(router);
         ForwardRequest request = new ForwardRequest(context.request(), location);
         context.setRequest(request);
-        Optional<Router.Invocation> invocation = router.resolve(new Router.Criteria(httpMethod, request.requestURI()));
-        router.execute(invocation.get());
+        Optional<Router.Invocation> resolution = router.resolve(new Router.Criteria(httpMethod, request.requestURI()));
+        router.execute(resolution.get());
     }
 
     protected StringBuilder buildParamsStr() {
