@@ -18,7 +18,9 @@ abstract public class HttpTRContext extends TRContext {
     private final String paramName;
 
     /**
-     * Origin name to  read value from it
+     * Origin name to read value from it
+     *
+     * @see ParamOrigin
      */
     private final String originName;
 

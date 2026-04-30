@@ -4,21 +4,21 @@ import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.scope.ThreadScope;
 
-abstract public class AbstractProfileContext<P extends Profile> implements ProfileContext<P> {
+abstract public class AbstractProfileManager<P extends Profile> implements ProfileManager<P> {
 
     /**
      * Profile association with thread
      */
     protected final ThreadScope threadScope;
 
-    public AbstractProfileContext(ThreadScope threadScope) {
+    public AbstractProfileManager(ThreadScope threadScope) {
         this.threadScope = threadScope;
     }
 
     /**
-     * Profile instance factory
+     * Default profile instance factory
      */
-    abstract protected P createProfile();
+    abstract protected P createDefaultProfile();
 
     /**
      * Read profile from source.
@@ -37,7 +37,7 @@ abstract public class AbstractProfileContext<P extends Profile> implements Profi
     public P profile() {
         ProfileHolder holder = threadScope.get(ProfileHolder.SCOPE_KEY);
         if (holder != null) {
-            return holder.profile != null ? (P) holder.profile : createProfile();
+            return holder.profile != null ? (P) holder.profile : createDefaultProfile();
         } else {
             // Recursive calls protection
             threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(null));
@@ -45,7 +45,7 @@ abstract public class AbstractProfileContext<P extends Profile> implements Profi
         // No profile in cache. Retrieve profile from source
         P profile = read();
         if (profile == null) {
-            profile = createProfile();
+            profile = createDefaultProfile();
         }
         threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
         return profile;

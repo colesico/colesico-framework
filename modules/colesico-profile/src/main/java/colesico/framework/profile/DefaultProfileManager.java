@@ -11,17 +11,17 @@ import java.util.Locale;
  * Data port as source for profile
  */
 @Singleton
-public class DefaultProfileContext extends AbstractProfileContext<DefaultProfile> {
+public class DefaultProfileManager extends AbstractProfileManager<DefaultProfile> {
 
     protected final Provider<DataPort> dataPortProv;
 
-    public DefaultProfileContext(ThreadScope threadScope, Provider<DataPort> dataPortProv) {
+    public DefaultProfileManager(ThreadScope threadScope, Provider<DataPort> dataPortProv) {
         super(threadScope);
         this.dataPortProv = dataPortProv;
     }
 
     @Override
-    public DefaultProfile createProfile() {
+    public DefaultProfile createDefaultProfile() {
         var profile = new DefaultProfile();
         profile.setLocale(Locale.getDefault());
         return profile;

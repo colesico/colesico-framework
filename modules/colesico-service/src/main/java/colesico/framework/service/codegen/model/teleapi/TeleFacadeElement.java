@@ -59,12 +59,12 @@ public class TeleFacadeElement {
     /**
      * Tele write context class
      */
-    private final Class<? extends TRContext> readContextClass;
+    private final Class<? extends TRContext<?,?>> readContextClass;
 
     /**
      * Tele read context class
      */
-    private final Class<? extends TWContext> writeContextClass;
+    private final Class<? extends TWContext<?,?>> writeContextClass;
 
     /**
      * Tele commands.
@@ -101,8 +101,8 @@ public class TeleFacadeElement {
 
     public TeleFacadeElement(Class<?> teleType,
                              Class<? extends TeleFacade.Commands> commandsClass,
-                             Class<? extends TRContext> readContextClass,
-                             Class<? extends TWContext> writeContextClass,
+                             Class<? extends TRContext<?,?>> readContextClass,
+                             Class<? extends TWContext<?,?>> writeContextClass,
                              IocQualifier iocQualifier) {
         this.teleType = teleType;
         this.commandsClass = commandsClass;

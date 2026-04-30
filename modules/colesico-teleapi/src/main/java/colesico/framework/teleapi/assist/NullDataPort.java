@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Type;
 
 @Singleton
-public final class NullDataPort implements DataPort<TRContext, TWContext> {
+public final class NullDataPort implements DataPort<TRContext<?, ?>, TWContext<?, ?>> {
 
     private static final Logger log = LoggerFactory.getLogger(NullDataPort.class);
     private final ThreadScope threadScope;
@@ -25,24 +25,24 @@ public final class NullDataPort implements DataPort<TRContext, TWContext> {
     }
 
     @Override
-    public Object read(TRContext context) {
+    public <V> V read(TRContext<?, ?> context) {
         log.debug("Read for context: {}", context);
         return null;
     }
 
     @Override
-    public Object read(Type valueType) {
+    public <V> V read(Type valueType) {
         log.debug("Read for value type: {}", valueType);
         return null;
     }
 
     @Override
-    public void write(Object value, TWContext context) {
+    public <V> void write(V value, TWContext<?, ?> context) {
         log.debug("Write value: {}; context: {}", value, context);
     }
 
     @Override
-    public void write(Object value, Type valueType) {
+    public <V> void write(V value, Type valueType) {
         log.debug("Write value: {}; value type: {}", value, valueType);
     }
 }

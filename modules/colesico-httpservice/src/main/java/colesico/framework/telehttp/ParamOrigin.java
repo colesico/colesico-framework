@@ -20,6 +20,8 @@ import java.lang.annotation.*;
 
 /**
  * Defines parameter reading origin
+ *
+ * @see Origin
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.PARAMETER})

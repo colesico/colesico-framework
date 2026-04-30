@@ -31,7 +31,7 @@ import java.lang.reflect.Type;
  * @param <R> Data reading context
  * @param <W> Data writing context
  */
-public interface DataPort<R extends TRContext, W extends TWContext> {
+public interface DataPort<R extends TRContext<?, ?>, W extends TWContext<?, ?>> {
 
     String READ_METHOD = "read";
     String WRITE_METHOD = "write";
@@ -53,7 +53,11 @@ public interface DataPort<R extends TRContext, W extends TWContext> {
      * Read value by type from remote request.
      * Internally must create appropriate reading context and forward to {@link DataPort#read(R)}
      */
-    <V> V read(Type valueType);
+    <V, A> V read(Type valueType, A attributes);
+
+    default <V> V read(Type valueType) {
+        return read(valueType, null);
+    }
 
     /**
      * Writes data to the remote response.
@@ -65,8 +69,12 @@ public interface DataPort<R extends TRContext, W extends TWContext> {
 
     /**
      * Write data by type to the response
-     * Internally must create appropriate writing context and forward to {@link DataPort#write(Object, Type)}
+     * Internally must create appropriate writing context and forward to {@link #write(V, Type)}
      */
-    <V> void write(V value, Type valueType);
+    <V, A> void write(V value, Type valueType, A attributes);
+
+    default <V> void write(V value, Type valueType) {
+        write(value, valueType, null);
+    }
 
 }

@@ -3,24 +3,39 @@ package colesico.framework.teleapi.dataport;
 import java.lang.reflect.Type;
 
 /**
- * Basic tele data write context
+ * Value tele-write context
  */
-abstract public class TWContext {
+abstract public class TWContext<T extends Type, A> {
 
     /**
      * Result type
      */
-    protected Type valueType;
+    protected T valueType;
 
-    public TWContext(Type valueType) {
+    /**
+     * Any custom attributes
+     * that can be used by the {@link TeleWriter}
+     * to value specific write
+     */
+    protected A attributes;
+
+    public TWContext(T valueType) {
         this.valueType = valueType;
     }
 
-    public Type valueType() {
+    public T valueType() {
         return valueType;
     }
 
-    public void setValueType(Type valueType) {
+    public void setValueType(T valueType) {
         this.valueType = valueType;
+    }
+
+    public A attributes() {
+        return attributes;
+    }
+
+    public void setAttributes(A attributes) {
+        this.attributes = attributes;
     }
 }

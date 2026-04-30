@@ -16,8 +16,6 @@
 
 package colesico.framework.telehttp;
 
-import java.util.Collection;
-
 /**
  * Data reading origin API and basic dictionary.
  * Origin defines strategy for reading string value from http context

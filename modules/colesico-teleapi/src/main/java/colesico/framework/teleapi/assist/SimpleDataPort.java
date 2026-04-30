@@ -13,11 +13,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
-public final class SimpleDataPort implements DataPort<TRContext, TWContext> {
+public final class SimpleDataPort implements DataPort<TRContext<?, ?>, TWContext<?, ?>> {
 
     private static final Logger log = LoggerFactory.getLogger(SimpleDataPort.class);
     private final ThreadScope threadScope;
-    private final Map<Type, ? super Object> values = new ConcurrentHashMap<>();
+    private final Map<Type, Object> values = new ConcurrentHashMap<>();
 
     public SimpleDataPort(ThreadScope threadScope) {
         this.threadScope = threadScope;
@@ -27,7 +27,7 @@ public final class SimpleDataPort implements DataPort<TRContext, TWContext> {
         threadScope.put(DataPort.SCOPE_KEY, this);
     }
 
-    public Map<Type, ? super Object> values() {
+    public Map<Type, ?> values() {
         return values;
     }
 
@@ -36,25 +36,25 @@ public final class SimpleDataPort implements DataPort<TRContext, TWContext> {
     }
 
     @Override
-    public Object read(TRContext context) {
+    public <V> V read(TRContext<?, ?> context) {
         log.debug("Read for context: {}", context);
-        return values.get(context.valueType());
+        return (V) values.get(context.valueType());
     }
 
     @Override
-    public Object read(Type valueType) {
+    public <V> V read(Type valueType) {
         log.debug("Read for value type: {}", valueType);
-        return values.get(valueType);
+        return (V) values.get(valueType);
     }
 
     @Override
-    public void write(Object value, TWContext context) {
+    public <V> void write(V value, TWContext<?, ?> context) {
         log.debug("Write value: {}; context: {}", value, context);
         values.put(context.valueType(), value);
     }
 
     @Override
-    public void write(Object value, Type valueType) {
+    public <V> void write(V value, Type valueType) {
         log.debug("Write value: {}; value type: {}", value, valueType);
         values.put(valueType, value);
     }
