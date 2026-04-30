@@ -54,9 +54,9 @@ public class UndertowHttpResponseDebug extends UndertowHttpResponse {
     }
 
     @Override
-    public void setContenType(String contentType) {
+    public void setContentType(String contentType) {
         log.debug("setContenType(" + contentType + "); responded=" + isResponded() + "; responseId=" + responseId);
-        super.setContenType(contentType);
+        super.setContentType(contentType);
     }
 
     @Override

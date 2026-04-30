@@ -21,7 +21,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.telehttp.HttpTWContext;
-import colesico.framework.telehttp.AbstractHttpTeleWriter;
+import colesico.framework.telehttp.HttpTeleWriter;
 import colesico.framework.security.Principal;
 import colesico.framework.security.assist.MACUtils;
 import colesico.framework.security.teleapi.PrincipalSerializer;
@@ -33,7 +33,7 @@ import java.util.Calendar;
 
 
 @Singleton
-public final class PrincipalWriter extends AbstractHttpTeleWriter<Principal, HttpTWContext<?, ?>> {
+public final class PrincipalWriter extends HttpTeleWriter<Principal, HttpTWContext<?, ?>> {
 
     public static final String COOKIE_NAME = "principal";
     public static final String HEADER_NAME = "X-Principal";

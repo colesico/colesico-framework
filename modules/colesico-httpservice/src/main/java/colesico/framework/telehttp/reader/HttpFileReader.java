@@ -29,7 +29,7 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class HttpFileReader implements HttpTeleReader<HttpFile, HttpTRContext<?, ?>> {
+public final class HttpFileReader extends HttpTeleReader<HttpFile, HttpTRContext<?, ?>> {
 
     private final Provider<HttpRequest> requestProv;
 

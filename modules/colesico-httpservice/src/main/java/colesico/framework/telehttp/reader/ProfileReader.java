@@ -36,7 +36,7 @@ import static colesico.framework.telehttp.writer.ProfileWriter.PROFILE_HEADER;
  * Profile default reader
  */
 @Singleton
-public class ProfileReader<P extends Profile, C extends HttpTRContext<?, ?>> implements HttpTeleReader<P, C> {
+public class ProfileReader<P extends Profile, C extends HttpTRContext<?, ?>> extends HttpTeleReader<P, C> {
 
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
 

@@ -26,7 +26,7 @@ public interface HttpResponse {
 
     void setStatusCode(Integer code);
 
-    void setContenType(String contentType);
+    void setContentType(String contentType);
 
     void setCookie(HttpCookie cookie);
 
@@ -55,8 +55,6 @@ public interface HttpResponse {
 
     /**
      * Returns true if the server has sent any data to a client
-     *
-     * @return
      */
     boolean isResponded();
 

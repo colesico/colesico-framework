@@ -59,7 +59,7 @@ public class StaticContentImpl implements StaticContent {
             resourcePath = resourceUtils.localize(resourcePath);
         }
 
-        httpContext.response().setContenType(MimeAssist.getContentType(resourcePath));
+        httpContext.response().setContentType(MimeAssist.getContentType(resourcePath));
 
         try (InputStream is = resourceUtils.resourceStream(resourcePath);
              OutputStream os = httpContext.response().outputStream()) {

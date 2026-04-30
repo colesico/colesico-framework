@@ -34,7 +34,7 @@ import java.util.Base64;
 import java.util.StringTokenizer;
 
 @Singleton
-public class PrincipalReader implements HttpTeleReader<Principal, HttpTRContext<?, ?>> {
+public class PrincipalReader extends HttpTeleReader<Principal, HttpTRContext<?, ?>> {
 
     protected final PrincipalHttpConfigPrototype config;
     protected final PrincipalSerializer principalSerializer;

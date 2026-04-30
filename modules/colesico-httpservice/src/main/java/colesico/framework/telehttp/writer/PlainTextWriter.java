@@ -2,14 +2,14 @@ package colesico.framework.telehttp.writer;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.telehttp.HttpTWContext;
-import colesico.framework.telehttp.AbstractHttpTeleWriter;
+import colesico.framework.telehttp.HttpTeleWriter;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 @Singleton
-public final class PlainTextWriter extends AbstractHttpTeleWriter<Object, HttpTWContext<?, ?>> {
+public final class PlainTextWriter extends HttpTeleWriter<Object, HttpTWContext<?, ?>> {
 
     private static final String CONTENT_TYPE = "text/plain; charset=utf-8";
 
@@ -41,6 +41,8 @@ public final class PlainTextWriter extends AbstractHttpTeleWriter<Object, HttpTW
             str = value.toString();
         }
 
-        response().sendText(str, CONTENT_TYPE, 200);
+        response().sendText(str,
+                context.contentType() != null ? context.contentType() : CONTENT_TYPE,
+                context.statusCode() != null ? context.statusCode() : 200);
     }
 }

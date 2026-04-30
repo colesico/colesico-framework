@@ -52,7 +52,7 @@ public final class WebletTRContext extends HttpTRContext<Type,Object> {
         return new WebletTRContext(valueType, null, paramName, WebletOrigin.AUTO, null);
     }
 
-    public static WebletTRContext of(Type valueType, String paramName, String originName, Class<? extends WebletTeleReader> readerClass) {
+    public static WebletTRContext of(Type valueType, String paramName, String originName, Class<? extends WebletTeleReader<?>> readerClass) {
         return new WebletTRContext(valueType, null, paramName, originName, readerClass);
     }
 

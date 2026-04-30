@@ -24,20 +24,10 @@ abstract public class HttpTRContext<T extends Type, P> extends TRContext<T, P> {
      */
     private final String originName;
 
-    public HttpTRContext(T valueType, P payload, String paramName, String originName) {
+    public HttpTRContext(T valueType, String paramName, String originName, P payload) {
         super(valueType, payload);
         this.paramName = paramName;
         this.originName = originName;
-    }
-
-    public static <T extends Type, P> HttpTRContext<T, P> instance(T valueType, String paramName, String originName) {
-        return new HttpTRContext<>(valueType, null, paramName, originName) {
-        };
-    }
-
-    public static <T extends Type, P> HttpTRContext<T, P> instance(T valueType, P payload, String paramName, String originName) {
-        return new HttpTRContext<>(valueType, payload, paramName, originName) {
-        };
     }
 
     /**

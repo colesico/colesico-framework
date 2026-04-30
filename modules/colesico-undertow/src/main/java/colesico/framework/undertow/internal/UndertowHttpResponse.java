@@ -56,7 +56,7 @@ public class UndertowHttpResponse implements HttpResponse {
     }
 
     @Override
-    public void setContenType(String contentType) {
+    public void setContentType(String contentType) {
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, contentType);
     }
 
