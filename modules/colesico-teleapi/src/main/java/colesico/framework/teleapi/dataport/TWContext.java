@@ -10,7 +10,7 @@ abstract public class TWContext<T extends Type, A> {
     /**
      * Result type
      */
-    protected T valueType;
+    protected final T valueType;
 
     /**
      * Any custom attributes
@@ -23,12 +23,13 @@ abstract public class TWContext<T extends Type, A> {
         this.valueType = valueType;
     }
 
-    public T valueType() {
-        return valueType;
+    public TWContext(T valueType, A attributes) {
+        this.valueType = valueType;
+        this.attributes = attributes;
     }
 
-    public void setValueType(T valueType) {
-        this.valueType = valueType;
+    public T valueType() {
+        return valueType;
     }
 
     public A attributes() {

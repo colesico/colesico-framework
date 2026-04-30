@@ -42,8 +42,8 @@ public final class SimpleDataPort implements DataPort<TRContext<?, ?>, TWContext
     }
 
     @Override
-    public <V> V read(Type valueType) {
-        log.debug("Read for value type: {}", valueType);
+    public <V, A> V read(Type valueType, A attributes) {
+        log.debug("Read for value type: {}; attributes: {}", valueType, attributes);
         return (V) values.get(valueType);
     }
 
@@ -54,8 +54,8 @@ public final class SimpleDataPort implements DataPort<TRContext<?, ?>, TWContext
     }
 
     @Override
-    public <V> void write(V value, Type valueType) {
-        log.debug("Write value: {}; value type: {}", value, valueType);
+    public <V, A> void write(V value, Type valueType, A attributes) {
+        log.debug("Write value: {}; value type: {}; attributes: {}", value, valueType, attributes);
         values.put(valueType, value);
     }
 

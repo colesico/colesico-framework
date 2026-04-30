@@ -7,7 +7,7 @@ import java.lang.reflect.Type;
 /**
  * Basic tele-reading context for interaction via http
  */
-abstract public class HttpTRContext extends TRContext {
+abstract public class HttpTRContext<T extends Type, A> extends TRContext<T,A> {
 
     /**
      * Http param name.
@@ -24,8 +24,14 @@ abstract public class HttpTRContext extends TRContext {
      */
     private final String originName;
 
-    protected HttpTRContext(Type valueType, String paramName, String originName) {
+    public HttpTRContext(T valueType, String paramName, String originName) {
         super(valueType);
+        this.paramName = paramName;
+        this.originName = originName;
+    }
+
+    public HttpTRContext(T valueType, A attributes, String paramName, String originName) {
+        super(valueType, attributes);
         this.paramName = paramName;
         this.originName = originName;
     }

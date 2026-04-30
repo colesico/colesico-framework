@@ -10,7 +10,7 @@ abstract public class TRContext<T extends Type, A> {
     /**
      * Target value type
      */
-    protected T valueType;
+    protected final T valueType;
 
     /**
      * Any custom attributes
@@ -30,10 +30,6 @@ abstract public class TRContext<T extends Type, A> {
 
     public Type valueType() {
         return valueType;
-    }
-
-    public void setValueType(T valueType) {
-        this.valueType = valueType;
     }
 
     public A attributes() {
