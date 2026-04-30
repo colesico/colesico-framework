@@ -25,8 +25,9 @@ module colesico.framework.httpservice {
     exports colesico.framework.telehttp;
     exports colesico.framework.telehttp.assist;
     exports colesico.framework.telehttp.origin;
-    exports colesico.framework.telehttp.reader;
-    exports colesico.framework.telehttp.writer;
+    exports colesico.framework.telehttp.readwrite;
+    exports colesico.framework.telehttp.readwrite.principal;
+    exports colesico.framework.telehttp.readwrite.profile;
     exports colesico.framework.telehttp.codegen;
     exports colesico.framework.telehttp.internal to colesico.framework.ioc;
 
@@ -37,8 +38,6 @@ module colesico.framework.httpservice {
 
     exports colesico.framework.httpserver;
     exports colesico.framework.httpserver.internal to colesico.framework.ioc;
-    exports colesico.framework.telehttp.rw.profile;
-    exports colesico.framework.telehttp.rw;
-    exports colesico.framework.telehttp.rw.principal;
+
 
 }

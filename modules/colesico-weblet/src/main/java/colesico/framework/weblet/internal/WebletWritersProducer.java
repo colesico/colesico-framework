@@ -16,9 +16,9 @@
 
 package colesico.framework.weblet.internal;
 
-import colesico.framework.telehttp.rw.PlainTextWriter;
-import colesico.framework.telehttp.rw.principal.PrincipalWriter;
-import colesico.framework.telehttp.rw.profile.ProfileWriter;
+import colesico.framework.telehttp.readwrite.PlainTextWriter;
+import colesico.framework.telehttp.readwrite.principal.PrincipalWriter;
+import colesico.framework.telehttp.readwrite.profile.ProfileWriter;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;

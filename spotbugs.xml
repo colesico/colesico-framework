@@ -15,7 +15,7 @@
         <Bug pattern="VO_VOLATILE_INCREMENT" />
     </Match>
     <Match>
-        <Class name="colesico.framework.telehttp.rw.BooleanReader" />
+        <Class name="colesico.framework.telehttp.readwrite.BooleanReader" />
         <Bug pattern="NP_BOOLEAN_RETURN_NULL" />
     </Match>
     <Match>
@@ -27,7 +27,7 @@
         <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE" />
     </Match>
     <Match>
-        <Class name="colesico.framework.telehttp.rw.PlainTextWriter" />
+        <Class name="colesico.framework.telehttp.readwrite.PlainTextWriter" />
         <Bug pattern="NP_NULL_ON_SOME_PATH" />
     </Match>
     <Match>

@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.rw.principal;
+package colesico.framework.telehttp.readwrite.principal;
 
 import colesico.framework.http.CookieFactory;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
+import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTWContext;
 import colesico.framework.telehttp.AbstractHttpTeleWriter;
 import colesico.framework.security.Principal;
@@ -33,7 +34,7 @@ import java.util.Calendar;
 
 
 @Singleton
-public final class PrincipalWriter<C extends HttpTWContext> extends AbstractHttpTeleWriter<Principal, C> {
+public final class PrincipalWriter extends AbstractHttpTeleWriter<Principal, HttpTWContext<?, ?>> {
 
     public static final String COOKIE_NAME = "principal";
     public static final String HEADER_NAME = "X-Principal";
@@ -53,7 +54,7 @@ public final class PrincipalWriter<C extends HttpTWContext> extends AbstractHttp
     }
 
     @Override
-    public void write(Principal principal, C context) {
+    public void write(Principal principal, HttpTWContext<?, ?> context) {
         String principalValue;
         Calendar expires = Calendar.getInstance();
 

@@ -23,10 +23,10 @@ import colesico.framework.profile.Profile;
 import colesico.framework.restlet.teleapi.RestletTeleReader;
 import colesico.framework.restlet.teleapi.reader.*;
 import colesico.framework.security.Principal;
-import colesico.framework.telehttp.rw.principal.PrincipalReader;
-import colesico.framework.telehttp.rw.profile.ProfileReader;
+import colesico.framework.telehttp.readwrite.principal.PrincipalReader;
+import colesico.framework.telehttp.readwrite.profile.ProfileReader;
 
-import colesico.framework.telehttp.rw.*;
+import colesico.framework.telehttp.readwrite.*;
 import jakarta.inject.Singleton;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

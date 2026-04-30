@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.rw.profile;
+package colesico.framework.telehttp.readwrite.profile;
 
 import colesico.framework.http.CookieFactory;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.assist.LocaleProperty;
+import colesico.framework.profile.assist.LocaleAttribute;
 import colesico.framework.telehttp.HttpTWContext;
 import colesico.framework.telehttp.AbstractHttpTeleWriter;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
@@ -53,9 +53,9 @@ public class ProfileWriter<P extends Profile, C extends HttpTWContext<?, ?>> ext
     /**
      *  Override this method to process different profile type
      */
-    protected void exportToProperties(P profile, Map<String, String> properties) {
-        var localeProperty = LocaleProperty.of(profile);
-        properties.put(localeProperty.name(), localeProperty.asString());
+    protected void exportToAttributes(P profile, Map<String, String> attributes) {
+        var localeAttribute = LocaleAttribute.of(profile);
+        attributes.put(localeAttribute.name(), localeAttribute.asString());
     }
 
     @Override
@@ -64,9 +64,9 @@ public class ProfileWriter<P extends Profile, C extends HttpTWContext<?, ?>> ext
         Calendar expires = Calendar.getInstance();
         String profileStr;
         if (profile != null) {
-            Map<String, String> properties = new HashMap<>();
-            exportToProperties(profile, properties);
-            profileStr = TeleHttpUtils.stringifyProperties(properties);
+            Map<String, String> attributes = new HashMap<>();
+            exportToAttributes(profile, attributes);
+            profileStr = TeleHttpUtils.stringifyAttributes(attributes);
             expires.add(Calendar.DAY_OF_MONTH, config.cookieValidityDays());
         } else {
             profileStr = null;

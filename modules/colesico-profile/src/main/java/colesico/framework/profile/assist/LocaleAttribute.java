@@ -5,22 +5,22 @@ import colesico.framework.profile.Profile;
 import java.util.Locale;
 
 /**
- * Locale property helper
+ * Locale attribute helper
  */
-public class LocaleProperty<P extends Profile> extends AbstractProfileProperty<P, Locale> {
+public class LocaleAttribute<P extends Profile> extends AbstractProfileAttribute<P, Locale> {
 
     /**
-     * Locale property name
+     * Locale attribute name
      */
     static final String PROPERTY_NAME = "locale";
 
 
-    public LocaleProperty(P profile, String name) {
+    public LocaleAttribute(P profile, String name) {
         super(profile, name);
     }
 
-    public static <P extends Profile> LocaleProperty<P> of(P profile) {
-        return new LocaleProperty<>(profile, PROPERTY_NAME);
+    public static <P extends Profile> LocaleAttribute<P> of(P profile) {
+        return new LocaleAttribute<>(profile, PROPERTY_NAME);
     }
 
     public Locale value() {

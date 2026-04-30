@@ -14,19 +14,30 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.rw.profile;
+package colesico.framework.telehttp.readwrite.principal;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
+import colesico.framework.security.assist.MACUtils;
 
+import java.nio.charset.StandardCharsets;
+
+/**
+ * Configuration prototype to configure security principal reading/writing
+ */
 @ConfigPrototype(model = ConfigModel.SINGLE)
-abstract public class ProfileHttpConfigPrototype {
+abstract public class PrincipalHttpConfigPrototype {
 
-    /**
-     * Profile cookie validity days
-     */
+    public byte[] signatureKey() {
+        return "0123456789ABCDEF".getBytes(StandardCharsets.UTF_8);
+    }
+
+    public String signatureAlgorithm() {
+        return MACUtils.HmacSHA256;
+    }
+
     public int cookieValidityDays() {
-        return 365;
+        return 14;
     }
 
 }

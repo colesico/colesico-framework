@@ -14,8 +14,8 @@ public final class RouterTeleFacadeElement extends TeleFacadeElement {
 
     public RouterTeleFacadeElement(Class<?> teleType,
                                    Class<? extends TeleFacade.Commands> commandsClass,
-                                   Class<? extends TRContext> readContextClass,
-                                   Class<? extends TWContext> writeContextClass,
+                                   Class<? extends TRContext<?,?>> readContextClass,
+                                   Class<? extends TWContext<?,?>> writeContextClass,
                                    IocQualifier iocQualifier,
                                    RoutesBuilder routesBuilder) {
         super(teleType, commandsClass, readContextClass, writeContextClass, iocQualifier);

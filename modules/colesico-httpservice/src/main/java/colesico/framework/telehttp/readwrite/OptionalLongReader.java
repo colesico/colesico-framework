@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.rw;
+package colesico.framework.telehttp.readwrite;
 
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.telehttp.HttpTRContext;
@@ -25,34 +25,36 @@ import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.OptionalLong;
 
 /**
  * @author Vladlen Larionov
  */
 @Singleton
-public final class LocalDateReader<C extends HttpTRContext> extends OriginTeleReader<LocalDate, C> {
+public final class OptionalLongReader extends OriginTeleReader<OptionalLong,HttpTRContext<?, ?>> {
 
-    private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final Messages messages;
 
     @Inject
-    public LocalDateReader(OriginFactory originFactory, Messages messages) {
+    public OptionalLongReader(OriginFactory originFactory, Messages messages) {
         super(originFactory);
         this.messages = messages;
     }
 
     @Override
-    public LocalDate read(C ctx) {
+    public OptionalLong read(HttpTRContext<?, ?> ctx) {
         try {
             String val = readString(ctx);
-            if (StringUtils.isEmpty(val)) {
+            if (StringUtils.isBlank(val)) {
                 return null;
             }
-            return LocalDate.parse(val, dtf);
-        } catch (Exception ex) {
-            throw new TeleException(messages.invalidDateFormat(ctx.paramName()));
+            if (val.equals("null")) {
+                return OptionalLong.empty();
+            } else {
+                return OptionalLong.of(Long.parseLong(val));
+            }
+        } catch (Exception var3) {
+            throw new TeleException(messages.invalidNumberFormat(ctx.paramName()));
         }
     }
 }

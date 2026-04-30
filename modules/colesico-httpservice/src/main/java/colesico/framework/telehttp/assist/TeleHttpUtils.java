@@ -65,45 +65,45 @@ public class TeleHttpUtils {
         return sb.toString();
     }
 
-    public static String stringifyProperties(Map<String, String> properties) {
-        if (properties == null || properties.isEmpty()) {
+    public static String stringifyAttributes(Map<String, String> attributes) {
+        if (attributes == null || attributes.isEmpty()) {
             return null;
         }
 
-        StringBuilder tagsStr = new StringBuilder();
+        StringBuilder attributesStr = new StringBuilder();
         try {
-            for (Map.Entry<String, String> e : properties.entrySet()) {
-                if (!tagsStr.isEmpty()) {
-                    tagsStr.append("&");
+            for (Map.Entry<String, String> e : attributes.entrySet()) {
+                if (!attributesStr.isEmpty()) {
+                    attributesStr.append("&");
                 }
                 String name = e.getKey();
                 String value = URLEncoder.encode(e.getValue(), StandardCharsets.UTF_8);
-                tagsStr.append(name).append("=").append(value);
+                attributesStr.append(name).append("=").append(value);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        return tagsStr.toString();
+        return attributesStr.toString();
     }
 
-    public static Map<String, String> parseProperties(String propertiesStr) {
-        if (StringUtils.isBlank(propertiesStr)) {
+    public static Map<String, String> parseAttributes(String attributesStr) {
+        if (StringUtils.isBlank(attributesStr)) {
             return Map.of();
         }
 
-        Map<String, String> tags = new HashMap<>();
+        Map<String, String> attributes = new HashMap<>();
 
-        StringTokenizer st = new StringTokenizer(propertiesStr, "&");
+        StringTokenizer st = new StringTokenizer(attributesStr, "&");
         while (st.hasMoreTokens()) {
             String tag = st.nextToken();
             String[] keyVal = StringUtils.split(tag, "=");
             String key = keyVal[0];
             String val = URLDecoder.decode(keyVal[1], StandardCharsets.UTF_8);
-            tags.put(key, val);
+            attributes.put(key, val);
         }
 
-        return tags;
+        return attributes;
     }
 
 }

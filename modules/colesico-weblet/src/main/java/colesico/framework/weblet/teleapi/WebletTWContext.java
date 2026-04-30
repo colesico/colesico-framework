@@ -25,7 +25,7 @@ import java.lang.reflect.Type;
  *
  * @author Vladlen Larionov
  */
-public final class WebletTWContext extends HttpTWContext {
+public final class WebletTWContext extends HttpTWContext<Type, Object> {
 
     public static final String OF_METHOD = "of";
 
@@ -33,22 +33,22 @@ public final class WebletTWContext extends HttpTWContext {
      * Custom writer class or null.
      * If null - default writer will be used
      */
-    private final Class<? extends WebletTeleWriter> writerClass;
+    private final Class<? extends WebletTeleWriter<?>> writerClass;
 
-    private WebletTWContext(Type valueType, Class<? extends WebletTeleWriter> writerClass) {
-        super(valueType);
+    public WebletTWContext(Type valueType, Object payload, Class<? extends WebletTeleWriter<?>> writerClass) {
+        super(valueType, payload);
         this.writerClass = writerClass;
     }
 
     public static WebletTWContext of(Type valueType) {
-        return new WebletTWContext(valueType, null);
+        return new WebletTWContext(valueType, null, null);
     }
 
-    public static WebletTWContext of(Type valueType, Class<? extends WebletTeleWriter> writerClass) {
-        return new WebletTWContext(valueType, writerClass);
+    public static WebletTWContext of(Type valueType, Class<? extends WebletTeleWriter<?>> writerClass) {
+        return new WebletTWContext(valueType, null, writerClass);
     }
 
-    public Class<? extends WebletTeleWriter> writerClass() {
+    public Class<? extends WebletTeleWriter<?>> writerClass() {
         return writerClass;
     }
 }

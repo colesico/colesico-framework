@@ -31,8 +31,8 @@ public final class NullDataPort implements DataPort<TRContext<?, ?>, TWContext<?
     }
 
     @Override
-    public <V, A> V read(Type valueType, A attributes) {
-        log.debug("Read for value type: {}; attributes: {}", valueType, attributes);
+    public <V, A> V read(Type valueType, A payload) {
+        log.debug("Read for value type: {}; attributes: {}", valueType, payload);
         return null;
     }
 
@@ -42,7 +42,7 @@ public final class NullDataPort implements DataPort<TRContext<?, ?>, TWContext<?
     }
 
     @Override
-    public <V, A> void write(V value, Type valueType, A attributes) {
-        log.debug("Write value: {}; value type: {}; attributes: {}", value, valueType, attributes);
+    public <V, A> void write(V value, Type valueType, A payload) {
+        log.debug("Write value: {}; value type: {}; attributes: {}", value, valueType, payload);
     }
 }

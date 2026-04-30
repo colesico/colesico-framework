@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.rw.profile;
+package colesico.framework.telehttp.readwrite.profile;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.profile.*;
-import colesico.framework.profile.assist.LocaleProperty;
+import colesico.framework.profile.assist.LocaleAttribute;
+import colesico.framework.profile.assist.ProfileAttribute;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTeleReader;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
@@ -28,13 +29,13 @@ import jakarta.inject.Singleton;
 
 import java.util.*;
 
-import static colesico.framework.telehttp.rw.profile.ProfileWriter.PROFILE_HEADER;
+import static colesico.framework.telehttp.readwrite.profile.ProfileWriter.PROFILE_HEADER;
 
 /**
  * Profile default reader
  */
 @Singleton
-public class ProfileReader<P extends Profile, C extends HttpTRContext> implements HttpTeleReader<P, C> {
+public class ProfileReader<P extends Profile, C extends HttpTRContext<?,?>> implements HttpTeleReader<P, C> {
 
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
 
@@ -46,8 +47,8 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
         this.config = config;
     }
 
-    protected void readLocale(ProfileAttribute<Profile, Locale> attribute, HttpRequest request, Map<String, String> profileProperties) {
-        readAttribute(attribute, request, profileProperties);
+    protected void readLocale(LocaleAttribute<?> attribute, Map<String, String> attributes, HttpRequest request) {
+        readAttribute(attribute, attributes);
         if (!attribute.hasValue()) {
             String acceptLangs = request.headers().get(ACCEPT_LANGUAGE_HEADER);
             Locale locale = TeleHttpUtils.getAcceptedLanguage(acceptLangs);
@@ -57,38 +58,39 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext> implement
         }
     }
 
-    protected void readAttribute(ProfileAttribute<?, ?> attribute, HttpRequest request, Map<String, String> profileProperties) {
-        var value = profileProperties.get(attribute.name());
+    protected void readAttribute(ProfileAttribute<?, ?> attribute, Map<String, String> attributes) {
+        var value = attributes.get(attribute.name());
         if (value != null) {
             attribute.setString(value);
         }
     }
 
     /**
-     *  Override this method to process different profile type
+     * Override this method to process different profile type
      */
-    protected void importFromProperties(P profile, Map<String, String> properties,HttpRequest request) {
-        var localeProperty = LocaleProperty.of(profile);
-        properties.put(localeProperty.name(), localeProperty.asString());
+    protected void importFromAttributes(P profile, Map<String, String> attributes, HttpRequest request) {
+        var localeAttribute = LocaleAttribute.of(profile);
+        readLocale(localeAttribute, attributes, request);
     }
 
     @Override
     public final P read(C context) {
         HttpRequest request = httpContextProv.get().request();
 
-        Map<String, String> properties = new HashMap<>();
+        Map<String, String> attributes = new HashMap<>();
         var profileCookie = request.cookies().get(ProfileWriter.PROFILE_COOKIE);
         if (profileCookie != null) {
-            properties.putAll(TeleHttpUtils.parseProperties(profileCookie.setValue()));
+            attributes.putAll(TeleHttpUtils.parseAttributes(profileCookie.setValue()));
         }
 
         var profileHeader = request.cookies().get(PROFILE_HEADER);
         if (profileHeader != null) {
-            properties.putAll(TeleHttpUtils.parseProperties(profileHeader.setValue()));
+            attributes.putAll(TeleHttpUtils.parseAttributes(profileHeader.setValue()));
         }
 
-        P profile = (P) context.attributes();
-        importFromProperties(profile,properties);
+        // Get default profile instance from context
+        P profile = (P) context.payload();
+        importFromAttributes(profile, attributes, request);
         return profile;
     }
 

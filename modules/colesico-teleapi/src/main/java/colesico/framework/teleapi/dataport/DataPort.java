@@ -53,14 +53,14 @@ public interface DataPort<R extends TRContext<?, ?>, W extends TWContext<?, ?>> 
      * Read value by type from remote request.
      * Internally must create appropriate reading context and forward to {@link DataPort#read(R)}
      */
-    <V, A> V read(Type valueType, A attributes);
+    <V, P> V read(Type valueType, P payload);
 
     default <V> V read(Type valueType) {
         return read(valueType, null);
     }
 
     /**
-     * Writes data to the remote response.
+     * Writes value to the remote response.
      *
      * @param context data writing context
      * @param <V>     writing value type
@@ -68,10 +68,10 @@ public interface DataPort<R extends TRContext<?, ?>, W extends TWContext<?, ?>> 
     <V> void write(V value, W context);
 
     /**
-     * Write data by type to the response
+     * Write value by type to the response
      * Internally must create appropriate writing context and forward to {@link #write(V, Type)}
      */
-    <V, A> void write(V value, Type valueType, A attributes);
+    <V, P> void write(V value, Type valueType, P payload);
 
     default <V> void write(V value, Type valueType) {
         write(value, valueType, null);

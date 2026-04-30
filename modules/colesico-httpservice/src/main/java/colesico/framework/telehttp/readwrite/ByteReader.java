@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.rw;
+package colesico.framework.telehttp.readwrite;
 
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.telehttp.HttpTRContext;
@@ -30,24 +30,24 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class IntegerReader<C extends HttpTRContext> extends OriginTeleReader<Integer, C> {
+public final class ByteReader extends OriginTeleReader<Byte, HttpTRContext<?, ?>> {
 
     private final Messages messages;
 
     @Inject
-    public IntegerReader(OriginFactory originFactory, Messages messages) {
+    public ByteReader(OriginFactory originFactory, Messages messages) {
         super(originFactory);
         this.messages = messages;
     }
 
     @Override
-    public Integer read(C ctx) {
+    public Byte read(HttpTRContext<?, ?> ctx) {
         try {
             String val = readString(ctx);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }
-            return Integer.parseInt(val);
+            return Byte.parseByte(val);
         } catch (Exception ex) {
             throw new TeleException(messages.invalidNumberFormat(ctx.paramName()));
         }

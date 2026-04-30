@@ -41,9 +41,9 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
 
     abstract protected Class<? extends TeleFacade.Commands> commandsClass();
 
-    abstract protected Class<? extends TRContext> readContextClass();
+    abstract protected Class<? extends TRContext<?,?>> readContextClass();
 
-    abstract protected Class<? extends TWContext> writeContextClass();
+    abstract protected Class<? extends TWContext<?,?>> writeContextClass();
 
     @Override
     protected void processTeleCommand(TeleCommandElement teleCommandElement) {

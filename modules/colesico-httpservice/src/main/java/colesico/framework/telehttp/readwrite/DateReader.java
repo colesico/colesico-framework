@@ -14,43 +14,42 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.rw;
+package colesico.framework.telehttp.readwrite;
 
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.OriginFactory;
 import colesico.framework.telehttp.OriginTeleReader;
+import colesico.framework.telehttp.assist.ISO8601DateParser;
 import colesico.framework.telehttp.t9n.Messages;
 import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+
+import java.util.Date;
 
 /**
  * @author Vladlen Larionov
  */
 @Singleton
-public final class LocalTimeReader<C extends HttpTRContext> extends OriginTeleReader<LocalTime,C> {
-
-    private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+public final class DateReader extends OriginTeleReader<Date, HttpTRContext<?, ?>> {
     private final Messages messages;
 
     @Inject
-    public LocalTimeReader(OriginFactory originFactory, Messages messages) {
+    public DateReader(OriginFactory originFactory, Messages messages) {
         super(originFactory);
         this.messages = messages;
     }
 
     @Override
-    public LocalTime read(C ctx) {
+    public Date read(HttpTRContext<?, ?> ctx) {
         try {
             String val = readString(ctx);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }
-            return LocalTime.parse(val, dtf);
+            return ISO8601DateParser.parse(val);
         } catch (Exception ex) {
             throw new TeleException(messages.invalidDateFormat(ctx.paramName()));
         }

@@ -7,19 +7,19 @@ import java.lang.reflect.Type;
 /**
  * Basic tele-writing context for interaction via http
  */
-abstract public class HttpTWContext<T extends Type, A> extends TWContext<T, A> {
+abstract public class HttpTWContext<T extends Type, P> extends TWContext<T, P> {
 
-    public HttpTWContext(T valueType, A attribute) {
-        super(valueType, attribute);
+    public HttpTWContext(T valueType, P payload) {
+        super(valueType, payload);
     }
 
-    public static <T extends Type, A> HttpTWContext<T, A> instance(T valueType) {
+    public static <T extends Type, P> HttpTWContext<T, P> instance(T valueType) {
         return new HttpTWContext<>(valueType, null) {
         };
     }
 
-    public static <T extends Type, A> HttpTWContext<T, A> instance(T valueType, A attribute) {
-        return new HttpTWContext<>(valueType, attribute) {
+    public static <T extends Type, P> HttpTWContext<T, P> instance(T valueType, P payload) {
+        return new HttpTWContext<>(valueType, payload) {
         };
     }
 

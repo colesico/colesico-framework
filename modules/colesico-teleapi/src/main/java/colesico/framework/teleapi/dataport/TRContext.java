@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 /**
  * Value tele-read context.
  */
-abstract public class TRContext<T extends Type, A> {
+abstract public class TRContext<T extends Type, P> {
 
     /**
      * Target value type
@@ -13,23 +13,22 @@ abstract public class TRContext<T extends Type, A> {
     protected final T valueType;
 
     /**
-     * Any custom attributes
-     * that can be used by the {@link TeleReader}
+     * Any custom data that can be used by the {@link TeleReader}
      * to value specific read
      */
-    protected final A attributes;
+    protected final P payload;
 
-    public TRContext(T valueType, A attributes) {
+    public TRContext(T valueType, P payload) {
         this.valueType = valueType;
-        this.attributes = attributes;
+        this.payload = payload;
     }
 
     public Type valueType() {
         return valueType;
     }
 
-    public A attributes() {
-        return attributes;
+    public P payload() {
+        return payload;
     }
 
 }

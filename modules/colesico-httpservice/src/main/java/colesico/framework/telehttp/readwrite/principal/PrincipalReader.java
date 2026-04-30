@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.rw.principal;
+package colesico.framework.telehttp.readwrite.principal;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
@@ -32,7 +32,7 @@ import java.util.Base64;
 import java.util.StringTokenizer;
 
 @Singleton
-public class PrincipalReader<C extends HttpTRContext> implements HttpTeleReader<Principal, C> {
+public class PrincipalReader implements HttpTeleReader<Principal, HttpTRContext<?, ?>> {
 
     protected final PrincipalHttpConfigPrototype config;
     protected final PrincipalSerializer principalSerializer;
@@ -46,7 +46,7 @@ public class PrincipalReader<C extends HttpTRContext> implements HttpTeleReader<
     }
 
     @Override
-    public Principal read(C context) {
+    public Principal read(HttpTRContext<?, ?> context) {
 
         HttpRequest request = httpContextProv.get().request();
         // Retrieve principal from http header

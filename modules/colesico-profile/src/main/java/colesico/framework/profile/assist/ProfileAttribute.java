@@ -3,10 +3,10 @@ package colesico.framework.profile.assist;
 import colesico.framework.profile.Profile;
 
 /**
- * Profile property helper.
- * Used to serialize and deserialize an property value
+ * Profile attribute helper.
+ * Used to serialize and deserialize an attribute value
  */
-public interface ProfileProperty<P extends Profile, V> {
+public interface ProfileAttribute<P extends Profile, V> {
 
     /**
      * Returns parent profile

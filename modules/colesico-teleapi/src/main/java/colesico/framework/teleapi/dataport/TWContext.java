@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 /**
  * Value tele-write context
  */
-abstract public class TWContext<T extends Type, A> {
+abstract public class TWContext<T extends Type, P> {
 
     /**
      * Type of value to be written
@@ -13,23 +13,23 @@ abstract public class TWContext<T extends Type, A> {
     protected final T valueType;
 
     /**
-     * Any custom attributes
+     * Any custom data
      * that can be used by the {@link TeleWriter}
      * to value specific write
      */
-    protected final A attributes;
+    protected final P payload;
 
-    public TWContext(T valueType, A attributes) {
+    public TWContext(T valueType, P payload) {
         this.valueType = valueType;
-        this.attributes = attributes;
+        this.payload = payload;
     }
 
     public T valueType() {
         return valueType;
     }
 
-    public A attributes() {
-        return attributes;
+    public P payload() {
+        return payload;
     }
 
 }

@@ -25,7 +25,7 @@ import java.lang.reflect.Type;
  *
  * @author Vladlen Larionov
  */
-public final class WebletTRContext extends HttpTRContext {
+public final class WebletTRContext extends HttpTRContext<Type,Object> {
 
     public static final String OF_METHOD = "of";
 
@@ -33,30 +33,30 @@ public final class WebletTRContext extends HttpTRContext {
      * Custom reader class or null.
      * If null - default reader will be used to  read the parameter
      */
-    private final Class<? extends WebletTeleReader> readerClass;
+    private final Class<? extends WebletTeleReader<?>> readerClass;
 
-    private WebletTRContext(Type valueType, String paramName, String originName, Class<? extends WebletTeleReader> readerClass) {
-        super(valueType, paramName, originName);
+    public WebletTRContext(Type valueType, Object payload, String paramName, String originName, Class<? extends WebletTeleReader<?>> readerClass) {
+        super(valueType, payload, paramName, originName);
         this.readerClass = readerClass;
     }
 
-    public static WebletTRContext of(Type valueType) {
-        return new WebletTRContext(valueType, null, null, null);
+    public static  WebletTRContext of(Type valueType) {
+        return new WebletTRContext(valueType, null,null, null, null);
     }
 
     public static WebletTRContext of(Type valueType, String paramName, String originName) {
-        return new WebletTRContext(valueType, paramName, originName, null);
+        return new WebletTRContext(valueType,null, paramName, originName, null);
     }
 
     public static WebletTRContext of(Type valueType, String paramName) {
-        return new WebletTRContext(valueType, paramName, WebletOrigin.AUTO, null);
+        return new WebletTRContext(valueType, null, paramName, WebletOrigin.AUTO, null);
     }
 
     public static WebletTRContext of(Type valueType, String paramName, String originName, Class<? extends WebletTeleReader> readerClass) {
-        return new WebletTRContext(valueType, paramName, originName, readerClass);
+        return new WebletTRContext(valueType, null, paramName, originName, readerClass);
     }
 
-    public Class<? extends WebletTeleReader> readerClass() {
+    public Class<? extends WebletTeleReader<?>> readerClass() {
         return readerClass;
     }
 

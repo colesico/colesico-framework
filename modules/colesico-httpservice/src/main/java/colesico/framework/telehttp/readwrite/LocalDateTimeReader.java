@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.rw;
+package colesico.framework.telehttp.readwrite;
 
 import colesico.framework.teleapi.TeleException;
 import colesico.framework.telehttp.HttpTRContext;
@@ -32,7 +32,7 @@ import java.time.format.DateTimeFormatter;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class LocalDateTimeReader<C extends HttpTRContext> extends OriginTeleReader<LocalDateTime, C> {
+public final class LocalDateTimeReader extends OriginTeleReader<LocalDateTime, HttpTRContext<?, ?>> {
 
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     private final Messages messages;
@@ -44,7 +44,7 @@ public final class LocalDateTimeReader<C extends HttpTRContext> extends OriginTe
     }
 
     @Override
-    public LocalDateTime read(C ctx) {
+    public LocalDateTime read(HttpTRContext<?, ?> ctx) {
         try {
             String val = readString(ctx);
             if (StringUtils.isEmpty(val)) {

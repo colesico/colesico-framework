@@ -7,7 +7,7 @@ import java.util.TimeZone;
 
 public class CustomProfileManager extends DefaultProfileManager<CustomProfile> {
 
-    public CustomProfile createDefaultProfile() {
+    public CustomProfile createProfile() {
         return initProfile(new CustomProfile());
     }
 

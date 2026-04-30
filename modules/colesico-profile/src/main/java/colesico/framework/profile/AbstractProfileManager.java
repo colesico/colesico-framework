@@ -18,14 +18,14 @@ abstract public class AbstractProfileManager<P extends Profile> implements Profi
     /**
      * Default profile instance factory
      */
-    abstract protected P createDefaultProfile();
+    abstract protected P createProfile();
 
     /**
      * Read profile from source.
      * Implement this method to fine-grained profile read: check validity,
      * enrich with extra data from database, e.t.c.
      */
-    abstract protected P read();
+    abstract protected P read(P profile);
 
     /**
      * Writes profile to source.
@@ -37,15 +37,15 @@ abstract public class AbstractProfileManager<P extends Profile> implements Profi
     public P profile() {
         ProfileHolder holder = threadScope.get(ProfileHolder.SCOPE_KEY);
         if (holder != null) {
-            return holder.profile != null ? (P) holder.profile : createDefaultProfile();
+            return holder.profile != null ? (P) holder.profile : createProfile();
         } else {
             // Recursive calls protection
             threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(null));
         }
         // No profile in cache. Retrieve profile from source
-        P profile = read();
+        P profile = read(createProfile());
         if (profile == null) {
-            profile = createDefaultProfile();
+            throw new ProfileException("Read profile null result");
         }
         threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
         return profile;

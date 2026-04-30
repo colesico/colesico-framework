@@ -56,7 +56,7 @@ public final class RouterCommands implements TeleFacade.Commands {
      * @param targetMethod handler method name
      * @param attributes   route attributes (see {@link RouteAttribute})
      */
-    public <R extends TRContext, W extends TWContext> void add(String route, TeleCommand<R, W> teleCommand, String targetMethod, Map<String, String> attributes) {
+    public <R extends TRContext<?,?>, W extends TWContext<?,?>> void add(String route, TeleCommand<R, W> teleCommand, String targetMethod, Map<String, String> attributes) {
         RouteInfo routeInfo = new RouteInfo(route, teleCommand, targetMethod, attributes);
         RouteInfo oldRouteInfo = routesMap.put(route, routeInfo);
         if (oldRouteInfo != null) {

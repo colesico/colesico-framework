@@ -21,15 +21,15 @@ public class DefaultProfileManager extends AbstractProfileManager<DefaultProfile
     }
 
     @Override
-    public DefaultProfile createDefaultProfile() {
+    public DefaultProfile createProfile() {
         var profile = new DefaultProfile();
         profile.setLocale(Locale.getDefault());
         return profile;
     }
 
     @Override
-    protected DefaultProfile read() {
-        return (DefaultProfile) dataPortProv.get().read(Profile.class);
+    protected DefaultProfile read(DefaultProfile profile) {
+        return (DefaultProfile) dataPortProv.get().read(Profile.class, profile);
     }
 
     @Override

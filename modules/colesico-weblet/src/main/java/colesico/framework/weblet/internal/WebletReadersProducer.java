@@ -20,9 +20,9 @@ import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.security.Principal;
-import colesico.framework.telehttp.rw.principal.PrincipalReader;
-import colesico.framework.telehttp.rw.profile.ProfileReader;
-import colesico.framework.telehttp.rw.*;
+import colesico.framework.telehttp.readwrite.principal.PrincipalReader;
+import colesico.framework.telehttp.readwrite.profile.ProfileReader;
+import colesico.framework.telehttp.readwrite.*;
 import colesico.framework.weblet.teleapi.WebletTeleReader;
 import colesico.framework.weblet.teleapi.reader.WebletReaderProxy;
 

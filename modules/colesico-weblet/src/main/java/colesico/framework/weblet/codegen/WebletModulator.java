@@ -25,6 +25,7 @@ import colesico.framework.service.codegen.model.teleapi.TRContextElement;
 import colesico.framework.service.codegen.model.teleapi.TWContextElement;
 import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import colesico.framework.service.codegen.model.teleapi.TeleParameterElement;
+import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.dataport.TRContext;
 import colesico.framework.teleapi.dataport.TWContext;
 import colesico.framework.telehttp.codegen.HttpTRContextElement;
@@ -58,17 +59,17 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected Class<?> commandsClass() {
+    protected Class<? extends TeleFacade.Commands> commandsClass() {
         return RouterCommands.class;
     }
 
     @Override
-    protected Class<? extends TRContext> readContextClass() {
+    protected Class<? extends TRContext<?,?>> readContextClass() {
         return WebletTRContext.class;
     }
 
     @Override
-    protected Class<? extends TWContext> writeContextClass() {
+    protected Class<? extends TWContext<?,?>> writeContextClass() {
         return WebletTWContext.class;
     }
 
