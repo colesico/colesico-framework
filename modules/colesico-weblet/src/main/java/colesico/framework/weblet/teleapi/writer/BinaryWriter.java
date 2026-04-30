@@ -19,7 +19,7 @@ package colesico.framework.weblet.teleapi.writer;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
-import colesico.framework.weblet.BinaryResponse;
+import colesico.framework.weblet.response.BinaryResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WebletTWContext;
 

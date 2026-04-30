@@ -23,8 +23,8 @@ import colesico.framework.security.Principal;
 import colesico.framework.security.assist.MACUtils;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 import colesico.framework.telehttp.*;
-import colesico.framework.telehttp.writer.principal.PrincipalHttpConfigPrototype;
-import colesico.framework.telehttp.writer.principal.PrincipalWriter;
+import colesico.framework.telehttp.writer.PrincipalHttpConfigPrototype;
+import colesico.framework.telehttp.writer.PrincipalWriter;
 import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Inject;

@@ -24,14 +24,13 @@ import colesico.framework.profile.assist.ProfileAttribute;
 import colesico.framework.telehttp.HttpTRContext;
 import colesico.framework.telehttp.HttpTeleReader;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
-import colesico.framework.telehttp.writer.profile.ProfileHttpConfigPrototype;
-import colesico.framework.telehttp.writer.profile.ProfileWriter;
+import colesico.framework.telehttp.writer.ProfileWriter;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.util.*;
 
-import static colesico.framework.telehttp.writer.profile.ProfileWriter.PROFILE_HEADER;
+import static colesico.framework.telehttp.writer.ProfileWriter.PROFILE_HEADER;
 
 /**
  * Profile default reader

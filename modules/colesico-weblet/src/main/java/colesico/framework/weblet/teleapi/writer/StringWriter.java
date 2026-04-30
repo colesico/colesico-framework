@@ -19,8 +19,8 @@ package colesico.framework.weblet.teleapi.writer;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
-import colesico.framework.weblet.StringResponse;
-import colesico.framework.weblet.TextResponse;
+import colesico.framework.weblet.response.StringResponse;
+import colesico.framework.weblet.response.TextResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WebletTWContext;
 

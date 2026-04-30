@@ -1,4 +1,4 @@
-package colesico.framework.weblet;
+package colesico.framework.weblet.response;
 
 import colesico.framework.http.HttpCookie;
 

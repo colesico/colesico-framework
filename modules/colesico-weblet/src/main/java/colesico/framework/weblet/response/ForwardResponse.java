@@ -14,30 +14,29 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.writer.principal;
+package colesico.framework.weblet.response;
 
-import colesico.framework.config.ConfigModel;
-import colesico.framework.config.ConfigPrototype;
-import colesico.framework.security.assist.MACUtils;
 
-import java.nio.charset.StandardCharsets;
+import colesico.framework.router.assist.Navigation;
 
 /**
- * Configuration prototype to configure security principal reading/writing
+ * Performs inner router forward
  */
-@ConfigPrototype(model = ConfigModel.SINGLE)
-abstract public class PrincipalHttpConfigPrototype {
+public final class ForwardResponse extends Navigation<ForwardResponse> {
 
-    public byte[] signatureKey() {
-        return "0123456789ABCDEF".getBytes(StandardCharsets.UTF_8);
+    public static ForwardResponse of(Class<?> serviceClass, String methodName) {
+        return new ForwardResponse().service(serviceClass).method(methodName);
     }
 
-    public String signatureAlgorithm() {
-        return MACUtils.HmacSHA256;
+    public static ForwardResponse of(String uri) {
+        return new ForwardResponse().uri(uri);
     }
 
-    public int cookieValidityDays() {
-        return 14;
+    public static ForwardResponse of() {
+        return new ForwardResponse();
     }
 
+    public WebletResponse wrap() {
+        return WebletResponse.of(this);
+    }
 }

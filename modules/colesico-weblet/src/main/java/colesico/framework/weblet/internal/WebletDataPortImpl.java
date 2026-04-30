@@ -17,7 +17,7 @@
 package colesico.framework.weblet.internal;
 
 import colesico.framework.teleapi.dataport.TRWFactory;
-import colesico.framework.weblet.WebletResponse;
+import colesico.framework.weblet.response.WebletResponse;
 import colesico.framework.weblet.teleapi.*;
 
 import jakarta.inject.Singleton;

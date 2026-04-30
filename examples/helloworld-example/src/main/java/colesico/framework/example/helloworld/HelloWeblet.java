@@ -16,7 +16,7 @@
 
 package colesico.framework.example.helloworld;
 
-import colesico.framework.weblet.HtmlResponse;
+import colesico.framework.weblet.response.HtmlResponse;
 import colesico.framework.weblet.Weblet;
 
 @Weblet

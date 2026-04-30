@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.writer.profile;
+package colesico.framework.telehttp.writer;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;

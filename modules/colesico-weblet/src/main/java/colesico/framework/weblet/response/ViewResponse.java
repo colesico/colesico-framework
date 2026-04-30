@@ -1,4 +1,4 @@
-package colesico.framework.weblet;
+package colesico.framework.weblet.response;
 
 /**
  * Returns  model that be presented to  given view

@@ -1,4 +1,4 @@
-package colesico.framework.weblet;
+package colesico.framework.weblet.response;
 
 /**
  * Response wrapper. Used to  return dynamically produced responses of different types

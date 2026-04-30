@@ -17,7 +17,7 @@
 package colesico.framework.example.web.localization;
 
 import colesico.framework.profile.ProfileSource;
-import colesico.framework.weblet.HtmlResponse;
+import colesico.framework.weblet.response.HtmlResponse;
 import colesico.framework.weblet.Weblet;
 
 import java.util.Locale;

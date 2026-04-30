@@ -2,7 +2,7 @@ package colesico.framework.weblet.teleapi.writer;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.telehttp.AbstractHttpTeleWriter;
-import colesico.framework.weblet.ViewResponse;
+import colesico.framework.weblet.response.ViewResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 
 import jakarta.inject.Provider;

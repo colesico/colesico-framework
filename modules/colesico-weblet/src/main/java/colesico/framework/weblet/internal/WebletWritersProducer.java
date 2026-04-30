@@ -17,14 +17,14 @@
 package colesico.framework.weblet.internal;
 
 import colesico.framework.telehttp.writer.PlainTextWriter;
-import colesico.framework.telehttp.writer.principal.PrincipalWriter;
-import colesico.framework.telehttp.writer.profile.ProfileWriter;
+import colesico.framework.telehttp.writer.PrincipalWriter;
+import colesico.framework.telehttp.writer.ProfileWriter;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.security.Principal;
-import colesico.framework.weblet.*;
+import colesico.framework.weblet.response.*;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.writer.*;
 

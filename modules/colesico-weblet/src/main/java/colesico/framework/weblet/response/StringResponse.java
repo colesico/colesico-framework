@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.weblet;
+package colesico.framework.weblet.response;
 
 /**
  * String content based response
