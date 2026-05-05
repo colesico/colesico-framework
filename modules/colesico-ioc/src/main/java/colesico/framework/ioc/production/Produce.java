@@ -73,7 +73,7 @@ public @interface Produce {
     String named() default "";
 
     /**
-     * Analogue of th @Classed annotation
+     * Analogue of the @Classed annotation
      *
      * @see Classed
      */

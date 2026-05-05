@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents tele-command variable: parameter, batch param
+ * Represents tele-command variable: parameter, batch param, injected param...
  */
 abstract public class TeleInputElement {
 

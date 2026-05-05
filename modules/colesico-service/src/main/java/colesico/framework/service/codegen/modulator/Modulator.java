@@ -19,6 +19,7 @@ package colesico.framework.service.codegen.modulator;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.ServiceMethodElement;
+import colesico.framework.service.codegen.model.ServiceParameterElement;
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import colesico.framework.service.codegen.model.teleapi.TeleInputElement;
@@ -38,6 +39,7 @@ abstract public class Modulator {
 
     protected ServiceElement service;
     protected ServiceMethodElement serviceMethod;
+    protected ServiceParameterElement serviceParameter;
 
     /**
      * Returns a set of annotation that are aliases for @Service
@@ -72,6 +74,10 @@ abstract public class Modulator {
 
     public void onServiceMethodParsed(ServiceMethodElement serviceMethod) {
         this.serviceMethod = serviceMethod;
+    }
+
+    public void onServiceParameterParsed(ServiceParameterElement serviceParameter) {
+        this.serviceParameter = serviceParameter;
     }
 
     public void onInitTeleFacade(ServiceElement service) {

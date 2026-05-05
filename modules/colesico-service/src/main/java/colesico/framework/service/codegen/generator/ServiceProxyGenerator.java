@@ -183,7 +183,7 @@ public class ServiceProxyGenerator {
         serviceElm.addCustomMethod(new CustomMethodElement(mb.build()));
     }
 
-    protected InterceptionElement generateSuperMethodInterception(MethodElement methodElement) {
+    protected InterceptionElement generateSuperMethodInterception(ServiceMethodElement methodElement) {
         CodeBlock.Builder codeBlock = CodeBlock.builder();
 
         codeBlock.add("$N->{", Interceptor.INVOCATION_CONTEXT_PARAM);
@@ -191,7 +191,7 @@ public class ServiceProxyGenerator {
         codeBlock.indent();
 
         // Process method parameters
-        List<ParameterElement> methodParams = methodElement.parameters();
+        List<ServiceParameterElement> methodParams = methodElement.parameters();
 
         if (!methodParams.isEmpty()) {
             codeBlock.addStatement("$T[] p = " + Interceptor.INVOCATION_CONTEXT_PARAM + "." + InvocationContext.PARAMETERS_METHOD + "()", ClassName.get(Object.class));
@@ -201,16 +201,16 @@ public class ServiceProxyGenerator {
         List<String> paramFormats = new ArrayList<>();
 
         int i = 0;
-        for (ParameterElement paramElm : methodParams) {
+        for (var paramElm : methodParams) {
             String paramName = "p[" + i + "]";
-            paramItems.add(TypeName.get(paramElm.originType()));
+            paramItems.add(TypeName.get(paramElm.originParam().originType()));
             paramItems.add(paramName);
             paramFormats.add("($T)$N");
             i++;
         }
 
         String methodName = methodElement.name();
-        TypeMirror retType = methodElement.returnType();
+        TypeMirror retType = methodElement.originMethod().returnType();
         paramItems.add(0, methodName);
         Object[] statementArgs = paramItems.toArray(new Object[paramItems.size()]);
         if (retType instanceof NoType) {
@@ -289,7 +289,7 @@ public class ServiceProxyGenerator {
             if (methodElement.interception() != null) {
                 generateInterceptorBindings(methodElement.interception(), methodBuilder);
             } else {
-                InterceptionElement ihe = generateSuperMethodInterception(methodElement.originMethod());
+                InterceptionElement ihe = generateSuperMethodInterception(methodElement);
                 generateInterceptorBindings(ihe, methodBuilder);
             }
 

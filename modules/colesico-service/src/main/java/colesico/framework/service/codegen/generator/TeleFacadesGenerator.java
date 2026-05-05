@@ -97,7 +97,7 @@ public class TeleFacadesGenerator {
 
     protected CodeBlock generateParamRetrieving(TeleInputElement parameter, CodeBlock.Builder invokerBuilder) {
 
-        // ==== For simple param
+        // ==== For simple param ================
 
         if (parameter instanceof TeleParameterElement) {
             CodeBlock ctx = ((TeleParameterElement) parameter).readContext().creationCode();
@@ -109,13 +109,22 @@ public class TeleFacadesGenerator {
             return cb.build();
         }
 
-        // ==== For batch filed param
+        // ==== For batch filed param =============
 
         if (parameter instanceof TeleBatchFieldElement) {
             TeleBatchFieldElement batchParam = (TeleBatchFieldElement) parameter;
             // batch.getFiled();
             CodeBlock.Builder cb = CodeBlock.builder();
             cb.add("$N.$N()", batchParam.parentBatch().batchVarName(), batchParam.getterName());
+            return cb.build();
+        }
+
+        // ======= Injected parameter ============
+
+        if (parameter instanceof TeleInjectedParameterElement) {
+            CodeBlock.Builder cb = CodeBlock.builder();
+            // Actual values will be injected at service method interception layer
+            cb.add("null");
             return cb.build();
         }
 
@@ -129,7 +138,7 @@ public class TeleFacadesGenerator {
         // ============= Generate Batches retrieving from data port
         cb.add(generateBatches(teleCommand));
 
-        // ============= Generate params retrieving from data port
+        // ============= Generate params retrieving (default from data port)
         ArrayCodegen serviceMethodArgs = new ArrayCodegen();
         for (TeleInputElement param : teleCommand.parameters()) {
             CodeBlock value = generateParamRetrieving(param, cb);

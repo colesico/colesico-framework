@@ -21,6 +21,7 @@ import colesico.framework.assist.spi.ServiceLocatorFactory;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.ServiceMethodElement;
+import colesico.framework.service.codegen.model.ServiceParameterElement;
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import colesico.framework.service.codegen.model.teleapi.TeleInputElement;
@@ -119,6 +120,12 @@ public class ModulatorManager {
     public void notifyServiceMethodParsed(ServiceMethodElement serviceMethod) {
         for (Modulator modulator : modulators) {
             modulator.onServiceMethodParsed(serviceMethod);
+        }
+    }
+
+    public void notifyServiceParameterParsed(ServiceParameterElement serviceParameter) {
+        for (Modulator modulator : modulators) {
+            modulator.onServiceParameterParsed(serviceParameter);
         }
     }
 

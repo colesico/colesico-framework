@@ -62,6 +62,11 @@ public final class ServiceMethodElement {
     private InterceptionElement interception;
 
     /**
+     * Service method params
+     */
+    private final List<ServiceParameterElement> parameters = new ArrayList<>();
+
+    /**
      * Common purpose properties
      */
     private final Map<Class, Object> properties;
@@ -86,6 +91,10 @@ public final class ServiceMethodElement {
     public void addInterception(String interceptionPhase, InterceptionElement interception) {
         List<InterceptionElement> phaseInterceptions = this.interceptionsByPhase.computeIfAbsent(interceptionPhase, k -> new ArrayList<>());
         phaseInterceptions.add(interception);
+    }
+
+    public void addParameter(ServiceParameterElement parametr) {
+        parameters.add(parametr);
     }
 
     public InterceptionElement interception() {
@@ -126,6 +135,10 @@ public final class ServiceMethodElement {
 
     public ServiceElement parentService() {
         return parentService;
+    }
+
+    public List<ServiceParameterElement> parameters() {
+        return parameters;
     }
 
     @Override

@@ -20,6 +20,7 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
 import colesico.framework.service.BatchField;
+import colesico.framework.service.InjectParam;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.*;
 import org.apache.commons.lang3.StringUtils;
@@ -65,6 +66,15 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
         context.modulatorKit().notifyTeleInputParsed(batchField);
     }
 
+    private void parseInjectParam(TeleCommandElement teleCommand,
+                                  VarElement variable,
+                                  AnnotationAssist<InjectParam> injectParamAnn) {
+
+        TeleInjectedParameterElement injectParam = new TeleInjectedParameterElement(teleCommand, variable);
+        teleCommand.addParameter(injectParam);
+        context.modulatorKit().notifyTeleInputParsed(injectParam);
+    }
+
     private void parseParameter(TeleCommandElement teleCommand, VarElement variable) {
         // Process simple param
         TeleParameterElement parameter = new TeleParameterElement(teleCommand, variable);
@@ -72,6 +82,9 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
         context.modulatorKit().notifyTeleInputParsed(parameter);
     }
 
+    /**
+     * Parse method params
+     */
     private void parseVariables(TeleCommandElement teleCommand, List<? extends VarElement> variables) {
         for (VarElement variable : variables) {
 
@@ -89,7 +102,12 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
                     parseBatchField(teleCommand, variable, paramBatchAnn, methodBatchAnn);
                 }
             } else {
-                parseParameter(teleCommand, variable);
+                AnnotationAssist<InjectParam> injectParamAnn = variable.annotation(InjectParam.class);
+                if (injectParamAnn != null) {
+                    parseInjectParam(teleCommand, variable, injectParamAnn);
+                } else {
+                    parseParameter(teleCommand, variable);
+                }
             }
         }
     }

@@ -21,15 +21,18 @@ import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
 import colesico.framework.ioc.listener.PostConstruct;
 import colesico.framework.ioc.scope.CustomScope;
+import colesico.framework.service.InjectParam;
 import colesico.framework.service.LocalMethod;
 import colesico.framework.service.PlainMethod;
 import colesico.framework.service.ServiceMethod;
 import colesico.framework.service.codegen.model.ServiceMethodElement;
 import colesico.framework.service.codegen.model.ServiceElement;
+import colesico.framework.service.codegen.model.ServiceParameterElement;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 import java.util.List;
 
 public class ServiceParser extends FrameworkAbstractParser {
@@ -95,6 +98,25 @@ public class ServiceParser extends FrameworkAbstractParser {
         return !isPublic;
     }
 
+    protected void parseMethodParameters(ServiceMethodElement serviceMethod) {
+
+        // Process method parameters
+        List<ParameterElement> methodParams = serviceMethod.originMethod().parameters();
+
+        for (var param : methodParams) {
+            ServiceParameterElement serviceParam = new ServiceParameterElement(serviceMethod,param);
+            serviceMethod.addParameter(serviceParam);
+
+            AnnotationAssist<InjectParam> injectParamAnn = param.annotation(InjectParam.class);
+            if (injectParamAnn!=null) {
+                // TODO:
+                String named = injectParamAnn.unwrap().named();
+                TypeMirror classed = injectParamAnn.valueTypeMirror(InjectParam::classed);
+            }
+            context.modulatorKit().notifyServiceParameterParsed(serviceParam);
+        }
+    }
+
     protected void parseServiceMethods(ServiceElement serviceElement) {
         ClassElement classElement = serviceElement.originClass();
         AnnotationAssist<LocalMethod> classLocalAnn = classElement.annotation(LocalMethod.class);
@@ -122,6 +144,8 @@ public class ServiceParser extends FrameworkAbstractParser {
 
             ServiceMethodElement serviceMethod = new ServiceMethodElement(method, isPlain, isLocal, isPCListener);
             serviceElement.addServiceMethod(serviceMethod);
+
+            parseMethodParameters(serviceMethod);
 
             context.modulatorKit().notifyServiceMethodParsed(serviceMethod);
         }
