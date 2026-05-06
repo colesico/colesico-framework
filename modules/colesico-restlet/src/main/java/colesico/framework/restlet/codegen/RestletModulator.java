@@ -82,7 +82,7 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     @Override
-    protected TRContextElement createReadContext(TeleParameterElement teleParam) {
+    protected TRContextElement createReadContext(TeleOrdinaryParamElement teleParam) {
 
         String paramName = RestletCodegenUtils.getParamName(teleParam);
 
@@ -91,7 +91,7 @@ public final class RestletModulator extends RoutesModulator {
         // new RestletTRContext(
         cb.add("$T.$N(", ClassName.get(RestletTRContext.class), RestletTRContext.OF_METHOD);
 
-        ServiceCodegenUtils.generateTeleInputType(teleParam, cb);
+        ServiceCodegenUtils.generateTeleParamType(teleParam, cb);
 
         cb.add(", $S", paramName);
 
@@ -144,13 +144,13 @@ public final class RestletModulator extends RoutesModulator {
 
     @Override
     public void onTeleEntryParsed(TeleEntryElement teleEntry) {
-        super.onTeleInputParsed(teleEntry);
-        if (teleEntry instanceof TeleBatchFieldElement) {
+        super.onTeleParameterParsed(teleEntry);
+        if (teleEntry instanceof TeleBatchParamElement) {
             AnnotationAssist<ParamName> paramNameAnn = teleEntry.getOriginElement().getAnnotation(ParamName.class);
             if (paramNameAnn == null) {
                 return;
             }
-            ((TeleBatchFieldElement) teleEntry).setName(paramNameAnn.unwrap().value());
+            ((TeleBatchParamElement) teleEntry).setName(paramNameAnn.unwrap().value());
         }
     }
 }

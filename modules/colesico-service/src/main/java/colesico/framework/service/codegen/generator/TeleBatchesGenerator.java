@@ -4,7 +4,7 @@ package colesico.framework.service.codegen.generator;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.service.codegen.model.teleapi.TeleBatchElement;
-import colesico.framework.service.codegen.model.teleapi.TeleBatchFieldElement;
+import colesico.framework.service.codegen.model.teleapi.TeleBatchParamElement;
 import colesico.framework.service.codegen.model.teleapi.TeleBatchPackElement;
 import com.palantir.javapoet.FieldSpec;
 import com.palantir.javapoet.MethodSpec;
@@ -31,7 +31,7 @@ public class TeleBatchesGenerator extends FrameworkAbstractGenerator {
             TypeSpec.Builder rb = TypeSpec.classBuilder(batch.batchClassSimpleName());
             rb.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
 
-            for (TeleBatchFieldElement batchField : batch.fields()) {
+            for (TeleBatchParamElement batchField : batch.fields()) {
                 TypeName filedTypeName = TypeName.get(batchField.originElement().originType());
                 String filedName = batchField.name();
                 FieldSpec.Builder fb = FieldSpec.builder(filedTypeName, filedName, Modifier.PRIVATE);

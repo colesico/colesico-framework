@@ -20,12 +20,9 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
 import colesico.framework.service.BatchField;
-import colesico.framework.service.InjectParam;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.*;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.List;
 
 public final class TeleFacadeParser extends FrameworkAbstractParser {
 
@@ -36,8 +33,8 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
         this.context = context;
     }
 
-    private void parseBatchField(TeleCommandElement teleCommand,
-                                 VarElement variable,
+    private void parseBatchParam(TeleCommandElement teleCommand,
+                                 ServiceParameterElement param,
                                  AnnotationAssist<BatchField> paramBatchAnn,
                                  AnnotationAssist<BatchField> methodBatchAnn) {
 
@@ -50,45 +47,43 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
         }
 
         if (StringUtils.isBlank(fieldName)) {
-            fieldName = variable.name();
+            fieldName = param.originParameter().name();
         }
 
         if (batchName.equals(BatchField.DEFAULT_BATCH) && methodBatchAnn != null) {
             batchName = methodBatchAnn.unwrap().batch();
         }
 
-        TeleBatchFieldElement batchField = new TeleBatchFieldElement(teleCommand, variable, fieldName);
+        TeleBatchParamElement batchField = new TeleBatchParamElement(teleCommand, param, fieldName);
 
         TeleBatchElement batch = teleCommand.getOrCreateBatch(batchName);
         batch.addField(batchField);
         teleCommand.addParameter(batchField);
 
-        context.modulatorKit().notifyTeleInputParsed(batchField);
+        context.modulatorKit().notifyTeleParameterParsed(batchField);
     }
 
     private void parseInjectParam(TeleCommandElement teleCommand,
-                                  VarElement variable,
-                                  AnnotationAssist<InjectParam> injectParamAnn) {
+                                  ServiceInjectParamElement param
+    ) {
 
-        TeleInjectedParameterElement injectParam = new TeleInjectedParameterElement(teleCommand, variable);
+        TeleInjectParamElement injectParam = new TeleInjectParamElement(teleCommand, param);
         teleCommand.addParameter(injectParam);
-        context.modulatorKit().notifyTeleInputParsed(injectParam);
+        context.modulatorKit().notifyTeleParameterParsed(injectParam);
     }
 
-    private void parseParameter(TeleCommandElement teleCommand, VarElement variable) {
+    private void parseParameter(TeleCommandElement teleCommand, ServiceParameterElement param) {
         // Process simple param
-        TeleParameterElement parameter = new TeleParameterElement(teleCommand, variable);
+        TeleOrdinaryParamElement parameter = new TeleOrdinaryParamElement(teleCommand, param);
         teleCommand.addParameter(parameter);
-        context.modulatorKit().notifyTeleInputParsed(parameter);
+        context.modulatorKit().notifyTeleParameterParsed(parameter);
     }
 
-    /**
-     * Parse method params
-     */
-    private void parseVariables(TeleCommandElement teleCommand, List<? extends VarElement> variables) {
-        for (VarElement variable : variables) {
+    private void parseTeleCommandParams(TeleCommandElement teleCommand) {
+        var method = teleCommand.serviceMethod();
+        for (var param : method.parameters()) {
 
-            AnnotationAssist<BatchField> paramBatchAnn = variable.annotation(BatchField.class);
+            AnnotationAssist<BatchField> paramBatchAnn = param.originParameter().annotation(BatchField.class);
             AnnotationAssist<BatchField> methodBatchAnn = teleCommand.serviceMethod().originMethod().annotation(BatchField.class);
 
             if (paramBatchAnn != null || methodBatchAnn != null) {
@@ -96,25 +91,20 @@ public final class TeleFacadeParser extends FrameworkAbstractParser {
                 if (!teleCommand.parentTeleFacade().batchParams()) {
                     throw CodegenException.of()
                             .message("Batch parameters not supported by tele-facade " + teleCommand.parentTeleFacade().teleType().getCanonicalName())
-                            .element(variable.unwrap())
+                            .element(param.originParameter().unwrap())
                             .build();
                 } else {
-                    parseBatchField(teleCommand, variable, paramBatchAnn, methodBatchAnn);
+                    parseBatchParam(teleCommand, param, paramBatchAnn, methodBatchAnn);
                 }
             } else {
-                AnnotationAssist<InjectParam> injectParamAnn = variable.annotation(InjectParam.class);
-                if (injectParamAnn != null) {
-                    parseInjectParam(teleCommand, variable, injectParamAnn);
+                if (param instanceof ServiceInjectParamElement injParam) {
+                    parseInjectParam(teleCommand, injParam);
                 } else {
-                    parseParameter(teleCommand, variable);
+                    parseParameter(teleCommand, param);
                 }
             }
         }
-    }
 
-    private void parseTeleCommandParams(TeleCommandElement teleCommand) {
-        MethodElement method = teleCommand.serviceMethod().originMethod();
-        parseVariables(teleCommand, method.parameters());
     }
 
     private void parseTeleCommands(TeleFacadeElement teleFacade) {

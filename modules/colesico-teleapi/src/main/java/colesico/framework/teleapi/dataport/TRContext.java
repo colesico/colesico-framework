@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 
 /**
  * Value tele-read context.
+ * @param <P> context payload type
  */
 abstract public class TRContext<T extends Type, P> {
 

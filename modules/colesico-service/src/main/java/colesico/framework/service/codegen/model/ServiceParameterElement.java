@@ -6,19 +6,21 @@ import colesico.framework.assist.codegen.model.VarElement;
  * Service method parameter element
  */
 public class ServiceParameterElement {
-    private final ServiceMethodElement parentMethod;
-    private final VarElement originParam;
 
-    public ServiceParameterElement(ServiceMethodElement parentMethod, VarElement originParam) {
+    private final ServiceMethodElement parentMethod;
+
+    private final VarElement originParameter;
+
+    public ServiceParameterElement(ServiceMethodElement parentMethod, VarElement originParameter) {
         this.parentMethod = parentMethod;
-        this.originParam = originParam;
+        this.originParameter = originParameter;
     }
 
     public ServiceMethodElement parentMethod() {
         return parentMethod;
     }
 
-    public VarElement originParam() {
-        return originParam;
+    public VarElement originParameter() {
+        return originParameter;
     }
 }

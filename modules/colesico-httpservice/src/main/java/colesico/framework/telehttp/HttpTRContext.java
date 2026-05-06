@@ -6,6 +6,7 @@ import java.lang.reflect.Type;
 
 /**
  * Basic tele-reading context for interaction via http
+ * @param <P> context payload type
  */
 abstract public class HttpTRContext<T extends Type, P> extends TRContext<T, P> {
 

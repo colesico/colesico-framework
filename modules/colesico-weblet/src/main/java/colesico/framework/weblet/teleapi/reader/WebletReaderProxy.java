@@ -5,11 +5,11 @@ import colesico.framework.telehttp.HttpTeleReader;
 import colesico.framework.weblet.teleapi.WebletTRContext;
 import colesico.framework.weblet.teleapi.WebletTeleReader;
 
-public final class WebletReaderProxy<V> implements WebletTeleReader<V> {
+public final class WebletReaderProxy<V> extends WebletTeleReader<V> {
 
-    private final HttpTeleReader<V, HttpTRContext> reader;
+    private final HttpTeleReader<V, HttpTRContext<?,?>> reader;
 
-    private WebletReaderProxy(HttpTeleReader<V, HttpTRContext> reader) {
+    private WebletReaderProxy(HttpTeleReader<V, HttpTRContext<?,?>> reader) {
         this.reader = reader;
     }
 
@@ -18,7 +18,7 @@ public final class WebletReaderProxy<V> implements WebletTeleReader<V> {
         return reader.read(context);
     }
 
-    public static <V> WebletReaderProxy of(HttpTeleReader<V, HttpTRContext> reader) {
+    public static <V> WebletReaderProxy of(HttpTeleReader<V, HttpTRContext<?,?>> reader) {
         return new WebletReaderProxy(reader);
     }
 }

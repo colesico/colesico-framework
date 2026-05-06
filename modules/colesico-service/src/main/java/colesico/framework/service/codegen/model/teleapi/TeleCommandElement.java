@@ -45,7 +45,7 @@ public final class TeleCommandElement {
     /**
      * Method parameters
      */
-    private final List<TeleInputElement> parameters = new ArrayList<>();
+    private final List<TeleParameterElement> parameters = new ArrayList<>();
 
     /**
      * Parameter batches.
@@ -89,7 +89,7 @@ public final class TeleCommandElement {
     /**
      * Add parameter of tele-command
      */
-    public void addParameter(TeleInputElement parameter) {
+    public void addParameter(TeleParameterElement parameter) {
         parameters.add(parameter);
     }
 
@@ -125,7 +125,7 @@ public final class TeleCommandElement {
         return parentTeleFacade;
     }
 
-    public List<TeleInputElement> parameters() {
+    public List<TeleParameterElement> parameters() {
         return parameters;
     }
 

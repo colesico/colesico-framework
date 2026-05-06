@@ -28,7 +28,7 @@ import java.util.Set;
 public final class RoundContext {
     private final Set<? extends TypeElement> annotations;
     private final RoundEnvironment roundEnv;
-    private final Map<Class, Object> properties;
+    private final Map<Class<?>, Object> properties;
 
     public RoundContext(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         this.annotations = annotations;
@@ -44,7 +44,7 @@ public final class RoundContext {
         return roundEnv;
     }
 
-    public Object getProperty(Class propertyClass) {
+    public Object getProperty(Class<?> propertyClass) {
         return properties.get(propertyClass);
     }
 

@@ -1,46 +1,53 @@
-/*
- * Copyright © 2014-2025 Vladlen V. Larionov and others as noted.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package colesico.framework.service.codegen.model.teleapi;
 
 import colesico.framework.assist.codegen.model.VarElement;
+import colesico.framework.service.codegen.model.ServiceParameterElement;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Tele-method parameter that can be directly read from data port
+ * Represents any tele-command parameter (batch param, injected param...)
  */
-public final class TeleParameterElement extends TeleInputElement implements TeleReadableElement {
+abstract public class TeleParameterElement {
 
-    private TRContextElement readContext;
+    /**
+     * Parent tele-command ref
+     */
+    protected final TeleCommandElement parentTeleCommand;
 
-    public TeleParameterElement(TeleCommandElement parentTeleCommand, VarElement originElement) {
-        super(parentTeleCommand, originElement);
+    /**
+     * Origin parameter
+     */
+    protected final ServiceParameterElement serviceParameter;
+
+    /**
+     * Custom purpose props
+     */
+    protected final Map<Class<?>, Object> properties = new HashMap<>();
+
+    public TeleParameterElement(TeleCommandElement parentTeleCommand, ServiceParameterElement serviceParameter) {
+        this.parentTeleCommand = parentTeleCommand;
+        this.serviceParameter = serviceParameter;
     }
 
-    public TRContextElement readContext() {
-        return readContext;
+    public <C> C property(Class<C> propertyClass) {
+        return (C) properties.get(propertyClass);
     }
 
-    public void setReadContext(TRContextElement readContext) {
-        this.readContext = readContext;
+    public void setProperty(Class<?> propertyClass, Object property) {
+        properties.put(propertyClass, property);
     }
 
-    @Override
-    public String toString() {
-        return "TeleParameterElement{" +
-                "originElement=" + originElement +
-                '}';
+    public TeleCommandElement parentTeleCommand() {
+        return parentTeleCommand;
+    }
+
+    public ServiceParameterElement serviceParameter() {
+        return serviceParameter;
+    }
+
+    public VarElement originElement() {
+        return serviceParameter.originParameter();
     }
 }

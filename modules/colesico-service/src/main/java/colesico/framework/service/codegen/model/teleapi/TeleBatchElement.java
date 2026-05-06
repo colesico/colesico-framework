@@ -35,14 +35,14 @@ public class TeleBatchElement implements TeleReadableElement {
      */
     protected final String name;
 
-    protected final List<TeleBatchFieldElement> fields = new ArrayList<>();
+    protected final List<TeleBatchParamElement> fields = new ArrayList<>();
 
     public TeleBatchElement(TeleCommandElement parentTeleCommand, String name) {
         this.parentTeleCommand = parentTeleCommand;
         this.name = name;
     }
 
-    public void addField(TeleBatchFieldElement field) {
+    public void addField(TeleBatchParamElement field) {
         fields.add(field);
         field.setParentBatch(this);
     }
@@ -76,7 +76,7 @@ public class TeleBatchElement implements TeleReadableElement {
         return name;
     }
 
-    public List<TeleBatchFieldElement> fields() {
+    public List<TeleBatchParamElement> fields() {
         return fields;
     }
 

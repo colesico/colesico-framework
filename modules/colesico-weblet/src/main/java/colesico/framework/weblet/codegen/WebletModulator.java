@@ -24,7 +24,7 @@ import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.TRContextElement;
 import colesico.framework.service.codegen.model.teleapi.TWContextElement;
 import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
-import colesico.framework.service.codegen.model.teleapi.TeleParameterElement;
+import colesico.framework.service.codegen.model.teleapi.TeleOrdinaryParamElement;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.dataport.TRContext;
 import colesico.framework.teleapi.dataport.TWContext;
@@ -79,14 +79,14 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected TRContextElement createReadContext(TeleParameterElement teleParam) {
+    protected TRContextElement createReadContext(TeleOrdinaryParamElement teleParam) {
 
         String paramName = TeleHttpCodegenUtils.paramName(teleParam);
 
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("$T.$N(", ClassName.get(WebletTRContext.class), WebletTRContext.OF_METHOD);
 
-        ServiceCodegenUtils.generateTeleInputType(teleParam, cb);
+        ServiceCodegenUtils.generateTeleParamType(teleParam, cb);
         cb.add(",");
 
         String originName = TeleHttpCodegenUtils.originName(teleParam, WebletOrigin.AUTO);
@@ -144,7 +144,7 @@ public final class WebletModulator extends RoutesModulator {
         return wrAnn.valueTypeMirror(a -> a.value());
     }
 
-    private TypeMirror getCustomReaderClass(TeleParameterElement teleParam) {
+    private TypeMirror getCustomReaderClass(TeleOrdinaryParamElement teleParam) {
         var rdAnn = teleParam.originElement().annotation(WebletParamReader.class);
 
         if (rdAnn == null) {

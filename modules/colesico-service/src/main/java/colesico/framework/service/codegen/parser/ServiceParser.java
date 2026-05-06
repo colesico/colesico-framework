@@ -16,7 +16,9 @@
 
 package colesico.framework.service.codegen.parser;
 
+import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
 import colesico.framework.ioc.listener.PostConstruct;
@@ -25,6 +27,7 @@ import colesico.framework.service.InjectParam;
 import colesico.framework.service.LocalMethod;
 import colesico.framework.service.PlainMethod;
 import colesico.framework.service.ServiceMethod;
+import colesico.framework.service.codegen.model.ServiceInjectParamElement;
 import colesico.framework.service.codegen.model.ServiceMethodElement;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.ServiceParameterElement;
@@ -98,22 +101,31 @@ public class ServiceParser extends FrameworkAbstractParser {
         return !isPublic;
     }
 
-    protected void parseMethodParameters(ServiceMethodElement serviceMethod) {
+    protected void parseMethodParams(ServiceMethodElement serviceMethod) {
+
+        List<ParameterElement> methodParams = serviceMethod.originMethod().parameters();
+        ServiceParameterElement srvParam;
 
         // Process method parameters
-        List<ParameterElement> methodParams = serviceMethod.originMethod().parameters();
-
         for (var param : methodParams) {
-            ServiceParameterElement serviceParam = new ServiceParameterElement(serviceMethod,param);
-            serviceMethod.addParameter(serviceParam);
-
             AnnotationAssist<InjectParam> injectParamAnn = param.annotation(InjectParam.class);
-            if (injectParamAnn!=null) {
-                // TODO:
+            if (injectParamAnn != null) {
+                var sipe = new ServiceInjectParamElement(serviceMethod, param);
+                srvParam = sipe;
+
                 String named = injectParamAnn.unwrap().named();
+                sipe.setNamed(StrUtils.isEmpty(named) ? null : named);
+
                 TypeMirror classed = injectParamAnn.valueTypeMirror(InjectParam::classed);
+                if (!CodegenUtils.isAssignable(Class.class, classed, processingEnv)) {
+                    sipe.setClassed(classed);
+                }
+            } else {
+                srvParam = new ServiceParameterElement(serviceMethod, param);
             }
-            context.modulatorKit().notifyServiceParameterParsed(serviceParam);
+
+            serviceMethod.addParameter(srvParam);
+            context.modulatorKit().notifyServiceParameterParsed(srvParam);
         }
     }
 
@@ -145,7 +157,7 @@ public class ServiceParser extends FrameworkAbstractParser {
             ServiceMethodElement serviceMethod = new ServiceMethodElement(method, isPlain, isLocal, isPCListener);
             serviceElement.addServiceMethod(serviceMethod);
 
-            parseMethodParameters(serviceMethod);
+            parseMethodParams(serviceMethod);
 
             context.modulatorKit().notifyServiceMethodParsed(serviceMethod);
         }

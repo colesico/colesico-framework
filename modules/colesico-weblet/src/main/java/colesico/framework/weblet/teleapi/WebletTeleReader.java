@@ -22,6 +22,6 @@ import colesico.framework.telehttp.HttpTeleReader;
 /**
  * Weblet reader base class
  */
-public interface WebletTeleReader<V> extends HttpTeleReader<V, WebletTRContext> {
+abstract public class WebletTeleReader<V> extends HttpTeleReader<V, WebletTRContext> {
 
 }

@@ -2,13 +2,14 @@ package colesico.framework.service.codegen.model.teleapi;
 
 import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.model.VarElement;
+import colesico.framework.service.codegen.model.ServiceParameterElement;
 
 /**
  * Represents field of batch class and corresponding method parameter
  *
  * @see colesico.framework.service.BatchField
  */
-public class TeleBatchFieldElement extends TeleInputElement {
+public class TeleBatchParamElement extends TeleParameterElement {
 
     private TeleBatchElement parentBatch;
 
@@ -17,8 +18,8 @@ public class TeleBatchFieldElement extends TeleInputElement {
      */
     private String name;
 
-    public TeleBatchFieldElement(TeleCommandElement parentTeleCommand, VarElement originElement, String name) {
-        super(parentTeleCommand, originElement);
+    public TeleBatchParamElement(TeleCommandElement parentTeleCommand, ServiceParameterElement serviceParam, String name) {
+        super(parentTeleCommand, serviceParam);
         this.name = name;
     }
 

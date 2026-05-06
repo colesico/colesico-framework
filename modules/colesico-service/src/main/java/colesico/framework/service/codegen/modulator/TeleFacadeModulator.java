@@ -85,19 +85,19 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
         serviceElm.setTeleFacade(teleFacade);
     }
 
-    private void createParamReadContexts(List<TeleInputElement> params) {
+    private void createParamReadContexts(List<TeleParameterElement> params) {
         for (var param : params) {
 
             // Skip batch fields
-            if (param instanceof TeleBatchFieldElement) {
-                TeleBatchFieldElement batchField = (TeleBatchFieldElement) param;
+            if (param instanceof TeleBatchParamElement) {
+                TeleBatchParamElement batchField = (TeleBatchParamElement) param;
                 if (batchField.parentBatch().readContext() == null) {
                     batchField.parentBatch().setReadContext(createReadContext(batchField.parentBatch()));
                 }
                 continue;
             }
 
-            TeleParameterElement teleParam = (TeleParameterElement) param;
+            TeleOrdinaryParamElement teleParam = (TeleOrdinaryParamElement) param;
             teleParam.setReadContext(createReadContext(teleParam));
 
         }
@@ -138,9 +138,9 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
         return new TWContextElement(teleCommand, cb.build());
     }
 
-    protected TRContextElement createReadContext(TeleParameterElement teleParam) {
+    protected TRContextElement createReadContext(TeleOrdinaryParamElement teleParam) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        ServiceCodegenUtils.generateTeleInputType(teleParam, cb);
+        ServiceCodegenUtils.generateTeleParamType(teleParam, cb);
         return new TRContextElement(teleParam, cb.build());
     }
 

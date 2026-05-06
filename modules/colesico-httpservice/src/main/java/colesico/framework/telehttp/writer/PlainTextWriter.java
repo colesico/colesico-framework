@@ -8,10 +8,10 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import java.util.Map;
-
 @Singleton
 public final class PlainTextWriter extends HttpTeleWriter<Object, HttpTWContext<?, ?>> {
+
+    private static final String CONTENT_TYPE = "text/plain";
 
     @Inject
     public PlainTextWriter(Provider<HttpContext> httpContextProv) {
@@ -21,9 +21,7 @@ public final class PlainTextWriter extends HttpTeleWriter<Object, HttpTWContext<
     @Override
     public void write(Object value, HttpTWContext<?, ?> context) {
         if (value == null) {
-            response().sendText("",
-                    context.contentType() != null ? context.contentType() : CONTENT_TYPE,
-                    context.statusCode() != null ? context.statusCode() : 204);
+            response().sendText("", CONTENT_TYPE, 204);
         }
 
         String str = "";
@@ -43,8 +41,6 @@ public final class PlainTextWriter extends HttpTeleWriter<Object, HttpTWContext<
             str = value.toString();
         }
 
-        response().sendText(str,
-                context.contentType() != null ? context.contentType() : CONTENT_TYPE,
-                context.statusCode() != null ? context.statusCode() : 200);
+        response().sendText(str, CONTENT_TYPE, 200);
     }
 }

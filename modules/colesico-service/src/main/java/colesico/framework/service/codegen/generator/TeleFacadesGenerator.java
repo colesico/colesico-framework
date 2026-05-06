@@ -95,12 +95,12 @@ public class TeleFacadesGenerator {
         return cb.build();
     }
 
-    protected CodeBlock generateParamRetrieving(TeleInputElement parameter, CodeBlock.Builder invokerBuilder) {
+    protected CodeBlock generateParamRetrieving(TeleParameterElement parameter, CodeBlock.Builder invokerBuilder) {
 
         // ==== For simple param ================
 
-        if (parameter instanceof TeleParameterElement) {
-            CodeBlock ctx = ((TeleParameterElement) parameter).readContext().creationCode();
+        if (parameter instanceof TeleOrdinaryParamElement) {
+            CodeBlock ctx = ((TeleOrdinaryParamElement) parameter).readContext().creationCode();
             // dataPot.read(new Context(...));
             CodeBlock.Builder cb = CodeBlock.builder();
             cb.add("$N.$N(", TeleCommand.DATA_PORT_PARAM, DataPort.READ_METHOD);
@@ -111,8 +111,8 @@ public class TeleFacadesGenerator {
 
         // ==== For batch filed param =============
 
-        if (parameter instanceof TeleBatchFieldElement) {
-            TeleBatchFieldElement batchParam = (TeleBatchFieldElement) parameter;
+        if (parameter instanceof TeleBatchParamElement) {
+            TeleBatchParamElement batchParam = (TeleBatchParamElement) parameter;
             // batch.getFiled();
             CodeBlock.Builder cb = CodeBlock.builder();
             cb.add("$N.$N()", batchParam.parentBatch().batchVarName(), batchParam.getterName());
@@ -121,7 +121,7 @@ public class TeleFacadesGenerator {
 
         // ======= Injected parameter ============
 
-        if (parameter instanceof TeleInjectedParameterElement) {
+        if (parameter instanceof TeleInjectParamElement) {
             CodeBlock.Builder cb = CodeBlock.builder();
             // Actual values will be injected at service method interception layer
             cb.add("null");
@@ -140,7 +140,7 @@ public class TeleFacadesGenerator {
 
         // ============= Generate params retrieving (default from data port)
         ArrayCodegen serviceMethodArgs = new ArrayCodegen();
-        for (TeleInputElement param : teleCommand.parameters()) {
+        for (TeleParameterElement param : teleCommand.parameters()) {
             CodeBlock value = generateParamRetrieving(param, cb);
             String paramName = param.originElement().name() + PARAM_SUFFIX;
             serviceMethodArgs.add("$N", paramName);

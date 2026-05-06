@@ -15,9 +15,9 @@ public final class ServiceCodegenUtils {
         CodegenUtils.generateTypePick(returnType, cb);
     }
 
-    public static void generateTeleInputType(TeleInputElement teleInput, CodeBlock.Builder cb) {
+    public static void generateTeleParamType(TeleParameterElement teleParam, CodeBlock.Builder cb) {
         // Detect param type considering generics
-        TypeMirror paramType = teleInput.originElement().originType();
+        TypeMirror paramType = teleParam.originElement().originType();
         // ParamType.class or  for generics: new TypeWrapper<TheType>(){}.unwrap()
         CodegenUtils.generateTypePick(paramType, cb);
     }

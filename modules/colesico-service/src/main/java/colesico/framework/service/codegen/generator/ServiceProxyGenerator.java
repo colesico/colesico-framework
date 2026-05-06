@@ -203,7 +203,7 @@ public class ServiceProxyGenerator {
         int i = 0;
         for (var paramElm : methodParams) {
             String paramName = "p[" + i + "]";
-            paramItems.add(TypeName.get(paramElm.originParam().originType()));
+            paramItems.add(TypeName.get(paramElm.originParameter().originType()));
             paramItems.add(paramName);
             paramFormats.add("($T)$N");
             i++;

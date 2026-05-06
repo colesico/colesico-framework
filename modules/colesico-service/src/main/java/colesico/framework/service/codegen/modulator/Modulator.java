@@ -22,7 +22,7 @@ import colesico.framework.service.codegen.model.ServiceMethodElement;
 import colesico.framework.service.codegen.model.ServiceParameterElement;
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
-import colesico.framework.service.codegen.model.teleapi.TeleInputElement;
+import colesico.framework.service.codegen.model.teleapi.TeleParameterElement;
 import colesico.framework.service.codegen.parser.RoundContext;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 
@@ -90,7 +90,7 @@ abstract public class Modulator {
 
     }
 
-    public void onTeleInputParsed(TeleInputElement teleInput) {
+    public void onTeleParameterParsed(TeleParameterElement teleParam) {
 
     }
 

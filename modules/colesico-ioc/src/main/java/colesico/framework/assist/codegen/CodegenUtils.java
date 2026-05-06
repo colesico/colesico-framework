@@ -266,7 +266,7 @@ public class CodegenUtils {
     /**
      * Test class  is assignable to mirror type
      */
-    public static boolean isAssignable(Class clazz, TypeMirror typeMirror, ProcessingEnvironment env) {
+    public static boolean isAssignable(Class<?> clazz, TypeMirror typeMirror, ProcessingEnvironment env) {
         Elements elementUtils = env.getElementUtils();
         Types typeUtils = env.getTypeUtils();
         TypeMirror clazzMirror = classToTypeMirror(clazz, elementUtils);
