@@ -22,7 +22,7 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.restlet.teleapi.RestletTeleReader;
 import colesico.framework.restlet.teleapi.reader.*;
-import colesico.framework.security.Principal;
+import colesico.framework.security.Identity;
 import colesico.framework.telehttp.reader.PrincipalReader;
 import colesico.framework.telehttp.reader.ProfileReader;
 
@@ -178,7 +178,7 @@ public class RestletReadersProducer {
     }
 
     @Singleton
-    @Classed(Principal.class)
+    @Classed(Identity.class)
     public RestletTeleReader getPrincipalReader(PrincipalReader impl) {
         return RestletReaderProxy.of(impl);
     }

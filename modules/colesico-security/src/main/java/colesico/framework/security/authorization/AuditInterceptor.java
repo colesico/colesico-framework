@@ -22,7 +22,7 @@ import colesico.framework.service.InvocationContext;
  * Is used to handle security audit interception
  *
  * @see SecurityAudit
- * @see RequirePrincipal
+ * @see RequireIdentity
  */
 @FunctionalInterface
 public interface AuditInterceptor {

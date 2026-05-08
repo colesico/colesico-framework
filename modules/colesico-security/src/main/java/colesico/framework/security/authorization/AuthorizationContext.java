@@ -1,13 +1,13 @@
 package colesico.framework.security.authorization;
 
-import colesico.framework.security.Principal;
+import colesico.framework.security.Identity;
 
-public interface AuthorizationContext<P extends Principal<?>, R> {
+public interface AuthorizationContext<R> {
 
     /**
-     * Principal that requests authorization
+     * Identity that requests authorization
      */
-    P principal();
+    Identity<?> identity();
 
     /**
      * Resource for which authorization is requested.

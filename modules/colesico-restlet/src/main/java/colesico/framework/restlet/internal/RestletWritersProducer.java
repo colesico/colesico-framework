@@ -23,7 +23,7 @@ import colesico.framework.profile.Profile;
 import colesico.framework.restlet.RestletException;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 import colesico.framework.restlet.teleapi.writer.*;
-import colesico.framework.security.Principal;
+import colesico.framework.security.Identity;
 import colesico.framework.security.authorization.PrincipalRequiredException;
 import colesico.framework.telehttp.writer.PrincipalWriter;
 import colesico.framework.telehttp.writer.ProfileWriter;
@@ -44,7 +44,7 @@ public class RestletWritersProducer {
     }
 
     @Singleton
-    @Classed(Principal.class)
+    @Classed(Identity.class)
     public RestletTeleWriter getPrincipalWriter(PrincipalWriter impl) {
         return RestletWriterProxy.of(impl);
     }

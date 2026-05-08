@@ -19,8 +19,7 @@ package colesico.framework.example.rpc;
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
-import colesico.framework.security.DefaultPrincipal;
-import colesico.framework.security.Principal;
+import colesico.framework.security.Identity;
 
 import java.util.Locale;
 
@@ -36,7 +35,7 @@ public class MockProducer {
     }
 
     @Substitute
-    public Principal getPrincipal() {
-        return new DefaultPrincipal("ID0");
+    public Identity getPrincipal() {
+        return new StringIdentity("ID0");
     }
 }

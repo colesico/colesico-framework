@@ -2,12 +2,13 @@ package colesico.framework.security.internal;
 
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.ClassedKey;
-import colesico.framework.security.Principal;
-import colesico.framework.security.SecurityManager;
+import colesico.framework.ioc.key.Key;
+import colesico.framework.security.authentication.AuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationManager;
-import colesico.framework.security.authentication.AuthenticationProvider;
+import colesico.framework.security.authentication.Authenticator;
+import colesico.framework.security.authentication.AuthenticationResult;
 
-public class AuthenticationManagerImpl implements AuthenticationManager<?> {
+public class AuthenticationManagerImpl implements AuthenticationManager {
 
     protected final Ioc ioc;
 
@@ -16,14 +17,13 @@ public class AuthenticationManagerImpl implements AuthenticationManager<?> {
     }
 
     @Override
-    public Principal<?> authenticate(SecurityManager.Credentials credentials) {
-        AuthenticationProvider<P, SecurityManager.Credentials> authProvider = ioc.instance(new ClassedKey<>(AuthenticationProvider.class, credentials.getClass()));
-        var principleOpt = authProvider.authenticate(credentials);
-        if (principleOpt.isPresent()) {
-            write(principleOpt.get());
-            return principleOpt.get();
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public AuthenticationResult<?> authenticate(AuthenticationRequest request) {
+        Key<Authenticator> authIocKey = new ClassedKey<>(Authenticator.class, request.getClass());
+        Authenticator<AuthenticationRequest> authenticator = ioc.instanceOrNull(authIocKey);
+        if (authenticator == null) {
+            return AuthenticationResult.failure("Authenticator not found for authentication '" + request.getClass().getCanonicalName() + "'");
         }
-        return null;
+        return authenticator.authenticate(request);
     }
-
 }

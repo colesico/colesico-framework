@@ -19,12 +19,12 @@ package colesico.framework.security.authorization;
 import java.lang.annotation.*;
 
 /**
- * Annotate service method to require valid principal to be executed
+ * Annotate service method to require valid identity to be executed
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Inherited
 @Documented
-public @interface RequirePrincipal {
+public @interface RequireIdentity {
 
 }

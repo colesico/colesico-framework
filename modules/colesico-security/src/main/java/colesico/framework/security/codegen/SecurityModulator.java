@@ -22,8 +22,8 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.security.authorization.AuditInterceptor;
-import colesico.framework.security.authorization.RequirePrincipal;
-import colesico.framework.security.authorization.RequirePrincipalAudit;
+import colesico.framework.security.authorization.RequireIdentity;
+import colesico.framework.security.authorization.RequireIdentityAudit;
 import colesico.framework.security.authorization.SecurityAudit;
 import colesico.framework.service.codegen.model.InterceptionElement;
 import colesico.framework.service.codegen.model.InterceptionPhases;
@@ -48,22 +48,22 @@ public class SecurityModulator extends Modulator {
     @Override
     public void onServiceMethodParsed(ServiceMethodElement serviceMethod) {
         super.onServiceMethodParsed(serviceMethod);
-        final AnnotationAssist<RequirePrincipal> requirePrincipal = serviceMethod.originMethod().annotation(RequirePrincipal.class);
+        final AnnotationAssist<RequireIdentity> requireIdentity = serviceMethod.originMethod().annotation(RequireIdentity.class);
         final AnnotationAssist<SecurityAudit> securityAudit = serviceMethod.originMethod().annotation(SecurityAudit.class);
 
-        if (requirePrincipal == null && securityAudit == null) {
+        if (requireIdentity == null && securityAudit == null) {
             return;
         }
 
         if (serviceMethod.isPlain()) {
-            throw CodegenException.of().message("To use @" + RequirePrincipal.class.getSimpleName() + " or @"
+            throw CodegenException.of().message("To use @" + RequireIdentity.class.getSimpleName() + " or @"
                     + SecurityAudit.class.getSimpleName() + " method should not be a plain method").element(this.serviceMethod.originMethod()).build();
         }
 
         List<SecurityAuditorElement> auditors = new ArrayList<>();
 
-        if (requirePrincipal != null) {
-            SecurityAuditorElement se = new SecurityAuditorElement(ClassElement.of(processorContext().processingEnv(), RequirePrincipalAudit.class));
+        if (requireIdentity != null) {
+            SecurityAuditorElement se = new SecurityAuditorElement(ClassElement.of(processorContext().processingEnv(), RequireIdentityAudit.class));
             auditors.add(se);
         }
 

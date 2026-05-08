@@ -19,7 +19,7 @@ package colesico.framework.weblet.internal;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
-import colesico.framework.security.Principal;
+import colesico.framework.security.Identity;
 import colesico.framework.telehttp.reader.PrincipalReader;
 import colesico.framework.telehttp.reader.ProfileReader;
 import colesico.framework.telehttp.reader.*;
@@ -190,7 +190,7 @@ public class WebletReadersProducer {
     }
 
     @Singleton
-    @Classed(Principal.class)
+    @Classed(Identity.class)
     public WebletTeleReader principalReader(PrincipalReader impl) {
         return WebletReaderProxy.of(impl);
     }

@@ -20,35 +20,29 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.security.*;
 import colesico.framework.security.SecurityManager;
-import colesico.framework.security.authorization.RequirePrincipalAudit;
-import colesico.framework.security.teleapi.PrincipalSerializer;
+import colesico.framework.security.authentication.AuthenticationManager;
+import colesico.framework.security.authorization.RequireIdentityAudit;
 
 import jakarta.inject.Singleton;
 
 @Producer
-//@Produce(AbstractSecurityContext.class)
-@Produce(PrincipalSerializerImpl.class)
-@Produce(RequirePrincipalAudit.class)
+@Produce(RequireIdentityAudit.class)
+@Produce(value = AuthenticationManagerImpl.class, keyType = AuthenticationManager.class)
 public class SecurityProducer {
 
     /**
      * Default security kit producer
      */
     @Singleton
-    public SecurityManager getSecurityContext(AbstractSecurityManager impl) {
+    public SecurityManager getSecurityContext(SecurityManagerImpl impl) {
         return impl;
     }
 
     /**
-     * Current principal producer
+     * Current identity producer
      */
-    public Principal getPrincipal(SecurityManager kit) {
-        return kit.principal();
-    }
-
-    @Singleton
-    public PrincipalSerializer getPrincipalSerializer(PrincipalSerializerImpl impl) {
-        return impl;
+    public Identity identity(SecurityManager sm) {
+        return sm.identity();
     }
 
 }

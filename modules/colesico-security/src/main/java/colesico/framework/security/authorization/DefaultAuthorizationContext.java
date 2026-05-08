@@ -1,8 +1,7 @@
 package colesico.framework.security.authorization;
 
-import colesico.framework.security.Principal;
+import colesico.framework.security.Identity;
 
-public record DefaultAuthorizationContext<P extends Principal<?>, D>(P principal, D resource)
-        implements AuthorizationContext<P, D> {
-
+public record DefaultAuthorizationContext<R>(Identity<?> identity, R resource)
+        implements AuthorizationContext<R> {
 }

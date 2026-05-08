@@ -19,7 +19,7 @@ package colesico.framework.telehttp.reader;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpRequest;
-import colesico.framework.security.Principal;
+import colesico.framework.security.Identity;
 import colesico.framework.security.assist.MACUtils;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 import colesico.framework.telehttp.*;
@@ -34,7 +34,7 @@ import java.util.Base64;
 import java.util.StringTokenizer;
 
 @Singleton
-public class PrincipalReader extends HttpTeleReader<Principal, HttpTRContext<?, ?>> {
+public class PrincipalReader extends HttpTeleReader<Identity, HttpTRContext<?, ?>> {
 
     protected final PrincipalHttpConfigPrototype config;
     protected final PrincipalSerializer principalSerializer;
@@ -48,7 +48,7 @@ public class PrincipalReader extends HttpTeleReader<Principal, HttpTRContext<?, 
     }
 
     @Override
-    public Principal read(HttpTRContext<?, ?> context) {
+    public Identity read(HttpTRContext<?, ?> context) {
 
         HttpRequest request = httpContextProv.get().request();
         // Retrieve principal from http header
@@ -80,7 +80,7 @@ public class PrincipalReader extends HttpTeleReader<Principal, HttpTRContext<?, 
             throw new SecurityException("Invalid principal signature");
         }
 
-        Principal principal = principalSerializer.deserialize(principalBytes);
-        return principal;
+        Identity identity = principalSerializer.deserialize(principalBytes);
+        return identity;
     }
 }

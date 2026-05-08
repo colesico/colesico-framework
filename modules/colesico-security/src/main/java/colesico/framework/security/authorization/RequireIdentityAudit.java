@@ -7,21 +7,21 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
- * Checks that the current principal exists
+ * Checks that the current identity exists
  */
 @Singleton
-public final class RequirePrincipalAudit implements AuditInterceptor {
+public final class RequireIdentityAudit implements AuditInterceptor {
 
     private final colesico.framework.security.SecurityManager securityManager;
 
     @Inject
-    public RequirePrincipalAudit(SecurityManager securityManager) {
+    public RequireIdentityAudit(SecurityManager securityManager) {
         this.securityManager = securityManager;
     }
 
     @Override
     public Object audit(InvocationContext context) {
-        securityManager.requirePrincipal();
+        securityManager.requireIdentity();
         return context.proceed();
     }
 }

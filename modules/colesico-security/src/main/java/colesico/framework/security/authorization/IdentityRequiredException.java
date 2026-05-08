@@ -19,11 +19,11 @@ package colesico.framework.security.authorization;
 import colesico.framework.security.SecurityException;
 
 /**
- * An exception to be thrown in case of no current valid principal
+ * An exception to be thrown in case of no current valid identity
  */
-public class PrincipalRequiredException extends SecurityException {
+public class IdentityRequiredException extends SecurityException {
 
-    public PrincipalRequiredException() {
-        super("PrincipalRequired");
+    public IdentityRequiredException() {
+        super("IdentityRequired");
     }
 }

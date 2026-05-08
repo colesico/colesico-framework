@@ -16,48 +16,49 @@
 
 package colesico.framework.security;
 
+import colesico.framework.security.authentication.AuthenticationRequest;
+import colesico.framework.security.authentication.AuthenticationResult;
 import colesico.framework.security.authorization.*;
 
 import java.util.concurrent.Callable;
 
 /**
  * Security manager to provide basic security service.
- * Manager can store/obtain principal from different sources,
- * associates current principal instance to the current thread.
+ * Manager can store/obtain identity from different sources,
+ * associates current identity instance to the current thread.
  */
-public interface SecurityManager<P extends Principal<?>> {
+public interface SecurityManager {
 
     /**
-     * Authenticates the client using the provided credentials.
+     * Authenticates the client using the provided request.
      * If authentication is successful, the method should associate
-     * the resulting principal with the current thread and return it.
-     * In case of failure, should return null
+     * the resulting identity with the current thread.
      */
-    P authenticate(Credentials credentials);
+    AuthenticationResult<?> authenticate(AuthenticationRequest request);
 
     /**
-     * Returns the valid principal associated with the current process for authenticated
+     * Returns the valid identity associated with the current process for authenticated
      * client or null for an anonymous.
-     * Method must retrieve the principal from any source (eg from the data port)
+     * Method must retrieve the identity from any source (eg from the data port)
      * then validate, enrich (if needed) and cache it for a subsequent quick return
      * within the current thread.
      */
-    P principal();
+    Identity<?> identity();
 
     default boolean isAuthenticated() {
-        return principal() != null;
+        return identity() != null;
     }
 
     /**
-     * Call given closure as specified principal
+     * Call given closure as specified identity
      */
-    <T> T callAs(Callable<T> callable, P principal);
+    <T> T callAs(Callable<T> callable, Identity<?> identity);
 
-    default void runAs(P principal, Runnable runnable) {
+    default void runAs(Identity<?> identity, Runnable runnable) {
         callAs(() -> {
             runnable.run();
             return null;
-        }, principal);
+        }, identity);
     }
 
     /**
@@ -66,25 +67,19 @@ public interface SecurityManager<P extends Principal<?>> {
     void logout();
 
     /**
-     * Checks the presence of active valid principal.
-     * If not present - throws PrincipalRequiredException
+     * Checks the presence of active valid identity.
+     * If not present - throws IdentityRequiredException
      */
-    default void requirePrincipal() {
-        P principal = principal();
-        if (principal == null) {
-            throw new PrincipalRequiredException();
+    default void requireIdentity() {
+        Identity<?> identity = identity();
+        if (identity == null) {
+            throw new IdentityRequiredException();
         }
     }
 
-    default <D, R> AuthorizationResult<D> hasPermission(Authorizer<P, R, D> authorizer, R resource) {
-        AuthorizationContext<P, R> context = new DefaultAuthorizationContext<>(principal(), resource);
+    default <D, R> AuthorizationResult<D> hasPermission(Authorizer<R, D> authorizer, R resource) {
+        AuthorizationContext<R> context = new DefaultAuthorizationContext<>(identity(), resource);
         return authorizer.authorize(context);
-    }
-
-    /**
-     * Marker interface for any credentials
-     */
-    interface Credentials {
     }
 
 }

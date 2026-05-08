@@ -1,4 +1,4 @@
-package colesico.framework.security.authorization.authorizers;
+package colesico.framework.security.assist.authorizer;
 
 import colesico.framework.security.authorization.AuthorizationContext;
 import colesico.framework.security.authorization.AuthorizationResult;
@@ -7,14 +7,14 @@ import colesico.framework.security.authorization.Authorizer;
 import java.util.Collection;
 
 /**
- * Ideal for plugin systems.
- * If at least one {@link Authorizer} has granted access  - access is granted.
+ * For critical systems.
+ * If even one {@link Authorizer} denies access to a resource - access is denied.
  */
-public final class AffirmativeAuthorizer implements Authorizer {
+public final class UnanimousAuthorizer implements Authorizer {
 
-    private final Collection<Authorizer<?,?,?>> authorizers;
+    private final Collection<Authorizer> authorizers;
 
-    public AffirmativeAuthorizer(Collection<Authorizer<?,?,?>> authorizers) {
+    public UnanimousAuthorizer(Collection<Authorizer> authorizers) {
         this.authorizers = authorizers;
     }
 
@@ -22,10 +22,10 @@ public final class AffirmativeAuthorizer implements Authorizer {
     public AuthorizationResult<?> authorize(AuthorizationContext context) {
         for (var authorizer : authorizers) {
             var result = authorizer.authorize(context);
-            if (result.isGranted()) {
+            if (result.isDenied()) {
                 return result;
             }
         }
-        return AuthorizationResult.denied(null);
+        return AuthorizationResult.granted();
     }
 }

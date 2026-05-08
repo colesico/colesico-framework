@@ -4,7 +4,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 /**
- * Profile basic implementation
+ * Profile default implementation
  */
 public class DefaultProfile implements Profile {
 

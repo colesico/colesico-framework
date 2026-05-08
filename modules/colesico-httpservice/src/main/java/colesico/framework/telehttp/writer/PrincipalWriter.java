@@ -22,7 +22,7 @@ import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.telehttp.HttpTWContext;
 import colesico.framework.telehttp.HttpTeleWriter;
-import colesico.framework.security.Principal;
+import colesico.framework.security.Identity;
 import colesico.framework.security.assist.MACUtils;
 import colesico.framework.security.teleapi.PrincipalSerializer;
 
@@ -33,7 +33,7 @@ import java.util.Calendar;
 
 
 @Singleton
-public final class PrincipalWriter extends HttpTeleWriter<Principal, HttpTWContext<?, ?>> {
+public final class PrincipalWriter extends HttpTeleWriter<Identity, HttpTWContext<?, ?>> {
 
     public static final String COOKIE_NAME = "principal";
     public static final String HEADER_NAME = "X-Principal";
@@ -53,15 +53,15 @@ public final class PrincipalWriter extends HttpTeleWriter<Principal, HttpTWConte
     }
 
     @Override
-    public void write(Principal principal, HttpTWContext<?, ?> context) {
+    public void write(Identity identity, HttpTWContext<?, ?> context) {
         String principalValue;
         Calendar expires = Calendar.getInstance();
 
         // Serialize, sign and encode
 
-        if (principal != null) {
+        if (identity != null) {
 
-            byte[] principalBytes = principalSerializer.serialize(principal);
+            byte[] principalBytes = principalSerializer.serialize(identity);
             byte[] signatureBytes = MACUtils.sign(config.signatureAlgorithm(), principalBytes, config.signatureKey());
 
             Base64.Encoder encoder = Base64.getEncoder();

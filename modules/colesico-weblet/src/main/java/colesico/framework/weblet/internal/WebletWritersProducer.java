@@ -23,7 +23,7 @@ import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
-import colesico.framework.security.Principal;
+import colesico.framework.security.Identity;
 import colesico.framework.weblet.response.*;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.writer.*;
@@ -68,7 +68,7 @@ public class WebletWritersProducer {
     }
 
     @Singleton
-    @Classed(Principal.class)
+    @Classed(Identity.class)
     public WebletTeleWriter getPrincipalWriter(PrincipalWriter impl) {
         return WebletWriterProxy.of(impl);
     }
