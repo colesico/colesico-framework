@@ -4,5 +4,5 @@ package colesico.framework.security.authentication;
  * Iterates over AuthenticationProviders
  */
 public interface AuthenticationManager {
-    AuthenticationResult<?> authenticate(AuthenticationRequest request);
+    AuthenticationResult<?> authenticate(AuthenticationContext context);
 }

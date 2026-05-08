@@ -16,7 +16,7 @@
 
 package colesico.framework.security;
 
-import colesico.framework.security.authentication.AuthenticationRequest;
+import colesico.framework.security.authentication.AuthenticationContext;
 import colesico.framework.security.authentication.AuthenticationResult;
 import colesico.framework.security.authorization.*;
 
@@ -30,11 +30,11 @@ import java.util.concurrent.Callable;
 public interface SecurityManager {
 
     /**
-     * Authenticates the client using the provided request.
+     * Authenticates the client using the provided context.
      * If authentication is successful, the method should associate
      * the resulting identity with the current thread.
      */
-    AuthenticationResult<?> authenticate(AuthenticationRequest request);
+    AuthenticationResult<?> authenticate(AuthenticationContext context);
 
     /**
      * Returns the valid identity associated with the current process for authenticated

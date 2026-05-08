@@ -18,6 +18,8 @@ package colesico.framework.service;
 
 /**
  * Service method invocation interception context
+ * @param <R> invocation result type
+ * @param <T> target service type
  */
 public final class InvocationContext<T, R> {
 

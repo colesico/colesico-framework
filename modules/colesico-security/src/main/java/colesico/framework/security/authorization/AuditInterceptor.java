@@ -28,5 +28,5 @@ import colesico.framework.service.InvocationContext;
 public interface AuditInterceptor {
     String AUDIT_METHOD = "audit";
 
-    Object audit(InvocationContext context);
+    Object audit(InvocationContext<?,?> context);
 }

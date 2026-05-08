@@ -16,13 +16,12 @@
 
 package colesico.framework.security.internal;
 
-import colesico.framework.ioc.key.Key;
-import colesico.framework.ioc.key.TypeKey;
-import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.security.Identity;
+import colesico.framework.security.IdentityContext;
+import colesico.framework.security.SecurityListener;
 import colesico.framework.security.SecurityManager;
 import colesico.framework.security.authentication.AuthenticationManager;
-import colesico.framework.security.authentication.AuthenticationRequest;
+import colesico.framework.security.authentication.AuthenticationContext;
 import colesico.framework.security.authentication.AuthenticationResult;
 
 import java.util.concurrent.Callable;
@@ -33,27 +32,29 @@ import java.util.concurrent.Callable;
  */
 abstract public class SecurityManagerImpl implements SecurityManager {
 
-    protected final ThreadScope threadScope;
+    protected final IdentityContext identityContext;
     protected final AuthenticationManager authenticationManager;
+    protected final SecurityListener listener;
 
-    public SecurityManagerImpl(ThreadScope threadScope, AuthenticationManager authenticationManager) {
-        this.threadScope = threadScope;
+    public SecurityManagerImpl(IdentityContext identityContext, AuthenticationManager authenticationManager, SecurityListener listener) {
+        this.identityContext = identityContext;
         this.authenticationManager = authenticationManager;
+        this.listener = listener;
     }
 
     /**
-     * Read principle from source.
-     * Override this method to fine-grained principle read control: check validity,
-     * enrich with extra data from database, e.t.c.
+     * Read AuthenticationRequest from source.
+     * Override this method to fine-grained read control: check validity,
+     * enrich with extra data, e.t.c.
      */
-    abstract protected P read();
+    abstract protected AuthenticationContext readAuthRequest();
 
     @Override
-    public AuthenticationResult<?> authenticate(AuthenticationRequest request) {
-        var result = authenticationManager.authenticate(request);
+    public AuthenticationResult<?> authenticate(AuthenticationContext context) {
+        var result = authenticationManager.authenticate(context);
         if (result.isSuccess()) {
-            threadScope.put(IdentityHolder.SCOPE_KEY,
-                    new IdentityHolder(result.getIdentity().orElseThrow()));
+            identityContext.setIdentity(result.getIdentity().orElseThrow());
+
         }
         return result;
     }
@@ -61,39 +62,49 @@ abstract public class SecurityManagerImpl implements SecurityManager {
     @Override
     public Identity<?> identity() {
         // Check thread cache at first
-        IdentityHolder holder = threadScope.get(IdentityHolder.SCOPE_KEY);
+        var holder = identityContext.holder();
         if (holder != null) {
             return holder.identity();
         } else {
             // Create temporary empty identity holder
             // for possible subsequent recursive identity() invocations
-            threadScope.put(IdentityHolder.SCOPE_KEY, new IdentityHolder(null));
+            identityContext.setIdentity(null);
         }
 
         // No identity in cache. Retrieve identity from source
-        Identity<?> identity = read();
-        // Store identity to cache
-        threadScope.put(IdentityHolder.SCOPE_KEY, new IdentityHolder(identity));
+        AuthenticationContext authRequest = readAuthRequest();
+        if (authRequest != null) {
+            var authResult = authenticationManager.authenticate(authRequest);
+            if (authResult.isSuccess()) {
+                // Store identity to cache
+                var identity = authResult.getIdentity().orElseThrow();
+                identityContext.setIdentity(identity);
+                return identity;
+            }
+        }
 
-        return identity;
+        return null;
     }
 
+    @Override
+    public void logout() {
+        var holder = identityContext.holder();
+        //TODO: process identity notify event
+        identityContext.clear();
+    }
 
     @Override
     public <T> T callAs(Callable<T> callable, Identity<?> identity) {
-        IdentityHolder holder = threadScope.get(IdentityHolder.SCOPE_KEY);
-        threadScope.put(IdentityHolder.SCOPE_KEY, new IdentityHolder(identity));
+        var previous = identityContext.holder();
+        identityContext.setIdentity(identity);
         try {
             return callable.call();
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
-            threadScope.put(IdentityHolder.SCOPE_KEY, holder);
+            identityContext.setIdentity(previous.identity());
         }
     }
 
-    public record IdentityHolder(Identity<?> identity) {
-        public static final Key<IdentityHolder> SCOPE_KEY = new TypeKey<>(IdentityHolder.class);
-    }
 
 }
