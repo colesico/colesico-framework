@@ -31,7 +31,7 @@ import java.util.concurrent.Callable;
  * Security context default implementation.
  * Extend this class to customize identity control.
  */
-abstract public class SecurityManagerImpl<P extends Identity<?>> implements SecurityManager<P> {
+abstract public class SecurityManagerImpl implements SecurityManager {
 
     protected final ThreadScope threadScope;
     protected final AuthenticationManager authenticationManager;
@@ -48,12 +48,6 @@ abstract public class SecurityManagerImpl<P extends Identity<?>> implements Secu
      */
     abstract protected P read();
 
-    /**
-     * Writes identity to source.
-     * Override this method to get more specific control.
-     */
-    abstract protected P write(P principle);
-
     @Override
     public AuthenticationResult<?> authenticate(AuthenticationRequest request) {
         var result = authenticationManager.authenticate(request);
@@ -65,11 +59,11 @@ abstract public class SecurityManagerImpl<P extends Identity<?>> implements Secu
     }
 
     @Override
-    public P identity() {
+    public Identity<?> identity() {
         // Check thread cache at first
         IdentityHolder holder = threadScope.get(IdentityHolder.SCOPE_KEY);
         if (holder != null) {
-            return (P) holder.identity();
+            return holder.identity();
         } else {
             // Create temporary empty identity holder
             // for possible subsequent recursive identity() invocations
@@ -77,7 +71,7 @@ abstract public class SecurityManagerImpl<P extends Identity<?>> implements Secu
         }
 
         // No identity in cache. Retrieve identity from source
-        P identity = read();
+        Identity<?> identity = read();
         // Store identity to cache
         threadScope.put(IdentityHolder.SCOPE_KEY, new IdentityHolder(identity));
 
@@ -86,7 +80,7 @@ abstract public class SecurityManagerImpl<P extends Identity<?>> implements Secu
 
 
     @Override
-    public <T> T callAs(Callable<T> callable, P identity) {
+    public <T> T callAs(Callable<T> callable, Identity<?> identity) {
         IdentityHolder holder = threadScope.get(IdentityHolder.SCOPE_KEY);
         threadScope.put(IdentityHolder.SCOPE_KEY, new IdentityHolder(identity));
         try {
@@ -98,7 +92,7 @@ abstract public class SecurityManagerImpl<P extends Identity<?>> implements Secu
         }
     }
 
-    public record IdentityHolder(Identity identity) {
+    public record IdentityHolder(Identity<?> identity) {
         public static final Key<IdentityHolder> SCOPE_KEY = new TypeKey<>(IdentityHolder.class);
     }
 
