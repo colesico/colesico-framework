@@ -18,8 +18,9 @@ package colesico.framework.security.internal;
 
 import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
-import colesico.framework.security.SecurityListener;
+import colesico.framework.security.authentication.AuthenticationListener;
 import colesico.framework.security.SecurityManager;
+import colesico.framework.security.authentication.AuthenticationContextReader;
 import colesico.framework.security.authentication.AuthenticationManager;
 import colesico.framework.security.authentication.AuthenticationContext;
 import colesico.framework.security.authentication.AuthenticationResult;
@@ -30,32 +31,32 @@ import java.util.concurrent.Callable;
  * Security context default implementation.
  * Extend this class to customize identity control.
  */
-abstract public class SecurityManagerImpl implements SecurityManager {
+public class SecurityManagerImpl implements SecurityManager {
 
     protected final IdentityContext identityContext;
     protected final AuthenticationManager authenticationManager;
-    protected final SecurityListener listener;
+    protected final AuthenticationListener authenticationListener;
+    protected final AuthenticationContextReader authContextReader;
 
-    public SecurityManagerImpl(IdentityContext identityContext, AuthenticationManager authenticationManager, SecurityListener listener) {
+    public SecurityManagerImpl(IdentityContext identityContext,
+                               AuthenticationManager authenticationManager,
+                               AuthenticationListener authenticationListener,
+                               AuthenticationContextReader authContextReader) {
         this.identityContext = identityContext;
         this.authenticationManager = authenticationManager;
-        this.listener = listener;
+        this.authenticationListener = authenticationListener;
+        this.authContextReader = authContextReader;
     }
-
-    /**
-     * Read AuthenticationRequest from source.
-     * Override this method to fine-grained read control: check validity,
-     * enrich with extra data, e.t.c.
-     */
-    abstract protected AuthenticationContext readAuthRequest();
 
     @Override
     public AuthenticationResult<?> authenticate(AuthenticationContext context) {
         var result = authenticationManager.authenticate(context);
+        result = authenticationListener.onAuthenticate(result);
+
         if (result.isSuccess()) {
             identityContext.setIdentity(result.getIdentity().orElseThrow());
-
         }
+
         return result;
     }
 
@@ -65,21 +66,17 @@ abstract public class SecurityManagerImpl implements SecurityManager {
         var holder = identityContext.holder();
         if (holder != null) {
             return holder.identity();
-        } else {
-            // Create temporary empty identity holder
-            // for possible subsequent recursive identity() invocations
-            identityContext.setIdentity(null);
         }
+        // Create temporary empty identity holder
+        // for possible subsequent recursive identity() invocations
+        identityContext.setIdentity(null);
 
         // No identity in cache. Retrieve identity from source
-        AuthenticationContext authRequest = readAuthRequest();
-        if (authRequest != null) {
-            var authResult = authenticationManager.authenticate(authRequest);
+        AuthenticationContext context = authContextReader.read();
+        if (context != null) {
+            var authResult = authenticate(context);
             if (authResult.isSuccess()) {
-                // Store identity to cache
-                var identity = authResult.getIdentity().orElseThrow();
-                identityContext.setIdentity(identity);
-                return identity;
+                return authResult.getIdentity().orElseThrow();
             }
         }
 
@@ -89,7 +86,9 @@ abstract public class SecurityManagerImpl implements SecurityManager {
     @Override
     public void logout() {
         var holder = identityContext.holder();
-        //TODO: process identity notify event
+        if (holder != null && holder.identity() != null) {
+            authenticationListener.onLogout(holder.identity());
+        }
         identityContext.clear();
     }
 
@@ -100,11 +99,14 @@ abstract public class SecurityManagerImpl implements SecurityManager {
         try {
             return callable.call();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw (e instanceof RuntimeException re) ? re : new RuntimeException(e);
         } finally {
-            identityContext.setIdentity(previous.identity());
+            if (previous != null) {
+                identityContext.setIdentity(previous.identity());
+            } else {
+                identityContext.clear();
+            }
         }
     }
-
 
 }
