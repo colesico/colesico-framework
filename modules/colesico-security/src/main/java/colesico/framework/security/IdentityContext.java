@@ -8,13 +8,26 @@ import colesico.framework.ioc.key.TypeKey;
  */
 public interface IdentityContext {
 
-    Holder holder();
+    /**
+     * Returns entry bound to current scope  (thread, request, etc)
+     */
+    Entry get();
 
-    void setIdentity(Identity<?> identity);
+    void setEntry(Entry entry);
 
+    default void setIdentity(Identity<?> identity) {
+        setEntry(new Entry(identity));
+    }
+
+    /**
+     * Remove entry  bound to current scope
+     */
     void clear();
 
-    record Holder(Identity<?> identity) {
-        public static final Key<Holder> SCOPE_KEY = new TypeKey<>(Holder.class);
+    /**
+     * Context data holder
+     */
+    record Entry(Identity<?> identity) {
+        public static final Key<Entry> SCOPE_KEY = new TypeKey<>(Entry.class);
     }
 }

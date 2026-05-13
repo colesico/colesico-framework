@@ -16,6 +16,8 @@
 
 package colesico.framework.security;
 
+import colesico.framework.security.authentication.AuthenticationContext;
+
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -27,9 +29,11 @@ import java.util.function.Function;
  * the subject's unique identifier and a set of claims (attributes and permissions)
  * describing the entity's properties and authorities.
  * <p>
- * Framework provides default implementation {@link StringIdentity}
+ * Framework provides default implementation {@link Identity.Default}
  */
 public interface Identity<I> {
+
+    String AUTHENTICATOR_CLAIM = "authenticator";
 
     /**
      * The unique string identifier of this identity (e.g., UUID, username, or numeric ID).
@@ -52,4 +56,11 @@ public interface Identity<I> {
         Object value = claims().get(key);
         return type.isInstance(value) ? Optional.of(type.cast(value)) : Optional.empty();
     }
+
+    /**
+     * Default identity implementation
+     */
+    record Default<I>(I id, Map<String, Object> claims) implements Identity<I> {
+    }
+
 }

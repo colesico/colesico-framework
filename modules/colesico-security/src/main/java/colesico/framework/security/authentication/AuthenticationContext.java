@@ -1,8 +1,7 @@
 package colesico.framework.security.authentication;
 
 /**
- * Marker interface representing the data required for authentication.
- * (e.g., credentials, tokens, or environmental metadata).
+ * Authentication/logout context.
  */
 public interface AuthenticationContext {
 }

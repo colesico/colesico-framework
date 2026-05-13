@@ -7,7 +7,7 @@ package colesico.framework.security.authorization;
 public interface Authorizer<R, D> {
 
     /**
-     * Perform authorization
+     * Perform specific authorization
      */
-    AuthorizationResult<D> authorize(AuthorizationContext<R> context);
+    AuthorizationResult<D> authorize(AuthorizationRequest<R> request);
 }

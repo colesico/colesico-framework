@@ -3,6 +3,7 @@ package colesico.framework.security.internal;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.ClassedKey;
 import colesico.framework.ioc.key.Key;
+import colesico.framework.security.Identity;
 import colesico.framework.security.authentication.AuthenticationContext;
 import colesico.framework.security.authentication.AuthenticationManager;
 import colesico.framework.security.authentication.Authenticator;
@@ -16,14 +17,32 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         this.ioc = ioc;
     }
 
-    @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public AuthenticationResult<?> authenticate(AuthenticationContext context) {
-        Key<Authenticator> authIocKey = new ClassedKey<>(Authenticator.class, context.getClass());
+    private Authenticator<AuthenticationContext> authenticator(Class<? extends AuthenticationContext> contextClass) {
+        if (contextClass == null) {
+            throw new SecurityException("Authentication context class is null");
+        }
+        Key<Authenticator> authIocKey = new ClassedKey<>(Authenticator.class, contextClass);
         Authenticator<AuthenticationContext> authenticator = ioc.instanceOrNull(authIocKey);
         if (authenticator == null) {
-            return AuthenticationResult.failure("Authenticator not found for authentication '" + context.getClass().getCanonicalName() + "'");
+            throw new SecurityException("Authenticator not found for context class '" + contextClass.getCanonicalName() + "'");
         }
-        return authenticator.authenticate(context);
+        return authenticator;
+    }
+
+    @Override
+    public AuthenticationResult<?> authenticate(AuthenticationContext context) {
+        return authenticator(context.getClass()).authenticate(context);
+    }
+
+    @Override
+    public void logout(Identity<?> identity) {
+        @SuppressWarnings("unchecked")
+        Class<? extends AuthenticationContext> contextClass =
+                (Class<? extends AuthenticationContext>) identity.claims().get(Identity.AUTHENTICATOR_CLAIM);
+
+        if (contextClass != null) {
+            authenticator(contextClass).logout(identity);
+        }
     }
 }

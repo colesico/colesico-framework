@@ -1,6 +1,6 @@
 package colesico.framework.security.authorization.authorizer;
 
-import colesico.framework.security.authorization.AuthorizationContext;
+import colesico.framework.security.authorization.AuthorizationRequest;
 import colesico.framework.security.authorization.AuthorizationResult;
 import colesico.framework.security.authorization.Authorizer;
 
@@ -19,9 +19,9 @@ public final class UnanimousAuthorizer implements Authorizer {
     }
 
     @Override
-    public AuthorizationResult<?> authorize(AuthorizationContext context) {
+    public AuthorizationResult<?> authorize(AuthorizationRequest request) {
         for (var authorizer : authorizers) {
-            var result = authorizer.authorize(context);
+            var result = authorizer.authorize(request);
             if (result.isDenied()) {
                 return result;
             }

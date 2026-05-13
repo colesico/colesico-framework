@@ -2,7 +2,10 @@ package colesico.framework.security.authorization;
 
 import colesico.framework.security.Identity;
 
-public interface AuthorizationContext<R> {
+/**
+ * Request for authorization given identity to resource
+ */
+public interface AuthorizationRequest<R> {
 
     /**
      * Identity that requests authorization

@@ -30,21 +30,20 @@ import java.util.concurrent.Callable;
 public interface SecurityManager {
 
     /**
-     * Authenticates the client using the provided context.
-     * If authentication is successful, the method should associate
-     * the resulting identity with the current thread.
+     * Authenticate by provided {@link AuthenticationContext} and bind  to {@link IdentityContext} on success.
      */
     AuthenticationResult<?> authenticate(AuthenticationContext context);
 
     /**
      * Returns the valid identity associated with the current process for authenticated
-     * client or null for an anonymous.
-     * Method must retrieve the identity from any source (eg from the data port)
-     * then validate, enrich (if needed) and cache it for a subsequent quick return
-     * within the current thread.
+     * caller or null for an anonymous.
+     * To authenticate caller method tries to retrieve {@link AuthenticationContext} from any source (eg from the data port)
      */
     Identity<?> identity();
 
+    /**
+     * Check  current caller is authenticated
+     */
     default boolean isAuthenticated() {
         return identity() != null;
     }
@@ -62,7 +61,7 @@ public interface SecurityManager {
     }
 
     /**
-     *  Complete reset of current authentication.
+     * Complete reset of current authentication.
      */
     void logout();
 
@@ -78,7 +77,7 @@ public interface SecurityManager {
     }
 
     default <D, R> AuthorizationResult<D> hasPermission(Authorizer<R, D> authorizer, R resource) {
-        AuthorizationContext<R> context = new DefaultAuthorizationContext<>(identity(), resource);
+        AuthorizationRequest<R> context = new DefaultAuthorizationRequest<>(identity(), resource);
         return authorizer.authorize(context);
     }
 

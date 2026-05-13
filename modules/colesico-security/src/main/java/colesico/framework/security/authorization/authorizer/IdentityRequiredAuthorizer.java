@@ -1,14 +1,14 @@
 package colesico.framework.security.authorization.authorizer;
 
-import colesico.framework.security.authorization.AuthorizationContext;
+import colesico.framework.security.authorization.AuthorizationRequest;
 import colesico.framework.security.authorization.AuthorizationResult;
 import colesico.framework.security.authorization.Authorizer;
 
 public class IdentityRequiredAuthorizer implements Authorizer<Object, Object> {
 
     @Override
-    public AuthorizationResult<Object> authorize(AuthorizationContext<Object> context) {
-        if (context.identity() == null) {
+    public AuthorizationResult<Object> authorize(AuthorizationRequest<Object> request) {
+        if (request.identity() == null) {
             return AuthorizationResult.denied();
         }
         return AuthorizationResult.granted();

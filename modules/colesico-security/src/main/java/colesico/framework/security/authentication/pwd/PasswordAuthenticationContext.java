@@ -1,7 +1,9 @@
-package colesico.framework.security.authentication;
+package colesico.framework.security.authentication.pwd;
+
+import colesico.framework.security.authentication.AuthenticationContext;
 
 /**
- * Helper auth context
+ * Helper context
  */
 public record PasswordAuthenticationContext(
         String username,

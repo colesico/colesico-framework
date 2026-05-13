@@ -18,12 +18,9 @@ package colesico.framework.security.internal;
 
 import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
-import colesico.framework.security.authentication.AuthenticationListener;
+import colesico.framework.security.authentication.*;
 import colesico.framework.security.SecurityManager;
-import colesico.framework.security.authentication.AuthenticationContextReader;
-import colesico.framework.security.authentication.AuthenticationManager;
-import colesico.framework.security.authentication.AuthenticationContext;
-import colesico.framework.security.authentication.AuthenticationResult;
+import colesico.framework.security.authentication.AuthenticationSource;
 
 import java.util.concurrent.Callable;
 
@@ -36,47 +33,48 @@ public class SecurityManagerImpl implements SecurityManager {
     protected final IdentityContext identityContext;
     protected final AuthenticationManager authenticationManager;
     protected final AuthenticationListener authenticationListener;
-    protected final AuthenticationContextReader authContextReader;
+    protected final AuthenticationSource authenticationSource;
 
     public SecurityManagerImpl(IdentityContext identityContext,
                                AuthenticationManager authenticationManager,
                                AuthenticationListener authenticationListener,
-                               AuthenticationContextReader authContextReader) {
+                               AuthenticationSource authenticationSource) {
         this.identityContext = identityContext;
         this.authenticationManager = authenticationManager;
         this.authenticationListener = authenticationListener;
-        this.authContextReader = authContextReader;
+        this.authenticationSource = authenticationSource;
     }
 
     @Override
     public AuthenticationResult<?> authenticate(AuthenticationContext context) {
         var result = authenticationManager.authenticate(context);
         result = authenticationListener.onAuthenticate(result);
-
         if (result.isSuccess()) {
-            identityContext.setIdentity(result.getIdentity().orElseThrow());
+            if (result.identity() == null) {
+                throw new SecurityException("Null Identity for success authentication");
+            }
+            identityContext.setIdentity(result.identity());
         }
-
         return result;
     }
 
     @Override
     public Identity<?> identity() {
         // Check thread cache at first
-        var holder = identityContext.holder();
-        if (holder != null) {
-            return holder.identity();
+        var entry = identityContext.get();
+        if (entry != null) {
+            return entry.identity();
         }
         // Create temporary empty identity holder
         // for possible subsequent recursive identity() invocations
         identityContext.setIdentity(null);
 
         // No identity in cache. Retrieve identity from source
-        AuthenticationContext context = authContextReader.read();
+        AuthenticationContext context = authenticationSource.context();
         if (context != null) {
             var authResult = authenticate(context);
             if (authResult.isSuccess()) {
-                return authResult.getIdentity().orElseThrow();
+                return authResult.identity();
             }
         }
 
@@ -85,16 +83,19 @@ public class SecurityManagerImpl implements SecurityManager {
 
     @Override
     public void logout() {
-        var holder = identityContext.holder();
-        if (holder != null && holder.identity() != null) {
-            authenticationListener.onLogout(holder.identity());
-        }
+        var entry = identityContext.get();
         identityContext.clear();
+
+        if (entry != null && entry.identity() != null) {
+            authenticationManager.logout(entry.identity());
+            authenticationSource.onLogout(entry.identity());
+            authenticationListener.onLogout(entry.identity());
+        }
     }
 
     @Override
     public <T> T callAs(Callable<T> callable, Identity<?> identity) {
-        var previous = identityContext.holder();
+        var previous = identityContext.get();
         identityContext.setIdentity(identity);
         try {
             return callable.call();
@@ -102,7 +103,7 @@ public class SecurityManagerImpl implements SecurityManager {
             throw (e instanceof RuntimeException re) ? re : new RuntimeException(e);
         } finally {
             if (previous != null) {
-                identityContext.setIdentity(previous.identity());
+                identityContext.setEntry(previous);
             } else {
                 identityContext.clear();
             }

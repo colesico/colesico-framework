@@ -1,7 +1,6 @@
 package colesico.framework.security.internal;
 
 import colesico.framework.ioc.scope.ThreadScope;
-import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
 
 public class IdentityContextImpl implements IdentityContext {
@@ -13,17 +12,18 @@ public class IdentityContextImpl implements IdentityContext {
     }
 
     @Override
-    public Holder holder() {
-        return threadScope.get(Holder.SCOPE_KEY);
+    public Entry get() {
+        return threadScope.get(Entry.SCOPE_KEY);
     }
 
     @Override
-    public void setIdentity(Identity<?> identity) {
-        threadScope.put(Holder.SCOPE_KEY, new Holder(identity));
+    public void setEntry(Entry entry) {
+        threadScope.put(Entry.SCOPE_KEY, entry);
     }
 
     @Override
     public void clear() {
-        threadScope.put(Holder.SCOPE_KEY, null);
+        threadScope.put(Entry.SCOPE_KEY, null);
     }
+
 }

@@ -16,27 +16,27 @@
 
 package colesico.framework.security.internal;
 
+import colesico.framework.ioc.conditional.Substitute;
+import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.security.*;
 import colesico.framework.security.SecurityManager;
+import colesico.framework.security.authentication.AuthenticationContext;
+import colesico.framework.security.authentication.AuthenticationSource;
+import colesico.framework.security.authentication.AuthenticationListener;
 import colesico.framework.security.authentication.AuthenticationManager;
+import colesico.framework.security.authentication.pwd.PasswordAuthenticationContext;
 import colesico.framework.security.authorization.RequireIdentityAudit;
 
 import jakarta.inject.Singleton;
 
 @Producer
 @Produce(RequireIdentityAudit.class)
-@Produce(value = AuthenticationManagerImpl.class, keyType = AuthenticationManager.class)
+@Produce(value = IdentityContextImpl.class, keyType = IdentityContext.class, scoped = Singleton.class)
+@Produce(value = AuthenticationManagerImpl.class, keyType = AuthenticationManager.class, scoped = Singleton.class)
+@Produce(value = SecurityManagerImpl.class, keyType = SecurityManager.class, scoped = Singleton.class)
 public class SecurityProducer {
-
-    /**
-     * Default security kit producer
-     */
-    @Singleton
-    public SecurityManager getSecurityContext(SecurityManagerImpl impl) {
-        return impl;
-    }
 
     /**
      * Current identity producer
@@ -45,4 +45,26 @@ public class SecurityProducer {
         return sm.identity();
     }
 
+    @Substitute(Substitution.STUB)
+    @Singleton
+    public AuthenticationListener authListener() {
+        return new AuthenticationListener() {
+        };
+    }
+
+    @Substitute(Substitution.STUB)
+    @Singleton
+    public AuthenticationSource authContextReader() {
+        return new AuthenticationSource() {
+            @Override
+            public AuthenticationContext context() {
+                return new PasswordAuthenticationContext(null, null);
+            }
+
+            @Override
+            public void onLogout(Identity<?> identity) {
+
+            }
+        };
+    }
 }
