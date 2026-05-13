@@ -44,7 +44,7 @@ public interface AuthenticationResult<E> {
 
     }
 
-    static <E> AuthenticationResult<E> success(Identity<?> identity, AuthenticationContext auth) {
+    static <E> AuthenticationResult<E> success(Identity<?> identity) {
         return new Success<>(identity);
     }
 

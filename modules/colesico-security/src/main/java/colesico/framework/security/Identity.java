@@ -61,6 +61,13 @@ public interface Identity<I> {
      * Default identity implementation
      */
     record Default<I>(I id, Map<String, Object> claims) implements Identity<I> {
+        public static <I> Default<I> of(I id) {
+            return new Default<>(id, Map.of());
+        }
+
+        public static <I> Default<I> of(I id, Map<String, Object> claims) {
+            return new Default<>(id, claims);
+        }
     }
 
 }
