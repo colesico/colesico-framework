@@ -1,13 +1,13 @@
-package colesico.framework.security.authentication.pwd;
+package colesico.framework.security.assist.pwdauth;
 
 import colesico.framework.security.Identity;
 import colesico.framework.security.authentication.AuthenticationResult;
 import colesico.framework.security.authentication.Authenticator;
 
-public class PasswordAuthenticator implements Authenticator<PasswordAuthenticationContext> {
+public class PasswordAuthenticator implements Authenticator<PasswordAuthContext> {
 
     @Override
-    public AuthenticationResult<?> authenticate(PasswordAuthenticationContext context) {
+    public AuthenticationResult<?> login(PasswordAuthContext context) {
         return null;
     }
 

@@ -20,7 +20,7 @@ import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
 import colesico.framework.security.authentication.*;
 import colesico.framework.security.SecurityManager;
-import colesico.framework.security.authentication.AuthenticationSource;
+import colesico.framework.security.authentication.AuthenticationExchange;
 
 import java.util.concurrent.Callable;
 
@@ -33,28 +33,29 @@ public class SecurityManagerImpl implements SecurityManager {
     protected final IdentityContext identityContext;
     protected final AuthenticationManager authenticationManager;
     protected final AuthenticationListener authenticationListener;
-    protected final AuthenticationSource authenticationSource;
+    protected final AuthenticationExchange authenticationExchange;
 
     public SecurityManagerImpl(IdentityContext identityContext,
                                AuthenticationManager authenticationManager,
                                AuthenticationListener authenticationListener,
-                               AuthenticationSource authenticationSource) {
+                               AuthenticationExchange authenticationExchange) {
         this.identityContext = identityContext;
         this.authenticationManager = authenticationManager;
         this.authenticationListener = authenticationListener;
-        this.authenticationSource = authenticationSource;
+        this.authenticationExchange = authenticationExchange;
     }
 
     @Override
-    public AuthenticationResult<?> authenticate(AuthenticationContext context) {
-        var result = authenticationManager.authenticate(context);
-        result = authenticationListener.onAuthenticate(result);
+    public AuthenticationResult<?> login(AuthenticationContext context) {
+        var result = authenticationManager.login(context);
         if (result.isSuccess()) {
             if (result.identity() == null) {
                 throw new SecurityException("Null Identity for success authentication");
             }
             identityContext.setIdentity(result.identity());
+            authenticationExchange.login(result.identity());
         }
+        authenticationListener.onLogin(result);
         return result;
     }
 
@@ -70,9 +71,9 @@ public class SecurityManagerImpl implements SecurityManager {
         identityContext.setIdentity(null);
 
         // No identity in cache. Retrieve identity from source
-        AuthenticationContext context = authenticationSource.context();
+        AuthenticationContext context = authenticationExchange.context();
         if (context != null) {
-            var authResult = authenticate(context);
+            var authResult = login(context);
             if (authResult.isSuccess()) {
                 return authResult.identity();
             }
@@ -88,7 +89,7 @@ public class SecurityManagerImpl implements SecurityManager {
 
         if (entry != null && entry.identity() != null) {
             authenticationManager.logout(entry.identity());
-            authenticationSource.onLogout(entry.identity());
+            authenticationExchange.logout(entry.identity());
             authenticationListener.onLogout(entry.identity());
         }
     }

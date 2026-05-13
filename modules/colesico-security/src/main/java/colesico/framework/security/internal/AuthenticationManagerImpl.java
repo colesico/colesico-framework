@@ -31,8 +31,8 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     }
 
     @Override
-    public AuthenticationResult<?> authenticate(AuthenticationContext context) {
-        return authenticator(context.getClass()).authenticate(context);
+    public AuthenticationResult<?> login(AuthenticationContext context) {
+        return authenticator(context.getClass()).login(context);
     }
 
     @Override

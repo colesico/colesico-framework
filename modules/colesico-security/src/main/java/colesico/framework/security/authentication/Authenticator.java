@@ -22,7 +22,7 @@ public interface Authenticator<C extends AuthenticationContext> {
     /**
      * Performs authentication using the provided context.
      */
-    AuthenticationResult<?> authenticate(C context);
+    AuthenticationResult<?> login(C context);
 
     /**
      * Perform logout

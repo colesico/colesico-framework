@@ -23,10 +23,10 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.security.*;
 import colesico.framework.security.SecurityManager;
 import colesico.framework.security.authentication.AuthenticationContext;
-import colesico.framework.security.authentication.AuthenticationSource;
+import colesico.framework.security.authentication.AuthenticationExchange;
 import colesico.framework.security.authentication.AuthenticationListener;
 import colesico.framework.security.authentication.AuthenticationManager;
-import colesico.framework.security.authentication.pwd.PasswordAuthenticationContext;
+import colesico.framework.security.assist.pwdauth.PasswordAuthContext;
 import colesico.framework.security.authorization.RequireIdentityAudit;
 
 import jakarta.inject.Singleton;
@@ -54,11 +54,11 @@ public class SecurityProducer {
 
     @Substitute(Substitution.STUB)
     @Singleton
-    public AuthenticationSource authContextReader() {
-        return new AuthenticationSource() {
+    public AuthenticationExchange authContextReader() {
+        return new AuthenticationExchange() {
             @Override
             public AuthenticationContext context() {
-                return new PasswordAuthenticationContext(null, null);
+                return new PasswordAuthContext(null, null);
             }
 
             @Override

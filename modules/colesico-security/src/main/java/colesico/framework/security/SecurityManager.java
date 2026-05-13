@@ -30,9 +30,9 @@ import java.util.concurrent.Callable;
 public interface SecurityManager {
 
     /**
-     * Authenticate by provided {@link AuthenticationContext} and bind  to {@link IdentityContext} on success.
+     * Authenticate user by provided {@link AuthenticationContext} and on success bind {@link Identity} to {@link IdentityContext}.
      */
-    AuthenticationResult<?> authenticate(AuthenticationContext context);
+    AuthenticationResult<?> login(AuthenticationContext context);
 
     /**
      * Returns the valid identity associated with the current process for authenticated
@@ -77,7 +77,7 @@ public interface SecurityManager {
     }
 
     default <D, R> AuthorizationResult<D> hasPermission(Authorizer<R, D> authorizer, R resource) {
-        AuthorizationRequest<R> context = new DefaultAuthorizationRequest<>(identity(), resource);
+        AuthorizationRequest<R> context = new AuthorizationRequest.Default<>(identity(), resource);
         return authorizer.authorize(context);
     }
 
