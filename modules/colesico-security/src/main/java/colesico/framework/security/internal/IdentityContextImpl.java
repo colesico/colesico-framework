@@ -12,7 +12,7 @@ public class IdentityContextImpl implements IdentityContext {
     }
 
     @Override
-    public Entry get() {
+    public Entry entry() {
         return threadScope.get(Entry.SCOPE_KEY);
     }
 

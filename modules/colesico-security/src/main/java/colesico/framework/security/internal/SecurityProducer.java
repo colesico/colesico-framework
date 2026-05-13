@@ -26,7 +26,7 @@ import colesico.framework.security.authentication.AuthenticationContext;
 import colesico.framework.security.authentication.AuthenticationExchange;
 import colesico.framework.security.authentication.AuthenticationListener;
 import colesico.framework.security.authentication.AuthenticationManager;
-import colesico.framework.security.assist.pwdauth.PasswordAuthContext;
+import colesico.framework.security.assist.basicauth.BasicAuthContext;
 import colesico.framework.security.authorization.RequireIdentityAudit;
 
 import jakarta.inject.Singleton;
@@ -58,7 +58,7 @@ public class SecurityProducer {
         return new AuthenticationExchange() {
             @Override
             public AuthenticationContext context() {
-                return new PasswordAuthContext(null, null);
+                return new BasicAuthContext(null, null);
             }
 
             @Override

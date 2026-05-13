@@ -11,7 +11,7 @@ public interface IdentityContext {
     /**
      * Returns entry bound to current scope  (thread, request, etc)
      */
-    Entry get();
+    Entry entry();
 
     void setEntry(Entry entry);
 
@@ -20,7 +20,7 @@ public interface IdentityContext {
     }
 
     /**
-     * Remove entry  bound to current scope
+     * Remove entry bound to current scope
      */
     void clear();
 

@@ -17,7 +17,7 @@ module colesico.framework.security {
     exports colesico.framework.security.authorization;
     exports colesico.framework.security.assist.authorizer;
     exports colesico.framework.security.authentication;
-    exports colesico.framework.security.assist.pwdauth;
+    exports colesico.framework.security.assist.basicauth;
 
     exports colesico.framework.security.assist;
     exports colesico.framework.security.internal to colesico.framework.ioc;

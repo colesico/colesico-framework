@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2025 Vladlen V. Larionov and others as noted.
+ * Copyright © 2014-2026 Vladlen V. Larionov and others as noted.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ public class SecurityManagerImpl implements SecurityManager {
     @Override
     public Identity<?> identity() {
         // Check thread cache at first
-        var entry = identityContext.get();
+        var entry = identityContext.entry();
         if (entry != null) {
             return entry.identity();
         }
@@ -84,7 +84,7 @@ public class SecurityManagerImpl implements SecurityManager {
 
     @Override
     public void logout() {
-        var entry = identityContext.get();
+        var entry = identityContext.entry();
         identityContext.clear();
 
         if (entry != null && entry.identity() != null) {
@@ -96,7 +96,7 @@ public class SecurityManagerImpl implements SecurityManager {
 
     @Override
     public <T> T callAs(Callable<T> callable, Identity<?> identity) {
-        var previous = identityContext.get();
+        var previous = identityContext.entry();
         identityContext.setIdentity(identity);
         try {
             return callable.call();

@@ -3,17 +3,17 @@ package colesico.framework.security.authentication;
 import colesico.framework.security.Identity;
 
 /**
- * Authentication exchange is represented by HTTP Request/Response, grpc, MQ Message, etc.
+ * Authentication exchange is represented by HTTP Request/Response, gRPC, MQ Message, etc.
  */
 public interface AuthenticationExchange {
 
     /**
-     * Retrieve {@link AuthenticationContext}.
+     * Retrieve {@link AuthenticationContext}
      */
     AuthenticationContext context();
 
     /**
-     * Succeeded authentication callback
+     * Login callback
      */
     void login(Identity<?> identity);
 
