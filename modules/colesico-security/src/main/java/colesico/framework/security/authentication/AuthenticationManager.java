@@ -10,7 +10,7 @@ public interface AuthenticationManager {
     /**
      * Delegates authentication to acceptable authenticator
      */
-    AuthenticationResult<?> login(AuthenticationContext context);
+    AuthenticationStatus login(AuthenticationContext context);
 
     /**
      * Delegates the logout to acceptable authenticator that is selected by

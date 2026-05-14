@@ -7,7 +7,7 @@ import colesico.framework.security.Identity;
 import colesico.framework.security.authentication.AuthenticationContext;
 import colesico.framework.security.authentication.AuthenticationManager;
 import colesico.framework.security.authentication.Authenticator;
-import colesico.framework.security.authentication.AuthenticationResult;
+import colesico.framework.security.authentication.AuthenticationStatus;
 
 public class AuthenticationManagerImpl implements AuthenticationManager {
 
@@ -31,7 +31,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     }
 
     @Override
-    public AuthenticationResult<?> login(AuthenticationContext context) {
+    public AuthenticationStatus login(AuthenticationContext context) {
         return authenticator(context.getClass()).login(context);
     }
 

@@ -23,7 +23,7 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.security.*;
 import colesico.framework.security.SecurityManager;
 import colesico.framework.security.authentication.AuthenticationContext;
-import colesico.framework.security.authentication.AuthenticationExchange;
+import colesico.framework.security.authentication.AuthenticationPeer;
 import colesico.framework.security.authentication.AuthenticationListener;
 import colesico.framework.security.authentication.AuthenticationManager;
 import colesico.framework.security.assist.basicauth.BasicAuthContext;
@@ -42,7 +42,7 @@ public class SecurityProducer {
      * Current identity producer
      */
     public Identity identity(SecurityManager sm) {
-        return sm.identity();
+        return sm.identity().getIdentity().orElse(null);
     }
 
     @Substitute(Substitution.STUB)
@@ -54,15 +54,25 @@ public class SecurityProducer {
 
     @Substitute(Substitution.STUB)
     @Singleton
-    public AuthenticationExchange authContextReader() {
-        return new AuthenticationExchange() {
+    public AuthenticationPeer authContextReader() {
+        return new AuthenticationPeer() {
             @Override
             public AuthenticationContext context() {
-                return new BasicAuthContext(null, null);
+                return  BasicAuthContext.of(null);
             }
 
             @Override
-            public void onLogout(Identity<?> identity) {
+            public <C> void proceed(C challenge) {
+
+            }
+
+            @Override
+            public void login(Identity<?> identity) {
+
+            }
+
+            @Override
+            public void logout(Identity<?> identity) {
 
             }
         };

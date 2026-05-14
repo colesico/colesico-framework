@@ -17,8 +17,10 @@
 package colesico.framework.security;
 
 import colesico.framework.security.authentication.AuthenticationContext;
-import colesico.framework.security.authentication.AuthenticationResult;
+import colesico.framework.security.authentication.AuthenticationStatus;
 import colesico.framework.security.authorization.*;
+import colesico.framework.security.authentication.AuthenticationPeer;
+
 
 import java.util.concurrent.Callable;
 
@@ -30,22 +32,21 @@ import java.util.concurrent.Callable;
 public interface SecurityManager {
 
     /**
-     * Authenticate user by provided {@link AuthenticationContext} and on success bind {@link Identity} to {@link IdentityContext}.
+     * Authenticate caller by provided {@link AuthenticationContext} and on success bind {@link Identity} to {@link IdentityContext}.
      */
-    AuthenticationResult<?> login(AuthenticationContext context);
+    AuthenticationStatus login(AuthenticationContext context);
 
     /**
-     * Returns the valid identity associated with the current process for authenticated
-     * caller or null for an anonymous.
-     * To authenticate caller method tries to retrieve {@link AuthenticationContext} from any source (eg from the data port)
+     * The same as {@link SecurityManager#login(AuthenticationContext)}
+     * but retrieve {@link AuthenticationContext} with {@link AuthenticationPeer#context()}
      */
-    Identity<?> identity();
+    AuthenticationStatus identity();
 
     /**
-     * Check  current caller is authenticated
+     * Check peer is authenticated
      */
     default boolean isAuthenticated() {
-        return identity() != null;
+        return identity() instanceof AuthenticationStatus.Success;
     }
 
     /**
@@ -70,15 +71,16 @@ public interface SecurityManager {
      * If not present - throws IdentityRequiredException
      */
     default void requireIdentity() {
-        Identity<?> identity = identity();
-        if (identity == null) {
+        if (!identity().isSuccess()) {
             throw new IdentityRequiredException();
         }
     }
 
     default <D, R> AuthorizationResult<D> hasPermission(Authorizer<R, D> authorizer, R resource) {
-        AuthorizationRequest<R> context = new AuthorizationRequest.Default<>(identity(), resource);
-        return authorizer.authorize(context);
+        AuthorizationRequest<R> request =
+                new AuthorizationRequest.Default<>(identity().getIdentity().orElse(null), resource);
+
+        return authorizer.authorize(request);
     }
 
 }

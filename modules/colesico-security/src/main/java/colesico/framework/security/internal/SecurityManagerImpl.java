@@ -20,7 +20,7 @@ import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
 import colesico.framework.security.authentication.*;
 import colesico.framework.security.SecurityManager;
-import colesico.framework.security.authentication.AuthenticationExchange;
+import colesico.framework.security.authentication.AuthenticationPeer;
 
 import java.util.concurrent.Callable;
 
@@ -33,53 +33,59 @@ public class SecurityManagerImpl implements SecurityManager {
     protected final IdentityContext identityContext;
     protected final AuthenticationManager authenticationManager;
     protected final AuthenticationListener authenticationListener;
-    protected final AuthenticationExchange authenticationExchange;
+    protected final AuthenticationPeer authenticationPeer;
 
     public SecurityManagerImpl(IdentityContext identityContext,
                                AuthenticationManager authenticationManager,
                                AuthenticationListener authenticationListener,
-                               AuthenticationExchange authenticationExchange) {
+                               AuthenticationPeer authenticationPeer) {
         this.identityContext = identityContext;
         this.authenticationManager = authenticationManager;
         this.authenticationListener = authenticationListener;
-        this.authenticationExchange = authenticationExchange;
+        this.authenticationPeer = authenticationPeer;
     }
 
     @Override
-    public AuthenticationResult<?> login(AuthenticationContext context) {
+    public AuthenticationStatus login(AuthenticationContext context) {
         var result = authenticationManager.login(context);
-        if (result.isSuccess()) {
-            if (result.identity() == null) {
-                throw new SecurityException("Null Identity for success authentication");
+        result = authenticationListener.onLogin(result);
+        switch (result) {
+            case AuthenticationStatus.Success s -> {
+                if (s.identity() == null) {
+                    throw new SecurityException("Null Identity for success authentication");
+                }
+                identityContext.setIdentity(s.identity());
+                authenticationPeer.login(s.identity());
             }
-            identityContext.setIdentity(result.identity());
-            authenticationExchange.login(result.identity());
+            case AuthenticationStatus.Continuation<?> c -> {
+                authenticationPeer.proceed(c.challenge());
+            }
+
+            default -> {
+            }
         }
-        authenticationListener.onLogin(result);
+
         return result;
     }
 
     @Override
-    public Identity<?> identity() {
+    public AuthenticationStatus identity() {
         // Check thread cache at first
         var entry = identityContext.entry();
         if (entry != null) {
-            return entry.identity();
+            return AuthenticationStatus.success(entry.identity());
         }
         // Create temporary empty identity holder
         // for possible subsequent recursive identity() invocations
         identityContext.setIdentity(null);
 
         // No identity in cache. Retrieve identity from source
-        AuthenticationContext context = authenticationExchange.context();
+        AuthenticationContext context = authenticationPeer.context();
         if (context != null) {
-            var authResult = login(context);
-            if (authResult.isSuccess()) {
-                return authResult.identity();
-            }
+            return login(context);
         }
 
-        return null;
+        return AuthenticationStatus.failure("Unauthenticated");
     }
 
     @Override
@@ -89,7 +95,7 @@ public class SecurityManagerImpl implements SecurityManager {
 
         if (entry != null && entry.identity() != null) {
             authenticationManager.logout(entry.identity());
-            authenticationExchange.logout(entry.identity());
+            authenticationPeer.logout(entry.identity());
             authenticationListener.onLogout(entry.identity());
         }
     }

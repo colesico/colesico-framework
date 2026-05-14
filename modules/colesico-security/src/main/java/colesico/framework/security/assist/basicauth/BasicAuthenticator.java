@@ -1,7 +1,7 @@
 package colesico.framework.security.assist.basicauth;
 
 import colesico.framework.security.Identity;
-import colesico.framework.security.authentication.AuthenticationResult;
+import colesico.framework.security.authentication.AuthenticationStatus;
 import colesico.framework.security.authentication.Authenticator;
 
 import java.util.HashMap;
@@ -17,26 +17,26 @@ public class BasicAuthenticator implements Authenticator<BasicAuthContext<Object
      */
     private final Map<Object, Identity<?>> identities = new HashMap<>();
 
-    private AuthenticationResult<?> authById(Object identityId) {
+    private AuthenticationStatus authById(Object identityId) {
         var identity = identities.get(identityId);
         if (identity != null) {
-            return AuthenticationResult.success(identity);
+            return AuthenticationStatus.success(identity);
         }
-        return AuthenticationResult.failure("Not authenticated");
+        return AuthenticationStatus.failure("Not authenticated");
     }
 
-    private AuthenticationResult<?> authByLoginPassword(BasicAuthContext<Object> context) {
+    private AuthenticationStatus authByLoginPassword(BasicAuthContext<Object> context) {
         return null;
     }
 
     @Override
-    public AuthenticationResult<?> login(BasicAuthContext<Object> context) {
+    public AuthenticationStatus login(BasicAuthContext<Object> context) {
         if (context.identityId() != null) {
             return authById(context.identityId());
         } else if (context.username() != null && context.password() != null) {
             return authByLoginPassword(context);
         }
-        return AuthenticationResult.failure("Invalid credentials");
+        return AuthenticationStatus.failure("Invalid credentials");
     }
 
     @Override
