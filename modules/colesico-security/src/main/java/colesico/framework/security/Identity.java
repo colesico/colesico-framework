@@ -16,10 +16,10 @@
 
 package colesico.framework.security;
 
-import colesico.framework.security.authentication.AuthenticationContext;
-
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -34,6 +34,8 @@ import java.util.function.Function;
 public interface Identity<I> {
 
     String AUTHENTICATOR_CLAIM = "authenticator";
+    String ROLES_CLAIM = "roles";
+    String PERMISSIONS_CLAIM = "permissions";
 
     /**
      * The unique string identifier of this identity (e.g., UUID, username, or numeric ID).
@@ -55,6 +57,35 @@ public interface Identity<I> {
     default <T> Optional<T> claim(String key, Class<T> type) {
         Object value = claims().get(key);
         return type.isInstance(value) ? Optional.of(type.cast(value)) : Optional.empty();
+    }
+
+    /**
+     * Syntactic sugar for typed claims with a default value.
+     */
+    default <T> T claimOrElse(String key, Class<T> type, T defaultValue) {
+        return claim(key, type).orElse(defaultValue);
+    }
+
+    /**
+     * Built-in support for Roles (RBAC).
+     */
+    default Set<String> roles() {
+        return claim(ROLES_CLAIM, Set.class).orElse(Collections.emptySet());
+    }
+
+    default boolean hasRole(String role) {
+        return roles().contains(role);
+    }
+
+    /**
+     * Built-in support for Permissions/Authorities.
+     */
+    default Set<String> permissions() {
+        return claim(PERMISSIONS_CLAIM, Set.class).orElse(Collections.emptySet());
+    }
+
+    default boolean hasPermission(String permission) {
+        return permissions().contains(permission);
     }
 
     /**

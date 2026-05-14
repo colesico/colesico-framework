@@ -46,18 +46,18 @@ public class SecurityManagerImpl implements SecurityManager {
     }
 
     @Override
-    public AuthenticationStatus login(AuthenticationContext context) {
-        var result = authenticationManager.login(context);
+    public AuthenticationResult authenticate(AuthenticationRequest request) {
+        var result = authenticationManager.login(request);
         result = authenticationListener.onLogin(result);
         switch (result) {
-            case AuthenticationStatus.Success s -> {
+            case AuthenticationResult.Success s -> {
                 if (s.identity() == null) {
                     throw new SecurityException("Null Identity for success authentication");
                 }
                 identityContext.setIdentity(s.identity());
                 authenticationPeer.login(s.identity());
             }
-            case AuthenticationStatus.Continuation<?> c -> {
+            case AuthenticationResult.Continuation<?> c -> {
                 authenticationPeer.proceed(c.challenge());
             }
 
@@ -69,28 +69,28 @@ public class SecurityManagerImpl implements SecurityManager {
     }
 
     @Override
-    public AuthenticationStatus identity() {
+    public AuthenticationResult authenticate() {
         // Check thread cache at first
-        var entry = identityContext.entry();
+        var entry = identityContext.identity();
         if (entry != null) {
-            return AuthenticationStatus.success(entry.identity());
+            return AuthenticationResult.success(entry.identity());
         }
         // Create temporary empty identity holder
         // for possible subsequent recursive identity() invocations
         identityContext.setIdentity(null);
 
         // No identity in cache. Retrieve identity from source
-        AuthenticationContext context = authenticationPeer.context();
+        AuthenticationRequest context = authenticationPeer.request();
         if (context != null) {
-            return login(context);
+            return authenticate(context);
         }
 
-        return AuthenticationStatus.failure("Unauthenticated");
+        return AuthenticationResult.failure("Unauthenticated");
     }
 
     @Override
     public void logout() {
-        var entry = identityContext.entry();
+        var entry = identityContext.identity();
         identityContext.clear();
 
         if (entry != null && entry.identity() != null) {
@@ -102,7 +102,7 @@ public class SecurityManagerImpl implements SecurityManager {
 
     @Override
     public <T> T callAs(Callable<T> callable, Identity<?> identity) {
-        var previous = identityContext.entry();
+        var previous = identityContext.identity();
         identityContext.setIdentity(identity);
         try {
             return callable.call();

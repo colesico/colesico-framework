@@ -7,7 +7,7 @@ import colesico.framework.security.Identity;
  * i.e. database, ldap, etc
  *
  * <p>Implementations of this interface verify the credentials/token/etc provided in the
- * {@link AuthenticationContext} and return an {@link AuthenticationStatus}
+ * {@link AuthenticationRequest} and return an {@link AuthenticationResult}
  * containing either the established {@code Identity} or failure details.
  * <p>
  * Register the context manager instance with the IOC producer as
@@ -15,14 +15,14 @@ import colesico.framework.security.Identity;
  * value = AuthenticatorInstace.class,
  * classed = AuthenticationContextInstance.class)
  *
- * @param <C> the specific type of {@link AuthenticationContext} this authenticator handles
+ * @param <R> the specific type of {@link AuthenticationRequest} this authenticator handles
  */
-public interface Authenticator<C extends AuthenticationContext> {
+public interface Authenticator<R extends AuthenticationRequest> {
 
     /**
      * Performs authentication using the provided context.
      */
-    AuthenticationStatus login(C context);
+    AuthenticationResult login(R request);
 
     /**
      * Perform logout

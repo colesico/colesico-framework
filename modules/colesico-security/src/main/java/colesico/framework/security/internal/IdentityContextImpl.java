@@ -1,29 +1,29 @@
 package colesico.framework.security.internal;
 
-import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.ioc.scope.RequestScope;
 import colesico.framework.security.IdentityContext;
 
 public class IdentityContextImpl implements IdentityContext {
 
-    protected final ThreadScope threadScope;
+    protected final RequestScope requestScope;
 
-    public IdentityContextImpl(ThreadScope threadScope) {
-        this.threadScope = threadScope;
+    public IdentityContextImpl(RequestScope requestScope) {
+        this.requestScope = requestScope;
     }
 
     @Override
-    public Entry entry() {
-        return threadScope.get(Entry.SCOPE_KEY);
+    public Entry identity() {
+        return requestScope.get(Entry.SCOPE_KEY);
     }
 
     @Override
     public void setEntry(Entry entry) {
-        threadScope.put(Entry.SCOPE_KEY, entry);
+        requestScope.put(Entry.SCOPE_KEY, entry);
     }
 
     @Override
     public void clear() {
-        threadScope.put(Entry.SCOPE_KEY, null);
+        requestScope.put(Entry.SCOPE_KEY, null);
     }
 
 }

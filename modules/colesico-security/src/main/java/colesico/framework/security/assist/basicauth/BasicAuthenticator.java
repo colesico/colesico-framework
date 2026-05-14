@@ -1,7 +1,7 @@
 package colesico.framework.security.assist.basicauth;
 
 import colesico.framework.security.Identity;
-import colesico.framework.security.authentication.AuthenticationStatus;
+import colesico.framework.security.authentication.AuthenticationResult;
 import colesico.framework.security.authentication.Authenticator;
 
 import java.util.HashMap;
@@ -10,33 +10,33 @@ import java.util.Map;
 /**
  * Default basic authenticator (in-memory)
  */
-public class BasicAuthenticator implements Authenticator<BasicAuthContext<Object>> {
+public class BasicAuthenticator implements Authenticator<BasicAuthRequest<Object>> {
 
     /**
      * Authenticated identities
      */
     private final Map<Object, Identity<?>> identities = new HashMap<>();
 
-    private AuthenticationStatus authById(Object identityId) {
+    private AuthenticationResult authById(Object identityId) {
         var identity = identities.get(identityId);
         if (identity != null) {
-            return AuthenticationStatus.success(identity);
+            return AuthenticationResult.success(identity);
         }
-        return AuthenticationStatus.failure("Not authenticated");
+        return AuthenticationResult.failure("Not authenticated");
     }
 
-    private AuthenticationStatus authByLoginPassword(BasicAuthContext<Object> context) {
+    private AuthenticationResult authByLoginPassword(BasicAuthRequest<Object> context) {
         return null;
     }
 
     @Override
-    public AuthenticationStatus login(BasicAuthContext<Object> context) {
-        if (context.identityId() != null) {
-            return authById(context.identityId());
-        } else if (context.username() != null && context.password() != null) {
-            return authByLoginPassword(context);
+    public AuthenticationResult login(BasicAuthRequest<Object> request) {
+        if (request.identityId() != null) {
+            return authById(request.identityId());
+        } else if (request.username() != null && request.password() != null) {
+            return authByLoginPassword(request);
         }
-        return AuthenticationStatus.failure("Invalid credentials");
+        return AuthenticationResult.failure("Invalid credentials");
     }
 
     @Override

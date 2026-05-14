@@ -4,31 +4,31 @@ import colesico.framework.security.Identity;
 
 import java.util.Optional;
 
-public sealed interface AuthenticationStatus
-        permits AuthenticationStatus.Success,
-        AuthenticationStatus.Failure,
-        AuthenticationStatus.Continuation {
+public sealed interface AuthenticationResult
+        permits AuthenticationResult.Success,
+        AuthenticationResult.Failure,
+        AuthenticationResult.Continuation {
 
     /**
      * Successful authentication
      */
-    record Success(Identity<?> identity) implements AuthenticationStatus {
+    record Success(Identity<?> identity) implements AuthenticationResult {
     }
 
     /**
      * Authentication failed
      */
-    record Failure<E>(E error) implements AuthenticationStatus {
+    record Failure<E>(E error) implements AuthenticationResult {
     }
 
     /**
      * Authentication requires an additional step
      */
-    record Continuation<C>(C challenge) implements AuthenticationStatus {
+    record Continuation<C>(C challenge) implements AuthenticationResult {
     }
 
     default boolean isSuccess() {
-        return this instanceof AuthenticationStatus.Success;
+        return this instanceof AuthenticationResult.Success;
     }
 
     default boolean isFailure() {
@@ -51,15 +51,15 @@ public sealed interface AuthenticationStatus
         return this instanceof Continuation(Object challenge) ? Optional.of((C) challenge) : Optional.empty();
     }
 
-    static AuthenticationStatus success(Identity<?> identity) {
+    static AuthenticationResult success(Identity<?> identity) {
         return new Success(identity);
     }
 
-    static <E> AuthenticationStatus failure(E error) {
+    static <E> AuthenticationResult failure(E error) {
         return new Failure<>(error);
     }
 
-    static <C> AuthenticationStatus continuation(C challenge) {
+    static <C> AuthenticationResult continuation(C challenge) {
         return new Continuation<>(challenge);
     }
 }

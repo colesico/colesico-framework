@@ -2,7 +2,7 @@ package colesico.framework.security.assist.basicauth;
 
 
 import colesico.framework.security.Identity;
-import colesico.framework.security.authentication.AuthenticationContext;
+import colesico.framework.security.authentication.AuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationPeer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +15,11 @@ public class BasicAuthPeer implements AuthenticationPeer {
     private Object identityId;
 
     @Override
-    public AuthenticationContext context() {
+    public AuthenticationRequest request() {
         if (identityId == null) {
             return null;
         }
-        return BasicAuthContext.of(identityId);
+        return BasicAuthRequest.of(identityId);
     }
 
     @Override

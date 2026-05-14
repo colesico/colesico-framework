@@ -9,9 +9,9 @@ import colesico.framework.security.Identity;
 public interface AuthenticationPeer {
 
     /**
-     * Retrieve {@link AuthenticationContext} from peer
+     * Retrieve {@link AuthenticationRequest} from peer
      */
-    AuthenticationContext context();
+    AuthenticationRequest request();
 
     /**
      * Request to continue authentication (challenge)

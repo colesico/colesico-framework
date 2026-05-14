@@ -16,12 +16,13 @@
 
 package colesico.framework.security;
 
-import colesico.framework.security.authentication.AuthenticationContext;
-import colesico.framework.security.authentication.AuthenticationStatus;
-import colesico.framework.security.authorization.*;
 import colesico.framework.security.authentication.AuthenticationPeer;
+import colesico.framework.security.authentication.AuthenticationRequest;
+import colesico.framework.security.authentication.AuthenticationResult;
+import colesico.framework.security.authorization.*;
 
 
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 /**
@@ -32,21 +33,27 @@ import java.util.concurrent.Callable;
 public interface SecurityManager {
 
     /**
-     * Authenticate caller by provided {@link AuthenticationContext} and on success bind {@link Identity} to {@link IdentityContext}.
+     * Authenticate peer by provided {@link AuthenticationRequest} and on success bind {@link Identity} to {@link IdentityContext}.
      */
-    AuthenticationStatus login(AuthenticationContext context);
+    AuthenticationResult authenticate(AuthenticationRequest request);
 
     /**
-     * The same as {@link SecurityManager#login(AuthenticationContext)}
-     * but retrieve {@link AuthenticationContext} with {@link AuthenticationPeer#context()}
+     * Authenticate peer by extracted {@link AuthenticationRequest} from the peer
+     * by {@link AuthenticationPeer#request()}
      */
-    AuthenticationStatus identity();
+    AuthenticationResult authenticate();
+
+    /**
+     * Retrieves the current {@link Identity} from the local context {@link IdentityContext}
+     * This method with zero side-effects.
+     */
+    Optional<Identity<?>> identity();
 
     /**
      * Check peer is authenticated
      */
     default boolean isAuthenticated() {
-        return identity() instanceof AuthenticationStatus.Success;
+        return identity().isPresent();
     }
 
     /**
@@ -71,14 +78,14 @@ public interface SecurityManager {
      * If not present - throws IdentityRequiredException
      */
     default void requireIdentity() {
-        if (!identity().isSuccess()) {
+        if (identity().isEmpty()) {
             throw new IdentityRequiredException();
         }
     }
 
     default <D, R> AuthorizationResult<D> hasPermission(Authorizer<R, D> authorizer, R resource) {
         AuthorizationRequest<R> request =
-                new AuthorizationRequest.Default<>(identity().getIdentity().orElse(null), resource);
+                new AuthorizationRequest.Default<>(identity().orElse(null), resource);
 
         return authorizer.authorize(request);
     }
