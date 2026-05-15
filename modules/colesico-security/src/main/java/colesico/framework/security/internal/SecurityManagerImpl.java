@@ -52,16 +52,19 @@ public class SecurityManagerImpl implements SecurityManager {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private Authenticator<AuthenticationRequest> authenticator(Class<? extends AuthenticationRequest> requestClass) {
-        if (requestClass == null) {
+    private Authenticator<AuthenticationRequest> authenticator(AuthenticationRequest request) {
+        if (request == null) {
             throw new SecurityException("Authentication request class is null");
         }
-        Key<Authenticator> authIocKey = new ClassedKey<>(Authenticator.class, requestClass);
-        Authenticator<AuthenticationRequest> authenticator = ioc.instanceOrNull(authIocKey);
-        if (authenticator == null) {
-            throw new SecurityException("Authenticator not found for request class '" + requestClass.getCanonicalName() + "'");
+        Key<Authenticator> authIocKey = new ClassedKey<>(Authenticator.class, request.getClass());
+        var authenticators = ioc.polysupplier(authIocKey);
+        for (var authenticator : authenticators) {
+            if (authenticator.supports(request)) {
+                return authenticator;
+            }
         }
-        return authenticator;
+
+        throw new SecurityException("Appropriate authenticator not found for request '" + request + "'");
     }
 
     private Authenticator<?> authenticator(Identity<?> identity) {
@@ -77,7 +80,7 @@ public class SecurityManagerImpl implements SecurityManager {
 
     @Override
     public AuthenticationResult authenticate(AuthenticationRequest request) {
-        var authenticator = authenticator(request.getClass());
+        var authenticator = authenticator(request);
         var result = authenticator.login(request);
         result = authenticationListener.onAuthenticate(result, request);
         switch (result) {

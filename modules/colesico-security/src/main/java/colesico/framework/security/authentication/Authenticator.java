@@ -20,6 +20,11 @@ import colesico.framework.security.Identity;
 public interface Authenticator<R extends AuthenticationRequest> {
 
     /**
+     * Check authenticator supports given request
+     */
+    boolean supports(R request);
+
+    /**
      * Performs authentication using the provided context.
      */
     AuthenticationResult login(R request);

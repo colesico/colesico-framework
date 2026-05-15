@@ -30,6 +30,11 @@ public class BasicAuthenticator implements Authenticator<BasicAuthRequest<Object
     }
 
     @Override
+    public boolean supports(BasicAuthRequest<Object> request) {
+        return true;
+    }
+
+    @Override
     public AuthenticationResult login(BasicAuthRequest<Object> request) {
         if (request.identityId() != null) {
             return authById(request.identityId());
