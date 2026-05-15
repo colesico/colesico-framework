@@ -35,13 +35,13 @@ public interface SecurityManager {
     /**
      * Authenticate peer by provided {@link AuthenticationRequest} and on success bind {@link Identity} to {@link IdentityContext}.
      */
-    AuthenticationResult authenticate(AuthenticationRequest request);
+    AuthenticationResult login(AuthenticationRequest request);
 
     /**
      * Authenticate peer by extracted {@link AuthenticationRequest} from the peer
      * by {@link AuthenticationPeer#request()}
      */
-    AuthenticationResult authenticate();
+    AuthenticationResult login();
 
     /**
      * Retrieves the current {@link Identity} from the local context {@link IdentityContext}
@@ -70,9 +70,9 @@ public interface SecurityManager {
     /**
      * Complete reset of current authentication.
      */
-    void logout(Identity<?> identity);
+    boolean logout(Identity<?> identity);
 
-    void logout();
+    boolean logout();
 
     /**
      * Checks the presence of active valid identity.
@@ -88,5 +88,4 @@ public interface SecurityManager {
 
         return authorizer.authorize(request);
     }
-
 }

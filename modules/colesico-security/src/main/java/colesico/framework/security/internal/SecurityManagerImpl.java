@@ -16,9 +16,6 @@
 
 package colesico.framework.security.internal;
 
-import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.key.ClassedKey;
-import colesico.framework.ioc.key.Key;
 import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
 import colesico.framework.security.authentication.*;
@@ -34,122 +31,90 @@ import java.util.concurrent.Callable;
  */
 public class SecurityManagerImpl implements SecurityManager {
 
-    protected final Ioc ioc;
+    protected final IdentityContext context;
+    protected final AuthenticationListener listener;
+    protected final AuthenticationPeer peer;
+    protected final AuthenticationRegistry registry;
 
-    protected final IdentityContext identityContext;
-    protected final AuthenticationListener authenticationListener;
-    protected final AuthenticationPeer authenticationPeer;
-
-    public SecurityManagerImpl(Ioc ioc,
-                               IdentityContext identityContext,
-
-                               AuthenticationListener authenticationListener,
-                               AuthenticationPeer authenticationPeer) {
-        this.ioc = ioc;
-        this.identityContext = identityContext;
-        this.authenticationListener = authenticationListener;
-        this.authenticationPeer = authenticationPeer;
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private Authenticator<AuthenticationRequest> authenticator(AuthenticationRequest request) {
-        if (request == null) {
-            throw new SecurityException("Authentication request class is null");
-        }
-        Key<Authenticator> authIocKey = new ClassedKey<>(Authenticator.class, request.getClass());
-        var authenticators = ioc.polysupplier(authIocKey);
-        for (var authenticator : authenticators) {
-            if (authenticator.supports(request)) {
-                return authenticator;
-            }
-        }
-
-        throw new SecurityException("Appropriate authenticator not found for request '" + request + "'");
-    }
-
-    private Authenticator<?> authenticator(Identity<?> identity) {
-        @SuppressWarnings("unchecked")
-        Class<? extends Authenticator<?>> authenticatorClass =
-                (Class<? extends Authenticator<?>>) identity.claims().get(Identity.AUTHENTICATOR_CLAIM);
-
-        if (authenticatorClass != null) {
-            return ioc.instance(authenticatorClass);
-        }
-        return null;
+    public SecurityManagerImpl(IdentityContext context, AuthenticationListener listener, AuthenticationPeer peer, AuthenticationRegistry registry) {
+        this.context = context;
+        this.listener = listener;
+        this.peer = peer;
+        this.registry = registry;
     }
 
     @Override
-    public AuthenticationResult authenticate(AuthenticationRequest request) {
-        var authenticator = authenticator(request);
-        var result = authenticator.login(request);
-        result = authenticationListener.onAuthenticate(result, request);
-        switch (result) {
-            case AuthenticationResult.Success s -> {
-                var identity = s.identity();
-                if (identity == null) {
-                    throw new SecurityException("Null Identity for success authentication");
-                }
-                identityContext.setIdentity(identity);
-                authenticationPeer.login(identity);
-            }
-            case AuthenticationResult.Continuation<?> c -> {
-                authenticationPeer.proceed(c.challenge());
-            }
+    public AuthenticationResult login(AuthenticationRequest request) {
+        var authenticator = registry.findAuthenticator(request);
 
-            default -> {
+        var result = authenticator.login(request);
+        result = listener.onLogin(result, request);
+
+        if (result instanceof AuthenticationResult.Success success) {
+            var identity = success.identity();
+            if (identity == null) {
+                throw new SecurityException("Null Identity for success authentication");
             }
+            context.setIdentity(identity);
+            peer.authenticate(identity);
+        } else if (result instanceof AuthenticationResult.Continuation<?> continuation) {
+            peer.proceed(continuation.challenge());
         }
 
         return result;
     }
 
     @Override
-    public AuthenticationResult authenticate() {
-        AuthenticationRequest request = authenticationPeer.request();
+    public AuthenticationResult login() {
+        AuthenticationRequest request = peer.request();
         if (request != null) {
-            return authenticate(request);
+            return login(request);
         }
         return AuthenticationResult.failure("Unauthenticated");
     }
 
     @Override
     public Optional<Identity<?>> identity() {
-        return Optional.of(identityContext.identity());
+        return Optional.ofNullable(context.identity());
     }
 
     @Override
-    public void logout(Identity<?> identity) {
-        var authenticator = authenticator(identity);
-        if (authenticator != null) {
-            authenticator.logout(identity);
-            authenticationListener.onLogout(identity);
+    public boolean logout(Identity<?> identity) {
+        if (identity == null) return false;
+        var logoutHandler = registry.findLogoutHandler(identity);
+        if (logoutHandler.isPresent()) {
+            logoutHandler.get().logout(identity);
+            listener.onLogout(identity);
+            return true;
         }
+        return false;
     }
 
     @Override
-    public void logout() {
-        var identity = identityContext.identity();
-
+    public boolean logout() {
+        var identity = context.identity();
         if (identity != null) {
-            identityContext.clear();
-            var authenticator = authenticator(identity);
-            if (authenticator != null) {
-                authenticator.logout(identity);
+            context.clear();
+            var logoutHandler = registry.findLogoutHandler(identity);
+            if (logoutHandler.isPresent()) {
+                logoutHandler.get().logout(identity);
             }
-            authenticationListener.onLogout(identity);
+            listener.onLogout(identity);
+            return true;
         }
+        return false;
     }
 
     @Override
     public <T> T callAs(Callable<T> callable, Identity<?> identity) {
-        var previous = identityContext.identity();
-        identityContext.setIdentity(identity);
+        final var previous = context.identity();
+        context.setIdentity(identity);
         try {
             return callable.call();
         } catch (Exception e) {
             throw (e instanceof RuntimeException re) ? re : new RuntimeException(e);
         } finally {
-            identityContext.setIdentity(previous);
+            context.setIdentity(previous);
         }
     }
 

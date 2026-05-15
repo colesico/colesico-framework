@@ -16,7 +16,8 @@
 
 package colesico.framework.security;
 
-import colesico.framework.security.authentication.Authenticator;
+import colesico.framework.ioc.key.NamedKey;
+import colesico.framework.security.authentication.LogoutHandler;
 
 import java.util.Collections;
 import java.util.Map;
@@ -35,8 +36,21 @@ import java.util.function.Function;
  */
 public interface Identity<I> {
 
-    String AUTHENTICATOR_CLAIM = "authenticator";
+    /**
+     * Name for {@link NamedKey} of
+     * {@link LogoutHandler} implementation that will perform
+     * logout on this identity.
+     */
+    String LOGOUT_HANDLER_CLAIM = "logout-handler";
+
+    /**
+     * Roles holder claim
+     */
     String ROLES_CLAIM = "roles";
+
+    /**
+     * Permissions holder claim
+     */
     String PERMISSIONS_CLAIM = "permissions";
 
     /**
@@ -88,6 +102,10 @@ public interface Identity<I> {
 
     default boolean hasPermission(String permission) {
         return permissions().contains(permission);
+    }
+
+    default Optional<String> logoutHandlerName() {
+        return claim(LOGOUT_HANDLER_CLAIM, String.class);
     }
 
     /**

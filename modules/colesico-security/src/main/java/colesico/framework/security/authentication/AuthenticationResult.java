@@ -24,7 +24,7 @@ public sealed interface AuthenticationResult
     /**
      * Authentication requires an additional step
      */
-    record Continuation<C>(C challenge) implements AuthenticationResult {
+    record Continuation<C extends AuthenticationChallenge>(C challenge) implements AuthenticationResult {
     }
 
     default boolean isSuccess() {
@@ -59,7 +59,7 @@ public sealed interface AuthenticationResult
         return new Failure<>(error);
     }
 
-    static <C> AuthenticationResult continuation(C challenge) {
+    static <C extends AuthenticationChallenge> AuthenticationResult continuation(C challenge) {
         return new Continuation<>(challenge);
     }
 }

@@ -10,10 +10,11 @@ import colesico.framework.security.Identity;
  * {@link AuthenticationRequest} and return an {@link AuthenticationResult}
  * containing either the established {@code Identity} or failure details.
  * <p>
- * Register the context manager instance with the IOC producer as
- * \@Produce(keyType = Authenticator.class,
+ * Register the {@link  Authenticator} instance with the IOC producer as
+ * \@Produce(keyType = {@link  Authenticator}.class,
  * value = AuthenticatorInstace.class,
- * classed = AuthenticationContextInstance.class)
+ * classed = AuthenticationContextInstance.class,
+ * polyproduce=N)
  *
  * @param <R> the specific type of {@link AuthenticationRequest} this authenticator handles
  */
@@ -29,8 +30,4 @@ public interface Authenticator<R extends AuthenticationRequest> {
      */
     AuthenticationResult login(R request);
 
-    /**
-     * Perform logout
-     */
-    void logout(Identity<?> identity);
 }

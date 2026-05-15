@@ -3,21 +3,25 @@ package colesico.framework.security.assist.basicauth;
 import colesico.framework.security.Identity;
 import colesico.framework.security.authentication.AuthenticationResult;
 import colesico.framework.security.authentication.Authenticator;
+import colesico.framework.security.authentication.LogoutHandler;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Default basic authenticator (in-memory)
  */
-public class BasicAuthenticator implements Authenticator<BasicAuthRequest<Object>> {
+abstract public class BasicAuthenticator implements
+        Authenticator<BasicAuthRequest<Object>>,
+        LogoutHandler {
 
     /**
      * Authenticated identities
      */
-    private final Map<Object, Identity<?>> identities = new HashMap<>();
+    private final Map<Object, Identity<?>> identities = new ConcurrentHashMap<>();
 
-    private AuthenticationResult authById(Object identityId) {
+    protected AuthenticationResult authById(Object identityId) {
         var identity = identities.get(identityId);
         if (identity != null) {
             return AuthenticationResult.success(identity);
@@ -25,9 +29,7 @@ public class BasicAuthenticator implements Authenticator<BasicAuthRequest<Object
         return AuthenticationResult.failure("Not authenticated");
     }
 
-    private AuthenticationResult authByLoginPassword(BasicAuthRequest<Object> context) {
-        return null;
-    }
+    abstract protected AuthenticationResult authByLoginPassword(BasicAuthRequest<Object> context);
 
     @Override
     public boolean supports(BasicAuthRequest<Object> request) {

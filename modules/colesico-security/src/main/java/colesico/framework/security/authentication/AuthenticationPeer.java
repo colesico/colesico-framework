@@ -16,15 +16,15 @@ public interface AuthenticationPeer {
     /**
      * Request to continue authentication (challenge)
      */
-    <C> void proceed(C challenge);
+    <C extends AuthenticationChallenge> void proceed(C challenge);
 
     /**
-     * Login notification
+     * Identity is authenticated notification
      */
-    void login(Identity<?> identity);
+    void authenticate(Identity<?> identity);
 
     /**
-     * Logout notification
+     * Identity is logged out notification
      */
     void logout(Identity<?> identity);
 }
