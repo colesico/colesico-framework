@@ -4,8 +4,8 @@ import colesico.framework.security.Identity;
 
 public interface AuthenticationListener {
 
-    default AuthenticationResult onLogin(AuthenticationResult status) {
-        return status;
+    default AuthenticationResult onAuthenticate(AuthenticationResult result, AuthenticationRequest request) {
+        return result;
     }
 
     default void onLogout(Identity<?> identity) {

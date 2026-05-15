@@ -16,6 +16,8 @@
 
 package colesico.framework.security;
 
+import colesico.framework.security.authentication.Authenticator;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;

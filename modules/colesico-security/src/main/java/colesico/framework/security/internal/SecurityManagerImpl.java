@@ -16,12 +16,16 @@
 
 package colesico.framework.security.internal;
 
+import colesico.framework.ioc.Ioc;
+import colesico.framework.ioc.key.ClassedKey;
+import colesico.framework.ioc.key.Key;
 import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
 import colesico.framework.security.authentication.*;
 import colesico.framework.security.SecurityManager;
 import colesico.framework.security.authentication.AuthenticationPeer;
 
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 /**
@@ -30,32 +34,60 @@ import java.util.concurrent.Callable;
  */
 public class SecurityManagerImpl implements SecurityManager {
 
+    protected final Ioc ioc;
+
     protected final IdentityContext identityContext;
-    protected final AuthenticationManager authenticationManager;
     protected final AuthenticationListener authenticationListener;
     protected final AuthenticationPeer authenticationPeer;
 
-    public SecurityManagerImpl(IdentityContext identityContext,
-                               AuthenticationManager authenticationManager,
+    public SecurityManagerImpl(Ioc ioc,
+                               IdentityContext identityContext,
+
                                AuthenticationListener authenticationListener,
                                AuthenticationPeer authenticationPeer) {
+        this.ioc = ioc;
         this.identityContext = identityContext;
-        this.authenticationManager = authenticationManager;
         this.authenticationListener = authenticationListener;
         this.authenticationPeer = authenticationPeer;
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private Authenticator<AuthenticationRequest> authenticator(Class<? extends AuthenticationRequest> requestClass) {
+        if (requestClass == null) {
+            throw new SecurityException("Authentication request class is null");
+        }
+        Key<Authenticator> authIocKey = new ClassedKey<>(Authenticator.class, requestClass);
+        Authenticator<AuthenticationRequest> authenticator = ioc.instanceOrNull(authIocKey);
+        if (authenticator == null) {
+            throw new SecurityException("Authenticator not found for request class '" + requestClass.getCanonicalName() + "'");
+        }
+        return authenticator;
+    }
+
+    private Authenticator<?> authenticator(Identity<?> identity) {
+        @SuppressWarnings("unchecked")
+        Class<? extends Authenticator<?>> authenticatorClass =
+                (Class<? extends Authenticator<?>>) identity.claims().get(Identity.AUTHENTICATOR_CLAIM);
+
+        if (authenticatorClass != null) {
+            return ioc.instance(authenticatorClass);
+        }
+        return null;
+    }
+
     @Override
     public AuthenticationResult authenticate(AuthenticationRequest request) {
-        var result = authenticationManager.login(request);
-        result = authenticationListener.onLogin(result);
+        var authenticator = authenticator(request.getClass());
+        var result = authenticator.login(request);
+        result = authenticationListener.onAuthenticate(result, request);
         switch (result) {
             case AuthenticationResult.Success s -> {
-                if (s.identity() == null) {
+                var identity = s.identity();
+                if (identity == null) {
                     throw new SecurityException("Null Identity for success authentication");
                 }
-                identityContext.setIdentity(s.identity());
-                authenticationPeer.login(s.identity());
+                identityContext.setIdentity(identity);
+                authenticationPeer.login(identity);
             }
             case AuthenticationResult.Continuation<?> c -> {
                 authenticationPeer.proceed(c.challenge());
@@ -70,33 +102,38 @@ public class SecurityManagerImpl implements SecurityManager {
 
     @Override
     public AuthenticationResult authenticate() {
-        // Check thread cache at first
-        var entry = identityContext.identity();
-        if (entry != null) {
-            return AuthenticationResult.success(entry.identity());
+        AuthenticationRequest request = authenticationPeer.request();
+        if (request != null) {
+            return authenticate(request);
         }
-        // Create temporary empty identity holder
-        // for possible subsequent recursive identity() invocations
-        identityContext.setIdentity(null);
-
-        // No identity in cache. Retrieve identity from source
-        AuthenticationRequest context = authenticationPeer.request();
-        if (context != null) {
-            return authenticate(context);
-        }
-
         return AuthenticationResult.failure("Unauthenticated");
     }
 
     @Override
-    public void logout() {
-        var entry = identityContext.identity();
-        identityContext.clear();
+    public Optional<Identity<?>> identity() {
+        return Optional.of(identityContext.identity());
+    }
 
-        if (entry != null && entry.identity() != null) {
-            authenticationManager.logout(entry.identity());
-            authenticationPeer.logout(entry.identity());
-            authenticationListener.onLogout(entry.identity());
+    @Override
+    public void logout(Identity<?> identity) {
+        var authenticator = authenticator(identity);
+        if (authenticator != null) {
+            authenticator.logout(identity);
+            authenticationListener.onLogout(identity);
+        }
+    }
+
+    @Override
+    public void logout() {
+        var identity = identityContext.identity();
+
+        if (identity != null) {
+            identityContext.clear();
+            var authenticator = authenticator(identity);
+            if (authenticator != null) {
+                authenticator.logout(identity);
+            }
+            authenticationListener.onLogout(identity);
         }
     }
 
@@ -109,11 +146,7 @@ public class SecurityManagerImpl implements SecurityManager {
         } catch (Exception e) {
             throw (e instanceof RuntimeException re) ? re : new RuntimeException(e);
         } finally {
-            if (previous != null) {
-                identityContext.setEntry(previous);
-            } else {
-                identityContext.clear();
-            }
+            identityContext.setIdentity(previous);
         }
     }
 

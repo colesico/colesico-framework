@@ -45,7 +45,6 @@ public interface SecurityManager {
 
     /**
      * Retrieves the current {@link Identity} from the local context {@link IdentityContext}
-     * This method with zero side-effects.
      */
     Optional<Identity<?>> identity();
 
@@ -71,16 +70,16 @@ public interface SecurityManager {
     /**
      * Complete reset of current authentication.
      */
+    void logout(Identity<?> identity);
+
     void logout();
 
     /**
      * Checks the presence of active valid identity.
      * If not present - throws IdentityRequiredException
      */
-    default void requireIdentity() {
-        if (identity().isEmpty()) {
-            throw new IdentityRequiredException();
-        }
+    default Identity<?> requireIdentity() {
+        return identity().orElseThrow(IdentityRequiredException::new);
     }
 
     default <D, R> AuthorizationResult<D> hasPermission(Authorizer<R, D> authorizer, R resource) {
