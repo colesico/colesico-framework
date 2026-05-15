@@ -41,8 +41,8 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
     public Optional<LogoutHandler> findLogoutHandler(Identity<?> identity) {
         var handlerName = identity.logoutHandlerName();
         if (handlerName.isPresent()) {
-            var handler = ioc.instance(new NamedKey<>(LogoutHandler.class, handlerName.get()));
-            return Optional.of(handler);
+            var handler = ioc.instanceOrNull(new NamedKey<>(LogoutHandler.class, handlerName.get()));
+            return Optional.ofNullable(handler);
         }
         return Optional.empty();
     }
