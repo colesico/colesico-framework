@@ -43,14 +43,14 @@ public class CatalogImpl implements Catalog {
     }
 
     @Override
-    public <T> boolean accept(Key<T> key, Condition condition, Substitution substitution, boolean polyproducing) {
+    public <T> boolean accept(Key<T> key, Condition condition, Substitution substitution, Integer polyproduce) {
 
         // for older version ioclets compatibility
         if (substitution == null) {
             substitution = Substitution.REGULAR;
         }
 
-        curEntry = new CatalogEntry(key, condition, substitution, polyproducing);
+        curEntry = new CatalogEntry(key, condition, substitution, polyproduce);
 
         // Check condition
         if ((condition != null) && !condition.isMet(conditionContext)) {
@@ -64,8 +64,8 @@ public class CatalogImpl implements Catalog {
             return true;
         }
 
-        // Check polyproducing
-        if (curEntry.isPolyproducing() != prevEntry.isPolyproducing()) {
+        // Check non-matching polyproducing
+        if ((curEntry.getPolyproduce() == null) ^ (prevEntry.getPolyproduce() == null)) {
             throw new IocException("Polyproducing mismatch for key: " + key);
         }
 
@@ -80,12 +80,11 @@ public class CatalogImpl implements Catalog {
             return false;
         }
 
-        // curEntry.getSubstitution().getRank() == prevEntry.getSubstitution().getRank()
-
-        // Check polyproducing
-
-        if (curEntry.isPolyproducing() && prevEntry.isPolyproducing()) {
-            curEntry.setAction(EntryAction.APPEND);
+        // Check polyproduce is specified
+        if (curEntry.getPolyproduce() != null) {
+            var action = curEntry.getPolyproduce() < prevEntry.getPolyproduce() ?
+                    EntryAction.PREPEND : EntryAction.APPEND;
+            curEntry.setAction(action);
             return true;
         }
 
@@ -104,8 +103,12 @@ public class CatalogImpl implements Catalog {
                 entriesMap.put(curEntry.key(), curEntry);
                 return;
             case APPEND:
-                CatalogEntry<?> prevEntry = entriesMap.put(curEntry.key(), curEntry);
-                curEntry.gfactory().setNext(prevEntry.gfactory());
+                CatalogEntry<?> prevEntry = entriesMap.get(curEntry.key());
+                prevEntry.factory().setNext(curEntry.factory());
+                return;
+            case PREPEND:
+                prevEntry = entriesMap.put(curEntry.key(), curEntry);
+                curEntry.factory().setNext(prevEntry.factory());
                 return;
             default:
                 throw new IocException("Unsupported catalog action: " + curEntry.action());
@@ -115,7 +118,7 @@ public class CatalogImpl implements Catalog {
     public Map<Key<?>, Factory<?>> factories() {
         Map<Key<?>, Factory<?>> result = new HashMap<>();
         for (CatalogEntry entry : entriesMap.values()) {
-            result.put(entry.key(), entry.gfactory());
+            result.put(entry.key(), entry.factory());
         }
         return result;
     }

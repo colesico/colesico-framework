@@ -34,7 +34,7 @@ public class CustomFactoryElement extends FactoryElement {
                                 ScopeElement scope,
                                 ConditionElement condition,
                                 SubstitutionElement substitution,
-                                Boolean polyproduce,
+                                Integer polyproduce,
                                 PostProduceElement postProduce,
                                 String named,
                                 ClassifierType classed,

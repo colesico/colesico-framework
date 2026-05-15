@@ -87,15 +87,15 @@ public final class IocIoclet implements Ioclet {
 
     @Override
     public void addFactories(Catalog catalog) {
-        if (catalog.accept(new TypeKey<>(Ioc.class), null, null, false)) {
+        if (catalog.accept(new TypeKey<>(Ioc.class), null, null, null)) {
             catalog.add(iocContainerFactory());
         }
 
-        if (catalog.accept(new TypeKey<>(ThreadScope.class), null, null, false)) {
+        if (catalog.accept(new TypeKey<>(ThreadScope.class), null, null, null)) {
             catalog.add(threadScopeFactory());
         }
 
-        if (catalog.accept(new TypeKey<>(RefreshScope.class), null, null, false)) {
+        if (catalog.accept(new TypeKey<>(RefreshScope.class), null, null, null)) {
             catalog.add(refreshScopeFactory());
         }
     }

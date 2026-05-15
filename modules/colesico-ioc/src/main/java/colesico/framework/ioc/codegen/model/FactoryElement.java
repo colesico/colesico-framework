@@ -37,9 +37,11 @@ abstract public class FactoryElement {
     protected final SubstitutionElement substitution;
 
     /**
+     * Polyproduce order for poliptodicing.
+     * Null value if poliproducing not specified
      * {@link colesico.framework.ioc.production.Polyproduce}
      */
-    protected final Boolean polyproduce;
+    protected final Integer polyproduce;
 
     protected final PostProduceElement postProduce;
 
@@ -79,7 +81,7 @@ abstract public class FactoryElement {
                           ScopeElement scope,
                           ConditionElement condition,
                           SubstitutionElement substitution,
-                          Boolean polyproduce,
+                          Integer polyproduce,
                           PostProduceElement postProduce,
                           String named,
                           ClassifierType classed,
@@ -139,7 +141,7 @@ abstract public class FactoryElement {
         return substitution;
     }
 
-    public Boolean polyproduce() {
+    public Integer polyproduce() {
         return polyproduce;
     }
 

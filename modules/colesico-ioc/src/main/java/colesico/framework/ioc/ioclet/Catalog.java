@@ -20,6 +20,7 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.conditional.Condition;
 import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.key.Key;
+import colesico.framework.ioc.production.Polyproduce;
 
 /**
  * Factories catalog.
@@ -33,7 +34,16 @@ public interface Catalog {
     String ACCEPT_METHOD = "accept";
     String ADD_METHOD = "add";
 
-    <T> boolean accept(Key<T> key, Condition condition, Substitution substitution, boolean polyproducing);
+    /**
+     *
+     * @param key The key by which the IoC container will find the factory
+     * @param condition Producing condition
+     * @param substitution Producing substitution
+     * @param polyproduce Instance factory order (see {@link Polyproduce#order()}). Null value if polyproducing not specified
+     * @param <T> Producing instance type
+     * @return
+     */
+    <T> boolean accept(Key<T> key, Condition condition, Substitution substitution, Integer polyproduce);
 
     <T> void add(Factory<T> factory);
 

@@ -17,5 +17,5 @@
 package colesico.framework.ioc.internal;
 
 public enum EntryAction {
-    NONE, PUT, APPEND, SUBSTITUTE;
+    NONE, PUT, APPEND, PREPEND, SUBSTITUTE;
 }

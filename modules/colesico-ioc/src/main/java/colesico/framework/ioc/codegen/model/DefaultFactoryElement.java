@@ -37,7 +37,7 @@ public class DefaultFactoryElement extends FactoryElement {
                                  ScopeElement scope,
                                  ConditionElement condition,
                                  SubstitutionElement substitution,
-                                 Boolean polyproduce,
+                                 Integer polyproduce,
                                  String named,
                                  ClassifierType classed,
                                  boolean notifyPostProduce,

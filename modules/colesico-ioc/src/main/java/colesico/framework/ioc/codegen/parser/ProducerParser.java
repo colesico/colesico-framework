@@ -39,10 +39,12 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
@@ -284,8 +286,8 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         // Polyproduce
-
-        final boolean polyproduce = produceAnn.unwrap().polyproduce();
+        final Integer polyproduce = produceAnn.unwrap().polyproduce() == Produce.NO_POLYPRODUCE ?
+                null : produceAnn.unwrap().polyproduce();
 
         // Named
 
@@ -426,7 +428,8 @@ public class ProducerParser extends FrameworkAbstractParser {
         }
 
         // Polyproduce
-        boolean polyproduce = method.annotation(Polyproduce.class) != null;
+        var polyproduceAnn = method.annotation(Polyproduce.class);
+        Integer polyproduce = polyproduceAnn == null ? null : polyproduceAnn.unwrap().order();
 
         // Named
         String named = null;

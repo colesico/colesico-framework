@@ -44,6 +44,7 @@ public @interface Produce {
     String POST_CONSTRUCT_METHOD = "postConstruct";
     String KEY_TYPE_METHOD = "keyType";
     String SUBSTITUTE_METHOD = "substitute";
+    int NO_POLYPRODUCE = Integer.MIN_VALUE;
 
     /**
      * Class of instance to be produced
@@ -59,11 +60,12 @@ public @interface Produce {
     Class<? extends Condition> requires() default Condition.class;
 
     /**
-     * Analogue of the @Polyproduce annotation
+     * Analogue of the {@link Polyproduce} annotation
+     * Defines instance factory order. {@link Produce#NO_POLYPRODUCE} means no polyproducing.
      *
-     * @see Polyproduce
+     * @see Polyproduce#order()
      */
-    boolean polyproduce() default false;
+    int polyproduce() default NO_POLYPRODUCE;
 
     /**
      * Analogue of the @Named annotation

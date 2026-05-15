@@ -104,8 +104,8 @@ public class IocletGenerator extends FrameworkAbstractGenerator {
                 if (fe.classed() != null) {
                     mb.addJavadoc("Classed: " + fe.classed().erasure().toString() + '\n');
                 }
-                if (fe.polyproduce()) {
-                    mb.addJavadoc("Polyproduce: true" + '\n');
+                if (fe.polyproduce() != null) {
+                    mb.addJavadoc("Polyproduce: " + fe.polyproduce() + '\n');
                 }
             } else {
                 mb.addJavadoc("Factory of post produce listener for class " + fe.suppliedType().asClassElement().name() + '\n');

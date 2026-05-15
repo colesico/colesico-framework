@@ -31,4 +31,9 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 public @interface Polyproduce {
+
+    /**
+     * Instance factories order ( including for {@link Polysupplier} )
+     */
+    int order() default 0;
 }

@@ -26,17 +26,17 @@ public final class CatalogEntry<T> {
     private final Key<T> key;
     private final Condition condition;
     private final Substitution substitution;
-    private final boolean polyproducing;
+    private final Integer polyproduce;
 
     private EntryAction action;
 
     private Factory<T> factory;
 
-    public CatalogEntry(Key<T> key, Condition condition, Substitution substitution, boolean polyproducing) {
+    public CatalogEntry(Key<T> key, Condition condition, Substitution substitution, Integer polyproduce) {
         this.key = key;
         this.condition = condition;
         this.substitution = substitution;
-        this.polyproducing = polyproducing;
+        this.polyproduce = polyproduce;
         this.action = EntryAction.NONE;
     }
 
@@ -52,11 +52,11 @@ public final class CatalogEntry<T> {
         return substitution;
     }
 
-    public boolean isPolyproducing() {
-        return polyproducing;
+    public Integer getPolyproduce() {
+        return polyproduce;
     }
 
-    public Factory<T> gfactory() {
+    public Factory<T> factory() {
         return factory;
     }
 
