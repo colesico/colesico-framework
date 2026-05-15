@@ -79,30 +79,22 @@ public class SecurityManagerImpl implements SecurityManager {
     }
 
     @Override
-    public boolean logout(Identity<?> identity) {
-        if (identity == null) return false;
-        var logoutHandler = registry.findLogoutHandler(identity);
-        if (logoutHandler.isPresent()) {
-            logoutHandler.get().logout(identity);
-            listener.onLogout(identity);
-            return true;
+    public void logout(Identity<?> identity) {
+        if (identity == null) {
+            return;
         }
-        return false;
+        registry.findLogoutHandler(identity)
+                .ifPresent(handler -> handler.logout(identity));
+        listener.onLogout(identity);
     }
 
     @Override
-    public boolean logout() {
+    public void logout() {
         var identity = context.identity();
         if (identity != null) {
             context.clear();
-            var logoutHandler = registry.findLogoutHandler(identity);
-            if (logoutHandler.isPresent()) {
-                logoutHandler.get().logout(identity);
-            }
-            listener.onLogout(identity);
-            return true;
+            logout(identity);
         }
-        return false;
     }
 
     @Override

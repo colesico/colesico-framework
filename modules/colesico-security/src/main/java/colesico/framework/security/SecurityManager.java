@@ -70,9 +70,9 @@ public interface SecurityManager {
     /**
      * Complete reset of current authentication.
      */
-    boolean logout(Identity<?> identity);
+    void logout(Identity<?> identity);
 
-    boolean logout();
+    void logout();
 
     /**
      * Checks the presence of active valid identity.
