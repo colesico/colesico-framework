@@ -21,7 +21,7 @@ import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
 import colesico.framework.security.authentication.*;
 import colesico.framework.security.SecurityManager;
-import colesico.framework.security.authentication.AuthenticationPeer;
+import colesico.framework.security.authentication.AuthenticationSource;
 
 import java.util.Optional;
 import java.util.concurrent.Callable;
@@ -30,19 +30,19 @@ import java.util.concurrent.Callable;
  * Default implementation of the {@link SecurityManager}.
  * <p>
  * This manager orchestrates the authentication process by coordinating between
- * transport-level peers, the authentication registry, and lifecycle handlers.
+ * transport-level sources, the authentication registry, and lifecycle handlers.
  * It also manages the security context (Identity) within the current scope.
  */
 public class SecurityManagerImpl implements SecurityManager {
 
     protected final IdentityContext identityContext;
-    protected final PeerContext peerContext;
+    protected final SourceContext sourceContext;
     protected final Polysupplier<AuthenticationHandler> authHandlers;
     protected final AuthenticationRegistry authRegistry;
 
-    public SecurityManagerImpl(IdentityContext identityContext, PeerContext peerContext, Polysupplier<AuthenticationHandler> authHandlers, AuthenticationRegistry authRegistry) {
+    public SecurityManagerImpl(IdentityContext identityContext, SourceContext sourceContext, Polysupplier<AuthenticationHandler> authHandlers, AuthenticationRegistry authRegistry) {
         this.identityContext = identityContext;
-        this.peerContext = peerContext;
+        this.sourceContext = sourceContext;
         this.authHandlers = authHandlers;
         this.authRegistry = authRegistry;
     }
@@ -58,28 +58,28 @@ public class SecurityManagerImpl implements SecurityManager {
         authHandlers.forEach(h -> h.handleLogout(identity));
     }
 
-    private PeerRequest lookupPeerRequest(Iterable<AuthenticationPeer> peers) {
-        for (var p : peers) {
+    private SourceRequest lookupSourceRequest(Iterable<AuthenticationSource> sources) {
+        for (var p : sources) {
             var request = p.request();
             if (request != null) {
-                return new PeerRequest(request, p);
+                return new SourceRequest(request, p);
             }
         }
         return null;
     }
 
     @Override
-    public AuthenticationResult login(Iterable<AuthenticationPeer> peers) {
+    public AuthenticationResult login(Iterable<AuthenticationSource> sources) {
 
-        var peerRequest = lookupPeerRequest(peers);
-        if (peerRequest == null) {
-            return handleLogin(Optional.empty(), AuthenticationResult.failure("No acceptable authentication peer"));
+        var sourceRequest = lookupSourceRequest(sources);
+        if (sourceRequest == null) {
+            return handleLogin(Optional.empty(), AuthenticationResult.failure("No acceptable authentication source"));
         }
 
-        var authenticator = authRegistry.findAuthenticator(peerRequest.request);
-        var result = authenticator.login(peerRequest.request);
+        var authenticator = authRegistry.findAuthenticator(sourceRequest.request);
+        var result = authenticator.login(sourceRequest.request);
 
-        result = handleLogin(Optional.of(peerRequest.request), result);
+        result = handleLogin(Optional.of(sourceRequest.request), result);
 
         if (result instanceof AuthenticationResult.Success success) {
             var identity = success.identity();
@@ -87,9 +87,9 @@ public class SecurityManagerImpl implements SecurityManager {
                 throw new SecurityException("Null Identity for success authentication");
             }
             identityContext.setIdentity(identity);
-            peerRequest.peer.authenticate(identity);
+            sourceRequest.source.authenticate(identity);
         } else if (result instanceof AuthenticationResult.Continuation<?> continuation) {
-            peerRequest.peer.proceed(continuation.challenge());
+            sourceRequest.source.proceed(continuation.challenge());
         }
 
         return result;
@@ -97,9 +97,9 @@ public class SecurityManagerImpl implements SecurityManager {
 
     @Override
     public AuthenticationResult login() {
-        var peer = peerContext.peers();
-        if (peer != null) {
-            return login(peer);
+        var sources = sourceContext.sources();
+        if (sources != null) {
+            return login(sources);
         }
         return AuthenticationResult.failure("Unauthenticated");
     }
@@ -141,7 +141,7 @@ public class SecurityManagerImpl implements SecurityManager {
         }
     }
 
-    protected record PeerRequest(AuthenticationRequest request, AuthenticationPeer peer) {
+    protected record SourceRequest(AuthenticationRequest request, AuthenticationSource source) {
 
     }
 

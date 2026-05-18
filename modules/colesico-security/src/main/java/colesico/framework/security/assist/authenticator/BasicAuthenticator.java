@@ -1,4 +1,4 @@
-package colesico.framework.security.assist.basicauth;
+package colesico.framework.security.assist.authenticator;
 
 import colesico.framework.security.Identity;
 import colesico.framework.security.assist.authrequest.BasicAuthRequest;

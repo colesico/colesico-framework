@@ -1,26 +1,26 @@
 package colesico.framework.security.internal;
 
 import colesico.framework.ioc.scope.RequestScope;
-import colesico.framework.security.authentication.AuthenticationPeer;
-import colesico.framework.security.authentication.PeerContext;
+import colesico.framework.security.authentication.AuthenticationSource;
+import colesico.framework.security.authentication.SourceContext;
 
-public class PeerContextImpl implements PeerContext {
+public class SourceContextImpl implements SourceContext {
 
     protected final RequestScope requestScope;
 
-    public PeerContextImpl(RequestScope requestScope) {
+    public SourceContextImpl(RequestScope requestScope) {
         this.requestScope = requestScope;
     }
 
     @Override
-    public Iterable<AuthenticationPeer> peers() {
-        var peers = requestScope.get(SCOPE_KEY);
-        return peers == null ? null : peers.items();
+    public Iterable<AuthenticationSource> sources() {
+        var sources = requestScope.get(SCOPE_KEY);
+        return sources == null ? null : sources.items();
     }
 
     @Override
-    public void setPeers(Iterable<AuthenticationPeer> peers) {
-        requestScope.put(SCOPE_KEY, new Peers(peers));
+    public void setSources(Iterable<AuthenticationSource> sources) {
+        requestScope.put(SCOPE_KEY, new Sources(sources));
     }
 
     @Override

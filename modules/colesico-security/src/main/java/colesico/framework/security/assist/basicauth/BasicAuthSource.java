@@ -5,15 +5,15 @@ import colesico.framework.security.Identity;
 import colesico.framework.security.assist.authrequest.BasicAuthRequest;
 import colesico.framework.security.authentication.AuthenticationChallenge;
 import colesico.framework.security.authentication.AuthenticationRequest;
-import colesico.framework.security.authentication.AuthenticationPeer;
+import colesico.framework.security.authentication.AuthenticationSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-public class BasicAuthPeer implements AuthenticationPeer {
+public class BasicAuthSource implements AuthenticationSource {
 
-    private static final Logger log = LoggerFactory.getLogger(BasicAuthPeer.class);
+    private static final Logger log = LoggerFactory.getLogger(BasicAuthSource.class);
 
     // current identity
     private final AtomicReference<Object> identityId = new AtomicReference<>();

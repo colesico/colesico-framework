@@ -34,14 +34,14 @@ import java.util.concurrent.Callable;
 public interface SecurityManager {
 
     /**
-     * Attempts to authenticate a subject using the provided collection of {@link AuthenticationPeer}s.
-     * The first peer that provides a valid {@link AuthenticationRequest} will be used for authentication.
+     * Attempts to authenticate a subject using the provided collection of {@link AuthenticationSource}s.
+     * The first source that provides a valid {@link AuthenticationRequest} will be used for authentication.
      * On success, the resulting {@link Identity} is bound to the current {@link IdentityContext}.
      */
-    AuthenticationResult login(Iterable<AuthenticationPeer> peers);
+    AuthenticationResult login(Iterable<AuthenticationSource> sources);
 
     /**
-     * Performs authentication using the peers currently bound to the {@link PeerContext}.
+     * Performs authentication using the sources currently bound to the {@link SourceContext}.
      * This is the standard way to trigger authentication in a scoped environment (e.g., during an HTTP request).
      */
     AuthenticationResult login();
@@ -80,7 +80,7 @@ public interface SecurityManager {
 
     /**
      * Performs a logout for the specified {@link Identity}.
-     * Triggers appropriate logout handlers and notifies associated peers.
+     * Triggers appropriate logout handlers and notifies associated sources.
      */
     void logout(Identity<?> identity);
 

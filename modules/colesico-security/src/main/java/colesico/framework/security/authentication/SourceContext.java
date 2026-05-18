@@ -4,25 +4,25 @@ import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
 
 /**
- * Current peer holder
+ * Current auth sources holder
  */
-public interface PeerContext {
+public interface SourceContext {
 
-    Key<Peers> SCOPE_KEY = new TypeKey<>(Peers.class);
+    Key<Sources> SCOPE_KEY = new TypeKey<>(Sources.class);
 
     /**
-     * Returns {@link AuthenticationPeer} bound to current scope  (thread, request, etc)
+     * Returns {@link AuthenticationSource}s bound to current scope  (thread, request, etc)
      */
-    Iterable<AuthenticationPeer> peers();
+    Iterable<AuthenticationSource> sources();
 
-    void setPeers(Iterable<AuthenticationPeer> peers);
+    void setSources(Iterable<AuthenticationSource> sources);
 
     /**
-     * Remove peer bound to current scope
+     * Remove source bound to current scope
      */
     void clear();
 
-    record Peers(Iterable<AuthenticationPeer> items){
+    record Sources(Iterable<AuthenticationSource> items){
 
     }
 }

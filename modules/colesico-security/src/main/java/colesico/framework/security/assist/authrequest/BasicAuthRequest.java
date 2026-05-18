@@ -1,25 +1,19 @@
-package colesico.framework.security.assist.basicauth;
+package colesico.framework.security.assist.authrequest;
 
 import colesico.framework.security.authentication.AuthenticationRequest;
 
 /**
  * Login/Password authentication credentials
  *
- * @param identityId for already authenticated user
- * @param username   for initial authentication
- * @param password   for initial authentication
+ * @param login for initial authentication
+ * @param password for initial authentication
  */
-public record BasicAuthRequest<I>(
-        String username,
-        String password,
-        I identityId
+public record BasicAuthRequest(
+        String login,
+        String password
 ) implements AuthenticationRequest {
-
-    public static <I> BasicAuthRequest<I> of(String username, String password) {
-        return new BasicAuthRequest<>(username, password, null);
-    }
-
-    public static <I> BasicAuthRequest<I> of(I identityId) {
-        return new BasicAuthRequest<>(null, null, identityId);
+    public static AuthenticationRequest of(String login,
+                                           String password) {
+        return new BasicAuthRequest(login, password);
     }
 }

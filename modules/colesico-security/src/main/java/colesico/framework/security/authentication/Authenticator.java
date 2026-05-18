@@ -24,7 +24,7 @@ public interface Authenticator<R extends AuthenticationRequest> {
     boolean supports(R request);
 
     /**
-     * Performs authentication using the provided context.
+     * Performs authentication using the provided request.
      */
     AuthenticationResult login(R request);
 

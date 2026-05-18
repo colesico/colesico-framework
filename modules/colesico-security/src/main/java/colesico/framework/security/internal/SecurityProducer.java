@@ -24,7 +24,7 @@ import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
 import colesico.framework.security.SecurityManager;
 import colesico.framework.security.authentication.*;
-import colesico.framework.security.assist.basicauth.BasicAuthRequest;
+import colesico.framework.security.assist.authrequest.BasicAuthRequest;
 import colesico.framework.security.authorization.RequireIdentityAudit;
 
 import jakarta.inject.Singleton;
@@ -33,7 +33,7 @@ import jakarta.inject.Singleton;
 @Produce(RequireIdentityAudit.class)
 @Produce(value = AuthRegistryImpl.class, keyType = AuthenticationRegistry.class)
 @Produce(value = IdentityContextImpl.class, keyType = IdentityContext.class, scoped = Singleton.class)
-@Produce(value = PeerContextImpl.class, keyType = PeerContext.class, scoped = Singleton.class)
+@Produce(value = SourceContextImpl.class, keyType = SourceContext.class, scoped = Singleton.class)
 @Produce(value = SecurityManagerImpl.class, keyType = SecurityManager.class, scoped = Singleton.class)
 public class SecurityProducer {
 
@@ -53,11 +53,11 @@ public class SecurityProducer {
 
     @Substitute(Substitution.STUB)
     @Singleton
-    public AuthenticationPeer authContextReader() {
-        return new AuthenticationPeer() {
+    public AuthenticationSource authContextReader() {
+        return new AuthenticationSource() {
             @Override
             public AuthenticationRequest request() {
-                return BasicAuthRequest.of(null);
+                return BasicAuthRequest.of(null, null);
             }
 
             @Override

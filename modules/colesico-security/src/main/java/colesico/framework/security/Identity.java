@@ -55,7 +55,7 @@ public interface Identity<I> {
     String PERMISSIONS_CLAIM = "permissions";
 
     /**
-     * The unique string identifier of this identity (e.g., UUID, username, or numeric ID).
+     * The unique string identifier of this identity (e.g., UUID, login, or numeric ID).
      */
     I id();
 
