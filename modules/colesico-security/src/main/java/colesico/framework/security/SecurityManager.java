@@ -16,14 +16,10 @@
 
 package colesico.framework.security;
 
-import colesico.framework.security.authentication.AuthenticationPeer;
-import colesico.framework.security.authentication.AuthenticationRequest;
-import colesico.framework.security.authentication.AuthenticationResult;
-import colesico.framework.security.authentication.PeerContext;
+import colesico.framework.security.authentication.*;
 import colesico.framework.security.authorization.*;
 
 
-import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 

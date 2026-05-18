@@ -4,7 +4,7 @@ import colesico.framework.security.Identity;
 
 /**
  * Represents the party to be authenticated.
- * Its can be a HTTP Request/Response, gRPC, MQ Message, etc.
+ * It can be a HTTP Request/Response, gRPC, MQ Message, etc.
  */
 public interface AuthenticationPeer {
 

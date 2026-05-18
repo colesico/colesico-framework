@@ -6,7 +6,7 @@ import colesico.framework.security.Identity;
 import java.util.Optional;
 
 /**
- * Authentication handler
+ * Authentication handler/listener
  * To register handler use {@link Polyproduce}
  */
 public interface AuthenticationHandler {

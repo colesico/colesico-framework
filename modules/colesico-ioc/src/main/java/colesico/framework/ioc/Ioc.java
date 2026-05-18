@@ -125,6 +125,10 @@ public interface Ioc {
         return instance(new TypeKey<>(type), null);
     }
 
+    default <T> T instanceOrNull(Class<T> type) {
+        return instanceOrNull(new TypeKey<>(type));
+    }
+
     /**
      * Shortcut method
      * The method uses a TypeKey and null injection message to obtain a provider.

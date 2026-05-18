@@ -12,11 +12,11 @@ import colesico.framework.security.authentication.LogoutHandler;
 
 import java.util.Optional;
 
-public class AuthenticationRegistryImpl implements AuthenticationRegistry {
+public class AuthRegistryImpl implements AuthenticationRegistry {
 
     protected final Ioc ioc;
 
-    public AuthenticationRegistryImpl(Ioc ioc) {
+    public AuthRegistryImpl(Ioc ioc) {
         this.ioc = ioc;
     }
 
@@ -44,6 +44,7 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
             var handler = ioc.instanceOrNull(new NamedKey<>(LogoutHandler.class, handlerName.get()));
             return Optional.ofNullable(handler);
         }
-        return Optional.empty();
+
+        return Optional.ofNullable(ioc.instanceOrNull(LogoutHandler.class));
     }
 }

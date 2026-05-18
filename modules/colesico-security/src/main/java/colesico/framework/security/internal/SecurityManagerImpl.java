@@ -28,7 +28,7 @@ import java.util.concurrent.Callable;
 
 /**
  * Default implementation of the {@link SecurityManager}.
- *
+ * <p>
  * This manager orchestrates the authentication process by coordinating between
  * transport-level peers, the authentication registry, and lifecycle handlers.
  * It also manages the security context (Identity) within the current scope.

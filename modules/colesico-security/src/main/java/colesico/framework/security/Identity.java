@@ -39,7 +39,8 @@ public interface Identity<I> {
     /**
      * Name for {@link NamedKey} of
      * {@link LogoutHandler} implementation that will perform
-     * logout on this identity.
+     * logout on this identity. Name mast be a logout handler canonical class name
+     * {@link Class#getCanonicalName()}
      */
     String LOGOUT_HANDLER_CLAIM = "logout-handler";
 

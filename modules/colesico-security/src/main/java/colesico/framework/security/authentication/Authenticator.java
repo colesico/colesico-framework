@@ -1,7 +1,5 @@
 package colesico.framework.security.authentication;
 
-import colesico.framework.security.Identity;
-
 /**
  * A strategy for authenticating/logout specific types of authentication,
  * i.e. database, ldap, etc
