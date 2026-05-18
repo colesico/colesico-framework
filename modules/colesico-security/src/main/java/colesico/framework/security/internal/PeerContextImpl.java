@@ -15,7 +15,7 @@ public class PeerContextImpl implements PeerContext {
     @Override
     public Iterable<AuthenticationPeer> peers() {
         var peers = requestScope.get(SCOPE_KEY);
-        return peers == null ? null : peers.values();
+        return peers == null ? null : peers.items();
     }
 
     @Override

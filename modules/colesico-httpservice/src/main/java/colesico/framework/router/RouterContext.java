@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * Intended to access the route parameter values
+ * Intended to access the route parameter items
  */
 public final class RouterContext {
 
@@ -32,7 +32,7 @@ public final class RouterContext {
     private final String requestUri;
 
     /**
-     * Route params values  (ex: /foo/{a}/boo/{b} -> /foo/1/boo/2 -> a=1 and b=2)
+     * Route params items  (ex: /foo/{a}/boo/{b} -> /foo/1/boo/2 -> a=1 and b=2)
      */
     private final Map<String, String> parameters;
 

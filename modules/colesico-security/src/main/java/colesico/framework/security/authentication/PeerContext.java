@@ -22,7 +22,7 @@ public interface PeerContext {
      */
     void clear();
 
-    record Peers(Iterable<AuthenticationPeer> values){
+    record Peers(Iterable<AuthenticationPeer> items){
 
     }
 }
