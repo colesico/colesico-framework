@@ -2,6 +2,7 @@ package colesico.framework.security.assist.authenticator;
 
 import colesico.framework.security.Identity;
 import colesico.framework.security.assist.authrequest.BasicAuthRequest;
+import colesico.framework.security.authentication.AuthenticationChallenge;
 import colesico.framework.security.authentication.AuthenticationResult;
 import colesico.framework.security.authentication.Authenticator;
 import colesico.framework.security.authentication.LogoutHandler;
@@ -10,9 +11,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Default basic authenticator (in-memory)
+ * Abstract basic authenticator
  */
-abstract public class BasicAuthenticator implements
+abstract public class AbstractBasicAuthenticator implements
         Authenticator<BasicAuthRequest>,
         LogoutHandler {
 
@@ -21,7 +22,9 @@ abstract public class BasicAuthenticator implements
      */
     private final Map<Object, Identity<?>> authenticated = new ConcurrentHashMap<>();
 
-    abstract protected Identity authByLoginPassword(BasicAuthRequest context);
+    abstract protected Identity<?> authByLoginPassword(BasicAuthRequest context);
+
+    abstract protected AuthenticationChallenge createChallenge();
 
     @Override
     public boolean supports(BasicAuthRequest request) {
@@ -44,7 +47,7 @@ abstract public class BasicAuthenticator implements
                 }
             }
         }
-        return AuthenticationResult.continuation("Invalid credentials");
+        return AuthenticationResult.continuation(createChallenge());
     }
 
     @Override
