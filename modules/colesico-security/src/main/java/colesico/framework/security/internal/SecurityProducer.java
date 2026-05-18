@@ -44,8 +44,8 @@ public class SecurityProducer {
 
     @Substitute(Substitution.STUB)
     @Singleton
-    public AuthenticationListener authListener() {
-        return new AuthenticationListener() {
+    public AuthenticationHandler authListener() {
+        return new AuthenticationHandler() {
         };
     }
 

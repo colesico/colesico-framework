@@ -19,47 +19,62 @@ package colesico.framework.security;
 import colesico.framework.security.authentication.AuthenticationPeer;
 import colesico.framework.security.authentication.AuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationResult;
+import colesico.framework.security.authentication.PeerContext;
 import colesico.framework.security.authorization.*;
 
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
 /**
- * Security manager to provide basic security service.
- * Manager can store/obtain identity from different sources,
- * associates current identity instance to the current thread.
+ * The central entry point for security services within the framework.
+ * <p>
+ * Provides methods for authenticating subjects, managing the current identity's lifecycle,
+ * and performing identity-scoped operations (impersonation).
+ * This manager coordinates with {@link IdentityContext} to associate an identity
+ * with the current execution scope.
  */
 public interface SecurityManager {
 
     /**
-     * Authenticate peer by provided {@link AuthenticationRequest} and on success bind {@link Identity} to {@link IdentityContext}.
+     * Attempts to authenticate a subject using the provided collection of {@link AuthenticationPeer}s.
+     * The first peer that provides a valid {@link AuthenticationRequest} will be used for authentication.
+     * On success, the resulting {@link Identity} is bound to the current {@link IdentityContext}.
      */
-    AuthenticationResult login(AuthenticationRequest request);
+    AuthenticationResult login(Iterable<AuthenticationPeer> peers);
 
     /**
-     * Authenticate peer by extracted {@link AuthenticationRequest} from the peer
-     * by {@link AuthenticationPeer#request()}
+     * Performs authentication using the peers currently bound to the {@link PeerContext}.
+     * This is the standard way to trigger authentication in a scoped environment (e.g., during an HTTP request).
      */
     AuthenticationResult login();
 
     /**
-     * Retrieves the current {@link Identity} from the local context {@link IdentityContext}
+     * Retrieves the current {@link Identity} from the active {@link IdentityContext}.
+     * Returns an empty Optional if the subject is not authenticated.
      */
     Optional<Identity<?>> identity();
 
     /**
-     * Check peer is authenticated
+     * Checks whether the current subject is authenticated.
      */
     default boolean isAuthenticated() {
         return identity().isPresent();
     }
 
     /**
-     * Call given closure as specified identity
+     * Executes the given task as the specified {@link Identity}.
+     * Temporarily replaces the current identity in the context and restores it after the task completes.
+     * This is useful for impersonation or system-level background tasks.
      */
     <T> T callAs(Callable<T> callable, Identity<?> identity);
 
+    /**
+     * Executes the given runnable as the specified {@link Identity}.
+     *
+     * @see #callAs(Callable, Identity)
+     */
     default void runAs(Identity<?> identity, Runnable runnable) {
         callAs(() -> {
             runnable.run();
@@ -68,20 +83,28 @@ public interface SecurityManager {
     }
 
     /**
-     * Complete reset of current authentication.
+     * Performs a logout for the specified {@link Identity}.
+     * Triggers appropriate logout handlers and notifies associated peers.
      */
     void logout(Identity<?> identity);
 
+    /**
+     * Performs a logout for the current {@link Identity} and clears the security context.
+     */
     void logout();
 
     /**
-     * Checks the presence of active valid identity.
-     * If not present - throws IdentityRequiredException
+     * Returns the current {@link Identity} or throws an {@link IdentityRequiredException}
+     * if the subject is not authenticated.
+     * Use this method when an identity is strictly required for the subsequent logic.
      */
     default Identity<?> requireIdentity() {
         return identity().orElseThrow(IdentityRequiredException::new);
     }
 
+    /**
+     * Checks if the current subject has permission to access a specific resource using the provided {@link Authorizer}.
+     */
     default <D, R> AuthorizationResult<D> hasPermission(Authorizer<R, D> authorizer, R resource) {
         AuthorizationRequest<R> request =
                 new AuthorizationRequest.Default<>(identity().orElse(null), resource);
