@@ -2,6 +2,7 @@ package colesico.framework.security.assist.basicauth;
 
 
 import colesico.framework.security.Identity;
+import colesico.framework.security.assist.authrequest.BasicAuthRequest;
 import colesico.framework.security.authentication.AuthenticationChallenge;
 import colesico.framework.security.authentication.AuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationPeer;
