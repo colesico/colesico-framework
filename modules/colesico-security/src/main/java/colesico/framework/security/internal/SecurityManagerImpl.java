@@ -58,7 +58,7 @@ public class SecurityManagerImpl implements SecurityManager {
         return result;
     }
 
-    protected void handleLogout(Identity<?> identity) {
+    protected void handleLogout(Optional<Identity<?>> identity) {
         for (var h : authHandlers) {
             var r = h.handleLogout(identity);
             if (!r.porceed()) {
@@ -126,14 +126,15 @@ public class SecurityManagerImpl implements SecurityManager {
 
     @Override
     public void logout(Identity<?> identity) {
-        if (identity == null) {
-            return;
+        if (identity != null) {
+            authRegistry.findAuthenticator(identity)
+                    .ifPresent(a -> a.logout(identity));
+            authRegistry.findAuthenticationSource(identity)
+                    .ifPresent(s -> s.logout(identity));
+            handleLogout(Optional.of(identity));
+        } else {
+            handleLogout(Optional.empty());
         }
-        authRegistry.findAuthenticator(identity)
-                .ifPresent(a -> a.logout(identity));
-        authRegistry.findAuthenticationSource(identity)
-                .ifPresent(s -> s.logout(identity));
-        handleLogout(identity);
     }
 
     @Override

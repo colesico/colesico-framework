@@ -15,7 +15,7 @@ public interface AuthenticationHandler {
         return new HandleResult<>(result, true);
     }
 
-    default HandleResult<Object> handleLogout(Identity<?> identity) {
+    default HandleResult<Object> handleLogout(Optional<Identity<?>> identity) {
         return new HandleResult<>(null, true);
     }
 
