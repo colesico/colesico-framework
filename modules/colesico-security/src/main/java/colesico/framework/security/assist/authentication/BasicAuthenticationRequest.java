@@ -2,18 +2,19 @@ package colesico.framework.security.assist.authentication;
 
 import colesico.framework.security.authentication.AuthenticationRequest;
 
+import java.util.Map;
+
 /**
  * Login/Password authentication credentials
- *
- * @param login for initial authentication
- * @param password for initial authentication
  */
 public record BasicAuthenticationRequest(
         String login,
-        String password
+        String password,
+        Map<String, Object> claims
 ) implements AuthenticationRequest {
-    public static AuthenticationRequest of(String login,
-                                           String password) {
-        return new BasicAuthenticationRequest(login, password);
+    public static BasicAuthenticationRequest of(String login,
+                                                String password,
+                                                Map<String, Object> claims) {
+        return new BasicAuthenticationRequest(login, password, claims);
     }
 }

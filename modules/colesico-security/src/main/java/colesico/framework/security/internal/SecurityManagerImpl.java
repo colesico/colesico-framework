@@ -51,7 +51,7 @@ public class SecurityManagerImpl implements SecurityManager {
         for (var h : authHandlers) {
             var r = h.handleLogin(request, result);
             result = r.result();
-            if (!r.porceed()) {
+            if (!r.proceed()) {
                 break;
             }
         }
@@ -61,7 +61,7 @@ public class SecurityManagerImpl implements SecurityManager {
     protected void handleLogout(Optional<Identity<?>> identity) {
         for (var h : authHandlers) {
             var r = h.handleLogout(identity);
-            if (!r.porceed()) {
+            if (!r.proceed()) {
                 break;
             }
         }

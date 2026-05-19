@@ -19,7 +19,7 @@ public interface AuthenticationHandler {
         return new HandleResult<>(null, true);
     }
 
-    record HandleResult<R>(R result, boolean porceed) {
+    record HandleResult<R>(R result, boolean proceed) {
 
     }
 

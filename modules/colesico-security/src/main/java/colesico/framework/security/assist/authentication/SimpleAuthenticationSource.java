@@ -1,6 +1,5 @@
 package colesico.framework.security.assist.authentication;
 
-
 import colesico.framework.security.Identity;
 import colesico.framework.security.authentication.AuthenticationChallenge;
 import colesico.framework.security.authentication.AuthenticationRequest;
@@ -8,19 +7,26 @@ import colesico.framework.security.authentication.AuthenticationSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static colesico.framework.security.authentication.AuthenticationRequest.SOURCE_CLAIM;
+
 /**
- * Put this source to appropriate scope  (i.e. session)
+ * Simple authentication source.
+ * Allow to authenticate single user per scope  (default - singleton)
+ * Put this source to appropriate scope to support multi user authentication.
  */
-public class SimpleAuthenticationSource<R extends AuthenticationRequest> implements AuthenticationSource {
+public class SimpleAuthenticationSource implements AuthenticationSource {
+
+    public static final String SOURCE_NAME = "simple";
 
     protected static final Logger log = LoggerFactory.getLogger(SimpleAuthenticationSource.class);
 
-    protected final AtomicReference<R> request = new AtomicReference<>();
+    protected final AtomicReference<BasicAuthenticationRequest> request = new AtomicReference<>();
 
     @Override
-    public R request() {
+    public BasicAuthenticationRequest request() {
         return request.get();
     }
 
@@ -34,7 +40,6 @@ public class SimpleAuthenticationSource<R extends AuthenticationRequest> impleme
         log.debug("Identity {} is logged in", identity.id());
     }
 
-
     @Override
     public void unauthenticated(AuthenticationRequest request) {
         this.request.set(null);
@@ -47,7 +52,11 @@ public class SimpleAuthenticationSource<R extends AuthenticationRequest> impleme
         log.debug("Identity {} is logged out", identity.id());
     }
 
-    public void setRequest(R request) {
-        this.request.set(request);
+    /**
+     * Credentials to perform authentication
+     */
+    public void setCredentials(String login, String password) {
+        Map<String, Object> claims = Map.of(SOURCE_CLAIM, SOURCE_NAME);
+        this.request.set(BasicAuthenticationRequest.of(login, password, claims));
     }
 }

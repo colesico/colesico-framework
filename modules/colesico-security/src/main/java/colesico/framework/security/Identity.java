@@ -16,6 +16,7 @@
 
 package colesico.framework.security;
 
+import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.NamedKey;
 import colesico.framework.security.authentication.AuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationSource;
@@ -39,23 +40,16 @@ import java.util.function.Function;
 public interface Identity<I> {
 
     /**
-     * Specifies the name for the {@link NamedKey} of the {@link Authenticator} implementation that
-     * issued this identity.
-     * This value is typically the canonical class name {@link Class#getCanonicalName()}
-     * of the authenticator class.
+     * Specifies the unique name for the {@link NamedKey} to retrieve {@link Authenticator}
+     * instance that issued this identity from {@link Ioc}.
      * The name is used to route security actions, such as logout, to the correct authenticator.
      */
     String AUTHENTICATOR_CLAIM = "authenticator";
 
     /**
-     * Specifies the name for the {@link NamedKey} used to look up the
-     * {@link AuthenticationSource} implementation in the IoC container,
-     * where the {@link AuthenticationRequest} resulted in the issuance of this identity.
-     * This value is typically the canonical class name {@link Class#getCanonicalName()}
-     * of the authentication source class.
-     * The name is used to route security actions, such as logout, to the correct source.
+     * @see AuthenticationRequest#SOURCE_CLAIM
      */
-    String SOURCE_CLAIM = "source";
+    String SOURCE_CLAIM = AuthenticationRequest.SOURCE_CLAIM;
 
     /**
      * The claim key for the roles holder.
