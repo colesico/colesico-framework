@@ -1,4 +1,4 @@
-package colesico.framework.security.assist.authorizer;
+package colesico.framework.security.assist.authorization;
 
 import colesico.framework.security.authorization.AuthorizationRequest;
 import colesico.framework.security.authorization.AuthorizationResult;

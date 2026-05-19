@@ -15,14 +15,13 @@ module colesico.framework.security {
     // Exports
     exports colesico.framework.security;
     exports colesico.framework.security.authorization;
-    exports colesico.framework.security.assist.authorizer;
     exports colesico.framework.security.authentication;
-    exports colesico.framework.security.assist.basicauth;
+
 
     exports colesico.framework.security.assist;
     exports colesico.framework.security.internal to colesico.framework.ioc;
-    exports colesico.framework.security.assist.authrequest;
-    exports colesico.framework.security.assist.authenticator;
+    exports colesico.framework.security.assist.authentication;
+    exports colesico.framework.security.assist.authorization;
 
 
 }

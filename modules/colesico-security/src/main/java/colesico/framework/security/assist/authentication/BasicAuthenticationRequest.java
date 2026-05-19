@@ -1,4 +1,4 @@
-package colesico.framework.security.assist.authrequest;
+package colesico.framework.security.assist.authentication;
 
 import colesico.framework.security.authentication.AuthenticationRequest;
 
@@ -8,12 +8,12 @@ import colesico.framework.security.authentication.AuthenticationRequest;
  * @param login for initial authentication
  * @param password for initial authentication
  */
-public record BasicAuthRequest(
+public record BasicAuthenticationRequest(
         String login,
         String password
 ) implements AuthenticationRequest {
     public static AuthenticationRequest of(String login,
                                            String password) {
-        return new BasicAuthRequest(login, password);
+        return new BasicAuthenticationRequest(login, password);
     }
 }

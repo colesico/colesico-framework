@@ -1,7 +1,6 @@
-package colesico.framework.security.assist.authenticator;
+package colesico.framework.security.assist.authentication;
 
 import colesico.framework.security.Identity;
-import colesico.framework.security.assist.authrequest.BasicAuthRequest;
 import colesico.framework.security.authentication.AuthenticationChallenge;
 import colesico.framework.security.authentication.AuthenticationResult;
 import colesico.framework.security.authentication.Authenticator;
@@ -13,26 +12,31 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Abstract basic authenticator
  */
-abstract public class AbstractBasicAuthenticator implements
-        Authenticator<BasicAuthRequest>,
+public class BasicAuthenticator implements
+        Authenticator<BasicAuthenticationRequest>,
         LogoutHandler {
 
     /**
      * Authenticated identities
      */
-    private final Map<Object, Identity<?>> authenticated = new ConcurrentHashMap<>();
+    protected final Map<Object, Identity<?>> authenticated = new ConcurrentHashMap<>();
 
-    abstract protected Identity<?> authByLoginPassword(BasicAuthRequest context);
+    protected Identity<?> authByLoginPassword(BasicAuthenticationRequest context) {
+        Map<String, Object> claims = Map.of(Identity.LOGOUT_HANDLER_CLAIM, BasicAuthenticator.class.getCanonicalName());
+        return new Identity.Default<>("0", claims);
+    }
 
-    abstract protected AuthenticationChallenge createChallenge();
+    protected AuthenticationChallenge createChallenge() {
+        return null;
+    }
 
     @Override
-    public boolean supports(BasicAuthRequest request) {
+    public boolean supports(BasicAuthenticationRequest request) {
         return true;
     }
 
     @Override
-    public AuthenticationResult login(BasicAuthRequest request) {
+    public AuthenticationResult login(BasicAuthenticationRequest request) {
         if (request.login() != null) {
             var identity = authenticated.get(request.login());
             if (identity != null) {

@@ -12,11 +12,11 @@ import colesico.framework.security.authentication.LogoutHandler;
 
 import java.util.Optional;
 
-public class AuthRegistryImpl implements AuthenticationRegistry {
+public class AuthenticationRegistryImpl implements AuthenticationRegistry {
 
     protected final Ioc ioc;
 
-    public AuthRegistryImpl(Ioc ioc) {
+    public AuthenticationRegistryImpl(Ioc ioc) {
         this.ioc = ioc;
     }
 

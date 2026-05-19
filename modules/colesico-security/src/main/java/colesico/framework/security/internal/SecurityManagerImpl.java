@@ -49,7 +49,11 @@ public class SecurityManagerImpl implements SecurityManager {
 
     protected AuthenticationResult handleLogin(Optional<AuthenticationRequest> request, AuthenticationResult result) {
         for (var h : authHandlers) {
-            result = h.handleLogin(request, result);
+            var r = h.handleLogin(request, result);
+            result = r.result();
+            if (!r.porceed()) {
+                break;
+            }
         }
         return result;
     }
@@ -58,41 +62,41 @@ public class SecurityManagerImpl implements SecurityManager {
         authHandlers.forEach(h -> h.handleLogout(identity));
     }
 
-    private SourceRequest lookupSourceRequest(Iterable<AuthenticationSource> sources) {
-        for (var p : sources) {
-            var request = p.request();
-            if (request != null) {
-                return new SourceRequest(request, p);
-            }
-        }
-        return null;
-    }
-
     @Override
     public AuthenticationResult login(Iterable<AuthenticationSource> sources) {
 
-        var sourceRequest = lookupSourceRequest(sources);
-        if (sourceRequest == null) {
-            return handleLogin(Optional.empty(), AuthenticationResult.failure("No acceptable authentication source"));
-        }
+        AuthenticationResult lastFailure = null;
 
-        var authenticator = authRegistry.findAuthenticator(sourceRequest.request);
-        var result = authenticator.login(sourceRequest.request);
-
-        result = handleLogin(Optional.of(sourceRequest.request), result);
-
-        if (result instanceof AuthenticationResult.Success success) {
-            var identity = success.identity();
-            if (identity == null) {
-                throw new SecurityException("Null Identity for success authentication");
+        for (var source : sources) {
+            var request = source.request();
+            if (request == null) {
+                continue;
             }
-            identityContext.setIdentity(identity);
-            sourceRequest.source.authenticate(identity);
-        } else if (result instanceof AuthenticationResult.Continuation<?> continuation) {
-            sourceRequest.source.proceed(continuation.challenge());
-        }
+            var authenticator = authRegistry.findAuthenticator(request);
+            var result = authenticator.login(request);
+            result = handleLogin(Optional.of(request), result);
 
-        return result;
+            switch (result) {
+                case AuthenticationResult.Success success -> {
+                    var identity = success.identity();
+                    if (identity == null) {
+                        throw new SecurityException("Null Identity for success authentication");
+                    }
+                    identityContext.setIdentity(identity);
+                    source.authenticate(identity);
+                    return result;
+                }
+                case AuthenticationResult.Continuation<?> continuation -> {
+                    source.proceed(continuation.challenge());
+                    return result;
+                }
+                default -> lastFailure = result;
+            }
+
+        } // for sources
+
+        return lastFailure != null ? lastFailure :
+                handleLogin(Optional.empty(), AuthenticationResult.failure("No acceptable authentication source"));
     }
 
     @Override
@@ -139,10 +143,6 @@ public class SecurityManagerImpl implements SecurityManager {
         } finally {
             identityContext.setIdentity(previous);
         }
-    }
-
-    protected record SourceRequest(AuthenticationRequest request, AuthenticationSource source) {
-
     }
 
 }

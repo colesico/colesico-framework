@@ -24,17 +24,16 @@ import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
 import colesico.framework.security.SecurityManager;
 import colesico.framework.security.authentication.*;
-import colesico.framework.security.assist.authrequest.BasicAuthRequest;
 import colesico.framework.security.authorization.RequireIdentityAudit;
 
 import jakarta.inject.Singleton;
 
 @Producer
-@Produce(RequireIdentityAudit.class)
-@Produce(value = AuthRegistryImpl.class, keyType = AuthenticationRegistry.class)
+@Produce(value = AuthenticationRegistryImpl.class, keyType = AuthenticationRegistry.class)
 @Produce(value = IdentityContextImpl.class, keyType = IdentityContext.class, scoped = Singleton.class)
 @Produce(value = SourceContextImpl.class, keyType = SourceContext.class, scoped = Singleton.class)
 @Produce(value = SecurityManagerImpl.class, keyType = SecurityManager.class, scoped = Singleton.class)
+@Produce(RequireIdentityAudit.class)
 public class SecurityProducer {
 
     /**
@@ -51,29 +50,4 @@ public class SecurityProducer {
         };
     }
 
-    @Substitute(Substitution.STUB)
-    @Singleton
-    public AuthenticationSource authContextReader() {
-        return new AuthenticationSource() {
-            @Override
-            public AuthenticationRequest request() {
-                return BasicAuthRequest.of(null, null);
-            }
-
-            @Override
-            public <C extends AuthenticationChallenge> void proceed(C challenge) {
-
-            }
-
-            @Override
-            public void authenticate(Identity<?> identity) {
-
-            }
-
-            @Override
-            public void logout(Identity<?> identity) {
-
-            }
-        };
-    }
 }
