@@ -11,14 +11,15 @@ import java.util.Optional;
  */
 public interface AuthenticationHandler {
 
-    default HandleResult handleLogin(Optional<AuthenticationRequest> request, AuthenticationResult result) {
-        return new HandleResult(result,true);
+    default HandleResult<AuthenticationResult> handleLogin(Optional<AuthenticationRequest> request, AuthenticationResult result) {
+        return new HandleResult<>(result, true);
     }
 
-    default void handleLogout(Identity<?> identity) {
+    default HandleResult<Object> handleLogout(Identity<?> identity) {
+        return new HandleResult<>(null, true);
     }
 
-    record HandleResult(AuthenticationResult result, boolean porceed){
+    record HandleResult<R>(R result, boolean porceed) {
 
     }
 

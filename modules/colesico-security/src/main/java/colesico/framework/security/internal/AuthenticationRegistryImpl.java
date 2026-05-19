@@ -7,10 +7,13 @@ import colesico.framework.ioc.key.NamedKey;
 import colesico.framework.security.Identity;
 import colesico.framework.security.authentication.AuthenticationRegistry;
 import colesico.framework.security.authentication.AuthenticationRequest;
+import colesico.framework.security.authentication.AuthenticationSource;
 import colesico.framework.security.authentication.Authenticator;
-import colesico.framework.security.authentication.LogoutHandler;
 
 import java.util.Optional;
+
+import static colesico.framework.security.Identity.AUTHENTICATOR_CLAIM;
+import static colesico.framework.security.Identity.SOURCE_CLAIM;
 
 public class AuthenticationRegistryImpl implements AuthenticationRegistry {
 
@@ -22,7 +25,7 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public Authenticator<AuthenticationRequest> findAuthenticator(AuthenticationRequest request) {
+    public Optional<Authenticator<AuthenticationRequest>> findAuthenticator(AuthenticationRequest request) {
         if (request == null) {
             throw new SecurityException("Authentication request class is null");
         }
@@ -30,21 +33,32 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
         var authenticators = ioc.polysupplier(authIocKey);
         for (var authenticator : authenticators) {
             if (authenticator.supports(request)) {
-                return authenticator;
+                return Optional.of(authenticator);
             }
         }
 
-        throw new SecurityException("Appropriate authenticator not found for request '" + request + "'");
+        return Optional.empty();
     }
 
     @Override
-    public Optional<LogoutHandler> findLogoutHandler(Identity<?> identity) {
-        var handlerName = identity.logoutHandlerName();
-        if (handlerName.isPresent()) {
-            var handler = ioc.instanceOrNull(new NamedKey<>(LogoutHandler.class, handlerName.get()));
-            return Optional.ofNullable(handler);
+    public Optional<Authenticator<AuthenticationRequest>> findAuthenticator(Identity<?> identity) {
+        var authenticatorName = identity.claim(AUTHENTICATOR_CLAIM, String.class);
+        if (authenticatorName.isPresent()) {
+            var authenticator = ioc.instanceOrNull(new NamedKey<>(Authenticator.class, authenticatorName.get()));
+            return Optional.ofNullable(authenticator);
+        } else {
+            return Optional.empty();
         }
+    }
 
-        return Optional.ofNullable(ioc.instanceOrNull(LogoutHandler.class));
+    @Override
+    public Optional<AuthenticationSource> findAuthenticationSource(Identity<?> identity) {
+        var sourceName = identity.claim(SOURCE_CLAIM, String.class);
+        if (sourceName.isPresent()) {
+            var source = ioc.instanceOrNull(new NamedKey<>(AuthenticationSource.class, sourceName.get()));
+            return Optional.ofNullable(source);
+        } else {
+            return Optional.empty();
+        }
     }
 }

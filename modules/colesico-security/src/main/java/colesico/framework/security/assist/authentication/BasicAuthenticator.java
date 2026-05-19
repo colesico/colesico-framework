@@ -4,7 +4,6 @@ import colesico.framework.security.Identity;
 import colesico.framework.security.authentication.AuthenticationChallenge;
 import colesico.framework.security.authentication.AuthenticationResult;
 import colesico.framework.security.authentication.Authenticator;
-import colesico.framework.security.authentication.LogoutHandler;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,8 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Abstract basic authenticator
  */
 public class BasicAuthenticator implements
-        Authenticator<BasicAuthenticationRequest>,
-        LogoutHandler {
+        Authenticator<BasicAuthenticationRequest> {
 
     /**
      * Authenticated identities
@@ -22,7 +20,7 @@ public class BasicAuthenticator implements
     protected final Map<Object, Identity<?>> authenticated = new ConcurrentHashMap<>();
 
     protected Identity<?> authByLoginPassword(BasicAuthenticationRequest context) {
-        Map<String, Object> claims = Map.of(Identity.LOGOUT_HANDLER_CLAIM, BasicAuthenticator.class.getCanonicalName());
+        Map<String, Object> claims = Map.of(Identity.AUTHENTICATOR_CLAIM, BasicAuthenticator.class.getCanonicalName());
         return new Identity.Default<>("0", claims);
     }
 

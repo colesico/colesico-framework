@@ -8,15 +8,20 @@ import colesico.framework.security.authentication.AuthenticationSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.atomic.AtomicReference;
+
+/**
+ * Put this source to appropriate scope  (i.e. session)
+ */
 public class SimpleAuthenticationSource<R extends AuthenticationRequest> implements AuthenticationSource {
 
     protected static final Logger log = LoggerFactory.getLogger(SimpleAuthenticationSource.class);
 
-    protected R request;
+    protected final AtomicReference<R> request = new AtomicReference<>();
 
     @Override
     public R request() {
-        return request;
+        return request.get();
     }
 
     @Override
@@ -29,16 +34,20 @@ public class SimpleAuthenticationSource<R extends AuthenticationRequest> impleme
         log.debug("Identity {} is logged in", identity.id());
     }
 
+
+    @Override
+    public void unauthenticated(AuthenticationRequest request) {
+        this.request.set(null);
+        log.debug("Authentication request failure");
+    }
+
     @Override
     public void logout(Identity<?> identity) {
+        request.set(null);
         log.debug("Identity {} is logged out", identity.id());
     }
 
-    public R getRequest() {
-        return request;
-    }
-
     public void setRequest(R request) {
-        this.request = request;
+        this.request.set(request);
     }
 }

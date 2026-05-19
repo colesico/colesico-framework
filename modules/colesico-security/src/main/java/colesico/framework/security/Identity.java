@@ -17,7 +17,9 @@
 package colesico.framework.security;
 
 import colesico.framework.ioc.key.NamedKey;
-import colesico.framework.security.authentication.LogoutHandler;
+import colesico.framework.security.authentication.AuthenticationRequest;
+import colesico.framework.security.authentication.AuthenticationSource;
+import colesico.framework.security.authentication.Authenticator;
 
 import java.util.Collections;
 import java.util.Map;
@@ -32,34 +34,46 @@ import java.util.function.Function;
  * the subject's unique identifier and a set of claims (attributes and permissions)
  * describing the entity's properties and authorities.
  * <p>
- * Framework provides default implementation {@link Identity.Default}
+ * The framework provides a default implementation: {@link Identity.Default}
  */
 public interface Identity<I> {
 
     /**
-     * Name for {@link NamedKey} of
-     * {@link LogoutHandler} implementation that will perform
-     * logout on this identity. Name mast be a logout handler canonical class name
-     * {@link Class#getCanonicalName()}
+     * Specifies the name for the {@link NamedKey} of the {@link Authenticator} implementation that
+     * issued this identity.
+     * This value is typically the canonical class name {@link Class#getCanonicalName()}
+     * of the authenticator class.
+     * The name is used to route security actions, such as logout, to the correct authenticator.
      */
-    String LOGOUT_HANDLER_CLAIM = "logout-handler";
+    String AUTHENTICATOR_CLAIM = "authenticator";
 
     /**
-     * Roles holder claim
+     * Specifies the name for the {@link NamedKey} used to look up the
+     * {@link AuthenticationSource} implementation in the IoC container,
+     * where the {@link AuthenticationRequest} resulted in the issuance of this identity.
+     * This value is typically the canonical class name {@link Class#getCanonicalName()}
+     * of the authentication source class.
+     * The name is used to route security actions, such as logout, to the correct source.
+     */
+    String SOURCE_CLAIM = "source";
+
+    /**
+     * The claim key for the roles holder.
      */
     String ROLES_CLAIM = "roles";
 
     /**
-     * Permissions holder claim
+     * The claim key for the permissions holder.
      */
     String PERMISSIONS_CLAIM = "permissions";
 
     /**
-     * The unique string identifier of this identity (e.g., UUID, login, or numeric ID).
+     * Returns the unique identifier of this identity (e.g., UUID, login, or numeric ID).
      */
     I id();
 
     /**
+     * Maps the identity identifier to another type.
      * Usage example: Long userId = identity.id(Long::valueOf);
      */
     default <T> T id(Function<I, T> mapper) {
@@ -67,50 +81,55 @@ public interface Identity<I> {
     }
 
     /**
-     * Any identity data
+     * Returns a map of all claims associated with this identity.
      */
     Map<String, Object> claims();
 
+    /**
+     * Retrieves a claim by its key and casts it to the specified type.
+     */
     default <T> Optional<T> claim(String key, Class<T> type) {
         Object value = claims().get(key);
         return type.isInstance(value) ? Optional.of(type.cast(value)) : Optional.empty();
     }
 
     /**
-     * Syntactic sugar for typed claims with a default value.
+     * Syntactic sugar for retrieving a typed claim with a default value.
      */
     default <T> T claimOrElse(String key, Class<T> type, T defaultValue) {
         return claim(key, type).orElse(defaultValue);
     }
 
     /**
-     * Built-in support for Roles (RBAC).
+     * Provides built-in support for Roles (RBAC).
      */
     default Set<String> roles() {
         return claim(ROLES_CLAIM, Set.class).orElse(Collections.emptySet());
     }
 
+    /**
+     * Checks if the identity has the specified role.
+     */
     default boolean hasRole(String role) {
         return roles().contains(role);
     }
 
     /**
-     * Built-in support for Permissions/Authorities.
+     * Provides built-in support for Permissions/Authorities.
      */
     default Set<String> permissions() {
         return claim(PERMISSIONS_CLAIM, Set.class).orElse(Collections.emptySet());
     }
 
+    /**
+     * Checks if the identity has the specified permission.
+     */
     default boolean hasPermission(String permission) {
         return permissions().contains(permission);
     }
 
-    default Optional<String> logoutHandlerName() {
-        return claim(LOGOUT_HANDLER_CLAIM, String.class);
-    }
-
     /**
-     * Default identity implementation
+     * The default implementation of the {@link Identity} interface.
      */
     record Default<I>(I id, Map<String, Object> claims) implements Identity<I> {
         public static <I> Default<I> of(I id) {
@@ -121,5 +140,4 @@ public interface Identity<I> {
             return new Default<>(id, claims);
         }
     }
-
 }

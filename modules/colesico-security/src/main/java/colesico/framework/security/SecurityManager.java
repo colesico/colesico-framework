@@ -20,6 +20,7 @@ import colesico.framework.security.authentication.*;
 import colesico.framework.security.authorization.*;
 
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
@@ -40,11 +41,16 @@ public interface SecurityManager {
      */
     AuthenticationResult login(Iterable<AuthenticationSource> sources);
 
+    default AuthenticationResult login(AuthenticationSource source) {
+        return login(List.of(source));
+    }
+
     /**
      * Performs authentication using the sources currently bound to the {@link SourceContext}.
      * This is the standard way to trigger authentication in a scoped environment (e.g., during an HTTP request).
      */
     AuthenticationResult login();
+
 
     /**
      * Retrieves the current {@link Identity} from the active {@link IdentityContext}.

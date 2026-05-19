@@ -59,7 +59,12 @@ public class SecurityManagerImpl implements SecurityManager {
     }
 
     protected void handleLogout(Identity<?> identity) {
-        authHandlers.forEach(h -> h.handleLogout(identity));
+        for (var h : authHandlers) {
+            var r = h.handleLogout(identity);
+            if (!r.porceed()) {
+                break;
+            }
+        }
     }
 
     @Override
@@ -68,11 +73,14 @@ public class SecurityManagerImpl implements SecurityManager {
         AuthenticationResult lastFailure = null;
 
         for (var source : sources) {
-            var request = source.request();
+            final var request = source.request();
             if (request == null) {
                 continue;
             }
-            var authenticator = authRegistry.findAuthenticator(request);
+            var authenticator = authRegistry.findAuthenticator(request).orElseThrow(
+                    () -> new SecurityException("Appropriate authenticator not found for request '" + request + "'")
+            );
+
             var result = authenticator.login(request);
             result = handleLogin(Optional.of(request), result);
 
@@ -90,7 +98,10 @@ public class SecurityManagerImpl implements SecurityManager {
                     source.proceed(continuation.challenge());
                     return result;
                 }
-                default -> lastFailure = result;
+                default -> {
+                    source.unauthenticated(request);
+                    lastFailure = result;
+                }
             }
 
         } // for sources
@@ -118,8 +129,10 @@ public class SecurityManagerImpl implements SecurityManager {
         if (identity == null) {
             return;
         }
-        authRegistry.findLogoutHandler(identity)
-                .ifPresent(handler -> handler.logout(identity));
+        authRegistry.findAuthenticator(identity)
+                .ifPresent(a -> a.logout(identity));
+        authRegistry.findAuthenticationSource(identity)
+                .ifPresent(s -> s.logout(identity));
         handleLogout(identity);
     }
 

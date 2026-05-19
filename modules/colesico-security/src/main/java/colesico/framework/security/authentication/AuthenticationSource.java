@@ -25,7 +25,9 @@ public interface AuthenticationSource {
      * This is used for multi-step authentication (e.g., Digest, OAuth redirect,
      * or Multi-Factor Authentication) to prompt the client for further information.
      */
-    <C extends AuthenticationChallenge> void proceed(C challenge);
+    default <C extends AuthenticationChallenge> void proceed(C challenge) {
+
+    }
 
     /**
      * Notifies the source that the subject has been successfully authenticated.
@@ -33,7 +35,19 @@ public interface AuthenticationSource {
      * This allows the source to perform post-authentication actions, such as
      * attaching the identity to a session or sending a success header.
      */
-    void authenticate(Identity<?> identity);
+    default void authenticate(Identity<?> identity) {
+
+    }
+
+    /**
+     * Notifies the source of a failed authentication attempt.
+     * <p>
+     * Allows the source to react to the failure, for example, by clearing
+     * invalid credentials from the transport headers or logging the event.
+     */
+    default void unauthenticated(AuthenticationRequest request) {
+
+    }
 
     /**
      * Notifies the source that the subject has been logged out.
@@ -41,5 +55,7 @@ public interface AuthenticationSource {
      * This is used to clear protocol-specific security data, such as
      * invalidating a session cookie or clearing local security headers.
      */
-    void logout(Identity<?> identity);
+    default void logout(Identity<?> identity) {
+
+    }
 }
