@@ -37,7 +37,7 @@ public class SimpleAuthenticator implements
         );
     }
 
-    protected Identity<?> authByLoginPassword(BasicAuthenticationRequest request) {
+    protected Identity<?> authenticate(BasicAuthenticationRequest request) {
         if () found
         Map<String, Object> claims = new HashMap<>(request.claims());
         claims.put(Identity.AUTHENTICATOR_CLAIM, AUTHENTICATOR_NAME);
@@ -66,7 +66,7 @@ public class SimpleAuthenticator implements
             return AuthenticationResult.success(identity);
         }
 
-        identity = authByLoginPassword(request);
+        identity = authenticate(request);
         if (identity != null) {
             authenticated.put(login, identity);
             return AuthenticationResult.success(identity);
