@@ -45,7 +45,7 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
         var authenticatorClass = identity.claim(AUTHENTICATOR_CLAIM, Class.class);
         if (authenticatorClass.isPresent()) {
             var authenticator = ioc.instanceOrNull(authenticatorClass.get());
-            return Optional.ofNullable((Authenticator<AuthenticationRequest>) authenticator);
+            return Optional.ofNullable((Authenticator) authenticator);
         } else {
             return Optional.empty();
         }

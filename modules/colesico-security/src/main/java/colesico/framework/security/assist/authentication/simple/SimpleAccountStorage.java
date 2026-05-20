@@ -8,5 +8,6 @@ public interface SimpleAccountStorage {
         return null;
     }
 
-    record Account(String login, String passwordHashHex, Set<String> roles)
+    record Account(String login, String passwordHashHex, Set<String> roles) {
+    }
 }

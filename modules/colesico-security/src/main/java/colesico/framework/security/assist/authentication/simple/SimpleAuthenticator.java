@@ -12,11 +12,20 @@ import java.util.*;
 
 /**
  * Simple authenticator
+ *
+ * @see colesico.framework.security.internal.SimpleAuthProducer
  */
 public class SimpleAuthenticator implements
         Authenticator<BasicAuthenticationRequest> {
 
+    /**
+     * Authenticator config
+     */
     protected final SimpleAuthConfigPrototype config;
+
+    /**
+     * Accounts storage
+     */
     protected final SimpleAccountStorage accounts;
 
     /**
@@ -27,6 +36,7 @@ public class SimpleAuthenticator implements
     public SimpleAuthenticator(SimpleAuthConfigPrototype config, SimpleAccountStorage accounts) {
         this.config = config;
         this.accounts = accounts;
+
         authenticated = Collections.synchronizedMap(
                 new LinkedHashMap<>(100, 0.75f, true) {
                     @Override
@@ -59,10 +69,6 @@ public class SimpleAuthenticator implements
         return Identity.Default.of(request.login(), claims);
     }
 
-    protected AuthenticationChallenge createChallenge() {
-        return null;
-    }
-
     @Override
     public boolean supports(BasicAuthenticationRequest request) {
         return true;
@@ -73,7 +79,7 @@ public class SimpleAuthenticator implements
         var login = request.login();
 
         if (login == null) {
-            return AuthenticationResult.continuation(createChallenge());
+            return AuthenticationResult.continuation(config.challenge());
         }
 
         var identity = authenticated.get(login);
