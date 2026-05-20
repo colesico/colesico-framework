@@ -42,7 +42,7 @@ public final class NullDataPort implements DataPort<TRContext<?, ?>, TWContext<?
     }
 
     @Override
-    public <V, A> void write(V value, Type valueType, A payload) {
-        log.debug("Write value: {}; value type: {}; attributes: {}", value, valueType, payload);
+    public <V, P> void write(V value, Type valueType, P payload) {
+        log.debug("Write value: {}; value type: {}; payload: {}", value, valueType, payload);
     }
 }

@@ -37,7 +37,7 @@ public interface DataPort<R extends TRContext<?, ?>, W extends TWContext<?, ?>> 
     String WRITE_METHOD = "write";
 
     /**
-     * Key for storing instance of DataPort in process scope
+     * Key for storing instance of DataPort in a scope
      */
     Key<DataPort> SCOPE_KEY = new TypeKey<>(DataPort.class);
 
@@ -52,6 +52,8 @@ public interface DataPort<R extends TRContext<?, ?>, W extends TWContext<?, ?>> 
     /**
      * Read value by type from remote request.
      * Internally must create appropriate reading context and forward to {@link DataPort#read(R)}
+     *
+     * @param payload see {@link TWContext#payload}
      */
     <V, P> V read(Type valueType, P payload);
 
@@ -70,6 +72,8 @@ public interface DataPort<R extends TRContext<?, ?>, W extends TWContext<?, ?>> 
     /**
      * Write value by type to the response
      * Internally must create appropriate writing context and forward to {@link #write(V, Type)}
+     *
+     * @param payload see {@link TWContext#payload}
      */
     <V, P> void write(V value, Type valueType, P payload);
 
