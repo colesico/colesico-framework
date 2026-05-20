@@ -12,9 +12,9 @@ import java.util.Optional;
 public interface AuthenticationRequest {
 
     /**
-     * Specifies the unique name for the {@link NamedKey} used to retrieve the
-     * {@link AuthenticationSource} implementation from the {@link Ioc} container.
-     * The name is used to route security actions, such as logout, to the correct source.
+     * Specifies {@link AuthenticationSource} instance class that issued this request
+     * to retrieve instance from {@link Ioc} to route security actions, such as logout,
+     * to the correct source.
      */
     String SOURCE_CLAIM = "source";
 

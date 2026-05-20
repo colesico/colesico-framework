@@ -1,14 +1,14 @@
-package colesico.framework.security.assist.authentication;
+package colesico.framework.security.assist.authentication.simple;
 
 import colesico.framework.security.Identity;
+import colesico.framework.security.assist.authentication.BasicAuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationChallenge;
 import colesico.framework.security.authentication.AuthenticationResult;
 import colesico.framework.security.authentication.Authenticator;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.*;
 
 /**
  * Simple authenticator
@@ -16,17 +16,17 @@ import java.util.Map;
 public class SimpleAuthenticator implements
         Authenticator<BasicAuthenticationRequest> {
 
-    public static final String AUTHENTICATOR_NAME = "simple";
-
     protected final SimpleAuthConfigPrototype config;
+    protected final SimpleAccountStorage accounts;
 
     /**
      * Authenticated identities
      */
     protected final Map<Object, Identity<?>> authenticated;
 
-    public SimpleAuthenticator(SimpleAuthConfigPrototype config) {
+    public SimpleAuthenticator(SimpleAuthConfigPrototype config, SimpleAccountStorage accounts) {
         this.config = config;
+        this.accounts = accounts;
         authenticated = Collections.synchronizedMap(
                 new LinkedHashMap<>(100, 0.75f, true) {
                     @Override
@@ -38,9 +38,24 @@ public class SimpleAuthenticator implements
     }
 
     protected Identity<?> authenticate(BasicAuthenticationRequest request) {
-        if () found
+        String passwordHash;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(
+                    request.password().getBytes(StandardCharsets.UTF_8));
+            passwordHash = HexFormat.of().formatHex(hash);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+
+        SimpleAccountStorage.Account account = accounts.findAccount(request.login(), passwordHash);
+        if (account == null) {
+            return null;
+        }
+
         Map<String, Object> claims = new HashMap<>(request.claims());
-        claims.put(Identity.AUTHENTICATOR_CLAIM, AUTHENTICATOR_NAME);
+        claims.put(Identity.AUTHENTICATOR_CLAIM, SimpleAuthenticator.class);
+        claims.put(Identity.ROLES_CLAIM, account.roles());
         return Identity.Default.of(request.login(), claims);
     }
 

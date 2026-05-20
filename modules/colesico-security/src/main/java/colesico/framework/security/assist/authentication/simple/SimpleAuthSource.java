@@ -1,9 +1,11 @@
-package colesico.framework.security.assist.authentication;
+package colesico.framework.security.assist.authentication.simple;
 
 import colesico.framework.security.Identity;
+import colesico.framework.security.assist.authentication.BasicAuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationChallenge;
 import colesico.framework.security.authentication.AuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationSource;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,11 +19,10 @@ import static colesico.framework.security.authentication.AuthenticationRequest.S
  * Allow to authenticate single user per scope  (default - singleton)
  * Put this source to appropriate scope to support multi user authentication.
  */
-public class SimpleAuthenticationSource implements AuthenticationSource {
+@Singleton
+public class SimpleAuthSource implements AuthenticationSource {
 
-    public static final String SOURCE_NAME = "simple";
-
-    protected static final Logger log = LoggerFactory.getLogger(SimpleAuthenticationSource.class);
+    protected static final Logger log = LoggerFactory.getLogger(SimpleAuthSource.class);
 
     protected final AtomicReference<BasicAuthenticationRequest> request = new AtomicReference<>();
 
@@ -56,7 +57,7 @@ public class SimpleAuthenticationSource implements AuthenticationSource {
      * Credentials to perform authentication
      */
     public void setCredentials(String login, String password) {
-        Map<String, Object> claims = Map.of(SOURCE_CLAIM, SOURCE_NAME);
+        Map<String, Object> claims = Map.of(SOURCE_CLAIM, SimpleAuthSource.class);
         this.request.set(BasicAuthenticationRequest.of(login, password, claims));
     }
 }

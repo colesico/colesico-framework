@@ -16,31 +16,22 @@
 
 package colesico.framework.security.internal;
 
-import colesico.framework.ioc.conditional.Substitute;
-import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
 import colesico.framework.security.SecurityManager;
-import colesico.framework.security.assist.authentication.SimpleAuthenticationSource;
 import colesico.framework.security.authentication.*;
 import colesico.framework.security.authorization.RequireIdentityAudit;
 
 import jakarta.inject.Singleton;
 
 @Producer
+@Produce(value = SecurityManagerImpl.class, keyType = SecurityManager.class, scoped = Singleton.class)
 @Produce(value = AuthenticationRegistryImpl.class, keyType = AuthenticationRegistry.class)
 @Produce(value = IdentityContextImpl.class, keyType = IdentityContext.class, scoped = Singleton.class)
 @Produce(value = SourceContextImpl.class, keyType = SourceContext.class, scoped = Singleton.class)
-@Produce(value = SecurityManagerImpl.class, keyType = SecurityManager.class, scoped = Singleton.class)
 @Produce(RequireIdentityAudit.class)
-@Produce(value = SimpleAuthenticationSource.class,
-        keyType = AuthenticationSource.class,
-        named = SimpleAuthenticationSource.SOURCE_NAME,
-        scoped = Singleton.class,
-        substitute = Substitution.STUB
-)
 public class SecurityProducer {
 
     /**
@@ -48,13 +39,6 @@ public class SecurityProducer {
      */
     public Identity identity(IdentityContext context) {
         return context.identity();
-    }
-
-    @Substitute(Substitution.STUB)
-    @Singleton
-    public AuthenticationHandler authListener() {
-        return new AuthenticationHandler() {
-        };
     }
 
 }

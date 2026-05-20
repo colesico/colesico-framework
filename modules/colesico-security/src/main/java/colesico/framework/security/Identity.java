@@ -40,9 +40,9 @@ import java.util.function.Function;
 public interface Identity<I> {
 
     /**
-     * Specifies the unique name for the {@link NamedKey} to retrieve {@link Authenticator}
-     * instance that issued this identity from {@link Ioc}.
-     * The name is used to route security actions, such as logout, to the correct authenticator.
+     * Specifies {@link Authenticator} instance class that issued this identity
+     * to retrieve instance from {@link Ioc} to route security actions, such as logout,
+     * to the correct authenticator.
      */
     String AUTHENTICATOR_CLAIM = "authenticator";
 

@@ -42,10 +42,10 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
 
     @Override
     public Optional<Authenticator<AuthenticationRequest>> findAuthenticator(Identity<?> identity) {
-        var authenticatorName = identity.claim(AUTHENTICATOR_CLAIM, String.class);
-        if (authenticatorName.isPresent()) {
-            var authenticator = ioc.instanceOrNull(new NamedKey<>(Authenticator.class, authenticatorName.get()));
-            return Optional.ofNullable(authenticator);
+        var authenticatorClass = identity.claim(AUTHENTICATOR_CLAIM, Class.class);
+        if (authenticatorClass.isPresent()) {
+            var authenticator = ioc.instanceOrNull(authenticatorClass.get());
+            return Optional.ofNullable((Authenticator<AuthenticationRequest>) authenticator);
         } else {
             return Optional.empty();
         }
@@ -53,10 +53,10 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
 
     @Override
     public Optional<AuthenticationSource> findAuthenticationSource(Identity<?> identity) {
-        var sourceName = identity.claim(SOURCE_CLAIM, String.class);
-        if (sourceName.isPresent()) {
-            var source = ioc.instanceOrNull(new NamedKey<>(AuthenticationSource.class, sourceName.get()));
-            return Optional.ofNullable(source);
+        var sourceClass = identity.claim(SOURCE_CLAIM, Class.class);
+        if (sourceClass.isPresent()) {
+            var source = ioc.instanceOrNull(sourceClass.get());
+            return Optional.ofNullable((AuthenticationSource) source);
         } else {
             return Optional.empty();
         }
