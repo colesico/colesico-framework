@@ -30,7 +30,7 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class ShortReader extends OriginTeleReader<Short, HttpReadOptions<?>> {
+public final class ShortReader extends OriginTeleReader<Short, HttpReadOptions> {
 
     private final Messages messages;
 
@@ -41,7 +41,7 @@ public final class ShortReader extends OriginTeleReader<Short, HttpReadOptions<?
     }
 
     @Override
-    public Short read(Class<Short> valueType, HttpReadOptions<?> options, Channel channel) {
+    public Short read(Class<Short> valueType, HttpReadOptions options, Channel channel) {
         try {
             String val = readString(options, channel);
             if (StringUtils.isEmpty(val)) {

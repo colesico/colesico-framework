@@ -85,20 +85,20 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
         serviceElm.setTeleFacade(teleFacade);
     }
 
-    private void createParamReadContexts(List<TeleParameterElement> params) {
+    private void createParamReadOptions(List<TeleParameterElement> params) {
         for (var param : params) {
 
             // Skip batch fields
             if (param instanceof TeleBatchParamElement) {
                 TeleBatchParamElement batchField = (TeleBatchParamElement) param;
-                if (batchField.parentBatch().readContext() == null) {
-                    batchField.parentBatch().setReadContext(createReadContext(batchField.parentBatch()));
+                if (batchField.parentBatch().readOptions() == null) {
+                    batchField.parentBatch().setReadOptions(createReadOptions(batchField.parentBatch()));
                 }
                 continue;
             }
 
             TeleOrdinaryParamElement teleParam = (TeleOrdinaryParamElement) param;
-            teleParam.setReadContext(createReadContext(teleParam));
+            teleParam.setReadOptions(createReadOptions(teleParam));
 
         }
     }
@@ -111,9 +111,9 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
             return;
         }
         processTeleCommand(teleCommand);
-        createParamReadContexts(teleCommand.parameters());
+        createParamReadOptions(teleCommand.parameters());
         teleCommand.setInvocationContext(createInvocationContext(teleCommand));
-        teleCommand.setWritingContext(createWriteContext(teleCommand));
+        teleCommand.setWriteOptions(createWriteOptions(teleCommand));
     }
 
     @Override
@@ -132,21 +132,21 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
         return new TIContextElement(teleCommand, cb.build());
     }
 
-    protected TWContextElement createWriteContext(TeleCommandElement teleCommand) {
+    protected TWOptionsElement createWriteOptions(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleResultType(teleCommand, cb);
-        return new TWContextElement(teleCommand, cb.build());
+        return new TWOptionsElement(teleCommand, cb.build());
     }
 
-    protected TRContextElement createReadContext(TeleOrdinaryParamElement teleParam) {
+    protected TROptionsElement createReadOptions(TeleOrdinaryParamElement teleParam) {
         CodeBlock.Builder cb = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleParamType(teleParam, cb);
-        return new TRContextElement(teleParam, cb.build());
+        return new TROptionsElement(teleParam, cb.build());
     }
 
-    protected TRContextElement createReadContext(TeleBatchElement teleBatch) {
+    protected TROptionsElement createReadOptions(TeleBatchElement teleBatch) {
         CodeBlock.Builder cb = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleBatchType(teleBatch, cb);
-        return new TRContextElement(teleBatch, cb.build());
+        return new TROptionsElement(teleBatch, cb.build());
     }
 }

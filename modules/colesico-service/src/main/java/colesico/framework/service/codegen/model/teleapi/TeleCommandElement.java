@@ -60,9 +60,9 @@ public final class TeleCommandElement {
     Integer index;
 
     /**
-     * Method result writing context
+     * Method result write options
      */
-    private TWContextElement writingContext;
+    private TWOptionsElement writeOptions;
 
     /**
      * Invocation context code
@@ -129,12 +129,12 @@ public final class TeleCommandElement {
         return parameters;
     }
 
-    public TWContextElement writingContext() {
-        return writingContext;
+    public TWOptionsElement writeOptions() {
+        return writeOptions;
     }
 
-    public void setWritingContext(TWContextElement writingContext) {
-        this.writingContext = writingContext;
+    public void setWriteOptions(TWOptionsElement wo) {
+        this.writeOptions = wo;
     }
 
     public TIContextElement invocationContext() {

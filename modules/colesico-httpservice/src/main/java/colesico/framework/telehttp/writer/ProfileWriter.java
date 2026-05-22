@@ -31,10 +31,10 @@ import jakarta.inject.Singleton;
 import java.util.*;
 
 /**
- *  Profile default writer
+ * Profile default writer
  */
 @Singleton
-public class ProfileWriter<P extends Profile, C extends HttpWriteOptions<?, ?>> extends HttpTeleWriter<P, C> {
+public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implements HttpTeleWriter<P, R> {
 
     public static final String PROFILE_COOKIE = "profile";
     public static final String PROFILE_HEADER = "X-Profile";
@@ -42,16 +42,14 @@ public class ProfileWriter<P extends Profile, C extends HttpWriteOptions<?, ?>> 
     protected final ProfileHttpConfigPrototype config;
     protected final CookieFactory cookieFactory;
 
-    public ProfileWriter(Provider<HttpContext> httpContextProv,
-                         ProfileHttpConfigPrototype config,
+    public ProfileWriter(ProfileHttpConfigPrototype config,
                          CookieFactory cookieFactory) {
-        super(httpContextProv);
         this.config = config;
         this.cookieFactory = cookieFactory;
     }
 
     /**
-     *  Override this method to process different profile type
+     * Override this method to process different profile type
      */
     protected void exportToAttributes(P profile, Map<String, String> attributes) {
         var localeAttribute = LocaleAttribute.of(profile);
@@ -59,7 +57,7 @@ public class ProfileWriter<P extends Profile, C extends HttpWriteOptions<?, ?>> 
     }
 
     @Override
-    public final void write(P profile, C wrContext) {
+    public void write(P profile, Class<P> valueType, R options, Channel channel) {
         // Calc expiring
         Calendar expires = Calendar.getInstance();
         String profileStr;
@@ -76,9 +74,11 @@ public class ProfileWriter<P extends Profile, C extends HttpWriteOptions<?, ?>> 
         HttpCookie cookie = cookieFactory.create(PROFILE_COOKIE, profileStr);
         cookie.setExpires(expires.getTime()).setSameSite(HttpCookie.SameSite.STRICT);
 
-        HttpResponse response = httpContextProv.get().response();
+        var response = channel.httpResponse();
         response.setCookie(cookie);
         response.setHeader(PROFILE_HEADER, profileStr);
 
     }
+
+
 }

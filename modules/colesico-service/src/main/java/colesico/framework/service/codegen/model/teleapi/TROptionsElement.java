@@ -3,9 +3,9 @@ package colesico.framework.service.codegen.model.teleapi;
 import com.palantir.javapoet.CodeBlock;
 
 /**
- * Represents tele-reading context
+ * Represents tele-reading options
  */
-public class TRContextElement {
+public class TROptionsElement {
 
     /**
      * Parent tele-readable ref
@@ -17,7 +17,7 @@ public class TRContextElement {
      */
     private final CodeBlock creationCode;
 
-    public TRContextElement(TeleReadableElement parentReadable, CodeBlock creationCode) {
+    public TROptionsElement(TeleReadableElement parentReadable, CodeBlock creationCode) {
         this.parentReadable = parentReadable;
         this.creationCode = creationCode;
     }

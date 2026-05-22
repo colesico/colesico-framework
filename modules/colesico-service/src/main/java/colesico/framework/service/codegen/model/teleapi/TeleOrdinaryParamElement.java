@@ -23,18 +23,18 @@ import colesico.framework.service.codegen.model.ServiceParameterElement;
  */
 public final class TeleOrdinaryParamElement extends TeleParameterElement implements TeleReadableElement {
 
-    private TRContextElement readContext;
+    private TROptionsElement readOptions;
 
     public TeleOrdinaryParamElement(TeleCommandElement parentTeleCommand, ServiceParameterElement serviceParameter) {
         super(parentTeleCommand, serviceParameter);
     }
 
-    public TRContextElement readContext() {
-        return readContext;
+    public TROptionsElement readOptions() {
+        return readOptions;
     }
 
-    public void setReadContext(TRContextElement readContext) {
-        this.readContext = readContext;
+    public void setReadOptions(TROptionsElement readOptions) {
+        this.readOptions = readOptions;
     }
 
     @Override

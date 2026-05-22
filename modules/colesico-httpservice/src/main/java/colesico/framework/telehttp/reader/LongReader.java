@@ -30,7 +30,7 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class LongReader extends OriginTeleReader<Long, HttpReadOptions<?>> {
+public final class LongReader extends OriginTeleReader<Long, HttpReadOptions> {
 
     private final Messages messages;
 
@@ -41,7 +41,7 @@ public final class LongReader extends OriginTeleReader<Long, HttpReadOptions<?>>
     }
 
     @Override
-    public Long read(Class<Long> valueType, HttpReadOptions<?> options, Channel channel) {
+    public Long read(Class<Long> valueType, HttpReadOptions options, Channel channel) {
         try {
             String val = readString(options, channel);
             if (StringUtils.isEmpty(val)) {

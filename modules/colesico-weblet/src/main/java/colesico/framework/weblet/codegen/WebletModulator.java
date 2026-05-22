@@ -21,15 +21,15 @@ import colesico.framework.router.RouterCommands;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.*;
-import colesico.framework.service.codegen.model.teleapi.TRContextElement;
-import colesico.framework.service.codegen.model.teleapi.TWContextElement;
+import colesico.framework.service.codegen.model.teleapi.TROptionsElement;
+import colesico.framework.service.codegen.model.teleapi.TWOptionsElement;
 import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import colesico.framework.service.codegen.model.teleapi.TeleOrdinaryParamElement;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.dataport.ReadOptions;
 import colesico.framework.teleapi.dataport.WriteOptions;
-import colesico.framework.telehttp.codegen.HttpTRContextElement;
-import colesico.framework.telehttp.codegen.HttpTWContextElement;
+import colesico.framework.telehttp.codegen.HttpTROptionsElement;
+import colesico.framework.telehttp.codegen.HttpTWOptionsElement;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
 import colesico.framework.weblet.Weblet;
 import colesico.framework.weblet.teleapi.*;
@@ -64,12 +64,12 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected Class<? extends ReadOptions<?,?>> readContextClass() {
+    protected Class<? extends ReadOptions<?,?>> readOptionsClass() {
         return WebletTeleContext.class;
     }
 
     @Override
-    protected Class<? extends WriteOptions<?,?>> writeContextClass() {
+    protected Class<? extends WriteOptions<?,?>> writeOptionsClass() {
         return WebletWriteOptions.class;
     }
 
@@ -79,7 +79,7 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected TRContextElement createReadContext(TeleOrdinaryParamElement teleParam) {
+    protected TROptionsElement createReadOptions(TeleOrdinaryParamElement teleParam) {
 
         String paramName = TeleHttpCodegenUtils.paramName(teleParam);
 
@@ -108,7 +108,7 @@ public final class WebletModulator extends RoutesModulator {
 
         cb.add(")");
 
-        return new HttpTRContextElement(teleParam,
+        return new HttpTROptionsElement(teleParam,
                 cb.build(),
                 paramName,
                 originName,
@@ -117,7 +117,7 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected TWContextElement createWriteContext(TeleCommandElement teleCommand) {
+    protected TWOptionsElement createWriteOptions(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("$T.$N(", ClassName.get(WebletWriteOptions.class), WebletWriteOptions.OF_METHOD);
 
@@ -130,7 +130,7 @@ public final class WebletModulator extends RoutesModulator {
             customWriterCT = new ClassType(processorContext().processingEnv(), (DeclaredType) customWriter);
         }
         cb.add(")");
-        return new HttpTWContextElement(teleCommand, cb.build(), customWriterCT);
+        return new HttpTWOptionsElement(teleCommand, cb.build(), customWriterCT);
     }
 
     private TypeMirror getCustomWriterClass(TeleCommandElement teleCommand) {

@@ -22,7 +22,7 @@ public class TeleBatchElement implements TeleReadableElement {
     private final TeleCommandElement parentTeleCommand;
 
 
-    protected TRContextElement readContext;
+    protected TROptionsElement readOptions;
 
     /**
      * Batch pack ref
@@ -81,12 +81,12 @@ public class TeleBatchElement implements TeleReadableElement {
     }
 
     @Override
-    public TRContextElement readContext() {
-        return readContext;
+    public TROptionsElement readOptions() {
+        return readOptions;
     }
 
     @Override
-    public void setReadContext(TRContextElement readContext) {
-        this.readContext = readContext;
+    public void setReadOptions(TROptionsElement readOptions) {
+        this.readOptions = readOptions;
     }
 }

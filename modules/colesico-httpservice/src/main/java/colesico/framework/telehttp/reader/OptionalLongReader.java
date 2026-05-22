@@ -32,7 +32,7 @@ import java.util.OptionalLong;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class OptionalLongReader extends OriginTeleReader<OptionalLong, HttpReadOptions<?>> {
+public final class OptionalLongReader extends OriginTeleReader<OptionalLong, HttpReadOptions> {
 
     private final Messages messages;
 
@@ -43,7 +43,7 @@ public final class OptionalLongReader extends OriginTeleReader<OptionalLong, Htt
     }
 
     @Override
-    public OptionalLong read(Class<OptionalLong> valueType, HttpReadOptions<?> options, Channel channel) {
+    public OptionalLong read(Class<OptionalLong> valueType, HttpReadOptions options, Channel channel) {
         try {
             String val = readString(options, channel);
             if (StringUtils.isBlank(val)) {

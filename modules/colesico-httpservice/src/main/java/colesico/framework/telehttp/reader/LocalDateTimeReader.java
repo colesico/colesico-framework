@@ -33,7 +33,7 @@ import java.time.format.DateTimeFormatter;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class LocalDateTimeReader extends OriginTeleReader<LocalDateTime, HttpReadOptions<?>> {
+public final class LocalDateTimeReader extends OriginTeleReader<LocalDateTime, HttpReadOptions> {
 
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     private final Messages messages;
@@ -45,7 +45,7 @@ public final class LocalDateTimeReader extends OriginTeleReader<LocalDateTime, H
     }
 
     @Override
-    public LocalDateTime read(Class<LocalDateTime> valueType, HttpReadOptions<?> options, Channel channel) {
+    public LocalDateTime read(Class<LocalDateTime> valueType, HttpReadOptions options, Channel channel) {
         try {
             String val = readString(options, channel);
             if (StringUtils.isEmpty(val)) {

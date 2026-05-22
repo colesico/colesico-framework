@@ -27,10 +27,10 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class HttpFileReader implements HttpTeleReader<HttpFile, HttpReadOptions<?>> {
+public final class HttpFileReader implements HttpTeleReader<HttpFile, HttpReadOptions> {
 
     @Override
-    public HttpFile read(Class<HttpFile> valueType, HttpReadOptions<?> options, Channel channel) {
+    public HttpFile read(Class<HttpFile> valueType, HttpReadOptions options, Channel channel) {
         return channel.httpRequest().postFiles().get(options.paramName());
     }
 }

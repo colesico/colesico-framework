@@ -30,7 +30,7 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class BooleanReader extends OriginTeleReader<Boolean, HttpReadOptions<?>> {
+public final class BooleanReader extends OriginTeleReader<Boolean, HttpReadOptions> {
 
     private final Messages messages;
 
@@ -41,7 +41,7 @@ public final class BooleanReader extends OriginTeleReader<Boolean, HttpReadOptio
     }
 
     @Override
-    public Boolean read(Class<Boolean> valueType, HttpReadOptions<?> options, Channel channel) {
+    public Boolean read(Class<Boolean> valueType, HttpReadOptions options, Channel channel) {
         try {
             String str = readString(options, channel);
             if (StringUtils.isBlank(str)) {

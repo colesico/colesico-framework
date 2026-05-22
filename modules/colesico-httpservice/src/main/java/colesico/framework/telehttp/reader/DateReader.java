@@ -33,7 +33,7 @@ import java.util.Date;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class DateReader extends OriginTeleReader<Date, HttpReadOptions<?>> {
+public final class DateReader extends OriginTeleReader<Date, HttpReadOptions> {
     private final Messages messages;
 
     @Inject
@@ -43,7 +43,7 @@ public final class DateReader extends OriginTeleReader<Date, HttpReadOptions<?>>
     }
 
     @Override
-    public Date read(Class<Date> valueType, HttpReadOptions<?> options, Channel channel) {
+    public Date read(Class<Date> valueType, HttpReadOptions options, Channel channel) {
         try {
             String val = readString(options, channel);
             if (StringUtils.isEmpty(val)) {

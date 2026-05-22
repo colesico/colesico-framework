@@ -4,9 +4,9 @@ package colesico.framework.telehttp;
  * Basic origin based reader
  *
  * @param <V> type of value to  be read
- * @param <R> reading context
+ * @param <R> read options
  */
-abstract public class OriginTeleReader<V, R extends HttpReadOptions<?>> implements HttpTeleReader<V, R> {
+abstract public class OriginTeleReader<V, R extends HttpReadOptions> implements HttpTeleReader<V, R> {
 
     protected final OriginFactory originFactory;
 

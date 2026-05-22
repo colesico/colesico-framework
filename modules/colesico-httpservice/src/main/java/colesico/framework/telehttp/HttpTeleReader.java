@@ -8,7 +8,7 @@ import colesico.framework.teleapi.dataport.TeleReader;
  * Basic reader for retrieving param vales from http request
  */
 @FunctionalInterface
-public interface HttpTeleReader<V, R extends HttpReadOptions<?>> extends TeleReader<V, R, HttpTeleReader.Channel> {
+public interface HttpTeleReader<V, R extends HttpReadOptions> extends TeleReader<V, R, HttpTeleReader.Channel> {
 
     /**
      * Read channel api

@@ -1,27 +1,19 @@
 package colesico.framework.telehttp.writer;
 
-import colesico.framework.http.HttpContext;
 import colesico.framework.telehttp.HttpWriteOptions;
 import colesico.framework.telehttp.HttpTeleWriter;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 @Singleton
-public final class PlainTextWriter extends HttpTeleWriter<Object, HttpWriteOptions<?, ?>> {
+public final class PlainTextWriter implements HttpTeleWriter<Object, HttpWriteOptions> {
 
     private static final String CONTENT_TYPE = "text/plain";
 
-    @Inject
-    public PlainTextWriter(Provider<HttpContext> httpContextProv) {
-        super(httpContextProv);
-    }
-
     @Override
-    public void write(Object value, HttpWriteOptions<?, ?> context) {
+    public void write(Object value, Class<Object> valueType, HttpWriteOptions options, Channel channel) {
         if (value == null) {
-            response().sendText("", CONTENT_TYPE, 204);
+            channel.httpResponse().sendText("", CONTENT_TYPE, 204);
         }
 
         String str = "";
@@ -41,6 +33,7 @@ public final class PlainTextWriter extends HttpTeleWriter<Object, HttpWriteOptio
             str = value.toString();
         }
 
-        response().sendText(str, CONTENT_TYPE, 200);
+        channel.httpResponse().sendText(str, CONTENT_TYPE, 200);
     }
+
 }

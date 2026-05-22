@@ -32,7 +32,7 @@ import java.util.OptionalInt;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class OptionalIntReader extends OriginTeleReader<OptionalInt, HttpReadOptions<?>> {
+public final class OptionalIntReader extends OriginTeleReader<OptionalInt, HttpReadOptions> {
 
     private final Messages messages;
 
@@ -43,7 +43,7 @@ public final class OptionalIntReader extends OriginTeleReader<OptionalInt, HttpR
     }
 
     @Override
-    public OptionalInt read(Class<OptionalInt> valueType, HttpReadOptions<?> options, Channel channel) {
+    public OptionalInt read(Class<OptionalInt> valueType, HttpReadOptions options, Channel channel) {
         try {
             String val = readString(options, channel);
             if (StringUtils.isBlank(val)) {

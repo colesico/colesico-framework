@@ -28,7 +28,7 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class CharacterReader extends OriginTeleReader<Character, HttpReadOptions<?>> {
+public final class CharacterReader extends OriginTeleReader<Character, HttpReadOptions> {
 
     @Inject
     public CharacterReader(OriginFactory originFactory) {
@@ -36,7 +36,7 @@ public final class CharacterReader extends OriginTeleReader<Character, HttpReadO
     }
 
     @Override
-    public Character read(Class<Character> valueType, HttpReadOptions<?> options, Channel channel) {
+    public Character read(Class<Character> valueType, HttpReadOptions options, Channel channel) {
         String str = StringUtils.trim(readString(options, channel));
         return StringUtils.isNotEmpty(str) ? str.charAt(0) : null;
     }

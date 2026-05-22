@@ -30,7 +30,7 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class DoubleReader extends OriginTeleReader<Double, HttpReadOptions<?>> {
+public final class DoubleReader extends OriginTeleReader<Double, HttpReadOptions> {
 
     private final Messages messages;
 
@@ -41,7 +41,7 @@ public final class DoubleReader extends OriginTeleReader<Double, HttpReadOptions
     }
 
     @Override
-    public Double read(Class<Double> valueType, HttpReadOptions<?> options, Channel channel) {
+    public Double read(Class<Double> valueType, HttpReadOptions options, Channel channel) {
         try {
             String val = readString(options, channel);
             if (StringUtils.isEmpty(val)) {

@@ -32,7 +32,6 @@ import java.util.OptionalLong;
 @Produce(LocalDateReader.class)
 @Produce(LocalTimeReader.class)
 @Produce(LocalDateTimeReader.class)
-@Produce(PrincipalReader.class)
 @Produce(ProfileReader.class)
 @Produce(HttpFileReader.class)
 public class ReadersProducer {

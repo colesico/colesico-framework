@@ -27,7 +27,7 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class StringReader extends OriginTeleReader<String, HttpReadOptions<?>> {
+public final class StringReader extends OriginTeleReader<String, HttpReadOptions> {
 
     @Inject
     public StringReader(OriginFactory originFactory) {
@@ -35,7 +35,7 @@ public final class StringReader extends OriginTeleReader<String, HttpReadOptions
     }
 
     @Override
-    public String read(Class<String> valueType, HttpReadOptions<?> options, Channel channel) {
+    public String read(Class<String> valueType, HttpReadOptions options, Channel channel) {
         return readString(options, channel);
     }
 }

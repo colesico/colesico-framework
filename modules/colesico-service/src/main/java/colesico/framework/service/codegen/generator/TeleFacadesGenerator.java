@@ -77,7 +77,7 @@ public class TeleFacadesGenerator {
     protected CodeBlock generateBatches(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
         for (TeleBatchElement batch : teleCommand.batches().values()) {
-            if (batch.readContext() == null || batch.readContext().creationCode() == null) {
+            if (batch.readOptions() == null || batch.readOptions().creationCode() == null) {
                 throw CodegenException.of()
                         .message("Batch read context code not defined")
                         .element(teleCommand.serviceMethod().originMethod())
@@ -89,7 +89,7 @@ public class TeleFacadesGenerator {
                     ClassName.bestGuess(batch.batchClassName()),
                     batch.batchVarName(),
                     TeleCommand.DATA_PORT_PARAM, DataPort.READ_METHOD);
-            cb.add(batch.readContext().creationCode());
+            cb.add(batch.readOptions().creationCode());
             cb.add(");\n");
         }
         return cb.build();
@@ -100,7 +100,7 @@ public class TeleFacadesGenerator {
         // ==== For simple param ================
 
         if (parameter instanceof TeleOrdinaryParamElement) {
-            CodeBlock ctx = ((TeleOrdinaryParamElement) parameter).readContext().creationCode();
+            CodeBlock ctx = ((TeleOrdinaryParamElement) parameter).readOptions().creationCode();
             // dataPot.read(new Context(...));
             CodeBlock.Builder cb = CodeBlock.builder();
             cb.add("$N.$N(", TeleCommand.DATA_PORT_PARAM, DataPort.READ_METHOD);
@@ -180,7 +180,7 @@ public class TeleFacadesGenerator {
         if (!voidResult) {
             cb.add("\n// Send result to remote client\n");
             cb.add("$N.$N($N, ", TeleCommand.DATA_PORT_PARAM, DataPort.WRITE_METHOD, RESULT_VAR);
-            CodeBlock writeCtx = teleCommand.writingContext().creationCode();
+            CodeBlock writeCtx = teleCommand.writeOptions().creationCode();
             cb.add(writeCtx);
             cb.add(");\n");
         }

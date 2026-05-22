@@ -108,7 +108,7 @@ public class CSRFProtector<V> {
         random.nextBytes(tokenBytes);
         String tokenStr = Base64.getEncoder().encodeToString(tokenBytes);
         HttpCookie cookie = cookieFactory.create(CSRF_COOKIE, tokenStr);
-        response.setCookie(cookie);
+        response.addCookie(cookie);
         return tokenStr;
     }
 }

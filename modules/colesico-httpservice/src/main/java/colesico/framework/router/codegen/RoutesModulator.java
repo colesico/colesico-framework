@@ -41,9 +41,9 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
 
     abstract protected Class<? extends TeleFacade.Commands> commandsClass();
 
-    abstract protected Class<? extends ReadOptions<?,?>> readContextClass();
+    abstract protected Class<? extends ReadOptions> readOptionsClass();
 
-    abstract protected Class<? extends WriteOptions<?,?>> writeContextClass();
+    abstract protected Class<? extends WriteOptions> writeOptionsClass();
 
     @Override
     protected void processTeleCommand(TeleCommandElement teleCommandElement) {
@@ -57,8 +57,8 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
         return new RouterTeleFacadeElement(
                 teleType(),
                 commandsClass(),
-                readContextClass(),
-                writeContextClass(),
+                readOptionsClass(),
+                writeOptionsClass(),
                 TeleFacadeElement.IocQualifier.ofEmpty(),
                 new RoutesBuilder(serviceElm)
         );

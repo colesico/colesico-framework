@@ -14,11 +14,11 @@ public final class RouterTeleFacadeElement extends TeleFacadeElement {
 
     public RouterTeleFacadeElement(Class<?> teleType,
                                    Class<? extends TeleFacade.Commands> commandsClass,
-                                   Class<? extends ReadOptions<?,?>> readContextClass,
-                                   Class<? extends WriteOptions<?,?>> writeContextClass,
+                                   Class<? extends ReadOptions> readOptionsClass,
+                                   Class<? extends WriteOptions> writeOptionsClass,
                                    IocQualifier iocQualifier,
                                    RoutesBuilder routesBuilder) {
-        super(teleType, commandsClass, readContextClass, writeContextClass, iocQualifier);
+        super(teleType, commandsClass, readOptionsClass, writeOptionsClass, iocQualifier);
         this.routesBuilder = routesBuilder;
     }
 

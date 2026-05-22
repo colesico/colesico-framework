@@ -25,7 +25,6 @@ import colesico.framework.restlet.teleapi.RestletTeleWriter;
 import colesico.framework.restlet.teleapi.writer.*;
 import colesico.framework.security.Identity;
 import colesico.framework.security.authorization.PrincipalRequiredException;
-import colesico.framework.telehttp.writer.PrincipalWriter;
 import colesico.framework.telehttp.writer.ProfileWriter;
 
 import jakarta.inject.Singleton;
