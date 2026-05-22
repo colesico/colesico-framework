@@ -26,6 +26,7 @@ import colesico.framework.weblet.teleapi.WebletWriteOptions;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+
 import java.nio.ByteBuffer;
 
 /**
@@ -34,15 +35,10 @@ import java.nio.ByteBuffer;
 @Singleton
 public final class BinaryWriter implements WebletTeleWriter<BinaryResponse> {
 
-    @Inject
-    public BinaryWriter(Provider<HttpContext> httpContextProv) {
-        super(httpContextProv);
-    }
-
     @Override
-    public void write(BinaryResponse value, WebletWriteOptions ctx) {
+    public void write(BinaryResponse value, Class<BinaryResponse> valueType, WebletWriteOptions options, Channel channel) {
 
-        HttpResponse response = response();
+        HttpResponse response = channel.httpResponse();
 
         if (value == null) {
             response.sendData(ByteBuffer.allocate(0), BinaryResponse.DEFAULT_CONTENT_TYPE, 204);
@@ -64,4 +60,5 @@ public final class BinaryWriter implements WebletTeleWriter<BinaryResponse> {
             response.sendData(buffer, value.contentType(), value.statusCode());
         }
     }
+
 }

@@ -16,7 +16,6 @@
 
 package colesico.framework.weblet.teleapi.writer;
 
-import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.weblet.response.StringResponse;
@@ -24,24 +23,17 @@ import colesico.framework.weblet.response.TextResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WebletWriteOptions;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 /**
  * @author Vladlen Larionov
  */
 @Singleton
-public final class StringWriter extends WebletTeleWriter<StringResponse> {
-
-    @Inject
-    public StringWriter(Provider<HttpContext> httpContextProv) {
-        super(httpContextProv);
-    }
+public final class StringWriter implements WebletTeleWriter<StringResponse> {
 
     @Override
-    public void write(StringResponse value, WebletWriteOptions ctx) {
-        HttpResponse response = response();
+    public void write(StringResponse value, Class<StringResponse> valueType, WebletWriteOptions options, Channel channel) {
+        HttpResponse response = channel.httpResponse();
 
         if (value == null) {
             response.sendText("", TextResponse.DEFAULT_CONTENT_TYPE, 204);

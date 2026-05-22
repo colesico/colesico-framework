@@ -28,7 +28,7 @@ import jakarta.inject.Provider;
 /**
  * @author Vladlen Larionov
  */
-public final class RedirectWriter extends WebletTeleWriter<RedirectResponse> {
+public final class RedirectWriter implements WebletTeleWriter<RedirectResponse> {
 
     protected final Router router;
 
