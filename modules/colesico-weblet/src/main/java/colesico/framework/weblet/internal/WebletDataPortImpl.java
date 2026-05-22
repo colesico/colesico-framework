@@ -35,11 +35,11 @@ public class WebletDataPortImpl implements WebletDataPort {
 
     @Override
     public <V> V read(Type valueType) {
-        return read(WebletTeleContext.of(valueType));
+        return read(WebletReadOptions.of(valueType));
     }
 
     @Override
-    public <V> V read(WebletTeleContext query) {
+    public <V> V read(WebletReadOptions query) {
         WebletTeleReader reader;
         if (query.readerClass() != null) {
             // Get specified reader
@@ -57,7 +57,7 @@ public class WebletDataPortImpl implements WebletDataPort {
 
     @Override
     public <V, P> V read(Type valueType, P attachment) {
-        return read(WebletTeleContext.of(valueType, attachment));
+        return read(WebletReadOptions.of(valueType, attachment));
     }
 
     @Override

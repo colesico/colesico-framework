@@ -64,12 +64,12 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected Class<? extends ReadOptions<?,?>> readOptionsClass() {
-        return WebletTeleContext.class;
+    protected Class<? extends ReadOptions> readOptionsClass() {
+        return WebletReadOptions.class;
     }
 
     @Override
-    protected Class<? extends WriteOptions<?,?>> writeOptionsClass() {
+    protected Class<? extends WriteOptions> writeOptionsClass() {
         return WebletWriteOptions.class;
     }
 
@@ -84,7 +84,7 @@ public final class WebletModulator extends RoutesModulator {
         String paramName = TeleHttpCodegenUtils.paramName(teleParam);
 
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("$T.$N(", ClassName.get(WebletTeleContext.class), WebletTeleContext.OF_METHOD);
+        cb.add("$T.$N(", ClassName.get(WebletReadOptions.class), WebletReadOptions.OF_METHOD);
 
         ServiceCodegenUtils.generateTeleParamType(teleParam, cb);
         cb.add(",");

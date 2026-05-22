@@ -32,7 +32,7 @@ import java.nio.ByteBuffer;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class BinaryWriter extends WebletTeleWriter<BinaryResponse> {
+public final class BinaryWriter implements WebletTeleWriter<BinaryResponse> {
 
     @Inject
     public BinaryWriter(Provider<HttpContext> httpContextProv) {

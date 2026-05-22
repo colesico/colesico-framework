@@ -20,8 +20,8 @@ package colesico.framework.weblet.teleapi;
 import colesico.framework.telehttp.HttpTeleReader;
 
 /**
- * Weblet reader base class
+ * Weblet reader base
  */
-abstract public class WebletTeleReader<V> extends HttpTeleReader<V, WebletTeleContext> {
+public interface WebletTeleReader<V> extends HttpTeleReader<V, WebletReadOptions> {
 
 }

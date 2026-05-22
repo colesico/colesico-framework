@@ -23,24 +23,16 @@ import java.lang.reflect.Type;
 /**
  * Weblet write options
  *
+ * @param writerClass Custom writer class or null. If null - default writer will be used
  * @author Vladlen Larionov
  */
-public final class WebletWriteOptions extends HttpWriteOptions<Type, Object> {
+public record WebletWriteOptions(
+        Type valueType,
+        Class<? extends WebletTeleWriter<?>> writerClass,
+        Object attachment
+) implements HttpWriteOptions {
 
     public static final String OF_METHOD = "of";
-
-    /**
-     * Custom writer class or null.
-     * If null - default writer will be used
-     *
-     * @see WebletResponseWriter
-     */
-    private final Class<? extends WebletTeleWriter<?>> writerClass;
-
-    public WebletWriteOptions(Type valueType, Class<? extends WebletTeleWriter<?>> writerClass, Object payload) {
-        super(valueType, payload);
-        this.writerClass = writerClass;
-    }
 
     public static WebletWriteOptions of(Type valueType) {
         return new WebletWriteOptions(valueType, null, null);
@@ -54,7 +46,4 @@ public final class WebletWriteOptions extends HttpWriteOptions<Type, Object> {
         return new WebletWriteOptions(valueType, writerClass, null);
     }
 
-    public Class<? extends WebletTeleWriter<?>> writerClass() {
-        return writerClass;
-    }
 }
