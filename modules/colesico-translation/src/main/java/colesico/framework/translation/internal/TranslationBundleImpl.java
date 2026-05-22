@@ -36,7 +36,7 @@ public final class TranslationBundleImpl implements TranslationBundle {
     }
 
     @Override
-    public String get(final String key, final String defaultVal, final Object... params) {
+    public String translation(final String key, final String defaultVal, final Object... params) {
         final String translation = bundle.getString(key);
 
         if (translation == null) {

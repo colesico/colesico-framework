@@ -22,6 +22,7 @@ package colesico.framework.teleapi.dataport;
  *
  * @param <C> channel raw api
  */
-public interface TeleReader<R extends ReadOptions<?>, C> {
-    <V> V read(Class<V> valueType, R options, C channel);
+@FunctionalInterface
+public interface TeleReader<V, R extends ReadOptions<?>, C> {
+    V read(Class<V> valueType, R options, C channel);
 }

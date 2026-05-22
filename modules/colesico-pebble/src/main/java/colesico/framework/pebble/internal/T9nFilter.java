@@ -83,10 +83,10 @@ public final class T9nFilter implements Filter {
         }
 
         if (textParams == null || textParams.isEmpty()) {
-            return dictionary.get(strKey, strKey);
+            return dictionary.translation(strKey, strKey);
         }
 
-        return dictionary.get(strKey, strKey, textParams.toArray());
+        return dictionary.translation(strKey, strKey, textParams.toArray());
 
     }
 }

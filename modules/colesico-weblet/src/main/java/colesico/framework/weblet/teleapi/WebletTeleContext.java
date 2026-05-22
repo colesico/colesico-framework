@@ -16,7 +16,7 @@
 
 package colesico.framework.weblet.teleapi;
 
-import colesico.framework.telehttp.HttpTeleContext;
+import colesico.framework.telehttp.HttpReadOptions;
 
 import java.lang.reflect.Type;
 
@@ -25,7 +25,7 @@ import java.lang.reflect.Type;
  *
  * @author Vladlen Larionov
  */
-public final class WebletTeleContext extends HttpTeleContext<Type, Object> {
+public final class WebletTeleContext extends HttpReadOptions<Type, Object> {
 
     public static final String OF_METHOD = "of";
 

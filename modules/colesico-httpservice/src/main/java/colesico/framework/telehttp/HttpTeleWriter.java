@@ -1,42 +1,18 @@
 package colesico.framework.telehttp;
 
-import colesico.framework.http.HttpContext;
-import colesico.framework.http.HttpRequest;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.teleapi.dataport.TeleWriter;
 
-import jakarta.inject.Provider;
-
 /**
- * Basic tel-writer for interaction over http
- *
- * @param <V> value type
- * @param <C> writing context
+ * Basic writer for interaction over http
  */
-abstract public class HttpTeleWriter<V, C extends HttpWriteOptions<?, ?>> implements TeleWriter<V, C> {
-
-    protected final Provider<HttpContext> httpContextProv;
-
-    /**
-     * Constructor for injection
-     */
-    public HttpTeleWriter(Provider<HttpContext> httpContextProv) {
-        this.httpContextProv = httpContextProv;
-    }
+@FunctionalInterface
+public interface HttpTeleWriter<V, W extends HttpWriteOptions<?>> extends TeleWriter<V, W, HttpTeleWriter.Channel> {
 
     /**
-     * Constructor for proxies
+     * Write channel api
      */
-    public HttpTeleWriter(HttpTeleWriter<?, ?> writer) {
-        this.httpContextProv = writer.httpContextProv;
-    }
-
-    protected final HttpRequest request() {
-        return httpContextProv.get().request();
-    }
-
-    protected final HttpResponse response() {
-        return httpContextProv.get().response();
+    record Channel(HttpResponse httpResponse) {
     }
 
 }

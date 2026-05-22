@@ -1,5 +1,6 @@
 package colesico.framework.telehttp.origin;
 
+import colesico.framework.telehttp.HttpTeleReader;
 import colesico.framework.telehttp.Origin;
 
 import jakarta.inject.Singleton;
@@ -12,9 +13,9 @@ import java.util.List;
 public class RouteOrigin implements Origin {
 
     @Override
-    public Collection<String> getStrings(String name, Context context) {
+    public Collection<String> getStrings(String name, HttpTeleReader.Channel  channel) {
         List<String> result = new ArrayList<>();
-        var value = context.routerContext().parameters().get(name);
+        var value = channel.routerContext().parameters().get(name);
         if (value != null) {
             result.add(value);
         }

@@ -17,7 +17,7 @@
 package colesico.framework.telehttp.reader;
 
 import colesico.framework.teleapi.TeleException;
-import colesico.framework.telehttp.HttpTeleContext;
+import colesico.framework.telehttp.HttpReadOptions;
 import colesico.framework.telehttp.OriginFactory;
 import colesico.framework.telehttp.OriginTeleReader;
 import colesico.framework.telehttp.t9n.Messages;
@@ -30,7 +30,7 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class FloatReader extends OriginTeleReader<Float, HttpTeleContext<?, ?>> {
+public final class FloatReader extends OriginTeleReader<Float, HttpReadOptions<?>> {
 
     private final Messages messages;
 
@@ -41,15 +41,15 @@ public final class FloatReader extends OriginTeleReader<Float, HttpTeleContext<?
     }
 
     @Override
-    public Float read(HttpTeleContext<?, ?> ctx) {
+    public Float read(Class<Float> valueType, HttpReadOptions<?> options, Channel channel) {
         try {
-            String val = readString(ctx);
+            String val = readString(options, channel);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }
             return Float.parseFloat(val);
         } catch (Exception ex) {
-            throw new TeleException(messages.invalidNumberFormat(ctx.paramName()));
+            throw new TeleException(messages.invalidNumberFormat(options.paramName()));
         }
     }
 }

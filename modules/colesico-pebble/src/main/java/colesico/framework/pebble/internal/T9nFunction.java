@@ -74,10 +74,10 @@ public class T9nFunction implements Function {
         }
 
         if (textParams == null || textParams.isEmpty()) {
-            return dictionary.get(strKey, strKey);
+            return dictionary.translation(strKey, strKey);
         }
 
-        return dictionary.get(strKey, strKey, textParams.toArray());
+        return dictionary.translation(strKey, strKey, textParams.toArray());
     }
 
     @Override

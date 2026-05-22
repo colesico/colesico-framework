@@ -44,7 +44,7 @@ public final class T9nDictionaryNode extends AbstractRenderableNode {
 
     @Override
     public void render(PebbleTemplateImpl pebbleTemplate, Writer writer, EvaluationContextImpl context) throws IOException {
-        TranslationBundle dictionary = translationKit.getBundle(basePath);
+        TranslationBundle dictionary = translationKit.bundle(basePath);
 
         // local variable
         context.getScopeChain().put(dictName, dictionary);

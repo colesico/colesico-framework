@@ -22,6 +22,7 @@ package colesico.framework.teleapi.dataport;
  *
  * @param <C> channel raw api
  */
-public interface TeleWriter<W extends WriteOptions<?>, C> {
-    <V> void write(V value, Class<V> valueType, W options, C channel);
+@FunctionalInterface
+public interface TeleWriter<V, W extends WriteOptions<?>, C> {
+    void write(V value, Class<V> valueType, W options, C channel);
 }

@@ -56,12 +56,12 @@ public class TranslationKitImpl implements TranslationKit {
     }
 
     @Override
-    public Translatable getTranslatable(String baseName, String key) {
+    public Translatable translatable(String baseName, String key) {
         return new TranslatableImpl(this, baseName, key);
     }
 
     @Override
-    public TranslationBundle getBundle(String baseName) {
+    public TranslationBundle bundle(String baseName) {
 
         // Check thread scope for bundle
         final StringKey<TranslationBundle> scopeKey = new StringKey<>(SCOPE_KEY_PREFIX + baseName);

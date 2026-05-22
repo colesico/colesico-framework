@@ -3,7 +3,6 @@ package colesico.framework.telehttp.internal;
 import colesico.framework.http.HttpFile;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.telehttp.HttpTeleReader;
-import colesico.framework.telehttp.reader.PrincipalReader;
 import colesico.framework.telehttp.reader.ProfileReader;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;

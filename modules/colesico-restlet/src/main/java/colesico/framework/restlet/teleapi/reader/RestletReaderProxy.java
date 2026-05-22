@@ -18,7 +18,7 @@ package colesico.framework.restlet.teleapi.reader;
 
 import colesico.framework.restlet.teleapi.RestletTeleContext;
 import colesico.framework.restlet.teleapi.RestletTeleReader;
-import colesico.framework.telehttp.HttpTeleContext;
+import colesico.framework.telehttp.HttpReadOptions;
 import colesico.framework.telehttp.HttpTeleReader;
 
 /**
@@ -27,9 +27,9 @@ import colesico.framework.telehttp.HttpTeleReader;
 
 public final class RestletReaderProxy<V> implements RestletTeleReader<V> {
 
-    private final HttpTeleReader<V, HttpTeleContext> reader;
+    private final HttpTeleReader<V, HttpReadOptions> reader;
 
-    private RestletReaderProxy(HttpTeleReader<V, HttpTeleContext> reader) {
+    private RestletReaderProxy(HttpTeleReader<V, HttpReadOptions> reader) {
         this.reader = reader;
     }
 
@@ -38,7 +38,7 @@ public final class RestletReaderProxy<V> implements RestletTeleReader<V> {
         return reader.read(context);
     }
 
-    public static <V> RestletReaderProxy of(HttpTeleReader<V, HttpTeleContext> reader) {
+    public static <V> RestletReaderProxy of(HttpTeleReader<V, HttpReadOptions> reader) {
         return new RestletReaderProxy(reader);
     }
 

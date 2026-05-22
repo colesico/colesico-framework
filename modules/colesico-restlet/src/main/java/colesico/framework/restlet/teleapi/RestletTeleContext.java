@@ -1,10 +1,10 @@
 package colesico.framework.restlet.teleapi;
 
-import colesico.framework.telehttp.HttpTeleContext;
+import colesico.framework.telehttp.HttpReadOptions;
 
 import java.lang.reflect.Type;
 
-public final class RestletTeleContext extends HttpTeleContext {
+public final class RestletTeleContext extends HttpReadOptions {
 
     public static final String OF_METHOD = "of";
 

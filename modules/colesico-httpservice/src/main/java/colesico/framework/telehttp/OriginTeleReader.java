@@ -4,9 +4,9 @@ package colesico.framework.telehttp;
  * Basic origin based reader
  *
  * @param <V> type of value to  be read
- * @param <C> reading context
+ * @param <R> reading context
  */
-abstract public class OriginTeleReader<V, C extends HttpTeleContext<?, ?>> extends HttpTeleReader<V, C> {
+abstract public class OriginTeleReader<V, R extends HttpReadOptions<?>> implements HttpTeleReader<V, R> {
 
     protected final OriginFactory originFactory;
 
@@ -17,23 +17,23 @@ abstract public class OriginTeleReader<V, C extends HttpTeleContext<?, ?>> exten
     /**
      * Return param string value from origin defined in the context
      */
-    protected final Iterable<String> readStrings(C trContext) {
-        Origin origin = originFactory.getOrigin(trContext.originName());
-        return origin.getStrings(trContext.paramName());
+    protected final Iterable<String> readStrings(R options, HttpTeleReader.Channel channel) {
+        Origin origin = originFactory.getOrigin(options.originName());
+        return origin.getStrings(options.paramName(), channel);
     }
 
-    protected final Iterable<String> readStrings(String originName, String paramName) {
+    protected final Iterable<String> readStrings(String originName, String paramName, HttpTeleReader.Channel channel) {
         Origin origin = originFactory.getOrigin(originName);
-        return origin.getStrings(paramName);
+        return origin.getStrings(paramName, channel);
     }
 
-    protected final String readString(C context) {
-        var it = readStrings(context).iterator();
+    protected final String readString(R options, HttpTeleReader.Channel channel) {
+        var it = readStrings(options, channel).iterator();
         return it.hasNext() ? it.next() : null;
     }
 
-    protected final String readString(String originName, String paramName) {
-        var it = readStrings(originName, paramName).iterator();
+    protected final String readString(String originName, String paramName, HttpTeleReader.Channel channel) {
+        var it = readStrings(originName, paramName, channel).iterator();
         return it.hasNext() ? it.next() : null;
     }
 

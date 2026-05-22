@@ -17,7 +17,7 @@
 package colesico.framework.telehttp.reader;
 
 import colesico.framework.teleapi.TeleException;
-import colesico.framework.telehttp.HttpTeleContext;
+import colesico.framework.telehttp.HttpReadOptions;
 import colesico.framework.telehttp.OriginFactory;
 import colesico.framework.telehttp.OriginTeleReader;
 import colesico.framework.telehttp.t9n.Messages;
@@ -25,15 +25,17 @@ import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
 import java.util.OptionalInt;
 
 /**
  * @author Vladlen Larionov
  */
 @Singleton
-public final class OptionalIntReader extends OriginTeleReader<OptionalInt, HttpTeleContext<?, ?>> {
+public final class OptionalIntReader extends OriginTeleReader<OptionalInt, HttpReadOptions<?>> {
 
     private final Messages messages;
+
     @Inject
     public OptionalIntReader(OriginFactory originFactory, Messages messages) {
         super(originFactory);
@@ -41,9 +43,9 @@ public final class OptionalIntReader extends OriginTeleReader<OptionalInt, HttpT
     }
 
     @Override
-    public OptionalInt read(HttpTeleContext<?, ?> ctx) {
+    public OptionalInt read(Class<OptionalInt> valueType, HttpReadOptions<?> options, Channel channel) {
         try {
-            String val = readString(ctx);
+            String val = readString(options, channel);
             if (StringUtils.isBlank(val)) {
                 return null;
             }
@@ -53,7 +55,7 @@ public final class OptionalIntReader extends OriginTeleReader<OptionalInt, HttpT
                 return OptionalInt.of(Integer.parseInt(val));
             }
         } catch (Exception var3) {
-            throw new TeleException(messages.invalidNumberFormat(ctx.paramName()));
+            throw new TeleException(messages.invalidNumberFormat(options.paramName()));
         }
     }
 }

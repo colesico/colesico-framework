@@ -17,7 +17,7 @@
 package colesico.framework.telehttp.reader;
 
 import colesico.framework.teleapi.TeleException;
-import colesico.framework.telehttp.HttpTeleContext;
+import colesico.framework.telehttp.HttpReadOptions;
 import colesico.framework.telehttp.OriginFactory;
 import colesico.framework.telehttp.OriginTeleReader;
 import colesico.framework.telehttp.t9n.Messages;
@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -32,7 +33,7 @@ import java.time.format.DateTimeFormatter;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class LocalDateReader extends OriginTeleReader<LocalDate, HttpTeleContext<?, ?>> {
+public final class LocalDateReader extends OriginTeleReader<LocalDate, HttpReadOptions<?>> {
 
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final Messages messages;
@@ -44,15 +45,15 @@ public final class LocalDateReader extends OriginTeleReader<LocalDate, HttpTeleC
     }
 
     @Override
-    public LocalDate read(HttpTeleContext<?, ?> ctx) {
+    public LocalDate read(Class<LocalDate> valueType, HttpReadOptions<?> options, Channel channel) {
         try {
-            String val = readString(ctx);
+            String val = readString(options, channel);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }
             return LocalDate.parse(val, dtf);
         } catch (Exception ex) {
-            throw new TeleException(messages.invalidDateFormat(ctx.paramName()));
+            throw new TeleException(messages.invalidDateFormat(options.paramName()));
         }
     }
 }

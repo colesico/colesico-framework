@@ -33,6 +33,6 @@ public final class TranslatableImpl implements Translatable {
 
     @Override
     public String translate(Object... params) {
-        return translationKit.getBundle(baseName).get(key,key, params);
+        return translationKit.bundle(baseName).translation(key,key, params);
     }
 }

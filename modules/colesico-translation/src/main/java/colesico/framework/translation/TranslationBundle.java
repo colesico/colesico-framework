@@ -22,12 +22,12 @@ package colesico.framework.translation;
  */
 public interface TranslationBundle {
 
-    String GET_METHOD = "get";
+    String GET_METHOD = "translation";
 
     /**
      * Returns the string by its key or the default value if string was not found.
      * Also performs the parameter substitution by default with MessageFormat.format(...)
      */
-    String get(String key, String defaultValue, Object... params);
+    String translation(String key, String defaultValue, Object... params);
 
 }

@@ -59,12 +59,7 @@ public interface Origin {
      * Return string value from the http request entity
      *
      * @param name value name  (e.g. query param name, cookie name, header name, e.t.c)
-     * @return string value
-     * @see colesico.framework.http.HttpRequest
      */
-    Iterable<String> getStrings(String name, Context context);
+    Iterable<String> getStrings(String name, HttpTeleReader.Channel channel);
 
-    record Context(HttpRequest httpRequest, RouterContext routerContext){
-
-    }
 }

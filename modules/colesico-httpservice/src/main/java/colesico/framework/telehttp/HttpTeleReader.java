@@ -1,13 +1,19 @@
 package colesico.framework.telehttp;
 
+import colesico.framework.http.HttpRequest;
+import colesico.framework.router.RouterContext;
 import colesico.framework.teleapi.dataport.TeleReader;
 
 /**
- * Basic tele-reader for reading param vales from remote client via http
- *
- * @param <V> the value type to  be read
- * @param <C> reading context
+ * Basic reader for retrieving param vales from http request
  */
-abstract public class HttpTeleReader<V, C extends HttpTeleContext<?, ?>> implements TeleReader<V, C> {
+@FunctionalInterface
+public interface HttpTeleReader<V, R extends HttpReadOptions<?>> extends TeleReader<V, R, HttpTeleReader.Channel> {
+
+    /**
+     * Read channel api
+     */
+    record Channel(HttpRequest httpRequest, RouterContext routerContext) {
+    }
 
 }

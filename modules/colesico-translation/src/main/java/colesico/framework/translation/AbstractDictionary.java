@@ -34,17 +34,17 @@ abstract public class AbstractDictionary implements TranslationDictionary {
     }
 
     protected final String translateOrKey(final String key, Object... params) {
-        return translationKit.getBundle(baseName).get(key, key, params);
+        return translationKit.bundle(baseName).translation(key, key, params);
     }
 
     @Override
     public final String translate(final String key, final String defaultValue, Object... params) {
-        return translationKit.getBundle(baseName).get(key, defaultValue, params);
+        return translationKit.bundle(baseName).translation(key, defaultValue, params);
     }
 
     @Override
     public final TranslationBundle bundle() {
-        return translationKit.getBundle(baseName);
+        return translationKit.bundle(baseName);
     }
 
     @Override

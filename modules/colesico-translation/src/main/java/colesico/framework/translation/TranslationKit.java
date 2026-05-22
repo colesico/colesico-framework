@@ -29,11 +29,11 @@ public interface TranslationKit {
      *
      * @param baseName - the same as for {@link java.util.ResourceBundle#getBundle(String)}
      */
-    TranslationBundle getBundle(String baseName);
+    TranslationBundle bundle(String baseName);
 
     /**
      * Returns translatable text
      */
-    Translatable getTranslatable(String baseName, String key);
+    Translatable translatable(String baseName, String key);
 
 }

@@ -23,7 +23,6 @@ import colesico.framework.profile.Profile;
 import colesico.framework.restlet.teleapi.RestletTeleReader;
 import colesico.framework.restlet.teleapi.reader.*;
 import colesico.framework.security.Identity;
-import colesico.framework.telehttp.reader.PrincipalReader;
 import colesico.framework.telehttp.reader.ProfileReader;
 
 import colesico.framework.telehttp.reader.*;

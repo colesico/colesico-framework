@@ -16,16 +16,14 @@
 
 package colesico.framework.telehttp.reader;
 
-import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.profile.*;
 import colesico.framework.profile.assist.LocaleAttribute;
 import colesico.framework.profile.assist.ProfileAttribute;
-import colesico.framework.telehttp.HttpTeleContext;
+import colesico.framework.telehttp.HttpReadOptions;
 import colesico.framework.telehttp.HttpTeleReader;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
 import colesico.framework.telehttp.writer.ProfileWriter;
-import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.util.*;
@@ -36,15 +34,9 @@ import static colesico.framework.telehttp.writer.ProfileWriter.PROFILE_HEADER;
  * Profile default reader
  */
 @Singleton
-public class ProfileReader<P extends Profile, C extends HttpTeleContext<?, ?>> extends HttpTeleReader<P, C> {
+public class ProfileReader<P extends Profile> implements HttpTeleReader<P, HttpReadOptions<?>> {
 
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
-
-    protected final Provider<HttpContext> httpContextProv;
-
-    public ProfileReader(Provider<HttpContext> httpContextProv) {
-        this.httpContextProv = httpContextProv;
-    }
 
     protected void readLocale(LocaleAttribute<?> attribute, Map<String, String> attributes, HttpRequest request) {
         readAttribute(attribute, attributes);
@@ -73,8 +65,8 @@ public class ProfileReader<P extends Profile, C extends HttpTeleContext<?, ?>> e
     }
 
     @Override
-    public final P read(C context) {
-        HttpRequest request = httpContextProv.get().request();
+    public final P read(Class<P> valueType, HttpReadOptions<?> options, Channel channel) {
+        HttpRequest request = channel.httpRequest();
 
         Map<String, String> attributes = new HashMap<>();
         var profileCookie = request.cookies().get(ProfileWriter.PROFILE_COOKIE);
@@ -88,7 +80,7 @@ public class ProfileReader<P extends Profile, C extends HttpTeleContext<?, ?>> e
         }
 
         // Get default profile instance from context
-        P profile = (P) context.attachment();
+        P profile = (P) options.attachment();
         importFromAttributes(profile, attributes, request);
         return profile;
     }
