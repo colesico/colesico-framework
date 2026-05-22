@@ -8,16 +8,15 @@ import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
-public final class SimpleDataPort implements DataPort<ReadOptions<?, ?>, WriteOptions<?, ?>> {
+public final class SimpleDataPort implements DataPort<ReadOptions, WriteOptions> {
 
     private static final Logger log = LoggerFactory.getLogger(SimpleDataPort.class);
     private final ThreadScope threadScope;
-    private final Map<Type, Object> values = new ConcurrentHashMap<>();
+    private final Map<Class<?>, Object> values = new ConcurrentHashMap<>();
 
     public SimpleDataPort(ThreadScope threadScope) {
         this.threadScope = threadScope;
@@ -27,7 +26,7 @@ public final class SimpleDataPort implements DataPort<ReadOptions<?, ?>, WriteOp
         threadScope.put(DataPort.SCOPE_KEY, this);
     }
 
-    public Map<Type, ?> values() {
+    public Map<Class<?>, ?> values() {
         return values;
     }
 
@@ -36,26 +35,26 @@ public final class SimpleDataPort implements DataPort<ReadOptions<?, ?>, WriteOp
     }
 
     @Override
-    public <V> V read(ReadOptions<?, ?> query) {
-        log.debug("Read for context: {}", query);
-        return (V) values.get(query.valueType());
+    public <V> V read(Class<V> valueType, ReadOptions options) {
+        log.debug("Read for valueType: {}; options: {}", valueType, options);
+        return valueType.cast(values.get(valueType));
     }
 
     @Override
-    public <V, A> V read(Type valueType, A attachment) {
-        log.debug("Read for value type: {}; attributes: {}", valueType, attachment);
-        return (V) values.get(valueType);
+    public <V> V read(Class<V> valueType, Object attachment) {
+        log.debug("Read for valueType: {}; attachment: {}", valueType, attachment);
+        return valueType.cast(values.get(valueType));
     }
 
     @Override
-    public <V> void write(V value, WriteOptions<?, ?> options) {
-        log.debug("Write value: {}; context: {}", value, options);
-        values.put(options.valueType(), value);
+    public <V> void write(V value, Class<V> valueType, WriteOptions options) {
+        log.debug("Write value: {}; valueType: {}; options: {}", value, valueType, options);
+        values.put(valueType, value);
     }
 
     @Override
-    public <V, P> void write(V value, Type valueType, P attachment) {
-        log.debug("Write value: {}; value type: {}; payload: {}", value, valueType, attachment);
+    public <V> void write(V value, Class<V> valueType, Object attachment) {
+        log.debug("Write value: {}; valueType: {}; attachment: {}", value, valueType, attachment);
         values.put(valueType, value);
     }
 

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Type;
 
 @Singleton
-public final class NullDataPort implements DataPort<ReadOptions<?, ?>, WriteOptions<?, ?>> {
+public final class NullDataPort implements DataPort<ReadOptions, WriteOptions> {
 
     private static final Logger log = LoggerFactory.getLogger(NullDataPort.class);
     private final ThreadScope threadScope;
@@ -25,24 +25,24 @@ public final class NullDataPort implements DataPort<ReadOptions<?, ?>, WriteOpti
     }
 
     @Override
-    public <V> V read(ReadOptions<?, ?> query) {
-        log.debug("Read for context: {}", query);
+    public <V> V read(Class<V> valueType, ReadOptions options) {
+        log.debug("Read for valueType: {}; options: {}", valueType, options);
         return null;
     }
 
     @Override
-    public <V, A> V read(Type valueType, A attachment) {
-        log.debug("Read for value type: {}; attributes: {}", valueType, attachment);
+    public <V> V read(Class<V> valueType, Object attachment) {
+        log.debug("Read for valueType: {}; attachment: {}", valueType, attachment);
         return null;
     }
 
     @Override
-    public <V> void write(V value, WriteOptions<?, ?> options) {
-        log.debug("Write value: {}; context: {}", value, options);
+    public <V> void write(V value, Class<V> valueType, WriteOptions options) {
+        log.debug("Write value: {}; valueType: {}; options: {}", value, valueType, options);
     }
 
     @Override
-    public <V, P> void write(V value, Type valueType, P attachment) {
-        log.debug("Write value: {}; value type: {}; payload: {}", value, valueType, attachment);
+    public <V> void write(V value, Class<V> valueType, Object attachment) {
+        log.debug("Write value: {}; valueType: {}; attachment: {}", value, valueType, attachment);
     }
 }

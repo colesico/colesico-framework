@@ -23,7 +23,7 @@ import colesico.framework.ioc.key.TypeKey;
 /**
  * Data port for data exchange with remote source.
  */
-public interface DataPort<R extends ReadOptions<?>, W extends WriteOptions<?>> {
+public interface DataPort<R extends ReadOptions, W extends WriteOptions> {
 
     String READ_METHOD = "read";
     String WRITE_METHOD = "write";
@@ -45,7 +45,7 @@ public interface DataPort<R extends ReadOptions<?>, W extends WriteOptions<?>> {
      *
      * @param attachment see {@link ReadOptions#attachment()}
      */
-    <V, A> V read(Class<V> valueType, A attachment);
+    <V> V read(Class<V> valueType, Object attachment);
 
     default <V> V read(Class<V> valueType) {
         return read(valueType, null);
@@ -63,7 +63,7 @@ public interface DataPort<R extends ReadOptions<?>, W extends WriteOptions<?>> {
      *
      * @param attachment see {@link WriteOptions#attachment()}
      */
-    <V, A> void write(V value, Class<V> valueType, A attachment);
+    <V> void write(V value, Class<V> valueType, Object attachment);
 
     default <V> void write(V value, Class<V> valueType) {
         write(value, valueType, null);
