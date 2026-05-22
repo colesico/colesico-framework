@@ -199,8 +199,8 @@ public class TeleFacadesGenerator {
             // Param DataPort<R,W> dataPort
             methodBuilder.addParameter(
                     ParameterizedTypeName.get(ClassName.get(DataPort.class),
-                            ClassName.get(teleFacade.readContextClass()),
-                            ClassName.get(teleFacade.writeContextClass())
+                            ClassName.get(teleFacade.readOptionsClass()),
+                            ClassName.get(teleFacade.writeOptionsClass())
                     ), TeleCommand.DATA_PORT_PARAM
             );
 

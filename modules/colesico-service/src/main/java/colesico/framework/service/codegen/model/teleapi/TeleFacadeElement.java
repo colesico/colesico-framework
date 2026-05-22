@@ -59,12 +59,12 @@ public class TeleFacadeElement {
     /**
      * Tele write context class
      */
-    private final Class<? extends ReadOptions<?,?>> readContextClass;
+    private final Class<? extends ReadOptions> readOptionsClass;
 
     /**
      * Tele read context class
      */
-    private final Class<? extends WriteOptions<?,?>> writeContextClass;
+    private final Class<? extends WriteOptions> writeOptionsClass;
 
     /**
      * Tele commands.
@@ -101,13 +101,13 @@ public class TeleFacadeElement {
 
     public TeleFacadeElement(Class<?> teleType,
                              Class<? extends TeleFacade.Commands> commandsClass,
-                             Class<? extends ReadOptions<?,?>> readContextClass,
-                             Class<? extends WriteOptions<?,?>> writeContextClass,
+                             Class<? extends ReadOptions> readOptionsClass,
+                             Class<? extends WriteOptions> writeOptionsClass,
                              IocQualifier iocQualifier) {
         this.teleType = teleType;
         this.commandsClass = commandsClass;
-        this.readContextClass = readContextClass;
-        this.writeContextClass = writeContextClass;
+        this.readOptionsClass = readOptionsClass;
+        this.writeOptionsClass = writeOptionsClass;
         this.iocQualifier = iocQualifier;
 
         this.batchPack = new TeleBatchPackElement(this);
@@ -203,12 +203,12 @@ public class TeleFacadeElement {
         return batchPack;
     }
 
-    public Class<? extends ReadOptions> readContextClass() {
-        return readContextClass;
+    public Class<? extends ReadOptions> readOptionsClass() {
+        return readOptionsClass;
     }
 
-    public Class<? extends WriteOptions> writeContextClass() {
-        return writeContextClass;
+    public Class<? extends WriteOptions> writeOptionsClass() {
+        return writeOptionsClass;
     }
 
     public static final class IocQualifier {
