@@ -5,7 +5,7 @@ import com.palantir.javapoet.CodeBlock;
 /**
  * Represents tele-reading options
  */
-public class TROptionsElement {
+public class ReadOptionsElement {
 
     /**
      * Parent tele-readable ref
@@ -17,7 +17,7 @@ public class TROptionsElement {
      */
     private final CodeBlock creationCode;
 
-    public TROptionsElement(TeleReadableElement parentReadable, CodeBlock creationCode) {
+    public ReadOptionsElement(TeleReadableElement parentReadable, CodeBlock creationCode) {
         this.parentReadable = parentReadable;
         this.creationCode = creationCode;
     }

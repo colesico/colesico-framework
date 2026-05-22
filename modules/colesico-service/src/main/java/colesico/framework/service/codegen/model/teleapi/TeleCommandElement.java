@@ -62,7 +62,7 @@ public final class TeleCommandElement {
     /**
      * Method result write options
      */
-    private TWOptionsElement writeOptions;
+    private WriteOptionsElement writeOptions;
 
     /**
      * Invocation context code
@@ -129,11 +129,11 @@ public final class TeleCommandElement {
         return parameters;
     }
 
-    public TWOptionsElement writeOptions() {
+    public WriteOptionsElement writeOptions() {
         return writeOptions;
     }
 
-    public void setWriteOptions(TWOptionsElement wo) {
+    public void setWriteOptions(WriteOptionsElement wo) {
         this.writeOptions = wo;
     }
 

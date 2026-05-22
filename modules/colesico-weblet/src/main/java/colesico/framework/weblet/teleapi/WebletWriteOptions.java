@@ -21,7 +21,7 @@ import colesico.framework.telehttp.HttpWriteOptions;
 import java.lang.reflect.Type;
 
 /**
- * Weblet tele-writing context
+ * Weblet write options
  *
  * @author Vladlen Larionov
  */

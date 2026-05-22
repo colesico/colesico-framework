@@ -21,7 +21,7 @@ import colesico.framework.telehttp.HttpReadOptions;
 import java.lang.reflect.Type;
 
 /**
- * Weblet tele-reading context
+ * Weblet read context
  *
  * @author Vladlen Larionov
  */

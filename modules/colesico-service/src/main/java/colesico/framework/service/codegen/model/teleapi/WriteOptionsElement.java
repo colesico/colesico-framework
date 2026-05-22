@@ -2,7 +2,10 @@ package colesico.framework.service.codegen.model.teleapi;
 
 import com.palantir.javapoet.CodeBlock;
 
-public class TWOptionsElement {
+/**
+ * @see colesico.framework.teleapi.dataport.WriteOptions
+ */
+public class WriteOptionsElement {
 
     /**
      * Parent tele-command ref
@@ -10,11 +13,11 @@ public class TWOptionsElement {
     protected final TeleCommandElement parentTeleCommand;
 
     /**
-     * Method result writing context creation code
+     * Write options creation code
      */
     private final CodeBlock creationCode;
 
-    public TWOptionsElement(TeleCommandElement parentTeleCommand, CodeBlock creationCode) {
+    public WriteOptionsElement(TeleCommandElement parentTeleCommand, CodeBlock creationCode) {
         this.parentTeleCommand = parentTeleCommand;
         this.creationCode = creationCode;
     }

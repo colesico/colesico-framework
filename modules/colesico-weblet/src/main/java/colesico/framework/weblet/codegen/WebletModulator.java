@@ -21,15 +21,15 @@ import colesico.framework.router.RouterCommands;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.*;
-import colesico.framework.service.codegen.model.teleapi.TROptionsElement;
-import colesico.framework.service.codegen.model.teleapi.TWOptionsElement;
+import colesico.framework.service.codegen.model.teleapi.ReadOptionsElement;
+import colesico.framework.service.codegen.model.teleapi.WriteOptionsElement;
 import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import colesico.framework.service.codegen.model.teleapi.TeleOrdinaryParamElement;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.dataport.ReadOptions;
 import colesico.framework.teleapi.dataport.WriteOptions;
-import colesico.framework.telehttp.codegen.HttpTROptionsElement;
-import colesico.framework.telehttp.codegen.HttpTWOptionsElement;
+import colesico.framework.telehttp.codegen.HttpReadOptionsElement;
+import colesico.framework.telehttp.codegen.HttpWriteOptionsElement;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
 import colesico.framework.weblet.Weblet;
 import colesico.framework.weblet.teleapi.*;
@@ -79,7 +79,7 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected TROptionsElement createReadOptions(TeleOrdinaryParamElement teleParam) {
+    protected ReadOptionsElement createReadOptions(TeleOrdinaryParamElement teleParam) {
 
         String paramName = TeleHttpCodegenUtils.paramName(teleParam);
 
@@ -108,7 +108,7 @@ public final class WebletModulator extends RoutesModulator {
 
         cb.add(")");
 
-        return new HttpTROptionsElement(teleParam,
+        return new HttpReadOptionsElement(teleParam,
                 cb.build(),
                 paramName,
                 originName,
@@ -117,7 +117,7 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected TWOptionsElement createWriteOptions(TeleCommandElement teleCommand) {
+    protected WriteOptionsElement createWriteOptions(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("$T.$N(", ClassName.get(WebletWriteOptions.class), WebletWriteOptions.OF_METHOD);
 
@@ -130,7 +130,7 @@ public final class WebletModulator extends RoutesModulator {
             customWriterCT = new ClassType(processorContext().processingEnv(), (DeclaredType) customWriter);
         }
         cb.add(")");
-        return new HttpTWOptionsElement(teleCommand, cb.build(), customWriterCT);
+        return new HttpWriteOptionsElement(teleCommand, cb.build(), customWriterCT);
     }
 
     private TypeMirror getCustomWriterClass(TeleCommandElement teleCommand) {

@@ -132,21 +132,21 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
         return new TIContextElement(teleCommand, cb.build());
     }
 
-    protected TWOptionsElement createWriteOptions(TeleCommandElement teleCommand) {
+    protected WriteOptionsElement createWriteOptions(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleResultType(teleCommand, cb);
-        return new TWOptionsElement(teleCommand, cb.build());
+        return new WriteOptionsElement(teleCommand, cb.build());
     }
 
-    protected TROptionsElement createReadOptions(TeleOrdinaryParamElement teleParam) {
+    protected ReadOptionsElement createReadOptions(TeleOrdinaryParamElement teleParam) {
         CodeBlock.Builder cb = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleParamType(teleParam, cb);
-        return new TROptionsElement(teleParam, cb.build());
+        return new ReadOptionsElement(teleParam, cb.build());
     }
 
-    protected TROptionsElement createReadOptions(TeleBatchElement teleBatch) {
+    protected ReadOptionsElement createReadOptions(TeleBatchElement teleBatch) {
         CodeBlock.Builder cb = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleBatchType(teleBatch, cb);
-        return new TROptionsElement(teleBatch, cb.build());
+        return new ReadOptionsElement(teleBatch, cb.build());
     }
 }
