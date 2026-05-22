@@ -16,6 +16,9 @@
 
 package colesico.framework.telehttp;
 
+import colesico.framework.http.HttpRequest;
+import colesico.framework.router.RouterContext;
+
 /**
  * Data reading origin API and basic dictionary.
  * Origin defines strategy for reading string value from http context
@@ -59,5 +62,9 @@ public interface Origin {
      * @return string value
      * @see colesico.framework.http.HttpRequest
      */
-    Iterable<String> getStrings(String name);
+    Iterable<String> getStrings(String name, Context context);
+
+    record Context(HttpRequest httpRequest, RouterContext routerContext){
+
+    }
 }

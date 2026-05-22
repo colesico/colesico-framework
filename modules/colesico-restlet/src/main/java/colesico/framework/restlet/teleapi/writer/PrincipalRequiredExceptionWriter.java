@@ -1,7 +1,7 @@
 package colesico.framework.restlet.teleapi.writer;
 
 import colesico.framework.http.HttpContext;
-import colesico.framework.restlet.teleapi.RestletTWContext;
+import colesico.framework.restlet.teleapi.RestletWriteOptions;
 import colesico.framework.security.authorization.PrincipalRequiredException;
 
 import jakarta.inject.Provider;
@@ -15,12 +15,12 @@ public class PrincipalRequiredExceptionWriter extends AbstractExceptionWriter<Pr
     }
 
     @Override
-    protected Object getDetails(PrincipalRequiredException value, RestletTWContext context) {
+    protected Object getDetails(PrincipalRequiredException value, RestletWriteOptions context) {
         return "User is not authenticated";
     }
 
     @Override
-    protected int getHttpStatus(PrincipalRequiredException value, RestletTWContext context) {
+    protected int getHttpStatus(PrincipalRequiredException value, RestletWriteOptions context) {
         return 401;
     }
 }

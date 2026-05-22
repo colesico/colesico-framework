@@ -89,7 +89,7 @@ public final class RestletModulator extends RoutesModulator {
         CodeBlock.Builder cb = CodeBlock.builder();
 
         // new RestletTRContext(
-        cb.add("$T.$N(", ClassName.get(RestletTRContext.class), RestletTRContext.OF_METHOD);
+        cb.add("$T.$N(", ClassName.get(RestletTeleContext.class), RestletTeleContext.OF_METHOD);
 
         ServiceCodegenUtils.generateTeleParamType(teleParam, cb);
 
@@ -117,7 +117,7 @@ public final class RestletModulator extends RoutesModulator {
     @Override
     protected TWContextElement createWriteContext(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("$T.$N(", ClassName.get(RestletTWContext.class), RestletTWContext.OF_METHOD);
+        cb.add("$T.$N(", ClassName.get(RestletWriteOptions.class), RestletWriteOptions.OF_METHOD);
 
         ServiceCodegenUtils.generateTeleResultType(teleCommand, cb);
 

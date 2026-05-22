@@ -20,18 +20,10 @@ package colesico.framework.teleapi.dataport;
 import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
 
-import java.lang.reflect.Type;
-
 /**
- * Data exchange port for communication with remote client.
- * This port is designed for retrieving parameters values from remote client and sending back a results.
- * A request "controller"  (tele-driver, controller servlet or something similar) creates and puts DataPort instance
- * to the process scope for each request process.
- *
- * @param <R> Data reading context
- * @param <W> Data writing context
+ * Data port for data exchange with remote source.
  */
-public interface DataPort<R extends TRContext<?, ?>, W extends TWContext<?, ?>> {
+public interface DataPort<R extends ReadOptions<?>, W extends WriteOptions<?>> {
 
     String READ_METHOD = "read";
     String WRITE_METHOD = "write";
@@ -42,42 +34,38 @@ public interface DataPort<R extends TRContext<?, ?>, W extends TWContext<?, ?>> 
     Key<DataPort> SCOPE_KEY = new TypeKey<>(DataPort.class);
 
     /**
-     * Read value from remote request.
-     *
-     * @param context data reading context
-     * @param <V>     reading value type
+     * Read value from remote source.
      */
-    <V> V read(R context);
+    <V> V read(Class<V> valueType, R options);
 
     /**
-     * Read value by type from remote request.
-     * Internally must create appropriate reading context and forward to {@link DataPort#read(R)}
+     * Read value from remote source.
+     * Internally must create appropriate {@link ReadOptions} and forward
+     * to {@link #read(Class, ReadOptions)}
      *
-     * @param payload see {@link TWContext#payload}
+     * @param attachment see {@link ReadOptions#attachment()}
      */
-    <V, P> V read(Type valueType, P payload);
+    <V, A> V read(Class<V> valueType, A attachment);
 
-    default <V> V read(Type valueType) {
+    default <V> V read(Class<V> valueType) {
         return read(valueType, null);
     }
 
     /**
-     * Writes value to the remote response.
-     *
-     * @param context data writing context
-     * @param <V>     writing value type
+     * Writes value to the remote source.
      */
-    <V> void write(V value, W context);
+    <V> void write(V value, Class<V> valueType, W options);
 
     /**
-     * Write value by type to the response
-     * Internally must create appropriate writing context and forward to {@link #write(V, Type)}
+     * Write value to remote source.
+     * Internally must create appropriate {@link WriteOptions} and forward to
+     * {@link #write(Object, Class, WriteOptions)}
      *
-     * @param payload see {@link TWContext#payload}
+     * @param attachment see {@link WriteOptions#attachment()}
      */
-    <V, P> void write(V value, Type valueType, P payload);
+    <V, A> void write(V value, Class<V> valueType, A attachment);
 
-    default <V> void write(V value, Type valueType) {
+    default <V> void write(V value, Class<V> valueType) {
         write(value, valueType, null);
     }
 

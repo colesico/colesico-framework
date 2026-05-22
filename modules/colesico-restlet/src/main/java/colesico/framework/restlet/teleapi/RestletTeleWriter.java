@@ -21,7 +21,7 @@ import colesico.framework.telehttp.HttpTeleWriter;
 
 import jakarta.inject.Provider;
 
-abstract public class RestletTeleWriter<V> extends HttpTeleWriter<V, RestletTWContext> {
+abstract public class RestletTeleWriter<V> extends HttpTeleWriter<V, RestletWriteOptions> {
 
     /**
      * For injection

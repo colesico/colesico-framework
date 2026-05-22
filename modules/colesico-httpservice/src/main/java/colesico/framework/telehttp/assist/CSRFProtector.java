@@ -103,7 +103,7 @@ public class CSRFProtector<V> {
         }
     }
 
-    public String sendToken(HttpResponse response) {
+    public String sendToken(TeleHttpResponse response) {
         byte[] tokenBytes = new byte[32];
         random.nextBytes(tokenBytes);
         String tokenStr = Base64.getEncoder().encodeToString(tokenBytes);

@@ -21,7 +21,7 @@ import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.weblet.response.BinaryResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
-import colesico.framework.weblet.teleapi.WebletTWContext;
+import colesico.framework.weblet.teleapi.WebletWriteOptions;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -40,7 +40,7 @@ public final class BinaryWriter extends WebletTeleWriter<BinaryResponse> {
     }
 
     @Override
-    public void write(BinaryResponse value, WebletTWContext ctx) {
+    public void write(BinaryResponse value, WebletWriteOptions ctx) {
 
         HttpResponse response = response();
 

@@ -2,7 +2,7 @@ package colesico.framework.restlet.teleapi.writer;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.restlet.teleapi.RestletJsonConverter;
-import colesico.framework.restlet.teleapi.RestletTWContext;
+import colesico.framework.restlet.teleapi.RestletWriteOptions;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -24,7 +24,7 @@ public final class JsonWriter extends ObjectWriter {
     }
 
     @Override
-    public void write(Object value, RestletTWContext context) {
+    public void write(Object value, RestletWriteOptions context) {
         if (value == null) {
             response().sendText("", JSON_CONTENT_TYPE, 204);
             return;

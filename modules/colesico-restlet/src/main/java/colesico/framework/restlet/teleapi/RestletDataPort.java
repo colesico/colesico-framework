@@ -18,6 +18,6 @@ package colesico.framework.restlet.teleapi;
 
 import colesico.framework.teleapi.dataport.DataPort;
 
-public interface RestletDataPort extends DataPort<RestletTRContext, RestletTWContext> {
+public interface RestletDataPort extends DataPort<RestletTeleContext, RestletWriteOptions> {
 
 }

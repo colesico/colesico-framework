@@ -190,12 +190,6 @@ public class WebletReadersProducer {
     }
 
     @Singleton
-    @Classed(Identity.class)
-    public WebletTeleReader principalReader(PrincipalReader impl) {
-        return WebletReaderProxy.of(impl);
-    }
-
-    @Singleton
     @Classed(HttpFileReader.class)
     public WebletTeleReader httpFileReader(HttpFileReader impl) {
         return WebletReaderProxy.of(impl);

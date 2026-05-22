@@ -45,45 +45,45 @@ public class RestletDataPortImpl implements RestletDataPort {
     @Override
     @SuppressWarnings("unchecked")
     public <V> V read(Type valueType) {
-        return read(RestletTRContext.of(valueType));
+        return read(RestletTeleContext.of(valueType));
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <V> V read(RestletTRContext context) {
+    public <V> V read(RestletTeleContext query) {
 
         RestletTeleReader<V> reader;
 
-        if (context.getReaderClass() != null) {
+        if (query.getReaderClass() != null) {
             // Use specified reader
-            reader = (RestletTeleReader<V>) trwFactory.getReader(context.getReaderClass());
+            reader = (RestletTeleReader<V>) trwFactory.getReader(query.getReaderClass());
         } else {
             // Use reader by param type
-            reader = trwFactory.findReader(RestletTeleReader.class, context.valueType());
+            reader = trwFactory.findReader(RestletTeleReader.class, query.valueType());
 
             // No accurate reader here so are reading data as object
             if (reader == null) {
                 reader = (RestletTeleReader<V>) trwFactory.getReader(ValueReader.class);
             }
         }
-        return reader.read(context);
+        return reader.read(query);
     }
 
     @Override
     public <V> void write(V value, Type valueType) {
-        write(value, RestletTWContext.of(valueType));
+        write(value, RestletWriteOptions.of(valueType));
     }
 
     @Override
-    public <V> void write(V value, RestletTWContext context) {
+    public <V> void write(V value, RestletWriteOptions options) {
         RestletTeleWriter<V> writer;
 
-        if (context.getWriterClass() != null) {
+        if (options.getWriterClass() != null) {
             // Specified writer
-            writer = trwFactory.getWriter(context.getWriterClass());
+            writer = trwFactory.getWriter(options.getWriterClass());
         } else {
             // By type writer
-            writer = trwFactory.findWriter(RestletTeleWriter.class, context.valueType());
+            writer = trwFactory.findWriter(RestletTeleWriter.class, options.valueType());
         }
 
         if (writer == null) {
@@ -91,13 +91,13 @@ public class RestletDataPortImpl implements RestletDataPort {
             writer = (RestletTeleWriter<V>) trwFactory.getWriter(ObjectWriter.class);
         }
 
-        writer.write(value, context);
+        writer.write(value, options);
     }
 
     @Override
     public <T extends Throwable> void writeError(final T throwable) {
 
-        RestletTWContext context = RestletTWContext.of(throwable.getClass());
+        RestletWriteOptions context = RestletWriteOptions.of(throwable.getClass());
         RestletTeleWriter<T> throwableWriter = trwFactory.findWriter(RestletTeleWriter.class, throwable.getClass());
         if (throwableWriter != null) {
             throwableWriter.write(throwable, context);

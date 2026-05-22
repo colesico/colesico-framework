@@ -8,9 +8,11 @@ import java.util.Optional;
  *
  * @param <Q> Criteria to resolve an invocation (e.g. HTTP URL, method name, etc.)
  * @param <I> Invocation to execute
- * @param <M> Commands registry of tele-facade (references to target methods)
+ * @param <K> Commands registry of tele-facade (references to target methods)
  */
-public interface TeleController<Q extends TeleController.Criteria, I extends TeleController.Invocation, M extends TeleFacade.Commands> {
+public interface TeleController<Q extends TeleController.Criteria,
+        I extends TeleController.Invocation,
+        K extends TeleFacade.Commands> {
 
     /**
      * Resolve invocation with protocol context.
@@ -29,9 +31,9 @@ public interface TeleController<Q extends TeleController.Criteria, I extends Tel
     /**
      * Register tele-facade
      */
-    void register(TeleFacade<?, M> teleFacade);
+    void register(TeleFacade<?, K> teleFacade);
 
-    default void register(Iterable<TeleFacade<?, M>> teleFacades) {
+    default void register(Iterable<TeleFacade<?, K>> teleFacades) {
         for (var teleFacade : teleFacades) {
             register(teleFacade);
         }

@@ -17,16 +17,11 @@
 package colesico.framework.teleapi.dataport;
 
 /**
- * Remote data reader.
- * For cases that the data port is built on a pluggable/modular architecture in which a separate data
- * reader or writer is used for given data type.
- * <p>
- * Reader is used to read param values from remote client.
+ * Reader is used by {@link DataPort} to read values from channel.
  * Reader must be a stateless  (maybe a singleton but stateless)
  *
- * @param <V> the value  type to be read
- * @param <C> the reading context
+ * @param <C> channel raw api
  */
-public interface TeleReader<V, C extends TRContext<?,?>> {
-    V read(C context);
+public interface TeleReader<R extends ReadOptions<?>, C> {
+    <V> V read(Class<V> valueType, R options, C channel);
 }

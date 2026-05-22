@@ -22,7 +22,7 @@ import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.profile.Profile;
 import colesico.framework.profile.assist.LocaleAttribute;
-import colesico.framework.telehttp.HttpTWContext;
+import colesico.framework.telehttp.HttpWriteOptions;
 import colesico.framework.telehttp.HttpTeleWriter;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
 import jakarta.inject.Provider;
@@ -34,7 +34,7 @@ import java.util.*;
  *  Profile default writer
  */
 @Singleton
-public class ProfileWriter<P extends Profile, C extends HttpTWContext<?, ?>> extends HttpTeleWriter<P, C> {
+public class ProfileWriter<P extends Profile, C extends HttpWriteOptions<?, ?>> extends HttpTeleWriter<P, C> {
 
     public static final String PROFILE_COOKIE = "profile";
     public static final String PROFILE_HEADER = "X-Profile";

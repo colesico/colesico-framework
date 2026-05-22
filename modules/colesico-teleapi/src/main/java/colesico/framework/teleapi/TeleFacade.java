@@ -22,9 +22,9 @@ import jakarta.inject.Provider;
  * Unified facade for tele-command invocations.
  *
  * @param <T> Target whose method will be invoked (usually a service)
- * @param <M> Tele-commands registry (references to target methods)
+ * @param <K> Tele-commands registry (references to target methods)
  */
-abstract public class TeleFacade<T, M extends TeleFacade.Commands> {
+abstract public class TeleFacade<T, K extends TeleFacade.Commands> {
 
     public static final String TELE_FACADE_SUFFIX = "TeleFacade";
     public static final String TARGET_PROV_FIELD = "targetProvider";
@@ -47,10 +47,10 @@ abstract public class TeleFacade<T, M extends TeleFacade.Commands> {
      *
      * @see TeleController#resolve(TeleController.Criteria)
      */
-    abstract public M commands();
+    abstract public K commands();
 
     /**
-     * Marker interface for {@link TeleFacade}
+     * Marker interface
      */
     public interface Commands {
     }

@@ -1,4 +1,4 @@
-package colesico.framework.telehttp;
+package colesico.framework.telehttp.assist;
 
 import colesico.framework.http.HttpCookie;
 
@@ -7,11 +7,9 @@ import java.util.*;
 /**
  * Basic response model
  */
-abstract public class HttpTeleResponse<C> {
+abstract public class TeleHttpResponse {
 
     public static final int DEFAULT_STATUS_CODE = 200;
-
-    protected final C content;
 
     /**
      * Http response content type
@@ -27,8 +25,7 @@ abstract public class HttpTeleResponse<C> {
 
     protected Set<HttpCookie> cookies = new HashSet<>();
 
-    protected HttpTeleResponse(C content, String contentType, int statusCode) {
-        this.content = content;
+    public TeleHttpResponse(String contentType, int statusCode) {
         this.contentType = contentType;
         this.statusCode = statusCode;
     }
@@ -40,10 +37,6 @@ abstract public class HttpTeleResponse<C> {
 
     public void addCookie(HttpCookie cookie) {
         cookies.add(cookie);
-    }
-
-    public C content() {
-        return content;
     }
 
     public String contentType() {

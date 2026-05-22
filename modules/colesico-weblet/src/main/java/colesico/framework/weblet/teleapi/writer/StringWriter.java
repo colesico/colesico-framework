@@ -22,7 +22,7 @@ import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.weblet.response.StringResponse;
 import colesico.framework.weblet.response.TextResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
-import colesico.framework.weblet.teleapi.WebletTWContext;
+import colesico.framework.weblet.teleapi.WebletWriteOptions;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -40,7 +40,7 @@ public final class StringWriter extends WebletTeleWriter<StringResponse> {
     }
 
     @Override
-    public void write(StringResponse value, WebletTWContext ctx) {
+    public void write(StringResponse value, WebletWriteOptions ctx) {
         HttpResponse response = response();
 
         if (value == null) {

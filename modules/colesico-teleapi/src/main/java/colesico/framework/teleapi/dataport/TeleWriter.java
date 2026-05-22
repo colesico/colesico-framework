@@ -17,12 +17,11 @@
 package colesico.framework.teleapi.dataport;
 
 /**
- * Remote data writer.
- * Writer is used to send responses to remote client.
+ * Writer is used by {@link DataPort} to write values to channel.
+ * Writer must be a stateless  (maybe a singleton but stateless)
  *
- * @param <V> the value type to be written
- * @param <C> the write context
+ * @param <C> channel raw api
  */
-public interface TeleWriter<V, C extends TWContext<?,?>> {
-    void write(V value, C context);
+public interface TeleWriter<W extends WriteOptions<?>, C> {
+    <V> void write(V value, Class<V> valueType, W options, C channel);
 }

@@ -17,7 +17,7 @@
 package colesico.framework.telehttp.reader;
 
 import colesico.framework.teleapi.TeleException;
-import colesico.framework.telehttp.HttpTRContext;
+import colesico.framework.telehttp.HttpTeleContext;
 import colesico.framework.telehttp.OriginFactory;
 import colesico.framework.telehttp.OriginTeleReader;
 import colesico.framework.telehttp.t9n.Messages;
@@ -30,7 +30,7 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class BooleanReader extends OriginTeleReader<Boolean, HttpTRContext<?, ?>> {
+public final class BooleanReader extends OriginTeleReader<Boolean, HttpTeleContext<?, ?>> {
 
     private final Messages messages;
 
@@ -41,7 +41,7 @@ public final class BooleanReader extends OriginTeleReader<Boolean, HttpTRContext
     }
 
     @Override
-    public Boolean read(HttpTRContext<?, ?> ctx) {
+    public Boolean read(HttpTeleContext<?, ?> ctx) {
         try {
             String str = readString(ctx);
             if (StringUtils.isBlank(str)) {

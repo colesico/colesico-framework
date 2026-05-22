@@ -21,7 +21,7 @@ import colesico.framework.http.HttpRequest;
 import colesico.framework.profile.*;
 import colesico.framework.profile.assist.LocaleAttribute;
 import colesico.framework.profile.assist.ProfileAttribute;
-import colesico.framework.telehttp.HttpTRContext;
+import colesico.framework.telehttp.HttpTeleContext;
 import colesico.framework.telehttp.HttpTeleReader;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
 import colesico.framework.telehttp.writer.ProfileWriter;
@@ -36,7 +36,7 @@ import static colesico.framework.telehttp.writer.ProfileWriter.PROFILE_HEADER;
  * Profile default reader
  */
 @Singleton
-public class ProfileReader<P extends Profile, C extends HttpTRContext<?, ?>> extends HttpTeleReader<P, C> {
+public class ProfileReader<P extends Profile, C extends HttpTeleContext<?, ?>> extends HttpTeleReader<P, C> {
 
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
 
@@ -88,7 +88,7 @@ public class ProfileReader<P extends Profile, C extends HttpTRContext<?, ?>> ext
         }
 
         // Get default profile instance from context
-        P profile = (P) context.payload();
+        P profile = (P) context.attachment();
         importFromAttributes(profile, attributes, request);
         return profile;
     }

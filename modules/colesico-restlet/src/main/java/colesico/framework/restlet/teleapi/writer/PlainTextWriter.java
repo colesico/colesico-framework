@@ -1,6 +1,6 @@
 package colesico.framework.restlet.teleapi.writer;
 
-import colesico.framework.restlet.teleapi.RestletTWContext;
+import colesico.framework.restlet.teleapi.RestletWriteOptions;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 
 import jakarta.inject.Inject;
@@ -12,7 +12,7 @@ import jakarta.inject.Singleton;
 @Singleton
 public final class PlainTextWriter extends RestletTeleWriter<Object> {
 
-    private final colesico.framework.telehttp.writer.PlainTextWriter<RestletTWContext> writer;
+    private final colesico.framework.telehttp.writer.PlainTextWriter<RestletWriteOptions> writer;
 
     @Inject
     public PlainTextWriter(colesico.framework.telehttp.writer.PlainTextWriter writer) {
@@ -21,7 +21,7 @@ public final class PlainTextWriter extends RestletTeleWriter<Object> {
     }
 
     @Override
-    public void write(Object value, RestletTWContext context) {
+    public void write(Object value, RestletWriteOptions context) {
         writer.write(value, context);
     }
 }

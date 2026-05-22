@@ -22,8 +22,8 @@ import colesico.framework.assist.StrUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.dataport.TRContext;
-import colesico.framework.teleapi.dataport.TWContext;
+import colesico.framework.teleapi.dataport.ReadOptions;
+import colesico.framework.teleapi.dataport.WriteOptions;
 import com.palantir.javapoet.CodeBlock;
 import org.apache.commons.lang3.StringUtils;
 
@@ -59,12 +59,12 @@ public class TeleFacadeElement {
     /**
      * Tele write context class
      */
-    private final Class<? extends TRContext<?,?>> readContextClass;
+    private final Class<? extends ReadOptions<?,?>> readContextClass;
 
     /**
      * Tele read context class
      */
-    private final Class<? extends TWContext<?,?>> writeContextClass;
+    private final Class<? extends WriteOptions<?,?>> writeContextClass;
 
     /**
      * Tele commands.
@@ -101,8 +101,8 @@ public class TeleFacadeElement {
 
     public TeleFacadeElement(Class<?> teleType,
                              Class<? extends TeleFacade.Commands> commandsClass,
-                             Class<? extends TRContext<?,?>> readContextClass,
-                             Class<? extends TWContext<?,?>> writeContextClass,
+                             Class<? extends ReadOptions<?,?>> readContextClass,
+                             Class<? extends WriteOptions<?,?>> writeContextClass,
                              IocQualifier iocQualifier) {
         this.teleType = teleType;
         this.commandsClass = commandsClass;
@@ -203,11 +203,11 @@ public class TeleFacadeElement {
         return batchPack;
     }
 
-    public Class<? extends TRContext> readContextClass() {
+    public Class<? extends ReadOptions> readContextClass() {
         return readContextClass;
     }
 
-    public Class<? extends TWContext> writeContextClass() {
+    public Class<? extends WriteOptions> writeContextClass() {
         return writeContextClass;
     }
 

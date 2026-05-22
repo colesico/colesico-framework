@@ -1,9 +1,12 @@
 package colesico.framework.weblet.response;
 
+import colesico.framework.telehttp.assist.ContentResponse;
+import colesico.framework.telehttp.assist.TeleHttpResponse;
+
 /**
- * Returns  model that be presented to  given view
+ * Returns  model that be presented to given view
  */
-public final class ViewResponse extends colesico.framework.telehttp.HttpTeleResponse {
+public final class ViewResponse extends TeleHttpResponse {
 
     private final String viewName;
     private final Object model;

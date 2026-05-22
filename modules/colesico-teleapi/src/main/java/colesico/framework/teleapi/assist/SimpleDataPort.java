@@ -2,8 +2,8 @@ package colesico.framework.teleapi.assist;
 
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.teleapi.dataport.DataPort;
-import colesico.framework.teleapi.dataport.TRContext;
-import colesico.framework.teleapi.dataport.TWContext;
+import colesico.framework.teleapi.dataport.ReadOptions;
+import colesico.framework.teleapi.dataport.WriteOptions;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
-public final class SimpleDataPort implements DataPort<TRContext<?, ?>, TWContext<?, ?>> {
+public final class SimpleDataPort implements DataPort<ReadOptions<?, ?>, WriteOptions<?, ?>> {
 
     private static final Logger log = LoggerFactory.getLogger(SimpleDataPort.class);
     private final ThreadScope threadScope;
@@ -36,26 +36,26 @@ public final class SimpleDataPort implements DataPort<TRContext<?, ?>, TWContext
     }
 
     @Override
-    public <V> V read(TRContext<?, ?> context) {
-        log.debug("Read for context: {}", context);
-        return (V) values.get(context.valueType());
+    public <V> V read(ReadOptions<?, ?> query) {
+        log.debug("Read for context: {}", query);
+        return (V) values.get(query.valueType());
     }
 
     @Override
-    public <V, A> V read(Type valueType, A payload) {
-        log.debug("Read for value type: {}; attributes: {}", valueType, payload);
+    public <V, A> V read(Type valueType, A attachment) {
+        log.debug("Read for value type: {}; attributes: {}", valueType, attachment);
         return (V) values.get(valueType);
     }
 
     @Override
-    public <V> void write(V value, TWContext<?, ?> context) {
-        log.debug("Write value: {}; context: {}", value, context);
-        values.put(context.valueType(), value);
+    public <V> void write(V value, WriteOptions<?, ?> options) {
+        log.debug("Write value: {}; context: {}", value, options);
+        values.put(options.valueType(), value);
     }
 
     @Override
-    public <V, P> void write(V value, Type valueType, P payload) {
-        log.debug("Write value: {}; value type: {}; payload: {}", value, valueType, payload);
+    public <V, P> void write(V value, Type valueType, P attachment) {
+        log.debug("Write value: {}; value type: {}; payload: {}", value, valueType, attachment);
         values.put(valueType, value);
     }
 

@@ -20,62 +20,112 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Interception phases
+ * Interception phases in execution order.
+ * Higher in the list means more "outer" (wraps subsequent phases).
  */
 public final class InterceptionPhases {
+
     /**
      * Common purpose initial phase
      */
     public static final String BOOTSTRAP = "BOOTSTRAP";
 
     /**
-     * Logging phase
+     * Error handling and transformation
+     */
+    public static final String ERRORS = "ERRORS";
+
+    /**
+     * Global logging/tracing of the request execution
      */
     public static final String LOGGING = "LOGGING";
 
     /**
-     * Transaction control phase
+     * SLA, Latency, Throughput metrics
      */
-    public static final String TRANSACTION = "TRANSACTION";
+    public static final String METRICS = "METRICS";
 
     /**
-     * Authorization control phase
+     * Request frequency control
+     */
+    public static final String RATE_LIMITING = "RATE_LIMITING";
+
+    /**
+     * Permission and access control
      */
     public static final String AUTHORIZATION = "AUTHORIZATION";
 
     /**
-     * Parameters validation phase
+     * Input parameters validation (prevents unnecessary cache lookups)
      */
     public static final String VALIDATION = "VALIDATION";
 
     /**
-     * Method invocation result caching phase
+     * Method result caching
      */
     public static final String CACHING = "CACHING";
 
     /**
-     * Resource initialization phase  (db connection)
+     * Fault tolerance: circuit breaker and retries
+     */
+    public static final String CIRCUIT_BREAKER = "CIRCUIT_BREAKER";
+
+
+    /**
+     * Database transaction management
+     */
+    public static final String TRANSACTION = "TRANSACTION";
+
+    /**
+     * Resource management (DB connections, handles, sessions)
      */
     public static final String RESOURCES = "RESOURCES";
 
     /**
-     * Common purpose phase just before target method been invoked
+     * Common purpose phase just before target method invocation
      */
     public static final String PREPROCESS = "PREPROCESS";
 
-    private List<String> phaseOrder;
+    /**
+     * Common purpose phase just after target method invocation (inside transaction)
+     */
+    public static final String POSTPROCESS = "POSTPROCESS";
+
+    /**
+     * Common purpose final phase
+     */
+    public static final String TEARDOWN = "TEARDOWN";
+
+    private final List<String> phaseOrder;
 
     public InterceptionPhases() {
-        // Set default invocation phases
         phaseOrder = new ArrayList<>();
+
+        // 1. Infrastructure
         phaseOrder.add(BOOTSTRAP);
+        phaseOrder.add(ERRORS);
         phaseOrder.add(LOGGING);
-        phaseOrder.add(TRANSACTION);
+        phaseOrder.add(METRICS);
+        phaseOrder.add(RATE_LIMITING);
+
+        // 2. Security
         phaseOrder.add(AUTHORIZATION);
+
+        // 3. Traffic control & Validation
         phaseOrder.add(VALIDATION);
         phaseOrder.add(CACHING);
+        phaseOrder.add(CIRCUIT_BREAKER);
+
+        // 5. Data & Context
+        phaseOrder.add(TRANSACTION);
         phaseOrder.add(RESOURCES);
+
+        // 6. Main action wrappers
         phaseOrder.add(PREPROCESS);
+        phaseOrder.add(POSTPROCESS);
+
+        // 7. Final action
+        phaseOrder.add(TEARDOWN);
     }
 
     public List<String> phaseOrder() {
@@ -96,6 +146,20 @@ public final class InterceptionPhases {
         checkAddPhase(existingPhase, newPhase);
         int phaseIndex = phaseOrder.indexOf(existingPhase);
         phaseOrder.add(phaseIndex, newPhase);
+    }
+
+    public void addPhaseFirst(String newPhase) {
+        if (checkPhaseExists(newPhase)) {
+            throw new RuntimeException("Interception phase already exists: " + newPhase);
+        }
+        phaseOrder.add(0, newPhase);
+    }
+
+    public void addPhaseLast(String newPhase) {
+        if (checkPhaseExists(newPhase)) {
+            throw new RuntimeException("Interception phase already exists: " + newPhase);
+        }
+        phaseOrder.add(newPhase);
     }
 
     private void checkAddPhase(String existingPhase, String newPhase) {

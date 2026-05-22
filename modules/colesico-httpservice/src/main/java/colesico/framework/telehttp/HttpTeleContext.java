@@ -1,14 +1,15 @@
 package colesico.framework.telehttp;
 
-import colesico.framework.teleapi.dataport.TRContext;
+import colesico.framework.teleapi.dataport.ReadOptions;
 
 import java.lang.reflect.Type;
 
 /**
  * Basic tele-reading context for interaction via http
+ *
  * @param <P> context payload type
  */
-abstract public class HttpTRContext<T extends Type, P> extends TRContext<T, P> {
+abstract public class HttpTeleContext<T extends Type, P> extends ReadOptions<T, P> {
 
     /**
      * Http param name.
@@ -25,7 +26,7 @@ abstract public class HttpTRContext<T extends Type, P> extends TRContext<T, P> {
      */
     private final String originName;
 
-    public HttpTRContext(T valueType, String paramName, String originName, P payload) {
+    public HttpTeleContext(T valueType, String paramName, String originName, P payload) {
         super(valueType, payload);
         this.paramName = paramName;
         this.originName = originName;

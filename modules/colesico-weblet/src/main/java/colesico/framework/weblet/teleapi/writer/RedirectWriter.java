@@ -20,7 +20,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.router.Router;
 import colesico.framework.weblet.response.RedirectResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
-import colesico.framework.weblet.teleapi.WebletTWContext;
+import colesico.framework.weblet.teleapi.WebletWriteOptions;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -39,7 +39,7 @@ public final class RedirectWriter extends WebletTeleWriter<RedirectResponse> {
     }
 
     @Override
-    public void write(RedirectResponse value, WebletTWContext ctx) {
+    public void write(RedirectResponse value, WebletWriteOptions ctx) {
         value.redirect(router, httpContextProv.get());
     }
 }

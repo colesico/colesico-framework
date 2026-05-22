@@ -26,8 +26,8 @@ import colesico.framework.service.codegen.model.teleapi.TWContextElement;
 import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import colesico.framework.service.codegen.model.teleapi.TeleOrdinaryParamElement;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.dataport.TRContext;
-import colesico.framework.teleapi.dataport.TWContext;
+import colesico.framework.teleapi.dataport.ReadOptions;
+import colesico.framework.teleapi.dataport.WriteOptions;
 import colesico.framework.telehttp.codegen.HttpTRContextElement;
 import colesico.framework.telehttp.codegen.HttpTWContextElement;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
@@ -64,13 +64,13 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected Class<? extends TRContext<?,?>> readContextClass() {
-        return WebletTRContext.class;
+    protected Class<? extends ReadOptions<?,?>> readContextClass() {
+        return WebletTeleContext.class;
     }
 
     @Override
-    protected Class<? extends TWContext<?,?>> writeContextClass() {
-        return WebletTWContext.class;
+    protected Class<? extends WriteOptions<?,?>> writeContextClass() {
+        return WebletWriteOptions.class;
     }
 
     @Override
@@ -84,7 +84,7 @@ public final class WebletModulator extends RoutesModulator {
         String paramName = TeleHttpCodegenUtils.paramName(teleParam);
 
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("$T.$N(", ClassName.get(WebletTRContext.class), WebletTRContext.OF_METHOD);
+        cb.add("$T.$N(", ClassName.get(WebletTeleContext.class), WebletTeleContext.OF_METHOD);
 
         ServiceCodegenUtils.generateTeleParamType(teleParam, cb);
         cb.add(",");
@@ -119,7 +119,7 @@ public final class WebletModulator extends RoutesModulator {
     @Override
     protected TWContextElement createWriteContext(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("$T.$N(", ClassName.get(WebletTWContext.class), WebletTWContext.OF_METHOD);
+        cb.add("$T.$N(", ClassName.get(WebletWriteOptions.class), WebletWriteOptions.OF_METHOD);
 
         ServiceCodegenUtils.generateTeleResultType(teleCommand, cb);
 

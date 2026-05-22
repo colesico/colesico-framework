@@ -20,7 +20,7 @@ import colesico.framework.http.CookieFactory;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
-import colesico.framework.telehttp.HttpTWContext;
+import colesico.framework.telehttp.HttpWriteOptions;
 import colesico.framework.telehttp.HttpTeleWriter;
 import colesico.framework.security.Identity;
 import colesico.framework.security.assist.MACUtils;
@@ -33,7 +33,7 @@ import java.util.Calendar;
 
 
 @Singleton
-public final class PrincipalWriter extends HttpTeleWriter<Identity, HttpTWContext<?, ?>> {
+public final class PrincipalWriter extends HttpTeleWriter<Identity, HttpWriteOptions<?, ?>> {
 
     public static final String COOKIE_NAME = "principal";
     public static final String HEADER_NAME = "X-Principal";
@@ -53,7 +53,7 @@ public final class PrincipalWriter extends HttpTeleWriter<Identity, HttpTWContex
     }
 
     @Override
-    public void write(Identity identity, HttpTWContext<?, ?> context) {
+    public void write(Identity identity, HttpWriteOptions<?, ?> context) {
         String principalValue;
         Calendar expires = Calendar.getInstance();
 

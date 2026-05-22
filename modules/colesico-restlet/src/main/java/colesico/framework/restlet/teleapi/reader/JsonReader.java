@@ -7,7 +7,7 @@ import colesico.framework.restlet.RestletError;
 import colesico.framework.restlet.RestletException;
 import colesico.framework.restlet.teleapi.RestletJsonConverter;
 import colesico.framework.restlet.teleapi.RestletOrigin;
-import colesico.framework.restlet.teleapi.RestletTRContext;
+import colesico.framework.restlet.teleapi.RestletTeleContext;
 import colesico.framework.telehttp.Origin;
 import colesico.framework.telehttp.OriginFactory;
 import org.apache.commons.lang3.StringUtils;
@@ -35,7 +35,7 @@ public final class JsonReader implements ValueReader {
     }
 
     @Override
-    public Object read(RestletTRContext context) {
+    public Object read(RestletTeleContext context) {
         HttpRequest request = httpContextProv.get().request();
 
         HttpMethod requestMethod = request.requestMethod();

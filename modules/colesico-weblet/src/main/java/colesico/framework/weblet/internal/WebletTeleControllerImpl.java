@@ -24,7 +24,6 @@ import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterContext;
 import colesico.framework.router.RouterCommands;
-import colesico.framework.security.authorization.PrincipalRequiredException;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.telehttp.assist.CSRFProtector;
@@ -82,24 +81,16 @@ public class WebletTeleControllerImpl implements WebletTeleController {
     }
 
     @Override
-    public Optional<Router.Invocation> resolve(Object criteria) {
+    public Optional<Router.Invocation> resolve(Criteria criteria) {
         return Optional.empty();
     }
 
     @Override
     public void execute(Router.Invocation invocation) {
-        try {
-            threadScope.put(DataPort.SCOPE_KEY, dataPort);
-            HttpRequest request = httpContextProv.get().request();
-            csrfProtector.check(request);
-            invocation.action().teleCommand().execute(dataPort);
-        } catch (PrincipalRequiredException pre) {
-            if (authenticatorProv.get().authenticate()) {
-                invocation.action().teleCommand().execute(dataPort);
-            } else {
-                throw pre;
-            }
-        }
+        threadScope.put(DataPort.SCOPE_KEY, dataPort);
+        HttpRequest request = httpContextProv.get().request();
+        csrfProtector.check(request);
+        invocation.action().teleCommand().execute(dataPort);
     }
 
     @Override

@@ -68,12 +68,6 @@ public class WebletWritersProducer {
     }
 
     @Singleton
-    @Classed(Identity.class)
-    public WebletTeleWriter getPrincipalWriter(PrincipalWriter impl) {
-        return WebletWriterProxy.of(impl);
-    }
-
-    @Singleton
     @Classed(Profile.class)
     public WebletTeleWriter getProfileWriter(ProfileWriter impl) {
         return WebletWriterProxy.of(impl);

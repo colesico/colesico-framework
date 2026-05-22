@@ -34,7 +34,7 @@ import java.util.Base64;
 import java.util.StringTokenizer;
 
 @Singleton
-public class PrincipalReader extends HttpTeleReader<Identity, HttpTRContext<?, ?>> {
+public class PrincipalReader extends HttpTeleReader<Identity, HttpTeleContext<?, ?>> {
 
     protected final PrincipalHttpConfigPrototype config;
     protected final PrincipalSerializer principalSerializer;
@@ -48,7 +48,7 @@ public class PrincipalReader extends HttpTeleReader<Identity, HttpTRContext<?, ?
     }
 
     @Override
-    public Identity read(HttpTRContext<?, ?> context) {
+    public Identity read(HttpTeleContext<?, ?> context) {
 
         HttpRequest request = httpContextProv.get().request();
         // Retrieve principal from http header

@@ -1,10 +1,9 @@
 package colesico.framework.telehttp.origin;
 
-import colesico.framework.http.HttpContext;
+import colesico.framework.http.HttpRequest;
 import colesico.framework.http.MultiValue;
 import colesico.framework.telehttp.Origin;
 
-import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
@@ -14,16 +13,10 @@ import java.util.List;
 @Singleton
 public class HeaderOrigin implements Origin {
 
-    private final Provider<HttpContext> httpContextProv;
-
-    public HeaderOrigin(Provider<HttpContext> httpContextProv) {
-        this.httpContextProv = httpContextProv;
-    }
-
     @Override
-    public Collection<String> getStrings(String name) {
-        List<String> result = new ArrayList<>();
-        MultiValue<String> headers = httpContextProv.get().request().headers().getAll(name);
+    public Collection<String> getStrings(String name, Context context) {
+        final List<String> result = new ArrayList<>();
+        MultiValue<String> headers = context.httpRequest().headers().getAll(name);
         if (headers != null) {
             headers.iterator().forEachRemaining(result::add);
         }

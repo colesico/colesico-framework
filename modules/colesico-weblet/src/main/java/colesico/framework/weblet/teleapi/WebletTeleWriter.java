@@ -24,7 +24,7 @@ import jakarta.inject.Provider;
 /**
  * Weblet writer base class
  */
-abstract public class WebletTeleWriter<V> extends HttpTeleWriter<V, WebletTWContext> {
+abstract public class WebletTeleWriter<V> extends HttpTeleWriter<V, WebletWriteOptions> {
     public WebletTeleWriter(Provider<HttpContext> httpContextProv) {
         super(httpContextProv);
     }

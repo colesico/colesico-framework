@@ -25,7 +25,7 @@ import colesico.framework.pebble.internal.PebbleTemplateLoader;
 import colesico.framework.weblet.HtmlRenderer;
 import colesico.framework.weblet.response.HtmlResponse;
 import colesico.framework.weblet.response.ViewResponse;
-import colesico.framework.weblet.teleapi.WebletTWContext;
+import colesico.framework.weblet.teleapi.WebletWriteOptions;
 import colesico.framework.weblet.teleapi.writer.ViewWriter;
 import io.pebbletemplates.pebble.PebbleEngine;
 import io.pebbletemplates.pebble.error.PebbleException;
@@ -82,7 +82,7 @@ public class PebbleTemplater extends ViewWriter implements HtmlRenderer {
     }
 
     @Override
-    public void write(ViewResponse viewResponse, WebletTWContext context) {
+    public void write(ViewResponse viewResponse, WebletWriteOptions context) {
         Writer writer = evaluate(viewResponse.viewName(), viewResponse.model());
 
         HttpResponse httpResponse = httpContextProv.get().response();

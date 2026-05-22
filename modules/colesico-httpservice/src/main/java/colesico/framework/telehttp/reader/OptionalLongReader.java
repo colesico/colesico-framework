@@ -17,7 +17,7 @@
 package colesico.framework.telehttp.reader;
 
 import colesico.framework.teleapi.TeleException;
-import colesico.framework.telehttp.HttpTRContext;
+import colesico.framework.telehttp.HttpTeleContext;
 import colesico.framework.telehttp.OriginFactory;
 import colesico.framework.telehttp.OriginTeleReader;
 import colesico.framework.telehttp.t9n.Messages;
@@ -31,7 +31,7 @@ import java.util.OptionalLong;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class OptionalLongReader extends OriginTeleReader<OptionalLong,HttpTRContext<?, ?>> {
+public final class OptionalLongReader extends OriginTeleReader<OptionalLong, HttpTeleContext<?, ?>> {
 
     private final Messages messages;
 
@@ -42,7 +42,7 @@ public final class OptionalLongReader extends OriginTeleReader<OptionalLong,Http
     }
 
     @Override
-    public OptionalLong read(HttpTRContext<?, ?> ctx) {
+    public OptionalLong read(HttpTeleContext<?, ?> ctx) {
         try {
             String val = readString(ctx);
             if (StringUtils.isBlank(val)) {

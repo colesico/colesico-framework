@@ -22,8 +22,8 @@ import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import colesico.framework.service.codegen.modulator.TeleFacadeModulator;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.dataport.TRContext;
-import colesico.framework.teleapi.dataport.TWContext;
+import colesico.framework.teleapi.dataport.ReadOptions;
+import colesico.framework.teleapi.dataport.WriteOptions;
 import com.palantir.javapoet.ClassName;
 import com.palantir.javapoet.CodeBlock;
 import com.palantir.javapoet.TypeName;
@@ -41,9 +41,9 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
 
     abstract protected Class<? extends TeleFacade.Commands> commandsClass();
 
-    abstract protected Class<? extends TRContext<?,?>> readContextClass();
+    abstract protected Class<? extends ReadOptions<?,?>> readContextClass();
 
-    abstract protected Class<? extends TWContext<?,?>> writeContextClass();
+    abstract protected Class<? extends WriteOptions<?,?>> writeContextClass();
 
     @Override
     protected void processTeleCommand(TeleCommandElement teleCommandElement) {

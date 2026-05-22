@@ -2,7 +2,7 @@ package colesico.framework.restlet.teleapi.writer;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.restlet.RestletException;
-import colesico.framework.restlet.teleapi.RestletTWContext;
+import colesico.framework.restlet.teleapi.RestletWriteOptions;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 
 import jakarta.inject.Provider;
@@ -19,7 +19,7 @@ public class RestletExceptionWriter extends RestletTeleWriter<RestletException> 
     }
 
     @Override
-    public void write(RestletException value, RestletTWContext context) {
+    public void write(RestletException value, RestletWriteOptions context) {
         if (context.getStatusCode() == null) {
             context.setStatusCode(value.getHttpStatus());
         }

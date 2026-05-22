@@ -18,8 +18,8 @@ package colesico.framework.router;
 
 import colesico.framework.teleapi.TeleCommand;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.dataport.TRContext;
-import colesico.framework.teleapi.dataport.TWContext;
+import colesico.framework.teleapi.dataport.ReadOptions;
+import colesico.framework.teleapi.dataport.WriteOptions;
 
 import java.util.Collection;
 import java.util.Map;
@@ -56,7 +56,7 @@ public final class RouterCommands implements TeleFacade.Commands {
      * @param targetMethod handler method name
      * @param attributes   route attributes (see {@link RouteAttribute})
      */
-    public <R extends TRContext<?,?>, W extends TWContext<?,?>> void add(String route, TeleCommand<R, W> teleCommand, String targetMethod, Map<String, String> attributes) {
+    public <R extends ReadOptions<?,?>, W extends WriteOptions<?,?>> void add(String route, TeleCommand<R, W> teleCommand, String targetMethod, Map<String, String> attributes) {
         RouteInfo routeInfo = new RouteInfo(route, teleCommand, targetMethod, attributes);
         RouteInfo oldRouteInfo = routesMap.put(route, routeInfo);
         if (oldRouteInfo != null) {

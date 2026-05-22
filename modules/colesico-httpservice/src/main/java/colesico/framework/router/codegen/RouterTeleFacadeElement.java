@@ -2,8 +2,8 @@ package colesico.framework.router.codegen;
 
 import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.dataport.TRContext;
-import colesico.framework.teleapi.dataport.TWContext;
+import colesico.framework.teleapi.dataport.ReadOptions;
+import colesico.framework.teleapi.dataport.WriteOptions;
 
 /**
  * Custom tele facade
@@ -14,8 +14,8 @@ public final class RouterTeleFacadeElement extends TeleFacadeElement {
 
     public RouterTeleFacadeElement(Class<?> teleType,
                                    Class<? extends TeleFacade.Commands> commandsClass,
-                                   Class<? extends TRContext<?,?>> readContextClass,
-                                   Class<? extends TWContext<?,?>> writeContextClass,
+                                   Class<? extends ReadOptions<?,?>> readContextClass,
+                                   Class<? extends WriteOptions<?,?>> writeContextClass,
                                    IocQualifier iocQualifier,
                                    RoutesBuilder routesBuilder) {
         super(teleType, commandsClass, readContextClass, writeContextClass, iocQualifier);

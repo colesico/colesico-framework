@@ -6,7 +6,7 @@ package colesico.framework.telehttp;
  * @param <V> type of value to  be read
  * @param <C> reading context
  */
-abstract public class OriginTeleReader<V, C extends HttpTRContext<?, ?>> extends HttpTeleReader<V, C> {
+abstract public class OriginTeleReader<V, C extends HttpTeleContext<?, ?>> extends HttpTeleReader<V, C> {
 
     protected final OriginFactory originFactory;
 
@@ -17,9 +17,9 @@ abstract public class OriginTeleReader<V, C extends HttpTRContext<?, ?>> extends
     /**
      * Return param string value from origin defined in the context
      */
-    protected final Iterable<String> readStrings(C context) {
-        Origin origin = originFactory.getOrigin(context.originName());
-        return origin.getStrings(context.paramName());
+    protected final Iterable<String> readStrings(C trContext) {
+        Origin origin = originFactory.getOrigin(trContext.originName());
+        return origin.getStrings(trContext.paramName());
     }
 
     protected final Iterable<String> readStrings(String originName, String paramName) {

@@ -21,6 +21,7 @@ import colesico.framework.weblet.response.WebletResponse;
 import colesico.framework.weblet.teleapi.*;
 
 import jakarta.inject.Singleton;
+
 import java.lang.reflect.Type;
 
 @Singleton
@@ -32,50 +33,54 @@ public class WebletDataPortImpl implements WebletDataPort {
         this.trwFactory = trwFactory;
     }
 
-
     @Override
     public <V> V read(Type valueType) {
-        return read(WebletTRContext.of(valueType));
+        return read(WebletTeleContext.of(valueType));
     }
 
     @Override
-    public <V> V read(WebletTRContext context) {
+    public <V> V read(WebletTeleContext query) {
         WebletTeleReader reader;
-        if (context.readerClass() != null) {
+        if (query.readerClass() != null) {
             // Get specified reader
-            reader = trwFactory.getReader(context.readerClass());
+            reader = trwFactory.getReader(query.readerClass());
         } else {
             // Get reader by value type
-            reader = trwFactory.findReader(WebletTeleReader.class, context.valueType());
+            reader = trwFactory.findReader(WebletTeleReader.class, query.valueType());
             if (reader == null) {
                 // Get default reader
                 reader = trwFactory.getReader(WebletTeleReader.class, Object.class);
             }
         }
-        return (V) reader.read(context);
+        return (V) reader.read(query);
+    }
+
+    @Override
+    public <V, P> V read(Type valueType, P attachment) {
+        return read(WebletTeleContext.of(valueType, attachment));
     }
 
     @Override
     public <V> void write(V value, Type valueType) {
-        write(value, WebletTWContext.of(valueType));
+        write(value, WebletWriteOptions.of(valueType));
     }
 
     @Override
-    public <V> void write(V value, WebletTWContext context) {
+    public <V> void write(V value, WebletWriteOptions options) {
 
-        boolean isWebletResponse = context.valueType().equals(WebletResponse.class);
+        boolean isWebletResponse = options.valueType().equals(WebletResponse.class);
 
         // Obtain writer
         WebletTeleWriter writer;
-        if (context.writerClass() != null) {
+        if (options.writerClass() != null) {
             // Get specified reader
-            writer = trwFactory.getWriter(context.writerClass());
+            writer = trwFactory.getWriter(options.writerClass());
         } else {
             Type responseType;
             if (isWebletResponse) {
                 responseType = ((WebletResponse) value).unwrap().getClass();
             } else {
-                responseType = context.valueType();
+                responseType = options.valueType();
             }
             // Get reader by response type
             writer = trwFactory.getWriter(WebletTeleWriter.class, responseType);
@@ -83,10 +88,15 @@ public class WebletDataPortImpl implements WebletDataPort {
 
         // Write value
         if (isWebletResponse) {
-            writer.write(((WebletResponse) value).unwrap(), context);
+            writer.write(((WebletResponse) value).unwrap(), options);
         } else {
-            writer.write(value, context);
+            writer.write(value, options);
         }
+    }
+
+    @Override
+    public <V, P> void write(V value, Type valueType, P attachment) {
+        write(value, WebletWriteOptions.of(valueType, attachment));
     }
 
 }
