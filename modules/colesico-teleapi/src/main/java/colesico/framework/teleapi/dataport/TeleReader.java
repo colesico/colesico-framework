@@ -17,12 +17,11 @@
 package colesico.framework.teleapi.dataport;
 
 /**
- * Reader is used by {@link DataPort} to read values from channel.
- * Reader must be a stateless  (maybe a singleton but stateless)
- *
- * @param <C> channel raw api
+ * Tele-reader is a command used by {@link DataPort} to retrieve a value
+ * of a specified type considering provided options.
+ * Reader must be a stateless (allowed to be a singleton)
  */
 @FunctionalInterface
-public interface TeleReader<V, R extends ReadOptions, C> {
-    V read(Class<V> valueType, R options, C channel);
+public interface TeleReader<V, R extends ReadOptions> {
+    V read(Class<V> valueType, R options);
 }

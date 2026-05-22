@@ -41,9 +41,9 @@ public final class FloatReader extends OriginTeleReader<Float, HttpReadOptions> 
     }
 
     @Override
-    public Float read(Class<Float> valueType, HttpReadOptions options, Channel channel) {
+    public Float read(Class<Float> valueType, HttpReadOptions options) {
         try {
-            String val = readString(options, channel);
+            String val = readString(options);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }

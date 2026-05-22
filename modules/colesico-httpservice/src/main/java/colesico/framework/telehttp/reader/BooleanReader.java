@@ -41,9 +41,9 @@ public final class BooleanReader extends OriginTeleReader<Boolean, HttpReadOptio
     }
 
     @Override
-    public Boolean read(Class<Boolean> valueType, HttpReadOptions options, Channel channel) {
+    public Boolean read(Class<Boolean> valueType, HttpReadOptions options) {
         try {
-            String str = readString(options, channel);
+            String str = readString(options);
             if (StringUtils.isBlank(str)) {
                 return null;
             }

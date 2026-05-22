@@ -43,9 +43,9 @@ public final class DateReader extends OriginTeleReader<Date, HttpReadOptions> {
     }
 
     @Override
-    public Date read(Class<Date> valueType, HttpReadOptions options, Channel channel) {
+    public Date read(Class<Date> valueType, HttpReadOptions options) {
         try {
-            String val = readString(options, channel);
+            String val = readString(options);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }

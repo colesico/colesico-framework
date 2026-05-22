@@ -41,9 +41,9 @@ public final class ShortReader extends OriginTeleReader<Short, HttpReadOptions> 
     }
 
     @Override
-    public Short read(Class<Short> valueType, HttpReadOptions options, Channel channel) {
+    public Short read(Class<Short> valueType, HttpReadOptions options) {
         try {
-            String val = readString(options, channel);
+            String val = readString(options);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }

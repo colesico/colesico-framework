@@ -17,23 +17,23 @@ abstract public class OriginTeleReader<V, R extends HttpReadOptions> implements 
     /**
      * Return param string value from origin defined in the context
      */
-    protected final Iterable<String> readStrings(R options, HttpTeleReader.Channel channel) {
+    protected final Iterable<String> readStrings(R options) {
         Origin origin = originFactory.getOrigin(options.originName());
-        return origin.getStrings(options.paramName(), channel);
+        return origin.getStrings(options.paramName());
     }
 
-    protected final Iterable<String> readStrings(String originName, String paramName, HttpTeleReader.Channel channel) {
+    protected final Iterable<String> readStrings(String originName, String paramName) {
         Origin origin = originFactory.getOrigin(originName);
-        return origin.getStrings(paramName, channel);
+        return origin.getStrings(paramName);
     }
 
-    protected final String readString(R options, HttpTeleReader.Channel channel) {
-        var it = readStrings(options, channel).iterator();
+    protected final String readString(R options) {
+        var it = readStrings(options).iterator();
         return it.hasNext() ? it.next() : null;
     }
 
-    protected final String readString(String originName, String paramName, HttpTeleReader.Channel channel) {
-        var it = readStrings(originName, paramName, channel).iterator();
+    protected final String readString(String originName, String paramName) {
+        var it = readStrings(originName, paramName).iterator();
         return it.hasNext() ? it.next() : null;
     }
 

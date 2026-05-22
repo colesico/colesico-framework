@@ -45,9 +45,9 @@ public final class LocalDateReader extends OriginTeleReader<LocalDate, HttpReadO
     }
 
     @Override
-    public LocalDate read(Class<LocalDate> valueType, HttpReadOptions options, Channel channel) {
+    public LocalDate read(Class<LocalDate> valueType, HttpReadOptions options) {
         try {
-            String val = readString(options, channel);
+            String val = readString(options);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }

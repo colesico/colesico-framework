@@ -41,9 +41,9 @@ public final class DoubleReader extends OriginTeleReader<Double, HttpReadOptions
     }
 
     @Override
-    public Double read(Class<Double> valueType, HttpReadOptions options, Channel channel) {
+    public Double read(Class<Double> valueType, HttpReadOptions options) {
         try {
-            String val = readString(options, channel);
+            String val = readString(options);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }

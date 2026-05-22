@@ -41,9 +41,9 @@ public final class IntegerReader extends OriginTeleReader<Integer, HttpReadOptio
     }
 
     @Override
-    public Integer read(Class<Integer> valueType, HttpReadOptions options, Channel channel) {
+    public Integer read(Class<Integer> valueType, HttpReadOptions options) {
         try {
-            String val = readString(options, channel);
+            String val = readString(options);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }

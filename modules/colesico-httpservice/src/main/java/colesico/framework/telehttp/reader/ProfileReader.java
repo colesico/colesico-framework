@@ -65,8 +65,8 @@ public class ProfileReader<P extends Profile> implements HttpTeleReader<P, HttpR
     }
 
     @Override
-    public final P read(Class<P> valueType, HttpReadOptions options, Channel channel) {
-        HttpRequest request = channel.httpRequest();
+    public final P read(Class<P> valueType, HttpReadOptions options) {
+        HttpRequest request = null;
 
         Map<String, String> attributes = new HashMap<>();
         var profileCookie = request.cookies().get(ProfileWriter.PROFILE_COOKIE);

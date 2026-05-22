@@ -36,8 +36,8 @@ public final class CharacterReader extends OriginTeleReader<Character, HttpReadO
     }
 
     @Override
-    public Character read(Class<Character> valueType, HttpReadOptions options, Channel channel) {
-        String str = StringUtils.trim(readString(options, channel));
+    public Character read(Class<Character> valueType, HttpReadOptions options) {
+        String str = StringUtils.trim(readString(options));
         return StringUtils.isNotEmpty(str) ? str.charAt(0) : null;
     }
 }

@@ -1,9 +1,11 @@
 package colesico.framework.telehttp.origin;
 
+import colesico.framework.http.HttpRequest;
 import colesico.framework.http.MultiValue;
 import colesico.framework.telehttp.HttpTeleReader;
 import colesico.framework.telehttp.Origin;
 
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
@@ -13,10 +15,16 @@ import java.util.List;
 @Singleton
 public class QueryOrigin implements Origin {
 
+    protected final Provider<HttpRequest> httpRequest;
+
+    public QueryOrigin(Provider<HttpRequest> httpRequest) {
+        this.httpRequest = httpRequest;
+    }
+
     @Override
-    public Collection<String> getStrings(String name,  HttpTeleReader.Channel channel) {
+    public Collection<String> getStrings(String name) {
         List<String> result = new ArrayList<>();
-        MultiValue<String> headers = channel.httpRequest().queryParameters().getAll(name);
+        MultiValue<String> headers = httpRequest.get().queryParameters().getAll(name);
         if (headers != null) {
             headers.iterator().forEachRemaining(result::add);
         }

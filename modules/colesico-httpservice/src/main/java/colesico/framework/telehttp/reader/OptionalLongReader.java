@@ -43,9 +43,9 @@ public final class OptionalLongReader extends OriginTeleReader<OptionalLong, Htt
     }
 
     @Override
-    public OptionalLong read(Class<OptionalLong> valueType, HttpReadOptions options, Channel channel) {
+    public OptionalLong read(Class<OptionalLong> valueType, HttpReadOptions options) {
         try {
-            String val = readString(options, channel);
+            String val = readString(options);
             if (StringUtils.isBlank(val)) {
                 return null;
             }

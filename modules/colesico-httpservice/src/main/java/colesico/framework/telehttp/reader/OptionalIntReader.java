@@ -43,9 +43,9 @@ public final class OptionalIntReader extends OriginTeleReader<OptionalInt, HttpR
     }
 
     @Override
-    public OptionalInt read(Class<OptionalInt> valueType, HttpReadOptions options, Channel channel) {
+    public OptionalInt read(Class<OptionalInt> valueType, HttpReadOptions options) {
         try {
-            String val = readString(options, channel);
+            String val = readString(options);
             if (StringUtils.isBlank(val)) {
                 return null;
             }

@@ -35,7 +35,7 @@ public final class StringReader extends OriginTeleReader<String, HttpReadOptions
     }
 
     @Override
-    public String read(Class<String> valueType, HttpReadOptions options, Channel channel) {
-        return readString(options, channel);
+    public String read(Class<String> valueType, HttpReadOptions options) {
+        return readString(options);
     }
 }

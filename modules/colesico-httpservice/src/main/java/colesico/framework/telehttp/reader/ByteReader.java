@@ -41,9 +41,9 @@ public final class ByteReader extends OriginTeleReader<Byte, HttpReadOptions> {
     }
 
     @Override
-    public Byte read(Class<Byte> valueType, HttpReadOptions options, Channel channel) {
+    public Byte read(Class<Byte> valueType, HttpReadOptions options) {
         try {
-            String val = readString(options, channel);
+            String val = readString(options);
             if (StringUtils.isEmpty(val)) {
                 return null;
             }

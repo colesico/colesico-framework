@@ -17,9 +17,11 @@
 package colesico.framework.telehttp.reader;
 
 import colesico.framework.http.HttpFile;
+import colesico.framework.http.HttpRequest;
 import colesico.framework.telehttp.HttpReadOptions;
 import colesico.framework.telehttp.HttpTeleReader;
 
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 
@@ -29,8 +31,14 @@ import jakarta.inject.Singleton;
 @Singleton
 public final class HttpFileReader implements HttpTeleReader<HttpFile, HttpReadOptions> {
 
+    private final Provider<HttpRequest> httpRequest;
+
+    public HttpFileReader(Provider<HttpRequest> httpRequest) {
+        this.httpRequest = httpRequest;
+    }
+
     @Override
-    public HttpFile read(Class<HttpFile> valueType, HttpReadOptions options, Channel channel) {
-        return channel.httpRequest().postFiles().get(options.paramName());
+    public HttpFile read(Class<HttpFile> valueType, HttpReadOptions options) {
+        return httpRequest.get().postFiles().get(options.paramName());
     }
 }

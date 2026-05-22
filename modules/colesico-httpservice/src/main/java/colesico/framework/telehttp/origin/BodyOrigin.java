@@ -1,10 +1,11 @@
 package colesico.framework.telehttp.origin;
 
 import colesico.framework.http.HttpException;
-import colesico.framework.telehttp.HttpTeleReader;
+import colesico.framework.http.HttpRequest;
 import colesico.framework.telehttp.Origin;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
 
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.io.InputStream;
@@ -14,9 +15,15 @@ import java.util.List;
 @Singleton
 public class BodyOrigin implements Origin {
 
+    protected final Provider<HttpRequest> httpRequest;
+
+    public BodyOrigin(Provider<HttpRequest> httpRequest) {
+        this.httpRequest = httpRequest;
+    }
+
     @Override
-    public Collection<String> getStrings(String name,  HttpTeleReader.Channel channel) {
-        try (InputStream is = channel.httpRequest().inputStream()) {
+    public Collection<String> getStrings(String name) {
+        try (InputStream is = httpRequest.get().inputStream()) {
             String content = TeleHttpUtils.inputStreamToString(is);
             return List.of(content);
         } catch (Exception e) {

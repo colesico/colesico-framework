@@ -60,6 +60,6 @@ public interface Origin {
      *
      * @param name value name  (e.g. query param name, cookie name, header name, e.t.c)
      */
-    Iterable<String> getStrings(String name, HttpTeleReader.Channel channel);
+    Iterable<String> getStrings(String name);
 
 }

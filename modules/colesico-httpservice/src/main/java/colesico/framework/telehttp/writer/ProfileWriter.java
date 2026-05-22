@@ -57,7 +57,7 @@ public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implem
     }
 
     @Override
-    public void write(P profile, Class<P> valueType, R options, Channel channel) {
+    public void write(P profile, Class<P> valueType, R options) {
         // Calc expiring
         Calendar expires = Calendar.getInstance();
         String profileStr;
@@ -74,7 +74,7 @@ public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implem
         HttpCookie cookie = cookieFactory.create(PROFILE_COOKIE, profileStr);
         cookie.setExpires(expires.getTime()).setSameSite(HttpCookie.SameSite.STRICT);
 
-        var response = channel.httpResponse();
+        HttpResponse response = null;
         response.setCookie(cookie);
         response.setHeader(PROFILE_HEADER, profileStr);
 

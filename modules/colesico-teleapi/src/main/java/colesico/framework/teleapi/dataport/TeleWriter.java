@@ -17,12 +17,11 @@
 package colesico.framework.teleapi.dataport;
 
 /**
- * Writer is used by {@link DataPort} to write values to channel.
- * Writer must be a stateless  (maybe a singleton but stateless)
- *
- * @param <C> channel raw api
+ * Tele-writer is a command used by {@link DataPort} to  send (or handle) a value
+ * of a specified type considering provided options.
+ * Writer must be a stateless (allowed to be a singleton)
  */
 @FunctionalInterface
-public interface TeleWriter<V, W extends WriteOptions, C> {
-    void write(V value, Class<V> valueType, W options, C channel);
+public interface TeleWriter<V, W extends WriteOptions> {
+    void write(V value, Class<V> valueType, W options);
 }
