@@ -41,6 +41,12 @@ public final class SimpleDataPort implements DataPort<ReadOptions, WriteOptions>
     }
 
     @Override
+    public <V> V read(Class<V> valueType) {
+        log.debug("Read for valueType: {}", valueType);
+        return valueType.cast(values.get(valueType));
+    }
+
+    @Override
     public <V> V read(Class<V> valueType, Object attachment) {
         log.debug("Read for valueType: {}; attachment: {}", valueType, attachment);
         return valueType.cast(values.get(valueType));
@@ -49,6 +55,12 @@ public final class SimpleDataPort implements DataPort<ReadOptions, WriteOptions>
     @Override
     public <V> void write(V value, Class<V> valueType, WriteOptions options) {
         log.debug("Write value: {}; valueType: {}; options: {}", value, valueType, options);
+        values.put(valueType, value);
+    }
+
+    @Override
+    public <V> void write(V value, Class<V> valueType) {
+        log.debug("Write value: {}; valueType: {}", value, valueType);
         values.put(valueType, value);
     }
 

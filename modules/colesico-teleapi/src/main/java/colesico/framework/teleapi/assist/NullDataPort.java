@@ -31,6 +31,12 @@ public final class NullDataPort implements DataPort<ReadOptions, WriteOptions> {
     }
 
     @Override
+    public <V> V read(Class<V> valueType) {
+        log.debug("Read for valueType: {}", valueType);
+        return null;
+    }
+
+    @Override
     public <V> V read(Class<V> valueType, Object attachment) {
         log.debug("Read for valueType: {}; attachment: {}", valueType, attachment);
         return null;
@@ -39,6 +45,11 @@ public final class NullDataPort implements DataPort<ReadOptions, WriteOptions> {
     @Override
     public <V> void write(V value, Class<V> valueType, WriteOptions options) {
         log.debug("Write value: {}; valueType: {}; options: {}", value, valueType, options);
+    }
+
+    @Override
+    public <V> void write(V value, Class<V> valueType) {
+        log.debug("Write value: {}; valueType: {}", value, valueType);
     }
 
     @Override

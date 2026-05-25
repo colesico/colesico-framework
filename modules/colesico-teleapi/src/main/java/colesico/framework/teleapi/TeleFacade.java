@@ -16,29 +16,39 @@
 
 package colesico.framework.teleapi;
 
+import colesico.framework.teleapi.dataport.DataPort;
+import colesico.framework.teleapi.dataport.ReadOptions;
+import colesico.framework.teleapi.dataport.WriteOptions;
 import jakarta.inject.Provider;
 
 /**
  * Unified facade for tele-command invocations.
  *
  * @param <T> Target whose method will be invoked (usually a service)
- * @param <K> Tele-commands registry (references to target methods)
+ * @param <C> Tele-commands registry (references to target methods)
  */
-abstract public class TeleFacade<T, K extends TeleFacade.Commands> {
+abstract public class TeleFacade<T,
+        R extends ReadOptions,
+        W extends WriteOptions,
+        C extends TeleFacade.Commands> {
 
     public static final String TELE_FACADE_SUFFIX = "TeleFacade";
+
     public static final String TARGET_PROV_FIELD = "targetProvider";
+    public static final String DATA_PORT_PROV_FIELD = "dataPortProvider";
+
     public static final String COMMANDS_METHOD = "commands";
 
     /**
-     * Target provider.
-     * Target - this is an object whose method will be invoked.
-     * Typically, this is a service object.
+     * An object whose method will be invoked, typically, this is a service object.
      */
     protected final Provider<T> targetProvider;
+    protected final Provider<DataPort<R, W>> dataPortProvider;
 
-    public TeleFacade(Provider<T> targetProvider) {
+    @SuppressWarnings("unchecked")
+    public TeleFacade(Provider<T> targetProvider, Provider<DataPort> dataPortProvider) {
         this.targetProvider = targetProvider;
+        this.dataPortProvider = (Provider) dataPortProvider;
     }
 
     /**
@@ -47,7 +57,7 @@ abstract public class TeleFacade<T, K extends TeleFacade.Commands> {
      *
      * @see TeleController#resolve(TeleController.Criteria)
      */
-    abstract public K commands();
+    abstract public C commands();
 
     /**
      * Marker interface

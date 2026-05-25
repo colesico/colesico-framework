@@ -19,7 +19,7 @@ public final class RouteAction {
      * Tele-command invoked to proceed the request.
      * This is the command of tele-facade for the appropriate service (weblet, restlet)
      */
-    private final TeleCommand<?, ?> teleCommand;
+    private final TeleCommand teleCommand;
 
     /**
      * Extra attributes bound to action method
@@ -30,7 +30,7 @@ public final class RouteAction {
     private final Map<String, String> attributes;
 
     public RouteAction(TeleController<?, Router.Invocation, RouterCommands> teleController,
-                       TeleCommand<?, ?> teleCommand,
+                       TeleCommand teleCommand,
                        Map<String, String> attributes) {
 
         this.teleController = teleController;
@@ -42,7 +42,7 @@ public final class RouteAction {
         return teleController;
     }
 
-    public TeleCommand<?, ?> teleCommand() {
+    public TeleCommand teleCommand() {
         return teleCommand;
     }
 

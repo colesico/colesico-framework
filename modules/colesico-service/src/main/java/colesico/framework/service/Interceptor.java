@@ -18,6 +18,8 @@ package colesico.framework.service;
 
 /**
  * Service method invocation interceptor
+ * @param <T> target service type
+ * @param <R> target method result type
  */
 @FunctionalInterface
 public interface Interceptor<T, R> {

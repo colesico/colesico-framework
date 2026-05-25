@@ -32,7 +32,7 @@ public class RouterBuilderImpl implements RouterBuilder {
     public void addCustomAction(HttpMethod httpMethod,
                                 String route,
                                 TeleController<Router.Criteria, Router.Invocation, RouterCommands> teleController,
-                                TeleCommand<?, ?> teleCommand,
+                                TeleCommand teleCommand,
                                 Class<?> targetClass,
                                 String targetMethod,
                                 Map<String, String> routeAttributes) {
@@ -66,7 +66,7 @@ public class RouterBuilderImpl implements RouterBuilder {
     private record CustomRouteAction(HttpMethod httpMethod,
                                      String route,
                                      TeleController<Router.Criteria, Router.Invocation, RouterCommands> teleController,
-                                     TeleCommand<?, ?> teleCommand,
+                                     TeleCommand teleCommand,
                                      Class<?> targetClass,
                                      String targetMethod,
                                      Map<String, String> attributes) {

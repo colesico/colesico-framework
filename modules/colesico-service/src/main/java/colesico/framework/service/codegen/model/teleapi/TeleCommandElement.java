@@ -107,6 +107,10 @@ public final class TeleCommandElement {
         return "" + StrUtils.firstCharToLowerCase(serviceMethod.name()) + "TC" + index;
     }
 
+    public String interceptorMethodName() {
+        return "" + StrUtils.firstCharToLowerCase(serviceMethod.name()) + "TI" + index;
+    }
+
     public TeleBatchElement getOrCreateBatch(String name) {
         TeleBatchElement batch = batches.get(name);
         if (batch == null) {

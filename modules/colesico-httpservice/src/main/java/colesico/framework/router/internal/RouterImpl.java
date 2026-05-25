@@ -86,7 +86,7 @@ public class RouterImpl implements Router {
         var teleController = invocation.action().teleController();
         if (teleController == null || teleController == this) {
             //TODO: create default data port
-            invocation.action().teleCommand().execute(null);
+            invocation.action().teleCommand().execute();
         } else {
             teleController.execute(invocation);
         }
@@ -98,12 +98,12 @@ public class RouterImpl implements Router {
     }
 
     @Override
-    public void register(TeleFacade<?, RouterCommands> teleFacade) {
+    public void register(TeleFacade<?, ?, ?, RouterCommands> teleFacade) {
         register(this, teleFacade);
     }
 
     void register(TeleController<?, Router.Invocation, RouterCommands> teleController,
-                  TeleFacade<?, RouterCommands> teleFacade) {
+                  TeleFacade<?, ?, ?, RouterCommands> teleFacade) {
         log.debug("Register http router tele-facade: {}", teleFacade.getClass().getName());
 
         var commands = teleFacade.commands();
@@ -133,7 +133,7 @@ public class RouterImpl implements Router {
     void addCustomAction(HttpMethod httpMethod,
                          String route,
                          TeleController<Router.Criteria, Router.Invocation, RouterCommands> teleController,
-                         TeleCommand<?, ?> teleCommand,
+                         TeleCommand teleCommand,
                          Class<?> targetClass,
                          String targetMethod,
                          Map<String, String> attributes) {

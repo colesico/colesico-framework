@@ -23,7 +23,7 @@ public interface RouterBuilder {
     void addCustomAction(HttpMethod httpMethod,
                          String route,
                          TeleController<Router.Criteria, Router.Invocation, RouterCommands> teleController,
-                         TeleCommand<?, ?> teleCommand,
+                         TeleCommand teleCommand,
                          Class<?> targetClass,
                          String targetMethod,
                          Map<String, String> routeAttributes);

@@ -39,4 +39,8 @@ public class HelloWeblet {
     public HtmlResponse privet(String name) {
         return HtmlResponse.of("Привет, "+name);
     }
+
+    public void doSomething(int i){
+
+    }
 }

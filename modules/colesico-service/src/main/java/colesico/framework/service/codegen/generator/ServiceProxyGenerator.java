@@ -224,7 +224,7 @@ public class ServiceProxyGenerator {
         return new InterceptionElement(codeBlock.build());
     }
 
-    protected void generateInvocationContextExec(MethodElement methodElement, MethodSpec.Builder serviceMethodBuilder) {
+    protected void generateInvocationContextProceed(MethodElement methodElement, MethodSpec.Builder serviceMethodBuilder) {
         List<ParameterElement> methodParams = methodElement.parameters();
         List<String> paramNames = new ArrayList<>();
         for (ParameterElement paramElm : methodParams) {
@@ -294,7 +294,7 @@ public class ServiceProxyGenerator {
             }
 
             // Add invContext.proceed...
-            generateInvocationContextExec(methodElement.originMethod(), methodBuilder);
+            generateInvocationContextProceed(methodElement.originMethod(), methodBuilder);
             serviceBuilder.addMethod(methodBuilder.build());
         }
     }
