@@ -5,7 +5,7 @@ package colesico.framework.service.codegen.model.teleapi;
  */
 public interface TeleReadableElement {
 
-    ReadOptionsElement readOptions();
+    TeleReadElement readSpec();
 
-    void setReadOptions(ReadOptionsElement readOptions);
+    void setReadSpec(TeleReadElement readSpec);
 }

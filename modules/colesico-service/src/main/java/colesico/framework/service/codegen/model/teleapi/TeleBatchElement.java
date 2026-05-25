@@ -21,9 +21,6 @@ public class TeleBatchElement implements TeleReadableElement {
      */
     private final TeleCommandElement parentTeleCommand;
 
-
-    protected ReadOptionsElement readOptions;
-
     /**
      * Batch pack ref
      */
@@ -36,6 +33,11 @@ public class TeleBatchElement implements TeleReadableElement {
     protected final String name;
 
     protected final List<TeleBatchParamElement> fields = new ArrayList<>();
+
+    /**
+     * Read batch spec
+     */
+    protected TeleReadElement readSpec;
 
     public TeleBatchElement(TeleCommandElement parentTeleCommand, String name) {
         this.parentTeleCommand = parentTeleCommand;
@@ -81,12 +83,12 @@ public class TeleBatchElement implements TeleReadableElement {
     }
 
     @Override
-    public ReadOptionsElement readOptions() {
-        return readOptions;
+    public TeleReadElement readSpec() {
+        return readSpec;
     }
 
     @Override
-    public void setReadOptions(ReadOptionsElement readOptions) {
-        this.readOptions = readOptions;
+    public void setReadSpec(TeleReadElement readSpec) {
+        this.readSpec = readSpec;
     }
 }

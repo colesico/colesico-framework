@@ -237,13 +237,10 @@ public class CodegenUtils {
 
         boolean isGenericType;
 
-        if (!(typeMirror instanceof DeclaredType)) {
+        if (!(typeMirror instanceof DeclaredType declaredType)) {
             isGenericType = false;
         } else {
-            DeclaredType declaredType = (DeclaredType) typeMirror;
             isGenericType = !declaredType.getTypeArguments().isEmpty(); // Actual types  e.g. <String,Long>
-            //TypeElement typeElement = (TypeElement) declaredType.asElement();
-            //isGenericType = !typeElement.getTypeParameters().isEmpty(); // Generic parameters e.g. "<T,V>"
         }
 
         if (isGenericType) {

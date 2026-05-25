@@ -25,7 +25,7 @@ public class HelloWeblet {
     public static final String SAY_HELLO_TEXT = "Hello World!";
     public static final String SAY_HOLLA_TEXT = "Holla World!";
 
-    // Browse the url: http://localhost:8080/hello-weblet/say-hello
+    // Browse the url: http://localhost:8080/hello-weblet/say-hello?name=Tatiana
     public HtmlResponse sayHello() {
         return HtmlResponse.of(SAY_HELLO_TEXT);
     }
@@ -33,5 +33,10 @@ public class HelloWeblet {
     // Browse the url: http://localhost:8080/hello-weblet/holla
     public HtmlResponse holla() {
         return HtmlResponse.of(SAY_HOLLA_TEXT);
+    }
+
+    // Browse the url: http://localhost:8080/hello-weblet/privet?name=Tatiana
+    public HtmlResponse privet(String name) {
+        return HtmlResponse.of("Привет, "+name);
     }
 }

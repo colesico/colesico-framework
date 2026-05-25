@@ -1,16 +1,16 @@
 package colesico.framework.telehttp.codegen;
 
 import colesico.framework.assist.codegen.model.ClassType;
-import colesico.framework.service.codegen.model.teleapi.WriteOptionsElement;
+import colesico.framework.service.codegen.model.teleapi.TeleWriteElement;
 import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import com.palantir.javapoet.CodeBlock;
 
-public class HttpWriteOptionsElement extends WriteOptionsElement {
+public class HttpTeleWriteElement extends TeleWriteElement {
 
     protected final ClassType customWriter;
 
-    public HttpWriteOptionsElement(TeleCommandElement parentTeleCommand, CodeBlock creationCode, ClassType customWriter) {
-        super(parentTeleCommand, creationCode);
+    public HttpTeleWriteElement(TeleCommandElement parentTeleCommand, CodeBlock resultTypeCode, CodeBlock optionsCode, ClassType customWriter) {
+        super(parentTeleCommand, resultTypeCode, optionsCode);
         this.customWriter = customWriter;
     }
 

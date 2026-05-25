@@ -77,7 +77,7 @@ public class TeleFacadesGenerator {
     protected CodeBlock generateBatches(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
         for (TeleBatchElement batch : teleCommand.batches().values()) {
-            if (batch.readOptions() == null || batch.readOptions().creationCode() == null) {
+            if (batch.readSpec() == null || batch.readSpec().optionsCode() == null) {
                 throw CodegenException.of()
                         .message("Batch read context code not defined")
                         .element(teleCommand.serviceMethod().originMethod())
@@ -89,7 +89,12 @@ public class TeleFacadesGenerator {
                     ClassName.bestGuess(batch.batchClassName()),
                     batch.batchVarName(),
                     TeleCommand.DATA_PORT_PARAM, DataPort.READ_METHOD);
-            cb.add(batch.readOptions().creationCode());
+            cb.add(batch.readSpec().valueTypeCode());
+            var optionsCode = batch.readSpec().optionsCode();
+            if (optionsCode != null) {
+                cb.add(", ");
+                cb.add(batch.readSpec().optionsCode());
+            }
             cb.add(");\n");
         }
         return cb.build();
@@ -99,12 +104,16 @@ public class TeleFacadesGenerator {
 
         // ==== For simple param ================
 
-        if (parameter instanceof TeleOrdinaryParamElement) {
-            CodeBlock ctx = ((TeleOrdinaryParamElement) parameter).readOptions().creationCode();
-            // dataPot.read(new Context(...));
+        if (parameter instanceof TeleOrdinaryParamElement p) {
+            // dataPot.read(Value.class, new Context(...));
             CodeBlock.Builder cb = CodeBlock.builder();
             cb.add("$N.$N(", TeleCommand.DATA_PORT_PARAM, DataPort.READ_METHOD);
-            cb.add(ctx);
+            cb.add(p.readSpec().valueTypeCode());
+            var optionsCode = p.readSpec().optionsCode();
+            if (optionsCode != null) {
+                cb.add(", ");
+                cb.add(optionsCode);
+            }
             cb.add(")");
             return cb.build();
         }
@@ -176,15 +185,22 @@ public class TeleFacadesGenerator {
                 + "(" + serviceMethodArgs.toFormat() + ");\n", serviceMethodArgs.toValues());
         cb.add(callMethodCb.build());
 
-        // Send result to client via data port dataPort.write(result,new Context());
+        // Send result to client via data port dataPort.write(result, Result.class, new Context());
         if (!voidResult) {
             cb.add("\n// Send result to remote client\n");
-            cb.add("$N.$N($N, ", TeleCommand.DATA_PORT_PARAM, DataPort.WRITE_METHOD, RESULT_VAR);
-            CodeBlock writeCtx = teleCommand.writeOptions().creationCode();
-            cb.add(writeCtx);
+            cb.add("$N.$N($N, ",
+                    TeleCommand.DATA_PORT_PARAM,
+                    DataPort.WRITE_METHOD,
+                    RESULT_VAR);
+
+            cb.add(teleCommand.writeSpec().valueTypeCode());
+            var optionsCode = teleCommand.writeSpec().optionsCode();
+            if (optionsCode != null) {
+                cb.add(", ");
+                cb.add(optionsCode);
+            }
             cb.add(");\n");
         }
-
 
         return cb.build();
     }

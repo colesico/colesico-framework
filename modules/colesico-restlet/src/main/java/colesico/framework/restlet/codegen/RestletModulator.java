@@ -28,8 +28,8 @@ import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.teleapi.*;
 import colesico.framework.telehttp.ParamName;
-import colesico.framework.telehttp.codegen.HttpReadOptionsElement;
-import colesico.framework.telehttp.codegen.HttpWriteOptionsElement;
+import colesico.framework.telehttp.codegen.HttpTeleReadElement;
+import colesico.framework.telehttp.codegen.HttpTeleWriteElement;
 import com.palantir.javapoet.ClassName;
 import com.palantir.javapoet.CodeBlock;
 import com.palantir.javapoet.TypeName;
@@ -82,7 +82,7 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     @Override
-    protected ReadOptionsElement createReadOptions(TeleOrdinaryParamElement teleParam) {
+    protected TeleReadElement createReadValue(TeleOrdinaryParamElement teleParam) {
 
         String paramName = RestletCodegenUtils.getParamName(teleParam);
 
@@ -111,11 +111,11 @@ public final class RestletModulator extends RoutesModulator {
 
         cb.add(")");
 
-        return new HttpReadOptionsElement(teleParam, cb.build(), paramName, originName, customReaderCT);
+        return new HttpTeleReadElement(teleParam, cb.build(), paramName, originName, customReaderCT);
     }
 
     @Override
-    protected WriteOptionsElement createWriteOptions(TeleCommandElement teleCommand) {
+    protected TeleWriteElement createWriteResult(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("$T.$N(", ClassName.get(RestletWriteOptions.class), RestletWriteOptions.OF_METHOD);
 
@@ -128,7 +128,7 @@ public final class RestletModulator extends RoutesModulator {
             customWriterCT = new ClassType(getProcessorContext().getProcessingEnv(), (DeclaredType) customWriter);
         }
         cb.add(")");
-        return new HttpWriteOptionsElement(teleCommand, cb.build(), customWriterCT);
+        return new HttpTeleWriteElement(teleCommand, cb.build(), customWriterCT);
     }
 
     protected TypeMirror getCustomWriterClass(TeleCommandElement teleCommand) {

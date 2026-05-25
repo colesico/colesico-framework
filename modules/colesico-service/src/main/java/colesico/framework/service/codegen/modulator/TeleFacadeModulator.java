@@ -91,14 +91,14 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
             // Skip batch fields
             if (param instanceof TeleBatchParamElement) {
                 TeleBatchParamElement batchField = (TeleBatchParamElement) param;
-                if (batchField.parentBatch().readOptions() == null) {
-                    batchField.parentBatch().setReadOptions(createReadOptions(batchField.parentBatch()));
+                if (batchField.parentBatch().readSpec() == null) {
+                    batchField.parentBatch().setReadSpec(createReadValue(batchField.parentBatch()));
                 }
                 continue;
             }
 
             TeleOrdinaryParamElement teleParam = (TeleOrdinaryParamElement) param;
-            teleParam.setReadOptions(createReadOptions(teleParam));
+            teleParam.setReadSpec(createReadValue(teleParam));
 
         }
     }
@@ -113,7 +113,7 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
         processTeleCommand(teleCommand);
         createParamReadOptions(teleCommand.parameters());
         teleCommand.setInvocationContext(createInvocationContext(teleCommand));
-        teleCommand.setWriteOptions(createWriteOptions(teleCommand));
+        teleCommand.setWriteSpec(createWriteResult(teleCommand));
     }
 
     @Override
@@ -132,21 +132,21 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
         return new TIContextElement(teleCommand, cb.build());
     }
 
-    protected WriteOptionsElement createWriteOptions(TeleCommandElement teleCommand) {
-        CodeBlock.Builder cb = CodeBlock.builder();
-        ServiceCodegenUtils.generateTeleResultType(teleCommand, cb);
-        return new WriteOptionsElement(teleCommand, cb.build());
+    protected TeleWriteElement createWriteResult(TeleCommandElement teleCommand) {
+        CodeBlock.Builder valueTypeCode = CodeBlock.builder();
+        ServiceCodegenUtils.generateTeleResultType(teleCommand, valueTypeCode);
+        return new TeleWriteElement(teleCommand, valueTypeCode.build(), null);
     }
 
-    protected ReadOptionsElement createReadOptions(TeleOrdinaryParamElement teleParam) {
-        CodeBlock.Builder cb = CodeBlock.builder();
-        ServiceCodegenUtils.generateTeleParamType(teleParam, cb);
-        return new ReadOptionsElement(teleParam, cb.build());
+    protected TeleReadElement createReadValue(TeleOrdinaryParamElement teleParam) {
+        CodeBlock.Builder valueTypeCode = CodeBlock.builder();
+        ServiceCodegenUtils.generateTeleParamType(teleParam, valueTypeCode);
+        return new TeleReadElement(teleParam, valueTypeCode.build(), null);
     }
 
-    protected ReadOptionsElement createReadOptions(TeleBatchElement teleBatch) {
-        CodeBlock.Builder cb = CodeBlock.builder();
-        ServiceCodegenUtils.generateTeleBatchType(teleBatch, cb);
-        return new ReadOptionsElement(teleBatch, cb.build());
+    protected TeleReadElement createReadValue(TeleBatchElement teleBatch) {
+        CodeBlock.Builder valueTypeCode = CodeBlock.builder();
+        ServiceCodegenUtils.generateTeleBatchType(teleBatch, valueTypeCode);
+        return new TeleReadElement(teleBatch, valueTypeCode.build(), null);
     }
 }

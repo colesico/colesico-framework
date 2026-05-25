@@ -21,15 +21,15 @@ import colesico.framework.router.RouterCommands;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.*;
-import colesico.framework.service.codegen.model.teleapi.ReadOptionsElement;
-import colesico.framework.service.codegen.model.teleapi.WriteOptionsElement;
+import colesico.framework.service.codegen.model.teleapi.TeleReadElement;
+import colesico.framework.service.codegen.model.teleapi.TeleWriteElement;
 import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import colesico.framework.service.codegen.model.teleapi.TeleOrdinaryParamElement;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.dataport.ReadOptions;
 import colesico.framework.teleapi.dataport.WriteOptions;
-import colesico.framework.telehttp.codegen.HttpReadOptionsElement;
-import colesico.framework.telehttp.codegen.HttpWriteOptionsElement;
+import colesico.framework.telehttp.codegen.HttpTeleReadElement;
+import colesico.framework.telehttp.codegen.HttpTeleWriteElement;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
 import colesico.framework.weblet.Weblet;
 import colesico.framework.weblet.teleapi.*;
@@ -79,37 +79,38 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected ReadOptionsElement createReadOptions(TeleOrdinaryParamElement teleParam) {
+    protected TeleReadElement createReadValue(TeleOrdinaryParamElement teleParam) {
+
+        CodeBlock.Builder valueTypeCode = CodeBlock.builder();
+        ServiceCodegenUtils.generateTeleParamType(teleParam, valueTypeCode);
 
         String paramName = TeleHttpCodegenUtils.paramName(teleParam);
 
-        CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("$T.$N(", ClassName.get(WebletReadOptions.class), WebletReadOptions.OF_METHOD);
-
-        ServiceCodegenUtils.generateTeleParamType(teleParam, cb);
-        cb.add(",");
+        CodeBlock.Builder optionsCode = CodeBlock.builder();
+        optionsCode.add("$T.$N(", ClassName.get(WebletReadOptions.class), WebletReadOptions.OF_METHOD);
 
         String originName = TeleHttpCodegenUtils.originName(teleParam, WebletOrigin.AUTO);
 
         TypeMirror customReader = getCustomReaderClass(teleParam);
 
-        cb.add("$S", paramName);
+        optionsCode.add("$S", paramName);
 
         if (!originName.equals(WebletOrigin.AUTO) || customReader != null) {
-            cb.add(", $S", originName);
+            optionsCode.add(", $S", originName);
         }
 
         ClassType customReaderCT = null;
 
         if (customReader != null) {
-            cb.add(", $T.class", TypeName.get(customReader));
+            optionsCode.add(", $T.class", TypeName.get(customReader));
             customReaderCT = new ClassType(processorContext().processingEnv(), (DeclaredType) customReader);
         }
 
-        cb.add(")");
+        optionsCode.add(")");
 
-        return new HttpReadOptionsElement(teleParam,
-                cb.build(),
+        return new HttpTeleReadElement(teleParam,
+                valueTypeCode.build(),
+                optionsCode.build(),
                 paramName,
                 originName,
                 customReaderCT
@@ -117,20 +118,21 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected WriteOptionsElement createWriteOptions(TeleCommandElement teleCommand) {
-        CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("$T.$N(", ClassName.get(WebletWriteOptions.class), WebletWriteOptions.OF_METHOD);
+    protected TeleWriteElement createWriteResult(TeleCommandElement teleCommand) {
+        CodeBlock.Builder valueTypeCode = CodeBlock.builder();
+        ServiceCodegenUtils.generateTeleResultType(teleCommand, valueTypeCode);
 
-        ServiceCodegenUtils.generateTeleResultType(teleCommand, cb);
-
+        CodeBlock.Builder optionsCode = CodeBlock.builder();
+        optionsCode.add("$T.$N(", ClassName.get(WebletWriteOptions.class), WebletWriteOptions.OF_METHOD);
         TypeMirror customWriter = getCustomWriterClass(teleCommand);
         ClassType customWriterCT = null;
         if (customWriter != null) {
-            cb.add(", $T.class", TypeName.get(customWriter));
+            optionsCode.add("$T.class", TypeName.get(customWriter));
             customWriterCT = new ClassType(processorContext().processingEnv(), (DeclaredType) customWriter);
         }
-        cb.add(")");
-        return new HttpWriteOptionsElement(teleCommand, cb.build(), customWriterCT);
+        optionsCode.add(")");
+
+        return new HttpTeleWriteElement(teleCommand, valueTypeCode.build(), optionsCode.build(), customWriterCT);
     }
 
     private TypeMirror getCustomWriterClass(TeleCommandElement teleCommand) {
@@ -150,7 +152,12 @@ public final class WebletModulator extends RoutesModulator {
         if (rdAnn == null) {
             rdAnn = teleParam.parentTeleCommand().serviceMethod().originMethod().annotation(WebletParamReader.class);
         }
-        return rdAnn.valueTypeMirror(a -> a.value());
+
+        if (rdAnn != null) {
+            return rdAnn.valueTypeMirror(a -> a.value());
+        }
+
+        return null;
     }
 
 }
