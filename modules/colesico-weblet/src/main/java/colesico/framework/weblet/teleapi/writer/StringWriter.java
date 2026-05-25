@@ -23,6 +23,8 @@ import colesico.framework.weblet.response.TextResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WebletWriteOptions;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 /**
@@ -31,9 +33,17 @@ import jakarta.inject.Singleton;
 @Singleton
 public final class StringWriter implements WebletTeleWriter<StringResponse> {
 
+    private final Provider<HttpResponse> httpResponse;
+
+    @Inject
+    public StringWriter(Provider<HttpResponse> httpResponse) {
+        this.httpResponse = httpResponse;
+    }
+
     @Override
-    public void write(StringResponse value, Class<StringResponse> valueType, WebletWriteOptions options, Channel channel) {
-        HttpResponse response = channel.httpResponse();
+    public void write(StringResponse value, Class<StringResponse> valueType, WebletWriteOptions options) {
+
+        HttpResponse response = httpResponse.get();
 
         if (value == null) {
             response.sendText("", TextResponse.DEFAULT_CONTENT_TYPE, 204);

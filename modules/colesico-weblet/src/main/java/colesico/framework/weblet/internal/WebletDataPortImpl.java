@@ -27,76 +27,66 @@ import java.lang.reflect.Type;
 @Singleton
 public class WebletDataPortImpl implements WebletDataPort {
 
-    protected final TRWFactory trwFactory;
+    protected final TRWFactory factory;
 
-    public WebletDataPortImpl(TRWFactory trwFactory) {
-        this.trwFactory = trwFactory;
+    public WebletDataPortImpl(TRWFactory factory) {
+        this.factory = factory;
     }
 
     @Override
-    public <V> V read(Type valueType) {
-        return read(WebletReadOptions.of(valueType));
-    }
-
-    @Override
-    public <V> V read(WebletReadOptions query) {
-        WebletTeleReader reader;
-        if (query.readerClass() != null) {
+    public <V> V read(Class<V> valueType, WebletReadOptions options) {
+        WebletTeleReader<V> reader;
+        if (options.readerClass() != null) {
             // Get specified reader
-            reader = trwFactory.getReader(query.readerClass());
+            reader = (WebletTeleReader<V>) factory.getReader(options.readerClass());
         } else {
             // Get reader by value type
-            reader = trwFactory.findReader(WebletTeleReader.class, query.valueType());
+            reader = factory.findReader(WebletTeleReader.class, valueType);
             if (reader == null) {
                 // Get default reader
-                reader = trwFactory.getReader(WebletTeleReader.class, Object.class);
+                reader = factory.getReader(WebletTeleReader.class, Object.class);
             }
         }
-        return (V) reader.read(query);
+        return reader.read(valueType, options);
     }
 
     @Override
-    public <V, P> V read(Type valueType, P attachment) {
-        return read(WebletReadOptions.of(valueType, attachment));
+    public <V> V read(Class<V> valueType) {
+        return read(valueType, WebletReadOptions.of());
     }
 
     @Override
-    public <V> void write(V value, Type valueType) {
-        write(value, WebletWriteOptions.of(valueType));
+    public <V> V read(Class<V> valueType, Object attachment) {
+        return read(valueType, WebletReadOptions.of(attachment));
     }
 
     @Override
-    public <V> void write(V value, WebletWriteOptions options) {
+    public <V> void write(V value, Class<V> valueType) {
+        write(value, valueType, WebletWriteOptions.of());
+    }
 
-        boolean isWebletResponse = options.valueType().equals(WebletResponse.class);
+    @Override
+    public <V> void write(V value, Class<V> valueType, Object attachment) {
+        write(value, valueType, WebletWriteOptions.of(attachment));
+    }
 
-        // Obtain writer
+    @Override
+    public <V> void write(V value, Class<V> valueType, WebletWriteOptions options) {
+
+        boolean isWebletResponse = value instanceof WebletResponse;
+
+        Object targetValue = isWebletResponse ? ((WebletResponse) value).unwrap() : value;
+        Class<?> targetType = isWebletResponse ? targetValue.getClass() : valueType;
+
         WebletTeleWriter writer;
         if (options.writerClass() != null) {
-            // Get specified reader
-            writer = trwFactory.getWriter(options.writerClass());
+            writer = factory.getWriter(options.writerClass());
         } else {
-            Type responseType;
-            if (isWebletResponse) {
-                responseType = ((WebletResponse) value).unwrap().getClass();
-            } else {
-                responseType = options.valueType();
-            }
-            // Get reader by response type
-            writer = trwFactory.getWriter(WebletTeleWriter.class, responseType);
+            writer = factory.getWriter(WebletTeleWriter.class, targetType);
         }
 
-        // Write value
-        if (isWebletResponse) {
-            writer.write(((WebletResponse) value).unwrap(), options);
-        } else {
-            writer.write(value, options);
-        }
+        writer.write(targetValue, targetType, options);
     }
 
-    @Override
-    public <V, P> void write(V value, Type valueType, P attachment) {
-        write(value, WebletWriteOptions.of(valueType, attachment));
-    }
 
 }

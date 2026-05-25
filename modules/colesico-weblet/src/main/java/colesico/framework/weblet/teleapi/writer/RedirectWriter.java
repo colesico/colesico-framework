@@ -31,15 +31,16 @@ import jakarta.inject.Provider;
 public final class RedirectWriter implements WebletTeleWriter<RedirectResponse> {
 
     protected final Router router;
+    private final Provider<HttpContext> httpContext;
 
-    @Inject
-    public RedirectWriter(Provider<HttpContext> httpContextProv, Router router) {
-        super(httpContextProv);
+    public RedirectWriter(Router router, Provider<HttpContext> httpContext) {
         this.router = router;
+        this.httpContext = httpContext;
     }
 
     @Override
-    public void write(RedirectResponse value, WebletWriteOptions ctx) {
-        value.redirect(router, httpContextProv.get());
+    public void write(RedirectResponse value, Class<RedirectResponse> valueType, WebletWriteOptions options) {
+        value.redirect(router, httpContext.get());
     }
+
 }

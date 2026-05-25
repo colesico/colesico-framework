@@ -18,7 +18,7 @@ public final class WebletReaderProxy<V> implements WebletTeleReader<V> {
     }
 
     @Override
-    public V read(Class<V> valueType, WebletReadOptions options, Channel channel) {
-        return reader.read(valueType, options, channel);
+    public V read(Class<V> valueType, WebletReadOptions options) {
+        return reader.read(valueType, options);
     }
 }

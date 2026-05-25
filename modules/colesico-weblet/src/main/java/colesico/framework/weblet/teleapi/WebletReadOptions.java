@@ -27,7 +27,6 @@ import java.lang.reflect.Type;
  * @author Vladlen Larionov
  */
 public record WebletReadOptions(
-        Type valueType,
         String paramName,
         String originName,
         Class<? extends WebletTeleReader<?>> readerClass,
@@ -36,25 +35,23 @@ public record WebletReadOptions(
 
     public static final String OF_METHOD = "of";
 
-    public static WebletReadOptions of(Type valueType) {
-        return new WebletReadOptions(valueType, null, null, null, null);
+    public static WebletReadOptions of() {
+        return new WebletReadOptions(null, null, null, null);
     }
 
-    public static WebletReadOptions of(Type valueType, Object payload) {
-        return new WebletReadOptions(valueType, null, null, null, payload);
+    public static WebletReadOptions of(Object attachment) {
+        return new WebletReadOptions(null, null, null, attachment);
     }
 
-    public static WebletReadOptions of(Type valueType, String paramName) {
-        return new WebletReadOptions(valueType, paramName, WebletOrigin.AUTO, null, null);
+    public static WebletReadOptions of(String paramName) {
+        return new WebletReadOptions(paramName, WebletOrigin.AUTO, null, null);
     }
 
-    public static WebletReadOptions of(Type valueType, String paramName, String originName) {
-        return new WebletReadOptions(valueType, paramName, originName, null, null);
+    public static WebletReadOptions of(String paramName, String originName) {
+        return new WebletReadOptions(paramName, originName, null, null);
     }
 
-    public static WebletReadOptions of(Type valueType, String paramName, String originName, Class<? extends WebletTeleReader<?>> readerClass) {
-        return new WebletReadOptions(valueType, paramName, originName, readerClass, null);
+    public static WebletReadOptions of(String paramName, String originName, Class<? extends WebletTeleReader<?>> readerClass) {
+        return new WebletReadOptions(paramName, originName, readerClass, null);
     }
-
-
 }

@@ -14,8 +14,8 @@ public final class WebletWriterProxy<V> implements WebletTeleWriter<V> {
     }
 
     @Override
-    public void write(V value, Class<V> valueType, WebletWriteOptions options, Channel channel) {
-        writer.write(value, valueType, options, channel);
+    public void write(V value, Class<V> valueType, WebletWriteOptions options) {
+        writer.write(value, valueType, options);
     }
 
     public static <V> WebletWriterProxy<V> of(HttpTeleWriter<V, HttpWriteOptions> writer) {

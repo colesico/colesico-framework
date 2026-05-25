@@ -27,23 +27,21 @@ import java.lang.reflect.Type;
  * @author Vladlen Larionov
  */
 public record WebletWriteOptions(
-        Type valueType,
         Class<? extends WebletTeleWriter<?>> writerClass,
         Object attachment
 ) implements HttpWriteOptions {
 
     public static final String OF_METHOD = "of";
 
-    public static WebletWriteOptions of(Type valueType) {
-        return new WebletWriteOptions(valueType, null, null);
+    public static WebletWriteOptions of() {
+        return new WebletWriteOptions(null, null);
     }
 
-    public static WebletWriteOptions of(Type valueType, Object payload) {
-        return new WebletWriteOptions(valueType, null, payload);
+    public static WebletWriteOptions of(Object attachment) {
+        return new WebletWriteOptions(null, attachment);
     }
 
-    public static WebletWriteOptions of(Type valueType, Class<? extends WebletTeleWriter<?>> writerClass) {
-        return new WebletWriteOptions(valueType, writerClass, null);
+    public static WebletWriteOptions of(Class<? extends WebletTeleWriter<?>> writerClass) {
+        return new WebletWriteOptions(writerClass, null);
     }
-
 }

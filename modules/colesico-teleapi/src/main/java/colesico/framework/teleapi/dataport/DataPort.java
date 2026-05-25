@@ -38,6 +38,8 @@ public interface DataPort<R extends ReadOptions, W extends WriteOptions> {
      */
     <V> V read(Class<V> valueType, R options);
 
+    <V> V read(Class<V> valueType);
+
     /**
      * Read value from remote source.
      * Internally must create appropriate {@link ReadOptions} and forward
@@ -47,14 +49,12 @@ public interface DataPort<R extends ReadOptions, W extends WriteOptions> {
      */
     <V> V read(Class<V> valueType, Object attachment);
 
-    default <V> V read(Class<V> valueType) {
-        return read(valueType, null);
-    }
-
     /**
      * Writes value to the remote source.
      */
     <V> void write(V value, Class<V> valueType, W options);
+
+    <V> void write(V value, Class<V> valueType);
 
     /**
      * Write value to remote source.
@@ -65,8 +65,5 @@ public interface DataPort<R extends ReadOptions, W extends WriteOptions> {
      */
     <V> void write(V value, Class<V> valueType, Object attachment);
 
-    default <V> void write(V value, Class<V> valueType) {
-        write(value, valueType, null);
-    }
 
 }

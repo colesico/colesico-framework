@@ -35,10 +35,17 @@ import java.nio.ByteBuffer;
 @Singleton
 public final class BinaryWriter implements WebletTeleWriter<BinaryResponse> {
 
-    @Override
-    public void write(BinaryResponse value, Class<BinaryResponse> valueType, WebletWriteOptions options, Channel channel) {
+    private final Provider<HttpResponse> httpResponse;
 
-        HttpResponse response = channel.httpResponse();
+    @Inject
+    public BinaryWriter(Provider<HttpResponse> httpResponse) {
+        this.httpResponse = httpResponse;
+    }
+
+    @Override
+    public void write(BinaryResponse value, Class<BinaryResponse> valueType, WebletWriteOptions options) {
+
+        HttpResponse response = httpResponse.get();
 
         if (value == null) {
             response.sendData(ByteBuffer.allocate(0), BinaryResponse.DEFAULT_CONTENT_TYPE, 204);

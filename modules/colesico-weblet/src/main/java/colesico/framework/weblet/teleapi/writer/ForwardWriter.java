@@ -16,12 +16,15 @@
 
 package colesico.framework.weblet.teleapi.writer;
 
+import colesico.framework.http.HttpContext;
+import colesico.framework.http.HttpResponse;
 import colesico.framework.router.Router;
 import colesico.framework.weblet.response.ForwardResponse;
 import colesico.framework.weblet.teleapi.WebletWriteOptions;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 /**
  * Performs forward operation
@@ -29,15 +32,17 @@ import jakarta.inject.Inject;
 public final class ForwardWriter implements WebletTeleWriter<ForwardResponse> {
 
     private final Router router;
+    private final Provider<HttpContext> httpContext;
 
     @Inject
-    public ForwardWriter(Router router) {
+    public ForwardWriter(Router router, Provider<HttpContext> httpContext) {
         this.router = router;
+        this.httpContext = httpContext;
     }
 
     @Override
-    public void write(ForwardResponse value, Class<ForwardResponse> valueType, WebletWriteOptions options, Channel channel) {
-        value.forward(router, httpContextProv.get());
+    public void write(ForwardResponse value, Class<ForwardResponse> valueType, WebletWriteOptions options) {
+        value.forward(router, httpContext.get());
     }
 
 }
