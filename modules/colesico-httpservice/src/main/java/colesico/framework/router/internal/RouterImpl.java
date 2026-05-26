@@ -98,12 +98,12 @@ public class RouterImpl implements Router {
     }
 
     @Override
-    public void register(TeleFacade<?, ?, ?, RouterCommands> teleFacade) {
+    public void register(TeleFacade<?, RouterCommands> teleFacade) {
         register(this, teleFacade);
     }
 
     void register(TeleController<?, Router.Invocation, RouterCommands> teleController,
-                  TeleFacade<?, ?, ?, RouterCommands> teleFacade) {
+                  TeleFacade<?, RouterCommands> teleFacade) {
         log.debug("Register http router tele-facade: {}", teleFacade.getClass().getName());
 
         var commands = teleFacade.commands();

@@ -32,9 +32,9 @@ import java.util.List;
  *
  * @see TeleFacade
  */
-public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends Modulator {
+public abstract class TeleServiceModulator<T extends TeleServiceElement> extends Modulator {
 
-    private final Logger log = LoggerFactory.getLogger(TeleFacadeModulator.class);
+    private final Logger log = LoggerFactory.getLogger(TeleServiceModulator.class);
 
     public static final String COMMANDS_VAR = "commands";
 
@@ -45,16 +45,16 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
     abstract protected Class<?> teleType();
 
     /**
-     * Checks that the modulator can handle given service to produce tele-facade
+     * Checks that the modulator can handle given service to produce tele-service
      */
-    abstract protected boolean isTeleFacadeSupported(ServiceElement service);
+    abstract protected boolean isTeleServiceSupported(ServiceElement service);
 
     /**
-     * Returns custom tele-facade object for modulation process
+     * Returns custom tele-service object for modulation process
      *
      * @see TeleFacade
      */
-    abstract protected T createTeleFacade(ServiceElement serviceElm);
+    abstract protected T createTeleService(ServiceElement serviceElm);
 
     /**
      * Called to process tele-command after parsing completed.
@@ -68,21 +68,21 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
      * Called to process tele facade after parsing completed.
      * Override this method to custom processing.
      */
-    protected void processTeleFacade(TeleFacadeElement teleFacade) {
+    protected void processTeleService(TeleServiceElement teleService) {
 
     }
 
-    abstract protected CodeBlock generateCommandsMethodBody(T teleFacade);
+    abstract protected CodeBlock generateCommandsMethodBody(T teleService);
 
     @Override
-    public void onInitTeleFacade(ServiceElement serviceElm) {
-        super.onInitTeleFacade(serviceElm);
-        if (!isTeleFacadeSupported(serviceElm)) {
+    public void onInitTeleService(ServiceElement serviceElm) {
+        super.onInitTeleService(serviceElm);
+        if (!isTeleServiceSupported(serviceElm)) {
             return;
         }
         log.debug("Init tele-facade from modulator: {}", this.getClass().getCanonicalName());
-        T teleFacade = createTeleFacade(serviceElm);
-        serviceElm.setTeleFacade(teleFacade);
+        T teleService = createTeleService(serviceElm);
+        serviceElm.setTeleService(teleService);
     }
 
     private void createParamReadOptions(List<TeleParameterElement> params) {
@@ -106,8 +106,8 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
     @Override
     public void onTeleCommandParsed(TeleCommandElement teleCommand) {
         super.onTeleCommandParsed(teleCommand);
-        TeleFacadeElement teleFacade = teleCommand.parentTeleFacade();
-        if (!teleFacade.teleType().equals(teleType())) {
+        TeleServiceElement teleService = teleCommand.parentTeleService();
+        if (!teleService.teleType().equals(teleType())) {
             return;
         }
         processTeleCommand(teleCommand);
@@ -117,13 +117,13 @@ public abstract class TeleFacadeModulator<T extends TeleFacadeElement> extends M
     }
 
     @Override
-    public void onTeleFacadeParsed(TeleFacadeElement teleFacade) {
-        super.onTeleFacadeParsed(teleFacade);
-        if (!teleFacade.teleType().equals(teleType())) {
+    public void onTeleServiceParsed(TeleServiceElement teleService) {
+        super.onTeleServiceParsed(teleService);
+        if (!teleService.teleType().equals(teleType())) {
             return;
         }
-        processTeleFacade(teleFacade);
-        teleFacade.setCommandsMethodBody(generateCommandsMethodBody((T) teleFacade));
+        processTeleService(teleService);
+        teleService.setCommandsMethodBody(generateCommandsMethodBody((T) teleService));
     }
 
     protected TIContextElement createInvocationContext(TeleCommandElement teleCommand) {

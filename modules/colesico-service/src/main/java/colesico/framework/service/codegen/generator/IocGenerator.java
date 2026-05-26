@@ -24,7 +24,7 @@ import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polyproduce;
 import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
+import colesico.framework.service.codegen.model.teleapi.TeleServiceElement;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import colesico.framework.teleapi.TeleFacade;
 import com.palantir.javapoet.*;
@@ -75,58 +75,58 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
     }
 
-    private void generateProduceTeleFacade(ProducerGenerator producerGenerator, TeleFacadeElement teleFacadeElement) {
+    private void generateProduceTeleFacade(ProducerGenerator producerGenerator, TeleServiceElement teleServiceElement) {
 
         // Generate @Produce annotation
-        producerGenerator.addProduceAnnotation(ClassName.bestGuess(teleFacadeElement.facadeClassName()));
+        producerGenerator.addProduceAnnotation(ClassName.bestGuess(teleServiceElement.facadeClassName()));
 
         // Generate produce method
-        String methodName = StrUtils.firstCharToLowerCase(teleFacadeElement.facadeClassSimpleName());
+        String methodName = StrUtils.firstCharToLowerCase(teleServiceElement.facadeClassSimpleName());
         MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, TypeName.get(TeleFacade.class));
-        mb.addParameter(ClassName.bestGuess(teleFacadeElement.facadeClassName()), IMPLEMENTATION_PARAM, Modifier.FINAL);
+        mb.addParameter(ClassName.bestGuess(teleServiceElement.facadeClassName()), IMPLEMENTATION_PARAM, Modifier.FINAL);
 
         mb.addAnnotation(Polyproduce.class);
 
         // Add IOC qualifiers
-        if (StringUtils.isNotEmpty(teleFacadeElement.iocQualifier().named())) {
+        if (StringUtils.isNotEmpty(teleServiceElement.iocQualifier().named())) {
             AnnotationSpec.Builder anb = AnnotationSpec.builder(Named.class);
-            anb.addMember("value", "$S", teleFacadeElement.iocQualifier().named());
+            anb.addMember("value", "$S", teleServiceElement.iocQualifier().named());
             mb.addAnnotation(anb.build());
-        } else if (teleFacadeElement.iocQualifier().classed() != null) {
+        } else if (teleServiceElement.iocQualifier().classed() != null) {
             AnnotationSpec.Builder anb = AnnotationSpec.builder(Classed.class);
-            anb.addMember("value", "$T.class", ClassName.bestGuess(teleFacadeElement.iocQualifier().classed()));
+            anb.addMember("value", "$T.class", ClassName.bestGuess(teleServiceElement.iocQualifier().classed()));
             mb.addAnnotation(anb.build());
         } else {
             // Default add classed as tele-type
             AnnotationSpec.Builder anb = AnnotationSpec.builder(Classed.class);
-            anb.addMember("value", "$T.class", ClassName.get(teleFacadeElement.teleType()));
+            anb.addMember("value", "$T.class", ClassName.get(teleServiceElement.teleType()));
             mb.addAnnotation(anb.build());
         }
 
         mb.addStatement("return $N", IMPLEMENTATION_PARAM);
     }
 
-    public void generate(ServiceElement serviceElm) {
+    public void generate(ServiceElement service) {
 
-        String producerClassSimpleName = serviceElm.originClass().simpleName();
-        String packageName = serviceElm.originClass().packageName();
+        String producerClassSimpleName = service.originClass().simpleName();
+        String packageName = service.originClass().packageName();
 
         ProducerGenerator producerGenerator = new ProducerGenerator(packageName, producerClassSimpleName, this.getClass(), context.processingEnv());
 
         // Service producing
-        generateProduceService(producerGenerator, serviceElm);
+        generateProduceService(producerGenerator, service);
 
         // Tele-facade producing
-        TeleFacadeElement teleFacadeElm = serviceElm.teleFacade();
-        if (teleFacadeElm != null) {
-            logger.debug("Generate tele-facade producing: " + serviceElm.proxyClassName());
-            generateProduceTeleFacade(producerGenerator, teleFacadeElm);
+        TeleServiceElement teleService = service.teleService();
+        if (teleService != null) {
+            logger.debug("Generate tele-facade producing: " + service.proxyClassName());
+            generateProduceTeleFacade(producerGenerator, teleService);
         }
 
-        context.modulatorKit().notifyGenerateIocProducer(producerGenerator, serviceElm);
+        context.modulatorKit().notifyGenerateIocProducer(producerGenerator, service);
 
         final TypeSpec typeSpec = producerGenerator.typeBuilder().build();
-        CodegenUtils.createJavaFile(context.processingEnv(), typeSpec, packageName, serviceElm.originClass().unwrap());
+        CodegenUtils.createJavaFile(context.processingEnv(), typeSpec, packageName, service.originClass().unwrap());
     }
 
 }

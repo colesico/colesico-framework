@@ -3,7 +3,7 @@ package colesico.framework.service.codegen.modulator;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.codegen.generator.TeleSchemeGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
+import colesico.framework.service.codegen.model.teleapi.TeleServiceElement;
 import colesico.framework.service.codegen.model.teleapi.TeleSchemeElement;
 import colesico.framework.teleapi.TeleScheme;
 
@@ -12,7 +12,7 @@ abstract public class TeleSchemeModulator extends Modulator {
     /**
      * Check the tele-scheme can be created for given tele-facade
      */
-    abstract protected boolean isTeleFacadeSupported(TeleFacadeElement teleFacade);
+    abstract protected boolean isTeleServiceSupported(TeleServiceElement teleService);
 
     /**
      * Scheme implementation type
@@ -25,15 +25,15 @@ abstract public class TeleSchemeModulator extends Modulator {
      * Called to process tele facade after parsing completed.
      * Override this method to generate tele-scheme build method body.
      */
-    protected abstract void processTeleFacade(TeleFacadeElement teleFacade);
+    protected abstract void processTeleService(TeleServiceElement teleService);
 
     /**
      * Creates tele-scheme element.
      * This is default implementation and can be overridden
      * for concrete tele-scheme element
      */
-    protected TeleSchemeElement createTeleScheme(TeleFacadeElement teleFacade) {
-        TeleSchemeElement schemeBuilder = new TeleSchemeElement(teleFacade, schemeType(), teleSchemeBaseClass());
+    protected TeleSchemeElement createTeleScheme(TeleServiceElement teleService) {
+        TeleSchemeElement schemeBuilder = new TeleSchemeElement(teleService, schemeType(), teleSchemeBaseClass());
         return schemeBuilder;
     }
 
@@ -49,29 +49,29 @@ abstract public class TeleSchemeModulator extends Modulator {
      * Helper for scheme builder element obtaining from tele-facade
      */
     protected TeleSchemeElement teleScheme() {
-        if (service.teleFacade() == null) {
+        if (service.teleService() == null) {
             return null;
         }
-        return service.teleFacade().teleScheme(schemeType());
+        return service.teleService().teleScheme(schemeType());
     }
 
     @Override
-    public void onBeforeParseTeleFacade(TeleFacadeElement teleFacade) {
-        super.onBeforeParseTeleFacade(teleFacade);
-        if (!isTeleFacadeSupported(teleFacade)) {
+    public void onBeforeParseTeleService(TeleServiceElement teleService) {
+        super.onBeforeParseTeleService(teleService);
+        if (!isTeleServiceSupported(teleService)) {
             return;
         }
-        TeleSchemeElement teleScheme = createTeleScheme(teleFacade);
-        teleFacade.setTeleScheme(schemeType(), teleScheme);
+        TeleSchemeElement teleScheme = createTeleScheme(teleService);
+        teleService.setTeleScheme(schemeType(), teleScheme);
     }
 
     @Override
-    public void onTeleFacadeParsed(TeleFacadeElement teleFacade) {
-        super.onTeleFacadeParsed(teleFacade);
-        if (!isTeleFacadeSupported(teleFacade)) {
+    public void onTeleServiceParsed(TeleServiceElement teleService) {
+        super.onTeleServiceParsed(teleService);
+        if (!isTeleServiceSupported(teleService)) {
             return;
         }
-        processTeleFacade(teleFacade);
+        processTeleService(teleService);
     }
 
     @Override

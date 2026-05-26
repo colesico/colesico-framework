@@ -3,7 +3,7 @@ package colesico.framework.service.codegen.generator;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
+import colesico.framework.service.codegen.model.teleapi.TeleServiceElement;
 import colesico.framework.service.codegen.model.teleapi.TeleSchemeElement;
 import colesico.framework.teleapi.TeleScheme;
 import com.palantir.javapoet.*;
@@ -23,12 +23,12 @@ public class TeleSchemeGenerator extends FrameworkAbstractGenerator {
         super(processingEnv);
     }
 
-    protected void generateConstructor(TeleFacadeElement teleFacade, TypeSpec.Builder classBuilder) {
+    protected void generateConstructor(TeleServiceElement teleService, TypeSpec.Builder classBuilder) {
         MethodSpec.Builder mb = MethodSpec.constructorBuilder();
         mb.addAnnotation(ClassName.get(Inject.class));
         mb.addModifiers(Modifier.PUBLIC);
         mb.addParameter(
-                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(teleFacade.parentService().originClass().originType())),
+                ParameterizedTypeName.get(ClassName.get(Provider.class), TypeName.get(teleService.parentService().originClass().originType())),
                 TARGET_PROV_FIELD,
                 Modifier.FINAL);
         /*
@@ -49,8 +49,8 @@ public class TeleSchemeGenerator extends FrameworkAbstractGenerator {
 
     protected void createSchemeBuilderClassFile(TeleSchemeElement schemeBuilder, TypeSpec.Builder classBuilder) {
         final TypeSpec typeSpec = classBuilder.build();
-        String packageName = schemeBuilder.parentTeleFacade().parentService().originClass().packageName();
-        ServiceElement service = schemeBuilder.parentTeleFacade().parentService();
+        String packageName = schemeBuilder.parentTeleService().parentService().originClass().packageName();
+        ServiceElement service = schemeBuilder.parentTeleService().parentService();
         CodegenUtils.createJavaFile(processingEnv(), typeSpec, packageName, service.originClass().unwrap());
     }
 
@@ -61,7 +61,7 @@ public class TeleSchemeGenerator extends FrameworkAbstractGenerator {
         classBuilder.addModifiers(Modifier.FINAL);
 
         AnnotationSpec genstamp = CodegenUtils.generateGenstamp(this.getClass().getName(), null,
-                "Service: " + schemeBuilder.parentTeleFacade().parentService().originClass().unwrap().getQualifiedName().toString());
+                "Service: " + schemeBuilder.parentTeleService().parentService().originClass().unwrap().getQualifiedName().toString());
         classBuilder.addAnnotation(genstamp);
 
         classBuilder.addAnnotation(ClassName.get(Singleton.class));

@@ -27,28 +27,19 @@ import jakarta.inject.Provider;
  * @param <T> Target whose method will be invoked (usually a service)
  * @param <C> Tele-commands registry (references to target methods)
  */
-abstract public class TeleFacade<T,
-        R extends ReadOptions,
-        W extends WriteOptions,
-        C extends TeleFacade.Commands> {
+abstract public class TeleFacade<T, C extends TeleFacade.Commands> {
 
     public static final String TELE_FACADE_SUFFIX = "TeleFacade";
-
     public static final String TARGET_PROV_FIELD = "targetProvider";
-    public static final String DATA_PORT_PROV_FIELD = "dataPortProvider";
-
     public static final String COMMANDS_METHOD = "commands";
 
     /**
      * An object whose method will be invoked, typically, this is a service object.
      */
     protected final Provider<T> targetProvider;
-    protected final Provider<DataPort<R, W>> dataPortProvider;
 
-    @SuppressWarnings("unchecked")
-    public TeleFacade(Provider<T> targetProvider, Provider<DataPort> dataPortProvider) {
+    public TeleFacade(Provider<T> targetProvider) {
         this.targetProvider = targetProvider;
-        this.dataPortProvider = (Provider) dataPortProvider;
     }
 
     /**

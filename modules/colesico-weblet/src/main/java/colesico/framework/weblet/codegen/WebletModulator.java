@@ -53,7 +53,7 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected boolean isTeleFacadeSupported(ServiceElement service) {
+    protected boolean isTeleServiceSupported(ServiceElement service) {
         var teleAnn = service.originClass().annotation(Weblet.class);
         return teleAnn != null;
     }
@@ -138,7 +138,7 @@ public final class WebletModulator extends RoutesModulator {
     private TypeMirror getCustomWriterClass(TeleCommandElement teleCommand) {
         var wrAnn = teleCommand.serviceMethod().originMethod().annotation(WebletResponseWriter.class);
         if (wrAnn == null) {
-            wrAnn = teleCommand.parentTeleFacade().parentService().originClass().annotation(WebletResponseWriter.class);
+            wrAnn = teleCommand.parentTeleService().parentService().originClass().annotation(WebletResponseWriter.class);
         }
         if (wrAnn == null) {
             return null;

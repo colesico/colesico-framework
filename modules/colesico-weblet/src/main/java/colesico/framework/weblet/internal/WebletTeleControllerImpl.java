@@ -90,7 +90,7 @@ public class WebletTeleControllerImpl implements WebletTeleController {
         threadScope.put(DataPort.SCOPE_KEY, dataPort);
         HttpRequest request = httpContextProv.get().request();
         csrfProtector.check(request);
-        invocation.action().teleCommand().execute(dataPort);
+        invocation.action().teleCommand().execute();
     }
 
     @Override

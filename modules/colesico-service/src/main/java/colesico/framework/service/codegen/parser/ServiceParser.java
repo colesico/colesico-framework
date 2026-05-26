@@ -42,12 +42,12 @@ public class ServiceParser extends FrameworkAbstractParser {
 
     protected final ServiceProcessorContext context;
 
-    protected final TeleFacadeParser teleFacadeParser;
+    protected final TeleServiceParser teleServiceParser;
 
     public ServiceParser(ServiceProcessorContext context) {
         super(context.processingEnv());
         this.context = context;
-        this.teleFacadeParser = new TeleFacadeParser(context);
+        this.teleServiceParser = new TeleServiceParser(context);
     }
 
     protected ClassType getServiceScope(ClassElement serviceElement) {
@@ -171,7 +171,7 @@ public class ServiceParser extends FrameworkAbstractParser {
 
         context.modulatorKit().notifyBeforeParseService(service);
         parseServiceMethods(service);
-        teleFacadeParser.parse(service);
+        teleServiceParser.parse(service);
         context.modulatorKit().notifyServiceParsed(service);
 
         return service;

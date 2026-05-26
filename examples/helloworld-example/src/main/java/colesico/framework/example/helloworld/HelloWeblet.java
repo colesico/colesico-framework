@@ -40,7 +40,8 @@ public class HelloWeblet {
         return HtmlResponse.of("Привет, "+name);
     }
 
-    public void doSomething(int i){
-
+    // Browse the url: http://localhost:8080/hello-weblet/do-something?name=Tatiana
+    public void doSomething(Integer i, Integer j){
+        IO.println("Sum = "+(i+j));
     }
 }

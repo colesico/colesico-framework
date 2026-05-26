@@ -33,9 +33,9 @@ import java.util.Map;
 public final class TeleCommandElement {
 
     /**
-     * Parent tele-facade ref
+     * Parent tele-service ref
      */
-    TeleFacadeElement parentTeleFacade;
+    TeleServiceElement parentTeleService;
 
     /**
      * Service method reference
@@ -104,11 +104,11 @@ public final class TeleCommandElement {
      *  Tele-command method name to generate in tele-facade
      */
     public String commandMethodName() {
-        return "" + StrUtils.firstCharToLowerCase(serviceMethod.name()) + "TC" + index;
+        return "" + StrUtils.firstCharToLowerCase(serviceMethod.name()) + "C" + index;
     }
 
     public String interceptorMethodName() {
-        return "" + StrUtils.firstCharToLowerCase(serviceMethod.name()) + "TI" + index;
+        return "" + StrUtils.firstCharToLowerCase(serviceMethod.name()) + "I" + index;
     }
 
     public TeleBatchElement getOrCreateBatch(String name) {
@@ -116,7 +116,7 @@ public final class TeleCommandElement {
         if (batch == null) {
             batch = new TeleBatchElement(this, name);
             batches.put(name, batch);
-            parentTeleFacade.batchPack().addBatch(batch);
+            parentTeleService.batchPack().addBatch(batch);
         }
         return batch;
     }
@@ -125,8 +125,8 @@ public final class TeleCommandElement {
         return serviceMethod;
     }
 
-    public TeleFacadeElement parentTeleFacade() {
-        return parentTeleFacade;
+    public TeleServiceElement parentTeleService() {
+        return parentTeleService;
     }
 
     public List<TeleParameterElement> parameters() {

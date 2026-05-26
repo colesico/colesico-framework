@@ -22,7 +22,7 @@ import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.restlet.Restlet;
 import colesico.framework.restlet.codegen.assist.RestletCodegenUtils;
 import colesico.framework.restlet.teleapi.*;
-import colesico.framework.router.codegen.RouterTeleFacadeElement;
+import colesico.framework.router.codegen.RouterTeleServiceElement;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.ServiceElement;
@@ -50,7 +50,7 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     @Override
-    protected boolean isTeleFacadeSupported(ServiceElement service) {
+    protected boolean isTeleServiceSupported(ServiceElement service) {
         var teleAnn = service.originClass().annotation(Restlet.class);
         return teleAnn != null;
     }
@@ -74,8 +74,8 @@ public final class RestletModulator extends RoutesModulator {
      * Assign json request pack element to  telefacade
      */
     @Override
-    protected RouterTeleFacadeElement createTeleFacade(ServiceElement serviceElm) {
-        RouterTeleFacadeElement teleFacade = super.createTeleFacade(serviceElm);
+    protected RouterTeleServiceElement createTeleService(ServiceElement serviceElm) {
+        RouterTeleServiceElement teleFacade = super.createTeleService(serviceElm);
         // Enable batch params
         teleFacade.setBatchParams(true);
         return teleFacade;
@@ -134,7 +134,7 @@ public final class RestletModulator extends RoutesModulator {
     protected TypeMirror getCustomWriterClass(TeleCommandElement teleCommand) {
         var wrAnn = teleCommand.serviceMethod().originMethod().annotation(RestletResponseWriter.class);
         if (wrAnn == null) {
-            wrAnn = teleCommand.parentTeleFacade().parentService().originClass().annotation(RestletResponseWriter.class);
+            wrAnn = teleCommand.parentTeleService().parentService().originClass().annotation(RestletResponseWriter.class);
         }
         if (wrAnn == null) {
             return null;

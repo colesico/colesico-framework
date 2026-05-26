@@ -20,7 +20,7 @@ import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.ServiceMethodElement;
 import colesico.framework.service.codegen.model.ServiceParameterElement;
-import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
+import colesico.framework.service.codegen.model.teleapi.TeleServiceElement;
 import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import colesico.framework.service.codegen.model.teleapi.TeleParameterElement;
 import colesico.framework.service.codegen.parser.RoundContext;
@@ -80,10 +80,10 @@ abstract public class Modulator {
         this.serviceParameter = serviceParameter;
     }
 
-    public void onInitTeleFacade(ServiceElement service) {
+    public void onInitTeleService(ServiceElement service) {
     }
 
-    public void onBeforeParseTeleFacade(TeleFacadeElement teleFacade) {
+    public void onBeforeParseTeleService(TeleServiceElement teleService) {
     }
 
     public void onBeforeParseTeleCommand(TeleCommandElement teleCommand) {
@@ -98,7 +98,7 @@ abstract public class Modulator {
 
     }
 
-    public void onTeleFacadeParsed(TeleFacadeElement teleFacade) {
+    public void onTeleServiceParsed(TeleServiceElement teleService) {
     }
 
     public void onServiceParsed(ServiceElement service) {

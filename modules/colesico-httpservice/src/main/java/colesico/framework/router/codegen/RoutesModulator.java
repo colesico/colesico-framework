@@ -18,9 +18,9 @@ package colesico.framework.router.codegen;
 import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.router.RouterCommands;
 import colesico.framework.service.codegen.model.ServiceElement;
-import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
+import colesico.framework.service.codegen.model.teleapi.TeleServiceElement;
 import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
-import colesico.framework.service.codegen.modulator.TeleFacadeModulator;
+import colesico.framework.service.codegen.modulator.TeleServiceModulator;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.dataport.ReadOptions;
 import colesico.framework.teleapi.dataport.WriteOptions;
@@ -35,7 +35,7 @@ import java.util.Map;
 /**
  * Routes modulation support
  */
-abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFacadeElement> {
+abstract public class RoutesModulator extends TeleServiceModulator<RouterTeleServiceElement> {
 
     protected final Logger logger = LoggerFactory.getLogger(RoutesModulator.class);
 
@@ -47,44 +47,44 @@ abstract public class RoutesModulator extends TeleFacadeModulator<RouterTeleFaca
 
     @Override
     protected void processTeleCommand(TeleCommandElement teleCommandElement) {
-        ((RouterTeleFacadeElement) teleCommandElement.parentTeleFacade())
+        ((RouterTeleServiceElement) teleCommandElement.parentTeleService())
                 .routesBuilder()
                 .addTeleCommand(teleCommandElement);
     }
 
     @Override
-    protected RouterTeleFacadeElement createTeleFacade(ServiceElement serviceElm) {
-        return new RouterTeleFacadeElement(
+    protected RouterTeleServiceElement createTeleService(ServiceElement serviceElm) {
+        return new RouterTeleServiceElement(
                 teleType(),
                 commandsClass(),
                 readOptionsClass(),
                 writeOptionsClass(),
-                TeleFacadeElement.IocQualifier.ofEmpty(),
+                TeleServiceElement.IocQualifier.ofEmpty(),
                 new RoutesBuilder(serviceElm)
         );
     }
 
-    protected CodeBlock generateCommandsMethodBody(RouterTeleFacadeElement teleFacade) {
+    protected CodeBlock generateCommandsMethodBody(RouterTeleServiceElement teleService) {
         CodeBlock.Builder cb = CodeBlock.builder();
 
         cb.addStatement("$T $N = new $T($T.class)",
                 ClassName.get(RouterCommands.class),
                 COMMANDS_VAR,
                 ClassName.get(RouterCommands.class),
-                TypeName.get(teleFacade.parentService().originClass().originType())
+                TypeName.get(teleService.parentService().originClass().originType())
         );
 
-        RoutesBuilder routesBuilder = teleFacade.routesBuilder();
+        RoutesBuilder routesBuilder = teleService.routesBuilder();
 
         for (RoutesBuilder.RoutedTeleCommandElement routedTeleCommand : routesBuilder.teleCommands()) {
-            cb.add(generateRouteMapping(teleFacade, routedTeleCommand));
+            cb.add(generateRouteMapping(teleService, routedTeleCommand));
         }
 
         cb.addStatement("return $N", COMMANDS_VAR);
         return cb.build();
     }
 
-    protected CodeBlock generateRouteMapping(TeleFacadeElement teleFacade, RoutesBuilder.RoutedTeleCommandElement routedTeleCommand) {
+    protected CodeBlock generateRouteMapping(TeleServiceElement teleFacade, RoutesBuilder.RoutedTeleCommandElement routedTeleCommand) {
 
         CodeBlock.Builder cb = CodeBlock.builder();
 

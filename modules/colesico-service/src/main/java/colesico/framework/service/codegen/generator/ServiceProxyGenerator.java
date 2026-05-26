@@ -58,11 +58,13 @@ public class ServiceProxyGenerator {
     public static final String INV_CONTEXT_VAR = "ctx";
 
     protected final ServiceProcessorContext context;
-    protected final TeleFacadesGenerator teleFacadesGenerator;
+    protected final TeleFacadeGenerator teleFacadeGenerator;
+    protected final TeleInterceptorGenerator teleInterceptorGenerator;
 
     public ServiceProxyGenerator(ServiceProcessorContext context) {
         this.context = context;
-        teleFacadesGenerator = new TeleFacadesGenerator(context);
+        teleFacadeGenerator = new TeleFacadeGenerator(context);
+        teleInterceptorGenerator = new TeleInterceptorGenerator(context);
     }
 
     /**
@@ -361,7 +363,8 @@ public class ServiceProxyGenerator {
         String packageName = originClass.packageName();
         CodegenUtils.createJavaFile(context.processingEnv(), typeSpec, packageName, originClass.unwrap());
 
-        teleFacadesGenerator.generate(serviceElement);
+        teleFacadeGenerator.generate(serviceElement);
+        teleInterceptorGenerator.generate(serviceElement);
 
         context.modulatorKit().notifyServiceGenerated(serviceElement);
     }

@@ -14,7 +14,7 @@ public class TeleSchemeElement<S> {
     /**
      * Tele-facade for which the scheme is being built
      */
-    private final TeleFacadeElement parentTeleFacade;
+    private final TeleServiceElement parentTeleService;
 
     /**
      * Scheme implementation type
@@ -33,8 +33,8 @@ public class TeleSchemeElement<S> {
      */
     private CodeBlock buildMethodBody;
 
-    public TeleSchemeElement(TeleFacadeElement parentTeleFacade, Class<S> schemeType, Class<? extends TeleScheme<S>> baseClass) {
-        this.parentTeleFacade = parentTeleFacade;
+    public TeleSchemeElement(TeleServiceElement parentTeleService, Class<S> schemeType, Class<? extends TeleScheme<S>> baseClass) {
+        this.parentTeleService = parentTeleService;
         this.schemeType = schemeType;
         this.baseClass = baseClass;
     }
@@ -43,13 +43,13 @@ public class TeleSchemeElement<S> {
      * Returns tele-scheme implementation class simple name
      */
     public String teleSchemeClassSimpleName() {
-        String originClassName = parentTeleFacade.parentService().originClass().simpleName();
+        String originClassName = parentTeleService.parentService().originClass().simpleName();
         String schemeTypeSuffix = StrUtils.firstCharToUpperCase(schemeType.getSimpleName());
         return originClassName + schemeTypeSuffix+TeleScheme.SCHEME_IMPL_SUFFIX;
     }
 
-    public TeleFacadeElement parentTeleFacade() {
-        return parentTeleFacade;
+    public TeleServiceElement parentTeleService() {
+        return parentTeleService;
     }
 
     public Class<S> schemeType() {

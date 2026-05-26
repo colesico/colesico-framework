@@ -11,6 +11,6 @@ public interface RouterTargetController<Q extends TeleController.Criteria> exten
     /**
      * Target controllers all tele-facades
      */
-    Iterable<TeleFacade<?, ?, ?, RouterCommands>> teleFacades();
+    Iterable<TeleFacade<?, RouterCommands>> teleFacades();
 }
 

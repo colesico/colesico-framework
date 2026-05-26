@@ -32,9 +32,9 @@ public interface TeleController<
     /**
      * Register tele-facade
      */
-    void register(TeleFacade<?, ?, ?, C> teleFacade);
+    void register(TeleFacade<?, C> teleFacade);
 
-    default void register(Iterable<TeleFacade<?, ?, ?, C>> teleFacades) {
+    default void register(Iterable<TeleFacade<?, C>> teleFacades) {
         for (var teleFacade : teleFacades) {
             register(teleFacade);
         }

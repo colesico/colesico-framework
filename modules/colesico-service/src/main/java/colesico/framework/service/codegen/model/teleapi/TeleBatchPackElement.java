@@ -7,11 +7,11 @@ public class TeleBatchPackElement {
 
     public static final String BATCH_PACK_CLASS_SUFFIX = "BatchPack";
 
-    private final TeleFacadeElement parentTeleFacade;
+    private final TeleServiceElement parentTeleFacade;
 
     private final List<TeleBatchElement> batches = new ArrayList<>();
 
-    public TeleBatchPackElement(TeleFacadeElement parentTeleFacade) {
+    public TeleBatchPackElement(TeleServiceElement parentTeleFacade) {
         this.parentTeleFacade = parentTeleFacade;
     }
 
@@ -24,7 +24,7 @@ public class TeleBatchPackElement {
         batch.setParentPack(this);
     }
 
-    public TeleFacadeElement parentTeleFacade() {
+    public TeleServiceElement parentTeleFacade() {
         return parentTeleFacade;
     }
 

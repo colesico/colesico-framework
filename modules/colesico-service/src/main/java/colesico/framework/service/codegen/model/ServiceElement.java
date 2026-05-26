@@ -21,7 +21,7 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.service.ServiceProxy;
-import colesico.framework.service.codegen.model.teleapi.TeleFacadeElement;
+import colesico.framework.service.codegen.model.teleapi.TeleServiceElement;
 import com.palantir.javapoet.CodeBlock;
 import com.palantir.javapoet.TypeName;
 import org.apache.commons.lang3.StringUtils;
@@ -68,9 +68,9 @@ public final class ServiceElement {
     private final Elements<CodeBlock> constructorCustomCode;
 
     /**
-     * Service tele-facade if specified
+     * Tele service if specified
      */
-    private TeleFacadeElement teleFacade;
+    private TeleServiceElement teleService;
 
     /**
      * Common purpose properties
@@ -127,15 +127,15 @@ public final class ServiceElement {
         customMethod.parentService = this;
     }
 
-    public void setTeleFacade(TeleFacadeElement teleFacade) {
-        if (this.teleFacade != null) {
+    public void setTeleService(TeleServiceElement teleService) {
+        if (this.teleService != null) {
             throw CodegenException.of()
-                    .message("Tele-facade has already been set: " + teleFacade.teleType())
+                    .message("Tele-facade has already been set: " + teleService.teleType())
                     .element(originClass())
                     .build();
         }
-        teleFacade.setParentService(this);
-        this.teleFacade = teleFacade;
+        teleService.setParentService(this);
+        this.teleService = teleService;
     }
 
     public void addConstructorCustomCode(CodeBlock cb) {
@@ -170,8 +170,8 @@ public final class ServiceElement {
         return constructorCustomCode;
     }
 
-    public TeleFacadeElement teleFacade() {
-        return teleFacade;
+    public TeleServiceElement teleService() {
+        return teleService;
     }
 
     public ClassType customScopeType() {
