@@ -75,35 +75,39 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
     }
 
-    private void generateProduceTeleFacade(ProducerGenerator producerGenerator, TeleServiceElement teleServiceElement) {
+    private void generateProduceTeleFacade(ProducerGenerator producerGenerator, TeleServiceElement teleService) {
 
         // Generate @Produce annotation
-        producerGenerator.addProduceAnnotation(ClassName.bestGuess(teleServiceElement.facadeClassName()));
+        producerGenerator.addProduceAnnotation(ClassName.bestGuess(teleService.facadeClassName()));
 
         // Generate produce method
-        String methodName = StrUtils.firstCharToLowerCase(teleServiceElement.facadeClassSimpleName());
+        String methodName = StrUtils.firstCharToLowerCase(teleService.facadeClassSimpleName());
         MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, TypeName.get(TeleFacade.class));
-        mb.addParameter(ClassName.bestGuess(teleServiceElement.facadeClassName()), IMPLEMENTATION_PARAM, Modifier.FINAL);
+        mb.addParameter(ClassName.bestGuess(teleService.facadeClassName()), IMPLEMENTATION_PARAM, Modifier.FINAL);
 
         mb.addAnnotation(Polyproduce.class);
 
         // Add IOC qualifiers
-        if (StringUtils.isNotEmpty(teleServiceElement.iocQualifier().named())) {
+        if (StringUtils.isNotEmpty(teleService.iocQualifier().named())) {
             AnnotationSpec.Builder anb = AnnotationSpec.builder(Named.class);
-            anb.addMember("value", "$S", teleServiceElement.iocQualifier().named());
+            anb.addMember("value", "$S", teleService.iocQualifier().named());
             mb.addAnnotation(anb.build());
-        } else if (teleServiceElement.iocQualifier().classed() != null) {
+        } else if (teleService.iocQualifier().classed() != null) {
             AnnotationSpec.Builder anb = AnnotationSpec.builder(Classed.class);
-            anb.addMember("value", "$T.class", ClassName.bestGuess(teleServiceElement.iocQualifier().classed()));
+            anb.addMember("value", "$T.class", ClassName.bestGuess(teleService.iocQualifier().classed()));
             mb.addAnnotation(anb.build());
         } else {
             // Default add classed as tele-type
             AnnotationSpec.Builder anb = AnnotationSpec.builder(Classed.class);
-            anb.addMember("value", "$T.class", ClassName.get(teleServiceElement.teleType()));
+            anb.addMember("value", "$T.class", ClassName.get(teleService.teleType()));
             mb.addAnnotation(anb.build());
         }
 
         mb.addStatement("return $N", IMPLEMENTATION_PARAM);
+    }
+
+    private void generateProduceTeleInterceptor(ProducerGenerator producerGenerator, TeleServiceElement teleService) {
+        producerGenerator.addProduceAnnotation(ClassName.bestGuess(teleService.interceptorClassName()));
     }
 
     public void generate(ServiceElement service) {
@@ -122,6 +126,9 @@ public class IocGenerator extends FrameworkAbstractGenerator {
             logger.debug("Generate tele-facade producing: " + service.proxyClassName());
             generateProduceTeleFacade(producerGenerator, teleService);
         }
+
+        // Interceptor producing
+        generateProduceTeleInterceptor(producerGenerator, teleService);
 
         context.modulatorKit().notifyGenerateIocProducer(producerGenerator, service);
 

@@ -138,7 +138,7 @@ public class TeleServiceElement {
         if (StringUtils.endsWith(originClassName, teleTypeSuffix)) {
             return originClassName + TeleInterceptor.TELE_INTERCEPTOR_SUFFIX;
         } else {
-            return originClassName + teleTypeSuffix +  TeleInterceptor.TELE_INTERCEPTOR_SUFFIX;
+            return originClassName + teleTypeSuffix + TeleInterceptor.TELE_INTERCEPTOR_SUFFIX;
         }
     }
 
@@ -147,6 +147,10 @@ public class TeleServiceElement {
      */
     public String facadeClassName() {
         return parentService.originClass().packageName() + '.' + facadeClassSimpleName();
+    }
+
+    public String interceptorClassName() {
+        return parentService.originClass().packageName() + '.' + interceptorClassSimpleName();
     }
 
     public void addTeleCommand(TeleCommandElement teleCommand) {

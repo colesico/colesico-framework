@@ -18,6 +18,7 @@ package colesico.framework.service.codegen.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Interception phases in execution order.
@@ -51,14 +52,27 @@ public final class InterceptionPhases {
     public static final String RATE_LIMITING = "RATE_LIMITING";
 
     /**
-     * Permission and access control
+     * Client identity verification
      */
-    public static final String AUTHORIZATION = "AUTHORIZATION";
+    public static final String AUTHENTICATION = "AUTHENTICATION";
+
+    /**
+     * RPC protocol mapping: unmarshals invocation arguments from the DataPort
+     * and marshals the execution result back.
+     *
+     * @see colesico.framework.teleapi.dataport.DataPort
+     */
+    public static final String TELE_DATA_MAPPING = "TELE_DATA_MAPPING";
 
     /**
      * Input parameters validation (prevents unnecessary cache lookups)
      */
     public static final String VALIDATION = "VALIDATION";
+
+    /**
+     * Permission and access control
+     */
+    public static final String AUTHORIZATION = "AUTHORIZATION";
 
     /**
      * Method result caching
@@ -69,7 +83,6 @@ public final class InterceptionPhases {
      * Fault tolerance: circuit breaker and retries
      */
     public static final String CIRCUIT_BREAKER = "CIRCUIT_BREAKER";
-
 
     /**
      * Database transaction management
@@ -86,46 +99,39 @@ public final class InterceptionPhases {
      */
     public static final String PREPROCESS = "PREPROCESS";
 
-    /**
-     * Common purpose phase just after target method invocation (inside transaction)
-     */
-    public static final String POSTPROCESS = "POSTPROCESS";
-
-    /**
-     * Common purpose final phase
-     */
-    public static final String TEARDOWN = "TEARDOWN";
 
     private final List<String> phaseOrder;
 
     public InterceptionPhases() {
         phaseOrder = new ArrayList<>();
 
-        // 1. Infrastructure
         phaseOrder.add(BOOTSTRAP);
+
         phaseOrder.add(ERRORS);
+
         phaseOrder.add(LOGGING);
+
         phaseOrder.add(METRICS);
+
         phaseOrder.add(RATE_LIMITING);
 
-        // 2. Security
+        phaseOrder.add(AUTHENTICATION);
+
+        phaseOrder.add(TELE_DATA_MAPPING);
+
+        phaseOrder.add(VALIDATION);
+
         phaseOrder.add(AUTHORIZATION);
 
-        // 3. Traffic control & Validation
-        phaseOrder.add(VALIDATION);
         phaseOrder.add(CACHING);
+
         phaseOrder.add(CIRCUIT_BREAKER);
 
-        // 5. Data & Context
         phaseOrder.add(TRANSACTION);
+
         phaseOrder.add(RESOURCES);
 
-        // 6. Main action wrappers
         phaseOrder.add(PREPROCESS);
-        phaseOrder.add(POSTPROCESS);
-
-        // 7. Final action
-        phaseOrder.add(TEARDOWN);
     }
 
     public List<String> phaseOrder() {
@@ -133,7 +139,7 @@ public final class InterceptionPhases {
     }
 
     public boolean checkPhaseExists(String phase) {
-        return phaseOrder.indexOf(phase) >= 0;
+        return phaseOrder.contains(phase);
     }
 
     public void addPhaseAfter(String existingPhase, String newPhase) {
@@ -149,6 +155,7 @@ public final class InterceptionPhases {
     }
 
     public void addPhaseFirst(String newPhase) {
+        Objects.requireNonNull(newPhase, "New phase cannot be null");
         if (checkPhaseExists(newPhase)) {
             throw new RuntimeException("Interception phase already exists: " + newPhase);
         }
@@ -156,6 +163,7 @@ public final class InterceptionPhases {
     }
 
     public void addPhaseLast(String newPhase) {
+        Objects.requireNonNull(newPhase, "New phase cannot be null");
         if (checkPhaseExists(newPhase)) {
             throw new RuntimeException("Interception phase already exists: " + newPhase);
         }
@@ -163,12 +171,14 @@ public final class InterceptionPhases {
     }
 
     private void checkAddPhase(String existingPhase, String newPhase) {
+        Objects.requireNonNull(existingPhase, "Existing phase cannot be null");
+        Objects.requireNonNull(newPhase, "New phase cannot be null");
+
         if (checkPhaseExists(newPhase)) {
             throw new RuntimeException("Interception phase already exists: " + newPhase);
         }
         if (!checkPhaseExists(existingPhase)) {
-            throw new RuntimeException("Interception doesn't  exists: " + existingPhase);
+            throw new RuntimeException("Interception phase doesn't exist: " + existingPhase);
         }
     }
-
 }

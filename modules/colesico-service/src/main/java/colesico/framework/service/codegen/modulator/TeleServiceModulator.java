@@ -20,10 +20,14 @@ import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.*;
 import colesico.framework.teleapi.TeleFacade;
+import com.palantir.javapoet.ClassName;
 import com.palantir.javapoet.CodeBlock;
+import com.palantir.javapoet.FieldSpec;
+import com.palantir.javapoet.TypeName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.lang.model.element.Modifier;
 import java.util.List;
 
 /**
@@ -37,6 +41,7 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
     private final Logger log = LoggerFactory.getLogger(TeleServiceModulator.class);
 
     public static final String COMMANDS_VAR = "commands";
+    public static final String TELE_INTERCEPTOR_FIELD = "teleInterceptor";
 
     /**
      * Tele-type id.
@@ -103,6 +108,13 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
         }
     }
 
+    protected void addTeleInterception(TeleCommandElement teleCommand) {
+        CodeBlock.Builder cb = CodeBlock.builder();
+        cb.add("$N::$N", TELE_INTERCEPTOR_FIELD, teleCommand.interceptorMethodName());
+        InterceptionElement interception = new InterceptionElement(cb.build());
+        teleCommand.serviceMethod().addInterception(InterceptionPhases.TELE_DATA_MAPPING, interception);
+    }
+
     @Override
     public void onTeleCommandParsed(TeleCommandElement teleCommand) {
         super.onTeleCommandParsed(teleCommand);
@@ -114,6 +126,18 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
         createParamReadOptions(teleCommand.parameters());
         teleCommand.setInvocationContext(createInvocationContext(teleCommand));
         teleCommand.setWriteSpec(createWriteResult(teleCommand));
+        addTeleInterception(teleCommand);
+    }
+
+    protected void addTeleInterceptorField(TeleServiceElement teleService) {
+        FieldSpec.Builder ti = FieldSpec.builder(
+                ClassName.bestGuess(teleService.interceptorClassName()),
+                TELE_INTERCEPTOR_FIELD,
+                Modifier.FINAL, Modifier.PRIVATE
+        );
+        ServiceFieldElement teleInterceptor = new ServiceFieldElement(ti.build());
+        teleInterceptor.inject();
+        teleService.parentService().addCustomField(teleInterceptor);
     }
 
     @Override
@@ -123,6 +147,7 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
             return;
         }
         processTeleService(teleService);
+        addTeleInterceptorField(teleService);
         teleService.setCommandsMethodBody(generateCommandsMethodBody((T) teleService));
     }
 
@@ -149,4 +174,6 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
         ServiceCodegenUtils.generateTeleBatchType(teleBatch, valueTypeCode);
         return new TeleReadElement(teleBatch, valueTypeCode.build(), null);
     }
+
+
 }
