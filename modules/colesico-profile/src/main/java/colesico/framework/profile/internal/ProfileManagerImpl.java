@@ -28,8 +28,8 @@ public class ProfileManagerImpl extends AbstractProfileManager<Profile> {
     }
 
     @Override
-    protected Profile read(Profile profile) {
-        return (Profile) dataPort.get().read(Profile.class, profile);
+    protected Profile read() {
+        return (Profile) dataPort.get().read(Profile.class, createProfile());
     }
 
     @Override

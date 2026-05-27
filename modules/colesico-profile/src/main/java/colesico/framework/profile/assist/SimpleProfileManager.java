@@ -26,7 +26,7 @@ public class SimpleProfileManager extends AbstractProfileManager<Profile> {
     }
 
     @Override
-    protected Profile read(Profile profile) {
+    protected Profile read() {
         return profileHolder.get();
     }
 

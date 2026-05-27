@@ -22,11 +22,11 @@ abstract public class AbstractProfileManager<P extends Profile> implements Profi
     abstract protected P createProfile();
 
     /**
-     * Read profile from source.
+     * Read profile data from source.
      * Implement this method to fine-grained profile read: check validity,
      * enrich with extra data from database, e.t.c.
      */
-    abstract protected P read(P profile);
+    abstract protected P read();
 
     /**
      * Writes profile to source.
@@ -43,10 +43,11 @@ abstract public class AbstractProfileManager<P extends Profile> implements Profi
             // Recursive calls protection
             requestScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(null));
         }
+
         // No profile in cache. Retrieve profile from source
-        P profile = read(createProfile());
+        P profile = read();
         if (profile == null) {
-            throw new ProfileException("Read profile null result");
+            profile = createProfile();
         }
         requestScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
         return profile;
