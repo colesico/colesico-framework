@@ -28,5 +28,4 @@ import colesico.framework.resource.internal.l10n.Localizer;
 @Produce(value = ResourceUtilsImpl.class, keyType = ResourceUtils.class)
 public class ResourceProducer {
 
-
 }

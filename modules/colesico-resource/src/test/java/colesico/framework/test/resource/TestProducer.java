@@ -17,22 +17,25 @@
 package colesico.framework.test.resource;
 
 import colesico.framework.ioc.conditional.Substitute;
+import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.profile.ProfileManager;
+import colesico.framework.profile.assist.SimpleProfileManager;
+import colesico.framework.profile.internal.ProfileManagerImpl;
 import jakarta.inject.Singleton;
 
 import java.util.Locale;
+
+import static colesico.framework.ioc.conditional.Substitution.STUB;
 
 @Producer
 @Substitute
 public class TestProducer {
 
     @Singleton
-    public Profile getProfile(ProfileManager profileManager) {
-        Profile profile = profileManager.profile();
-        profile.setLocale(Locale.of("en", "RU"));
-        return profile;
+    public Profile profile() {
+        return Profile.Default.of(Locale.of("en", "RU"));
     }
 
 }

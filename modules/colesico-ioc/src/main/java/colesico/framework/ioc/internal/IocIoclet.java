@@ -95,6 +95,10 @@ public final class IocIoclet implements Ioclet {
             catalog.add(threadScopeFactory());
         }
 
+        if (catalog.accept(new TypeKey<>(RequestScope.class), null, null, null)) {
+            catalog.add(requestScopeFactory());
+        }
+
         if (catalog.accept(new TypeKey<>(RefreshScope.class), null, null, null)) {
             catalog.add(refreshScopeFactory());
         }

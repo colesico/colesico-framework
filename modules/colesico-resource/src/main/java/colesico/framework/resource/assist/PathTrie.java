@@ -71,7 +71,7 @@ public class PathTrie<V> {
         Node<V> selectedNode = null;
         while (pathTokenize.hasMoreElements()) {
             final String pathItem = pathTokenize.nextToken();
-            final Node child = currentNode.getChild(pathItem);
+            final Node child = currentNode.child(pathItem);
             if (child == null) {
                 return selectedNode == null ? null : selectedNode.value();
             } else {
@@ -89,7 +89,7 @@ public class PathTrie<V> {
         Node<V> currentNode = rootNode;
         while (pathTokenize.hasMoreElements()) {
             final String pathItem = pathTokenize.nextToken();
-            final var child = currentNode.getChild(pathItem);
+            final var child = currentNode.child(pathItem);
             if (child == null) {
                 return currentNode.value();
             } else {
@@ -115,7 +115,7 @@ public class PathTrie<V> {
             this.value = value;
         }
 
-        public Node<V> getChild(String nodeName) {
+        public Node<V> child(String nodeName) {
             return children.get(nodeName);
         }
 
