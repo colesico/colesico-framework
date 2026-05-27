@@ -24,6 +24,8 @@ import colesico.framework.telehttp.HttpReadOptions;
 import colesico.framework.telehttp.HttpTeleReader;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
 import colesico.framework.telehttp.writer.ProfileWriter;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.util.*;
@@ -36,7 +38,14 @@ import static colesico.framework.telehttp.writer.ProfileWriter.PROFILE_HEADER;
 @Singleton
 public class ProfileReader<P extends Profile> implements HttpTeleReader<P, HttpReadOptions> {
 
+    protected final Provider<HttpRequest> httpRequest;
+
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
+
+    @Inject
+    public ProfileReader(Provider<HttpRequest> httpRequest) {
+        this.httpRequest = httpRequest;
+    }
 
     protected void readLocale(LocaleAttribute<?> attribute, Map<String, String> attributes, HttpRequest request) {
         readAttribute(attribute, attributes);
@@ -66,17 +75,17 @@ public class ProfileReader<P extends Profile> implements HttpTeleReader<P, HttpR
 
     @Override
     public final P read(Class<P> valueType, HttpReadOptions options) {
-        HttpRequest request = null;
+        HttpRequest request = httpRequest.get();
 
         Map<String, String> attributes = new HashMap<>();
         var profileCookie = request.cookies().get(ProfileWriter.PROFILE_COOKIE);
         if (profileCookie != null) {
-            attributes.putAll(TeleHttpUtils.parseAttributes(profileCookie.setValue()));
+            attributes.putAll(TeleHttpUtils.parseAttributes(profileCookie.value()));
         }
 
         var profileHeader = request.cookies().get(PROFILE_HEADER);
         if (profileHeader != null) {
-            attributes.putAll(TeleHttpUtils.parseAttributes(profileHeader.setValue()));
+            attributes.putAll(TeleHttpUtils.parseAttributes(profileHeader.value()));
         }
 
         // Get default profile instance from context

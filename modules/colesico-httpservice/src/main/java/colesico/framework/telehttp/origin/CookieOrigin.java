@@ -26,7 +26,7 @@ public class CookieOrigin implements Origin {
         final List<String> result = new ArrayList<>();
         MultiValue<HttpCookie> cookies = httpRequest.get().cookies().getAll(name);
         if (cookies != null) {
-            cookies.iterator().forEachRemaining(c -> result.add(c.setValue()));
+            cookies.iterator().forEachRemaining(c -> result.add(c.value()));
         }
         return result;
     }

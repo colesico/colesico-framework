@@ -28,7 +28,7 @@ public interface HttpCookie {
 
     String name();
 
-    String setValue();
+    String value();
 
     String domain();
 

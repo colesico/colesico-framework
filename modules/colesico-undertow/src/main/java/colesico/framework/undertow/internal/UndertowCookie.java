@@ -26,7 +26,7 @@ public class UndertowCookie implements HttpCookie {
     }
 
     @Override
-    public String setValue() {
+    public String value() {
         return undertowCookie.getValue();
     }
 

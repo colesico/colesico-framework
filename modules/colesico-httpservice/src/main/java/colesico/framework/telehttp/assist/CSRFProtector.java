@@ -95,7 +95,7 @@ public class CSRFProtector<V> {
             return;
         }
 
-        String csrfCookieToken = cookie.setValue();
+        String csrfCookieToken = cookie.value();
         String csrfHeaderToken = request.headers().get(CSRF_HEADER);
 
         if (!StringUtils.equals(csrfCookieToken, csrfHeaderToken)) {
