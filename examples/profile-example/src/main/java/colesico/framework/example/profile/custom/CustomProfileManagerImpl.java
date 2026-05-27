@@ -5,7 +5,7 @@ import colesico.framework.teleapi.dataport.DataPort;
 import java.util.Collection;
 import java.util.TimeZone;
 
-public class CustomProfileManager extends DefaultProfileManager<CustomProfile> {
+public class CustomProfileManagerImpl extends DefaultProfileManager<CustomProfile> {
 
     public CustomProfile createProfile() {
         return initProfile(new CustomProfile());

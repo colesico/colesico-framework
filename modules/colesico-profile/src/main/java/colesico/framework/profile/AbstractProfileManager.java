@@ -2,6 +2,7 @@ package colesico.framework.profile;
 
 import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
+import colesico.framework.ioc.scope.RequestScope;
 import colesico.framework.ioc.scope.ThreadScope;
 
 abstract public class AbstractProfileManager<P extends Profile> implements ProfileManager<P> {
@@ -9,10 +10,10 @@ abstract public class AbstractProfileManager<P extends Profile> implements Profi
     /**
      * Profile association with thread
      */
-    protected final ThreadScope threadScope;
+    protected final RequestScope requestScope;
 
-    public AbstractProfileManager(ThreadScope threadScope) {
-        this.threadScope = threadScope;
+    public AbstractProfileManager(RequestScope requestScope) {
+        this.requestScope = requestScope;
     }
 
     /**
@@ -35,26 +36,26 @@ abstract public class AbstractProfileManager<P extends Profile> implements Profi
 
     @Override
     public P profile() {
-        ProfileHolder holder = threadScope.get(ProfileHolder.SCOPE_KEY);
+        ProfileHolder holder = requestScope.get(ProfileHolder.SCOPE_KEY);
         if (holder != null) {
             return holder.profile != null ? (P) holder.profile : createProfile();
         } else {
             // Recursive calls protection
-            threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(null));
+            requestScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(null));
         }
         // No profile in cache. Retrieve profile from source
         P profile = read(createProfile());
         if (profile == null) {
             throw new ProfileException("Read profile null result");
         }
-        threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
+        requestScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
         return profile;
     }
 
     @Override
     public void save(P profile) {
         profile = write(profile);
-        threadScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
+        requestScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
     }
 
     public record ProfileHolder(Profile profile) {

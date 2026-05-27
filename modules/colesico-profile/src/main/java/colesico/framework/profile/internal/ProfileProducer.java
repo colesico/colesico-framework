@@ -19,14 +19,13 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.profile.*;
-import jakarta.inject.Provider;
 
 import java.util.Locale;
 
 import static colesico.framework.ioc.conditional.Substitution.STUB;
 
 @Producer
-@Produce(value = DefaultProfileManager.class, keyType = ProfileManager.class, substitute = STUB)
+@Produce(value = ProfileManagerImpl.class, keyType = ProfileManager.class, substitute = STUB)
 public class ProfileProducer {
 
     @Unscoped
@@ -38,9 +37,8 @@ public class ProfileProducer {
      * Get current locale
      */
     @Unscoped
-    public Locale locale(Provider<Profile> profileProv) {
-        Profile profile = profileProv.get();
-        return profile != null ? profile.locale() : Locale.getDefault();
+    public Locale locale(Profile profile) {
+        return profile.locale();
     }
 
 }

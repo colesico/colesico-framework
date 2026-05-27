@@ -20,6 +20,7 @@ import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
 
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * User localization profile.
@@ -41,8 +42,55 @@ public interface Profile {
     Locale locale();
 
     /**
-     * Set  locale
+     * Set locale preference
      */
     void setLocale(Locale locale);
 
+    class Default implements Profile {
+
+        private Locale locale;
+
+        public Default(Locale locale) {
+            this.locale = locale;
+        }
+
+        public Default() {
+        }
+
+        public static Default of(Locale locale) {
+            return new Default(locale);
+        }
+
+        public static Default of() {
+            return new Default();
+        }
+
+        @Override
+        public Locale locale() {
+            return locale;
+        }
+
+        @Override
+        public void setLocale(Locale locale) {
+            this.locale = locale;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof Default aDefault)) return false;
+            return Objects.equals(locale, aDefault.locale);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(locale);
+        }
+
+        @Override
+        public String toString() {
+            return "Profile{" +
+                    "locale=" + locale +
+                    '}';
+        }
+    }
 }

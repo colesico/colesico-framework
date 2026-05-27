@@ -1,7 +1,5 @@
 package colesico.framework.example.profile.custom;
 
-import colesico.framework.profile.DefaultProfile;
-
 import java.util.TimeZone;
 
 public class CustomProfile extends DefaultProfile {

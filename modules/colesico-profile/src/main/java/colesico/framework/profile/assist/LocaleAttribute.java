@@ -14,7 +14,6 @@ public class LocaleAttribute<P extends Profile> extends AbstractProfileAttribute
      */
     static final String PROPERTY_NAME = "locale";
 
-
     public LocaleAttribute(P profile, String name) {
         super(profile, name);
     }
