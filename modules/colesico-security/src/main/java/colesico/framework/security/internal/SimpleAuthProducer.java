@@ -17,27 +17,27 @@ import jakarta.inject.Singleton;
 @Producer
 @Produce(SimpleAuthSource.class)
 @Produce(SimpleAuthenticator.class)
-
 public class SimpleAuthProducer {
 
     @Singleton
     @Classed(BasicAuthenticationRequest.class)
     @Polyproduce(order = Integer.MAX_VALUE)
-    Authenticator authenticator(SimpleAuthenticator impl) {
+    public Authenticator authenticator(SimpleAuthenticator impl) {
         return impl;
     }
 
     @Singleton
     @Substitute(Substitution.STUB)
-    SimpleAuthConfigPrototype config() {
+    public SimpleAuthConfigPrototype config() {
         return new SimpleAuthConfigPrototype() {
         };
     }
 
     @Singleton
     @Substitute(Substitution.STUB)
-    SimpleAccountStorage accountStorage() {
+    public SimpleAccountStorage accountStorage() {
         return new SimpleAccountStorage() {
         };
     }
+
 }

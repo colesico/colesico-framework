@@ -16,11 +16,15 @@
 
 package colesico.framework.security.internal;
 
+import colesico.framework.ioc.conditional.Substitute;
+import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
 import colesico.framework.security.SecurityManager;
+import colesico.framework.security.assist.authentication.simple.SimpleAccountStorage;
+import colesico.framework.security.assist.authentication.simple.SimpleAuthConfigPrototype;
 import colesico.framework.security.authentication.*;
 import colesico.framework.security.authorization.RequireIdentityAudit;
 

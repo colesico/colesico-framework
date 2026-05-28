@@ -2,9 +2,9 @@ package colesico.framework.security.assist.authentication.simple;
 
 import colesico.framework.security.Identity;
 import colesico.framework.security.assist.authentication.BasicAuthenticationRequest;
-import colesico.framework.security.authentication.AuthenticationChallenge;
 import colesico.framework.security.authentication.AuthenticationResult;
 import colesico.framework.security.authentication.Authenticator;
+import jakarta.inject.Inject;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -33,6 +33,7 @@ public class SimpleAuthenticator implements
      */
     protected final Map<Object, Identity<?>> authenticated;
 
+    @Inject
     public SimpleAuthenticator(SimpleAuthConfigPrototype config, SimpleAccountStorage accounts) {
         this.config = config;
         this.accounts = accounts;
@@ -55,7 +56,7 @@ public class SimpleAuthenticator implements
                     request.password().getBytes(StandardCharsets.UTF_8));
             passwordHash = HexFormat.of().formatHex(hash);
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            throw new SecurityException(ex);
         }
 
         SimpleAccountStorage.Account account = accounts.findAccount(request.login(), passwordHash);

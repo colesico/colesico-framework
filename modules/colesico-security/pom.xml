@@ -67,6 +67,17 @@
                             <artifactId>colesico-ioc</artifactId>
                             <version>${project.version}</version>
                         </path>
+                        <path>
+                            <groupId>net.colesico.framework</groupId>
+                            <artifactId>colesico-config</artifactId>
+                            <version>${project.version}</version>
+                        </path>
+                        <!-- Enable compile debug log -->
+                        <dependency>
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>slf4j-simple</artifactId>
+                            <version>${slf4j.version}</version>
+                        </dependency>
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>

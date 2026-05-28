@@ -2,6 +2,7 @@ package colesico.framework.security.assist.authentication.simple;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
+import colesico.framework.security.assist.authentication.BasicAuthenticationChallenge;
 import colesico.framework.security.authentication.AuthenticationChallenge;
 
 @ConfigPrototype(model = ConfigModel.SINGLE)
@@ -19,6 +20,6 @@ abstract public class SimpleAuthConfigPrototype {
     }
 
     protected AuthenticationChallenge challenge(){
-        return null;
+        return new BasicAuthenticationChallenge("Authentication");
     }
 }
