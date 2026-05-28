@@ -4,6 +4,7 @@ import colesico.framework.http.HttpResponse;
 import colesico.framework.telehttp.HttpWriteOptions;
 import colesico.framework.telehttp.HttpTeleWriter;
 
+import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
@@ -14,6 +15,7 @@ public final class PlainTextWriter implements HttpTeleWriter<Object, HttpWriteOp
 
     private final Provider<HttpResponse> httpResponse;
 
+    @Inject
     public PlainTextWriter(Provider<HttpResponse> httpResponse) {
         this.httpResponse = httpResponse;
     }
@@ -22,26 +24,9 @@ public final class PlainTextWriter implements HttpTeleWriter<Object, HttpWriteOp
     public void write(Object value, Class<Object> valueType, HttpWriteOptions options) {
         if (value == null) {
             httpResponse.get().sendText("", CONTENT_TYPE, 204);
-        }
-
-        String str = "";
-        if (value instanceof String) {
-            str = (String) value;
-        } else if (value instanceof Long) {
-            str = Long.toString((Long) value);
-        } else if (value instanceof Integer) {
-            str = Integer.toString((Integer) value);
-        } else if (value instanceof Short) {
-            str = Short.toString((Short) value);
-        } else if (value instanceof Character) {
-            str = "" + value;
-        } else if (value instanceof Byte) {
-            str = Byte.toString((Byte) value);
         } else {
-            str = value.toString();
+            httpResponse.get().sendText(String.valueOf(value), CONTENT_TYPE, 200);
         }
-
-        httpResponse.get().sendText(str, CONTENT_TYPE, 200);
     }
 
 }

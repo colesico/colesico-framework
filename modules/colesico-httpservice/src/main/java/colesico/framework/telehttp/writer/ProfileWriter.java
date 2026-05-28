@@ -48,12 +48,16 @@ public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implem
         this.cookieFactory = cookieFactory;
     }
 
+    protected void exportLocale(P profile, Map<String, String> attributes) {
+        var localeAttribute = LocaleAttribute.of(profile);
+        attributes.put(localeAttribute.name(), localeAttribute.asString());
+    }
+
     /**
      * Override this method to process different profile type
      */
     protected void exportToAttributes(P profile, Map<String, String> attributes) {
-        var localeAttribute = LocaleAttribute.of(profile);
-        attributes.put(localeAttribute.name(), localeAttribute.asString());
+        exportLocale(profile, attributes);
     }
 
     @Override
@@ -77,7 +81,6 @@ public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implem
         HttpResponse response = null;
         response.setCookie(cookie);
         response.setHeader(PROFILE_HEADER, profileStr);
-
     }
 
 

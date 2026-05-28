@@ -1,6 +1,7 @@
 package colesico.framework.telehttp.internal;
 
 import colesico.framework.http.HttpFile;
+import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.telehttp.HttpTeleReader;
 import colesico.framework.telehttp.reader.ProfileReader;
@@ -9,6 +10,7 @@ import colesico.framework.ioc.production.Producer;
 
 import colesico.framework.telehttp.reader.*;
 import jakarta.inject.Singleton;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -32,7 +34,7 @@ import java.util.OptionalLong;
 @Produce(LocalDateReader.class)
 @Produce(LocalTimeReader.class)
 @Produce(LocalDateTimeReader.class)
-@Produce(ProfileReader.class)
+@Produce(value = ProfileReader.class, substitute = Substitution.STUB)
 @Produce(HttpFileReader.class)
 public class ReadersProducer {
 

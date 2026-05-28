@@ -27,6 +27,7 @@ import colesico.framework.telehttp.writer.ProfileWriter;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -47,20 +48,16 @@ public class ProfileReader<P extends Profile> implements HttpTeleReader<P, HttpR
         this.httpRequest = httpRequest;
     }
 
-    protected void readLocale(LocaleAttribute<?> attribute, Map<String, String> attributes, HttpRequest request) {
-        readAttribute(attribute, attributes);
-        if (!attribute.hasValue()) {
+    protected void readLocale(P profile, Map<String, String> attributes, HttpRequest request) {
+        var attribute = LocaleAttribute.of(profile);
+        var value = attributes.get(attribute.name());
+        if (StringUtils.isBlank(value)) {
             String acceptLangs = request.headers().get(ACCEPT_LANGUAGE_HEADER);
             Locale locale = TeleHttpUtils.acceptedLanguage(acceptLangs);
             if (locale != null) {
                 attribute.setValue(locale);
             }
-        }
-    }
-
-    protected void readAttribute(ProfileAttribute<?, ?> attribute, Map<String, String> attributes) {
-        var value = attributes.get(attribute.name());
-        if (value != null) {
+        } else {
             attribute.setString(value);
         }
     }
@@ -69,8 +66,7 @@ public class ProfileReader<P extends Profile> implements HttpTeleReader<P, HttpR
      * Override this method to process different profile type
      */
     protected void importFromAttributes(P profile, Map<String, String> attributes, HttpRequest request) {
-        var localeAttribute = LocaleAttribute.of(profile);
-        readLocale(localeAttribute, attributes, request);
+        readLocale(profile, attributes, request);
     }
 
     @Override
