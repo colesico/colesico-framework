@@ -14,8 +14,18 @@ public class DefaultSimpleAccountStorage implements SimpleAccountStorage {
     protected static final String PASSWORD_SUFFIX = ".password";
     protected static final String ROLES_SUFFIX = ".roles";
 
+    /**
+     * Format:
+     *
+     * admin.password=secret1
+     * admin.roles=ADMIN,MANAGER
+     *
+     * user1.password=qwerty11
+     * user1.roles=USER,GUEST
+     */
     @FromSource
     private Properties accounts;
+
     private final Map<String, Entry> entries = new ConcurrentHashMap<>();
 
     @Override
