@@ -51,7 +51,7 @@ public class SimpleAuthenticator implements
     protected Identity<?> authenticate(BasicAuthenticationRequest request) {
         String passwordHash;
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            MessageDigest digest = MessageDigest.getInstance(config.passwordDigest());
             byte[] hash = digest.digest(
                     request.password().getBytes(StandardCharsets.UTF_8));
             passwordHash = HexFormat.of().formatHex(hash);

@@ -16,6 +16,8 @@
 
 package colesico.framework.config;
 
+import colesico.framework.config.internal.ConfigProducer;
+
 import java.lang.annotation.*;
 
 /**
@@ -40,7 +42,7 @@ public @interface UseSource {
 
     /**
      * Config source type. PropertiesSource supported out-of the-box.
-     *
+     * Default source specified in IoC producer {@link ConfigProducer#defaultConfigSource(PropertiesSource)}
      * @see PropertiesSource
      */
     Class<? extends ConfigSource> type() default ConfigSource.class;

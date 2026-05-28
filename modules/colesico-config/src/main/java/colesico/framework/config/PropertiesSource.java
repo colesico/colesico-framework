@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Singleton;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -124,7 +125,7 @@ public class PropertiesSource implements ConfigSource {
         }
 
         @Override
-        public <T> T getValue(Type valueType) {
+        public <T> T getValue(Class<T> valueType) {
             T result = buildComposition(valueType, prefix);
             return result;
         }
@@ -134,7 +135,7 @@ public class PropertiesSource implements ConfigSource {
             // nop
         }
 
-        protected <T> Function<String, T> getValueConverter(Type valueType) {
+        protected <T> Function<String, T> getValueConverter(Class<T> valueType) {
             if (valueType == String.class) {
                 return v -> (T) v;
             }
@@ -162,26 +163,33 @@ public class PropertiesSource implements ConfigSource {
             if (valueType == Character.class) {
                 return v -> (T) Character.valueOf(v.charAt(0));
             }
+            if (valueType == String[].class) {
+                return v -> (T) v.split(",");
+            }
             return null;
         }
 
-        protected <T> T buildComposition(Type compositionType, String compositionPath) {
+        protected <T> T buildComposition(Class<T> compositionClass, String compositionPath) {
             try {
-                Class<T> compositionClass = (Class<T>) compositionType;
                 T compositionInstance = compositionClass.getDeclaredConstructor().newInstance();
                 List<Method> setters = getSetters(compositionClass);
                 for (Method setter : setters) {
                     String valueKey = toKey(compositionPath, getFieldName(setter));
-                    Type valueType = setter.getParameterTypes()[0];
+                    Class<T> valueType = (Class<T>) setter.getParameterTypes()[0];
                     T value = null;
-                    Function<String, T> valueConverter = getValueConverter(valueType);
-                    if (valueConverter != null) {
-                        String rawValue = properties.getProperty(valueKey);
-                        if (rawValue != null) {
-                            value = valueConverter.apply(rawValue);
-                        }
+                    // Ability to access via config to all properties
+                    if (valueType == Properties.class) {
+                        value = (T) properties;
                     } else {
-                        value = buildComposition(valueType, valueKey);
+                        Function<String, T> valueConverter = getValueConverter(valueType);
+                        if (valueConverter != null) {
+                            String rawValue = properties.getProperty(valueKey);
+                            if (rawValue != null) {
+                                value = valueConverter.apply(rawValue);
+                            }
+                        } else {
+                            value = buildComposition(valueType, valueKey);
+                        }
                     }
                     setter.invoke(compositionInstance, value);
                 }
@@ -195,7 +203,7 @@ public class PropertiesSource implements ConfigSource {
             return (prefix != null ? prefix + '.' : "") + path;
         }
 
-        protected List<Method> getSetters(Class clazz) {
+        protected List<Method> getSetters(Class<?> clazz) {
             List<Method> result = new ArrayList<>();
             Class<?> currentClazz = clazz;
             while (currentClazz.getSuperclass() != null) { // we don't want to process Object.class

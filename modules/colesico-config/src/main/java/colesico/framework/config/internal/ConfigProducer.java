@@ -31,7 +31,7 @@ public class ConfigProducer {
      * Default ConfigSource implementation
      */
     @Singleton
-    public ConfigSource getDefaultConfigSource(PropertiesSource impl) {
+    public ConfigSource defaultConfigSource(PropertiesSource impl) {
         return impl;
     }
 }

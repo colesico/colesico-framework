@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Singleton;
+
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -106,8 +107,8 @@ public class HoconSource implements ConfigSource {
         }
 
         @Override
-        public <T> T getValue(Type valueType) {
-            return ConfigBeanFactory.create(config, (Class<T>) valueType);
+        public <T> T getValue(Class<T> valueType) {
+            return ConfigBeanFactory.create(config, valueType);
         }
 
         @Override

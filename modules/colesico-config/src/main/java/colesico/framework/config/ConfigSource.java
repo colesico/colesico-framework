@@ -53,7 +53,7 @@ public interface ConfigSource {
          * @param <T> config value type
          * @return null if value not found, value otherwise
          */
-        <T> T getValue(Type valueType);
+        <T> T getValue(Class<T> valueType);
 
         /**
          * Close connection
