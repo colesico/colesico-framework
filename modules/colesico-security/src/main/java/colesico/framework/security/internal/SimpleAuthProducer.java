@@ -7,10 +7,7 @@ import colesico.framework.ioc.production.Polyproduce;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.security.assist.authentication.BasicAuthenticationRequest;
-import colesico.framework.security.assist.authentication.simple.SimpleAccountStorage;
-import colesico.framework.security.assist.authentication.simple.SimpleAuthConfigPrototype;
-import colesico.framework.security.assist.authentication.simple.SimpleAuthSource;
-import colesico.framework.security.assist.authentication.simple.SimpleAuthenticator;
+import colesico.framework.security.assist.authentication.simple.*;
 import colesico.framework.security.authentication.Authenticator;
 import jakarta.inject.Singleton;
 
@@ -35,9 +32,8 @@ public class SimpleAuthProducer {
 
     @Singleton
     @Substitute(Substitution.STUB)
-    public SimpleAccountStorage accountStorage() {
-        return new SimpleAccountStorage() {
-        };
+    public SimpleAccountStorage accountStorage(DefaultSimpleAccountStorage impl) {
+        return impl;
     }
 
 }
