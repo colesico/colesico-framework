@@ -20,7 +20,7 @@ package colesico.framework.weblet.response;
 import colesico.framework.router.assist.Navigation;
 
 /**
- * Performs inner router forward
+ * To perform router inner forwarding
  */
 public final class ForwardResponse extends Navigation<ForwardResponse> {
 
@@ -32,10 +32,16 @@ public final class ForwardResponse extends Navigation<ForwardResponse> {
         return new ForwardResponse().uri(uri);
     }
 
+    /**
+     * For manual configuring
+     */
     public static ForwardResponse of() {
         return new ForwardResponse();
     }
 
+    /**
+     * To wrapper response
+     */
     public WebletResponse wrap() {
         return WebletResponse.of(this);
     }

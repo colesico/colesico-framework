@@ -17,6 +17,7 @@
 package colesico.framework.weblet.response;
 
 import colesico.framework.telehttp.response.ContentResponse;
+import colesico.framework.telehttp.response.TeleHttpResponse;
 
 /**
  * Binary data to  returned to  client
@@ -37,15 +38,15 @@ public final class BinaryResponse extends ContentResponse<byte[]> {
     }
 
     public static BinaryResponse of(byte[] content, String contentType, String fileName) {
-        return new BinaryResponse(content, contentType, fileName, DEFAULT_STATUS_CODE);
+        return new BinaryResponse(content, contentType, fileName, TeleHttpResponse.DEFAULT_STATUS_CODE);
     }
 
     public static BinaryResponse of(byte[] content, String contentType) {
-        return new BinaryResponse(content, contentType, null, DEFAULT_STATUS_CODE);
+        return new BinaryResponse(content, contentType, null, TeleHttpResponse.DEFAULT_STATUS_CODE);
     }
 
     public static BinaryResponse of(byte[] content) {
-        return new BinaryResponse(content, DEFAULT_CONTENT_TYPE, null, DEFAULT_STATUS_CODE);
+        return new BinaryResponse(content, DEFAULT_CONTENT_TYPE, null, TeleHttpResponse.DEFAULT_STATUS_CODE);
     }
 
     public WebletResponse wrap() {

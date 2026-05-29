@@ -24,8 +24,8 @@ import colesico.framework.router.assist.Navigation;
  */
 public final class RedirectResponse extends Navigation<RedirectResponse> {
 
-    public static RedirectResponse of(Class<?> serviceClass, String targetMethodName) {
-        return new RedirectResponse().service(serviceClass).method(targetMethodName);
+    public static RedirectResponse of(Class<?> serviceClass, String methodName) {
+        return new RedirectResponse().service(serviceClass).method(methodName);
     }
 
     public static RedirectResponse of(String uri) {

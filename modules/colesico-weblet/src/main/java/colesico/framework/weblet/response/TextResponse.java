@@ -16,6 +16,8 @@
 
 package colesico.framework.weblet.response;
 
+import colesico.framework.telehttp.response.TeleHttpResponse;
+
 /**
  * Simple text response
  */
@@ -32,11 +34,11 @@ public final class TextResponse extends StringResponse {
     }
 
     public static TextResponse of(String content, String contentType) {
-        return new TextResponse(content, contentType, DEFAULT_STATUS_CODE);
+        return new TextResponse(content, contentType, TeleHttpResponse.DEFAULT_STATUS_CODE);
     }
 
     public static TextResponse of(String content) {
-        return new TextResponse(content, DEFAULT_CONTENT_TYPE, DEFAULT_STATUS_CODE);
+        return new TextResponse(content, DEFAULT_CONTENT_TYPE, TeleHttpResponse.DEFAULT_STATUS_CODE);
     }
 
 }

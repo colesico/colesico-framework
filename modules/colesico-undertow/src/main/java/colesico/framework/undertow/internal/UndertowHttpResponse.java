@@ -51,13 +51,27 @@ public class UndertowHttpResponse implements HttpResponse {
     }
 
     @Override
-    public void setStatusCode(Integer code) {
+    public HttpResponse setStatusCode(Integer code) {
         exchange.setStatusCode(code);
+        return this;
     }
 
     @Override
-    public void setContentType(String contentType) {
+    public HttpResponse setContentType(String contentType) {
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, contentType);
+        return this;
+    }
+
+    @Override
+    public HttpResponse setCookie(HttpCookie cookie) {
+        exchange.setResponseCookie(((UndertowCookie) cookie).undertowCookie());
+        return this;
+    }
+
+    @Override
+    public HttpResponse setHeader(String name, String vale) {
+        exchange.getResponseHeaders().put(new HttpString(name), vale);
+        return this;
     }
 
     @Override
@@ -72,15 +86,6 @@ public class UndertowHttpResponse implements HttpResponse {
         exchange.endExchange();
     }
 
-    @Override
-    public void setCookie(HttpCookie cookie) {
-        exchange.setResponseCookie(((UndertowCookie) cookie).undertowCookie());
-    }
-
-    @Override
-    public void setHeader(String name, String vale) {
-        exchange.getResponseHeaders().put(new HttpString(name), vale);
-    }
 
     @Override
     public void sendRedirect(String location) {

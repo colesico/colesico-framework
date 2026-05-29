@@ -30,7 +30,7 @@ import jakarta.inject.Provider;
  */
 public final class RedirectWriter implements WebletTeleWriter<RedirectResponse> {
 
-    protected final Router router;
+    private final Router router;
     private final Provider<HttpContext> httpContext;
 
     public RedirectWriter(Router router, Provider<HttpContext> httpContext) {

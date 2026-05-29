@@ -16,6 +16,7 @@
 package colesico.framework.undertow.internal;
 
 import colesico.framework.http.HttpCookie;
+import colesico.framework.http.HttpResponse;
 import io.undertow.server.HttpServerExchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,15 +49,31 @@ public class UndertowHttpResponseDebug extends UndertowHttpResponse {
     }
 
     @Override
-    public void setStatusCode(Integer code) {
+    public HttpResponse setStatusCode(Integer code) {
         log.debug("setStatusCode({}); responded={}; responseId={}", code, isResponded(), responseId);
         super.setStatusCode(code);
+        return this;
     }
 
     @Override
-    public void setContentType(String contentType) {
+    public HttpResponse setContentType(String contentType) {
         log.debug("setContenType({}); responded={}; responseId={}", contentType, isResponded(), responseId);
         super.setContentType(contentType);
+        return this;
+    }
+
+    @Override
+    public HttpResponse setCookie(HttpCookie cookie) {
+        log.debug("setCookie({}); responded={}; responseId={}", cookie, isResponded(), responseId);
+        super.setCookie(cookie);
+        return this;
+    }
+
+    @Override
+    public HttpResponse setHeader(String name, String vale) {
+        log.debug("setHeader({},{}); responded={}; responseId={}", name, vale, isResponded(), responseId);
+        super.setHeader(name, vale);
+        return this;
     }
 
     @Override
@@ -69,18 +86,6 @@ public class UndertowHttpResponseDebug extends UndertowHttpResponse {
     public void sendData(ByteBuffer byteBuffer) {
         log.debug("sendData({}); responded={}; responseId={}", byteBuffer, isResponded(), responseId);
         super.sendData(byteBuffer);
-    }
-
-    @Override
-    public void setCookie(HttpCookie cookie) {
-        log.debug("setCookie({}); responded={}; responseId={}", cookie, isResponded(), responseId);
-        super.setCookie(cookie);
-    }
-
-    @Override
-    public void setHeader(String name, String vale) {
-        log.debug("setHeader({},{}); responded={}; responseId={}", name, vale, isResponded(), responseId);
-        super.setHeader(name, vale);
     }
 
     @Override
