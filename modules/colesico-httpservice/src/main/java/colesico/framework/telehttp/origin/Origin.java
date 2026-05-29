@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp;
-
-import colesico.framework.http.HttpRequest;
-import colesico.framework.router.RouterContext;
+package colesico.framework.telehttp.origin;
 
 /**
  * Data reading origin API and basic dictionary.

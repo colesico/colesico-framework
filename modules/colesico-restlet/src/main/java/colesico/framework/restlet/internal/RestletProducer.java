@@ -23,7 +23,7 @@ import colesico.framework.restlet.assist.LogRestletListener;
 import colesico.framework.restlet.internal.gsonconv.GsonConverter;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.origin.RestletAutoOrigin;
-import colesico.framework.telehttp.Origin;
+import colesico.framework.telehttp.origin.Origin;
 
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;

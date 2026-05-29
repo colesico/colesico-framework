@@ -2,7 +2,6 @@ package colesico.framework.telehttp.origin;
 
 import colesico.framework.http.HttpException;
 import colesico.framework.http.HttpRequest;
-import colesico.framework.telehttp.Origin;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
 
 import jakarta.inject.Provider;

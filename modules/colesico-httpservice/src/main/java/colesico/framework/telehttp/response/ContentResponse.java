@@ -1,4 +1,4 @@
-package colesico.framework.telehttp.assist;
+package colesico.framework.telehttp.response;
 
 
 abstract public class ContentResponse<C> extends TeleHttpResponse {

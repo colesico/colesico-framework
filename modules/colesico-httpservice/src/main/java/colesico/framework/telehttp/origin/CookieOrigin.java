@@ -3,7 +3,6 @@ package colesico.framework.telehttp.origin;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.http.MultiValue;
-import colesico.framework.telehttp.Origin;
 
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;

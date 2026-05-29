@@ -16,20 +16,18 @@
 
 package colesico.framework.weblet.internal;
 
-import colesico.framework.teleapi.dataport.TRWFactory;
+import colesico.framework.teleapi.dataport.TeleFactory;
 import colesico.framework.weblet.response.WebletResponse;
 import colesico.framework.weblet.teleapi.*;
 
 import jakarta.inject.Singleton;
 
-import java.lang.reflect.Type;
-
 @Singleton
 public class WebletDataPortImpl implements WebletDataPort {
 
-    protected final TRWFactory factory;
+    protected final TeleFactory factory;
 
-    public WebletDataPortImpl(TRWFactory factory) {
+    public WebletDataPortImpl(TeleFactory factory) {
         this.factory = factory;
     }
 
@@ -38,13 +36,13 @@ public class WebletDataPortImpl implements WebletDataPort {
         WebletTeleReader<V> reader;
         if (options.readerClass() != null) {
             // Get specified reader
-            reader = (WebletTeleReader<V>) factory.getReader(options.readerClass());
+            reader = (WebletTeleReader<V>) factory.reader(options.readerClass());
         } else {
             // Get reader by value type
             reader = factory.findReader(WebletTeleReader.class, valueType);
             if (reader == null) {
                 // Get default reader
-                reader = factory.getReader(WebletTeleReader.class, Object.class);
+                reader = factory.reader(WebletTeleReader.class, Object.class);
             }
         }
         return reader.read(valueType, options);
@@ -80,9 +78,9 @@ public class WebletDataPortImpl implements WebletDataPort {
 
         WebletTeleWriter writer;
         if (options.writerClass() != null) {
-            writer = factory.getWriter(options.writerClass());
+            writer = factory.writer(options.writerClass());
         } else {
-            writer = factory.getWriter(WebletTeleWriter.class, targetType);
+            writer = factory.writer(WebletTeleWriter.class, targetType);
         }
 
         writer.write(targetValue, targetType, options);

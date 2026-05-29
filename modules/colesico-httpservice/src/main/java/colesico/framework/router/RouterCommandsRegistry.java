@@ -18,8 +18,6 @@ package colesico.framework.router;
 
 import colesico.framework.teleapi.TeleCommand;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.dataport.ReadOptions;
-import colesico.framework.teleapi.dataport.WriteOptions;
 
 import java.util.Collection;
 import java.util.Map;
@@ -28,7 +26,7 @@ import java.util.TreeMap;
 /**
  * Binds routes with route actions  (tele-facade methods)
  */
-public final class RouterCommands implements TeleFacade.Commands {
+public final class RouterCommandsRegistry implements TeleFacade.CommandsRegistry {
 
     public static final String ADD_METHOD = "add";
     public static final String ROUTE_PARAM = "route";
@@ -42,9 +40,12 @@ public final class RouterCommands implements TeleFacade.Commands {
      */
     private final Class<?> targetClass;
 
-    private final Map<String, RouteInfo> routesMap = new TreeMap<>();
+    /**
+     * route -> entry
+     */
+    private final Map<String, RouteEntry> routesMap = new TreeMap<>();
 
-    public RouterCommands(Class<?> targetClass) {
+    public RouterCommandsRegistry(Class<?> targetClass) {
         this.targetClass = targetClass;
     }
 
@@ -56,11 +57,11 @@ public final class RouterCommands implements TeleFacade.Commands {
      * @param targetMethod handler method name
      * @param attributes   route attributes (see {@link RouteAttribute})
      */
-    public <R extends ReadOptions, W extends WriteOptions> void add(String route, TeleCommand teleCommand, String targetMethod, Map<String, String> attributes) {
-        RouteInfo routeInfo = new RouteInfo(route, teleCommand, targetMethod, attributes);
-        RouteInfo oldRouteInfo = routesMap.put(route, routeInfo);
-        if (oldRouteInfo != null) {
-            throw new RouterException("Duplicate route: " + route + " -> " + routeInfo + " | " + oldRouteInfo);
+    public void add(String route, TeleCommand teleCommand, String targetMethod, Map<String, String> attributes) {
+        RouteEntry routeEntry = new RouteEntry(route, teleCommand, targetMethod, attributes);
+        RouteEntry oldRouteEntry = routesMap.put(route, routeEntry);
+        if (oldRouteEntry != null) {
+            throw new RouterException("Duplicate route: " + route + " -> " + routeEntry + " | " + oldRouteEntry);
         }
     }
 
@@ -68,7 +69,7 @@ public final class RouterCommands implements TeleFacade.Commands {
         return targetClass;
     }
 
-    public Collection<RouteInfo> routesInfo() {
+    public Collection<RouteEntry> entries() {
         return routesMap.values();
     }
 
@@ -76,10 +77,10 @@ public final class RouterCommands implements TeleFacade.Commands {
      * @param route        Route with http method
      * @param teleCommand  Tele-command to execute
      * @param targetMethod Target method name
-     * @param attributes   Route attributes
+     * @param attributes   Route attributes, see {@link RouteAttribute}
      */
-    public record RouteInfo(String route, TeleCommand teleCommand, String targetMethod,
-                            Map<String, String> attributes) {
+    public record RouteEntry(String route, TeleCommand teleCommand, String targetMethod,
+                             Map<String, String> attributes) {
 
         @Override
         public String toString() {

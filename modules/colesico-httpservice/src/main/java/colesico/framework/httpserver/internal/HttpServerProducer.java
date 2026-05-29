@@ -24,9 +24,6 @@ import colesico.framework.ioc.production.Producer;
 
 
 @Producer
-@Produce(value = DefaultErrorHandler.class, substitute = Substitution.STUB)
+@Produce(value = DefaultErrorHandler.class, keyType = ErrorHandler.class, substitute = Substitution.STUB)
 public class HttpServerProducer {
-    public ErrorHandler defaultErrorHandler(DefaultErrorHandler impl) {
-        return impl;
-    }
 }

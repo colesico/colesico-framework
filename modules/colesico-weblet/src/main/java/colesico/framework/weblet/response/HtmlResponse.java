@@ -21,21 +21,21 @@ package colesico.framework.weblet.response;
  */
 public final class HtmlResponse extends StringResponse {
 
-    public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
+    public static final String CONTENT_TYPE = "text/html; charset=utf-8";
 
     private HtmlResponse(String content, String contentType, int statusCode) {
         super(content, contentType, statusCode);
     }
 
     public static HtmlResponse of() {
-        return new HtmlResponse(null, DEFAULT_CONTENT_TYPE, 204);
+        return new HtmlResponse(null, CONTENT_TYPE, 204);
     }
 
     public static HtmlResponse of(String content) {
-        return new HtmlResponse(content, DEFAULT_CONTENT_TYPE, DEFAULT_STATUS_CODE);
+        return new HtmlResponse(content, CONTENT_TYPE, DEFAULT_STATUS_CODE);
     }
 
     public static HtmlResponse of(String content, int statusCode) {
-        return new HtmlResponse(content, DEFAULT_CONTENT_TYPE, statusCode);
+        return new HtmlResponse(content, CONTENT_TYPE, statusCode);
     }
 }

@@ -11,7 +11,7 @@ import jakarta.inject.Singleton;
 @Singleton
 public final class PlainTextWriter implements HttpTeleWriter<Object, HttpWriteOptions> {
 
-    private static final String CONTENT_TYPE = "text/plain";
+    private static final String CONTENT_TYPE = "text/plain; charset=utf-8";
 
     private final Provider<HttpResponse> httpResponse;
 
@@ -22,10 +22,14 @@ public final class PlainTextWriter implements HttpTeleWriter<Object, HttpWriteOp
 
     @Override
     public void write(Object value, Class<Object> valueType, HttpWriteOptions options) {
+        var resp = httpResponse.get();
+        resp.setContentType(CONTENT_TYPE);
         if (value == null) {
-            httpResponse.get().sendText("", CONTENT_TYPE, 204);
+            resp.setStatusCode(204);
+            resp.sendText("");
         } else {
-            httpResponse.get().sendText(String.valueOf(value), CONTENT_TYPE, 200);
+            resp.setStatusCode(200);
+            resp.sendText(String.valueOf(value));
         }
     }
 

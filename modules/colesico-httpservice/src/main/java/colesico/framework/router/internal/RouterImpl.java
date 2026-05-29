@@ -18,7 +18,7 @@ package colesico.framework.router.internal;
 
 import colesico.framework.assist.StrUtils;
 import colesico.framework.http.HttpMethod;
-import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.ioc.scope.RequestScope;
 import colesico.framework.router.*;
 import colesico.framework.router.assist.RouteTrie;
 import colesico.framework.teleapi.TeleController;
@@ -41,15 +41,15 @@ public class RouterImpl implements Router {
 
     protected final Logger log = LoggerFactory.getLogger(Router.class);
 
-    protected final ThreadScope threadScope;
+    protected final RequestScope requestScope;
 
     protected RouteTrie<RouteAction> routeTrie = new RouteTrie<>(null);
 
     protected RoutesIndex routesIndex = new RoutesIndex();
 
     @Inject
-    public RouterImpl(ThreadScope threadScope) {
-        this.threadScope = threadScope;
+    public RouterImpl(RequestScope requestScope) {
+        this.requestScope = requestScope;
     }
 
     @Override
@@ -57,12 +57,12 @@ public class RouterImpl implements Router {
         var requestMethod = criteria.requestMethod();
         var requestUri = criteria.requestUri();
 
-        RouteTrie.RouteResolution<RouteAction> routeResolution = routeTrie.resolveRoute(StrUtils.concatPath(requestMethod.name(), requestUri, RouteTrie.SEGMENT_DELEMITER));
+        var resolution = routeTrie.resolveRoute(StrUtils.concatPath(requestMethod.name(), requestUri, RouteTrie.SEGMENT_DELEMITER));
 
-        if (routeResolution == null
-                || routeResolution.node() == null
-                || routeResolution.node().value() == null
-                || routeResolution.node().value().teleCommand() == null) {
+        if (resolution == null
+                || resolution.node() == null
+                || resolution.node().value() == null
+                || resolution.node().value().teleCommand() == null) {
             return Optional.empty();
         }
 
@@ -70,8 +70,8 @@ public class RouterImpl implements Router {
                 new Router.Invocation(
                         requestMethod,
                         requestUri,
-                        routeResolution.node().value(),
-                        routeResolution.params())
+                        resolution.node().value(),
+                        resolution.params())
         );
     }
 
@@ -80,14 +80,16 @@ public class RouterImpl implements Router {
         if (invocation == null) {
             throw new TeleException("Undetermined invocation target");
         }
+
         RouterContext routerContext = new RouterContext(invocation.requestUri(), invocation.parameters());
-        threadScope.put(RouterContext.SCOPE_KEY, routerContext);
+        requestScope.put(RouterContext.SCOPE_KEY, routerContext);
 
         var teleController = invocation.action().teleController();
         if (teleController == null || teleController == this) {
             //TODO: create default data port
             invocation.action().teleCommand().execute();
         } else {
+            // forward invocation
             teleController.execute(invocation);
         }
     }
@@ -98,19 +100,19 @@ public class RouterImpl implements Router {
     }
 
     @Override
-    public void register(TeleFacade<?, RouterCommands> teleFacade) {
+    public void register(TeleFacade<?, RouterCommandsRegistry> teleFacade) {
         register(this, teleFacade);
     }
 
-    void register(TeleController<?, Router.Invocation, RouterCommands> teleController,
-                  TeleFacade<?, RouterCommands> teleFacade) {
+    void register(TeleController<?, Router.Invocation, RouterCommandsRegistry> teleController,
+                  TeleFacade<?, RouterCommandsRegistry> teleFacade) {
         log.debug("Register http router tele-facade: {}", teleFacade.getClass().getName());
 
         var commands = teleFacade.commands();
 
-        for (var routeInfo : commands.routesInfo()) {
+        for (var routeInfo : commands.entries()) {
             log.debug("Route '{}' mapped to target method '{}->{}", routeInfo.route(), commands.targetClass().getName(), routeInfo.targetMethod());
-            RouteTrie.Node<RouteAction> node = routeTrie.addRoute(
+            var node = routeTrie.addRoute(
                     routeInfo.route(),
                     new RouteAction(teleController,
                             routeInfo.teleCommand(),
@@ -132,7 +134,7 @@ public class RouterImpl implements Router {
 
     void addCustomAction(HttpMethod httpMethod,
                          String route,
-                         TeleController<Router.Criteria, Router.Invocation, RouterCommands> teleController,
+                         TeleController<Router.Criteria, Router.Invocation, RouterCommandsRegistry> teleController,
                          TeleCommand teleCommand,
                          Class<?> targetClass,
                          String targetMethod,

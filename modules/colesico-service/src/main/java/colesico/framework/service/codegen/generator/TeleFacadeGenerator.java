@@ -104,7 +104,7 @@ public class TeleFacadeGenerator {
     }
 
     protected void generateCommandsMethod(TeleServiceElement teleService, TypeSpec.Builder classBuilder) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(TeleFacade.COMMANDS_METHOD);
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(TeleFacade.COMMANDS_REGISTRY_METHOD);
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         mb.returns(ClassName.get(teleService.commandsClass()));
         mb.addCode(teleService.commandsMethodBody());

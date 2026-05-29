@@ -24,32 +24,28 @@ import java.nio.ByteBuffer;
  */
 public interface HttpResponse {
 
-    void setStatusCode(Integer code);
+    HttpResponse setStatusCode(Integer code);
 
-    void setContentType(String contentType);
+    HttpResponse setContentType(String contentType);
 
-    void setCookie(HttpCookie cookie);
+    HttpResponse setCookie(HttpCookie cookie);
 
-    void setHeader(String name, String vale);
+    HttpResponse setHeader(String name, String vale);
 
     /**
      * Send text response
      */
-    void sendText(String text, String contentType, Integer statusCode);
+    void sendText(String text);
 
     /**
      * Send binary response
      */
-    void sendData(ByteBuffer byteBuffer, String contentType, Integer statusCode);
+    void sendData(ByteBuffer byteBuffer);
 
     /**
      * Send redirect  (Http header Location)
      */
-    void sendRedirect(String location, Integer statusCode);
-
-    default void sendRedirect(String location) {
-        sendRedirect(location, 302);
-    }
+    void sendRedirect(String location);
 
     OutputStream outputStream();
 

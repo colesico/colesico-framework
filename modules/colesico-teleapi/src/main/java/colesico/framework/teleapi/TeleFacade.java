@@ -16,9 +16,6 @@
 
 package colesico.framework.teleapi;
 
-import colesico.framework.teleapi.dataport.DataPort;
-import colesico.framework.teleapi.dataport.ReadOptions;
-import colesico.framework.teleapi.dataport.WriteOptions;
 import jakarta.inject.Provider;
 
 /**
@@ -27,11 +24,11 @@ import jakarta.inject.Provider;
  * @param <T> Target whose method will be invoked (usually a service)
  * @param <C> Tele-commands registry (references to target methods)
  */
-abstract public class TeleFacade<T, C extends TeleFacade.Commands> {
+abstract public class TeleFacade<T, C extends TeleFacade.CommandsRegistry> {
 
     public static final String TELE_FACADE_SUFFIX = "TeleFacade";
     public static final String TARGET_PROV_FIELD = "targetProvider";
-    public static final String COMMANDS_METHOD = "commands";
+    public static final String COMMANDS_REGISTRY_METHOD = "commands";
 
     /**
      * An object whose method will be invoked, typically, this is a service object.
@@ -51,8 +48,8 @@ abstract public class TeleFacade<T, C extends TeleFacade.Commands> {
     abstract public C commands();
 
     /**
-     * Marker interface
+     * Marker interface for tele commands registry
      */
-    public interface Commands {
+    public interface CommandsRegistry {
     }
 }

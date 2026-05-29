@@ -18,6 +18,8 @@ package colesico.framework.weblet.teleapi.writer;
 
 import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
+import colesico.framework.telehttp.writer.TeleHttpResponseWriter;
+import colesico.framework.weblet.response.BinaryResponse;
 import colesico.framework.weblet.response.StringResponse;
 import colesico.framework.weblet.response.TextResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
@@ -31,13 +33,14 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class StringWriter implements WebletTeleWriter<StringResponse> {
+public final class StringWriter
+        extends TeleHttpResponseWriter<StringResponse, WebletWriteOptions>
+        implements WebletTeleWriter<StringResponse> {
 
-    private final Provider<HttpResponse> httpResponse;
 
     @Inject
     public StringWriter(Provider<HttpResponse> httpResponse) {
-        this.httpResponse = httpResponse;
+        super(httpResponse);
     }
 
     @Override
@@ -46,17 +49,20 @@ public final class StringWriter implements WebletTeleWriter<StringResponse> {
         HttpResponse response = httpResponse.get();
 
         if (value == null) {
-            response.sendText("", TextResponse.DEFAULT_CONTENT_TYPE, 204);
+            response.setStatusCode(204)
+                    .setContentType(TextResponse.DEFAULT_CONTENT_TYPE)
+                    .sendText("");
             return;
         }
 
-        HttpUtils.setHeaders(response, value.headers());
-        HttpUtils.setCookies(response, value.cookies());
+        super.write(value, valueType, options);
 
         if (value.content() == null) {
-            response.sendText("", TextResponse.DEFAULT_CONTENT_TYPE, 204);
+            response.setStatusCode(204)
+                    .setContentType(TextResponse.DEFAULT_CONTENT_TYPE)
+                    .sendText("");
         } else {
-            response.sendText(value.content(), value.contentType(), value.statusCode());
+            response.sendText(value.content());
         }
     }
 }

@@ -2,7 +2,7 @@ package colesico.framework.telehttp.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.telehttp.OriginFactory;
+import colesico.framework.telehttp.origin.OriginFactory;
 import colesico.framework.telehttp.writer.ProfileHttpConfigPrototype;
 import colesico.framework.telehttp.assist.CSRFProtector;
 

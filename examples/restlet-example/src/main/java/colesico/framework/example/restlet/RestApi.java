@@ -26,7 +26,7 @@ import colesico.framework.router.Route;
 import colesico.framework.router.RouteAttribute;
 import colesico.framework.restlet.teleapi.writer.PlainTextWriter;
 import colesico.framework.service.Compound;
-import colesico.framework.telehttp.Origin;
+import colesico.framework.telehttp.origin.Origin;
 import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.ParamOrigin;
 

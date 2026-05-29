@@ -17,6 +17,7 @@
 package colesico.framework.telehttp.assist;
 
 import colesico.framework.http.*;
+import colesico.framework.telehttp.response.TeleHttpResponse;
 import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Singleton;

@@ -13,7 +13,7 @@ public final class RouterTeleServiceElement extends TeleServiceElement {
     private final RoutesBuilder routesBuilder;
 
     public RouterTeleServiceElement(Class<?> teleType,
-                                    Class<? extends TeleFacade.Commands> commandsClass,
+                                    Class<? extends TeleFacade.CommandsRegistry> commandsClass,
                                     Class<? extends ReadOptions> readOptionsClass,
                                     Class<? extends WriteOptions> writeOptionsClass,
                                     IocQualifier iocQualifier,

@@ -17,7 +17,7 @@
 package colesico.framework.weblet.codegen;
 
 import colesico.framework.assist.codegen.model.ClassType;
-import colesico.framework.router.RouterCommands;
+import colesico.framework.router.RouterCommandsRegistry;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.*;
@@ -59,8 +59,8 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected Class<? extends TeleFacade.Commands> commandsClass() {
-        return RouterCommands.class;
+    protected Class<? extends TeleFacade.CommandsRegistry> commandsClass() {
+        return RouterCommandsRegistry.class;
     }
 
     @Override

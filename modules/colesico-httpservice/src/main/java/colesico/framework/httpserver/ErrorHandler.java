@@ -19,6 +19,7 @@ package colesico.framework.httpserver;
 import colesico.framework.http.HttpContext;
 
 /**
+ * Request errors handler
  * @author Vladlen Larionov
  */
 public interface ErrorHandler {

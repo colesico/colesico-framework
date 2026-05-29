@@ -1,7 +1,6 @@
 package colesico.framework.telehttp.origin;
 
 import colesico.framework.router.RouterContext;
-import colesico.framework.telehttp.Origin;
 
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;

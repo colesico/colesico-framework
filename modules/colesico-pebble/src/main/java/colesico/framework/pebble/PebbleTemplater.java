@@ -22,7 +22,6 @@ import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.pebble.internal.FrameworkExtension;
 import colesico.framework.pebble.internal.PebbleTemplateLoader;
-import colesico.framework.weblet.HtmlRenderer;
 import colesico.framework.weblet.response.HtmlResponse;
 import colesico.framework.weblet.response.ViewResponse;
 import colesico.framework.weblet.teleapi.WebletWriteOptions;
@@ -92,7 +91,7 @@ public class PebbleTemplater extends ViewWriter implements HtmlRenderer {
 
         String contentType = viewResponse.contentType();
         if (StringUtils.isEmpty(contentType)) {
-            contentType = HtmlResponse.DEFAULT_CONTENT_TYPE;
+            contentType = HtmlResponse.CONTENT_TYPE;
         }
 
         httpResponse.sendText(writer.toString(), contentType, viewResponse.statusCode());

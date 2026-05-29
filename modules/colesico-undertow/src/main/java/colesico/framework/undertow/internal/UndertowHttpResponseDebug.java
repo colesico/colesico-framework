@@ -43,49 +43,49 @@ public class UndertowHttpResponseDebug extends UndertowHttpResponse {
 
     @Override
     public OutputStream outputStream() {
-        log.debug("getOutputStream(); responded=" + isResponded() + "; responseId=" + responseId);
+        log.debug("getOutputStream(); responded={}; responseId={}", isResponded(), responseId);
         return super.outputStream();
     }
 
     @Override
     public void setStatusCode(Integer code) {
-        log.debug("setStatusCode(" + code + "); responded=" + isResponded() + "; responseId=" + responseId);
+        log.debug("setStatusCode({}); responded={}; responseId={}", code, isResponded(), responseId);
         super.setStatusCode(code);
     }
 
     @Override
     public void setContentType(String contentType) {
-        log.debug("setContenType(" + contentType + "); responded=" + isResponded() + "; responseId=" + responseId);
+        log.debug("setContenType({}); responded={}; responseId={}", contentType, isResponded(), responseId);
         super.setContentType(contentType);
     }
 
     @Override
-    public void sendText(String text, String contentType, Integer statusCode) {
-        log.debug("sendText(" + text + "," + contentType + "," + statusCode + "); responded=" + isResponded() + "; responseId=" + responseId);
-        super.sendText(text, contentType, statusCode);
+    public void sendText(String text) {
+        log.debug("sendText({}); responded={}; responseId={}", text, isResponded(), responseId);
+        super.sendText(text);
     }
 
     @Override
-    public void sendData(ByteBuffer byteBuffer, String contentType, Integer statusCode) {
-        log.debug("sendData(" + byteBuffer + "," + contentType + "," + statusCode + "); responded=" + isResponded() + "; responseId=" + responseId);
-        super.sendData(byteBuffer, contentType, statusCode);
+    public void sendData(ByteBuffer byteBuffer) {
+        log.debug("sendData({}); responded={}; responseId={}", byteBuffer, isResponded(), responseId);
+        super.sendData(byteBuffer);
     }
 
     @Override
     public void setCookie(HttpCookie cookie) {
-        log.debug("setCookie(" + cookie + "); responded=" + isResponded() + "; responseId=" + responseId);
+        log.debug("setCookie({}); responded={}; responseId={}", cookie, isResponded(), responseId);
         super.setCookie(cookie);
     }
 
     @Override
     public void setHeader(String name, String vale) {
-        log.debug("setHeader(" + name + "," + vale + "); responded=" + isResponded() + "; responseId=" + responseId);
+        log.debug("setHeader({},{}); responded={}; responseId={}", name, vale, isResponded(), responseId);
         super.setHeader(name, vale);
     }
 
     @Override
-    public void sendRedirect(String location, Integer code) {
-        log.debug("sendRedirect(" + location + "," + code + "); responded=" + isResponded() + "; responseId=" + responseId);
-        super.sendRedirect(location, code);
+    public void sendRedirect(String location) {
+        log.debug("sendRedirect({}); responded={}; responseId={}", location, isResponded(), responseId);
+        super.sendRedirect(location);
     }
 }

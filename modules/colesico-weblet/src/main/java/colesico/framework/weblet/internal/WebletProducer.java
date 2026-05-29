@@ -18,42 +18,27 @@ package colesico.framework.weblet.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.telehttp.Origin;
+import colesico.framework.router.RouterTargetController;
+import colesico.framework.telehttp.origin.Origin;
 import colesico.framework.weblet.teleapi.*;
 import colesico.framework.weblet.teleapi.origin.WebletAutoOrigin;
 
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
 
 @Producer
-@Produce(WebletDataPortImpl.class)
 @Produce(WebletTeleControllerImpl.class)
-@Produce(AuthenticatorImpl.class)
-@Produce(WebletAutoOrigin.class)
+@Produce(value = WebletDataPortImpl.class, keyType = WebletDataPort.class, scoped = Singleton.class)
+@Produce(value = WebletAutoOrigin.class, keyType = Origin.class, scoped = Singleton.class, named = WebletOrigin.AUTO)
 public class WebletProducer {
 
     @Singleton
-    public WebletDataPort getWebletDataPort(WebletDataPortImpl impl) {
+    public WebletTeleController webletTeleController(WebletTeleControllerImpl impl) {
         return impl;
     }
 
     @Singleton
-    public WebletTeleController getWebTeledriver(WebletTeleControllerImpl impl) {
+    public RouterTargetController routerTargetController(WebletTeleController impl) {
         return impl;
     }
-
-    // Default Authenticator
-    @Singleton
-    public Authenticator getAuthenticator(AuthenticatorImpl impl) {
-        return impl;
-    }
-
-
-    @Singleton
-    @Named(WebletOrigin.AUTO)
-    public Origin getWebletAutoOrigin(WebletAutoOrigin impl) {
-        return impl;
-    }
-
 }

@@ -16,19 +16,20 @@
 
 package colesico.framework.router.assist;
 
+import colesico.framework.http.HttpException;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.router.RouterException;
 
 /**
  * Utility exception to raise when route is not resolved
  */
-public class UnknownRouteException extends RouterException {
+public class UnknownRouteException extends HttpException {
 
     private final HttpMethod httpMethod;
     private final String uri;
 
     public UnknownRouteException(HttpMethod httpMethod, String uri) {
-        super("Route '" + httpMethod.name() + uri + "' is not mapped to any controller");
+        super("Route '" + httpMethod.name() + uri + "' is not mapped to any controller", 404);
         this.uri = uri;
         this.httpMethod = httpMethod;
     }

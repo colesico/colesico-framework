@@ -16,7 +16,7 @@
 package colesico.framework.router.codegen;
 
 import colesico.framework.assist.codegen.ArrayCodegen;
-import colesico.framework.router.RouterCommands;
+import colesico.framework.router.RouterCommandsRegistry;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.teleapi.TeleServiceElement;
 import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
@@ -39,7 +39,7 @@ abstract public class RoutesModulator extends TeleServiceModulator<RouterTeleSer
 
     protected final Logger logger = LoggerFactory.getLogger(RoutesModulator.class);
 
-    abstract protected Class<? extends TeleFacade.Commands> commandsClass();
+    abstract protected Class<? extends TeleFacade.CommandsRegistry> commandsClass();
 
     abstract protected Class<? extends ReadOptions> readOptionsClass();
 
@@ -68,9 +68,9 @@ abstract public class RoutesModulator extends TeleServiceModulator<RouterTeleSer
         CodeBlock.Builder cb = CodeBlock.builder();
 
         cb.addStatement("$T $N = new $T($T.class)",
-                ClassName.get(RouterCommands.class),
+                ClassName.get(RouterCommandsRegistry.class),
                 COMMANDS_VAR,
-                ClassName.get(RouterCommands.class),
+                ClassName.get(RouterCommandsRegistry.class),
                 TypeName.get(teleService.parentService().originClass().originType())
         );
 
@@ -91,7 +91,7 @@ abstract public class RoutesModulator extends TeleServiceModulator<RouterTeleSer
         // commands.add("GET/foo/bla",this:commandMethod,"targetMethodName")
         cb.add("$N.$N($S, this::$N, $S, ",
                 COMMANDS_VAR,
-                RouterCommands.ADD_METHOD,
+                RouterCommandsRegistry.ADD_METHOD,
                 routedTeleCommand.route(),
                 routedTeleCommand.teleCommand().commandMethodName(),
                 routedTeleCommand.teleCommand().targetMethodName()

@@ -50,7 +50,7 @@ public class TeleServiceElement {
     /**
      * commands registry class
      */
-    private final Class<? extends TeleFacade.Commands> commandsClass;
+    private final Class<? extends TeleFacade.CommandsRegistry> commandsClass;
 
     /**
      * Commands registry method code
@@ -101,7 +101,7 @@ public class TeleServiceElement {
     private final Map<Class<?>, Object> properties = new HashMap<>();
 
     public TeleServiceElement(Class<?> teleType,
-                              Class<? extends TeleFacade.Commands> commandsClass,
+                              Class<? extends TeleFacade.CommandsRegistry> commandsClass,
                               Class<? extends ReadOptions> readOptionsClass,
                               Class<? extends WriteOptions> writeOptionsClass,
                               IocQualifier iocQualifier) {
@@ -198,7 +198,7 @@ public class TeleServiceElement {
         this.commandsMethodBody = commandsMethodBody;
     }
 
-    public Class<? extends TeleFacade.Commands> commandsClass() {
+    public Class<? extends TeleFacade.CommandsRegistry> commandsClass() {
         return commandsClass;
     }
 

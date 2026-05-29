@@ -1,4 +1,4 @@
-package colesico.framework.telehttp;
+package colesico.framework.telehttp.origin;
 
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.NamedKey;

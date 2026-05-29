@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface TeleController<
         Q extends TeleController.Criteria,
         I extends TeleController.Invocation,
-        C extends TeleFacade.Commands> {
+        C extends TeleFacade.CommandsRegistry> {
 
     /**
      * Resolve invocation with protocol context.

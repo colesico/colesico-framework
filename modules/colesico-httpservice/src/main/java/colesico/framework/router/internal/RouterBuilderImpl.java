@@ -2,7 +2,7 @@ package colesico.framework.router.internal;
 
 import colesico.framework.http.HttpMethod;
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.ioc.scope.RequestScope;
 import colesico.framework.router.*;
 import colesico.framework.teleapi.TeleController;
 
@@ -17,21 +17,22 @@ import java.util.Map;
 @Singleton
 public class RouterBuilderImpl implements RouterBuilder {
 
-    private final ThreadScope threadScope;
+    private final RequestScope requestScope;
     private final Polysupplier<RouterTargetController> targetControllers;
     private final List<CustomRouteAction> customRouteActions = new ArrayList<>();
 
     @Inject
     public RouterBuilderImpl(Polysupplier<RouterTargetController> targetControllers,
-                             ThreadScope threadScope) {
+                             RequestScope requestScope) {
+
         this.targetControllers = targetControllers;
-        this.threadScope = threadScope;
+        this.requestScope = requestScope;
     }
 
     @Override
     public void addCustomAction(HttpMethod httpMethod,
                                 String route,
-                                TeleController<Router.Criteria, Router.Invocation, RouterCommands> teleController,
+                                TeleController<Router.Criteria, Router.Invocation, RouterCommandsRegistry> teleController,
                                 TeleCommand teleCommand,
                                 Class<?> targetClass,
                                 String targetMethod,
@@ -45,7 +46,7 @@ public class RouterBuilderImpl implements RouterBuilder {
 
     @Override
     public Router build() {
-        RouterImpl router = new RouterImpl(threadScope);
+        RouterImpl router = new RouterImpl(requestScope);
 
         for (var teleController : targetControllers) {
             router.register(teleController);
@@ -65,7 +66,7 @@ public class RouterBuilderImpl implements RouterBuilder {
 
     private record CustomRouteAction(HttpMethod httpMethod,
                                      String route,
-                                     TeleController<Router.Criteria, Router.Invocation, RouterCommands> teleController,
+                                     TeleController<Router.Criteria, Router.Invocation, RouterCommandsRegistry> teleController,
                                      TeleCommand teleCommand,
                                      Class<?> targetClass,
                                      String targetMethod,

@@ -16,6 +16,8 @@
 
 package colesico.framework.telehttp;
 
+import colesico.framework.telehttp.origin.Origin;
+
 import java.lang.annotation.*;
 
 /**

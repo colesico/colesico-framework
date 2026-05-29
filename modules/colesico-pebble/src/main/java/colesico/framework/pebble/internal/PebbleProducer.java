@@ -21,7 +21,6 @@ import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.pebble.PebbleTemplater;
-import colesico.framework.weblet.HtmlRenderer;
 import colesico.framework.weblet.response.ViewResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 

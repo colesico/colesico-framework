@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Singleton;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
@@ -31,7 +32,7 @@ import java.util.Date;
 @Singleton
 public class DefaultErrorHandler implements ErrorHandler {
 
-    public static final String HTML_CONTENT_TYPE = "text/html; charset=utf-8";
+    public static final String CONTENT_TYPE = "text/plain; charset=utf-8";
 
     protected final Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
 
@@ -52,21 +53,20 @@ public class DefaultErrorHandler implements ErrorHandler {
         logger.error(toStackTrace(throwable));
 
         StringBuilder out = new StringBuilder("<!doctype html>");
-        out.append("<html>");
-        out.append("<head>");
-        out.append("<title>").append("Error").append("</title>");
-        out.append("</head>");
-        out.append("<body>");
-        out.append("An unexpected error occurred at ").append(new Date().toInstant()).append(". See server log for details.");
-        out.append("</body>");
-        out.append("</html>");
+        out.append("An unexpected error occurred at ")
+                .append(new Date().toInstant())
+                .append(". See server log for details.");
 
         HttpResponse response = httpContext.response();
         try {
             if (throwable instanceof UnknownRouteException) {
-                response.sendText(out.toString(), HTML_CONTENT_TYPE, 404);
+                response.setContentType(CONTENT_TYPE);
+                response.setStatusCode(404);
+                response.sendText(out.toString());
             } else {
-                response.sendText(out.toString(), HTML_CONTENT_TYPE, 500);
+                response.setContentType(CONTENT_TYPE);
+                response.setStatusCode(500);
+                response.sendText(out.toString());
             }
         } catch (Exception ex) {
             logger.error("Sending error page error: " + ExceptionUtils.getRootCauseMessage(ex));

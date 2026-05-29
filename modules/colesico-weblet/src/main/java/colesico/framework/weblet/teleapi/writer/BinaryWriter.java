@@ -16,9 +16,9 @@
 
 package colesico.framework.weblet.teleapi.writer;
 
-import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
+import colesico.framework.telehttp.writer.TeleHttpResponseWriter;
 import colesico.framework.weblet.response.BinaryResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WebletWriteOptions;
@@ -33,13 +33,13 @@ import java.nio.ByteBuffer;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class BinaryWriter implements WebletTeleWriter<BinaryResponse> {
-
-    private final Provider<HttpResponse> httpResponse;
+public final class BinaryWriter
+        extends TeleHttpResponseWriter<BinaryResponse, WebletWriteOptions>
+        implements WebletTeleWriter<BinaryResponse> {
 
     @Inject
     public BinaryWriter(Provider<HttpResponse> httpResponse) {
-        this.httpResponse = httpResponse;
+        super(httpResponse);
     }
 
     @Override
@@ -48,12 +48,13 @@ public final class BinaryWriter implements WebletTeleWriter<BinaryResponse> {
         HttpResponse response = httpResponse.get();
 
         if (value == null) {
-            response.sendData(ByteBuffer.allocate(0), BinaryResponse.DEFAULT_CONTENT_TYPE, 204);
+            response.setStatusCode(204)
+                    .setContentType(BinaryResponse.DEFAULT_CONTENT_TYPE)
+                    .sendData(ByteBuffer.allocate(0));
             return;
         }
 
-        HttpUtils.setHeaders(response, value.headers());
-        HttpUtils.setCookies(response, value.cookies());
+        super.write(value, valueType, options);
 
         // Force download?
         if (value.fileName() != null) {
@@ -61,10 +62,11 @@ public final class BinaryWriter implements WebletTeleWriter<BinaryResponse> {
         }
 
         if (value.content() == null || value.content().length == 0) {
-            response.sendData(ByteBuffer.allocate(0), BinaryResponse.DEFAULT_CONTENT_TYPE, 204);
+            response.setStatusCode(204)
+                    .sendData(ByteBuffer.allocate(0));
         } else {
             ByteBuffer buffer = ByteBuffer.wrap(value.content());
-            response.sendData(buffer, value.contentType(), value.statusCode());
+            response.sendData(buffer);
         }
     }
 

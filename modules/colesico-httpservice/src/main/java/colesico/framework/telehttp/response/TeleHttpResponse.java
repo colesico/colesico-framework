@@ -1,4 +1,4 @@
-package colesico.framework.telehttp.assist;
+package colesico.framework.telehttp.response;
 
 import colesico.framework.http.HttpCookie;
 
@@ -30,7 +30,7 @@ abstract public class TeleHttpResponse {
         this.statusCode = statusCode;
     }
 
-    public void setHeader(String name, String vale) {
+    public void addHeader(String name, String vale) {
         List<String> hValues = headers.computeIfAbsent(name, n -> new ArrayList<>());
         hValues.add(vale);
     }

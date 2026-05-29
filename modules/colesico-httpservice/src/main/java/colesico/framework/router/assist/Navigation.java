@@ -235,9 +235,10 @@ public class Navigation<N extends Navigation<?>> {
     public void redirect(Router router, HttpContext context) {
         String location = toLocation(router);
         HttpResponse response = context.response();
-        HttpUtils.setHeaders(response,headers);
-        HttpUtils.setCookies(response,cookies);
-        response.sendRedirect(location, statusCode);
+        HttpUtils.setHeaders(response, headers);
+        HttpUtils.setCookies(response, cookies);
+        response.setStatusCode(statusCode);
+        response.sendRedirect(location);
     }
 
     /**

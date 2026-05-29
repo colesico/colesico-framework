@@ -16,7 +16,7 @@
 
 package colesico.framework.weblet.response;
 
-import colesico.framework.telehttp.assist.ContentResponse;
+import colesico.framework.telehttp.response.ContentResponse;
 
 /**
  * String content based response

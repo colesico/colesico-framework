@@ -18,7 +18,7 @@ package colesico.framework.example.web.params;
 
 import colesico.framework.http.HttpMethod;
 import colesico.framework.router.RequestMethod;
-import colesico.framework.telehttp.Origin;
+import colesico.framework.telehttp.origin.Origin;
 import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.ParamOrigin;
 import colesico.framework.weblet.response.HtmlResponse;

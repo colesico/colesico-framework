@@ -20,15 +20,14 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.ioc.scope.RequestScope;
 import colesico.framework.router.Router;
-import colesico.framework.router.RouterContext;
-import colesico.framework.router.RouterCommands;
+import colesico.framework.router.RouterCommandsRegistry;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.telehttp.assist.CSRFProtector;
 import colesico.framework.weblet.Weblet;
-import colesico.framework.weblet.teleapi.Authenticator;
+import colesico.framework.weblet.teleapi.WebletDataPort;
 import colesico.framework.weblet.teleapi.WebletTeleController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,37 +45,30 @@ public class WebletTeleControllerImpl implements WebletTeleController {
 
     protected final Logger logger = LoggerFactory.getLogger(WebletTeleControllerImpl.class);
 
-    protected final WebletDataPortImpl dataPort;
-    protected final Polysupplier<TeleFacade<?, RouterCommands>> teleFacades;
+    protected final WebletDataPort dataPort;
+    protected final Polysupplier<TeleFacade<?, RouterCommandsRegistry>> teleFacades;
 
-    protected final Provider<HttpContext> httpContextProv;
-    protected final Provider<RouterContext> routerContextProv;
-
-    protected final Provider<Authenticator> authenticatorProv;
+    protected final Provider<HttpContext> httpContext;
 
     protected final CSRFProtector csrfProtector;
 
-    protected final ThreadScope threadScope;
+    protected final RequestScope requestScope;
 
-    public WebletTeleControllerImpl(WebletDataPortImpl dataPort,
+    public WebletTeleControllerImpl(WebletDataPort dataPort,
                                     @Classed(Weblet.class)
                                     Polysupplier<TeleFacade> teleFacades,
-                                    Provider<HttpContext> httpContextProv,
-                                    Provider<RouterContext> routerContextProv,
-                                    Provider<Authenticator> authenticatorProv,
+                                    Provider<HttpContext> httpContext,
                                     CSRFProtector csrfProtector,
-                                    ThreadScope threadScope) {
+                                    RequestScope requestScope) {
         this.dataPort = dataPort;
         this.teleFacades = (Polysupplier) teleFacades;
-        this.httpContextProv = httpContextProv;
-        this.routerContextProv = routerContextProv;
-        this.authenticatorProv = authenticatorProv;
+        this.httpContext = httpContext;
         this.csrfProtector = csrfProtector;
-        this.threadScope = threadScope;
+        this.requestScope = requestScope;
     }
 
     @Override
-    public Iterable<TeleFacade<?, RouterCommands>> teleFacades() {
+    public Iterable<TeleFacade<?, RouterCommandsRegistry>> teleFacades() {
         return teleFacades;
     }
 
@@ -87,14 +79,14 @@ public class WebletTeleControllerImpl implements WebletTeleController {
 
     @Override
     public void execute(Router.Invocation invocation) {
-        threadScope.put(DataPort.SCOPE_KEY, dataPort);
-        HttpRequest request = httpContextProv.get().request();
+        requestScope.put(DataPort.SCOPE_KEY, dataPort);
+        HttpRequest request = httpContext.get().request();
         csrfProtector.check(request);
         invocation.action().teleCommand().execute();
     }
 
     @Override
-    public void register(TeleFacade<?, RouterCommands> teleFacade) {
+    public void register(TeleFacade<?, RouterCommandsRegistry> teleFacade) {
         throw new UnsupportedOperationException("Not supported");
     }
 }

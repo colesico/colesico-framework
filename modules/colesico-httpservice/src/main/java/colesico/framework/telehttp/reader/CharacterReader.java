@@ -17,8 +17,7 @@
 package colesico.framework.telehttp.reader;
 
 import colesico.framework.telehttp.HttpReadOptions;
-import colesico.framework.telehttp.OriginFactory;
-import colesico.framework.telehttp.OriginTeleReader;
+import colesico.framework.telehttp.origin.OriginFactory;
 import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Inject;
@@ -28,7 +27,7 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class CharacterReader extends OriginTeleReader<Character, HttpReadOptions> {
+public final class CharacterReader extends OriginReader<Character, HttpReadOptions> {
 
     @Inject
     public CharacterReader(OriginFactory originFactory) {

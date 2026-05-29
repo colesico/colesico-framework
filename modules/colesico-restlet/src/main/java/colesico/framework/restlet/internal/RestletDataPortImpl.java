@@ -20,7 +20,7 @@ import colesico.framework.restlet.RestletError;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.reader.ValueReader;
 import colesico.framework.restlet.teleapi.writer.ObjectWriter;
-import colesico.framework.teleapi.dataport.TRWFactory;
+import colesico.framework.teleapi.dataport.TeleFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -35,10 +35,10 @@ import java.util.List;
 public class RestletDataPortImpl implements RestletDataPort {
 
     private final Logger logger = LoggerFactory.getLogger(RestletDataPort.class);
-    private final TRWFactory trwFactory;
+    private final TeleFactory trwFactory;
 
 
-    public RestletDataPortImpl(TRWFactory trwFactory) {
+    public RestletDataPortImpl(TeleFactory trwFactory) {
         this.trwFactory = trwFactory;
     }
 
@@ -56,14 +56,14 @@ public class RestletDataPortImpl implements RestletDataPort {
 
         if (query.getReaderClass() != null) {
             // Use specified reader
-            reader = (RestletTeleReader<V>) trwFactory.getReader(query.getReaderClass());
+            reader = (RestletTeleReader<V>) trwFactory.reader(query.getReaderClass());
         } else {
             // Use reader by param type
             reader = trwFactory.findReader(RestletTeleReader.class, query.valueType());
 
             // No accurate reader here so are reading data as object
             if (reader == null) {
-                reader = (RestletTeleReader<V>) trwFactory.getReader(ValueReader.class);
+                reader = (RestletTeleReader<V>) trwFactory.reader(ValueReader.class);
             }
         }
         return reader.read(query);
@@ -80,7 +80,7 @@ public class RestletDataPortImpl implements RestletDataPort {
 
         if (options.getWriterClass() != null) {
             // Specified writer
-            writer = trwFactory.getWriter(options.getWriterClass());
+            writer = trwFactory.writer(options.getWriterClass());
         } else {
             // By type writer
             writer = trwFactory.findWriter(RestletTeleWriter.class, options.valueType());
@@ -88,7 +88,7 @@ public class RestletDataPortImpl implements RestletDataPort {
 
         if (writer == null) {
             // Default object writer
-            writer = (RestletTeleWriter<V>) trwFactory.getWriter(ObjectWriter.class);
+            writer = (RestletTeleWriter<V>) trwFactory.writer(ObjectWriter.class);
         }
 
         writer.write(value, options);
@@ -121,7 +121,7 @@ public class RestletDataPortImpl implements RestletDataPort {
         error.setErrorCode(throwable.getClass().getCanonicalName());
         error.setMessage(ExceptionUtils.getRootCauseMessage(throwable));
         error.setDetails(getErrorMessages(throwable));
-        RestletTeleWriter objWriter = trwFactory.getWriter(ObjectWriter.class);
+        RestletTeleWriter objWriter = trwFactory.writer(ObjectWriter.class);
         context.setStatusCode(500);
         objWriter.write(error, context);
 

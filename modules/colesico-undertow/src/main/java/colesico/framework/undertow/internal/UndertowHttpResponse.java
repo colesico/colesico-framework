@@ -60,31 +60,17 @@ public class UndertowHttpResponse implements HttpResponse {
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, contentType);
     }
 
-    protected void sendMetadata(String contentType, Integer statusCode) {
-        if (StringUtils.isEmpty(contentType)) {
-            throw new RuntimeException("ContentType is empty");
-        }
-        if (statusCode == null) {
-            throw new RuntimeException("StatusCode is null");
-        }
-        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, contentType);
-        exchange.setStatusCode(statusCode);
-    }
-
     @Override
-    public void sendText(String text, String contentType, Integer statusCode) {
-        sendMetadata(contentType, statusCode);
+    public void sendText(String text) {
         exchange.getResponseSender().send(text);
         exchange.endExchange();
     }
 
     @Override
-    public void sendData(ByteBuffer byteBuffer, String contentType, Integer statusCode) {
-        sendMetadata(contentType, statusCode);
+    public void sendData(ByteBuffer byteBuffer) {
         exchange.getResponseSender().send(byteBuffer);
         exchange.endExchange();
     }
-
 
     @Override
     public void setCookie(HttpCookie cookie) {
@@ -97,11 +83,7 @@ public class UndertowHttpResponse implements HttpResponse {
     }
 
     @Override
-    public void sendRedirect(String location, Integer code) {
-        if (code == null) {
-            throw new RuntimeException("StatusCode is null");
-        }
-        exchange.setStatusCode(code);
+    public void sendRedirect(String location) {
         exchange.getResponseHeaders().put(Headers.LOCATION, location);
         exchange.endExchange();
     }

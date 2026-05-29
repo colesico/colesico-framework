@@ -29,15 +29,16 @@ module colesico.framework.httpservice {
     exports colesico.framework.telehttp.writer;
     exports colesico.framework.telehttp.codegen;
     exports colesico.framework.telehttp.internal to colesico.framework.ioc;
+    exports colesico.framework.telehttp.response;
 
     exports colesico.framework.telehttp.t9n;
     opens colesico.framework.telehttp.t9n;
+
 
     //== HTTP Server
 
     exports colesico.framework.httpserver;
     exports colesico.framework.httpserver.internal to colesico.framework.ioc;
-
 
 
 }

@@ -8,8 +8,8 @@ import colesico.framework.restlet.RestletException;
 import colesico.framework.restlet.teleapi.RestletJsonConverter;
 import colesico.framework.restlet.teleapi.RestletOrigin;
 import colesico.framework.restlet.teleapi.RestletTeleContext;
-import colesico.framework.telehttp.Origin;
-import colesico.framework.telehttp.OriginFactory;
+import colesico.framework.telehttp.origin.Origin;
+import colesico.framework.telehttp.origin.OriginFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 

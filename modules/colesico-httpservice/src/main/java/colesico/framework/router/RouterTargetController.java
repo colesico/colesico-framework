@@ -6,11 +6,11 @@ import colesico.framework.teleapi.TeleFacade;
 /**
  * This interface must provide a controller that will call the router to execute the invocation.
  */
-public interface RouterTargetController<Q extends TeleController.Criteria> extends TeleController<Q, Router.Invocation, RouterCommands> {
+public interface RouterTargetController<Q extends TeleController.Criteria> extends TeleController<Q, Router.Invocation, RouterCommandsRegistry> {
 
     /**
      * Target controllers all tele-facades
      */
-    Iterable<TeleFacade<?, RouterCommands>> teleFacades();
+    Iterable<TeleFacade<?, RouterCommandsRegistry>> teleFacades();
 }
 
