@@ -25,6 +25,11 @@ import colesico.framework.ioc.IocBuilder;
 public class Main {
 
     static void main(String[] args) {
+        try {
+            Class.forName("org.xnio.nio.NioXnioProvider");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         IocBuilder.create().build()
                 .instance(HttpServer.class)
                 .start();
