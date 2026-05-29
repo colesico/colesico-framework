@@ -24,6 +24,7 @@ public class HelloWeblet {
 
     public static final String SAY_HELLO_TEXT = "Hello World!";
     public static final String SAY_HOLLA_TEXT = "Holla World!";
+    public static final String SAY_PRIVET_TEXT = "Привет Мир!";
 
     // Browse the url: http://localhost:8080/hello-weblet/say-hello?name=Tatiana
     public HtmlResponse sayHello() {
@@ -37,11 +38,11 @@ public class HelloWeblet {
 
     // Browse the url: http://localhost:8080/hello-weblet/privet?name=Tatiana
     public HtmlResponse privet(String name) {
-        return HtmlResponse.of("Привет, "+name);
+        return HtmlResponse.of(name + ": " + SAY_PRIVET_TEXT);
     }
 
-    // Browse the url: http://localhost:8080/hello-weblet/do-something?name=Tatiana
-    public void doSomething(Integer i, Integer j){
-        IO.println("Sum = "+(i+j));
+    // Browse the url: http://localhost:8080/hello-weblet/do-something?i=1&j=2
+    public void doSomething(Integer i, Integer j) {
+        IO.println("Sum = " + (i + j));
     }
 }

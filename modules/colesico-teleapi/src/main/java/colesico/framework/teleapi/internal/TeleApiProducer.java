@@ -18,6 +18,7 @@ package colesico.framework.teleapi.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
+import colesico.framework.ioc.scope.RequestScope;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.teleapi.dataport.DataPort;
@@ -41,7 +42,7 @@ public class TeleApiProducer {
      * Produces data port
      */
     @Unscoped
-    public DataPort getDataPort(ThreadScope scope) {
+    public DataPort dataPort(RequestScope scope) {
         DataPort port = scope.get(DataPort.SCOPE_KEY);
         if (port == null) {
             throw new TeleException(NO_DATA_PORT_MSG);

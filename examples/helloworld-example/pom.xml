@@ -69,6 +69,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Downgrade logging fix jpms access -->
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <version>3.5.3.Final</version>
+        </dependency>
+
     </dependencies>
 
     <build>

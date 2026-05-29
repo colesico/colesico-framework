@@ -5,6 +5,7 @@ module colesico.framework.undertow {
 
     requires transitive undertow.core;
     requires xnio.api;
+    uses org.xnio.XnioProvider;
 
     requires transitive colesico.framework.config;
     requires transitive colesico.framework.httpservice;
