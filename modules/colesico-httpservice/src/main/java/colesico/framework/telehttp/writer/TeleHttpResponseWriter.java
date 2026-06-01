@@ -22,7 +22,7 @@ abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, W exten
         HttpUtils.setHeaders(response, value.headers());
         HttpUtils.setCookies(response, value.cookies());
 
-        response.setStatusCode(value.statusCode());
+        response.setStatus(value.statusCode());
         response.setContentType(value.contentType());
     }
 }

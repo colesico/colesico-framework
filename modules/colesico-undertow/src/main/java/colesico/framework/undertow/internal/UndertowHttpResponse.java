@@ -51,7 +51,7 @@ public class UndertowHttpResponse implements HttpResponse {
     }
 
     @Override
-    public HttpResponse setStatusCode(Integer code) {
+    public HttpResponse setStatus(Integer code) {
         exchange.setStatusCode(code);
         return this;
     }
@@ -81,8 +81,8 @@ public class UndertowHttpResponse implements HttpResponse {
     }
 
     @Override
-    public void sendData(ByteBuffer byteBuffer) {
-        exchange.getResponseSender().send(byteBuffer);
+    public void sendData(ByteBuffer buffer) {
+        exchange.getResponseSender().send(buffer);
         exchange.endExchange();
     }
 
@@ -94,7 +94,7 @@ public class UndertowHttpResponse implements HttpResponse {
     }
 
     @Override
-    public boolean isResponded() {
+    public boolean isCommitted() {
         return exchange.isResponseStarted();
     }
 

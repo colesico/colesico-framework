@@ -237,7 +237,7 @@ public class Navigation<N extends Navigation<?>> {
         HttpResponse response = context.response();
         HttpUtils.setHeaders(response, headers);
         HttpUtils.setCookies(response, cookies);
-        response.setStatusCode(statusCode);
+        response.setStatus(statusCode);
         response.sendRedirect(location);
     }
 

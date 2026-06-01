@@ -44,53 +44,53 @@ public class UndertowHttpResponseDebug extends UndertowHttpResponse {
 
     @Override
     public OutputStream outputStream() {
-        log.debug("getOutputStream(); responded={}; responseId={}", isResponded(), responseId);
+        log.debug("getOutputStream(); responded={}; responseId={}", isCommitted(), responseId);
         return super.outputStream();
     }
 
     @Override
-    public HttpResponse setStatusCode(Integer code) {
-        log.debug("setStatusCode({}); responded={}; responseId={}", code, isResponded(), responseId);
-        super.setStatusCode(code);
+    public HttpResponse setStatus(Integer code) {
+        log.debug("setStatusCode({}); responded={}; responseId={}", code, isCommitted(), responseId);
+        super.setStatus(code);
         return this;
     }
 
     @Override
     public HttpResponse setContentType(String contentType) {
-        log.debug("setContenType({}); responded={}; responseId={}", contentType, isResponded(), responseId);
+        log.debug("setContenType({}); responded={}; responseId={}", contentType, isCommitted(), responseId);
         super.setContentType(contentType);
         return this;
     }
 
     @Override
     public HttpResponse setCookie(HttpCookie cookie) {
-        log.debug("setCookie({}); responded={}; responseId={}", cookie, isResponded(), responseId);
+        log.debug("setCookie({}); responded={}; responseId={}", cookie, isCommitted(), responseId);
         super.setCookie(cookie);
         return this;
     }
 
     @Override
     public HttpResponse setHeader(String name, String vale) {
-        log.debug("setHeader({},{}); responded={}; responseId={}", name, vale, isResponded(), responseId);
+        log.debug("setHeader({},{}); responded={}; responseId={}", name, vale, isCommitted(), responseId);
         super.setHeader(name, vale);
         return this;
     }
 
     @Override
     public void sendText(String text) {
-        log.debug("sendText({}); responded={}; responseId={}", text, isResponded(), responseId);
+        log.debug("sendText({}); responded={}; responseId={}", text, isCommitted(), responseId);
         super.sendText(text);
     }
 
     @Override
-    public void sendData(ByteBuffer byteBuffer) {
-        log.debug("sendData({}); responded={}; responseId={}", byteBuffer, isResponded(), responseId);
-        super.sendData(byteBuffer);
+    public void sendData(ByteBuffer buffer) {
+        log.debug("sendData({}); responded={}; responseId={}", buffer, isCommitted(), responseId);
+        super.sendData(buffer);
     }
 
     @Override
     public void sendRedirect(String location) {
-        log.debug("sendRedirect({}); responded={}; responseId={}", location, isResponded(), responseId);
+        log.debug("sendRedirect({}); responded={}; responseId={}", location, isCommitted(), responseId);
         super.sendRedirect(location);
     }
 }

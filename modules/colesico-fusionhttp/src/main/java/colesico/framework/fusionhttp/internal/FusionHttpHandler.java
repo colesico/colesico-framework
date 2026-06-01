@@ -16,14 +16,15 @@ public class FusionHttpHandler extends RequestProcessor<FusionHttpContext> imple
     }
 
     @Override
-    public void handle(HTTPRequest httpRequest, HTTPResponse httpResponse) throws Exception {
-        var context =  new FusionHttpContext(httpRequest,httpResponse);
+    public void handle(HTTPRequest request, HTTPResponse response) throws Exception {
+        var context = new FusionHttpContext(new FusionHttpRequest(request),
+                new FusionHttpResponse(response)
+        );
         handleRequest(context);
     }
 
     @Override
     protected HttpContext createHttpContext(FusionHttpContext ctx) {
-        return new HttpContext(ctx.);
-
+        return new HttpContext(ctx.request(), ctx.response());
     }
 }

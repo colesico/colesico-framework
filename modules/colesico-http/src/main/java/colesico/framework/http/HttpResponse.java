@@ -24,7 +24,7 @@ import java.nio.ByteBuffer;
  */
 public interface HttpResponse {
 
-    HttpResponse setStatusCode(Integer code);
+    HttpResponse setStatus(Integer code);
 
     HttpResponse setContentType(String contentType);
 
@@ -40,7 +40,7 @@ public interface HttpResponse {
     /**
      * Send binary response
      */
-    void sendData(ByteBuffer byteBuffer);
+    void sendData(ByteBuffer buffer);
 
     /**
      * Send redirect  (Http header Location)
@@ -52,7 +52,7 @@ public interface HttpResponse {
     /**
      * Returns true if the server has sent any data to a client
      */
-    boolean isResponded();
+    boolean isCommitted();
 
     /**
      * Dump response data to characters output for further logging

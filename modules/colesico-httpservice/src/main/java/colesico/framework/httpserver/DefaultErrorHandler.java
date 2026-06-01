@@ -61,11 +61,11 @@ public class DefaultErrorHandler implements ErrorHandler {
         try {
             if (throwable instanceof UnknownRouteException) {
                 response.setContentType(CONTENT_TYPE);
-                response.setStatusCode(404);
+                response.setStatus(404);
                 response.sendText(out.toString());
             } else {
                 response.setContentType(CONTENT_TYPE);
-                response.setStatusCode(500);
+                response.setStatus(500);
                 response.sendText(out.toString());
             }
         } catch (Exception ex) {

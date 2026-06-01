@@ -25,10 +25,10 @@ public final class PlainTextWriter implements HttpTeleWriter<Object, HttpWriteOp
         var resp = httpResponse.get();
         resp.setContentType(CONTENT_TYPE);
         if (value == null) {
-            resp.setStatusCode(204);
+            resp.setStatus(204);
             resp.sendText("");
         } else {
-            resp.setStatusCode(200);
+            resp.setStatus(200);
             resp.sendText(String.valueOf(value));
         }
     }

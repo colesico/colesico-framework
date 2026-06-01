@@ -17,9 +17,7 @@
 package colesico.framework.weblet.teleapi.writer;
 
 import colesico.framework.http.HttpResponse;
-import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.telehttp.writer.TeleHttpResponseWriter;
-import colesico.framework.weblet.response.BinaryResponse;
 import colesico.framework.weblet.response.StringResponse;
 import colesico.framework.weblet.response.TextResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
@@ -49,7 +47,7 @@ public final class StringWriter
         HttpResponse response = httpResponse.get();
 
         if (value == null) {
-            response.setStatusCode(204)
+            response.setStatus(204)
                     .setContentType(TextResponse.DEFAULT_CONTENT_TYPE)
                     .sendText("");
             return;
@@ -58,7 +56,7 @@ public final class StringWriter
         super.write(value, valueType, options);
 
         if (value.content() == null) {
-            response.setStatusCode(204)
+            response.setStatus(204)
                     .setContentType(TextResponse.DEFAULT_CONTENT_TYPE)
                     .sendText("");
         } else {

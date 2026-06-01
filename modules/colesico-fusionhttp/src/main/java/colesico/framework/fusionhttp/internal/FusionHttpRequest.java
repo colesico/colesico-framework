@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.Writer;
 
 public class FusionHttpRequest implements HttpRequest {
+
     private final HTTPRequest request;
 
     public FusionHttpRequest(HTTPRequest request) {
