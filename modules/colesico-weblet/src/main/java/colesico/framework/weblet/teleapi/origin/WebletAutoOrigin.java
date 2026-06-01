@@ -37,8 +37,8 @@ public class WebletAutoOrigin implements WebletOrigin {
             case HttpMethod.PATCH:
             case HttpMethod.DELETE:
             case HttpMethod.PUT:
-                if (httpRequest.postParameters().hasKey(name)) {
-                    return httpRequest.postParameters().getAll(name);
+                if (httpRequest.formData().hasKey(name)) {
+                    return httpRequest.formData().getAll(name);
                 }
                 if (httpRequest.queryParameters().hasKey(name)) {
                     return httpRequest.queryParameters().getAll(name);

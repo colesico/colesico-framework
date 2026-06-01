@@ -5,8 +5,6 @@ import io.fusionauth.http.server.HTTPRequest;
 
 import java.io.InputStream;
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
 
 public class FusionHttpRequest implements HttpRequest {
     private final HTTPRequest request;
@@ -47,34 +45,35 @@ public class FusionHttpRequest implements HttpRequest {
 
     @Override
     public HttpValues<String, String> headers() {
-        var headers = request.getHeaders();
-        Map<String, MultiValue<String>> result = new HashMap<>();
-        headers.forEach((name,values)->{
-
-            var multiValue = result.computeIfAbsent(name, new MultiValue<>());
-        });
-
-        return new HttpValues<>(result);
+        return new HttpValues<>(request.getHeaders());
     }
 
     @Override
     public HttpValues<String, HttpCookie> cookies() {
-        return null;
+        HttpValues.Builder<String, HttpCookie> builder = HttpValues.builder();
+        for (var cookie : request.getCookies()) {
+            builder.add(cookie.getName(), new FusionCookie(cookie));
+        }
+        return builder.build();
     }
 
     @Override
     public HttpValues<String, String> queryParameters() {
-        return null;
+        return new HttpValues<>(request.getURLParameters());
     }
 
     @Override
-    public HttpValues<String, String> postParameters() {
-        return null;
+    public HttpValues<String, String> formData() {
+        return new HttpValues<>(request.getFormData());
     }
 
     @Override
-    public HttpValues<String, HttpFile> postFiles() {
-        return null;
+    public HttpValues<String, HttpFile> files() {
+        HttpValues.Builder<String, HttpFile> builder = HttpValues.builder();
+        for (var file : request.getFiles()) {
+            builder.add(file.getName(), new FusionHttpFile(file));
+        }
+        return builder.build();
     }
 
     @Override
@@ -84,6 +83,12 @@ public class FusionHttpRequest implements HttpRequest {
 
     @Override
     public void dump(Writer out) {
-
+        try {
+            out.write("HTTP Request");
+            out.write(request.getMethod().name() + " ");
+            out.write(request.getBaseURL() + request.getPath() + request.getQueryString());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

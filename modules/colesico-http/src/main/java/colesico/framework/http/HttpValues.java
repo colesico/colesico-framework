@@ -23,9 +23,9 @@ import java.util.*;
  */
 public final class HttpValues<K, V> {
 
-    private final Map<K, MultiValue<V>> valuesMap;
+    private final Map<K, List<V>> valuesMap;
 
-    public HttpValues(Map<K, MultiValue<V>> valuesMap) {
+    public HttpValues(Map<K, List<V>> valuesMap) {
         this.valuesMap = valuesMap;
     }
 
@@ -38,11 +38,11 @@ public final class HttpValues<K, V> {
      * To retrieve all values associated with given key use {@link HttpValues#getAll(K)}
      */
     public V get(K key) {
-        MultiValue<V> multiValue = valuesMap.get(key);
+        List<V> multiValue = valuesMap.get(key);
         if (multiValue == null) {
             return null;
         }
-        return multiValue.value();
+        return multiValue.getFirst();
     }
 
     public Set<K> keys() {
@@ -52,7 +52,7 @@ public final class HttpValues<K, V> {
     /**
      * Returns all values associated with given key or null.
      */
-    public MultiValue<V> getAll(K key) {
+    public List<V> getAll(K key) {
         return valuesMap.get(key);
     }
 
@@ -64,28 +64,23 @@ public final class HttpValues<K, V> {
         return valuesMap.isEmpty();
     }
 
-    public Map<K, MultiValue<V>> export() {
-        Map<K, MultiValue<V>> result = new HashMap<>();
-        for (Map.Entry<K, MultiValue<V>> entry : valuesMap.entrySet()) {
-            Collection<V> cv = new ArrayList<>();
-            for (V v : entry.getValue()) {
-                cv.add(v);
-            }
-            result.put(entry.getKey(), new MultiValue<>(cv));
-        }
-        return result;
+    public Map<K, List<V>> export() {
+        return Collections.unmodifiableMap(valuesMap);
+    }
+
+    public static <K, V> Builder<K, V> builder() {
+        return new Builder<>();
     }
 
     public static class Builder<K, V> {
-        private Map<K, Collection<V>> valuesMap = new HashMap<>();
+        private final Map<K, List<V>> valuesMap = new HashMap<>();
 
         public void add(K key, V value) {
-            var multiValue = valuesMap.computeIfAbsent(key, k -> new ArrayList<V>());
+            var multiValue = valuesMap.computeIfAbsent(key, k -> new ArrayList<>());
             multiValue.add(value);
         }
 
-        public HttpValues<K,V> build(){
-            Map<K, Collection<V>> valuesMap = new HashMap<>();
+        public HttpValues<K, V> build() {
             return new HttpValues<>(valuesMap);
         }
     }

@@ -39,6 +39,6 @@ public final class HttpFileReader implements HttpTeleReader<HttpFile, HttpReadOp
 
     @Override
     public HttpFile read(Class<HttpFile> valueType, HttpReadOptions options) {
-        return httpRequest.get().postFiles().get(options.paramName());
+        return httpRequest.get().files().get(options.paramName());
     }
 }

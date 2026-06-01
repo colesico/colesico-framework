@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class ForwardRequest implements HttpRequest {
             requestURI = uri.getPath();
             queryString = uri.getQuery();
 
-            Map<String, MultiValue<String>> paramsMap = new HashMap<>();
+            Map<String, List<String>> paramsMap = new HashMap<>();
             if (queryString != null) {
                 // Parse params
                 String[] pairs = queryString.split("&");
@@ -42,7 +43,7 @@ public class ForwardRequest implements HttpRequest {
                     int idx = pair.indexOf("=");
                     String paramName = URLDecoder.decode(pair.substring(0, idx), "UTF-8");
                     String paramVal = URLDecoder.decode(pair.substring(idx + 1), "UTF-8");
-                    paramsMap.put(paramName, new MultiValue<>(List.of(paramVal)));
+                    paramsMap.put(paramName, new ArrayList<>(List.of(paramVal)));
                 }
             }
             queryParameters = new HttpValues<>(paramsMap);
@@ -97,13 +98,13 @@ public class ForwardRequest implements HttpRequest {
     }
 
     @Override
-    public HttpValues<String, String> postParameters() {
-        return parentRequest.postParameters();
+    public HttpValues<String, String> formData() {
+        return parentRequest.formData();
     }
 
     @Override
-    public HttpValues<String, HttpFile> postFiles() {
-        return parentRequest.postFiles();
+    public HttpValues<String, HttpFile> files() {
+        return parentRequest.files();
     }
 
     @Override

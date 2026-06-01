@@ -72,12 +72,12 @@ public interface HttpRequest {
      * Returns read-only string parameters model from post map with Content-Type: application/x-www-form-urlencoded
      * or  multipart/form-data except files
      */
-    HttpValues<String,String> postParameters();
+    HttpValues<String,String> formData();
 
     /**
      * Returns read-only file model from post map with Content-Type: multipart/form-data
      */
-    HttpValues<String, HttpFile> postFiles();
+    HttpValues<String, HttpFile> files();
 
     /**
      * Returns body input stream

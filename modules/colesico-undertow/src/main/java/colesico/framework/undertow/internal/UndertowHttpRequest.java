@@ -178,7 +178,7 @@ public final class UndertowHttpRequest implements HttpRequest {
     }
 
     @Override
-    public HttpValues<String, String> postParameters() {
+    public HttpValues<String, String> formData() {
         if (postParams == null) {
             createPostValues();
         }
@@ -186,7 +186,7 @@ public final class UndertowHttpRequest implements HttpRequest {
     }
 
     @Override
-    public HttpValues<String, HttpFile> postFiles() {
+    public HttpValues<String, HttpFile> files() {
         if (postFiles == null) {
             createPostValues();
         }

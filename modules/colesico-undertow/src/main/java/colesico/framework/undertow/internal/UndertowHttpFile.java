@@ -6,6 +6,7 @@ import io.undertow.util.HeaderValues;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 
 public class UndertowHttpFile implements HttpFile {
@@ -42,6 +43,11 @@ public class UndertowHttpFile implements HttpFile {
         HeaderValues hv = value.getHeaders().get("Content-Type");
         String contentType = hv != null ? hv.getFirst() : "";
         return contentType;
+    }
+
+    @Override
+    public String encoding() {
+        return value.getCharset();
     }
 
     @Override

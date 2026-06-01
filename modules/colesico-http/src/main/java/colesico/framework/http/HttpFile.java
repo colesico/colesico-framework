@@ -23,7 +23,7 @@ import java.io.InputStream;
  */
 public interface HttpFile {
     /**
-     * Release server resources which are used to store the file staticres
+     * Release server resources which are used to store the file
      */
     void release();
 

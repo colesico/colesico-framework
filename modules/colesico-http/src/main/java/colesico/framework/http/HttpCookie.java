@@ -15,6 +15,7 @@
  */
 package colesico.framework.http;
 
+import java.time.Instant;
 import java.util.Date;
 
 /**
@@ -34,9 +35,9 @@ public interface HttpCookie {
 
     String path();
 
-    Integer maxAge();
+    Long maxAge();
 
-    Date expires();
+    Instant expires();
 
     Boolean secure();
 
@@ -50,9 +51,9 @@ public interface HttpCookie {
 
     HttpCookie setPath(String path);
 
-    HttpCookie setMaxAge(Integer age);
+    HttpCookie setMaxAge(Long age);
 
-    HttpCookie setExpires(Date expires);
+    HttpCookie setExpires(Instant expires);
 
     HttpCookie setSecure(Boolean secure);
 
@@ -61,6 +62,6 @@ public interface HttpCookie {
     HttpCookie setSameSite(SameSite sameSite);
 
     enum SameSite {
-        STRICT, LAX
+        STRICT, LAX, NONE
     }
 }
