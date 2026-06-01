@@ -62,8 +62,8 @@ abstract public class RequestProcessor<C> {
     }
 
     protected Router.Invocation resolve(HttpContext httpContext) {
-        HttpMethod httpMethod = httpContext.request().requestMethod();
-        String requestUri = httpContext.request().requestURI();
+        HttpMethod httpMethod = httpContext.request().method();
+        String requestUri = httpContext.request().path();
         Optional<Router.Invocation> resolution;
         try {
             resolution = router.resolve(httpMethod, requestUri);

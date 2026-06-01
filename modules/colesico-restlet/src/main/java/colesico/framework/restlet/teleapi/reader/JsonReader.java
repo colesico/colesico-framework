@@ -38,7 +38,7 @@ public final class JsonReader implements ValueReader {
     public Object read(RestletTeleContext context) {
         HttpRequest request = httpContextProv.get().request();
 
-        HttpMethod requestMethod = request.requestMethod();
+        HttpMethod requestMethod = request.method();
 
         // Should the value be read from request input stream?
         String originName = context.originName();

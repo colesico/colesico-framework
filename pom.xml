@@ -24,11 +24,11 @@
     <artifactId>colesico-framework</artifactId>
     <packaging>pom</packaging>
     <version>6.0.0-SNAPSHOT</version>
+
     <name>Colesico Framework</name>
     <description>
-        Lightweight application framework for Java 21+
+        Lightweight application framework for Java 25+
     </description>
-
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -36,7 +36,6 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-
     <url>https://github.com/colesico/colesico-framework</url>
 
     <developers>
@@ -44,10 +43,6 @@
             <name>Vladlen Larionov</name>
         </developer>
     </developers>
-
-    <scm>
-        <url>https://github.com/colesico/colesico-framework</url>
-    </scm>
 
     <distributionManagement>
         <snapshotRepository>
@@ -81,7 +76,7 @@
         <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
         <spotbugs-maven-plugin.version>4.9.8.2</spotbugs-maven-plugin.version>
 
-        <!-- Other -->
+        <!-- Apache Commons -->
         <commons-lang3.version>3.20.0</commons-lang3.version>
         <commons-io.version>2.21.0</commons-io.version>
 
@@ -93,16 +88,13 @@
         <hikaricp.version>7.0.2</hikaricp.version>
         <jdbi3.version>3.51.0</jdbi3.version>
 
-        <!-- Mix -->
-        <typesafe-config.version>1.4.3</typesafe-config.version>
-        <pebble.version>4.1.1</pebble.version>
+        <!-- Serializers -->
         <gson.version>2.13.2</gson.version>
-
-        <palantir-javapoet.version>0.11.0</palantir-javapoet.version>
-        <undertow.version>2.4.1.Final</undertow.version>
         <kryo.version>5.6.2</kryo.version>
 
-        <jakarta.inject-api.version>2.0.1</jakarta.inject-api.version>
+        <!-- HTTP Servers -->
+        <undertow.version>2.4.1.Final</undertow.version>
+        <fusionauth-http.version>1.4.0</fusionauth-http.version>
 
         <!-- Tests -->
         <org-testng.version>7.12.0</org-testng.version>
@@ -110,6 +102,13 @@
 
         <!-- Code analyze -->
         <spotbugs.version>4.9.8</spotbugs.version>
+
+        <!-- Mix -->
+        <jakarta.inject-api.version>2.0.1</jakarta.inject-api.version>
+        <typesafe-config.version>1.4.3</typesafe-config.version>
+        <pebble.version>4.1.1</pebble.version>
+        <palantir-javapoet.version>0.11.0</palantir-javapoet.version>
+
     </properties>
 
     <modules>
@@ -152,28 +151,12 @@
                 <!-- Web -->
                 <module>modules/colesico-http</module>
                 <module>modules/colesico-httpservice</module>
-
                 <module>modules/colesico-weblet</module>
                 <module>modules/colesico-webstatic</module>
-
                 <module>modules/colesico-pebble</module>
                 <module>modules/colesico-restlet</module>
-
                 <module>modules/colesico-undertow</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>bundles</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <!-- Bundles -->
-                <module>bundles/colesico-bundle-base</module>
-                <module>bundles/colesico-bundle-srv</module>
-                <module>bundles/colesico-bundle-sql</module>
-                <module>bundles/colesico-bundle-l10n</module>
-                <module>bundles/colesico-bundle-web</module>
+                <module>modules/colesico-fusionhttp</module>
             </modules>
         </profile>
         <profile>
@@ -182,7 +165,6 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-
                 <module>examples/ioc-example</module>
                 <module>examples/config-example</module>
                 <module>examples/hocon-example</module>

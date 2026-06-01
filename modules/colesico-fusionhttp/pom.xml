@@ -17,7 +17,9 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>net.colesico.framework</groupId>
         <artifactId>colesico-framework</artifactId>
@@ -25,37 +27,41 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>colesico-bundle-sql</artifactId>
-
+    <artifactId>colesico-fusionhttp</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico Bundle SQL</name>
+    <name>Colesico FuncionAuth HTTP</name>
     <description>
-        Colesico framework bundle joins framework modules for database interaction
+        Colesico framework FuncionAuth HTTP server integration.
+		https://github.com/FusionAuth/java-http
     </description>
+	
+    <url>https://github.com/colesico/colesico-framework</url>
 
     <properties>
     </properties>
 
     <dependencies>
-        <!-- Colesico basic -->
+        <!-- Colesico -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-bundle-base</artifactId>
+            <artifactId>colesico-config</artifactId>
             <version>${project.version}</version>
         </dependency>
 
-        <!-- Colesico database  -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-hikaricp</artifactId>
+            <artifactId>colesico-httpservice</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!-- Webserver-->
         <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-jdbc</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+			<groupId>io.fusionauth</groupId>
+			<artifactId>java-http</artifactId>
+			<version>${fusionauth-http.version}</version>
+		</dependency>
+
     </dependencies>
 
     <build>
@@ -64,36 +70,22 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
-            </plugin>
-            <plugin>
-                <!-- Disable javadoc for this module -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven-javadoc-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-			            <phase/>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven-jar-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>empty-javadoc-jar</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>javadoc</classifier>
-                            <classesDirectory>${basedir}/javadoc</classesDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
+                <configuration combine.children="append">
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>net.colesico.framework</groupId>
+                            <artifactId>colesico-config</artifactId>
+                            <version>${project.version}</version>
+                        </path>
+
+                        <!-- Enable compile debug log -->
+                        <dependency>
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>slf4j-simple</artifactId>
+                            <version>${slf4j.version}</version>
+                        </dependency>
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
         </plugins>
     </build>

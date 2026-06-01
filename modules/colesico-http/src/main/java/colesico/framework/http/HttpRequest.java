@@ -26,12 +26,12 @@ public interface HttpRequest {
     /**
      * Returns the http method. e.g. GET, POST, etc.
      */
-    HttpMethod requestMethod();
+    HttpMethod method();
 
     /**
      * Http protocol string: http, https etc.
      */
-    String requestScheme();
+    String scheme();
 
     /**
      * Requested host
@@ -44,9 +44,9 @@ public interface HttpRequest {
     Integer port();
 
     /**
-     * The part of request's URL from the domain(port) name up to the query string
+     * The part of request's URL from the domain(port) name (excluded) up to the query string "?"
      */
-    String requestURI();
+    String path();
 
     /**
      * Query URL part after '?' char

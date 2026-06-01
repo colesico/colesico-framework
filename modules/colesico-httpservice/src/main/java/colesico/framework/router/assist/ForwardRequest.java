@@ -52,13 +52,13 @@ public class ForwardRequest implements HttpRequest {
     }
 
     @Override
-    public HttpMethod requestMethod() {
-        return parentRequest.requestMethod();
+    public HttpMethod method() {
+        return parentRequest.method();
     }
 
     @Override
-    public String requestScheme() {
-        return parentRequest.requestScheme();
+    public String scheme() {
+        return parentRequest.scheme();
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ForwardRequest implements HttpRequest {
     }
 
     @Override
-    public String requestURI() {
+    public String path() {
         return requestURI;
     }
 

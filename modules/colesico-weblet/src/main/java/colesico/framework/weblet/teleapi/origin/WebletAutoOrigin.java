@@ -9,7 +9,6 @@ import colesico.framework.weblet.teleapi.WebletOrigin;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import java.util.Collection;
 import java.util.List;
 
 @Singleton
@@ -27,7 +26,7 @@ public class WebletAutoOrigin implements WebletOrigin {
     public Iterable<String> getStrings(String name) {
         String value = null;
         HttpRequest httpRequest = httpContextProv.get().request();
-        switch (httpRequest.requestMethod().name()) {
+        switch (httpRequest.method().name()) {
             case HttpMethod.GET:
             case HttpMethod.HEAD:
                 if (httpRequest.queryParameters().hasKey(name)) {

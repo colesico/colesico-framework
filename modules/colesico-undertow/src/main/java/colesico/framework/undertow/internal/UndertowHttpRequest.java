@@ -22,7 +22,6 @@ import io.undertow.server.handlers.Cookie;
 import io.undertow.server.handlers.form.FormData;
 import io.undertow.server.handlers.form.FormDataParser;
 import io.undertow.util.HeaderValues;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -140,12 +139,12 @@ public final class UndertowHttpRequest implements HttpRequest {
     }
 
     @Override
-    public HttpMethod requestMethod() {
+    public HttpMethod method() {
         return HttpMethod.of(exchange.getRequestMethod().toString());
     }
 
     @Override
-    public String requestScheme() {
+    public String scheme() {
         return exchange.getRequestScheme();
     }
 
@@ -195,8 +194,8 @@ public final class UndertowHttpRequest implements HttpRequest {
     }
 
     @Override
-    public String requestURI() {
-        return StringUtils.substringBefore(exchange.getRequestURI(), "?");
+    public String path() {
+        return exchange.getRequestPath();
     }
 
     @Override
@@ -221,7 +220,7 @@ public final class UndertowHttpRequest implements HttpRequest {
     @Override
     public void dump(final Writer out) {
         try {
-            out.append(requestMethod().name() + " " + requestScheme() + "://"
+            out.append(method().name() + " " + scheme() + "://"
                     + exchange.getHostName()
                     + ":" + exchange.getDestinationAddress().getPort()
                     + exchange.getRequestURI()

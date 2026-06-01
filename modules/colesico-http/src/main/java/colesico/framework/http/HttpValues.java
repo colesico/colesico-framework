@@ -68,13 +68,25 @@ public final class HttpValues<K, V> {
         Map<K, MultiValue<V>> result = new HashMap<>();
         for (Map.Entry<K, MultiValue<V>> entry : valuesMap.entrySet()) {
             Collection<V> cv = new ArrayList<>();
-            Iterator<V> itv = entry.getValue().iterator();
-            while (itv.hasNext()) {
-                cv.add(itv.next());
+            for (V v : entry.getValue()) {
+                cv.add(v);
             }
             result.put(entry.getKey(), new MultiValue<>(cv));
         }
         return result;
     }
 
+    public static class Builder<K, V> {
+        private Map<K, Collection<V>> valuesMap = new HashMap<>();
+
+        public void add(K key, V value) {
+            var multiValue = valuesMap.computeIfAbsent(key, k -> new ArrayList<V>());
+            multiValue.add(value);
+        }
+
+        public HttpValues<K,V> build(){
+            Map<K, Collection<V>> valuesMap = new HashMap<>();
+            return new HttpValues<>(valuesMap);
+        }
+    }
 }
