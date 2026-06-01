@@ -5,14 +5,12 @@ import io.fusionauth.http.Cookie;
 
 import java.time.Instant;
 import java.time.ZoneOffset;
-import java.util.Date;
-import java.util.TimeZone;
 
-public class FusionCookie implements HttpCookie {
+public class FusionHttpCookie implements HttpCookie {
 
     private final Cookie cookie;
 
-    public FusionCookie(Cookie cookie) {
+    public FusionHttpCookie(Cookie cookie) {
         this.cookie = cookie;
     }
 

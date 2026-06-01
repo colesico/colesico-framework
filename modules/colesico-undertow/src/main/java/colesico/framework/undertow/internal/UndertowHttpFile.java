@@ -46,11 +46,6 @@ public class UndertowHttpFile implements HttpFile {
     }
 
     @Override
-    public String encoding() {
-        return value.getCharset();
-    }
-
-    @Override
     public InputStream inputStream() {
         try {
             return new FileInputStream(filePath().toFile());

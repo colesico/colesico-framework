@@ -3,6 +3,7 @@ package colesico.framework.undertow.internal;
 import colesico.framework.http.HttpCookie;
 import io.undertow.server.handlers.Cookie;
 
+import java.time.Instant;
 import java.util.Date;
 
 public class UndertowCookie implements HttpCookie {
@@ -41,13 +42,13 @@ public class UndertowCookie implements HttpCookie {
     }
 
     @Override
-    public Integer maxAge() {
-        return undertowCookie.getMaxAge();
+    public Long maxAge() {
+        return undertowCookie.getMaxAge().longValue();
     }
 
     @Override
-    public Date expires() {
-        return undertowCookie.getExpires();
+    public Instant expires() {
+        return undertowCookie.getExpires().toInstant();
     }
 
     @Override
@@ -95,14 +96,14 @@ public class UndertowCookie implements HttpCookie {
     }
 
     @Override
-    public HttpCookie setMaxAge(Integer age) {
-        undertowCookie.setMaxAge(age);
+    public HttpCookie setMaxAge(Long age) {
+        undertowCookie.setMaxAge(age.intValue());
         return this;
     }
 
     @Override
-    public HttpCookie setExpires(Date expires) {
-        undertowCookie.setExpires(expires);
+    public HttpCookie setExpires(Instant expires) {
+        undertowCookie.setExpires(Date.from(expires));
         return this;
     }
 

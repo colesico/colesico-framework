@@ -4,7 +4,9 @@ import colesico.framework.http.HttpFile;
 import io.fusionauth.http.FileInfo;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 
 public class FusionHttpFile implements HttpFile {
     private final FileInfo fileInfo;
@@ -30,6 +32,10 @@ public class FusionHttpFile implements HttpFile {
 
     @Override
     public InputStream inputStream() {
-        return new FileInputStream(fileInfo.getFile());
+        try {
+            return Files.newInputStream(fileInfo.getFile());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

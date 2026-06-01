@@ -52,12 +52,12 @@ public final class UndertowHttpRequest implements HttpRequest {
         return exchange;
     }
 
-    public FormData formData() {
+    public FormData getFormData() {
         return formData;
     }
 
     private HttpValues<String, String> createHeaders() {
-        Map<String, MultiValue<String>> headers = new HashMap<>();
+        Map<String, List<String>> headers = new HashMap<>();
         Iterator<HeaderValues> hit = exchange.getRequestHeaders().iterator();
         while (hit.hasNext()) {
             HeaderValues h = hit.next();
@@ -66,7 +66,7 @@ public final class UndertowHttpRequest implements HttpRequest {
             while (vit.hasNext()) {
                 values.add(vit.next());
             }
-            headers.put(h.getHeaderName().toString(), new MultiValue<>(values));
+            headers.put(h.getHeaderName().toString(), new ArrayList<>(values));
         }
         return new HttpValues<>(headers);
     }
@@ -81,28 +81,28 @@ public final class UndertowHttpRequest implements HttpRequest {
             values.add(httpCookie);
         }
 
-        Map<String, MultiValue<HttpCookie>> cookiesMv = new HashMap<>();
+        Map<String, List<HttpCookie>> cookiesMv = new HashMap<>();
         for (Map.Entry<String, Set<HttpCookie>> e : cookiesSt.entrySet()) {
-            cookiesMv.put(e.getKey(), new MultiValue<>(e.getValue()));
+            cookiesMv.put(e.getKey(), new ArrayList<>(e.getValue()));
         }
 
         return new HttpValues<>(cookiesMv);
     }
 
     private HttpValues<String, String> createQueryParams() {
-        Map<String, MultiValue<String>> params = new HashMap<>();
+        Map<String, List<String>> params = new HashMap<>();
 
         for (Map.Entry<String, Deque<String>> e : exchange.getQueryParameters().entrySet()) {
-            params.put(e.getKey(), new MultiValue<>(e.getValue()));
+            params.put(e.getKey(), new ArrayList<>(e.getValue()));
         }
         return new HttpValues<>(params);
     }
 
     private void createPostValues() {
-        Map<String, MultiValue<String>> params = new HashMap<>();
+        Map<String, List<String>> params = new HashMap<>();
         postParams = new HttpValues<>(params);
 
-        Map<String, MultiValue<HttpFile>> files = new HashMap<>();
+        Map<String, List<HttpFile>> files = new HashMap<>();
         postFiles = new HttpValues<>(files);
 
         if (formData == null) {
@@ -128,11 +128,11 @@ public final class UndertowHttpRequest implements HttpRequest {
             }
 
             if (!foundFiles.isEmpty()) {
-                files.put(paramName, new MultiValue<>(foundFiles));
+                files.put(paramName, new ArrayList<>(foundFiles));
             }
 
             if (!foundParams.isEmpty()) {
-                params.put(paramName, new MultiValue<>(foundParams));
+                params.put(paramName, new ArrayList<>(foundParams));
             }
 
         }

@@ -34,11 +34,11 @@ public class CSRFProtector<V> {
     public static final String CSRF_HEADER = "X-CSRF-Token";
     public static final String CSRF_COOKIE = "XSRF-Token";
 
-    protected final CookieFactory cookieFactory;
+    protected final HttpCookieFactory cookieFactory;
 
     private static final Random random = new Random();
 
-    public CSRFProtector(CookieFactory cookieFactory) {
+    public CSRFProtector(HttpCookieFactory cookieFactory) {
         this.cookieFactory = cookieFactory;
     }
 

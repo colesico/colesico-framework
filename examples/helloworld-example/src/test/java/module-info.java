@@ -5,6 +5,7 @@ module colesico.framework.test.example.helloworld {
 
     requires org.slf4j;
     requires org.testng;
+    requires io.fusionauth.http;
 
     exports colesico.framework.test.example.helloworld;
 }

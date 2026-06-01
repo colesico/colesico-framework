@@ -30,9 +30,9 @@
     <artifactId>colesico-fusionhttp</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico FuncionAuth HTTP</name>
+    <name>Colesico FusionAuth HTTP</name>
     <description>
-        Colesico framework FuncionAuth HTTP server integration.
+        Colesico framework FusionAuth HTTP server integration.
 		https://github.com/FusionAuth/java-http
     </description>
 	

@@ -16,8 +16,7 @@
 
 package colesico.framework.telehttp.writer;
 
-import colesico.framework.http.CookieFactory;
-import colesico.framework.http.HttpContext;
+import colesico.framework.http.HttpCookieFactory;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.profile.Profile;
@@ -25,7 +24,6 @@ import colesico.framework.profile.assist.LocaleAttribute;
 import colesico.framework.telehttp.HttpWriteOptions;
 import colesico.framework.telehttp.HttpTeleWriter;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
-import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.util.*;
@@ -40,10 +38,10 @@ public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implem
     public static final String PROFILE_HEADER = "X-Profile";
 
     protected final ProfileHttpConfigPrototype config;
-    protected final CookieFactory cookieFactory;
+    protected final HttpCookieFactory cookieFactory;
 
     public ProfileWriter(ProfileHttpConfigPrototype config,
-                         CookieFactory cookieFactory) {
+                         HttpCookieFactory cookieFactory) {
         this.config = config;
         this.cookieFactory = cookieFactory;
     }

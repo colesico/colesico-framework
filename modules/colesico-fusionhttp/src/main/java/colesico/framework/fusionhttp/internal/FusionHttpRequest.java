@@ -53,7 +53,7 @@ public class FusionHttpRequest implements HttpRequest {
     public HttpValues<String, HttpCookie> cookies() {
         HttpValues.Builder<String, HttpCookie> builder = HttpValues.builder();
         for (var cookie : request.getCookies()) {
-            builder.add(cookie.getName(), new FusionCookie(cookie));
+            builder.add(cookie.getName(), new FusionHttpCookie(cookie));
         }
         return builder.build();
     }
