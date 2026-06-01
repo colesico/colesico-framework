@@ -52,7 +52,7 @@ public class DefaultErrorHandler implements ErrorHandler {
         logger.error("Unexpected error: " + rootMessage);
         logger.error(toStackTrace(throwable));
 
-        StringBuilder out = new StringBuilder("<!doctype html>");
+        StringBuilder out = new StringBuilder();
         out.append("An unexpected error occurred at ")
                 .append(new Date().toInstant())
                 .append(". See server log for details.");
