@@ -26,7 +26,7 @@ public class HelloWeblet {
     public static final String SAY_HOLLA_TEXT = "Holla World!";
     public static final String SAY_PRIVET_TEXT = "Привет Мир!";
 
-    // Browse the url: http://localhost:8080/hello-weblet/say-hello?name=Tatiana
+    // Browse the url: http://localhost:8080/hello-weblet/say-hello
     public HtmlResponse sayHello() {
         return HtmlResponse.of(SAY_HELLO_TEXT);
     }

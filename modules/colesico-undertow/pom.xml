@@ -53,11 +53,16 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- Webserver -->
+        <!-- Webserver do not modify versions without compatibility test-->
         <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-core</artifactId>
-            <version>${undertow.version}</version>
+            <version>2.4.1.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <version>3.5.3.Final</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.xnio</groupId>
@@ -74,6 +79,7 @@
             <artifactId>wildfly-common</artifactId>
             <version>2.0.1</version>
         </dependency>
+
     </dependencies>
 
     <build>
