@@ -30,7 +30,7 @@
 
     <name>Colesico Weblet</name>
     <description>
-        Colesico framework http requests handling service
+        Colesico framework common http requests handling service
     </description>
     <url>https://github.com/colesico/colesico-framework</url>
 
@@ -41,7 +41,12 @@
         <!-- Colesico -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-httpservice</artifactId>
+            <artifactId>colesico-tele-http</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-http-router</artifactId>
             <version>${project.version}</version>
         </dependency>
 

@@ -52,6 +52,7 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang3.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- Java poet for code generation at annotation processing. Can be excluded at runtime -->
@@ -59,6 +60,7 @@
             <groupId>com.palantir.javapoet</groupId>
             <artifactId>javapoet</artifactId>
             <version>${palantir-javapoet.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- Injection -->

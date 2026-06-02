@@ -18,21 +18,18 @@ module colesico.framework.ioc {
 
     // Compile time
     requires static java.compiler;
+    requires static jdk.compiler;
     requires static com.palantir.javapoet;
+    requires static org.apache.commons.lang3;
 
     // Inherited in client projects
     requires transitive jakarta.inject;
 
-    requires jdk.compiler;
-
     requires org.slf4j;
-
-    requires static org.apache.commons.lang3;
 
     // API
     exports colesico.framework.assist;
     exports colesico.framework.assist.codegen;
-
     exports colesico.framework.ioc;
     exports colesico.framework.ioc.ioclet;
     exports colesico.framework.ioc.key;

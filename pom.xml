@@ -128,13 +128,13 @@
                 <module>modules/colesico-config</module>
                 <module>modules/colesico-hocon</module>
                 <module>modules/colesico-resource</module>
-                <module>modules/colesico-teleapi</module>
+                <module>modules/colesico-tele-api</module>
                 <module>modules/colesico-service</module>
                 <module>modules/colesico-security</module>
                 <module>modules/colesico-profile</module>
                 <module>modules/colesico-translation</module>
                 <module>modules/colesico-validation</module>
-                <module>modules/colesico-asynctask</module>
+                <module>modules/colesico-async-task</module>
 
                 <!-- Logging -->
                 <module>modules/colesico-slf4j</module>
@@ -146,17 +146,19 @@
                 <module>modules/colesico-hikaricp</module>
                 <module>modules/colesico-jdbc</module>
                 <module>modules/colesico-jdbi</module>
-                <module>modules/colesico-jdbirec</module>
+                <module>modules/colesico-jdbi-rec</module>
 
                 <!-- Web -->
                 <module>modules/colesico-http</module>
-                <module>modules/colesico-httpservice</module>
+                <module>modules/colesico-tele-http</module>
+                <module>modules/colesico-http-router</module>
+                <module>modules/colesico-http-server</module>
                 <module>modules/colesico-weblet</module>
                 <module>modules/colesico-webstatic</module>
                 <module>modules/colesico-pebble</module>
                 <module>modules/colesico-restlet</module>
                 <module>modules/colesico-undertow</module>
-                <module>modules/colesico-fusionhttp</module>
+                <module>modules/colesico-fusion-http</module>
             </modules>
         </profile>
         <profile>

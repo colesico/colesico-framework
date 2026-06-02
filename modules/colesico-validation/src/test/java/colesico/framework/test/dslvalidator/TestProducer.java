@@ -33,7 +33,7 @@ import java.util.Locale;
 public class TestProducer {
 
     @Singleton
-    public Profile getProfile(ProfileUtils pu) {
-        return pu.createProfile(Locale.of("en", "RU"));
+    public Profile profile() {
+        return Profile.Default.of(Locale.of("en", "RU"));
     }
 }

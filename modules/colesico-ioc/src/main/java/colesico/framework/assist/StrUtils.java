@@ -28,8 +28,8 @@ import java.util.StringTokenizer;
  */
 public class StrUtils {
 
-    public static boolean isEmpty(String str){
-        return str == null || str.length()==0;
+    public static boolean isEmpty(String str) {
+        return str == null || str.length() == 0;
     }
 
     public static List<String> split(String str, String separator) {
@@ -39,6 +39,17 @@ public class StrUtils {
             strParts.add(StringUtils.trim(strTokenizer.nextToken()));
         }
         return strParts;
+    }
+
+    public static String trim(final String str) {
+        return str == null ? null : str.trim();
+    }
+
+    public static boolean contains(CharSequence seq, CharSequence searchSeq) {
+        if (seq == null || searchSeq == null) {
+            return false;
+        }
+        return seq.toString().contains(searchSeq);
     }
 
     public static String firstCharToLowerCase(String str) {

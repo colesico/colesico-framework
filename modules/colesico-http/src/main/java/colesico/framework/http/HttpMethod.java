@@ -15,7 +15,7 @@
  */
 package colesico.framework.http;
 
-import org.apache.commons.lang3.StringUtils;
+import colesico.framework.assist.StrUtils;
 
 import java.util.Objects;
 
@@ -53,8 +53,8 @@ public class HttpMethod {
     private final String name;
 
     protected HttpMethod(String name) {
-        if (StringUtils.isBlank(name)) {
-            throw new RuntimeException("HTTP method name is blank");
+        if (StrUtils.isEmpty(name)) {
+            throw new RuntimeException("HTTP method name is empty");
         }
         this.name = name;
     }
