@@ -157,7 +157,6 @@
                 <module>modules/colesico-webstatic</module>
                 <module>modules/colesico-pebble</module>
                 <module>modules/colesico-restlet</module>
-                <module>modules/colesico-undertow</module>
                 <module>modules/colesico-fusion-http</module>
             </modules>
         </profile>
