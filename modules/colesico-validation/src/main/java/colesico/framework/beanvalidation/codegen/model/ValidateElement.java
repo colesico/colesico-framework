@@ -66,7 +66,7 @@ abstract public class ValidateElement {
     public final String getPropertyReferenceName() {
         if (originField != null) {
             String kebabCase = StringUtils.toSeparatorNotation(originField.name(), '_');
-            return StringUtils.toRootUpperCase(kebabCase);
+            return StringUtilse.toRootUpperCase(kebabCase);
         }
         return null;
     }
