@@ -44,18 +44,6 @@
             <artifactId>colesico-tele-http</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-http-router</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <!-- Utils -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
-        </dependency>
     </dependencies>
 
     <build>

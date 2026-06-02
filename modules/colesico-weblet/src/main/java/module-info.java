@@ -21,12 +21,9 @@ module colesico.framework.weblet {
     requires static java.compiler;
     requires static com.palantir.javapoet;
 
-    requires transitive colesico.framework.tele-http;
+    requires transitive colesico.framework.telehttp;
 
     requires org.slf4j;
-
-    requires org.apache.commons.lang3;
-    requires org.apache.commons.io;
 
     exports colesico.framework.weblet;
     exports colesico.framework.weblet.assist;
@@ -36,9 +33,8 @@ module colesico.framework.weblet {
     exports colesico.framework.weblet.teleapi.reader;
 
     exports colesico.framework.weblet.codegen;
-    exports colesico.framework.weblet.internal to colesico.framework.ioc;
     exports colesico.framework.weblet.response;
-
+    exports colesico.framework.weblet.internal to colesico.framework.ioc;
 
     provides Modulator with colesico.framework.weblet.codegen.WebletModulator;
 }
