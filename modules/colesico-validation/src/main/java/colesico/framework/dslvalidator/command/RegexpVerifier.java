@@ -19,10 +19,11 @@ package colesico.framework.dslvalidator.command;
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.translation.Translatable;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static colesico.framework.assist.StringUtils.isBlank;
 
 /**
  * Validate String by regexp
@@ -46,7 +47,7 @@ public final class RegexpVerifier implements Command<String> {
     @Override
     public void execute(ValidationContext<String> context) {
         String email = context.getValue();
-        if (StringUtils.isNotEmpty(email)) {
+        if (!isBlank(email)) {
             Matcher matcher = pattern.matcher(email);
             if (!matcher.matches()) {
                 context.addError(errorCode, errorMessage.translate(messageParams));

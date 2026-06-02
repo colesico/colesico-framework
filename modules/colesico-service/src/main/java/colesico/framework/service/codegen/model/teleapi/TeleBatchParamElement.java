@@ -1,7 +1,6 @@
 package colesico.framework.service.codegen.model.teleapi;
 
-import colesico.framework.assist.StrUtils;
-import colesico.framework.assist.codegen.model.VarElement;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.service.codegen.model.ServiceParameterElement;
 
 /**
@@ -28,11 +27,11 @@ public class TeleBatchParamElement extends TeleParameterElement {
     }
 
     public String getterName() {
-        return "get" + StrUtils.firstCharToUpperCase(name());
+        return "get" + StringUtils.firstCharToUpperCase(name());
     }
 
     public String setterName() {
-        return "set" + StrUtils.firstCharToUpperCase(name());
+        return "set" + StringUtils.firstCharToUpperCase(name());
     }
 
     public TeleBatchElement parentBatch() {

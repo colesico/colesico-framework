@@ -10,8 +10,6 @@ module colesico.framework.security {
 
     requires org.slf4j;
 
-    requires org.apache.commons.lang3;
-
     // Exports
     exports colesico.framework.security;
     exports colesico.framework.security.authorization;

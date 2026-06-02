@@ -16,7 +16,7 @@
 
 package colesico.framework.ioc.codegen.parser;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
@@ -35,8 +35,6 @@ import colesico.framework.ioc.message.Message;
 import colesico.framework.ioc.production.*;
 import colesico.framework.ioc.scope.CustomScope;
 import colesico.framework.ioc.scope.Unscoped;
-import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 
@@ -55,12 +53,18 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
+import static colesico.framework.assist.StringUtils.isBlank;
+
 public class ProducerParser extends FrameworkAbstractParser {
 
     public static final String IOC_MODULE_NAME = "colesico.framework.ioc";
 
     public ProducerParser(ProcessingEnvironment processingEnv) {
         super(processingEnv);
+    }
+
+    public static int toInteger(boolean b) {
+        return b ? 1 : 0;
     }
 
     protected MethodElement getInjectableConstructor(ClassElement producer) {
@@ -269,7 +273,7 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         final ClassType suppliedType = new ClassType(processingEnv(), (DeclaredType) suppliedMirror);
 
-        final String factoryMethodBaseName = StrUtils.firstCharToLowerCase(suppliedType.asClassElement().simpleName());
+        final String factoryMethodBaseName = StringUtils.firstCharToLowerCase(suppliedType.asClassElement().simpleName());
 
         MethodElement constructor = getInjectableConstructor(suppliedType.asClassElement());
         if (constructor == null) {
@@ -291,7 +295,7 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         // Named
 
-        String named = StringUtils.isEmpty(produceAnn.unwrap().named()) ? null : produceAnn.unwrap().named();
+        String named = isBlank(produceAnn.unwrap().named()) ? null : produceAnn.unwrap().named();
         if (named == null) {
             // Get @Named from class definition
             AnnotationAssist<Named> namedAnn = suppliedType.asClassElement().annotation(Named.class);
@@ -323,8 +327,8 @@ public class ProducerParser extends FrameworkAbstractParser {
 
         final List<MethodElement> postConstructListeners = parsePostConstructListeners(suppliedType);
 
-        if (BooleanUtils.toInteger(named != null)
-                + BooleanUtils.toInteger(classed != null) > 1) {
+        if (toInteger(named != null)
+                + toInteger(classed != null) > 1) {
             throw CodegenException.of().message("Ambiguous injection qualifiers for " + suppliedType.asClassElement().name())
                     .element(iocletElement.originProducer().unwrap()).build();
         }
@@ -406,7 +410,7 @@ public class ProducerParser extends FrameworkAbstractParser {
                 withClassed = new ClassifierType(processingEnv, classifier);
             }
             // Process withNamed
-            String withNamed = StringUtils.isNotBlank(postProduceAnn.unwrap().withNamed()) ? postProduceAnn.unwrap().withNamed() : null;
+            String withNamed = !isBlank(postProduceAnn.unwrap().withNamed()) ? postProduceAnn.unwrap().withNamed() : null;
             postProduce = new PostProduceElement(withNamed, withClassed);
         } else {
             postProduce = null;
@@ -481,9 +485,9 @@ public class ProducerParser extends FrameworkAbstractParser {
         // postConstructListeners
         final List<MethodElement> postConstructListeners = parsePostConstructListeners(suppliedType);
 
-        if (BooleanUtils.toInteger(StringUtils.isNotEmpty(named)) +
-                BooleanUtils.toInteger(classed != null) +
-                BooleanUtils.toInteger(postProduce != null)
+        if (toInteger(!isBlank(named)) +
+                toInteger(classed != null) +
+                toInteger(postProduce != null)
                 > 1
         ) {
             throw CodegenException.of().message("Ambiguous injection qualifiers").element(method.unwrap()).build();

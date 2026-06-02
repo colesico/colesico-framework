@@ -20,8 +20,6 @@ import colesico.framework.assist.TypeWrapper;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.assist.codegen.model.ParameterElement;
 import com.palantir.javapoet.*;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
@@ -39,6 +37,9 @@ import java.io.Writer;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static colesico.framework.assist.ExceptionUtils.getRootCauseMessage;
+import static colesico.framework.assist.StringUtils.isBlank;
 
 /**
  * Code generation helper
@@ -66,7 +67,7 @@ public class CodegenUtils {
                 javaFile.writeTo(writer);
             }
         } catch (IOException ex) {
-            String errMsg = MessageFormat.format("Error creating java file: {0}; Cause message: {1}", fullName, ExceptionUtils.getRootCauseMessage(ex));
+            String errMsg = MessageFormat.format("Error creating java file: {0}; Cause message: {1}", fullName, getRootCauseMessage(ex));
             throw CodegenException.of().message(errMsg).build();
         }
     }
@@ -78,7 +79,7 @@ public class CodegenUtils {
                 writer.write(text);
             }
         } catch (IOException ex) {
-            String errMsg = MessageFormat.format("Error creating text resource file: {0}; Cause message: {1}", filePath, ExceptionUtils.getRootCauseMessage(ex));
+            String errMsg = MessageFormat.format("Error creating text resource file: {0}; Cause message: {1}", filePath, getRootCauseMessage(ex));
             throw CodegenException.of().message(errMsg).build();
         }
     }
@@ -109,7 +110,7 @@ public class CodegenUtils {
     }
 
     public static CodeBlock generateSuperMethodCall(MethodElement method, String resultVarName, String paramPrefix) {
-        if (StringUtils.isBlank(paramPrefix)) {
+        if (isBlank(paramPrefix)) {
             paramPrefix = "";
         }
         if (resultVarName == null) {

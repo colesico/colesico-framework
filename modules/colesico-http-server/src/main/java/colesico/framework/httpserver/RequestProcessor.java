@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
-import static colesico.framework.httpserver.ErrorUtils.getRootCauseMessage;
+import static colesico.framework.assist.ExceptionUtils.getRootCauseMessage;
 
 /**
  * Basic abstract http request processor.

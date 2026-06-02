@@ -16,7 +16,7 @@
 
 package colesico.framework.router.internal;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.ioc.scope.RequestScope;
 import colesico.framework.router.*;
@@ -57,7 +57,7 @@ public class RouterImpl implements Router {
         var requestMethod = criteria.requestMethod();
         var requestUri = criteria.requestUri();
 
-        var resolution = routeTrie.resolveRoute(StrUtils.concatPath(requestMethod.name(), requestUri, RouteTrie.SEGMENT_DELEMITER));
+        var resolution = routeTrie.resolveRoute(StringUtils.concatPath(requestMethod.name(), requestUri, RouteTrie.SEGMENT_DELEMITER));
 
         if (resolution == null
                 || resolution.node() == null

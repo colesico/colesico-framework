@@ -1,4 +1,4 @@
-package colesico.framework.httpserver;
+package colesico.framework.assist;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Set;
 
-public class ErrorUtils {
+public class ExceptionUtils {
     public static String getRootCauseMessage(Throwable th) {
         if (th == null) {
             return "";

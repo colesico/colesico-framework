@@ -16,7 +16,7 @@
 
 package colesico.framework.service.codegen.model.teleapi;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.service.codegen.model.ServiceMethodElement;
 
 import java.util.ArrayList;
@@ -104,11 +104,11 @@ public final class TeleCommandElement {
      *  Tele-command method name to generate in tele-facade
      */
     public String commandMethodName() {
-        return "" + StrUtils.firstCharToLowerCase(serviceMethod.name()) + "C" + index;
+        return "" + StringUtils.firstCharToLowerCase(serviceMethod.name()) + "C" + index;
     }
 
     public String interceptorMethodName() {
-        return "" + StrUtils.firstCharToLowerCase(serviceMethod.name()) + "I" + index;
+        return "" + StringUtils.firstCharToLowerCase(serviceMethod.name()) + "I" + index;
     }
 
     public TeleBatchElement getOrCreateBatch(String name) {

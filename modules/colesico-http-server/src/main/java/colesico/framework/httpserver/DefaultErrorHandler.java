@@ -26,8 +26,8 @@ import jakarta.inject.Singleton;
 
 import java.util.Date;
 
-import static colesico.framework.httpserver.ErrorUtils.getRootCauseMessage;
-import static colesico.framework.httpserver.ErrorUtils.toStackTrace;
+import static colesico.framework.assist.ExceptionUtils.getRootCauseMessage;
+import static colesico.framework.assist.ExceptionUtils.toStackTrace;
 
 @Singleton
 public class DefaultErrorHandler implements ErrorHandler {

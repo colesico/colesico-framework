@@ -16,9 +16,7 @@
 
 package colesico.framework.assist.codegen.model;
 
-import colesico.framework.assist.StrUtils;
-import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.lang3.StringUtils;
+import colesico.framework.assist.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
@@ -28,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
+
+import static colesico.framework.assist.StringUtils.isBlank;
 
 public class MethodElement extends ParserElement {
 
@@ -70,7 +70,7 @@ public class MethodElement extends ParserElement {
         return originType().getReturnType();
     }
 
-    public boolean isVoidReturnType(){
+    public boolean isVoidReturnType() {
         return originType().getReturnType() instanceof NoType;
     }
 
@@ -86,10 +86,10 @@ public class MethodElement extends ParserElement {
     }
 
     public String nameWithPrefix(String prefix) {
-        if (StringUtils.isEmpty(prefix)) {
+        if (isBlank(prefix)) {
             return name();
         }
-        return StrUtils.addPrefix(prefix, name());
+        return StringUtils.addPrefix(prefix, name());
     }
 
     public List<ParameterElement> parameters() {
@@ -107,7 +107,7 @@ public class MethodElement extends ParserElement {
     }
 
     public List<ParameterElement> parametersFiltered(Predicate<ParserElement> filter) {
-        throw new NotImplementedException("getParametersFiltered not implemented yet");
+        throw new UnsupportedOperationException("getParametersFiltered not implemented yet");
     }
 
     public boolean isConstractor() {
@@ -115,12 +115,12 @@ public class MethodElement extends ParserElement {
     }
 
     public boolean isGetter() {
-        return StringUtils.startsWith(name(), "get") && parameters().isEmpty()
+        return name().startsWith("get") && parameters().isEmpty()
                 && !(returnType() instanceof NoType);
     }
 
     public boolean isSetter() {
-        return StringUtils.startsWith(name(), "set") && (parameters().size() == 1)
+        return name().startsWith("set") && (parameters().size() == 1)
                 && (returnType() instanceof NoType);
     }
 

@@ -16,7 +16,7 @@
 
 package colesico.framework.service.codegen.parser;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
@@ -114,7 +114,7 @@ public class ServiceParser extends FrameworkAbstractParser {
                 srvParam = sipe;
 
                 String named = injectParamAnn.unwrap().named();
-                sipe.setNamed(StrUtils.isEmpty(named) ? null : named);
+                sipe.setNamed(StringUtils.isBlank(named) ? null : named);
 
                 TypeMirror classed = injectParamAnn.valueTypeMirror(InjectParam::classed);
                 if (!CodegenUtils.isAssignable(Class.class, classed, processingEnv)) {

@@ -20,9 +20,10 @@ import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.MethodElement;
 import colesico.framework.translation.Dictionary;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
+
+import static colesico.framework.assist.StringUtils.isBlank;
 
 /**
  * Represents dictionary bean
@@ -51,7 +52,7 @@ public class DictionaryElement {
 
         AnnotationAssist<Dictionary> dictAnn = dictionaryInterface.annotation(Dictionary.class);
         String bName;
-        if (StringUtils.isNoneBlank(dictAnn.unwrap().baseName())) {
+        if (!isBlank(dictAnn.unwrap().baseName())) {
             bName = dictAnn.unwrap().baseName();
         } else {
             bName = dictionaryInterface.packageName() + '.' + dictionaryInterface.simpleName();

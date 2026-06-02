@@ -10,9 +10,6 @@ module colesico.framework.profile {
 
     requires org.slf4j;
 
-    requires org.apache.commons.lang3;
-    requires java.desktop;
-
     // Exports
 
     // API

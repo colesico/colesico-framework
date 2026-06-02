@@ -1,6 +1,6 @@
 package colesico.framework.beanvalidation.codegen.model;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.model.FieldElement;
 
 /**
@@ -31,7 +31,7 @@ public class PropertyValidateElement extends ValidateElement {
         } else {
             prefix = "validate";
         }
-        return prefix + StrUtils.firstCharToUpperCase(getPropertyName());
+        return prefix + StringUtils.firstCharToUpperCase(getPropertyName());
     }
 
 }

@@ -20,10 +20,11 @@ import colesico.framework.teleapi.TeleException;
 import colesico.framework.telehttp.HttpReadOptions;
 import colesico.framework.telehttp.origin.OriginFactory;
 import colesico.framework.telehttp.t9n.Messages;
-import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import static colesico.framework.assist.StringUtils.isBlank;
 
 /**
  * @author Vladlen Larionov
@@ -43,7 +44,7 @@ public final class BooleanReader extends OriginReader<Boolean, HttpReadOptions> 
     public Boolean read(Class<Boolean> valueType, HttpReadOptions options) {
         try {
             String str = readString(options);
-            if (StringUtils.isBlank(str)) {
+            if (isBlank(str)) {
                 return null;
             }
             return Boolean.parseBoolean(str);

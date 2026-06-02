@@ -21,7 +21,6 @@ module colesico.framework.service {
     // Compile time
     requires static java.compiler;
     requires static com.palantir.javapoet;
-    requires static org.apache.commons.lang3;
 
     // Inherited in child projects
     requires transitive colesico.framework.teleapi;

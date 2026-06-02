@@ -25,16 +25,19 @@ import colesico.framework.translation.TranslationKey;
 import colesico.framework.translation.TranslationKit;
 import colesico.framework.translation.codegen.model.DictionaryElement;
 import com.palantir.javapoet.*;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.ProcessingEnvironment;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import java.util.List;
+
+import static colesico.framework.assist.ExceptionUtils.getRootCauseMessage;
 
 public class DictionaryGenerator {
 
@@ -71,7 +74,6 @@ public class DictionaryGenerator {
         if (t9nKeyAnn != null) {
             t9nKey = t9nKeyAnn.unwrap().value();
         } else {
-            //t9nKey = StrUtils.firstCharToUpperCase(keyMethod.getSimpleName().toString());
             t9nKey = keyMethod.name();
         }
 
@@ -117,7 +119,7 @@ public class DictionaryGenerator {
             String packageName = dictionaryElement.originBean().packageName();
             CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, linkedElm);
         } catch (Exception e) {
-            logger.debug("Error generating dictionary bean:" + ExceptionUtils.getRootCauseMessage(e));
+            logger.debug("Error generating dictionary bean:" + getRootCauseMessage(e));
             throw e;
         }
     }

@@ -1,9 +1,9 @@
 package colesico.framework.resource.l10n;
 
+import colesico.framework.assist.StringUtils;
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
 import colesico.framework.resource.ResourceException;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 

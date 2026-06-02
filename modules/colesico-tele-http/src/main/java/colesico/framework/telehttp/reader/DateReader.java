@@ -21,12 +21,13 @@ import colesico.framework.telehttp.HttpReadOptions;
 import colesico.framework.telehttp.origin.OriginFactory;
 import colesico.framework.telehttp.assist.ISO8601DateParser;
 import colesico.framework.telehttp.t9n.Messages;
-import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.Date;
+
+import static colesico.framework.assist.StringUtils.isBlank;
 
 /**
  * @author Vladlen Larionov
@@ -45,7 +46,7 @@ public final class DateReader extends OriginReader<Date, HttpReadOptions> {
     public Date read(Class<Date> valueType, HttpReadOptions options) {
         try {
             String val = readString(options);
-            if (StringUtils.isEmpty(val)) {
+            if (isBlank(val)) {
                 return null;
             }
             return ISO8601DateParser.parse(val);

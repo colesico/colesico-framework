@@ -20,7 +20,6 @@ module colesico.framework.ioc {
     requires static java.compiler;
     requires static jdk.compiler;
     requires static com.palantir.javapoet;
-    requires static org.apache.commons.lang3;
 
     // Inherited in client projects
     requires transitive jakarta.inject;

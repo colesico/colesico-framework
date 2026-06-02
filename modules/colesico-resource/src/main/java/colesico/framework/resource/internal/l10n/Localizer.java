@@ -1,5 +1,6 @@
 package colesico.framework.resource.internal.l10n;
 
+import colesico.framework.assist.StringUtils;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.profile.Profile;
 import colesico.framework.resource.ResourceException;
@@ -8,7 +9,6 @@ import colesico.framework.resource.l10n.*;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

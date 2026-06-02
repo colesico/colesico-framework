@@ -1,6 +1,6 @@
 package colesico.framework.service.codegen.model.teleapi;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import com.palantir.javapoet.CodeBlock;
 import colesico.framework.teleapi.TeleScheme;
 
@@ -44,7 +44,7 @@ public class TeleSchemeElement<S> {
      */
     public String teleSchemeClassSimpleName() {
         String originClassName = parentTeleService.parentService().originClass().simpleName();
-        String schemeTypeSuffix = StrUtils.firstCharToUpperCase(schemeType.getSimpleName());
+        String schemeTypeSuffix = StringUtils.firstCharToUpperCase(schemeType.getSimpleName());
         return originClassName + schemeTypeSuffix+TeleScheme.SCHEME_IMPL_SUFFIX;
     }
 

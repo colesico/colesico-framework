@@ -16,7 +16,7 @@
 
 package colesico.framework.config.codegen;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.config.ConfigSource;
@@ -57,7 +57,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
     }
 
     protected MethodSpec.Builder createProducingOnPrototypeMethodBuilder(final ProducerGenerator prodGen, final ConfigElement config) {
-        String methodName =StrUtils.firstCharToLowerCase(config.originClass().simpleName());
+        String methodName = StringUtils.firstCharToLowerCase(config.originClass().simpleName());
         MethodSpec.Builder mb = prodGen.addProduceMethod(methodName, TypeName.get(config.prototype().originType()));
 
         // Config impl param
@@ -193,11 +193,11 @@ public class IocGenerator extends FrameworkAbstractGenerator {
             // if (bag.getField()!=null {config.setField(bag.getField())}
             cb.addStatement("if ( $N.$N() != null ){ $N.$N($N.$N()); }",
                     BAG_VAR,
-                    "get" + StrUtils.firstCharToUpperCase(fieldName),
+                    "get" + StringUtils.firstCharToUpperCase(fieldName),
                     CONF_PARAM,
-                    "set" + StrUtils.firstCharToUpperCase(fieldName),
+                    "set" + StringUtils.firstCharToUpperCase(fieldName),
                     BAG_VAR,
-                    "get" + StrUtils.firstCharToUpperCase(fieldName)
+                    "get" + StringUtils.firstCharToUpperCase(fieldName)
             );
         }
 

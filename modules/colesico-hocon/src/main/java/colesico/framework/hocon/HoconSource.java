@@ -16,7 +16,7 @@
 
 package colesico.framework.hocon;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.config.ConfigSource;
 import colesico.framework.config.UseFileSource;
 import com.typesafe.config.Config;
@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import jakarta.inject.Singleton;
 
 import java.io.File;
-import java.lang.reflect.Type;
 import java.util.Map;
 
 import static colesico.framework.config.UseFileSource.*;
@@ -64,7 +63,7 @@ public class HoconSource implements ConfigSource {
 
     private Config getConfigFromDirectory(Map<String, String> params, String fileName) {
         final String directory = params.getOrDefault(DIRECTORY_OPTION, CONFIG_DIRECTORY);
-        String fullPath = StrUtils.concatPath(directory, fileName, "/");
+        String fullPath = StringUtils.concatPath(directory, fileName, "/");
 
         final File directoryFile = new File(fullPath);
 
@@ -84,7 +83,7 @@ public class HoconSource implements ConfigSource {
 
     private Config getConfigFromClasspath(Map<String, String> params, String fileName) {
         final String classpath = params.getOrDefault(CLASSPATH_OPTION, "META-INF");
-        String fullPath = StrUtils.concatPath(classpath, fileName, "/");
+        String fullPath = StringUtils.concatPath(classpath, fileName, "/");
         try {
             return ConfigFactory.parseResources(fullPath);
         } catch (Exception e) {

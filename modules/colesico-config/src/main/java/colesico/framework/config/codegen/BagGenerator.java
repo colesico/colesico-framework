@@ -16,7 +16,7 @@
 
 package colesico.framework.config.codegen;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import com.palantir.javapoet.FieldSpec;
@@ -46,14 +46,14 @@ public class BagGenerator extends FrameworkAbstractGenerator {
             FieldSpec.Builder fb = FieldSpec.builder(fieldTypeName, fieldName, Modifier.PRIVATE);
             bagBuilder.addField(fb.build());
 
-            MethodSpec.Builder sb = MethodSpec.methodBuilder("set" + StrUtils.firstCharToUpperCase(fieldName));
+            MethodSpec.Builder sb = MethodSpec.methodBuilder("set" + StringUtils.firstCharToUpperCase(fieldName));
             sb.addModifiers(Modifier.PUBLIC);
             sb.returns(TypeName.VOID);
             sb.addParameter(fieldTypeName, fieldName);
             sb.addStatement("this.$N = $N", fieldName, fieldName);
             bagBuilder.addMethod(sb.build());
 
-            MethodSpec.Builder gb = MethodSpec.methodBuilder("get" + StrUtils.firstCharToUpperCase(fieldName));
+            MethodSpec.Builder gb = MethodSpec.methodBuilder("get" + StringUtils.firstCharToUpperCase(fieldName));
             gb.addModifiers(Modifier.PUBLIC);
             gb.returns(fieldTypeName);
             gb.addStatement("return this.$N", fieldName);

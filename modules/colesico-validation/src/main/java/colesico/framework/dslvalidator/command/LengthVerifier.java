@@ -19,7 +19,8 @@ package colesico.framework.dslvalidator.command;
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
-import org.apache.commons.lang3.StringUtils;
+
+import static colesico.framework.assist.StringUtils.isBlank;
 
 /**
  * @author Vladlen Larionov
@@ -40,7 +41,7 @@ public final class LengthVerifier implements Command<String> {
     @Override
     public void execute(ValidationContext<String> context) {
         String value = context.getValue();
-        if (StringUtils.isNotEmpty(value)) {
+        if (!isBlank(value)) {
             if (min != null && max != null) {
                 if (value.length() < min || value.length() > max) {
                     context.addError(LengthVerifier.class.getSimpleName() + "Between",

@@ -17,7 +17,7 @@
 package colesico.framework.service.codegen.generator;
 
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
@@ -30,7 +30,6 @@ import colesico.framework.service.*;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import com.palantir.javapoet.*;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +42,7 @@ import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.List;
 
+import static colesico.framework.assist.StringUtils.isBlank;
 import static colesico.framework.service.ServiceProxy.SERVICE_ORIGIN_METHOD;
 
 /**
@@ -149,7 +149,7 @@ public class ServiceProxyGenerator {
 
             if (similarParam == null) {
                 ParameterSpec.Builder pb = ParameterSpec.builder(fieldElm.injectAs(), fieldElm.spec().name());
-                if (StringUtils.isNotEmpty(fieldElm.named())) {
+                if (!isBlank(fieldElm.named())) {
                     AnnotationSpec.Builder named = AnnotationSpec.builder(Named.class);
                     named.addMember("value", "$S", fieldElm.named());
                     pb.addAnnotation(named.build());
@@ -162,7 +162,7 @@ public class ServiceProxyGenerator {
                 constructorBuilder.addParameter(pb.build());
                 constructorBuilder.addStatement("this.$N = $N", fieldElm.spec().name(), fieldElm.spec().name());
             } else {
-                String paramName = StrUtils.addPrefix(METHOD_PARAM_PREFIX, similarParam.name());
+                String paramName = StringUtils.addPrefix(METHOD_PARAM_PREFIX, similarParam.name());
                 constructorBuilder.addStatement("this.$N = $N", fieldElm.spec().name(), paramName);
             }
         }
@@ -230,7 +230,7 @@ public class ServiceProxyGenerator {
         List<ParameterElement> methodParams = methodElement.parameters();
         List<String> paramNames = new ArrayList<>();
         for (ParameterElement paramElm : methodParams) {
-            paramNames.add(StrUtils.addPrefix(METHOD_PARAM_PREFIX, paramElm.name()));
+            paramNames.add(StringUtils.addPrefix(METHOD_PARAM_PREFIX, paramElm.name()));
         }
         String paramsArrayLiteral = "{" + String.join(",", paramNames) + "}";
 

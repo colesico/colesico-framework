@@ -18,7 +18,7 @@ package colesico.framework.service.codegen.model.teleapi;
 
 
 import colesico.framework.assist.Elements;
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.teleapi.TeleFacade;
@@ -26,7 +26,6 @@ import colesico.framework.teleapi.TeleInterceptor;
 import colesico.framework.teleapi.dataport.ReadOptions;
 import colesico.framework.teleapi.dataport.WriteOptions;
 import com.palantir.javapoet.CodeBlock;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -119,7 +118,7 @@ public class TeleServiceElement {
      */
     public String facadeClassSimpleName() {
         String originClassName = parentService.originClass().simpleName();
-        String teleTypeSuffix = StrUtils.firstCharToUpperCase(teleType.getSimpleName());
+        String teleTypeSuffix = StringUtils.firstCharToUpperCase(teleType.getSimpleName());
 
         if (StringUtils.endsWith(originClassName, teleTypeSuffix)) {
             return originClassName + TeleFacade.TELE_FACADE_SUFFIX;
@@ -133,7 +132,7 @@ public class TeleServiceElement {
      */
     public String interceptorClassSimpleName() {
         String originClassName = parentService.originClass().simpleName();
-        String teleTypeSuffix = StrUtils.firstCharToUpperCase(teleType.getSimpleName());
+        String teleTypeSuffix = StringUtils.firstCharToUpperCase(teleType.getSimpleName());
 
         if (StringUtils.endsWith(originClassName, teleTypeSuffix)) {
             return originClassName + TeleInterceptor.TELE_INTERCEPTOR_SUFFIX;

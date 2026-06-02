@@ -6,8 +6,6 @@ module colesico.framework.translation {
 
     requires org.slf4j;
 
-    requires org.apache.commons.lang3;
-
     requires transitive colesico.framework.resource;
     //  requires transitive cache2k.api;
 

@@ -1,11 +1,10 @@
 
 module colesico.framework.telehttp {
 
-    requires org.slf4j;
-    requires org.apache.commons.lang3;
+    requires static com.palantir.javapoet;
+    requires static java.compiler;
 
-    requires com.palantir.javapoet;
-    requires java.compiler;
+    requires org.slf4j;
 
     requires transitive colesico.framework.config;
     requires transitive colesico.framework.service;

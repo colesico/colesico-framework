@@ -22,7 +22,8 @@ import colesico.framework.assist.codegen.model.*;
 import colesico.framework.service.BatchField;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.*;
-import org.apache.commons.lang3.StringUtils;
+
+import static colesico.framework.assist.StringUtils.isBlank;
 
 public final class TeleServiceParser extends FrameworkAbstractParser {
 
@@ -46,7 +47,7 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
             batchName = paramBatchAnn.unwrap().batch();
         }
 
-        if (StringUtils.isBlank(fieldName)) {
+        if (isBlank(fieldName)) {
             fieldName = param.originParameter().name();
         }
 

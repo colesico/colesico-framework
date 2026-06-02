@@ -1,6 +1,6 @@
 package colesico.framework.beanvalidation.codegen.model;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.beanvalidation.ValidateBean;
 
@@ -21,7 +21,7 @@ public class BeanValidateElement extends ValidateElement {
 
     @Override
     public String getValidationMethodName() {
-        return "validate" + StrUtils.firstCharToUpperCase(getPropertyName());
+        return "validate" + StringUtils.firstCharToUpperCase(getPropertyName());
     }
 
     public String getValidatorBuilderFieldName() {

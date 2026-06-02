@@ -16,12 +16,12 @@
 
 package colesico.framework.resource.internal;
 
+import colesico.framework.assist.StringUtils;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.resource.ResourceException;
 import colesico.framework.resource.ResourcePrefixOptionsPrototype;
 import colesico.framework.resource.assist.PathTrie;
 import jakarta.inject.Singleton;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Rewrites the resource name by a partial prefix match.
@@ -71,8 +71,8 @@ public class PrefixSubstitutor implements ResourcePrefixOptionsPrototype.Options
         if (node.value() != null) {
             throw new ResourceException("Duplicate resource name prefix substitution: " + originPrefix);
         }
-        String[] targetParts = StringUtils.split(targetPrefix, "/");
-        targetPrefix = StringUtils.joinWith("/", targetParts);
+        var targetParts = StringUtils.split(targetPrefix, "/");
+        targetPrefix = StringUtils.join(targetParts, "/");
         Rewriting rewriting = new Rewriting(originPrefix.length(), targetPrefix);
         node.setValue(rewriting);
     }

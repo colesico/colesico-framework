@@ -1,7 +1,7 @@
 package colesico.framework.resource.l10n;
 
+import colesico.framework.assist.StringUtils;
 import colesico.framework.resource.ResourceException;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

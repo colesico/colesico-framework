@@ -20,12 +20,13 @@ import colesico.framework.teleapi.TeleException;
 import colesico.framework.telehttp.HttpReadOptions;
 import colesico.framework.telehttp.origin.OriginFactory;
 import colesico.framework.telehttp.t9n.Messages;
-import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.OptionalInt;
+
+import static colesico.framework.assist.StringUtils.isBlank;
 
 /**
  * @author Vladlen Larionov
@@ -45,7 +46,7 @@ public final class OptionalIntReader extends OriginReader<OptionalInt, HttpReadO
     public OptionalInt read(Class<OptionalInt> valueType, HttpReadOptions options) {
         try {
             String val = readString(options);
-            if (StringUtils.isBlank(val)) {
+            if (isBlank(val)) {
                 return null;
             }
             if (val.equals("null")) {

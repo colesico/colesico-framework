@@ -1,6 +1,6 @@
 package colesico.framework.beanvalidation.codegen.generator;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
@@ -47,7 +47,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
                 AnnotationSpec.Builder produceAnn = producerGenerator.addProduceAnnotation(builderType);
                 TypeName keyType = TypeName.get(vb.getPrototypeType().unwrap());
                 produceAnn.addMember(Produce.SCOPED_METHOD, "$T.class", ClassName.get(Unscoped.class));
-                String methodName = "get" + StrUtils.firstCharToUpperCase(vb.getOriginClass().simpleName());
+                String methodName = "get" + StringUtils.firstCharToUpperCase(vb.getOriginClass().simpleName());
                 MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, keyType);
                 mb.addAnnotation(Unscoped.class);
                 mb.addParameter(builderType, "vb");

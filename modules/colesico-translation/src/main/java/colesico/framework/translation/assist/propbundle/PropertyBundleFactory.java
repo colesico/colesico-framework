@@ -1,11 +1,10 @@
 package colesico.framework.translation.assist.propbundle;
 
+import colesico.framework.assist.ExceptionUtils;
 import colesico.framework.resource.ResourceUtils;
 import colesico.framework.resource.l10n.ObjectiveQualifiers;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +13,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Properties;
+
+import static colesico.framework.assist.ExceptionUtils.getRootCauseMessage;
+import static colesico.framework.assist.StringUtils.isBlank;
 
 @Singleton
 public class PropertyBundleFactory {
@@ -31,7 +33,7 @@ public class PropertyBundleFactory {
 
     @Inject
     public PropertyBundle getBundle(String baseName) {
-        if (StringUtils.isEmpty(baseName)) {
+        if (isBlank(baseName)) {
             throw new IllegalArgumentException("Base name is empty");
         }
         ObjectiveQualifiers qualifiers = resourceUtils.objectiveQualifiers();
@@ -80,14 +82,14 @@ public class PropertyBundleFactory {
             prop.load(isr);
             return prop;
         } catch (Exception ex) {
-            String errMsg = MessageFormat.format("Error loading properties file: {0}; Cause message: {1}", resourceName, ExceptionUtils.getRootCauseMessage(ex));
+            String errMsg = MessageFormat.format("Error loading properties file: {0}; Cause message: {1}", resourceName, getRootCauseMessage(ex));
             log.error(errMsg);
             throw new RuntimeException(errMsg, ex);
         } finally {
             try {
                 in.close();
             } catch (Exception ex) {
-                String errMsg = MessageFormat.format("Error closing properties file: {0}; Cause message: {1}", resourceName, ExceptionUtils.getRootCauseMessage(ex));
+                String errMsg = MessageFormat.format("Error closing properties file: {0}; Cause message: {1}", resourceName, getRootCauseMessage(ex));
                 log.error(errMsg);
                 throw new RuntimeException(errMsg, ex);
             }

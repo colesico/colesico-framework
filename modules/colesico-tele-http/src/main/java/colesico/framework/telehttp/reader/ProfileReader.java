@@ -27,10 +27,10 @@ import colesico.framework.telehttp.writer.ProfileWriter;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
+import static colesico.framework.assist.StringUtils.isBlank;
 import static colesico.framework.telehttp.writer.ProfileWriter.PROFILE_HEADER;
 
 /**
@@ -51,7 +51,7 @@ public class ProfileReader<P extends Profile> implements HttpTeleReader<P, HttpR
     protected void readLocale(P profile, Map<String, String> attributes, HttpRequest request) {
         var attribute = LocaleAttribute.of(profile);
         var value = attributes.get(attribute.name());
-        if (StringUtils.isBlank(value)) {
+        if (isBlank(value)) {
             String acceptLangs = request.headers().get(ACCEPT_LANGUAGE_HEADER);
             Locale locale = TeleHttpUtils.acceptedLanguage(acceptLangs);
             if (locale != null) {

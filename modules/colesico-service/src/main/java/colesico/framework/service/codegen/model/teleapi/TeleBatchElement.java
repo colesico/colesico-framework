@@ -1,6 +1,6 @@
 package colesico.framework.service.codegen.model.teleapi;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public class TeleBatchElement implements TeleReadableElement {
     }
 
     public String batchClassSimpleName() {
-        return StrUtils.firstCharToUpperCase(parentTeleCommand.targetMethodName()) + StrUtils.firstCharToUpperCase(name);
+        return StringUtils.firstCharToUpperCase(parentTeleCommand.targetMethodName()) + StringUtils.firstCharToUpperCase(name);
     }
 
     public String batchClassName() {
@@ -63,7 +63,7 @@ public class TeleBatchElement implements TeleReadableElement {
      * Batch variable name
      */
     public String batchVarName() {
-        return StrUtils.firstCharToLowerCase(name) + BATCH_VAR_SUFFIX;
+        return StringUtils.firstCharToLowerCase(name) + BATCH_VAR_SUFFIX;
     }
 
     public TeleBatchPackElement parentPack() {

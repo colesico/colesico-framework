@@ -27,7 +27,6 @@ import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.scope.CustomScope;
 import colesico.framework.ioc.scope.Unscoped;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +39,7 @@ import javax.lang.model.type.TypeMirror;
 import java.util.HashMap;
 import java.util.Map;
 
+import static colesico.framework.assist.StringUtils.isBlank;
 import static colesico.framework.config.UseFileSource.*;
 
 /**
@@ -190,16 +190,16 @@ public class ConfigParser extends FrameworkAbstractParser {
 
         AnnotationAssist<UseFileSource> fileSourceAnn = configImpl.annotation(UseFileSource.class);
         if (fileSourceAnn != null) {
-            if (StringUtils.isNotBlank(fileSourceAnn.unwrap().file())) {
+            if (!isBlank(fileSourceAnn.unwrap().file())) {
                 result.put(FILE_OPTION, fileSourceAnn.unwrap().file());
             }
-            if (StringUtils.isNotBlank(fileSourceAnn.unwrap().directory())) {
+            if (!isBlank(fileSourceAnn.unwrap().directory())) {
                 result.put(DIRECTORY_OPTION, fileSourceAnn.unwrap().directory());
             }
-            if (StringUtils.isNotBlank(fileSourceAnn.unwrap().classpath())) {
+            if (!isBlank(fileSourceAnn.unwrap().classpath())) {
                 result.put(CLASSPATH_OPTION, fileSourceAnn.unwrap().classpath());
             }
-            if (StringUtils.isNotBlank(fileSourceAnn.unwrap().prefix())) {
+            if (!isBlank(fileSourceAnn.unwrap().prefix())) {
                 result.put(PREFIX_OPTION, fileSourceAnn.unwrap().prefix());
             }
         }

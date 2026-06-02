@@ -21,7 +21,6 @@ module colesico.framework.config {
     // Compile time
     requires static java.compiler;
     requires static com.palantir.javapoet;
-    requires static org.apache.commons.lang3;
 
     // Runtime
     requires org.slf4j;

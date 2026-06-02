@@ -19,11 +19,12 @@ package colesico.framework.dslvalidator.command;
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
-import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
+
+import static colesico.framework.assist.StringUtils.isBlank;
 
 /**
  * Executes chain command if beginValue ins not null and not blank.
@@ -51,7 +52,7 @@ public final class RequiredVerifier<V> implements Command<V> {
         }
 
         if (context.getValue() instanceof String) {
-            if (StringUtils.isBlank((String) context.getValue())) {
+            if (isBlank((String) context.getValue())) {
                 addError(context);
             }
             return;

@@ -16,8 +16,7 @@
 
 package colesico.framework.assist.codegen.model;
 
-import colesico.framework.assist.StrUtils;
-import org.apache.commons.lang3.StringUtils;
+import colesico.framework.assist.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
@@ -31,6 +30,8 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static colesico.framework.assist.StringUtils.isBlank;
 
 abstract public class ParserElement extends Assist {
 
@@ -57,10 +58,10 @@ abstract public class ParserElement extends Assist {
     }
 
     public String nameWithPrefix(String prefix) {
-        if (StringUtils.isEmpty(prefix)) {
+        if (isBlank(prefix)) {
             return name();
         }
-        return StrUtils.addPrefix(prefix, name());
+        return StringUtils.addPrefix(prefix, name());
     }
 
     public ModuleElement module() {

@@ -32,7 +32,6 @@ import colesico.framework.translation.codegen.generator.IocGenerator;
 import colesico.framework.translation.codegen.generator.L10nOptionsGenerator;
 import colesico.framework.translation.codegen.model.DictionaryElement;
 import colesico.framework.translation.codegen.model.DictionaryRegistry;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.*;
@@ -41,6 +40,8 @@ import javax.tools.Diagnostic;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Set;
+
+import static colesico.framework.assist.ExceptionUtils.getRootCauseMessage;
 
 public class DictionaryProcessor extends FrameworkAbstractProcessor {
 
@@ -90,7 +91,7 @@ public class DictionaryProcessor extends FrameworkAbstractProcessor {
                 logger.debug(message);
                 ce.print(processingEnv, elm);
             } catch (Exception e) {
-                String msg = ExceptionUtils.getRootCauseMessage(e);
+                String msg = getRootCauseMessage(e);
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, msg);
                 if (logger.isDebugEnabled()) {
                     e.printStackTrace();

@@ -1,6 +1,6 @@
 package colesico.framework.resource.assist;
 
-import org.apache.commons.lang3.StringUtils;
+import colesico.framework.assist.StringUtils;
 
 /**
  * Parse file path to  obtain file name, file extension

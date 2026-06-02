@@ -16,7 +16,7 @@
 
 package colesico.framework.config;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +27,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +65,7 @@ public class PropertiesSource implements ConfigSource {
 
     private Connection getConnectionFromDirectory(Map<String, String> params, String fileName) {
         final String directory = params.getOrDefault(DIRECTORY_OPTION, CONFIG_DIRECTORY);
-        String fullPath = StrUtils.concatPath(directory, fileName, "/");
+        String fullPath = StringUtils.concatPath(directory, fileName, "/");
         final File directoryFile = new File(fullPath);
 
         if (directoryFile.exists()) {
@@ -87,7 +86,7 @@ public class PropertiesSource implements ConfigSource {
 
     private Connection getConnectionFromClasspath(Map<String, String> params, String fileName) {
         final String classpath = params.getOrDefault(CLASSPATH_OPTION, "META-INF");
-        String fullPath = StrUtils.concatPath(classpath, fileName, "/");
+        String fullPath = StringUtils.concatPath(classpath, fileName, "/");
 
         try (InputStream is = classLoader().getResourceAsStream(fullPath)) {
             if (is != null) {
@@ -223,7 +222,7 @@ public class PropertiesSource implements ConfigSource {
         }
 
         protected String getFieldName(Method setter) {
-            return StrUtils.firstCharToLowerCase(setter.getName().substring(3));
+            return StringUtils.firstCharToLowerCase(setter.getName().substring(3));
         }
 
     }

@@ -19,10 +19,11 @@ package colesico.framework.dslvalidator.command;
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
-import org.apache.commons.lang3.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
+import static colesico.framework.assist.StringUtils.isBlank;
 
 /**
  * @author Vladlen Larionov
@@ -40,7 +41,7 @@ public final class DateFormatVerifier implements Command<String> {
     @Override
     public void execute(ValidationContext<String> context) {
         try {
-            if (StringUtils.isNotEmpty(context.getValue())) {
+            if (!isBlank(context.getValue())) {
                 dateFormat.parse(context.getValue());
             }
         } catch (ParseException ex) {

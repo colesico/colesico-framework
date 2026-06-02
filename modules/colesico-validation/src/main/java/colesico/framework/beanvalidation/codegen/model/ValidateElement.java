@@ -1,10 +1,9 @@
 package colesico.framework.beanvalidation.codegen.model;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.beanvalidation.Validate;
 import colesico.framework.beanvalidation.ValidateBean;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.type.TypeMirror;
 
@@ -61,12 +60,12 @@ abstract public class ValidateElement {
     }
 
     public final String getPropertyGetterName() {
-        return "get" + StrUtils.firstCharToUpperCase(getPropertyName());
+        return "get" + StringUtils.firstCharToUpperCase(getPropertyName());
     }
 
     public final String getPropertyReferenceName() {
         if (originField != null) {
-            String kebabCase = StrUtils.toSeparatorNotation(originField.name(), '_');
+            String kebabCase = StringUtils.toSeparatorNotation(originField.name(), '_');
             return StringUtils.toRootUpperCase(kebabCase);
         }
         return null;

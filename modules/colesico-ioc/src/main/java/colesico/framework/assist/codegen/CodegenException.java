@@ -17,13 +17,14 @@
 package colesico.framework.assist.codegen;
 
 import colesico.framework.assist.codegen.model.ParserElement;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.tools.Diagnostic;
+
+import static colesico.framework.assist.ExceptionUtils.getRootCauseMessage;
+import static colesico.framework.assist.StringUtils.isBlank;
 
 /**
  * An exception thrown while code generation in error case
@@ -50,8 +51,8 @@ public class CodegenException extends RuntimeException {
 
     public void print(ProcessingEnvironment processingEnv, Element defaultElement) {
         String message = getMessage();
-        if (StringUtils.isEmpty(message)) {
-            message = ExceptionUtils.getRootCauseMessage(this);
+        if (isBlank(message)) {
+            message = getRootCauseMessage(this);
         }
 
         if (element != null && annotation != null) {

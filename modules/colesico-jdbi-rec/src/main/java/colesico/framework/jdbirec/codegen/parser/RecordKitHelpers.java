@@ -1,6 +1,6 @@
 package colesico.framework.jdbirec.codegen.parser;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
@@ -37,7 +37,7 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
     protected static String buildColumnName(AnnotationAssist<Column> columnAnn, FieldElement columnField) {
         String name = StringUtils.trim(columnAnn.unwrap().name());
         if (Column.AS_FIELD.equals(name) || StringUtils.isBlank(name)) {
-            name = StrUtils.toSeparatorNotation(columnField.name(), '_');
+            name = StringUtils.toSeparatorNotation(columnField.name(), '_');
         }
         return name;
     }

@@ -16,7 +16,7 @@
 
 package colesico.framework.translation.codegen.generator;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.translation.codegen.model.DictionaryElement;
@@ -46,7 +46,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
             TypeName implTypeName = ClassName.bestGuess(packageName + '.' + dbe.implClassSimpleName());
             producerGenerator.addProduceAnnotation(implTypeName);
 
-            String methodName = StrUtils.firstCharToLowerCase(dbe.originBean().simpleName()) + i;
+            String methodName = StringUtils.firstCharToLowerCase(dbe.originBean().simpleName()) + i;
             TypeName retTypeName = TypeName.get(dbe.originBean().originType());
             producerGenerator.addImplementMethod(methodName, retTypeName, implTypeName);
             i++;

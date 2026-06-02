@@ -16,7 +16,7 @@
 
 package colesico.framework.jdbirec;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.lang.reflect.Constructor;
@@ -48,7 +48,7 @@ public class RecordKitFactory {
             return getKit(recordKitClass);
         }
 
-        String kitClassName = recordKitClass.getName() + StrUtils.firstCharToUpperCase(view) + KIT_IMPL_CLASS_SUFFIX;
+        String kitClassName = recordKitClass.getName() + StringUtils.firstCharToUpperCase(view) + KIT_IMPL_CLASS_SUFFIX;
         return getKit(kitClassName, view);
     }
 }

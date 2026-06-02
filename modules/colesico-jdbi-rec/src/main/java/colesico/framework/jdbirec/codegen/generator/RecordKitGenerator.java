@@ -16,7 +16,7 @@
 
 package colesico.framework.jdbirec.codegen.generator;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.FieldElement;
@@ -68,12 +68,12 @@ public class RecordKitGenerator {
 
     protected String toGetterName(FieldElement field) {
         String fieldName = field.name();
-        return "get" + StrUtils.firstCharToUpperCase(fieldName);
+        return "get" + StringUtils.firstCharToUpperCase(fieldName);
     }
 
     protected String toSetterName(FieldElement field) {
         String fieldName = field.name();
-        return "set" + StrUtils.firstCharToUpperCase(fieldName);
+        return "set" + StringUtils.firstCharToUpperCase(fieldName);
     }
 
     public void generateMediatorFields() {

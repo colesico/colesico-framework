@@ -7,7 +7,6 @@ import colesico.framework.beanvalidation.ValidatorBuilderPrototype;
 import colesico.framework.beanvalidation.ValidatorBuilderPrototypes;
 import colesico.framework.beanvalidation.codegen.generator.BuilderPrototypeGenerator;
 import colesico.framework.beanvalidation.codegen.model.BeanElement;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
@@ -16,6 +15,8 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import java.lang.annotation.Annotation;
 import java.util.Set;
+
+import static colesico.framework.assist.ExceptionUtils.getRootCauseMessage;
 
 public class BuilderPrototypeProcessor extends FrameworkAbstractProcessor {
 
@@ -51,7 +52,7 @@ public class BuilderPrototypeProcessor extends FrameworkAbstractProcessor {
                 logger.debug(message);
                 ce.print(processingEnv, elm);
             } catch (Exception e) {
-                String msg = ExceptionUtils.getRootCauseMessage(e);
+                String msg = getRootCauseMessage(e);
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, msg);
                 if (logger.isDebugEnabled()) {
                     e.printStackTrace();

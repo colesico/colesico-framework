@@ -26,7 +26,6 @@ module colesico.framework.hocon {
     requires transitive colesico.framework.config;
 
     requires org.slf4j;
-    requires static org.apache.commons.lang3;
     requires typesafe.config;
 
     // Exports

@@ -1,6 +1,6 @@
 package colesico.framework.beanvalidation.codegen.model;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.beanvalidation.ValidatorBuilderPrototype;
 
@@ -69,7 +69,7 @@ public class BuilderPrototypeElement {
         if (ValidatorBuilderPrototype.DEFAULT_BUILDER.equals(name)) {
             nameSuffix = "";
         } else {
-            nameSuffix = StrUtils.firstCharToUpperCase(name);
+            nameSuffix = StringUtils.firstCharToUpperCase(name);
         }
         return VALIDATOR_BUILDER_PROTOTYPE_PREFIX
                 + parentBean.getOriginType().asClassElement().simpleName()

@@ -1,11 +1,11 @@
 package colesico.framework.resource.assist;
 
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.config.Config;
 import colesico.framework.resource.l10n.L10nOptionsPrototype;
 import com.palantir.javapoet.*;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;

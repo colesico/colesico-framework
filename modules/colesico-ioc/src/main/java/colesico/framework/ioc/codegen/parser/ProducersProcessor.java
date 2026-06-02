@@ -25,7 +25,6 @@ import colesico.framework.ioc.codegen.generator.SPIGenerator;
 import colesico.framework.ioc.codegen.model.IocletElement;
 import colesico.framework.ioc.production.Producer;
 import com.palantir.javapoet.TypeSpec;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
@@ -37,6 +36,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
+import static colesico.framework.assist.ExceptionUtils.getRootCauseMessage;
 
 /**
  * @author Vladlen Larionov
@@ -86,7 +87,7 @@ public class ProducersProcessor extends FrameworkAbstractProcessor {
                 logger.debug(message);
                 ce.print(processingEnv, elm);
             } catch (Exception e) {
-                String msg = ExceptionUtils.getRootCauseMessage(e);
+                String msg = getRootCauseMessage(e);
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, msg);
                 if (logger.isDebugEnabled()) {
                     e.printStackTrace();
@@ -114,11 +115,11 @@ public class ProducersProcessor extends FrameworkAbstractProcessor {
             String packageName = iocletElement.originProducer().packageName();
             CodegenUtils.createJavaFile(processingEnv, typeSpec, packageName, iocletElement.originProducer().unwrap());
         } catch (CodegenException ce) {
-            logger.error("Error generating ioclet: " + ExceptionUtils.getRootCauseMessage(ce));
+            logger.error("Error generating ioclet: " + getRootCauseMessage(ce));
             ce.print(processingEnv, Optional.ofNullable(iocletElement).map(IocletElement::originProducer).map(ClassElement::unwrap).orElse(null));
             throw ce;
         } catch (Exception e) {
-            logger.debug("Error generating ioclet: " + ExceptionUtils.getRootCauseMessage(e));
+            logger.debug("Error generating ioclet: " + getRootCauseMessage(e));
             if (logger.isDebugEnabled()) {
                 e.printStackTrace();
             }

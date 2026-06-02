@@ -16,7 +16,8 @@
 
 package colesico.framework.assist.codegen;
 
-import org.apache.commons.lang3.StringUtils;
+import static colesico.framework.assist.StringUtils.isBlank;
+
 /*
 
   Usage in maven compiler plugin:
@@ -51,7 +52,7 @@ public enum CodegenMode {
 
     public static CodegenMode fromKey(String key) {
         // Default codegen mode is for production
-        if (StringUtils.isBlank(key)) {
+        if (isBlank(key)) {
             return CodegenMode.DEFAULT;
         }
 

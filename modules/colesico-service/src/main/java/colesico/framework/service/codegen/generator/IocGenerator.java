@@ -17,7 +17,7 @@
 package colesico.framework.service.codegen.generator;
 
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
@@ -28,7 +28,6 @@ import colesico.framework.service.codegen.model.teleapi.TeleServiceElement;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
 import colesico.framework.teleapi.TeleFacade;
 import com.palantir.javapoet.*;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +35,8 @@ import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
 import javax.lang.model.element.Modifier;
+
+import static colesico.framework.assist.StringUtils.isBlank;
 
 /**
  * Service and tele-facade producer generator
@@ -61,7 +62,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         producerGenerator.addProduceAnnotation(serviceProxyTypeName);
 
         // Add produce method
-        String methodName = StrUtils.firstCharToLowerCase(serviceElm.originClass().simpleName());
+        String methodName = StringUtils.firstCharToLowerCase(serviceElm.originClass().simpleName());
         MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, TypeName.get(serviceElm.originClass().originType()));
 
         if (serviceElm.customScopeType() == null) {
@@ -81,14 +82,14 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         producerGenerator.addProduceAnnotation(ClassName.bestGuess(teleService.facadeClassName()));
 
         // Generate produce method
-        String methodName = StrUtils.firstCharToLowerCase(teleService.facadeClassSimpleName());
+        String methodName = StringUtils.firstCharToLowerCase(teleService.facadeClassSimpleName());
         MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, TypeName.get(TeleFacade.class));
         mb.addParameter(ClassName.bestGuess(teleService.facadeClassName()), IMPLEMENTATION_PARAM, Modifier.FINAL);
 
         mb.addAnnotation(Polyproduce.class);
 
         // Add IOC qualifiers
-        if (StringUtils.isNotEmpty(teleService.iocQualifier().named())) {
+        if (!isBlank(teleService.iocQualifier().named())) {
             AnnotationSpec.Builder anb = AnnotationSpec.builder(Named.class);
             anb.addMember("value", "$S", teleService.iocQualifier().named());
             mb.addAnnotation(anb.build());

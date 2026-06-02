@@ -15,7 +15,7 @@
  */
 package colesico.framework.router.assist;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpMethod;
@@ -208,7 +208,7 @@ public class Navigation<N extends Navigation<?>> {
      */
     public String toLocation(Router router) {
         String targetURI;
-        if (!StrUtils.isEmpty(this.uri)) {
+        if (!StringUtils.isBlank(uri)) {
             targetURI = uri;
         } else if (this.serviceClass != null && this.targetMethod != null) {
             List<String> slicedRoute = router.slicedRoute(this.serviceClass, this.targetMethod, this.httpMethod, this.routeParameters);

@@ -16,11 +16,11 @@
 
 package colesico.framework.resource.assist;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import static colesico.framework.assist.StringUtils.isBlank;
 
 /**
  * Path tree representation
@@ -58,7 +58,7 @@ public class PathTrie<V> {
         Node<V> node = rootNode;
         while (pathTokenizer.hasMoreElements()) {
             String pathItem = pathTokenizer.nextToken();
-            if (StringUtils.isNotBlank(pathItem)) {
+            if (!isBlank(pathItem)) {
                 node = node.provideChild(pathItem);
             }
         }

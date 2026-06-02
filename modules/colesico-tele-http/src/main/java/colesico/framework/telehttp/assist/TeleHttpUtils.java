@@ -1,6 +1,6 @@
 package colesico.framework.telehttp.assist;
 
-import org.apache.commons.lang3.StringUtils;
+import colesico.framework.assist.StringUtils;
 
 import java.io.*;
 import java.net.URLDecoder;
@@ -11,10 +11,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import static colesico.framework.assist.StringUtils.isBlank;
+
 public class TeleHttpUtils {
 
     public static Locale acceptedLanguage(String acceptLanguageHeader) {
-        if (StringUtils.isBlank(acceptLanguageHeader)) {
+        if (isBlank(acceptLanguageHeader)) {
             return null;
         }
 
@@ -97,9 +99,9 @@ public class TeleHttpUtils {
         StringTokenizer st = new StringTokenizer(attributesStr, "&");
         while (st.hasMoreTokens()) {
             String tag = st.nextToken();
-            String[] keyVal = StringUtils.split(tag, "=");
-            String key = keyVal[0];
-            String val = URLDecoder.decode(keyVal[1], StandardCharsets.UTF_8);
+            var keyVal = StringUtils.split(tag, "=");
+            String key = keyVal.getFirst();
+            String val = URLDecoder.decode(keyVal.get(1), StandardCharsets.UTF_8);
             attributes.put(key, val);
         }
 

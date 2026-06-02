@@ -26,13 +26,14 @@ import colesico.framework.ioc.ioclet.AdvancedIoc;
 import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.ioclet.Ioclet;
 import colesico.framework.ioc.key.Key;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static colesico.framework.assist.ExceptionUtils.getRootCauseMessage;
 
 /**
  * @author Vladlen Larionov
@@ -109,7 +110,7 @@ public class IocBuilderImpl implements IocBuilder {
                 ioclet.addFactories(catalog);
             }
         } catch (Exception e) {
-            throw new IocException("Error loading ioclet: " + (curIoclet != null ? curIoclet.id() : "?") + "; message: " + ExceptionUtils.getRootCauseMessage(e));
+            throw new IocException("Error loading ioclet: " + (curIoclet != null ? curIoclet.id() : "?") + "; message: " + getRootCauseMessage(e));
         }
 
         Map<Key<?>, Factory<?>> factories = catalog.factories();

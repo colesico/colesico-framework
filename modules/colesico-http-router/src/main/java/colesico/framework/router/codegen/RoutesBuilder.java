@@ -18,7 +18,7 @@ package colesico.framework.router.codegen;
 
 
 import colesico.framework.assist.Elements;
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ParserElement;
@@ -78,14 +78,14 @@ public class RoutesBuilder {
         AnnotationAssist<Route> routeAnn = teleCommand.serviceMethod().originMethod().annotation(Route.class);
         String methodRoute;
         if (routeAnn != null) {
-            methodRoute = StrUtils.trim(routeAnn.unwrap().value());
+            methodRoute = StringUtils.trim(routeAnn.unwrap().value());
             // If NOT absolute route
             if (!methodRoute.startsWith(RouteTrie.SEGMENT_DELEMITER)) {
                 // Local route optional marker
                 if (methodRoute.startsWith("./")) {
                     methodRoute = methodRoute.substring(2);
                 }
-                methodRoute = StrUtils.concatPath(serviceRoute, methodRoute, RouteTrie.SEGMENT_DELEMITER);
+                methodRoute = StringUtils.concatPath(serviceRoute, methodRoute, RouteTrie.SEGMENT_DELEMITER);
             }
         } else {
             String methodName = teleCommand.targetMethodName();
@@ -96,9 +96,9 @@ public class RoutesBuilder {
                 // any route
                 methodRoute = "*";
             } else {
-                methodRoute = StrUtils.toSeparatorNotation(methodName, '-');
+                methodRoute = StringUtils.toSeparatorNotation(methodName, '-');
             }
-            methodRoute = StrUtils.concatPath(serviceRoute, methodRoute, RouteTrie.SEGMENT_DELEMITER);
+            methodRoute = StringUtils.concatPath(serviceRoute, methodRoute, RouteTrie.SEGMENT_DELEMITER);
         }
 
         HttpMethod httpMethod = HttpMethod.HTTP_METHOD_GET;
@@ -107,14 +107,14 @@ public class RoutesBuilder {
             httpMethod = HttpMethod.of(methodAnnotation.unwrap().value());
         }
 
-        return StrUtils.concatPath(httpMethod.name(), methodRoute, RouteTrie.SEGMENT_DELEMITER);
+        return StringUtils.concatPath(httpMethod.name(), methodRoute, RouteTrie.SEGMENT_DELEMITER);
     }
 
     protected String buildServiceRoute(ServiceElement service) {
         AnnotationAssist<Route> routeAnn = service.originClass().annotation(Route.class);
         String srvRoute;
         if (routeAnn != null) {
-            srvRoute = StrUtils.trim(routeAnn.unwrap().value());
+            srvRoute = StringUtils.trim(routeAnn.unwrap().value());
 
             // If absolute route
             if (srvRoute.startsWith(RouteTrie.SEGMENT_DELEMITER)) {
@@ -127,7 +127,7 @@ public class RoutesBuilder {
             }
 
             String pkgRoute = buildPackageRoute(service.originClass().packageElm());
-            return StrUtils.concatPath(pkgRoute, srvRoute, RouteTrie.SEGMENT_DELEMITER);
+            return StringUtils.concatPath(pkgRoute, srvRoute, RouteTrie.SEGMENT_DELEMITER);
         } else {
             String serviceBeanName = service.originClass().simpleName();
             // Local root route
@@ -135,10 +135,10 @@ public class RoutesBuilder {
                 srvRoute = "";
             } else {
                 // Bean route from bean simple class name
-                srvRoute = StrUtils.toSeparatorNotation(serviceBeanName, '-');
+                srvRoute = StringUtils.toSeparatorNotation(serviceBeanName, '-');
             }
             String pkgRoute = buildPackageRoute(service.originClass().packageElm());
-            return StrUtils.concatPath(pkgRoute, srvRoute, RouteTrie.SEGMENT_DELEMITER);
+            return StringUtils.concatPath(pkgRoute, srvRoute, RouteTrie.SEGMENT_DELEMITER);
         }
     }
 
@@ -147,7 +147,7 @@ public class RoutesBuilder {
         if (routeAnn == null) {
             return "/";
         }
-        String route = StrUtils.trim(routeAnn.value());
+        String route = StringUtils.trim(routeAnn.value());
         if (!route.startsWith(RouteTrie.SEGMENT_DELEMITER)) {
             throw CodegenException.of()
                     .message("Wrong package route: " + route + ". must starts with '" + RouteTrie.SEGMENT_DELEMITER + "'")

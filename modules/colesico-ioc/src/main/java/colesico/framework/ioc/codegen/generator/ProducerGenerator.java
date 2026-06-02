@@ -16,6 +16,7 @@
 
 package colesico.framework.ioc.codegen.generator;
 
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.ioc.conditional.Requires;
@@ -24,7 +25,6 @@ import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import com.palantir.javapoet.*;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;

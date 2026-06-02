@@ -1,6 +1,6 @@
 package colesico.framework.jdbirec.codegen.generator;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.jdbirec.RecordKitFactory;
 import colesico.framework.jdbirec.codegen.model.RecordViewElement;
 
@@ -9,7 +9,7 @@ public class RecordKitGeneratorUtils {
         if (view.isDefaultView()) {
             return view.getRecord().getRecordKit().getOriginClass().simpleName() + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
         } else {
-            String namePart = StrUtils.firstCharToUpperCase(view.getName());
+            String namePart = StringUtils.firstCharToUpperCase(view.getName());
             return view.getRecord().getRecordKit().getOriginClass().simpleName() + namePart + RecordKitFactory.KIT_IMPL_CLASS_SUFFIX;
         }
     }

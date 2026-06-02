@@ -18,7 +18,6 @@ package colesico.framework.assist.codegen.model;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -35,6 +34,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import static colesico.framework.assist.StringUtils.isBlank;
 
 public class ClassElement extends ParserElement {
 
@@ -57,7 +58,7 @@ public class ClassElement extends ParserElement {
     }
 
     public static ClassElement of(ProcessingEnvironment processingEnv, String className) {
-        if (StringUtils.isEmpty(className)) {
+        if (isBlank(className)) {
             throw CodegenException.of().message("className is empty").build();
         }
         TypeElement element = processingEnv.getElementUtils().getTypeElement(className);

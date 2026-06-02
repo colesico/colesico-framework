@@ -20,7 +20,6 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.config.Config;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
@@ -31,6 +30,8 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import static colesico.framework.assist.ExceptionUtils.getRootCauseMessage;
 
 /**
  * @author Vladlen Larionov
@@ -78,7 +79,7 @@ public class ConfigProcessor extends FrameworkAbstractProcessor {
                 logger.debug(message);
                 ce.print(processingEnv, elm);
             } catch (Exception e) {
-                String msg = ExceptionUtils.getRootCauseMessage(e);
+                String msg = getRootCauseMessage(e);
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, msg);
                 if (logger.isDebugEnabled()) {
                     e.printStackTrace();
@@ -93,7 +94,7 @@ public class ConfigProcessor extends FrameworkAbstractProcessor {
                 iocGenerator.generate(configElements);
             } catch (Exception e){
                 e.printStackTrace();
-                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, ExceptionUtils.getRootCauseMessage(e));
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, getRootCauseMessage(e));
             }
         }
 

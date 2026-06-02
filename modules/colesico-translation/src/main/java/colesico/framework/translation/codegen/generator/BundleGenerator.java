@@ -16,14 +16,13 @@
 
 package colesico.framework.translation.codegen.generator;
 
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.resource.assist.FileParser;
 import colesico.framework.translation.codegen.model.BundleElement;
 import colesico.framework.translation.codegen.model.DictionaryElement;
 import colesico.framework.translation.codegen.model.DictionaryRegistry;
 import colesico.framework.translation.codegen.model.TranslationElement;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +34,9 @@ import java.io.IOException;
 import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.List;
+
+import static colesico.framework.assist.ExceptionUtils.getRootCauseMessage;
+import static colesico.framework.assist.StringUtils.isBlank;
 
 /**
  * Generates translations properties file for a locale
@@ -54,7 +56,7 @@ public class BundleGenerator {
         String filePath = fp.path();
 
         String fileName;
-        if (StringUtils.isEmpty(bundleElement.languageTag())) {
+        if (isBlank(bundleElement.languageTag())) {
             fileName = fp.fileName() + ".properties";
         } else {
             fileName = fp.fileName() + '_' + bundleElement.languageTag() + ".properties";
@@ -78,7 +80,7 @@ public class BundleGenerator {
                 }
             }
         } catch (IOException ex) {
-            String errMsg = MessageFormat.format("Error creating properties file: {0}; Cause message: {1}", fullPath, ExceptionUtils.getRootCauseMessage(ex));
+            String errMsg = MessageFormat.format("Error creating properties file: {0}; Cause message: {1}", fullPath, getRootCauseMessage(ex));
             logger.error(errMsg);
             throw CodegenException.of().message(errMsg).build();
         }

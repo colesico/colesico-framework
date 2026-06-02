@@ -5,12 +5,13 @@ import colesico.framework.translation.TranslationExceprion;
 import colesico.framework.translation.codegen.model.BundleElement;
 import colesico.framework.translation.codegen.model.DictionaryElement;
 import com.palantir.javapoet.CodeBlock;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static colesico.framework.assist.StringUtils.isBlank;
 
 public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
 
@@ -44,21 +45,21 @@ public class L10nOptionsGenerator extends FrameworkAbstractGenerator {
         languageTags.addAll(dictionaryElement.extraTranslations());
 
         for (String languageTag : languageTags) {
-            if (StringUtils.isEmpty(languageTag)) {
+            if (isBlank(languageTag)) {
                 continue;
             }
             optionsGenerator.qualifiers();
             Locale locale = Locale.forLanguageTag(languageTag);
             boolean emptyQualifiers = true;
-            if (StringUtils.isNotEmpty(locale.getLanguage())) {
+            if (!isBlank(locale.getLanguage())) {
                 emptyQualifiers = false;
                 optionsGenerator.language(locale.getLanguage());
             }
-            if (StringUtils.isNotEmpty(locale.getCountry())) {
+            if (!isBlank(locale.getCountry())) {
                 emptyQualifiers = false;
                 optionsGenerator.country(locale.getCountry());
             }
-            if (StringUtils.isNotEmpty(locale.getVariant())) {
+            if (!isBlank(locale.getVariant())) {
                 emptyQualifiers = false;
                 optionsGenerator.variant(locale.getVariant());
             }

@@ -17,6 +17,7 @@
 package colesico.framework.service.codegen.model;
 
 import colesico.framework.assist.Elements;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
@@ -24,7 +25,6 @@ import colesico.framework.service.ServiceProxy;
 import colesico.framework.service.codegen.model.teleapi.TeleServiceElement;
 import com.palantir.javapoet.CodeBlock;
 import com.palantir.javapoet.TypeName;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;

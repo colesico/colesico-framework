@@ -23,7 +23,6 @@ import colesico.framework.service.codegen.generator.IocGenerator;
 import colesico.framework.service.codegen.generator.ServiceProxyGenerator;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.modulator.ModulatorManager;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,11 +37,13 @@ import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
 
+import static colesico.framework.assist.ExceptionUtils.getRootCauseMessage;
+
 /**
  * Processes classes with the @Service annotation and others that considered to be an aliases.
- * @see colesico.framework.service.codegen.modulator.Modulator#serviceAnnotations
  *
  * @author Vladlen Larionov
+ * @see colesico.framework.service.codegen.modulator.Modulator#serviceAnnotations
  */
 public class ServiceProcessor extends FrameworkAbstractProcessor {
 
@@ -82,7 +83,7 @@ public class ServiceProcessor extends FrameworkAbstractProcessor {
             context = new ServiceProcessorContext(modulatorManager, processingEnv);
             modulatorManager.notifyInit(context);
         } catch (Exception e) {
-            String msg = ExceptionUtils.getRootCauseMessage(e);
+            String msg = getRootCauseMessage(e);
             processingEnv.getMessager().printMessage(Kind.ERROR, msg);
             if (logger.isDebugEnabled()) {
                 e.printStackTrace();
@@ -99,7 +100,7 @@ public class ServiceProcessor extends FrameworkAbstractProcessor {
             modulatorManager.notifyRoundStop();
             return true;
         } catch (Exception e) {
-            String msg = ExceptionUtils.getRootCauseMessage(e);
+            String msg = getRootCauseMessage(e);
             context.messager().printMessage(Kind.ERROR, msg);
             if (logger.isDebugEnabled()) {
                 e.printStackTrace();

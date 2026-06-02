@@ -17,7 +17,7 @@
 package colesico.framework.security.codegen;
 
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
@@ -80,7 +80,7 @@ public class SecurityModulator extends Modulator {
             auditorIdx++;
 
             // Add auditor field
-            String fieldName = StrUtils.firstCharToLowerCase(sae.auditorClass().simpleName()) + auditorIdx;
+            String fieldName = StringUtils.firstCharToLowerCase(sae.auditorClass().simpleName()) + auditorIdx;
             FieldSpec fieldSpec = FieldSpec.builder(TypeName.get(sae.auditorClass().originType()), fieldName).addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
             ServiceFieldElement fieldElement = new ServiceFieldElement(fieldSpec).inject();
             service.addCustomField(fieldElement);

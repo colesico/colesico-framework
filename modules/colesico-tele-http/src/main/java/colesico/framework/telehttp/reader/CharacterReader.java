@@ -16,9 +16,9 @@
 
 package colesico.framework.telehttp.reader;
 
+import colesico.framework.assist.StringUtils;
 import colesico.framework.telehttp.HttpReadOptions;
 import colesico.framework.telehttp.origin.OriginFactory;
-import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -37,6 +37,6 @@ public final class CharacterReader extends OriginReader<Character, HttpReadOptio
     @Override
     public Character read(Class<Character> valueType, HttpReadOptions options) {
         String str = StringUtils.trim(readString(options));
-        return StringUtils.isNotEmpty(str) ? str.charAt(0) : null;
+        return !StringUtils.isBlank(str) ? str.charAt(0) : null;
     }
 }

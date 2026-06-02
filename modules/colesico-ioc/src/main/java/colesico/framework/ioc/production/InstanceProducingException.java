@@ -16,7 +16,7 @@
 
 package colesico.framework.ioc.production;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import static colesico.framework.assist.ExceptionUtils.getRootCauseMessage;
 
 public class InstanceProducingException extends RuntimeException {
     private Class<?> target;
@@ -32,7 +32,7 @@ public class InstanceProducingException extends RuntimeException {
         if (getCause() instanceof StackOverflowError) {
             errMsg = errMsg + "; Possible the cyclic dependency";
         }
-        errMsg = errMsg + "; Root message: " + ExceptionUtils.getRootCauseMessage(this);
+        errMsg = errMsg + "; Root message: " + getRootCauseMessage(this);
         return errMsg;
     }
 }

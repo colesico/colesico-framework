@@ -16,15 +16,18 @@
 
 package colesico.framework.telehttp.assist;
 
+import colesico.framework.assist.StringUtils;
 import colesico.framework.http.*;
 import colesico.framework.telehttp.response.TeleHttpResponse;
-import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Base64;
+import java.util.Objects;
 import java.util.Random;
+
+import static colesico.framework.assist.StringUtils.isBlank;
 
 @Singleton
 public class CSRFProtector<V> {
@@ -47,7 +50,7 @@ public class CSRFProtector<V> {
     }
 
     protected static String hostFromUrl(String url) {
-        if (StringUtils.isBlank(url)) {
+        if (isBlank(url)) {
             return null;
         }
         URI uri;
@@ -99,7 +102,7 @@ public class CSRFProtector<V> {
         String csrfCookieToken = cookie.value();
         String csrfHeaderToken = request.headers().get(CSRF_HEADER);
 
-        if (!StringUtils.equals(csrfCookieToken, csrfHeaderToken)) {
+        if (!Objects.equals(csrfCookieToken, csrfHeaderToken)) {
             throw new RuntimeException("CSRF token mismatch:" + csrfCookieToken + " != " + csrfHeaderToken);
         }
     }

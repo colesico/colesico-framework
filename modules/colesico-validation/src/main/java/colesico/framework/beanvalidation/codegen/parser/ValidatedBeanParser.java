@@ -12,12 +12,13 @@ import colesico.framework.beanvalidation.codegen.model.BeanElement;
 import colesico.framework.beanvalidation.codegen.model.BeanValidateElement;
 import colesico.framework.beanvalidation.codegen.model.BuilderPrototypeElement;
 import colesico.framework.beanvalidation.codegen.model.PropertyValidateElement;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.DeclaredType;
 import java.util.*;
+
+import static colesico.framework.assist.StringUtils.isBlank;
 
 public class ValidatedBeanParser extends FrameworkAbstractParser {
 
@@ -35,7 +36,7 @@ public class ValidatedBeanParser extends FrameworkAbstractParser {
         }
 
         String subject = validateSpec.unwrap().subject();
-        if (StringUtils.isEmpty(subject)) {
+        if (isBlank(subject)) {
             subject = field.name();
         }
 
@@ -78,7 +79,7 @@ public class ValidatedBeanParser extends FrameworkAbstractParser {
         validatedBean.addValidatorBuilder(fieldValidatorBuilder);
 
         String subject = validateBeanSpec.unwrap().subject();
-        if (StringUtils.isEmpty(subject)) {
+        if (isBlank(subject)) {
             subject = field.name();
         }
 
@@ -116,7 +117,7 @@ public class ValidatedBeanParser extends FrameworkAbstractParser {
         DeclaredType superclass = (DeclaredType) builderSpec.valueTypeMirror(a -> a.superclass());
         String packageName = builderSpec.unwrap().packageName();
 
-        if (StringUtils.isBlank(packageName)) {
+        if (isBlank(packageName)) {
             if (!CodegenUtils.isAssignable(BeanValidatorBuilder.class, superclass, processingEnv)) {
                 packageName = (new ClassType(processingEnv, superclass)).asClassElement().packageName();
             } else {
@@ -125,12 +126,12 @@ public class ValidatedBeanParser extends FrameworkAbstractParser {
         }
 
         String name = builderSpec.unwrap().name();
-        if (StringUtils.isBlank(name)) {
+        if (isBlank(name)) {
             name = ValidatorBuilderPrototype.DEFAULT_BUILDER;
         }
 
         String subject = builderSpec.unwrap().subject();
-        if (StringUtils.isBlank(subject)) {
+        if (isBlank(subject)) {
             subject = null;
         }
 

@@ -17,7 +17,6 @@
 package colesico.framework.assist.codegen;
 
 import com.palantir.javapoet.TypeName;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +25,7 @@ import java.util.function.Function;
 
 /**
  * Array code generation helper
+ *
  * @author Vladlen Larionov
  */
 public class ArrayCodegen {
@@ -73,9 +73,9 @@ public class ArrayCodegen {
 
     public String toFormat() {
         if (type != null) {
-            return "new $T[]{" + StringUtils.join(formatsList, ",") + "}";
+            return "new $T[]{" + String.join(",", formatsList) + "}";
         } else {
-            return StringUtils.join(formatsList, ",");
+            return String.join(",", formatsList);
         }
     }
 

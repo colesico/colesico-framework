@@ -6,7 +6,6 @@ module colesico.framework.validation {
     requires static java.compiler;
     requires static com.palantir.javapoet;
     requires org.slf4j;
-    requires org.apache.commons.lang3;
 
     // Api
     exports colesico.framework.validation;

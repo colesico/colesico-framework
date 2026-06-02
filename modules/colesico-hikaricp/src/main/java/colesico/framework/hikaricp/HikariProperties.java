@@ -16,7 +16,7 @@
 
 package colesico.framework.hikaricp;
 
-import colesico.framework.assist.StrUtils;
+import colesico.framework.assist.StringUtils;
 import com.zaxxer.hikari.HikariConfig;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -70,7 +70,7 @@ abstract public class HikariProperties extends HikariConfigPrototype {
     public final HikariConfig hikariConfig() {
 
         final Properties props = new Properties();
-        String fullPath = StrUtils.concatPath(directory(), fileName(), "/");
+        String fullPath = StringUtils.concatPath(directory(), fileName(), "/");
         final File directoryFile = new File(fullPath);
         if (directoryFile.exists()) {
             logger.info("Read HikariCP configuration from file: " + fullPath);
@@ -84,7 +84,7 @@ abstract public class HikariProperties extends HikariConfigPrototype {
             }
         }
 
-        fullPath = StrUtils.concatPath(classpath(), fileName(), "/");
+        fullPath = StringUtils.concatPath(classpath(), fileName(), "/");
 
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         try (InputStream is = loader.getResourceAsStream(fullPath)) {
