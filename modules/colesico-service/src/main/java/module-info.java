@@ -37,6 +37,7 @@ module colesico.framework.service {
     exports colesico.framework.service.codegen.parser;
     exports colesico.framework.service.codegen.modulator;
     exports colesico.framework.service.codegen.generator;
+    exports colesico.framework.service.interception;
 
     provides javax.annotation.processing.Processor with ServiceProcessor;
 }

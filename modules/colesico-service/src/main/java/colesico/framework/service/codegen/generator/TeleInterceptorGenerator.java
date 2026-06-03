@@ -21,8 +21,8 @@ import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.MethodElement;
-import colesico.framework.service.Interceptor;
-import colesico.framework.service.InvocationContext;
+import colesico.framework.service.interception.Interceptor;
+import colesico.framework.service.interception.InvocationContext;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.teleapi.*;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
@@ -156,6 +156,8 @@ public class TeleInterceptorGenerator {
                     ), Interceptor.INVOCATION_CONTEXT_PARAM
             );
 
+            // methodBuilder.addParameter(ClassName.get(Object.class), Interceptor.OPTIONS_PARAM);
+
             CodeBlock.Builder cb = CodeBlock.builder();
 
             // =============== Data port from provider
@@ -181,7 +183,6 @@ public class TeleInterceptorGenerator {
                         InvocationContext.PARAMETERS_METHOD);
             }
 
-            ArrayCodegen serviceMethodArgs = new ArrayCodegen();
             int paramInd = -1;
             for (TeleParameterElement param : teleCommand.parameters()) {
                 paramInd++;
@@ -191,8 +192,6 @@ public class TeleInterceptorGenerator {
                     continue;
                 }
                 CodeBlock value = generateParamRetrieving(param, cb);
-                String paramName = param.originElement().name() + PARAM_SUFFIX;
-                serviceMethodArgs.add("$N", paramName);
                 cb.add("$N[$L] = ", PARAMS_VAR, paramInd);
                 cb.add(value);
                 cb.add(";\n");
@@ -233,14 +232,14 @@ public class TeleInterceptorGenerator {
 
             // Catch
             cb.unindent();
-            cb.add("} catch ($T $N) {\n",ClassName.get(Exception.class),EXCEPTION_VAR);
+            cb.add("} catch ($T $N) {\n", ClassName.get(Exception.class), EXCEPTION_VAR);
             cb.indent();
             cb.add("$N.$N($N, $T.class);\n",
                     DATA_PORT_VAR,
                     DataPort.WRITE_METHOD,
                     EXCEPTION_VAR,
                     ClassName.get(Exception.class));
-            cb.add("throw $N;\n",EXCEPTION_VAR);
+            cb.add("throw $N;\n", EXCEPTION_VAR);
             cb.unindent();
             cb.add("}\n");
 

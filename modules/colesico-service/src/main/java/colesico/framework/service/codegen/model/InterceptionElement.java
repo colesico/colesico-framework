@@ -20,23 +20,23 @@ import com.palantir.javapoet.CodeBlock;
 
 public class InterceptionElement {
     private final CodeBlock interceptorCode;
-    private final CodeBlock parametersCode;
+    private final CodeBlock optionsCode;
 
-    public InterceptionElement(CodeBlock interceptorCode, CodeBlock parametersCode) {
+    public InterceptionElement(CodeBlock interceptorCode, CodeBlock optionsCode) {
         this.interceptorCode = interceptorCode;
-        this.parametersCode = parametersCode;
+        this.optionsCode = optionsCode;
     }
 
     public InterceptionElement(CodeBlock interceptorCode) {
         this.interceptorCode = interceptorCode;
-        this.parametersCode = null;
+        this.optionsCode = null;
     }
 
     public CodeBlock interceptorCode() {
         return interceptorCode;
     }
 
-    public CodeBlock parametersCode() {
-        return parametersCode;
+    public CodeBlock optionsCode() {
+        return optionsCode;
     }
 }

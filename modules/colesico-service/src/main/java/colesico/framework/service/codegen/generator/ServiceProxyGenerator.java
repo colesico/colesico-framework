@@ -29,6 +29,9 @@ import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.service.*;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
+import colesico.framework.service.interception.Interceptor;
+import colesico.framework.service.interception.InterceptorsChain;
+import colesico.framework.service.interception.InvocationContext;
 import com.palantir.javapoet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -303,15 +306,14 @@ public class ServiceProxyGenerator {
 
     private void generateInterceptorBindings(InterceptionElement interceptionElement, MethodSpec.Builder serviceMethodBuilder) {
         CodeBlock.Builder interceptorBindings = CodeBlock.builder();
-        interceptorBindings.add(INTERCEPTORS_CHAIN_VAR + ".add(");
+        interceptorBindings.add(INTERCEPTORS_CHAIN_VAR + ".$N(",InterceptorsChain.ADD_METHOD);
         interceptorBindings.add(interceptionElement.interceptorCode());
-        interceptorBindings.add(",");
 
-        if (interceptionElement.parametersCode() != null) {
-            interceptorBindings.add(interceptionElement.parametersCode());
-        } else {
-            interceptorBindings.add("null");
+        if (interceptionElement.optionsCode() != null) {
+            interceptorBindings.add(",");
+            interceptorBindings.add(interceptionElement.optionsCode());
         }
+
         interceptorBindings.add(");\n");
         serviceMethodBuilder.addCode(interceptorBindings.build());
     }

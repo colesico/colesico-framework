@@ -18,19 +18,22 @@ package colesico.framework.security.codegen;
 
 
 import colesico.framework.assist.StringUtils;
-import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.security.authentication.Authentication;
-import colesico.framework.security.authorization.AuditInterceptor;
+import colesico.framework.security.authentication.AuthenticationInterceptor;
+import colesico.framework.security.authentication.AuthenticationSource;
 import colesico.framework.security.authorization.RequireIdentity;
 import colesico.framework.security.authorization.RequireIdentityAudit;
 import colesico.framework.security.authorization.SecurityAudit;
+import colesico.framework.service.interception.Interceptor;
 import colesico.framework.service.codegen.model.InterceptionElement;
 import colesico.framework.service.codegen.model.InterceptionPhases;
 import colesico.framework.service.codegen.model.ServiceFieldElement;
 import colesico.framework.service.codegen.model.ServiceMethodElement;
 import colesico.framework.service.codegen.modulator.Modulator;
+import com.palantir.javapoet.ClassName;
 import com.palantir.javapoet.CodeBlock;
 import com.palantir.javapoet.FieldSpec;
 import com.palantir.javapoet.TypeName;
@@ -50,16 +53,20 @@ public class SecurityModulator extends Modulator {
     @Override
     public void onServiceMethodParsed(ServiceMethodElement serviceMethod) {
         super.onServiceMethodParsed(serviceMethod);
+
         if (serviceMethod.isPlain()) {
             return;
         }
 
-        // === Process auditors
+        processAuditors();
+        processAuthentication();
+    }
 
+    private void processAuditors() {
         List<SecurityAuditorElement> auditors = new ArrayList<>();
 
-        obtainRequireIdentity().ifPresent(auditors::add);
-        auditors.addAll(obtainSecurityAudit());
+        retrieveRequireIdentity().ifPresent(auditors::add);
+        auditors.addAll(retrieveSecurityAudit());
 
         int auditorIdx = 0;
         for (SecurityAuditorElement sae : auditors) {
@@ -73,16 +80,12 @@ public class SecurityModulator extends Modulator {
 
             // Add interceptor invocation code
             CodeBlock.Builder codeBlock = CodeBlock.builder();
-            codeBlock.add("$N::$N", fieldName, AuditInterceptor.AUDIT_METHOD);
+            codeBlock.add("$N::$N", fieldName, Interceptor.INTERCEPT_METHOD);
             serviceMethod.addInterception(InterceptionPhases.AUTHORIZATION, new InterceptionElement(codeBlock.build()));
         }
-
-        // === Process Authentication
-
-        processAuthentication();
     }
 
-    private Optional<SecurityAuditorElement> obtainRequireIdentity() {
+    private Optional<SecurityAuditorElement> retrieveRequireIdentity() {
         var requireIdentity = serviceMethod.originMethod().annotation(RequireIdentity.class);
         if (requireIdentity == null) {
             requireIdentity = service.originClass().annotation(RequireIdentity.class);
@@ -94,7 +97,7 @@ public class SecurityModulator extends Modulator {
         return Optional.of(se);
     }
 
-    private List<SecurityAuditorElement> obtainSecurityAudit() {
+    private List<SecurityAuditorElement> retrieveSecurityAudit() {
         List<SecurityAuditorElement> result = new ArrayList<>();
 
         var securityAudit = serviceMethod.originMethod().annotation(SecurityAudit.class);
@@ -114,9 +117,38 @@ public class SecurityModulator extends Modulator {
         return result;
     }
 
-    private void processAuthentication(){
+    private void processAuthentication() {
+        AnnotationAssist<Authentication> authentication = serviceMethod.originMethod().annotation(Authentication.class);
+        if (authentication == null) {
+            authentication = service.originClass().annotation(Authentication.class);
+        }
+        if (authentication == null) {
+            return;
+        }
 
-        final AnnotationAssist<Authentication> authentication = serviceMethod.originMethod().annotation(Authentication.class);
+        TypeMirror[] sourcesArr = authentication.valueTypeMirrors(a -> a.value());
+        if (sourcesArr.length == 0) {
+            return;
+        }
 
+        // Add authentication interceptor field
+        String fieldName = StringUtils.firstCharToLowerCase(AuthenticationInterceptor.class.getSimpleName());
+        FieldSpec fieldSpec = FieldSpec.builder(ClassName.get(AuthenticationInterceptor.class), fieldName).addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
+        ServiceFieldElement fieldElement = new ServiceFieldElement(fieldSpec).inject();
+        service.addCustomField(fieldElement);
+
+        // Sources classes code
+        CodeBlock.Builder paramsCode = CodeBlock.builder();
+        ArrayCodegen paramsCodegen = new ArrayCodegen(ClassName.get(Class.class));
+        for (var authSourceClass : sourcesArr) {
+            paramsCodegen.add("$T.class", TypeName.get(authSourceClass));
+        }
+        paramsCode.add(paramsCodegen.toFormat(),paramsCodegen.toValues());
+
+        // Add interceptor invocation code
+        CodeBlock.Builder interceptorCode = CodeBlock.builder();
+        interceptorCode.add("$N::$N", fieldName, Interceptor.INTERCEPT_METHOD);
+        serviceMethod.addInterception(InterceptionPhases.AUTHENTICATION,
+                new InterceptionElement(interceptorCode.build(), paramsCode.build()));
     }
 }

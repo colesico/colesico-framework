@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-package colesico.framework.security.authorization;
-
-import colesico.framework.service.interception.Interceptor;
+package colesico.framework.service.interception;
 
 /**
- * Is used to handle security audit interception
+ * Service method invocation interceptor
  *
- * @see SecurityAudit
- * @see RequireIdentity
+ * @param <T> target service type
+ * @param <R> target method result type
  */
 @FunctionalInterface
-public interface AuditInterceptor<T,R> extends Interceptor<T,R> {
+public interface Interceptor<T, R> {
+
+    String INVOCATION_CONTEXT_PARAM = "context";
+    String OPTIONS_PARAM = "options";
+    String INTERCEPT_METHOD = "intercept";
+
+    R intercept(InvocationContext<T, R> context);
 
 }

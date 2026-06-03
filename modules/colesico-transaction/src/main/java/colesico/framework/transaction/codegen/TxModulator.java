@@ -18,8 +18,8 @@ package colesico.framework.transaction.codegen;
 
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
-import colesico.framework.service.Interceptor;
-import colesico.framework.service.InvocationContext;
+import colesico.framework.service.interception.Interceptor;
+import colesico.framework.service.interception.InvocationContext;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.modulator.Modulator;
 import colesico.framework.transaction.TransactionPropagation;

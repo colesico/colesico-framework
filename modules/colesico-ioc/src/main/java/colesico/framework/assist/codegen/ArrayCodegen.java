@@ -81,6 +81,6 @@ public class ArrayCodegen {
 
 
     public Object[] toValues() {
-        return valuesList.toArray(new Object[valuesList.size()]);
+        return valuesList.toArray(new Object[0]);
     }
 }
