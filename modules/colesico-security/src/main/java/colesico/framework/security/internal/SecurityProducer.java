@@ -16,15 +16,11 @@
 
 package colesico.framework.security.internal;
 
-import colesico.framework.ioc.conditional.Substitute;
-import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
 import colesico.framework.security.SecurityManager;
-import colesico.framework.security.assist.authentication.simple.SimpleAccountStorage;
-import colesico.framework.security.assist.authentication.simple.SimpleAuthConfigPrototype;
 import colesico.framework.security.authentication.*;
 import colesico.framework.security.authorization.RequireIdentityAudit;
 
@@ -34,7 +30,8 @@ import jakarta.inject.Singleton;
 @Produce(value = SecurityManagerImpl.class, keyType = SecurityManager.class, scoped = Singleton.class)
 @Produce(value = AuthenticationRegistryImpl.class, keyType = AuthenticationRegistry.class)
 @Produce(value = IdentityContextImpl.class, keyType = IdentityContext.class, scoped = Singleton.class)
-@Produce(value = SourceContextImpl.class, keyType = SourceContext.class, scoped = Singleton.class)
+@Produce(value = AuthenticationSourceContextImpl.class, keyType = AuthenticationSourceContext.class, scoped = Singleton.class)
+@Produce(value = AuthenticationInterceptorImpl.class, keyType = AuthenticationInterceptor.class)
 @Produce(RequireIdentityAudit.class)
 public class SecurityProducer {
 

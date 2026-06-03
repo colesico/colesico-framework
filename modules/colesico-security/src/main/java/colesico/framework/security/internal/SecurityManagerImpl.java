@@ -36,11 +36,11 @@ import java.util.concurrent.Callable;
 public class SecurityManagerImpl implements SecurityManager {
 
     protected final IdentityContext identityContext;
-    protected final SourceContext sourceContext;
+    protected final AuthenticationSourceContext sourceContext;
     protected final Polysupplier<AuthenticationHandler> authHandlers;
     protected final AuthenticationRegistry authRegistry;
 
-    public SecurityManagerImpl(IdentityContext identityContext, SourceContext sourceContext, Polysupplier<AuthenticationHandler> authHandlers, AuthenticationRegistry authRegistry) {
+    public SecurityManagerImpl(IdentityContext identityContext, AuthenticationSourceContext sourceContext, Polysupplier<AuthenticationHandler> authHandlers, AuthenticationRegistry authRegistry) {
         this.identityContext = identityContext;
         this.sourceContext = sourceContext;
         this.authHandlers = authHandlers;

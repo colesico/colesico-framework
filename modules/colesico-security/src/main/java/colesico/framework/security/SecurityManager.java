@@ -46,7 +46,7 @@ public interface SecurityManager {
     }
 
     /**
-     * Performs authentication using the sources currently bound to the {@link SourceContext}.
+     * Performs authentication using the sources currently bound to the {@link AuthenticationSourceContext}.
      * This is the standard way to trigger authentication in a scoped environment (e.g., during an HTTP request).
      */
     AuthenticationResult login();

@@ -16,6 +16,8 @@
 
 package colesico.framework.service.interception;
 
+import java.util.Optional;
+
 /**
  * Service method invocation interception context
  *
@@ -86,9 +88,8 @@ public final class InvocationContext<T, R> {
         return interception;
     }
 
-    @SuppressWarnings("unchecked")
-    public <O> O options() {
-        return (O) interception.options();
+    public <O> Optional<O> options(Class<O> type) {
+        return Optional.ofNullable(type.cast(interception.options()));
     }
 
     public R proceed() {

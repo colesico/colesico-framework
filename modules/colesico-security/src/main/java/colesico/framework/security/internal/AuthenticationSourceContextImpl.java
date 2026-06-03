@@ -2,13 +2,13 @@ package colesico.framework.security.internal;
 
 import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.security.authentication.AuthenticationSource;
-import colesico.framework.security.authentication.SourceContext;
+import colesico.framework.security.authentication.AuthenticationSourceContext;
 
-public class SourceContextImpl implements SourceContext {
+public class AuthenticationSourceContextImpl implements AuthenticationSourceContext {
 
     protected final TaskScope taskScope;
 
-    public SourceContextImpl(TaskScope taskScope) {
+    public AuthenticationSourceContextImpl(TaskScope taskScope) {
         this.taskScope = taskScope;
     }
 

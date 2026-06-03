@@ -10,7 +10,7 @@ import jakarta.inject.Singleton;
  * Checks that the current identity exists
  */
 @Singleton
-public final class RequireIdentityAudit implements AuditInterceptor<Object, Object> {
+public final class RequireIdentityAudit implements AuditInterceptor {
 
     private final colesico.framework.security.SecurityManager securityManager;
 
@@ -20,7 +20,7 @@ public final class RequireIdentityAudit implements AuditInterceptor<Object, Obje
     }
 
     @Override
-    public Object intercept(InvocationContext<Object, Object> context) {
+    public Object intercept(InvocationContext context) {
         securityManager.requireIdentity();
         return context.proceed();
     }

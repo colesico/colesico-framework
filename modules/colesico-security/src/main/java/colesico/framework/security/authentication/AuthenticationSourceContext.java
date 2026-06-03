@@ -6,7 +6,7 @@ import colesico.framework.ioc.key.TypeKey;
 /**
  * Current auth sources holder
  */
-public interface SourceContext {
+public interface AuthenticationSourceContext {
 
     Key<Sources> SCOPE_KEY = new TypeKey<>(Sources.class);
 
