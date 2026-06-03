@@ -2,7 +2,7 @@ package colesico.framework.router.internal;
 
 import colesico.framework.http.HttpMethod;
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.ioc.scope.RequestScope;
+import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.router.*;
 import colesico.framework.teleapi.TeleController;
 
@@ -17,16 +17,16 @@ import java.util.Map;
 @Singleton
 public class RouterBuilderImpl implements RouterBuilder {
 
-    private final RequestScope requestScope;
+    private final TaskScope taskScope;
     private final Polysupplier<RouterTargetController> targetControllers;
     private final List<CustomRouteAction> customRouteActions = new ArrayList<>();
 
     @Inject
     public RouterBuilderImpl(Polysupplier<RouterTargetController> targetControllers,
-                             RequestScope requestScope) {
+                             TaskScope taskScope) {
 
         this.targetControllers = targetControllers;
-        this.requestScope = requestScope;
+        this.taskScope = taskScope;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class RouterBuilderImpl implements RouterBuilder {
 
     @Override
     public Router build() {
-        RouterImpl router = new RouterImpl(requestScope);
+        RouterImpl router = new RouterImpl(taskScope);
 
         for (var teleController : targetControllers) {
             router.register(teleController);

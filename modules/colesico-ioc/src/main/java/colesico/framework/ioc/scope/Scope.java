@@ -29,43 +29,33 @@ public interface Scope {
 
     /**
      * Returns an object from the scope by its key. If object is not exists returns null
-     *
-     * @param key
-     * @return
      */
     <T> T get(Key<T> key);
 
     /**
      * Puts an object to the scope and associate it with key
-     *
-     * @param key
-     * @param value
      */
     <T> void put(Key<T> key, T value);
 
     /**
-     * Returns an object from the scope by  key.
+     * Returns an object from the scope by key.
      * If the object is not present in the scope, creates it with  the fabricator,
      * puts to scope and returns this object
-     *
-     * @param key
-     * @param fabricator
-     * @return
-     * @see Fabricator
      */
     <T,C> T get(Key<T> key, Fabricator<T,C> fabricator, C fabricationContext);
 
     /**
      * Removes an object from the scope
-     *
-     * @param key
      */
     <T> void remove(Key<T> key);
 
     /**
      * Returns the scope keys
-     *
-     * @return
      */
     Set<Key<?>> keys();
+
+    /**
+     * Clear all scope data
+     */
+    void clear();
 }

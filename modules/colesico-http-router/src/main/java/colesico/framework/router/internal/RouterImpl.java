@@ -18,7 +18,7 @@ package colesico.framework.router.internal;
 
 import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpMethod;
-import colesico.framework.ioc.scope.RequestScope;
+import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.router.*;
 import colesico.framework.router.assist.RouteTrie;
 import colesico.framework.teleapi.TeleController;
@@ -41,15 +41,15 @@ public class RouterImpl implements Router {
 
     protected final Logger log = LoggerFactory.getLogger(Router.class);
 
-    protected final RequestScope requestScope;
+    protected final TaskScope taskScope;
 
     protected RouteTrie<RouteAction> routeTrie = new RouteTrie<>(null);
 
     protected RoutesIndex routesIndex = new RoutesIndex();
 
     @Inject
-    public RouterImpl(RequestScope requestScope) {
-        this.requestScope = requestScope;
+    public RouterImpl(TaskScope taskScope) {
+        this.taskScope = taskScope;
     }
 
     @Override
@@ -82,7 +82,7 @@ public class RouterImpl implements Router {
         }
 
         RouterContext routerContext = new RouterContext(invocation.requestUri(), invocation.parameters());
-        requestScope.put(RouterContext.SCOPE_KEY, routerContext);
+        taskScope.put(RouterContext.SCOPE_KEY, routerContext);
 
         var teleController = invocation.action().teleController();
         if (teleController == null || teleController == this) {

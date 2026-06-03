@@ -32,17 +32,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class RefreshScopeImpl implements RefreshScope {
 
-    private final Map<Key<?>, Object> objectsHolder;
+    private final Map<Key<?>, Object> data;
     private final Ioc ioc;
 
     public RefreshScopeImpl(Ioc ioc) {
-        objectsHolder = new ConcurrentHashMap();
+        data = new ConcurrentHashMap();
         this.ioc = ioc;
     }
 
     @Override
-    public <T,M> T refresh(Key<T> key, M message) {
-        T obj = (T) objectsHolder.remove(key);
+    public <T, M> T refresh(Key<T> key, M message) {
+        T obj = (T) data.remove(key);
         if (obj != null) {
             return ioc.instance(key, message);
         }
@@ -51,12 +51,12 @@ public final class RefreshScopeImpl implements RefreshScope {
 
     @Override
     public <T> T refresh(Class<T> type) {
-        return refresh(new TypeKey<>(type),null);
+        return refresh(new TypeKey<>(type), null);
     }
 
     @Override
     public void refreshAll() {
-        for (Key<?> key : objectsHolder.keySet()) {
+        for (Key<?> key : data.keySet()) {
             remove(key);
         }
     }
@@ -64,30 +64,35 @@ public final class RefreshScopeImpl implements RefreshScope {
 
     @Override
     public <T> void remove(Key<T> key) {
-        objectsHolder.remove(key);
+        data.remove(key);
     }
 
     @Override
     public Set<Key<?>> keys() {
-        return objectsHolder.keySet();
+        return data.keySet();
+    }
+
+    @Override
+    public void clear() {
+        data.clear();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T, C> T get(Key<T> key, Fabricator<T, C> fabricator, C fabricationContext) {
-        Object obj = objectsHolder.computeIfAbsent(key, k -> fabricator.fabricate(fabricationContext));
+        Object obj = data.computeIfAbsent(key, k -> fabricator.fabricate(fabricationContext));
         return (T) obj;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(Key<T> key) {
-        return (T) objectsHolder.get(key);
+        return (T) data.get(key);
     }
 
     @Override
     public <T> void put(Key<T> key, T value) {
-        objectsHolder.put(key, value);
+        data.put(key, value);
     }
 
 }

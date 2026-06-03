@@ -18,7 +18,7 @@ package colesico.framework.translation.internal;
 
 
 import colesico.framework.ioc.key.StringKey;
-import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.translation.TextFormatter;
 import colesico.framework.translation.Translatable;
 import colesico.framework.translation.TranslationBundle;
@@ -42,14 +42,14 @@ public class TranslationKitImpl implements TranslationKit {
 
     protected final Logger logger = LoggerFactory.getLogger(TranslationKit.class);
 
-    protected final ThreadScope threadScope;
+    protected final TaskScope taskScope;
 
     protected final Provider<Locale> localeProv;
     protected final PropertyBundleFactory propertyBundleFactory;
     protected final TextFormatter formatter;
 
-    public TranslationKitImpl(ThreadScope threadScope, Provider<Locale> localeProv, PropertyBundleFactory propertyBundleFactory, TextFormatter formatter) {
-        this.threadScope = threadScope;
+    public TranslationKitImpl(TaskScope taskScope, Provider<Locale> localeProv, PropertyBundleFactory propertyBundleFactory, TextFormatter formatter) {
+        this.taskScope = taskScope;
         this.localeProv = localeProv;
         this.propertyBundleFactory = propertyBundleFactory;
         this.formatter = formatter;
@@ -65,7 +65,7 @@ public class TranslationKitImpl implements TranslationKit {
 
         // Check thread scope for bundle
         final StringKey<TranslationBundle> scopeKey = new StringKey<>(SCOPE_KEY_PREFIX + baseName);
-        TranslationBundle translationBundle = threadScope.get(scopeKey);
+        TranslationBundle translationBundle = taskScope.get(scopeKey);
         if (translationBundle != null) {
             return translationBundle;
         }
@@ -75,7 +75,7 @@ public class TranslationKitImpl implements TranslationKit {
         translationBundle = new TranslationBundleImpl(propertyBundle, formatter);
 
         // Reference the bundle from thread scope to  fast access in the same thread
-        threadScope.put(scopeKey, translationBundle);
+        taskScope.put(scopeKey, translationBundle);
 
         return translationBundle;
     }

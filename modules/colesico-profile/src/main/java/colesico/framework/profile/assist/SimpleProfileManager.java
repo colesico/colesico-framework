@@ -1,6 +1,6 @@
 package colesico.framework.profile.assist;
 
-import colesico.framework.ioc.scope.RequestScope;
+import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.profile.AbstractProfileManager;
 import colesico.framework.profile.Profile;
 import jakarta.inject.Inject;
@@ -15,8 +15,8 @@ public class SimpleProfileManager extends AbstractProfileManager<Profile> {
     private AtomicReference<Profile> profileHolder;
 
     @Inject
-    public SimpleProfileManager(RequestScope requestScope) {
-        super(requestScope);
+    public SimpleProfileManager(TaskScope taskScope) {
+        super(taskScope);
         this.profileHolder = new AtomicReference<>(createProfile());
     }
 

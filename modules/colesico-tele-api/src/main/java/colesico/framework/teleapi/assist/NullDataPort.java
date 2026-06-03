@@ -1,6 +1,6 @@
 package colesico.framework.teleapi.assist;
 
-import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.teleapi.dataport.ReadOptions;
 import colesico.framework.teleapi.dataport.WriteOptions;
@@ -8,20 +8,18 @@ import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Type;
-
 @Singleton
 public final class NullDataPort implements DataPort<ReadOptions, WriteOptions> {
 
     private static final Logger log = LoggerFactory.getLogger(NullDataPort.class);
-    private final ThreadScope threadScope;
+    private final TaskScope taskScope;
 
-    public NullDataPort(ThreadScope threadScope) {
-        this.threadScope = threadScope;
+    public NullDataPort(TaskScope taskScope) {
+        this.taskScope = taskScope;
     }
 
     public void provide() {
-        threadScope.put(DataPort.SCOPE_KEY, this);
+        taskScope.put(DataPort.SCOPE_KEY, this);
     }
 
     @Override

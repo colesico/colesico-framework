@@ -18,7 +18,7 @@ package colesico.framework.httpserver;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
-import colesico.framework.ioc.scope.RequestScope;
+import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.router.Router;
 import colesico.framework.router.assist.UnknownRouteException;
 import org.slf4j.Logger;
@@ -37,12 +37,12 @@ import static colesico.framework.assist.ExceptionUtils.getRootCauseMessage;
 abstract public class RequestProcessor<C> {
 
     protected final Logger log = LoggerFactory.getLogger(RequestProcessor.class);
-    protected final RequestScope requestScope;
+    protected final TaskScope taskScope;
     protected final Router router;
     protected final ErrorHandler errorHandler;
 
-    public RequestProcessor(RequestScope requestScope, Router router, ErrorHandler errorHandler) {
-        this.requestScope = requestScope;
+    public RequestProcessor(TaskScope taskScope, Router router, ErrorHandler errorHandler) {
+        this.taskScope = taskScope;
         this.router = router;
         this.errorHandler = errorHandler;
     }
@@ -50,13 +50,15 @@ abstract public class RequestProcessor<C> {
     abstract protected HttpContext createHttpContext(C rawContext);
 
     protected void handleRequest(C rawContext) {
-        requestScope.open();
-        try (requestScope) {
-            var httpContext = bindHttpContext(rawContext);
-            var invocation = resolve(httpContext);
-            if (invocation != null) {
-                execute(invocation, httpContext);
-            }
+        try {
+            taskScope.run(() -> {
+                        var httpContext = bindHttpContext(rawContext);
+                        var invocation = resolve(httpContext);
+                        if (invocation != null) {
+                            execute(invocation, httpContext);
+                        }
+                    }
+            );
         } catch (Throwable fatal) {
             log.error("Fatal error during request processing: {}", fatal.getMessage());
         }
@@ -94,7 +96,7 @@ abstract public class RequestProcessor<C> {
 
     protected HttpContext bindHttpContext(C rawContext) {
         var httpContext = createHttpContext(rawContext);
-        requestScope.put(HttpContext.SCOPE_KEY, httpContext);
+        taskScope.put(HttpContext.SCOPE_KEY, httpContext);
         return httpContext;
     }
 

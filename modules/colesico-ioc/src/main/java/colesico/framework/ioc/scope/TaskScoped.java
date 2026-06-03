@@ -27,6 +27,6 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Inherited
 @Documented
-@CustomScope(RequestScope.class)
-public @interface RequestScoped {
+@CustomScope(TaskScope.class)
+public @interface TaskScoped {
 }

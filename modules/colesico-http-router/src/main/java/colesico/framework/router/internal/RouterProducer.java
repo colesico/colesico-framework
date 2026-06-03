@@ -18,8 +18,7 @@ package colesico.framework.router.internal;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.ioc.scope.RequestScope;
-import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterBuilder;
 import colesico.framework.router.RouterContext;
@@ -46,8 +45,8 @@ public class RouterProducer {
         return builder.build();
     }
 
-    public RouterContext routerContext(RequestScope requestScope) {
-        return requestScope.get(RouterContext.SCOPE_KEY);
+    public RouterContext routerContext(TaskScope taskScope) {
+        return taskScope.get(RouterContext.SCOPE_KEY);
     }
 
 }

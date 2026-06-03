@@ -2,18 +2,17 @@ package colesico.framework.profile;
 
 import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
-import colesico.framework.ioc.scope.RequestScope;
-import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.ioc.scope.TaskScope;
 
 abstract public class AbstractProfileManager<P extends Profile> implements ProfileManager<P> {
 
     /**
      * Profile association with thread
      */
-    protected final RequestScope requestScope;
+    protected final TaskScope taskScope;
 
-    public AbstractProfileManager(RequestScope requestScope) {
-        this.requestScope = requestScope;
+    public AbstractProfileManager(TaskScope taskScope) {
+        this.taskScope = taskScope;
     }
 
     /**
@@ -36,12 +35,12 @@ abstract public class AbstractProfileManager<P extends Profile> implements Profi
 
     @Override
     public P profile() {
-        ProfileHolder holder = requestScope.get(ProfileHolder.SCOPE_KEY);
+        ProfileHolder holder = taskScope.get(ProfileHolder.SCOPE_KEY);
         if (holder != null) {
             return holder.profile != null ? (P) holder.profile : createProfile();
         } else {
             // Recursive calls protection
-            requestScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(null));
+            taskScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(null));
         }
 
         // No profile in cache. Retrieve profile from source
@@ -49,14 +48,14 @@ abstract public class AbstractProfileManager<P extends Profile> implements Profi
         if (profile == null) {
             profile = createProfile();
         }
-        requestScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
+        taskScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
         return profile;
     }
 
     @Override
     public void save(P profile) {
         profile = write(profile);
-        requestScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
+        taskScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
     }
 
     public record ProfileHolder(Profile profile) {

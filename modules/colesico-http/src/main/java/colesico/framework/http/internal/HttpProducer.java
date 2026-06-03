@@ -19,9 +19,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.ioc.scope.RequestScope;
-import colesico.framework.ioc.scope.ThreadScope;
-
+import colesico.framework.ioc.scope.TaskScope;
 
 
 /**
@@ -32,7 +30,7 @@ import colesico.framework.ioc.scope.ThreadScope;
 @Producer
 public class HttpProducer {
 
-    public HttpContext getHttpContext(RequestScope scope) {
+    public HttpContext getHttpContext(TaskScope scope) {
         return scope.get(HttpContext.SCOPE_KEY);
     }
 

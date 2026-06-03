@@ -20,7 +20,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.ioc.scope.RequestScope;
+import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.router.Router;
 import colesico.framework.router.RouterCommandsRegistry;
 import colesico.framework.teleapi.TeleFacade;
@@ -52,19 +52,19 @@ public class WebletTeleControllerImpl implements WebletTeleController {
 
     protected final CSRFProtector csrfProtector;
 
-    protected final RequestScope requestScope;
+    protected final TaskScope taskScope;
 
     public WebletTeleControllerImpl(WebletDataPort dataPort,
                                     @Classed(Weblet.class)
                                     Polysupplier<TeleFacade> teleFacades,
                                     Provider<HttpContext> httpContext,
                                     CSRFProtector csrfProtector,
-                                    RequestScope requestScope) {
+                                    TaskScope taskScope) {
         this.dataPort = dataPort;
         this.teleFacades = (Polysupplier) teleFacades;
         this.httpContext = httpContext;
         this.csrfProtector = csrfProtector;
-        this.requestScope = requestScope;
+        this.taskScope = taskScope;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class WebletTeleControllerImpl implements WebletTeleController {
 
     @Override
     public void execute(Router.Invocation invocation) {
-        requestScope.put(DataPort.SCOPE_KEY, dataPort);
+        taskScope.put(DataPort.SCOPE_KEY, dataPort);
         HttpRequest request = httpContext.get().request();
         csrfProtector.check(request);
         invocation.action().teleCommand().execute();

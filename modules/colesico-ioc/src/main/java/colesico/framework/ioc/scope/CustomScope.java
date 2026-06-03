@@ -35,7 +35,6 @@ import java.lang.annotation.*;
 public @interface CustomScope {
     /**
      * Scope intrface or implementation class
-     * @return
      */
     Class<? extends Scope> value();
 }

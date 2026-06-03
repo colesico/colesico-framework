@@ -1,6 +1,6 @@
 package colesico.framework.profile.internal;
 
-import colesico.framework.ioc.scope.RequestScope;
+import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.profile.AbstractProfileManager;
 import colesico.framework.profile.Profile;
 import colesico.framework.teleapi.dataport.DataPort;
@@ -17,8 +17,8 @@ public class ProfileManagerImpl extends AbstractProfileManager<Profile> {
 
     protected final Provider<DataPort> dataPort;
 
-    public ProfileManagerImpl(RequestScope requestScope, Provider<DataPort> dataPort) {
-        super(requestScope);
+    public ProfileManagerImpl(TaskScope taskScope, Provider<DataPort> dataPort) {
+        super(taskScope);
         this.dataPort = dataPort;
     }
 

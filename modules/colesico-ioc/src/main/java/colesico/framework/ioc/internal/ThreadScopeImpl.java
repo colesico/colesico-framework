@@ -19,8 +19,8 @@ import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.scope.Fabricator;
 import colesico.framework.ioc.scope.ThreadScope;
 
-import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,48 +31,53 @@ import java.util.Set;
  */
 public final class ThreadScopeImpl implements ThreadScope {
 
-    private final ThreadLocal<Map<Key<?>, Object>> objectsHolder;
+    private final ThreadLocal<Map<Key<?>, Object>> dataHolder;
 
     public ThreadScopeImpl() {
-        objectsHolder = ThreadLocal.withInitial(HashMap::new);
+        dataHolder = ThreadLocal.withInitial(HashMap::new);
     }
 
     @Override
     public <T> void remove(Key<T> key) {
-        objectsHolder.get().remove(key);
+        dataHolder.get().remove(key);
     }
 
     @Override
     public Set<Key<?>> keys() {
-        return objectsHolder.get().keySet();
+        return new HashSet<>(dataHolder.get().keySet());
+    }
+
+    @Override
+    public void clear() {
+        dataHolder.set(new HashMap<>());
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T, C> T get(Key<T> key, Fabricator<T, C> fabricator, C fabricationContext) {
-        var objects = objectsHolder.get();
-        Object obj = objects.computeIfAbsent(key, k -> fabricator.fabricate(fabricationContext));
+        var data = dataHolder.get();
+        Object obj = data.computeIfAbsent(key, k -> fabricator.fabricate(fabricationContext));
         return (T) obj;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(Key<T> key) {
-        return (T) objectsHolder.get().get(key);
+        return (T) dataHolder.get().get(key);
     }
 
     @Override
     public <T> void put(Key<T> key, T value) {
-        objectsHolder.get().put(key, value);
+        dataHolder.get().put(key, value);
     }
 
     @Override
     public void open() {
-        objectsHolder.get().clear();
+        dataHolder.get().clear();
     }
 
     @Override
     public void close() {
-        objectsHolder.remove();
+        dataHolder.remove();
     }
 }

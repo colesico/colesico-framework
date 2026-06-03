@@ -17,16 +17,17 @@ package colesico.framework.http;
 
 import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
+import colesico.framework.ioc.scope.TaskScope;
 
 /**
  * Contains data relating to the current http request processing.
- * This context must be placed to {@link colesico.framework.ioc.scope.RequestScope}
+ * This context must be placed to {@link TaskScope}
  * to be accessible for other framework components
  */
 public final class HttpContext {
 
     /**
-     * {@link colesico.framework.ioc.scope.RequestScope}  key to hold this context
+     * {@link TaskScope}  key to hold this context
      */
     public static final Key<HttpContext> SCOPE_KEY = new TypeKey<>(HttpContext.class);
 

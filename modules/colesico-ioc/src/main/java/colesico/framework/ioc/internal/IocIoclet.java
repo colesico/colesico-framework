@@ -20,7 +20,7 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.ioclet.*;
 import colesico.framework.ioc.key.TypeKey;
 import colesico.framework.ioc.scope.RefreshScope;
-import colesico.framework.ioc.scope.RequestScope;
+import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.ioc.scope.ThreadScope;
 
 /**
@@ -46,7 +46,6 @@ public final class IocIoclet implements Ioclet {
 
     private Factory<ThreadScope> threadScopeFactory() {
         return new SingletonFactory<>() {
-
             @Override
             public ThreadScope create(Object message) {
                 return new ThreadScopeImpl();
@@ -54,12 +53,11 @@ public final class IocIoclet implements Ioclet {
         };
     }
 
-    private Factory<RequestScope> requestScopeFactory() {
+    private Factory<TaskScope> taskScopeFactory() {
         return new SingletonFactory<>() {
-
             @Override
-            public RequestScope create(Object message) {
-                return new RequestScopeImpl();
+            public TaskScope create(Object message) {
+                return new TaskScopeImpl();
             }
         };
     }
@@ -95,8 +93,8 @@ public final class IocIoclet implements Ioclet {
             catalog.add(threadScopeFactory());
         }
 
-        if (catalog.accept(new TypeKey<>(RequestScope.class), null, null, null)) {
-            catalog.add(requestScopeFactory());
+        if (catalog.accept(new TypeKey<>(TaskScope.class), null, null, null)) {
+            catalog.add(taskScopeFactory());
         }
 
         if (catalog.accept(new TypeKey<>(RefreshScope.class), null, null, null)) {

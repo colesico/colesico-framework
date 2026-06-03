@@ -1,6 +1,6 @@
 package colesico.framework.teleapi.assist;
 
-import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.teleapi.dataport.ReadOptions;
 import colesico.framework.teleapi.dataport.WriteOptions;
@@ -15,15 +15,15 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class SimpleDataPort implements DataPort<ReadOptions, WriteOptions> {
 
     private static final Logger log = LoggerFactory.getLogger(SimpleDataPort.class);
-    private final ThreadScope threadScope;
+    private final TaskScope taskScope;
     private final Map<Class<?>, Object> values = new ConcurrentHashMap<>();
 
-    public SimpleDataPort(ThreadScope threadScope) {
-        this.threadScope = threadScope;
+    public SimpleDataPort(TaskScope taskScope) {
+        this.taskScope = taskScope;
     }
 
     public void provide() {
-        threadScope.put(DataPort.SCOPE_KEY, this);
+        taskScope.put(DataPort.SCOPE_KEY, this);
     }
 
     public Map<Class<?>, ?> values() {
