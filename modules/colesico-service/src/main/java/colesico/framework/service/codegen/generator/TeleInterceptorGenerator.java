@@ -51,6 +51,7 @@ public class TeleInterceptorGenerator {
     public static final String RESULT_VAR = "result";
     public static final String DATA_PORT_VAR = "dataPort";
     public static final String PARAMS_VAR = "params";
+    public static final String EXCEPTION_VAR = "ex";
 
     protected final Logger logger = LoggerFactory.getLogger(TeleInterceptorGenerator.class);
 
@@ -197,6 +198,9 @@ public class TeleInterceptorGenerator {
                 cb.add(";\n");
             }
 
+            // Try
+            cb.add("\ntry {\n").indent();
+
             // ==================  Invoke by context
             // final ResType result = ctx.proceed();
             cb.add("\n// Proceed next interceptors\n");
@@ -225,7 +229,20 @@ public class TeleInterceptorGenerator {
                 cb.add(");\n");
             }
 
-            cb.add("return $N;", RESULT_VAR);
+            cb.add("return $N;\n\n", RESULT_VAR);
+
+            // Catch
+            cb.unindent();
+            cb.add("} catch ($T $N) {\n",ClassName.get(Exception.class),EXCEPTION_VAR);
+            cb.indent();
+            cb.add("$N.$N($N, $T.class);\n",
+                    DATA_PORT_VAR,
+                    DataPort.WRITE_METHOD,
+                    EXCEPTION_VAR,
+                    ClassName.get(Exception.class));
+            cb.add("throw $N;\n",EXCEPTION_VAR);
+            cb.unindent();
+            cb.add("}\n");
 
             methodBuilder.addCode(cb.build());
             classBuilder.addMethod(methodBuilder.build());

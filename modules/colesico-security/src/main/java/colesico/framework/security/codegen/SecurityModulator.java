@@ -21,6 +21,7 @@ import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
+import colesico.framework.security.authentication.Authentication;
 import colesico.framework.security.authorization.AuditInterceptor;
 import colesico.framework.security.authorization.RequireIdentity;
 import colesico.framework.security.authorization.RequireIdentityAudit;
@@ -39,6 +40,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Generates security audit interceptors
@@ -48,32 +50,16 @@ public class SecurityModulator extends Modulator {
     @Override
     public void onServiceMethodParsed(ServiceMethodElement serviceMethod) {
         super.onServiceMethodParsed(serviceMethod);
-        final AnnotationAssist<RequireIdentity> requireIdentity = serviceMethod.originMethod().annotation(RequireIdentity.class);
-        final AnnotationAssist<SecurityAudit> securityAudit = serviceMethod.originMethod().annotation(SecurityAudit.class);
-
-        if (requireIdentity == null && securityAudit == null) {
+        if (serviceMethod.isPlain()) {
             return;
         }
 
-        if (serviceMethod.isPlain()) {
-            throw CodegenException.of().message("To use @" + RequireIdentity.class.getSimpleName() + " or @"
-                    + SecurityAudit.class.getSimpleName() + " method should not be a plain method").element(this.serviceMethod.originMethod()).build();
-        }
+        // === Process auditors
 
         List<SecurityAuditorElement> auditors = new ArrayList<>();
 
-        if (requireIdentity != null) {
-            SecurityAuditorElement se = new SecurityAuditorElement(ClassElement.of(processorContext().processingEnv(), RequireIdentityAudit.class));
-            auditors.add(se);
-        }
-
-        if (securityAudit != null) {
-            TypeMirror[] tmArr = securityAudit.valueTypeMirrors(a -> a.value());
-            for (TypeMirror tm : tmArr) {
-                SecurityAuditorElement se = new SecurityAuditorElement(ClassElement.of(processorContext().processingEnv(), (DeclaredType) tm));
-                auditors.add(se);
-            }
-        }
+        obtainRequireIdentity().ifPresent(auditors::add);
+        auditors.addAll(obtainSecurityAudit());
 
         int auditorIdx = 0;
         for (SecurityAuditorElement sae : auditors) {
@@ -90,5 +76,47 @@ public class SecurityModulator extends Modulator {
             codeBlock.add("$N::$N", fieldName, AuditInterceptor.AUDIT_METHOD);
             serviceMethod.addInterception(InterceptionPhases.AUTHORIZATION, new InterceptionElement(codeBlock.build()));
         }
+
+        // === Process Authentication
+
+        processAuthentication();
+    }
+
+    private Optional<SecurityAuditorElement> obtainRequireIdentity() {
+        var requireIdentity = serviceMethod.originMethod().annotation(RequireIdentity.class);
+        if (requireIdentity == null) {
+            requireIdentity = service.originClass().annotation(RequireIdentity.class);
+        }
+        if (requireIdentity == null) {
+            return Optional.empty();
+        }
+        var se = new SecurityAuditorElement(ClassElement.of(processorContext().processingEnv(), RequireIdentityAudit.class));
+        return Optional.of(se);
+    }
+
+    private List<SecurityAuditorElement> obtainSecurityAudit() {
+        List<SecurityAuditorElement> result = new ArrayList<>();
+
+        var securityAudit = serviceMethod.originMethod().annotation(SecurityAudit.class);
+        if (securityAudit == null) {
+            securityAudit = service.originClass().annotation(SecurityAudit.class);
+        }
+        if (securityAudit == null) {
+            return result;
+        }
+
+        TypeMirror[] tmArr = securityAudit.valueTypeMirrors(a -> a.value());
+        for (TypeMirror tm : tmArr) {
+            SecurityAuditorElement se = new SecurityAuditorElement(ClassElement.of(processorContext().processingEnv(), (DeclaredType) tm));
+            result.add(se);
+        }
+
+        return result;
+    }
+
+    private void processAuthentication(){
+
+        final AnnotationAssist<Authentication> authentication = serviceMethod.originMethod().annotation(Authentication.class);
+
     }
 }

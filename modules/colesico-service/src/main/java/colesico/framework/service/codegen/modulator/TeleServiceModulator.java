@@ -57,7 +57,7 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
     /**
      * Returns custom tele-service object for modulation process
      *
-     * @see TeleFacade
+     * @see TeleServiceElement
      */
     abstract protected T createTeleService(ServiceElement serviceElm);
 
