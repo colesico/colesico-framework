@@ -22,33 +22,33 @@ import java.util.Queue;
 /**
  * Service method interceptors chain
  */
-public final class InterceptorsChain<T, R> {
+public final class InterceptorsChain {
 
     public static final String ADD_METHOD = "add";
 
     /**
      * Interceptors queue
      */
-    private final Queue<Interception<T, R, ?>> queue = new ArrayDeque<>();
+    private final Queue<Interception<?>> queue = new ArrayDeque<>();
 
     /**
      * Add interceptor to chain
      */
-    public void add(Interceptor<T, R> interceptor, Object options) {
+    public <O> void add(Interceptor<O> interceptor, O options) {
         queue.add(new Interception<>(interceptor, options));
     }
 
-    public void add(Interceptor<T, R> interceptor) {
+    public <O> void add(Interceptor<O> interceptor) {
         queue.add(new Interception<>(interceptor, null));
     }
 
-    public Interception<T, R, ?> next() {
+    public Interception<?> next() {
         return queue.poll();
     }
 
     /**
      * Interceptors chain element
      */
-    public record Interception<T, R, O>(Interceptor<T, R> interceptor, O options) {
+    public record Interception<O>(Interceptor<O> interceptor, O options) {
     }
 }

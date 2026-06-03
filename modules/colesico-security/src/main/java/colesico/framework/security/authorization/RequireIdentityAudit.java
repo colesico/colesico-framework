@@ -20,7 +20,7 @@ public final class RequireIdentityAudit implements AuditInterceptor {
     }
 
     @Override
-    public Object intercept(InvocationContext context) {
+    public Object intercept(InvocationContext context, Object options) {
         securityManager.requireIdentity();
         return context.proceed();
     }

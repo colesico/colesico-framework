@@ -25,6 +25,6 @@ import colesico.framework.service.interception.Interceptor;
  * @see RequireIdentity
  */
 @FunctionalInterface
-public interface AuditInterceptor<T,R> extends Interceptor<T,R> {
+public interface AuditInterceptor extends Interceptor<Object> {
 
 }

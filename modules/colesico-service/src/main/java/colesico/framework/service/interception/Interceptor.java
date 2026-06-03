@@ -18,17 +18,14 @@ package colesico.framework.service.interception;
 
 /**
  * Service method invocation interceptor
- *
- * @param <T> target service type
- * @param <R> target method result type
  */
 @FunctionalInterface
-public interface Interceptor<T, R> {
+public interface Interceptor<O> {
 
     String INVOCATION_CONTEXT_PARAM = "context";
     String OPTIONS_PARAM = "options";
     String INTERCEPT_METHOD = "intercept";
 
-    R intercept(InvocationContext<T, R> context);
+    Object intercept(InvocationContext context, O options);
 
 }

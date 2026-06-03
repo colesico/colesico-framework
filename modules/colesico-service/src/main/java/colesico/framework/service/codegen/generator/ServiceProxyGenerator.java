@@ -191,7 +191,7 @@ public class ServiceProxyGenerator {
     protected InterceptionElement generateSuperMethodInterception(ServiceMethodElement methodElement) {
         CodeBlock.Builder codeBlock = CodeBlock.builder();
 
-        codeBlock.add("$N->{", Interceptor.INVOCATION_CONTEXT_PARAM);
+        codeBlock.add("($N,$N)->{", Interceptor.INVOCATION_CONTEXT_PARAM,Interceptor.OPTIONS_PARAM);
         codeBlock.add("\n");
         codeBlock.indent();
 
@@ -269,19 +269,8 @@ public class ServiceProxyGenerator {
                 methodBuilder.addAnnotation(PostConstruct.class);
             }
 
-            TypeName returnTypeName;
-            if (methodElement.originMethod().isVoidReturnType()) {
-                returnTypeName = TypeName.get(Object.class);
-            } else {
-                returnTypeName = TypeName.get(methodElement.originMethod().returnType());
-            }
-
-            methodBuilder.addStatement("final $T " + INTERCEPTORS_CHAIN_VAR + " = new $T<>()",
-                    ParameterizedTypeName.get(ClassName.get(InterceptorsChain.class),
-                            TypeName.get(serviceElement.originClass().originType()),
-                            returnTypeName),
+            methodBuilder.addStatement("final var " + INTERCEPTORS_CHAIN_VAR + " = new $T()",
                     ClassName.get(InterceptorsChain.class));
-
 
             // Adds interceptors code for each interception  phase
             for (String intrcPhase : context.interceptionPhases().phaseOrder()) {
@@ -306,7 +295,7 @@ public class ServiceProxyGenerator {
 
     private void generateInterceptorBindings(InterceptionElement interceptionElement, MethodSpec.Builder serviceMethodBuilder) {
         CodeBlock.Builder interceptorBindings = CodeBlock.builder();
-        interceptorBindings.add(INTERCEPTORS_CHAIN_VAR + ".$N(",InterceptorsChain.ADD_METHOD);
+        interceptorBindings.add(INTERCEPTORS_CHAIN_VAR + ".$N(", InterceptorsChain.ADD_METHOD);
         interceptorBindings.add(interceptionElement.interceptorCode());
 
         if (interceptionElement.optionsCode() != null) {

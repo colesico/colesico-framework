@@ -16,15 +16,10 @@
 
 package colesico.framework.service.interception;
 
-import java.util.Optional;
-
 /**
  * Service method invocation interception context
- *
- * @param <R> invocation result type
- * @param <T> target service type
  */
-public final class InvocationContext<T, R> {
+public final class InvocationContext {
 
     public static final String SERVICE_METHOD = "target";
     public static final String METHOD_NAME_METHOD = "methodName";
@@ -34,7 +29,7 @@ public final class InvocationContext<T, R> {
     /**
      * Target service
      */
-    private final T target;
+    private final Object target;
 
     /**
      * Target service method name
@@ -49,14 +44,14 @@ public final class InvocationContext<T, R> {
     /**
      * Interceptors to be invoked to intercept method invocation
      */
-    private final InterceptorsChain<T, R> interceptors;
+    private final InterceptorsChain interceptors;
 
     /**
      * Current interception
      */
-    private InterceptorsChain.Interception<T, R, ?> interception;
+    private InterceptorsChain.Interception<?> interception;
 
-    public InvocationContext(T target, String methodName, Object[] parameters, InterceptorsChain<T, R> interceptors) {
+    public InvocationContext(Object target, String methodName, Object[] parameters, InterceptorsChain interceptors) {
         this.target = target;
         this.methodName = methodName;
         this.parameters = parameters;
@@ -66,7 +61,7 @@ public final class InvocationContext<T, R> {
     /**
      * The target object whose method is executed
      */
-    public T target() {
+    public Object target() {
         return target;
     }
 
@@ -84,17 +79,18 @@ public final class InvocationContext<T, R> {
         return parameters;
     }
 
-    public InterceptorsChain.Interception<T, R, ?> interception() {
+    public InterceptorsChain.Interception<?> interception() {
         return interception;
     }
 
-    public <O> Optional<O> options(Class<O> type) {
-        return Optional.ofNullable(type.cast(interception.options()));
+    @SuppressWarnings("unchecked")
+    public <O> O options() {
+        return (O) interception.options();
     }
 
-    public R proceed() {
+    public Object proceed() {
         interception = interceptors.next();
-        return interception.interceptor().intercept(this);
+        return interception.interceptor().intercept(this, options());
     }
 
 }

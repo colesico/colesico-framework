@@ -149,14 +149,11 @@ public class TeleInterceptorGenerator {
             methodBuilder.addJavadoc("Tele-interceptor method for target method '$N'", teleCommand.serviceMethod().name());
             methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
             methodBuilder.returns(returnTypeName);
-            methodBuilder.addParameter(
-                    ParameterizedTypeName.get(ClassName.get(InvocationContext.class),
-                            ClassName.get(teleService.parentService().originClass().unwrap()),
-                            returnTypeName
-                    ), Interceptor.INVOCATION_CONTEXT_PARAM
+            methodBuilder.addParameter(ClassName.get(InvocationContext.class),
+                    Interceptor.INVOCATION_CONTEXT_PARAM
             );
 
-            // methodBuilder.addParameter(ClassName.get(Object.class), Interceptor.OPTIONS_PARAM);
+            methodBuilder.addParameter(ClassName.get(Object.class), Interceptor.OPTIONS_PARAM);
 
             CodeBlock.Builder cb = CodeBlock.builder();
 
@@ -246,14 +243,6 @@ public class TeleInterceptorGenerator {
             methodBuilder.addCode(cb.build());
             classBuilder.addMethod(methodBuilder.build());
         }
-    }
-
-    protected void generateCommandsMethod(TeleServiceElement teleService, TypeSpec.Builder classBuilder) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(TeleFacade.COMMANDS_REGISTRY_METHOD);
-        mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-        mb.returns(ClassName.get(teleService.commandsClass()));
-        mb.addCode(teleService.commandsMethodBody());
-        classBuilder.addMethod(mb.build());
     }
 
     protected void createTeleInterceptorClassFile(ServiceElement service, TypeSpec.Builder classBuilder) {

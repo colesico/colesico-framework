@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Singleton
-public class AuthenticationInterceptorImpl implements AuthenticationInterceptor<Object, Object> {
+public class AuthenticationInterceptorImpl implements AuthenticationInterceptor {
 
     private final Ioc ioc;
     private final SecurityManager securityManager;
@@ -25,22 +25,19 @@ public class AuthenticationInterceptorImpl implements AuthenticationInterceptor<
     }
 
     @Override
-    public Object intercept(InvocationContext<Object, Object> context) {
+    public Object intercept(InvocationContext context, Options options) {
 
         Collection<AuthenticationSource> sources = new ArrayList<>();
 
-        context.options(Options.class).ifPresent(options -> {
-            for (var souceClass : options.sources()) {
-                sources.add(ioc.instance(souceClass));
-            }
+        for (var souceClass : options.sources()) {
+            sources.add(ioc.instance(souceClass));
+        }
 
-            if (options.login()) {
-                securityManager.login(sources);
-            } else {
-                sourceContext.setSources(sources);
-            }
-
-        });
+        if (options.login()) {
+            securityManager.login(sources);
+        } else {
+            sourceContext.setSources(sources);
+        }
 
         return null;
     }
