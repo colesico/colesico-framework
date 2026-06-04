@@ -1,5 +1,7 @@
-package colesico.framework.security;
+package colesico.framework.security.authorization;
 
+
+import colesico.framework.security.SecurityException;
 
 public class UnauthorizedException extends SecurityException {
     public UnauthorizedException() {

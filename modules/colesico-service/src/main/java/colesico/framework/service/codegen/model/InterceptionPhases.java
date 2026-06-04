@@ -52,11 +52,6 @@ public final class InterceptionPhases {
     public static final String RATE_LIMITING = "RATE_LIMITING";
 
     /**
-     * Client identity verification
-     */
-    public static final String AUTHENTICATION = "AUTHENTICATION";
-
-    /**
      * RPC protocol mapping: unmarshals invocation arguments from the DataPort
      * and marshals the execution result back.
      *
@@ -65,14 +60,19 @@ public final class InterceptionPhases {
     public static final String TELE_DATA_MAPPING = "TELE_DATA_MAPPING";
 
     /**
-     * Input parameters validation (prevents unnecessary cache lookups)
+     * Client identity verification
      */
-    public static final String VALIDATION = "VALIDATION";
+    public static final String AUTHENTICATION = "AUTHENTICATION";
 
     /**
      * Permission and access control
      */
     public static final String AUTHORIZATION = "AUTHORIZATION";
+
+    /**
+     * Input parameters validation (prevents unnecessary cache lookups)
+     */
+    public static final String VALIDATION = "VALIDATION";
 
     /**
      * Method result caching
@@ -106,31 +106,18 @@ public final class InterceptionPhases {
         phaseOrder = new ArrayList<>();
 
         phaseOrder.add(BOOTSTRAP);
-
         phaseOrder.add(ERRORS);
-
         phaseOrder.add(LOGGING);
-
         phaseOrder.add(METRICS);
-
         phaseOrder.add(RATE_LIMITING);
-
-        phaseOrder.add(AUTHENTICATION);
-
         phaseOrder.add(TELE_DATA_MAPPING);
-
-        phaseOrder.add(VALIDATION);
-
+        phaseOrder.add(AUTHENTICATION);
         phaseOrder.add(AUTHORIZATION);
-
+        phaseOrder.add(VALIDATION);
         phaseOrder.add(CACHING);
-
         phaseOrder.add(CIRCUIT_BREAKER);
-
         phaseOrder.add(TRANSACTION);
-
         phaseOrder.add(RESOURCES);
-
         phaseOrder.add(PREPROCESS);
     }
 
