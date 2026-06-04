@@ -39,9 +39,9 @@ public interface SecurityManager {
      * The first source that provides a valid {@link AuthenticationRequest} will be used for authentication.
      * On success, the resulting {@link Identity} is bound to the current {@link IdentityContext}.
      */
-    AuthenticationResult login(Iterable<AuthenticationSource> sources);
+    AuthenticationResult login(Iterable<? extends AuthenticationSource<?, ?>> sources);
 
-    default AuthenticationResult login(AuthenticationSource source) {
+    default AuthenticationResult login(AuthenticationSource<?, ?> source) {
         return login(List.of(source));
     }
 

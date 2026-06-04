@@ -68,16 +68,17 @@ public class SecurityManagerImpl implements SecurityManager {
     }
 
     @Override
-    public AuthenticationResult login(Iterable<AuthenticationSource> sources) {
+    @SuppressWarnings("unchecked")
+    public AuthenticationResult login(Iterable<? extends AuthenticationSource<?, ?>> sources) {
 
         AuthenticationResult lastFailure = null;
 
-        for (var source : sources) {
-            final var request = source.request();
+        for (AuthenticationSource source : sources) {
+            final AuthenticationRequest request = source.request();
             if (request == null) {
                 continue;
             }
-            var authenticator = authRegistry.findAuthenticator(request).orElseThrow(
+            Authenticator authenticator = authRegistry.findAuthenticator(request).orElseThrow(
                     () -> new SecurityException("Appropriate authenticator not found for request '" + request + "'")
             );
 

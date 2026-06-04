@@ -17,9 +17,8 @@
 package colesico.framework.example.helloworld;
 
 import colesico.framework.security.authentication.Authentication;
-import colesico.framework.security.authentication.AuthenticationSource;
 import colesico.framework.security.authorization.RequireIdentity;
-import colesico.framework.telehttp.auth.HttpBasicSource;
+import colesico.framework.telehttp.authentication.HttpBasic;
 import colesico.framework.weblet.response.HtmlResponse;
 import colesico.framework.weblet.Weblet;
 
@@ -46,7 +45,7 @@ public class HelloWeblet {
     }
 
     // Browse the url: http://localhost:8080/hello-weblet/do-something?i=1&j=2
-    @Authentication(HttpBasicSource.class)
+    @Authentication(HttpBasic.class)
     @RequireIdentity
     public void doSomething(Integer i, Integer j) {
         IO.println("Sum = " + (i + j));

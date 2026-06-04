@@ -1,6 +1,7 @@
 package colesico.framework.security.assist.authentication.simple;
 
 import colesico.framework.security.Identity;
+import colesico.framework.security.assist.authentication.BasicAuthenticationChallenge;
 import colesico.framework.security.assist.authentication.BasicAuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationChallenge;
 import colesico.framework.security.authentication.AuthenticationRequest;
@@ -20,7 +21,8 @@ import static colesico.framework.security.authentication.AuthenticationRequest.S
  * Put this source to appropriate scope to support multi user authentication.
  */
 @Singleton
-public class SimpleAuthSource implements AuthenticationSource {
+public class SimpleAuthSource
+        implements AuthenticationSource<BasicAuthenticationRequest, BasicAuthenticationChallenge> {
 
     protected static final Logger log = LoggerFactory.getLogger(SimpleAuthSource.class);
 
@@ -32,7 +34,7 @@ public class SimpleAuthSource implements AuthenticationSource {
     }
 
     @Override
-    public <C extends AuthenticationChallenge> void proceed(C challenge) {
+    public void proceed(BasicAuthenticationChallenge challenge) {
         log.debug("Proceed challenge: {}", challenge);
     }
 
@@ -42,7 +44,7 @@ public class SimpleAuthSource implements AuthenticationSource {
     }
 
     @Override
-    public void unauthenticated(AuthenticationRequest request) {
+    public void unauthenticated(BasicAuthenticationRequest request) {
         this.request.set(null);
         log.debug("Authentication request failure");
     }

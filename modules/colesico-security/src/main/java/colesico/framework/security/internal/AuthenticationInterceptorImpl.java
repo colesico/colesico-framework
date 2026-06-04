@@ -6,6 +6,7 @@ import colesico.framework.security.SecurityManager;
 import colesico.framework.security.authentication.AuthenticationInterceptor;
 import colesico.framework.security.authentication.AuthenticationSource;
 import colesico.framework.security.authentication.AuthenticationSourceContext;
+import colesico.framework.security.authentication.UnauthenticatedException;
 import colesico.framework.service.interception.InvocationContext;
 import jakarta.inject.Singleton;
 
@@ -30,18 +31,24 @@ public class AuthenticationInterceptorImpl implements AuthenticationInterceptor 
     @Override
     public Object intercept(InvocationContext context, Options options) {
 
-        Collection<AuthenticationSource> sources = new ArrayList<>();
+        Collection<AuthenticationSource<?, ?>> sources = new ArrayList<>();
 
         for (var souceClass : options.sources()) {
             sources.add(sourceFactory.get(souceClass));
         }
 
         if (options.login()) {
-            securityManager.login(sources);
+            var result = securityManager.login(sources);
+            if (result.isSuccess()) {
+                return context.proceed();
+            } else if (result.isContinuation()) {
+                return null;
+            } else {
+                throw new UnauthenticatedException("Not authenticated");
+            }
         } else {
             sourceContext.setSources(sources);
+            return context.proceed();
         }
-
-        return null;
     }
 }

@@ -20,7 +20,7 @@ module colesico.framework.telehttp {
     exports colesico.framework.telehttp.writer;
     exports colesico.framework.telehttp.codegen;
     exports colesico.framework.telehttp.response;
-    exports colesico.framework.telehttp.auth;
+    exports colesico.framework.telehttp.authentication;
     exports colesico.framework.telehttp.internal to colesico.framework.ioc;
 
     exports colesico.framework.telehttp.t9n;

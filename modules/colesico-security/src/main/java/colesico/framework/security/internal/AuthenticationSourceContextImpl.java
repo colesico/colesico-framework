@@ -13,13 +13,13 @@ public class AuthenticationSourceContextImpl implements AuthenticationSourceCont
     }
 
     @Override
-    public Iterable<AuthenticationSource> sources() {
+    public Iterable<AuthenticationSource<?,?>> sources() {
         var sources = taskScope.get(SCOPE_KEY);
         return sources == null ? null : sources.items();
     }
 
     @Override
-    public void setSources(Iterable<AuthenticationSource> sources) {
+    public void setSources(Iterable<AuthenticationSource<?,?>> sources) {
         taskScope.put(SCOPE_KEY, new Sources(sources));
     }
 

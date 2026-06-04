@@ -9,7 +9,7 @@ import colesico.framework.security.Identity;
  * communication protocols such as HTTP, gRPC, or Message Queues. It is responsible
  * for extracting credentials and handling protocol-specific responses.
  */
-public interface AuthenticationSource {
+public interface AuthenticationSource<R extends AuthenticationRequest, C extends AuthenticationChallenge> {
 
     /**
      * Extracts an {@link AuthenticationRequest} from the underlying transport.
@@ -17,7 +17,7 @@ public interface AuthenticationSource {
      * @return the request containing credentials, or {@code null} if no credentials
      * are present in this source.
      */
-    AuthenticationRequest request();
+    R request();
 
     /**
      * Triggers a protocol-specific authentication challenge.
@@ -25,7 +25,7 @@ public interface AuthenticationSource {
      * This is used for multi-step authentication (e.g., Digest, OAuth redirect,
      * or Multi-Factor Authentication) to prompt the client for further information.
      */
-    default <C extends AuthenticationChallenge> void proceed(C challenge) {
+    default void proceed(C challenge) {
 
     }
 
@@ -45,7 +45,7 @@ public interface AuthenticationSource {
      * Allows the source to react to the failure, for example, by clearing
      * invalid credentials from the transport headers or logging the event.
      */
-    default void unauthenticated(AuthenticationRequest request) {
+    default void unauthenticated(R request) {
 
     }
 

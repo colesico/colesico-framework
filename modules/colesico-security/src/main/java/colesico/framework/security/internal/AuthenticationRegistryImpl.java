@@ -25,7 +25,7 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public Optional<Authenticator<AuthenticationRequest>> findAuthenticator(AuthenticationRequest request) {
+    public Optional<Authenticator<?>> findAuthenticator(AuthenticationRequest request) {
         if (request == null) {
             throw new SecurityException("Authentication request class is null");
         }
@@ -41,7 +41,7 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
     }
 
     @Override
-    public Optional<Authenticator<AuthenticationRequest>> findAuthenticator(Identity<?> identity) {
+    public Optional<Authenticator<?>> findAuthenticator(Identity<?> identity) {
         var authenticatorClass = identity.claim(AUTHENTICATOR_CLAIM, Class.class);
         if (authenticatorClass.isPresent()) {
             var authenticator = ioc.instanceOrNull(authenticatorClass.get());
@@ -52,7 +52,7 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
     }
 
     @Override
-    public Optional<AuthenticationSource> findAuthenticationSource(Identity<?> identity) {
+    public Optional<AuthenticationSource<?,?>> findAuthenticationSource(Identity<?> identity) {
         var sourceClass = identity.claim(SOURCE_CLAIM, Class.class);
         if (sourceClass.isPresent()) {
             var source = ioc.instanceOrNull(sourceClass.get());
