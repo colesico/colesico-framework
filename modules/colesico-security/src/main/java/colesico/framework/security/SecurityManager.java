@@ -96,12 +96,12 @@ public interface SecurityManager {
     void logout();
 
     /**
-     * Returns the current {@link Identity} or throws an {@link IdentityRequiredException}
+     * Returns the current {@link Identity} or throws an {@link UnauthorizedException}
      * if the subject is not authenticated.
      * Use this method when an identity is strictly required for the subsequent logic.
      */
     default Identity<?> requireIdentity() {
-        return identity().orElseThrow(IdentityRequiredException::new);
+        return identity().orElseThrow(UnauthorizedException::new);
     }
 
     /**

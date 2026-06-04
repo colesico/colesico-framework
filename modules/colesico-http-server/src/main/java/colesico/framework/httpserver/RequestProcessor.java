@@ -101,7 +101,7 @@ abstract public class RequestProcessor<C> {
     }
 
     protected void handleException(Throwable t, HttpContext httpContext) {
-        log.error("Request processing error: {}", getRootCauseMessage(t));
+        log.debug("Request processing error: {}", getRootCauseMessage(t));
         try {
             errorHandler.handleException(t, httpContext);
         } catch (Throwable t2) {

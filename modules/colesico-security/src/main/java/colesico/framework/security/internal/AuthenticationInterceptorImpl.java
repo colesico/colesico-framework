@@ -1,12 +1,11 @@
 package colesico.framework.security.internal;
 
-import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.production.Supplier;
 import colesico.framework.security.SecurityManager;
+import colesico.framework.security.UnauthorizedException;
 import colesico.framework.security.authentication.AuthenticationInterceptor;
 import colesico.framework.security.authentication.AuthenticationSource;
 import colesico.framework.security.authentication.AuthenticationSourceContext;
-import colesico.framework.security.authentication.UnauthenticatedException;
 import colesico.framework.service.interception.InvocationContext;
 import jakarta.inject.Singleton;
 
@@ -44,7 +43,7 @@ public class AuthenticationInterceptorImpl implements AuthenticationInterceptor 
             } else if (result.isContinuation()) {
                 return null;
             } else {
-                throw new UnauthenticatedException("Not authenticated");
+                throw new UnauthorizedException("Unauthenticated");
             }
         } else {
             sourceContext.setSources(sources);

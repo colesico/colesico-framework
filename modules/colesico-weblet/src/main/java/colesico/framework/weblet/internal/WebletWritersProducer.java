@@ -16,6 +16,7 @@
 
 package colesico.framework.weblet.internal;
 
+import colesico.framework.telehttp.writer.ExceptionWriter;
 import colesico.framework.telehttp.writer.PlainTextWriter;
 import colesico.framework.telehttp.writer.ProfileWriter;
 import colesico.framework.ioc.production.Classed;
@@ -36,74 +37,80 @@ import jakarta.inject.Singleton;
 public class WebletWritersProducer {
 
     @Singleton
+    @Classed(Exception.class)
+    public WebletTeleWriter binaryWriter(ExceptionWriter writer) {
+        return WebletWriterProxy.of(writer);
+    }
+
+    @Singleton
     @Classed(BinaryResponse.class)
-    public WebletTeleWriter getBinaryWriter(BinaryWriter impl) {
+    public WebletTeleWriter binaryWriter(BinaryWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(TextResponse.class)
-    public WebletTeleWriter getTextResponseWriter(StringWriter impl) {
+    public WebletTeleWriter textResponseWriter(StringWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(HtmlResponse.class)
-    public WebletTeleWriter getHtmlResponseWriter(StringWriter impl) {
+    public WebletTeleWriter htmlResponseWriter(StringWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(RedirectResponse.class)
-    public WebletTeleWriter getRedirectResponseWriter(RedirectWriter impl) {
+    public WebletTeleWriter redirectResponseWriter(RedirectWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(ForwardResponse.class)
-    public WebletTeleWriter getForwardResponseWriter(ForwardWriter impl) {
+    public WebletTeleWriter forwardResponseWriter(ForwardWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Profile.class)
-    public WebletTeleWriter getProfileWriter(ProfileWriter impl) {
+    public WebletTeleWriter profileWriter(ProfileWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(String.class)
-    public WebletTeleWriter getStringWriter(PlainTextWriter impl) {
+    public WebletTeleWriter stringWriter(PlainTextWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(Long.class)
-    public WebletTeleWriter getLongWriter(PlainTextWriter impl) {
+    public WebletTeleWriter longWriter(PlainTextWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(Integer.class)
-    public WebletTeleWriter getIntegerWriter(PlainTextWriter impl) {
+    public WebletTeleWriter integerWriter(PlainTextWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(Short.class)
-    public WebletTeleWriter getShortWriter(PlainTextWriter impl) {
+    public WebletTeleWriter shortWriter(PlainTextWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(Byte.class)
-    public WebletTeleWriter getByteWriter(PlainTextWriter impl) {
+    public WebletTeleWriter byteWriter(PlainTextWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(Character.class)
-    public WebletTeleWriter getCharWriter(PlainTextWriter impl) {
+    public WebletTeleWriter charWriter(PlainTextWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 

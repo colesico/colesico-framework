@@ -40,7 +40,7 @@ public class DefaultErrorHandler implements ErrorHandler {
     public void handleException(Throwable throwable, HttpContext httpContext) {
         String rootMessage = getRootCauseMessage(throwable);
 
-        logger.error("Unexpected error: " + rootMessage);
+        logger.debug("Unexpected error: " + rootMessage);
         logger.error(toStackTrace(throwable));
 
         StringBuilder out = new StringBuilder();

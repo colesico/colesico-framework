@@ -73,14 +73,31 @@ public class WebletDataPortImpl implements WebletDataPort {
 
         boolean isWebletResponse = value instanceof WebletResponse;
 
-        Object targetValue = isWebletResponse ? ((WebletResponse) value).unwrap() : value;
-        Class<?> targetType = isWebletResponse ? targetValue.getClass() : valueType;
+        Object targetValue;
+        Class<?> targetType;
+        WebletTeleWriter writer = null;
 
-        WebletTeleWriter writer;
         if (options.writerClass() != null) {
+            // Get options specified writer
             writer = factory.writer(options.writerClass());
+        }
+
+        if (isWebletResponse) {
+            targetValue = ((WebletResponse) value).unwrap();
+            targetType = targetValue.getClass();
+            if (writer == null) {
+                writer = factory.writer(WebletTeleWriter.class, targetType);
+            }
         } else {
-            writer = factory.writer(WebletTeleWriter.class, targetType);
+            targetValue = value;
+            targetType = value.getClass();
+            if (writer == null) {
+                writer = factory.findWriter(WebletTeleWriter.class, targetType);
+            }
+            if (writer == null) {
+                targetType = valueType;
+                writer = factory.writer(WebletTeleWriter.class, targetType);
+            }
         }
 
         writer.write(targetValue, targetType, options);
