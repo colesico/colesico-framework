@@ -16,8 +16,11 @@
 
 package colesico.framework.security.internal;
 
+import colesico.framework.ioc.Ioc;
+import colesico.framework.ioc.message.Message;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
+import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
 import colesico.framework.security.SecurityManager;
@@ -42,4 +45,11 @@ public class SecurityProducer {
         return context.identity();
     }
 
+    @Unscoped
+    public AuthenticationSource authenticationSourceFactory(
+            @Message Class<? extends AuthenticationSource> sourceClass,
+            Ioc ioc) {
+
+        return ioc.instance(sourceClass);
+    }
 }

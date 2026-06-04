@@ -1,6 +1,7 @@
 package colesico.framework.security.internal;
 
 import colesico.framework.ioc.Ioc;
+import colesico.framework.ioc.production.Supplier;
 import colesico.framework.security.SecurityManager;
 import colesico.framework.security.authentication.AuthenticationInterceptor;
 import colesico.framework.security.authentication.AuthenticationSource;
@@ -14,12 +15,14 @@ import java.util.Collection;
 @Singleton
 public class AuthenticationInterceptorImpl implements AuthenticationInterceptor {
 
-    private final Ioc ioc;
+    private final Supplier<AuthenticationSource> sourceFactory;
     private final SecurityManager securityManager;
     private final AuthenticationSourceContext sourceContext;
 
-    public AuthenticationInterceptorImpl(Ioc ioc, SecurityManager securityManager, AuthenticationSourceContext sourceContext) {
-        this.ioc = ioc;
+    public AuthenticationInterceptorImpl(Supplier<AuthenticationSource> sourceFactory,
+                                         SecurityManager securityManager,
+                                         AuthenticationSourceContext sourceContext) {
+        this.sourceFactory = sourceFactory;
         this.securityManager = securityManager;
         this.sourceContext = sourceContext;
     }
@@ -30,7 +33,7 @@ public class AuthenticationInterceptorImpl implements AuthenticationInterceptor 
         Collection<AuthenticationSource> sources = new ArrayList<>();
 
         for (var souceClass : options.sources()) {
-            sources.add(ioc.instance(souceClass));
+            sources.add(sourceFactory.get(souceClass));
         }
 
         if (options.login()) {

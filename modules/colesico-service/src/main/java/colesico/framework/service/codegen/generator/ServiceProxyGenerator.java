@@ -299,8 +299,10 @@ public class ServiceProxyGenerator {
         interceptorBindings.add(interceptionElement.interceptorCode());
 
         if (interceptionElement.optionsCode() != null) {
-            interceptorBindings.add(",");
+            interceptorBindings.add(",\n");
+            interceptorBindings.indent();
             interceptorBindings.add(interceptionElement.optionsCode());
+            interceptorBindings.unindent();
         }
 
         interceptorBindings.add(");\n");

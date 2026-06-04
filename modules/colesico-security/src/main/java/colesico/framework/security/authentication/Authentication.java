@@ -19,7 +19,7 @@ package colesico.framework.security.authentication;
 import java.lang.annotation.*;
 
 /**
- * Defines security auditors to check authorities on method invocation
+ * Configures the authentication behavior for methods or on classes level.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
@@ -28,7 +28,12 @@ import java.lang.annotation.*;
 public @interface Authentication {
 
     /**
-     * Authentication sources to be used
+     * Authentication sources to be used for authentication
      */
     Class<? extends AuthenticationSource>[] value();
+
+    /**
+     * Determines whether the explicit login operation should be executed
+     */
+    boolean login() default true;
 }

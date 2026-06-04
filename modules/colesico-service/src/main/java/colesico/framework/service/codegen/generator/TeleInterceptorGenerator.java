@@ -200,9 +200,9 @@ public class TeleInterceptorGenerator {
             // ==================  Invoke by context
             // final ResType result = ctx.proceed();
             cb.add("\n// Proceed next interceptors\n");
-            cb.add("final $T $N = $N.$N();\n",
-                    returnTypeName,
+            cb.add("final var $N = ($T) $N.$N();\n",
                     RESULT_VAR,
+                    returnTypeName,
                     Interceptor.INVOCATION_CONTEXT_PARAM,
                     InvocationContext.PROCEED_METHOD);
 
