@@ -1,44 +1,85 @@
 package colesico.framework.telehttp.authentication;
 
+import colesico.framework.assist.StringUtils;
+import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.security.Identity;
 import colesico.framework.security.assist.authentication.BasicAuthenticationChallenge;
 import colesico.framework.security.assist.authentication.BasicAuthenticationRequest;
+import colesico.framework.security.authentication.AuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationSource;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Singleton
 public class HttpBasic implements AuthenticationSource<BasicAuthenticationRequest, BasicAuthenticationChallenge> {
 
-    private final Provider<HttpRequest> httpRequest;
+    private static final Pattern BASIC_AUTH_PATTERN =
+            Pattern.compile("^Basic\\s+(.+)$", Pattern.CASE_INSENSITIVE);
 
-    public HttpBasic(Provider<HttpRequest> httpRequest) {
-        this.httpRequest = httpRequest;
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String WWW_AUTHENTICATE_HEADER = "WWW-Authenticate";
+
+    private final Provider<HttpContext> httpContext;
+
+    public HttpBasic(Provider<HttpContext> httpContext) {
+        this.httpContext = httpContext;
     }
 
     @Override
     public BasicAuthenticationRequest request() {
-        return null;
+        var request = httpContext.get().request();
+        String authHeader = request.headers().get(AUTHORIZATION_HEADER);
+        if (StringUtils.isBlank(authHeader)) {
+            return BasicAuthenticationRequest.empty(HttpBasic.class);
+        }
+        Matcher matcher = BASIC_AUTH_PATTERN.matcher(authHeader.trim());
+        if (!matcher.matches()) {
+            return BasicAuthenticationRequest.empty(HttpBasic.class);
+        }
+
+        String base64Credentials = matcher.group(1);
+
+        byte[] decodedBytes = Base64.getDecoder().decode(base64Credentials);
+        String credentials = new String(decodedBytes, StandardCharsets.UTF_8);
+
+        String[] values = credentials.split(":", 2);
+        if (values.length == 2) {
+            return BasicAuthenticationRequest.of(values[0], values[1], HttpBasic.class);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public void proceed(BasicAuthenticationChallenge challenge) {
-        AuthenticationSource.super.proceed(challenge);
+        var response = httpContext.get().response();
+        response
+                .setHeader(WWW_AUTHENTICATE_HEADER, "Basic realm=\"" + challenge.realm() + "\"")
+                .setStatus(401)
+                .sendText("401 Unauthorized. Authentication required.");
+
     }
 
     @Override
     public void authenticate(Identity<?> identity) {
-        AuthenticationSource.super.authenticate(identity);
+
     }
 
     @Override
     public void unauthenticated(BasicAuthenticationRequest request) {
-        AuthenticationSource.super.unauthenticated(request);
+
     }
 
     @Override
     public void logout(Identity<?> identity) {
-        AuthenticationSource.super.logout(identity);
+
     }
 }
