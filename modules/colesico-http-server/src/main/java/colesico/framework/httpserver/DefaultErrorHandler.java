@@ -43,12 +43,16 @@ public class DefaultErrorHandler implements ErrorHandler {
         logger.debug("Unexpected error: " + rootMessage);
         logger.error(toStackTrace(throwable));
 
+        HttpResponse response = httpContext.response();
+        if (response.isCommitted()){
+            return;
+        }
+
         StringBuilder out = new StringBuilder();
         out.append("An unexpected error occurred at ")
                 .append(new Date().toInstant())
                 .append(". See server log for details.");
 
-        HttpResponse response = httpContext.response();
         try {
             if (throwable instanceof UnknownRouteException) {
                 response.setContentType(CONTENT_TYPE);

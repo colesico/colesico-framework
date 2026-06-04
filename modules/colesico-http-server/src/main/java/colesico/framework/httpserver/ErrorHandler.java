@@ -19,9 +19,22 @@ package colesico.framework.httpserver;
 import colesico.framework.http.HttpContext;
 
 /**
- * Request errors handler
+ * Global top-level exception handler.
+ * <p>
+ * Serves as the ultimate fallback mechanism for the application. It intercepts
+ * any unhandled errors and exceptions thrown during HTTP request processing
+ * to prevent abrupt server failure and ensure a graceful error response.
+ * </p>
+ *
  * @author Vladlen Larionov
  */
 public interface ErrorHandler {
+
+    /**
+     * Handles the unhandled exception within the current HTTP context.
+     *
+     * @param throwable   the caught exception or error of any type
+     * @param httpContext the current HTTP context used to format and send the response
+     */
     void handleException(Throwable throwable, HttpContext httpContext);
 }
