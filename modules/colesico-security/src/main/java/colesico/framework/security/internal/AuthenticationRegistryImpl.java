@@ -10,6 +10,9 @@ import colesico.framework.security.authentication.AuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationSource;
 import colesico.framework.security.authentication.Authenticator;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static colesico.framework.security.Identity.AUTHENTICATOR_CLAIM;
@@ -25,19 +28,14 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public Optional<Authenticator<?>> findAuthenticator(AuthenticationRequest request) {
+    public Collection<Authenticator<?>> findAuthenticators(AuthenticationRequest request) {
         if (request == null) {
-            throw new SecurityException("Authentication request class is null");
+            throw new SecurityException("Authentication request is null");
         }
         Key<Authenticator> authIocKey = new ClassedKey<>(Authenticator.class, request.getClass());
-        var authenticators = ioc.polysupplier(authIocKey);
-        for (var authenticator : authenticators) {
-            if (authenticator.supports(request)) {
-                return Optional.of(authenticator);
-            }
-        }
-
-        return Optional.empty();
+        List<Authenticator<?>> result = new ArrayList<>();
+        ioc.polysupplier(authIocKey).forEach(a -> result.add(a));
+        return result;
     }
 
     @Override
@@ -52,7 +50,7 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
     }
 
     @Override
-    public Optional<AuthenticationSource<?,?>> findAuthenticationSource(Identity<?> identity) {
+    public Optional<AuthenticationSource<?, ?>> findAuthenticationSource(Identity<?> identity) {
         var sourceClass = identity.claim(SOURCE_CLAIM, Class.class);
         if (sourceClass.isPresent()) {
             var source = ioc.instanceOrNull(sourceClass.get());

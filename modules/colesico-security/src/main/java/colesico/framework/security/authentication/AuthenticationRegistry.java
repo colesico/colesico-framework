@@ -2,6 +2,7 @@ package colesico.framework.security.authentication;
 
 import colesico.framework.security.Identity;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -13,12 +14,12 @@ import java.util.Optional;
 public interface AuthenticationRegistry {
 
     /**
-     * Finds a suitable {@link Authenticator} capable of processing the given {@link AuthenticationRequest}.
+     * Finds a suitable  {@link Authenticator}s  capable of processing the given {@link AuthenticationRequest}.
      *
      * @param request the authentication request to match an authenticator for.
-     * @return an {@link Optional} containing the matched authenticator, or empty if none found.
+     * @return an {@link Collection} containing the matched authenticators, or empty if none found.
      */
-    Optional<Authenticator<?>> findAuthenticator(AuthenticationRequest request);
+    Collection<Authenticator<?>> findAuthenticators(AuthenticationRequest request);
 
     /**
      * Retrieves the {@link Authenticator} that originally issued the given {@link Identity}.

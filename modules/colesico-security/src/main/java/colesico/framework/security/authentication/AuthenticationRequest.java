@@ -37,4 +37,11 @@ public interface AuthenticationRequest {
     default <T> T claimOrElse(String key, Class<T> type, T defaultValue) {
         return claim(key, type).orElse(defaultValue);
     }
+
+    /**
+     *  Source claim helper
+     */
+    static Map<String,Object> sourceClaims(Class<? extends AuthenticationSource> sourceClass){
+        return Map.of(SOURCE_CLAIM,sourceClass);
+    }
 }

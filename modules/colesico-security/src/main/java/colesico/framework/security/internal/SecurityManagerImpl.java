@@ -31,7 +31,7 @@ import java.util.concurrent.Callable;
  * <p>
  * This manager orchestrates the authentication process by coordinating between
  * transport-level sources, the authentication registry, and lifecycle handlers.
- * It also manages the security context (Identity) within the current scope.
+ * It also manages the security challenge (Identity) within the current scope.
  */
 public class SecurityManagerImpl implements SecurityManager {
 
@@ -67,48 +67,69 @@ public class SecurityManagerImpl implements SecurityManager {
         }
     }
 
+    /**
+     * Orchestrates the authentication process across provided sources and matching authenticators.
+     * <p>
+     * For each valid source, iterates through its capable authenticators:
+     * <ul>
+     *   <li>{@link AuthenticationResult.Success} or {@link AuthenticationResult.Continuation}
+     *       immediately halts processing and returns the outcome.</li>
+     *   <li>{@link AuthenticationResult.Failure} registers a definitive failure and returns immediately.</li>
+     *   <li>Any other status (such as {@code Abstained}) is skipped, passing control
+     *       to the next authenticator in the chain.</li>
+     * </ul>
+     *
+     * @param sources transport-level authentication sources to evaluate.
+     * @return the final outcome of the authentication process.
+     * @throws SecurityException if no suitable authenticator is found for a request,
+     *                           or if a successful authentication yields a null {@link Identity}.
+     */
     @Override
     @SuppressWarnings("unchecked")
     public AuthenticationResult login(Iterable<? extends AuthenticationSource<?, ?>> sources) {
-
-        AuthenticationResult lastFailure = null;
 
         for (AuthenticationSource source : sources) {
             final AuthenticationRequest request = source.request();
             if (request == null) {
                 continue;
             }
-            Authenticator authenticator = authRegistry.findAuthenticator(request).orElseThrow(
-                    () -> new SecurityException("Appropriate authenticator not found for request '" + request + "'")
-            );
 
-            var result = authenticator.login(request);
-            result = handleLogin(Optional.of(request), result);
-
-            switch (result) {
-                case AuthenticationResult.Success success -> {
-                    var identity = success.identity();
-                    if (identity == null) {
-                        throw new SecurityException("Null Identity for success authentication");
-                    }
-                    identityContext.setIdentity(identity);
-                    source.authenticate(identity);
-                    return result;
-                }
-                case AuthenticationResult.Continuation<?> continuation -> {
-                    source.proceed(continuation.challenge());
-                    return result;
-                }
-                default -> {
-                    source.unauthenticated(request);
-                    lastFailure = result;
-                }
+            var authenticators = authRegistry.findAuthenticators(request);
+            if (authenticators.isEmpty()) {
+                throw new SecurityException("Appropriate authenticator not found for request '" + request + "'");
             }
 
+            for (Authenticator authenticator : authenticators) {
+                var result = authenticator.login(request);
+                result = handleLogin(Optional.of(request), result);
+
+                switch (result) {
+                    case AuthenticationResult.Success success -> {
+                        var identity = success.identity();
+                        if (identity == null) {
+                            throw new SecurityException("Null Identity for success authentication");
+                        }
+                        identityContext.setIdentity(identity);
+                        source.authenticate(identity);
+                        return success;
+                    }
+                    case AuthenticationResult.Continuation<?> continuation -> {
+                        source.proceed(continuation.challenge());
+                        return continuation;
+                    }
+                    case AuthenticationResult.Failure failure -> {
+                        source.unauthenticated(request, failure.error());
+                        return failure;
+                    }
+                    // Abstained
+                    default -> {
+                        // nop - proceed to the next authenticator
+                    }
+                }
+            }
         } // for sources
 
-        return lastFailure != null ? lastFailure :
-                handleLogin(Optional.empty(), AuthenticationResult.failure("No acceptable authentication source"));
+        return handleLogin(Optional.empty(), AuthenticationResult.failure("No acceptable authentication source"));
     }
 
     @Override
@@ -125,13 +146,24 @@ public class SecurityManagerImpl implements SecurityManager {
         return Optional.ofNullable(identityContext.identity());
     }
 
+    /**
+     * Revokes the authenticated state for the specified identity.
+     * <p>
+     * Locates the original issuing authenticator and transport source associated
+     * with the {@link Identity} to invalidate their respective sessions or tokens,
+     * then triggers registered lifecycle handlers.
+     *
+     * @param identity the identity to log out.
+     */
     @Override
     public void logout(Identity<?> identity) {
         if (identity != null) {
             authRegistry.findAuthenticator(identity)
                     .ifPresent(a -> a.logout(identity));
+
             authRegistry.findAuthenticationSource(identity)
                     .ifPresent(s -> s.logout(identity));
+
             handleLogout(Optional.of(identity));
         } else {
             handleLogout(Optional.empty());

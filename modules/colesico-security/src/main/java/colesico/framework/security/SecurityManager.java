@@ -67,7 +67,7 @@ public interface SecurityManager {
 
     /**
      * Executes the given task as the specified {@link Identity}.
-     * Temporarily replaces the current identity in the context and restores it after the task completes.
+     * Temporarily replaces the current identity in the challenge and restores it after the task completes.
      * This is useful for impersonation or system-level background tasks.
      */
     <T> T callAs(Callable<T> callable, Identity<?> identity);
@@ -91,7 +91,7 @@ public interface SecurityManager {
     void logout(Identity<?> identity);
 
     /**
-     * Performs a logout for the current {@link Identity} and clears the security context.
+     * Performs a logout for the current {@link Identity} and clears the security challenge.
      */
     void logout();
 

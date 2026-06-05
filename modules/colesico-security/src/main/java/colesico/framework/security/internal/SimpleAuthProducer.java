@@ -12,7 +12,7 @@ import colesico.framework.security.authentication.Authenticator;
 import jakarta.inject.Singleton;
 
 @Producer
-@Produce(SimpleAuthSource.class)
+@Produce(SimpleAuth.class)
 @Produce(SimpleAuthenticator.class)
 public class SimpleAuthProducer {
 

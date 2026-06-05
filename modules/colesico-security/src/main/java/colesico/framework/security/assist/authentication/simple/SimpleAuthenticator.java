@@ -71,16 +71,11 @@ public class SimpleAuthenticator implements
     }
 
     @Override
-    public boolean supports(BasicAuthenticationRequest request) {
-        return true;
-    }
-
-    @Override
     public AuthenticationResult login(BasicAuthenticationRequest request) {
         var login = request.login();
 
         if (login == null) {
-            return AuthenticationResult.continuation(config.challenge());
+            return AuthenticationResult.challenge(config.challenge());
         }
 
         var identity = authenticated.get(login);

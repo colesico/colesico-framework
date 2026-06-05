@@ -2,12 +2,11 @@ package colesico.framework.security.authentication;
 
 import colesico.framework.security.Identity;
 
-import java.util.Optional;
-
+/**
+ * Represents the final or intermediate result of an authentication process.
+ */
 public sealed interface AuthenticationResult
-        permits AuthenticationResult.Success,
-        AuthenticationResult.Failure,
-        AuthenticationResult.Continuation {
+        permits AuthenticationResult.Abstained, AuthenticationResult.Continuation, AuthenticationResult.Failure, AuthenticationResult.Success {
 
     /**
      * Successful authentication
@@ -16,50 +15,40 @@ public sealed interface AuthenticationResult
     }
 
     /**
-     * Authentication failed
+     * Authentication failed definitively
      */
-    record Failure<E>(E error) implements AuthenticationResult {
+    record Failure(String error) implements AuthenticationResult {
     }
 
     /**
-     * Authentication requires an additional step
+     * Authentication requires an additional step/challenge (e.g. MFA)
+     * Теперь тип C жестко связан с типом результата на уровне компиляции.
      */
     record Continuation<C extends AuthenticationChallenge>(C challenge) implements AuthenticationResult {
     }
 
-    default boolean isSuccess() {
-        return this instanceof AuthenticationResult.Success;
+    /**
+     * Authenticator abstained from decision.
+     * Move to the next authenticator in the chain.
+     */
+    record Abstained(String reason) implements AuthenticationResult {
     }
 
-    default boolean isFailure() {
-        return this instanceof Failure<?>;
-    }
-
-    default boolean isContinuation() {
-        return this instanceof Continuation<?>;
-    }
-
-    default Optional<Identity<?>> getIdentity() {
-        return this instanceof Success(Identity<?> identity) ? Optional.of(identity) : Optional.empty();
-    }
-
-    default <E> Optional<E> getError() {
-        return this instanceof Failure(Object error) ? (Optional<E>) Optional.of(error) : Optional.empty();
-    }
-
-    default <C> Optional<C> getChallenge() {
-        return this instanceof Continuation(Object challenge) ? Optional.of((C) challenge) : Optional.empty();
-    }
+    // --- Статические фабричные методы с корректным выводом типов ---
 
     static AuthenticationResult success(Identity<?> identity) {
         return new Success(identity);
     }
 
-    static <E> AuthenticationResult failure(E error) {
-        return new Failure<>(error);
+    static AuthenticationResult failure(String error) {
+        return new Failure(error);
     }
 
-    static <C extends AuthenticationChallenge> AuthenticationResult continuation(C challenge) {
+    static <C extends AuthenticationChallenge> AuthenticationResult challenge(C challenge) {
         return new Continuation<>(challenge);
+    }
+
+    static AuthenticationResult abstained(String reason) {
+        return new Abstained(reason);
     }
 }

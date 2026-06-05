@@ -1,5 +1,6 @@
 package colesico.framework.security.assist.authentication;
 
+import colesico.framework.security.Identity;
 import colesico.framework.security.authentication.AuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationSource;
 
@@ -21,13 +22,16 @@ public record BasicAuthenticationRequest(
 
     public static BasicAuthenticationRequest of(String login,
                                                 String password,
-                                                Class<? extends AuthenticationSource> source) {
-        Map<String, Object> claims = Map.of(AuthenticationRequest.SOURCE_CLAIM, source);
-        return new BasicAuthenticationRequest(login, password, claims);
+                                                Class<? extends AuthenticationSource> sourceClass) {
+
+        return new BasicAuthenticationRequest(login, password, AuthenticationRequest.sourceClaims(sourceClass));
     }
 
-    public static BasicAuthenticationRequest empty(Class<? extends AuthenticationSource> source) {
-        Map<String, Object> claims = Map.of(AuthenticationRequest.SOURCE_CLAIM, source);
-        return new BasicAuthenticationRequest(null, null, claims);
+    public static BasicAuthenticationRequest empty(Class<? extends AuthenticationSource> sourceClass) {
+        return new BasicAuthenticationRequest(null, null, AuthenticationRequest.sourceClaims(sourceClass));
+    }
+
+    public boolean isEmpty() {
+        return login == null && password == null;
     }
 }

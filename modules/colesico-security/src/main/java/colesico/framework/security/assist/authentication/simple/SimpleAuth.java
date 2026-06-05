@@ -3,8 +3,6 @@ package colesico.framework.security.assist.authentication.simple;
 import colesico.framework.security.Identity;
 import colesico.framework.security.assist.authentication.BasicAuthenticationChallenge;
 import colesico.framework.security.assist.authentication.BasicAuthenticationRequest;
-import colesico.framework.security.authentication.AuthenticationChallenge;
-import colesico.framework.security.authentication.AuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationSource;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -21,10 +19,10 @@ import static colesico.framework.security.authentication.AuthenticationRequest.S
  * Put this source to appropriate scope to support multi user authentication.
  */
 @Singleton
-public class SimpleAuthSource
+public class SimpleAuth
         implements AuthenticationSource<BasicAuthenticationRequest, BasicAuthenticationChallenge> {
 
-    protected static final Logger log = LoggerFactory.getLogger(SimpleAuthSource.class);
+    protected static final Logger log = LoggerFactory.getLogger(SimpleAuth.class);
 
     protected final AtomicReference<BasicAuthenticationRequest> request = new AtomicReference<>();
 
@@ -44,9 +42,9 @@ public class SimpleAuthSource
     }
 
     @Override
-    public void unauthenticated(BasicAuthenticationRequest request) {
+    public void unauthenticated(BasicAuthenticationRequest request, String error) {
         this.request.set(null);
-        log.debug("Authentication request failure");
+        log.debug("Authentication request failure: {}", error);
     }
 
     @Override
@@ -59,7 +57,6 @@ public class SimpleAuthSource
      * Credentials to perform authentication
      */
     public void setCredentials(String login, String password) {
-        Map<String, Object> claims = Map.of(SOURCE_CLAIM, SimpleAuthSource.class);
-        this.request.set(BasicAuthenticationRequest.of(login, password, claims));
+        this.request.set(BasicAuthenticationRequest.of(login, password, SimpleAuth.class));
     }
 }
