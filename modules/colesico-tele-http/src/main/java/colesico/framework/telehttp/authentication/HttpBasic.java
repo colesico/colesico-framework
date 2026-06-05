@@ -2,19 +2,15 @@ package colesico.framework.telehttp.authentication;
 
 import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpContext;
-import colesico.framework.http.HttpRequest;
 import colesico.framework.security.Identity;
 import colesico.framework.security.assist.authentication.BasicAuthenticationChallenge;
 import colesico.framework.security.assist.authentication.BasicAuthenticationRequest;
-import colesico.framework.security.authentication.AuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationSource;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,7 +70,7 @@ public class HttpBasic implements AuthenticationSource<BasicAuthenticationReques
     }
 
     @Override
-    public void unauthenticated(BasicAuthenticationRequest request) {
+    public void unauthenticated(BasicAuthenticationRequest request, String error) {
 
     }
 

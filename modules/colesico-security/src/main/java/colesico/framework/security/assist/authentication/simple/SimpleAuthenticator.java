@@ -73,12 +73,17 @@ public class SimpleAuthenticator implements
 
     @Override
     public AuthenticationResult login(BasicAuthenticationRequest request) {
-        var login = request.login();
 
-        if (login == null) {
-            return AuthenticationResult.challenge(config.challenge());
+        if (request.isEmpty()) {
+            var challenge = config.challenge();
+            if (challenge!=null) {
+                return AuthenticationResult.challenge(challenge);
+            } else {
+                return AuthenticationResult.abstained("No challenge required");
+            }
         }
 
+        var login = request.login();
         var identity = authenticated.get(login);
         if (identity != null) {
             return AuthenticationResult.success(identity);
