@@ -1,6 +1,7 @@
 package colesico.framework.security.assist.authentication.simple;
 
 import colesico.framework.security.Identity;
+import colesico.framework.security.assist.authentication.BasicAuthenticationChallenge;
 import colesico.framework.security.assist.authentication.BasicAuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationResult;
 import colesico.framework.security.authentication.Authenticator;
@@ -16,7 +17,7 @@ import java.util.*;
  * @see colesico.framework.security.internal.SimpleAuthProducer
  */
 public class SimpleAuthenticator implements
-        Authenticator<BasicAuthenticationRequest> {
+        Authenticator<BasicAuthenticationRequest, BasicAuthenticationChallenge> {
 
     /**
      * Authenticator config

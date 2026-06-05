@@ -16,10 +16,10 @@ public class DefaultSimpleAccountStorage implements SimpleAccountStorage {
 
     /**
      * Format:
-     *
+     * <p>
      * admin.password=secret1
      * admin.roles=ADMIN,MANAGER
-     *
+     * <p>
      * user1.password=qwerty11
      * user1.roles=USER,GUEST
      */

@@ -19,7 +19,7 @@ public interface AuthenticationRegistry {
      * @param request the authentication request to match an authenticator for.
      * @return an {@link Collection} containing the matched authenticators, or empty if none found.
      */
-    Collection<Authenticator<?>> findAuthenticators(AuthenticationRequest request);
+    Collection<Authenticator<?,?>> findAuthenticators(AuthenticationRequest request);
 
     /**
      * Retrieves the {@link Authenticator} that originally issued the given {@link Identity}.
@@ -30,7 +30,7 @@ public interface AuthenticationRegistry {
      * @return an {@link Optional} containing the issuing authenticator, or empty if the claim
      * is missing or no matching authenticator is registered.
      */
-    Optional<Authenticator<?>> findAuthenticator(Identity<?> identity);
+    Optional<Authenticator<?,?>> findAuthenticator(Identity<?> identity);
 
     /**
      * Retrieves the {@link AuthenticationSource} associated with the given {@link Identity}.

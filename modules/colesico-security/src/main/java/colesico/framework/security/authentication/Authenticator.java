@@ -18,12 +18,12 @@ import colesico.framework.security.Identity;
  *
  * @param <R> the specific type of {@link AuthenticationRequest} this authenticator handles
  */
-public interface Authenticator<R extends AuthenticationRequest> {
+public interface Authenticator<R extends AuthenticationRequest, C extends AuthenticationChallenge> {
 
     /**
      * Performs authentication using the provided request.
      */
-    AuthenticationResult login(R request);
+    AuthenticationResult<C> login(R request);
 
     /**
      * Perform logout

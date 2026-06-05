@@ -69,20 +69,6 @@ public class SecurityManagerImpl implements SecurityManager {
 
     /**
      * Orchestrates the authentication process across provided sources and matching authenticators.
-     * <p>
-     * For each valid source, iterates through its capable authenticators:
-     * <ul>
-     *   <li>{@link AuthenticationResult.Success} or {@link AuthenticationResult.Continuation}
-     *       immediately halts processing and returns the outcome.</li>
-     *   <li>{@link AuthenticationResult.Failure} registers a definitive failure and returns immediately.</li>
-     *   <li>Any other status (such as {@code Abstained}) is skipped, passing control
-     *       to the next authenticator in the chain.</li>
-     * </ul>
-     *
-     * @param sources transport-level authentication sources to evaluate.
-     * @return the final outcome of the authentication process.
-     * @throws SecurityException if no suitable authenticator is found for a request,
-     *                           or if a successful authentication yields a null {@link Identity}.
      */
     @Override
     @SuppressWarnings("unchecked")

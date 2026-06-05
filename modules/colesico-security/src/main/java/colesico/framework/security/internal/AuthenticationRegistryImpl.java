@@ -28,18 +28,18 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public Collection<Authenticator<?>> findAuthenticators(AuthenticationRequest request) {
+    public Collection<Authenticator<?,?>> findAuthenticators(AuthenticationRequest request) {
         if (request == null) {
             throw new SecurityException("Authentication request is null");
         }
         Key<Authenticator> authIocKey = new ClassedKey<>(Authenticator.class, request.getClass());
-        List<Authenticator<?>> result = new ArrayList<>();
+        List<Authenticator<?,?>> result = new ArrayList<>();
         ioc.polysupplier(authIocKey).forEach(a -> result.add(a));
         return result;
     }
 
     @Override
-    public Optional<Authenticator<?>> findAuthenticator(Identity<?> identity) {
+    public Optional<Authenticator<?,?>> findAuthenticator(Identity<?> identity) {
         var authenticatorClass = identity.claim(AUTHENTICATOR_CLAIM, Class.class);
         if (authenticatorClass.isPresent()) {
             var authenticator = ioc.instanceOrNull(authenticatorClass.get());

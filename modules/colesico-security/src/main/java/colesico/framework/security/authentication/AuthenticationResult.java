@@ -3,52 +3,62 @@ package colesico.framework.security.authentication;
 import colesico.framework.security.Identity;
 
 /**
- * Represents the final or intermediate result of an authentication process.
+ * Represents the outcome of an authentication attempt.
+ *
+ * @param <C> the type of authentication challenge required for continuation
  */
-public sealed interface AuthenticationResult
-        permits AuthenticationResult.Abstained, AuthenticationResult.Continuation, AuthenticationResult.Failure, AuthenticationResult.Success {
+public sealed interface AuthenticationResult<C extends AuthenticationChallenge>
+        permits AuthenticationResult.Success, AuthenticationResult.Failure, AuthenticationResult.Continuation, AuthenticationResult.Abstained {
 
     /**
-     * Successful authentication
+     * Successful authentication.
      */
-    record Success(Identity<?> identity) implements AuthenticationResult {
+    record Success<C extends AuthenticationChallenge>(Identity<?> identity) implements AuthenticationResult<C> {
     }
 
     /**
-     * Authentication failed definitively
+     * Definitively failed authentication.
      */
-    record Failure(String error) implements AuthenticationResult {
-    }
-
-    /**
-     * Authentication requires an additional step/challenge (e.g. MFA)
-     * Теперь тип C жестко связан с типом результата на уровне компиляции.
-     */
-    record Continuation<C extends AuthenticationChallenge>(C challenge) implements AuthenticationResult {
+    record Failure<C extends AuthenticationChallenge>(String error) implements AuthenticationResult<C> {
     }
 
     /**
      * Authenticator abstained from decision.
-     * Move to the next authenticator in the chain.
      */
-    record Abstained(String reason) implements AuthenticationResult {
+    record Abstained<C extends AuthenticationChallenge>(String reason) implements AuthenticationResult<C> {
     }
 
-    // --- Статические фабричные методы с корректным выводом типов ---
-
-    static AuthenticationResult success(Identity<?> identity) {
-        return new Success(identity);
+    /**
+     * Authentication requires an additional challenge.
+     */
+    record Continuation<C extends AuthenticationChallenge>(C challenge) implements AuthenticationResult<C> {
     }
 
-    static AuthenticationResult failure(String error) {
-        return new Failure(error);
+    /**
+     * Creates a successful authentication result adapted to the required challenge type.
+     */
+    static <T extends AuthenticationChallenge> AuthenticationResult<T> success(Identity<?> identity) {
+        return new Success<>(identity);
     }
 
-    static <C extends AuthenticationChallenge> AuthenticationResult challenge(C challenge) {
+    /**
+     * Creates a failure authentication result adapted to the required challenge type.
+     */
+    static <T extends AuthenticationChallenge> AuthenticationResult<T> failure(String error) {
+        return new Failure<>(error);
+    }
+
+    /**
+     * Creates an abstained authentication result adapted to the required challenge type.
+     */
+    static <T extends AuthenticationChallenge> AuthenticationResult<T> abstained(String reason) {
+        return new Abstained<>(reason);
+    }
+
+    /**
+     * Creates a continuation authentication result with the specific challenge.
+     */
+    static <T extends AuthenticationChallenge> AuthenticationResult<T> challenge(T challenge) {
         return new Continuation<>(challenge);
-    }
-
-    static AuthenticationResult abstained(String reason) {
-        return new Abstained(reason);
     }
 }

@@ -1,6 +1,5 @@
 package colesico.framework.security.assist.authentication;
 
-import colesico.framework.security.Identity;
 import colesico.framework.security.authentication.AuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationSource;
 
