@@ -21,6 +21,8 @@ import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.ioclet.Factory;
 import colesico.framework.ioc.key.Key;
 
+import java.util.Objects;
+
 public final class CatalogEntry<T> {
 
     private final Key<T> key;
@@ -70,5 +72,28 @@ public final class CatalogEntry<T> {
 
     public void setAction(EntryAction action) {
         this.action = action;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof CatalogEntry<?> that)) return false;
+        return Objects.equals(key, that.key) && Objects.equals(condition, that.condition) && substitution == that.substitution && Objects.equals(polyproduce, that.polyproduce) && action == that.action && Objects.equals(factory, that.factory);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(key, condition, substitution, polyproduce, action, factory);
+    }
+
+    @Override
+    public String toString() {
+        return "CatalogEntry{" +
+                "key=" + key +
+                ", condition=" + condition +
+                ", substitution=" + substitution +
+                ", polyproduce=" + polyproduce +
+                ", action=" + action +
+                ", factory=" + factory +
+                '}';
     }
 }

@@ -99,6 +99,7 @@ public class IocBuilderImpl implements IocBuilder {
                 List<Ioclet> foundList = lookupIoclets();
                 for (Ioclet ioclet : foundList) {
                     curIoclet = ioclet;
+                    log.debug("Add factories from ioclet: {}", ioclet.getClass().getName());
                     ioclet.addFactories(catalog);
                 }
             } else {
@@ -143,7 +144,7 @@ public class IocBuilderImpl implements IocBuilder {
         log.debug("Lookup ioclets...");
         ServiceLocator<Ioclet> ioclets = serviceLocatorFactory.locator(this.getClass(), Ioclet.class);
         for (Ioclet ioclet : ioclets) {
-            log.debug("Found ioclet '" + ioclet.getClass().getName() + "' with id: '" + ioclet.id() + "'");
+            log.debug("Found ioclet '{}' with id: '{}'", ioclet.getClass().getName(), ioclet.id());
             result.add(ioclet);
         }
         return result;

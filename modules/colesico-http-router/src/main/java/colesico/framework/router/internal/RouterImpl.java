@@ -99,6 +99,9 @@ public class RouterImpl implements Router {
         return routesIndex.slicedRoute(toRouteId(targetClass, targetMethod, httpMethod), parameters);
     }
 
+    /**
+     * Register singe tele-facade
+     */
     @Override
     public void register(TeleFacade<?, RouterCommandsRegistry> teleFacade) {
         register(this, teleFacade);

@@ -44,6 +44,7 @@ public class CatalogImpl implements Catalog {
 
     @Override
     public <T> boolean accept(Key<T> key, Condition condition, Substitution substitution, Integer polyproduce) {
+        log.debug("Accept ioc factory for key: {}; condition: {}; substitution: {}; polyproduce:{}", key, condition, substitution, polyproduce);
 
         // for older version ioclets compatibility
         if (substitution == null) {
@@ -94,6 +95,7 @@ public class CatalogImpl implements Catalog {
 
     @Override
     public <T> void add(Factory<T> factory) {
+        log.debug("Add ioc factory for key: {}; action: {}", curEntry.key(), curEntry.action());
         curEntry.setFactory(factory);
         switch (curEntry.action()) {
             case NONE:

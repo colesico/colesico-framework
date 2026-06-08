@@ -9,7 +9,7 @@ import colesico.framework.teleapi.TeleFacade;
 public interface RouterTargetController<Q extends TeleController.Criteria> extends TeleController<Q, Router.Invocation, RouterCommandsRegistry> {
 
     /**
-     * Target controllers all tele-facades
+     * Returns http router target controller all tele-facades
      */
     Iterable<TeleFacade<?, RouterCommandsRegistry>> teleFacades();
 }
