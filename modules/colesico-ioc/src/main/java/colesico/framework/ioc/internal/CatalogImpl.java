@@ -44,7 +44,7 @@ public class CatalogImpl implements Catalog {
 
     @Override
     public <T> boolean accept(Key<T> key, Condition condition, Substitution substitution, Integer polyproduce) {
-        log.debug("Accept ioc factory for key: {}; condition: {}; substitution: {}; polyproduce:{}", key, condition, substitution, polyproduce);
+        log.trace("Accept ioc factory for key: {}; condition: {}; substitution: {}; polyproduce:{}", key, condition, substitution, polyproduce);
 
         // for older version ioclets compatibility
         if (substitution == null) {
@@ -95,7 +95,7 @@ public class CatalogImpl implements Catalog {
 
     @Override
     public <T> void add(Factory<T> factory) {
-        log.debug("Add ioc factory for key: {}; action: {}", curEntry.key(), curEntry.action());
+        log.trace("Add ioc factory for key: {}; action: {}", curEntry.key(), curEntry.action());
         curEntry.setFactory(factory);
         switch (curEntry.action()) {
             case NONE:
@@ -106,11 +106,11 @@ public class CatalogImpl implements Catalog {
                 return;
             case APPEND:
                 CatalogEntry<?> prevEntry = entriesMap.get(curEntry.key());
-                prevEntry.factory().setNext(curEntry.factory());
+                prevEntry.setLastFactory(curEntry.factory());
                 return;
             case PREPEND:
                 prevEntry = entriesMap.put(curEntry.key(), curEntry);
-                curEntry.factory().setNext(prevEntry.factory());
+                curEntry.setNextFactory(prevEntry.factory());
                 return;
             default:
                 throw new IocException("Unsupported catalog action: " + curEntry.action());

@@ -66,6 +66,20 @@ public final class CatalogEntry<T> {
         this.factory = factory;
     }
 
+    public void setNextFactory(Factory<T> factory) {
+        this.factory.setNext(factory);
+    }
+
+    public void setLastFactory(Factory<T> factory) {
+        if (this.factory == null) {
+            this.factory = factory;
+        } else {
+            var c = this.factory;
+            while (c.next() != null) c = c.next();
+            c.setNext(factory);
+        }
+    }
+
     public EntryAction action() {
         return action;
     }
