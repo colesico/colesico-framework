@@ -22,10 +22,10 @@ import colesico.framework.ioc.IocBuilder;
 
 public class Main {
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         MyService srv = IocBuilder.create().build().instance(MyService.class);
 
-        System.out.println("Config obj: "+srv.getMyConfig());
-        System.out.println("Config val: "+srv.getAppConfig().getVal());
+        System.out.println("Config obj: " + srv.getMyConfig());
+        System.out.println("Config val: " + srv.getAppConfig().getVal());
     }
 }

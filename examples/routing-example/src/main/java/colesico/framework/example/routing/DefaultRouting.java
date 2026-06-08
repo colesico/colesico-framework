@@ -16,8 +16,8 @@
 
 package colesico.framework.example.routing;
 
-import colesico.framework.weblet.HtmlResponse;
 import colesico.framework.weblet.Weblet;
+import colesico.framework.weblet.response.HtmlResponse;
 
 /**
  * Weblet default route example.

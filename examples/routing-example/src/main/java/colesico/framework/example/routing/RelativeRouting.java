@@ -17,8 +17,8 @@
 package colesico.framework.example.routing;
 
 import colesico.framework.router.Route;
-import colesico.framework.weblet.HtmlResponse;
 import colesico.framework.weblet.Weblet;
+import colesico.framework.weblet.response.HtmlResponse;
 
 /**
  * Weblet relative uri example.

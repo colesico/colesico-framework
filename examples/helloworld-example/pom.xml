@@ -39,7 +39,7 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- Colesico undertow integration -->
+        <!-- Colesico Fusion Auth HTTP integration -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-fusion-http</artifactId>

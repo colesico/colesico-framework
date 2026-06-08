@@ -28,10 +28,10 @@ import colesico.framework.ioc.production.Producer;
 public class MyProducer {
 
     /**
-     * Define default config source
+     * Define default config source as HoconSource
      */
     @Substitute
-    public ConfigSource getConfigSource(HoconSource impl) {
+    public ConfigSource configSource(HoconSource impl) {
         return impl;
     }
 }

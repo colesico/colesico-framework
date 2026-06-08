@@ -29,23 +29,23 @@
     <artifactId>routing-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - HTTP routes</name>
+    <name>Colesico example - HTTP routing</name>
 
     <properties>
     </properties>
 
     <dependencies>
-        <!-- Colesico web bundle -->
+        <!-- Colesico common http -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-bundle-web</artifactId>
+            <artifactId>colesico-weblet</artifactId>
             <version>${project.version}</version>
         </dependency>
 
-        <!-- Colesico undertow integration -->
+        <!-- Colesico Fusion Auth HTTP integration -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-undertow</artifactId>
+            <artifactId>colesico-fusion-http</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -75,9 +75,15 @@
                         <!-- Framework annotation processors -->
                         <path>
                             <groupId>net.colesico.framework</groupId>
-                            <artifactId>colesico-bundle-web</artifactId>
+                            <artifactId>colesico-weblet</artifactId>
                             <version>${project.version}</version>
                         </path>
+                        <!-- To disable compile debug log remove this dependency-->
+                        <dependency>
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>slf4j-simple</artifactId>
+                            <version>${slf4j.version}</version>
+                        </dependency>
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
