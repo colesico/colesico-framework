@@ -4,25 +4,20 @@ import colesico.framework.security.Identity;
 import colesico.framework.security.assist.authentication.BasicAuthenticationChallenge;
 import colesico.framework.security.assist.authentication.BasicAuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationSource;
-import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
-
-import static colesico.framework.security.authentication.AuthenticationRequest.SOURCE_CLAIM;
 
 /**
  * Simple authentication source.
  * Allow to authenticate single user per scope  (default - singleton)
  * Put this source to appropriate scope to support multi user authentication.
  */
-@Singleton
-public class SimpleAuth
+public class SimpleAuthentication
         implements AuthenticationSource<BasicAuthenticationRequest, BasicAuthenticationChallenge> {
 
-    protected static final Logger log = LoggerFactory.getLogger(SimpleAuth.class);
+    protected static final Logger log = LoggerFactory.getLogger(SimpleAuthentication.class);
 
     protected final AtomicReference<BasicAuthenticationRequest> request = new AtomicReference<>();
 
@@ -37,12 +32,12 @@ public class SimpleAuth
     }
 
     @Override
-    public void authenticate(Identity<?> identity) {
+    public void authenticated(Identity<?> identity) {
         log.debug("Identity {} is logged in", identity.id());
     }
 
     @Override
-    public void unauthenticated(BasicAuthenticationRequest request, String error) {
+    public <E> void unauthenticated(BasicAuthenticationRequest request, E error) {
         this.request.set(null);
         log.debug("Authentication request failure: {}", error);
     }
@@ -57,6 +52,6 @@ public class SimpleAuth
      * Credentials to perform authentication
      */
     public void setCredentials(String login, String password) {
-        this.request.set(BasicAuthenticationRequest.of(login, password, SimpleAuth.class));
+        this.request.set(BasicAuthenticationRequest.of(login, password, SimpleAuthentication.class));
     }
 }

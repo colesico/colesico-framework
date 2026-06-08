@@ -29,22 +29,32 @@ public class AuthenticationInterceptorImpl implements AuthenticationInterceptor 
 
         Collection<AuthenticationSource<?, ?>> sources = new ArrayList<>();
 
-        for (var souceClass : options.sources()) {
-            sources.add(sourceFactory.get(souceClass));
+        for (var sourceClass : options.sources()) {
+            sources.add(sourceFactory.get(sourceClass));
         }
 
-        if (options.login()) {
-            var result = securityManager.login(sources);
-            if (result instanceof AuthenticationResult.Success) {
+        switch (options.strategy()) {
+            case DEFERRED:
+                sourceContext.setSources(sources);
                 return context.proceed();
-            } else if (result instanceof AuthenticationResult.Continuation<?>) {
-                return null;
-            } else {
-                throw new UnauthenticatedException("Unauthenticated");
-            }
-        } else {
-            sourceContext.setSources(sources);
-            return context.proceed();
+
+            case IF_NECESSARY:
+                if (securityManager.isAuthenticated()) {
+                    return context.proceed();
+                }
+                // fall-through to STRICT if not authenticated
+
+            case STRICT:
+                var result = securityManager.login(sources);
+                if (result instanceof AuthenticationResult.Success) {
+                    return context.proceed();
+                } else if (result instanceof AuthenticationResult.Continuation<?>) {
+                    return null;
+                } else {
+                    throw new UnauthenticatedException("Unauthenticated");
+                }
+            default:
+                throw new IllegalArgumentException("Unsupported strategy: " + options.strategy());
         }
     }
 }

@@ -35,7 +35,7 @@ public interface AuthenticationSource<R extends AuthenticationRequest, C extends
      * This allows the source to perform post-authentication actions, such as
      * attaching the identity to a session or sending a success header.
      */
-    default void authenticate(Identity<?> identity) {
+    default void authenticated(Identity<?> identity) {
 
     }
 
@@ -45,7 +45,7 @@ public interface AuthenticationSource<R extends AuthenticationRequest, C extends
      * Allows the source to react to the failure, for example, by clearing
      * invalid credentials from the transport headers or logging the event.
      */
-    default void unauthenticated(R request, String error) {
+    default <E> void unauthenticated(R request, E error) {
 
     }
 

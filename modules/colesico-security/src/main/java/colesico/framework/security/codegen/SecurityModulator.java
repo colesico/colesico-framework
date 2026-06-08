@@ -145,13 +145,7 @@ public class SecurityModulator extends Modulator {
             paramsCodegen.add("$T.class", TypeName.get(authSourceClass));
         }
         paramsCode.add(paramsCodegen.toFormat(),paramsCodegen.toValues());
-        paramsCode.add(",");
-        if (authentication.unwrap().login()){
-            paramsCode.add("true");
-        } else {
-            paramsCode.add("false");
-        }
-        paramsCode.add(")");
+        paramsCode.add(",$L)",authentication.unwrap().strategy().name());
 
         // Add interceptor invocation code
         CodeBlock.Builder interceptorCode = CodeBlock.builder();

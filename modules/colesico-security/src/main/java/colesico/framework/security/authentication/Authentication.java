@@ -16,10 +16,16 @@
 
 package colesico.framework.security.authentication;
 
+import colesico.framework.security.Identity;
+import colesico.framework.security.IdentityContext;
+import colesico.framework.security.SecurityManager;
+
 import java.lang.annotation.*;
 
 /**
- * Configures the authentication behavior for methods or on classes level.
+ * Configures authentication behavior for methods or classes.
+ *
+ * @author Vladlen V. Larionov
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
@@ -28,12 +34,34 @@ import java.lang.annotation.*;
 public @interface Authentication {
 
     /**
-     * Authentication sources to be used for authentication
+     * Specifies the authentication sources to be used.
      */
     Class<? extends AuthenticationSource>[] value();
 
     /**
-     * Determines whether the explicit login operation should be executed
+     * Determines the execution strategy for authentication.
      */
-    boolean login() default true;
+    Strategy strategy() default Strategy.STRICT;
+
+    /**
+     * Strategies defining how and when authentication is triggered.
+     */
+    enum Strategy {
+
+        /**
+         * Always performs authentication (call {@link SecurityManager#login(AuthenticationSource)}).
+         */
+        STRICT,
+
+        /**
+         * Performs authentication only if an {@link Identity} is missing from the {@link IdentityContext}.
+         */
+        IF_NECESSARY,
+
+        /**
+         * Only registers sources in the {@link AuthenticationSourceContext} for manual authentication
+         * by calling {@link SecurityManager#login()} later within the business logic.
+         */
+        DEFERRED
+    }
 }

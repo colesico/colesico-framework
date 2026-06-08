@@ -62,7 +62,7 @@ public interface Identity<I> {
     String PERMISSIONS_CLAIM = "permissions";
 
     /**
-     * Returns the unique identifier of this identity (e.g., UUID, login, or numeric ID).
+     * Returns the unique identifier of this identity (e.g., UUID, strategy, or numeric ID).
      */
     I id();
 

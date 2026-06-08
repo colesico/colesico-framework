@@ -79,7 +79,7 @@ public class SimpleAuthenticator implements
             if (challenge!=null) {
                 return AuthenticationResult.challenge(challenge);
             } else {
-                return AuthenticationResult.abstained("No challenge required");
+                return AuthenticationResult.skip("No challenge required");
             }
         }
 

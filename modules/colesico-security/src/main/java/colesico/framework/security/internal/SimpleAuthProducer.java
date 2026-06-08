@@ -9,18 +9,19 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.security.assist.authentication.BasicAuthenticationRequest;
 import colesico.framework.security.assist.authentication.simple.*;
 import colesico.framework.security.authentication.Authenticator;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 @Producer
-@Produce(SimpleAuth.class)
-@Produce(SimpleAuthenticator.class)
+@Produce(SimpleAuthentication.class)
+@Produce(value = SimpleAuthenticator.class, scoped = Singleton.class)
 public class SimpleAuthProducer {
 
     @Singleton
     @Classed(BasicAuthenticationRequest.class)
     @Polyproduce(order = Integer.MAX_VALUE)
-    public Authenticator authenticator(SimpleAuthenticator impl) {
-        return impl;
+    public Authenticator authenticator(Provider<SimpleAuthenticator> impl) {
+        return impl.get();
     }
 
     @Singleton

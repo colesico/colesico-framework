@@ -65,7 +65,7 @@ public class HttpBasic implements AuthenticationSource<BasicAuthenticationReques
     }
 
     @Override
-    public void authenticate(Identity<?> identity) {
+    public void authenticated(Identity<?> identity) {
 
     }
 

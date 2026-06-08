@@ -74,6 +74,8 @@ public class SecurityManagerImpl implements SecurityManager {
     @SuppressWarnings("unchecked")
     public AuthenticationResult login(Iterable<? extends AuthenticationSource<?, ?>> sources) {
 
+        identityContext.clear();
+
         for (AuthenticationSource source : sources) {
             final AuthenticationRequest request = source.request();
             if (request == null) {
@@ -96,7 +98,7 @@ public class SecurityManagerImpl implements SecurityManager {
                             throw new SecurityException("Null Identity for success authentication");
                         }
                         identityContext.setIdentity(identity);
-                        source.authenticate(identity);
+                        source.authenticated(identity);
                         return success;
                     }
                     case AuthenticationResult.Continuation<?> continuation -> {
@@ -107,7 +109,7 @@ public class SecurityManagerImpl implements SecurityManager {
                         source.unauthenticated(request, failure.error());
                         return failure;
                     }
-                    // Abstained
+                    // Skip
                     default -> {
                         // nop - proceed to the next authenticator
                     }

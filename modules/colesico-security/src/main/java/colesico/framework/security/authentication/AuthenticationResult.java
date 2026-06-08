@@ -8,7 +8,7 @@ import colesico.framework.security.Identity;
  * @param <C> the type of authentication challenge required for continuation
  */
 public sealed interface AuthenticationResult<C extends AuthenticationChallenge>
-        permits AuthenticationResult.Success, AuthenticationResult.Failure, AuthenticationResult.Continuation, AuthenticationResult.Abstained {
+        permits AuthenticationResult.Success, AuthenticationResult.Failure, AuthenticationResult.Continuation, AuthenticationResult.Skip {
 
     /**
      * Successful authentication.
@@ -19,13 +19,13 @@ public sealed interface AuthenticationResult<C extends AuthenticationChallenge>
     /**
      * Definitively failed authentication.
      */
-    record Failure<C extends AuthenticationChallenge>(String error) implements AuthenticationResult<C> {
+    record Failure<C extends AuthenticationChallenge, E>(E error) implements AuthenticationResult<C> {
     }
 
     /**
      * Authenticator abstained from decision.
      */
-    record Abstained<C extends AuthenticationChallenge>(String reason) implements AuthenticationResult<C> {
+    record Skip<C extends AuthenticationChallenge>(String reason) implements AuthenticationResult<C> {
     }
 
     /**
@@ -44,15 +44,15 @@ public sealed interface AuthenticationResult<C extends AuthenticationChallenge>
     /**
      * Creates a failure authentication result adapted to the required challenge type.
      */
-    static <T extends AuthenticationChallenge> AuthenticationResult<T> failure(String error) {
+    static <T extends AuthenticationChallenge, E> AuthenticationResult<T> failure(E error) {
         return new Failure<>(error);
     }
 
     /**
      * Creates an abstained authentication result adapted to the required challenge type.
      */
-    static <T extends AuthenticationChallenge> AuthenticationResult<T> abstained(String reason) {
-        return new Abstained<>(reason);
+    static <T extends AuthenticationChallenge> AuthenticationResult<T> skip(String reason) {
+        return new Skip<>(reason);
     }
 
     /**
