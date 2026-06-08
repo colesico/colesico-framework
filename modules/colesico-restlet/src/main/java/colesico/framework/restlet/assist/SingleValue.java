@@ -8,7 +8,7 @@ public class SingleValue<V> {
 
     private V value;
 
-    public V getValue() {
+    public V value() {
         return value;
     }
 

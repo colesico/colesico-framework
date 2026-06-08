@@ -31,11 +31,11 @@ public class ValidationError implements Serializable {
         this.message = message;
     }
 
-    public String getCode() {
+    public String code() {
         return code;
     }
 
-    public String getMessage() {
+    public String message() {
         return message;
     }
 

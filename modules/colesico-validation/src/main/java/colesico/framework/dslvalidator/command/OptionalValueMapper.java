@@ -43,7 +43,7 @@ public final class OptionalValueMapper<V, N> extends Mapper<V, N> {
 
     @Override
     public void execute(ValidationContext<V> context) {
-        Optional<V> value = Optional.ofNullable(context.getValue());
+        Optional<V> value = Optional.ofNullable(context.value());
         Optional<N> nestedValue = mapper.apply(value);
         ValidationContext<N> nestedContext = ValidationContext.ofNested(context, subject, nestedValue.orElse(null));
         command.execute(nestedContext);

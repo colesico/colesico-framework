@@ -40,7 +40,7 @@ public final class LengthVerifier implements Command<String> {
 
     @Override
     public void execute(ValidationContext<String> context) {
-        String value = context.getValue();
+        String value = context.value();
         if (!isBlank(value)) {
             if (min != null && max != null) {
                 if (value.length() < min || value.length() > max) {

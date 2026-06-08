@@ -59,7 +59,7 @@ public class ValidationIssue implements Serializable {
         return subissues.get(subject);
     }
 
-    public String getSubject() {
+    public String subject() {
         return subject;
     }
 
@@ -68,14 +68,14 @@ public class ValidationIssue implements Serializable {
     }
 
     public void addSubissue(ValidationIssue subissue) {
-        subissues.put(subissue.getSubject(), subissue);
+        subissues.put(subissue.subject(), subissue);
     }
 
-    public List<ValidationError> getErrors() {
+    public List<ValidationError> errors() {
         return Collections.unmodifiableList(errors);
     }
 
-    public Map<String, ValidationIssue> getSubissues() {
+    public Map<String, ValidationIssue> subissues() {
         return Collections.unmodifiableMap(subissues);
     }
 

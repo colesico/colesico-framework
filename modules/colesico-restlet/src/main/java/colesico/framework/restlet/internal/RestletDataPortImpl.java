@@ -54,9 +54,9 @@ public class RestletDataPortImpl implements RestletDataPort {
 
         RestletTeleReader<V> reader;
 
-        if (query.getReaderClass() != null) {
+        if (query.readerClass() != null) {
             // Use specified reader
-            reader = (RestletTeleReader<V>) trwFactory.reader(query.getReaderClass());
+            reader = (RestletTeleReader<V>) trwFactory.reader(query.readerClass());
         } else {
             // Use reader by param type
             reader = trwFactory.findReader(RestletTeleReader.class, query.valueType());
@@ -78,9 +78,9 @@ public class RestletDataPortImpl implements RestletDataPort {
     public <V> void write(V value, RestletWriteOptions options) {
         RestletTeleWriter<V> writer;
 
-        if (options.getWriterClass() != null) {
+        if (options.writerClass() != null) {
             // Specified writer
-            writer = trwFactory.writer(options.getWriterClass());
+            writer = trwFactory.writer(options.writerClass());
         } else {
             // By type writer
             writer = trwFactory.findWriter(RestletTeleWriter.class, options.valueType());

@@ -124,16 +124,16 @@ public class RecordKitParser extends RecordKitHelpers {
             logger.debug("Overriding for column: {}; overriding: {}", name, overriding);
             overriding.setAssociated(true);
 
-            if (overriding.getName() != null) {
-                name = overriding.getName();
+            if (overriding.name() != null) {
+                name = overriding.name();
             }
 
-            if (overriding.getDefinition() != null) {
-                name = overriding.getDefinition();
+            if (overriding.definition() != null) {
+                name = overriding.definition();
             }
 
-            if (overriding.getMediator() != null) {
-                mediator = overriding.getMediator();
+            if (overriding.mediator() != null) {
+                mediator = overriding.mediator();
             }
         }
 
@@ -141,7 +141,7 @@ public class RecordKitParser extends RecordKitHelpers {
         ContainerElement c = container;
         while (c != null) {
             name = applyColumnRenaming(c, name);
-            c = c instanceof CompositionElement comp ? comp.getContainer() : null;
+            c = c instanceof CompositionElement comp ? comp.container() : null;
         }
 
         // Build column element
@@ -220,7 +220,7 @@ public class RecordKitParser extends RecordKitHelpers {
     }
 
     private void parseContainerFields(ContainerElement cont) {
-        List<FieldElement> fields = cont.getType().asClassElement().fieldsFiltered(
+        List<FieldElement> fields = cont.type().asClassElement().fieldsFiltered(
                 f -> !f.unwrap().getModifiers().contains(Modifier.STATIC)
         );
 
@@ -319,19 +319,19 @@ public class RecordKitParser extends RecordKitHelpers {
         // Check that this composition specified as a  joint record
         JointRecord jointRecord = null;
         if (compAnn.unwrap().join()) {
-            jointRecord = parseJoinRecord(comp.getType());
+            jointRecord = parseJoinRecord(comp.type());
             comp.setJoin(true);
         } else {
             if (container instanceof CompositionElement c) {
-                comp.setJoin(c.isJoin());
+                comp.setJoin(c.join());
             }
         }
 
         String tableName;
         if (jointRecord != null) {
-            tableName = jointRecord.getTableName();
+            tableName = jointRecord.tableName();
         } else {
-            tableName = container.getTableName();
+            tableName = container.tableName();
         }
         comp.setTableName(tableName);
 
@@ -358,7 +358,7 @@ public class RecordKitParser extends RecordKitHelpers {
         record.addView(view);
 
         // Set record default table name
-        view.setTableName(record.getTableName());
+        view.setTableName(record.tableName());
 
         // Set renaming
         view.setRenaming(viewAnn.unwrap().renaming());
@@ -400,7 +400,7 @@ public class RecordKitParser extends RecordKitHelpers {
             parseRecordView(recordType, AnnotationAssist.of(processingEnv, viewAnn));
         }
 
-        for (RecordViewElement view : record.getViews()) {
+        for (RecordViewElement view : record.views()) {
             validateRecordView(view);
         }
 

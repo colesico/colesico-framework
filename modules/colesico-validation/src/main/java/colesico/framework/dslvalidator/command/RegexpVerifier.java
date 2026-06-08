@@ -46,7 +46,7 @@ public final class RegexpVerifier implements Command<String> {
 
     @Override
     public void execute(ValidationContext<String> context) {
-        String email = context.getValue();
+        String email = context.value();
         if (!isBlank(email)) {
             Matcher matcher = pattern.matcher(email);
             if (!matcher.matches()) {

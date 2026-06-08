@@ -45,7 +45,7 @@ public final class ValueMapper<V, N> extends Mapper<V, N> {
 
     @Override
     public void execute(ValidationContext<V> context) {
-        V currentValue = context.getValue();
+        V currentValue = context.value();
         N nestedValue;
         if (currentValue != null) {
             nestedValue = mapper.apply(currentValue);

@@ -78,11 +78,11 @@ public final class DSLValidator<V> implements Validator<V> {
         }
     }
 
-    public Command<V> getValidation() {
+    public Command<V> validation() {
         return validation;
     }
 
-    public String getSubject() {
+    public String subject() {
         return subject;
     }
 }

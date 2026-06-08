@@ -39,7 +39,7 @@ public final class SubjectExecutor<V> extends Executor<V> {
 
     @Override
     public void execute(ValidationContext<V> context) {
-        ValidationContext<V> nestedContext = ValidationContext.ofNested(context, subject, context.getValue());
+        ValidationContext<V> nestedContext = ValidationContext.ofNested(context, subject, context.value());
         command.execute(nestedContext);
     }
 }

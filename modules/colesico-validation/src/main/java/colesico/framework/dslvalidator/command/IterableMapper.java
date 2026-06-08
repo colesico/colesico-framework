@@ -34,7 +34,7 @@ public class IterableMapper<V extends Iterable<I>, I> extends Mapper<V, I> {
 
     @Override
     public void execute(ValidationContext<V> context) {
-        Iterable<I> items = context.getValue();
+        Iterable<I> items = context.value();
         if (items == null) {
             return;
         }

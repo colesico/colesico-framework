@@ -41,38 +41,38 @@ import jakarta.inject.Singleton;
 public class RestletProducer {
 
     @Singleton
-    public RestletDataPort getRestletDataPort(RestletDataPortImpl impl) {
+    public RestletDataPort restletDataPort(RestletDataPortImpl impl) {
         return impl;
     }
 
     @Singleton
-    public RestletTeleDriver getRestletTeleDriver(RestletTeleDriverImpl impl) {
+    public RestletTeleDriver restletTeleDriver(RestletTeleDriverImpl impl) {
         return impl;
     }
 
     @Singleton
-    public RestletJsonConverter getJsonConverter(GsonConverter impl) {
+    public RestletJsonConverter jsonConverter(GsonConverter impl) {
         return impl;
     }
 
     @Singleton
-    public RestletRequestListener getRestletRequestListener(LogRestletListener impl) {
+    public RestletRequestListener restletRequestListener(LogRestletListener impl) {
         return impl;
     }
 
     @Singleton
-    public RestletResponseListener getRestletResponseListener(LogRestletListener impl) {
+    public RestletResponseListener  restletResponseListener(LogRestletListener impl) {
         return impl;
     }
 
     @Singleton
-    public RestletConfigPrototype getDefaultRestletConfig() {
+    public RestletConfigPrototype defaultRestletConfig() {
         return new RestletConfigImpl();
     }
 
     @Singleton
     @Named(RestletOrigin.AUTO)
-    public Origin getRestletAutoOrigin(RestletAutoOrigin impl) {
+    public Origin restletAutoOrigin(RestletAutoOrigin impl) {
         return impl;
     }
 }

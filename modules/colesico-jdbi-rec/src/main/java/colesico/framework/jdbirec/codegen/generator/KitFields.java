@@ -48,7 +48,7 @@ public class KitFields {
         return fieldName;
     }
 
-    public Map<TypeMirror, String> getFieldsMap() {
+    public Map<TypeMirror, String> fieldsMap() {
         return fieldsMap;
     }
 

@@ -18,7 +18,7 @@ public class PositiveVerifier<V extends Number> implements Command<V> {
 
     @Override
     public void execute(ValidationContext<V> context) {
-        Number value = context.getValue();
+        Number value = context.value();
         if (value != null) {
             switch (value) {
                 case Long val -> {

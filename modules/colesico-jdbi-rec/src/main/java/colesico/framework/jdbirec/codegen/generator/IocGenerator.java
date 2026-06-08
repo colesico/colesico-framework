@@ -37,21 +37,21 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
     public void generate(RecordKitElement recordKit) {
 
-        String packageName = recordKit.getOriginClass().packageName();
-        String producerClassSimpleName = recordKit.getOriginClass().simpleName() + PRODUCER_SUFFIX;
+        String packageName = recordKit.originClass().packageName();
+        String producerClassSimpleName = recordKit.originClass().simpleName() + PRODUCER_SUFFIX;
         ProducerGenerator producerGenerator = new ProducerGenerator(packageName, producerClassSimpleName, this.getClass(), processingEnv);
 
-        for (RecordViewElement view : recordKit.getRecord().getViews()) {
+        for (RecordViewElement view : recordKit.record().views()) {
             logger.debug("Generating JDBI Rec producer: " + producerGenerator.producerClassFilePath());
-            String implPackageStr = recordKit.getOriginClass().packageName();
+            String implPackageStr = recordKit.originClass().packageName();
             String implClassStr = RecordKitGeneratorUtils.buildRecordKitInstanceClassName(view);
             ClassName implClassName = ClassName.bestGuess(implPackageStr + "." + implClassStr);
             AnnotationSpec.Builder produceAnn = producerGenerator.addProduceAnnotation(implClassName);
             if (!view.isDefaultView()) {
-                produceAnn.addMember(Produce.NAMED_METHOD, "$S", view.getName());
+                produceAnn.addMember(Produce.NAMED_METHOD, "$S", view.name());
             }
 
-            TypeName recKitType = TypeName.get(recordKit.getOriginClass().asClassType().unwrap());
+            TypeName recKitType = TypeName.get(recordKit.originClass().asClassType().unwrap());
             produceAnn.addMember(Produce.KEY_TYPE_METHOD, "$T.class", recKitType);
 
         }

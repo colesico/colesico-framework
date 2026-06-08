@@ -16,38 +16,39 @@
 
 package colesico.framework.example.helloworld;
 
+import colesico.framework.security.Identity;
 import colesico.framework.security.authentication.Authentication;
-import colesico.framework.security.authorization.RequireIdentity;
 import colesico.framework.telehttp.authentication.HttpBasic;
 import colesico.framework.weblet.response.HtmlResponse;
 import colesico.framework.weblet.Weblet;
+import jakarta.inject.Provider;
 
 @Weblet
 public class HelloWeblet {
 
     public static final String SAY_HELLO_TEXT = "Hello World!";
-    public static final String SAY_HOLLA_TEXT = "Holla World!";
-    public static final String SAY_PRIVET_TEXT = "Привет Мир!";
+    public static final String SAY_PRIVET_TEXT = "Привет, ";
+
+    private final Provider<Identity> identity;
+
+    public HelloWeblet(Provider<Identity> identity) {
+        this.identity = identity;
+    }
 
     // Browse the url: http://localhost:8080/hello-weblet/say-hello
     public HtmlResponse sayHello() {
         return HtmlResponse.of(SAY_HELLO_TEXT);
     }
 
-    // Browse the url: http://localhost:8080/hello-weblet/holla
-    public HtmlResponse holla() {
-        return HtmlResponse.of(SAY_HOLLA_TEXT);
-    }
-
-    // Browse the url: http://localhost:8080/hello-weblet/privet?name=Tatiana
+    // Browse the url: http://localhost:8080/hello-weblet/privet?name=Татьяна
     public HtmlResponse privet(String name) {
-        return HtmlResponse.of(name + ": " + SAY_PRIVET_TEXT);
+        return HtmlResponse.of(SAY_PRIVET_TEXT+name);
     }
 
-    // Browse the url: http://localhost:8080/hello-weblet/do-something?i=1&j=2
+    // Browse the url: http://localhost:8080/hello-weblet/secured
+    // Use admin/secret to  authenticate
     @Authentication(HttpBasic.class)
-    @RequireIdentity
-    public void doSomething(Integer i, Integer j) {
-        IO.println("Sum = " + (i + j));
+    public String secured() {
+        return (String)identity.get().id();
     }
 }

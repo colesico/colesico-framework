@@ -20,15 +20,15 @@ public class BeanValidateElement extends ValidateElement {
     }
 
     @Override
-    public String getValidationMethodName() {
-        return "validate" + StringUtils.firstCharToUpperCase(getPropertyName());
+    public String validationMethodName() {
+        return "validate" + StringUtils.firstCharToUpperCase(propertyName());
     }
 
-    public String getValidatorBuilderFieldName() {
-        return getPropertyName() + "VB";
+    public String validatorBuilderFieldName() {
+        return propertyName() + "VB";
     }
 
-    public BuilderPrototypeElement getFieldValidatorBuilder() {
+    public BuilderPrototypeElement fieldValidatorBuilder() {
         return fieldValidatorBuilder;
     }
 }

@@ -13,15 +13,15 @@ public class ValidatorBuilderElement {
         this.prototypeType = prototypeType;
     }
 
-    public ClassElement getOriginClass() {
+    public ClassElement originClass() {
         return originClass;
     }
 
-    public String getPackageName() {
+    public String packageName() {
         return originClass.packageName();
     }
 
-    public ClassType getPrototypeType() {
+    public ClassType prototypeType() {
         return prototypeType;
     }
 }

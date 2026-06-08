@@ -479,7 +479,7 @@ public enum MimeType {
         this.contentType = contentType;
     }
 
-    public String getContentType() {
+    public String contentType() {
         return contentType;
     }
 }

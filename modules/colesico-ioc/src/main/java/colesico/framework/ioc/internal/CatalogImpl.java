@@ -65,7 +65,7 @@ public class CatalogImpl implements Catalog {
         }
 
         // Check non-matching polyproducing
-        if ((curEntry.getPolyproduce() == null) ^ (prevEntry.getPolyproduce() == null)) {
+        if ((curEntry.polyproduce() == null) ^ (prevEntry.polyproduce() == null)) {
             throw new IocException("Polyproducing mismatch for key: " + key);
         }
 
@@ -81,8 +81,8 @@ public class CatalogImpl implements Catalog {
         }
 
         // Check polyproduce is specified
-        if (curEntry.getPolyproduce() != null) {
-            var action = curEntry.getPolyproduce() < prevEntry.getPolyproduce() ?
+        if (curEntry.polyproduce() != null) {
+            var action = curEntry.polyproduce() < prevEntry.polyproduce() ?
                     EntryAction.PREPEND : EntryAction.APPEND;
             curEntry.setAction(action);
             return true;

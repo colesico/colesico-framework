@@ -33,9 +33,9 @@ public class TestValidatorBuilder extends AbstractValidatorBuilder {
 
     public Validator<DataBean> buildGroup() {
         return validator(
-                field("id", DataBean::getId, required(), interval(0L, 1L, true)),
-                field("name", DataBean::getName, required(), length(1, 2)),
-                field("value", DataBean::getValue, required(), length(1, 5))
+                field("id", DataBean::id, required(), interval(0L, 1L, true)),
+                field("name", DataBean::name, required(), length(1, 2)),
+                field("value", DataBean::value, required(), length(1, 5))
         );
     }
 
@@ -44,18 +44,18 @@ public class TestValidatorBuilder extends AbstractValidatorBuilder {
         return basicValidator(
                 "DataBean",
                 mandatory(
-                        field("id", DataBean::getId,
+                        field("id", DataBean::id,
                                 idValidor(),
                                 interval(0L, 1L, true)
                         ),
-                        map("name", DataBean::getName,
+                        map("name", DataBean::name,
                                 series(
                                         required(),
                                         length(0, 1),
                                         length(1, 2)
                                 )
                         ),
-                        field("value", DataBean::getValue,
+                        field("value", DataBean::value,
                                 required(),
                                 length(1, 5)
                         )
@@ -65,7 +65,7 @@ public class TestValidatorBuilder extends AbstractValidatorBuilder {
 
     public Command<Long> idValidor() {
         return ctx -> {
-            if (ctx.getValue() == null || ctx.getValue() < 0) {
+            if (ctx.value() == null || ctx.value() < 0) {
                 ctx.addError("InvalidId", "Id value mast be great than 0");
             }
         };

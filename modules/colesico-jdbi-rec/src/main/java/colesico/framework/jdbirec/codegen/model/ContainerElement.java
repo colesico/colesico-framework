@@ -110,15 +110,15 @@ abstract public class ContainerElement {
         this.tableName = tableName;
     }
 
-    public ClassType getType() {
+    public ClassType type() {
         return type;
     }
 
-    public String getTableName() {
+    public String tableName() {
         return tableName;
     }
 
-    public TagFilterElement getTagFilter() {
+    public TagFilterElement tagFilter() {
         return tagFilter;
     }
 
@@ -126,7 +126,7 @@ abstract public class ContainerElement {
         this.tagFilter = tagFilter;
     }
 
-    public String getRenaming() {
+    public String renaming() {
         return renaming;
     }
 
@@ -134,23 +134,23 @@ abstract public class ContainerElement {
         this.renaming = renaming;
     }
 
-    public List<ColumnOverridingElement> getColumnOverriding() {
+    public List<ColumnOverridingElement> columnOverriding() {
         return columnOverriding;
     }
 
-    public Set<ColumnElement> getColumns() {
+    public Set<ColumnElement> columns() {
         return columns;
     }
 
-    public Set<CompositionElement> getCompositions() {
+    public Set<CompositionElement> compositions() {
         return compositions;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public RecordElement getRecord() {
+    public RecordElement record() {
         return record;
     }
 }

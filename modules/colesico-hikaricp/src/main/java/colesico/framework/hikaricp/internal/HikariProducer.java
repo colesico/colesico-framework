@@ -16,6 +16,7 @@
 
 package colesico.framework.hikaricp.internal;
 
+import colesico.framework.assist.ExceptionUtils;
 import colesico.framework.hikaricp.HikariCPConditions;
 import colesico.framework.hikaricp.HikariConfigPrototype;
 import colesico.framework.hikaricp.HikariProperties;
@@ -26,7 +27,6 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.production.Supplier;
 import colesico.framework.ioc.scope.Unscoped;
 import com.zaxxer.hikari.HikariDataSource;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

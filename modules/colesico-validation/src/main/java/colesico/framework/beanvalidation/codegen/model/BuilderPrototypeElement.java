@@ -64,7 +64,7 @@ public class BuilderPrototypeElement {
     /**
      * Validator builder class simple name
      */
-    public String getBuilderClassSimpleName() {
+    public String builderClassSimpleName() {
         String nameSuffix;
         if (ValidatorBuilderPrototype.DEFAULT_BUILDER.equals(name)) {
             nameSuffix = "";
@@ -72,44 +72,44 @@ public class BuilderPrototypeElement {
             nameSuffix = StringUtils.firstCharToUpperCase(name);
         }
         return VALIDATOR_BUILDER_PROTOTYPE_PREFIX
-                + parentBean.getOriginType().asClassElement().simpleName()
+                + parentBean.originType().asClassElement().simpleName()
                 + nameSuffix
                 + VALIDATOR_BUILDER_PROTOTYPE_SUFFIX;
     }
 
-    public String getBuilderClassName() {
-        return packageName + "." + getBuilderClassSimpleName();
+    public String builderClassName() {
+        return packageName + "." + builderClassSimpleName();
     }
 
-    public List<ValidateElement> getValidations() {
+    public List<ValidateElement> validations() {
         return validations;
     }
 
-    public BeanElement getParentBean() {
+    public BeanElement parentBean() {
         return parentBean;
     }
 
-    public void setParentBean(BeanElement parentBean) {
+    public void parentBean(BeanElement parentBean) {
         this.parentBean = parentBean;
     }
 
-    public String getPackageName() {
+    public String packageName() {
         return packageName;
     }
 
-    public ClassType getSuperclass() {
+    public ClassType superclass() {
         return superclass;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public String getSubject() {
+    public String subject() {
         return subject;
     }
 
-    public String getCommand() {
+    public String command() {
         return command;
     }
 

@@ -27,7 +27,7 @@ public class ValidationException extends ApplicationException {
         this.issue = issue;
     }
 
-    public ValidationIssue getIssue() {
+    public ValidationIssue issue() {
         return issue;
     }
 }

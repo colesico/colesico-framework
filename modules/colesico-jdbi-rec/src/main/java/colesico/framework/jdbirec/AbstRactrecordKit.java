@@ -56,43 +56,43 @@ abstract public class AbstRactrecordKit<R> implements RecordKitApi<R> {
      * Returns table name to table alias name mappings
      * for master table and joint record kits
      */
-    abstract protected Map<String, String> getTablesAliases();
+    abstract protected Map<String, String> tablesAliases();
 
     /**
      * Select columns and expressions, separated by comma:  column1,column2, expr(column3)...
      * This token for use in select statements
      */
-    abstract protected String getSelectRecordToken();
+    abstract protected String selectRecordToken();
 
     /**
      * Column names separate with  comma:  column1,column2...
      * This token for use in insert statements
      */
-    abstract protected String getInsertColumnsToken();
+    abstract protected String insertColumnsToken();
 
     /**
      * Param names separated with comma: :param1,:param2...
      * This token for use in insert statements
      */
-    abstract protected String getInsertValuesToken();
+    abstract protected String insertValuesToken();
 
     /**
      * Column assignments separated with comma: column1 = :param1, column2 = :param2 ...
      * This token for use in update statements
      */
-    abstract protected String getUpdatesToken();
+    abstract protected String updatesToken();
 
     @Override
     public String sql(String query) {
 
         query = query
-                .replace(TABLE_NAME_REF, getTableName())
-                .replace(RECORD_REF, getSelectRecordToken())
-                .replace(COLUMNS_REF, getInsertColumnsToken())
-                .replace(VALUES_REF, getInsertValuesToken())
-                .replace(UPDATES_REF, getUpdatesToken());
+                .replace(TABLE_NAME_REF, tableName())
+                .replace(RECORD_REF, selectRecordToken())
+                .replace(COLUMNS_REF, insertColumnsToken())
+                .replace(VALUES_REF, insertValuesToken())
+                .replace(UPDATES_REF, updatesToken());
 
-        Map<String, String> tableAls = getTablesAliases();
+        Map<String, String> tableAls = tablesAliases();
         if (tableAls != null) {
             for (Map.Entry<String, String> jt : tableAls.entrySet()) {
                 String ref = "@" + jt.getKey();

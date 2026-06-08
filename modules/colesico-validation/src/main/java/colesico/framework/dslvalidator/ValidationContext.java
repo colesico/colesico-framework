@@ -75,17 +75,17 @@ public final class ValidationContext<V> {
      */
     public static <V> ValidationContext<V> ofNested(ValidationContext<?> superContext, String subject, V value, Object... params) {
         ValidationContext<V> childContext = new ValidationContext(superContext, subject, value, params);
-        superContext.getNestedContexts().put(childContext.getSubject(), childContext);
+        superContext.nestedContexts().put(childContext.subject(), childContext);
         return childContext;
     }
 
     /**
      * Returns root validation context
      */
-    public <U> ValidationContext<U> getRootContext() {
+    public <U> ValidationContext<U> rootContext() {
         ValidationContext curCtx = this;
-        while (curCtx.getSuperContext() != null) {
-            curCtx = curCtx.getSuperContext();
+        while (curCtx.superContext() != null) {
+            curCtx = curCtx.superContext();
         }
         return curCtx;
     }
@@ -96,7 +96,7 @@ public final class ValidationContext<V> {
     public <U> ValidationContext<U> findNestedContext(String... path) {
         ValidationContext ctx = this;
         for (String subject : path) {
-            ctx = (ValidationContext) ctx.getNestedContexts().get(subject);
+            ctx = (ValidationContext) ctx.nestedContexts().get(subject);
             if (ctx == null) {
                 return null;
             }
@@ -104,14 +104,14 @@ public final class ValidationContext<V> {
         return ctx;
     }
 
-    public String getSubject() {
+    public String subject() {
         return subject;
     }
 
     /**
      * Returns value from this context
      */
-    public V getValue() {
+    public V value() {
         return value;
     }
 
@@ -119,7 +119,7 @@ public final class ValidationContext<V> {
         this.value = value;
     }
 
-    public Object[] getParams() {
+    public Object[] params() {
         return params;
     }
 
@@ -130,19 +130,19 @@ public final class ValidationContext<V> {
         return null;
     }
 
-    public <T> T getRootParam(int index) {
-        return getRootContext().getParam(index);
+    public <T> T rootParam(int index) {
+        return rootContext().getParam(index);
     }
 
-    public Object[] getRootParams() {
-        return getRootContext().getParams();
+    public Object[] rootParams() {
+        return rootContext().params();
     }
 
     public void setParams(Object[] params) {
         this.params = params;
     }
 
-    public List<ValidationError> getErrors() {
+    public List<ValidationError> errors() {
         return errors;
     }
 
@@ -155,7 +155,7 @@ public final class ValidationContext<V> {
     }
 
     protected boolean hasNestedErrors(ValidationContext<V> context) {
-        Collection<ValidationContext> nestedContexts = context.getNestedContexts().values();
+        Collection<ValidationContext> nestedContexts = context.nestedContexts().values();
         for (ValidationContext nestedCtx : nestedContexts) {
             if (nestedCtx.hasErrors()) {
                 return true;
@@ -172,11 +172,11 @@ public final class ValidationContext<V> {
     }
 
 
-    public Map<String, ValidationContext> getNestedContexts() {
+    public Map<String, ValidationContext> nestedContexts() {
         return nestedContexts;
     }
 
-    public ValidationContext<?> getSuperContext() {
+    public ValidationContext<?> superContext() {
         return superContext;
     }
 
@@ -186,7 +186,7 @@ public final class ValidationContext<V> {
     }
 
     protected ValidationIssue exportErrors() {
-        ValidationIssue issue = new ValidationIssue(getSubject());
+        ValidationIssue issue = new ValidationIssue(subject());
 
         for (ValidationContext<?> childContext : nestedContexts.values()) {
             ValidationIssue childIssue = childContext.exportErrors();

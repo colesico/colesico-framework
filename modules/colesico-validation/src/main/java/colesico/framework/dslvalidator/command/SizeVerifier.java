@@ -48,7 +48,7 @@ public class SizeVerifier<V> extends AbstractIntervalVerifier<V> {
 
     @Override
     public void execute(ValidationContext<V> context) {
-        Object value = context.getValue();
+        Object value = context.value();
         Number size;
 
         if (value == null) {
@@ -58,7 +58,7 @@ public class SizeVerifier<V> extends AbstractIntervalVerifier<V> {
         } else if (value instanceof Map) {
             size = ((Map) value).size();
         } else if (value.getClass().isArray()) {
-            size = ((Object[]) context.getValue()).length;
+            size = ((Object[]) context.value()).length;
         } else if (value instanceof String) {
             size = ((String)value).length();
         } else {

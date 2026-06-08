@@ -19,7 +19,7 @@ public class MandatoryExecutor<V> extends Executor<V> {
 
     @Override
     public void execute(ValidationContext<V> context) {
-        if (context.getValue() != null) {
+        if (context.value() != null) {
             command.execute(context);
         } else {
             context.addError(MandatoryExecutor.class.getSimpleName(), msg.mandatoryValueIsNull());

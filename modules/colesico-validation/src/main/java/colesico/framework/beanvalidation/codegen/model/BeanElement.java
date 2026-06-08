@@ -26,14 +26,14 @@ public class BeanElement {
 
     public void addValidatorBuilder(BuilderPrototypeElement validatorBuilder) {
         validatorBuilders.add(validatorBuilder);
-        validatorBuilder.setParentBean(this);
+        validatorBuilder.parentBean(this);
     }
 
-    public List<BuilderPrototypeElement> getValidatorBuilders() {
+    public List<BuilderPrototypeElement> validatorBuilders() {
         return validatorBuilders;
     }
 
-    public ClassType getOriginType() {
+    public ClassType originType() {
         return originType;
     }
 }

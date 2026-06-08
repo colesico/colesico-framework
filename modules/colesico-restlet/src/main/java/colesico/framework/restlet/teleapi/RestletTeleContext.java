@@ -19,7 +19,7 @@ public final class RestletTeleContext extends HttpReadOptions {
         this.readerClass = readerClass;
     }
 
-    public Class<? extends RestletTeleReader> getReaderClass() {
+    public Class<? extends RestletTeleReader> readerClass() {
         return readerClass;
     }
 

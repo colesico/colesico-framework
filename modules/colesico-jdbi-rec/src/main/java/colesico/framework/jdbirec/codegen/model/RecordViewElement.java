@@ -17,33 +17,33 @@ public class RecordViewElement extends ContainerElement {
         super(record, type, name);
     }
 
-    public List<ColumnElement> getAllColumns() {
+    public List<ColumnElement> allColumns() {
         List<ColumnElement> columns = new ArrayList<>();
         collectAllColumns(columns);
         return columns;
     }
 
     public boolean isDefaultView() {
-        return VIEW_DEFAULT.equals(getName());
+        return VIEW_DEFAULT.equals(name());
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         RecordViewElement that = (RecordViewElement) o;
-        return Objects.equals(getName(), that.getName());
+        return Objects.equals(name(), that.name());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getName());
+        return Objects.hashCode(name());
     }
 
     @Override
     public String toString() {
         return "RecordElement{" +
                 "originType=" + type +
-                ", name='" + getName() + '\'' +
+                ", name='" + name() + '\'' +
                 '}';
     }
 }

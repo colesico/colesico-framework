@@ -31,7 +31,7 @@ public class ValidatedBeanParser extends FrameworkAbstractParser {
                                            AnnotationAssist<Validate> validateSpec) {
 
         Set<String> builders = new HashSet<>(Arrays.asList(validateSpec.unwrap().builders()));
-        if (!builders.contains(builderPrototype.getName())) {
+        if (!builders.contains(builderPrototype.name())) {
             return;
         }
 
@@ -53,7 +53,7 @@ public class ValidatedBeanParser extends FrameworkAbstractParser {
                                        AnnotationAssist<ValidateBean> validateBeanSpec) {
 
         Set<String> builders = new HashSet<>(Arrays.asList(validateBeanSpec.unwrap().builders()));
-        if (!builders.contains(builderPrototype.getName())) {
+        if (!builders.contains(builderPrototype.name())) {
             return;
         }
 
@@ -93,7 +93,7 @@ public class ValidatedBeanParser extends FrameworkAbstractParser {
     protected void parseFieldsValidations(BuilderPrototypeElement builderPrototype) {
         logger.debug("Parse fields validations : " + builderPrototype);
 
-        ClassElement beanClass = builderPrototype.getParentBean().getOriginType().asClassElement();
+        ClassElement beanClass = builderPrototype.parentBean().originType().asClassElement();
         List<FieldElement> fieldsList = beanClass.fieldsFiltered(
                 f -> !f.unwrap().getModifiers().contains(Modifier.STATIC)
         );
@@ -144,7 +144,7 @@ public class ValidatedBeanParser extends FrameworkAbstractParser {
     }
 
     protected void parseValidatedBean(BeanElement validatedBean, AnnotationAssist<ValidatorBuilderPrototype> builderSpec) {
-        BuilderPrototypeElement builderPrototype = createBuilderPrototypeElement(validatedBean.getOriginType().asClassElement(), builderSpec);
+        BuilderPrototypeElement builderPrototype = createBuilderPrototypeElement(validatedBean.originType().asClassElement(), builderSpec);
         validatedBean.addValidatorBuilder(builderPrototype);
         parseFieldsValidations(builderPrototype);
     }

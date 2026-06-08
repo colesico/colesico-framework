@@ -46,34 +46,34 @@ public final class RequiredVerifier<V> implements Command<V> {
 
     @Override
     public void execute(ValidationContext<V> context) {
-        if (context.getValue() == null) {
+        if (context.value() == null) {
             addError(context);
             return;
         }
 
-        if (context.getValue() instanceof String) {
-            if (isBlank((String) context.getValue())) {
+        if (context.value() instanceof String) {
+            if (isBlank((String) context.value())) {
                 addError(context);
             }
             return;
         }
 
-        if (context.getValue() instanceof Collection) {
-            if (((Collection) context.getValue()).isEmpty()) {
+        if (context.value() instanceof Collection) {
+            if (((Collection) context.value()).isEmpty()) {
                 addError(context);
             }
             return;
         }
 
-        if (context.getValue() instanceof Map) {
-            if (((Map) context.getValue()).isEmpty()) {
+        if (context.value() instanceof Map) {
+            if (((Map) context.value()).isEmpty()) {
                 addError(context);
             }
             return;
         }
 
-        if (context.getValue().getClass().isArray()) {
-            if (Array.getLength(context.getValue()) == 0) {
+        if (context.value().getClass().isArray()) {
+            if (Array.getLength(context.value()) == 0) {
                 addError(context);
             }
         }

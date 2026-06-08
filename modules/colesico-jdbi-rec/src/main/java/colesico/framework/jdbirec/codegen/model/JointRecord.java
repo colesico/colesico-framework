@@ -16,11 +16,11 @@ public class JointRecord {
         this.recordType = recordType;
     }
 
-    public String getTableName() {
+    public String tableName() {
         return tableName;
     }
 
-    public ClassType getRecordType() {
+    public ClassType recordType() {
         return recordType;
     }
 

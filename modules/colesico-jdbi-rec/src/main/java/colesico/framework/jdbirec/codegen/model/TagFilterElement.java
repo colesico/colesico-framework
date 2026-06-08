@@ -13,7 +13,7 @@ public class TagFilterElement {
     private List<String> noneOf = new ArrayList<>();
 
 
-    public List<String> getOneOf() {
+    public List<String> oneOf() {
         return oneOf;
     }
 
@@ -21,7 +21,7 @@ public class TagFilterElement {
         this.oneOf = oneOf;
     }
 
-    public List<String> getAnyOf() {
+    public List<String> anyOf() {
         return anyOf;
     }
 
@@ -29,7 +29,7 @@ public class TagFilterElement {
         this.anyOf = anyOf;
     }
 
-    public List<String> getNoneOf() {
+    public List<String> noneOf() {
         return noneOf;
     }
 

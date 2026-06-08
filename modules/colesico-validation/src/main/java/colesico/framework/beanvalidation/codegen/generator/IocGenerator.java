@@ -32,7 +32,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
         Map<String, List<ValidatorBuilderElement>> byPackage = new HashMap<>();
         for (ValidatorBuilderElement vb : validatorBuilders) {
-            List<ValidatorBuilderElement> vbs = byPackage.computeIfAbsent(vb.getPackageName(), k -> new ArrayList<>());
+            List<ValidatorBuilderElement> vbs = byPackage.computeIfAbsent(vb.packageName(), k -> new ArrayList<>());
             vbs.add(vb);
         }
 
@@ -43,11 +43,11 @@ public class IocGenerator extends FrameworkAbstractGenerator {
             List<ValidatorBuilderElement> vbs = entry.getValue();
             for (ValidatorBuilderElement vb : vbs) {
                 logger.debug("Generating validator builders  producer: " + producerGenerator.producerClassFilePath());
-                TypeName builderType = TypeName.get(vb.getOriginClass().asClassType().unwrap());
+                TypeName builderType = TypeName.get(vb.originClass().asClassType().unwrap());
                 AnnotationSpec.Builder produceAnn = producerGenerator.addProduceAnnotation(builderType);
-                TypeName keyType = TypeName.get(vb.getPrototypeType().unwrap());
+                TypeName keyType = TypeName.get(vb.prototypeType().unwrap());
                 produceAnn.addMember(Produce.SCOPED_METHOD, "$T.class", ClassName.get(Unscoped.class));
-                String methodName = "get" + StringUtils.firstCharToUpperCase(vb.getOriginClass().simpleName());
+                String methodName = "get" + StringUtils.firstCharToUpperCase(vb.originClass().simpleName());
                 MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, keyType);
                 mb.addAnnotation(Unscoped.class);
                 mb.addParameter(builderType, "vb");

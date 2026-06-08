@@ -52,5 +52,4 @@ public final class TaskExecutorImpl extends AbstractTaskExecutor implements Task
         return config;
     }
 
-
 }

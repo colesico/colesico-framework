@@ -65,8 +65,8 @@ public class HelloWorldTest {
 
     @Test
     public void test2() throws Exception {
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8085/hello-weblet/holla")).build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8085/hello-weblet/privet?name=Tanja")).build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(HelloWeblet.SAY_HOLLA_TEXT, response.body());
+        assertEquals(HelloWeblet.SAY_PRIVET_TEXT+"Tanja", response.body());
     }
 }

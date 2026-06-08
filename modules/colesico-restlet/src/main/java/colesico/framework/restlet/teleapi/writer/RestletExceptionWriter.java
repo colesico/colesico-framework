@@ -20,7 +20,7 @@ public class RestletExceptionWriter extends RestletTeleWriter<RestletException> 
 
     @Override
     public void write(RestletException value, RestletWriteOptions context) {
-        if (context.getStatusCode() == null) {
+        if (context.statusCode() == null) {
             context.setStatusCode(value.getHttpStatus());
         }
         writer.write(value.getError(), context);

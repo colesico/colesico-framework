@@ -22,7 +22,7 @@ public interface RecordKitApi<R> {
     /**
      * Return table name
      */
-    String getTableName();
+    String tableName();
 
     /**
      * Transforms query text with references (@table, @columns, @updates, @values) to actual sql

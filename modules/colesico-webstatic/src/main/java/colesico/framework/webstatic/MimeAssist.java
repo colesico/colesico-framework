@@ -26,7 +26,7 @@ public class MimeAssist {
         try {
             String resourceExt = StringUtils.lowerCase(FilenameUtils.getExtension(resourcePath));
             MimeType mimeType = MimeType.valueOf(resourceExt);
-            return mimeType.getContentType();
+            return mimeType.contentType();
         } catch (IllegalArgumentException ex) {
             return DEFAULT_CONTENT_TYPE;
         }

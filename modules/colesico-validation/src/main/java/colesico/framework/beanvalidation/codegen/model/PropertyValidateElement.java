@@ -15,23 +15,23 @@ public class PropertyValidateElement extends ValidateElement {
         this.verifier = verifier;
     }
 
-    public String getSubject() {
+    public String subject() {
         return subject;
     }
 
-    public Boolean getVerifier() {
+    public Boolean verifier() {
         return verifier;
     }
 
     @Override
-    public String getValidationMethodName() {
+    public String validationMethodName() {
         String prefix;
         if (verifier) {
             prefix = "verify";
         } else {
             prefix = "validate";
         }
-        return prefix + StringUtils.firstCharToUpperCase(getPropertyName());
+        return prefix + StringUtils.firstCharToUpperCase(propertyName());
     }
 
 }

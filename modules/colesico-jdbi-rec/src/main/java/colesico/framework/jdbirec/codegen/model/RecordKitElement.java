@@ -56,7 +56,7 @@ public class RecordKitElement {
     }
 
     public void addJointRecord(JointRecord rec) {
-        jointRecords.put(rec.getRecordType(), rec);
+        jointRecords.put(rec.recordType(), rec);
     }
 
     public void addTableAlias(String alias, String table) {
@@ -67,23 +67,23 @@ public class RecordKitElement {
         this.record = record;
     }
 
-    public ClassElement getOriginClass() {
+    public ClassElement originClass() {
         return originClass;
     }
 
-    public ClassType getSuperclass() {
+    public ClassType superclass() {
         return superclass;
     }
 
-    public RecordElement getRecord() {
+    public RecordElement record() {
         return record;
     }
 
-    public Map<String, String> getTableAliases() {
+    public Map<String, String> tableAliases() {
         return tableAliases;
     }
 
-    public Map<ClassType, JointRecord> getJointRecords() {
+    public Map<ClassType, JointRecord> jointRecords() {
         return jointRecords;
     }
 }

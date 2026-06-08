@@ -31,7 +31,7 @@ public final class JsonWriter extends ObjectWriter {
         }
 
         String json = jsonConverter.toJson(value);
-        Integer code = context.getStatusCode();
+        Integer code = context.statusCode();
         if (code==null){
             code = 200;
         }

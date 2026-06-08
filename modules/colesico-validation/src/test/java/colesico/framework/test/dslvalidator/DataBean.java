@@ -31,7 +31,7 @@ public class DataBean {
         this.value = value;
     }
 
-    public Long getId() {
+    public Long id() {
         return id;
     }
 
@@ -39,7 +39,7 @@ public class DataBean {
         this.id = id;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
@@ -47,7 +47,7 @@ public class DataBean {
         this.name = name;
     }
 
-    public String getValue() {
+    public String value() {
         return value;
     }
 

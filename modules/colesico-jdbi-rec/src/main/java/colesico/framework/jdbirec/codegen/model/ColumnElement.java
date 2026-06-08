@@ -80,11 +80,11 @@ public class ColumnElement {
         this.tags = tags;
     }
 
-    public FieldElement getField() {
+    public FieldElement field() {
         return field;
     }
 
-    public ContainerElement getContainer() {
+    public ContainerElement container() {
         return container;
     }
 
@@ -92,11 +92,11 @@ public class ColumnElement {
         this.container = container;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public ClassType getMediator() {
+    public ClassType mediator() {
         return mediator;
     }
 
@@ -104,7 +104,7 @@ public class ColumnElement {
         this.mediator = mediator;
     }
 
-    public String getInsertAs() {
+    public String insertAs() {
         return insertAs;
     }
 
@@ -112,7 +112,7 @@ public class ColumnElement {
         this.insertAs = insertAs;
     }
 
-    public String getDefinition() {
+    public String definition() {
         return definition;
     }
 
@@ -120,7 +120,7 @@ public class ColumnElement {
         this.definition = definition;
     }
 
-    public boolean isImportable() {
+    public boolean importable() {
         return importable;
     }
 
@@ -128,7 +128,7 @@ public class ColumnElement {
         this.importable = importable;
     }
 
-    public boolean isExportable() {
+    public boolean exportable() {
         return exportable;
     }
 
@@ -136,7 +136,7 @@ public class ColumnElement {
         this.exportable = exportable;
     }
 
-    public String getSelectAs() {
+    public String selectAs() {
         return selectAs;
     }
 
@@ -144,7 +144,7 @@ public class ColumnElement {
         this.selectAs = selectAs;
     }
 
-    public String getUpdateAs() {
+    public String updateAs() {
         return updateAs;
     }
 
@@ -152,7 +152,7 @@ public class ColumnElement {
         this.updateAs = updateAs;
     }
 
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return tags;
     }
 

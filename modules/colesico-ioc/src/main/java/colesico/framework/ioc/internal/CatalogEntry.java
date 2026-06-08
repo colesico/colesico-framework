@@ -52,7 +52,7 @@ public final class CatalogEntry<T> {
         return substitution;
     }
 
-    public Integer getPolyproduce() {
+    public Integer polyproduce() {
         return polyproduce;
     }
 

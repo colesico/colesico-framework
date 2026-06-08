@@ -72,7 +72,7 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
         List<ContainerElement> containerChain = new ArrayList<>();
         while (c != null) {
             containerChain.add(c);
-            c = c instanceof CompositionElement comp ? comp.getContainer() : null;
+            c = c instanceof CompositionElement comp ? comp.container() : null;
         }
 
         logger.debug("ContainerChain size: {} ", containerChain.size());
@@ -81,16 +81,16 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
         Set<ColumnOverridingElement> columnOverridings = new HashSet<>();
         String columnPath = buildContainerPath(container, columnName);
         for (ContainerElement ce : containerChain) {
-            logger.debug("Composition {} column overriding size= {} ", ce, ce.getColumnOverriding().size());
+            logger.debug("Composition {} column overriding size= {} ", ce, ce.columnOverriding().size());
 
-            if (ce.getColumnOverriding().isEmpty()) {
+            if (ce.columnOverriding().isEmpty()) {
                 continue;
             }
 
             // Find column within overriding
-            for (ColumnOverridingElement coe : ce.getColumnOverriding()) {
+            for (ColumnOverridingElement coe : ce.columnOverriding()) {
                 logger.debug("Test column {} overriding:  {}", columnPath, coe);
-                if (coe.getColumnPath().equals(columnPath)) {
+                if (coe.columnPath().equals(columnPath)) {
                     columnOverridings.add(coe);
                 }
             }
@@ -112,8 +112,8 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
         ContainerElement c = container;
         while (c != null) {
             if (c instanceof CompositionElement comp) {
-                namesStack.push(comp.getField().name());
-                c = comp.getContainer();
+                namesStack.push(comp.field().name());
+                c = comp.container();
             } else {
                 c = null;
             }
@@ -143,11 +143,11 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
     }
 
     protected boolean tagsContainerFilter(ContainerElement container, Set<String> tags) {
-        TagFilterElement tagFilter = container.getTagFilter();
+        TagFilterElement tagFilter = container.tagFilter();
         boolean anyOf;
-        if (!tagFilter.getAnyOf().isEmpty()) {
+        if (!tagFilter.anyOf().isEmpty()) {
             anyOf = false;
-            for (String filter : tagFilter.getAnyOf()) {
+            for (String filter : tagFilter.anyOf()) {
                 if (hasTagsFilter(filter, tags) ||
                         noTagsFilter(filter, tags) ||
                         containsTagsFilter(filter, tags)) {
@@ -160,9 +160,9 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
         }
 
         boolean noneOf;
-        if (!tagFilter.getNoneOf().isEmpty()) {
+        if (!tagFilter.noneOf().isEmpty()) {
             noneOf = true;
-            for (String filter : tagFilter.getNoneOf()) {
+            for (String filter : tagFilter.noneOf()) {
                 if (hasTagsFilter(filter, tags) ||
                         noTagsFilter(filter, tags) ||
                         containsTagsFilter(filter, tags)) {
@@ -187,7 +187,7 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
             if (!tagsContainerFilter(c, tags)) {
                 return false;
             }
-            c = c instanceof CompositionElement comp ? comp.getContainer() : null;
+            c = c instanceof CompositionElement comp ? comp.container() : null;
         }
         return true;
     }
@@ -256,19 +256,19 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
 
     protected String applyColumnRenaming(ContainerElement container, String columnName) {
         String columnOriginName = columnName;
-        if (StringUtils.isNotBlank(container.getRenaming())) {
+        if (StringUtils.isNotBlank(container.renaming())) {
             if (container instanceof CompositionElement comp) {
-                columnName = StringUtils.replace(container.getRenaming(), Composition.RN_PREFIX, comp.getName() + "_" + columnOriginName);
+                columnName = StringUtils.replace(container.renaming(), Composition.RN_PREFIX, comp.name() + "_" + columnOriginName);
                 columnName = StringUtils.replace(columnName, Composition.RN_COLUMN_NAME, columnOriginName);
-                columnName = StringUtils.replace(columnName, Composition.RN_COMPOSITION_NAME, comp.getName());
+                columnName = StringUtils.replace(columnName, Composition.RN_COMPOSITION_NAME, comp.name());
             } else {
-                columnName = StringUtils.replace(container.getRenaming(), Composition.RN_PREFIX, columnOriginName);
+                columnName = StringUtils.replace(container.renaming(), Composition.RN_PREFIX, columnOriginName);
                 columnName = StringUtils.replace(columnName, Composition.RN_COLUMN_NAME, columnOriginName);
                 columnName = StringUtils.replace(columnName, Composition.RN_COMPOSITION_NAME, "");
             }
         }
 
-        logger.debug("Column renaming: {} -> rule '{}' -> {}", columnOriginName, container.getRenaming(), columnName);
+        logger.debug("Column renaming: {} -> rule '{}' -> {}", columnOriginName, container.renaming(), columnName);
 
         return columnName;
     }

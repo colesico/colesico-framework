@@ -43,35 +43,35 @@ abstract public class ValidateElement {
     /**
      * Method which will be called to obtain field validation
      */
-    abstract public String getValidationMethodName();
+    abstract public String validationMethodName();
 
-    public final String getPropertyName() {
+    public final String propertyName() {
         if (originField != null) {
             return originField.name();
         }
         return null;
     }
 
-    public final TypeMirror getPropertyType() {
+    public final TypeMirror propertyType() {
         if (originField != null) {
             return originField.originType();
         }
         return null;
     }
 
-    public final String getPropertyGetterName() {
-        return "get" + StringUtils.firstCharToUpperCase(getPropertyName());
+    public final String propertyGetterName() {
+        return "get" + StringUtils.firstCharToUpperCase(propertyName());
     }
 
-    public final String getPropertyReferenceName() {
+    public final String propertyReferenceName() {
         if (originField != null) {
             String kebabCase = StringUtils.toSeparatorNotation(originField.name(), '_');
-            return StringUtilse.toRootUpperCase(kebabCase);
+            return StringUtils.toRootUpperCase(kebabCase);
         }
         return null;
     }
 
-    public BuilderPrototypeElement getParentBuilder() {
+    public BuilderPrototypeElement parentBuilder() {
         return parentBuilder;
     }
 
@@ -79,15 +79,15 @@ abstract public class ValidateElement {
         this.parentBuilder = parentBuilder;
     }
 
-    public FieldElement getOriginField() {
+    public FieldElement originField() {
         return originField;
     }
 
-    public String getSubject() {
+    public String subject() {
         return subject;
     }
 
-    public String getMapper() {
+    public String mapper() {
         return mapper;
     }
 

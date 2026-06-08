@@ -42,7 +42,7 @@ public final class ItemMapper<V extends List<E>, E> extends Mapper<V, E> {
 
     @Override
     public void execute(ValidationContext<V> context) {
-        V currentValue = context.getValue();
+        V currentValue = context.value();
         E elementValue;
         if (currentValue == null || index >= currentValue.size() || index < 0) {
             elementValue = null;

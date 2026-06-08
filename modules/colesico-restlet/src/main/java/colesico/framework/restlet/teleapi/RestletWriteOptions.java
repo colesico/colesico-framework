@@ -37,11 +37,11 @@ public final class RestletWriteOptions extends HttpWriteOptions {
         return new RestletWriteOptions(valueType, writerClass, statusCode);
     }
 
-    public Class<? extends RestletTeleWriter> getWriterClass() {
+    public Class<? extends RestletTeleWriter> writerClass() {
         return writerClass;
     }
 
-    public Integer getStatusCode() {
+    public Integer statusCode() {
         return statusCode;
     }
 

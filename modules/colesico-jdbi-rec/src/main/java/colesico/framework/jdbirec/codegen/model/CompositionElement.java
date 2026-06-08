@@ -69,23 +69,23 @@ public class CompositionElement extends ContainerElement {
     /**
      * Get parent container
      */
-    public ContainerElement getContainer() {
+    public ContainerElement container() {
         return container;
     }
 
-    public FieldElement getField() {
+    public FieldElement field() {
         return field;
     }
 
-    public Set<String> getTags() {
+    public Set<String> tags() {
         return tags;
     }
 
-    public boolean isNullInstance() {
+    public boolean nullInstance() {
         return nullInstance;
     }
 
-    public boolean isJoin() {
+    public boolean join() {
         return join;
     }
 

@@ -28,6 +28,6 @@ public final class RestletException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return error == null ? super.getMessage() : error.getMessage();
+        return error == null ? super.getMessage() : error.message();
     }
 }

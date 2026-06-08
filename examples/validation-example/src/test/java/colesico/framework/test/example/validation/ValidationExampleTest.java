@@ -47,8 +47,8 @@ public class ValidationExampleTest {
 
         User user = new User();
         ValidationIssue issue = userValidator.validate(user);
-        assertEquals(issue.getSubject(), "user");
-        assertEquals(issue.getSubissues().size(), 4);
+        assertEquals(issue.subject(), "user");
+        assertEquals(issue.subissues().size(), 4);
     }
 
 }

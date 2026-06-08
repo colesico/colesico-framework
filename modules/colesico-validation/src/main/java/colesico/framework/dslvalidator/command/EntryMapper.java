@@ -42,7 +42,7 @@ public final class EntryMapper<V extends Map<K, E>, K, E> extends Mapper<V, E> {
 
     @Override
     public void execute(ValidationContext<V> context) {
-        V currentValue = context.getValue();
+        V currentValue = context.value();
         E entryValue;
         if (currentValue == null) {
             entryValue = null;

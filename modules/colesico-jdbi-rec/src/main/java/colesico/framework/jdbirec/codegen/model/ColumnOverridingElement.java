@@ -43,11 +43,11 @@ public class ColumnOverridingElement {
         this.columnPath = columnPath;
     }
 
-    public String getColumnPath() {
+    public String columnPath() {
         return columnPath;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
@@ -55,7 +55,7 @@ public class ColumnOverridingElement {
         this.name = name;
     }
 
-    public String getDefinition() {
+    public String definition() {
         return definition;
     }
 
@@ -63,7 +63,7 @@ public class ColumnOverridingElement {
         this.definition = definition;
     }
 
-    public ClassType getMediator() {
+    public ClassType mediator() {
         return mediator;
     }
 
@@ -71,7 +71,7 @@ public class ColumnOverridingElement {
         this.mediator = mediator;
     }
 
-    public boolean isAssociated() {
+    public boolean associated() {
         return associated;
     }
 

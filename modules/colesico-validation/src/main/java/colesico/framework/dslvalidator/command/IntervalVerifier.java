@@ -33,7 +33,7 @@ public final class IntervalVerifier<V extends Number> extends AbstractIntervalVe
 
     @Override
     public void execute(ValidationContext<V> context) {
-        Number value = context.getValue();
+        Number value = context.value();
         execute(value,context);
     }
 

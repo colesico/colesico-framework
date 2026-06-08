@@ -41,8 +41,8 @@ public final class DateFormatVerifier implements Command<String> {
     @Override
     public void execute(ValidationContext<String> context) {
         try {
-            if (!isBlank(context.getValue())) {
-                dateFormat.parse(context.getValue());
+            if (!isBlank(context.value())) {
+                dateFormat.parse(context.value());
             }
         } catch (ParseException ex) {
             context.addError(DateFormatVerifier.class.getSimpleName(), msg.invalidDateFormat());

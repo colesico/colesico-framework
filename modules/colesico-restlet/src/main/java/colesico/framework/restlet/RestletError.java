@@ -51,7 +51,7 @@ public class RestletError implements Serializable {
         this.details = details;
     }
 
-    public String getErrorCode() {
+    public String errorCode() {
         return errorCode;
     }
 
@@ -59,7 +59,7 @@ public class RestletError implements Serializable {
         this.errorCode = errorCode;
     }
 
-    public String getMessage() {
+    public String message() {
         return message;
     }
 
@@ -67,7 +67,7 @@ public class RestletError implements Serializable {
         this.message = message;
     }
 
-    public Object getDetails() {
+    public Object details() {
         return details;
     }
 

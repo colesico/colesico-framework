@@ -61,7 +61,7 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     @Override
-    protected Class<RestletDataPort> getDataPortClass() {
+    protected Class<RestletDataPort> dataPortClass() {
         return RestletDataPort.class;
     }
 

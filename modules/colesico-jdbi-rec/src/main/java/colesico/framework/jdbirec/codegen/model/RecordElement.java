@@ -41,27 +41,27 @@ public class RecordElement {
 
     public void addView(RecordViewElement view) {
         if (!views.add(view)) {
-            throw new RuntimeException("Duplicate record view: " + view.getName());
+            throw new RuntimeException("Duplicate record view: " + view.name());
         }
     }
 
-    public RecordKitElement getRecordKit() {
+    public RecordKitElement recordKit() {
         return recordKit;
     }
 
-    public ClassType getType() {
+    public ClassType type() {
         return type;
     }
 
-    public String getTableName() {
+    public String tableName() {
         return tableName;
     }
 
-    public String getTableAlias() {
+    public String tableAlias() {
         return tableAlias;
     }
 
-    public Set<RecordViewElement> getViews() {
+    public Set<RecordViewElement> views() {
         return views;
     }
 }
