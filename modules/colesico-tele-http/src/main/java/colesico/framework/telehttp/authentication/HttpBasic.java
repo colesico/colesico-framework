@@ -50,7 +50,7 @@ public class HttpBasic implements AuthenticationSource<BasicAuthenticationReques
         if (values.length == 2) {
             return BasicAuthenticationRequest.of(values[0], values[1], HttpBasic.class);
         } else {
-            return null;
+            throw new SecurityException("Invalid Authorization header");
         }
     }
 
@@ -70,12 +70,12 @@ public class HttpBasic implements AuthenticationSource<BasicAuthenticationReques
     }
 
     @Override
-    public void unauthenticated(BasicAuthenticationRequest request, String error) {
+    public <E> void unauthenticated(BasicAuthenticationRequest request, E error) {
 
     }
 
     @Override
     public void logout(Identity<?> identity) {
-
+        httpContext.get().response().setStatus(401).sendText("");
     }
 }

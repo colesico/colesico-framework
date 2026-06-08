@@ -24,7 +24,7 @@ public class IdentityContextImpl implements IdentityContext {
 
     @Override
     public void clear() {
-        taskScope.put(SCOPE_KEY, null);
+        taskScope.remove(SCOPE_KEY);
     }
 
 }
