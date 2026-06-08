@@ -99,7 +99,7 @@ public class IocBuilderImpl implements IocBuilder {
                 List<Ioclet> foundList = lookupIoclets();
                 for (Ioclet ioclet : foundList) {
                     curIoclet = ioclet;
-                    log.debug("Add factories from ioclet: {}", ioclet.getClass().getName());
+                    log.trace("Add factories from ioclet: {}", ioclet.getClass().getName());
                     ioclet.addFactories(catalog);
                 }
             } else {
