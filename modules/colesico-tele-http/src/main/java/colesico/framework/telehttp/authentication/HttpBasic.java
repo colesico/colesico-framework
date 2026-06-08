@@ -20,7 +20,7 @@ public class HttpBasic implements AuthenticationSource<BasicAuthenticationReques
     private static final Pattern BASIC_AUTH_PATTERN =
             Pattern.compile("^Basic\\s+(.+)$", Pattern.CASE_INSENSITIVE);
 
-    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String AUTHORIZATION_HEADER = "authorization";
     public static final String WWW_AUTHENTICATE_HEADER = "WWW-Authenticate";
 
     private final Provider<HttpContext> httpContext;

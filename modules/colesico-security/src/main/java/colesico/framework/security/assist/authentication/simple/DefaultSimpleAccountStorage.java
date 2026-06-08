@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Config
-@UseFileSource(bindAll = false, file = "accounts.properties", mandatory = false)
+@UseFileSource(bindAll = false, file = "accounts.properties", optional = true)
 public class DefaultSimpleAccountStorage implements SimpleAccountStorage {
 
     protected static final String PASSWORD_SUFFIX = ".password";

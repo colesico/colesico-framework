@@ -54,7 +54,7 @@ public interface HttpRequest {
     String queryString();
 
     /**
-     * Returns read-only http headers
+     * Returns read-only http headers (lowercase names)
      */
     HttpValues<String, String> headers();
 

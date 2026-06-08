@@ -88,7 +88,7 @@ public class PropertiesSource implements ConfigSource {
         final String classpath = params.getOrDefault(CLASSPATH_OPTION, "META-INF");
         String fullPath = StringUtils.concatPath(classpath, fileName, "/");
 
-        final String mandatory = params.getOrDefault(MANDATORY_OPTION, "true");
+        final String optional = params.getOrDefault(OPTIONAL_OPTION, "false");
 
         try (InputStream is = classLoader().getResourceAsStream(fullPath)) {
             if (is != null) {
@@ -97,7 +97,7 @@ public class PropertiesSource implements ConfigSource {
                 props.load(is);
                 return createConnection(props, params);
             } else {
-                if (mandatory.equals("true")) {
+                if (optional.equals("false")) {
                     throw new RuntimeException("Resource file not found: " + fullPath);
                 } else {
                     return createConnection(new Properties(), params);

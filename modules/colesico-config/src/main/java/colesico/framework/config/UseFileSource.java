@@ -16,7 +16,7 @@ public @interface UseFileSource {
     String DIRECTORY_OPTION = "directory";
     String CLASSPATH_OPTION = "classpath";
     String PREFIX_OPTION = "prefix";
-    String MANDATORY_OPTION = "mandatory";
+    String OPTIONAL_OPTION = "optional";
 
     /**
      * Default config directory
@@ -62,5 +62,5 @@ public @interface UseFileSource {
     /**
      * Values source file is mandatory or may absent
      */
-    boolean mandatory() default true;
+    boolean optional() default false;
 }
