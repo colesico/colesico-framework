@@ -16,11 +16,11 @@
 
 package colesico.framework.jdbi;
 
+import colesico.framework.assist.ExceptionUtils;
 import colesico.framework.jdbi.internal.JdbiTransaction;
 import colesico.framework.transaction.AbstractTransactionalShell;
 import colesico.framework.transaction.Tuning;
 import colesico.framework.transaction.UnitOfWork;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.slf4j.LoggerFactory;
@@ -92,7 +92,7 @@ public class JdbiTransactionalShell extends AbstractTransactionalShell<JdbiTrans
                 logger.debug("TX-New-JDBI handle is null (success)");
             }
         } catch (Exception e) {
-            logger.debug("TX-New-JDBI exception:" + ExceptionUtils.getRootCauseMessage(e));
+            logger.debug("TX-New-JDBI exception:{}", ExceptionUtils.getRootCauseMessage(e));
 
             if (handle != null) {
                 try {
@@ -112,7 +112,7 @@ public class JdbiTransactionalShell extends AbstractTransactionalShell<JdbiTrans
                     logger.debug("TX-New-JDBI close handle (on finally)");
                     handle.close();
                 } catch (Exception e) {
-                    logger.error("Error closing handle: " + ExceptionUtils.getRootCauseMessage(e));
+                    logger.error("Error closing handle: {}", ExceptionUtils.getRootCauseMessage(e));
                 }
             } else {
                 logger.debug("TX-New-JDBI handle is null (on finally)");
