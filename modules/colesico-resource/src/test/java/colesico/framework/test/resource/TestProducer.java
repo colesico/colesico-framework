@@ -17,17 +17,11 @@
 package colesico.framework.test.resource;
 
 import colesico.framework.ioc.conditional.Substitute;
-import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileManager;
-import colesico.framework.profile.assist.SimpleProfileManager;
-import colesico.framework.profile.internal.ProfileManagerImpl;
 import jakarta.inject.Singleton;
 
 import java.util.Locale;
-
-import static colesico.framework.ioc.conditional.Substitution.STUB;
 
 @Producer
 @Substitute

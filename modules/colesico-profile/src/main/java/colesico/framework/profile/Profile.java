@@ -48,7 +48,7 @@ public interface Profile {
 
     class Default implements Profile {
 
-        private Locale locale;
+        protected Locale locale;
 
         public Default(Locale locale) {
             this.locale = locale;

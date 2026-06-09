@@ -54,7 +54,7 @@ public class ProfileExampleTest {
         logger.info("Get profile");
         dataPort.clear();
         AppService service = ioc.instance(AppService.class);
-        assertEquals(service.getProfile().getLocale().toLanguageTag(), "ru");
+        assertEquals(service.getProfile().locale().toLanguageTag(), "ru");
     }
 
     @Test(priority = 2)
@@ -64,7 +64,7 @@ public class ProfileExampleTest {
         AppService service = ioc.instance(AppService.class);
         service.setLocale(Locale.of("en"));
         CustomProfile profile = (CustomProfile) dataPort.values().get(Profile.class);
-        assertEquals(profile.getLocale().toLanguageTag(), "en");
+        assertEquals(profile.locale().toLanguageTag(), "en");
     }
 
     @Test(priority = 3)
@@ -75,7 +75,7 @@ public class ProfileExampleTest {
         service.setTimezone(TimeZone.getTimeZone("UTC"));
         CustomProfile profile = (CustomProfile) dataPort.values().get(Profile.class);
 
-        assertEquals(profile.getTimeZone().getID(), "UTC");
+        assertEquals(profile.timeZone().getID(), "UTC");
     }
 
     @Test(priority = 1)
@@ -83,6 +83,6 @@ public class ProfileExampleTest {
         logger.info("Profile listener");
         dataPort.clear();
         AppService service = ioc.instance(AppService.class);
-        assertEquals(service.getProfile().getApiVersion(), "2.0");
+        assertEquals(service.getProfile().apiVersion(), "2.0");
     }
 }

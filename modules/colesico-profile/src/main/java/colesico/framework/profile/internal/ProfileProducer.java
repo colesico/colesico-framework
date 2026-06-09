@@ -25,12 +25,12 @@ import java.util.Locale;
 import static colesico.framework.ioc.conditional.Substitution.STUB;
 
 @Producer
-@Produce(value = ProfileManagerImpl.class, keyType = ProfileManager.class, substitute = STUB)
+@Produce(value = DefaultProfileManager.class, keyType = ProfileManager.class, substitute = STUB)
 public class ProfileProducer {
 
     @Unscoped
-    public Profile profile(ProfileManager context) {
-        return context.profile();
+    public Profile profile(ProfileManager manager) {
+        return manager.profile();
     }
 
     /**

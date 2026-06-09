@@ -1,15 +1,16 @@
 package colesico.framework.example.profile.custom;
 
-import org.apache.commons.lang3.StringUtils;
+import colesico.framework.assist.StringUtils;
+import colesico.framework.profile.assist.AbstractProfileAttribute;
 
 import java.util.TimeZone;
 
-public class TimezoneProperty extends AbstractProfileAttribute<CustomProfile, TimeZone> {
+public class TimeZoneAttribute extends AbstractProfileAttribute<CustomProfile, TimeZone> {
 
-    static final String ATTRIBUTE_NAME = "timezone";
+    static final String ATTRIBUTE_NAME = "time_zone";
 
-    public TimezoneProperty(CustomProfile profile) {
-        super(profile);
+    public TimeZoneAttribute(CustomProfile profile, String name) {
+        super(profile, name);
     }
 
     @Override
@@ -18,8 +19,8 @@ public class TimezoneProperty extends AbstractProfileAttribute<CustomProfile, Ti
     }
 
     @Override
-    public TimeZone getValue() {
-        return profile.getTimeZone();
+    public TimeZone value() {
+        return profile.timeZone();
     }
 
     @Override
@@ -28,11 +29,11 @@ public class TimezoneProperty extends AbstractProfileAttribute<CustomProfile, Ti
     }
 
     @Override
-    public String getString() {
-        if (profile.getTimeZone() == null) {
+    public String asString() {
+        if (profile.timeZone() == null) {
             return null;
         }
-        return profile.getTimeZone().getID();
+        return profile.timeZone().getID();
     }
 
     @Override

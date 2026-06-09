@@ -10,28 +10,29 @@ import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Singleton
-public class SimpleProfileManager extends AbstractProfileManager<Profile> {
+public class DefaultProfileManager<P extends Profile> extends AbstractProfileManager<P> {
 
-    private AtomicReference<Profile> profileHolder;
+    private final AtomicReference<P> profileHolder;
 
     @Inject
-    public SimpleProfileManager(TaskScope taskScope) {
+    public DefaultProfileManager(TaskScope taskScope) {
         super(taskScope);
         this.profileHolder = new AtomicReference<>(createProfile());
     }
 
     @Override
-    protected Profile createProfile() {
-        return new Profile.Default(Locale.getDefault());
+    @SuppressWarnings("unchecked")
+    protected P createProfile() {
+        return (P) new Profile.Default(Locale.getDefault());
     }
 
     @Override
-    protected Profile read() {
+    protected P read() {
         return profileHolder.get();
     }
 
     @Override
-    protected Profile write(Profile profile) {
+    protected P write(P profile) {
         profileHolder.set(profile);
         return profile;
     }

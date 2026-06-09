@@ -1,15 +1,17 @@
 package colesico.framework.example.profile.custom;
 
+import colesico.framework.profile.Profile;
+
 import java.util.TimeZone;
 
-public class CustomProfile extends DefaultProfile {
+public class CustomProfile extends Profile.Default {
 
     protected TimeZone timeZone;
 
-    // filled in from the listener
+    // filled in from the reader
     protected String apiVersion;
 
-    public TimeZone getTimeZone() {
+    public TimeZone timeZone() {
         return timeZone;
     }
 
@@ -17,7 +19,7 @@ public class CustomProfile extends DefaultProfile {
         this.timeZone = timeZone;
     }
 
-    public String getApiVersion() {
+    public String apiVersion() {
         return apiVersion;
     }
 

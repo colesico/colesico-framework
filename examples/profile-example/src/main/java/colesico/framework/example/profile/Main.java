@@ -26,7 +26,7 @@ import java.util.TimeZone;
 
 public class Main {
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         Ioc ioc = IocBuilder.create().build();
 
         // Provide default data port
@@ -44,6 +44,6 @@ public class Main {
         srv.setTimezone(TimeZone.getTimeZone("UTC"));
         System.out.println("Timezone/en = " + srv.getProfile());
 
-        System.out.println("DataPort = "+dataPort);
+        System.out.println("DataPort = " + dataPort);
     }
 }

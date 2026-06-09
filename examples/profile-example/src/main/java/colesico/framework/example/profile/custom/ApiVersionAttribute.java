@@ -1,11 +1,13 @@
 package colesico.framework.example.profile.custom;
 
-public class ApiVersionProperty extends AbstractProfileAttribute<CustomProfile, String> {
+import colesico.framework.profile.assist.AbstractProfileAttribute;
+
+public class ApiVersionAttribute extends AbstractProfileAttribute<CustomProfile, String> {
 
     static final String ATTRIBUTE_NAME = "api_version";
 
-    public ApiVersionProperty(CustomProfile profile) {
-        super(profile);
+    public ApiVersionAttribute(CustomProfile profile, String name) {
+        super(profile, name);
     }
 
     @Override
@@ -14,8 +16,8 @@ public class ApiVersionProperty extends AbstractProfileAttribute<CustomProfile, 
     }
 
     @Override
-    public String getValue() {
-        return profile.getApiVersion();
+    public String value() {
+        return profile.apiVersion();
     }
 
     @Override
@@ -24,8 +26,8 @@ public class ApiVersionProperty extends AbstractProfileAttribute<CustomProfile, 
     }
 
     @Override
-    public String getString() {
-        return profile.getApiVersion();
+    public String asString() {
+        return profile.apiVersion();
     }
 
     @Override
@@ -33,9 +35,5 @@ public class ApiVersionProperty extends AbstractProfileAttribute<CustomProfile, 
         profile.setApiVersion(value);
     }
 
-    @Override
-    protected void initMetadata() {
-        super.initMetadata();
-        metadata.dataPortWritable = false;
-    }
+
 }
