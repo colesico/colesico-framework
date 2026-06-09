@@ -16,6 +16,7 @@
 
 package colesico.framework.transaction.codegen;
 
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.service.interception.Interceptor;
@@ -28,7 +29,6 @@ import colesico.framework.transaction.TransactionalShell;
 import com.palantir.javapoet.ClassName;
 import com.palantir.javapoet.CodeBlock;
 import com.palantir.javapoet.FieldSpec;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.element.Modifier;
 
@@ -88,7 +88,7 @@ public class TxModulator extends Modulator {
 
         FieldSpec txShellFs = FieldSpec.builder(ClassName.get(TransactionalShell.class), shellFieldName).addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
         ServiceFieldElement txShellFe = new ServiceFieldElement(txShellFs).inject();
-        if (StringUtils.isNotEmpty(txAnnotation.unwrap().shell())) {
+        if (!StringUtils.isBlank(txAnnotation.unwrap().shell())) {
             txShellFe.setNamed(txAnnotation.unwrap().shell());
         }
         proxyMethod.parentService().addCustomField(txShellFe);
@@ -98,7 +98,7 @@ public class TxModulator extends Modulator {
         String propogationMethodName = propogationMethodName(txAnnotation.unwrap().propagation());
 
         CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("$N->", Interceptor.INVOCATION_CONTEXT_PARAM);
+        cb.add("($N, $N)->", Interceptor.INVOCATION_CONTEXT_PARAM, Interceptor.OPTIONS_PARAM);
         //cb.add("$N.$N(()->$N.$N(),null)",
         cb.add("$N.$N($N::$N,null)",
                 shellFieldName,

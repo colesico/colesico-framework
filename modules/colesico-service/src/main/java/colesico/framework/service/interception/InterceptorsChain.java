@@ -18,6 +18,7 @@ package colesico.framework.service.interception;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
+import java.util.function.Function;
 
 /**
  * Service method interceptors chain

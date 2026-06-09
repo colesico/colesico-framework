@@ -16,11 +16,11 @@
 
 package colesico.framework.jdbc;
 
+import colesico.framework.assist.ExceptionUtils;
 import colesico.framework.jdbc.internal.JdbcTransaction;
 import colesico.framework.transaction.AbstractTransactionalShell;
 import colesico.framework.transaction.Tuning;
 import colesico.framework.transaction.UnitOfWork;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;

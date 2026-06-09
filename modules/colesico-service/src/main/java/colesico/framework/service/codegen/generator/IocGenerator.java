@@ -126,10 +126,9 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         if (teleService != null) {
             logger.debug("Generate tele-facade producing: " + service.proxyClassName());
             generateProduceTeleFacade(producerGenerator, teleService);
+            // Interceptor producing
+            generateProduceTeleInterceptor(producerGenerator, teleService);
         }
-
-        // Interceptor producing
-        generateProduceTeleInterceptor(producerGenerator, teleService);
 
         context.modulatorKit().notifyGenerateIocProducer(producerGenerator, service);
 

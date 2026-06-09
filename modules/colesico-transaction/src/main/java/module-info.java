@@ -1,12 +1,10 @@
 module colesico.framework.transaction {
 
+    requires static com.palantir.javapoet;
+    requires static java.compiler;
+
     requires transitive colesico.framework.service;
-
     requires org.slf4j;
-
-    requires org.apache.commons.lang3;
-    requires com.palantir.javapoet;
-    requires java.compiler;
 
     // API
     exports colesico.framework.transaction;

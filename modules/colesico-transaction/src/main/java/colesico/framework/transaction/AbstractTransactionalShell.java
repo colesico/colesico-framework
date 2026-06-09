@@ -16,7 +16,7 @@
 
 package colesico.framework.transaction;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import colesico.framework.assist.ExceptionUtils;
 import org.slf4j.Logger;
 
 /**

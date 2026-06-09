@@ -28,4 +28,7 @@ public interface Interceptor<O> {
 
     Object intercept(InvocationContext context, O options);
 
+    default Object intercept(InvocationContext context) {
+        return intercept(context, null);
+    }
 }
