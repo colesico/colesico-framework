@@ -16,13 +16,13 @@
 
 package colesico.framework.jdbirec.codegen.parser;
 
+import colesico.framework.assist.ExceptionUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.jdbirec.RecordKit;
 import colesico.framework.jdbirec.codegen.generator.RecordKitGenerator;
 import colesico.framework.jdbirec.codegen.model.RecordKitElement;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;

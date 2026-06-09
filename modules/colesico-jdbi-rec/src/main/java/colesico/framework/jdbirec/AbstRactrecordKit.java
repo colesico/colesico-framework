@@ -30,13 +30,13 @@ abstract public class AbstRactrecordKit<R> implements RecordKitApi<R> {
 
     public static final String EXPORT_RECORD_METHOD = "exportRecord";
     public static final String IMPORT_RECORD_METHOD = "importRecord";
-    public static final String GET_TABLES_ALIASES_METHOD = "getTablesAliases";
-    public static final String GET_RECORD_TOKEN_METHOD = "getSelectRecordToken";
-    public static final String GET_COLUMNS_TOKEN_METHOD = "getInsertColumnsToken";
-    public static final String GET_VALUES_TOKEN_METHOD = "getInsertValuesToken";
-    public static final String GET_UPDATES_TOKEN_METHOD = "getUpdatesToken";
+    public static final String GET_TABLES_ALIASES_METHOD = "tablesAliases";
+    public static final String GET_RECORD_TOKEN_METHOD = "selectRecordToken";
+    public static final String GET_COLUMNS_TOKEN_METHOD = "insertColumnsToken";
+    public static final String GET_VALUES_TOKEN_METHOD = "insertValuesToken";
+    public static final String GET_UPDATES_TOKEN_METHOD = "updatesToken";
     public static final String NEW_RECORD_METHOD = "newRecord";
-    public static final String GET_TABLE_NAME_METHOD = "getTableName";
+    public static final String GET_TABLE_NAME_METHOD = "tableName";
 
     public static final String RECORD_PARAM = "rec";
     public static final String FIELD_RECEIVER_PARAM = "fr";

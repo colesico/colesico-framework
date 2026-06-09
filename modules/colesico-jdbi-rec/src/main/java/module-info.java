@@ -8,9 +8,7 @@ module colesico.framework.jdbirec {
     requires transitive java.sql;
     requires transitive org.jdbi.v3.core;
 
-    requires org.apache.commons.lang3;
     requires org.slf4j;
-    requires java.desktop;
 
     // API
     exports colesico.framework.jdbirec;

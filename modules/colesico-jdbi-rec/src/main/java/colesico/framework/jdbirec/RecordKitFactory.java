@@ -16,8 +16,8 @@
 
 package colesico.framework.jdbirec;
 
+import colesico.framework.assist.ExceptionUtils;
 import colesico.framework.assist.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.lang.reflect.Constructor;
 

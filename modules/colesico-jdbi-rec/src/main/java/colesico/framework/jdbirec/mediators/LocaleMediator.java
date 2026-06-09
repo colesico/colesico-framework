@@ -16,9 +16,9 @@
 
 package colesico.framework.jdbirec.mediators;
 
+import colesico.framework.assist.StringUtils;
 import colesico.framework.jdbirec.AbstRactrecordKit;
 import colesico.framework.jdbirec.FieldMediator;
-import org.apache.commons.lang3.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

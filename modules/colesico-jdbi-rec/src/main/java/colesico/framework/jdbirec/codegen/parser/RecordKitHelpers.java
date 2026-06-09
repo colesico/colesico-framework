@@ -10,7 +10,6 @@ import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.Record;
 import colesico.framework.jdbirec.*;
 import colesico.framework.jdbirec.codegen.model.*;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -44,7 +43,7 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
 
     protected String buildCompositionName(AnnotationAssist<Composition> compAnn, FieldElement field) {
         String name;
-        if (StringUtils.isNotBlank(compAnn.unwrap().name())) {
+        if (!StringUtils.isBlank(compAnn.unwrap().name())) {
             name = StringUtils.trim(compAnn.unwrap().name());
         } else {
             name = field.name();
@@ -105,7 +104,7 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
     protected String buildContainerPath(ContainerElement container, String name) {
         Deque<String> namesStack = new ArrayDeque<>();
 
-        if (StringUtils.isNotBlank(name)) {
+        if (!StringUtils.isBlank(name)) {
             namesStack.push(name);
         }
 
@@ -256,7 +255,7 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
 
     protected String applyColumnRenaming(ContainerElement container, String columnName) {
         String columnOriginName = columnName;
-        if (StringUtils.isNotBlank(container.renaming())) {
+        if (!StringUtils.isBlank(container.renaming())) {
             if (container instanceof CompositionElement comp) {
                 columnName = StringUtils.replace(container.renaming(), Composition.RN_PREFIX, comp.name() + "_" + columnOriginName);
                 columnName = StringUtils.replace(columnName, Composition.RN_COLUMN_NAME, columnOriginName);
@@ -307,7 +306,7 @@ abstract public class RecordKitHelpers extends FrameworkAbstractParser {
 
         // Transform local tags to global
         for (String tagDef : tagsDef) {
-            if (!StringUtils.startsWith(tagDef, "#")) {
+            if (!tagDef.startsWith("#")) {
                 tagDef = "#" + buildContainerPath(container, tagDef);
             }
             result.add(tagDef);

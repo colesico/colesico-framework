@@ -16,6 +16,7 @@
 
 package colesico.framework.jdbirec.codegen.parser;
 
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
@@ -25,7 +26,6 @@ import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.jdbirec.Record;
 import colesico.framework.jdbirec.*;
 import colesico.framework.jdbirec.codegen.model.*;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
@@ -200,12 +200,12 @@ public class RecordKitParser extends RecordKitHelpers {
             ColumnOverridingElement overriding = new ColumnOverridingElement(columnPath);
 
             // name overriding
-            if (StringUtils.isNoneBlank(overridingAnn.unwrap().name())) {
+            if (!StringUtils.isBlank(overridingAnn.unwrap().name())) {
                 overriding.setName(StringUtils.trim(co.name()));
             }
 
             // definition overriding
-            if (StringUtils.isNoneBlank(overridingAnn.unwrap().definition())) {
+            if (!StringUtils.isBlank(overridingAnn.unwrap().definition())) {
                 overriding.setName(StringUtils.trim(overridingAnn.unwrap().definition()));
             }
 
