@@ -3,6 +3,8 @@ package colesico.framework.profile;
 import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
 
+import java.util.Optional;
+
 /**
  * Current profile holder.
  */
@@ -16,7 +18,7 @@ public interface ProfileContext {
     /**
      * Returns {@link Profile} bound to current scope  (thread, request, etc)
      */
-    Profile profile();
+    Optional<Profile> profile();
 
     void setProfile(Profile profile);
 

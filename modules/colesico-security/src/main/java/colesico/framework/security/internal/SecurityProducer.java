@@ -42,7 +42,7 @@ public class SecurityProducer {
      * Current identity producer
      */
     public Identity identity(IdentityContext context) {
-        return context.identity();
+        return context.identity().orElse(null);
     }
 
     @Unscoped

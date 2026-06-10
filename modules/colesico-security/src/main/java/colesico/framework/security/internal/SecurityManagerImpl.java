@@ -131,7 +131,7 @@ public class SecurityManagerImpl implements SecurityManager {
 
     @Override
     public Optional<Identity<?>> identity() {
-        return Optional.ofNullable(identityContext.identity());
+        return identityContext.identity();
     }
 
     /**
@@ -161,10 +161,10 @@ public class SecurityManagerImpl implements SecurityManager {
     @Override
     public void logout() {
         var identity = identityContext.identity();
-        if (identity != null) {
+        identity.ifPresent(iden -> {
             identityContext.clear();
-            logout(identity);
-        }
+            logout(iden);
+        });
     }
 
     @Override
@@ -176,7 +176,7 @@ public class SecurityManagerImpl implements SecurityManager {
         } catch (Exception e) {
             throw (e instanceof RuntimeException re) ? re : new RuntimeException(e);
         } finally {
-            identityContext.setIdentity(previous);
+            identityContext.setIdentity(previous.orElse(null));
         }
     }
 

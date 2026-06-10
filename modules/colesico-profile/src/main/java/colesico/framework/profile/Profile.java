@@ -33,66 +33,8 @@ import java.util.Objects;
  */
 public interface Profile {
 
-    /**
-     * Returns locale.
-     */
     Locale locale();
 
-    /**
-     * Set locale preference
-     */
-    void setLocale(Locale locale);
-
-    interface Builder {
-        Builder locale(Locale locale);
-        Profile build();
-    }
-
-    class Default implements Profile {
-
-        protected Locale locale;
-
-        public Default(Locale locale) {
-            this.locale = locale;
-        }
-
-        public Default() {
-        }
-
-        public static Default of(Locale locale) {
-            return new Default(locale);
-        }
-
-        public static Default of() {
-            return new Default();
-        }
-
-        @Override
-        public Locale locale() {
-            return locale;
-        }
-
-        @Override
-        public void setLocale(Locale locale) {
-            this.locale = locale;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (!(o instanceof Default aDefault)) return false;
-            return Objects.equals(locale, aDefault.locale);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hashCode(locale);
-        }
-
-        @Override
-        public String toString() {
-            return "Profile{" +
-                    "locale=" + locale +
-                    '}';
-        }
+    record Default(Locale locale) implements Profile {
     }
 }

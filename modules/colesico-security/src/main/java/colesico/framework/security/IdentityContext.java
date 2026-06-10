@@ -3,6 +3,8 @@ package colesico.framework.security;
 import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
 
+import java.util.Optional;
+
 /**
  * Current identity holder
  */
@@ -13,7 +15,7 @@ public interface IdentityContext {
     /**
      * Returns {@link Identity} bound to current scope  (thread, request, etc)
      */
-    Identity<?> identity();
+    Optional<Identity<?>> identity();
 
     void setIdentity(Identity<?> identity);
 

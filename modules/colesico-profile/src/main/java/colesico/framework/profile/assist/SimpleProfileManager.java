@@ -1,7 +1,6 @@
 package colesico.framework.profile.assist;
 
 import colesico.framework.ioc.scope.TaskScope;
-import colesico.framework.profile.AbstractProfileManager;
 import colesico.framework.profile.Profile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

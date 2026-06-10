@@ -5,6 +5,8 @@ import colesico.framework.profile.Profile;
 import colesico.framework.profile.ProfileContext;
 import jakarta.inject.Singleton;
 
+import java.util.Optional;
+
 /**
  * Profile context based on {@link TaskScope}
  */
@@ -18,8 +20,8 @@ public class ProfileContextImpl implements ProfileContext {
     }
 
     @Override
-    public Profile profile() {
-        return taskScope.get(SCOPE_KEY);
+    public Optional<Profile> profile() {
+        return Optional.ofNullable(taskScope.get(SCOPE_KEY));
     }
 
     @Override

@@ -4,6 +4,8 @@ import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
 
+import java.util.Optional;
+
 public class IdentityContextImpl implements IdentityContext {
 
     protected final TaskScope taskScope;
@@ -13,8 +15,8 @@ public class IdentityContextImpl implements IdentityContext {
     }
 
     @Override
-    public Identity<?> identity() {
-        return taskScope.get(SCOPE_KEY);
+    public Optional<Identity<?>> identity() {
+        return Optional.ofNullable(taskScope.get(SCOPE_KEY));
     }
 
     @Override
