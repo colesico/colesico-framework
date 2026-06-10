@@ -31,7 +31,7 @@ abstract public class AbstractProfileManager<P extends Profile> implements Profi
      * Writes profile to source.
      * Implement this method to get more specific control.
      */
-    abstract protected P write(P profile);
+    abstract protected void write(P profile);
 
     @Override
     public P profile() {
@@ -54,7 +54,7 @@ abstract public class AbstractProfileManager<P extends Profile> implements Profi
 
     @Override
     public void save(P profile) {
-        profile = write(profile);
+        write(profile);
         taskScope.put(ProfileHolder.SCOPE_KEY, new ProfileHolder(profile));
     }
 
@@ -65,4 +65,9 @@ abstract public class AbstractProfileManager<P extends Profile> implements Profi
         public static final Key<ProfileHolder> SCOPE_KEY = new TypeKey<>(ProfileHolder.class);
     }
 
+    @Override
+    public P refresh() {
+        taskScope.remove(ProfileHolder.SCOPE_KEY);
+        return profile();
+    }
 }

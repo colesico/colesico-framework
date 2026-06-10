@@ -1,5 +1,7 @@
 package colesico.framework.profile;
 
+import java.util.Optional;
+
 /**
  * Profile manager API.
  * Manager can store/obtain profile from different sources,
@@ -7,17 +9,17 @@ package colesico.framework.profile;
  * HTTP/RPC request/response, Kafka message etc.
  * Manager associates current profile instance to the current thread.
  */
-public interface ProfileManager<P extends Profile> {
+public interface ProfileManager {
 
     /**
-     * Obtain current profile instance.
-     * Returns not null value.
+     * Retrieves the current {@link Profile} from the active {@link ProfileContext}.
+     * Returns an empty Optional if no profile in context.
      */
-    P profile();
+    Optional<Profile> profile();
 
     /**
      * Save profile preferences
      */
-    void save(P profile);
+    void save(Profile profile);
 
 }

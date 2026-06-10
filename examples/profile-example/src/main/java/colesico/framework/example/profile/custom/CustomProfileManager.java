@@ -2,14 +2,14 @@ package colesico.framework.example.profile.custom;
 
 
 import colesico.framework.ioc.scope.TaskScope;
-import colesico.framework.profile.assist.DefaultProfileManager;
+import colesico.framework.profile.assist.SimpleProfileManager;
 import jakarta.inject.Singleton;
 
 import java.util.Locale;
 import java.util.TimeZone;
 
 @Singleton
-public class CustomProfileManager extends DefaultProfileManager<CustomProfile> {
+public class CustomProfileManager extends SimpleProfileManager<CustomProfile> {
 
     public CustomProfileManager(TaskScope taskScope) {
         super(taskScope);
