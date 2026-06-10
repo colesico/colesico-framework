@@ -1,11 +1,12 @@
 package colesico.framework.profile;
 
+
 /**
- * Represents any profile source  (DB, config, HTTP Request, Kafka message etc.)
+ * Represents any profile source (DB, config, HTTP Request, Kafka message etc.)
  */
 public interface ProfileSource {
 
-    Profile read();
+    void populate(Profile.Builder builder);
 
     void write(Profile profile);
 

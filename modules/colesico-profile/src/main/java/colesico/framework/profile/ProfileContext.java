@@ -4,10 +4,13 @@ import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
 
 /**
- * Current profile holder
+ * Current profile holder.
  */
 public interface ProfileContext {
 
+    /**
+     * Key to bind profile to scope
+     */
     Key<Profile> SCOPE_KEY = new TypeKey<>(Profile.class);
 
     /**

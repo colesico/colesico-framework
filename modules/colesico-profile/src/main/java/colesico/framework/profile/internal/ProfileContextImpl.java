@@ -5,6 +5,9 @@ import colesico.framework.profile.Profile;
 import colesico.framework.profile.ProfileContext;
 import jakarta.inject.Singleton;
 
+/**
+ * Profile context based on {@link TaskScope}
+ */
 @Singleton
 public class ProfileContextImpl implements ProfileContext {
 

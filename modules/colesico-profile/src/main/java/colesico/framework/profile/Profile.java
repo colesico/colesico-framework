@@ -16,9 +16,6 @@
 
 package colesico.framework.profile;
 
-import colesico.framework.ioc.key.Key;
-import colesico.framework.ioc.key.TypeKey;
-
 import java.util.Locale;
 import java.util.Objects;
 
@@ -45,6 +42,11 @@ public interface Profile {
      * Set locale preference
      */
     void setLocale(Locale locale);
+
+    interface Builder {
+        Builder locale(Locale locale);
+        Profile build();
+    }
 
     class Default implements Profile {
 
