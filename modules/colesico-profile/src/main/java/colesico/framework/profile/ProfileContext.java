@@ -8,7 +8,7 @@ import java.util.Optional;
 /**
  * Current profile holder.
  */
-public interface ProfileContext {
+public interface ProfileContext<ID> {
 
     /**
      * Key to bind profile to scope
@@ -18,10 +18,10 @@ public interface ProfileContext {
     /**
      * Returns {@link Profile} bound to current scope  (thread, request, etc)
      */
-    Optional<Profile<?>> profile();
-    <ID> Optional<Profile<?>> profile(ID profileId);
+    Optional<Profile<ID>> profile();
+    Optional<Profile<ID>> profile(ID profileId);
 
-    void setProfile(Profile<?> profile);
+    void setProfile(Profile<ID> profile);
 
     /**
      * Remove profile bound to current scope
