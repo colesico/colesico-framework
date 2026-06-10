@@ -25,7 +25,7 @@ public class ProfileManagerImpl implements ProfileManager {
         }
         profile = source.read();
         if (profile.isPresent()) {
-            context.setProfile(profile().get());
+            context.setProfile(profile.get());
         }
         return profile;
     }

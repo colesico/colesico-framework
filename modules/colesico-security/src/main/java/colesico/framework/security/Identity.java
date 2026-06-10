@@ -17,9 +17,7 @@
 package colesico.framework.security;
 
 import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.key.NamedKey;
 import colesico.framework.security.authentication.AuthenticationRequest;
-import colesico.framework.security.authentication.AuthenticationSource;
 import colesico.framework.security.authentication.Authenticator;
 
 import java.util.Collections;
@@ -37,7 +35,7 @@ import java.util.function.Function;
  * <p>
  * The framework provides a default implementation: {@link Identity.Default}
  */
-public interface Identity<I> {
+public interface Identity<ID> {
 
     /**
      * Specifies {@link Authenticator} instance class that issued this identity
@@ -64,13 +62,13 @@ public interface Identity<I> {
     /**
      * Returns the unique identifier of this identity (e.g., UUID, strategy, or numeric ID).
      */
-    I id();
+    ID id();
 
     /**
      * Maps the identity identifier to another type.
      * Usage example: Long userId = identity.id(Long::valueOf);
      */
-    default <T> T id(Function<I, T> mapper) {
+    default <T> T id(Function<ID, T> mapper) {
         return mapper.apply(id());
     }
 

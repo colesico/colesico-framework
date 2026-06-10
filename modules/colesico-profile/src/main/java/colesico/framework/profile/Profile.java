@@ -31,10 +31,16 @@ import java.util.Objects;
  * has to be implemented in the application.
  * <p>
  */
-public interface Profile {
+public interface Profile<ID> {
+
+    /**
+     * Profile id.
+     * Typically, is a userId, serviceId, etc
+     */
+    ID id();
 
     Locale locale();
 
-    record Default(Locale locale) implements Profile {
+    record Default<ID>(ID id, Locale locale) implements Profile<ID> {
     }
 }
