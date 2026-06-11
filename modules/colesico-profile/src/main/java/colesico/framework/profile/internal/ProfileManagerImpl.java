@@ -42,6 +42,6 @@ public class ProfileManagerImpl implements ProfileManager {
     @SuppressWarnings("unchecked")
     public void save(Profile<?> profile) {
         source.write(profile);
-        context.clear();
+        context.setProfile(profile);
     }
 }
