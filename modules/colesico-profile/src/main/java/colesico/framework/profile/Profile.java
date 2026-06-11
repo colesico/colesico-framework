@@ -41,6 +41,49 @@ public interface Profile<ID> {
 
     Locale locale();
 
-    record Default<ID>(ID id, Locale locale) implements Profile<ID> {
+    void setLocale(Locale locale);
+
+    /**
+     * Default getter
+     */
+    default ID getId() {
+        return id();
+    }
+
+    default Locale getLocale() {
+        return locale();
+    }
+
+    /**
+     * Profile default implementation
+     */
+    class Default<ID> implements Profile<ID> {
+        protected ID id;
+        protected Locale locale;
+
+        public Default() {
+        }
+
+        public Default(ID id, Locale locale) {
+            this.id = id;
+            this.locale = locale;
+        }
+
+        public Locale locale() {
+            return locale;
+        }
+
+        @Override
+        public void setLocale(Locale locale) {
+            this.locale = locale;
+        }
+
+        public ID id() {
+            return id;
+        }
+
+        public void setId(ID id) {
+            this.id = id;
+        }
     }
 }

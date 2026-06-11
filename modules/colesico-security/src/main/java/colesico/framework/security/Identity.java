@@ -72,10 +72,18 @@ public interface Identity<ID> {
         return mapper.apply(id());
     }
 
+    default ID getId() {
+        return id();
+    }
+
     /**
      * Returns a map of all claims associated with this identity.
      */
     Map<String, Object> claims();
+
+    default Map<String, Object> getClaims() {
+        return claims();
+    }
 
     /**
      * Retrieves a claim by its key and casts it to the specified type.
@@ -123,12 +131,12 @@ public interface Identity<ID> {
     /**
      * The default implementation of the {@link Identity} interface.
      */
-    record Default<I>(I id, Map<String, Object> claims) implements Identity<I> {
-        public static <I> Default<I> of(I id) {
+    record Default<ID>(ID id, Map<String, Object> claims) implements Identity<ID> {
+        public static <ID> Default<ID> of(ID id) {
             return new Default<>(id, Map.of());
         }
 
-        public static <I> Default<I> of(I id, Map<String, Object> claims) {
+        public static <ID> Default<ID> of(ID id, Map<String, Object> claims) {
             return new Default<>(id, claims);
         }
     }

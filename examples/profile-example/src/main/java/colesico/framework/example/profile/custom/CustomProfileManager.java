@@ -1,33 +1,33 @@
 package colesico.framework.example.profile.custom;
 
 
-import colesico.framework.ioc.scope.TaskScope;
-import colesico.framework.profile.assist.SimpleProfileManager;
+import colesico.framework.profile.ProfileSource;
+
+import colesico.framework.teleapi.dataport.DataPort;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.Optional;
 
 @Singleton
-public class CustomProfileManager extends SimpleProfileManager<CustomProfile> {
+public class CustomProfileManager implements ProfileSource<CustomProfile, Long> {
 
-    public CustomProfileManager(TaskScope taskScope) {
-        super(taskScope);
+    protected final Provider<DataPort<?, ?>> dataPort;
+
+    @SuppressWarnings("unchecked")
+    public CustomProfileManager(Provider<DataPort> dataPort) {
+        this.dataPort = (Provider) dataPort;
     }
 
     @Override
-    public CustomProfile createProfile() {
-        var profile = new CustomProfile();
-        profile.setLocale(Locale.getDefault());
-        profile.setTimeZone(TimeZone.getDefault());
-        return profile;
-    }
-
-    @Override
-    protected CustomProfile read() {
-        var profile = super.read();
-        // Set from another source
+    public Optional<CustomProfile> read(Long profileId) {
+        var profile = dataPort.get().read(CustomProfile.class);
         profile.setApiVersion("1.0");
-        return profile;
+        return Optional.of(profile);
+    }
+
+    @Override
+    public void write(CustomProfile profile) {
+        dataPort.get().write(profile, CustomProfile.class);
     }
 }
