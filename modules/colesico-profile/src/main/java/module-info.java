@@ -9,6 +9,7 @@ module colesico.framework.profile {
     requires transitive colesico.framework.config;
 
     requires org.slf4j;
+    requires colesico.framework.security;
 
     // Exports
 

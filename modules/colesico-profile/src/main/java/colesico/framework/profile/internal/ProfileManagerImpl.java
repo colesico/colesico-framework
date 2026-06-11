@@ -9,29 +9,38 @@ import java.util.Optional;
 
 public class ProfileManagerImpl implements ProfileManager {
 
+    @SuppressWarnings("rawtypes")
     private final ProfileSource source;
     private final ProfileContext context;
 
+    @SuppressWarnings("rawtypes")
     public ProfileManagerImpl(ProfileSource source, ProfileContext context) {
         this.source = source;
         this.context = context;
     }
 
+
     @Override
-    public Optional<Profile> profile() {
-        var profile = context.profile();
-        if (profile.isPresent()) {
-            return profile;
+    @SuppressWarnings("unchecked")
+    public <P extends Profile<ID>, ID> Optional<P> profile(ID profileId) {
+        Optional<P> currentProfile = context.profile();
+        if (currentProfile.isPresent()) {
+            return currentProfile;
         }
-        profile = source.read();
-        if (profile.isPresent()) {
-            context.setProfile(profile.get());
+
+        Optional<?> fetched = source.read(profileId);
+        if (fetched.isPresent()) {
+            P result = (P) fetched.get();
+            context.setProfile(result);
+            return Optional.of(result);
         }
-        return profile;
+
+        return Optional.empty();
     }
 
     @Override
-    public void save(Profile profile) {
+    @SuppressWarnings("unchecked")
+    public void save(Profile<?> profile) {
         source.write(profile);
         context.clear();
     }

@@ -9,7 +9,6 @@ public interface ProfileSource<P extends Profile<ID>, ID> {
 
     /**
      * Read profile data from source.
-     * @param profileId possible null value
      */
     Optional<P> read(ID profileId);
 
@@ -18,4 +17,10 @@ public interface ProfileSource<P extends Profile<ID>, ID> {
      */
     void write(P profile);
 
+    /**
+     * Delete specified profile
+     */
+    default void delete(ID profileId) {
+        // nop
+    }
 }

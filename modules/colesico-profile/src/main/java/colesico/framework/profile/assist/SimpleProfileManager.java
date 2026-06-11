@@ -1,37 +1,38 @@
 package colesico.framework.profile.assist;
 
-import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.profile.Profile;
-import jakarta.inject.Inject;
+import colesico.framework.profile.ProfileSource;
 import jakarta.inject.Singleton;
 
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
-public class SimpleProfileManager extends AbstractProfileManager<Profile> {
+public class SimpleProfileSource<P extends Profile<ID>, ID> implements ProfileSource<P, ID> {
 
-    private final AtomicReference<Profile> profileHolder;
+    private final Map<ID, P> profileHolder = new ConcurrentHashMap<>();
 
-    @Inject
-    public SimpleProfileManager(TaskScope taskScope) {
-        super(taskScope);
-        this.profileHolder = new AtomicReference<>(createProfile());
+    public SimpleProfileSource() {
     }
 
     @Override
-    protected Profile createProfile() {
-        return new Profile.Default(Locale.getDefault());
+    public Optional<P> read(ID profileId) {
+        if (profileId != null) {
+            return Optional.ofNullable(profileHolder.get(profileId));
+        } else {
+            return (Optional<P>) Optional.of(new Profile.Default<ID>(null, Locale.getDefault()));
+        }
     }
 
     @Override
-    protected Profile read() {
-        return profileHolder.get();
+    public void write(P profile) {
+        profileHolder.put(profile.id(), profile);
     }
 
     @Override
-    protected void write(Profile profile) {
-        profileHolder.set(profile);
+    public void delete(ID profileId) {
+        profileHolder.remove(profileId);
     }
-
 }

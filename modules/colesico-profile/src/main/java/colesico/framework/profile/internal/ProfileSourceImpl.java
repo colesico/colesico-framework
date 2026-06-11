@@ -12,21 +12,25 @@ import java.util.Optional;
  * {@link DataPort} based profile source implementation
  */
 @Singleton
-public class ProfileSourceImpl implements ProfileSource {
+public class ProfileSourceImpl<P extends Profile<ID>, ID> implements ProfileSource<P, ID> {
 
     protected final Provider<DataPort<?, ?>> dataPort;
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public ProfileSourceImpl(Provider<DataPort> dataPort) {
         this.dataPort = (Provider) dataPort;
     }
 
     @Override
-    public Optional<Profile> read() {
-        return Optional.of(dataPort.get().read(Profile.class));
+    @SuppressWarnings("unchecked")
+    public Optional<P> read(ID profileId) {
+        Profile<?> profile = dataPort.get().read(Profile.class);
+        return Optional.ofNullable((P) profile);
     }
 
     @Override
-    public void write(Profile profile) {
+    public void write(P profile) {
         dataPort.get().write(profile, Profile.class);
     }
+
 }

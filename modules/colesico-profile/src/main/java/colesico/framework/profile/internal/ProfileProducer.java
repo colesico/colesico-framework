@@ -19,6 +19,7 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.profile.*;
+import colesico.framework.security.IdentityContext;
 
 import java.util.Locale;
 
@@ -26,12 +27,17 @@ import static colesico.framework.ioc.conditional.Substitution.STUB;
 
 @Producer
 @Produce(value = ProfileContextImpl.class, keyType = ProfileContext.class)
-@Produce(value = DefaultProfileManager.class, keyType = ProfileManager.class, substitute = STUB)
+@Produce(value = ProfileManagerImpl.class, keyType = ProfileManager.class)
+@Produce(value = ProfileSourceImpl.class, keyType = ProfileSource.class, substitute = STUB)
 public class ProfileProducer {
 
     @Unscoped
-    public Profile profile(ProfileManager manager) {
-        return manager.profile();
+    public Profile profile(ProfileManager manager, IdentityContext ictx) {
+        var idn = ictx.identity();
+        if (idn.isPresent()) {
+            return manager.profile(idn.get().id()).orElse(null);
+        }
+        return manager.profile(null).orElse(null);
     }
 
     /**

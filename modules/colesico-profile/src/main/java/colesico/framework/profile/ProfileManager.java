@@ -12,16 +12,20 @@ import java.util.Optional;
 public interface ProfileManager {
 
     /**
-     * Retrieves the current {@link Profile}.
-     * First try to get profile from {@link ProfileContext}
-     * then from {@link ProfileSource}
+     * Retrieves the profile by ID.
+     *
+     * <p>Looks up the profile in the {@link ProfileContext} first.
+     * If missing, fetches it from the {@link ProfileSource} and
+     * caches the result back into the context.
+     *
+     * @param profileId can be null.
      */
-    Optional<Profile> profile();
+    <P extends Profile<ID>, ID> Optional<P> profile(ID profileId);
 
     /**
      * Save profile preferences to {@link ProfileSource} and
-     * updates in active {@link ProfileContext}
+     * updates in {@link ProfileContext}
      */
-    void save(Profile profile);
+    void save(Profile<?> profile);
 
 }

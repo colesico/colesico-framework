@@ -91,7 +91,7 @@ public interface SecurityManager {
     void logout(Identity<?> identity);
 
     /**
-     * Performs a logout for the current {@link Identity} and clears the security challenge.
+     * Performs a logout for the current {@link Identity} from {@link IdentityContext}
      */
     void logout();
 

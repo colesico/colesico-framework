@@ -20,12 +20,13 @@ public class ProfileContextImpl implements ProfileContext {
     }
 
     @Override
-    public Optional<Profile> profile() {
-        return Optional.ofNullable(taskScope.get(SCOPE_KEY));
+    @SuppressWarnings("unchecked")
+    public <P extends Profile<?>> Optional<P> profile() {
+        return Optional.ofNullable((P) taskScope.get(SCOPE_KEY));
     }
 
     @Override
-    public void setProfile(Profile profile) {
+    public void setProfile(Profile<?> profile) {
         taskScope.put(SCOPE_KEY, profile);
     }
 
