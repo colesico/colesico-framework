@@ -1,6 +1,7 @@
 package colesico.framework.example.profile.custom;
 
 
+import colesico.framework.profile.Profile;
 import colesico.framework.profile.ProfileSource;
 
 import colesico.framework.teleapi.dataport.DataPort;
@@ -23,18 +24,20 @@ public class CustomProfileSource implements ProfileSource<CustomProfile, Long> {
 
     @Override
     public Optional<CustomProfile> read(Long profileId) {
-        var profile = dataPort.get().read(CustomProfile.class);
-        profile.setApiVersion("1.0");
+        var profile = (CustomProfile) dataPort.get().read(Profile.class);
+        if (profile != null) {
+            profile.setApiVersion("2.0");
+        }
         return Optional.ofNullable(profile);
     }
 
     @Override
     public void write(CustomProfile profile) {
-        dataPort.get().write(profile, CustomProfile.class);
+        dataPort.get().write(profile, Profile.class);
     }
 
     @Override
     public CustomProfile createDefault(Long profileId) {
-        return new CustomProfile(profileId, Locale.getDefault(), TimeZone.getDefault(), "0.1");
+        return new CustomProfile(profileId, Locale.getDefault(), TimeZone.getDefault(), "2.0");
     }
 }

@@ -36,53 +36,54 @@ public class ProfileExampleTest {
 
     private Ioc ioc;
     private Logger logger = LoggerFactory.getLogger(ProfileExampleTest.class);
-    private SimpleDataPort dataPort;
 
     @BeforeClass
     public void init() {
         ioc = IocBuilder.create().build();
-
-        // Provide default data port
-        dataPort = ioc.instance(SimpleDataPort.class);
-        dataPort.provide();
-
         Locale.setDefault(Locale.of("ru"));
     }
 
     @Test(priority = 1)
     public void testGetProfile() {
         logger.info("Get profile");
-        dataPort.clear();
-        AppService service = ioc.instance(AppService.class);
-        assertEquals(service.getProfile().locale().toLanguageTag(), "ru");
+        var dataPort = ioc.instance(SimpleDataPort.class);
+        dataPort.forTask(() -> {
+            AppService service = ioc.instance(AppService.class);
+            assertEquals("ru", service.getProfile().locale().toLanguageTag());
+        });
     }
 
     @Test(priority = 2)
     public void testCommitProfile() {
         logger.info("Commit profile");
-        dataPort.clear();
-        AppService service = ioc.instance(AppService.class);
-        service.setLocale(Locale.of("en"));
-        CustomProfile profile = (CustomProfile) dataPort.values().get(Profile.class);
-        assertEquals(profile.locale().toLanguageTag(), "en");
+        var dataPort = ioc.instance(SimpleDataPort.class);
+        dataPort.forTask(() -> {
+            AppService service = ioc.instance(AppService.class);
+            service.setLocale(Locale.of("en"));
+            CustomProfile profile = (CustomProfile) dataPort.values().get(Profile.class);
+            assertEquals("en", profile.locale().toLanguageTag());
+        });
     }
 
     @Test(priority = 3)
     public void testCommitCustomProfile() {
         logger.info("Commit custom profile");
-        dataPort.clear();
-        AppService service = ioc.instance(AppService.class);
-        service.setTimezone(TimeZone.getTimeZone("UTC"));
-        CustomProfile profile = (CustomProfile) dataPort.values().get(Profile.class);
-
-        assertEquals(profile.timeZone().getID(), "UTC");
+        var dataPort = ioc.instance(SimpleDataPort.class);
+        dataPort.forTask(() -> {
+            AppService service = ioc.instance(AppService.class);
+            service.setTimezone(TimeZone.getTimeZone("UTC"));
+            CustomProfile profile = (CustomProfile) dataPort.values().get(Profile.class);
+            assertEquals("UTC", profile.timeZone().getID());
+        });
     }
 
     @Test(priority = 1)
     public void testProfileListener() {
         logger.info("Profile listener");
-        dataPort.clear();
-        AppService service = ioc.instance(AppService.class);
-        assertEquals(service.getProfile().apiVersion(), "2.0");
+        var dataPort = ioc.instance(SimpleDataPort.class);
+        dataPort.forTask(() -> {
+            AppService service = ioc.instance(AppService.class);
+            assertEquals("2.0", service.getProfile().apiVersion());
+        });
     }
 }

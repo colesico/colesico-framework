@@ -27,7 +27,7 @@ import java.util.TimeZone;
 @Service
 public class AppService {
 
-    private final ProfileManager<CustomProfile> profileManager;
+    private final ProfileManager profileManager;
 
     public AppService(ProfileManager profileManager) {
         this.profileManager = profileManager;
@@ -40,12 +40,12 @@ public class AppService {
     public void setLocale(Locale locale) {
         CustomProfile profile = profileManager.resolve();
         profile.setLocale(locale);
-        profileManager.update(profile);
+        profileManager.commit(profile);
     }
 
     public void setTimezone(TimeZone tz) {
         CustomProfile profile = profileManager.resolve();
         profile.setTimeZone(tz);
-        profileManager.update(profile);
+        profileManager.commit(profile);
     }
 }

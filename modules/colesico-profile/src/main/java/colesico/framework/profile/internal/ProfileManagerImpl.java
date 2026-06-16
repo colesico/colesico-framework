@@ -58,7 +58,7 @@ public class ProfileManagerImpl implements ProfileManager {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void update(Profile<?> profile) {
+    public void commit(Profile<?> profile) {
         if (profile == null) {
             throw new ProfileException("Profile cannot be null");
         }

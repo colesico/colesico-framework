@@ -28,6 +28,6 @@ public interface ProfileManager {
      * Save current profile preferences to {@link ProfileSource} and
      * updates in {@link ProfileContext}
      */
-    void update(Profile<?> profile);
+    void commit(Profile<?> profile);
 
 }
