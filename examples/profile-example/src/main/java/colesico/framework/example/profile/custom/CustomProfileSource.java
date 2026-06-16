@@ -10,12 +10,12 @@ import jakarta.inject.Singleton;
 import java.util.Optional;
 
 @Singleton
-public class CustomProfileManager implements ProfileSource<CustomProfile, Long> {
+public class CustomProfileSource implements ProfileSource<CustomProfile, Long> {
 
     protected final Provider<DataPort<?, ?>> dataPort;
 
     @SuppressWarnings("unchecked")
-    public CustomProfileManager(Provider<DataPort> dataPort) {
+    public CustomProfileSource(Provider<DataPort> dataPort) {
         this.dataPort = (Provider) dataPort;
     }
 

@@ -19,7 +19,6 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.profile.*;
-import colesico.framework.security.IdentityContext;
 
 import java.util.Locale;
 
@@ -32,12 +31,8 @@ import static colesico.framework.ioc.conditional.Substitution.STUB;
 public class ProfileProducer {
 
     @Unscoped
-    public Profile profile(ProfileManager manager, IdentityContext ictx) {
-        var idn = ictx.identity();
-        if (idn.isPresent()) {
-            return manager.profile(idn.get().id()).orElse(null);
-        }
-        return manager.profile(null).orElse(null);
+    public Profile profile(ProfileManager manager) {
+        return manager.resolve();
     }
 
     /**

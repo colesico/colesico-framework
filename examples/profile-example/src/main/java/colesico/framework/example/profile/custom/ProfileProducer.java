@@ -5,6 +5,6 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.ProfileManager;
 
 @Producer
-@Produce(value = CustomProfileManager.class, keyType = ProfileManager.class)
+@Produce(value = CustomProfileSource.class, keyType = ProfileManager.class)
 public class ProfileProducer {
 }

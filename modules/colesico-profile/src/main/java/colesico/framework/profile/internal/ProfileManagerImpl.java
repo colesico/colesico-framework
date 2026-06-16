@@ -1,47 +1,67 @@
 package colesico.framework.profile.internal;
 
-import colesico.framework.profile.Profile;
-import colesico.framework.profile.ProfileContext;
-import colesico.framework.profile.ProfileManager;
-import colesico.framework.profile.ProfileSource;
-
+import colesico.framework.profile.*;
+import colesico.framework.security.Identity;
+import colesico.framework.security.IdentityContext;
 import java.util.Optional;
 
 public class ProfileManagerImpl implements ProfileManager {
 
-    @SuppressWarnings("rawtypes")
-    private final ProfileSource source;
-    private final ProfileContext context;
+    private final ProfileSource<Profile<Object>, Object> source;
+    private final ProfileContext profileContext;
+    private final IdentityContext identityContext;
 
-    @SuppressWarnings("rawtypes")
-    public ProfileManagerImpl(ProfileSource source, ProfileContext context) {
-        this.source = source;
-        this.context = context;
+    @SuppressWarnings("unchecked")
+    public ProfileManagerImpl(ProfileSource profileSource,
+                              ProfileContext profileContext,
+                              IdentityContext identityContext) {
+        this.source = (ProfileSource<Profile<Object>, Object>) profileSource;
+        this.profileContext = profileContext;
+        this.identityContext = identityContext;
     }
-
 
     @Override
     @SuppressWarnings("unchecked")
-    public <P extends Profile<ID>, ID> Optional<P> profile(ID profileId) {
-        Optional<P> currentProfile = context.profile();
+    public <P extends Profile<?>> P resolve() {
+        // 1. Lookup in the current thread context
+        Optional<Profile<?>> currentProfile = profileContext.profile();
         if (currentProfile.isPresent()) {
-            return currentProfile;
+            return (P) currentProfile.get();
         }
 
-        Optional<?> fetched = source.read(profileId);
-        if (fetched.isPresent()) {
-            P result = (P) fetched.get();
-            context.setProfile(result);
-            return Optional.of(result);
+        // 2. Retrieve profile ID from the security context
+        Object profileId = identityContext.identity()
+                .map(Identity::id)
+                .orElse(null);
+
+        // 3. If no identity ID is found, fallback to the default profile
+        if (profileId == null) {
+            P defaultProfile = (P) source.createDefault(null);
+            profileContext.setProfile(defaultProfile);
+            return defaultProfile;
         }
 
-        return Optional.empty();
+        // 4. Fetch the profile from the source (DB, config, cache, etc.)
+        Optional<Profile<Object>> fetchedProfile = source.read(profileId);
+        if (fetchedProfile.isEmpty()) {
+            P defaultProfile = (P) source.createDefault(profileId);
+            profileContext.setProfile(defaultProfile);
+            return defaultProfile;
+        }
+
+        // 5. Cache the resolved profile in the context and return it
+        P profile = (P) fetchedProfile.get();
+        profileContext.setProfile(profile);
+        return profile;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void save(Profile<?> profile) {
-        source.write(profile);
-        context.setProfile(profile);
+    public void update(Profile<?> profile) {
+        if (profile == null) {
+            throw new ProfileException("Profile cannot be null");
+        }
+        source.write((Profile<Object>) profile);
+        profileContext.setProfile(profile);
     }
 }

@@ -8,19 +8,27 @@ import java.util.Optional;
 public interface ProfileSource<P extends Profile<ID>, ID> {
 
     /**
-     * Read profile data from source.
+     * Reads profile within source. If not found returns {@link Optional#empty()}
      */
     Optional<P> read(ID profileId);
 
     /**
-     * Save profile preferences
+     * Create/save profile preferences into source
      */
     void write(P profile);
 
     /**
-     * Delete specified profile
+     * Delete specified profile from source
      */
     default void delete(ID profileId) {
         // nop
     }
+
+    /**
+     * Creates default profile instance
+     *
+     * @param profileId optional (can be null)
+     */
+    P createDefault(ID profileId);
+
 }

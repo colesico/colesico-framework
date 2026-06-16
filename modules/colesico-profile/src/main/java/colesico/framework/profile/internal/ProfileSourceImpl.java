@@ -6,13 +6,14 @@ import colesico.framework.teleapi.dataport.DataPort;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
+import java.util.Locale;
 import java.util.Optional;
 
 /**
- * {@link DataPort} based profile source implementation
+ * {@link DataPort} based profile source default implementation
  */
 @Singleton
-public class ProfileSourceImpl<P extends Profile<ID>, ID> implements ProfileSource<P, ID> {
+public class ProfileSourceImpl implements ProfileSource<Profile<String>, String> {
 
     protected final Provider<DataPort<?, ?>> dataPort;
 
@@ -22,15 +23,19 @@ public class ProfileSourceImpl<P extends Profile<ID>, ID> implements ProfileSour
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Optional<P> read(ID profileId) {
-        Profile<?> profile = dataPort.get().read(Profile.class);
-        return Optional.ofNullable((P) profile);
+    @SuppressWarnings({"unchecked"})
+    public Optional<Profile<String>> read(String profileId) {
+        Profile<String> profile = (Profile<String>) dataPort.get().read(Profile.class, profileId);
+        return Optional.ofNullable(profile);
     }
 
     @Override
-    public void write(P profile) {
-        dataPort.get().write(profile, Profile.class);
+    public Profile<String> createDefault(String profileId) {
+        return new Profile.Default<>(profileId, Locale.getDefault());
     }
 
+    @Override
+    public void write(Profile<String> profile) {
+        dataPort.get().write(profile, Profile.class);
+    }
 }

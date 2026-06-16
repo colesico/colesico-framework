@@ -10,6 +10,7 @@ module colesico.framework.profile {
 
     requires org.slf4j;
     requires colesico.framework.security;
+    requires java.desktop;
 
     // Exports
 
