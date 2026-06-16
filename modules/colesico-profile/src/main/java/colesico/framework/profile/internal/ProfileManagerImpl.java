@@ -3,11 +3,12 @@ package colesico.framework.profile.internal;
 import colesico.framework.profile.*;
 import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
+
 import java.util.Optional;
 
 public class ProfileManagerImpl implements ProfileManager {
 
-    private final ProfileSource<Profile<Object>, Object> source;
+    private final ProfileSource<Profile<Object>, Object> profileSource;
     private final ProfileContext profileContext;
     private final IdentityContext identityContext;
 
@@ -15,7 +16,7 @@ public class ProfileManagerImpl implements ProfileManager {
     public ProfileManagerImpl(ProfileSource profileSource,
                               ProfileContext profileContext,
                               IdentityContext identityContext) {
-        this.source = (ProfileSource<Profile<Object>, Object>) profileSource;
+        this.profileSource = (ProfileSource<Profile<Object>, Object>) profileSource;
         this.profileContext = profileContext;
         this.identityContext = identityContext;
     }
@@ -36,15 +37,15 @@ public class ProfileManagerImpl implements ProfileManager {
 
         // 3. If no identity ID is found, fallback to the default profile
         if (profileId == null) {
-            P defaultProfile = (P) source.createDefault(null);
+            P defaultProfile = (P) profileSource.createDefault(null);
             profileContext.setProfile(defaultProfile);
             return defaultProfile;
         }
 
         // 4. Fetch the profile from the source (DB, config, cache, etc.)
-        Optional<Profile<Object>> fetchedProfile = source.read(profileId);
+        Optional<Profile<Object>> fetchedProfile = profileSource.read(profileId);
         if (fetchedProfile.isEmpty()) {
-            P defaultProfile = (P) source.createDefault(profileId);
+            P defaultProfile = (P) profileSource.createDefault(profileId);
             profileContext.setProfile(defaultProfile);
             return defaultProfile;
         }
@@ -61,7 +62,7 @@ public class ProfileManagerImpl implements ProfileManager {
         if (profile == null) {
             throw new ProfileException("Profile cannot be null");
         }
-        source.write((Profile<Object>) profile);
+        profileSource.write((Profile<Object>) profile);
         profileContext.setProfile(profile);
     }
 }

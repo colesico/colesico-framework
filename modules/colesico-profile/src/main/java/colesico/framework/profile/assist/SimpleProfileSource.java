@@ -14,8 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * A simple, in-memory {@link ProfileSource} implementation powered by {@link ConcurrentHashMap}.
  * This class is designed to be extended by specific profile types to fulfill the {@link #createDefault(Object)} contract.
  */
-@Singleton
-public class SimpleProfileSource<P extends Profile<ID>, ID> implements ProfileSource<P, ID> {
+abstract public class SimpleProfileSource<P extends Profile<ID>, ID> implements ProfileSource<P, ID> {
 
     // Thread-safe store for profiles
     protected final Map<ID, P> profileHolder = new ConcurrentHashMap<>();
@@ -35,10 +34,7 @@ public class SimpleProfileSource<P extends Profile<ID>, ID> implements ProfileSo
      * Subclasses must override this method to create a specific default profile instance.
      * This avoids ClassCastException caused by erasing generic type P.
      */
-    @Override
-    public P createDefault(ID profileId) {
-        return (P) new Profile.Default(profileId, Locale.getDefault());
-    }
+    abstract public P createDefault(ID profileId);
 
     @Override
     public void write(P profile) {

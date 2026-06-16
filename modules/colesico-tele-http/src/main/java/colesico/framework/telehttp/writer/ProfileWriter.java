@@ -20,7 +20,6 @@ import colesico.framework.http.HttpCookieFactory;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.profile.Profile;
-import colesico.framework.profile.assist.LocaleAttribute;
 import colesico.framework.telehttp.HttpWriteOptions;
 import colesico.framework.telehttp.HttpTeleWriter;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
