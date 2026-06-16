@@ -1,4 +1,4 @@
-package colesico.framework.security.assist.authentication.simple;
+package colesico.framework.security.assist.authentication.basic;
 
 import colesico.framework.config.Config;
 import colesico.framework.config.FromSource;
@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Config
 @UseFileSource(bindAll = false, file = "accounts.properties", optional = true)
-public class DefaultSimpleAccountStorage implements SimpleAccountStorage {
+public class DefaultBasicAccountStorage implements BasicAccountStorage {
 
     protected static final String PASSWORD_SUFFIX = ".password";
     protected static final String ROLES_SUFFIX = ".roles";
@@ -29,7 +29,7 @@ public class DefaultSimpleAccountStorage implements SimpleAccountStorage {
     private final Map<String, Entry> entries = new ConcurrentHashMap<>();
 
     @Override
-    public SimpleAccountStorage.Account findAccount(String login, String passwordHashHex) {
+    public BasicAccountStorage.Account findAccount(String login, String passwordHashHex) {
         var entry = getEntry(login);
         if (entry == null) {
             return null;

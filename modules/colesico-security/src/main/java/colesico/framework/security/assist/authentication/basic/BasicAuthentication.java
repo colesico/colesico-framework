@@ -1,8 +1,6 @@
-package colesico.framework.security.assist.authentication.simple;
+package colesico.framework.security.assist.authentication.basic;
 
 import colesico.framework.security.Identity;
-import colesico.framework.security.assist.authentication.BasicAuthenticationChallenge;
-import colesico.framework.security.assist.authentication.BasicAuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,14 +8,14 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Simple authentication source.
+ * Simple basic authentication source.
  * Allow to authenticate single user per scope  (default - singleton)
  * Put this source to appropriate scope to support multi user authentication.
  */
-public class SimpleAuthentication
+public class BasicAuthentication
         implements AuthenticationSource<BasicAuthenticationRequest, BasicAuthenticationChallenge> {
 
-    protected static final Logger log = LoggerFactory.getLogger(SimpleAuthentication.class);
+    protected static final Logger log = LoggerFactory.getLogger(BasicAuthentication.class);
 
     protected final AtomicReference<BasicAuthenticationRequest> request = new AtomicReference<>();
 
@@ -52,6 +50,6 @@ public class SimpleAuthentication
      * Credentials to perform authentication
      */
     public void setCredentials(String login, String password) {
-        this.request.set(BasicAuthenticationRequest.of(login, password, SimpleAuthentication.class));
+        this.request.set(BasicAuthenticationRequest.of(login, password, BasicAuthentication.class));
     }
 }

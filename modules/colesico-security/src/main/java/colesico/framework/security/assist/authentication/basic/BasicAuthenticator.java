@@ -1,10 +1,9 @@
-package colesico.framework.security.assist.authentication.simple;
+package colesico.framework.security.assist.authentication.basic;
 
 import colesico.framework.security.Identity;
-import colesico.framework.security.assist.authentication.BasicAuthenticationChallenge;
-import colesico.framework.security.assist.authentication.BasicAuthenticationRequest;
 import colesico.framework.security.authentication.AuthenticationResult;
 import colesico.framework.security.authentication.Authenticator;
+import colesico.framework.security.internal.BasicAuthProducer;
 import jakarta.inject.Inject;
 
 import java.nio.charset.StandardCharsets;
@@ -12,22 +11,22 @@ import java.security.MessageDigest;
 import java.util.*;
 
 /**
- * Simple authenticator
+ * Simple basic authenticator
  *
- * @see colesico.framework.security.internal.SimpleAuthProducer
+ * @see BasicAuthProducer
  */
-public class SimpleAuthenticator implements
+public class BasicAuthenticator implements
         Authenticator<BasicAuthenticationRequest, BasicAuthenticationChallenge> {
 
     /**
      * Authenticator config
      */
-    protected final SimpleAuthConfigPrototype config;
+    protected final BasicAuthConfigPrototype config;
 
     /**
      * Accounts storage
      */
-    protected final SimpleAccountStorage accounts;
+    protected final BasicAccountStorage accounts;
 
     /**
      * Authenticated identities
@@ -35,7 +34,7 @@ public class SimpleAuthenticator implements
     protected final Map<Object, Identity<?>> authenticated;
 
     @Inject
-    public SimpleAuthenticator(SimpleAuthConfigPrototype config, SimpleAccountStorage accounts) {
+    public BasicAuthenticator(BasicAuthConfigPrototype config, BasicAccountStorage accounts) {
         this.config = config;
         this.accounts = accounts;
 
@@ -50,23 +49,23 @@ public class SimpleAuthenticator implements
     }
 
     protected Identity<?> authenticate(BasicAuthenticationRequest request) {
-        String passwordHash;
+        String passwordHex;
         try {
             MessageDigest digest = MessageDigest.getInstance(config.passwordDigest());
-            byte[] hash = digest.digest(
+            byte[] passwordHash = digest.digest(
                     request.password().getBytes(StandardCharsets.UTF_8));
-            passwordHash = HexFormat.of().formatHex(hash);
+            passwordHex = HexFormat.of().formatHex(passwordHash);
         } catch (Exception ex) {
             throw new SecurityException(ex);
         }
 
-        SimpleAccountStorage.Account account = accounts.findAccount(request.login(), passwordHash);
+        BasicAccountStorage.Account account = accounts.findAccount(request.login(), passwordHex);
         if (account == null) {
             return null;
         }
 
         Map<String, Object> claims = new HashMap<>(request.claims());
-        claims.put(Identity.AUTHENTICATOR_CLAIM, SimpleAuthenticator.class);
+        claims.put(Identity.AUTHENTICATOR_CLAIM, BasicAuthenticator.class);
         claims.put(Identity.ROLES_CLAIM, account.roles());
         return Identity.Default.of(request.login(), claims);
     }

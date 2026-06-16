@@ -1,4 +1,4 @@
-package colesico.framework.security.assist.authentication;
+package colesico.framework.security.assist.authentication.apikey;
 
 import colesico.framework.security.authentication.AuthenticationRequest;
 

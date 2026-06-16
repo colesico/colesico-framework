@@ -6,34 +6,34 @@ import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polyproduce;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.security.assist.authentication.BasicAuthenticationRequest;
-import colesico.framework.security.assist.authentication.simple.*;
+import colesico.framework.security.assist.authentication.basic.BasicAuthenticationRequest;
+import colesico.framework.security.assist.authentication.basic.*;
 import colesico.framework.security.authentication.Authenticator;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 @Producer
-@Produce(SimpleAuthentication.class)
-@Produce(value = SimpleAuthenticator.class, scoped = Singleton.class)
-public class SimpleAuthProducer {
+@Produce(BasicAuthentication.class)
+@Produce(value = BasicAuthenticator.class, scoped = Singleton.class)
+public class BasicAuthProducer {
 
     @Singleton
     @Classed(BasicAuthenticationRequest.class)
     @Polyproduce(order = Integer.MAX_VALUE)
-    public Authenticator authenticator(Provider<SimpleAuthenticator> impl) {
+    public Authenticator authenticator(Provider<BasicAuthenticator> impl) {
         return impl.get();
     }
 
     @Singleton
     @Substitute(Substitution.STUB)
-    public SimpleAuthConfigPrototype config() {
-        return new SimpleAuthConfigPrototype() {
+    public BasicAuthConfigPrototype config() {
+        return new BasicAuthConfigPrototype() {
         };
     }
 
     @Singleton
     @Substitute(Substitution.STUB)
-    public SimpleAccountStorage accountStorage(DefaultSimpleAccountStorage impl) {
+    public BasicAccountStorage accountStorage(DefaultBasicAccountStorage impl) {
         return impl;
     }
 
