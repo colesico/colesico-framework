@@ -43,9 +43,6 @@ public interface Profile<ID> {
 
     void setLocale(Locale locale);
 
-    /**
-     * Default getter
-     */
     default ID getId() {
         return id();
     }
@@ -58,6 +55,7 @@ public interface Profile<ID> {
      * Profile default implementation
      */
     class Default<ID> implements Profile<ID> {
+
         protected ID id;
         protected Locale locale;
 

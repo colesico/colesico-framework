@@ -7,7 +7,9 @@ import colesico.framework.teleapi.dataport.DataPort;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
+import java.util.Locale;
 import java.util.Optional;
+import java.util.TimeZone;
 
 @Singleton
 public class CustomProfileSource implements ProfileSource<CustomProfile, Long> {
@@ -23,11 +25,16 @@ public class CustomProfileSource implements ProfileSource<CustomProfile, Long> {
     public Optional<CustomProfile> read(Long profileId) {
         var profile = dataPort.get().read(CustomProfile.class);
         profile.setApiVersion("1.0");
-        return Optional.of(profile);
+        return Optional.ofNullable(profile);
     }
 
     @Override
     public void write(CustomProfile profile) {
         dataPort.get().write(profile, CustomProfile.class);
+    }
+
+    @Override
+    public CustomProfile createDefault(Long profileId) {
+        return new CustomProfile(profileId, Locale.getDefault(), TimeZone.getDefault(), "0.1");
     }
 }
