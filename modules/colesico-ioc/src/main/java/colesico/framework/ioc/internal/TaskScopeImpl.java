@@ -4,6 +4,8 @@ import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.scope.Fabricator;
 import colesico.framework.ioc.scope.TaskScope;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -20,11 +22,16 @@ public final class TaskScopeImpl implements TaskScope {
     private final ScopedValue<Map<Key<?>, Object>> dataHolder = ScopedValue.newInstance();
 
     @Override
-    public void run(Runnable task) {
+    public void forTask(Runnable task) {
+        Map<Key<?>, Object> childData;
+
         if (dataHolder.isBound()) {
-            throw new IllegalStateException("A task scope is already active");
+            childData = new ConcurrentHashMap<>(dataHolder.get());
+        } else {
+            childData = new ConcurrentHashMap<>();
         }
-        ScopedValue.where(dataHolder, new ConcurrentHashMap<>()).run(task);
+
+        ScopedValue.where(dataHolder, childData).run(task);
     }
 
     @Override

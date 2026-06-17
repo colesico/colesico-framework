@@ -34,27 +34,16 @@ import java.util.*;
 public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implements HttpTeleWriter<P, R> {
 
     public static final String PROFILE_COOKIE = "profile";
-    public static final String PROFILE_HEADER = "X-Profile";
+    public static final String PROFILE_HEADER = "x-profile";
+    public static final String LOCALE_ATTRIBUTE = "locale";
 
-    protected final ProfileHttpConfigPrototype config;
+    protected final ProfileWriterConfigPrototype config;
     protected final HttpCookieFactory cookieFactory;
 
-    public ProfileWriter(ProfileHttpConfigPrototype config,
+    public ProfileWriter(ProfileWriterConfigPrototype config,
                          HttpCookieFactory cookieFactory) {
         this.config = config;
         this.cookieFactory = cookieFactory;
-    }
-
-    protected void exportLocale(P profile, Map<String, String> attributes) {
-        var localeAttribute = LocaleAttribute.of(profile);
-        attributes.put(localeAttribute.name(), localeAttribute.asString());
-    }
-
-    /**
-     * Override this method to process different profile type
-     */
-    protected void exportToAttributes(P profile, Map<String, String> attributes) {
-        exportLocale(profile, attributes);
     }
 
     @Override
@@ -64,7 +53,7 @@ public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implem
         String profileStr;
         if (profile != null) {
             Map<String, String> attributes = new HashMap<>();
-            exportToAttributes(profile, attributes);
+            toAttributes(profile, attributes);
             profileStr = TeleHttpUtils.stringifyAttributes(attributes);
             expires.add(Calendar.DAY_OF_MONTH, config.cookieValidityDays());
         } else {
@@ -80,5 +69,17 @@ public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implem
         response.setHeader(PROFILE_HEADER, profileStr);
     }
 
+    /**
+     * Override this method to process different profile type
+     */
+    protected void toAttributes(P profile, Map<String, String> attributes) {
+        exportLocale(profile, attributes);
+    }
+
+    protected void exportLocale(P profile, Map<String, String> attributes) {
+        if (profile.locale() != null) {
+            attributes.put(LOCALE_ATTRIBUTE, profile.locale().toLanguageTag());
+        }
+    }
 
 }

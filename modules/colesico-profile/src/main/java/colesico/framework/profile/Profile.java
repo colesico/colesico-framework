@@ -43,14 +43,6 @@ public interface Profile<ID> {
 
     void setLocale(Locale locale);
 
-    default ID getId() {
-        return id();
-    }
-
-    default Locale getLocale() {
-        return locale();
-    }
-
     /**
      * Profile default implementation
      */
@@ -65,6 +57,14 @@ public interface Profile<ID> {
         public Default(ID id, Locale locale) {
             this.id = id;
             this.locale = locale;
+        }
+
+        public static <ID> Default<ID> of() {
+            return new Default<>();
+        }
+
+        public static <ID> Default<ID> of(ID id, Locale locale) {
+            return new Default<>(id, locale);
         }
 
         public Locale locale() {

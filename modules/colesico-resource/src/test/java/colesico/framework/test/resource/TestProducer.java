@@ -19,6 +19,8 @@ package colesico.framework.test.resource;
 import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
+import colesico.framework.profile.ProfileSource;
+import colesico.framework.profile.assist.SimpleProfileSource;
 import jakarta.inject.Singleton;
 
 import java.util.Locale;
@@ -28,8 +30,10 @@ import java.util.Locale;
 public class TestProducer {
 
     @Singleton
-    public Profile profile() {
-        return Profile.Default.of(Locale.of("en", "RU"));
+    public ProfileSource profileSource() {
+        return SimpleProfileSource.of(
+                () -> Profile.Default.of(null, Locale.of("en", "RU"))
+        );
     }
 
 }

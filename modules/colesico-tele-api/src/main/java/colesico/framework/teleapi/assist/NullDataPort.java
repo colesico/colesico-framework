@@ -22,6 +22,13 @@ public final class NullDataPort implements DataPort<ReadOptions, WriteOptions> {
         taskScope.put(DataPort.SCOPE_KEY, this);
     }
 
+    public void forTask(Runnable task) {
+        taskScope.forTask(() -> {
+            taskScope.put(DataPort.SCOPE_KEY, this);
+            task.run();
+        });
+    }
+
     @Override
     public <V> V read(Class<V> valueType, ReadOptions options) {
         log.debug("Read for valueType: {}; options: {}", valueType, options);

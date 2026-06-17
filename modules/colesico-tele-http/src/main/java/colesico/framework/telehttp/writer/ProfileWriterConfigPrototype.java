@@ -20,7 +20,7 @@ import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
 
 @ConfigPrototype(model = ConfigModel.SINGLE)
-abstract public class ProfileHttpConfigPrototype {
+abstract public class ProfileWriterConfigPrototype {
 
     /**
      * Profile cookie validity days

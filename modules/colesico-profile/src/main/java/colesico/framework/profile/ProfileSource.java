@@ -25,10 +25,10 @@ public interface ProfileSource<P extends Profile<ID>, ID> {
     }
 
     /**
-     * Creates default profile instance
+     * Returns default profile instance
      *
      * @param profileId optional (can be null)
      */
-    P createDefault(ID profileId);
+    P getDefault(ID profileId);
 
 }

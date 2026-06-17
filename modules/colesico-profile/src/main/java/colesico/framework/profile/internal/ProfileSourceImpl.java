@@ -30,8 +30,8 @@ public class ProfileSourceImpl implements ProfileSource<Profile<String>, String>
     }
 
     @Override
-    public Profile<String> createDefault(String profileId) {
-        return new Profile.Default<>(profileId, Locale.getDefault());
+    public Profile<String> getDefault(String profileId) {
+        return Profile.Default.of(profileId, Locale.getDefault());
     }
 
     @Override

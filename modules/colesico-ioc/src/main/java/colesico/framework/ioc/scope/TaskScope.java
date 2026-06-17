@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * A task scope that uses {@link ScopedValue} to bind a mutable map of objects
  * to the current thread (or virtual thread). The scope is active only within
- * a {@link #run(Runnable)} or {@link #run(Callable)} block.
+ * a {@link #forTask(Runnable)} or {@link #run(Callable)} block.
  * The data is automatically cleaned up after the block exits, making it suitable
  * for request scoped or task scoped dependencies in an IoC container.
  * <p>
@@ -46,5 +46,5 @@ public interface TaskScope extends Scope {
      *                               that was created by the same {@code TaskScope} instance
      *                               (nested scopes are not allowed)
      */
-    void run(Runnable task);
+    void forTask(Runnable task);
 }

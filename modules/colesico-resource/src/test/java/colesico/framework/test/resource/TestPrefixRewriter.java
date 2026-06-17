@@ -18,6 +18,7 @@ package colesico.framework.test.resource;
 
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
+import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.resource.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,48 +34,49 @@ public class TestPrefixRewriter {
 
     Logger logger = LoggerFactory.getLogger(TestPrefixRewriter.class);
 
-
     @BeforeClass
     public void init() {
-        logger.info("Init PrefixRewriter  test");
+        logger.info("Init PrefixRewriter test");
         ioc = IocBuilder.create().build();
         resourceUtils = ioc.instance(ResourceUtils.class);
     }
 
     @Test
     public void test1() {
-        String path;
+        ioc.instance(TaskScope.class).forTask(() -> {
+            String path;
 
-        path = resourceUtils.localize("/");
-        assertEquals(path, "/");
+            path = resourceUtils.localize("/");
+            assertEquals(path, "/");
 
-        path = resourceUtils.localize("/home/foo");
-        assertEquals(path, "/home/foo");
+            path = resourceUtils.localize("/home/foo");
+            assertEquals(path, "/home/foo");
 
-        path = resourceUtils.localize("home/foo");
-        assertEquals(path, "home/foo");
+            path = resourceUtils.localize("home/foo");
+            assertEquals(path, "home/foo");
 
-        path = resourceUtils.localize("alias");
-        assertEquals(path, "foo/dummy");
+            path = resourceUtils.localize("alias");
+            assertEquals(path, "foo/dummy");
 
-        path = resourceUtils.localize("/alias");
-        assertEquals(path, "/foo/dummy");
+            path = resourceUtils.localize("/alias");
+            assertEquals(path, "/foo/dummy");
 
-        path = resourceUtils.localize("/alias/");
-        assertEquals(path, "/foo/dummy/");
+            path = resourceUtils.localize("/alias/");
+            assertEquals(path, "/foo/dummy/");
 
-        path = resourceUtils.localize("alias");
-        assertEquals(path, "foo/dummy");
+            path = resourceUtils.localize("alias");
+            assertEquals(path, "foo/dummy");
 
-        path = resourceUtils.localize("alias/home");
-        assertEquals(path, "foo/dummy/home");
+            path = resourceUtils.localize("alias/home");
+            assertEquals(path, "foo/dummy/home");
 
-        path = resourceUtils.localize("/alias/home");
-        assertEquals(path, "/foo/dummy/home");
+            path = resourceUtils.localize("/alias/home");
+            assertEquals(path, "/foo/dummy/home");
 
-        path = resourceUtils.localize("/alias/home/");
-        assertEquals(path, "/foo/dummy/home/");
+            path = resourceUtils.localize("/alias/home/");
+            assertEquals(path, "/foo/dummy/home/");
 
-        logger.info("Resource properties test passed");
+            logger.info("Resource properties test passed");
+        });
     }
 }

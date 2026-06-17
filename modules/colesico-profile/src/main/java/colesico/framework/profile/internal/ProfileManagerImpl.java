@@ -37,7 +37,7 @@ public class ProfileManagerImpl implements ProfileManager {
 
         // 3. If no identity ID is found, fallback to the default profile
         if (profileId == null) {
-            P defaultProfile = (P) profileSource.createDefault(null);
+            P defaultProfile = (P) profileSource.getDefault(null);
             profileContext.setProfile(defaultProfile);
             return defaultProfile;
         }
@@ -45,7 +45,7 @@ public class ProfileManagerImpl implements ProfileManager {
         // 4. Fetch the profile from the source (DB, config, cache, etc.)
         Optional<Profile<Object>> fetchedProfile = profileSource.read(profileId);
         if (fetchedProfile.isEmpty()) {
-            P defaultProfile = (P) profileSource.createDefault(profileId);
+            P defaultProfile = (P) profileSource.getDefault(profileId);
             profileContext.setProfile(defaultProfile);
             return defaultProfile;
         }
@@ -64,5 +64,12 @@ public class ProfileManagerImpl implements ProfileManager {
         }
         profileSource.write((Profile<Object>) profile);
         profileContext.setProfile(profile);
+    }
+
+
+    @Override
+    public <P extends Profile<?>> P reload() {
+        profileContext.clear();
+        return resolve();
     }
 }

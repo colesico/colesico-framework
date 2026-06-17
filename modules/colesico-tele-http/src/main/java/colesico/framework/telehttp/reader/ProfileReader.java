@@ -29,48 +29,54 @@ import jakarta.inject.Singleton;
 import java.util.*;
 
 import static colesico.framework.assist.StringUtils.isBlank;
+import static colesico.framework.telehttp.writer.ProfileWriter.LOCALE_ATTRIBUTE;
 import static colesico.framework.telehttp.writer.ProfileWriter.PROFILE_HEADER;
 
 /**
  * Profile default reader
  */
 @Singleton
-public class ProfileReader<P extends Profile> implements HttpTeleReader<P, HttpReadOptions> {
-
-    protected final Provider<HttpRequest> httpRequest;
+public class ProfileReader<P extends Profile<?>> implements HttpTeleReader<P, HttpReadOptions> {
 
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
+
+    protected final Provider<HttpRequest> httpRequest;
 
     @Inject
     public ProfileReader(Provider<HttpRequest> httpRequest) {
         this.httpRequest = httpRequest;
     }
 
-    protected void readLocale(P profile, Map<String, String> attributes, HttpRequest request) {
-        var attribute = LocaleAttribute.of(profile);
-        var value = attributes.get(attribute.name());
-        if (isBlank(value)) {
-            String acceptLangs = request.headers().get(ACCEPT_LANGUAGE_HEADER);
-            Locale locale = TeleHttpUtils.acceptedLanguage(acceptLangs);
-            if (locale != null) {
-                attribute.setValue(locale);
-            }
-        } else {
-            attribute.setString(value);
-        }
+    @Override
+    public final P read(Class<P> valueType, HttpReadOptions options) {
+        HttpRequest request = httpRequest.get();
+        Map<String, String> attributes = readProfileAttributes(request);
+        return buildProfile(options, attributes, request);
     }
 
     /**
      * Override this method to process different profile type
      */
-    protected void importFromAttributes(P profile, Map<String, String> attributes, HttpRequest request) {
-        readLocale(profile, attributes, request);
+    protected P buildProfile(HttpReadOptions options, Map<String, String> attributes, HttpRequest request) {
+        var locale = readLocale(attributes, request);
+        return (P) new Profile.Default(options.attachment(), locale);
     }
 
-    @Override
-    public final P read(Class<P> valueType, HttpReadOptions options) {
-        HttpRequest request = httpRequest.get();
+    protected Locale readLocale(Map<String, String> attributes, HttpRequest request) {
+        var localeTag = attributes.get(LOCALE_ATTRIBUTE);
+        if (isBlank(localeTag)) {
+            String acceptLangs = request.headers().get(ACCEPT_LANGUAGE_HEADER);
+            Locale locale = TeleHttpUtils.acceptedLanguage(acceptLangs);
+            if (locale != null) {
+                return locale;
+            }
+            return Locale.getDefault();
+        } else {
+            return Locale.forLanguageTag(localeTag);
+        }
+    }
 
+    private static Map<String, String> readProfileAttributes(HttpRequest request) {
         Map<String, String> attributes = new HashMap<>();
         var profileCookie = request.cookies().get(ProfileWriter.PROFILE_COOKIE);
         if (profileCookie != null) {
@@ -81,11 +87,7 @@ public class ProfileReader<P extends Profile> implements HttpTeleReader<P, HttpR
         if (profileHeader != null) {
             attributes.putAll(TeleHttpUtils.parseAttributes(profileHeader.value()));
         }
-
-        // Get default profile instance from context
-        P profile = (P) options.attachment();
-        importFromAttributes(profile, attributes, request);
-        return profile;
+        return attributes;
     }
 
 }

@@ -51,7 +51,7 @@ abstract public class RequestProcessor<C> {
 
     protected void handleRequest(C rawContext) {
         try {
-            taskScope.run(() -> {
+            taskScope.forTask(() -> {
                         var httpContext = bindHttpContext(rawContext);
                         var invocation = resolve(httpContext);
                         if (invocation != null) {

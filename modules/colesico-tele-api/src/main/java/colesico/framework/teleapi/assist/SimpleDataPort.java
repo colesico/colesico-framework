@@ -27,7 +27,7 @@ public final class SimpleDataPort implements DataPort<ReadOptions, WriteOptions>
     }
 
     public void forTask(Runnable task) {
-        taskScope.run(() -> {
+        taskScope.forTask(() -> {
             taskScope.put(DataPort.SCOPE_KEY, this);
             task.run();
         });

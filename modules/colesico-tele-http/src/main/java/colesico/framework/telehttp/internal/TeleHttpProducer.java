@@ -4,7 +4,7 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.telehttp.authentication.HttpBasic;
 import colesico.framework.telehttp.origin.OriginFactory;
-import colesico.framework.telehttp.writer.ProfileHttpConfigPrototype;
+import colesico.framework.telehttp.writer.ProfileWriterConfigPrototype;
 import colesico.framework.telehttp.assist.CSRFProtector;
 
 import jakarta.inject.Singleton;
@@ -17,8 +17,8 @@ public class TeleHttpProducer {
 
     // Default config
     @Singleton
-    public ProfileHttpConfigPrototype profileWriterConfig() {
-        return new ProfileHttpConfigPrototype() {
+    public ProfileWriterConfigPrototype profileWriterConfig() {
+        return new ProfileWriterConfigPrototype() {
         };
     }
 }

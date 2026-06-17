@@ -37,7 +37,7 @@ public class CustomProfileSource implements ProfileSource<CustomProfile, Long> {
     }
 
     @Override
-    public CustomProfile createDefault(Long profileId) {
+    public CustomProfile getDefault(Long profileId) {
         return new CustomProfile(profileId, Locale.getDefault(), TimeZone.getDefault(), "2.0");
     }
 }

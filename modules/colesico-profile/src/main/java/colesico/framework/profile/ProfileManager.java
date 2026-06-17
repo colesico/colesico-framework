@@ -25,9 +25,13 @@ public interface ProfileManager {
     <P extends Profile<?>> P resolve();
 
     /**
-     * Save current profile preferences to {@link ProfileSource} and
-     * updates in {@link ProfileContext}
+     * Save profile preferences to {@link ProfileSource} and
+     * put it to {@link ProfileContext} as current profile
      */
     void commit(Profile<?> profile);
 
+    /**
+     * Reload current profile from {@link ProfileSource} to {@link ProfileContext}
+     */
+    <P extends Profile<?>> P reload();
 }

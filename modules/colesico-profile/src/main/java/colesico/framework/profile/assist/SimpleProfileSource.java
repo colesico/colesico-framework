@@ -3,23 +3,29 @@ package colesico.framework.profile.assist;
 import colesico.framework.profile.Profile;
 import colesico.framework.profile.ProfileException;
 import colesico.framework.profile.ProfileSource;
-import jakarta.inject.Singleton;
 
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 /**
  * A simple, in-memory {@link ProfileSource} implementation powered by {@link ConcurrentHashMap}.
- * This class is designed to be extended by specific profile types to fulfill the {@link #createDefault(Object)} contract.
+ * This class is designed to be extended by specific profile types to fulfill the {@link #getDefault(Object)} contract.
  */
-abstract public class SimpleProfileSource<P extends Profile<ID>, ID> implements ProfileSource<P, ID> {
+public class SimpleProfileSource<P extends Profile<ID>, ID> implements ProfileSource<P, ID> {
 
     // Thread-safe store for profiles
     protected final Map<ID, P> profileHolder = new ConcurrentHashMap<>();
 
-    public SimpleProfileSource() {
+    protected final Supplier<P> defaultProfileFactory;
+
+    public SimpleProfileSource(Supplier<P> defaultProfileFactory) {
+        this.defaultProfileFactory = defaultProfileFactory;
+    }
+
+    public static <P extends Profile<ID>, ID> SimpleProfileSource<P, ID> of(Supplier<P> defaultProfileFactory) {
+        return new SimpleProfileSource<>(defaultProfileFactory);
     }
 
     @Override
@@ -34,7 +40,9 @@ abstract public class SimpleProfileSource<P extends Profile<ID>, ID> implements 
      * Subclasses must override this method to create a specific default profile instance.
      * This avoids ClassCastException caused by erasing generic type P.
      */
-    abstract public P createDefault(ID profileId);
+    public P getDefault(ID profileId) {
+        return defaultProfileFactory.get();
+    }
 
     @Override
     public void write(P profile) {
