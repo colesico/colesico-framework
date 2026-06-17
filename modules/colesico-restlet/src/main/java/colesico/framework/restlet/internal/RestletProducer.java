@@ -34,7 +34,7 @@ import jakarta.inject.Singleton;
  */
 @Producer
 @Produce(RestletDataPortImpl.class)
-@Produce(RestletTeleDriverImpl.class)
+@Produce(RestletTeleControllerImpl.class)
 @Produce(RestletAutoOrigin.class)
 @Produce(GsonConverter.class)
 @Produce(LogRestletListener.class)
@@ -46,7 +46,7 @@ public class RestletProducer {
     }
 
     @Singleton
-    public RestletTeleDriver restletTeleDriver(RestletTeleDriverImpl impl) {
+    public RestletTeleController restletTeleDriver(RestletTeleControllerImpl impl) {
         return impl;
     }
 
