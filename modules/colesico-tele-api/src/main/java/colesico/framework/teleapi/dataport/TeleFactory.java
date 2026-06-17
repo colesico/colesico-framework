@@ -51,7 +51,7 @@ public final class TeleFactory {
     }
 
     /**
-     * Returns appropriate writer for given base class and the type that to be write.
+     * Returns appropriate writer for given base class and the type that to be written.
      * Throws an exception if reader not found
      */
     public <W extends TeleWriter<?, ?>, V> W writer(Class<W> writerBaseClass, Class<V> valueType) {

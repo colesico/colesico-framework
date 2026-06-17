@@ -16,139 +16,102 @@
 
 package colesico.framework.restlet.internal;
 
-import colesico.framework.restlet.RestletError;
+import colesico.framework.assist.ExceptionUtils;
 import colesico.framework.restlet.teleapi.*;
-import colesico.framework.restlet.teleapi.reader.ValueReader;
+import colesico.framework.restlet.teleapi.reader.ObjectReader;
 import colesico.framework.restlet.teleapi.writer.ObjectWriter;
 import colesico.framework.teleapi.dataport.TeleFactory;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Singleton;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 @Singleton
 public class RestletDataPortImpl implements RestletDataPort {
 
     private final Logger logger = LoggerFactory.getLogger(RestletDataPort.class);
-    private final TeleFactory trwFactory;
+    private final TeleFactory teleFactory;
 
 
-    public RestletDataPortImpl(TeleFactory trwFactory) {
-        this.trwFactory = trwFactory;
+    public RestletDataPortImpl(TeleFactory teleFactory) {
+        this.teleFactory = teleFactory;
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <V> V read(Type valueType) {
-        return read(RestletReadOptions.of(valueType));
-    }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <V> V read(RestletReadOptions query) {
-
-        RestletTeleReader<V> reader;
-
-        if (query.readerClass() != null) {
-            // Use specified reader
-            reader = (RestletTeleReader<V>) trwFactory.reader(query.readerClass());
-        } else {
-            // Use reader by param type
-            reader = trwFactory.findReader(RestletTeleReader.class, query.valueType());
-
-            // No accurate reader here so are reading data as object
-            if (reader == null) {
-                reader = (RestletTeleReader<V>) trwFactory.reader(ValueReader.class);
-            }
-        }
-        return reader.read(query);
-    }
-
-    @Override
-    public <V> void write(V value, Type valueType) {
-        write(value, RestletWriteOptions.of(valueType));
-    }
-
-    @Override
-    public <V> void write(V value, RestletWriteOptions options) {
-        RestletTeleWriter<V> writer;
-
-        if (options.writerClass() != null) {
-            // Specified writer
-            writer = trwFactory.writer(options.writerClass());
-        } else {
-            // By type writer
-            writer = trwFactory.findWriter(RestletTeleWriter.class, options.valueType());
-        }
-
-        if (writer == null) {
-            // Default object writer
-            writer = (RestletTeleWriter<V>) trwFactory.writer(ObjectWriter.class);
-        }
-
-        writer.write(value, options);
-    }
-
-    @Override
-    public <T extends Throwable> void writeError(final T throwable) {
-
-        RestletWriteOptions context = RestletWriteOptions.of(throwable.getClass());
-        RestletTeleWriter<T> throwableWriter = trwFactory.findWriter(RestletTeleWriter.class, throwable.getClass());
-        if (throwableWriter != null) {
-            throwableWriter.write(throwable, context);
-            return;
-        }
-
-        // If no specific writer try to  get root exception
-        // and determine writer for it
+    protected RestletTeleWriter findRootErrorWriter(final Throwable throwable) {
         Throwable rootCause = ExceptionUtils.getRootCause(throwable);
         if (rootCause != null) {
-            RestletTeleWriter rootCauseWriter = trwFactory.findWriter(RestletTeleWriter.class, rootCause.getClass());
-            if (rootCauseWriter != null) {
-                rootCauseWriter.write(rootCause, context);
-                return;
-            }
+            return teleFactory.findWriter(RestletTeleWriter.class, rootCause.getClass());
         }
-
-        // No specific writer,
-        // Perform default writing
-        RestletError error = new RestletError();
-        error.setErrorCode(throwable.getClass().getCanonicalName());
-        error.setMessage(ExceptionUtils.getRootCauseMessage(throwable));
-        error.setDetails(getErrorMessages(throwable));
-        RestletTeleWriter objWriter = trwFactory.writer(ObjectWriter.class);
-        context.setStatusCode(500);
-        objWriter.write(error, context);
-
+        return null;
     }
 
-    private List<String> getErrorMessages(Throwable ex) {
-        Throwable e = ex;
-        List<String> messages = new ArrayList<>();
 
-        int depth = 0;
-        while (e != null) {
-            String message = e.getMessage();
-            if (StringUtils.isBlank(message)) {
-                message = "no message";
-            }
-            messages.add(e.getClass().getCanonicalName() + ": " + message);
-            if (e.getCause() == e) {
-                e = null;
-            } else {
-                if (depth++ < 16) {
-                    e = e.getCause();
-                } else {
-                    e = null;
-                }
+    @Override
+    public <V> V read(Class<V> valueType, RestletReadOptions options) {
+        RestletTeleReader<V> reader;
+
+        if (options.readerClass() != null) {
+            // Use specified reader
+            reader = (RestletTeleReader<V>) teleFactory.reader(options.readerClass());
+        } else {
+            // Use reader by value type
+            reader = teleFactory.findReader(RestletTeleReader.class, valueType);
+            if (reader == null) {
+                // No accurate reader here so are reading data as object
+                reader = (RestletTeleReader<V>) teleFactory.reader(ObjectReader.class);
             }
         }
-        return messages;
+        return reader.read(valueType, options);
     }
 
+    @Override
+    public <V> V read(Class<V> valueType) {
+        return read(valueType, RestletReadOptions.of());
+    }
+
+    @Override
+    public <V> V read(Class<V> valueType, Object attachment) {
+        return read(valueType, RestletReadOptions.of(attachment));
+    }
+
+    @Override
+    public <V> void write(V value, Class<V> valueType, RestletWriteOptions options) {
+        RestletTeleWriter writer = null;
+
+        // 1. Check for a custom writer specified in options
+        if (options.writerClass() != null) {
+            writer = teleFactory.writer(options.writerClass());
+        } else {
+
+            // 2. Find writer by the exact runtime class of the value
+            writer = teleFactory.findWriter(RestletTeleWriter.class, value.getClass());
+
+            // 3. Handle specific logic for exceptions
+            if (writer == null && value instanceof Throwable t) {
+                writer = findRootErrorWriter(t);
+            }
+
+            // 4. Fallback to the declared value type
+            if (writer == null) {
+                writer = teleFactory.findWriter(RestletTeleWriter.class, valueType);
+            }
+
+            // 5. Final fallback to the default object writer
+            if (writer == null) {
+                writer = teleFactory.writer(ObjectWriter.class);
+            }
+        }
+        writer.write(value, valueType, options);
+    }
+
+    @Override
+    public <V> void write(V value, Class<V> valueType) {
+        write(value, valueType, RestletWriteOptions.of());
+    }
+
+    @Override
+    public <V> void write(V value, Class<V> valueType, Object attachment) {
+        write(value, valueType, RestletWriteOptions.of(attachment));
+    }
 }

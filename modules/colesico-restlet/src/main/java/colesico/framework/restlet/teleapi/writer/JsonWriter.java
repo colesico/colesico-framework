@@ -38,10 +38,8 @@ public final class JsonWriter implements ObjectWriter {
         }
 
         String json = jsonConverter.toJson(value);
-        Integer code = context.statusCode();
-        if (code == null) {
-            code = 200;
-        }
-        response().sendData(ByteBuffer.wrap(json.getBytes(StandardCharsets.UTF_8)), JSON_CONTENT_TYPE, code);
+        response.setContentType(JSON_CONTENT_TYPE)
+                .setStatus(200)
+                .sendData(ByteBuffer.wrap(json.getBytes(StandardCharsets.UTF_8)));
     }
 }

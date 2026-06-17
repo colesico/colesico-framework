@@ -10,18 +10,18 @@ import jakarta.inject.Singleton;
  * Proxy for use PlainTextWriter as custom restlet writer
  */
 @Singleton
-public final class PlainTextWriter extends RestletTeleWriter<Object> {
+public final class PlainTextWriter implements RestletTeleWriter<Object> {
 
-    private final colesico.framework.telehttp.writer.PlainTextWriter<RestletWriteOptions> writer;
+    private final colesico.framework.telehttp.writer.PlainTextWriter writer;
 
     @Inject
     public PlainTextWriter(colesico.framework.telehttp.writer.PlainTextWriter writer) {
-        super(writer);
         this.writer = writer;
     }
 
     @Override
-    public void write(Object value, RestletWriteOptions context) {
-        writer.write(value, context);
+    public void write(Object value, Class<Object> valueType, RestletWriteOptions options) {
+        writer.write(value, valueType, options);
     }
+
 }

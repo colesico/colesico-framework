@@ -38,31 +38,25 @@ public class RestletWritersProducer {
 
     // Default object writer
     @Singleton
-    public ObjectWriter getObjectWriter(JsonWriter impl) {
+    public ObjectWriter objectWriter(JsonWriter impl) {
         return impl;
     }
 
     @Singleton
-    @Classed(Identity.class)
-    public RestletTeleWriter getPrincipalWriter(PrincipalWriter impl) {
-        return RestletWriterProxy.of(impl);
-    }
-
-    @Singleton
     @Classed(Profile.class)
-    public RestletTeleWriter getProfileWriter(ProfileWriter impl) {
+    public RestletTeleWriter profileWriter(ProfileWriter impl) {
         return RestletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(RestletException.class)
-    public RestletTeleWriter getRestletExceptionWriter(RestletExceptionWriter impl) {
+    public RestletTeleWriter restletExceptionWriter(RestletExceptionWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(PrincipalRequiredException.class)
-    public RestletTeleWriter getPrincipalRequiredExceptionWriter(PrincipalRequiredExceptionWriter impl) {
+    public RestletTeleWriter principalRequiredExceptionWriter(PrincipalRequiredExceptionWriter impl) {
         return impl;
     }
 

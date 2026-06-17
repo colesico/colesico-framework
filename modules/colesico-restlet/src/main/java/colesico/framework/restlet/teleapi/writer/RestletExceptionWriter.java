@@ -9,7 +9,7 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 @Singleton
-public class RestletExceptionWriter extends RestletTeleWriter<RestletException> {
+public class RestletExceptionWriter implements RestletTeleWriter<RestletException> {
 
     private final ObjectWriter writer;
 
@@ -19,9 +19,9 @@ public class RestletExceptionWriter extends RestletTeleWriter<RestletException> 
     }
 
     @Override
-    public void write(RestletException value, RestletWriteOptions context) {
-        if (context.statusCode() == null) {
-            context.setStatusCode(value.getHttpStatus());
+    public void write(RestletException value, Class<RestletException> valueType, RestletWriteOptions options) {
+        if (options.statusCode() == null) {
+            options.setStatusCode(value.getHttpStatus());
         }
         writer.write(value.getError(), context);
     }

@@ -40,7 +40,7 @@ public class RestletReadersProducer {
 
     // Default general purpose reader impl
     @Singleton
-    public ValueReader getValueReader(JsonReader impl) {
+    public ObjectReader getValueReader(JsonReader impl) {
         return impl;
     }
 

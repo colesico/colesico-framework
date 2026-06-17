@@ -26,22 +26,21 @@ import colesico.framework.telehttp.HttpTeleWriter;
  *
  * @param <V> value type
  */
-public final class RestletWriterProxy<V> extends RestletTeleWriter<V> {
+public final class RestletWriterProxy<V> implements RestletTeleWriter<V> {
 
     private final HttpTeleWriter<V, HttpWriteOptions> writer;
 
-    private RestletWriterProxy(HttpTeleWriter<V, HttpWriteOptions> writer) {
-        super(writer);
+    public RestletWriterProxy(HttpTeleWriter<V, HttpWriteOptions> writer) {
         this.writer = writer;
     }
 
     @Override
-    public void write(V value, RestletWriteOptions context) {
-        writer.write(value, context);
+    public void write(V value, Class<V> valueType, RestletWriteOptions options) {
+        writer.write(value, valueType, options);
     }
 
-    public static <V> RestletWriterProxy of(HttpTeleWriter<V, HttpWriteOptions> writer) {
-        return new RestletWriterProxy(writer);
+    public static <V> RestletWriterProxy<V> of(HttpTeleWriter<V, HttpWriteOptions> writer) {
+        return new RestletWriterProxy<>(writer);
     }
 
 }

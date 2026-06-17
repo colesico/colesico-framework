@@ -24,7 +24,7 @@ import static colesico.framework.http.HttpMethod.*;
 @Singleton
 public final class JsonReader
         extends OriginReader<Object, RestletReadOptions>
-        implements ValueReader {
+        implements ObjectReader {
 
     private final RestletJsonConverter jsonConverter;
     private final Provider<HttpContext> httpContextProv;

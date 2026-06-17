@@ -25,24 +25,24 @@ import jakarta.inject.Singleton;
 @Singleton
 public class WebletDataPortImpl implements WebletDataPort {
 
-    protected final TeleFactory factory;
+    protected final TeleFactory teleFactory;
 
-    public WebletDataPortImpl(TeleFactory factory) {
-        this.factory = factory;
+    public WebletDataPortImpl(TeleFactory teleFactory) {
+        this.teleFactory = teleFactory;
     }
 
     @Override
     public <V> V read(Class<V> valueType, WebletReadOptions options) {
         WebletTeleReader<V> reader;
         if (options.readerClass() != null) {
-            // Get specified reader
-            reader = (WebletTeleReader<V>) factory.reader(options.readerClass());
+            // Use specified reader
+            reader = (WebletTeleReader<V>) teleFactory.reader(options.readerClass());
         } else {
-            // Get reader by value type
-            reader = factory.findReader(WebletTeleReader.class, valueType);
+            // Use reader by value type
+            reader = teleFactory.findReader(WebletTeleReader.class, valueType);
             if (reader == null) {
                 // Get default reader
-                reader = factory.reader(WebletTeleReader.class, Object.class);
+                reader = teleFactory.reader(WebletTeleReader.class, Object.class);
             }
         }
         return reader.read(valueType, options);
@@ -79,24 +79,24 @@ public class WebletDataPortImpl implements WebletDataPort {
 
         if (options.writerClass() != null) {
             // Get options specified writer
-            writer = factory.writer(options.writerClass());
+            writer = teleFactory.writer(options.writerClass());
         }
 
         if (isWebletResponse) {
             targetValue = ((WebletResponse) value).unwrap();
             targetType = targetValue.getClass();
             if (writer == null) {
-                writer = factory.writer(WebletTeleWriter.class, targetType);
+                writer = teleFactory.writer(WebletTeleWriter.class, targetType);
             }
         } else {
             targetValue = value;
             targetType = value.getClass();
             if (writer == null) {
-                writer = factory.findWriter(WebletTeleWriter.class, targetType);
+                writer = teleFactory.findWriter(WebletTeleWriter.class, targetType);
             }
             if (writer == null) {
                 targetType = valueType;
-                writer = factory.writer(WebletTeleWriter.class, targetType);
+                writer = teleFactory.writer(WebletTeleWriter.class, targetType);
             }
         }
 

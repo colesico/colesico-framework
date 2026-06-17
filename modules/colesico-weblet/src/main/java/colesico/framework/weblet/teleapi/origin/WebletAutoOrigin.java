@@ -24,7 +24,6 @@ public class WebletAutoOrigin implements WebletOrigin {
 
     @Override
     public Iterable<String> getStrings(String name) {
-        String value = null;
         HttpRequest httpRequest = httpContextProv.get().request();
         switch (httpRequest.method().name()) {
             case HttpMethod.GET:
@@ -46,7 +45,7 @@ public class WebletAutoOrigin implements WebletOrigin {
                 RouterContext routerContext = routerContextProv.get();
                 return List.of(routerContext.parameters().get(name));
             default:
-                return List.of(value);
+                return List.of();
         }
     }
 }

@@ -7,15 +7,24 @@ import java.util.IdentityHashMap;
 import java.util.Set;
 
 public class ExceptionUtils {
-    public static String getRootCauseMessage(Throwable th) {
-        if (th == null) {
-            return "";
+
+    public static Throwable getRootCause(Throwable throwable) {
+        if (throwable == null) {
+            return null;
         }
-        Throwable root = th;
+        Throwable root = throwable;
         Set<Throwable> visited = Collections.newSetFromMap(new IdentityHashMap<>());
         while (root.getCause() != null && visited.add(root)) {
             root = root.getCause();
         }
+        return root;
+    }
+
+    public static String getRootCauseMessage(Throwable throwable) {
+        if (throwable == null) {
+            return "";
+        }
+        var root = getRootCause(throwable);
         return root.getClass().getSimpleName() + ": " + root.getMessage();
     }
 

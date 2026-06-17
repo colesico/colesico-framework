@@ -33,7 +33,7 @@ public class RestletError implements Serializable {
     protected String errorCode;
 
     /**
-     * Human readable error message
+     * Human-readable error message
      */
     protected String message;
 
