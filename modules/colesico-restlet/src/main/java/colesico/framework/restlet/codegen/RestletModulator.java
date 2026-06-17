@@ -89,7 +89,7 @@ public final class RestletModulator extends RoutesModulator {
         CodeBlock.Builder cb = CodeBlock.builder();
 
         // new RestletTRContext(
-        cb.add("$T.$N(", ClassName.get(RestletTeleContext.class), RestletTeleContext.OF_METHOD);
+        cb.add("$T.$N(", ClassName.get(RestletReadOptions.class), RestletReadOptions.OF_METHOD);
 
         ServiceCodegenUtils.generateTeleParamType(teleParam, cb);
 

@@ -1,5 +1,7 @@
 package colesico.framework.restlet.teleapi.reader;
 
+import colesico.framework.assist.ExceptionUtils;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
@@ -7,41 +9,41 @@ import colesico.framework.restlet.RestletError;
 import colesico.framework.restlet.RestletException;
 import colesico.framework.restlet.teleapi.RestletJsonConverter;
 import colesico.framework.restlet.teleapi.RestletOrigin;
-import colesico.framework.restlet.teleapi.RestletTeleContext;
-import colesico.framework.telehttp.origin.Origin;
+import colesico.framework.restlet.teleapi.RestletReadOptions;
 import colesico.framework.telehttp.origin.OriginFactory;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import colesico.framework.telehttp.reader.OriginReader;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+
 import java.io.InputStream;
 
 import static colesico.framework.http.HttpMethod.*;
 
 @Singleton
-public final class JsonReader implements ValueReader {
+public final class JsonReader
+        extends OriginReader<Object, RestletReadOptions>
+        implements ValueReader {
 
     private final RestletJsonConverter jsonConverter;
     private final Provider<HttpContext> httpContextProv;
-    private final OriginFactory originFactory;
 
     @Inject
-    public JsonReader(RestletJsonConverter jsonConverter, Provider<HttpContext> httpContextProv, OriginFactory originFactory) {
+    public JsonReader(OriginFactory originFactory, RestletJsonConverter jsonConverter, Provider<HttpContext> httpContextProv) {
+        super(originFactory);
         this.jsonConverter = jsonConverter;
         this.httpContextProv = httpContextProv;
-        this.originFactory = originFactory;
     }
 
     @Override
-    public Object read(RestletTeleContext context) {
+    public Object read(Class<Object> valueType, RestletReadOptions options) {
         HttpRequest request = httpContextProv.get().request();
 
         HttpMethod requestMethod = request.method();
 
         // Should the value be read from request input stream?
-        String originName = context.originName();
+        String originName = options.originName();
 
         boolean useInputStream = originName.equals(RestletOrigin.BODY) ||
                 (
@@ -57,21 +59,21 @@ public final class JsonReader implements ValueReader {
 
         if (useInputStream) {
             try (InputStream is = request.inputStream()) {
-                return jsonConverter.fromJson(is, context.valueType());
+                return jsonConverter.fromJson(is, valueType);
             } catch (Exception e) {
                 throw new RestletException(new RestletError("ReadJsonError", ExceptionUtils.getRootCauseMessage(e), null));
             }
         } else {
             try {
-                Origin origin = originFactory.getOrigin(context.originName());
-                String strValue = origin.getStrings(context.paramName());
+                String strValue = readString(options.originName(), options.paramName());
                 if (StringUtils.isBlank(strValue)) {
                     return null;
                 }
-                return jsonConverter.fromJson(strValue, context.valueType());
+                return jsonConverter.fromJson(strValue, valueType);
             } catch (Exception e) {
                 throw new RestletException(new RestletError("ReadJsonError", ExceptionUtils.getRootCauseMessage(e), null));
             }
         }
     }
+
 }

@@ -45,12 +45,12 @@ public class RestletDataPortImpl implements RestletDataPort {
     @Override
     @SuppressWarnings("unchecked")
     public <V> V read(Type valueType) {
-        return read(RestletTeleContext.of(valueType));
+        return read(RestletReadOptions.of(valueType));
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <V> V read(RestletTeleContext query) {
+    public <V> V read(RestletReadOptions query) {
 
         RestletTeleReader<V> reader;
 

@@ -16,24 +16,11 @@
 
 package colesico.framework.restlet.teleapi;
 
-import colesico.framework.http.HttpContext;
 import colesico.framework.telehttp.HttpTeleWriter;
 
-import jakarta.inject.Provider;
+/**
+ * Restlet writer base
+ */
+public interface RestletTeleWriter<V> extends HttpTeleWriter<V, RestletWriteOptions> {
 
-abstract public class RestletTeleWriter<V> extends HttpTeleWriter<V, RestletWriteOptions> {
-
-    /**
-     * For injection
-     */
-    public RestletTeleWriter(Provider<HttpContext> httpContextProv) {
-        super(httpContextProv);
-    }
-
-    /**
-     * For proxy
-     */
-    public RestletTeleWriter(HttpTeleWriter writer) {
-        super(writer);
-    }
 }

@@ -22,13 +22,9 @@ module colesico.framework.restlet {
     requires static com.palantir.javapoet;
 
     requires transitive colesico.framework.telehttp;
+    requires transitive com.google.gson;
 
     requires org.slf4j;
-
-    requires org.apache.commons.lang3;
-
-    requires transitive com.google.gson;
-    requires colesico.framework.httpservice;
 
     // API
     exports colesico.framework.restlet;
