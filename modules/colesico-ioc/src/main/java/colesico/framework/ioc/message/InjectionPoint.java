@@ -20,7 +20,7 @@ package colesico.framework.ioc.message;
  * Automatically generated IoC message that can be used for example for Logger factories (or other)
  * to  get the class name for which the logger instance  is intended.
  *
- * @see Message
+ * @see IocMessage
  */
 public final class InjectionPoint {
     private final Class<?> targetClass;

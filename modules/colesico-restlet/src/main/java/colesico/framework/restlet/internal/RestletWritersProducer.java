@@ -16,12 +16,14 @@
 
 package colesico.framework.restlet.internal;
 
+import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.restlet.RestletException;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
+import colesico.framework.restlet.teleapi.response.RestletResponse;
 import colesico.framework.restlet.teleapi.writer.*;
 import colesico.framework.telehttp.writer.ProfileWriter;
 
@@ -34,9 +36,9 @@ import jakarta.inject.Singleton;
 @Produce(PrincipalRequiredExceptionWriter.class)
 public class RestletWritersProducer {
 
-    // Default object writer
     @Singleton
-    public RestletResponseWriter restletResponseWriter(RestletResponseWriter impl) {
+    @Classed(RestletResponse.class)
+    public RestletTeleWriter restletResponseWriter(@IocMessage String contentType, RestletResponseWriter impl) {
         return impl;
     }
 

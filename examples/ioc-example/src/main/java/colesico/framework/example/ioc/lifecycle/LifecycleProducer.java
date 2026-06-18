@@ -17,7 +17,7 @@
 package colesico.framework.example.ioc.lifecycle;
 
 import colesico.framework.ioc.listener.PostProduce;
-import colesico.framework.ioc.message.Message;
+import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 
@@ -27,7 +27,7 @@ public class LifecycleProducer {
 
     // This is post produce listener
     @PostProduce
-    public MainBeanLFC postProduce(@Message MainBeanLFC instance) {
+    public MainBeanLFC postProduce(@IocMessage MainBeanLFC instance) {
         instance.setValue("Value");
         return instance;
     }

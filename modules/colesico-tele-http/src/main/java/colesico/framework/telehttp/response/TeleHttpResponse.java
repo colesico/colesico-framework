@@ -9,7 +9,7 @@ import java.util.*;
  */
 abstract public class TeleHttpResponse {
 
-    public static final int DEFAULT_STATUS_CODE = 200;
+    public static final Integer DEFAULT_STATUS_CODE = 200;
 
     /**
      * Http response content type
@@ -19,13 +19,13 @@ abstract public class TeleHttpResponse {
     /**
      * Http response status code
      */
-    protected final int statusCode;
+    protected final Integer statusCode;
 
     protected final Map<String, List<String>> headers = new HashMap<>();
 
     protected final Set<HttpCookie> cookies = new HashSet<>();
 
-    public TeleHttpResponse(String contentType, int statusCode) {
+    public TeleHttpResponse(String contentType, Integer statusCode) {
         this.contentType = contentType;
         this.statusCode = statusCode;
     }
@@ -43,7 +43,7 @@ abstract public class TeleHttpResponse {
         return contentType;
     }
 
-    public int statusCode() {
+    public Integer statusCode() {
         return statusCode;
     }
 

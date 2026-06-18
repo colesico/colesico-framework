@@ -17,7 +17,7 @@
 package colesico.framework.config;
 
 
-import colesico.framework.ioc.message.Message;
+import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polysupplier;
 
@@ -56,7 +56,7 @@ public enum ConfigModel {
      * The client can inject that  bean by specifying the @Classed qualifier with the configuration implementation class
      *
      * @see Classed
-     * @see Message
+     * @see IocMessage
      * @see DefaultConfig
      */
     MESSAGE

@@ -17,7 +17,7 @@
 package colesico.framework.security.internal;
 
 import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.message.Message;
+import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
@@ -47,7 +47,7 @@ public class SecurityProducer {
 
     @Unscoped
     public AuthenticationSource authenticationSourceFactory(
-            @Message Class<? extends AuthenticationSource> sourceClass,
+            @IocMessage Class<? extends AuthenticationSource> sourceClass,
             Ioc ioc) {
 
         return ioc.instance(sourceClass);

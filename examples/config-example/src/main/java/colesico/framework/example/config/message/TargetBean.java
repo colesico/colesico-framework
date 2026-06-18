@@ -16,7 +16,7 @@
 
 package colesico.framework.example.config.message;
 
-import colesico.framework.ioc.message.Message;
+import colesico.framework.ioc.message.IocMessage;
 
 /**
  * A message based configurable service
@@ -25,7 +25,7 @@ public class TargetBean {
 
     private final MessageConfigPrototype config;
 
-    public TargetBean(@Message MessageConfigPrototype config) {
+    public TargetBean(@IocMessage MessageConfigPrototype config) {
         this.config = config;
     }
 

@@ -31,7 +31,7 @@ import colesico.framework.ioc.listener.ListenersControl;
 import colesico.framework.ioc.listener.PostConstruct;
 import colesico.framework.ioc.listener.PostProduce;
 import colesico.framework.ioc.message.Contextual;
-import colesico.framework.ioc.message.Message;
+import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.production.*;
 import colesico.framework.ioc.scope.CustomScope;
 import colesico.framework.ioc.scope.Unscoped;
@@ -189,7 +189,7 @@ public class ProducerParser extends FrameworkAbstractParser {
                     .build();
         }
 
-        AnnotationAssist<Message> messageAnn = parameter.annotation(Message.class);
+        AnnotationAssist<IocMessage> messageAnn = parameter.annotation(IocMessage.class);
         boolean isMessage = messageAnn != null;
 
         String parameterClassName = parameter.asClassType().erasure().toString();

@@ -18,7 +18,7 @@ package colesico.framework.webstatic.internal;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.ioc.message.InjectionPoint;
-import colesico.framework.ioc.message.Message;
+import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.resource.ResourceUtils;
 import colesico.framework.webstatic.StaticContent;
@@ -37,7 +37,7 @@ public class StaticContentBuilderImpl implements StaticContent.Builder {
     protected String resourcesRoot;
 
     public StaticContentBuilderImpl(
-            @Message InjectionPoint injectionPoint,
+            @IocMessage InjectionPoint injectionPoint,
             Provider<HttpContext> httpContextProv,
             ResourceUtils resourceUtils) {
 

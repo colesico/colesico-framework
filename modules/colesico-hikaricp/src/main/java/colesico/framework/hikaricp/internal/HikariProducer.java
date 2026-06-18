@@ -21,7 +21,7 @@ import colesico.framework.hikaricp.HikariCPConditions;
 import colesico.framework.hikaricp.HikariConfigPrototype;
 import colesico.framework.hikaricp.HikariProperties;
 import colesico.framework.ioc.conditional.Requires;
-import colesico.framework.ioc.message.Message;
+import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.production.Supplier;
@@ -44,7 +44,7 @@ public class HikariProducer {
      */
     @Classed(HikariConfigPrototype.class)
     @Unscoped
-    public DataSource hikariDataSourceFactory(@Message HikariConfigPrototype config) {
+    public DataSource hikariDataSourceFactory(@IocMessage HikariConfigPrototype config) {
         try {
             HikariDataSource dataSource = new HikariDataSource(config.hikariConfig());
             log.debug("Hikari DB connection pool has been created with configuration: " + config);

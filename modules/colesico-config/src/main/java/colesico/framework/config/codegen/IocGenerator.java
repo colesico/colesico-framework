@@ -22,7 +22,7 @@ import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.config.ConfigSource;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.ioc.listener.PostProduce;
-import colesico.framework.ioc.message.Message;
+import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polyproduce;
 import colesico.framework.ioc.production.Produce;
@@ -151,7 +151,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         mb.addAnnotation(PostProduce.class);
 
         ParameterSpec.Builder confParam = ParameterSpec.builder(TypeName.get(config.originClass().asClassType().unwrap()), CONF_PARAM, Modifier.FINAL);
-        confParam.addAnnotation(Message.class);
+        confParam.addAnnotation(IocMessage.class);
         mb.addParameter(confParam.build());
 
         mb.addParameter(TypeName.get(config.source().sourceType().unwrap()), CONFIG_SOURCE_PARAM, Modifier.FINAL);

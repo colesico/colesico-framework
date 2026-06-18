@@ -17,7 +17,7 @@
 package colesico.framework.jdbi.internal;
 
 import colesico.framework.ioc.conditional.Substitute;
-import colesico.framework.ioc.message.Message;
+import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
@@ -41,7 +41,7 @@ public class JdbiProducer {
      */
     @Unscoped
     @Classed(JdbiConfigPrototype.class)
-    public Jdbi jdbiFactory(@Message JdbiConfigPrototype config) {
+    public Jdbi jdbiFactory(@IocMessage JdbiConfigPrototype config) {
         final Jdbi jdbi = Jdbi.create(config.dataSource());
         if (config.options() != null) {
             config.options().forEach(o -> o.applyOptions(jdbi));

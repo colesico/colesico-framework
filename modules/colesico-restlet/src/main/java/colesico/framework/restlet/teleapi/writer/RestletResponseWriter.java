@@ -1,8 +1,8 @@
 package colesico.framework.restlet.teleapi.writer;
 
 import colesico.framework.assist.StringUtils;
-import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpResponse;
+import colesico.framework.ioc.production.Supplier;
 import colesico.framework.restlet.teleapi.RestletSerializer;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 import colesico.framework.restlet.teleapi.RestletWriteOptions;
@@ -17,16 +17,16 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 @Singleton
-public final class RestletResponseWriter
+public class RestletResponseWriter
         extends TeleHttpResponseWriter<RestletResponse<?>, RestletWriteOptions>
         implements RestletTeleWriter<RestletResponse<?>> {
 
-    public static final String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
+    public static final String DEFAULT_CONTENT_TYPE = "application/json; charset=utf-8";
 
-    private final RestletSerializer serializer;
+    protected final Supplier<RestletSerializer> serializer;
 
     @Inject
-    public RestletResponseWriter(Provider<HttpResponse> httpResponse, RestletSerializer serializer) {
+    public RestletResponseWriter(Provider<HttpResponse> httpResponse, Supplier<RestletSerializer> serializer) {
         super(httpResponse);
         this.serializer = serializer;
     }
@@ -38,7 +38,7 @@ public final class RestletResponseWriter
 
         if (value == null) {
             response.setStatus(204)
-                    .setContentType(JSON_CONTENT_TYPE)
+                    .setContentType(DEFAULT_CONTENT_TYPE)
                     .sendText("");
             return;
         }
@@ -46,15 +46,22 @@ public final class RestletResponseWriter
         // write if specified headers, cookies
         super.write(value, valueType, options);
 
-        if (StringUtils.isBlank(value.contentType())) {
-            response.setContentType(JSON_CONTENT_TYPE);
+        var contentType = value.contentType();
+        if (StringUtils.isBlank(contentType)) {
+            contentType = DEFAULT_CONTENT_TYPE;
+            response.setContentType(contentType);
         }
 
-        if (value.statusCode() == 0) {
+        if (value.statusCode() == null) {
             response.setStatus(200);
         }
 
-        String content = serializer.serialize(value);
-        response.sendData(ByteBuffer.wrap(content.getBytes(StandardCharsets.UTF_8)));
+        String content = serializer.get(contentType).serialize(value.content());
+
+        var charset = value.charset();
+        if (charset == null) {
+            charset = StandardCharsets.UTF_8;
+        }
+        response.sendData(ByteBuffer.wrap(content.getBytes(charset)));
     }
 }

@@ -16,12 +16,12 @@
 
 package colesico.framework.example.ioc.message;
 
-import colesico.framework.ioc.message.Message;
+import colesico.framework.ioc.message.IocMessage;
 
 public class ReceiverBean {
     private final TextMessage message;
 
-    public ReceiverBean(@Message TextMessage message) {
+    public ReceiverBean(@IocMessage TextMessage message) {
         this.message = message;
     }
 

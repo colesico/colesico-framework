@@ -17,7 +17,7 @@
 package colesico.framework.ioc.production;
 
 
-import colesico.framework.ioc.message.Message;
+import colesico.framework.ioc.message.IocMessage;
 
 /**
  * Basic supplier interface.
@@ -31,7 +31,7 @@ public interface Supplier<T> {
     /**
      * Should returns instance of T
      *
-     * @see Message
+     * @see IocMessage
      */
     T get(Object message);
 }

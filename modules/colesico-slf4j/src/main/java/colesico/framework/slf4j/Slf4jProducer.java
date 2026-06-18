@@ -17,7 +17,7 @@
 package colesico.framework.slf4j;
 
 import colesico.framework.ioc.message.InjectionPoint;
-import colesico.framework.ioc.message.Message;
+import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.service.ServiceOrigin;
 import colesico.framework.service.ServiceProxy;
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 @Producer
 public class Slf4jProducer {
 
-    public Logger getLogger(@Message InjectionPoint ip) {
+    public Logger getLogger(@IocMessage InjectionPoint ip) {
         if (ip==null){
             throw new RuntimeException("Undetermined target class for Logger injection");
         }

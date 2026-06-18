@@ -18,7 +18,7 @@ package colesico.framework.example.ioc.logger;
 
 
 import colesico.framework.ioc.message.InjectionPoint;
-import colesico.framework.ioc.message.Message;
+import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 
@@ -26,7 +26,7 @@ import colesico.framework.ioc.production.Producer;
 @Produce(MainBeanLOG.class)
 public class LoggerProducer {
 
-    public Logger getLogger(@Message InjectionPoint ip) {
+    public Logger getLogger(@IocMessage InjectionPoint ip) {
         if (ip == null) {
             return new Logger("NonameLogger");
         }
