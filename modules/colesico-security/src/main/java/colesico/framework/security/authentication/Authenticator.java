@@ -23,7 +23,7 @@ public interface Authenticator<R extends AuthenticationRequest, C extends Authen
     /**
      * Performs authentication using the provided request.
      */
-    AuthenticationResult<C> login(R request);
+    AuthenticationResult<C> authenticate(R request);
 
     /**
      * Perform logout

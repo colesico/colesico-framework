@@ -8,7 +8,7 @@ import colesico.framework.security.authentication.Authenticator;
 public class ApiKeyAuthenticator implements Authenticator<ApiKeyAuthenticationRequest, AuthenticationChallenge> {
 
     @Override
-    public AuthenticationResult<AuthenticationChallenge> login(ApiKeyAuthenticationRequest request) {
+    public AuthenticationResult<AuthenticationChallenge> authenticate(ApiKeyAuthenticationRequest request) {
         throw new IllegalStateException("Not implemented");
     }
 

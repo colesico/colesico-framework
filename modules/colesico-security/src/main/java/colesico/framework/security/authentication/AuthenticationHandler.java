@@ -11,7 +11,7 @@ import java.util.Optional;
  */
 public interface AuthenticationHandler {
 
-    default HandleResult<AuthenticationResult> handleLogin(Optional<AuthenticationRequest> request, AuthenticationResult result) {
+    default HandleResult<AuthenticationResult> handleAuthenticate(Optional<AuthenticationRequest> request, AuthenticationResult result) {
         return new HandleResult<>(result, true);
     }
 

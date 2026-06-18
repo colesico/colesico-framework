@@ -27,6 +27,7 @@ import colesico.framework.telehttp.reader.ProfileReader;
 
 import colesico.framework.telehttp.reader.*;
 import jakarta.inject.Singleton;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -40,151 +41,145 @@ public class RestletReadersProducer {
 
     // Default general purpose reader impl
     @Singleton
-    public ObjectReader getValueReader(JsonReader impl) {
+    public ObjectReader valueReader(JsonReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Boolean.class)
-    public RestletTeleReader getBooleanReader(BooleanReader impl) {
+    public RestletTeleReader booleanReader(BooleanReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(boolean.class)
-    public RestletTeleReader getBoolReader(BooleanReader impl) {
+    public RestletTeleReader boolReader(BooleanReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(String.class)
-    public RestletTeleReader getStringReader(StringReader impl) {
+    public RestletTeleReader stringReader(StringReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(Byte.class)
-    public RestletTeleReader getByteReader(ByteReader impl) {
+    public RestletTeleReader byteReader(ByteReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(byte.class)
-    public RestletTeleReader getBtReader(ByteReader impl) {
+    public RestletTeleReader btReader(ByteReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(Short.class)
-    public RestletTeleReader getShortReader(ShortReader impl) {
+    public RestletTeleReader shortReader(ShortReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(short.class)
-    public RestletTeleReader getShtReader(ShortReader impl) {
+    public RestletTeleReader shtReader(ShortReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(Integer.class)
-    public RestletTeleReader getIntegerReader(IntegerReader impl) {
+    public RestletTeleReader integerReader(IntegerReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(int.class)
-    public RestletTeleReader getIntReader(IntegerReader impl) {
+    public RestletTeleReader intReader(IntegerReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(OptionalInt.class)
-    public RestletTeleReader getOptionalIntegerReader(OptionalIntReader impl) {
+    public RestletTeleReader optionalIntegerReader(OptionalIntReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(Long.class)
-    public RestletTeleReader getLongReader(LongReader impl) {
+    public RestletTeleReader longReader(LongReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(long.class)
-    public RestletTeleReader getLngReader(LongReader impl) {
+    public RestletTeleReader lngReader(LongReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(OptionalLong.class)
-    public RestletTeleReader getOptionalLongReader(OptionalLongReader impl) {
+    public RestletTeleReader optionalLongReader(OptionalLongReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(Float.class)
-    public RestletTeleReader getFloatReader(FloatReader impl) {
+    public RestletTeleReader floatReader(FloatReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(float.class)
-    public RestletTeleReader getFltReader(FloatReader impl) {
+    public RestletTeleReader fltReader(FloatReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(Double.class)
-    public RestletTeleReader getDoubleReader(DoubleReader impl) {
+    public RestletTeleReader doubleReader(DoubleReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(double.class)
-    public RestletTeleReader getDblReader(DoubleReader impl) {
+    public RestletTeleReader dblReader(DoubleReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(Date.class)
-    public RestletTeleReader getDateReader(DateReader impl) {
+    public RestletTeleReader dateReader(DateReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(LocalDate.class)
-    public RestletTeleReader getLocalDateReader(LocalDateReader impl) {
+    public RestletTeleReader localDateReader(LocalDateReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(LocalTime.class)
-    public RestletTeleReader getLocalTimeReader(LocalTimeReader impl) {
+    public RestletTeleReader localTimeReader(LocalTimeReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(LocalDateTime.class)
-    public RestletTeleReader getLocalDateTimeReader(LocalDateTimeReader impl) {
+    public RestletTeleReader localDateTimeReader(LocalDateTimeReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(Profile.class)
-    public RestletTeleReader getProfileReader(ProfileReader impl) {
-        return RestletReaderProxy.of(impl);
-    }
-
-    @Singleton
-    @Classed(Identity.class)
-    public RestletTeleReader getPrincipalReader(PrincipalReader impl) {
+    public RestletTeleReader profileReader(ProfileReader impl) {
         return RestletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(HttpFileReader.class)
-    public RestletTeleReader getHttpFileReader(HttpFileReader impl) {
+    public RestletTeleReader httpFileReader(HttpFileReader impl) {
         return RestletReaderProxy.of(impl);
     }
 

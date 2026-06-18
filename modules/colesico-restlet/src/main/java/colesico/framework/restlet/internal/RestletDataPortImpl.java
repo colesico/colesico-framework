@@ -79,30 +79,32 @@ public class RestletDataPortImpl implements RestletDataPort {
     public <V> void write(V value, Class<V> valueType, RestletWriteOptions options) {
         RestletTeleWriter writer = null;
 
-        // 1. Check for a custom writer specified in options
+        // Check for a custom writer specified in options
         if (options.writerClass() != null) {
             writer = teleFactory.writer(options.writerClass());
         } else {
 
-            // 2. Find writer by the exact runtime class of the value
+            // Find writer by the exact runtime class of the value
             writer = teleFactory.findWriter(RestletTeleWriter.class, value.getClass());
 
-            // 3. Handle specific logic for exceptions
+            // Handle specific logic for exceptions
             if (writer == null && value instanceof Throwable t) {
                 writer = findRootErrorWriter(t);
             }
 
-            // 4. Fallback to the declared value type
+            // Fallback to the declared value type
             if (writer == null) {
                 writer = teleFactory.findWriter(RestletTeleWriter.class, valueType);
             }
 
-            // 5. Final fallback to the default object writer
+            // Final fallback to the default object writer
             if (writer == null) {
                 writer = teleFactory.writer(ObjectWriter.class);
             }
         }
+
         writer.write(value, valueType, options);
+
     }
 
     @Override

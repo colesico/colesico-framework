@@ -49,7 +49,7 @@ public @interface Authentication {
     enum Strategy {
 
         /**
-         * Always performs authentication (call {@link SecurityManager#login(AuthenticationSource)}).
+         * Always performs authentication (call {@link SecurityManager#authenticate(AuthenticationSource)}).
          */
         STRICT,
 
@@ -60,7 +60,7 @@ public @interface Authentication {
 
         /**
          * Only registers sources in the {@link AuthenticationSourceContext} for manual authentication
-         * by calling {@link SecurityManager#login()} later within the business logic.
+         * by calling {@link SecurityManager#authenticate()} later within the business logic.
          */
         DEFERRED
     }

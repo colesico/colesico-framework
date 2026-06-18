@@ -39,17 +39,17 @@ public interface SecurityManager {
      * The first source that provides a valid {@link AuthenticationRequest} will be used for authentication.
      * On success, the resulting {@link Identity} is bound to the current {@link IdentityContext}.
      */
-    AuthenticationResult login(Iterable<? extends AuthenticationSource<?, ?>> sources);
+    AuthenticationResult<?> authenticate(Iterable<? extends AuthenticationSource<?, ?>> sources);
 
-    default AuthenticationResult login(AuthenticationSource<?, ?> source) {
-        return login(List.of(source));
+    default AuthenticationResult<?> authenticate(AuthenticationSource<?, ?> source) {
+        return authenticate(List.of(source));
     }
 
     /**
      * Performs authentication using the sources currently bound to the {@link AuthenticationSourceContext}.
      * This is the standard way to trigger authentication in a scoped environment (e.g., during an HTTP request).
      */
-    AuthenticationResult login();
+    AuthenticationResult<?> authenticate();
 
 
     /**

@@ -48,7 +48,7 @@ public class BasicAuthenticator implements
         );
     }
 
-    protected Identity<?> authenticate(BasicAuthenticationRequest request) {
+    protected Identity<?> performAuth(BasicAuthenticationRequest request) {
         String passwordHex;
         try {
             MessageDigest digest = MessageDigest.getInstance(config.passwordDigest());
@@ -71,11 +71,11 @@ public class BasicAuthenticator implements
     }
 
     @Override
-    public AuthenticationResult login(BasicAuthenticationRequest request) {
+    public AuthenticationResult<BasicAuthenticationChallenge> authenticate(BasicAuthenticationRequest request) {
 
         if (request.isEmpty()) {
             var challenge = config.challenge();
-            if (challenge!=null) {
+            if (challenge != null) {
                 return AuthenticationResult.challenge(challenge);
             } else {
                 return AuthenticationResult.skip("No challenge required");
@@ -88,7 +88,7 @@ public class BasicAuthenticator implements
             return AuthenticationResult.success(identity);
         }
 
-        identity = authenticate(request);
+        identity = performAuth(request);
         if (identity != null) {
             authenticated.put(login, identity);
             return AuthenticationResult.success(identity);

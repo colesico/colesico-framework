@@ -47,9 +47,9 @@ public class SecurityManagerImpl implements SecurityManager {
         this.authRegistry = authRegistry;
     }
 
-    protected AuthenticationResult handleLogin(Optional<AuthenticationRequest> request, AuthenticationResult result) {
+    protected AuthenticationResult<?> handleLogin(Optional<AuthenticationRequest> request, AuthenticationResult result) {
         for (var h : authHandlers) {
-            var r = h.handleLogin(request, result);
+            var r = h.handleAuthenticate(request, result);
             result = r.result();
             if (!r.proceed()) {
                 break;
@@ -72,7 +72,7 @@ public class SecurityManagerImpl implements SecurityManager {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public AuthenticationResult login(Iterable<? extends AuthenticationSource<?, ?>> sources) {
+    public AuthenticationResult<?> authenticate(Iterable<? extends AuthenticationSource<?, ?>> sources) {
 
         identityContext.clear();
 
@@ -88,7 +88,7 @@ public class SecurityManagerImpl implements SecurityManager {
             }
 
             for (Authenticator authenticator : authenticators) {
-                var result = authenticator.login(request);
+                var result = authenticator.authenticate(request);
                 result = handleLogin(Optional.of(request), result);
 
                 switch (result) {
@@ -121,10 +121,10 @@ public class SecurityManagerImpl implements SecurityManager {
     }
 
     @Override
-    public AuthenticationResult login() {
+    public AuthenticationResult<?> authenticate() {
         var sources = sourceContext.sources();
         if (sources != null) {
-            return login(sources);
+            return authenticate(sources);
         }
         return AuthenticationResult.failure("Unauthenticated");
     }

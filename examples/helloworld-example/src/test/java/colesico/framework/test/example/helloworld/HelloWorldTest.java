@@ -60,13 +60,14 @@ public class HelloWorldTest {
     public void test1() throws Exception {
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8085/hello-weblet/say-hello")).build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(HelloWeblet.SAY_HELLO_TEXT, response.body());
+        IO.println("Response: "+response);
+        assertEquals(response.body(), HelloWeblet.SAY_HELLO_TEXT);
     }
 
     @Test
     public void test2() throws Exception {
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8085/hello-weblet/privet?name=Tanja")).build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(HelloWeblet.SAY_PRIVET_TEXT+"Tanja", response.body());
+        assertEquals(response.body(), HelloWeblet.SAY_PRIVET_TEXT + "Tanja");
     }
 }

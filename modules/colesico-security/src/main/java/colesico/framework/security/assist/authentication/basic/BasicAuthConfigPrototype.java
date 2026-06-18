@@ -18,7 +18,7 @@ abstract public class BasicAuthConfigPrototype {
         return "SHA-256";
     }
 
-    protected AuthenticationChallenge challenge(){
+    protected BasicAuthenticationChallenge challenge(){
         return new BasicAuthenticationChallenge("Authentication");
     }
 }

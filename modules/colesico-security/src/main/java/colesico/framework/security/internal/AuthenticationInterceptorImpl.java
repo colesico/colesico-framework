@@ -45,7 +45,7 @@ public class AuthenticationInterceptorImpl implements AuthenticationInterceptor 
                 // fall-through to STRICT if not authenticated
 
             case STRICT:
-                var result = securityManager.login(sources);
+                var result = securityManager.authenticate(sources);
                 if (result instanceof AuthenticationResult.Success) {
                     return context.proceed();
                 } else if (result instanceof AuthenticationResult.Continuation) {
