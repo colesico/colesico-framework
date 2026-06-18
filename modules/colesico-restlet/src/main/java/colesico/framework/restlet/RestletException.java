@@ -1,33 +1,39 @@
 package colesico.framework.restlet;
 
 public final class RestletException extends RuntimeException {
-    private final RestletError error;
+    /**
+     * Returned data
+     */
+    private final Object payload;
 
     /**
      * Http response status code
      */
     private final int httpStatus;
 
-    public RestletException(RestletError error) {
-        this.error = error;
-        httpStatus = 500;
-    }
-
-    public RestletException(RestletError error, int httpStatus) {
-        this.error = error;
+    public RestletException(String message, Throwable cause, Object payload, int httpStatus) {
+        super(message, cause);
+        this.payload = payload;
         this.httpStatus = httpStatus;
     }
 
-    public RestletError getError() {
-        return error;
+    public Object payload() {
+        return payload;
     }
 
-    public int getHttpStatus() {
+    public int httpStatus() {
         return httpStatus;
     }
 
-    @Override
-    public String getMessage() {
-        return error == null ? super.getMessage() : error.message();
+    public static RestletException of(Object payload, int httpStatus) {
+        return new RestletException(String.valueOf(payload), null, payload, httpStatus);
+    }
+
+    public static RestletException of(String message, Object payload, int httpStatus) {
+        return new RestletException(message, null, payload, httpStatus);
+    }
+
+    public static RestletException of(String message, Object payload, int httpStatus) {
+        return new RestletException(message, null, payload, httpStatus);
     }
 }

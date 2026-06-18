@@ -1,6 +1,7 @@
 package colesico.framework.restlet.teleapi.writer;
 
 import colesico.framework.http.HttpContext;
+import colesico.framework.http.HttpResponse;
 import colesico.framework.restlet.RestletException;
 import colesico.framework.restlet.teleapi.RestletWriteOptions;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
@@ -12,10 +13,11 @@ import jakarta.inject.Singleton;
 public class RestletExceptionWriter implements RestletTeleWriter<RestletException> {
 
     private final RestletResponseWriter writer;
+    private final Provider<HttpResponse> httpResponse;
 
-    public RestletExceptionWriter(Provider<HttpContext> httpContextProv, RestletResponseWriter writer) {
-        super(httpContextProv);
+    public RestletExceptionWriter(RestletResponseWriter writer, Provider<HttpResponse> httpResponse) {
         this.writer = writer;
+        this.httpResponse = httpResponse;
     }
 
     @Override

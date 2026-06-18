@@ -31,7 +31,7 @@ import jakarta.inject.Singleton;
 
 @Producer
 @Produce(PlainTextWriter.class)
-@Produce(value = RestletResponseWriter.class, keyType = RestletResponse.class, classed = RestletResponse.class)
+@Produce(value = RestletResponseWriter.class, keyType = RestletTeleWriter.class, classed = RestletResponse.class)
 @Produce(value = RestletExceptionWriter.class, keyType = RestletTeleWriter.class, classed = RestletException.class)
 public class RestletWritersProducer {
 

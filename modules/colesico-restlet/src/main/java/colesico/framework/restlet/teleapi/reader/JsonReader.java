@@ -5,7 +5,6 @@ import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
-import colesico.framework.restlet.RestletError;
 import colesico.framework.restlet.RestletException;
 import colesico.framework.restlet.teleapi.RestletSerializer;
 import colesico.framework.restlet.teleapi.RestletOrigin;
