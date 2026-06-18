@@ -22,21 +22,21 @@ import colesico.framework.router.assist.Navigation;
 /**
  * To perform router inner forwarding
  */
-public final class ForwardResponse extends Navigation<ForwardResponse> {
+public record ForwardResponse(Navigation navigation) {
 
     public static ForwardResponse of(Class<?> serviceClass, String methodName) {
-        return new ForwardResponse().service(serviceClass).method(methodName);
+        return new ForwardResponse(Navigation.of(serviceClass, methodName));
     }
 
     public static ForwardResponse of(String uri) {
-        return new ForwardResponse().uri(uri);
+        return new ForwardResponse(Navigation.of(uri));
     }
 
     /**
      * For manual configuring
      */
     public static ForwardResponse of() {
-        return new ForwardResponse();
+        return new ForwardResponse(Navigation.of());
     }
 
     /**

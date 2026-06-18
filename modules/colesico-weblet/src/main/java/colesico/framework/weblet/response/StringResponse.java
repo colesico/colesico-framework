@@ -16,12 +16,12 @@
 
 package colesico.framework.weblet.response;
 
-import colesico.framework.telehttp.response.ContentResponse;
+import colesico.framework.telehttp.response.TeleHttpContentResponse;
 
 /**
  * String content based response
  */
-abstract public class StringResponse extends ContentResponse<String> {
+abstract public class StringResponse extends TeleHttpContentResponse<String> {
 
     protected StringResponse(String content, String contentType, int statusCode) {
         super(content, contentType, statusCode);

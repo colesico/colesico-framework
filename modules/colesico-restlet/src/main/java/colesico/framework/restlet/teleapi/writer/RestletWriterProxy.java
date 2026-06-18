@@ -22,7 +22,7 @@ import colesico.framework.telehttp.HttpWriteOptions;
 import colesico.framework.telehttp.HttpTeleWriter;
 
 /**
- * Proxy to  use any http writer as restlet writer
+ * Proxy to use any http writer as restlet writer
  *
  * @param <V> value type
  */

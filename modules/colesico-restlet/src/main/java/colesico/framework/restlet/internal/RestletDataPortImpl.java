@@ -19,7 +19,7 @@ package colesico.framework.restlet.internal;
 import colesico.framework.assist.ExceptionUtils;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.reader.ObjectReader;
-import colesico.framework.restlet.teleapi.writer.ObjectWriter;
+import colesico.framework.restlet.teleapi.writer.RestletResponseWriter;
 import colesico.framework.teleapi.dataport.TeleFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,7 +99,7 @@ public class RestletDataPortImpl implements RestletDataPort {
 
             // Final fallback to the default object writer
             if (writer == null) {
-                writer = teleFactory.writer(ObjectWriter.class);
+                writer = teleFactory.writer(RestletResponseWriter.class);
             }
         }
 

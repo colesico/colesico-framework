@@ -23,8 +23,6 @@ import colesico.framework.profile.Profile;
 import colesico.framework.restlet.RestletException;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 import colesico.framework.restlet.teleapi.writer.*;
-import colesico.framework.security.Identity;
-import colesico.framework.security.authorization.PrincipalRequiredException;
 import colesico.framework.telehttp.writer.ProfileWriter;
 
 import jakarta.inject.Singleton;
@@ -32,13 +30,13 @@ import jakarta.inject.Singleton;
 @Producer
 @Produce(RestletExceptionWriter.class)
 @Produce(PlainTextWriter.class)
-@Produce(JsonWriter.class)
+@Produce(JsonRestletResponseWriter.class)
 @Produce(PrincipalRequiredExceptionWriter.class)
 public class RestletWritersProducer {
 
     // Default object writer
     @Singleton
-    public ObjectWriter objectWriter(JsonWriter impl) {
+    public RestletResponseWriter restletResponseWriter(JsonRestletResponseWriter impl) {
         return impl;
     }
 

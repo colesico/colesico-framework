@@ -16,7 +16,6 @@ public record RestletWriteOptions(
 
     public static final String OF_METHOD = "of";
 
-
     public static RestletWriteOptions of() {
         return new RestletWriteOptions(null, null);
     }

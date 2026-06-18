@@ -34,7 +34,7 @@ import java.util.*;
  *
  * @author Vladlen Larionov
  */
-public class Navigation<N extends Navigation<?>> {
+public class Navigation {
 
     protected String uri;
     protected Class<?> serviceClass;
@@ -58,115 +58,115 @@ public class Navigation<N extends Navigation<?>> {
         return new Navigation().service(serviceClass).method(methodName);
     }
 
-    public N uri(String uri) {
+    public Navigation uri(String uri) {
         this.uri = uri;
-        return (N) this;
+        return this;
     }
 
-    public N service(Class<?> serviceClass) {
+    public Navigation service(Class<?> serviceClass) {
         this.serviceClass = serviceClass;
-        return (N) this;
+        return this;
     }
 
-    public N service(Object serviceInstance) {
+    public Navigation service(Object serviceInstance) {
         this.serviceClass = ((ServiceProxy) serviceInstance).serviceOrigin();
-        return (N) this;
+        return this;
     }
 
-    public N method(String methodName) {
+    public Navigation method(String methodName) {
         this.targetMethod = methodName;
-        return (N) this;
+        return this;
     }
 
-    public N httpMethod(HttpMethod httpMethod) {
+    public Navigation httpMethod(HttpMethod httpMethod) {
         this.httpMethod = httpMethod;
-        return (N) this;
+        return this;
     }
 
-    public N queryParam(String name, String value) {
+    public Navigation queryParam(String name, String value) {
         if (value != null) {
             queryParameters.put(name, value);
         }
-        return (N) this;
+        return this;
     }
 
-    public N queryParam(String name, Character value) {
+    public Navigation queryParam(String name, Character value) {
         if (value != null) {
             queryParameters.put(name, Character.toString(value));
         }
-        return (N) this;
+        return this;
     }
 
 
-    public N queryParam(String name, Long value) {
+    public Navigation queryParam(String name, Long value) {
         if (value != null) {
             queryParameters.put(name, Long.toString(value));
         }
-        return (N) this;
+        return this;
     }
 
-    public N queryParam(String name, Integer value) {
+    public Navigation queryParam(String name, Integer value) {
         if (value != null) {
             queryParameters.put(name, Integer.toString(value));
         }
-        return (N) this;
+        return this;
     }
 
-    public N queryParam(String name, Short value) {
+    public Navigation queryParam(String name, Short value) {
         if (value != null) {
             queryParameters.put(name, Short.toString(value));
         }
-        return (N) this;
+        return this;
     }
 
-    public N queryParam(String name, Boolean value) {
+    public Navigation queryParam(String name, Boolean value) {
         if (value != null) {
             queryParameters.put(name, Boolean.toString(value));
         }
-        return (N) this;
+        return this;
     }
 
     /**
      * Set query parameters
      */
-    public N queryParamsMap(Map<String, Object> params) {
+    public Navigation queryParamsMap(Map<String, Object> params) {
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             if (entry.getKey() != null) {
                 queryParameters.put(entry.getKey(), entry.getValue().toString());
             }
         }
-        return (N) this;
+        return this;
     }
 
-    public N routeParam(String name, String value) {
+    public Navigation routeParam(String name, String value) {
         routeParameters.put(name, value);
-        return (N) this;
+        return this;
     }
 
-    public N routeParam(String name, Long value) {
+    public Navigation routeParam(String name, Long value) {
         routeParameters.put(name, Long.toString(value));
-        return (N) this;
+        return this;
     }
 
-    public N routeParam(String name, Integer value) {
+    public Navigation routeParam(String name, Integer value) {
         routeParameters.put(name, Integer.toString(value));
-        return (N) this;
+        return this;
     }
 
-    public N routeParam(String name, Short value) {
+    public Navigation routeParam(String name, Short value) {
         routeParameters.put(name, Short.toString(value));
-        return (N) this;
+        return this;
     }
 
-    public N routeParam(String name, Boolean value) {
+    public Navigation routeParam(String name, Boolean value) {
         routeParameters.put(name, Boolean.toString(value));
-        return (N) this;
+        return this;
     }
 
     /**
      * Set route parameters
      */
-    public N routeParamsMap(Map<String, Object> params) {
+    public Navigation routeParamsMap(Map<String, Object> params) {
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             if (entry.getKey() != null) {
                 routeParameters.put(entry.getKey(), entry.getValue().toString());
@@ -174,33 +174,33 @@ public class Navigation<N extends Navigation<?>> {
                 throw new RouterException("Empty route parameter value: " + entry);
             }
         }
-        return (N) this;
+        return this;
     }
 
     /**
      * Set custom http redirect status code.
      * Default code 302
      */
-    public N statusCode(int code) {
+    public Navigation statusCode(int code) {
         this.statusCode = code;
-        return (N) this;
+        return this;
     }
 
     /**
      * Set HTTP header
      */
-    public N header(String name, String vale) {
+    public Navigation header(String name, String vale) {
         List<String> hValues = headers.computeIfAbsent(name, n -> new ArrayList<>());
         hValues.add(vale);
-        return (N) this;
+        return this;
     }
 
     /**
      * Set HTTP cookie
      */
-    public N cookie(HttpCookie cookie) {
+    public Navigation cookie(HttpCookie cookie) {
         cookies.add(cookie);
-        return (N) this;
+        return this;
     }
 
     /**

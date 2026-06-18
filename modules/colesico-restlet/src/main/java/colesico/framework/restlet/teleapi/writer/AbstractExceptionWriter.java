@@ -1,18 +1,28 @@
 package colesico.framework.restlet.teleapi.writer;
 
+import colesico.framework.http.HttpContext;
 import colesico.framework.restlet.RestletError;
+import colesico.framework.restlet.teleapi.RestletJsonConverter;
 import colesico.framework.restlet.teleapi.RestletWriteOptions;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
+import jakarta.inject.Provider;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Exception writer helper
  */
 abstract public class AbstractExceptionWriter<T extends Throwable> implements RestletTeleWriter<T> {
 
-    private final ObjectWriter writer;
+    public static final String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
 
-    public AbstractExceptionWriter(ObjectWriter writer) {
-        this.writer = writer;
+    private final Provider<HttpContext> httpContext;
+    private final RestletJsonConverter jsonConverter;
+
+    public AbstractExceptionWriter(Provider<HttpContext> httpContext, RestletJsonConverter jsonConverter) {
+        this.httpContext = httpContext;
+        this.jsonConverter = jsonConverter;
     }
 
     abstract protected Object getDetails(T value, RestletWriteOptions options);
@@ -38,7 +48,12 @@ abstract public class AbstractExceptionWriter<T extends Throwable> implements Re
         error.setErrorCode(getErrorCode(value, options));
         error.setMessage(getMessage(value, options));
         error.setDetails(getDetails(value, options));
-        options.setStatusCode(getHttpStatus(value, options));
-        writer.write(error, Object.class, options);
+
+        var response = httpContext.get().response();
+
+        String json = jsonConverter.toJson(value);
+        response.setContentType(JSON_CONTENT_TYPE)
+                .setStatus(getHttpStatus(value, options))
+                .sendData(ByteBuffer.wrap(json.getBytes(StandardCharsets.UTF_8)));
     }
 }

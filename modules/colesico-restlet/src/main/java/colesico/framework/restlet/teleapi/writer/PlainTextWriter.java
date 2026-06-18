@@ -7,7 +7,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
- * Proxy for use PlainTextWriter as custom restlet writer
+ * Proxy for use {@link colesico.framework.telehttp.writer.PlainTextWriter} as custom restlet writer
  */
 @Singleton
 public final class PlainTextWriter implements RestletTeleWriter<Object> {

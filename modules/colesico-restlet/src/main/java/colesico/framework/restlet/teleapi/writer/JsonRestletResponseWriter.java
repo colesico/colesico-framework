@@ -12,19 +12,18 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 @Singleton
-public final class JsonWriter implements ObjectWriter {
+public final class JsonRestletResponseWriter implements RestletResponseWriter {
 
     public static final String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
 
-    protected final Provider<HttpContext> httpContext;
-    protected final RestletJsonConverter jsonConverter;
+    private final Provider<HttpContext> httpContext;
+    private final RestletJsonConverter jsonConverter;
 
     @Inject
-    public JsonWriter(Provider<HttpContext> httpContext, RestletJsonConverter jsonConverter) {
+    public JsonRestletResponseWriter(Provider<HttpContext> httpContext, RestletJsonConverter jsonConverter) {
         this.httpContext = httpContext;
         this.jsonConverter = jsonConverter;
     }
-
 
     @Override
     public void write(Object value, Class<Object> valueType, RestletWriteOptions options) {
@@ -39,7 +38,7 @@ public final class JsonWriter implements ObjectWriter {
 
         String json = jsonConverter.toJson(value);
         response.setContentType(JSON_CONTENT_TYPE)
-                .setStatus(200)
+                .setStatus(options.statusCode())
                 .sendData(ByteBuffer.wrap(json.getBytes(StandardCharsets.UTF_8)));
     }
 }

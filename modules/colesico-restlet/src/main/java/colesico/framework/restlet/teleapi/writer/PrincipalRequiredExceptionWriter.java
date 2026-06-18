@@ -9,7 +9,7 @@ import jakarta.inject.Singleton;
 @Singleton
 public class PrincipalRequiredExceptionWriter extends AbstractExceptionWriter<PrincipalRequiredException> {
 
-    public PrincipalRequiredExceptionWriter(Provider<HttpContext> httpContextProv, ObjectWriter writer) {
+    public PrincipalRequiredExceptionWriter(Provider<HttpContext> httpContextProv, RestletResponseWriter writer) {
         super(httpContextProv, writer);
     }
 

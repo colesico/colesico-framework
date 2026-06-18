@@ -11,9 +11,9 @@ import jakarta.inject.Singleton;
 @Singleton
 public class RestletExceptionWriter implements RestletTeleWriter<RestletException> {
 
-    private final ObjectWriter writer;
+    private final RestletResponseWriter writer;
 
-    public RestletExceptionWriter(Provider<HttpContext> httpContextProv, ObjectWriter writer) {
+    public RestletExceptionWriter(Provider<HttpContext> httpContextProv, RestletResponseWriter writer) {
         super(httpContextProv);
         this.writer = writer;
     }

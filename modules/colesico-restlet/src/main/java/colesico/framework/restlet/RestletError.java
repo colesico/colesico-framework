@@ -20,8 +20,7 @@ package colesico.framework.restlet;
 import java.io.Serializable;
 
 /**
- * Restlet error object
- * Used to  unify the error response
+ * Restlet unified error object
  */
 public class RestletError implements Serializable {
 

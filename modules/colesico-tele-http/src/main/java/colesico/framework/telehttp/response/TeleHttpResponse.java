@@ -21,9 +21,9 @@ abstract public class TeleHttpResponse {
      */
     protected final int statusCode;
 
-    protected Map<String, List<String>> headers = new HashMap<>();
+    protected final Map<String, List<String>> headers = new HashMap<>();
 
-    protected Set<HttpCookie> cookies = new HashSet<>();
+    protected final Set<HttpCookie> cookies = new HashSet<>();
 
     public TeleHttpResponse(String contentType, int statusCode) {
         this.contentType = contentType;

@@ -16,13 +16,13 @@
 
 package colesico.framework.weblet.response;
 
-import colesico.framework.telehttp.response.ContentResponse;
+import colesico.framework.telehttp.response.TeleHttpContentResponse;
 import colesico.framework.telehttp.response.TeleHttpResponse;
 
 /**
  * Binary data to  returned to  client
  */
-public final class BinaryResponse extends ContentResponse<byte[]> {
+public final class BinaryResponse extends TeleHttpContentResponse<byte[]> {
 
     public static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
 

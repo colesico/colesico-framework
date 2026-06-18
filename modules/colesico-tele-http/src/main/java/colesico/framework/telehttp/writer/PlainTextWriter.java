@@ -8,6 +8,10 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
+/**
+ * Object simple writer.
+ * Writes object use {@link Object#toString()} as plain text
+ */
 @Singleton
 public final class PlainTextWriter implements HttpTeleWriter<Object, HttpWriteOptions> {
 

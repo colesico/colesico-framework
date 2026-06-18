@@ -22,18 +22,18 @@ import colesico.framework.router.assist.Navigation;
 /**
  * Performs http redirect
  */
-public final class RedirectResponse extends Navigation<RedirectResponse> {
+public record RedirectResponse(Navigation navigation) {
 
     public static RedirectResponse of(Class<?> serviceClass, String methodName) {
-        return new RedirectResponse().service(serviceClass).method(methodName);
+        return new RedirectResponse(Navigation.of(serviceClass, methodName));
     }
 
     public static RedirectResponse of(String uri) {
-        return new RedirectResponse().uri(uri);
+        return new RedirectResponse(Navigation.of(uri));
     }
 
     public static RedirectResponse of() {
-        return new RedirectResponse();
+        return new RedirectResponse(Navigation.of());
     }
 
     public WebletResponse wrap() {
