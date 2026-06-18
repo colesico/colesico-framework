@@ -8,20 +8,22 @@ import colesico.framework.restlet.teleapi.RestletTeleWriter;
 import colesico.framework.restlet.teleapi.RestletWriteOptions;
 
 import colesico.framework.restlet.teleapi.response.RestletResponse;
+import colesico.framework.telehttp.response.TeleHttpResponse;
 import colesico.framework.telehttp.writer.TeleHttpResponseWriter;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
+
+import static colesico.framework.restlet.teleapi.response.RestletResponse.DEFAULT_CHARSET;
+import static colesico.framework.restlet.teleapi.response.RestletResponse.DEFAULT_CONTENT_TYPE;
 
 @Singleton
 public class RestletResponseWriter
-        extends TeleHttpResponseWriter<RestletResponse<?>, RestletWriteOptions>
-        implements RestletTeleWriter<RestletResponse<?>> {
+        extends TeleHttpResponseWriter<RestletResponse, RestletWriteOptions>
+        implements RestletTeleWriter<RestletResponse> {
 
-    public static final String DEFAULT_CONTENT_TYPE = "application/json; charset=utf-8";
 
     protected final Supplier<RestletSerializer> serializer;
 
@@ -32,7 +34,7 @@ public class RestletResponseWriter
     }
 
     @Override
-    public void write(RestletResponse<?> value, Class<RestletResponse<?>> valueType, RestletWriteOptions options) {
+    public void write(RestletResponse value, Class<RestletResponse> valueType, RestletWriteOptions options) {
 
         var response = httpResponse.get();
 
@@ -53,14 +55,14 @@ public class RestletResponseWriter
         }
 
         if (value.statusCode() == null) {
-            response.setStatus(200);
+            response.setStatus(TeleHttpResponse.DEFAULT_STATUS_CODE);
         }
 
         String content = serializer.get(contentType).serialize(value.content());
 
         var charset = value.charset();
         if (charset == null) {
-            charset = StandardCharsets.UTF_8;
+            charset = DEFAULT_CHARSET;
         }
         response.sendData(ByteBuffer.wrap(content.getBytes(charset)));
     }

@@ -16,11 +16,12 @@
 
 package colesico.framework.restlet.internal;
 
+import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.restlet.RestletConfigPrototype;
 import colesico.framework.restlet.assist.LogRestletListener;
-import colesico.framework.restlet.internal.gsonconv.GsonConverter;
+import colesico.framework.restlet.internal.gsonconv.GsonSerializer;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.origin.RestletAutoOrigin;
 import colesico.framework.telehttp.origin.Origin;
@@ -36,7 +37,7 @@ import jakarta.inject.Singleton;
 @Produce(RestletDataPortImpl.class)
 @Produce(RestletTeleControllerImpl.class)
 @Produce(RestletAutoOrigin.class)
-@Produce(GsonConverter.class)
+@Produce(GsonSerializer.class)
 @Produce(LogRestletListener.class)
 public class RestletProducer {
 
@@ -50,8 +51,9 @@ public class RestletProducer {
         return impl;
     }
 
+    //TODO: add support for serializers by content-type
     @Singleton
-    public RestletSerializer jsonConverter(GsonConverter impl) {
+    public RestletSerializer restletSerializer(@IocMessage String contentType, GsonSerializer impl) {
         return impl;
     }
 
@@ -61,7 +63,7 @@ public class RestletProducer {
     }
 
     @Singleton
-    public RestletResponseListener  restletResponseListener(LogRestletListener impl) {
+    public RestletResponseListener restletResponseListener(LogRestletListener impl) {
         return impl;
     }
 

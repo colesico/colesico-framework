@@ -38,8 +38,8 @@ public class WebletWritersProducer {
 
     @Singleton
     @Classed(Exception.class)
-    public WebletTeleWriter binaryWriter(ExceptionWriter writer) {
-        return WebletWriterProxy.of(writer);
+    public WebletTeleWriter exceptionWriter(ExceptionWriter impl) {
+        return WebletWriterProxy.of(impl);
     }
 
     @Singleton
