@@ -19,7 +19,6 @@ package colesico.framework.restlet.internal;
 import colesico.framework.assist.ExceptionUtils;
 import colesico.framework.restlet.teleapi.*;
 import colesico.framework.restlet.teleapi.reader.ObjectReader;
-import colesico.framework.restlet.teleapi.writer.RestletResponseWriter;
 import colesico.framework.teleapi.dataport.TeleFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

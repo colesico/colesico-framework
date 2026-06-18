@@ -1,5 +1,6 @@
 package colesico.framework.telehttp.writer;
 
+import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.telehttp.HttpTeleWriter;
@@ -17,12 +18,23 @@ abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, W exten
 
     @Override
     public void write(V value, Class<V> valueType, W options) {
+
         final var response = httpResponse.get();
 
-        HttpUtils.setHeaders(response, value.headers());
-        HttpUtils.setCookies(response, value.cookies());
+        if (!value.headers().isEmpty()) {
+            HttpUtils.setHeaders(response, value.headers());
+        }
 
-        response.setStatus(value.statusCode());
-        response.setContentType(value.contentType());
+        if (!value.cookies().isEmpty()) {
+            HttpUtils.setCookies(response, value.cookies());
+        }
+
+        if (value.statusCode() != 0) {
+            response.setStatus(value.statusCode());
+        }
+
+        if (!StringUtils.isBlank(value.contentType())) {
+            response.setContentType(value.contentType());
+        }
     }
 }

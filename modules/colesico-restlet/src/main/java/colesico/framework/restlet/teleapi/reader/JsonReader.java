@@ -7,7 +7,7 @@ import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.restlet.RestletError;
 import colesico.framework.restlet.RestletException;
-import colesico.framework.restlet.teleapi.RestletJsonConverter;
+import colesico.framework.restlet.teleapi.RestletSerializer;
 import colesico.framework.restlet.teleapi.RestletOrigin;
 import colesico.framework.restlet.teleapi.RestletReadOptions;
 import colesico.framework.telehttp.origin.OriginFactory;
@@ -26,11 +26,11 @@ public final class JsonReader
         extends OriginReader<Object, RestletReadOptions>
         implements ObjectReader {
 
-    private final RestletJsonConverter jsonConverter;
+    private final RestletSerializer jsonConverter;
     private final Provider<HttpContext> httpContextProv;
 
     @Inject
-    public JsonReader(OriginFactory originFactory, RestletJsonConverter jsonConverter, Provider<HttpContext> httpContextProv) {
+    public JsonReader(OriginFactory originFactory, RestletSerializer jsonConverter, Provider<HttpContext> httpContextProv) {
         super(originFactory);
         this.jsonConverter = jsonConverter;
         this.httpContextProv = httpContextProv;
@@ -59,7 +59,7 @@ public final class JsonReader
 
         if (useInputStream) {
             try (InputStream is = request.inputStream()) {
-                return jsonConverter.fromJson(is, valueType);
+                return jsonConverter.deserialize(is, valueType);
             } catch (Exception e) {
                 throw new RestletException(new RestletError("ReadJsonError", ExceptionUtils.getRootCauseMessage(e), null));
             }
@@ -69,7 +69,7 @@ public final class JsonReader
                 if (StringUtils.isBlank(strValue)) {
                     return null;
                 }
-                return jsonConverter.fromJson(strValue, valueType);
+                return jsonConverter.deserialize(strValue, valueType);
             } catch (Exception e) {
                 throw new RestletException(new RestletError("ReadJsonError", ExceptionUtils.getRootCauseMessage(e), null));
             }

@@ -2,7 +2,7 @@ package colesico.framework.restlet.teleapi.writer;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.restlet.RestletError;
-import colesico.framework.restlet.teleapi.RestletJsonConverter;
+import colesico.framework.restlet.teleapi.RestletSerializer;
 import colesico.framework.restlet.teleapi.RestletWriteOptions;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 import jakarta.inject.Provider;
@@ -18,9 +18,9 @@ abstract public class AbstractExceptionWriter<T extends Throwable> implements Re
     public static final String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
 
     private final Provider<HttpContext> httpContext;
-    private final RestletJsonConverter jsonConverter;
+    private final RestletSerializer jsonConverter;
 
-    public AbstractExceptionWriter(Provider<HttpContext> httpContext, RestletJsonConverter jsonConverter) {
+    public AbstractExceptionWriter(Provider<HttpContext> httpContext, RestletSerializer jsonConverter) {
         this.httpContext = httpContext;
         this.jsonConverter = jsonConverter;
     }
@@ -51,7 +51,7 @@ abstract public class AbstractExceptionWriter<T extends Throwable> implements Re
 
         var response = httpContext.get().response();
 
-        String json = jsonConverter.toJson(value);
+        String json = jsonConverter.serialize(value);
         response.setContentType(JSON_CONTENT_TYPE)
                 .setStatus(getHttpStatus(value, options))
                 .sendData(ByteBuffer.wrap(json.getBytes(StandardCharsets.UTF_8)));

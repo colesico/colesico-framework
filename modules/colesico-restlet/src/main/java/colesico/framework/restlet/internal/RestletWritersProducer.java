@@ -30,13 +30,13 @@ import jakarta.inject.Singleton;
 @Producer
 @Produce(RestletExceptionWriter.class)
 @Produce(PlainTextWriter.class)
-@Produce(JsonRestletResponseWriter.class)
+@Produce(RestletResponseWriter.class)
 @Produce(PrincipalRequiredExceptionWriter.class)
 public class RestletWritersProducer {
 
     // Default object writer
     @Singleton
-    public RestletResponseWriter restletResponseWriter(JsonRestletResponseWriter impl) {
+    public RestletResponseWriter restletResponseWriter(RestletResponseWriter impl) {
         return impl;
     }
 

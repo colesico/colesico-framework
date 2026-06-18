@@ -18,7 +18,7 @@ package colesico.framework.restlet.internal.gsonconv;
 
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.restlet.teleapi.RestletGsonOptionsPrototype;
-import colesico.framework.restlet.teleapi.RestletJsonConverter;
+import colesico.framework.restlet.teleapi.RestletSerializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -32,7 +32,7 @@ import java.time.LocalDateTime;
  * Default json converter for restlet
  */
 @Singleton
-public class GsonConverter implements RestletJsonConverter {
+public class GsonConverter implements RestletSerializer {
 
     protected final Gson gson;
 
@@ -47,12 +47,12 @@ public class GsonConverter implements RestletJsonConverter {
     }
 
     @Override
-    public <T> String toJson(T obj) {
-        return gson.toJson(obj);
+    public <T> String serialize(T value) {
+        return gson.toJson(value);
     }
 
     @Override
-    public <T> T fromJson(Reader reader, Type valueType) {
+    public <T> T deserialize(Reader reader, Type valueType) {
         return gson.fromJson(reader, valueType);
     }
 }

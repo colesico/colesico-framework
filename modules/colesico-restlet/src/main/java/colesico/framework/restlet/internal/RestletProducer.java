@@ -51,7 +51,7 @@ public class RestletProducer {
     }
 
     @Singleton
-    public RestletJsonConverter jsonConverter(GsonConverter impl) {
+    public RestletSerializer jsonConverter(GsonConverter impl) {
         return impl;
     }
 
