@@ -7,8 +7,7 @@ import colesico.framework.restlet.teleapi.RestletSerializer;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 import colesico.framework.restlet.teleapi.RestletWriteOptions;
 
-import colesico.framework.restlet.teleapi.response.RestletResponse;
-import colesico.framework.telehttp.response.TeleHttpResponse;
+import colesico.framework.restlet.teleapi.response.ObjectResponse;
 import colesico.framework.telehttp.writer.TeleHttpResponseWriter;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -16,31 +15,28 @@ import jakarta.inject.Singleton;
 
 import java.nio.ByteBuffer;
 
-import static colesico.framework.restlet.teleapi.response.RestletResponse.DEFAULT_CHARSET;
-import static colesico.framework.restlet.teleapi.response.RestletResponse.DEFAULT_CONTENT_TYPE;
-
 @Singleton
-public class RestletResponseWriter
-        extends TeleHttpResponseWriter<RestletResponse, RestletWriteOptions>
-        implements RestletTeleWriter<RestletResponse> {
+public class ObjectResponseWriter
+        extends TeleHttpResponseWriter<ObjectResponse, RestletWriteOptions>
+        implements RestletTeleWriter<ObjectResponse> {
 
 
     protected final Supplier<RestletSerializer> serializer;
 
     @Inject
-    public RestletResponseWriter(Provider<HttpResponse> httpResponse, Supplier<RestletSerializer> serializer) {
+    public ObjectResponseWriter(Provider<HttpResponse> httpResponse, Supplier<RestletSerializer> serializer) {
         super(httpResponse);
         this.serializer = serializer;
     }
 
     @Override
-    public void write(RestletResponse value, Class<RestletResponse> valueType, RestletWriteOptions options) {
+    public void write(ObjectResponse value, Class<ObjectResponse> valueType, RestletWriteOptions options) {
 
         var response = httpResponse.get();
 
         if (value == null) {
             response.setStatus(204)
-                    .setContentType(DEFAULT_CONTENT_TYPE)
+                    .setContentType(RestletWriteOptions.DEFAULT_CONTENT_TYPE)
                     .sendText("");
             return;
         }
@@ -49,7 +45,7 @@ public class RestletResponseWriter
         super.write(value, valueType, options);
 
         var contentType = value.contentType();
-        if (StringUtils.isBlank(contentType)) {
+        if (contentType == null) {
             contentType = options.contentType();
             response.setContentType(contentType);
         }

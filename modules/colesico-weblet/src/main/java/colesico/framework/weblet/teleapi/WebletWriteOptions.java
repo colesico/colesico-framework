@@ -18,7 +18,6 @@ package colesico.framework.weblet.teleapi;
 
 import colesico.framework.telehttp.HttpWriteOptions;
 
-import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -41,6 +40,14 @@ public record WebletWriteOptions(
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     public static final String OF_METHOD = "of";
+
+    public WebletWriteOptions(Integer statusCode, String contentType, Charset charset, Class<? extends WebletTeleWriter<?>> writerClass, Object attachment) {
+        this.statusCode = statusCode != null ? statusCode : DEFAULT_STATUS_CODE;
+        this.contentType = contentType != null ? contentType : DEFAULT_CONTENT_TYPE;
+        this.charset = charset != null ? charset : DEFAULT_CHARSET;
+        this.writerClass = writerClass;
+        this.attachment = attachment;
+    }
 
     public static WebletWriteOptions of() {
         return new WebletWriteOptions(

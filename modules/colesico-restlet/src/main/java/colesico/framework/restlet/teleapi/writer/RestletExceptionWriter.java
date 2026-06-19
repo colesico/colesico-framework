@@ -12,9 +12,6 @@ import jakarta.inject.Singleton;
 
 import java.nio.ByteBuffer;
 
-import static colesico.framework.restlet.teleapi.response.RestletResponse.DEFAULT_CHARSET;
-import static colesico.framework.restlet.teleapi.response.RestletResponse.DEFAULT_CONTENT_TYPE;
-
 @Singleton
 public class RestletExceptionWriter implements RestletTeleWriter<RestletException> {
 

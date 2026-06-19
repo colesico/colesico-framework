@@ -25,6 +25,14 @@ public record RestletWriteOptions(
 
     public static final String OF_METHOD = "of";
 
+    public RestletWriteOptions(Integer statusCode, String contentType, Charset charset, Class<? extends RestletTeleWriter<?>> writerClass, Object attachment) {
+        this.statusCode = statusCode != null ? statusCode : DEFAULT_STATUS_CODE;
+        this.contentType = contentType != null ? contentType : DEFAULT_CONTENT_TYPE;
+        this.charset = charset != null ? charset : DEFAULT_CHARSET;
+        this.writerClass = writerClass;
+        this.attachment = attachment;
+    }
+
     public static RestletWriteOptions of() {
         return new RestletWriteOptions(
                 DEFAULT_STATUS_CODE,
