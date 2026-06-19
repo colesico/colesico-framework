@@ -17,25 +17,43 @@
 package colesico.framework.weblet;
 
 /**
-* @author Vladlen Larionov
-*/
+ * @author Vladlen Larionov
+ */
 public class WebletException extends RuntimeException {
-    public WebletException() {
-    }
 
-    public WebletException(String message) {
-        super(message);
-    }
+    /**
+     * Http response status code
+     */
+    private final Integer statusCode;
 
-    public WebletException(String message, Throwable cause) {
+    /**
+     * Returned data
+     */
+    private final Object details;
+
+    public WebletException(String message, Throwable cause, Integer statusCode, Object details) {
         super(message, cause);
+        this.statusCode = statusCode;
+        this.details = details;
     }
 
-    public WebletException(Throwable cause) {
-        super(cause);
+    public static WebletException of(Integer statusCode, Object details) {
+        return new WebletException(String.valueOf(details), null, statusCode, details);
     }
 
-    public WebletException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public static WebletException of(String message, Integer statusCode, Object details) {
+        return new WebletException(message, null, statusCode, details);
+    }
+
+    public static WebletException of(Throwable cause, Integer statusCode, Object details) {
+        return new WebletException(String.valueOf(details), cause, statusCode, details);
+    }
+
+    public Object details() {
+        return details;
+    }
+
+    public Integer statusCode() {
+        return statusCode;
     }
 }

@@ -23,6 +23,7 @@ import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
+import colesico.framework.weblet.WebletException;
 import colesico.framework.weblet.response.*;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.writer.*;
@@ -31,21 +32,16 @@ import jakarta.inject.Singleton;
 
 @Producer
 @Produce(StringWriter.class)
-@Produce(RedirectWriter.class)
-@Produce(ForwardWriter.class)
-@Produce(BinaryWriter.class)
+@Produce(value = RedirectWriter.class, keyType = WebletTeleWriter.class, classed = RedirectResponse.class)
+@Produce(value = ForwardWriter.class, keyType = WebletTeleWriter.class, classed = ForwardResponse.class)
+@Produce(value = BinaryWriter.class, keyType = WebletTeleWriter.class, classed = BinaryResponse.class)
+@Produce(value = WebletExceptionWriter.class, keyType = WebletTeleWriter.class, classed = WebletException.class)
 public class WebletWritersProducer {
 
     @Singleton
     @Classed(Exception.class)
     public WebletTeleWriter exceptionWriter(ExceptionWriter impl) {
         return WebletWriterProxy.of(impl);
-    }
-
-    @Singleton
-    @Classed(BinaryResponse.class)
-    public WebletTeleWriter binaryWriter(BinaryWriter impl) {
-        return impl;
     }
 
     @Singleton
@@ -57,18 +53,6 @@ public class WebletWritersProducer {
     @Singleton
     @Classed(HtmlResponse.class)
     public WebletTeleWriter htmlResponseWriter(StringWriter impl) {
-        return impl;
-    }
-
-    @Singleton
-    @Classed(RedirectResponse.class)
-    public WebletTeleWriter redirectResponseWriter(RedirectWriter impl) {
-        return impl;
-    }
-
-    @Singleton
-    @Classed(ForwardResponse.class)
-    public WebletTeleWriter forwardResponseWriter(ForwardWriter impl) {
         return impl;
     }
 

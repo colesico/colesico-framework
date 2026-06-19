@@ -3,19 +3,31 @@ package colesico.framework.restlet;
 public final class RestletException extends RuntimeException {
 
     /**
-     * Returned data
-     */
-    private final Object details;
-
-    /**
      * Http response status code
      */
     private final Integer statusCode;
 
-    public RestletException(String message, Throwable cause, Object details, Integer statusCode) {
+    /**
+     * Returned data
+     */
+    private final Object details;
+
+    public RestletException(String message, Throwable cause, Integer statusCode, Object details) {
         super(message, cause);
-        this.details = details;
         this.statusCode = statusCode;
+        this.details = details;
+    }
+
+    public static RestletException of(Integer statusCode, Object details) {
+        return new RestletException(String.valueOf(details), null, statusCode, details);
+    }
+
+    public static RestletException of(String message, Integer statusCode, Object details) {
+        return new RestletException(message, null, statusCode, details);
+    }
+
+    public static RestletException of(Throwable cause, Integer statusCode, Object details) {
+        return new RestletException(String.valueOf(details), cause, statusCode, details);
     }
 
     public Object details() {
@@ -24,17 +36,5 @@ public final class RestletException extends RuntimeException {
 
     public Integer statusCode() {
         return statusCode;
-    }
-
-    public static RestletException of(Object payload, Integer httpStatus) {
-        return new RestletException(String.valueOf(payload), null, payload, httpStatus);
-    }
-
-    public static RestletException of(String message, Object payload, Integer httpStatus) {
-        return new RestletException(message, null, payload, httpStatus);
-    }
-
-    public static RestletException of(Throwable cause, Object payload, Integer httpStatus) {
-        return new RestletException(String.valueOf(payload), cause, payload, httpStatus);
     }
 }
