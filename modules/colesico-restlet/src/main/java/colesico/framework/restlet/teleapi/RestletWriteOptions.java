@@ -3,6 +3,8 @@ package colesico.framework.restlet.teleapi;
 import colesico.framework.telehttp.HttpWriteOptions;
 
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -10,22 +12,44 @@ import java.lang.reflect.Type;
  * @param attachment
  */
 public record RestletWriteOptions(
+        Integer statusCode,
+        String contentType,
+        Charset charset,
         Class<? extends RestletTeleWriter<?>> writerClass,
         Object attachment
 ) implements HttpWriteOptions {
 
+    public static final Integer DEFAULT_STATUS_CODE = 200;
+    public static final String DEFAULT_CONTENT_TYPE = "application/json; charset=utf-8";
+    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+
     public static final String OF_METHOD = "of";
 
     public static RestletWriteOptions of() {
-        return new RestletWriteOptions(null, null);
+        return new RestletWriteOptions(
+                DEFAULT_STATUS_CODE,
+                DEFAULT_CONTENT_TYPE,
+                DEFAULT_CHARSET,
+                null,
+                null);
     }
 
     public static RestletWriteOptions of(Class<? extends RestletTeleWriter<?>> writerClass) {
-        return new RestletWriteOptions(writerClass, null);
+        return new RestletWriteOptions(
+                DEFAULT_STATUS_CODE,
+                DEFAULT_CONTENT_TYPE,
+                DEFAULT_CHARSET,
+                writerClass,
+                null);
     }
 
     public static RestletWriteOptions of(Object attachment) {
-        return new RestletWriteOptions(null, attachment);
+        return new RestletWriteOptions(
+                DEFAULT_STATUS_CODE,
+                DEFAULT_CONTENT_TYPE,
+                DEFAULT_CHARSET,
+                null,
+                attachment);
     }
 
 }

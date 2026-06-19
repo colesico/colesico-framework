@@ -50,19 +50,19 @@ public class RestletResponseWriter
 
         var contentType = value.contentType();
         if (StringUtils.isBlank(contentType)) {
-            contentType = DEFAULT_CONTENT_TYPE;
+            contentType = options.contentType();
             response.setContentType(contentType);
         }
 
         if (value.statusCode() == null) {
-            response.setStatus(TeleHttpResponse.DEFAULT_STATUS_CODE);
+            response.setStatus(options.statusCode());
         }
 
         String content = serializer.get(contentType).serialize(value.content());
 
         var charset = value.charset();
         if (charset == null) {
-            charset = DEFAULT_CHARSET;
+            charset = options.charset();
         }
         response.sendData(ByteBuffer.wrap(content.getBytes(charset)));
     }

@@ -16,31 +16,48 @@
 
 package colesico.framework.weblet.response;
 
-import colesico.framework.telehttp.response.TeleHttpResponse;
+import colesico.framework.weblet.teleapi.WebletWriteOptions;
+
+import java.nio.charset.Charset;
 
 /**
  * Html text to  returned to  client
  */
 public final class HtmlResponse extends StringResponse {
 
-    public static final String CONTENT_TYPE = "text/html; charset=utf-8";
+    public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
 
-    private HtmlResponse(String content, String contentType, int statusCode) {
-        super(content, contentType, statusCode);
+    public HtmlResponse(Integer statusCode, String contentType, String content, Charset charset) {
+        super(statusCode, contentType, content, charset);
     }
 
     /**
      * Empty response
      */
     public static HtmlResponse of() {
-        return new HtmlResponse(null, CONTENT_TYPE, 204);
+        return new HtmlResponse(
+                204,
+                DEFAULT_CONTENT_TYPE,
+                "",
+                WebletWriteOptions.DEFAULT_CHARSET
+        );
     }
 
     public static HtmlResponse of(String content) {
-        return new HtmlResponse(content, CONTENT_TYPE, TeleHttpResponse.DEFAULT_STATUS_CODE);
+        return new HtmlResponse(
+                WebletWriteOptions.DEFAULT_STATUS_CODE,
+                DEFAULT_CONTENT_TYPE,
+                content,
+                WebletWriteOptions.DEFAULT_CHARSET
+        );
     }
 
-    public static HtmlResponse of(String content, int statusCode) {
-        return new HtmlResponse(content, CONTENT_TYPE, statusCode);
+    public static HtmlResponse of(int statusCode, String content) {
+        return new HtmlResponse(
+                statusCode,
+                DEFAULT_CONTENT_TYPE,
+                content,
+                WebletWriteOptions.DEFAULT_CHARSET
+        );
     }
 }

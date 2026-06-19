@@ -1,5 +1,6 @@
 package colesico.framework.restlet.teleapi.response;
 
+import colesico.framework.restlet.teleapi.RestletWriteOptions;
 import colesico.framework.telehttp.response.TeleHttpContentResponse;
 
 import java.nio.charset.Charset;
@@ -10,13 +11,10 @@ import java.nio.charset.StandardCharsets;
  */
 public class RestletResponse<T> extends TeleHttpContentResponse<T> {
 
-    public static final String DEFAULT_CONTENT_TYPE = "application/json; charset=utf-8";
-    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-
     protected final Charset charset;
 
-    public RestletResponse(T content, String contentType, Integer statusCode, Charset charset) {
-        super(content, contentType, statusCode);
+    public RestletResponse(Integer statusCode, String contentType, T content, Charset charset) {
+        super(statusCode, contentType, content);
         this.charset = charset;
     }
 
@@ -25,10 +23,29 @@ public class RestletResponse<T> extends TeleHttpContentResponse<T> {
     }
 
     public static <T> RestletResponse<T> of(T content) {
-        return new RestletResponse<>(content, DEFAULT_CONTENT_TYPE, 200, DEFAULT_CHARSET);
+        return new RestletResponse<>(
+                RestletWriteOptions.DEFAULT_STATUS_CODE,
+                RestletWriteOptions.DEFAULT_CONTENT_TYPE,
+                content,
+                RestletWriteOptions.DEFAULT_CHARSET
+        );
     }
 
-    public static <T> RestletResponse<T> of(T content, int statusCode) {
-        return new RestletResponse<>(content, DEFAULT_CONTENT_TYPE, statusCode, DEFAULT_CHARSET);
+    public static <T> RestletResponse<T> of(int statusCode, T content) {
+        return new RestletResponse<>(
+                statusCode,
+                RestletWriteOptions.DEFAULT_CONTENT_TYPE,
+                content,
+                RestletWriteOptions.DEFAULT_CHARSET
+        );
+    }
+
+    public static <T> RestletResponse<T> of(int statusCode, String contentType, T content) {
+        return new RestletResponse<>(
+                statusCode,
+                contentType,
+                content,
+                RestletWriteOptions.DEFAULT_CHARSET
+        );
     }
 }

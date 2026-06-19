@@ -17,7 +17,7 @@
 package colesico.framework.weblet.response;
 
 import colesico.framework.telehttp.response.TeleHttpContentResponse;
-import colesico.framework.telehttp.response.TeleHttpResponse;
+import colesico.framework.weblet.teleapi.WebletWriteOptions;
 
 /**
  * Binary data to  returned to  client
@@ -28,32 +28,49 @@ public final class BinaryResponse extends TeleHttpContentResponse<byte[]> {
 
     private final String fileName;
 
-    public BinaryResponse(byte[] content, String contentType, String fileName, int statusCode) {
-        super(content, contentType, statusCode);
+    public BinaryResponse(Integer statusCode, String contentType, byte[] content, String fileName) {
+        super(statusCode, contentType, content);
         this.fileName = fileName;
     }
 
-    public static BinaryResponse of(byte[] content, String contentType, String fileName, int statusCode) {
-        return new BinaryResponse(content, contentType, fileName, statusCode);
-    }
-
-    public static BinaryResponse of(byte[] content, String contentType, String fileName) {
-        return new BinaryResponse(content, contentType, fileName, TeleHttpResponse.DEFAULT_STATUS_CODE);
-    }
-
-    public static BinaryResponse of(byte[] content, String contentType) {
-        return new BinaryResponse(content, contentType, null, TeleHttpResponse.DEFAULT_STATUS_CODE);
-    }
-
     public static BinaryResponse of(byte[] content) {
-        return new BinaryResponse(content, DEFAULT_CONTENT_TYPE, null, TeleHttpResponse.DEFAULT_STATUS_CODE);
+        return new BinaryResponse(
+                WebletWriteOptions.DEFAULT_STATUS_CODE,
+                DEFAULT_CONTENT_TYPE,
+                content,
+                null);
+    }
+
+    public static BinaryResponse of(String contentType, byte[] content) {
+        return new BinaryResponse(
+                WebletWriteOptions.DEFAULT_STATUS_CODE,
+                contentType,
+                content,
+                null);
+    }
+
+    public static BinaryResponse of(String contentType, byte[] content, String fileName) {
+        return new BinaryResponse(
+                WebletWriteOptions.DEFAULT_STATUS_CODE,
+                contentType,
+                content,
+                fileName);
+    }
+
+    public static BinaryResponse of(int statusCode, String contentType, byte[] content, String fileName) {
+        return new BinaryResponse(
+                statusCode,
+                contentType,
+                content,
+                fileName);
+    }
+
+    public String fileName() {
+        return fileName;
     }
 
     public WebletResponse wrap() {
         return WebletResponse.of(this);
     }
 
-    public String fileName() {
-        return fileName;
-    }
 }

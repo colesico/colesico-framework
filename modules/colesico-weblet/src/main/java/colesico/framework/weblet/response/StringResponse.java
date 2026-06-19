@@ -18,13 +18,22 @@ package colesico.framework.weblet.response;
 
 import colesico.framework.telehttp.response.TeleHttpContentResponse;
 
+import java.nio.charset.Charset;
+
 /**
  * String content based response
  */
 abstract public class StringResponse extends TeleHttpContentResponse<String> {
 
-    protected StringResponse(String content, String contentType, int statusCode) {
-        super(content, contentType, statusCode);
+    private final Charset charset;
+
+    public StringResponse(Integer statusCode, String contentType, String content, Charset charset) {
+        super(statusCode, contentType, content);
+        this.charset = charset;
+    }
+
+    public Charset charset() {
+        return charset;
     }
 
     public WebletResponse wrap() {

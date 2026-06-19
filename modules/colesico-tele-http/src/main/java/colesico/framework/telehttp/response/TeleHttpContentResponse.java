@@ -5,8 +5,8 @@ abstract public class TeleHttpContentResponse<C> extends TeleHttpResponse {
 
     protected final C content;
 
-    public TeleHttpContentResponse(C content, String contentType, Integer statusCode) {
-        super(contentType, statusCode);
+    public TeleHttpContentResponse(Integer statusCode, String contentType, C content) {
+        super(statusCode, contentType);
         this.content = content;
     }
 

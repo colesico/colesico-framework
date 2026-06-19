@@ -91,7 +91,7 @@ public class PebbleTemplater extends ViewWriter implements HtmlRenderer {
 
         String contentType = viewResponse.contentType();
         if (StringUtils.isEmpty(contentType)) {
-            contentType = HtmlResponse.CONTENT_TYPE;
+            contentType = HtmlResponse.DEFAULT_CONTENT_TYPE;
         }
 
         httpResponse.sendText(writer.toString(), contentType, viewResponse.statusCode());

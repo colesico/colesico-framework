@@ -19,6 +19,8 @@ package colesico.framework.weblet.teleapi;
 import colesico.framework.telehttp.HttpWriteOptions;
 
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Weblet write options
@@ -27,21 +29,46 @@ import java.lang.reflect.Type;
  * @author Vladlen Larionov
  */
 public record WebletWriteOptions(
+        Integer statusCode,
+        String contentType,
+        Charset charset,
         Class<? extends WebletTeleWriter<?>> writerClass,
         Object attachment
 ) implements HttpWriteOptions {
 
+    public static final Integer DEFAULT_STATUS_CODE = 200;
+    public static final String DEFAULT_CONTENT_TYPE = "text/plain; charset=utf-8";
+    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+
     public static final String OF_METHOD = "of";
 
     public static WebletWriteOptions of() {
-        return new WebletWriteOptions(null, null);
+        return new WebletWriteOptions(
+                DEFAULT_STATUS_CODE,
+                DEFAULT_CONTENT_TYPE,
+                DEFAULT_CHARSET,
+                null,
+                null
+        );
     }
 
     public static WebletWriteOptions of(Object attachment) {
-        return new WebletWriteOptions(null, attachment);
+        return new WebletWriteOptions(
+                DEFAULT_STATUS_CODE,
+                DEFAULT_CONTENT_TYPE,
+                DEFAULT_CHARSET,
+                null,
+                attachment
+        );
     }
 
     public static WebletWriteOptions of(Class<? extends WebletTeleWriter<?>> writerClass) {
-        return new WebletWriteOptions(writerClass, null);
+        return new WebletWriteOptions(
+                DEFAULT_STATUS_CODE,
+                DEFAULT_CONTENT_TYPE,
+                DEFAULT_CHARSET,
+                writerClass,
+                null
+        );
     }
 }

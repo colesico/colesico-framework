@@ -17,6 +17,9 @@
 package colesico.framework.weblet.response;
 
 import colesico.framework.telehttp.response.TeleHttpResponse;
+import colesico.framework.weblet.teleapi.WebletWriteOptions;
+
+import java.nio.charset.Charset;
 
 /**
  * Simple text response
@@ -25,20 +28,45 @@ public final class TextResponse extends StringResponse {
 
     public static final String DEFAULT_CONTENT_TYPE = "text/plain; charset=utf-8";
 
-    private TextResponse(String content, String contentType, int statusCode) {
-        super(content, contentType, statusCode);
-    }
-
-    public static TextResponse of(String content, String contentType, int statusCode) {
-        return new TextResponse(content, contentType, statusCode);
-    }
-
-    public static TextResponse of(String content, String contentType) {
-        return new TextResponse(content, contentType, TeleHttpResponse.DEFAULT_STATUS_CODE);
+    public TextResponse(Integer statusCode, String contentType, String content, Charset charset) {
+        super(statusCode, contentType, content, charset);
     }
 
     public static TextResponse of(String content) {
-        return new TextResponse(content, DEFAULT_CONTENT_TYPE, TeleHttpResponse.DEFAULT_STATUS_CODE);
+        return new TextResponse(
+                WebletWriteOptions.DEFAULT_STATUS_CODE,
+                DEFAULT_CONTENT_TYPE,
+                content,
+                WebletWriteOptions.DEFAULT_CHARSET
+        );
     }
+
+    public static TextResponse of(String contentType, String content) {
+        return new TextResponse(
+                WebletWriteOptions.DEFAULT_STATUS_CODE,
+                contentType,
+                content,
+                WebletWriteOptions.DEFAULT_CHARSET
+        );
+    }
+
+    public static TextResponse of(int statusCode, String content) {
+        return new TextResponse(
+                statusCode,
+                DEFAULT_CONTENT_TYPE,
+                content,
+                WebletWriteOptions.DEFAULT_CHARSET
+        );
+    }
+
+    public static TextResponse of(int statusCode, String contentType, String content) {
+        return new TextResponse(
+                statusCode,
+                contentType,
+                content,
+                WebletWriteOptions.DEFAULT_CHARSET
+        );
+    }
+
 
 }

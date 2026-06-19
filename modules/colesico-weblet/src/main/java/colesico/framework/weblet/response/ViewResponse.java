@@ -1,43 +1,49 @@
 package colesico.framework.weblet.response;
 
 import colesico.framework.telehttp.response.TeleHttpResponse;
+import colesico.framework.weblet.teleapi.WebletWriteOptions;
 
 /**
  * Returns  model that be presented to given view
  */
 public final class ViewResponse extends TeleHttpResponse {
 
+    public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
+
     private final String viewName;
     private final Object model;
 
-    private ViewResponse(String viewName, Object model, String contentType, int statusCode) {
-        super(contentType, statusCode);
+    public ViewResponse(Integer statusCode, String contentType, String viewName, Object model) {
+        super(statusCode, contentType);
         this.viewName = viewName;
         this.model = model;
     }
 
     public static ViewResponse of(String viewName) {
-        return new ViewResponse(viewName, null, null, DEFAULT_STATUS_CODE);
+        return new ViewResponse(
+                WebletWriteOptions.DEFAULT_STATUS_CODE,
+                DEFAULT_CONTENT_TYPE,
+                viewName,
+                null
+        );
     }
 
     public static ViewResponse of(String viewName, Object model) {
-        return new ViewResponse(viewName, model, null, DEFAULT_STATUS_CODE);
+        return new ViewResponse(
+                WebletWriteOptions.DEFAULT_STATUS_CODE,
+                DEFAULT_CONTENT_TYPE,
+                viewName,
+                model
+        );
     }
 
-    public static ViewResponse of(String viewName, int statusCode) {
-        return new ViewResponse(viewName, null, null, statusCode);
-    }
-
-    public static ViewResponse of(String viewName, Object model, int statusCode) {
-        return new ViewResponse(viewName, model, null, statusCode);
-    }
-
-    public static ViewResponse of(String viewName, Object model, String contentType, int statusCode) {
-        return new ViewResponse(viewName, model, contentType, statusCode);
-    }
-
-    public WebletResponse wrap() {
-        return WebletResponse.of(this);
+    public static ViewResponse of(int statusCode, String viewName, Object model) {
+        return new ViewResponse(
+                statusCode,
+                DEFAULT_CONTENT_TYPE,
+                viewName,
+                model
+        );
     }
 
     public String viewName() {
@@ -46,6 +52,10 @@ public final class ViewResponse extends TeleHttpResponse {
 
     public Object model() {
         return model;
+    }
+
+    public WebletResponse wrap() {
+        return WebletResponse.of(this);
     }
 
 }
