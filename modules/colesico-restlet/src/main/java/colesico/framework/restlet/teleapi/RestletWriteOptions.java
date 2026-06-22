@@ -2,7 +2,6 @@ package colesico.framework.restlet.teleapi;
 
 import colesico.framework.telehttp.HttpWriteOptions;
 
-import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -19,23 +18,24 @@ public record RestletWriteOptions(
         Object attachment
 ) implements HttpWriteOptions {
 
-    public static final Integer DEFAULT_STATUS_CODE = 200;
+    public static final Integer DEFAULT_SUCCESS_STATUS_CODE = 200;
+    public static final Integer DEFAULT_ERROR_STATUS_CODE = 500;
     public static final String DEFAULT_CONTENT_TYPE = "application/json; charset=utf-8";
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     public static final String OF_METHOD = "of";
 
     public RestletWriteOptions(Integer statusCode, String contentType, Charset charset, Class<? extends RestletTeleWriter<?>> writerClass, Object attachment) {
-        this.statusCode = statusCode != null ? statusCode : DEFAULT_STATUS_CODE;
-        this.contentType = contentType != null ? contentType : DEFAULT_CONTENT_TYPE;
-        this.charset = charset != null ? charset : DEFAULT_CHARSET;
+        this.statusCode = statusCode;
+        this.contentType = contentType;
+        this.charset = charset;
         this.writerClass = writerClass;
         this.attachment = attachment;
     }
 
     public static RestletWriteOptions of() {
         return new RestletWriteOptions(
-                DEFAULT_STATUS_CODE,
+                DEFAULT_SUCCESS_STATUS_CODE,
                 DEFAULT_CONTENT_TYPE,
                 DEFAULT_CHARSET,
                 null,
@@ -44,7 +44,7 @@ public record RestletWriteOptions(
 
     public static RestletWriteOptions of(Class<? extends RestletTeleWriter<?>> writerClass) {
         return new RestletWriteOptions(
-                DEFAULT_STATUS_CODE,
+                DEFAULT_SUCCESS_STATUS_CODE,
                 DEFAULT_CONTENT_TYPE,
                 DEFAULT_CHARSET,
                 writerClass,
@@ -53,7 +53,7 @@ public record RestletWriteOptions(
 
     public static RestletWriteOptions of(Object attachment) {
         return new RestletWriteOptions(
-                DEFAULT_STATUS_CODE,
+                DEFAULT_SUCCESS_STATUS_CODE,
                 DEFAULT_CONTENT_TYPE,
                 DEFAULT_CHARSET,
                 null,

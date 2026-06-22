@@ -45,7 +45,7 @@ public final class HtmlResponse extends StringResponse {
 
     public static HtmlResponse of(String content) {
         return new HtmlResponse(
-                WebletWriteOptions.DEFAULT_STATUS_CODE,
+                WebletWriteOptions.DEFAULT_SUCCES_STATUS_CODE,
                 DEFAULT_CONTENT_TYPE,
                 content,
                 WebletWriteOptions.DEFAULT_CHARSET

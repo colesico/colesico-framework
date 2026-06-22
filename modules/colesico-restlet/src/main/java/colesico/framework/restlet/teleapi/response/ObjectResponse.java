@@ -19,7 +19,7 @@ public class ObjectResponse<T> extends TeleHttpContentResponse<T> {
 
     public static <T> ObjectResponse<T> of(T content) {
         return new ObjectResponse<>(
-                RestletWriteOptions.DEFAULT_STATUS_CODE,
+                RestletWriteOptions.DEFAULT_SUCCESS_STATUS_CODE,
                 RestletWriteOptions.DEFAULT_CONTENT_TYPE,
                 content,
                 RestletWriteOptions.DEFAULT_CHARSET

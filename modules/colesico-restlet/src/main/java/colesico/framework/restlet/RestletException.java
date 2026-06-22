@@ -14,7 +14,7 @@ public final class RestletException extends RuntimeException {
 
     public RestletException(String message, Throwable cause, Integer statusCode, Object details) {
         super(message, cause);
-        this.statusCode = statusCode;
+        this.statusCode = statusCode != null ? statusCode : 500;
         this.details = details;
     }
 

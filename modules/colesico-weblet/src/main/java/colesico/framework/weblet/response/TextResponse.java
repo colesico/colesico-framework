@@ -16,7 +16,6 @@
 
 package colesico.framework.weblet.response;
 
-import colesico.framework.telehttp.response.TeleHttpResponse;
 import colesico.framework.weblet.teleapi.WebletWriteOptions;
 
 import java.nio.charset.Charset;
@@ -34,7 +33,7 @@ public final class TextResponse extends StringResponse {
 
     public static TextResponse of(String content) {
         return new TextResponse(
-                WebletWriteOptions.DEFAULT_STATUS_CODE,
+                WebletWriteOptions.DEFAULT_SUCCES_STATUS_CODE,
                 DEFAULT_CONTENT_TYPE,
                 content,
                 WebletWriteOptions.DEFAULT_CHARSET
@@ -43,7 +42,7 @@ public final class TextResponse extends StringResponse {
 
     public static TextResponse of(String contentType, String content) {
         return new TextResponse(
-                WebletWriteOptions.DEFAULT_STATUS_CODE,
+                WebletWriteOptions.DEFAULT_SUCCES_STATUS_CODE,
                 contentType,
                 content,
                 WebletWriteOptions.DEFAULT_CHARSET

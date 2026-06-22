@@ -29,25 +29,32 @@ public class RestletExceptionWriter implements RestletTeleWriter<RestletExceptio
 
         if (value == null) {
             response.setStatus(500)
-                    .setContentType(DEFAULT_CONTENT_TYPE)
+                    .setContentType(RestletWriteOptions.DEFAULT_CONTENT_TYPE)
                     .sendText("Unexpected error");
             return;
         }
 
-        response.setContentType(DEFAULT_CONTENT_TYPE);
+        var statusCode = value.statusCode();
+        if (statusCode == null) {
+            statusCode = options.statusCode();
+            if (statusCode == null) {
+                statusCode = RestletWriteOptions.DEFAULT_ERROR_STATUS_CODE;
+            }
+        }
+        response.setStatus(statusCode);
 
-        if (value.statusCode() == null) {
-            response.setStatus(500);
-        } else {
-            response.setStatus(value.statusCode());
+        var contentType = options.contentType();
+        if (contentType == null) {
+            contentType = RestletWriteOptions.DEFAULT_CONTENT_TYPE;
+        }
+        response.setContentType(contentType);
+
+        var charset = options.charset();
+        if (charset == null) {
+            charset = RestletWriteOptions.DEFAULT_CHARSET;
         }
 
         String content = serializer.get(contentType).serialize(value.details());
-
-        var charset = value.charset();
-        if (charset == null) {
-            charset = DEFAULT_CHARSET;
-        }
         response.sendData(ByteBuffer.wrap(content.getBytes(charset)));
     }
 }

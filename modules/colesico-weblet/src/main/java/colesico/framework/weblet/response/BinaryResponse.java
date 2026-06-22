@@ -35,7 +35,7 @@ public final class BinaryResponse extends TeleHttpContentResponse<byte[]> {
 
     public static BinaryResponse of(byte[] content) {
         return new BinaryResponse(
-                WebletWriteOptions.DEFAULT_STATUS_CODE,
+                WebletWriteOptions.DEFAULT_SUCCES_STATUS_CODE,
                 DEFAULT_CONTENT_TYPE,
                 content,
                 null);
@@ -43,7 +43,7 @@ public final class BinaryResponse extends TeleHttpContentResponse<byte[]> {
 
     public static BinaryResponse of(String contentType, byte[] content) {
         return new BinaryResponse(
-                WebletWriteOptions.DEFAULT_STATUS_CODE,
+                WebletWriteOptions.DEFAULT_SUCCES_STATUS_CODE,
                 contentType,
                 content,
                 null);
@@ -51,7 +51,7 @@ public final class BinaryResponse extends TeleHttpContentResponse<byte[]> {
 
     public static BinaryResponse of(String contentType, byte[] content, String fileName) {
         return new BinaryResponse(
-                WebletWriteOptions.DEFAULT_STATUS_CODE,
+                WebletWriteOptions.DEFAULT_SUCCES_STATUS_CODE,
                 contentType,
                 content,
                 fileName);

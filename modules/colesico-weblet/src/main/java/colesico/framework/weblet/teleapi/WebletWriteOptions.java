@@ -35,23 +35,24 @@ public record WebletWriteOptions(
         Object attachment
 ) implements HttpWriteOptions {
 
-    public static final Integer DEFAULT_STATUS_CODE = 200;
+    public static final Integer DEFAULT_SUCCES_STATUS_CODE = 200;
+    public static final Integer DEFAULT_ERROR_STATUS_CODE = 200;
     public static final String DEFAULT_CONTENT_TYPE = "text/plain; charset=utf-8";
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     public static final String OF_METHOD = "of";
 
     public WebletWriteOptions(Integer statusCode, String contentType, Charset charset, Class<? extends WebletTeleWriter<?>> writerClass, Object attachment) {
-        this.statusCode = statusCode != null ? statusCode : DEFAULT_STATUS_CODE;
-        this.contentType = contentType != null ? contentType : DEFAULT_CONTENT_TYPE;
-        this.charset = charset != null ? charset : DEFAULT_CHARSET;
+        this.statusCode = statusCode;
+        this.contentType = contentType;
+        this.charset = charset;
         this.writerClass = writerClass;
         this.attachment = attachment;
     }
 
     public static WebletWriteOptions of() {
         return new WebletWriteOptions(
-                DEFAULT_STATUS_CODE,
+                DEFAULT_SUCCES_STATUS_CODE,
                 DEFAULT_CONTENT_TYPE,
                 DEFAULT_CHARSET,
                 null,
@@ -61,7 +62,7 @@ public record WebletWriteOptions(
 
     public static WebletWriteOptions of(Object attachment) {
         return new WebletWriteOptions(
-                DEFAULT_STATUS_CODE,
+                DEFAULT_SUCCES_STATUS_CODE,
                 DEFAULT_CONTENT_TYPE,
                 DEFAULT_CHARSET,
                 null,
@@ -71,7 +72,7 @@ public record WebletWriteOptions(
 
     public static WebletWriteOptions of(Class<? extends WebletTeleWriter<?>> writerClass) {
         return new WebletWriteOptions(
-                DEFAULT_STATUS_CODE,
+                DEFAULT_SUCCES_STATUS_CODE,
                 DEFAULT_CONTENT_TYPE,
                 DEFAULT_CHARSET,
                 writerClass,

@@ -21,7 +21,7 @@ public final class ViewResponse extends TeleHttpResponse {
 
     public static ViewResponse of(String viewName) {
         return new ViewResponse(
-                WebletWriteOptions.DEFAULT_STATUS_CODE,
+                WebletWriteOptions.DEFAULT_SUCCES_STATUS_CODE,
                 DEFAULT_CONTENT_TYPE,
                 viewName,
                 null
@@ -30,7 +30,7 @@ public final class ViewResponse extends TeleHttpResponse {
 
     public static ViewResponse of(String viewName, Object model) {
         return new ViewResponse(
-                WebletWriteOptions.DEFAULT_STATUS_CODE,
+                WebletWriteOptions.DEFAULT_SUCCES_STATUS_CODE,
                 DEFAULT_CONTENT_TYPE,
                 viewName,
                 model
