@@ -3,19 +3,20 @@ package colesico.framework.restlet.teleapi.writer;
 import colesico.framework.restlet.teleapi.RestletWriteOptions;
 import colesico.framework.restlet.teleapi.RestletTeleWriter;
 
+import colesico.framework.telehttp.writer.ObjectWriter;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
- * Proxy for use {@link colesico.framework.telehttp.writer.PlainTextWriter} as custom restlet writer
+ * Proxy for use {@link ObjectWriter} as custom restlet writer
  */
 @Singleton
 public final class PlainTextWriter implements RestletTeleWriter<Object> {
 
-    private final colesico.framework.telehttp.writer.PlainTextWriter writer;
+    private final ObjectWriter writer;
 
     @Inject
-    public PlainTextWriter(colesico.framework.telehttp.writer.PlainTextWriter writer) {
+    public PlainTextWriter(ObjectWriter writer) {
         this.writer = writer;
     }
 

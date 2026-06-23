@@ -16,16 +16,19 @@
 
 package colesico.framework.weblet.response;
 
-import colesico.framework.weblet.teleapi.WebletWriteOptions;
+import colesico.framework.telehttp.response.StringResponse;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Simple text response
  */
 public final class TextResponse extends StringResponse {
 
-    public static final String DEFAULT_CONTENT_TYPE = "text/plain; charset=utf-8";
+    public static final Integer DEFAULT_STATUS_CODE = 200;
+    public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
+    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     public TextResponse(Integer statusCode, String contentType, String content, Charset charset) {
         super(statusCode, contentType, content, charset);
@@ -33,19 +36,19 @@ public final class TextResponse extends StringResponse {
 
     public static TextResponse of(String content) {
         return new TextResponse(
-                WebletWriteOptions.DEFAULT_SUCCES_STATUS_CODE,
+                DEFAULT_STATUS_CODE,
                 DEFAULT_CONTENT_TYPE,
                 content,
-                WebletWriteOptions.DEFAULT_CHARSET
+                DEFAULT_CHARSET
         );
     }
 
     public static TextResponse of(String contentType, String content) {
         return new TextResponse(
-                WebletWriteOptions.DEFAULT_SUCCES_STATUS_CODE,
+                DEFAULT_STATUS_CODE,
                 contentType,
                 content,
-                WebletWriteOptions.DEFAULT_CHARSET
+                DEFAULT_CHARSET
         );
     }
 
@@ -54,7 +57,7 @@ public final class TextResponse extends StringResponse {
                 statusCode,
                 DEFAULT_CONTENT_TYPE,
                 content,
-                WebletWriteOptions.DEFAULT_CHARSET
+                DEFAULT_CHARSET
         );
     }
 
@@ -63,7 +66,7 @@ public final class TextResponse extends StringResponse {
                 statusCode,
                 contentType,
                 content,
-                WebletWriteOptions.DEFAULT_CHARSET
+                DEFAULT_CHARSET
         );
     }
 

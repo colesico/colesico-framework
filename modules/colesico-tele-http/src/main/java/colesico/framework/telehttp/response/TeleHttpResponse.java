@@ -2,7 +2,6 @@ package colesico.framework.telehttp.response;
 
 import colesico.framework.http.HttpCookie;
 
-import java.nio.charset.Charset;
 import java.util.*;
 
 /**

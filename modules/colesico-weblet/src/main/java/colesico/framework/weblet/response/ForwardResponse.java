@@ -42,7 +42,7 @@ public record ForwardResponse(Navigation navigation) {
     /**
      * To wrapper response
      */
-    public WebletResponse wrap() {
-        return WebletResponse.of(this);
+    public DynamicResponse wrap() {
+        return DynamicResponse.of(this);
     }
 }

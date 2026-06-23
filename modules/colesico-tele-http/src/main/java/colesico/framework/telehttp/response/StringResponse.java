@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package colesico.framework.weblet.response;
-
-import colesico.framework.telehttp.response.TeleHttpContentResponse;
+package colesico.framework.telehttp.response;
 
 import java.nio.charset.Charset;
 
 /**
- * String content based response
+ * String based content response
  */
-abstract public class StringResponse extends TeleHttpContentResponse<String> {
+abstract public class StringResponse extends ContentResponse<String> {
 
     private final Charset charset;
 
@@ -34,10 +32,6 @@ abstract public class StringResponse extends TeleHttpContentResponse<String> {
 
     public Charset charset() {
         return charset;
-    }
-
-    public WebletResponse wrap() {
-        return WebletResponse.of(this);
     }
 
 }

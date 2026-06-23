@@ -16,16 +16,19 @@
 
 package colesico.framework.weblet.response;
 
-import colesico.framework.weblet.teleapi.WebletWriteOptions;
+import colesico.framework.telehttp.response.StringResponse;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
- * Html text to  returned to  client
+ * HTML text to  returned to  client
  */
 public final class HtmlResponse extends StringResponse {
 
+    public static final Integer DEFAULT_STATUS_CODE = 200;
     public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
+    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     public HtmlResponse(Integer statusCode, String contentType, String content, Charset charset) {
         super(statusCode, contentType, content, charset);
@@ -39,16 +42,16 @@ public final class HtmlResponse extends StringResponse {
                 204,
                 DEFAULT_CONTENT_TYPE,
                 "",
-                WebletWriteOptions.DEFAULT_CHARSET
+                DEFAULT_CHARSET
         );
     }
 
     public static HtmlResponse of(String content) {
         return new HtmlResponse(
-                WebletWriteOptions.DEFAULT_SUCCES_STATUS_CODE,
+                DEFAULT_STATUS_CODE,
                 DEFAULT_CONTENT_TYPE,
                 content,
-                WebletWriteOptions.DEFAULT_CHARSET
+                DEFAULT_CHARSET
         );
     }
 
@@ -57,7 +60,7 @@ public final class HtmlResponse extends StringResponse {
                 statusCode,
                 DEFAULT_CONTENT_TYPE,
                 content,
-                WebletWriteOptions.DEFAULT_CHARSET
+                DEFAULT_CHARSET
         );
     }
 }

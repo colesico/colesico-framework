@@ -16,22 +16,27 @@
 
 package colesico.framework.weblet.internal;
 
+import colesico.framework.http.HttpResponse;
+import colesico.framework.telehttp.response.StringResponse;
 import colesico.framework.telehttp.writer.ExceptionWriter;
-import colesico.framework.telehttp.writer.PlainTextWriter;
+import colesico.framework.telehttp.writer.ObjectWriter;
 import colesico.framework.telehttp.writer.ProfileWriter;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
+import colesico.framework.telehttp.writer.StringResponseWriter;
 import colesico.framework.weblet.WebletException;
 import colesico.framework.weblet.response.*;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
+import colesico.framework.weblet.teleapi.WebletWriteOptions;
 import colesico.framework.weblet.teleapi.writer.*;
 
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 @Producer
-@Produce(StringWriter.class)
+@Produce(StringResponseWriter.class)
 @Produce(value = RedirectWriter.class, keyType = WebletTeleWriter.class, classed = RedirectResponse.class)
 @Produce(value = ForwardWriter.class, keyType = WebletTeleWriter.class, classed = ForwardResponse.class)
 @Produce(value = BinaryWriter.class, keyType = WebletTeleWriter.class, classed = BinaryResponse.class)
@@ -46,14 +51,24 @@ public class WebletWritersProducer {
 
     @Singleton
     @Classed(TextResponse.class)
-    public WebletTeleWriter textResponseWriter(StringWriter impl) {
-        return impl;
+    public WebletTeleWriter textResponseWriter(Provider<HttpResponse> httpResponse) {
+        return new StringResponseWriter(httpResponse) {
+            @Override
+            protected String defaultContentType(StringResponse value, Class<StringResponse> valueType, WebletWriteOptions options) {
+                return TextResponse.DEFAULT_CONTENT_TYPE;
+            }
+        };
     }
 
     @Singleton
     @Classed(HtmlResponse.class)
-    public WebletTeleWriter htmlResponseWriter(StringWriter impl) {
-        return impl;
+    public WebletTeleWriter htmlResponseWriter(Provider<HttpResponse> httpResponse) {
+        return new StringResponseWriter(httpResponse) {
+            @Override
+            protected String defaultContentType(StringResponse value, Class<StringResponse> valueType, WebletWriteOptions options) {
+                return HtmlResponse.DEFAULT_CONTENT_TYPE;
+            }
+        };
     }
 
     @Singleton
@@ -64,37 +79,37 @@ public class WebletWritersProducer {
 
     @Singleton
     @Classed(String.class)
-    public WebletTeleWriter stringWriter(PlainTextWriter impl) {
+    public WebletTeleWriter stringWriter(ObjectWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(Long.class)
-    public WebletTeleWriter longWriter(PlainTextWriter impl) {
+    public WebletTeleWriter longWriter(ObjectWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(Integer.class)
-    public WebletTeleWriter integerWriter(PlainTextWriter impl) {
+    public WebletTeleWriter integerWriter(ObjectWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(Short.class)
-    public WebletTeleWriter shortWriter(PlainTextWriter impl) {
+    public WebletTeleWriter shortWriter(ObjectWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(Byte.class)
-    public WebletTeleWriter byteWriter(PlainTextWriter impl) {
+    public WebletTeleWriter byteWriter(ObjectWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(Character.class)
-    public WebletTeleWriter charWriter(PlainTextWriter impl) {
+    public WebletTeleWriter charWriter(ObjectWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 

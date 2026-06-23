@@ -22,6 +22,6 @@ package colesico.framework.teleapi.dataport;
  * Reader must be a stateless (allowed to be a singleton)
  */
 @FunctionalInterface
-public interface TeleReader<V, R extends ReadOptions> {
-    V read(Class<V> valueType, R options);
+public interface TeleReader<V, O extends ReadOptions> {
+    V read(Class<V> valueType, O options);
 }

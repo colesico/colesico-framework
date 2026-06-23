@@ -33,11 +33,9 @@ public class RestletDataPortImpl implements RestletDataPort {
     private final Logger logger = LoggerFactory.getLogger(RestletDataPort.class);
     private final TeleFactory teleFactory;
 
-
     public RestletDataPortImpl(TeleFactory teleFactory) {
         this.teleFactory = teleFactory;
     }
-
 
     protected RestletTeleWriter findRootErrorWriter(final Throwable throwable) {
         Throwable rootCause = ExceptionUtils.getRootCause(throwable);
@@ -46,7 +44,6 @@ public class RestletDataPortImpl implements RestletDataPort {
         }
         return null;
     }
-
 
     @Override
     public <V> V read(Class<V> valueType, RestletReadOptions options) {

@@ -19,6 +19,12 @@ public class ExceptionWriter implements HttpTeleWriter<Exception, HttpWriteOptio
 
     @Override
     public void write(Exception exception, Class<Exception> valueType, HttpWriteOptions options) {
+
+        if (exception == null) {
+            httpResponse.get().setStatus(500).sendText("Unexpected error");
+            return;
+        }
+
         switch (exception) {
             case UnauthenticatedException e -> httpResponse.get()
                     .setContentType("text/plain")
@@ -28,11 +34,17 @@ public class ExceptionWriter implements HttpTeleWriter<Exception, HttpWriteOptio
                     .setContentType("text/plain")
                     .setStatus(401)
                     .sendText("Unauthorized");
-            default -> httpResponse.get()
-                    .setContentType("text/plain")
-                    .setStatus(500)
-                    .sendText("Server error");
+            default -> {
+                var statusCode = options.statusCode();
+                if (statusCode == null) {
+                    statusCode = 500;
+                }
+                httpResponse.get()
+                        .setContentType("text/plain")
+                        .setStatus(statusCode)
+                        .sendText("Server error");
+            }
         }
-
     }
+
 }

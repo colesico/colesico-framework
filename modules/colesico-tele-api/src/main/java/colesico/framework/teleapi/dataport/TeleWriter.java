@@ -22,6 +22,6 @@ package colesico.framework.teleapi.dataport;
  * Writer must be a stateless (allowed to be a singleton)
  */
 @FunctionalInterface
-public interface TeleWriter<V, W extends WriteOptions> {
-    void write(V value, Class<V> valueType, W options);
+public interface TeleWriter<V, O extends WriteOptions> {
+    void write(V value, Class<V> valueType, O options);
 }

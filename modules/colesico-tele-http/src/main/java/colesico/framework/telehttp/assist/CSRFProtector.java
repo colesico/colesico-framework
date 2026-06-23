@@ -16,7 +16,6 @@
 
 package colesico.framework.telehttp.assist;
 
-import colesico.framework.assist.StringUtils;
 import colesico.framework.http.*;
 import colesico.framework.telehttp.response.TeleHttpResponse;
 

@@ -1,6 +1,5 @@
 package colesico.framework.restlet.teleapi.writer;
 
-import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.ioc.production.Supplier;
 import colesico.framework.restlet.teleapi.RestletSerializer;
@@ -14,6 +13,7 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 @Singleton
 public class ObjectResponseWriter
@@ -30,36 +30,36 @@ public class ObjectResponseWriter
     }
 
     @Override
-    public void write(ObjectResponse value, Class<ObjectResponse> valueType, RestletWriteOptions options) {
-
-        var response = httpResponse.get();
-
-        if (value == null) {
-            response.setStatus(204)
-                    .setContentType(RestletWriteOptions.DEFAULT_CONTENT_TYPE)
-                    .sendText("");
-            return;
+    protected Integer defaultStatusCode(ObjectResponse value, Class<ObjectResponse> valueType, RestletWriteOptions options) {
+        if (value != null) {
+            if (value.content() instanceof Throwable) {
+                return RestletWriteOptions.DEFAULT_ERROR_STATUS_CODE;
+            } else {
+                return RestletWriteOptions.DEFAULT_SUCCESS_STATUS_CODE;
+            }
         }
+        return RestletWriteOptions.DEFAULT_SUCCESS_STATUS_CODE;
+    }
 
-        // write if specified headers, cookies
-        super.write(value, valueType, options);
+    @Override
+    protected String defaultContentType(ObjectResponse value, Class<ObjectResponse> valueType, RestletWriteOptions options) {
+        return RestletWriteOptions.DEFAULT_CONTENT_TYPE;
+    }
 
-        var contentType = value.contentType();
-        if (contentType == null) {
-            contentType = options.contentType();
-            response.setContentType(contentType);
-        }
-
-        if (value.statusCode() == null) {
-            response.setStatus(options.statusCode());
-        }
+    @Override
+    protected void sendValue(HttpResponse response, ObjectResponse value, Class<ObjectResponse> valueType, RestletWriteOptions options, Integer statusCode, String contentType) {
 
         String content = serializer.get(contentType).serialize(value.content());
 
         var charset = value.charset();
         if (charset == null) {
             charset = options.charset();
+            if (charset == null) {
+                charset = StandardCharsets.UTF_8;
+            }
         }
+
         response.sendData(ByteBuffer.wrap(content.getBytes(charset)));
+
     }
 }

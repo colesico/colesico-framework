@@ -17,7 +17,7 @@
 package colesico.framework.weblet.internal;
 
 import colesico.framework.teleapi.dataport.TeleFactory;
-import colesico.framework.weblet.response.WebletResponse;
+import colesico.framework.weblet.response.DynamicResponse;
 import colesico.framework.weblet.teleapi.*;
 
 import jakarta.inject.Singleton;
@@ -71,7 +71,7 @@ public class WebletDataPortImpl implements WebletDataPort {
     @Override
     public <V> void write(V value, Class<V> valueType, WebletWriteOptions options) {
 
-        boolean isWebletResponse = value instanceof WebletResponse;
+        boolean isDynamicResponse = value instanceof DynamicResponse;
 
         Object targetValue;
         Class<?> targetType;
@@ -82,8 +82,8 @@ public class WebletDataPortImpl implements WebletDataPort {
             writer = teleFactory.writer(options.writerClass());
         }
 
-        if (isWebletResponse) {
-            targetValue = ((WebletResponse) value).unwrap();
+        if (isDynamicResponse) {
+            targetValue = ((DynamicResponse) value).unwrap();
             targetType = targetValue.getClass();
             if (writer == null) {
                 writer = teleFactory.writer(WebletTeleWriter.class, targetType);
@@ -102,6 +102,5 @@ public class WebletDataPortImpl implements WebletDataPort {
 
         writer.write(targetValue, targetType, options);
     }
-
 
 }

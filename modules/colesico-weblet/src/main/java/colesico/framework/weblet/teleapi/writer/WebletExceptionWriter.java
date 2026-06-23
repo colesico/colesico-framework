@@ -21,11 +21,12 @@ public class WebletExceptionWriter implements WebletTeleWriter<WebletException> 
 
     @Override
     public void write(WebletException value, Class<WebletException> valueType, WebletWriteOptions options) {
+
         var response = httpResponse.get();
 
         if (value == null) {
             response.setStatus(500)
-                    .setContentType(WebletWriteOptions.DEFAULT_CONTENT_TYPE)
+                    .setContentType(WebletException.DEFAULT_CONTENT_TYPE)
                     .sendText("Unexpected error");
             return;
         }
@@ -34,20 +35,20 @@ public class WebletExceptionWriter implements WebletTeleWriter<WebletException> 
         if (statusCode == null) {
             statusCode = options.statusCode();
             if (statusCode == null) {
-                statusCode = WebletWriteOptions.DEFAULT_ERROR_STATUS_CODE;
+                statusCode = WebletException.DEFAULT_STATUS_CODE;
             }
         }
         response.setStatus(statusCode);
 
         var contentType = options.contentType();
         if (contentType == null) {
-            contentType = WebletWriteOptions.DEFAULT_CONTENT_TYPE;
+            contentType = WebletException.DEFAULT_CONTENT_TYPE;
         }
         response.setContentType(contentType);
 
         var charset = options.charset();
         if (charset == null) {
-            charset = WebletWriteOptions.DEFAULT_CHARSET;
+            charset = WebletException.DEFAULT_CHARSET;
         }
 
         String content = String.valueOf(value.details());

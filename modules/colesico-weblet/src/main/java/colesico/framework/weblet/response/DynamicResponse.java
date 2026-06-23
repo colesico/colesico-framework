@@ -3,14 +3,14 @@ package colesico.framework.weblet.response;
 /**
  * Response wrapper. Used to  return dynamically produced responses of different types
  */
-public final class WebletResponse {
+public final class DynamicResponse {
 
     /**
      * Actual response
      */
     private final Object response;
 
-    private WebletResponse(Object response) {
+    private DynamicResponse(Object response) {
         this.response = response;
     }
 
@@ -21,8 +21,8 @@ public final class WebletResponse {
         return response;
     }
 
-    public static WebletResponse of(Object response) {
-        return new WebletResponse(response);
+    public static DynamicResponse of(Object response) {
+        return new DynamicResponse(response);
     }
 
 }

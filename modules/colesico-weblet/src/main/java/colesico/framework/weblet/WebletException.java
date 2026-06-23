@@ -16,10 +16,17 @@
 
 package colesico.framework.weblet;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 /**
  * @author Vladlen Larionov
  */
 public class WebletException extends RuntimeException {
+
+    public static final Integer DEFAULT_STATUS_CODE = 500;
+    public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
+    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     /**
      * Http response status code

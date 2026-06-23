@@ -42,18 +42,17 @@ public final class BinaryWriter
     }
 
     @Override
-    public void write(BinaryResponse value, Class<BinaryResponse> valueType, WebletWriteOptions options) {
+    protected Integer defaultStatusCode(BinaryResponse value, Class<BinaryResponse> valueType, WebletWriteOptions options) {
+        return 200;
+    }
 
-        HttpResponse response = httpResponse.get();
+    @Override
+    protected String defaultContentType(BinaryResponse value, Class<BinaryResponse> valueType, WebletWriteOptions options) {
+        return BinaryResponse.DEFAULT_CONTENT_TYPE;
+    }
 
-        if (value == null) {
-            response.setStatus(204)
-                    .setContentType(BinaryResponse.DEFAULT_CONTENT_TYPE)
-                    .sendData(ByteBuffer.allocate(0));
-            return;
-        }
-
-        super.write(value, valueType, options);
+    @Override
+    protected void sendValue(HttpResponse response, BinaryResponse value, Class<BinaryResponse> valueType, WebletWriteOptions options, Integer statusCode, String contentType) {
 
         // Force download?
         if (value.fileName() != null) {
@@ -61,12 +60,10 @@ public final class BinaryWriter
         }
 
         if (value.content() == null || value.content().length == 0) {
-            response.setStatus(204)
-                    .sendData(ByteBuffer.allocate(0));
+            response.setStatus(204).sendText("");
         } else {
             ByteBuffer buffer = ByteBuffer.wrap(value.content());
             response.sendData(buffer);
         }
     }
-
 }

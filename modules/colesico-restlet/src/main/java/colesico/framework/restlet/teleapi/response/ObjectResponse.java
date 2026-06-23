@@ -1,14 +1,14 @@
 package colesico.framework.restlet.teleapi.response;
 
 import colesico.framework.restlet.teleapi.RestletWriteOptions;
-import colesico.framework.telehttp.response.TeleHttpContentResponse;
+import colesico.framework.telehttp.response.ContentResponse;
 
 import java.nio.charset.Charset;
 
 /**
  * General purpose restlet response
  */
-public class ObjectResponse<T> extends TeleHttpContentResponse<T> {
+public class ObjectResponse<T> extends ContentResponse<T> {
 
     protected final Charset charset;
 

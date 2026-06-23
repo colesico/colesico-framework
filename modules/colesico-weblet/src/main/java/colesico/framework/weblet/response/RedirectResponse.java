@@ -36,7 +36,7 @@ public record RedirectResponse(Navigation navigation) {
         return new RedirectResponse(Navigation.of());
     }
 
-    public WebletResponse wrap() {
-        return WebletResponse.of(this);
+    public DynamicResponse wrap() {
+        return DynamicResponse.of(this);
     }
 }

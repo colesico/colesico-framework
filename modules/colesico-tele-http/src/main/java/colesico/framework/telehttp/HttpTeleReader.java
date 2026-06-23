@@ -6,6 +6,6 @@ import colesico.framework.teleapi.dataport.TeleReader;
  * Basic reader for retrieving param vales from http request
  */
 @FunctionalInterface
-public interface HttpTeleReader<V, R extends HttpReadOptions> extends TeleReader<V, R> {
+public interface HttpTeleReader<V, O extends HttpReadOptions> extends TeleReader<V, O> {
 
 }
