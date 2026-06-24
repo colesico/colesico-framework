@@ -14,23 +14,35 @@
  * limitations under the License.
  */
 
-package colesico.framework.weblet.teleapi.response;
+package colesico.framework.weblet.response;
 
 import colesico.framework.telehttp.response.StringResponse;
 
 import java.nio.charset.Charset;
 
 /**
- * Simple text response
+ * HTML text to  returned to  client
  */
-public final class TextResponse extends StringResponse {
+public final class HtmlResponse extends StringResponse {
 
-    public TextResponse(Integer statusCode, String contentType, String content, Charset charset) {
+    public HtmlResponse(Integer statusCode, String contentType, String content, Charset charset) {
         super(statusCode, contentType, content, charset);
     }
 
-    public static TextResponse of(String content) {
-        return new TextResponse(
+    /**
+     * Empty response
+     */
+    public static HtmlResponse of() {
+        return new HtmlResponse(
+                204,
+                null,
+                "",
+                null
+        );
+    }
+
+    public static HtmlResponse of(String content) {
+        return new HtmlResponse(
                 200,
                 null,
                 content,
@@ -38,28 +50,10 @@ public final class TextResponse extends StringResponse {
         );
     }
 
-    public static TextResponse of(String contentType, String content) {
-        return new TextResponse(
-                200,
-                contentType,
-                content,
-                null
-        );
-    }
-
-    public static TextResponse of(int statusCode, String content) {
-        return new TextResponse(
+    public static HtmlResponse of(int statusCode, String content) {
+        return new HtmlResponse(
                 statusCode,
                 null,
-                content,
-                null
-        );
-    }
-
-    public static TextResponse of(int statusCode, String contentType, String content) {
-        return new TextResponse(
-                statusCode,
-                contentType,
                 content,
                 null
         );

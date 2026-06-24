@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-package colesico.framework.weblet.teleapi;
+package colesico.framework.weblet;
 
-import colesico.framework.telehttp.TeleHttpReader;
+import colesico.framework.teleapi.dataport.DataPort;
 
-/**
- * Weblet reader base class
- */
-public interface WebletTeleReader<V> extends TeleHttpReader<V, WebletReadOptions> {
-
+public interface WebletDataPort extends DataPort<WebletReadOptions, WebletWriteOptions>{
 }

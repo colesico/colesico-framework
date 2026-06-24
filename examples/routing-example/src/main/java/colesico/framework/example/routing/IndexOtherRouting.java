@@ -17,7 +17,7 @@
 package colesico.framework.example.routing;
 
 import colesico.framework.weblet.Weblet;
-import colesico.framework.weblet.teleapi.response.HtmlResponse;
+import colesico.framework.weblet.response.HtmlResponse;
 
 /**
  * This weblet demonstrates implicit routes definitions.

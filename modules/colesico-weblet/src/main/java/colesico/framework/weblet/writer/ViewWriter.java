@@ -1,7 +1,7 @@
-package colesico.framework.weblet.teleapi.writer;
+package colesico.framework.weblet.writer;
 
-import colesico.framework.weblet.teleapi.response.ViewResponse;
-import colesico.framework.weblet.teleapi.WebletTeleWriter;
+import colesico.framework.weblet.response.ViewResponse;
+import colesico.framework.weblet.WebletTeleWriter;
 
 /**
  * This writer shod be implemented by concrete view renderer  (for different templating support)

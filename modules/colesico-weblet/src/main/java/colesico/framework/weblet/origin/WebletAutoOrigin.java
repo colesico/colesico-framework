@@ -1,10 +1,10 @@
-package colesico.framework.weblet.teleapi.origin;
+package colesico.framework.weblet.origin;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.router.RouterContext;
-import colesico.framework.weblet.teleapi.WebletOrigin;
+import colesico.framework.weblet.WebletOrigin;
 
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;

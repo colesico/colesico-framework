@@ -1,4 +1,4 @@
-package colesico.framework.weblet.teleapi;
+package colesico.framework.weblet;
 
 import colesico.framework.telehttp.ParamReaderSpecifier;
 

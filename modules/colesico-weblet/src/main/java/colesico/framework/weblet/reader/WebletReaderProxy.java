@@ -1,9 +1,9 @@
-package colesico.framework.weblet.teleapi.reader;
+package colesico.framework.weblet.reader;
 
 import colesico.framework.telehttp.HttpReadOptions;
 import colesico.framework.telehttp.TeleHttpReader;
-import colesico.framework.weblet.teleapi.WebletReadOptions;
-import colesico.framework.weblet.teleapi.WebletTeleReader;
+import colesico.framework.weblet.WebletReadOptions;
+import colesico.framework.weblet.WebletTeleReader;
 
 public final class WebletReaderProxy<V> implements WebletTeleReader<V> {
 

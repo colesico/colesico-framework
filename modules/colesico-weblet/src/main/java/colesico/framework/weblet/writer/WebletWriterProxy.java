@@ -1,9 +1,9 @@
-package colesico.framework.weblet.teleapi.writer;
+package colesico.framework.weblet.writer;
 
 import colesico.framework.telehttp.HttpWriteOptions;
 import colesico.framework.telehttp.TeleHttpWriter;
-import colesico.framework.weblet.teleapi.WebletWriteOptions;
-import colesico.framework.weblet.teleapi.WebletTeleWriter;
+import colesico.framework.weblet.WebletWriteOptions;
+import colesico.framework.weblet.WebletTeleWriter;
 
 public final class WebletWriterProxy<V> implements WebletTeleWriter<V> {
 

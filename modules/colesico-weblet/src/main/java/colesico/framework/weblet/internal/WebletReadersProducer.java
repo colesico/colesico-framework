@@ -21,8 +21,8 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.telehttp.reader.ProfileReader;
 import colesico.framework.telehttp.reader.*;
-import colesico.framework.weblet.teleapi.WebletTeleReader;
-import colesico.framework.weblet.teleapi.reader.WebletReaderProxy;
+import colesico.framework.weblet.WebletTeleReader;
+import colesico.framework.weblet.reader.WebletReaderProxy;
 
 import jakarta.inject.Singleton;
 import java.time.LocalDate;

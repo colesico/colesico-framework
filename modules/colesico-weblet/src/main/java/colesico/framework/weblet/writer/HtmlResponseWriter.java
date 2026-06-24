@@ -1,10 +1,10 @@
-package colesico.framework.weblet.teleapi.writer;
+package colesico.framework.weblet.writer;
 
 import colesico.framework.http.HttpResponse;
 import colesico.framework.telehttp.writer.StringResponseWriter;
-import colesico.framework.weblet.teleapi.response.HtmlResponse;
-import colesico.framework.weblet.teleapi.WebletTeleWriter;
-import colesico.framework.weblet.teleapi.WebletWriteOptions;
+import colesico.framework.weblet.response.HtmlResponse;
+import colesico.framework.weblet.WebletTeleWriter;
+import colesico.framework.weblet.WebletWriteOptions;
 import jakarta.inject.Provider;
 
 public class HtmlResponseWriter
@@ -18,7 +18,7 @@ public class HtmlResponseWriter
     }
 
     @Override
-    protected String contentType(HtmlResponse value, WebletWriteOptions options) {
-        return DEFAULT_CONTENT_TYPE;
+    protected String contentType(HtmlResponse response, WebletWriteOptions options, String defaultValue) {
+        return super.contentType(response, options, DEFAULT_CONTENT_TYPE);
     }
 }

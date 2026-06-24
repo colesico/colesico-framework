@@ -18,7 +18,7 @@ package colesico.framework.weblet.internal;
 
 import colesico.framework.teleapi.dataport.TeleFactory;
 import colesico.framework.telehttp.response.DynamicResponse;
-import colesico.framework.weblet.teleapi.*;
+import colesico.framework.weblet.*;
 
 import jakarta.inject.Singleton;
 

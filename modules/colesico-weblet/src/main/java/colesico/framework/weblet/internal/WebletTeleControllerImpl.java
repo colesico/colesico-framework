@@ -27,8 +27,8 @@ import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.telehttp.assist.CSRFProtector;
 import colesico.framework.weblet.Weblet;
-import colesico.framework.weblet.teleapi.WebletDataPort;
-import colesico.framework.weblet.teleapi.WebletTeleController;
+import colesico.framework.weblet.WebletDataPort;
+import colesico.framework.weblet.WebletTeleController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

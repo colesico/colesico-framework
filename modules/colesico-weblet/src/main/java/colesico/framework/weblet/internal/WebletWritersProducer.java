@@ -23,10 +23,10 @@ import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
-import colesico.framework.weblet.teleapi.WebletTeleWriter;
-import colesico.framework.weblet.teleapi.response.*;
-import colesico.framework.weblet.teleapi.writer.*;
+import colesico.framework.weblet.response.*;
+import colesico.framework.weblet.WebletTeleWriter;
 
+import colesico.framework.weblet.writer.*;
 import jakarta.inject.Singleton;
 
 @Producer

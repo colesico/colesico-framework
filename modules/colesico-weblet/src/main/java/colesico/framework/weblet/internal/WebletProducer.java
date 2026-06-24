@@ -20,8 +20,10 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.router.RouterTargetController;
 import colesico.framework.telehttp.origin.Origin;
-import colesico.framework.weblet.teleapi.*;
-import colesico.framework.weblet.teleapi.origin.WebletAutoOrigin;
+import colesico.framework.weblet.WebletDataPort;
+import colesico.framework.weblet.WebletOrigin;
+import colesico.framework.weblet.WebletTeleController;
+import colesico.framework.weblet.origin.WebletAutoOrigin;
 
 import jakarta.inject.Singleton;
 

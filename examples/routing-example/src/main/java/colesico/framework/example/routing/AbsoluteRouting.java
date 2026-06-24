@@ -18,7 +18,7 @@ package colesico.framework.example.routing;
 
 import colesico.framework.router.Route;
 import colesico.framework.weblet.Weblet;
-import colesico.framework.weblet.teleapi.response.HtmlResponse;
+import colesico.framework.weblet.response.HtmlResponse;
 
 /**
  * Absolute route starts with '/'

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package colesico.framework.weblet.teleapi.writer;
+package colesico.framework.weblet.writer;
 
 import colesico.framework.http.HttpResponse;
 import colesico.framework.telehttp.writer.TeleHttpResponseWriter;
-import colesico.framework.weblet.teleapi.response.BinaryResponse;
-import colesico.framework.weblet.teleapi.WebletTeleWriter;
-import colesico.framework.weblet.teleapi.WebletWriteOptions;
+import colesico.framework.weblet.response.BinaryResponse;
+import colesico.framework.weblet.WebletTeleWriter;
+import colesico.framework.weblet.WebletWriteOptions;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -44,8 +44,8 @@ public final class BinaryWriter
     }
 
     @Override
-    protected String contentType(BinaryResponse value, WebletWriteOptions options) {
-        return DEFAULT_CONTENT_TYPE;
+    protected String contentType(BinaryResponse response, WebletWriteOptions options,String defaultValue) {
+        return super.contentType(response,options,DEFAULT_CONTENT_TYPE);
     }
 
     @Override
