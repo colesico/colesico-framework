@@ -29,6 +29,10 @@ public class WebletException extends TeleHttpException {
         super(message, cause, statusCode, details);
     }
 
+    public static WebletException of(String message) {
+        return new WebletException(message, null, null, null);
+    }
+
     public static WebletException of(Integer statusCode, Object details) {
         return new WebletException(String.valueOf(details), null, statusCode, details);
     }
