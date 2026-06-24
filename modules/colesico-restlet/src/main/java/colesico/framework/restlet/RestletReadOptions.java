@@ -1,8 +1,6 @@
-package colesico.framework.restlet.teleapi;
+package colesico.framework.restlet;
 
 import colesico.framework.telehttp.HttpReadOptions;
-
-import java.lang.reflect.Type;
 
 /**
  *

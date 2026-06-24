@@ -2,8 +2,8 @@ package colesico.framework.example.restlet.customexception;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.restlet.teleapi.RestletTWContext;
-import colesico.framework.restlet.teleapi.writer.AbstractExceptionWriter;
-import colesico.framework.restlet.teleapi.writer.ObjectWriter;
+import colesico.framework.restlet.writer.AbstractExceptionWriter;
+import colesico.framework.restlet.writer.ObjectWriter;
 
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;

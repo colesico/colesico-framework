@@ -1,9 +1,9 @@
-package colesico.framework.restlet.teleapi.origin;
+package colesico.framework.restlet.origin;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
-import colesico.framework.restlet.teleapi.RestletOrigin;
+import colesico.framework.restlet.RestletOrigin;
 import colesico.framework.router.RouterContext;
 
 import jakarta.inject.Provider;

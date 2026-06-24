@@ -1,6 +1,5 @@
-package colesico.framework.restlet.teleapi.response;
+package colesico.framework.restlet.response;
 
-import colesico.framework.restlet.teleapi.RestletWriteOptions;
 import colesico.framework.telehttp.response.ContentResponse;
 
 import java.nio.charset.Charset;

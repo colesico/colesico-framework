@@ -1,9 +1,8 @@
-package colesico.framework.restlet.teleapi;
+package colesico.framework.restlet;
 
 import colesico.framework.telehttp.HttpWriteOptions;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 /**
  *

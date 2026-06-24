@@ -19,11 +19,10 @@ package colesico.framework.restlet.internal;
 import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.restlet.RestletConfigPrototype;
+import colesico.framework.restlet.*;
 import colesico.framework.restlet.assist.LogRestletListener;
 import colesico.framework.restlet.internal.gsonconv.GsonSerializer;
-import colesico.framework.restlet.teleapi.*;
-import colesico.framework.restlet.teleapi.origin.RestletAutoOrigin;
+import colesico.framework.restlet.origin.RestletAutoOrigin;
 import colesico.framework.telehttp.origin.Origin;
 
 import jakarta.inject.Named;

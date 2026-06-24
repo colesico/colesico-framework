@@ -21,9 +21,9 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.restlet.RestletException;
-import colesico.framework.restlet.teleapi.RestletTeleWriter;
-import colesico.framework.restlet.teleapi.response.ObjectResponse;
-import colesico.framework.restlet.teleapi.writer.*;
+import colesico.framework.restlet.RestletTeleWriter;
+import colesico.framework.restlet.response.ObjectResponse;
+import colesico.framework.restlet.writer.*;
 import colesico.framework.telehttp.writer.ExceptionWriter;
 import colesico.framework.telehttp.writer.ProfileWriter;
 

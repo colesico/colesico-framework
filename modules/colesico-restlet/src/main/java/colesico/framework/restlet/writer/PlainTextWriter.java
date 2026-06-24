@@ -1,7 +1,7 @@
-package colesico.framework.restlet.teleapi.writer;
+package colesico.framework.restlet.writer;
 
-import colesico.framework.restlet.teleapi.RestletWriteOptions;
-import colesico.framework.restlet.teleapi.RestletTeleWriter;
+import colesico.framework.restlet.RestletWriteOptions;
+import colesico.framework.restlet.RestletTeleWriter;
 
 import colesico.framework.telehttp.writer.ObjectWriter;
 import jakarta.inject.Inject;

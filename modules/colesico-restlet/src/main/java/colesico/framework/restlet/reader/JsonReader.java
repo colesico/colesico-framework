@@ -1,4 +1,4 @@
-package colesico.framework.restlet.teleapi.reader;
+package colesico.framework.restlet.reader;
 
 import colesico.framework.assist.ExceptionUtils;
 import colesico.framework.assist.StringUtils;
@@ -6,9 +6,9 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.restlet.RestletException;
-import colesico.framework.restlet.teleapi.RestletSerializer;
-import colesico.framework.restlet.teleapi.RestletOrigin;
-import colesico.framework.restlet.teleapi.RestletReadOptions;
+import colesico.framework.restlet.RestletSerializer;
+import colesico.framework.restlet.RestletOrigin;
+import colesico.framework.restlet.RestletReadOptions;
 import colesico.framework.telehttp.origin.OriginFactory;
 
 import colesico.framework.telehttp.reader.OriginReader;

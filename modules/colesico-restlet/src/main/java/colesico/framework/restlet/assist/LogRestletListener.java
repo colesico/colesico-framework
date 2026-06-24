@@ -1,9 +1,9 @@
 package colesico.framework.restlet.assist;
 
 import colesico.framework.http.HttpContext;
-import colesico.framework.restlet.teleapi.RestletDataPort;
-import colesico.framework.restlet.teleapi.RestletRequestListener;
-import colesico.framework.restlet.teleapi.RestletResponseListener;
+import colesico.framework.restlet.RestletDataPort;
+import colesico.framework.restlet.RestletRequestListener;
+import colesico.framework.restlet.RestletResponseListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

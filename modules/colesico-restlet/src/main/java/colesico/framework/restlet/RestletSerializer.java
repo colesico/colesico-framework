@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.restlet.teleapi;
+package colesico.framework.restlet;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

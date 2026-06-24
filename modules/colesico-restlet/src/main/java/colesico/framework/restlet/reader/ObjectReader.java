@@ -1,6 +1,6 @@
-package colesico.framework.restlet.teleapi.reader;
+package colesico.framework.restlet.reader;
 
-import colesico.framework.restlet.teleapi.RestletTeleReader;
+import colesico.framework.restlet.RestletTeleReader;
 
 /**
  * Default general purpose reader.

@@ -1,11 +1,11 @@
-package colesico.framework.restlet.teleapi.writer;
+package colesico.framework.restlet.writer;
 
 import colesico.framework.http.HttpResponse;
 import colesico.framework.ioc.production.Supplier;
 import colesico.framework.restlet.RestletException;
-import colesico.framework.restlet.teleapi.RestletSerializer;
-import colesico.framework.restlet.teleapi.RestletWriteOptions;
-import colesico.framework.restlet.teleapi.RestletTeleWriter;
+import colesico.framework.restlet.RestletSerializer;
+import colesico.framework.restlet.RestletWriteOptions;
+import colesico.framework.restlet.RestletTeleWriter;
 
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;

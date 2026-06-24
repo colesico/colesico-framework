@@ -1,4 +1,4 @@
-package colesico.framework.restlet.teleapi;
+package colesico.framework.restlet;
 
 import colesico.framework.telehttp.origin.Origin;
 

@@ -19,9 +19,8 @@ package colesico.framework.restlet.codegen;
 
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassType;
-import colesico.framework.restlet.Restlet;
+import colesico.framework.restlet.*;
 import colesico.framework.restlet.codegen.assist.RestletCodegenUtils;
-import colesico.framework.restlet.teleapi.*;
 import colesico.framework.router.codegen.RouterTeleServiceElement;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;

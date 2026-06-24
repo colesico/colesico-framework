@@ -14,16 +14,10 @@
  * limitations under the License.
  */
 
-package colesico.framework.restlet.teleapi;
+package colesico.framework.restlet;
 
-import colesico.framework.config.ConfigModel;
-import colesico.framework.config.ConfigPrototype;
-import com.google.gson.GsonBuilder;
+import colesico.framework.teleapi.dataport.DataPort;
 
-/**
- * Default json converter tuning options
- */
-@ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class GsonOptionsPrototype {
-    abstract public void applyOptions(GsonBuilder builder);
+public interface RestletDataPort extends DataPort<RestletReadOptions, RestletWriteOptions> {
+
 }

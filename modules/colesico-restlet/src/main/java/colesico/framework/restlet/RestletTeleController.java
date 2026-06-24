@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.restlet.teleapi;
+package colesico.framework.restlet;
 
 import colesico.framework.router.RouterTargetController;
 import colesico.framework.teleapi.TeleController;

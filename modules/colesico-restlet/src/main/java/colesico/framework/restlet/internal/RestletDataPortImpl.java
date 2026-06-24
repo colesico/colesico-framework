@@ -17,13 +17,13 @@
 package colesico.framework.restlet.internal;
 
 import colesico.framework.assist.ExceptionUtils;
-import colesico.framework.restlet.teleapi.*;
-import colesico.framework.restlet.teleapi.reader.ObjectReader;
-import colesico.framework.restlet.teleapi.response.ObjectResponse;
+import colesico.framework.restlet.*;
+import colesico.framework.restlet.reader.ObjectReader;
+import colesico.framework.restlet.response.ObjectResponse;
 import colesico.framework.teleapi.dataport.TeleFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import colesico.framework.restlet.teleapi.writer.ObjectResponseWriter;
+import colesico.framework.restlet.writer.ObjectResponseWriter;
 
 import jakarta.inject.Singleton;
 
