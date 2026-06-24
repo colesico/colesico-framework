@@ -16,12 +16,14 @@
 
 package colesico.framework.telehttp.response;
 
+import jakarta.inject.Singleton;
+
 import java.nio.charset.Charset;
 
 /**
  * String based content response
  */
-abstract public class StringResponse extends ContentResponse<String> {
+public class StringResponse extends ContentResponse<String> {
 
     private final Charset charset;
 
@@ -34,4 +36,15 @@ abstract public class StringResponse extends ContentResponse<String> {
         return charset;
     }
 
+    public static StringResponse of(String content) {
+        return new StringResponse(null, null, content, null);
+    }
+
+    public static StringResponse of(Integer statusCode, String content) {
+        return new StringResponse(statusCode, null, content, null);
+    }
+
+    public static StringResponse of(Integer statusCode, String contentType, String content) {
+        return new StringResponse(statusCode, contentType, content, null);
+    }
 }

@@ -35,8 +35,8 @@ public final class RestletWriterProxy<V> implements RestletTeleWriter<V> {
     }
 
     @Override
-    public void write(V value, Class<V> valueType, RestletWriteOptions options) {
-        writer.write(value, valueType, options);
+    public void write(V value, Class<V> baseType, RestletWriteOptions options) {
+        writer.write(value, baseType, options);
     }
 
     public static <V> RestletWriterProxy<V> of(HttpTeleWriter<V, HttpWriteOptions> writer) {

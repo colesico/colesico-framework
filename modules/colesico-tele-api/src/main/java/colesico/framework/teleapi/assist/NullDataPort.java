@@ -30,35 +30,35 @@ public final class NullDataPort implements DataPort<ReadOptions, WriteOptions> {
     }
 
     @Override
-    public <V> V read(Class<V> valueType, ReadOptions options) {
-        log.debug("Read for valueType: {}; options: {}", valueType, options);
+    public <V> V read(Class<V> baseType, ReadOptions options) {
+        log.debug("Read for valueType: {}; options: {}", baseType, options);
         return null;
     }
 
     @Override
-    public <V> V read(Class<V> valueType) {
-        log.debug("Read for valueType: {}", valueType);
+    public <V> V read(Class<V> baseType) {
+        log.debug("Read for valueType: {}", baseType);
         return null;
     }
 
     @Override
-    public <V> V read(Class<V> valueType, Object attachment) {
-        log.debug("Read for valueType: {}; attachment: {}", valueType, attachment);
+    public <V> V read(Class<V> baseType, Object attachment) {
+        log.debug("Read for valueType: {}; attachment: {}", baseType, attachment);
         return null;
     }
 
     @Override
-    public <V> void write(V value, Class<V> valueType, WriteOptions options) {
-        log.debug("Write value: {}; valueType: {}; options: {}", value, valueType, options);
+    public <V> void write(V value, Class<V> baseType, WriteOptions options) {
+        log.debug("Write value: {}; valueType: {}; options: {}", value, baseType, options);
     }
 
     @Override
-    public <V> void write(V value, Class<V> valueType) {
-        log.debug("Write value: {}; valueType: {}", value, valueType);
+    public <V> void write(V value, Class<V> baseType) {
+        log.debug("Write value: {}; valueType: {}", value, baseType);
     }
 
     @Override
-    public <V> void write(V value, Class<V> valueType, Object attachment) {
-        log.debug("Write value: {}; valueType: {}; attachment: {}", value, valueType, attachment);
+    public <V> void write(V value, Class<V> baseType, Object attachment) {
+        log.debug("Write value: {}; valueType: {}; attachment: {}", value, baseType, attachment);
     }
 }

@@ -7,7 +7,7 @@ import colesico.framework.restlet.teleapi.RestletTeleWriter;
 import colesico.framework.restlet.teleapi.RestletWriteOptions;
 
 import colesico.framework.restlet.teleapi.response.ObjectResponse;
-import colesico.framework.telehttp.writer.TeleHttpResponseWriter;
+import colesico.framework.telehttp.writer.HttpTeleResponseWriter;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 
 @Singleton
 public class ObjectResponseWriter
-        extends TeleHttpResponseWriter<ObjectResponse, RestletWriteOptions>
+        extends HttpTeleResponseWriter<ObjectResponse, RestletWriteOptions>
         implements RestletTeleWriter<ObjectResponse> {
 
 
@@ -42,12 +42,12 @@ public class ObjectResponseWriter
     }
 
     @Override
-    protected String defaultContentType(ObjectResponse value, Class<ObjectResponse> valueType, RestletWriteOptions options) {
+    protected String defaultContentType(ObjectResponse value, Class<ObjectResponse> baseType, RestletWriteOptions options) {
         return RestletWriteOptions.DEFAULT_CONTENT_TYPE;
     }
 
     @Override
-    protected void sendValue(HttpResponse response, ObjectResponse value, Class<ObjectResponse> valueType, RestletWriteOptions options, Integer statusCode, String contentType) {
+    protected void writeValue(HttpResponse response, ObjectResponse value, Class<ObjectResponse> baseType, RestletWriteOptions options, Integer statusCode, String contentType) {
 
         String content = serializer.get(contentType).serialize(value.content());
 

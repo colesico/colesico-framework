@@ -6,8 +6,11 @@ import colesico.framework.telehttp.writer.ObjectWriter;
 import colesico.framework.telehttp.writer.ProfileWriter;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
+import colesico.framework.telehttp.writer.StringResponseWriter;
+
 
 @Producer
+@Produce(StringResponseWriter.class)
 @Produce(ObjectWriter.class)
 @Produce(ExceptionWriter.class)
 @Produce(value = ProfileWriter.class, substitute = Substitution.STUB)

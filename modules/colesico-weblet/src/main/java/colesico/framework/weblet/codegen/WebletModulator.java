@@ -30,7 +30,7 @@ import colesico.framework.teleapi.dataport.ReadOptions;
 import colesico.framework.teleapi.dataport.WriteOptions;
 import colesico.framework.telehttp.codegen.HttpTeleReadElement;
 import colesico.framework.telehttp.codegen.HttpTeleWriteElement;
-import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
+import colesico.framework.telehttp.codegen.HttpTeleCodegenUtils;
 import colesico.framework.weblet.Weblet;
 import colesico.framework.weblet.teleapi.*;
 import com.palantir.javapoet.ClassName;
@@ -84,12 +84,12 @@ public final class WebletModulator extends RoutesModulator {
         CodeBlock.Builder valueTypeCode = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleParamType(teleParam, valueTypeCode);
 
-        String paramName = TeleHttpCodegenUtils.paramName(teleParam);
+        String paramName = HttpTeleCodegenUtils.paramName(teleParam);
 
         CodeBlock.Builder optionsCode = CodeBlock.builder();
         optionsCode.add("$T.$N(", ClassName.get(WebletReadOptions.class), WebletReadOptions.OF_METHOD);
 
-        String originName = TeleHttpCodegenUtils.originName(teleParam, WebletOrigin.AUTO);
+        String originName = HttpTeleCodegenUtils.originName(teleParam, WebletOrigin.AUTO);
 
         TypeMirror customReader = getCustomReaderClass(teleParam);
 

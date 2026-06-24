@@ -22,7 +22,7 @@ import colesico.framework.http.HttpResponse;
 import colesico.framework.profile.Profile;
 import colesico.framework.telehttp.HttpWriteOptions;
 import colesico.framework.telehttp.HttpTeleWriter;
-import colesico.framework.telehttp.assist.TeleHttpUtils;
+import colesico.framework.telehttp.assist.HttpTeleUtils;
 import jakarta.inject.Singleton;
 
 import java.util.*;
@@ -47,14 +47,14 @@ public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implem
     }
 
     @Override
-    public void write(P profile, Class<P> valueType, R options) {
+    public void write(P profile, R options) {
         // Calc expiring
         Calendar expires = Calendar.getInstance();
         String profileStr;
         if (profile != null) {
             Map<String, String> attributes = new HashMap<>();
             toAttributes(profile, attributes);
-            profileStr = TeleHttpUtils.stringifyAttributes(attributes);
+            profileStr = HttpTeleUtils.stringifyAttributes(attributes);
             expires.add(Calendar.DAY_OF_MONTH, config.cookieValidityDays());
         } else {
             profileStr = null;

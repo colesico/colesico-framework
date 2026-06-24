@@ -39,7 +39,7 @@ public final class RedirectWriter implements WebletTeleWriter<RedirectResponse> 
     }
 
     @Override
-    public void write(RedirectResponse value, Class<RedirectResponse> valueType, WebletWriteOptions options) {
+    public void write(RedirectResponse value, Class<RedirectResponse> baseType, WebletWriteOptions options) {
         value.navigation().redirect(router, httpContext.get());
     }
 

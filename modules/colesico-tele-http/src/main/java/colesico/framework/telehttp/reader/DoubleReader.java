@@ -41,7 +41,7 @@ public final class DoubleReader extends OriginReader<Double, HttpReadOptions> {
     }
 
     @Override
-    public Double read(Class<Double> valueType, HttpReadOptions options) {
+    public Double read(Class<Double> baseType, HttpReadOptions options) {
         try {
             String val = readString(options);
             if (isBlank(val)) {

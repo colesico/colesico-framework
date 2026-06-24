@@ -4,25 +4,37 @@ import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.telehttp.HttpTeleWriter;
 import colesico.framework.telehttp.HttpWriteOptions;
-import colesico.framework.telehttp.response.TeleHttpResponse;
+import colesico.framework.telehttp.response.HttpTeleResponse;
 import jakarta.inject.Provider;
 
-abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O extends HttpWriteOptions> implements HttpTeleWriter<V, O> {
+/**
+ * General {@link HttpTeleResponse} writer
+ */
+abstract public class HttpTeleResponseWriter<V extends HttpTeleResponse, O extends HttpWriteOptions> implements HttpTeleWriter<V, O> {
+
+    public static final Integer DEFAULT_STATUS_CODE = 200;
+    public static final String DEFAULT_CONTENT_TYPE = "text/plain";
 
     protected final Provider<HttpResponse> httpResponse;
 
-    public TeleHttpResponseWriter(Provider<HttpResponse> httpResponse) {
+    public HttpTeleResponseWriter(Provider<HttpResponse> httpResponse) {
         this.httpResponse = httpResponse;
     }
 
-    abstract protected Integer defaultStatusCode(V value, Class<V> valueType, O options);
+    abstract protected void writeValue(HttpResponse response, V value, O options,
+                                       Integer effectiveStatusCode,
+                                       String effectiveContentType);
 
-    abstract protected String defaultContentType(V value, Class<V> valueType, O options);
+    protected Integer defaultStatusCode(V value, O options) {
+        return DEFAULT_STATUS_CODE;
+    }
 
-    abstract protected void sendValue(HttpResponse response, V value, Class<V> valueType, O options, Integer statusCode, String contentType);
+    protected String defaultContentType(V value, O options) {
+        return DEFAULT_CONTENT_TYPE;
+    }
 
     @Override
-    public void write(V value, Class<V> valueType, O options) {
+    public void write(V value, O options) {
 
         var response = httpResponse.get();
 
@@ -35,7 +47,7 @@ abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O exten
         if (statusCode == null) {
             statusCode = options.statusCode();
             if (statusCode == null) {
-                statusCode = defaultStatusCode(value, valueType, options);
+                statusCode = defaultStatusCode(value, options);
             }
         }
         response.setStatus(statusCode);
@@ -44,7 +56,7 @@ abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O exten
         if (contentType == null) {
             contentType = options.contentType();
             if (contentType == null) {
-                contentType = defaultContentType(value, valueType, options);
+                contentType = defaultContentType(value, options);
             }
         }
 
@@ -58,6 +70,6 @@ abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O exten
             HttpUtils.setCookies(response, value.cookies());
         }
 
-        sendValue(response, value, valueType, options, statusCode, contentType);
+        writeValue(response, value, options, statusCode, contentType);
     }
 }

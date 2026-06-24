@@ -42,39 +42,39 @@ public final class SimpleDataPort implements DataPort<ReadOptions, WriteOptions>
     }
 
     @Override
-    public <V> V read(Class<V> valueType, ReadOptions options) {
-        log.debug("Read for valueType: {}; options: {}", valueType, options);
-        return valueType.cast(values.get(valueType));
+    public <V> V read(Class<V> baseType, ReadOptions options) {
+        log.debug("Read for valueType: {}; options: {}", baseType, options);
+        return baseType.cast(values.get(baseType));
     }
 
     @Override
-    public <V> V read(Class<V> valueType) {
-        log.debug("Read for valueType: {}", valueType);
-        return valueType.cast(values.get(valueType));
+    public <V> V read(Class<V> baseType) {
+        log.debug("Read for valueType: {}", baseType);
+        return baseType.cast(values.get(baseType));
     }
 
     @Override
-    public <V> V read(Class<V> valueType, Object attachment) {
-        log.debug("Read for valueType: {}; attachment: {}", valueType, attachment);
-        return valueType.cast(values.get(valueType));
+    public <V> V read(Class<V> baseType, Object attachment) {
+        log.debug("Read for valueType: {}; attachment: {}", baseType, attachment);
+        return baseType.cast(values.get(baseType));
     }
 
     @Override
-    public <V> void write(V value, Class<V> valueType, WriteOptions options) {
-        log.debug("Write value: {}; valueType: {}; options: {}", value, valueType, options);
-        values.put(valueType, value);
+    public <V> void write(V value, Class<V> baseType, WriteOptions options) {
+        log.debug("Write value: {}; valueType: {}; options: {}", value, baseType, options);
+        values.put(baseType, value);
     }
 
     @Override
-    public <V> void write(V value, Class<V> valueType) {
-        log.debug("Write value: {}; valueType: {}", value, valueType);
-        values.put(valueType, value);
+    public <V> void write(V value, Class<V> baseType) {
+        log.debug("Write value: {}; valueType: {}", value, baseType);
+        values.put(baseType, value);
     }
 
     @Override
-    public <V> void write(V value, Class<V> valueType, Object attachment) {
-        log.debug("Write value: {}; valueType: {}; attachment: {}", value, valueType, attachment);
-        values.put(valueType, value);
+    public <V> void write(V value, Class<V> baseType, Object attachment) {
+        log.debug("Write value: {}; valueType: {}; attachment: {}", value, baseType, attachment);
+        values.put(baseType, value);
     }
 
     @Override

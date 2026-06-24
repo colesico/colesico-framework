@@ -20,7 +20,7 @@ import colesico.framework.http.HttpRequest;
 import colesico.framework.profile.*;
 import colesico.framework.telehttp.HttpReadOptions;
 import colesico.framework.telehttp.HttpTeleReader;
-import colesico.framework.telehttp.assist.TeleHttpUtils;
+import colesico.framework.telehttp.assist.HttpTeleUtils;
 import colesico.framework.telehttp.writer.ProfileWriter;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -48,7 +48,7 @@ public class ProfileReader<P extends Profile<?>> implements HttpTeleReader<P, Ht
     }
 
     @Override
-    public final P read(Class<P> valueType, HttpReadOptions options) {
+    public final P read(Class<P> baseType, HttpReadOptions options) {
         HttpRequest request = httpRequest.get();
         Map<String, String> attributes = readProfileAttributes(request);
         return buildProfile(options, attributes, request);
@@ -66,7 +66,7 @@ public class ProfileReader<P extends Profile<?>> implements HttpTeleReader<P, Ht
         var localeTag = attributes.get(LOCALE_ATTRIBUTE);
         if (isBlank(localeTag)) {
             String acceptLangs = request.headers().get(ACCEPT_LANGUAGE_HEADER);
-            Locale locale = TeleHttpUtils.acceptedLanguage(acceptLangs);
+            Locale locale = HttpTeleUtils.acceptedLanguage(acceptLangs);
             if (locale != null) {
                 return locale;
             }
@@ -80,12 +80,12 @@ public class ProfileReader<P extends Profile<?>> implements HttpTeleReader<P, Ht
         Map<String, String> attributes = new HashMap<>();
         var profileCookie = request.cookies().get(ProfileWriter.PROFILE_COOKIE);
         if (profileCookie != null) {
-            attributes.putAll(TeleHttpUtils.parseAttributes(profileCookie.value()));
+            attributes.putAll(HttpTeleUtils.parseAttributes(profileCookie.value()));
         }
 
         var profileHeader = request.cookies().get(PROFILE_HEADER);
         if (profileHeader != null) {
-            attributes.putAll(TeleHttpUtils.parseAttributes(profileHeader.value()));
+            attributes.putAll(HttpTeleUtils.parseAttributes(profileHeader.value()));
         }
         return attributes;
     }

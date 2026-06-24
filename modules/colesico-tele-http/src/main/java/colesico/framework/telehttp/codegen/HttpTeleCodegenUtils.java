@@ -6,7 +6,7 @@ import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.ParamOrigin;
 
-public class TeleHttpCodegenUtils {
+public class HttpTeleCodegenUtils {
 
     public static String paramName(TeleParameterElement teleInput) {
         AnnotationAssist<ParamName> nameAnn = teleInput.originElement().annotation(ParamName.class);

@@ -41,7 +41,7 @@ public final class FloatReader extends OriginReader<Float, HttpReadOptions> {
     }
 
     @Override
-    public Float read(Class<Float> valueType, HttpReadOptions options) {
+    public Float read(Class<Float> baseType, HttpReadOptions options) {
         try {
             String val = readString(options);
             if (isBlank(val)) {

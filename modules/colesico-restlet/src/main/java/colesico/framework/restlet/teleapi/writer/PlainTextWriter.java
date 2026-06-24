@@ -21,8 +21,8 @@ public final class PlainTextWriter implements RestletTeleWriter<Object> {
     }
 
     @Override
-    public void write(Object value, Class<Object> valueType, RestletWriteOptions options) {
-        writer.write(value, valueType, options);
+    public void write(Object value, Class<Object> baseType, RestletWriteOptions options) {
+        writer.write(value, baseType, options);
     }
 
 }

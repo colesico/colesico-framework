@@ -3,7 +3,7 @@ package colesico.framework.telehttp.response;
 /**
  * Response model with content
  */
-public class ContentResponse<C> extends TeleHttpResponse {
+public class ContentResponse<C> extends HttpTeleResponse {
 
     protected final C content;
 
@@ -18,5 +18,13 @@ public class ContentResponse<C> extends TeleHttpResponse {
 
     public static <C> ContentResponse<C> of(C content) {
         return new ContentResponse<>(null, null, content);
+    }
+
+    public static <C> ContentResponse<C> of(Integer statusCode, C content) {
+        return new ContentResponse<>(statusCode, null, content);
+    }
+
+    public static <C> ContentResponse<C> of(Integer statusCode, String contentType, C content) {
+        return new ContentResponse<>(statusCode, contentType, content);
     }
 }

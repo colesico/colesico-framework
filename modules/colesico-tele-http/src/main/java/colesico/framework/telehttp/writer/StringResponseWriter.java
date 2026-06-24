@@ -22,28 +22,32 @@ import colesico.framework.telehttp.response.StringResponse;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
- * @author Vladlen Larionov
+ * General {@link StringResponse} writer
  */
-abstract public class StringResponseWriter
-        extends TeleHttpResponseWriter<StringResponse, HttpWriteOptions> {
+@Singleton
+public class StringResponseWriter<V extends StringResponse, O extends HttpWriteOptions>
+        extends HttpTeleResponseWriter<V, O> {
+
+    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     @Inject
     public StringResponseWriter(Provider<HttpResponse> httpResponse) {
         super(httpResponse);
     }
 
-    @Override
-    protected Integer defaultStatusCode(StringResponse value, Class<StringResponse> valueType, HttpWriteOptions options) {
-        return 200;
+    protected Charset defaultCharset(V value, O options) {
+        return DEFAULT_CHARSET;
     }
 
     @Override
-    protected void sendValue(HttpResponse response, StringResponse value, Class<StringResponse> valueType, HttpWriteOptions options, Integer statusCode, String contentType) {
+    protected void writeValue(HttpResponse response, V value, O options, Integer effectiveStatusCode, String effectiveContentType) {
 
         if (value.content() == null) {
             response.setStatus(204).sendText("");
@@ -54,12 +58,12 @@ abstract public class StringResponseWriter
         if (charset == null) {
             charset = options.charset();
             if (charset == null) {
-                charset = StandardCharsets.UTF_8;
+                charset = defaultCharset(value, options);
             }
         }
 
         var content = value.content();
         response.sendData(ByteBuffer.wrap(content.getBytes(charset)));
-
     }
+
 }

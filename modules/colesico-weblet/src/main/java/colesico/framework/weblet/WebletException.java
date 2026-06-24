@@ -16,32 +16,20 @@
 
 package colesico.framework.weblet;
 
+import colesico.framework.telehttp.HttpTeleException;
+
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
- * @author Vladlen Larionov
+ * Generic weblet exception
  */
-public class WebletException extends RuntimeException {
+public class WebletException extends HttpTeleException {
 
-    public static final Integer DEFAULT_STATUS_CODE = 500;
     public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
-    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-
-    /**
-     * Http response status code
-     */
-    private final Integer statusCode;
-
-    /**
-     * Returned data
-     */
-    private final Object details;
 
     public WebletException(String message, Throwable cause, Integer statusCode, Object details) {
-        super(message, cause);
-        this.statusCode = statusCode != null ? statusCode : 500;
-        this.details = details;
+        super(message, cause, statusCode, details);
     }
 
     public static WebletException of(Integer statusCode, Object details) {
@@ -56,11 +44,4 @@ public class WebletException extends RuntimeException {
         return new WebletException(String.valueOf(details), cause, statusCode, details);
     }
 
-    public Object details() {
-        return details;
-    }
-
-    public Integer statusCode() {
-        return statusCode;
-    }
 }

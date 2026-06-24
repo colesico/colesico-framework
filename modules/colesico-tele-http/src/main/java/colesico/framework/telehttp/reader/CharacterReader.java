@@ -35,7 +35,7 @@ public final class CharacterReader extends OriginReader<Character, HttpReadOptio
     }
 
     @Override
-    public Character read(Class<Character> valueType, HttpReadOptions options) {
+    public Character read(Class<Character> baseType, HttpReadOptions options) {
         String str = StringUtils.trim(readString(options));
         return !StringUtils.isBlank(str) ? str.charAt(0) : null;
     }

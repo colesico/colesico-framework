@@ -23,5 +23,5 @@ package colesico.framework.teleapi.dataport;
  */
 @FunctionalInterface
 public interface TeleReader<V, O extends ReadOptions> {
-    V read(Class<V> valueType, O options);
+    V read(Class<V> baseType, O options);
 }

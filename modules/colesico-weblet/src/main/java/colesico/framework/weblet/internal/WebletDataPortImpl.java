@@ -32,44 +32,44 @@ public class WebletDataPortImpl implements WebletDataPort {
     }
 
     @Override
-    public <V> V read(Class<V> valueType, WebletReadOptions options) {
+    public <V> V read(Class<V> baseType, WebletReadOptions options) {
         WebletTeleReader<V> reader;
         if (options.readerClass() != null) {
             // Use specified reader
             reader = (WebletTeleReader<V>) teleFactory.reader(options.readerClass());
         } else {
             // Use reader by value type
-            reader = teleFactory.findReader(WebletTeleReader.class, valueType);
+            reader = teleFactory.findReader(WebletTeleReader.class, baseType);
             if (reader == null) {
                 // Get default reader
                 reader = teleFactory.reader(WebletTeleReader.class, Object.class);
             }
         }
-        return reader.read(valueType, options);
+        return reader.read(baseType, options);
     }
 
     @Override
-    public <V> V read(Class<V> valueType) {
-        return read(valueType, WebletReadOptions.of());
+    public <V> V read(Class<V> baseType) {
+        return read(baseType, WebletReadOptions.of());
     }
 
     @Override
-    public <V> V read(Class<V> valueType, Object attachment) {
-        return read(valueType, WebletReadOptions.of(attachment));
+    public <V> V read(Class<V> baseType, Object attachment) {
+        return read(baseType, WebletReadOptions.of(attachment));
     }
 
     @Override
-    public <V> void write(V value, Class<V> valueType) {
-        write(value, valueType, WebletWriteOptions.of());
+    public <V> void write(V value, Class<V> baseType) {
+        write(value, baseType, WebletWriteOptions.of());
     }
 
     @Override
-    public <V> void write(V value, Class<V> valueType, Object attachment) {
-        write(value, valueType, WebletWriteOptions.of(attachment));
+    public <V> void write(V value, Class<V> baseType, Object attachment) {
+        write(value, baseType, WebletWriteOptions.of(attachment));
     }
 
     @Override
-    public <V> void write(V value, Class<V> valueType, WebletWriteOptions options) {
+    public <V> void write(V value, Class<V> baseType, WebletWriteOptions options) {
 
         boolean isDynamicResponse = value instanceof DynamicResponse;
 
@@ -95,7 +95,7 @@ public class WebletDataPortImpl implements WebletDataPort {
                 writer = teleFactory.findWriter(WebletTeleWriter.class, targetType);
             }
             if (writer == null) {
-                targetType = valueType;
+                targetType = baseType;
                 writer = teleFactory.writer(WebletTeleWriter.class, targetType);
             }
         }

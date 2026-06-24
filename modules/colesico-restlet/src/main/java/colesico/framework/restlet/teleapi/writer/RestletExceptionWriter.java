@@ -24,7 +24,7 @@ public class RestletExceptionWriter implements RestletTeleWriter<RestletExceptio
     }
 
     @Override
-    public void write(RestletException value, Class<RestletException> valueType, RestletWriteOptions options) {
+    public void write(RestletException value, Class<RestletException> baseType, RestletWriteOptions options) {
         var response = httpResponse.get();
 
         if (value == null) {

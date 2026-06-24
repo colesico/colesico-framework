@@ -41,7 +41,7 @@ public final class IntegerReader extends OriginReader<Integer, HttpReadOptions> 
     }
 
     @Override
-    public Integer read(Class<Integer> valueType, HttpReadOptions options) {
+    public Integer read(Class<Integer> baseType, HttpReadOptions options) {
         try {
             String val = readString(options);
             if (isBlank(val)) {

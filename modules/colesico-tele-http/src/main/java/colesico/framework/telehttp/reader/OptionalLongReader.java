@@ -43,7 +43,7 @@ public final class OptionalLongReader extends OriginReader<OptionalLong, HttpRea
     }
 
     @Override
-    public OptionalLong read(Class<OptionalLong> valueType, HttpReadOptions options) {
+    public OptionalLong read(Class<OptionalLong> baseType, HttpReadOptions options) {
         try {
             String val = readString(options);
             if (isBlank(val)) {

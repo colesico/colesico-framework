@@ -5,9 +5,9 @@ import colesico.framework.http.HttpCookie;
 import java.util.*;
 
 /**
- * Basic response model
+ * General response model
  */
-abstract public class TeleHttpResponse {
+abstract public class HttpTeleResponse {
 
     /**
      * Http response status code
@@ -23,7 +23,7 @@ abstract public class TeleHttpResponse {
 
     protected final Set<HttpCookie> cookies = new HashSet<>();
 
-    public TeleHttpResponse(Integer statusCode, String contentType) {
+    public HttpTeleResponse(Integer statusCode, String contentType) {
         this.statusCode = statusCode;
         this.contentType = contentType;
     }

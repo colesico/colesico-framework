@@ -41,7 +41,7 @@ public final class ShortReader extends OriginReader<Short, HttpReadOptions> {
     }
 
     @Override
-    public Short read(Class<Short> valueType, HttpReadOptions options) {
+    public Short read(Class<Short> baseType, HttpReadOptions options) {
         try {
             String val = readString(options);
             if (isBlank(val)) {

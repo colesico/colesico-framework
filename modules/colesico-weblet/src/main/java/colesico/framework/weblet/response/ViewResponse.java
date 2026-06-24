@@ -1,6 +1,6 @@
 package colesico.framework.weblet.response;
 
-import colesico.framework.telehttp.response.TeleHttpResponse;
+import colesico.framework.telehttp.response.HttpTeleResponse;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * Returns  model that be presented to given view
  */
-public final class ViewResponse extends TeleHttpResponse {
+public final class ViewResponse extends HttpTeleResponse {
 
     public static final Integer DEFAULT_STATUS_CODE = 200;
     public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";

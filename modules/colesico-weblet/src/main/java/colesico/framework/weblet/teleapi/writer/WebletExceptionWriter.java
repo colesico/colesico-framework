@@ -20,7 +20,7 @@ public class WebletExceptionWriter implements WebletTeleWriter<WebletException> 
     }
 
     @Override
-    public void write(WebletException value, Class<WebletException> valueType, WebletWriteOptions options) {
+    public void write(WebletException value, Class<WebletException> baseType, WebletWriteOptions options) {
 
         var response = httpResponse.get();
 

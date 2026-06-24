@@ -43,7 +43,7 @@ public final class OptionalIntReader extends OriginReader<OptionalInt, HttpReadO
     }
 
     @Override
-    public OptionalInt read(Class<OptionalInt> valueType, HttpReadOptions options) {
+    public OptionalInt read(Class<OptionalInt> baseType, HttpReadOptions options) {
         try {
             String val = readString(options);
             if (isBlank(val)) {

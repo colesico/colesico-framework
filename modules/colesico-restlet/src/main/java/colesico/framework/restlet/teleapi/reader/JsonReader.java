@@ -36,7 +36,7 @@ public final class JsonReader
     }
 
     @Override
-    public Object read(Class<Object> valueType, RestletReadOptions options) {
+    public Object read(Class<Object> baseType, RestletReadOptions options) {
         HttpRequest request = httpContextProv.get().request();
 
         HttpMethod requestMethod = request.method();
@@ -58,7 +58,7 @@ public final class JsonReader
 
         if (useInputStream) {
             try (InputStream is = request.inputStream()) {
-                return jsonConverter.deserialize(is, valueType);
+                return jsonConverter.deserialize(is, baseType);
             } catch (Exception e) {
                 throw new RestletException(new RestletError("ReadJsonError", ExceptionUtils.getRootCauseMessage(e), null));
             }
@@ -68,7 +68,7 @@ public final class JsonReader
                 if (StringUtils.isBlank(strValue)) {
                     return null;
                 }
-                return jsonConverter.deserialize(strValue, valueType);
+                return jsonConverter.deserialize(strValue, baseType);
             } catch (Exception e) {
                 throw new RestletException(new RestletError("ReadJsonError", ExceptionUtils.getRootCauseMessage(e), null));
             }

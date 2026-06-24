@@ -17,7 +17,7 @@
 package colesico.framework.weblet.teleapi.writer;
 
 import colesico.framework.http.HttpResponse;
-import colesico.framework.telehttp.writer.TeleHttpResponseWriter;
+import colesico.framework.telehttp.writer.HttpTeleResponseWriter;
 import colesico.framework.weblet.response.BinaryResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WebletWriteOptions;
@@ -33,7 +33,7 @@ import java.nio.ByteBuffer;
  */
 @Singleton
 public final class BinaryWriter
-        extends TeleHttpResponseWriter<BinaryResponse, WebletWriteOptions>
+        extends HttpTeleResponseWriter<BinaryResponse, WebletWriteOptions>
         implements WebletTeleWriter<BinaryResponse> {
 
     @Inject
@@ -47,12 +47,12 @@ public final class BinaryWriter
     }
 
     @Override
-    protected String defaultContentType(BinaryResponse value, Class<BinaryResponse> valueType, WebletWriteOptions options) {
+    protected String defaultContentType(BinaryResponse value, Class<BinaryResponse> baseType, WebletWriteOptions options) {
         return BinaryResponse.DEFAULT_CONTENT_TYPE;
     }
 
     @Override
-    protected void sendValue(HttpResponse response, BinaryResponse value, Class<BinaryResponse> valueType, WebletWriteOptions options, Integer statusCode, String contentType) {
+    protected void writeValue(HttpResponse response, BinaryResponse value, Class<BinaryResponse> baseType, WebletWriteOptions options, Integer statusCode, String contentType) {
 
         // Force download?
         if (value.fileName() != null) {

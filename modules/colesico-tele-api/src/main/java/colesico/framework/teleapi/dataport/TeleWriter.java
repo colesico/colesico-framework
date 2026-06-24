@@ -23,5 +23,5 @@ package colesico.framework.teleapi.dataport;
  */
 @FunctionalInterface
 public interface TeleWriter<V, O extends WriteOptions> {
-    void write(V value, Class<V> valueType, O options);
+    void write(V value, O options);
 }

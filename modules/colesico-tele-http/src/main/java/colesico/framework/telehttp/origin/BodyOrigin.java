@@ -2,7 +2,7 @@ package colesico.framework.telehttp.origin;
 
 import colesico.framework.http.HttpException;
 import colesico.framework.http.HttpRequest;
-import colesico.framework.telehttp.assist.TeleHttpUtils;
+import colesico.framework.telehttp.assist.HttpTeleUtils;
 
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -23,7 +23,7 @@ public class BodyOrigin implements Origin {
     @Override
     public Collection<String> getStrings(String name) {
         try (InputStream is = httpRequest.get().inputStream()) {
-            String content = TeleHttpUtils.inputStreamToString(is);
+            String content = HttpTeleUtils.inputStreamToString(is);
             return List.of(content);
         } catch (Exception e) {
             throw new HttpException(e, 500);

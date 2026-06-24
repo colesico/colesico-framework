@@ -41,7 +41,7 @@ public final class BooleanReader extends OriginReader<Boolean, HttpReadOptions> 
     }
 
     @Override
-    public Boolean read(Class<Boolean> valueType, HttpReadOptions options) {
+    public Boolean read(Class<Boolean> baseType, HttpReadOptions options) {
         try {
             String str = readString(options);
             if (isBlank(str)) {

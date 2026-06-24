@@ -33,8 +33,8 @@ public final class RestletReaderProxy<V> implements RestletTeleReader<V> {
     }
 
     @Override
-    public V read(Class<V> valueType, RestletReadOptions options) {
-        return reader.read(valueType, options);
+    public V read(Class<V> baseType, RestletReadOptions options) {
+        return reader.read(baseType, options);
     }
 
     public static <V> RestletReaderProxy<V> of(HttpTeleReader<V, HttpReadOptions> reader) {

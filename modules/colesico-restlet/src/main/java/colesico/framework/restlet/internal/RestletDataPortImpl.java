@@ -46,7 +46,7 @@ public class RestletDataPortImpl implements RestletDataPort {
     }
 
     @Override
-    public <V> V read(Class<V> valueType, RestletReadOptions options) {
+    public <V> V read(Class<V> baseType, RestletReadOptions options) {
         RestletTeleReader<V> reader;
 
         if (options.readerClass() != null) {
@@ -54,27 +54,27 @@ public class RestletDataPortImpl implements RestletDataPort {
             reader = (RestletTeleReader<V>) teleFactory.reader(options.readerClass());
         } else {
             // Use reader by value type
-            reader = teleFactory.findReader(RestletTeleReader.class, valueType);
+            reader = teleFactory.findReader(RestletTeleReader.class, baseType);
             if (reader == null) {
                 // No accurate reader here so are reading data as object
                 reader = (RestletTeleReader<V>) teleFactory.reader(ObjectReader.class);
             }
         }
-        return reader.read(valueType, options);
+        return reader.read(baseType, options);
     }
 
     @Override
-    public <V> V read(Class<V> valueType) {
-        return read(valueType, RestletReadOptions.of());
+    public <V> V read(Class<V> baseType) {
+        return read(baseType, RestletReadOptions.of());
     }
 
     @Override
-    public <V> V read(Class<V> valueType, Object attachment) {
-        return read(valueType, RestletReadOptions.of(attachment));
+    public <V> V read(Class<V> baseType, Object attachment) {
+        return read(baseType, RestletReadOptions.of(attachment));
     }
 
     @Override
-    public <V> void write(V value, Class<V> valueType, RestletWriteOptions options) {
+    public <V> void write(V value, Class<V> baseType, RestletWriteOptions options) {
         RestletTeleWriter writer = null;
 
         // Check for a custom writer specified in options
@@ -92,7 +92,7 @@ public class RestletDataPortImpl implements RestletDataPort {
 
             // Fallback to the declared value type
             if (writer == null) {
-                writer = teleFactory.findWriter(RestletTeleWriter.class, valueType);
+                writer = teleFactory.findWriter(RestletTeleWriter.class, baseType);
             }
 
             // Final fallback to the default object writer
@@ -103,17 +103,17 @@ public class RestletDataPortImpl implements RestletDataPort {
             }
         }
 
-        writer.write(value, valueType, options);
+        writer.write(value, baseType, options);
 
     }
 
     @Override
-    public <V> void write(V value, Class<V> valueType) {
-        write(value, valueType, RestletWriteOptions.of());
+    public <V> void write(V value, Class<V> baseType) {
+        write(value, baseType, RestletWriteOptions.of());
     }
 
     @Override
-    public <V> void write(V value, Class<V> valueType, Object attachment) {
-        write(value, valueType, RestletWriteOptions.of(attachment));
+    public <V> void write(V value, Class<V> baseType, Object attachment) {
+        write(value, baseType, RestletWriteOptions.of(attachment));
     }
 }

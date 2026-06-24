@@ -45,17 +45,17 @@ public interface DataPort<R extends ReadOptions, W extends WriteOptions> {
     /**
      * Reads a value using the given read options.
      *
-     * @param valueType type of the value to read
-     * @param options   logical read options
-     * @param <V>       value type
+     * @param baseType base type of the value to read
+     * @param options  logical read options
+     * @param <V>      value type
      * @return the deserialized value
      */
-    <V> V read(Class<V> valueType, R options);
+    <V> V read(Class<V> baseType, R options);
 
     /**
      * Reads a value using default read options.
      */
-    <V> V read(Class<V> valueType);
+    <V> V read(Class<V> baseType);
 
     /**
      * Reads a value using an attachment object.
@@ -64,22 +64,22 @@ public interface DataPort<R extends ReadOptions, W extends WriteOptions> {
      *
      * @param attachment a message object for the reader
      */
-    <V> V read(Class<V> valueType, Object attachment);
+    <V> V read(Class<V> baseType, Object attachment);
 
     /**
      * Writes a value using the given write options.
      *
-     * @param value     value to write
-     * @param valueType type of the value
-     * @param options   logical write options
-     * @param <V>       value type
+     * @param value    value to write
+     * @param baseType value base type
+     * @param options  write options
+     * @param <V>      value type
      */
-    <V> void write(V value, Class<V> valueType, W options);
+    <V> void write(V value, Class<V> baseType, W options);
 
     /**
      * Writes a value using default write options.
      */
-    <V> void write(V value, Class<V> valueType);
+    <V> void write(V value, Class<V> baseType);
 
     /**
      * Writes a value using an attachment object.
@@ -88,5 +88,5 @@ public interface DataPort<R extends ReadOptions, W extends WriteOptions> {
      *
      * @param attachment a message object for the writer (not raw protocol)
      */
-    <V> void write(V value, Class<V> valueType, Object attachment);
+    <V> void write(V value, Class<V> baseType, Object attachment);
 }

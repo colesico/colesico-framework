@@ -34,7 +34,7 @@ public final class StringReader extends OriginReader<String, HttpReadOptions> {
     }
 
     @Override
-    public String read(Class<String> valueType, HttpReadOptions options) {
+    public String read(Class<String> baseType, HttpReadOptions options) {
         return readString(options);
     }
 }

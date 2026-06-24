@@ -41,7 +41,7 @@ public final class ByteReader extends OriginReader<Byte, HttpReadOptions> {
     }
 
     @Override
-    public Byte read(Class<Byte> valueType, HttpReadOptions options) {
+    public Byte read(Class<Byte> baseType, HttpReadOptions options) {
         try {
             String val = readString(options);
             if (isBlank(val)) {
