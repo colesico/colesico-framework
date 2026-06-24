@@ -17,14 +17,12 @@
 package colesico.framework.weblet.response;
 
 import colesico.framework.telehttp.response.ContentResponse;
+import colesico.framework.telehttp.response.DynamicResponse;
 
 /**
  * Binary data to  returned to  client
  */
 public final class BinaryResponse extends ContentResponse<byte[]> {
-
-    public static final Integer DEFAULT_STATUS_CODE = 200;
-    public static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
 
     private final String fileName;
 
@@ -35,15 +33,15 @@ public final class BinaryResponse extends ContentResponse<byte[]> {
 
     public static BinaryResponse of(byte[] content) {
         return new BinaryResponse(
-                DEFAULT_STATUS_CODE,
-                DEFAULT_CONTENT_TYPE,
+                null,
+                null,
                 content,
                 null);
     }
 
     public static BinaryResponse of(String contentType, byte[] content) {
         return new BinaryResponse(
-                DEFAULT_STATUS_CODE,
+                null,
                 contentType,
                 content,
                 null);
@@ -51,7 +49,7 @@ public final class BinaryResponse extends ContentResponse<byte[]> {
 
     public static BinaryResponse of(String contentType, byte[] content, String fileName) {
         return new BinaryResponse(
-                DEFAULT_STATUS_CODE,
+                null,
                 contentType,
                 content,
                 fileName);
@@ -67,10 +65,6 @@ public final class BinaryResponse extends ContentResponse<byte[]> {
 
     public String fileName() {
         return fileName;
-    }
-
-    public DynamicResponse wrap() {
-        return DynamicResponse.of(this);
     }
 
 }

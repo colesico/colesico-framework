@@ -19,16 +19,11 @@ package colesico.framework.weblet.response;
 import colesico.framework.telehttp.response.StringResponse;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 /**
  * Simple text response
  */
 public final class TextResponse extends StringResponse {
-
-    public static final Integer DEFAULT_STATUS_CODE = 200;
-    public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
-    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     public TextResponse(Integer statusCode, String contentType, String content, Charset charset) {
         super(statusCode, contentType, content, charset);
@@ -36,28 +31,28 @@ public final class TextResponse extends StringResponse {
 
     public static TextResponse of(String content) {
         return new TextResponse(
-                DEFAULT_STATUS_CODE,
-                DEFAULT_CONTENT_TYPE,
+                200,
+                null,
                 content,
-                DEFAULT_CHARSET
+                null
         );
     }
 
     public static TextResponse of(String contentType, String content) {
         return new TextResponse(
-                DEFAULT_STATUS_CODE,
+                200,
                 contentType,
                 content,
-                DEFAULT_CHARSET
+                null
         );
     }
 
     public static TextResponse of(int statusCode, String content) {
         return new TextResponse(
                 statusCode,
-                DEFAULT_CONTENT_TYPE,
+                null,
                 content,
-                DEFAULT_CHARSET
+                null
         );
     }
 
@@ -66,9 +61,8 @@ public final class TextResponse extends StringResponse {
                 statusCode,
                 contentType,
                 content,
-                DEFAULT_CHARSET
+                null
         );
     }
-
 
 }

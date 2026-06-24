@@ -18,6 +18,7 @@ package colesico.framework.weblet.response;
 
 
 import colesico.framework.router.assist.Navigation;
+import colesico.framework.telehttp.response.DynamicResponse;
 
 /**
  * To perform router inner forwarding
@@ -39,10 +40,7 @@ public record ForwardResponse(Navigation navigation) {
         return new ForwardResponse(Navigation.of());
     }
 
-    /**
-     * To wrapper response
-     */
-    public DynamicResponse wrap() {
+    public DynamicResponse toDynamic() {
         return DynamicResponse.of(this);
     }
 }

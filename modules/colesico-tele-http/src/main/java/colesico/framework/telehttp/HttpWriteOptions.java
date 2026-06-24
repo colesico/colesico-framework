@@ -10,12 +10,18 @@ import java.nio.charset.Charset;
 public interface HttpWriteOptions extends WriteOptions {
 
     /**
-     * HTTP Status Code
+     * Default HTTP Status Code
      */
     Integer statusCode();
 
+    /**
+     * Default content type
+     */
     String contentType();
 
+    /**
+     * Default charset
+     */
     Charset charset();
 
 }

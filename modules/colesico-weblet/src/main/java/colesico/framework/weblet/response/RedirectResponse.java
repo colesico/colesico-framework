@@ -18,6 +18,7 @@ package colesico.framework.weblet.response;
 
 
 import colesico.framework.router.assist.Navigation;
+import colesico.framework.telehttp.response.DynamicResponse;
 
 /**
  * Performs http redirect
@@ -36,7 +37,8 @@ public record RedirectResponse(Navigation navigation) {
         return new RedirectResponse(Navigation.of());
     }
 
-    public DynamicResponse wrap() {
+    public DynamicResponse toDynamic() {
         return DynamicResponse.of(this);
     }
+
 }

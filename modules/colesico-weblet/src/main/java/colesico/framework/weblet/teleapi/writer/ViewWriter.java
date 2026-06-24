@@ -8,5 +8,4 @@ import colesico.framework.weblet.teleapi.WebletTeleWriter;
  */
 abstract public class ViewWriter implements WebletTeleWriter<ViewResponse> {
 
-
 }

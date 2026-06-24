@@ -39,8 +39,8 @@ public final class TeleFactory {
      * Finds appropriate reader for given base class and the type that to be read.
      * Returns null if reader not found
      */
-    public <R extends TeleReader<?, ?>, V> R findReader(Class<R> readerBaseClass, Class<V> valueType) {
-        return ioc.instanceOrNull(new ClassedKey<>(readerBaseClass, valueType));
+    public <R extends TeleReader<?, ?>, V> R findReader(Class<R> readerBaseClass, Class<V> baseType) {
+        return ioc.instanceOrNull(new ClassedKey<>(readerBaseClass, baseType));
     }
 
     /**
@@ -54,12 +54,12 @@ public final class TeleFactory {
      * Returns appropriate writer for given base class and the type that to be written.
      * Throws an exception if reader not found
      */
-    public <W extends TeleWriter<?, ?>, V> W writer(Class<W> writerBaseClass, Class<V> valueType) {
-        return ioc.instance(new ClassedKey<>(writerBaseClass, valueType));
+    public <W extends TeleWriter<?, ?>, V> W writer(Class<W> writerBaseClass, Class<V> baseType) {
+        return ioc.instance(new ClassedKey<>(writerBaseClass, baseType));
     }
 
-    public <W extends TeleWriter<?, ?>, V> W findWriter(Class<W> writerBaseClass, Class<V> valueType) {
-        return ioc.instanceOrNull(new ClassedKey<>(writerBaseClass, valueType));
+    public <W extends TeleWriter<?, ?>, V> W findWriter(Class<W> writerBaseClass, Class<V> baseType) {
+        return ioc.instanceOrNull(new ClassedKey<>(writerBaseClass, baseType));
     }
 
 }

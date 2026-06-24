@@ -41,7 +41,7 @@ public final class ForwardWriter implements WebletTeleWriter<ForwardResponse> {
     }
 
     @Override
-    public void write(ForwardResponse value, Class<ForwardResponse> baseType, WebletWriteOptions options) {
+    public void write(ForwardResponse value, WebletWriteOptions options) {
         value.navigation().forward(router, httpContext.get());
     }
 

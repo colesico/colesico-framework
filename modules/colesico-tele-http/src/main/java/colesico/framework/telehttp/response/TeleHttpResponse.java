@@ -52,4 +52,8 @@ abstract public class TeleHttpResponse {
     public Set<HttpCookie> cookies() {
         return cookies;
     }
+
+    public final DynamicResponse toDynamic() {
+        return DynamicResponse.of(this);
+    }
 }

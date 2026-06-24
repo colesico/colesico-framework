@@ -15,6 +15,8 @@ import jakarta.inject.Singleton;
 @Singleton
 public class ExceptionWriter implements TeleHttpWriter<Exception, HttpWriteOptions> {
 
+    public static final String CONTENT_TYPE = "text/plain";
+
     private final Provider<HttpResponse> httpResponse;
 
     public ExceptionWriter(Provider<HttpResponse> httpResponse) {
@@ -25,17 +27,20 @@ public class ExceptionWriter implements TeleHttpWriter<Exception, HttpWriteOptio
     public void write(Exception exception, HttpWriteOptions options) {
 
         if (exception == null) {
-            httpResponse.get().setStatus(500).sendText("Unexpected error");
+            httpResponse.get()
+                    .setStatus(500)
+                    .setContentType(CONTENT_TYPE)
+                    .sendText("Unexpected error");
             return;
         }
 
         switch (exception) {
             case UnauthenticatedException e -> httpResponse.get()
-                    .setContentType("text/plain")
+                    .setContentType(CONTENT_TYPE)
                     .setStatus(401)
                     .sendText("Unauthenticated");
             case UnauthorizedException e -> httpResponse.get()
-                    .setContentType("text/plain")
+                    .setContentType(CONTENT_TYPE)
                     .setStatus(401)
                     .sendText("Unauthorized");
             case TeleHttpException e -> {
@@ -47,7 +52,7 @@ public class ExceptionWriter implements TeleHttpWriter<Exception, HttpWriteOptio
                     }
                 }
                 httpResponse.get()
-                        .setContentType("text/plain")
+                        .setContentType(CONTENT_TYPE)
                         .setStatus(statusCode)
                         .sendText(String.valueOf(e.details()));
             }
@@ -57,7 +62,7 @@ public class ExceptionWriter implements TeleHttpWriter<Exception, HttpWriteOptio
                     statusCode = 500;
                 }
                 httpResponse.get()
-                        .setContentType("text/plain")
+                        .setContentType(CONTENT_TYPE)
                         .setStatus(statusCode)
                         .sendText("Server error");
             }

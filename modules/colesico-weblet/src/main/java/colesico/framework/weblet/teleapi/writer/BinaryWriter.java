@@ -36,23 +36,20 @@ public final class BinaryWriter
         extends TeleHttpResponseWriter<BinaryResponse, WebletWriteOptions>
         implements WebletTeleWriter<BinaryResponse> {
 
+    public static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
+
     @Inject
     public BinaryWriter(Provider<HttpResponse> httpResponse) {
         super(httpResponse);
     }
 
     @Override
-    protected Integer defaultStatusCode(BinaryResponse value, Class<BinaryResponse> valueType, WebletWriteOptions options) {
-        return 200;
+    protected String defaultContentType(BinaryResponse value, WebletWriteOptions options) {
+        return DEFAULT_CONTENT_TYPE;
     }
 
     @Override
-    protected String defaultContentType(BinaryResponse value, Class<BinaryResponse> baseType, WebletWriteOptions options) {
-        return BinaryResponse.DEFAULT_CONTENT_TYPE;
-    }
-
-    @Override
-    protected void writeValue(HttpResponse response, BinaryResponse value, Class<BinaryResponse> baseType, WebletWriteOptions options, Integer statusCode, String contentType) {
+    protected void writeValue(HttpResponse response, BinaryResponse value, WebletWriteOptions options, Integer statusCode, String contentType) {
 
         // Force download?
         if (value.fileName() != null) {

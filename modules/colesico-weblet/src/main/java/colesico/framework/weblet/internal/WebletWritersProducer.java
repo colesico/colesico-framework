@@ -40,35 +40,14 @@ import jakarta.inject.Singleton;
 @Produce(value = RedirectWriter.class, keyType = WebletTeleWriter.class, classed = RedirectResponse.class)
 @Produce(value = ForwardWriter.class, keyType = WebletTeleWriter.class, classed = ForwardResponse.class)
 @Produce(value = BinaryWriter.class, keyType = WebletTeleWriter.class, classed = BinaryResponse.class)
-@Produce(value = WebletExceptionWriter.class, keyType = WebletTeleWriter.class, classed = WebletException.class)
+@Produce(value = HtmlResponseWriter.class, keyType = WebletTeleWriter.class, classed = HtmlResponse.class)
+@Produce(value = TextResponseWriter.class, keyType = WebletTeleWriter.class, classed = TextResponse.class)
 public class WebletWritersProducer {
 
     @Singleton
     @Classed(Exception.class)
     public WebletTeleWriter exceptionWriter(ExceptionWriter impl) {
         return WebletWriterProxy.of(impl);
-    }
-
-    @Singleton
-    @Classed(TextResponse.class)
-    public WebletTeleWriter textResponseWriter(Provider<HttpResponse> httpResponse) {
-        return new StringResponseWriter(httpResponse) {
-            @Override
-            protected String defaultContentType(StringResponse value, Class<StringResponse> valueType, WebletWriteOptions options) {
-                return TextResponse.DEFAULT_CONTENT_TYPE;
-            }
-        };
-    }
-
-    @Singleton
-    @Classed(HtmlResponse.class)
-    public WebletTeleWriter htmlResponseWriter(Provider<HttpResponse> httpResponse) {
-        return new StringResponseWriter(httpResponse) {
-            @Override
-            protected String defaultContentType(StringResponse value, Class<StringResponse> valueType, WebletWriteOptions options) {
-                return HtmlResponse.DEFAULT_CONTENT_TYPE;
-            }
-        };
     }
 
     @Singleton
