@@ -3,7 +3,7 @@ package colesico.framework.telehttp.response;
 /**
  * Response model with content
  */
-public class ContentResponse<C> extends HttpTeleResponse {
+public class ContentResponse<C> extends TeleHttpResponse {
 
     protected final C content;
 

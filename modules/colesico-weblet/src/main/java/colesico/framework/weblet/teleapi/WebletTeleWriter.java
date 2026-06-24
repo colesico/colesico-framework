@@ -16,11 +16,11 @@
 
 package colesico.framework.weblet.teleapi;
 
-import colesico.framework.telehttp.HttpTeleWriter;
+import colesico.framework.telehttp.TeleHttpWriter;
 
 /**
  * Weblet writer base
  */
-public interface WebletTeleWriter<V> extends HttpTeleWriter<V, WebletWriteOptions> {
+public interface WebletTeleWriter<V> extends TeleHttpWriter<V, WebletWriteOptions> {
 
 }

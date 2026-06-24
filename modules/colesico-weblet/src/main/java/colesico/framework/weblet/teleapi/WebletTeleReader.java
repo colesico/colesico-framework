@@ -16,11 +16,11 @@
 
 package colesico.framework.weblet.teleapi;
 
-import colesico.framework.telehttp.HttpTeleReader;
+import colesico.framework.telehttp.TeleHttpReader;
 
 /**
  * Weblet reader base
  */
-public interface WebletTeleReader<V> extends HttpTeleReader<V, WebletReadOptions> {
+public interface WebletTeleReader<V> extends TeleHttpReader<V, WebletReadOptions> {
 
 }

@@ -21,8 +21,8 @@ import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.profile.Profile;
 import colesico.framework.telehttp.HttpWriteOptions;
-import colesico.framework.telehttp.HttpTeleWriter;
-import colesico.framework.telehttp.assist.HttpTeleUtils;
+import colesico.framework.telehttp.TeleHttpWriter;
+import colesico.framework.telehttp.assist.TeleHttpUtils;
 import jakarta.inject.Singleton;
 
 import java.util.*;
@@ -31,7 +31,7 @@ import java.util.*;
  * Profile default writer
  */
 @Singleton
-public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implements HttpTeleWriter<P, R> {
+public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implements TeleHttpWriter<P, R> {
 
     public static final String PROFILE_COOKIE = "profile";
     public static final String PROFILE_HEADER = "x-profile";
@@ -54,7 +54,7 @@ public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implem
         if (profile != null) {
             Map<String, String> attributes = new HashMap<>();
             toAttributes(profile, attributes);
-            profileStr = HttpTeleUtils.stringifyAttributes(attributes);
+            profileStr = TeleHttpUtils.stringifyAttributes(attributes);
             expires.add(Calendar.DAY_OF_MONTH, config.cookieValidityDays());
         } else {
             profileStr = null;

@@ -1,7 +1,7 @@
 package colesico.framework.telehttp.writer;
 
 import colesico.framework.telehttp.HttpWriteOptions;
-import colesico.framework.telehttp.HttpTeleWriter;
+import colesico.framework.telehttp.TeleHttpWriter;
 
 import colesico.framework.telehttp.response.StringResponse;
 import jakarta.inject.Provider;
@@ -12,7 +12,7 @@ import jakarta.inject.Singleton;
  * Uses {@link StringResponseWriter} under the hood
  */
 @Singleton
-public final class ObjectWriter implements HttpTeleWriter<Object, HttpWriteOptions> {
+public final class ObjectWriter implements TeleHttpWriter<Object, HttpWriteOptions> {
 
     private final Provider<StringResponseWriter> writer;
 

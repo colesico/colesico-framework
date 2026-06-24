@@ -3,8 +3,8 @@ package colesico.framework.telehttp.writer;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.security.authentication.UnauthenticatedException;
 import colesico.framework.security.authorization.UnauthorizedException;
-import colesico.framework.telehttp.HttpTeleException;
-import colesico.framework.telehttp.HttpTeleWriter;
+import colesico.framework.telehttp.TeleHttpException;
+import colesico.framework.telehttp.TeleHttpWriter;
 import colesico.framework.telehttp.HttpWriteOptions;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -13,7 +13,7 @@ import jakarta.inject.Singleton;
  * General exception writer
  */
 @Singleton
-public class ExceptionWriter implements HttpTeleWriter<Exception, HttpWriteOptions> {
+public class ExceptionWriter implements TeleHttpWriter<Exception, HttpWriteOptions> {
 
     private final Provider<HttpResponse> httpResponse;
 
@@ -38,7 +38,7 @@ public class ExceptionWriter implements HttpTeleWriter<Exception, HttpWriteOptio
                     .setContentType("text/plain")
                     .setStatus(401)
                     .sendText("Unauthorized");
-            case HttpTeleException e -> {
+            case TeleHttpException e -> {
                 var statusCode = e.statusCode();
                 if (statusCode == null) {
                     statusCode = options.statusCode();

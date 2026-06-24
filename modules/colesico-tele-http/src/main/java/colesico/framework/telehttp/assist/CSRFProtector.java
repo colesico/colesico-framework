@@ -17,7 +17,7 @@
 package colesico.framework.telehttp.assist;
 
 import colesico.framework.http.*;
-import colesico.framework.telehttp.response.HttpTeleResponse;
+import colesico.framework.telehttp.response.TeleHttpResponse;
 
 import jakarta.inject.Singleton;
 import java.net.URI;
@@ -106,7 +106,7 @@ public class CSRFProtector<V> {
         }
     }
 
-    public String sendToken(HttpTeleResponse response) {
+    public String sendToken(TeleHttpResponse response) {
         byte[] tokenBytes = new byte[32];
         random.nextBytes(tokenBytes);
         String tokenStr = Base64.getEncoder().encodeToString(tokenBytes);

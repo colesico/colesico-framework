@@ -33,7 +33,7 @@ import java.nio.charset.StandardCharsets;
  */
 @Singleton
 public class StringResponseWriter<V extends StringResponse, O extends HttpWriteOptions>
-        extends HttpTeleResponseWriter<V, O> {
+        extends TeleHttpResponseWriter<V, O> {
 
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 

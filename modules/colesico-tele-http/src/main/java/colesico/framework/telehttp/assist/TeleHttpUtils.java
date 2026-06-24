@@ -13,7 +13,7 @@ import java.util.StringTokenizer;
 
 import static colesico.framework.assist.StringUtils.isBlank;
 
-public class HttpTeleUtils {
+public class TeleHttpUtils {
 
     public static Locale acceptedLanguage(String acceptLanguageHeader) {
         if (isBlank(acceptLanguageHeader)) {

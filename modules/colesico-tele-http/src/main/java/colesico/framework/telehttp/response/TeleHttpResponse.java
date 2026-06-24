@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * General response model
  */
-abstract public class HttpTeleResponse {
+abstract public class TeleHttpResponse {
 
     /**
      * Http response status code
@@ -23,7 +23,7 @@ abstract public class HttpTeleResponse {
 
     protected final Set<HttpCookie> cookies = new HashSet<>();
 
-    public HttpTeleResponse(Integer statusCode, String contentType) {
+    public TeleHttpResponse(Integer statusCode, String contentType) {
         this.statusCode = statusCode;
         this.contentType = contentType;
     }

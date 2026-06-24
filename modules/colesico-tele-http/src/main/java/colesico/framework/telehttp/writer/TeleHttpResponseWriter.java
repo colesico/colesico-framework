@@ -2,22 +2,22 @@ package colesico.framework.telehttp.writer;
 
 import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
-import colesico.framework.telehttp.HttpTeleWriter;
+import colesico.framework.telehttp.TeleHttpWriter;
 import colesico.framework.telehttp.HttpWriteOptions;
-import colesico.framework.telehttp.response.HttpTeleResponse;
+import colesico.framework.telehttp.response.TeleHttpResponse;
 import jakarta.inject.Provider;
 
 /**
- * General {@link HttpTeleResponse} writer
+ * General {@link TeleHttpResponse} writer
  */
-abstract public class HttpTeleResponseWriter<V extends HttpTeleResponse, O extends HttpWriteOptions> implements HttpTeleWriter<V, O> {
+abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O extends HttpWriteOptions> implements TeleHttpWriter<V, O> {
 
     public static final Integer DEFAULT_STATUS_CODE = 200;
     public static final String DEFAULT_CONTENT_TYPE = "text/plain";
 
     protected final Provider<HttpResponse> httpResponse;
 
-    public HttpTeleResponseWriter(Provider<HttpResponse> httpResponse) {
+    public TeleHttpResponseWriter(Provider<HttpResponse> httpResponse) {
         this.httpResponse = httpResponse;
     }
 

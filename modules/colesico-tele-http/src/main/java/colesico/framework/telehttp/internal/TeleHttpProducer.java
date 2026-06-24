@@ -13,7 +13,7 @@ import jakarta.inject.Singleton;
 @Produce(CSRFProtector.class)
 @Produce(OriginFactory.class)
 @Produce(HttpBasic.class)
-public class HttpTeleProducer {
+public class TeleHttpProducer {
 
     // Default config
     @Singleton

@@ -16,15 +16,12 @@
 
 package colesico.framework.weblet;
 
-import colesico.framework.telehttp.HttpTeleException;
-
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+import colesico.framework.telehttp.TeleHttpException;
 
 /**
  * Generic weblet exception
  */
-public class WebletException extends HttpTeleException {
+public class WebletException extends TeleHttpException {
 
     public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
 

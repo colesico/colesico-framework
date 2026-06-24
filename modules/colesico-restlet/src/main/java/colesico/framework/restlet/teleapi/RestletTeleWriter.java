@@ -16,11 +16,11 @@
 
 package colesico.framework.restlet.teleapi;
 
-import colesico.framework.telehttp.HttpTeleWriter;
+import colesico.framework.telehttp.TeleHttpWriter;
 
 /**
  * Restlet writer base
  */
-public interface RestletTeleWriter<V> extends HttpTeleWriter<V, RestletWriteOptions> {
+public interface RestletTeleWriter<V> extends TeleHttpWriter<V, RestletWriteOptions> {
 
 }

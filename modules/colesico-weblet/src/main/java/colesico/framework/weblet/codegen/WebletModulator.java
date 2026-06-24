@@ -28,9 +28,9 @@ import colesico.framework.service.codegen.model.teleapi.TeleOrdinaryParamElement
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.dataport.ReadOptions;
 import colesico.framework.teleapi.dataport.WriteOptions;
-import colesico.framework.telehttp.codegen.HttpTeleReadElement;
-import colesico.framework.telehttp.codegen.HttpTeleWriteElement;
-import colesico.framework.telehttp.codegen.HttpTeleCodegenUtils;
+import colesico.framework.telehttp.codegen.TeleHttpReadElement;
+import colesico.framework.telehttp.codegen.TeleHttpWriteElement;
+import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
 import colesico.framework.weblet.Weblet;
 import colesico.framework.weblet.teleapi.*;
 import com.palantir.javapoet.ClassName;
@@ -84,12 +84,12 @@ public final class WebletModulator extends RoutesModulator {
         CodeBlock.Builder valueTypeCode = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleParamType(teleParam, valueTypeCode);
 
-        String paramName = HttpTeleCodegenUtils.paramName(teleParam);
+        String paramName = TeleHttpCodegenUtils.paramName(teleParam);
 
         CodeBlock.Builder optionsCode = CodeBlock.builder();
         optionsCode.add("$T.$N(", ClassName.get(WebletReadOptions.class), WebletReadOptions.OF_METHOD);
 
-        String originName = HttpTeleCodegenUtils.originName(teleParam, WebletOrigin.AUTO);
+        String originName = TeleHttpCodegenUtils.originName(teleParam, WebletOrigin.AUTO);
 
         TypeMirror customReader = getCustomReaderClass(teleParam);
 
@@ -108,7 +108,7 @@ public final class WebletModulator extends RoutesModulator {
 
         optionsCode.add(")");
 
-        return new HttpTeleReadElement(teleParam,
+        return new TeleHttpReadElement(teleParam,
                 valueTypeCode.build(),
                 optionsCode.build(),
                 paramName,
@@ -132,7 +132,7 @@ public final class WebletModulator extends RoutesModulator {
         }
         optionsCode.add(")");
 
-        return new HttpTeleWriteElement(teleCommand, valueTypeCode.build(), optionsCode.build(), customWriterCT);
+        return new TeleHttpWriteElement(teleCommand, valueTypeCode.build(), optionsCode.build(), customWriterCT);
     }
 
     private TypeMirror getCustomWriterClass(TeleCommandElement teleCommand) {

@@ -17,7 +17,7 @@
 package colesico.framework.weblet.teleapi.writer;
 
 import colesico.framework.http.HttpResponse;
-import colesico.framework.telehttp.writer.HttpTeleResponseWriter;
+import colesico.framework.telehttp.writer.TeleHttpResponseWriter;
 import colesico.framework.weblet.response.BinaryResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WebletWriteOptions;
@@ -33,7 +33,7 @@ import java.nio.ByteBuffer;
  */
 @Singleton
 public final class BinaryWriter
-        extends HttpTeleResponseWriter<BinaryResponse, WebletWriteOptions>
+        extends TeleHttpResponseWriter<BinaryResponse, WebletWriteOptions>
         implements WebletTeleWriter<BinaryResponse> {
 
     @Inject

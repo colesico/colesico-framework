@@ -2,11 +2,10 @@ package colesico.framework.telehttp.codegen;
 
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.service.codegen.model.teleapi.TeleReadElement;
-import colesico.framework.service.codegen.model.teleapi.TeleOrdinaryParamElement;
 import colesico.framework.service.codegen.model.teleapi.TeleReadableElement;
 import com.palantir.javapoet.CodeBlock;
 
-public class HttpTeleReadElement extends TeleReadElement {
+public class TeleHttpReadElement extends TeleReadElement {
 
     protected final String paramName;
 
@@ -14,7 +13,7 @@ public class HttpTeleReadElement extends TeleReadElement {
 
     protected final ClassType customReader;
 
-    public HttpTeleReadElement(TeleReadableElement parentReadable, CodeBlock valueTypeCode, CodeBlock optionsCode, String paramName, String originName, ClassType customReader) {
+    public TeleHttpReadElement(TeleReadableElement parentReadable, CodeBlock valueTypeCode, CodeBlock optionsCode, String paramName, String originName, ClassType customReader) {
         super(parentReadable, valueTypeCode, optionsCode);
         this.paramName = paramName;
         this.originName = originName;

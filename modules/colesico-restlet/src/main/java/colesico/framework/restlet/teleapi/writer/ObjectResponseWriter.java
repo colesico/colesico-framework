@@ -7,7 +7,7 @@ import colesico.framework.restlet.teleapi.RestletTeleWriter;
 import colesico.framework.restlet.teleapi.RestletWriteOptions;
 
 import colesico.framework.restlet.teleapi.response.ObjectResponse;
-import colesico.framework.telehttp.writer.HttpTeleResponseWriter;
+import colesico.framework.telehttp.writer.TeleHttpResponseWriter;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 
 @Singleton
 public class ObjectResponseWriter
-        extends HttpTeleResponseWriter<ObjectResponse, RestletWriteOptions>
+        extends TeleHttpResponseWriter<ObjectResponse, RestletWriteOptions>
         implements RestletTeleWriter<ObjectResponse> {
 
 
