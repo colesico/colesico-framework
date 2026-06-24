@@ -19,19 +19,19 @@ public class ObjectResponse<T> extends ContentResponse<T> {
 
     public static <T> ObjectResponse<T> of(T content) {
         return new ObjectResponse<>(
-                RestletWriteOptions.DEFAULT_SUCCESS_STATUS_CODE,
-                RestletWriteOptions.DEFAULT_CONTENT_TYPE,
+                null,
+                null,
                 content,
-                RestletWriteOptions.DEFAULT_CHARSET
+                null
         );
     }
 
     public static <T> ObjectResponse<T> of(int statusCode, T content) {
         return new ObjectResponse<>(
                 statusCode,
-                RestletWriteOptions.DEFAULT_CONTENT_TYPE,
+                null,
                 content,
-                RestletWriteOptions.DEFAULT_CHARSET
+                null
         );
     }
 
@@ -40,7 +40,7 @@ public class ObjectResponse<T> extends ContentResponse<T> {
                 statusCode,
                 contentType,
                 content,
-                RestletWriteOptions.DEFAULT_CHARSET
+                null
         );
     }
 

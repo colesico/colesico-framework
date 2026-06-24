@@ -14,31 +14,33 @@
  * limitations under the License.
  */
 
-package colesico.framework.weblet.response;
+package colesico.framework.weblet.teleapi.response;
 
 
 import colesico.framework.router.assist.Navigation;
 import colesico.framework.telehttp.response.DynamicResponse;
 
 /**
- * Performs http redirect
+ * To perform router inner forwarding
  */
-public record RedirectResponse(Navigation navigation) {
+public record ForwardResponse(Navigation navigation) {
 
-    public static RedirectResponse of(Class<?> serviceClass, String methodName) {
-        return new RedirectResponse(Navigation.of(serviceClass, methodName));
+    public static ForwardResponse of(Class<?> serviceClass, String methodName) {
+        return new ForwardResponse(Navigation.of(serviceClass, methodName));
     }
 
-    public static RedirectResponse of(String uri) {
-        return new RedirectResponse(Navigation.of(uri));
+    public static ForwardResponse of(String uri) {
+        return new ForwardResponse(Navigation.of(uri));
     }
 
-    public static RedirectResponse of() {
-        return new RedirectResponse(Navigation.of());
+    /**
+     * For manual configuring
+     */
+    public static ForwardResponse of() {
+        return new ForwardResponse(Navigation.of());
     }
 
     public DynamicResponse toDynamic() {
         return DynamicResponse.of(this);
     }
-
 }

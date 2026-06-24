@@ -1,6 +1,6 @@
 package colesico.framework.weblet.teleapi.writer;
 
-import colesico.framework.weblet.response.ViewResponse;
+import colesico.framework.weblet.teleapi.response.ViewResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 
 /**

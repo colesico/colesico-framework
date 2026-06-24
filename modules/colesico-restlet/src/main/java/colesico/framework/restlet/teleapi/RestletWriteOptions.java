@@ -18,12 +18,7 @@ public record RestletWriteOptions(
         Object attachment
 ) implements HttpWriteOptions {
 
-    public static final Integer DEFAULT_SUCCESS_STATUS_CODE = 200;
-    public static final Integer DEFAULT_ERROR_STATUS_CODE = 500;
-    public static final String DEFAULT_CONTENT_TYPE = "application/json; charset=utf-8";
-    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-
-    public static final String OF_METHOD = "of";
+      public static final String OF_METHOD = "of";
 
     public RestletWriteOptions(Integer statusCode, String contentType, Charset charset, Class<? extends RestletTeleWriter<?>> writerClass, Object attachment) {
         this.statusCode = statusCode;

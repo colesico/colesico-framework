@@ -17,7 +17,7 @@
 package colesico.framework.example.routing.pkgrelative;
 
 import colesico.framework.router.Route;
-import colesico.framework.weblet.response.HtmlResponse;
+import colesico.framework.weblet.teleapi.response.HtmlResponse;
 import colesico.framework.weblet.Weblet;
 
 /**

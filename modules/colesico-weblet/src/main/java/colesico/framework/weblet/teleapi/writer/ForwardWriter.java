@@ -17,9 +17,8 @@
 package colesico.framework.weblet.teleapi.writer;
 
 import colesico.framework.http.HttpContext;
-import colesico.framework.http.HttpResponse;
 import colesico.framework.router.Router;
-import colesico.framework.weblet.response.ForwardResponse;
+import colesico.framework.weblet.teleapi.response.ForwardResponse;
 import colesico.framework.weblet.teleapi.WebletWriteOptions;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 

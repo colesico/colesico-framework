@@ -18,8 +18,6 @@ package colesico.framework.weblet.teleapi;
 
 import colesico.framework.telehttp.HttpReadOptions;
 
-import java.lang.reflect.Type;
-
 /**
  * Weblet read options
  *

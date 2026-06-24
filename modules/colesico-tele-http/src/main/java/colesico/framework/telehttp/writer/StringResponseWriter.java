@@ -32,8 +32,8 @@ import java.nio.charset.StandardCharsets;
  * General {@link StringResponse} writer
  */
 @Singleton
-public class StringResponseWriter<V extends StringResponse, O extends HttpWriteOptions>
-        extends TeleHttpResponseWriter<V, O> {
+public class StringResponseWriter<R extends StringResponse, O extends HttpWriteOptions>
+        extends TeleHttpResponseWriter<R, O> {
 
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
@@ -42,28 +42,26 @@ public class StringResponseWriter<V extends StringResponse, O extends HttpWriteO
         super(httpResponse);
     }
 
-    protected Charset defaultCharset(V value, O options) {
-        return DEFAULT_CHARSET;
+    protected Charset charset(R response, O options, Charset defaultValue) {
+        if (response.charset() != null) {
+            return response.charset();
+        }
+        if (options.charset() != null) {
+            return options.charset();
+        }
+        return defaultValue;
     }
 
     @Override
-    protected void writeValue(HttpResponse response, V value, O options, Integer effectiveStatusCode, String effectiveContentType) {
+    protected void writeResponse(HttpResponse protocol, R response, O options, Integer effectiveStatusCode, String effectiveContentType) {
 
-        if (value.content() == null) {
-            response.setStatus(204).sendText("");
+        if (response.content() == null) {
+            protocol.setStatus(204).sendText("");
             return;
         }
 
-        var charset = value.charset();
-        if (charset == null) {
-            charset = options.charset();
-            if (charset == null) {
-                charset = defaultCharset(value, options);
-            }
-        }
-
-        var content = value.content();
-        response.sendData(ByteBuffer.wrap(content.getBytes(charset)));
+        var charset = charset(response, options, DEFAULT_CHARSET);
+        protocol.sendData(ByteBuffer.wrap(response.content().getBytes(charset)));
     }
 
 }

@@ -12,7 +12,7 @@ import jakarta.inject.Singleton;
  * Uses {@link StringResponseWriter} under the hood
  */
 @Singleton
-public final class ObjectWriter implements TeleHttpWriter<Object, HttpWriteOptions> {
+public class ObjectWriter implements TeleHttpWriter<Object, HttpWriteOptions> {
 
     private final Provider<StringResponseWriter> writer;
 
@@ -20,10 +20,13 @@ public final class ObjectWriter implements TeleHttpWriter<Object, HttpWriteOptio
         this.writer = writer;
     }
 
+    protected String asString(Object value) {
+        return String.valueOf(value);
+    }
+
     @Override
     public void write(Object value, HttpWriteOptions options) {
-        var content = String.valueOf(value);
-        writer.get().write(StringResponse.of(content), options);
+        writer.get().write(StringResponse.of(asString(value)), options);
     }
 
 }

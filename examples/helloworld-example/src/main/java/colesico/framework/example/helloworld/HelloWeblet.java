@@ -19,7 +19,7 @@ package colesico.framework.example.helloworld;
 import colesico.framework.security.Identity;
 import colesico.framework.security.authentication.Authentication;
 import colesico.framework.telehttp.authentication.HttpBasic;
-import colesico.framework.weblet.response.HtmlResponse;
+import colesico.framework.weblet.teleapi.response.HtmlResponse;
 import colesico.framework.weblet.Weblet;
 import jakarta.inject.Provider;
 

@@ -1,4 +1,4 @@
-package colesico.framework.weblet.response;
+package colesico.framework.weblet.teleapi.response;
 
 import colesico.framework.telehttp.response.TeleHttpResponse;
 

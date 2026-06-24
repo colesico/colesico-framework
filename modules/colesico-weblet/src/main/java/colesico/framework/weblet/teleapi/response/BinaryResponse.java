@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package colesico.framework.weblet.response;
+package colesico.framework.weblet.teleapi.response;
 
 import colesico.framework.telehttp.response.ContentResponse;
-import colesico.framework.telehttp.response.DynamicResponse;
 
 /**
  * Binary data to  returned to  client

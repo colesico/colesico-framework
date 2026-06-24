@@ -9,18 +9,34 @@ import colesico.framework.telehttp.HttpWriteOptions;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 /**
  * General exception writer
  */
 @Singleton
 public class ExceptionWriter implements TeleHttpWriter<Exception, HttpWriteOptions> {
 
-    public static final String CONTENT_TYPE = "text/plain";
+    public static final String DEFAULT_CONTENT_TYPE = "text/plain";
+    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     private final Provider<HttpResponse> httpResponse;
 
     public ExceptionWriter(Provider<HttpResponse> httpResponse) {
         this.httpResponse = httpResponse;
+    }
+
+    protected Integer statusCode(Exception exception, HttpWriteOptions options, Integer defaultCode) {
+        if (exception instanceof TeleHttpException e) {
+            if (e.statusCode() != null) {
+                return e.statusCode();
+            }
+        }
+        if (options.statusCode() != null) {
+            return options.statusCode();
+        }
+        return defaultCode;
     }
 
     @Override
@@ -29,44 +45,29 @@ public class ExceptionWriter implements TeleHttpWriter<Exception, HttpWriteOptio
         if (exception == null) {
             httpResponse.get()
                     .setStatus(500)
-                    .setContentType(CONTENT_TYPE)
-                    .sendText("Unexpected error");
+                    .setContentType(DEFAULT_CONTENT_TYPE)
+                    .sendText("Unknown error");
             return;
         }
 
         switch (exception) {
             case UnauthenticatedException e -> httpResponse.get()
-                    .setContentType(CONTENT_TYPE)
+                    .setContentType(DEFAULT_CONTENT_TYPE)
                     .setStatus(401)
                     .sendText("Unauthenticated");
             case UnauthorizedException e -> httpResponse.get()
-                    .setContentType(CONTENT_TYPE)
+                    .setContentType(DEFAULT_CONTENT_TYPE)
                     .setStatus(401)
                     .sendText("Unauthorized");
-            case TeleHttpException e -> {
-                var statusCode = e.statusCode();
-                if (statusCode == null) {
-                    statusCode = options.statusCode();
-                    if (statusCode == null) {
-                        statusCode = 500;
-                    }
-                }
-                httpResponse.get()
-                        .setContentType(CONTENT_TYPE)
-                        .setStatus(statusCode)
-                        .sendText(String.valueOf(e.details()));
-            }
-            default -> {
-                var statusCode = options.statusCode();
-                if (statusCode == null) {
-                    statusCode = 500;
-                }
-                httpResponse.get()
-                        .setContentType(CONTENT_TYPE)
-                        .setStatus(statusCode)
-                        .sendText("Server error");
-            }
+            case TeleHttpException e -> httpResponse.get()
+                    .setContentType(DEFAULT_CONTENT_TYPE)
+                    .setStatus(statusCode(e, options, 500))
+                    .sendText(String.valueOf(e.details()));
+            default -> httpResponse.get()
+                    .setContentType(DEFAULT_CONTENT_TYPE)
+                    .setStatus(statusCode(exception, options, 500))
+                    .sendText("Server error");
+
         }
     }
-
 }

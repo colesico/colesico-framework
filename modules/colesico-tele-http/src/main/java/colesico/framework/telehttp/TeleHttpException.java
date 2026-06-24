@@ -1,12 +1,10 @@
 package colesico.framework.telehttp;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
+/**
+ * General tele http exception
+ * with http status code support
+ */
 public class TeleHttpException extends RuntimeException {
-
-    public static final Integer DEFAULT_STATUS_CODE = 500;
-    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     /**
      * Http response status code
@@ -25,11 +23,11 @@ public class TeleHttpException extends RuntimeException {
     }
 
     public static TeleHttpException of(Object details) {
-        return new TeleHttpException(String.valueOf(details), null, DEFAULT_STATUS_CODE, details);
+        return new TeleHttpException(String.valueOf(details), null, null, details);
     }
 
     public static TeleHttpException of(Throwable cause) {
-        return new TeleHttpException(null, cause, DEFAULT_STATUS_CODE, null);
+        return new TeleHttpException(null, cause, null, null);
     }
 
     public static TeleHttpException of(Integer statusCode, Object details) {

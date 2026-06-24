@@ -10,7 +10,7 @@ import jakarta.inject.Provider;
 /**
  * General {@link TeleHttpResponse} writer
  */
-abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O extends HttpWriteOptions> implements TeleHttpWriter<V, O> {
+abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O extends HttpWriteOptions> implements TeleHttpWriter<R, O> {
 
     public static final Integer DEFAULT_STATUS_CODE = 200;
     public static final String DEFAULT_CONTENT_TYPE = "text/plain";
@@ -21,55 +21,56 @@ abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O exten
         this.httpResponse = httpResponse;
     }
 
-    abstract protected void writeValue(HttpResponse response, V value, O options,
-                                       Integer effectiveStatusCode,
-                                       String effectiveContentType);
+    abstract protected void writeResponse(HttpResponse protocol,
+                                          R response,
+                                          O options,
+                                          Integer effectiveStatusCode,
+                                          String effectiveContentType);
 
-    protected Integer defaultStatusCode(V value, O options) {
-        return DEFAULT_STATUS_CODE;
+    protected Integer statusCode(R response, O options, Integer defaultValue) {
+        if (response.statusCode() != null) {
+            return response.statusCode();
+        }
+        if (options.statusCode() != null) {
+            return options.statusCode();
+        }
+        return defaultValue;
     }
 
-    protected String defaultContentType(V value, O options) {
-        return DEFAULT_CONTENT_TYPE;
+    protected String contentType(R response, O options, String defaultValue) {
+        if (response.contentType() != null) {
+            return response.contentType();
+        }
+        if (options.contentType() != null) {
+            return options.contentType();
+        }
+        return defaultValue;
     }
 
     @Override
-    public void write(V value, O options) {
+    public void write(R response, O options) {
 
-        var response = httpResponse.get();
+        var protocol = httpResponse.get();
 
-        if (value == null) {
-            response.setStatus(204).sendText("");
+        if (response == null) {
+            protocol.setStatus(204).sendText("");
             return;
         }
 
-        var statusCode = value.statusCode();
-        if (statusCode == null) {
-            statusCode = options.statusCode();
-            if (statusCode == null) {
-                statusCode = defaultStatusCode(value, options);
-            }
-        }
-        response.setStatus(statusCode);
+        var statusCode = statusCode(response, options, DEFAULT_STATUS_CODE);
+        protocol.setStatus(statusCode);
 
-        var contentType = value.contentType();
-        if (contentType == null) {
-            contentType = options.contentType();
-            if (contentType == null) {
-                contentType = defaultContentType(value, options);
-            }
+        var contentType = contentType(response, options, DEFAULT_CONTENT_TYPE);
+        protocol.setContentType(contentType);
+
+        if (!response.headers().isEmpty()) {
+            HttpUtils.setHeaders(protocol, response.headers());
         }
 
-        response.setContentType(contentType);
-
-        if (!value.headers().isEmpty()) {
-            HttpUtils.setHeaders(response, value.headers());
+        if (!response.cookies().isEmpty()) {
+            HttpUtils.setCookies(protocol, response.cookies());
         }
 
-        if (!value.cookies().isEmpty()) {
-            HttpUtils.setCookies(response, value.cookies());
-        }
-
-        writeValue(response, value, options, statusCode, contentType);
+        writeResponse(protocol, response, options, statusCode, contentType);
     }
 }

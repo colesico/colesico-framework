@@ -18,7 +18,7 @@ package colesico.framework.weblet.teleapi.writer;
 
 import colesico.framework.http.HttpResponse;
 import colesico.framework.telehttp.writer.TeleHttpResponseWriter;
-import colesico.framework.weblet.response.BinaryResponse;
+import colesico.framework.weblet.teleapi.response.BinaryResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WebletWriteOptions;
 
@@ -44,23 +44,23 @@ public final class BinaryWriter
     }
 
     @Override
-    protected String defaultContentType(BinaryResponse value, WebletWriteOptions options) {
+    protected String contentType(BinaryResponse value, WebletWriteOptions options) {
         return DEFAULT_CONTENT_TYPE;
     }
 
     @Override
-    protected void writeValue(HttpResponse response, BinaryResponse value, WebletWriteOptions options, Integer statusCode, String contentType) {
+    protected void writeResponse(HttpResponse protocol, BinaryResponse response, WebletWriteOptions options, Integer statusCode, String contentType) {
 
         // Force download?
-        if (value.fileName() != null) {
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + value.fileName() + "\"");
+        if (response.fileName() != null) {
+            protocol.setHeader("Content-Disposition", "attachment; filename=\"" + response.fileName() + "\"");
         }
 
-        if (value.content() == null || value.content().length == 0) {
-            response.setStatus(204).sendText("");
+        if (response.content() == null || response.content().length == 0) {
+            protocol.setStatus(204).sendText("");
         } else {
-            ByteBuffer buffer = ByteBuffer.wrap(value.content());
-            response.sendData(buffer);
+            ByteBuffer buffer = ByteBuffer.wrap(response.content());
+            protocol.sendData(buffer);
         }
     }
 }

@@ -18,11 +18,10 @@ package colesico.framework.weblet.teleapi.writer;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.router.Router;
-import colesico.framework.weblet.response.RedirectResponse;
+import colesico.framework.weblet.teleapi.response.RedirectResponse;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
 import colesico.framework.weblet.teleapi.WebletWriteOptions;
 
-import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 /**

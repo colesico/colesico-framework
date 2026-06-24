@@ -16,8 +16,6 @@
 
 package colesico.framework.weblet.internal;
 
-import colesico.framework.http.HttpResponse;
-import colesico.framework.telehttp.response.StringResponse;
 import colesico.framework.telehttp.writer.ExceptionWriter;
 import colesico.framework.telehttp.writer.ObjectWriter;
 import colesico.framework.telehttp.writer.ProfileWriter;
@@ -25,18 +23,13 @@ import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
-import colesico.framework.telehttp.writer.StringResponseWriter;
-import colesico.framework.weblet.WebletException;
-import colesico.framework.weblet.response.*;
 import colesico.framework.weblet.teleapi.WebletTeleWriter;
-import colesico.framework.weblet.teleapi.WebletWriteOptions;
+import colesico.framework.weblet.teleapi.response.*;
 import colesico.framework.weblet.teleapi.writer.*;
 
-import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 @Producer
-@Produce(StringResponseWriter.class)
 @Produce(value = RedirectWriter.class, keyType = WebletTeleWriter.class, classed = RedirectResponse.class)
 @Produce(value = ForwardWriter.class, keyType = WebletTeleWriter.class, classed = ForwardResponse.class)
 @Produce(value = BinaryWriter.class, keyType = WebletTeleWriter.class, classed = BinaryResponse.class)

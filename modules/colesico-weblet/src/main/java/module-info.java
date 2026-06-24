@@ -33,7 +33,7 @@ module colesico.framework.weblet {
     exports colesico.framework.weblet.teleapi.reader;
 
     exports colesico.framework.weblet.codegen;
-    exports colesico.framework.weblet.response;
+    exports colesico.framework.weblet.teleapi.response;
     exports colesico.framework.weblet.internal to colesico.framework.ioc;
 
     provides Modulator with colesico.framework.weblet.codegen.WebletModulator;

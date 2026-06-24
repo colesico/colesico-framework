@@ -14,36 +14,23 @@
  * limitations under the License.
  */
 
-package colesico.framework.weblet.response;
+package colesico.framework.weblet.teleapi.response;
 
-import colesico.framework.telehttp.response.DynamicResponse;
 import colesico.framework.telehttp.response.StringResponse;
 
 import java.nio.charset.Charset;
 
 /**
- * HTML text to  returned to  client
+ * Simple text response
  */
-public final class HtmlResponse extends StringResponse {
+public final class TextResponse extends StringResponse {
 
-    public HtmlResponse(Integer statusCode, String contentType, String content, Charset charset) {
+    public TextResponse(Integer statusCode, String contentType, String content, Charset charset) {
         super(statusCode, contentType, content, charset);
     }
 
-    /**
-     * Empty response
-     */
-    public static HtmlResponse of() {
-        return new HtmlResponse(
-                204,
-                null,
-                "",
-                null
-        );
-    }
-
-    public static HtmlResponse of(String content) {
-        return new HtmlResponse(
+    public static TextResponse of(String content) {
+        return new TextResponse(
                 200,
                 null,
                 content,
@@ -51,10 +38,28 @@ public final class HtmlResponse extends StringResponse {
         );
     }
 
-    public static HtmlResponse of(int statusCode, String content) {
-        return new HtmlResponse(
+    public static TextResponse of(String contentType, String content) {
+        return new TextResponse(
+                200,
+                contentType,
+                content,
+                null
+        );
+    }
+
+    public static TextResponse of(int statusCode, String content) {
+        return new TextResponse(
                 statusCode,
                 null,
+                content,
+                null
+        );
+    }
+
+    public static TextResponse of(int statusCode, String contentType, String content) {
+        return new TextResponse(
+                statusCode,
+                contentType,
                 content,
                 null
         );

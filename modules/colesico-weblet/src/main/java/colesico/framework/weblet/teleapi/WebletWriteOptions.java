@@ -19,7 +19,6 @@ package colesico.framework.weblet.teleapi;
 import colesico.framework.telehttp.HttpWriteOptions;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 /**
  * Weblet write options
