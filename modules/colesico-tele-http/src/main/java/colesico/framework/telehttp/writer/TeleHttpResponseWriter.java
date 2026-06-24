@@ -13,7 +13,6 @@ import jakarta.inject.Provider;
 abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O extends HttpWriteOptions> implements TeleHttpWriter<R, O> {
 
     public static final Integer DEFAULT_STATUS_CODE = 200;
-    public static final String DEFAULT_CONTENT_TYPE = "text/plain";
 
     protected final Provider<HttpResponse> httpResponse;
 
@@ -60,8 +59,10 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         var statusCode = statusCode(response, options, DEFAULT_STATUS_CODE);
         protocol.setStatus(statusCode);
 
-        var contentType = contentType(response, options, DEFAULT_CONTENT_TYPE);
-        protocol.setContentType(contentType);
+        var contentType = contentType(response, options, null);
+        if (contentType != null) {
+            protocol.setContentType(contentType);
+        }
 
         if (!response.headers().isEmpty()) {
             HttpUtils.setHeaders(protocol, response.headers());

@@ -14,34 +14,32 @@
  * limitations under the License.
  */
 
-package colesico.framework.weblet.writer;
+package colesico.framework.telehttp.writer;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.router.Router;
-import colesico.framework.weblet.response.ForwardResponse;
-import colesico.framework.weblet.WebletWriteOptions;
-import colesico.framework.weblet.WebletTeleWriter;
+import colesico.framework.telehttp.HttpWriteOptions;
+import colesico.framework.telehttp.TeleHttpWriter;
+import colesico.framework.telehttp.response.RedirectResponse;
 
-import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 /**
- * Performs forward operation
+ * @author Vladlen Larionov
  */
-public final class ForwardWriter implements WebletTeleWriter<ForwardResponse> {
+public final class RedirectWriter implements TeleHttpWriter<RedirectResponse, HttpWriteOptions> {
 
     private final Router router;
     private final Provider<HttpContext> httpContext;
 
-    @Inject
-    public ForwardWriter(Router router, Provider<HttpContext> httpContext) {
+    public RedirectWriter(Router router, Provider<HttpContext> httpContext) {
         this.router = router;
         this.httpContext = httpContext;
     }
 
     @Override
-    public void write(ForwardResponse value, WebletWriteOptions options) {
-        value.navigation().forward(router, httpContext.get());
+    public void write(RedirectResponse value, HttpWriteOptions options) {
+        value.navigation().redirect(router, httpContext.get());
     }
 
 }

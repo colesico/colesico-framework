@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package colesico.framework.weblet.writer;
+package colesico.framework.telehttp.writer;
 
 import colesico.framework.http.HttpResponse;
-import colesico.framework.telehttp.writer.TeleHttpResponseWriter;
-import colesico.framework.weblet.response.BinaryResponse;
-import colesico.framework.weblet.WebletTeleWriter;
-import colesico.framework.weblet.WebletWriteOptions;
+import colesico.framework.telehttp.HttpWriteOptions;
+import colesico.framework.telehttp.response.BinaryResponse;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -32,24 +30,23 @@ import java.nio.ByteBuffer;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class BinaryWriter
-        extends TeleHttpResponseWriter<BinaryResponse, WebletWriteOptions>
-        implements WebletTeleWriter<BinaryResponse> {
+public final class BinaryResponseWriter
+        extends TeleHttpResponseWriter<BinaryResponse, HttpWriteOptions> {
 
     public static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
 
     @Inject
-    public BinaryWriter(Provider<HttpResponse> httpResponse) {
+    public BinaryResponseWriter(Provider<HttpResponse> httpResponse) {
         super(httpResponse);
     }
 
     @Override
-    protected String contentType(BinaryResponse response, WebletWriteOptions options,String defaultValue) {
-        return super.contentType(response,options,DEFAULT_CONTENT_TYPE);
+    protected String contentType(BinaryResponse response, HttpWriteOptions options, String defaultValue) {
+        return super.contentType(response, options, DEFAULT_CONTENT_TYPE);
     }
 
     @Override
-    protected void writeResponse(HttpResponse protocol, BinaryResponse response, WebletWriteOptions options, Integer statusCode, String contentType) {
+    protected void writeResponse(HttpResponse protocol, BinaryResponse response, HttpWriteOptions options, Integer statusCode, String contentType) {
 
         // Force download?
         if (response.fileName() != null) {
@@ -57,7 +54,7 @@ public final class BinaryWriter
         }
 
         if (response.content() == null || response.content().length == 0) {
-            protocol.setStatus(204).sendText("");
+            protocol.setStatus(204).sendData(ByteBuffer.allocate(0));
         } else {
             ByteBuffer buffer = ByteBuffer.wrap(response.content());
             protocol.sendData(buffer);

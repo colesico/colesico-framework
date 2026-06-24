@@ -17,6 +17,9 @@
 package colesico.framework.weblet.internal;
 
 import colesico.framework.teleapi.dataport.TeleFactory;
+import colesico.framework.telehttp.HttpReadOptions;
+import colesico.framework.telehttp.TeleHttpReader;
+import colesico.framework.telehttp.TeleHttpWriter;
 import colesico.framework.telehttp.response.DynamicResponse;
 import colesico.framework.weblet.*;
 
@@ -33,13 +36,16 @@ public class WebletDataPortImpl implements WebletDataPort {
 
     @Override
     public <V> V read(Class<V> baseType, WebletReadOptions options) {
-        WebletTeleReader<V> reader;
+        WebletTeleReader<?> reader;
         if (options.readerClass() != null) {
             // Use specified reader
-            reader = (WebletTeleReader<V>) teleFactory.reader(options.readerClass());
+            reader =  teleFactory.reader(options.readerClass());
         } else {
             // Use reader by value type
             reader = teleFactory.findReader(WebletTeleReader.class, baseType);
+            if (reader == null){
+                reader = (WebletTeleReader<?>) teleFactory.reader(TeleHttpReader.class, Object.class);
+            }
             if (reader == null) {
                 // Get default reader
                 reader = teleFactory.reader(WebletTeleReader.class, Object.class);

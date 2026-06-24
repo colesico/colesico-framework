@@ -36,6 +36,7 @@ public class StringResponseWriter<R extends StringResponse, O extends HttpWriteO
         extends TeleHttpResponseWriter<R, O> {
 
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+    public static final String DEFAULT_CONTENT_TYPE = "text/plain; charset=utf-8";
 
     @Inject
     public StringResponseWriter(Provider<HttpResponse> httpResponse) {
@@ -50,6 +51,11 @@ public class StringResponseWriter<R extends StringResponse, O extends HttpWriteO
             return options.charset();
         }
         return defaultValue;
+    }
+
+    @Override
+    protected String contentType(R response, O options, String defaultValue) {
+        return super.contentType(response, options, DEFAULT_CONTENT_TYPE);
     }
 
     @Override
