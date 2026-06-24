@@ -17,7 +17,7 @@
 package colesico.framework.weblet.internal;
 
 import colesico.framework.telehttp.writer.ExceptionWriter;
-import colesico.framework.telehttp.writer.ObjectWriter;
+import colesico.framework.telehttp.writer.StringifyWriter;
 import colesico.framework.telehttp.writer.ProfileWriter;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
@@ -51,37 +51,37 @@ public class WebletWritersProducer {
 
     @Singleton
     @Classed(String.class)
-    public WebletTeleWriter stringWriter(ObjectWriter impl) {
+    public WebletTeleWriter stringWriter(StringifyWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(Long.class)
-    public WebletTeleWriter longWriter(ObjectWriter impl) {
+    public WebletTeleWriter longWriter(StringifyWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(Integer.class)
-    public WebletTeleWriter integerWriter(ObjectWriter impl) {
+    public WebletTeleWriter integerWriter(StringifyWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(Short.class)
-    public WebletTeleWriter shortWriter(ObjectWriter impl) {
+    public WebletTeleWriter shortWriter(StringifyWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(Byte.class)
-    public WebletTeleWriter byteWriter(ObjectWriter impl) {
+    public WebletTeleWriter byteWriter(StringifyWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 
     @Singleton
     @Classed(Character.class)
-    public WebletTeleWriter charWriter(ObjectWriter impl) {
+    public WebletTeleWriter charWriter(StringifyWriter impl) {
         return WebletWriterProxy.of(impl);
     }
 

@@ -16,12 +16,10 @@
 
 package colesico.framework.telehttp.response;
 
-import jakarta.inject.Singleton;
-
 import java.nio.charset.Charset;
 
 /**
- * String based content response
+ * Response string content
  */
 public class StringResponse extends ContentResponse<String> {
 

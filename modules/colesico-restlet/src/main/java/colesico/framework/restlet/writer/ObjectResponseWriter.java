@@ -35,9 +35,9 @@ public class ObjectResponseWriter
     }
 
     @Override
-    protected Integer statusCode(ObjectResponse value, RestletWriteOptions options) {
-        if (value != null) {
-            if (value.content() instanceof Throwable) {
+    protected Integer statusCode(ObjectResponse response, RestletWriteOptions options, Integer defaultValue) {
+        if (response != null) {
+            if (response.content() instanceof Throwable) {
                 return RestletWriteOptions.DEFAULT_ERROR_STATUS_CODE;
             } else {
                 return RestletWriteOptions.DEFAULT_SUCCESS_STATUS_CODE;
@@ -47,8 +47,8 @@ public class ObjectResponseWriter
     }
 
     @Override
-    protected String contentType(ObjectResponse value, RestletWriteOptions options) {
-        return RestletWriteOptions.DEFAULT_CONTENT_TYPE;
+    protected String contentType(ObjectResponse response, RestletWriteOptions options, String defaultValue) {
+        return super.contentType(response, options, DEFAULT_CONTENT_TYPE);
     }
 
     @Override

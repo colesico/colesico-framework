@@ -9,24 +9,25 @@ import jakarta.inject.Singleton;
 
 /**
  * Object simple writer.
- * Uses {@link StringResponseWriter} under the hood
+ * Converts object to string and
+ * writes response with  {@link StringResponseWriter}
  */
 @Singleton
-public class ObjectWriter implements TeleHttpWriter<Object, HttpWriteOptions> {
+public class StringifyWriter implements TeleHttpWriter<Object, HttpWriteOptions> {
 
-    private final Provider<StringResponseWriter> writer;
+    protected final Provider<StringResponseWriter> writer;
 
-    public ObjectWriter(Provider<StringResponseWriter> writer) {
+    public StringifyWriter(Provider<StringResponseWriter> writer) {
         this.writer = writer;
     }
 
-    protected String asString(Object value) {
+    protected String stringify(Object value) {
         return String.valueOf(value);
     }
 
     @Override
     public void write(Object value, HttpWriteOptions options) {
-        writer.get().write(StringResponse.of(asString(value)), options);
+        writer.get().write(StringResponse.of(stringify(value)), options);
     }
 
 }
