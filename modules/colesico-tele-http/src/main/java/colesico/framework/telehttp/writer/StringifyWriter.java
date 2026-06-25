@@ -1,6 +1,6 @@
 package colesico.framework.telehttp.writer;
 
-import colesico.framework.telehttp.HttpWriteOptions;
+import colesico.framework.telehttp.TeleHttpWriteOptions;
 import colesico.framework.telehttp.TeleHttpWriter;
 
 import colesico.framework.telehttp.response.StringResponse;
@@ -13,7 +13,7 @@ import jakarta.inject.Singleton;
  * writes value with  {@link StringResponseWriter}
  */
 @Singleton
-public class StringifyWriter implements TeleHttpWriter<Object, HttpWriteOptions> {
+public class StringifyWriter implements TeleHttpWriter<Object, TeleHttpWriteOptions> {
 
     protected final Provider<StringResponseWriter> writer;
 
@@ -26,7 +26,7 @@ public class StringifyWriter implements TeleHttpWriter<Object, HttpWriteOptions>
     }
 
     @Override
-    public void write(Object value, HttpWriteOptions options) {
+    public void write(Object value, TeleHttpWriteOptions options) {
         writer.get().write(StringResponse.of(stringify(value)), options);
     }
 

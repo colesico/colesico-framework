@@ -18,7 +18,7 @@ package colesico.framework.telehttp.writer;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.router.Router;
-import colesico.framework.telehttp.HttpWriteOptions;
+import colesico.framework.telehttp.TeleHttpWriteOptions;
 import colesico.framework.telehttp.TeleHttpWriter;
 import colesico.framework.telehttp.response.ForwardResponse;
 
@@ -30,7 +30,7 @@ import jakarta.inject.Singleton;
  * Performs forward operation
  */
 @Singleton
-public final class ForwardWriter implements TeleHttpWriter<ForwardResponse, HttpWriteOptions> {
+public final class ForwardWriter implements TeleHttpWriter<ForwardResponse, TeleHttpWriteOptions> {
 
     private final Router router;
     private final Provider<HttpContext> httpContext;
@@ -42,7 +42,7 @@ public final class ForwardWriter implements TeleHttpWriter<ForwardResponse, Http
     }
 
     @Override
-    public void write(ForwardResponse value, HttpWriteOptions options) {
+    public void write(ForwardResponse value, TeleHttpWriteOptions options) {
         value.navigation().forward(router, httpContext.get());
     }
 

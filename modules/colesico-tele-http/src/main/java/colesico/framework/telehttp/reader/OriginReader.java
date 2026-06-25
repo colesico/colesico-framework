@@ -1,6 +1,6 @@
 package colesico.framework.telehttp.reader;
 
-import colesico.framework.telehttp.HttpReadOptions;
+import colesico.framework.telehttp.TeleHttpReadOptions;
 import colesico.framework.telehttp.TeleHttpReader;
 import colesico.framework.telehttp.origin.OriginFactory;
 import colesico.framework.telehttp.origin.Origin;
@@ -11,7 +11,7 @@ import colesico.framework.telehttp.origin.Origin;
  * @param <V> type of value to  be read
  * @param <R> read options
  */
-abstract public class OriginReader<V, R extends HttpReadOptions> implements TeleHttpReader<V, R> {
+abstract public class OriginReader<V, R extends TeleHttpReadOptions> implements TeleHttpReader<V, R> {
 
     protected final OriginFactory originFactory;
 

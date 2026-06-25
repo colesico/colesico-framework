@@ -1,15 +1,15 @@
 package colesico.framework.weblet.writer;
 
-import colesico.framework.telehttp.HttpWriteOptions;
+import colesico.framework.telehttp.TeleHttpWriteOptions;
 import colesico.framework.telehttp.TeleHttpWriter;
 import colesico.framework.weblet.WebletWriteOptions;
 import colesico.framework.weblet.WebletTeleWriter;
 
 public final class WebletWriterProxy<V> implements WebletTeleWriter<V> {
 
-    private final TeleHttpWriter<V, HttpWriteOptions> writer;
+    private final TeleHttpWriter<V, TeleHttpWriteOptions> writer;
 
-    public WebletWriterProxy(TeleHttpWriter<V, HttpWriteOptions> writer) {
+    public WebletWriterProxy(TeleHttpWriter<V, TeleHttpWriteOptions> writer) {
         this.writer = writer;
     }
 
@@ -18,7 +18,7 @@ public final class WebletWriterProxy<V> implements WebletTeleWriter<V> {
         writer.write(value, options);
     }
 
-    public static <V> WebletWriterProxy<V> of(TeleHttpWriter<V, HttpWriteOptions> writer) {
+    public static <V> WebletWriterProxy<V> of(TeleHttpWriter<V, TeleHttpWriteOptions> writer) {
         return new WebletWriterProxy<>(writer);
     }
 

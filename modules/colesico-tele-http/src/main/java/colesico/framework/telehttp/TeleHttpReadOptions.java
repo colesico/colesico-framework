@@ -5,7 +5,7 @@ import colesico.framework.teleapi.dataport.ReadOptions;
 /**
  * Basic read options for interaction via http
  */
-public interface HttpReadOptions extends ReadOptions {
+public interface TeleHttpReadOptions extends ReadOptions {
 
     /**
      * Http param name.
@@ -22,4 +22,8 @@ public interface HttpReadOptions extends ReadOptions {
      */
     String originName();
 
+    /**
+     *  Overrides the default reader to be used for reading the value
+     */
+    Class<? extends TeleHttpReader<?, ?>> readerClass();
 }

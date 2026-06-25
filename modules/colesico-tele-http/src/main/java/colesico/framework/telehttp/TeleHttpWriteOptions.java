@@ -7,7 +7,7 @@ import java.nio.charset.Charset;
 /**
  * Basic write options for interaction via http
  */
-public interface HttpWriteOptions extends WriteOptions {
+public interface TeleHttpWriteOptions extends WriteOptions {
 
     /**
      * Default HTTP Status Code
@@ -24,4 +24,8 @@ public interface HttpWriteOptions extends WriteOptions {
      */
     Charset charset();
 
+    /**
+     *  Overrides the default writer to be used for reading the value
+     */
+    Class<? extends TeleHttpWriter<?, ?>> writerClass();
 }

@@ -20,7 +20,7 @@ import colesico.framework.http.HttpCookieFactory;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.profile.Profile;
-import colesico.framework.telehttp.HttpWriteOptions;
+import colesico.framework.telehttp.TeleHttpWriteOptions;
 import colesico.framework.telehttp.TeleHttpWriter;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
 import jakarta.inject.Singleton;
@@ -31,7 +31,7 @@ import java.util.*;
  * Profile default writer
  */
 @Singleton
-public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implements TeleHttpWriter<P, R> {
+public class ProfileWriter<P extends Profile, R extends TeleHttpWriteOptions> implements TeleHttpWriter<P, R> {
 
     public static final String PROFILE_COOKIE = "profile";
     public static final String PROFILE_HEADER = "x-profile";

@@ -1,19 +1,19 @@
 package colesico.framework.weblet.reader;
 
-import colesico.framework.telehttp.HttpReadOptions;
+import colesico.framework.telehttp.TeleHttpReadOptions;
 import colesico.framework.telehttp.TeleHttpReader;
 import colesico.framework.weblet.WebletReadOptions;
 import colesico.framework.weblet.WebletTeleReader;
 
 public final class WebletReaderProxy<V> implements WebletTeleReader<V> {
 
-    private final TeleHttpReader<V, HttpReadOptions> reader;
+    private final TeleHttpReader<V, TeleHttpReadOptions> reader;
 
-    private WebletReaderProxy(TeleHttpReader<V, HttpReadOptions> reader) {
+    private WebletReaderProxy(TeleHttpReader<V, TeleHttpReadOptions> reader) {
         this.reader = reader;
     }
 
-    public static <V> WebletReaderProxy<V> of(TeleHttpReader<V, HttpReadOptions> reader) {
+    public static <V> WebletReaderProxy<V> of(TeleHttpReader<V, TeleHttpReadOptions> reader) {
         return new WebletReaderProxy<>(reader);
     }
 

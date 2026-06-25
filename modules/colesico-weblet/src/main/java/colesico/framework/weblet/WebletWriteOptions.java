@@ -16,7 +16,7 @@
 
 package colesico.framework.weblet;
 
-import colesico.framework.telehttp.HttpWriteOptions;
+import colesico.framework.telehttp.TeleHttpWriteOptions;
 
 import java.nio.charset.Charset;
 
@@ -32,7 +32,7 @@ public record WebletWriteOptions(
         Charset charset,
         Class<? extends WebletTeleWriter<?>> writerClass,
         Object attachment
-) implements HttpWriteOptions {
+) implements TeleHttpWriteOptions {
 
     public static final String OF_METHOD = "of";
 

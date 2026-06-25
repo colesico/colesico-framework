@@ -17,7 +17,7 @@
 package colesico.framework.telehttp.writer;
 
 import colesico.framework.http.HttpResponse;
-import colesico.framework.telehttp.HttpWriteOptions;
+import colesico.framework.telehttp.TeleHttpWriteOptions;
 import colesico.framework.telehttp.response.StringResponse;
 
 import jakarta.inject.Inject;
@@ -32,7 +32,7 @@ import java.nio.charset.StandardCharsets;
  * General {@link StringResponse} writer
  */
 @Singleton
-public class StringResponseWriter<R extends StringResponse, O extends HttpWriteOptions>
+public class StringResponseWriter<R extends StringResponse, O extends TeleHttpWriteOptions>
         extends TeleHttpResponseWriter<R, O> {
 
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;

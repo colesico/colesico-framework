@@ -17,7 +17,7 @@
 package colesico.framework.telehttp.writer;
 
 import colesico.framework.http.HttpResponse;
-import colesico.framework.telehttp.HttpWriteOptions;
+import colesico.framework.telehttp.TeleHttpWriteOptions;
 import colesico.framework.telehttp.response.BinaryResponse;
 
 import jakarta.inject.Inject;
@@ -31,7 +31,7 @@ import java.nio.ByteBuffer;
  */
 @Singleton
 public final class BinaryResponseWriter
-        extends TeleHttpResponseWriter<BinaryResponse, HttpWriteOptions> {
+        extends TeleHttpResponseWriter<BinaryResponse, TeleHttpWriteOptions> {
 
     public static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
 
@@ -41,12 +41,12 @@ public final class BinaryResponseWriter
     }
 
     @Override
-    protected String contentType(BinaryResponse response, HttpWriteOptions options, String defaultValue) {
+    protected String contentType(BinaryResponse response, TeleHttpWriteOptions options, String defaultValue) {
         return super.contentType(response, options, DEFAULT_CONTENT_TYPE);
     }
 
     @Override
-    protected void writeResponse(HttpResponse protocol, BinaryResponse response, HttpWriteOptions options, Integer statusCode, String contentType) {
+    protected void writeResponse(HttpResponse protocol, BinaryResponse response, TeleHttpWriteOptions options, Integer statusCode, String contentType) {
 
         // Force download?
         if (response.fileName() != null) {

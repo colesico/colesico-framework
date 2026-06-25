@@ -1,6 +1,6 @@
 package colesico.framework.restlet;
 
-import colesico.framework.telehttp.HttpWriteOptions;
+import colesico.framework.telehttp.TeleHttpWriteOptions;
 
 import java.nio.charset.Charset;
 
@@ -15,7 +15,7 @@ public record RestletWriteOptions(
         Charset charset,
         Class<? extends RestletTeleWriter<?>> writerClass,
         Object attachment
-) implements HttpWriteOptions {
+) implements TeleHttpWriteOptions {
 
       public static final String OF_METHOD = "of";
 

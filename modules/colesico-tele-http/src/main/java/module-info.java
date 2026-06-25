@@ -12,6 +12,7 @@ module colesico.framework.telehttp {
     requires transitive colesico.framework.router;
     requires transitive colesico.framework.security;
     requires transitive colesico.framework.translation;
+    requires java.xml.crypto;
 
     exports colesico.framework.telehttp;
     exports colesico.framework.telehttp.assist;

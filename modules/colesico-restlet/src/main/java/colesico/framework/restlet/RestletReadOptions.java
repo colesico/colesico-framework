@@ -1,6 +1,6 @@
 package colesico.framework.restlet;
 
-import colesico.framework.telehttp.HttpReadOptions;
+import colesico.framework.telehttp.TeleHttpReadOptions;
 
 /**
  *
@@ -14,7 +14,7 @@ public record RestletReadOptions(
         String originName,
         Class<? extends RestletTeleReader<?>> readerClass,
         Object attachment
-) implements HttpReadOptions {
+) implements TeleHttpReadOptions {
 
     public static final String OF_METHOD = "of";
 

@@ -24,7 +24,7 @@ public final class TeleFactory {
      * Returns reader by its exact class
      * Throws an exception if reader not found  in the IoC context
      */
-    public <R extends TeleReader<?, ?>> R reader(Class<R> readerClass) {
+    public <R extends TeleReader<?, ?>> R provideReader(Class<R> readerClass) {
         var reader = ioc.instanceOrNull(readerClass);
         if (reader != null) {
             return reader;
@@ -37,7 +37,7 @@ public final class TeleFactory {
      * Throws an exception if reader not found
      */
     @SafeVarargs
-    public final <R extends TeleReader<V, O>, V, O extends ReadOptions> R reader(Class<V> baseType, Class<? extends R>... readerBaseClasses) {
+    public final <R extends TeleReader<V, O>, V, O extends ReadOptions> R provideReader(Class<V> baseType, Class<? extends R>... readerBaseClasses) {
         var reader = findReader(baseType, readerBaseClasses);
         if (reader != null) {
             return reader;
@@ -63,7 +63,7 @@ public final class TeleFactory {
     /**
      * Returns writer by its exact class
      */
-    public <W extends TeleWriter<?, ?>> W writer(Class<W> writerClass) {
+    public <W extends TeleWriter<?, ?>> W provideWriter(Class<W> writerClass) {
         return ioc.instance(writerClass);
     }
 
@@ -72,7 +72,7 @@ public final class TeleFactory {
      * Throws an exception if reader not found
      */
     @SafeVarargs
-    public final <W extends TeleWriter<V, O>, V, O extends WriteOptions> W writer(Class<V> baseType, Class<? extends W>... writerBaseClasses) {
+    public final <W extends TeleWriter<V, O>, V, O extends WriteOptions> W provideWriter(Class<V> baseType, Class<? extends W>... writerBaseClasses) {
         var writer = findWriter(baseType, writerBaseClasses);
         if (writer != null) {
             return writer;

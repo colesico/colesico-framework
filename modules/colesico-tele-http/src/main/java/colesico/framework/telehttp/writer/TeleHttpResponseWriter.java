@@ -3,14 +3,14 @@ package colesico.framework.telehttp.writer;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.telehttp.TeleHttpWriter;
-import colesico.framework.telehttp.HttpWriteOptions;
+import colesico.framework.telehttp.TeleHttpWriteOptions;
 import colesico.framework.telehttp.response.TeleHttpResponse;
 import jakarta.inject.Provider;
 
 /**
  * General {@link TeleHttpResponse} writer
  */
-abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O extends HttpWriteOptions> implements TeleHttpWriter<R, O> {
+abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O extends TeleHttpWriteOptions> implements TeleHttpWriter<R, O> {
 
     public static final Integer DEFAULT_STATUS_CODE = 200;
 

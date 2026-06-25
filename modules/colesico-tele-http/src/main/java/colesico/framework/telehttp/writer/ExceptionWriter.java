@@ -5,7 +5,7 @@ import colesico.framework.security.authentication.UnauthenticatedException;
 import colesico.framework.security.authorization.UnauthorizedException;
 import colesico.framework.telehttp.TeleHttpException;
 import colesico.framework.telehttp.TeleHttpWriter;
-import colesico.framework.telehttp.HttpWriteOptions;
+import colesico.framework.telehttp.TeleHttpWriteOptions;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
  * General exception writer
  */
 @Singleton
-public class ExceptionWriter implements TeleHttpWriter<Exception, HttpWriteOptions> {
+public class ExceptionWriter implements TeleHttpWriter<Exception, TeleHttpWriteOptions> {
 
     public static final String DEFAULT_CONTENT_TYPE = "text/plain";
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
@@ -27,7 +27,7 @@ public class ExceptionWriter implements TeleHttpWriter<Exception, HttpWriteOptio
         this.httpResponse = httpResponse;
     }
 
-    protected Integer statusCode(Exception exception, HttpWriteOptions options, Integer defaultCode) {
+    protected Integer statusCode(Exception exception, TeleHttpWriteOptions options, Integer defaultCode) {
         if (exception instanceof TeleHttpException e) {
             if (e.statusCode() != null) {
                 return e.statusCode();
@@ -40,7 +40,7 @@ public class ExceptionWriter implements TeleHttpWriter<Exception, HttpWriteOptio
     }
 
     @Override
-    public void write(Exception exception, HttpWriteOptions options) {
+    public void write(Exception exception, TeleHttpWriteOptions options) {
 
         if (exception == null) {
             httpResponse.get()

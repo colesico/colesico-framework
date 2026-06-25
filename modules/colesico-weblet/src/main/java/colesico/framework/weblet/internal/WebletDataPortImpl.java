@@ -16,10 +16,9 @@
 
 package colesico.framework.weblet.internal;
 
-import colesico.framework.teleapi.dataport.ReadOptions;
 import colesico.framework.teleapi.dataport.TeleFactory;
-import colesico.framework.telehttp.HttpReadOptions;
-import colesico.framework.telehttp.HttpWriteOptions;
+import colesico.framework.telehttp.TeleHttpReadOptions;
+import colesico.framework.telehttp.TeleHttpWriteOptions;
 import colesico.framework.telehttp.TeleHttpReader;
 import colesico.framework.telehttp.TeleHttpWriter;
 import colesico.framework.telehttp.response.DynamicResponse;
@@ -41,15 +40,15 @@ public class WebletDataPortImpl implements WebletDataPort {
 
         if (options.readerClass() != null) {
             // Require specified reader
-            WebletTeleReader<V> reader = (WebletTeleReader) teleFactory.reader(options.readerClass());
+            WebletTeleReader<V> reader = (WebletTeleReader) teleFactory.provideReader(options.readerClass());
             return reader.read(baseType, options);
         }
 
         // Find reader by baseType
-        TeleHttpReader<V, HttpReadOptions> reader = teleFactory.findReader(baseType, WebletTeleReader.class, TeleHttpReader.class);
+        TeleHttpReader<V, TeleHttpReadOptions> reader = teleFactory.findReader(baseType, WebletTeleReader.class, TeleHttpReader.class);
         if (reader == null) {
             // Require object reader
-            reader = teleFactory.reader(Object.class, WebletTeleReader.class, TeleHttpReader.class);
+            reader = teleFactory.provideReader(Object.class, WebletTeleReader.class, TeleHttpReader.class);
         }
 
         return reader.read(baseType, options);
@@ -87,19 +86,19 @@ public class WebletDataPortImpl implements WebletDataPort {
 
         if (options.writerClass() != null) {
             // Require specified writer
-            WebletTeleWriter<Object> writer = (WebletTeleWriter) teleFactory.writer(options.writerClass());
+            WebletTeleWriter<Object> writer = (WebletTeleWriter) teleFactory.provideWriter(options.writerClass());
             writer.write(targetValue, options);
             return;
         }
 
         // Find writer by the exact runtime class of the value
-        TeleHttpWriter<Object, HttpWriteOptions> writer = teleFactory.writer(targetValue.getClass(), WebletTeleWriter.class, TeleHttpWriter.class);
+        TeleHttpWriter<Object, TeleHttpWriteOptions> writer = teleFactory.provideWriter(targetValue.getClass(), WebletTeleWriter.class, TeleHttpWriter.class);
         if (writer == null) {
             // Find by base type
             writer = teleFactory.findWriter(baseType, WebletTeleWriter.class, TeleHttpWriter.class);
             if (writer == null) {
                 // Get common object writer
-                writer = teleFactory.writer(Object.class, WebletTeleWriter.class, TeleHttpWriter.class);
+                writer = teleFactory.provideWriter(Object.class, WebletTeleWriter.class, TeleHttpWriter.class);
             }
         }
 

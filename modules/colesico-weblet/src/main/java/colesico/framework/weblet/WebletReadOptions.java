@@ -16,7 +16,7 @@
 
 package colesico.framework.weblet;
 
-import colesico.framework.telehttp.HttpReadOptions;
+import colesico.framework.telehttp.TeleHttpReadOptions;
 
 /**
  * Weblet read options
@@ -29,7 +29,7 @@ public record WebletReadOptions(
         String originName,
         Class<? extends WebletTeleReader<?>> readerClass,
         Object attachment
-) implements HttpReadOptions {
+) implements TeleHttpReadOptions {
 
     public static final String OF_METHOD = "of";
 

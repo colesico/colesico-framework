@@ -16,7 +16,7 @@
 
 package colesico.framework.telehttp.reader;
 
-import colesico.framework.telehttp.HttpReadOptions;
+import colesico.framework.telehttp.TeleHttpReadOptions;
 import colesico.framework.telehttp.origin.OriginFactory;
 
 import jakarta.inject.Inject;
@@ -26,7 +26,7 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class StringReader extends OriginReader<String, HttpReadOptions> {
+public final class StringReader extends OriginReader<String, TeleHttpReadOptions> {
 
     @Inject
     public StringReader(OriginFactory originFactory) {
@@ -34,7 +34,7 @@ public final class StringReader extends OriginReader<String, HttpReadOptions> {
     }
 
     @Override
-    public String read(Class<String> baseType, HttpReadOptions options) {
+    public String read(Class<String> baseType, TeleHttpReadOptions options) {
         return readString(options);
     }
 }
