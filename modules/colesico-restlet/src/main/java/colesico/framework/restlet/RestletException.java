@@ -12,8 +12,16 @@ public final class RestletException extends TeleHttpException {
         return new RestletException(String.valueOf(details), null, statusCode, details);
     }
 
+    public static RestletException of(String message, Integer statusCode) {
+        return new RestletException(message, null, statusCode, null);
+    }
+
     public static RestletException of(String message, Integer statusCode, Object details) {
         return new RestletException(message, null, statusCode, details);
+    }
+
+    public static RestletException of(Throwable cause, Integer statusCode) {
+        return new RestletException(null, cause, statusCode, null);
     }
 
     public static RestletException of(Throwable cause, Integer statusCode, Object details) {

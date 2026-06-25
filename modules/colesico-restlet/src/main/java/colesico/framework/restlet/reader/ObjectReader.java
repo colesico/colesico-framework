@@ -18,17 +18,17 @@ import java.io.InputStream;
 import static colesico.framework.http.HttpMethod.*;
 
 @Singleton
-public final class JsonReader
+public final class ObjectReader
         extends OriginReader<Object, RestletReadOptions>
         implements RestletTeleReader<Object> {
 
-    private final RestletSerializer jsonConverter;
+    private final RestletSerializer serializer;
     private final Provider<HttpContext> httpContextProv;
 
     @Inject
-    public JsonReader(OriginFactory originFactory, RestletSerializer jsonConverter, Provider<HttpContext> httpContextProv) {
+    public ObjectReader(OriginFactory originFactory, RestletSerializer serializer, Provider<HttpContext> httpContextProv) {
         super(originFactory);
-        this.jsonConverter = jsonConverter;
+        this.serializer = serializer;
         this.httpContextProv = httpContextProv;
     }
 
@@ -55,9 +55,9 @@ public final class JsonReader
 
         if (useInputStream) {
             try (InputStream is = request.inputStream()) {
-                return jsonConverter.deserialize(is, baseType);
+                return serializer.deserialize(is, baseType);
             } catch (Exception e) {
-                throw new RestletException(new RestletError("ReadJsonError", ExceptionUtils.getRootCauseMessage(e), null));
+                throw RestletException.of(RestletError("ReadJsonError", ExceptionUtils.getRootCauseMessage(e), null));
             }
         } else {
             try {
@@ -65,7 +65,7 @@ public final class JsonReader
                 if (StringUtils.isBlank(strValue)) {
                     return null;
                 }
-                return jsonConverter.deserialize(strValue, baseType);
+                return serializer.deserialize(strValue, baseType);
             } catch (Exception e) {
                 throw new RestletException(new RestletError("ReadJsonError", ExceptionUtils.getRootCauseMessage(e), null));
             }
