@@ -10,7 +10,7 @@ import jakarta.inject.Singleton;
 /**
  * Object simple writer.
  * Converts object to string and
- * writes response with  {@link StringResponseWriter}
+ * writes value with  {@link StringResponseWriter}
  */
 @Singleton
 public class StringifyWriter implements TeleHttpWriter<Object, HttpWriteOptions> {

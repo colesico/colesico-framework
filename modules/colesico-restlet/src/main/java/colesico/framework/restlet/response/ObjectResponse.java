@@ -5,7 +5,7 @@ import colesico.framework.telehttp.response.ContentResponse;
 import java.nio.charset.Charset;
 
 /**
- * General purpose restlet response
+ * General purpose restlet value
  */
 public class ObjectResponse<T> extends ContentResponse<T> {
 

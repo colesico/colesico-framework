@@ -3,7 +3,7 @@ package colesico.framework.restlet;
 public final class RestletException extends RuntimeException {
 
     /**
-     * Http response status code
+     * Http value status code
      */
     private final Integer statusCode;
 

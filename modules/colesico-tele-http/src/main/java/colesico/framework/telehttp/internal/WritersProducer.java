@@ -36,8 +36,20 @@ public class WritersProducer {
     }
 
     @Singleton
+    @Classed(long.class)
+    public TeleHttpWriter lngWriter(StringifyWriter impl) {
+        return impl;
+    }
+
+    @Singleton
     @Classed(Integer.class)
     public TeleHttpWriter integerWriter(StringifyWriter impl) {
+        return impl;
+    }
+
+    @Singleton
+    @Classed(int.class)
+    public TeleHttpWriter intWriter(StringifyWriter impl) {
         return impl;
     }
 
@@ -54,8 +66,32 @@ public class WritersProducer {
     }
 
     @Singleton
+    @Classed(Boolean.class)
+    public TeleHttpWriter booleanWriter(StringifyWriter impl) {
+        return impl;
+    }
+
+    @Singleton
+    @Classed(boolean.class)
+    public TeleHttpWriter boolWriter(StringifyWriter impl) {
+        return impl;
+    }
+
+    @Singleton
+    @Classed(byte.class)
+    public TeleHttpWriter btWriter(StringifyWriter impl) {
+        return impl;
+    }
+
+    @Singleton
     @Classed(Character.class)
     public TeleHttpWriter characterWriter(StringifyWriter impl) {
+        return impl;
+    }
+
+    @Singleton
+    @Classed(char.class)
+    public TeleHttpWriter chrarWriter(StringifyWriter impl) {
         return impl;
     }
 }

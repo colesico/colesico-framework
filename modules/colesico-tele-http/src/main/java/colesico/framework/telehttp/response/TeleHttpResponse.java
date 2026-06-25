@@ -5,17 +5,17 @@ import colesico.framework.http.HttpCookie;
 import java.util.*;
 
 /**
- * General response model
+ * General value model
  */
 abstract public class TeleHttpResponse {
 
     /**
-     * Http response status code
+     * Http value status code
      */
     protected final Integer statusCode;
 
     /**
-     * Http response content type
+     * Http value content type
      */
     protected final String contentType;
 

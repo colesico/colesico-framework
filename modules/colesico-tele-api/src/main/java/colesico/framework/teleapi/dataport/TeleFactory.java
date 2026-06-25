@@ -8,7 +8,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
- * Tele-readers and writers factory
+ * Tele-readers/writers factory
  */
 @Singleton
 public final class TeleFactory {
@@ -24,7 +24,7 @@ public final class TeleFactory {
      * Returns reader by its exact class
      * Throws an exception if reader not found  in the IoC context
      */
-    public <T extends TeleReader<?, ?>> T reader(Class<T> readerClass) {
+    public <R extends TeleReader<?, ?>> R reader(Class<R> readerClass) {
         var reader = ioc.instanceOrNull(readerClass);
         if (reader != null) {
             return reader;
@@ -36,19 +36,21 @@ public final class TeleFactory {
      * Returns appropriate reader for given base class and the type that to be read.
      * Throws an exception if reader not found
      */
-    public <T extends TeleReader<V, O>, V, O extends ReadOptions> T reader(Class<V> baseType, Class<? extends T>... readerBaseClasses) {
+    @SafeVarargs
+    public final <R extends TeleReader<V, O>, V, O extends ReadOptions> R reader(Class<V> baseType, Class<? extends R>... readerBaseClasses) {
         var reader = findReader(baseType, readerBaseClasses);
         if (reader != null) {
-            return (T) reader;
+            return reader;
         }
-        throw new TeleException("Unable to get tele reader for " + baseType);
+        throw new TeleException("Unable to get tele-reader for " + baseType);
     }
 
     /**
      * Finds appropriate reader for given base class and the type that to be read.
      * Returns null if reader not found
      */
-    public <T extends TeleReader<V, O>, V, O extends ReadOptions> T findReader(Class<V> baseType, Class<? extends T>... readerBaseClasses) {
+    @SafeVarargs
+    public final <R extends TeleReader<V, O>, V, O extends ReadOptions> R findReader(Class<V> baseType, Class<? extends R>... readerBaseClasses) {
         for (var readerBaseClass : readerBaseClasses) {
             var reader = ioc.instanceOrNull(new ClassedKey<>(readerBaseClass, baseType));
             if (reader != null) {
@@ -69,12 +71,24 @@ public final class TeleFactory {
      * Returns appropriate writer for given base class and the type that to be written.
      * Throws an exception if reader not found
      */
-    public <W extends TeleWriter<?, ?>, V> W writer(Class<W> writerBaseClass, Class<V> baseType) {
-        return ioc.instance(new ClassedKey<>(writerBaseClass, baseType));
+    @SafeVarargs
+    public final <W extends TeleWriter<V, O>, V, O extends WriteOptions> W writer(Class<V> baseType, Class<? extends W>... writerBaseClasses) {
+        var writer = findWriter(baseType, writerBaseClasses);
+        if (writer != null) {
+            return writer;
+        }
+        throw new TeleException("Unable to get tele-writer for " + baseType);
     }
 
-    public <W extends TeleWriter<?, ?>, V> W findWriter(Class<W> writerBaseClass, Class<V> baseType) {
-        return ioc.instanceOrNull(new ClassedKey<>(writerBaseClass, baseType));
+    @SafeVarargs
+    public final <W extends TeleWriter<V, O>, V, O extends WriteOptions> W findWriter(Class<V> baseType, Class<? extends W>... writerBaseClasses) {
+        for (var writerBaseClass : writerBaseClasses) {
+            var reader = ioc.instanceOrNull(new ClassedKey<>(writerBaseClass, baseType));
+            if (reader != null) {
+                return reader;
+            }
+        }
+        return null;
     }
 
 }

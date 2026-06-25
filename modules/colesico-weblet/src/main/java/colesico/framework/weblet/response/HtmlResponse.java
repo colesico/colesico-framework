@@ -30,7 +30,7 @@ public final class HtmlResponse extends StringResponse {
     }
 
     /**
-     * Empty response
+     * Empty value
      */
     public static HtmlResponse of() {
         return new HtmlResponse(
