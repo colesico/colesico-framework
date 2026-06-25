@@ -17,92 +17,47 @@
 package colesico.framework.weblet.internal;
 
 import colesico.framework.teleapi.dataport.TeleFactory;
-import colesico.framework.telehttp.TeleHttpReadOptions;
-import colesico.framework.telehttp.TeleHttpWriteOptions;
-import colesico.framework.telehttp.TeleHttpReader;
-import colesico.framework.telehttp.TeleHttpWriter;
-import colesico.framework.telehttp.response.DynamicResponse;
+import colesico.framework.telehttp.*;
 import colesico.framework.weblet.*;
 
 import jakarta.inject.Singleton;
 
 @Singleton
-public class WebletDataPortImpl implements WebletDataPort {
-
-    protected final TeleFactory teleFactory;
+public class WebletDataPortImpl
+        extends TeleHttpDataPort<WebletReadOptions, WebletWriteOptions>
+        implements WebletDataPort {
 
     public WebletDataPortImpl(TeleFactory teleFactory) {
-        this.teleFactory = teleFactory;
+        super(teleFactory);
     }
 
     @Override
-    public <V> V read(Class<V> baseType, WebletReadOptions options) {
-
-        if (options.readerClass() != null) {
-            // Require specified reader
-            WebletTeleReader<V> reader = (WebletTeleReader) teleFactory.provideReader(options.readerClass());
-            return reader.read(baseType, options);
-        }
-
-        // Find reader by baseType
-        TeleHttpReader<V, TeleHttpReadOptions> reader = teleFactory.findReader(baseType, WebletTeleReader.class, TeleHttpReader.class);
-        if (reader == null) {
-            // Require object reader
-            reader = teleFactory.provideReader(Object.class, WebletTeleReader.class, TeleHttpReader.class);
-        }
-
-        return reader.read(baseType, options);
+    protected Class<? extends TeleHttpReader> readerBaseClass() {
+        return WebletTeleReader.class;
     }
 
     @Override
-    public <V> V read(Class<V> baseType) {
-        return read(baseType, WebletReadOptions.of());
+    protected Class<? extends TeleHttpWriter> writerBaseClass() {
+        return WebletTeleWriter.class;
     }
 
     @Override
-    public <V> V read(Class<V> baseType, Object attachment) {
-        return read(baseType, WebletReadOptions.of(attachment));
+    protected WebletReadOptions readOptions() {
+        return WebletReadOptions.of();
     }
 
     @Override
-    public <V> void write(V value, Class<V> baseType) {
-        write(value, baseType, WebletWriteOptions.of());
+    protected WebletReadOptions readOptions(Object attachment) {
+        return WebletReadOptions.of(attachment);
     }
 
     @Override
-    public <V> void write(V value, Class<V> baseType, Object attachment) {
-        write(value, baseType, WebletWriteOptions.of(attachment));
+    protected WebletWriteOptions writeOptions() {
+        return WebletWriteOptions.of();
     }
 
     @Override
-    public <V> void write(V value, Class<V> baseType, WebletWriteOptions options) {
-
-        Object targetValue;
-        if (value instanceof DynamicResponse dr) {
-            targetValue = dr.value();
-        } else {
-            targetValue = value;
-        }
-
-        if (options.writerClass() != null) {
-            // Require specified writer
-            WebletTeleWriter<Object> writer = (WebletTeleWriter) teleFactory.provideWriter(options.writerClass());
-            writer.write(targetValue, options);
-            return;
-        }
-
-        // Find writer by the exact runtime class of the value
-        TeleHttpWriter<Object, TeleHttpWriteOptions> writer = teleFactory.provideWriter(targetValue.getClass(), WebletTeleWriter.class, TeleHttpWriter.class);
-        if (writer == null) {
-            // Find by base type
-            writer = teleFactory.findWriter(baseType, WebletTeleWriter.class, TeleHttpWriter.class);
-            if (writer == null) {
-                // Get common object writer
-                writer = teleFactory.provideWriter(Object.class, WebletTeleWriter.class, TeleHttpWriter.class);
-            }
-        }
-
-        writer.write(targetValue, options);
+    protected WebletWriteOptions writeOptions(Object attachment) {
+        return WebletWriteOptions.of(attachment);
     }
-
 }

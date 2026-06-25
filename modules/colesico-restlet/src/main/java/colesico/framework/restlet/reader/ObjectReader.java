@@ -1,6 +1,5 @@
 package colesico.framework.restlet.reader;
 
-import colesico.framework.assist.ExceptionUtils;
 import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
@@ -57,7 +56,7 @@ public final class ObjectReader
             try (InputStream is = request.inputStream()) {
                 return serializer.deserialize(is, baseType);
             } catch (Exception e) {
-                throw RestletException.of(RestletError("ReadJsonError", ExceptionUtils.getRootCauseMessage(e), null));
+                throw RestletException.of(e, 400);
             }
         } else {
             try {
@@ -67,7 +66,7 @@ public final class ObjectReader
                 }
                 return serializer.deserialize(strValue, baseType);
             } catch (Exception e) {
-                throw new RestletException(new RestletError("ReadJsonError", ExceptionUtils.getRootCauseMessage(e), null));
+                throw RestletException.of(e, 400);
             }
         }
     }

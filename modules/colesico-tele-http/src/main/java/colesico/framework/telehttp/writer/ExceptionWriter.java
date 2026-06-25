@@ -19,7 +19,6 @@ import java.nio.charset.StandardCharsets;
 public class ExceptionWriter implements TeleHttpWriter<Exception, TeleHttpWriteOptions> {
 
     public static final String DEFAULT_CONTENT_TYPE = "text/plain";
-    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     private final Provider<HttpResponse> httpResponse;
 

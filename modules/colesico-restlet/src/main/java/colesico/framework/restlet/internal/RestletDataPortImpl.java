@@ -16,124 +16,48 @@
 
 package colesico.framework.restlet.internal;
 
-import colesico.framework.assist.ExceptionUtils;
 import colesico.framework.restlet.*;
 import colesico.framework.teleapi.dataport.TeleFactory;
 import colesico.framework.telehttp.*;
-import colesico.framework.telehttp.response.DynamicResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Singleton;
 
 @Singleton
-public class RestletDataPortImpl implements RestletDataPort {
-
-    private final Logger logger = LoggerFactory.getLogger(RestletDataPort.class);
-    private final TeleFactory teleFactory;
+public class RestletDataPortImpl
+        extends TeleHttpDataPort<RestletReadOptions, RestletWriteOptions>
+        implements RestletDataPort {
 
     public RestletDataPortImpl(TeleFactory teleFactory) {
-        this.teleFactory = teleFactory;
+        super(teleFactory);
     }
 
     @Override
-    public <V> V read(Class<V> baseType, RestletReadOptions options) {
-
-        if (options.readerClass() != null) {
-            // Require specified reader
-            RestletTeleReader<V> reader = (RestletTeleReader) teleFactory.provideReader(options.readerClass());
-            return reader.read(baseType, options);
-        }
-
-        // Find reader by baseType
-        TeleHttpReader<V, TeleHttpReadOptions> reader = teleFactory.findReader(baseType, RestletTeleReader.class, TeleHttpReader.class);
-        if (reader == null) {
-            // No accurate reader here so are reading data as object - get object reader
-            reader = teleFactory.provideReader(Object.class, RestletTeleReader.class, TeleHttpReader.class);
-        }
-        return reader.read(baseType, options);
+    protected Class<? extends TeleHttpReader> readerBaseClass() {
+        return RestletTeleReader.class;
     }
 
     @Override
-    public <V> V read(Class<V> baseType) {
-        return read(baseType, RestletReadOptions.of());
+    protected Class<? extends TeleHttpWriter> writerBaseClass() {
+        return RestletTeleWriter.class;
     }
 
     @Override
-    public <V> V read(Class<V> baseType, Object attachment) {
-        return read(baseType, RestletReadOptions.of(attachment));
+    protected RestletReadOptions readOptions() {
+        return RestletReadOptions.of();
     }
 
     @Override
-    public <V> void write(V value, Class<V> baseType, RestletWriteOptions options) {
-
-        Object targetValue;
-        if (value instanceof DynamicResponse(Object val)) {
-            targetValue = val;
-        } else {
-            targetValue = value;
-        }
-
-        // Check for a custom writer specified in options
-        if (options.writerClass() != null) {
-            RestletTeleWriter<Object> writer = (RestletTeleWriter) teleFactory.provideWriter(options.writerClass());
-            writer.write(targetValue, options);
-            return;
-        }
-
-        // Find writer by the exact runtime class of the value
-        TeleHttpWriter<Object, TeleHttpWriteOptions> writer;
-        if (targetValue instanceof Throwable t) {
-            writer = findExceptionWriter(t);
-        } else {
-            writer = teleFactory.findWriter(targetValue.getClass(), RestletTeleWriter.class, TeleHttpWriter.class);
-        }
-
-        // Find by baseType
-        if (writer == null) {
-            writer = teleFactory.findWriter(baseType, RestletTeleWriter.class, TeleHttpWriter.class);
-            // Final fallback to the default object writer
-            if (writer == null) {
-                writer = teleFactory.provideWriter(Object.class, RestletTeleWriter.class, TeleHttpWriter.class);
-            }
-        }
-
-        writer.write(targetValue, options);
-
+    protected RestletReadOptions readOptions(Object attachment) {
+        return RestletReadOptions.of(attachment);
     }
 
     @Override
-    public <V> void write(V value, Class<V> baseType) {
-        write(value, baseType, RestletWriteOptions.of());
+    protected RestletWriteOptions writeOptions() {
+        return RestletWriteOptions.of();
     }
 
     @Override
-    public <V> void write(V value, Class<V> baseType, Object attachment) {
-        write(value, baseType, RestletWriteOptions.of(attachment));
-    }
-
-    protected TeleHttpWriter<Object, TeleHttpWriteOptions> findExceptionWriter(final Throwable throwable) {
-        TeleHttpWriter<Object, TeleHttpWriteOptions> writer = teleFactory.findWriter(throwable.getClass(), RestletTeleWriter.class, TeleHttpWriter.class);
-        if (writer != null) {
-            return writer;
-        }
-
-        Throwable rootCause = ExceptionUtils.getRootCause(throwable);
-        if (rootCause != throwable) {
-            writer = teleFactory.findWriter(rootCause.getClass(), RestletTeleWriter.class, TeleHttpWriter.class);
-            if (writer != null) {
-                return writer;
-            }
-        }
-
-        if (throwable instanceof TeleHttpException) {
-            writer = teleFactory.findWriter(TeleHttpException.class, RestletTeleWriter.class, TeleHttpWriter.class);
-            if (writer != null) {
-                return writer;
-            }
-        }
-
-        return teleFactory.findWriter(Exception.class, RestletTeleWriter.class, TeleHttpWriter.class);
-
+    protected RestletWriteOptions writeOptions(Object attachment) {
+        return RestletWriteOptions.of(attachment);
     }
 }
