@@ -23,10 +23,12 @@ import colesico.framework.telehttp.TeleHttpWriter;
 import colesico.framework.telehttp.response.RedirectResponse;
 
 import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 /**
  * @author Vladlen Larionov
  */
+@Singleton
 public final class RedirectWriter implements TeleHttpWriter<RedirectResponse, HttpWriteOptions> {
 
     private final Router router;

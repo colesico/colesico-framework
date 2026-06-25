@@ -24,10 +24,12 @@ import colesico.framework.telehttp.response.ForwardResponse;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 /**
  * Performs forward operation
  */
+@Singleton
 public final class ForwardWriter implements TeleHttpWriter<ForwardResponse, HttpWriteOptions> {
 
     private final Router router;

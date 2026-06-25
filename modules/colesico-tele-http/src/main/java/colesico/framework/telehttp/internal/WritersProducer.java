@@ -15,13 +15,44 @@ import jakarta.inject.Singleton;
 
 @Producer
 @Produce(StringifyWriter.class)
-@Produce(value = RedirectWriter.class, keyType = TeleHttpWriter.class, classed = RedirectResponse.class)
-@Produce(value = ForwardWriter.class, keyType = TeleHttpWriter.class, classed = ForwardResponse.class)
-@Produce(value = StringResponseWriter.class, keyType = TeleHttpWriter.class, classed = StringResponse.class)
-@Produce(value = BinaryResponseWriter.class, keyType = TeleHttpWriter.class, classed = BinaryResponse.class)
-@Produce(value = ExceptionWriter.class, keyType = TeleHttpWriter.class, classed = Exception.class)
+@Produce(RedirectWriter.class)
+@Produce(ForwardWriter.class)
+@Produce(StringResponseWriter.class)
+@Produce(BinaryResponseWriter.class)
+@Produce(ExceptionWriter.class)
 @Produce(value = ProfileWriter.class, substitute = Substitution.STUB)
 public class WritersProducer {
+
+    @Singleton
+    @Classed(Exception.class)
+    public TeleHttpWriter exceptionWriter(ExceptionWriter impl) {
+        return impl;
+    }
+
+
+    @Singleton
+    @Classed(RedirectResponse.class)
+    public TeleHttpWriter redirectResponseWriter(RedirectWriter impl) {
+        return impl;
+    }
+
+    @Singleton
+    @Classed(ForwardResponse.class)
+    public TeleHttpWriter forwardResponseWriter(ForwardWriter impl) {
+        return impl;
+    }
+
+    @Singleton
+    @Classed(BinaryResponse.class)
+    public TeleHttpWriter binaryResponseWriter(BinaryResponseWriter impl) {
+        return impl;
+    }
+
+    @Singleton
+    @Classed(StringResponse.class)
+    public TeleHttpWriter stringResponseWriter(StringResponseWriter impl) {
+        return impl;
+    }
 
     @Singleton
     @Classed(String.class)
