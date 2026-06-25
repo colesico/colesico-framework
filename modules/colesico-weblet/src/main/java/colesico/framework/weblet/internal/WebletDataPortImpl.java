@@ -92,11 +92,14 @@ public class WebletDataPortImpl implements WebletDataPort {
             return;
         }
 
-        TeleHttpWriter<Object, HttpWriteOptions> writer = teleFactory.writer(targetValue.getClass(), WebletTeleWriter.class);
+        // Find writer by the exact runtime class of the value
+        TeleHttpWriter<Object, HttpWriteOptions> writer = teleFactory.writer(targetValue.getClass(), WebletTeleWriter.class, TeleHttpWriter.class);
         if (writer == null) {
-            writer = teleFactory.findWriter(targetValue.getClass(), WebletTeleWriter.class, TeleHttpWriter.class);
+            // Find by base type
+            writer = teleFactory.findWriter(baseType, WebletTeleWriter.class, TeleHttpWriter.class);
             if (writer == null) {
-                writer = teleFactory.writer(baseType, WebletTeleWriter.class, TeleHttpWriter.class);
+                // Get common object writer
+                writer = teleFactory.writer(Object.class, WebletTeleWriter.class, TeleHttpWriter.class);
             }
         }
 

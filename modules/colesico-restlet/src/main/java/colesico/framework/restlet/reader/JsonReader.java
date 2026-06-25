@@ -5,10 +5,7 @@ import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
-import colesico.framework.restlet.RestletException;
-import colesico.framework.restlet.RestletSerializer;
-import colesico.framework.restlet.RestletOrigin;
-import colesico.framework.restlet.RestletReadOptions;
+import colesico.framework.restlet.*;
 import colesico.framework.telehttp.origin.OriginFactory;
 
 import colesico.framework.telehttp.reader.OriginReader;
@@ -23,7 +20,7 @@ import static colesico.framework.http.HttpMethod.*;
 @Singleton
 public final class JsonReader
         extends OriginReader<Object, RestletReadOptions>
-        implements ObjectReader {
+        implements RestletTeleReader<Object> {
 
     private final RestletSerializer jsonConverter;
     private final Provider<HttpContext> httpContextProv;

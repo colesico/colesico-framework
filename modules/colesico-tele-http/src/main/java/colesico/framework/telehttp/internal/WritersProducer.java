@@ -29,7 +29,6 @@ public class WritersProducer {
         return impl;
     }
 
-
     @Singleton
     @Classed(RedirectResponse.class)
     public TeleHttpWriter redirectResponseWriter(RedirectWriter impl) {

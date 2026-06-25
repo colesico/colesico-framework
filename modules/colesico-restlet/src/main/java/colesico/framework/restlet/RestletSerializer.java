@@ -24,6 +24,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 
 public interface RestletSerializer {
+
     <T> String serialize(T value);
 
     <T> T deserialize(Reader reader, Type valueType);
@@ -63,5 +64,6 @@ public interface RestletSerializer {
             throw new RuntimeException(e);
         }
     }
+
 }
 

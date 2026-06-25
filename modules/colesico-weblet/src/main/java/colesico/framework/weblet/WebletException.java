@@ -23,8 +23,6 @@ import colesico.framework.telehttp.TeleHttpException;
  */
 public class WebletException extends TeleHttpException {
 
-    public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
-
     public WebletException(String message, Throwable cause, Integer statusCode, Object details) {
         super(message, cause, statusCode, details);
     }

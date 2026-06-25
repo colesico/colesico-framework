@@ -4,7 +4,7 @@ import java.lang.annotation.*;
 
 
 /**
- * Specifies custom writer for tele-param
+ * Specifies custom writer for response
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
