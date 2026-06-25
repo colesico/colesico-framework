@@ -16,33 +16,31 @@
 
 package colesico.framework.telehttp.response;
 
-import java.nio.charset.Charset;
+import colesico.framework.telehttp.MediaType;
 
 /**
- * Response string content
+ * String data response
  */
 public class StringResponse extends ContentResponse<String> {
 
-    private final Charset charset;
-
-    public StringResponse(Integer statusCode, String contentType, String content, Charset charset) {
-        super(statusCode, contentType, content);
-        this.charset = charset;
-    }
-
-    public Charset charset() {
-        return charset;
+    public StringResponse(Integer statusCode, MediaType mediaType, String content) {
+        super(statusCode, mediaType, content);
     }
 
     public static StringResponse of(String content) {
-        return new StringResponse(null, null, content, null);
+        return new StringResponse(null, null, content);
+    }
+
+    public static StringResponse of(MediaType mediaType, String content) {
+        return new StringResponse(null, mediaType, content);
     }
 
     public static StringResponse of(Integer statusCode, String content) {
-        return new StringResponse(statusCode, null, content, null);
+        return new StringResponse(statusCode, null, content);
     }
 
-    public static StringResponse of(Integer statusCode, String contentType, String content) {
-        return new StringResponse(statusCode, contentType, content, null);
+    public static StringResponse of(Integer statusCode, MediaType mediaType, String content) {
+        return new StringResponse(statusCode, mediaType, content);
     }
 }
+

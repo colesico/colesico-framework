@@ -36,35 +36,41 @@ public class ObjectResponseWriter
 
     @Override
     protected Integer statusCode(ObjectResponse response, RestletWriteOptions options, Integer defaultValue) {
+
         if (response != null) {
             if (response.content() instanceof Throwable) {
-                return RestletWriteOptions.DEFAULT_ERROR_STATUS_CODE;
+                defaultValue = DEFAULT_ERROR_STATUS_CODE;
             } else {
-                return RestletWriteOptions.DEFAULT_SUCCESS_STATUS_CODE;
+                defaultValue = DEFAULT_SUCCESS_STATUS_CODE;
             }
+        } else {
+            defaultValue = DEFAULT_SUCCESS_STATUS_CODE;
         }
-        return RestletWriteOptions.DEFAULT_SUCCESS_STATUS_CODE;
+
+        return super.statusCode(response,options,defaultValue);
     }
 
     @Override
-    protected String contentType(ObjectResponse response, RestletWriteOptions options, String defaultValue) {
-        return super.contentType(response, options, DEFAULT_CONTENT_TYPE);
+    protected String mediaType(ObjectResponse response, RestletWriteOptions options, String defaultValue) {
+        return super.mediaType(response, options, DEFAULT_CONTENT_TYPE);
+    }
+
+    protected Charset charset(ObjectResponse response, RestletWriteOptions options, Charset defaultValue) {
+        if (response.charset() != null) {
+            return response.charset();
+        }
+        if (options.charset() != null) {
+            return options.charset();
+        }
+        return defaultValue;
     }
 
     @Override
     protected void writeResponse(HttpResponse protocol, ObjectResponse response, RestletWriteOptions options, Integer statusCode, String contentType) {
 
-        String content = serializer.get(contentType).serialize(response.content());
-
-        var charset = response.charset();
-        if (charset == null) {
-            charset = options.charset();
-            if (charset == null) {
-                charset = StandardCharsets.UTF_8;
-            }
-        }
-
-        protocol.sendData(ByteBuffer.wrap(content.getBytes(charset)));
+        var charset = charset(response, options, DEFAULT_CHARSET);
+        ByteBuffer content = serializer.get(contentType).serialize(response.content(), contentType, charset);
+        protocol.sendData(content);
 
     }
 }

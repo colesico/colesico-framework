@@ -17,8 +17,9 @@
 package colesico.framework.telehttp.writer;
 
 import colesico.framework.http.HttpResponse;
+import colesico.framework.telehttp.MediaType;
 import colesico.framework.telehttp.TeleHttpWriteOptions;
-import colesico.framework.telehttp.response.BinaryResponse;
+import colesico.framework.telehttp.response.BytesResponse;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -30,23 +31,27 @@ import java.nio.ByteBuffer;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class BinaryResponseWriter
-        extends TeleHttpResponseWriter<BinaryResponse, TeleHttpWriteOptions> {
+public final class BytesResponseWriter
+        extends TeleHttpResponseWriter<BytesResponse, TeleHttpWriteOptions> {
 
-    public static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
+    public static final MediaType DEFAULT_MEDIA_TYPE = MediaType.of("application/octet-stream");
 
     @Inject
-    public BinaryResponseWriter(Provider<HttpResponse> httpResponse) {
+    public BytesResponseWriter(Provider<HttpResponse> httpResponse) {
         super(httpResponse);
     }
 
     @Override
-    protected String contentType(BinaryResponse response, TeleHttpWriteOptions options, String defaultValue) {
-        return super.contentType(response, options, DEFAULT_CONTENT_TYPE);
+    protected MediaType mediaType(BytesResponse response, TeleHttpWriteOptions options, MediaType defaultValue) {
+        return super.mediaType(response, options, DEFAULT_MEDIA_TYPE);
     }
 
     @Override
-    protected void writeResponse(HttpResponse protocol, BinaryResponse response, TeleHttpWriteOptions options, Integer statusCode, String contentType) {
+    protected void writeResponse(HttpResponse protocol,
+                                 BytesResponse response,
+                                 TeleHttpWriteOptions options,
+                                 Integer effectiveStatusCode,
+                                 MediaType effectiveMediaType) {
 
         // Force download?
         if (response.fileName() != null) {

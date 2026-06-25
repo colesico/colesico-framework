@@ -16,46 +16,56 @@
 
 package colesico.framework.telehttp.response;
 
+import colesico.framework.telehttp.MediaType;
+
 /**
- * Binary data to  returned to  client
+ * Binary data response
  */
-public final class BinaryResponse extends ContentResponse<byte[]> {
+public final class BytesResponse extends ContentResponse<byte[]> {
 
     private final String fileName;
 
-    public BinaryResponse(Integer statusCode, String contentType, byte[] content, String fileName) {
-        super(statusCode, contentType, content);
+    public BytesResponse(Integer statusCode, MediaType mediaType, byte[] content, String fileName) {
+        super(statusCode, mediaType, content);
         this.fileName = fileName;
     }
 
-    public static BinaryResponse of(byte[] content) {
-        return new BinaryResponse(
+    public static BytesResponse of(byte[] content) {
+        return new BytesResponse(
                 null,
                 null,
                 content,
                 null);
     }
 
-    public static BinaryResponse of(String contentType, byte[] content) {
-        return new BinaryResponse(
+    public static BytesResponse of(MediaType mediaType, byte[] content) {
+        return new BytesResponse(
                 null,
-                contentType,
+                mediaType,
                 content,
                 null);
     }
 
-    public static BinaryResponse of(String contentType, byte[] content, String fileName) {
-        return new BinaryResponse(
-                null,
-                contentType,
-                content,
-                fileName);
-    }
-
-    public static BinaryResponse of(int statusCode, String contentType, byte[] content, String fileName) {
-        return new BinaryResponse(
+    public static BytesResponse of(Integer statusCode, byte[] content) {
+        return new BytesResponse(
                 statusCode,
-                contentType,
+                null,
+                content,
+                null);
+    }
+
+    public static BytesResponse of(Integer statusCode, MediaType mediaType, byte[] content) {
+        return new BytesResponse(
+                statusCode,
+                mediaType,
+                content,
+                null);
+    }
+
+    public static BytesResponse of(int statusCode, MediaType mediaType, byte[] content, String fileName) {
+        return new BytesResponse(
+                statusCode,
+                mediaType,
                 content,
                 fileName);
     }

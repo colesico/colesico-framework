@@ -2,6 +2,7 @@ package colesico.framework.telehttp.writer;
 
 import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
+import colesico.framework.telehttp.MediaType;
 import colesico.framework.telehttp.TeleHttpWriter;
 import colesico.framework.telehttp.TeleHttpWriteOptions;
 import colesico.framework.telehttp.response.TeleHttpResponse;
@@ -24,7 +25,7 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
                                           R response,
                                           O options,
                                           Integer effectiveStatusCode,
-                                          String effectiveContentType);
+                                          MediaType effectiveMediaType);
 
     protected Integer statusCode(R response, O options, Integer defaultValue) {
         if (response.statusCode() != null) {
@@ -36,14 +37,25 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         return defaultValue;
     }
 
-    protected String contentType(R response, O options, String defaultValue) {
-        if (response.contentType() != null) {
-            return response.contentType();
+    protected MediaType mediaType(R response, O options, MediaType defaultValue) {
+        if (response.mediaType() != null) {
+            return response.mediaType();
         }
-        if (options.contentType() != null) {
-            return options.contentType();
+        if (options.mediaType() != null) {
+            return options.mediaType();
         }
         return defaultValue;
+    }
+
+    protected String mediaTypeToContentType(MediaType mediaType) {
+        if (mediaType == null) {
+            return "";
+        }
+        StringBuilder result = new StringBuilder(mediaType.mimeType());
+        mediaType.parameters().forEach((name, value) -> {
+            result.append("; ").append(name).append("=").append(value);
+        });
+        return result.toString();
     }
 
     @Override
@@ -59,9 +71,9 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         var statusCode = statusCode(response, options, DEFAULT_STATUS_CODE);
         protocol.setStatus(statusCode);
 
-        var contentType = contentType(response, options, null);
-        if (contentType != null) {
-            protocol.setContentType(contentType);
+        var mediaType = mediaType(response, options, null);
+        if (mediaType != null) {
+            protocol.setContentType(mediaTypeToContentType(mediaType));
         }
 
         if (!response.headers().isEmpty()) {
@@ -72,6 +84,6 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
             HttpUtils.setCookies(protocol, response.cookies());
         }
 
-        writeResponse(protocol, response, options, statusCode, contentType);
+        writeResponse(protocol, response, options, statusCode, mediaType);
     }
 }

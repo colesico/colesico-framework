@@ -25,6 +25,8 @@ import java.nio.charset.Charset;
  */
 public final class HtmlResponse extends StringResponse {
 
+    public static final String CONTENT_TYPE="plain/"
+
     public HtmlResponse(Integer statusCode, String contentType, String content, Charset charset) {
         super(statusCode, contentType, content, charset);
     }

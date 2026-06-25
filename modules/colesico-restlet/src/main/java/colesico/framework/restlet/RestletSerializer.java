@@ -21,16 +21,17 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Type;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 public interface RestletSerializer {
 
-    <T> String serialize(T value);
+    <T> ByteBuffer serialize(T value, String contentType);
 
-    <T> T deserialize(Reader reader, Type valueType);
+    <T> T deserialize(ByteBuffer data, String contentType, Type valueType);
 
-    default <T> T deserialize(Reader reader, Class<T> valueClass) {
-        return deserialize(reader, (Type) valueClass);
+    default <T> T deserialize(ByteBuffer data, String contentType, Class<T> valueClass) {
+        return deserialize(data, (Type) valueClass);
     }
 
     default <T> T deserialize(InputStream is, Type valueType) {

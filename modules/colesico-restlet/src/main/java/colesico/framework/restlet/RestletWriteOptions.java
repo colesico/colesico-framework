@@ -11,7 +11,7 @@ import java.nio.charset.Charset;
  */
 public record RestletWriteOptions(
         Integer statusCode,
-        String contentType,
+        String mediaType,
         Charset charset,
         Class<? extends RestletTeleWriter<?>> writerClass,
         Object attachment
@@ -21,7 +21,7 @@ public record RestletWriteOptions(
 
     public RestletWriteOptions(Integer statusCode, String contentType, Charset charset, Class<? extends RestletTeleWriter<?>> writerClass, Object attachment) {
         this.statusCode = statusCode;
-        this.contentType = contentType;
+        this.mediaType = contentType;
         this.charset = charset;
         this.writerClass = writerClass;
         this.attachment = attachment;

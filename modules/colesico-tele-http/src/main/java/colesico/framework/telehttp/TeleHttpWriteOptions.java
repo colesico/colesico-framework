@@ -2,8 +2,6 @@ package colesico.framework.telehttp;
 
 import colesico.framework.teleapi.dataport.WriteOptions;
 
-import java.nio.charset.Charset;
-
 /**
  * Basic write options for interaction via http
  */
@@ -15,17 +13,12 @@ public interface TeleHttpWriteOptions extends WriteOptions {
     Integer statusCode();
 
     /**
-     * Default content type
+     * Default media-type
      */
-    String contentType();
+    MediaType mediaType();
 
     /**
-     * Default charset
-     */
-    Charset charset();
-
-    /**
-     *  Overrides the default writer to be used for reading the value
+     * Overrides the default writer to be used for reading the value
      */
     Class<? extends TeleHttpWriter<?, ?>> writerClass();
 }

@@ -18,7 +18,7 @@ public class HtmlResponseWriter
     }
 
     @Override
-    protected String contentType(HtmlResponse response, WebletWriteOptions options, String defaultValue) {
-        return super.contentType(response, options, DEFAULT_CONTENT_TYPE);
+    protected String mediaType(HtmlResponse response, WebletWriteOptions options, String defaultValue) {
+        return super.mediaType(response, options, DEFAULT_CONTENT_TYPE);
     }
 }

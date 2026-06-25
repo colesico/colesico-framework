@@ -1,31 +1,32 @@
 package colesico.framework.telehttp.response;
 
 import colesico.framework.http.HttpCookie;
+import colesico.framework.telehttp.MediaType;
 
 import java.util.*;
 
 /**
- * General value model
+ * General tele-http response model
  */
 abstract public class TeleHttpResponse {
 
     /**
-     * Http value status code
+     * Http status code
      */
     protected final Integer statusCode;
 
     /**
-     * Http value content type
+     * Content-type
      */
-    protected final String contentType;
+    protected final MediaType mediaType;
 
     protected final Map<String, List<String>> headers = new HashMap<>();
 
     protected final Set<HttpCookie> cookies = new HashSet<>();
 
-    public TeleHttpResponse(Integer statusCode, String contentType) {
+    public TeleHttpResponse(Integer statusCode, MediaType mediaType) {
         this.statusCode = statusCode;
-        this.contentType = contentType;
+        this.mediaType = mediaType;
     }
 
     public void addHeader(String name, String vale) {
@@ -41,8 +42,8 @@ abstract public class TeleHttpResponse {
         return statusCode;
     }
 
-    public String contentType() {
-        return contentType;
+    public MediaType mediaType() {
+        return mediaType;
     }
 
     public Map<String, List<String>> headers() {

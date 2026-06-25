@@ -17,6 +17,7 @@
 package colesico.framework.telehttp.writer;
 
 import colesico.framework.http.HttpResponse;
+import colesico.framework.telehttp.MediaType;
 import colesico.framework.telehttp.TeleHttpWriteOptions;
 import colesico.framework.telehttp.response.StringResponse;
 
@@ -35,38 +36,39 @@ import java.nio.charset.StandardCharsets;
 public class StringResponseWriter<R extends StringResponse, O extends TeleHttpWriteOptions>
         extends TeleHttpResponseWriter<R, O> {
 
-    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-    public static final String DEFAULT_CONTENT_TYPE = "text/plain; charset=utf-8";
+    public static final MediaType DEFAULT_MEDIA_TYPE = MediaType.ofCharset("text/plain", "utf-8");
 
     @Inject
     public StringResponseWriter(Provider<HttpResponse> httpResponse) {
         super(httpResponse);
     }
 
-    protected Charset charset(R response, O options, Charset defaultValue) {
-        if (response.charset() != null) {
-            return response.charset();
+    @Override
+    protected MediaType mediaType(R response, O options, MediaType defaultValue) {
+        return super.mediaType(response, options, DEFAULT_MEDIA_TYPE);
+    }
+
+    protected Charset charset(MediaType mediaType) {
+        String charsetName = mediaType.charset();
+        if (charsetName != null) {
+            return Charset.forName(charsetName);
         }
-        if (options.charset() != null) {
-            return options.charset();
-        }
-        return defaultValue;
+        return StandardCharsets.UTF_8;
     }
 
     @Override
-    protected String contentType(R response, O options, String defaultValue) {
-        return super.contentType(response, options, DEFAULT_CONTENT_TYPE);
-    }
-
-    @Override
-    protected void writeResponse(HttpResponse protocol, R response, O options, Integer effectiveStatusCode, String effectiveContentType) {
+    protected void writeResponse(HttpResponse protocol,
+                                 R response,
+                                 O options,
+                                 Integer effectiveStatusCode,
+                                 MediaType effectiveMediaType) {
 
         if (response.content() == null) {
             protocol.setStatus(204).sendText("");
             return;
         }
 
-        var charset = charset(response, options, DEFAULT_CHARSET);
+        var charset = charset(effectiveMediaType);
         protocol.sendData(ByteBuffer.wrap(response.content().getBytes(charset)));
     }
 
