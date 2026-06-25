@@ -16,6 +16,8 @@
 
 package colesico.framework.restlet;
 
+import colesico.framework.telehttp.MediaType;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -26,9 +28,9 @@ import java.nio.charset.StandardCharsets;
 
 public interface RestletSerializer {
 
-    <T> ByteBuffer serialize(T value, String contentType);
+    <T> ByteBuffer serialize(T value, MediaType mediaType);
 
-    <T> T deserialize(ByteBuffer data, String contentType, Type valueType);
+    <T> T deserialize(ByteBuffer data, Type valueType, MediaType mediaType);
 
     default <T> T deserialize(ByteBuffer data, String contentType, Class<T> valueClass) {
         return deserialize(data, (Type) valueClass);

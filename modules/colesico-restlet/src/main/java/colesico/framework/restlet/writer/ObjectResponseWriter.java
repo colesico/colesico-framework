@@ -7,6 +7,7 @@ import colesico.framework.restlet.RestletTeleWriter;
 import colesico.framework.restlet.RestletWriteOptions;
 
 import colesico.framework.restlet.response.ObjectResponse;
+import colesico.framework.telehttp.MediaType;
 import colesico.framework.telehttp.writer.TeleHttpResponseWriter;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -23,8 +24,7 @@ public class ObjectResponseWriter
 
     public static final Integer DEFAULT_SUCCESS_STATUS_CODE = 200;
     public static final Integer DEFAULT_ERROR_STATUS_CODE = 500;
-    public static final String DEFAULT_CONTENT_TYPE = "application/json; charset=utf-8";
-    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+    public static final MediaType DEFAULT_MEDIA_TYPE = MediaType.ofCharset(MediaType.APPLICATION_JSON, "utf-8");
 
     protected final Supplier<RestletSerializer> serializer;
 
@@ -47,29 +47,24 @@ public class ObjectResponseWriter
             defaultValue = DEFAULT_SUCCESS_STATUS_CODE;
         }
 
-        return super.statusCode(response,options,defaultValue);
+        return super.statusCode(response, options, defaultValue);
     }
 
     @Override
-    protected String mediaType(ObjectResponse response, RestletWriteOptions options, String defaultValue) {
-        return super.mediaType(response, options, DEFAULT_CONTENT_TYPE);
+    protected MediaType mediaType(ObjectResponse response, RestletWriteOptions options, MediaType defaultValue) {
+        return super.mediaType(response, options, DEFAULT_MEDIA_TYPE);
     }
 
-    protected Charset charset(ObjectResponse response, RestletWriteOptions options, Charset defaultValue) {
-        if (response.charset() != null) {
-            return response.charset();
-        }
-        if (options.charset() != null) {
-            return options.charset();
-        }
-        return defaultValue;
-    }
 
     @Override
-    protected void writeResponse(HttpResponse protocol, ObjectResponse response, RestletWriteOptions options, Integer statusCode, String contentType) {
+    protected void writeResponse(HttpResponse protocol,
+                                 ObjectResponse response,
+                                 RestletWriteOptions options,
+                                 Integer statusCode,
+                                 MediaType mediaType) {
 
-        var charset = charset(response, options, DEFAULT_CHARSET);
-        ByteBuffer content = serializer.get(contentType).serialize(response.content(), contentType, charset);
+
+        ByteBuffer content = serializer.get(mediaType.mimeType()).serialize(response.content(), mediaType);
         protocol.sendData(content);
 
     }

@@ -16,6 +16,7 @@
 
 package colesico.framework.weblet.response;
 
+import colesico.framework.telehttp.MediaType;
 import colesico.framework.telehttp.response.StringResponse;
 
 import java.nio.charset.Charset;
@@ -25,10 +26,8 @@ import java.nio.charset.Charset;
  */
 public final class HtmlResponse extends StringResponse {
 
-    public static final String CONTENT_TYPE="plain/"
-
-    public HtmlResponse(Integer statusCode, String contentType, String content, Charset charset) {
-        super(statusCode, contentType, content, charset);
+    public HtmlResponse(Integer statusCode, String charset, String content) {
+        super(statusCode, MediaType.ofCharset(MediaType.TEXT_HTML, charset != null ? charset : "utf-8"), content);
     }
 
     /**
@@ -38,7 +37,6 @@ public final class HtmlResponse extends StringResponse {
         return new HtmlResponse(
                 204,
                 null,
-                "",
                 null
         );
     }
@@ -47,8 +45,7 @@ public final class HtmlResponse extends StringResponse {
         return new HtmlResponse(
                 200,
                 null,
-                content,
-                null
+                content
         );
     }
 
@@ -56,8 +53,15 @@ public final class HtmlResponse extends StringResponse {
         return new HtmlResponse(
                 statusCode,
                 null,
-                content,
-                null
+                content
+        );
+    }
+
+    public static HtmlResponse of(int statusCode, String charset, String content) {
+        return new HtmlResponse(
+                statusCode,
+                charset,
+                content
         );
     }
 

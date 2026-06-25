@@ -24,8 +24,8 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
     abstract protected void writeResponse(HttpResponse protocol,
                                           R response,
                                           O options,
-                                          Integer effectiveStatusCode,
-                                          MediaType effectiveMediaType);
+                                          Integer statusCode,
+                                          MediaType mediaType);
 
     protected Integer statusCode(R response, O options, Integer defaultValue) {
         if (response.statusCode() != null) {

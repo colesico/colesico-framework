@@ -34,7 +34,7 @@ import java.nio.ByteBuffer;
 public final class BytesResponseWriter
         extends TeleHttpResponseWriter<BytesResponse, TeleHttpWriteOptions> {
 
-    public static final MediaType DEFAULT_MEDIA_TYPE = MediaType.of("application/octet-stream");
+    public static final MediaType DEFAULT_MEDIA_TYPE = MediaType.of(MediaType.APPLICATION_OCTET_STREAM);
 
     @Inject
     public BytesResponseWriter(Provider<HttpResponse> httpResponse) {
@@ -50,8 +50,8 @@ public final class BytesResponseWriter
     protected void writeResponse(HttpResponse protocol,
                                  BytesResponse response,
                                  TeleHttpWriteOptions options,
-                                 Integer effectiveStatusCode,
-                                 MediaType effectiveMediaType) {
+                                 Integer statusCode,
+                                 MediaType mediaType) {
 
         // Force download?
         if (response.fileName() != null) {

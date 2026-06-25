@@ -60,15 +60,15 @@ public class StringResponseWriter<R extends StringResponse, O extends TeleHttpWr
     protected void writeResponse(HttpResponse protocol,
                                  R response,
                                  O options,
-                                 Integer effectiveStatusCode,
-                                 MediaType effectiveMediaType) {
+                                 Integer statusCode,
+                                 MediaType mediaType) {
 
         if (response.content() == null) {
             protocol.setStatus(204).sendText("");
             return;
         }
 
-        var charset = charset(effectiveMediaType);
+        var charset = charset(mediaType);
         protocol.sendData(ByteBuffer.wrap(response.content().getBytes(charset)));
     }
 
