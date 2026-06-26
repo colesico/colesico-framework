@@ -15,9 +15,9 @@ import jakarta.inject.Singleton;
 @Singleton
 public class ObjectWriter implements TeleHttpWriter<Object, TeleHttpWriteOptions> {
 
-    protected final SerializingWriter writer;
+    protected final ValueResponseWriter writer;
 
-    public ObjectWriter(Supplier<SerializingWriter> writerSupplier) {
+    public ObjectWriter(Supplier<ValueResponseWriter> writerSupplier) {
         this.writer = writerSupplier.get();
     }
 

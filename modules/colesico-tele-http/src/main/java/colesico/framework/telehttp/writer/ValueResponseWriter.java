@@ -18,15 +18,15 @@ import java.io.OutputStream;
  * {@link ValueSerializer} based writer
  */
 @Unscoped
-public class SerializingWriter<R extends ValueResponse<?>, O extends TeleHttpWriteOptions>
+public class ValueResponseWriter<R extends ValueResponse<?>, O extends TeleHttpWriteOptions>
         extends TeleHttpResponseWriter<R, O> {
 
     protected final Supplier<ValueSerializer> serializerFactory;
 
     @Inject
-    public SerializingWriter(Provider<HttpResponse> httpResponse,
-                             Supplier<ValueSerializer> serializerFactory,
-                             @IocMessage WriterOptions writerOptions) {
+    public ValueResponseWriter(Provider<HttpResponse> httpResponse,
+                               Supplier<ValueSerializer> serializerFactory,
+                               @IocMessage WriterOptions writerOptions) {
         super(httpResponse, writerOptions);
         this.serializerFactory = serializerFactory;
     }
