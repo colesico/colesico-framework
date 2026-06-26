@@ -15,12 +15,9 @@ import jakarta.inject.Provider;
 abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O extends TeleHttpWriteOptions> implements TeleHttpWriter<R, O> {
 
     protected final Provider<HttpResponse> httpResponse;
-    protected final WriterOptions writerOptions;
 
-    public TeleHttpResponseWriter(Provider<HttpResponse> httpResponse,
-                                  WriterOptions writerOptions) {
+    public TeleHttpResponseWriter(Provider<HttpResponse> httpResponse) {
         this.httpResponse = httpResponse;
-        this.writerOptions = writerOptions;
     }
 
     abstract protected void writeResponse(HttpResponse protocol,
@@ -29,6 +26,10 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
                                           Integer statusCode,
                                           MediaType mediaType);
 
+    abstract protected Integer defaultStatusCode();
+
+    abstract protected MediaType defaultMediaType();
+
     protected Integer statusCode(R response, O options) {
         if (response.statusCode() != null) {
             return response.statusCode();
@@ -36,7 +37,7 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         if (options.statusCode() != null) {
             return options.statusCode();
         }
-        return writerOptions.statusCode;
+        return defaultStatusCode();
     }
 
     protected MediaType mediaType(R response, O options) {
@@ -46,7 +47,7 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         if (options.mediaType() != null) {
             return options.mediaType();
         }
-        return writerOptions.mediaType;
+        return defaultMediaType();
     }
 
     protected String mediaTypeToContentType(MediaType mediaType) {
@@ -92,24 +93,4 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         writeResponse(protocol, response, options, statusCode, mediaType);
     }
 
-    /**
-     * Writer options
-     */
-    public static class WriterOptions {
-        final Integer statusCode;
-        final MediaType mediaType;
-
-        public WriterOptions(Integer statusCode, MediaType mediaType) {
-            this.statusCode = statusCode;
-            this.mediaType = mediaType;
-        }
-
-        public Integer statusCode() {
-            return statusCode;
-        }
-
-        public MediaType mediaType() {
-            return mediaType;
-        }
-    }
 }
