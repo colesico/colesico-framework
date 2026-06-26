@@ -14,8 +14,8 @@ import jakarta.inject.Provider;
 import java.io.OutputStream;
 
 /**
- * {@link ValueSerializer} based object writer.
- * Appropriate serializer is selected based on the MIME type.
+ * General {@link ValueSerializer} based object writer.
+ * Appropriate serializer is selected based on the {@link MediaType#mimeType()} type.
  */
 @Unscoped
 public class ValueResponseWriter<R extends ValueResponse<?>, O extends TeleHttpWriteOptions>
@@ -50,7 +50,7 @@ public class ValueResponseWriter<R extends ValueResponse<?>, O extends TeleHttpW
         var serializer = serializer(mediaType.mimeType());
 
         try (OutputStream os = protocol.outputStream()) {
-            serializer.serialize(response.value(), mediaType, os);
+            serializer.serialize(response.value(), mediaType.parameters(), os);
             os.flush();
         } catch (Exception e) {
             throw TeleHttpException.of(e, 500);

@@ -32,16 +32,14 @@ import jakarta.inject.Singleton;
 public final class BytesResponseWriter
         extends TeleHttpResponseWriter<BytesResponse, TeleHttpWriteOptions> {
 
-    private static final MediaType DEFAULT_MEDIA_TYPE = MediaType.of(MediaType.APPLICATION_OCTET_STREAM);
+    public static final String MIME_TYPE = "application/octet-stream";
+
+    private static final TeleHttpResponseWriter.WriterOptions WRITER_OPTIONS =
+            TeleHttpResponseWriter.WriterOptions.of(200, MediaType.ofCharset(MIME_TYPE, "utf-8"));
 
     @Inject
     public BytesResponseWriter(Provider<HttpResponse> httpResponse) {
-        super(httpResponse);
-    }
-
-    @Override
-    protected MediaType mediaType(BytesResponse response, TeleHttpWriteOptions options, MediaType defaultValue) {
-        return super.mediaType(response, options, DEFAULT_MEDIA_TYPE);
+        super(httpResponse, WRITER_OPTIONS);
     }
 
     @Override

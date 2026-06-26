@@ -92,9 +92,18 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         writeResponse(protocol, response, options, statusCode, mediaType);
     }
 
+    /**
+     * Writer options
+     *
+     * @param statusCode default status code
+     * @param mediaType  default media type
+     */
     public record WriterOptions(
             Integer statusCode,
             MediaType mediaType
     ) {
+        public static WriterOptions of(Integer statusCode, MediaType mediaType) {
+            return new WriterOptions(statusCode, mediaType);
+        }
     }
 }

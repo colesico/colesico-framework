@@ -27,7 +27,7 @@
         <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE" />
     </Match>
     <Match>
-        <Class name="colesico.framework.telehttp.writer.ValueWriter" />
+        <Class name="colesico.framework.telehttp.writer.ObjectWriter" />
         <Bug pattern="NP_NULL_ON_SOME_PATH" />
     </Match>
     <Match>

@@ -21,6 +21,7 @@ import colesico.framework.telehttp.MediaType;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.util.Map;
 
 /**
  * Strategy interface for object serialization.
@@ -34,14 +35,14 @@ public interface ValueSerializer {
      * Serializes an object to the output stream .
      *
      * @param value        object to serialize
-     * @param mediaType    serialization params
+     * @param mediaParams  serialization params
      * @param outputStream stream to write into
      */
-    void serialize(Object value, MediaType mediaType, OutputStream outputStream);
+    void serialize(Object value, Map<String, String> mediaParams, OutputStream outputStream);
 
-    default ByteBuffer serialize(Object value, MediaType mediaType) {
+    default ByteBuffer serialize(Object value, Map<String, String> mediaParams) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-        serialize(value, mediaType, baos);
+        serialize(value, mediaParams, baos);
         return ByteBuffer.wrap(baos.toByteArray());
     }
 }

@@ -60,7 +60,7 @@ public class HttpBasic implements AuthenticationSource<BasicAuthenticationReques
         response
                 .setHeader(WWW_AUTHENTICATE_HEADER, "Basic realm=\"" + challenge.realm() + "\"")
                 .setStatus(401)
-                .sendText("401 Unauthorized. Authentication required.");
+                .send("401 Unauthorized. Authentication required");
 
     }
 
@@ -76,6 +76,6 @@ public class HttpBasic implements AuthenticationSource<BasicAuthenticationReques
 
     @Override
     public void logout(Identity<?> identity) {
-        httpContext.get().response().setStatus(401).sendText("");
+        httpContext.get().response().setStatus(401).send("Logout");
     }
 }
