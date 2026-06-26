@@ -1,14 +1,13 @@
 package colesico.framework.weblet.writer;
 
 import colesico.framework.http.HttpResponse;
-import colesico.framework.telehttp.writer.StringResponseWriter;
 import colesico.framework.weblet.response.HtmlResponse;
 import colesico.framework.weblet.WebletTeleWriter;
 import colesico.framework.weblet.WebletWriteOptions;
 import jakarta.inject.Provider;
 
 public class HtmlResponseWriter
-        extends StringResponseWriter<HtmlResponse, WebletWriteOptions>
+        extends ToStringWriter<HtmlResponse, WebletWriteOptions>
         implements WebletTeleWriter<HtmlResponse> {
 
     public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";

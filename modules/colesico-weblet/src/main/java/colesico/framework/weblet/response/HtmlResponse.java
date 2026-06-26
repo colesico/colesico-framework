@@ -17,9 +17,6 @@
 package colesico.framework.weblet.response;
 
 import colesico.framework.telehttp.MediaType;
-import colesico.framework.telehttp.response.StringResponse;
-
-import java.nio.charset.Charset;
 
 /**
  * HTML text to  returned to  client

@@ -19,9 +19,7 @@ package colesico.framework.telehttp.writer;
 import colesico.framework.telehttp.MediaType;
 
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 
 /**
@@ -38,17 +36,6 @@ public interface ValueSerializer {
      * @param outputStream the destination stream to write into
      */
     void serialize(Object value, MediaType mediaType, OutputStream outputStream);
-
-    /**
-     * Deserializes an object from the input stream using the specified media type.
-     *
-     * @param <T>         the target runtime type
-     * @param inputStream the source stream containing serialized data
-     * @param mediaType   the data format of the incoming stream
-     * @param valueType   the specific type to deserialize into (supports generics)
-     * @return the deserialized object instance
-     */
-    <T> T deserialize(InputStream inputStream, MediaType mediaType, Type valueType);
 
     default ByteBuffer serialize(Object value, MediaType mediaType) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);

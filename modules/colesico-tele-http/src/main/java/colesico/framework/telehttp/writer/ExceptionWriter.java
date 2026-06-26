@@ -5,7 +5,6 @@ import colesico.framework.security.authorization.UnauthorizedException;
 import colesico.framework.telehttp.TeleHttpException;
 import colesico.framework.telehttp.TeleHttpWriter;
 import colesico.framework.telehttp.TeleHttpWriteOptions;
-import colesico.framework.telehttp.response.StringResponse;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
@@ -15,9 +14,9 @@ import jakarta.inject.Singleton;
 @Singleton
 public class ExceptionWriter implements TeleHttpWriter<Exception, TeleHttpWriteOptions> {
 
-    protected final Provider<StringResponseWriter> writerProvider;
+    protected final Provider<ToStringWriter> writerProvider;
 
-    public ExceptionWriter(Provider<StringResponseWriter> writerProvider) {
+    public ExceptionWriter(Provider<ToStringWriter> writerProvider) {
         this.writerProvider = writerProvider;
     }
 
@@ -36,7 +35,7 @@ public class ExceptionWriter implements TeleHttpWriter<Exception, TeleHttpWriteO
     @Override
     public void write(Exception exception, TeleHttpWriteOptions options) {
 
-        StringResponseWriter writer = writerProvider.get();
+        ToStringWriter writer = writerProvider.get();
 
         if (exception == null) {
             writer.write(StringResponse.of(500, "Unknown error"), options);

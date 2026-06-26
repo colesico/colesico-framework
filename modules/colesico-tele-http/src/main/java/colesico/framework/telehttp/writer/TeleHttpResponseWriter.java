@@ -3,6 +3,7 @@ package colesico.framework.telehttp.writer;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.telehttp.MediaType;
+import colesico.framework.telehttp.TeleHttpException;
 import colesico.framework.telehttp.TeleHttpWriter;
 import colesico.framework.telehttp.TeleHttpWriteOptions;
 import colesico.framework.telehttp.response.TeleHttpResponse;
@@ -13,12 +14,13 @@ import jakarta.inject.Provider;
  */
 abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O extends TeleHttpWriteOptions> implements TeleHttpWriter<R, O> {
 
-    public static final Integer DEFAULT_STATUS_CODE = 200;
-
     protected final Provider<HttpResponse> httpResponse;
+    protected final WriterOptions writerOptions;
 
-    public TeleHttpResponseWriter(Provider<HttpResponse> httpResponse) {
+    public TeleHttpResponseWriter(Provider<HttpResponse> httpResponse,
+                                  WriterOptions writerOptions) {
         this.httpResponse = httpResponse;
+        this.writerOptions = writerOptions;
     }
 
     abstract protected void writeResponse(HttpResponse protocol,
@@ -27,24 +29,24 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
                                           Integer statusCode,
                                           MediaType mediaType);
 
-    protected Integer statusCode(R response, O options, Integer defaultValue) {
+    protected Integer statusCode(R response, O options) {
         if (response.statusCode() != null) {
             return response.statusCode();
         }
         if (options.statusCode() != null) {
             return options.statusCode();
         }
-        return defaultValue;
+        return writerOptions.statusCode;
     }
 
-    protected MediaType mediaType(R response, O options, MediaType defaultValue) {
+    protected MediaType mediaType(R response, O options) {
         if (response.mediaType() != null) {
             return response.mediaType();
         }
         if (options.mediaType() != null) {
             return options.mediaType();
         }
-        return defaultValue;
+        return writerOptions.mediaType;
     }
 
     protected String mediaTypeToContentType(MediaType mediaType) {
@@ -64,14 +66,17 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         var protocol = httpResponse.get();
 
         if (response == null) {
-            protocol.setStatus(204).sendText("");
+            protocol.setStatus(204).close();
             return;
         }
 
-        var statusCode = statusCode(response, options, DEFAULT_STATUS_CODE);
+        var statusCode = statusCode(response, options);
+        if (statusCode == null) {
+            throw TeleHttpException.of("Undefined http status code", 500);
+        }
         protocol.setStatus(statusCode);
 
-        var mediaType = mediaType(response, options, null);
+        var mediaType = mediaType(response, options);
         if (mediaType != null) {
             protocol.setContentType(mediaTypeToContentType(mediaType));
         }
@@ -85,5 +90,26 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         }
 
         writeResponse(protocol, response, options, statusCode, mediaType);
+    }
+
+    /**
+     * Writer options
+     */
+    public static class WriterOptions {
+        final Integer statusCode;
+        final MediaType mediaType;
+
+        public WriterOptions(Integer statusCode, MediaType mediaType) {
+            this.statusCode = statusCode;
+            this.mediaType = mediaType;
+        }
+
+        public Integer statusCode() {
+            return statusCode;
+        }
+
+        public MediaType mediaType() {
+            return mediaType;
+        }
     }
 }
