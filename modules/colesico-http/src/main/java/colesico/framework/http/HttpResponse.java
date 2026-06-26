@@ -15,9 +15,12 @@
  */
 package colesico.framework.http;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Vladlen Larionov
@@ -32,22 +35,12 @@ public interface HttpResponse {
 
     HttpResponse setHeader(String name, String vale);
 
-    /**
-     * Send text response
-     */
-    void sendText(String text);
-
-    /**
-     * Send binary response
-     */
-    void sendData(ByteBuffer buffer);
-
-    /**
-     * Send redirect  (Http header Location)
-     */
-    void sendRedirect(String location);
-
     OutputStream outputStream();
+
+    /**
+     * Close response
+     */
+    void close();
 
     /**
      * Returns true if the server has sent any data to a client
@@ -58,4 +51,30 @@ public interface HttpResponse {
      * Dump response data to characters output for further logging
      */
     void dump(Writer out);
+
+    /**
+     * Response with bytes
+     */
+    default void send(byte[] bytes) {
+        try (var os = outputStream()) {
+            os.write(bytes);
+            os.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Response with text in utf-8
+     */
+    default void send(String text) {
+        send(text.getBytes(StandardCharsets.UTF_8));
+    }
+
+    default void send(String text, Charset charset) {
+        if (charset == null) {
+            charset = StandardCharsets.UTF_8;
+        }
+        send(text.getBytes(charset));
+    }
 }

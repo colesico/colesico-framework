@@ -25,8 +25,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import java.nio.ByteBuffer;
-
 /**
  * @author Vladlen Larionov
  */
@@ -58,11 +56,10 @@ public final class BytesResponseWriter
             protocol.setHeader("Content-Disposition", "attachment; filename=\"" + response.fileName() + "\"");
         }
 
-        if (response.content() == null || response.content().length == 0) {
-            protocol.setStatus(204).sendData(ByteBuffer.allocate(0));
+        if (response.value() == null || response.value().length == 0) {
+            protocol.setStatus(204).close();
         } else {
-            ByteBuffer buffer = ByteBuffer.wrap(response.content());
-            protocol.sendData(buffer);
+            protocol.send(response.value());
         }
     }
 }

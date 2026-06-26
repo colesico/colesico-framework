@@ -1,0 +1,51 @@
+package colesico.framework.telehttp.writer;
+
+import colesico.framework.http.HttpResponse;
+import colesico.framework.ioc.production.Supplier;
+
+import colesico.framework.teleapi.TeleException;
+import colesico.framework.telehttp.MediaType;
+import colesico.framework.telehttp.TeleHttpException;
+import colesico.framework.telehttp.TeleHttpWriteOptions;
+import colesico.framework.telehttp.response.ValueResponse;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
+
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
+
+@Singleton
+public class ValueResponseWriter<R extends ValueResponse, O extends TeleHttpWriteOptions>
+        extends TeleHttpResponseWriter<R, O> {
+
+    protected final Supplier<ValueSerializer> serializerFactory;
+
+    @Inject
+    public ValueResponseWriter(Provider<HttpResponse> httpResponse, Supplier<ValueSerializer> serializerFactory) {
+        super(httpResponse);
+        this.serializerFactory = serializerFactory;
+    }
+
+
+    @Override
+    protected void writeResponse(HttpResponse protocol,
+                                 R response,
+                                 O options,
+                                 Integer statusCode,
+                                 MediaType mediaType) {
+
+        if (response.value() == null) {
+            protocol.setStatus(204).close();
+            return;
+        }
+
+        try (OutputStream os = protocol.outputStream()) {
+            var serializer = serializerFactory.get(mediaType.mimeType());
+            serializer.serialize(response.value(), mediaType, os);
+            os.flush();
+        } catch (Exception e) {
+            throw TeleHttpException.of(e, 500);
+        }
+    }
+}

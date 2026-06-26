@@ -3,7 +3,6 @@ package colesico.framework.restlet.writer;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.ioc.production.Supplier;
 import colesico.framework.restlet.RestletException;
-import colesico.framework.restlet.RestletSerializer;
 import colesico.framework.restlet.RestletWriteOptions;
 import colesico.framework.restlet.RestletTeleWriter;
 
@@ -16,9 +15,9 @@ import java.nio.ByteBuffer;
 public class RestletExceptionWriter implements RestletTeleWriter<RestletException> {
 
     private final Provider<HttpResponse> httpResponse;
-    protected final Supplier<RestletSerializer> serializer;
+    protected final Supplier<colesico.framework.telehttp.writer.ValueSerializer> serializer;
 
-    public RestletExceptionWriter(Provider<HttpResponse> httpResponse, Supplier<RestletSerializer> serializer) {
+    public RestletExceptionWriter(Provider<HttpResponse> httpResponse, Supplier<colesico.framework.telehttp.writer.ValueSerializer> serializer) {
         this.httpResponse = httpResponse;
         this.serializer = serializer;
     }

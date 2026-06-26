@@ -19,9 +19,9 @@ package colesico.framework.telehttp.response;
 import colesico.framework.telehttp.MediaType;
 
 /**
- * Binary data response
+ * Simple binary data response
  */
-public final class BytesResponse extends ContentResponse<byte[]> {
+public final class BytesResponse extends ValueResponse<byte[]> {
 
     private final String fileName;
 

@@ -44,7 +44,7 @@ public class DefaultErrorHandler implements ErrorHandler {
         logger.error(toStackTrace(throwable));
 
         HttpResponse response = httpContext.response();
-        if (response.isCommitted()){
+        if (response.isCommitted()) {
             return;
         }
 
@@ -57,11 +57,11 @@ public class DefaultErrorHandler implements ErrorHandler {
             if (throwable instanceof UnknownRouteException) {
                 response.setContentType(CONTENT_TYPE);
                 response.setStatus(404);
-                response.sendText(out.toString());
+                response.send(out.toString());
             } else {
                 response.setContentType(CONTENT_TYPE);
                 response.setStatus(500);
-                response.sendText(out.toString());
+                response.send(out.toString());
             }
         } catch (Exception ex) {
             logger.error("Sending error page error: {}", getRootCauseMessage(ex));

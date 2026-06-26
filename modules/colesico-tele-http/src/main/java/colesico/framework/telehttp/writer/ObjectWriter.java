@@ -23,7 +23,7 @@ public class ObjectWriter implements TeleHttpWriter<Object, TeleHttpWriteOptions
 
     protected String objectToString(Object value) {
         if (value == null) {
-            return "";
+            return null;
         }
         return String.valueOf(value);
     }

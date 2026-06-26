@@ -49,7 +49,7 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
 
     protected String mediaTypeToContentType(MediaType mediaType) {
         if (mediaType == null) {
-            return "";
+            return null;
         }
         StringBuilder result = new StringBuilder(mediaType.mimeType());
         mediaType.parameters().forEach((name, value) -> {

@@ -21,7 +21,7 @@ import colesico.framework.telehttp.MediaType;
 /**
  * String data response
  */
-public class StringResponse extends ContentResponse<String> {
+public class StringResponse extends ValueResponse<String> {
 
     public StringResponse(Integer statusCode, MediaType mediaType, String content) {
         super(statusCode, mediaType, content);

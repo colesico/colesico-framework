@@ -52,7 +52,7 @@ public class RestletProducer {
 
     //TODO: add support for serializers by content-type
     @Singleton
-    public RestletSerializer restletSerializer(@IocMessage String contentType, GsonSerializer impl) {
+    public colesico.framework.telehttp.writer.ValueSerializer restletSerializer(@IocMessage String contentType, GsonSerializer impl) {
         return impl;
     }
 

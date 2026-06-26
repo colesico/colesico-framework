@@ -4,6 +4,7 @@ import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
 import io.fusionauth.http.server.HTTPResponse;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.ByteBuffer;
@@ -42,45 +43,17 @@ public class FusionHttpResponse implements HttpResponse {
     }
 
     @Override
-    public void sendText(String text) {
-        try (var writer = response.getWriter()) {
-            writer.write(text);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void sendData(ByteBuffer buffer) {
-        try (OutputStream os = response.getOutputStream()) {
-            if (buffer.hasArray()) {
-                os.write(
-                        buffer.array(),
-                        buffer.arrayOffset() + buffer.position(),
-                        buffer.remaining()
-                );
-                buffer.position(buffer.limit());
-            } else {
-                WritableByteChannel channel = Channels.newChannel(os);
-
-                while (buffer.hasRemaining()) {
-                    channel.write(buffer);
-                }
-            }
-            os.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void sendRedirect(String location) {
-        response.sendRedirect(location);
-    }
-
-    @Override
     public OutputStream outputStream() {
         return response.getOutputStream();
+    }
+
+    @Override
+    public void close() {
+        try {
+            response.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

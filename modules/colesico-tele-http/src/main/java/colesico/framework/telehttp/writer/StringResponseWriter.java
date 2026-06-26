@@ -36,7 +36,7 @@ import java.nio.charset.StandardCharsets;
 public class StringResponseWriter<R extends StringResponse, O extends TeleHttpWriteOptions>
         extends TeleHttpResponseWriter<R, O> {
 
-    public static final MediaType DEFAULT_MEDIA_TYPE = MediaType.ofCharset("text/plain", "utf-8");
+    public static final MediaType DEFAULT_MEDIA_TYPE = MediaType.ofCharset(MediaType.TEXT_PLAIN, "utf-8");
 
     @Inject
     public StringResponseWriter(Provider<HttpResponse> httpResponse) {
@@ -48,13 +48,7 @@ public class StringResponseWriter<R extends StringResponse, O extends TeleHttpWr
         return super.mediaType(response, options, DEFAULT_MEDIA_TYPE);
     }
 
-    protected Charset charset(MediaType mediaType) {
-        String charsetName = mediaType.charset();
-        if (charsetName != null) {
-            return Charset.forName(charsetName);
-        }
-        return StandardCharsets.UTF_8;
-    }
+
 
     @Override
     protected void writeResponse(HttpResponse protocol,
@@ -63,13 +57,10 @@ public class StringResponseWriter<R extends StringResponse, O extends TeleHttpWr
                                  Integer statusCode,
                                  MediaType mediaType) {
 
-        if (response.content() == null) {
-            protocol.setStatus(204).sendText("");
-            return;
-        }
+
 
         var charset = charset(mediaType);
-        protocol.sendData(ByteBuffer.wrap(response.content().getBytes(charset)));
+        protocol.sendData(ByteBuffer.wrap(response.value().getBytes(charset)));
     }
 
 }

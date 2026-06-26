@@ -22,15 +22,15 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.restlet.RestletException;
 import colesico.framework.restlet.RestletTeleWriter;
-import colesico.framework.restlet.response.ObjectResponse;
 import colesico.framework.restlet.writer.*;
 import colesico.framework.telehttp.writer.ExceptionWriter;
 import colesico.framework.telehttp.writer.ProfileWriter;
 
+import colesico.framework.telehttp.writer.ValueResponseWriter;
 import jakarta.inject.Singleton;
 
 @Producer
-@Produce(value = ObjectResponseWriter.class, keyType = RestletTeleWriter.class, classed = ObjectResponse.class)
+@Produce(value = ValueResponseWriter.class, keyType = RestletTeleWriter.class, classed = ObjectResponse.class)
 @Produce(value = RestletExceptionWriter.class, keyType = RestletTeleWriter.class, classed = RestletException.class)
 public class RestletWritersProducer {
 

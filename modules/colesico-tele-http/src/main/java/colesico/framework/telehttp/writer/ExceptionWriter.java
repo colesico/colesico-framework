@@ -1,6 +1,5 @@
 package colesico.framework.telehttp.writer;
 
-import colesico.framework.http.HttpResponse;
 import colesico.framework.security.authentication.UnauthenticatedException;
 import colesico.framework.security.authorization.UnauthorizedException;
 import colesico.framework.telehttp.TeleHttpException;
@@ -15,8 +14,6 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 public class ExceptionWriter implements TeleHttpWriter<Exception, TeleHttpWriteOptions> {
-
-    public static final String DEFAULT_CONTENT_TYPE = "text/plain";
 
     protected final Provider<StringResponseWriter> writerProvider;
 
@@ -57,7 +54,7 @@ public class ExceptionWriter implements TeleHttpWriter<Exception, TeleHttpWriteO
                 var status = statusCode(exception, options, 500);
                 writer.write(StringResponse.of(status, "Server error"), options);
             }
-
         }
+
     }
 }

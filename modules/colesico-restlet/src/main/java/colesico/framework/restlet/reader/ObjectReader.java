@@ -21,11 +21,11 @@ public final class ObjectReader
         extends OriginReader<Object, RestletReadOptions>
         implements RestletTeleReader<Object> {
 
-    private final RestletSerializer serializer;
+    private final colesico.framework.telehttp.writer.ValueSerializer serializer;
     private final Provider<HttpContext> httpContextProv;
 
     @Inject
-    public ObjectReader(OriginFactory originFactory, RestletSerializer serializer, Provider<HttpContext> httpContextProv) {
+    public ObjectReader(OriginFactory originFactory, colesico.framework.telehttp.writer.ValueSerializer serializer, Provider<HttpContext> httpContextProv) {
         super(originFactory);
         this.serializer = serializer;
         this.httpContextProv = httpContextProv;
