@@ -66,8 +66,7 @@ public class ValueResponseWriter<R extends ValueResponse<?>, O extends TeleHttpW
 
         var serializer = serializer(mediaType.mimeType());
 
-        protocol.setStatus(statusCode);
-        protocol.setContentType(toContentType(mediaType));
+        protocol.setStatus(statusCode).setContentType(toContentType(mediaType));
 
         try (OutputStream os = protocol.outputStream()) {
             serializer.serialize(response.value(), mediaType.parameters(), os);

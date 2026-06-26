@@ -84,6 +84,9 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         }
 
         var mediaType = mediaType(response, options);
+        if (mediaType == null) {
+            throw TeleHttpException.of("Undefined media type", 500);
+        }
 
         if (!response.headers().isEmpty()) {
             HttpUtils.setHeaders(protocol, response.headers());
