@@ -29,11 +29,9 @@ public interface HttpResponse {
 
     HttpResponse setStatus(Integer code);
 
-    HttpResponse setContentType(String contentType);
+    HttpResponse setHeader(String name, String vale);
 
     HttpResponse setCookie(HttpCookie cookie);
-
-    HttpResponse setHeader(String name, String vale);
 
     OutputStream outputStream();
 
@@ -51,6 +49,11 @@ public interface HttpResponse {
      * Dump response data to characters output for further logging
      */
     void dump(Writer out);
+
+    default HttpResponse setContentType(String contentType) {
+        setHeader("Content-Type", contentType);
+        return this;
+    }
 
     /**
      * Response with bytes

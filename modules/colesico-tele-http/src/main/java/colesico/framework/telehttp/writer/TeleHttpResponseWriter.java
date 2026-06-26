@@ -15,11 +15,9 @@ import jakarta.inject.Provider;
 abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O extends TeleHttpWriteOptions> implements TeleHttpWriter<R, O> {
 
     protected final Provider<HttpResponse> httpResponse;
-    protected final WriterOptions writerOptions;
 
-    public TeleHttpResponseWriter(Provider<HttpResponse> httpResponse, WriterOptions writerOptions) {
+    public TeleHttpResponseWriter(Provider<HttpResponse> httpResponse) {
         this.httpResponse = httpResponse;
-        this.writerOptions = writerOptions;
     }
 
     abstract protected void writeResponse(HttpResponse protocol,
@@ -28,6 +26,15 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
                                           Integer statusCode,
                                           MediaType mediaType);
 
+    abstract protected MediaType defaultMediaType();
+
+    protected Integer defaultStatusCode() {
+        return 200;
+    }
+
+    protected Integer emptyStatusCode() {
+        return 204;
+    }
 
     protected Integer statusCode(R response, O options) {
         if (response.statusCode() != null) {
@@ -36,7 +43,7 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         if (options.statusCode() != null) {
             return options.statusCode();
         }
-        return writerOptions.statusCode;
+        return defaultStatusCode();
     }
 
     protected MediaType mediaType(R response, O options) {
@@ -46,10 +53,10 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         if (options.mediaType() != null) {
             return options.mediaType();
         }
-        return writerOptions.mediaType;
+        return defaultMediaType();
     }
 
-    protected String mediaTypeToContentType(MediaType mediaType) {
+    protected String toContentType(MediaType mediaType) {
         if (mediaType == null) {
             return null;
         }
@@ -57,6 +64,7 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         mediaType.parameters().forEach((name, value) -> {
             result.append("; ").append(name).append("=").append(value);
         });
+
         return result.toString();
     }
 
@@ -66,7 +74,7 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         var protocol = httpResponse.get();
 
         if (response == null) {
-            protocol.setStatus(204).close();
+            protocol.setStatus(emptyStatusCode()).close();
             return;
         }
 
@@ -74,12 +82,8 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         if (statusCode == null) {
             throw TeleHttpException.of("Undefined http status code", 500);
         }
-        protocol.setStatus(statusCode);
 
         var mediaType = mediaType(response, options);
-        if (mediaType != null) {
-            protocol.setContentType(mediaTypeToContentType(mediaType));
-        }
 
         if (!response.headers().isEmpty()) {
             HttpUtils.setHeaders(protocol, response.headers());
@@ -92,18 +96,5 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         writeResponse(protocol, response, options, statusCode, mediaType);
     }
 
-    /**
-     * Writer options
-     *
-     * @param statusCode default status code
-     * @param mediaType  default media type
-     */
-    public record WriterOptions(
-            Integer statusCode,
-            MediaType mediaType
-    ) {
-        public static WriterOptions of(Integer statusCode, MediaType mediaType) {
-            return new WriterOptions(statusCode, mediaType);
-        }
-    }
+
 }

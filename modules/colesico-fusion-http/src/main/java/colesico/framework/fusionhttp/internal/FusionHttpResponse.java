@@ -26,19 +26,13 @@ public class FusionHttpResponse implements HttpResponse {
     }
 
     @Override
-    public HttpResponse setContentType(String contentType) {
-        response.setContentType(contentType);
+    public HttpResponse setHeader(String name, String vale) {
+        response.setHeader(name, vale);
         return this;
     }
 
     @Override
     public HttpResponse setCookie(HttpCookie cookie) {
-        return this;
-    }
-
-    @Override
-    public HttpResponse setHeader(String name, String vale) {
-        response.setHeader(name, vale);
         return this;
     }
 

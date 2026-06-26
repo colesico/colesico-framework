@@ -22,13 +22,30 @@ public class ValueResponseWriter<R extends ValueResponse<?>, O extends TeleHttpW
         extends TeleHttpResponseWriter<R, O> {
 
     protected final Supplier<ValueSerializer> serializerFactory;
+    protected final WriterOptions writerOptions;
 
     public ValueResponseWriter(Provider<HttpResponse> httpResponse,
                                Supplier<ValueSerializer> serializerFactory,
                                @IocMessage WriterOptions writerOptions) {
 
-        super(httpResponse, writerOptions);
+        super(httpResponse);
         this.serializerFactory = serializerFactory;
+        this.writerOptions = writerOptions;
+    }
+
+    @Override
+    protected MediaType defaultMediaType() {
+        return writerOptions.defaultMediaType;
+    }
+
+    @Override
+    protected Integer defaultStatusCode() {
+        return writerOptions.defaultStatusCode;
+    }
+
+    @Override
+    protected Integer emptyStatusCode() {
+        return writerOptions.emptyStatusCode;
     }
 
     protected ValueSerializer serializer(String mimeType) {
@@ -43,17 +60,37 @@ public class ValueResponseWriter<R extends ValueResponse<?>, O extends TeleHttpW
                                  MediaType mediaType) {
 
         if (response.value() == null) {
-            protocol.setStatus(204).close();
+            protocol.setStatus(emptyStatusCode()).close();
             return;
         }
 
         var serializer = serializer(mediaType.mimeType());
+
+        protocol.setStatus(statusCode);
+        protocol.setContentType(toContentType(mediaType));
 
         try (OutputStream os = protocol.outputStream()) {
             serializer.serialize(response.value(), mediaType.parameters(), os);
             os.flush();
         } catch (Exception e) {
             throw TeleHttpException.of(e, 500);
+        }
+    }
+
+    /**
+     * Writer options
+     *
+     * @param defaultStatusCode default status code
+     * @param emptyStatusCode   empty result status code
+     * @param defaultMediaType  default media type
+     */
+    public record WriterOptions(
+            Integer defaultStatusCode,
+            Integer emptyStatusCode,
+            MediaType defaultMediaType
+    ) {
+        public static WriterOptions of(Integer statusCode, MediaType mediaType) {
+            return new WriterOptions(statusCode, 204, mediaType);
         }
     }
 }

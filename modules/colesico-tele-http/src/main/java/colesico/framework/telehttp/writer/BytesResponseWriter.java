@@ -32,14 +32,14 @@ import jakarta.inject.Singleton;
 public final class BytesResponseWriter
         extends TeleHttpResponseWriter<BytesResponse, TeleHttpWriteOptions> {
 
-    public static final String MIME_TYPE = "application/octet-stream";
-
-    private static final TeleHttpResponseWriter.WriterOptions WRITER_OPTIONS =
-            TeleHttpResponseWriter.WriterOptions.of(200, MediaType.ofCharset(MIME_TYPE, "utf-8"));
-
     @Inject
     public BytesResponseWriter(Provider<HttpResponse> httpResponse) {
-        super(httpResponse, WRITER_OPTIONS);
+        super(httpResponse);
+    }
+
+    @Override
+    protected MediaType defaultMediaType() {
+        return MediaType.ofCharset("application/octet-stream", "utf-8");
     }
 
     @Override
@@ -49,15 +49,21 @@ public final class BytesResponseWriter
                                  Integer statusCode,
                                  MediaType mediaType) {
 
+        if (response.value() == null || response.value().length == 0) {
+            protocol.setStatus(emptyStatusCode()).close();
+            return;
+        }
+
         // Force download?
         if (response.fileName() != null) {
             protocol.setHeader("Content-Disposition", "attachment; filename=\"" + response.fileName() + "\"");
         }
 
-        if (response.value() == null || response.value().length == 0) {
-            protocol.setStatus(204).close();
-        } else {
-            protocol.send(response.value());
+        protocol.setStatus(statusCode);
+        if (mediaType != null) {
+            protocol.setContentType(toContentType(mediaType));
         }
+        protocol.send(response.value());
+
     }
 }
