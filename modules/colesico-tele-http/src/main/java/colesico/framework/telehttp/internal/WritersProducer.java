@@ -18,15 +18,24 @@ import jakarta.inject.Singleton;
 
 
 @Producer
-@Produce(ObjectWriter.class)
 @Produce(RedirectWriter.class)
 @Produce(ForwardWriter.class)
-@Produce(ToStringWriter.class)
+@Produce(ValueResponseWriter.class)
+@Produce(ValueWriter.class)
 @Produce(BytesResponseWriter.class)
 @Produce(ExceptionWriter.class)
 @Produce(value = ProfileWriter.class, substitute = Substitution.STUB)
 @Produce(value = TextPlainSerializer.class, keyType = ValueSerializer.class, named = MediaType.TEXT_PLAIN)
 public class WritersProducer {
+
+    /**
+     * Default writer
+     */
+    @Singleton
+    @Classed(Object.class)
+    public TeleHttpWriter objectWriter(ValueWriter impl) {
+        return impl;
+    }
 
     /**
      * ValueSerializer factory
@@ -61,11 +70,6 @@ public class WritersProducer {
         return impl;
     }
 
-    @Singleton
-    @Classed(Object.class)
-    public TeleHttpWriter objectWriter(ObjectWriter impl) {
-        return impl;
-    }
 
     @Singleton
     @Classed(StringResponse.class)
@@ -75,73 +79,73 @@ public class WritersProducer {
 
     @Singleton
     @Classed(String.class)
-    public TeleHttpWriter stringWriter(ObjectWriter impl) {
+    public TeleHttpWriter stringWriter(ValueWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Long.class)
-    public TeleHttpWriter longWriter(ObjectWriter impl) {
+    public TeleHttpWriter longWriter(ValueWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(long.class)
-    public TeleHttpWriter lngWriter(ObjectWriter impl) {
+    public TeleHttpWriter lngWriter(ValueWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Integer.class)
-    public TeleHttpWriter integerWriter(ObjectWriter impl) {
+    public TeleHttpWriter integerWriter(ValueWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(int.class)
-    public TeleHttpWriter intWriter(ObjectWriter impl) {
+    public TeleHttpWriter intWriter(ValueWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Short.class)
-    public TeleHttpWriter shortWriter(ObjectWriter impl) {
+    public TeleHttpWriter shortWriter(ValueWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Byte.class)
-    public TeleHttpWriter byteWriter(ObjectWriter impl) {
+    public TeleHttpWriter byteWriter(ValueWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Boolean.class)
-    public TeleHttpWriter booleanWriter(ObjectWriter impl) {
+    public TeleHttpWriter booleanWriter(ValueWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(boolean.class)
-    public TeleHttpWriter boolWriter(ObjectWriter impl) {
+    public TeleHttpWriter boolWriter(ValueWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(byte.class)
-    public TeleHttpWriter btWriter(ObjectWriter impl) {
+    public TeleHttpWriter btWriter(ValueWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Character.class)
-    public TeleHttpWriter characterWriter(ObjectWriter impl) {
+    public TeleHttpWriter characterWriter(ValueWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(char.class)
-    public TeleHttpWriter chrarWriter(ObjectWriter impl) {
+    public TeleHttpWriter chrarWriter(ValueWriter impl) {
         return impl;
     }
 }

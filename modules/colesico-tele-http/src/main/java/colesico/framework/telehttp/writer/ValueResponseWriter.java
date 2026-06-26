@@ -9,13 +9,12 @@ import colesico.framework.telehttp.MediaType;
 import colesico.framework.telehttp.TeleHttpException;
 import colesico.framework.telehttp.TeleHttpWriteOptions;
 import colesico.framework.telehttp.response.ValueResponse;
-import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import java.io.OutputStream;
 
 /**
- * {@link ValueSerializer} based writer.
+ * {@link ValueSerializer} based object writer.
  * Appropriate serializer is selected based on the MIME type.
  */
 @Unscoped
@@ -24,10 +23,10 @@ public class ValueResponseWriter<R extends ValueResponse<?>, O extends TeleHttpW
 
     protected final Supplier<ValueSerializer> serializerFactory;
 
-    @Inject
     public ValueResponseWriter(Provider<HttpResponse> httpResponse,
                                Supplier<ValueSerializer> serializerFactory,
                                @IocMessage WriterOptions writerOptions) {
+
         super(httpResponse, writerOptions);
         this.serializerFactory = serializerFactory;
     }

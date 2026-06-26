@@ -15,9 +15,11 @@ import jakarta.inject.Provider;
 abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O extends TeleHttpWriteOptions> implements TeleHttpWriter<R, O> {
 
     protected final Provider<HttpResponse> httpResponse;
+    protected final WriterOptions writerOptions;
 
-    public TeleHttpResponseWriter(Provider<HttpResponse> httpResponse) {
+    public TeleHttpResponseWriter(Provider<HttpResponse> httpResponse, WriterOptions writerOptions) {
         this.httpResponse = httpResponse;
+        this.writerOptions = writerOptions;
     }
 
     abstract protected void writeResponse(HttpResponse protocol,
@@ -26,9 +28,6 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
                                           Integer statusCode,
                                           MediaType mediaType);
 
-    abstract protected Integer defaultStatusCode();
-
-    abstract protected MediaType defaultMediaType();
 
     protected Integer statusCode(R response, O options) {
         if (response.statusCode() != null) {
@@ -37,7 +36,7 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         if (options.statusCode() != null) {
             return options.statusCode();
         }
-        return defaultStatusCode();
+        return writerOptions.statusCode;
     }
 
     protected MediaType mediaType(R response, O options) {
@@ -47,7 +46,7 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         if (options.mediaType() != null) {
             return options.mediaType();
         }
-        return defaultMediaType();
+        return writerOptions.mediaType;
     }
 
     protected String mediaTypeToContentType(MediaType mediaType) {
@@ -93,4 +92,9 @@ abstract public class TeleHttpResponseWriter<R extends TeleHttpResponse, O exten
         writeResponse(protocol, response, options, statusCode, mediaType);
     }
 
+    public record WriterOptions(
+            Integer statusCode,
+            MediaType mediaType
+    ) {
+    }
 }

@@ -23,17 +23,19 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 /**
- * Strategy interface for object serialization and deserialization.
+ * Strategy interface for object serialization.
  * Implementations must be thread-safe.
+ * A specific serializer corresponds to the mime-type,
+ * and its production is annotated with the @Named(mime-type) annotation.
  */
 public interface ValueSerializer {
 
     /**
-     * Serializes an object to the output stream using the specified media type.
+     * Serializes an object to the output stream .
      *
-     * @param value        the object to serialize
-     * @param mediaType    the target data format (e.g., JSON, XML)
-     * @param outputStream the destination stream to write into
+     * @param value        object to serialize
+     * @param mediaType    serialization params
+     * @param outputStream stream to write into
      */
     void serialize(Object value, MediaType mediaType, OutputStream outputStream);
 
