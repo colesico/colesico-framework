@@ -17,7 +17,7 @@
 package colesico.framework.example.web.params;
 
 import colesico.framework.router.Route;
-import colesico.framework.weblet.response.HtmlResponse;
+import colesico.framework.telehttp.response.Responses;
 import colesico.framework.weblet.Weblet;
 
 import java.text.MessageFormat;
@@ -28,19 +28,19 @@ public class GetParams {
     // http://localhost:8080/get-params/a-b?a=test&b=100
 
     @Route("a-b")
-    public HtmlResponse printParams(String a, Integer b ){
-        return HtmlResponse.of(MessageFormat.format("a={0}, b={1}",a,b));
+    public Responses printParams(String a, Integer b ){
+        return Responses.object(MessageFormat.format("a={0}, b={1}",a,b));
     }
 
     // http://localhost:8080/get-params/path/test/100
     @Route("path/:a/:b")
-    public HtmlResponse printRouteParams(String a, Integer b ){
-        return HtmlResponse.of(MessageFormat.format("a={0}, b={1}",a,b));
+    public Responses printRouteParams(String a, Integer b ){
+        return Responses.object(MessageFormat.format("a={0}, b={1}",a,b));
     }
 
     // http://localhost:8080/get-params/path-s/foo/blabla
     @Route("path-s/*")
-    public HtmlResponse printRouteSuffix(String routeSuffix ){
-        return HtmlResponse.of(MessageFormat.format("routeSuffix={0}",routeSuffix));
+    public Responses printRouteSuffix(String routeSuffix ){
+        return Responses.object(MessageFormat.format("routeSuffix={0}",routeSuffix));
     }
 }

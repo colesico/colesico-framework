@@ -32,7 +32,7 @@ public class ObjectWriter implements TeleHttpWriter<Object, TeleHttpWriteOptions
 
         @Override
         public MediaType defaultMediaType() {
-            return MediaType.ofCharset(TextPlainSerializer.MIME_TYPE, "utf-8");
+            return MediaType.TEXT_PLAIN;
         }
     }
 }

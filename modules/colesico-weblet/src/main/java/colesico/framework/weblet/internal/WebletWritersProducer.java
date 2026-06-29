@@ -18,13 +18,11 @@ package colesico.framework.weblet.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.weblet.response.*;
+import colesico.framework.telehttp.response.Responses;
 import colesico.framework.weblet.WebletTeleWriter;
 
-import colesico.framework.weblet.writer.*;
-
 @Producer
-@Produce(value = HtmlResponseWriter.class, keyType = WebletTeleWriter.class, classed = HtmlResponse.class)
+@Produce(value = colesico.framework.telehttp.writer.StringResponseWriter.class, keyType = WebletTeleWriter.class, classed = Responses.class)
 public class WebletWritersProducer {
 
 }

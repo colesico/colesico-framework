@@ -16,8 +16,8 @@
 
 package colesico.framework.example.routing;
 
+import colesico.framework.telehttp.response.Responses;
 import colesico.framework.weblet.Weblet;
-import colesico.framework.weblet.response.HtmlResponse;
 
 /**
  * Weblet default route example.
@@ -33,8 +33,8 @@ public class DefaultRouting {
      * The route for the method without @Route annotation is derived from method name transformed to  snake case notation.
      * Corresponding URL GET http://localhost:8080/default-routing/hello    ./default-routing - part from weblet default route
      */
-    public HtmlResponse hello() {
-        return HtmlResponse.of("Hello");
+    public Responses hello() {
+        return Responses.object("Hello");
     }
 
 }

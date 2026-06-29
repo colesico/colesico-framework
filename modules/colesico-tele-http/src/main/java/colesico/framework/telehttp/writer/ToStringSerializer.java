@@ -11,9 +11,7 @@ import java.util.Map;
 /**
  * {@link String#valueOf(Object)} based serializer
  */
-public class TextPlainSerializer implements ValueSerializer {
-
-    public static final String MIME_TYPE = "text/plain";
+public class ToStringSerializer implements ValueSerializer {
 
     protected Charset charset(String charsetName) {
         if (charsetName != null) {
@@ -27,8 +25,16 @@ public class TextPlainSerializer implements ValueSerializer {
         if (value == null) {
             return;
         }
+
+        String stringValue;
+        if (value instanceof String str) {
+            stringValue = str;
+        } else {
+            stringValue = value.toString();
+        }
+
         try {
-            outputStream.write(String.valueOf(value).getBytes(charset(mediaParams.get(MediaType.CHARSET_PARAM))));
+            outputStream.write(stringValue.getBytes(charset(mediaParams.get(MediaType.CHARSET_PARAM))));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

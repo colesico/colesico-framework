@@ -25,6 +25,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
+import static colesico.framework.telehttp.MediaType.APPLICATION_OCTET_STREAM;
+
 /**
  * @author Vladlen Larionov
  */
@@ -39,7 +41,7 @@ public final class BytesResponseWriter
 
     @Override
     protected MediaType defaultMediaType() {
-        return MediaType.ofCharset("application/octet-stream", "utf-8");
+        return APPLICATION_OCTET_STREAM;
     }
 
     @Override

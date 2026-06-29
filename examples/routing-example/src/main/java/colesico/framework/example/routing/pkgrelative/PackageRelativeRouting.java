@@ -17,7 +17,7 @@
 package colesico.framework.example.routing.pkgrelative;
 
 import colesico.framework.router.Route;
-import colesico.framework.weblet.response.HtmlResponse;
+import colesico.framework.telehttp.response.Responses;
 import colesico.framework.weblet.Weblet;
 
 /**
@@ -31,15 +31,15 @@ public class PackageRelativeRouting {
     // http://localhost:8080/api/v1.0/relative/say-hallo
     // /api/v1.0 + /relative + /say-hallo
     @Route("say-hallo")
-    public HtmlResponse hallo() {
-        return HtmlResponse.of("Hallo");
+    public Responses hallo() {
+        return Responses.object("Hallo");
     }
 
     // http://localhost:8080/api/v1.0/relative/say-hei
     @Route("./say-hei")
     // Equivalent @Route("say-hei")
-    public HtmlResponse hei() {
-        return HtmlResponse.of("Hei");
+    public Responses hei() {
+        return Responses.object("Hei");
     }
 
 }

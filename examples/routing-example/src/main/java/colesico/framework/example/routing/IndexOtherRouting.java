@@ -16,8 +16,8 @@
 
 package colesico.framework.example.routing;
 
+import colesico.framework.telehttp.response.Responses;
 import colesico.framework.weblet.Weblet;
-import colesico.framework.weblet.response.HtmlResponse;
 
 /**
  * This weblet demonstrates implicit routes definitions.
@@ -34,15 +34,15 @@ public class IndexOtherRouting {
      * If method name is not "index" it is possible to  put  @Route("./") annotation to  construct the same route as for
      * "index" method name
      */
-    public HtmlResponse index(){
-        return HtmlResponse.of("Index");
+    public Responses index(){
+        return Responses.object("Index");
     }
 
     /**
      * "other" method name  is bound by default to  the local any route, i.e. corresponds to  the @Route("*") annotation.
      * Corresponding URL http://localhost:8080/[any path]
      */
-    public HtmlResponse other(){
-        return HtmlResponse.of("Other");
+    public Responses other(){
+        return Responses.object("Other");
     }
 }

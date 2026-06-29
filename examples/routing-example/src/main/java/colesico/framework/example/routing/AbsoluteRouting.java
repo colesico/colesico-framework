@@ -17,8 +17,8 @@
 package colesico.framework.example.routing;
 
 import colesico.framework.router.Route;
+import colesico.framework.telehttp.response.Responses;
 import colesico.framework.weblet.Weblet;
-import colesico.framework.weblet.response.HtmlResponse;
 
 /**
  * Absolute route starts with '/'
@@ -30,16 +30,16 @@ public class AbsoluteRouting {
     // This is the method absolute route, starts with '/'
     // Final URL: http://localhost:8080/say-hi.html
     @Route("/say-hi.html")
-    public HtmlResponse hi() {
-        return HtmlResponse.of("Hi");
+    public Responses hi() {
+        return Responses.object("Hi");
     }
 
     // This is relative route regarding weblet route (/absolute-route)
     // Relative route is not starts with '/', or may starts from './'
     // Final URL: http://localhost:8080/absolute-route/say-hello.html
     @Route("say-hello.html") // or  @Route("./say-hello.html")
-    public HtmlResponse hello() {
-        return HtmlResponse.of("Hello");
+    public Responses hello() {
+        return Responses.object("Hello");
     }
 
 }

@@ -1,5 +1,6 @@
 package colesico.framework.telehttp;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +11,12 @@ import java.util.Map;
  * @param parameters
  */
 public record MediaType(String mimeType, Map<String, String> parameters) {
+
+    public static final MediaType TEXT_PLAIN = MediaType.ofCharset("text/plain", StandardCharsets.UTF_8.name());
+    public static final MediaType TEXT_HTML = MediaType.ofCharset("text/htmo", StandardCharsets.UTF_8.name());
+    public static final MediaType APPLICATION_OCTET_STREAM = MediaType.ofCharset("application/octet-stream", StandardCharsets.UTF_8.name());
+    public static final MediaType APPLICATION_JSON = MediaType.ofCharset("application/json", StandardCharsets.UTF_8.name());
+
 
     public static String CHARSET_PARAM = "charset";
 

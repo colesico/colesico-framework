@@ -17,7 +17,7 @@
 package colesico.framework.example.web.localization;
 
 import colesico.framework.profile.ProfileSource;
-import colesico.framework.weblet.response.HtmlResponse;
+import colesico.framework.telehttp.response.Responses;
 import colesico.framework.weblet.Weblet;
 
 import java.util.Locale;
@@ -34,31 +34,31 @@ public class MyLocalization {
     }
 
     // http://localhost:8080/my-localization/message
-    public HtmlResponse message() {
-        return HtmlResponse.of(translations.hello1());
+    public Responses message() {
+        return Responses.object(translations.hello1());
     }
 
     // http://localhost:8080/my-localization/ru
-    public HtmlResponse ru() {
+    public Responses ru() {
         var profile = profileSource.profile();
         profile.setLocale(Locale.of("ru", "RU"));
         profileSource.commit(profile);
-        return HtmlResponse.of("Русский");
+        return Responses.object("Русский");
     }
 
     // http://localhost:8080/my-localization/en
-    public HtmlResponse en() {
+    public Responses en() {
         var profile = profileSource.profile();
         profile.setLocale(Locale.of("en", "GB"));
         profileSource.commit(profile);
-        return HtmlResponse.of("English");
+        return Responses.object("English");
     }
 
     // http://localhost:8080/my-localization/inherit
-    public HtmlResponse inherit() {
+    public Responses inherit() {
         var profile = profileSource.profile();
         profile.setLocale(Locale.of("ru", "RU"));
         profileSource.commit(profile);
-        return HtmlResponse.of(translations.hello3());
+        return Responses.object(translations.hello3());
     }
 }

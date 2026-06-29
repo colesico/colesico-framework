@@ -23,7 +23,7 @@ import colesico.framework.telehttp.MediaType;
  */
 public final class BytesResponse extends ValueResponse<byte[]> {
 
-    private final String fileName;
+     private final String fileName;
 
     public BytesResponse(Integer statusCode, MediaType mediaType, byte[] content, String fileName) {
         super(statusCode, mediaType, content);

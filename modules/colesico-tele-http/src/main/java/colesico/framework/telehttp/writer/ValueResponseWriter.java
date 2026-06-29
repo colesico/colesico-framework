@@ -24,30 +24,34 @@ public class ValueResponseWriter<R extends ValueResponse<?>, O extends TeleHttpW
         extends TeleHttpResponseWriter<R, O> {
 
     protected final Supplier<ValueSerializer> serializerFactory;
-    protected final Config writerOptions;
+    protected final Config config;
 
-    public ValueResponseWriter(Provider<HttpResponse> httpResponse,
-                               Supplier<ValueSerializer> serializerFactory,
-                               @IocMessage Config writerOptions) {
+    public ValueResponseWriter(@IocMessage Config config,
+                               Provider<HttpResponse> httpResponse,
+                               Supplier<ValueSerializer> serializerFactory) {
 
         super(httpResponse);
         this.serializerFactory = serializerFactory;
-        this.writerOptions = writerOptions;
+        if (config != null) {
+            this.config = config;
+        } else {
+            this.config = new Config();
+        }
     }
 
     @Override
     protected MediaType defaultMediaType() {
-        return writerOptions.defaultMediaType();
+        return config.defaultMediaType();
     }
 
     @Override
     protected Integer defaultStatusCode() {
-        return writerOptions.defaultStatusCode();
+        return config.defaultStatusCode();
     }
 
     @Override
     protected Integer emptyStatusCode() {
-        return writerOptions.emptyStatusCode();
+        return config.emptyStatusCode();
     }
 
     protected ValueSerializer serializer(String mimeType) {
@@ -79,10 +83,10 @@ public class ValueResponseWriter<R extends ValueResponse<?>, O extends TeleHttpW
     }
 
     /**
-     * Writer options
+     * Writer config
      */
     @ConfigPrototype(model = ConfigModel.MESSAGE, target = ValueResponseWriter.class)
-    abstract public static class Config {
+    public static class Config {
 
         public Integer defaultStatusCode() {
             return 200;
@@ -92,7 +96,9 @@ public class ValueResponseWriter<R extends ValueResponse<?>, O extends TeleHttpW
             return 204;
         }
 
-        abstract public MediaType defaultMediaType();
+        public MediaType defaultMediaType() {
+            return MediaType.TEXT_PLAIN;
+        }
 
     }
 }

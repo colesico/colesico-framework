@@ -19,7 +19,7 @@ package colesico.framework.example.routing;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.router.RequestMethod;
 import colesico.framework.router.Route;
-import colesico.framework.weblet.response.HtmlResponse;
+import colesico.framework.telehttp.response.Responses;
 import colesico.framework.weblet.Weblet;
 
 /**
@@ -35,7 +35,7 @@ public class SubmitFormRouting {
      * @return
      */
     @RequestMethod(HttpMethod.POST)
-    public HtmlResponse submit() {
-        return HtmlResponse.of("Submit");
+    public Responses submit() {
+        return Responses.object("Submit");
     }
 }

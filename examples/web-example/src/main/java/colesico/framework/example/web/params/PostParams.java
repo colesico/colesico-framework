@@ -21,7 +21,7 @@ import colesico.framework.router.RequestMethod;
 import colesico.framework.telehttp.origin.Origin;
 import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.ParamOrigin;
-import colesico.framework.weblet.response.HtmlResponse;
+import colesico.framework.telehttp.response.Responses;
 import colesico.framework.weblet.Weblet;
 
 @Weblet
@@ -29,7 +29,7 @@ public class PostParams {
 
     // http://localhost:8080/post-params/form?action=default-action
     // http://localhost:8080/post-params/form?action=advanced-action?getparam=1
-    public HtmlResponse form(String action) {
+    public Responses form(String action) {
         String formHtml = """
                 <form method='post'>
                     <input type='text' name='formval' value=''/>
@@ -37,22 +37,22 @@ public class PostParams {
                 </form>
                 """;
 
-        return HtmlResponse.of(String.format(formHtml, action));
+        return Responses.object(String.format(formHtml, action));
     }
 
     // for http://localhost:8080/post-params/form?action=default-action
     @RequestMethod(HttpMethod.POST)
-    public HtmlResponse defaultAction(String formval) {
-        return HtmlResponse.of("formval=" + formval);
+    public Responses defaultAction(String formval) {
+        return Responses.object("formval=" + formval);
     }
 
     //for http://localhost:8080/post-params/form?action=advanced-action?extraparam=1
     @RequestMethod(HttpMethod.POST)
-    public HtmlResponse advancedAction(
+    public Responses advancedAction(
             /* formval is a get or post param */String formval,
             /* getVal is a get or post param  */@ParamName("extraparam") Integer getVal,
             /* postVal is a post param only */  @ParamName("extraparam") @ParamOrigin(Origin.POST) Integer postVal) {
 
-        return HtmlResponse.of("formval=" + formval + "; extraparam(get)=" + getVal + "; extraparam(post)=" + postVal);
+        return Responses.object("formval=" + formval + "; extraparam(get)=" + getVal + "; extraparam(post)=" + postVal);
     }
 }

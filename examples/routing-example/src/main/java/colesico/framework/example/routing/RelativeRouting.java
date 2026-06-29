@@ -17,8 +17,8 @@
 package colesico.framework.example.routing;
 
 import colesico.framework.router.Route;
+import colesico.framework.telehttp.response.Responses;
 import colesico.framework.weblet.Weblet;
-import colesico.framework.weblet.response.HtmlResponse;
 
 /**
  * Weblet relative uri example.
@@ -31,7 +31,7 @@ public class RelativeRouting {
     // Final URL: http://localhost:8080/relative-routing/say-hola
     // './relative-routing' part is derived  from default weblet route.
     @Route("say-hola")
-    public HtmlResponse hola() {
-        return HtmlResponse.of("Hola");
+    public Responses hola() {
+        return Responses.object("Hola");
     }
 }

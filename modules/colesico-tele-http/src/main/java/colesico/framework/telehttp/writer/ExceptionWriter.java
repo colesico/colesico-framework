@@ -19,7 +19,7 @@ public class ExceptionWriter implements TeleHttpWriter<Exception, TeleHttpWriteO
 
     protected final ValueResponseWriter<ValueResponse<String>, TeleHttpWriteOptions> writer;
 
-    public ExceptionWriter(@Classed(WriterConfig.class ) ValueResponseWriter writer) {
+    public ExceptionWriter(@Classed(WriterConfig.class) ValueResponseWriter writer) {
         this.writer = writer;
     }
 
@@ -62,7 +62,7 @@ public class ExceptionWriter implements TeleHttpWriter<Exception, TeleHttpWriteO
 
         @Override
         public MediaType defaultMediaType() {
-            return MediaType.ofCharset(TextPlainSerializer.MIME_TYPE, "utf-8");
+            return MediaType.TEXT_PLAIN;
         }
     }
 }

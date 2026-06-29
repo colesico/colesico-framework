@@ -14,51 +14,47 @@
  * limitations under the License.
  */
 
-package colesico.framework.weblet.response;
+package colesico.framework.telehttp.response;
 
 import colesico.framework.telehttp.MediaType;
 
 /**
- * HTML text to  returned to  client
+ * Response helper
  */
-public final class HtmlResponse extends StringResponse {
-
-    public HtmlResponse(Integer statusCode, String charset, String content) {
-        super(statusCode, MediaType.ofCharset(MediaType.TEXT_HTML, charset != null ? charset : "utf-8"), content);
-    }
+public class Responses {
 
     /**
      * Empty actualResponse
      */
-    public static HtmlResponse of() {
-        return new HtmlResponse(
+    public static ValueResponse<String> empty() {
+        return new ValueResponse<>(
                 204,
                 null,
                 null
         );
     }
 
-    public static HtmlResponse of(String content) {
-        return new HtmlResponse(
-                200,
+    public static ValueResponse<Object> object(MediaType mediaType, Object value) {
+        return new ValueResponse<>(
                 null,
-                content
+                mediaType,
+                value
         );
     }
 
-    public static HtmlResponse of(int statusCode, String content) {
-        return new HtmlResponse(
-                statusCode,
+    public static ValueResponse<String> textPlain(String value) {
+        return new ValueResponse<>(
                 null,
-                content
+                MediaType.TEXT_PLAIN,
+                value
         );
     }
 
-    public static HtmlResponse of(int statusCode, String charset, String content) {
-        return new HtmlResponse(
-                statusCode,
-                charset,
-                content
+    public static ValueResponse<String> textHtml(String value) {
+        return new ValueResponse<>(
+                null,
+                MediaType.TEXT_HTML,
+                value
         );
     }
 
