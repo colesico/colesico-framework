@@ -5,6 +5,8 @@ import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.teleapi.dataport.TeleFactory;
 import colesico.framework.telehttp.response.DynamicResponse;
 
+import java.lang.reflect.Type;
+
 abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends TeleHttpWriteOptions>
         implements DataPort<R, W> {
 
@@ -27,7 +29,7 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
     abstract protected W writeOptions(Object attachment);
 
     @Override
-    public <V> V read(Class<V> baseType, R options) {
+    public <V> V read(Type baseType, R options) {
 
         if (options.readerClass() != null) {
             // Obtain specified reader
@@ -45,17 +47,17 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
     }
 
     @Override
-    public <V> V read(Class<V> baseType) {
+    public <V> V read(Type baseType) {
         return read(baseType, readOptions());
     }
 
     @Override
-    public <V> V read(Class<V> baseType, Object attachment) {
+    public <V> V read(Type baseType, Object attachment) {
         return read(baseType, readOptions(attachment));
     }
 
     @Override
-    public <V> void write(V value, Class<V> baseType, W options) {
+    public <V> void write(V value, Type baseType, W options) {
 
         // Handle dynamic actualResponse
         Object targetValue;
@@ -94,12 +96,12 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
     }
 
     @Override
-    public <V> void write(V value, Class<V> baseType) {
+    public <V> void write(V value, Type baseType) {
         write(value, baseType, writeOptions());
     }
 
     @Override
-    public <V> void write(V value, Class<V> baseType, Object attachment) {
+    public <V> void write(V value, Type baseType, Object attachment) {
         write(value, baseType, writeOptions(attachment));
     }
 

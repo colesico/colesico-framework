@@ -8,6 +8,8 @@ import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Type;
+
 @Singleton
 public final class NullDataPort implements DataPort<ReadOptions, WriteOptions> {
 
@@ -30,35 +32,35 @@ public final class NullDataPort implements DataPort<ReadOptions, WriteOptions> {
     }
 
     @Override
-    public <V> V read(Class<V> baseType, ReadOptions options) {
+    public <V> V read(Type baseType, ReadOptions options) {
         log.debug("Read for valueType: {}; options: {}", baseType, options);
         return null;
     }
 
     @Override
-    public <V> V read(Class<V> baseType) {
+    public <V> V read(Type baseType) {
         log.debug("Read for valueType: {}", baseType);
         return null;
     }
 
     @Override
-    public <V> V read(Class<V> baseType, Object attachment) {
+    public <V> V read(Type baseType, Object attachment) {
         log.debug("Read for valueType: {}; attachment: {}", baseType, attachment);
         return null;
     }
 
     @Override
-    public <V> void write(V value, Class<V> baseType, WriteOptions options) {
+    public <V> void write(V value, Type baseType, WriteOptions options) {
         log.debug("Write value: {}; valueType: {}; options: {}", value, baseType, options);
     }
 
     @Override
-    public <V> void write(V value, Class<V> baseType) {
+    public <V> void write(V value, Type baseType) {
         log.debug("Write value: {}; valueType: {}", value, baseType);
     }
 
     @Override
-    public <V> void write(V value, Class<V> baseType, Object attachment) {
+    public <V> void write(V value, Type baseType, Object attachment) {
         log.debug("Write value: {}; valueType: {}; attachment: {}", value, baseType, attachment);
     }
 }

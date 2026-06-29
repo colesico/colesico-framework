@@ -42,6 +42,15 @@ public final class ClassedKey<T> implements Key<T> {
         }
     }
 
+    public ClassedKey(Type type, Type classifier) {
+        this.typeName = type.getTypeName();
+        if (classifier instanceof Class) {
+            this.classifier = ((Class<?>) classifier).getCanonicalName();
+        } else {
+            this.classifier = classifier.getTypeName();
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

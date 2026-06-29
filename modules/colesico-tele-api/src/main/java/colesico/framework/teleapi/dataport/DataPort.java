@@ -1,7 +1,10 @@
 package colesico.framework.teleapi.dataport;
 
+import colesico.framework.assist.TypeWrapper;
 import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
+
+import java.lang.reflect.Type;
 
 /**
  * Gateway for data exchange with the remote source (via HTTP, gRPC, Kafka, etc.).
@@ -42,6 +45,10 @@ public interface DataPort<R extends ReadOptions, W extends WriteOptions> {
      */
     Key<DataPort> SCOPE_KEY = new TypeKey<>(DataPort.class);
 
+    default <V> V read(Class<V> baseType, R options) {
+        return read((Type) baseType, options);
+    }
+
     /**
      * Reads a value using the given read options.
      *
@@ -50,21 +57,33 @@ public interface DataPort<R extends ReadOptions, W extends WriteOptions> {
      * @param <V>      value type
      * @return the deserialized value
      */
-    <V> V read(Class<V> baseType, R options);
+    <V> V read(Type baseType, R options);
+
+    default <V> V read(Class<V> baseType) {
+        return read((Type) baseType);
+    }
 
     /**
      * Reads a value using default read options.
      */
-    <V> V read(Class<V> baseType);
+    <V> V read(Type baseType);
 
     /**
      * Reads a value using an attachment object.
      * The attachment is embedded to concrete read options (e.g., via {@link ReadOptions#attachment()})
-     * and then delegated to {@link #read(Class, ReadOptions)}.
+     * and then delegated to {@link #read(Type, ReadOptions)}.
      *
      * @param attachment a message object for the reader
      */
-    <V> V read(Class<V> baseType, Object attachment);
+    default <V> V read(Class<V> baseType, Object attachment) {
+        return read((Type) baseType, attachment);
+    }
+
+    <V> V read(Type baseType, Object attachment);
+
+    default <V> void write(V value, Class<V> baseType, W options) {
+        write(value, (Type) baseType, options);
+    }
 
     /**
      * Writes a value using the given write options.
@@ -74,19 +93,27 @@ public interface DataPort<R extends ReadOptions, W extends WriteOptions> {
      * @param options  write options
      * @param <V>      value type
      */
-    <V> void write(V value, Class<V> baseType, W options);
+    <V> void write(V value, Type baseType, W options);
+
+    default <V> void write(V value, Class<V> baseType) {
+        write(value, (Type) baseType);
+    }
 
     /**
      * Writes a value using default write options.
      */
-    <V> void write(V value, Class<V> baseType);
+    <V> void write(V value, Type baseType);
+
+    default <V> void write(V value, Class<V> baseType, Object attachment) {
+        write(value, (Type) baseType, attachment);
+    }
 
     /**
      * Writes a value using an attachment object.
      * The attachment is embedded to concrete write options and delegated to
-     * {@link #write(Object, Class, WriteOptions)}.
+     * {@link #write(Object, Type, WriteOptions)}.
      *
      * @param attachment a message object for the writer (not raw protocol)
      */
-    <V> void write(V value, Class<V> baseType, Object attachment);
+    <V> void write(V value, Type baseType, Object attachment);
 }

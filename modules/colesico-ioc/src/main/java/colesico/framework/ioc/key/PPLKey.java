@@ -37,8 +37,8 @@ public final class PPLKey<T> implements Key<T> {
     private final String withNamed;
     private final String withClassed;
 
-    public PPLKey(Class<?> clazz, String withNamed, Class<?> withClassed) {
-        this.typeName = clazz.getCanonicalName();
+    public PPLKey(Class<?> type, String withNamed, Class<?> withClassed) {
+        this.typeName = type.getCanonicalName();
         this.withNamed = withNamed;
         if (withClassed != null) {
             this.withClassed = withClassed.getCanonicalName();

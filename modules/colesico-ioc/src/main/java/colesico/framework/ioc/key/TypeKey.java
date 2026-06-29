@@ -36,6 +36,10 @@ public final class TypeKey<T> implements Key<T> {
         this.typeName = type.getCanonicalName();
     }
 
+    public TypeKey(Type type) {
+        this.typeName = type.getTypeName();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

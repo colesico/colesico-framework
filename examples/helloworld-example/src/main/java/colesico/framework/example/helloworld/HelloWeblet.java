@@ -46,6 +46,10 @@ public class HelloWeblet {
         return Responses.textPlain(SAY_PRIVET_TEXT + name);
     }
 
+    public int privet1(String name) {
+        return 2;
+    }
+
     // Browse the url: http://localhost:8080/hello-weblet/secured
     // Use admin/secret to  authenticate
     @Authentication(HttpBasic.class)
