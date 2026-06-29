@@ -1,5 +1,7 @@
 package colesico.framework.telehttp.writer;
 
+import colesico.framework.config.ConfigModel;
+import colesico.framework.config.ConfigPrototype;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.production.Supplier;
@@ -22,11 +24,11 @@ public class ValueResponseWriter<R extends ValueResponse<?>, O extends TeleHttpW
         extends TeleHttpResponseWriter<R, O> {
 
     protected final Supplier<ValueSerializer> serializerFactory;
-    protected final WriterOptions writerOptions;
+    protected final Config writerOptions;
 
     public ValueResponseWriter(Provider<HttpResponse> httpResponse,
                                Supplier<ValueSerializer> serializerFactory,
-                               @IocMessage WriterOptions writerOptions) {
+                               @IocMessage Config writerOptions) {
 
         super(httpResponse);
         this.serializerFactory = serializerFactory;
@@ -35,17 +37,17 @@ public class ValueResponseWriter<R extends ValueResponse<?>, O extends TeleHttpW
 
     @Override
     protected MediaType defaultMediaType() {
-        return writerOptions.defaultMediaType;
+        return writerOptions.defaultMediaType();
     }
 
     @Override
     protected Integer defaultStatusCode() {
-        return writerOptions.defaultStatusCode;
+        return writerOptions.defaultStatusCode();
     }
 
     @Override
     protected Integer emptyStatusCode() {
-        return writerOptions.emptyStatusCode;
+        return writerOptions.emptyStatusCode();
     }
 
     protected ValueSerializer serializer(String mimeType) {
@@ -78,18 +80,19 @@ public class ValueResponseWriter<R extends ValueResponse<?>, O extends TeleHttpW
 
     /**
      * Writer options
-     *
-     * @param defaultStatusCode default status code
-     * @param emptyStatusCode   empty result status code
-     * @param defaultMediaType  default media type
      */
-    public record WriterOptions(
-            Integer defaultStatusCode,
-            Integer emptyStatusCode,
-            MediaType defaultMediaType
-    ) {
-        public static WriterOptions of(Integer statusCode, MediaType mediaType) {
-            return new WriterOptions(statusCode, 204, mediaType);
+    @ConfigPrototype(model = ConfigModel.MESSAGE, target = ValueResponseWriter.class)
+    abstract public static class Config {
+
+        public Integer defaultStatusCode() {
+            return 200;
         }
+
+        public Integer emptyStatusCode() {
+            return 204;
+        }
+
+        abstract public MediaType defaultMediaType();
+
     }
 }

@@ -1,7 +1,7 @@
 package colesico.framework.restlet.assist;
 
 /**
- * Single value holder.
+ * Single actualResponse holder.
  * Indent to  pass primitive items with rest json
  */
 public class SingleValue<V> {

@@ -17,10 +17,12 @@
 package colesico.framework.example.config.message;
 
 import colesico.framework.ioc.message.IocMessage;
+import colesico.framework.ioc.scope.Unscoped;
 
 /**
  * A message based configurable service
  */
+@Unscoped
 public class TargetBean {
 
     private final MessageConfigPrototype config;

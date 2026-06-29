@@ -1,5 +1,7 @@
 package colesico.framework.telehttp.writer;
 
+import colesico.framework.telehttp.MediaType;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -26,7 +28,7 @@ public class TextPlainSerializer implements ValueSerializer {
             return;
         }
         try {
-            outputStream.write(String.valueOf(value).getBytes(charset(mediaParams.get("charset"))));
+            outputStream.write(String.valueOf(value).getBytes(charset(mediaParams.get(MediaType.CHARSET_PARAM))));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

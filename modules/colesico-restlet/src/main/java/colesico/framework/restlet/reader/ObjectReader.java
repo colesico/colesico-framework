@@ -37,7 +37,7 @@ public final class ObjectReader
 
         HttpMethod requestMethod = request.method();
 
-        // Should the value be read from request input stream?
+        // Should the actualResponse be read from request input stream?
         String originName = options.originName();
 
         boolean useInputStream = originName.equals(RestletOrigin.BODY) ||

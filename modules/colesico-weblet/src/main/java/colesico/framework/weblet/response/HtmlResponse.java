@@ -28,7 +28,7 @@ public final class HtmlResponse extends StringResponse {
     }
 
     /**
-     * Empty value
+     * Empty actualResponse
      */
     public static HtmlResponse of() {
         return new HtmlResponse(

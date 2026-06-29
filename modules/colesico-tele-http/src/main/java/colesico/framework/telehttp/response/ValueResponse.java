@@ -3,7 +3,7 @@ package colesico.framework.telehttp.response;
 import colesico.framework.telehttp.MediaType;
 
 /**
- * Response model with any value
+ * Response model with any actualResponse
  */
 public class ValueResponse<V> extends TeleHttpResponse {
 

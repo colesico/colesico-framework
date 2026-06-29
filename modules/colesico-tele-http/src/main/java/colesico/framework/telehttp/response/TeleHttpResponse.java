@@ -6,7 +6,7 @@ import colesico.framework.telehttp.MediaType;
 import java.util.*;
 
 /**
- * General tele-http response model
+ * General tele-http actualResponse model
  */
 abstract public class TeleHttpResponse {
 

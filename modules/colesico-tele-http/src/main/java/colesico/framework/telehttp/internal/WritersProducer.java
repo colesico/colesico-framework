@@ -68,4 +68,11 @@ public class WritersProducer {
         var key = new NamedKey<>(ValueSerializer.class, mimeType);
         return ioc.instance(key);
     }
+
+    // Default config
+    @Singleton
+    public ProfileWriterConfigPrototype profileWriterConfig() {
+        return new ProfileWriterConfigPrototype() {
+        };
+    }
 }

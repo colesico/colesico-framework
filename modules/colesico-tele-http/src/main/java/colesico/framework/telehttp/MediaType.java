@@ -11,6 +11,8 @@ import java.util.Map;
  */
 public record MediaType(String mimeType, Map<String, String> parameters) {
 
+    public static String CHARSET_PARAM = "charset";
+
     public static MediaType of(String mimeType) {
         return new MediaType(mimeType, Map.of());
     }
@@ -25,13 +27,13 @@ public record MediaType(String mimeType, Map<String, String> parameters) {
     }
 
     public static MediaType ofCharset(String mimeType, String charset) {
-        return new MediaType(mimeType, Map.of("charset", charset));
+        return new MediaType(mimeType, Map.of(CHARSET_PARAM, charset));
     }
 
     public String charset() {
         if (parameters == null) {
             return null;
         }
-        return parameters.get("charset");
+        return parameters.get(CHARSET_PARAM);
     }
 }

@@ -15,10 +15,4 @@ import jakarta.inject.Singleton;
 @Produce(HttpBasic.class)
 public class TeleHttpProducer {
 
-    // Default config
-    @Singleton
-    public ProfileWriterConfigPrototype profileWriterConfig() {
-        return new ProfileWriterConfigPrototype() {
-        };
-    }
 }

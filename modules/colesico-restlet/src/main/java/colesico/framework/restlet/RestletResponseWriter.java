@@ -4,7 +4,7 @@ import java.lang.annotation.*;
 
 
 /**
- * Specifies custom writer for response
+ * Specifies custom writer for actualResponse
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})

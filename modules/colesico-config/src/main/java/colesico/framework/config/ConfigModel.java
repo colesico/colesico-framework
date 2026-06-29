@@ -51,7 +51,7 @@ public enum ConfigModel {
     POLYVARIANT,
 
     /**
-     * Configuration of tis model is not used directly via injection.
+     * Configuration of this model is not used directly via injection.
      * To get this configuration the bean should receive configuration instance via IOC Message.
      * The client can inject that  bean by specifying the @Classed qualifier with the configuration implementation class
      *

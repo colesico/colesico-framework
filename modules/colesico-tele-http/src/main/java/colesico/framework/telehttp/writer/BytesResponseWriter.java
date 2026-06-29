@@ -59,8 +59,9 @@ public final class BytesResponseWriter
             protocol.setHeader("Content-Disposition", "attachment; filename=\"" + response.fileName() + "\"");
         }
 
-        protocol.setStatus(statusCode).setContentType(toContentType(mediaType));
-        protocol.send(response.value());
+        protocol.setStatus(statusCode)
+                .setContentType(toContentType(mediaType))
+                .send(response.value());
 
     }
 }

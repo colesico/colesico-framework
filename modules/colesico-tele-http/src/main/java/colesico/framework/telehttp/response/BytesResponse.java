@@ -19,7 +19,7 @@ package colesico.framework.telehttp.response;
 import colesico.framework.telehttp.MediaType;
 
 /**
- * Simple binary data response
+ * Simple binary data actualResponse
  */
 public final class BytesResponse extends ValueResponse<byte[]> {
 

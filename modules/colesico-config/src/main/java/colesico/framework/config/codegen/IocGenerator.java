@@ -32,8 +32,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.ProcessingEnvironment;
+
 import jakarta.inject.Named;
 
+import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import java.util.List;
@@ -208,7 +210,11 @@ public class IocGenerator extends FrameworkAbstractGenerator {
     }
 
     private void generateProducerClass(ConfigElement config) {
+        Element enclosing = config.originClass().unwrap().getEnclosingElement();
         String classSimpleName = config.originClass().simpleName();
+        if (enclosing instanceof TypeElement) {
+            classSimpleName = enclosing.getSimpleName() + "_" + classSimpleName;
+        }
         String packageName = config.originClass().packageName();
 
         ProducerGenerator prodGen = new ProducerGenerator(packageName, classSimpleName, this.getClass(), processingEnv());

@@ -24,7 +24,7 @@ import colesico.framework.telehttp.TeleHttpWriter;
 /**
  * Proxy to use any http writer as restlet writer
  *
- * @param <V> value type
+ * @param <V> actualResponse type
  */
 public final class RestletWriterProxy<V> implements RestletTeleWriter<V> {
 

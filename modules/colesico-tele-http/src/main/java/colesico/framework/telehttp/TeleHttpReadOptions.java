@@ -16,14 +16,14 @@ public interface TeleHttpReadOptions extends ReadOptions {
     String paramName();
 
     /**
-     * Origin name to read value from it
+     * Origin name to read actualResponse from it
      *
      * @see ParamOrigin
      */
     String originName();
 
     /**
-     *  Overrides the default reader to be used for reading the value
+     *  Overrides the default reader to be used for reading the actualResponse
      */
     Class<? extends TeleHttpReader<?, ?>> readerClass();
 }

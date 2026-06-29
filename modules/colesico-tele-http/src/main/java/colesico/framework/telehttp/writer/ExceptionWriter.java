@@ -1,6 +1,7 @@
 package colesico.framework.telehttp.writer;
 
-import colesico.framework.ioc.production.Supplier;
+import colesico.framework.config.Config;
+import colesico.framework.ioc.production.Classed;
 import colesico.framework.security.authentication.UnauthenticatedException;
 import colesico.framework.security.authorization.UnauthorizedException;
 import colesico.framework.telehttp.MediaType;
@@ -16,13 +17,10 @@ import jakarta.inject.Singleton;
 @Singleton
 public class ExceptionWriter implements TeleHttpWriter<Exception, TeleHttpWriteOptions> {
 
-    protected static final TeleHttpResponseWriter.WriterOptions WRITER_OPTIONS =
-            TeleHttpResponseWriter.WriterOptions.of(500, MediaType.ofCharset(TextPlainSerializer.MIME_TYPE, "utf-8"));
-
     protected final ValueResponseWriter<ValueResponse<String>, TeleHttpWriteOptions> writer;
 
-    public ExceptionWriter(Supplier<ValueResponseWriter> writerSupplier) {
-        this.writer = writerSupplier.get(WRITER_OPTIONS);
+    public ExceptionWriter(@Classed(WriterConfig.class ) ValueResponseWriter writer) {
+        this.writer = writer;
     }
 
     protected Integer statusCode(Exception exception, TeleHttpWriteOptions options, Integer defaultCode) {
@@ -57,6 +55,14 @@ public class ExceptionWriter implements TeleHttpWriter<Exception, TeleHttpWriteO
                 writer.write(ValueResponse.of(status, "Server error"), options);
             }
         }
+    }
 
+    @Config
+    public static class WriterConfig extends ValueResponseWriter.Config {
+
+        @Override
+        public MediaType defaultMediaType() {
+            return MediaType.ofCharset(TextPlainSerializer.MIME_TYPE, "utf-8");
+        }
     }
 }
