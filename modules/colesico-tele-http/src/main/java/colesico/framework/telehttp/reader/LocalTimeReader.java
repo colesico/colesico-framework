@@ -45,7 +45,7 @@ public final class LocalTimeReader extends OriginReader<LocalTime, TeleHttpReadO
     }
 
     @Override
-    public LocalTime read(Class<LocalTime> baseType, TeleHttpReadOptions options) {
+    public LocalTime read(TeleHttpReadOptions options) {
         try {
             String val = readString(options);
             if (isBlank(val)) {

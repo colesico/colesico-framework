@@ -24,6 +24,8 @@ import colesico.framework.telehttp.t9n.Messages;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.lang.reflect.Type;
+
 import static colesico.framework.assist.StringUtils.isBlank;
 
 /**
@@ -41,7 +43,7 @@ public final class BooleanReader extends OriginReader<Boolean, TeleHttpReadOptio
     }
 
     @Override
-    public Boolean read(Class<Boolean> baseType, TeleHttpReadOptions options) {
+    public Boolean read(TeleHttpReadOptions options) {
         try {
             String str = readString(options);
             if (isBlank(str)) {

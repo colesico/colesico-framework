@@ -12,13 +12,13 @@ import java.util.Map;
  */
 public record MediaType(String mimeType, Map<String, String> parameters) {
 
-    public static final MediaType TEXT_PLAIN = MediaType.ofCharset("text/plain", StandardCharsets.UTF_8.name());
-    public static final MediaType TEXT_HTML = MediaType.ofCharset("text/htmo", StandardCharsets.UTF_8.name());
-    public static final MediaType APPLICATION_OCTET_STREAM = MediaType.ofCharset("application/octet-stream", StandardCharsets.UTF_8.name());
-    public static final MediaType APPLICATION_JSON = MediaType.ofCharset("application/json", StandardCharsets.UTF_8.name());
+    public static final String CHARSET_PARAM = "charset";
+    public static final String UTF8_CHARSET = "utf-8";
 
-
-    public static String CHARSET_PARAM = "charset";
+    public static final MediaType TEXT_PLAIN = MediaType.ofCharset("text/plain", UTF8_CHARSET);
+    public static final MediaType TEXT_HTML = MediaType.ofCharset("text/html", UTF8_CHARSET);
+    public static final MediaType APPLICATION_OCTET_STREAM = MediaType.ofCharset("application/octet-stream", UTF8_CHARSET);
+    public static final MediaType APPLICATION_JSON = MediaType.ofCharset("application/json", UTF8_CHARSET);
 
     public static MediaType of(String mimeType) {
         return new MediaType(mimeType, Map.of());

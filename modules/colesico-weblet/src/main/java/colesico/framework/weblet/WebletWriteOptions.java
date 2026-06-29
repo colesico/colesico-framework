@@ -16,6 +16,7 @@
 
 package colesico.framework.weblet;
 
+import colesico.framework.telehttp.MediaType;
 import colesico.framework.telehttp.TeleHttpWriteOptions;
 
 import java.nio.charset.Charset;
@@ -28,21 +29,13 @@ import java.nio.charset.Charset;
  */
 public record WebletWriteOptions(
         Integer statusCode,
-        String mediaType,
+        MediaType mediaType,
         Charset charset,
         Class<? extends WebletTeleWriter<?>> writerClass,
         Object attachment
 ) implements TeleHttpWriteOptions {
 
     public static final String OF_METHOD = "of";
-
-    public WebletWriteOptions(Integer statusCode, String contentType, Charset charset, Class<? extends WebletTeleWriter<?>> writerClass, Object attachment) {
-        this.statusCode = statusCode;
-        this.mediaType = contentType;
-        this.charset = charset;
-        this.writerClass = writerClass;
-        this.attachment = attachment;
-    }
 
     public static WebletWriteOptions of() {
         return new WebletWriteOptions(

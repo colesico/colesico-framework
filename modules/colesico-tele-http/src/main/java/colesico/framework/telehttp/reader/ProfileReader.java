@@ -48,7 +48,7 @@ public class ProfileReader<P extends Profile<?>> implements TeleHttpReader<P, Te
     }
 
     @Override
-    public final P read(Class<P> baseType, TeleHttpReadOptions options) {
+    public final P read(TeleHttpReadOptions options) {
         HttpRequest request = httpRequest.get();
         Map<String, String> attributes = readProfileAttributes(request);
         return buildProfile(options, attributes, request);

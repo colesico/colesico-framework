@@ -34,7 +34,7 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
         if (options.readerClass() != null) {
             // Obtain specified reader
             TeleHttpReader<V, R> reader = (TeleHttpReader) teleFactory.provideReader(options.readerClass());
-            return reader.read(baseType, options);
+            return reader.read(options);
         }
 
         // Find reader by baseType
@@ -43,7 +43,7 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
             // No accurate reader here so are reading data as object - obtain object reader
             reader = teleFactory.provideReader(Object.class, readerBaseClass(), TeleHttpReader.class);
         }
-        return reader.read(baseType, options);
+        return reader.read(options);
     }
 
     @Override

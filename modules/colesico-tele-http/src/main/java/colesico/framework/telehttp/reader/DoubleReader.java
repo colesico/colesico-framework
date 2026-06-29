@@ -41,7 +41,7 @@ public final class DoubleReader extends OriginReader<Double, TeleHttpReadOptions
     }
 
     @Override
-    public Double read(Class<Double> baseType, TeleHttpReadOptions options) {
+    public Double read(TeleHttpReadOptions options) {
         try {
             String val = readString(options);
             if (isBlank(val)) {

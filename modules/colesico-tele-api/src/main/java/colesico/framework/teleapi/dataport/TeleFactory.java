@@ -7,6 +7,8 @@ import colesico.framework.teleapi.TeleException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.lang.reflect.Type;
+
 /**
  * Tele-readers/writers factory
  */
@@ -37,7 +39,7 @@ public final class TeleFactory {
      * Throws an exception if reader not found
      */
     @SafeVarargs
-    public final <R extends TeleReader<V, O>, V, O extends ReadOptions> R provideReader(Class<V> baseType, Class<? extends R>... readerBaseClasses) {
+    public final <R extends TeleReader<V, O>, V, O extends ReadOptions> R provideReader(Type baseType, Class<? extends R>... readerBaseClasses) {
         var reader = findReader(baseType, readerBaseClasses);
         if (reader != null) {
             return reader;
@@ -50,7 +52,7 @@ public final class TeleFactory {
      * Returns null if reader not found
      */
     @SafeVarargs
-    public final <R extends TeleReader<V, O>, V, O extends ReadOptions> R findReader(Class<V> baseType, Class<? extends R>... readerBaseClasses) {
+    public final <R extends TeleReader<V, O>, V, O extends ReadOptions> R findReader(Type baseType, Class<? extends R>... readerBaseClasses) {
         for (var readerBaseClass : readerBaseClasses) {
             var reader = ioc.instanceOrNull(new ClassedKey<>(readerBaseClass, baseType));
             if (reader != null) {
@@ -72,7 +74,7 @@ public final class TeleFactory {
      * Throws an exception if reader not found
      */
     @SafeVarargs
-    public final <W extends TeleWriter<V, O>, V, O extends WriteOptions> W provideWriter(Class<V> baseType, Class<? extends W>... writerBaseClasses) {
+    public final <W extends TeleWriter<V, O>, V, O extends WriteOptions> W provideWriter(Type baseType, Class<? extends W>... writerBaseClasses) {
         var writer = findWriter(baseType, writerBaseClasses);
         if (writer != null) {
             return writer;
@@ -81,7 +83,7 @@ public final class TeleFactory {
     }
 
     @SafeVarargs
-    public final <W extends TeleWriter<V, O>, V, O extends WriteOptions> W findWriter(Class<V> baseType, Class<? extends W>... writerBaseClasses) {
+    public final <W extends TeleWriter<V, O>, V, O extends WriteOptions> W findWriter(Type baseType, Class<? extends W>... writerBaseClasses) {
         for (var writerBaseClass : writerBaseClasses) {
             var reader = ioc.instanceOrNull(new ClassedKey<>(writerBaseClass, baseType));
             if (reader != null) {

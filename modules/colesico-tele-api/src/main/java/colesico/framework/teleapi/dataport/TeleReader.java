@@ -16,8 +16,6 @@
 
 package colesico.framework.teleapi.dataport;
 
-import java.lang.reflect.Type;
-
 /**
  * Tele-reader is a command used by {@link DataPort} to retrieve a value
  * of a specified type considering provided options.
@@ -26,10 +24,6 @@ import java.lang.reflect.Type;
 @FunctionalInterface
 public interface TeleReader<V, O extends ReadOptions> {
 
-    V read(Type baseType, O options);
-
-    default V read(Class<V> baseType, O options) {
-        return read((Type) baseType, options);
-    }
+    V read(O options);
 
 }

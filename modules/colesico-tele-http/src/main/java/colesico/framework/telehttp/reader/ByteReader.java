@@ -24,6 +24,8 @@ import colesico.framework.telehttp.t9n.Messages;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.lang.reflect.Type;
+
 import static colesico.framework.assist.StringUtils.isBlank;
 
 /**
@@ -41,7 +43,7 @@ public final class ByteReader extends OriginReader<Byte, TeleHttpReadOptions> {
     }
 
     @Override
-    public Byte read(Class<Byte> baseType, TeleHttpReadOptions options) {
+    public Byte read(TeleHttpReadOptions options) {
         try {
             String val = readString(options);
             if (isBlank(val)) {

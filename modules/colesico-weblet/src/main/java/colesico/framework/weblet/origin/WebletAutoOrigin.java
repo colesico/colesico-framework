@@ -31,7 +31,8 @@ public class WebletAutoOrigin implements WebletOrigin {
                 if (httpRequest.queryParameters().hasKey(name)) {
                     return httpRequest.queryParameters().getAll(name);
                 }
-                return List.of(routerContextProv.get().parameters().get(name));
+                var value = routerContextProv.get().parameters().get(name);
+                return value!=null?List.of(value):List.of();
             case HttpMethod.POST:
             case HttpMethod.PATCH:
             case HttpMethod.DELETE:

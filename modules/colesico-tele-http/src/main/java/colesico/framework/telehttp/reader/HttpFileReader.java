@@ -38,7 +38,7 @@ public final class HttpFileReader implements TeleHttpReader<HttpFile, TeleHttpRe
     }
 
     @Override
-    public HttpFile read(Class<HttpFile> baseType, TeleHttpReadOptions options) {
+    public HttpFile read(TeleHttpReadOptions options) {
         return httpRequest.get().files().get(options.paramName());
     }
 }

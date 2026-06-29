@@ -24,6 +24,7 @@ import colesico.framework.telehttp.t9n.Messages;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.lang.reflect.Type;
 import java.util.OptionalLong;
 
 import static colesico.framework.assist.StringUtils.isBlank;
@@ -43,7 +44,7 @@ public final class OptionalLongReader extends OriginReader<OptionalLong, TeleHtt
     }
 
     @Override
-    public OptionalLong read(Class<OptionalLong> baseType, TeleHttpReadOptions options) {
+    public OptionalLong read(TeleHttpReadOptions options) {
         try {
             String val = readString(options);
             if (isBlank(val)) {

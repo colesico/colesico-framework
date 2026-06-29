@@ -23,6 +23,8 @@ import colesico.framework.telehttp.origin.OriginFactory;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.lang.reflect.Type;
+
 /**
  * @author Vladlen Larionov
  */
@@ -35,7 +37,7 @@ public final class CharacterReader extends OriginReader<Character, TeleHttpReadO
     }
 
     @Override
-    public Character read(Class<Character> baseType, TeleHttpReadOptions options) {
+    public Character read(TeleHttpReadOptions options) {
         String str = StringUtils.trim(readString(options));
         return !StringUtils.isBlank(str) ? str.charAt(0) : null;
     }

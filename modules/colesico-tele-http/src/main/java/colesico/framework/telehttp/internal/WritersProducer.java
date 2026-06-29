@@ -15,7 +15,7 @@ import jakarta.inject.Singleton;
 @Producer
 @Produce(RedirectWriter.class)
 @Produce(ForwardWriter.class)
-@Produce(ValueResponseWriter.class)
+@Produce(value = ValueResponseWriter.class, classed = ValueResponseWriter.Config.class)
 @Produce(ObjectWriter.class)
 @Produce(BytesResponseWriter.class)
 @Produce(ExceptionWriter.class)
@@ -37,7 +37,7 @@ public class WritersProducer {
 
     @Singleton
     @Classed(ValueResponse.class)
-    public TeleHttpWriter valueResponseWriter(ValueResponseWriter imp) {
+    public TeleHttpWriter valueResponseWriter(@Classed(ValueResponseWriter.Config.class) ValueResponseWriter imp) {
         return imp;
     }
 
