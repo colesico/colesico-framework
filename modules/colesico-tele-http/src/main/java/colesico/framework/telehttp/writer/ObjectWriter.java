@@ -19,7 +19,7 @@ public class ObjectWriter implements TeleHttpWriter<Object, TeleHttpWriteOptions
 
     protected final ValueResponseWriter<ValueResponse<Object>, TeleHttpWriteOptions> writer;
 
-    public ObjectWriter(@Classed(ValueResponseWriter.Config.class) ValueResponseWriter writer) {
+    public ObjectWriter(ValueResponseWriter writer) {
         this.writer = writer;
     }
 
@@ -28,13 +28,5 @@ public class ObjectWriter implements TeleHttpWriter<Object, TeleHttpWriteOptions
         writer.write(ValueResponse.of(value), options);
     }
 
-    @Config
-    @DefaultMessage
-    public static class WriterConfig extends ValueResponseWriter.Config {
 
-        @Override
-        public MediaType defaultMediaType() {
-            return MediaType.TEXT_PLAIN;
-        }
-    }
 }

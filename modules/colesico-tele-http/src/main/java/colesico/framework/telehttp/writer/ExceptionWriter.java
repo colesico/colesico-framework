@@ -19,7 +19,7 @@ public class ExceptionWriter implements TeleHttpWriter<Exception, TeleHttpWriteO
 
     protected final ValueResponseWriter<ValueResponse<String>, TeleHttpWriteOptions> writer;
 
-    public ExceptionWriter(@Classed(ValueResponseWriter.Config.class) ValueResponseWriter writer) {
+    public ExceptionWriter(ValueResponseWriter writer) {
         this.writer = writer;
     }
 
