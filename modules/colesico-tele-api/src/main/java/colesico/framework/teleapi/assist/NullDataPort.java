@@ -2,8 +2,6 @@ package colesico.framework.teleapi.assist;
 
 import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.teleapi.dataport.DataPort;
-import colesico.framework.teleapi.dataport.ReadOptions;
-import colesico.framework.teleapi.dataport.WriteOptions;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Type;
 
 @Singleton
-public final class NullDataPort implements DataPort<ReadOptions, WriteOptions> {
+public final class NullDataPort implements DataPort<NullDataPort.ReadOptions, NullDataPort.WriteOptions> {
 
     private static final Logger log = LoggerFactory.getLogger(NullDataPort.class);
     private final TaskScope taskScope;
@@ -32,35 +30,35 @@ public final class NullDataPort implements DataPort<ReadOptions, WriteOptions> {
     }
 
     @Override
-    public <V> V read(Type baseType, ReadOptions options) {
-        log.debug("Read for valueType: {}; options: {}", baseType, options);
+    public <V> V read(ReadOptions options) {
+        log.debug("Read for options: {}", options);
         return null;
     }
 
     @Override
-    public <V> V read(Type baseType) {
-        log.debug("Read for valueType: {}", baseType);
-        return null;
+    public <V> V read(Type baseType, Object metadata) {
+        return read(new ReadOptions(baseType, metadata));
     }
 
     @Override
-    public <V> V read(Type baseType, Object attachment) {
-        log.debug("Read for valueType: {}; attachment: {}", baseType, attachment);
-        return null;
+    public <V> void write(V value, WriteOptions options) {
+        log.debug("Write value: {}; options: {}", value, options);
     }
 
     @Override
-    public <V> void write(V value, Type baseType, WriteOptions options) {
-        log.debug("Write value: {}; valueType: {}; options: {}", value, baseType, options);
+    public <V> void write(V value, Type baseType, Object metadata) {
+        write(value, new WriteOptions(baseType, metadata));
     }
 
-    @Override
-    public <V> void write(V value, Type baseType) {
-        log.debug("Write value: {}; valueType: {}", value, baseType);
+    public record ReadOptions(
+            Type baseType,
+            Object metadata
+    ) implements colesico.framework.teleapi.dataport.ReadOptions {
     }
 
-    @Override
-    public <V> void write(V value, Type baseType, Object attachment) {
-        log.debug("Write value: {}; valueType: {}; attachment: {}", value, baseType, attachment);
+    public record WriteOptions(
+            Type baseType,
+            Object metadata
+    ) implements colesico.framework.teleapi.dataport.WriteOptions {
     }
 }

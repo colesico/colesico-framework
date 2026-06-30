@@ -52,8 +52,8 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
     }
 
     @Override
-    public <V> V read(Type baseType, Object attachment) {
-        return read(baseType, readOptions(attachment));
+    public <V> V read(Type baseType, Object metadata) {
+        return read(baseType, readOptions(metadata));
     }
 
     @Override
@@ -101,8 +101,8 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
     }
 
     @Override
-    public <V> void write(V value, Type baseType, Object attachment) {
-        write(value, baseType, writeOptions(attachment));
+    public <V> void write(V value, Type baseType, Object metadata) {
+        write(value, baseType, writeOptions(metadata));
     }
 
     protected TeleHttpWriter<Object, TeleHttpWriteOptions> findExceptionWriter(final Throwable throwable) {

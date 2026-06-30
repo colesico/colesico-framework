@@ -59,7 +59,7 @@ public class ProfileReader<P extends Profile<?>> implements TeleHttpReader<P, Te
      */
     protected P buildProfile(TeleHttpReadOptions options, Map<String, String> attributes, HttpRequest request) {
         var locale = readLocale(attributes, request);
-        return (P) new Profile.Default(options.attachment(), locale);
+        return (P) new Profile.Default(options.metadata(), locale);
     }
 
     protected Locale readLocale(Map<String, String> attributes, HttpRequest request) {

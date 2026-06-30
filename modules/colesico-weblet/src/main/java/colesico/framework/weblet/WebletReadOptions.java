@@ -28,7 +28,7 @@ public record WebletReadOptions(
         String paramName,
         String originName,
         Class<? extends WebletTeleReader<?>> readerClass,
-        Object attachment
+        Object metadata
 ) implements TeleHttpReadOptions {
 
     public static final String OF_METHOD = "of";

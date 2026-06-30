@@ -7,14 +7,14 @@ import java.nio.charset.Charset;
 /**
  *
  * @param writerClass Custom writer class or null. If null - default writer will be used.
- * @param attachment
+ * @param metadata
  */
 public record RestletWriteOptions(
         Integer statusCode,
         String mediaType,
         Charset charset,
         Class<? extends RestletTeleWriter<?>> writerClass,
-        Object attachment
+        Object metadata
 ) implements TeleHttpWriteOptions {
 
       public static final String OF_METHOD = "of";
@@ -24,7 +24,7 @@ public record RestletWriteOptions(
         this.mediaType = contentType;
         this.charset = charset;
         this.writerClass = writerClass;
-        this.attachment = attachment;
+        this.metadata = attachment;
     }
 
     public static RestletWriteOptions of() {

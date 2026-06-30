@@ -1,14 +1,13 @@
 package colesico.framework.teleapi.dataport;
 
-import colesico.framework.assist.TypeWrapper;
 import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.TypeKey;
 
 import java.lang.reflect.Type;
 
 /**
- * Gateway for data exchange with the remote source (via HTTP, gRPC, Kafka, etc.).
- * Data port has always protocol specific implementation.
+ * Gateway for data exchange with a remote source (via HTTP, gRPC, Kafka, etc.).
+ * A data port always has a protocol-specific implementation.
  * <p>
  * DataPort dispatches read/write requests to the appropriate {@link TeleReader} or {@link TeleWriter}
  * based on the value type. It may also implement cross-cutting concerns such as security,
@@ -16,10 +15,10 @@ import java.lang.reflect.Type;
  * <p>
  * Key responsibilities:
  * <ul>
- *     <li><b>Logical options</b> ({@link ReadOptions}/{@link WriteOptions}) specify <i>what</i> to
- *     read or write (e.g., cookie name).</li>
- *     <li><b>Attachment</b> is an arbitrary message for the reader/writer (correlation ID, hint).</li>
- *     <li><b>TeleReader/TeleWriter</b> perform actual values transformation/mappings. They obtain raw protocol
+ *     <li><b>Logical options</b> ({@link ReadOptions}/{@link WriteOptions}) are implementation-dependent
+ *     types specifying <i>how</i> and <i>what</i> to read or write (e.g., cookie name, specific headers).</li>
+ *     <li><b>Metadata</b> is an arbitrary object bound to the type definition (e.g., default value, field annotations).</li>
+ *     <li><b>TeleReader/TeleWriter</b> perform actual value transformations and mappings. They obtain raw protocol
  *     objects (e.g., {@code HttpServletRequest}) from the execution context (e.g., {@code ThreadScope}).</li>
  * </ul>
  *
@@ -45,75 +44,41 @@ public interface DataPort<R extends ReadOptions, W extends WriteOptions> {
      */
     Key<DataPort> SCOPE_KEY = new TypeKey<>(DataPort.class);
 
-    default <V> V read(Class<V> baseType, R options) {
-        return read((Type) baseType, options);
-    }
-
     /**
      * Reads a value using the given read options.
-     *
-     * @param baseType base type of the value to read
-     * @param options  logical read options
-     * @param <V>      value type
-     * @return the deserialized value
      */
-    <V> V read(Type baseType, R options);
-
-    default <V> V read(Class<V> baseType) {
-        return read((Type) baseType);
-    }
+    <V> V read(R options);
 
     /**
-     * Reads a value using default read options.
+     * Reads the value by baseType and metadata.
+     * The internal implementation must create the appropriate {@link ReadOptions}
+     * and delegate the call to {@link #read(ReadOptions)}.
      */
-    <V> V read(Type baseType);
+    <V> V read(Type baseType, Object metadata);
 
     /**
-     * Reads a value using an attachment object.
-     * The attachment is embedded to concrete read options (e.g., via {@link ReadOptions#attachment()})
-     * and then delegated to {@link #read(Type, ReadOptions)}.
-     *
-     * @param attachment a message object for the reader
+     * Reads the value by baseType without additional metadata.
      */
-    default <V> V read(Class<V> baseType, Object attachment) {
-        return read((Type) baseType, attachment);
-    }
-
-    <V> V read(Type baseType, Object attachment);
-
-    default <V> void write(V value, Class<V> baseType, W options) {
-        write(value, (Type) baseType, options);
+    default <V> V read(Type baseType) {
+        return read(baseType, null);
     }
 
     /**
      * Writes a value using the given write options.
-     *
-     * @param value    value to write
-     * @param baseType value base type
-     * @param options  write options
-     * @param <V>      value type
      */
-    <V> void write(V value, Type baseType, W options);
-
-    default <V> void write(V value, Class<V> baseType) {
-        write(value, (Type) baseType);
-    }
+    <V> void write(V value, W options);
 
     /**
-     * Writes a value using default write options.
+     * Writes the value by baseType and metadata.
+     * The internal implementation must create the appropriate {@link WriteOptions}
+     * and delegate the call to {@link #write(Object, WriteOptions)}.
      */
-    <V> void write(V value, Type baseType);
-
-    default <V> void write(V value, Class<V> baseType, Object attachment) {
-        write(value, (Type) baseType, attachment);
-    }
+    <V> void write(V value, Type baseType, Object metadata);
 
     /**
-     * Writes a value using an attachment object.
-     * The attachment is embedded to concrete write options and delegated to
-     * {@link #write(Object, Type, WriteOptions)}.
-     *
-     * @param attachment a message object for the writer (not raw protocol)
+     * Writes the value by baseType without additional metadata.
      */
-    <V> void write(V value, Type baseType, Object attachment);
+    default <V> void write(V value, Type baseType) {
+        write(value, baseType, null);
+    }
 }

@@ -7,13 +7,13 @@ import colesico.framework.telehttp.TeleHttpReadOptions;
  * @param paramName
  * @param originName
  * @param readerClass Custom reader class or null. If null - default reader will be used to  read the parameter
- * @param attachment
+ * @param metadata
  */
 public record RestletReadOptions(
         String paramName,
         String originName,
         Class<? extends RestletTeleReader<?>> readerClass,
-        Object attachment
+        Object metadata
 ) implements TeleHttpReadOptions {
 
     public static final String OF_METHOD = "of";

@@ -32,7 +32,7 @@ public record WebletWriteOptions(
         MediaType mediaType,
         Charset charset,
         Class<? extends WebletTeleWriter<?>> writerClass,
-        Object attachment
+        Object metadata
 ) implements TeleHttpWriteOptions {
 
     public static final String OF_METHOD = "of";
