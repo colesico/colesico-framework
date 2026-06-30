@@ -19,7 +19,7 @@ package colesico.framework.config.codegen;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.config.ConfigModel;
-import colesico.framework.config.DefaultConfig;
+import colesico.framework.config.DefaultMessage;
 import colesico.framework.ioc.conditional.Substitution;
 
 import javax.lang.model.type.TypeMirror;
@@ -73,7 +73,7 @@ public class ConfigElement {
     private ConfigSourceElement source;
 
     /**
-     * @see DefaultConfig
+     * @see DefaultMessage
      */
     private final boolean defaultMessage;
 
@@ -168,7 +168,7 @@ public class ConfigElement {
                 ", model=" + model +
                 ", target=" + target +
                 ", source=" + source +
-                ", defaultMessage=" + defaultMessage +
+                ", defaultConfig=" + defaultMessage +
                 ", classedQualifier=" + classedQualifier +
                 ", namedQualifier='" + namedQualifier + '\'' +
                 '}';

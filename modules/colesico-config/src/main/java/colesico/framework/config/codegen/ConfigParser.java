@@ -117,11 +117,11 @@ public class ConfigParser extends FrameworkAbstractParser {
             model = ConfigModel.SINGLE;
         }
 
-        AnnotationAssist<DefaultConfig> defaultAnn = config.annotation(DefaultConfig.class);
+        AnnotationAssist<DefaultMessage> defaultAnn = config.annotation(DefaultMessage.class);
         boolean defaultMessage;
         if (defaultAnn != null) {
             if (!ConfigModel.MESSAGE.equals(model)) {
-                throw CodegenException.of().message("@" + DefaultConfig.class.getSimpleName() +
+                throw CodegenException.of().message("@" + DefaultMessage.class.getSimpleName() +
                         " annotation can be applied only to " + ConfigModel.MESSAGE.name() + " configuration model").build();
             }
             defaultMessage = true;

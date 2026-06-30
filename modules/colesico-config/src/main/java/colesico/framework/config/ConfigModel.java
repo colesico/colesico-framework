@@ -57,7 +57,7 @@ public enum ConfigModel {
      *
      * @see Classed
      * @see IocMessage
-     * @see DefaultConfig
+     * @see DefaultMessage
      */
     MESSAGE
 }

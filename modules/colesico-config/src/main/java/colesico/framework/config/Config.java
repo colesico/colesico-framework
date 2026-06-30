@@ -27,7 +27,7 @@ import java.lang.annotation.*;
  * @author Vladlen Larionov
  * @see ConfigModel
  * @see ConfigPrototype
- * @see DefaultConfig
+ * @see DefaultMessage
  * @see UseSource
  * <p>
  */

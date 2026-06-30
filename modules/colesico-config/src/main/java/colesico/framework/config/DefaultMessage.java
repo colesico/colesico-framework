@@ -19,9 +19,9 @@ package colesico.framework.config;
 import java.lang.annotation.*;
 
 /**
- * This annotation can be applied to configuration belongs to MESSAGE model
- * to specify that this configuration must be used when the "@Classed"
- * annotation not specified for the service being injected
+ * This annotation can be (additionally to {@link Config}) applied to configuration
+ * belongs to MESSAGE model to specify that this configuration must be used when the "@Classed"
+ * annotation with config prototype class is specified for the service being injected
  *
  * <p>
  *
@@ -34,5 +34,5 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
-public @interface DefaultConfig {
+public @interface DefaultMessage {
 }

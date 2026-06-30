@@ -1,7 +1,7 @@
 package colesico.framework.telehttp.writer;
 
 import colesico.framework.config.Config;
-import colesico.framework.ioc.production.Classed;
+import colesico.framework.config.DefaultMessage;
 import colesico.framework.telehttp.MediaType;
 import colesico.framework.telehttp.TeleHttpWriteOptions;
 import colesico.framework.telehttp.TeleHttpWriter;
@@ -18,7 +18,7 @@ public class ObjectWriter implements TeleHttpWriter<Object, TeleHttpWriteOptions
 
     protected final ValueResponseWriter<ValueResponse<Object>, TeleHttpWriteOptions> writer;
 
-    public ObjectWriter(@Classed(WriterConfig.class) ValueResponseWriter writer) {
+    public ObjectWriter(ValueResponseWriter writer) {
         this.writer = writer;
     }
 
@@ -28,6 +28,7 @@ public class ObjectWriter implements TeleHttpWriter<Object, TeleHttpWriteOptions
     }
 
     @Config
+    @DefaultMessage
     public static class WriterConfig extends ValueResponseWriter.Config {
 
         @Override

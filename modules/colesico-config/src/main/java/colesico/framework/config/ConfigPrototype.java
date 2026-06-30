@@ -16,6 +16,8 @@
 
 package colesico.framework.config;
 
+import colesico.framework.ioc.scope.Unscoped;
+
 import java.lang.annotation.*;
 
 /**
@@ -25,7 +27,7 @@ import java.lang.annotation.*;
  *
  * @author Vladlen Larionov
  * @see ConfigModel
- * @see DefaultConfig
+ * @see DefaultMessage
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -42,6 +44,7 @@ public @interface ConfigPrototype {
     /**
      * The class that the configuration will be injected to.
      * This value is used for MESSAGE config model to specify the target for that this config is designed.
+     * Target bean should be {@link Unscoped}
      */
     Class<?> target() default Object.class;
 }

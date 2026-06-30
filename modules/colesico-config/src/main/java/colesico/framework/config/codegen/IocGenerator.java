@@ -115,11 +115,13 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         MethodSpec.Builder mb = prodGen.addProduceMethod("get" + targetElm.getSimpleName().toString() + "With" + config.originClass().simpleName(),
                 ClassName.bestGuess(targetElm.getQualifiedName().toString()));
 
-        if (!config.defaultMessage()) {
-            AnnotationSpec.Builder classedAnn = AnnotationSpec.builder(Classed.class);
+        AnnotationSpec.Builder classedAnn = AnnotationSpec.builder(Classed.class);
+        if (config.defaultMessage()) {
+            classedAnn.addMember("value", "$T.class", TypeName.get(config.prototype().originType()));
+        } else {
             classedAnn.addMember("value", "$T.class", TypeName.get(config.originClass().originType()));
-            mb.addAnnotation(classedAnn.build());
         }
+        mb.addAnnotation(classedAnn.build());
 
         //Parameter Supplier<Service> factory
         ParameterSpec.Builder targetBuilder = ParameterSpec.builder(
