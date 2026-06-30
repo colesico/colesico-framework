@@ -29,16 +29,15 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
     abstract protected W writeOptions(Object attachment);
 
     @Override
-    public <V> V read(Type baseType, R options) {
-
-        if (options.readerClass() != null) {
+    public <V> V read(R options) {
+        if (options.customReader() != null) {
             // Obtain specified reader
-            TeleHttpReader<V, R> reader = (TeleHttpReader) teleFactory.provideReader(options.readerClass());
+            TeleHttpReader<V, R> reader = (TeleHttpReader) teleFactory.provideReader(options.customReader());
             return reader.read(options);
         }
 
         // Find reader by baseType
-        TeleHttpReader<V, TeleHttpReadOptions> reader = teleFactory.findReader(baseType, readerBaseClass(), TeleHttpReader.class);
+        TeleHttpReader<V, TeleHttpReadOptions> reader = teleFactory.findReader(options.baseType(), readerBaseClass(), TeleHttpReader.class);
         if (reader == null) {
             // No accurate reader here so are reading data as object - obtain object reader
             reader = teleFactory.provideReader(Object.class, readerBaseClass(), TeleHttpReader.class);
@@ -57,7 +56,7 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
     }
 
     @Override
-    public <V> void write(V value, Type baseType, W options) {
+    public <V> void write(V value, W options) {
 
         // Handle dynamic actualResponse
         Object targetValue;
@@ -68,8 +67,8 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
         }
 
         // Check for a custom writer specified in options
-        if (options.writerClass() != null) {
-            TeleHttpWriter writer = teleFactory.provideWriter(options.writerClass());
+        if (options.customWriter() != null) {
+            TeleHttpWriter writer = teleFactory.provideWriter(options.customWriter());
             writer.write(targetValue, options);
             return;
         }
@@ -84,7 +83,7 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
 
         // Find by baseType
         if (writer == null) {
-            writer = teleFactory.findWriter(baseType, writerBaseClass(), TeleHttpWriter.class);
+            writer = teleFactory.findWriter(options.baseType(), writerBaseClass(), TeleHttpWriter.class);
             // Final fallback to the default object writer
             if (writer == null) {
                 writer = teleFactory.provideWriter(Object.class, writerBaseClass(), TeleHttpWriter.class);

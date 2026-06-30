@@ -17,7 +17,15 @@ public interface ReadOptions {
      */
     Object metadata();
 
-    default <T> T attachmentAs(Class<T> type) {
+    /**
+     * Overrides the default reader to be used for reading the value
+     */
+    default Class<? extends TeleReader<?, ?>> customReader() {
+        return null;
+    }
+
+
+    default <T> T metadataAs(Class<T> type) {
         return type.cast(metadata());
     }
 }

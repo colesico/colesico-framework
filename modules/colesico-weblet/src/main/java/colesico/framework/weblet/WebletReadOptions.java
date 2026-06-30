@@ -21,13 +21,13 @@ import colesico.framework.telehttp.TeleHttpReadOptions;
 /**
  * Weblet read options
  *
- * @param readerClass Custom reader class or null. If null - default reader will be used to  read the parameter
+ * @param customReader Custom reader class or null. If null - default reader will be used to  read the parameter
  * @author Vladlen Larionov
  */
 public record WebletReadOptions(
         String paramName,
         String originName,
-        Class<? extends WebletTeleReader<?>> readerClass,
+        Class<? extends WebletTeleReader<?>> customReader,
         Object metadata
 ) implements TeleHttpReadOptions {
 

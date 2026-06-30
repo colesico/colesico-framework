@@ -17,7 +17,14 @@ public interface WriteOptions {
      */
     Object metadata();
 
-    default <T> T attachmentAs(Class<T> type) {
+    /**
+     * Overrides the default writer to be used for writing the value
+     */
+    default Class<? extends TeleWriter<?, ?>> customWriter() {
+        return null;
+    }
+
+    default <T> T metadataAs(Class<T> type) {
         return type.cast(metadata());
     }
 }

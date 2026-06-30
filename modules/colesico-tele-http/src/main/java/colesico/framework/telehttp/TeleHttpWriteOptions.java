@@ -17,8 +17,4 @@ public interface TeleHttpWriteOptions extends WriteOptions {
      */
     MediaType mediaType();
 
-    /**
-     * Overrides the default writer to be used for reading the actualResponse
-     */
-    Class<? extends TeleHttpWriter<?, ?>> writerClass();
 }

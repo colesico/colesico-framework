@@ -24,14 +24,14 @@ import java.nio.charset.Charset;
 /**
  * Weblet write options
  *
- * @param writerClass Custom writer class or null. If null - default writer will be used
+ * @param customWriter Custom writer class or null. If null - default writer will be used
  * @author Vladlen Larionov
  */
 public record WebletWriteOptions(
         Integer statusCode,
         MediaType mediaType,
         Charset charset,
-        Class<? extends WebletTeleWriter<?>> writerClass,
+        Class<? extends WebletTeleWriter<?>> customWriter,
         Object metadata
 ) implements TeleHttpWriteOptions {
 

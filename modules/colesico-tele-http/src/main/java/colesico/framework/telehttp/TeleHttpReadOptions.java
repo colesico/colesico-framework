@@ -22,8 +22,4 @@ public interface TeleHttpReadOptions extends ReadOptions {
      */
     String originName();
 
-    /**
-     *  Overrides the default reader to be used for reading the actualResponse
-     */
-    Class<? extends TeleHttpReader<?, ?>> readerClass();
 }

@@ -50,9 +50,8 @@ public interface DataPort<R extends ReadOptions, W extends WriteOptions> {
     <V> V read(R options);
 
     /**
-     * Reads the value by baseType and metadata.
-     * The internal implementation must create the appropriate {@link ReadOptions}
-     * and delegate the call to {@link #read(ReadOptions)}.
+     * Reads the value, internally creating the appropriate {@link ReadOptions},
+     * and delegates the call to {@link #read(ReadOptions)}.
      */
     <V> V read(Type baseType, Object metadata);
 
@@ -69,9 +68,8 @@ public interface DataPort<R extends ReadOptions, W extends WriteOptions> {
     <V> void write(V value, W options);
 
     /**
-     * Writes the value by baseType and metadata.
-     * The internal implementation must create the appropriate {@link WriteOptions}
-     * and delegate the call to {@link #write(Object, WriteOptions)}.
+     * Writes the value internally creating the appropriate {@link WriteOptions}
+     * and delegates the call to {@link #write(Object, WriteOptions)}.
      */
     <V> void write(V value, Type baseType, Object metadata);
 
