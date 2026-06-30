@@ -17,6 +17,9 @@
 package colesico.framework.weblet;
 
 import colesico.framework.telehttp.TeleHttpReadOptions;
+import colesico.framework.telehttp.TeleHttpReader;
+
+import java.lang.reflect.Type;
 
 /**
  * Weblet read options
@@ -25,31 +28,24 @@ import colesico.framework.telehttp.TeleHttpReadOptions;
  * @author Vladlen Larionov
  */
 public record WebletReadOptions(
+        Type baseType,
         String paramName,
         String originName,
-        Class<? extends WebletTeleReader<?>> customReader,
+        Class<? extends TeleHttpReader<?, ?>> customReader,
         Object metadata
-) implements TeleHttpReadOptions {
+) implements TeleHttpReadOptions<TeleHttpReader<?, ?>> {
 
     public static final String OF_METHOD = "of";
 
-    public static WebletReadOptions of() {
-        return new WebletReadOptions(null, null, null, null);
+    public static WebletReadOptions of(Type baseType, String paramName) {
+        return new WebletReadOptions(baseType, paramName, WebletOrigin.AUTO, null, null);
     }
 
-    public static WebletReadOptions of(Object attachment) {
-        return new WebletReadOptions(null, null, null, attachment);
+    public static WebletReadOptions of(Type baseType, String paramName, String originName) {
+        return new WebletReadOptions(baseType, paramName, originName, null, null);
     }
 
-    public static WebletReadOptions of(String paramName) {
-        return new WebletReadOptions(paramName, WebletOrigin.AUTO, null, null);
-    }
-
-    public static WebletReadOptions of(String paramName, String originName) {
-        return new WebletReadOptions(paramName, originName, null, null);
-    }
-
-    public static WebletReadOptions of(String paramName, String originName, Class<? extends WebletTeleReader<?>> readerClass) {
-        return new WebletReadOptions(paramName, originName, readerClass, null);
+    public static WebletReadOptions of(Type baseType, String paramName, String originName, Class<? extends WebletTeleReader<?>> readerClass) {
+        return new WebletReadOptions(baseType, paramName, originName, readerClass, null);
     }
 }
