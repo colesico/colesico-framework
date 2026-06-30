@@ -7,7 +7,7 @@ import colesico.framework.telehttp.response.DynamicResponse;
 
 import java.lang.reflect.Type;
 
-abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends TeleHttpWriteOptions>
+abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions<?>, W extends TeleHttpWriteOptions<?>>
         implements DataPort<R, W> {
 
     protected final TeleFactory teleFactory;
@@ -16,9 +16,9 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
         this.teleFactory = teleFactory;
     }
 
-    abstract protected Class<? extends TeleHttpReader> readerBaseClass();
+    abstract protected Class<? extends TeleHttpReader<?,?>> readerBaseClass();
 
-    abstract protected Class<? extends TeleHttpWriter> writerBaseClass();
+    abstract protected Class<? extends TeleHttpWriter<?,?>> writerBaseClass();
 
     abstract protected R readOptions();
 
@@ -32,12 +32,12 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
     public <V> V read(R options) {
         if (options.customReader() != null) {
             // Obtain specified reader
-            TeleHttpReader<V, R> reader = (TeleHttpReader) teleFactory.provideReader(options.customReader());
+            TeleHttpReader<V, R> reader = (TeleHttpReader) teleFactory.reader(options.customReader());
             return reader.read(options);
         }
 
         // Find reader by baseType
-        TeleHttpReader<V, TeleHttpReadOptions> reader = teleFactory.findReader(options.baseType(), readerBaseClass(), TeleHttpReader.class);
+        TeleHttpReader<V, TeleHttpReadOptions<?>> reader = teleFactory.findReader(options.baseType(), readerBaseClass(), TeleHttpReader.class);
         if (reader == null) {
             // No accurate reader here so are reading data as object - obtain object reader
             reader = teleFactory.provideReader(Object.class, readerBaseClass(), TeleHttpReader.class);
@@ -68,7 +68,7 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
 
         // Check for a custom writer specified in options
         if (options.customWriter() != null) {
-            TeleHttpWriter writer = teleFactory.provideWriter(options.customWriter());
+            TeleHttpWriter writer = teleFactory.writer(options.customWriter());
             writer.write(targetValue, options);
             return;
         }

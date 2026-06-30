@@ -11,7 +11,7 @@ import colesico.framework.telehttp.origin.Origin;
  * @param <V> type of actualResponse to  be read
  * @param <R> read options
  */
-abstract public class OriginReader<V, R extends TeleHttpReadOptions> implements TeleHttpReader<V, R> {
+abstract public class OriginReader<V, R extends TeleHttpReadOptions<?>> implements TeleHttpReader<V, R> {
 
     protected final OriginFactory originFactory;
 

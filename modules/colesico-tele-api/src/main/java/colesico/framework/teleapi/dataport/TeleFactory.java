@@ -23,10 +23,10 @@ public final class TeleFactory {
     }
 
     /**
-     * Returns reader by its exact class
-     * Throws an exception if reader not found  in the IoC context
+     * Returns reader by its exact class.
+     * Throws an exception if reader not found in the IoC context.
      */
-    public <R extends TeleReader<?, ?>> R provideReader(Class<R> readerClass) {
+    public <R extends TeleReader<?, ?>> R reader(Class<R> readerClass) {
         var reader = ioc.instanceOrNull(readerClass);
         if (reader != null) {
             return reader;
@@ -35,59 +35,65 @@ public final class TeleFactory {
     }
 
     /**
-     * Returns appropriate reader for given base class and the type that to be read.
-     * Throws an exception if reader not found
+     * Returns appropriate reader for given base type and reader base classes.
+     * Throws an exception if reader not found.
      */
     @SafeVarargs
-    public final <R extends TeleReader<V, O>, V, O extends ReadOptions> R provideReader(Type baseType, Class<? extends R>... readerBaseClasses) {
+    public final <R extends TeleReader<?, ?>> R provideReader(Type baseType, Class<? extends TeleReader>... readerBaseClasses) {
         var reader = findReader(baseType, readerBaseClasses);
         if (reader != null) {
-            return reader;
+            return (R) reader;
         }
         throw new TeleException("Unable to get tele-reader for " + baseType);
     }
 
     /**
-     * Finds appropriate reader for given base class and the type that to be read.
-     * Returns null if reader not found
+     * Finds appropriate reader for given base type and reader base classes.
+     * Returns null if reader not found.
      */
+    @SuppressWarnings("unchecked")
     @SafeVarargs
-    public final <R extends TeleReader<V, O>, V, O extends ReadOptions> R findReader(Type baseType, Class<? extends R>... readerBaseClasses) {
+    public final <R extends TeleReader<?, ?>> R findReader(Type baseType, Class<? extends TeleReader>... readerBaseClasses) {
         for (var readerBaseClass : readerBaseClasses) {
             var reader = ioc.instanceOrNull(new ClassedKey<>(readerBaseClass, baseType));
             if (reader != null) {
-                return reader;
+                return (R) reader;
             }
         }
         return null;
     }
 
     /**
-     * Returns writer by its exact class
+     * Returns writer by its exact class.
      */
-    public <W extends TeleWriter<?, ?>> W provideWriter(Class<W> writerClass) {
+    public <W extends TeleWriter<?, ?>> W writer(Class<W> writerClass) {
         return ioc.instance(writerClass);
     }
 
     /**
-     * Returns appropriate writer for given base class and the type that to be written.
-     * Throws an exception if reader not found
+     * Returns appropriate writer for given base type and writer base classes.
+     * Throws an exception if writer not found.
      */
     @SafeVarargs
-    public final <W extends TeleWriter<V, O>, V, O extends WriteOptions> W provideWriter(Type baseType, Class<? extends W>... writerBaseClasses) {
+    public final <W extends TeleWriter<?, ?>> W provideWriter(Type baseType, Class<? extends TeleWriter>... writerBaseClasses) {
         var writer = findWriter(baseType, writerBaseClasses);
         if (writer != null) {
-            return writer;
+            return (W) writer;
         }
         throw new TeleException("Unable to get tele-writer for " + baseType);
     }
 
+    /**
+     * Finds appropriate writer for given base type and writer base classes.
+     * Returns null if writer not found.
+     */
+    @SuppressWarnings("unchecked")
     @SafeVarargs
-    public final <W extends TeleWriter<V, O>, V, O extends WriteOptions> W findWriter(Type baseType, Class<? extends W>... writerBaseClasses) {
+    public final <W extends TeleWriter<?, ?>> W findWriter(Type baseType, Class<? extends TeleWriter>... writerBaseClasses) {
         for (var writerBaseClass : writerBaseClasses) {
-            var reader = ioc.instanceOrNull(new ClassedKey<>(writerBaseClass, baseType));
-            if (reader != null) {
-                return reader;
+            var writer = ioc.instanceOrNull(new ClassedKey<>(writerBaseClass, baseType));
+            if (writer != null) {
+                return (W) writer;
             }
         }
         return null;

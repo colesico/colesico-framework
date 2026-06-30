@@ -55,12 +55,12 @@ public final class NullDataPort implements DataPort<NullDataPort.ReadOptions, Nu
     public record ReadOptions(
             Type baseType,
             Object metadata
-    ) implements colesico.framework.teleapi.dataport.ReadOptions {
+    ) implements colesico.framework.teleapi.dataport.ReadOptions<TeleReader<?,?>> {
     }
 
     public record WriteOptions(
             Type baseType,
             Object metadata
-    ) implements colesico.framework.teleapi.dataport.WriteOptions {
+    ) implements colesico.framework.teleapi.dataport.WriteOptions<TeleWriter<?,?>> {
     }
 }

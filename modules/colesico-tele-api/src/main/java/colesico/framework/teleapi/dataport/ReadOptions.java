@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 /**
  * Represents a generic options for reading data from channel with {@link TeleReader}
  */
-public interface ReadOptions {
+public interface ReadOptions<R extends TeleReader<?, ?>> {
 
     /**
      * Reading value base type
@@ -20,12 +20,12 @@ public interface ReadOptions {
     /**
      * Overrides the default reader to be used for reading the value
      */
-    default Class<? extends TeleReader<?, ?>> customReader() {
+    default Class<? extends R> customReader() {
         return null;
     }
 
 
-    default <T> T metadataAs(Class<T> type) {
+    default <M> M metadataAs(Class<M> type) {
         return type.cast(metadata());
     }
 }

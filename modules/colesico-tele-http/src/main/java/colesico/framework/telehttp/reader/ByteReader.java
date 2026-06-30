@@ -32,7 +32,7 @@ import static colesico.framework.assist.StringUtils.isBlank;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class ByteReader extends OriginReader<Byte, TeleHttpReadOptions> {
+public final class ByteReader extends OriginReader<Byte, TeleHttpReadOptions<?>> {
 
     private final Messages messages;
 
@@ -43,7 +43,7 @@ public final class ByteReader extends OriginReader<Byte, TeleHttpReadOptions> {
     }
 
     @Override
-    public Byte read(TeleHttpReadOptions options) {
+    public Byte read(TeleHttpReadOptions<?> options) {
         try {
             String val = readString(options);
             if (isBlank(val)) {

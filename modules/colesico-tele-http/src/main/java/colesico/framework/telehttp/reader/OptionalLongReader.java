@@ -33,7 +33,7 @@ import static colesico.framework.assist.StringUtils.isBlank;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class OptionalLongReader extends OriginReader<OptionalLong, TeleHttpReadOptions> {
+public final class OptionalLongReader extends OriginReader<OptionalLong, TeleHttpReadOptions<?>> {
 
     private final Messages messages;
 
@@ -44,7 +44,7 @@ public final class OptionalLongReader extends OriginReader<OptionalLong, TeleHtt
     }
 
     @Override
-    public OptionalLong read(TeleHttpReadOptions options) {
+    public OptionalLong read(TeleHttpReadOptions<?> options) {
         try {
             String val = readString(options);
             if (isBlank(val)) {

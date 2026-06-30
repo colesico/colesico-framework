@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 /**
  * Represents a generic options for writing data to channel with {@link TeleWriter}
  */
-public interface WriteOptions {
+public interface WriteOptions<W extends TeleWriter<?, ?>> {
 
     /**
      * Writing value base type
@@ -20,11 +20,11 @@ public interface WriteOptions {
     /**
      * Overrides the default writer to be used for writing the value
      */
-    default Class<? extends TeleWriter<?, ?>> customWriter() {
+    default Class<? extends W> customWriter() {
         return null;
     }
 
-    default <T> T metadataAs(Class<T> type) {
+    default <M> M metadataAs(Class<M> type) {
         return type.cast(metadata());
     }
 }

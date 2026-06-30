@@ -29,7 +29,7 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class HttpFileReader implements TeleHttpReader<HttpFile, TeleHttpReadOptions> {
+public final class HttpFileReader implements TeleHttpReader<HttpFile, TeleHttpReadOptions<?>> {
 
     private final Provider<HttpRequest> httpRequest;
 
@@ -38,7 +38,7 @@ public final class HttpFileReader implements TeleHttpReader<HttpFile, TeleHttpRe
     }
 
     @Override
-    public HttpFile read(TeleHttpReadOptions options) {
+    public HttpFile read(TeleHttpReadOptions<?> options) {
         return httpRequest.get().files().get(options.paramName());
     }
 }

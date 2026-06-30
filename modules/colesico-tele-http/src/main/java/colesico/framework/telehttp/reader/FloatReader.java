@@ -30,7 +30,7 @@ import static colesico.framework.assist.StringUtils.isBlank;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class FloatReader extends OriginReader<Float, TeleHttpReadOptions> {
+public final class FloatReader extends OriginReader<Float, TeleHttpReadOptions<?>> {
 
     private final Messages messages;
 
@@ -41,7 +41,7 @@ public final class FloatReader extends OriginReader<Float, TeleHttpReadOptions> 
     }
 
     @Override
-    public Float read(TeleHttpReadOptions options) {
+    public Float read(TeleHttpReadOptions<?> options) {
         try {
             String val = readString(options);
             if (isBlank(val)) {

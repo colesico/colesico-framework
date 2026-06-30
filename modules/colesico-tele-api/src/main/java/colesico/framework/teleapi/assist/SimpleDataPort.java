@@ -2,6 +2,8 @@ package colesico.framework.teleapi.assist;
 
 import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.teleapi.dataport.DataPort;
+import colesico.framework.teleapi.dataport.TeleReader;
+import colesico.framework.teleapi.dataport.TeleWriter;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,11 +107,11 @@ public final class SimpleDataPort implements DataPort<SimpleDataPort.ReadOptions
 
     public record ReadOptions(Type baseType,
                               Object metadata
-    ) implements colesico.framework.teleapi.dataport.ReadOptions {
+    ) implements colesico.framework.teleapi.dataport.ReadOptions<TeleReader<?, ?>> {
     }
 
     public record WriteOptions(Type baseType,
                                Object metadata
-    ) implements colesico.framework.teleapi.dataport.WriteOptions {
+    ) implements colesico.framework.teleapi.dataport.WriteOptions<TeleWriter<?, ?>> {
     }
 }

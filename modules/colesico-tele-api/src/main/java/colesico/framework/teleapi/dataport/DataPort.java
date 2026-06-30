@@ -27,7 +27,7 @@ import java.lang.reflect.Type;
  * @see TeleReader
  * @see TeleWriter
  */
-public interface DataPort<R extends ReadOptions, W extends WriteOptions> {
+public interface DataPort<R extends ReadOptions<?>, W extends WriteOptions<?>> {
 
     /**
      * Operation name for read, used in logging/interception/code generation.
