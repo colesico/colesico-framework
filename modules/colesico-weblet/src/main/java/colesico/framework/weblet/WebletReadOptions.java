@@ -38,19 +38,19 @@ public record WebletReadOptions(
     public static final String OF_METHOD = "of";
 
     public static WebletReadOptions of() {
-        return new WebletReadOptions(null, null, null, null, null);
+        return new WebletReadOptions(null, null, WebletOrigin.AUTO, null, null);
     }
 
     public static WebletReadOptions of(Type baseType) {
-        return new WebletReadOptions(baseType, null, null, null, null);
+        return new WebletReadOptions(baseType, null, WebletOrigin.AUTO, null, null);
     }
 
     public static WebletReadOptions of(Type baseType, Object metadata) {
-        return new WebletReadOptions(baseType, null, null, null, metadata);
+        return new WebletReadOptions(baseType, null, WebletOrigin.AUTO, null, metadata);
     }
 
     public static WebletReadOptions of(Type baseType, String paramName) {
-        return new WebletReadOptions(baseType, paramName, null, null, null);
+        return new WebletReadOptions(baseType, paramName, WebletOrigin.AUTO, null, null);
     }
 
     public static WebletReadOptions of(Type baseType, String paramName, String originName) {

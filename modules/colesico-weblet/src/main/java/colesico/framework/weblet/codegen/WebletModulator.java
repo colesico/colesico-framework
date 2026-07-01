@@ -83,16 +83,17 @@ public final class WebletModulator extends RoutesModulator {
         CodeBlock.Builder valueTypeCode = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleParamType(teleParam, valueTypeCode);
 
-        String paramName = TeleHttpCodegenUtils.paramName(teleParam);
 
         CodeBlock.Builder optionsCode = CodeBlock.builder();
         optionsCode.add("$T.$N(", ClassName.get(WebletReadOptions.class), WebletReadOptions.OF_METHOD);
 
+        optionsCode.add(valueTypeCode.build());
+
+        String paramName = TeleHttpCodegenUtils.paramName(teleParam);
+        optionsCode.add(", $S", paramName);
+
         String originName = TeleHttpCodegenUtils.originName(teleParam, WebletOrigin.AUTO);
-
         TypeMirror customReader = getCustomReaderClass(teleParam);
-
-        optionsCode.add("$S", paramName);
 
         if (!originName.equals(WebletOrigin.AUTO) || customReader != null) {
             optionsCode.add(", $S", originName);
@@ -108,7 +109,7 @@ public final class WebletModulator extends RoutesModulator {
         optionsCode.add(")");
 
         return new TeleHttpReadElement(teleParam,
-                valueTypeCode.build(),
+                null,
                 optionsCode.build(),
                 paramName,
                 originName,
