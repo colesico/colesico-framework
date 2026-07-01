@@ -1,29 +1,26 @@
 package colesico.framework.telehttp.writer;
 
-import colesico.framework.ioc.production.Classed;
 import colesico.framework.telehttp.TeleHttpWriteOptions;
 import colesico.framework.telehttp.TeleHttpWriter;
 
-import colesico.framework.telehttp.response.ValueResponse;
+import colesico.framework.telehttp.response.ObjectResponse;
 import jakarta.inject.Singleton;
 
 /**
- * General Object writer
- * Writes value with  {@link ValueResponseWriter}
+ * Default object writer
+ * Writes value with  {@link ObjectResponseWriter}
  */
 @Singleton
 public class ObjectWriter implements TeleHttpWriter<Object, TeleHttpWriteOptions> {
 
-    protected final ValueResponseWriter<ValueResponse<Object>, TeleHttpWriteOptions> writer;
+    protected final ObjectResponseWriter writer;
 
-    public ObjectWriter(@Classed(ValueResponseWriter.Config.class) ValueResponseWriter writer) {
+    public ObjectWriter(ObjectResponseWriter writer) {
         this.writer = writer;
     }
 
     @Override
     public void write(Object value, TeleHttpWriteOptions options) {
-        writer.write(ValueResponse.of(value), options);
+        writer.write(ObjectResponse.of(value), options);
     }
-
-
 }
