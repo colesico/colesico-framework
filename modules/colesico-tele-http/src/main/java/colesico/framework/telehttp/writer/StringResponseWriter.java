@@ -1,0 +1,38 @@
+package colesico.framework.telehttp.writer;
+
+import colesico.framework.http.HttpResponse;
+import colesico.framework.telehttp.MediaType;
+import colesico.framework.telehttp.TeleHttpWriteOptions;
+import colesico.framework.telehttp.response.StringResponse;
+import jakarta.inject.Provider;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
+public class StringResponseWriter extends ValueResponseWriter<StringResponse, TeleHttpWriteOptions> {
+
+    public StringResponseWriter(Provider<HttpResponse> httpResponse) {
+        super(httpResponse);
+    }
+
+    protected Charset charset(String charsetName) {
+        if (charsetName != null) {
+            return Charset.forName(charsetName);
+        }
+        return StandardCharsets.UTF_8;
+    }
+
+    @Override
+    protected MediaType defaultMediaType() {
+        return MediaType.TEXT_PLAIN;
+    }
+
+    @Override
+    protected void write(OutputStream outputStream, StringResponse response, TeleHttpWriteOptions options) throws IOException {
+        var mediaType = mediaType(response, options);
+        outputStream.write(response.value().getBytes(charset(mediaType.charset())));
+    }
+
+}

@@ -5,7 +5,7 @@ import colesico.framework.telehttp.MediaType;
 /**
  * General response model with a value
  */
-abstract class ValueResponse<V> extends TeleHttpResponse {
+abstract public class ValueResponse<V> extends TeleHttpResponse {
 
     protected final V value;
 

@@ -8,7 +8,6 @@ import colesico.framework.restlet.*;
 import colesico.framework.telehttp.origin.OriginFactory;
 
 import colesico.framework.telehttp.reader.OriginReader;
-import colesico.framework.telehttp.writer.ValueSerializer;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;

@@ -6,7 +6,6 @@ import colesico.framework.restlet.RestletException;
 import colesico.framework.restlet.RestletWriteOptions;
 import colesico.framework.restlet.RestletTeleWriter;
 
-import colesico.framework.telehttp.writer.ValueSerializer;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 

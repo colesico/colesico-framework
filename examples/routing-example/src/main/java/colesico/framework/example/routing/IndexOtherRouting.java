@@ -16,7 +16,6 @@
 
 package colesico.framework.example.routing;
 
-import colesico.framework.telehttp.response.Responses;
 import colesico.framework.weblet.Weblet;
 
 /**

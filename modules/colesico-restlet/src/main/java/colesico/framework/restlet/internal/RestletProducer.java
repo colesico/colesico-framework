@@ -25,7 +25,6 @@ import colesico.framework.restlet.internal.gsonconv.GsonSerializer;
 import colesico.framework.restlet.origin.RestletAutoOrigin;
 import colesico.framework.telehttp.origin.Origin;
 
-import colesico.framework.telehttp.writer.ValueSerializer;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 

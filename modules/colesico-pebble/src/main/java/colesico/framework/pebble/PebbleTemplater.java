@@ -22,7 +22,6 @@ import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.pebble.internal.FrameworkExtension;
 import colesico.framework.pebble.internal.PebbleTemplateLoader;
-import colesico.framework.telehttp.response.Responses;
 import colesico.framework.weblet.response.ViewResponse;
 import colesico.framework.weblet.WebletWriteOptions;
 import colesico.framework.weblet.writer.ViewWriter;
