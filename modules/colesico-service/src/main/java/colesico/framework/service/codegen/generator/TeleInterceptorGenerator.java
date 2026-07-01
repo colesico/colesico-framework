@@ -88,17 +88,17 @@ public class TeleInterceptorGenerator {
                         .element(teleCommand.serviceMethod().originMethod())
                         .build();
             }
-            // Read batch: BatchType batch = dataPort.read()
+            // Read batch: BatchType batch = dataPort.read(...)
             cb.add("\n// Read batch \n");
             cb.add("final $T $N = $N.$N(",
                     ClassName.bestGuess(batch.batchClassName()),
                     batch.batchVarName(),
                     DATA_PORT_VAR, DataPort.READ_METHOD);
-            cb.add(batch.readSpec().valueTypeCode());
             var optionsCode = batch.readSpec().optionsCode();
             if (optionsCode != null) {
-                cb.add(", ");
-                cb.add(batch.readSpec().optionsCode());
+                cb.add(optionsCode);
+            } else {
+                cb.add(batch.readSpec().valueTypeCode());
             }
             cb.add(");\n");
         }
@@ -110,14 +110,14 @@ public class TeleInterceptorGenerator {
         // ==== For simple param ================
 
         if (parameter instanceof TeleOrdinaryParamElement p) {
-            // dataPot.read(Value.class, new Context(...));
+            // dataPot.read(new Context(value.class, ...));
             CodeBlock.Builder cb = CodeBlock.builder();
             cb.add("$N.$N(", DATA_PORT_VAR, DataPort.READ_METHOD);
-            cb.add(p.readSpec().valueTypeCode());
             var optionsCode = p.readSpec().optionsCode();
             if (optionsCode != null) {
-                cb.add(", ");
                 cb.add(optionsCode);
+            } else {
+                cb.add(p.readSpec().valueTypeCode());
             }
             cb.add(")");
             return cb.build();
@@ -207,7 +207,7 @@ public class TeleInterceptorGenerator {
                     InvocationContext.PROCEED_METHOD);
 
             // ================  Send result to client via data port
-            // dataPort.write(result, Result.class, new Context());
+            // dataPort.write(result, new Context(result.class, ...));
 
             if (!voidResult) {
                 cb.add("\n// Write result to data port\n");
@@ -216,11 +216,11 @@ public class TeleInterceptorGenerator {
                         DataPort.WRITE_METHOD,
                         RESULT_VAR);
 
-                cb.add(teleCommand.writeSpec().valueTypeCode());
                 var optionsCode = teleCommand.writeSpec().optionsCode();
                 if (optionsCode != null) {
-                    cb.add(", ");
                     cb.add(optionsCode);
+                } else {
+                    cb.add(teleCommand.writeSpec().valueTypeCode());
                 }
                 cb.add(");\n");
             }

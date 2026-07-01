@@ -12,6 +12,9 @@ public class TeleReadElement {
      */
     private final TeleReadableElement parentReadable;
 
+    /**
+     * Value type code
+     */
     private final CodeBlock valueTypeCode;
 
     /**
