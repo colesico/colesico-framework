@@ -22,6 +22,8 @@ import colesico.framework.weblet.*;
 
 import jakarta.inject.Singleton;
 
+import java.lang.reflect.Type;
+
 @Singleton
 public class WebletDataPortImpl
         extends TeleHttpDataPort<WebletReadOptions, WebletWriteOptions>
@@ -42,22 +44,12 @@ public class WebletDataPortImpl
     }
 
     @Override
-    protected WebletReadOptions readOptions() {
-        return WebletReadOptions.of();
+    public <V> V read(Type baseType, Object metadata) {
+        return read(WebletReadOptions.of(baseType, metadata));
     }
 
     @Override
-    protected WebletReadOptions readOptions(Object attachment) {
-        return WebletReadOptions.of(attachment);
-    }
-
-    @Override
-    protected WebletWriteOptions writeOptions() {
-        return WebletWriteOptions.of();
-    }
-
-    @Override
-    protected WebletWriteOptions writeOptions(Object attachment) {
-        return WebletWriteOptions.of(attachment);
+    public <V> void write(V value, Type baseType, Object metadata) {
+        write(value, WebletWriteOptions.of(baseType, metadata));
     }
 }

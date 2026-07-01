@@ -28,7 +28,7 @@ import java.lang.reflect.Type;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class StringReader extends OriginReader<String, TeleHttpReadOptions<?>> {
+public final class StringReader extends OriginReader<String, TeleHttpReadOptions> {
 
     @Inject
     public StringReader(OriginFactory originFactory) {
@@ -36,7 +36,7 @@ public final class StringReader extends OriginReader<String, TeleHttpReadOptions
     }
 
     @Override
-    public String read(TeleHttpReadOptions<?> options) {
+    public String read(TeleHttpReadOptions options) {
         return readString(options);
     }
 }

@@ -32,7 +32,7 @@ import static colesico.framework.assist.StringUtils.isBlank;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class BooleanReader extends OriginReader<Boolean, TeleHttpReadOptions<?>> {
+public final class BooleanReader extends OriginReader<Boolean, TeleHttpReadOptions> {
 
     private final Messages messages;
 
@@ -43,7 +43,7 @@ public final class BooleanReader extends OriginReader<Boolean, TeleHttpReadOptio
     }
 
     @Override
-    public Boolean read(TeleHttpReadOptions<?> options) {
+    public Boolean read(TeleHttpReadOptions options) {
         try {
             String str = readString(options);
             if (isBlank(str)) {

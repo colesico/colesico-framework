@@ -5,9 +5,7 @@ import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.teleapi.dataport.TeleFactory;
 import colesico.framework.telehttp.response.DynamicResponse;
 
-import java.lang.reflect.Type;
-
-abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions<?>, W extends TeleHttpWriteOptions<?>>
+abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends TeleHttpWriteOptions>
         implements DataPort<R, W> {
 
     protected final TeleFactory teleFactory;
@@ -16,17 +14,9 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions<?>, W exten
         this.teleFactory = teleFactory;
     }
 
-    abstract protected Class<? extends TeleHttpReader<?,?>> readerBaseClass();
+    abstract protected Class<? extends TeleHttpReader> readerBaseClass();
 
-    abstract protected Class<? extends TeleHttpWriter<?,?>> writerBaseClass();
-
-    abstract protected R readOptions();
-
-    abstract protected R readOptions(Object attachment);
-
-    abstract protected W writeOptions();
-
-    abstract protected W writeOptions(Object attachment);
+    abstract protected Class<? extends TeleHttpWriter> writerBaseClass();
 
     @Override
     public <V> V read(R options) {
@@ -37,22 +27,12 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions<?>, W exten
         }
 
         // Find reader by baseType
-        TeleHttpReader<V, TeleHttpReadOptions<?>> reader = teleFactory.findReader(options.baseType(), readerBaseClass(), TeleHttpReader.class);
+        TeleHttpReader<V, TeleHttpReadOptions> reader = teleFactory.findReader(options.baseType(), readerBaseClass(), TeleHttpReader.class);
         if (reader == null) {
             // No accurate reader here so are reading data as object - obtain object reader
             reader = teleFactory.provideReader(Object.class, readerBaseClass(), TeleHttpReader.class);
         }
         return reader.read(options);
-    }
-
-    @Override
-    public <V> V read(Type baseType) {
-        return read(baseType, readOptions());
-    }
-
-    @Override
-    public <V> V read(Type baseType, Object metadata) {
-        return read(baseType, readOptions(metadata));
     }
 
     @Override
@@ -68,7 +48,7 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions<?>, W exten
 
         // Check for a custom writer specified in options
         if (options.customWriter() != null) {
-            TeleHttpWriter writer = teleFactory.writer(options.customWriter());
+            TeleHttpWriter writer = (TeleHttpWriter) teleFactory.writer(options.customWriter());
             writer.write(targetValue, options);
             return;
         }
@@ -92,16 +72,6 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions<?>, W exten
 
         writer.write(targetValue, options);
 
-    }
-
-    @Override
-    public <V> void write(V value, Type baseType) {
-        write(value, baseType, writeOptions());
-    }
-
-    @Override
-    public <V> void write(V value, Type baseType, Object metadata) {
-        write(value, baseType, writeOptions(metadata));
     }
 
     protected TeleHttpWriter<Object, TeleHttpWriteOptions> findExceptionWriter(final Throwable throwable) {

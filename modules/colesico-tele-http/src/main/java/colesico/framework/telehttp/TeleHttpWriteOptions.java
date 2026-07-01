@@ -5,7 +5,7 @@ import colesico.framework.teleapi.dataport.WriteOptions;
 /**
  * Basic write options for interaction via http
  */
-public interface TeleHttpWriteOptions<W extends TeleHttpWriter<?, ?>> extends WriteOptions<W> {
+public interface TeleHttpWriteOptions extends WriteOptions {
 
     /**
      * Default HTTP Status Code

@@ -33,7 +33,7 @@ import static colesico.framework.assist.StringUtils.isBlank;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class DateReader extends OriginReader<Date, TeleHttpReadOptions<?>> {
+public final class DateReader extends OriginReader<Date, TeleHttpReadOptions> {
     private final Messages messages;
 
     @Inject
@@ -43,7 +43,7 @@ public final class DateReader extends OriginReader<Date, TeleHttpReadOptions<?>>
     }
 
     @Override
-    public Date read(TeleHttpReadOptions<?> options) {
+    public Date read(TeleHttpReadOptions options) {
         try {
             String val = readString(options);
             if (isBlank(val)) {

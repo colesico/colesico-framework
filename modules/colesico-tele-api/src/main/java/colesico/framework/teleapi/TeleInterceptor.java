@@ -5,7 +5,7 @@ import colesico.framework.teleapi.dataport.ReadOptions;
 import colesico.framework.teleapi.dataport.WriteOptions;
 import jakarta.inject.Provider;
 
-public class TeleInterceptor<R extends ReadOptions<?>, W extends WriteOptions<?>> {
+public class TeleInterceptor<R extends ReadOptions, W extends WriteOptions> {
 
     public static final String DATA_PORT_PROV_FIELD = "dataPortProvider";
     public static final String TELE_INTERCEPTOR_SUFFIX = "TeleInterceptor";

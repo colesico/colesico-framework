@@ -17,8 +17,11 @@
 package colesico.framework.weblet;
 
 import colesico.framework.telehttp.MediaType;
+import colesico.framework.telehttp.TeleHttpReader;
 import colesico.framework.telehttp.TeleHttpWriteOptions;
+import colesico.framework.telehttp.TeleHttpWriter;
 
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
 /**
@@ -28,10 +31,11 @@ import java.nio.charset.Charset;
  * @author Vladlen Larionov
  */
 public record WebletWriteOptions(
+        Type baseType,
         Integer statusCode,
         MediaType mediaType,
         Charset charset,
-        Class<? extends WebletTeleWriter<?>> customWriter,
+        Class<? extends TeleHttpWriter<?, ?>> customWriter,
         Object metadata
 ) implements TeleHttpWriteOptions {
 
@@ -43,22 +47,37 @@ public record WebletWriteOptions(
                 null,
                 null,
                 null,
+                null,
                 null
         );
     }
 
-    public static WebletWriteOptions of(Object attachment) {
+    public static WebletWriteOptions of(Type baseType) {
         return new WebletWriteOptions(
+                baseType,
                 null,
                 null,
                 null,
                 null,
-                attachment
+                null
         );
     }
 
-    public static WebletWriteOptions of(Class<? extends WebletTeleWriter<?>> writerClass) {
+    public static WebletWriteOptions of(Type baseType, Object metadata) {
         return new WebletWriteOptions(
+                baseType,
+                null,
+                null,
+                null,
+                null,
+                metadata
+        );
+    }
+
+
+    public static WebletWriteOptions of(Type baseType, Class<? extends WebletTeleWriter<?>> writerClass) {
+        return new WebletWriteOptions(
+                baseType,
                 null,
                 null,
                 null,

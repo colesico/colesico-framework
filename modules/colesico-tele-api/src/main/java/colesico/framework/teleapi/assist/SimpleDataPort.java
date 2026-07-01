@@ -107,11 +107,11 @@ public final class SimpleDataPort implements DataPort<SimpleDataPort.ReadOptions
 
     public record ReadOptions(Type baseType,
                               Object metadata
-    ) implements colesico.framework.teleapi.dataport.ReadOptions<TeleReader<?, ?>> {
+    ) implements colesico.framework.teleapi.dataport.ReadOptions {
     }
 
     public record WriteOptions(Type baseType,
                                Object metadata
-    ) implements colesico.framework.teleapi.dataport.WriteOptions<TeleWriter<?, ?>> {
+    ) implements colesico.framework.teleapi.dataport.WriteOptions {
     }
 }

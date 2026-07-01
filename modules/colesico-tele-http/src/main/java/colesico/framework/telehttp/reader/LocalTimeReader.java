@@ -33,7 +33,7 @@ import static colesico.framework.assist.StringUtils.isBlank;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class LocalTimeReader extends OriginReader<LocalTime, TeleHttpReadOptions<?>> {
+public final class LocalTimeReader extends OriginReader<LocalTime, TeleHttpReadOptions> {
 
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
     private final Messages messages;
@@ -45,7 +45,7 @@ public final class LocalTimeReader extends OriginReader<LocalTime, TeleHttpReadO
     }
 
     @Override
-    public LocalTime read(TeleHttpReadOptions<?> options) {
+    public LocalTime read(TeleHttpReadOptions options) {
         try {
             String val = readString(options);
             if (isBlank(val)) {
