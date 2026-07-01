@@ -14,56 +14,57 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.response;
+package colesico.framework.weblet.response;
 
 import colesico.framework.telehttp.MediaType;
+import colesico.framework.telehttp.response.ValueResponse;
 
 /**
  * Simple binary data actualResponse
  */
-public final class BytesResponse extends ValueResponse<byte[]> {
+public final class FileResponse extends ValueResponse<byte[]> {
 
-     private final String fileName;
+    private final String fileName;
 
-    public BytesResponse(Integer statusCode, MediaType mediaType, byte[] content, String fileName) {
+    public FileResponse(Integer statusCode, MediaType mediaType, byte[] content, String fileName) {
         super(statusCode, mediaType, content);
         this.fileName = fileName;
     }
 
-    public static BytesResponse of(byte[] content) {
-        return new BytesResponse(
+    public static FileResponse of(byte[] content) {
+        return new FileResponse(
                 null,
                 null,
                 content,
                 null);
     }
 
-    public static BytesResponse of(MediaType mediaType, byte[] content) {
-        return new BytesResponse(
+    public static FileResponse of(MediaType mediaType, byte[] content) {
+        return new FileResponse(
                 null,
                 mediaType,
                 content,
                 null);
     }
 
-    public static BytesResponse of(Integer statusCode, byte[] content) {
-        return new BytesResponse(
+    public static FileResponse of(Integer statusCode, byte[] content) {
+        return new FileResponse(
                 statusCode,
                 null,
                 content,
                 null);
     }
 
-    public static BytesResponse of(Integer statusCode, MediaType mediaType, byte[] content) {
-        return new BytesResponse(
+    public static FileResponse of(Integer statusCode, MediaType mediaType, byte[] content) {
+        return new FileResponse(
                 statusCode,
                 mediaType,
                 content,
                 null);
     }
 
-    public static BytesResponse of(int statusCode, MediaType mediaType, byte[] content, String fileName) {
-        return new BytesResponse(
+    public static FileResponse of(int statusCode, MediaType mediaType, byte[] content, String fileName) {
+        return new FileResponse(
                 statusCode,
                 mediaType,
                 content,

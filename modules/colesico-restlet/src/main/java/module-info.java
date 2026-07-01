@@ -29,9 +29,7 @@ module colesico.framework.restlet {
     // API
     exports colesico.framework.restlet;
     opens colesico.framework.restlet;
-    exports colesico.framework.restlet.teleapi;
     exports colesico.framework.restlet.origin;
-    exports colesico.framework.restlet.response;
     exports colesico.framework.restlet.reader;
     exports colesico.framework.restlet.writer;
     exports colesico.framework.restlet.assist;

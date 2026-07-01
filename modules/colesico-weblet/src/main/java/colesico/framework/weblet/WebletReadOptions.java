@@ -45,10 +45,6 @@ public record WebletReadOptions(
         return new WebletReadOptions(baseType, null, WebletOrigin.AUTO, null, null);
     }
 
-    public static WebletReadOptions of(Type baseType, Object metadata) {
-        return new WebletReadOptions(baseType, null, WebletOrigin.AUTO, null, metadata);
-    }
-
     public static WebletReadOptions of(Type baseType, String paramName) {
         return new WebletReadOptions(baseType, paramName, WebletOrigin.AUTO, null, null);
     }
@@ -59,5 +55,12 @@ public record WebletReadOptions(
 
     public static WebletReadOptions of(Type baseType, String paramName, String originName, Class<? extends WebletTeleReader<?>> readerClass) {
         return new WebletReadOptions(baseType, paramName, originName, readerClass, null);
+    }
+
+    /**
+     *  For basic manual usage
+     */
+    public static WebletReadOptions of(Type baseType, Object metadata) {
+        return new WebletReadOptions(baseType, null, WebletOrigin.AUTO, null, metadata);
     }
 }

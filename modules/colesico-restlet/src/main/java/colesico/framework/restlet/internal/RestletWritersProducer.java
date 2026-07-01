@@ -30,20 +30,7 @@ import colesico.framework.telehttp.writer.ProfileWriter;
 import jakarta.inject.Singleton;
 
 @Producer
-@Produce(value = ValueResponseWriter.class, keyType = RestletTeleWriter.class, classed = ObjectResponse.class)
-@Produce(value = RestletExceptionWriter.class, keyType = RestletTeleWriter.class, classed = RestletException.class)
+@Produce(value = RestletExceptionWriter.class, keyType = RestletTeleWriter.class, classed = Exception.class)
 public class RestletWritersProducer {
-
-    @Singleton
-    @Classed(Exception.class)
-    public RestletTeleWriter exceptionWriter(ExceptionWriter impl) {
-        return RestletWriterProxy.of(impl);
-    }
-
-    @Singleton
-    @Classed(Profile.class)
-    public RestletTeleWriter profileWriter(ProfileWriter impl) {
-        return RestletWriterProxy.of(impl);
-    }
 
 }

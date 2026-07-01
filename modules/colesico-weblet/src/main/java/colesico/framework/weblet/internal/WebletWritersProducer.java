@@ -16,9 +16,22 @@
 
 package colesico.framework.weblet.internal;
 
+import colesico.framework.ioc.production.Classed;
+import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
+import colesico.framework.telehttp.TeleHttpWriter;
+import colesico.framework.weblet.response.FileResponse;
+import colesico.framework.weblet.writer.FileResponseWriter;
+import jakarta.inject.Singleton;
 
 @Producer
+@Produce(FileResponseWriter.class)
 public class WebletWritersProducer {
+
+    @Singleton
+    @Classed(FileResponse.class)
+    public TeleHttpWriter binaryResponseWriter(FileResponseWriter impl) {
+        return impl;
+    }
 
 }

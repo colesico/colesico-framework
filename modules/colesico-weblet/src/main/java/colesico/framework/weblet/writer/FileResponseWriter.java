@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.writer;
+package colesico.framework.weblet.writer;
 
 import colesico.framework.http.HttpResponse;
 import colesico.framework.telehttp.MediaType;
 import colesico.framework.telehttp.TeleHttpWriteOptions;
-import colesico.framework.telehttp.response.BytesResponse;
 
+import colesico.framework.telehttp.writer.TeleHttpResponseWriter;
+import colesico.framework.weblet.response.FileResponse;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -31,11 +32,11 @@ import static colesico.framework.telehttp.MediaType.APPLICATION_OCTET_STREAM;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class BytesResponseWriter
-        extends TeleHttpResponseWriter<BytesResponse, TeleHttpWriteOptions> {
+public final class FileResponseWriter
+        extends TeleHttpResponseWriter<FileResponse, TeleHttpWriteOptions> {
 
     @Inject
-    public BytesResponseWriter(Provider<HttpResponse> httpResponse) {
+    public FileResponseWriter(Provider<HttpResponse> httpResponse) {
         super(httpResponse);
     }
 
@@ -46,7 +47,7 @@ public final class BytesResponseWriter
 
     @Override
     protected void writeResponse(HttpResponse protocol,
-                                 BytesResponse response,
+                                 FileResponse response,
                                  TeleHttpWriteOptions options,
                                  Integer statusCode,
                                  MediaType mediaType) {

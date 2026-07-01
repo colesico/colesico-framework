@@ -2,6 +2,8 @@ package colesico.framework.restlet;
 
 import colesico.framework.telehttp.TeleHttpReadOptions;
 
+import java.lang.reflect.Type;
+
 /**
  *
  * @param paramName
@@ -10,6 +12,7 @@ import colesico.framework.telehttp.TeleHttpReadOptions;
  * @param metadata
  */
 public record RestletReadOptions(
+        Type baseType,
         String paramName,
         String originName,
         Class<? extends RestletTeleReader<?>> customReader,
@@ -19,23 +22,29 @@ public record RestletReadOptions(
     public static final String OF_METHOD = "of";
 
     public static RestletReadOptions of() {
-        return new RestletReadOptions(null, RestletOrigin.AUTO, null, null);
+        return new RestletReadOptions(null, null, RestletOrigin.AUTO, null, null);
     }
 
-    public static RestletReadOptions of(Object attachment) {
-        return new RestletReadOptions(null, RestletOrigin.AUTO, null, attachment);
+    public static RestletReadOptions of(Type baseType) {
+        return new RestletReadOptions(baseType, null, RestletOrigin.AUTO, null, null);
     }
 
-    public static RestletReadOptions of(String paramName) {
-        return new RestletReadOptions(paramName, RestletOrigin.AUTO, null, null);
+    public static RestletReadOptions of(Type baseType, String paramName) {
+        return new RestletReadOptions(baseType, paramName, RestletOrigin.AUTO, null, null);
     }
 
-    public static RestletReadOptions of(String paramName, String originName) {
-        return new RestletReadOptions(paramName, originName, null, null);
+    public static RestletReadOptions of(Type baseType, String paramName, String originName) {
+        return new RestletReadOptions(baseType, paramName, originName, null, null);
     }
 
-    public static RestletReadOptions of(String paramName, String originName, Class<? extends RestletTeleReader<?>> readerClass) {
-        return new RestletReadOptions(paramName, originName, readerClass, null);
+    public static RestletReadOptions of(Type baseType, String paramName, String originName, Class<? extends RestletTeleReader<?>> readerClass) {
+        return new RestletReadOptions(baseType, paramName, originName, readerClass, null);
     }
 
+    /**
+     * For manual usage
+     */
+    public static RestletReadOptions of(Type baseType, Object metadata) {
+        return new RestletReadOptions(baseType, null, RestletOrigin.AUTO, null, metadata);
+    }
 }
