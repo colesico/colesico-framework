@@ -19,6 +19,7 @@ public record MediaType(String mimeType, Map<String, String> parameters) {
     public static final MediaType APPLICATION_OCTET_STREAM = MediaType.of("application/octet-stream");
     public static final MediaType APPLICATION_JSON = MediaType.ofCharset("application/json", CHARSET_UTF8);
     public static final MediaType APPLICATION_XML = MediaType.ofCharset("application/xml", CHARSET_UTF8);
+    public static final MediaType  MULTIPART_FORM_DATA  = MediaType.ofCharset("multipart/form-data", CHARSET_UTF8);
 
     public static MediaType of(String mimeType) {
         return new MediaType(mimeType, Map.of());
