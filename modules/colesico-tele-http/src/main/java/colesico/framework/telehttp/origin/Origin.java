@@ -18,7 +18,7 @@ package colesico.framework.telehttp.origin;
 
 /**
  * Data reading origin API and basic dictionary.
- * Origin defines strategy for reading string actualResponse from http context
+ * Origin defines strategy for reading string value from http context
  */
 public interface Origin {
 
@@ -53,9 +53,9 @@ public interface Origin {
     String BODY = "BODY";
 
     /**
-     * Return string actualResponse from the http request entity
+     * Return string value from the http request entity
      *
-     * @param name actualResponse name  (e.g. query param name, cookie name, header name, e.t.c)
+     * @param name value name  (e.g. query param name, cookie name, header name, e.t.c)
      */
     Iterable<String> getStrings(String name);
 

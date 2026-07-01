@@ -24,7 +24,7 @@ import colesico.framework.telehttp.MediaType;
 public class Responses {
 
     /**
-     * Empty actualResponse
+     * Empty response
      */
     public static ValueResponse<String> empty() {
         return new ValueResponse<>(

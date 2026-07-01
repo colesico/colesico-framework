@@ -8,7 +8,7 @@ import colesico.framework.telehttp.origin.Origin;
 /**
  * Basic origin based reader
  *
- * @param <V> type of actualResponse to  be read
+ * @param <V> type of value to  be read
  * @param <R> read options
  */
 abstract public class OriginReader<V, R extends TeleHttpReadOptions> implements TeleHttpReader<V, R> {
@@ -20,7 +20,7 @@ abstract public class OriginReader<V, R extends TeleHttpReadOptions> implements 
     }
 
     /**
-     * Return param string actualResponse from origin defined in the context
+     * Return param string value from origin defined in the context
      */
     protected final Iterable<String> readStrings(R options) {
         Origin origin = originFactory.getOrigin(options.originName());

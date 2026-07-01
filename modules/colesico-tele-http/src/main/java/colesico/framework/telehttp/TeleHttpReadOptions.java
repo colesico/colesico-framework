@@ -16,7 +16,7 @@ public interface TeleHttpReadOptions extends ReadOptions {
     String paramName();
 
     /**
-     * Origin name to read actualResponse from it
+     * Origin name to read value from it
      *
      * @see ParamOrigin
      */

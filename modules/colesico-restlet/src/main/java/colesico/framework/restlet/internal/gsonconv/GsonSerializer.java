@@ -18,6 +18,7 @@ package colesico.framework.restlet.internal.gsonconv;
 
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.restlet.GsonOptionsPrototype;
+import colesico.framework.telehttp.writer.ValueSerializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -31,7 +32,7 @@ import java.time.LocalDateTime;
  * Default json converter for restlet
  */
 @Singleton
-public class GsonSerializer implements colesico.framework.telehttp.writer.ValueSerializer {
+public class GsonSerializer implements ValueSerializer {
 
     protected final Gson gson;
 

@@ -3,9 +3,9 @@ package colesico.framework.telehttp.response;
 import colesico.framework.telehttp.MediaType;
 
 /**
- * Response model with any actualResponse
+ * General response model with a value
  */
-public class ValueResponse<V> extends TeleHttpResponse {
+abstract class ValueResponse<V> extends TeleHttpResponse {
 
     protected final V value;
 
@@ -18,19 +18,4 @@ public class ValueResponse<V> extends TeleHttpResponse {
         return value;
     }
 
-    public static <V> ValueResponse<V> of(V value) {
-        return new ValueResponse<>(null, null, value);
-    }
-
-    public static <V> ValueResponse<V> of(MediaType mediaType, V value) {
-        return new ValueResponse<>(null, mediaType, value);
-    }
-
-    public static <V> ValueResponse<V> of(Integer statusCode, V value) {
-        return new ValueResponse<>(statusCode, null, value);
-    }
-
-    public static <V> ValueResponse<V> of(Integer statusCode, MediaType mediaType, V value) {
-        return new ValueResponse<>(statusCode, mediaType, value);
-    }
 }

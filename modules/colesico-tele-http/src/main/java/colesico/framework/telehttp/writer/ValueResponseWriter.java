@@ -1,6 +1,5 @@
 package colesico.framework.telehttp.writer;
 
-import colesico.framework.config.Config;
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
 import colesico.framework.http.HttpResponse;
@@ -15,6 +14,7 @@ import colesico.framework.telehttp.response.ValueResponse;
 import jakarta.inject.Provider;
 
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 
 /**
  * General {@link ValueSerializer} based object writer.
@@ -55,8 +55,9 @@ public class ValueResponseWriter<R extends ValueResponse<?>, O extends TeleHttpW
         return config.emptyStatusCode();
     }
 
-    protected ValueSerializer serializer(String mimeType) {
-        return serializerFactory.get(mimeType);
+    protected ValueSerializer serializer(Type baseType, String mimeType) {
+        String namedKey = baseType.getTypeName() + ":" + mimeType;
+        return serializerFactory.get(namedKey);
     }
 
     @Override

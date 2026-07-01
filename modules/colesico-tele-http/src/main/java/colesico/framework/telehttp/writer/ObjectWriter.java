@@ -12,14 +12,14 @@ import jakarta.inject.Singleton;
 
 /**
  * General Object writer
- * Writes actualResponse with  {@link ValueResponseWriter}
+ * Writes value with  {@link ValueResponseWriter}
  */
 @Singleton
 public class ObjectWriter implements TeleHttpWriter<Object, TeleHttpWriteOptions> {
 
     protected final ValueResponseWriter<ValueResponse<Object>, TeleHttpWriteOptions> writer;
 
-    public ObjectWriter(ValueResponseWriter writer) {
+    public ObjectWriter(@Classed(ValueResponseWriter.Config.class) ValueResponseWriter writer) {
         this.writer = writer;
     }
 

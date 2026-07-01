@@ -55,7 +55,7 @@ public final class T9nFilter implements Filter {
 
         if (!(input instanceof String)) {
             throw new PebbleException(null,
-                    FILTER_NAME + " filter can be applied only to  string actualResponse. Current actualResponse=" + input,
+                    FILTER_NAME + " filter can be applied only to  string value. Current value=" + input,
                     lineNumber, pebbleTemplate.getName());
         }
         String strKey = (String) input;

@@ -38,7 +38,7 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
     @Override
     public <V> void write(V value, W options) {
 
-        // Handle dynamic actualResponse
+        // Handle dynamic value
         Object targetValue;
         if (value instanceof DynamicResponse(Object resp)) {
             targetValue = resp;
@@ -53,7 +53,7 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
             return;
         }
 
-        // Find writer by the exact runtime class of the actualResponse
+        // Find writer by the exact runtime class of the value
         TeleHttpWriter<Object, TeleHttpWriteOptions> writer;
         if (targetValue instanceof Throwable throwable) {
             writer = findExceptionWriter(throwable);

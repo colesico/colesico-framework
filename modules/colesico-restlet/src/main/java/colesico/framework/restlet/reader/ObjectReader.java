@@ -8,6 +8,7 @@ import colesico.framework.restlet.*;
 import colesico.framework.telehttp.origin.OriginFactory;
 
 import colesico.framework.telehttp.reader.OriginReader;
+import colesico.framework.telehttp.writer.ValueSerializer;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -21,11 +22,11 @@ public final class ObjectReader
         extends OriginReader<Object, RestletReadOptions>
         implements RestletTeleReader<Object> {
 
-    private final colesico.framework.telehttp.writer.ValueSerializer serializer;
+    private final ValueSerializer serializer;
     private final Provider<HttpContext> httpContextProv;
 
     @Inject
-    public ObjectReader(OriginFactory originFactory, colesico.framework.telehttp.writer.ValueSerializer serializer, Provider<HttpContext> httpContextProv) {
+    public ObjectReader(OriginFactory originFactory, ValueSerializer serializer, Provider<HttpContext> httpContextProv) {
         super(originFactory);
         this.serializer = serializer;
         this.httpContextProv = httpContextProv;
@@ -37,7 +38,7 @@ public final class ObjectReader
 
         HttpMethod requestMethod = request.method();
 
-        // Should the actualResponse be read from request input stream?
+        // Should the value be read from request input stream?
         String originName = options.originName();
 
         boolean useInputStream = originName.equals(RestletOrigin.BODY) ||

@@ -7,7 +7,7 @@ package colesico.framework.telehttp;
 public class TeleHttpException extends RuntimeException {
 
     /**
-     * Http actualResponse status code
+     * Http response status code
      */
     protected final Integer statusCode;
 

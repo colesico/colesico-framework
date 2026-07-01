@@ -6,6 +6,7 @@ import colesico.framework.restlet.RestletException;
 import colesico.framework.restlet.RestletWriteOptions;
 import colesico.framework.restlet.RestletTeleWriter;
 
+import colesico.framework.telehttp.writer.ValueSerializer;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
@@ -15,9 +16,9 @@ import java.nio.ByteBuffer;
 public class RestletExceptionWriter implements RestletTeleWriter<RestletException> {
 
     private final Provider<HttpResponse> httpResponse;
-    protected final Supplier<colesico.framework.telehttp.writer.ValueSerializer> serializer;
+    protected final Supplier<ValueSerializer> serializer;
 
-    public RestletExceptionWriter(Provider<HttpResponse> httpResponse, Supplier<colesico.framework.telehttp.writer.ValueSerializer> serializer) {
+    public RestletExceptionWriter(Provider<HttpResponse> httpResponse, Supplier<ValueSerializer> serializer) {
         this.httpResponse = httpResponse;
         this.serializer = serializer;
     }

@@ -16,20 +16,18 @@
 
 package colesico.framework.telehttp.writer;
 
-import colesico.framework.telehttp.MediaType;
-
-import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
 import java.util.Map;
 
 /**
  * Strategy interface for object serialization.
  * Implementations must be thread-safe.
- * A specific serializer corresponds to the mime-type,
+ * A specific serializer corresponds to the given mime-types (e.g. text/plain, text/html ),
  * and its production is annotated with the @Named(mime-type) annotation.
+ *
+ * @param <T> supported value type
  */
-public interface ValueSerializer {
+public interface ValueSerializer<T> {
 
     /**
      * Serializes an object to the output stream .
@@ -38,12 +36,7 @@ public interface ValueSerializer {
      * @param mediaParams  serialization params
      * @param outputStream stream to write into
      */
-    void serialize(Object value, Map<String, String> mediaParams, OutputStream outputStream);
+    void serialize(T value, Map<String, String> mediaParams, OutputStream outputStream);
 
-    default ByteBuffer serialize(Object value, Map<String, String> mediaParams) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-        serialize(value, mediaParams, baos);
-        return ByteBuffer.wrap(baos.toByteArray());
-    }
 }
 

@@ -25,6 +25,7 @@ import colesico.framework.restlet.internal.gsonconv.GsonSerializer;
 import colesico.framework.restlet.origin.RestletAutoOrigin;
 import colesico.framework.telehttp.origin.Origin;
 
+import colesico.framework.telehttp.writer.ValueSerializer;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
@@ -52,7 +53,7 @@ public class RestletProducer {
 
     //TODO: add support for serializers by content-type
     @Singleton
-    public colesico.framework.telehttp.writer.ValueSerializer restletSerializer(@IocMessage String contentType, GsonSerializer impl) {
+    public ValueSerializer restletSerializer(@IocMessage String contentType, GsonSerializer impl) {
         return impl;
     }
 
