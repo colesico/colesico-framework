@@ -16,13 +16,13 @@
 
 package colesico.framework.webstatic.internal;
 
+import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpContext;
 import colesico.framework.ioc.message.InjectionPoint;
 import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.resource.ResourceUtils;
 import colesico.framework.webstatic.StaticContent;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
