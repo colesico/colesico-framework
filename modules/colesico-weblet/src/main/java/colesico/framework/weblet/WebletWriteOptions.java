@@ -16,8 +16,7 @@
 
 package colesico.framework.weblet;
 
-import colesico.framework.telehttp.MediaType;
-import colesico.framework.telehttp.TeleHttpReader;
+import colesico.framework.telehttp.ContentType;
 import colesico.framework.telehttp.TeleHttpWriteOptions;
 import colesico.framework.telehttp.TeleHttpWriter;
 
@@ -33,7 +32,7 @@ import java.nio.charset.Charset;
 public record WebletWriteOptions(
         Type baseType,
         Integer statusCode,
-        MediaType mediaType,
+        ContentType contentType,
         Charset charset,
         Class<? extends TeleHttpWriter<?, ?>> customWriter,
         Object metadata

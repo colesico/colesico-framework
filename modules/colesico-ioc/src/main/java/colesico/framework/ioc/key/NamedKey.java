@@ -33,24 +33,26 @@ public final class NamedKey<T> implements Key<T> {
 
     public NamedKey(String typeName, String name) {
         this.typeName = typeName;
-        this.name = checkName(name);
+        checkName(name);
+        this.name = name;
     }
 
     public NamedKey(Class<T> type, String name) {
         this.typeName = type.getCanonicalName();
-        this.name = checkName(name);
+        checkName(name);
+        this.name = name;
     }
 
     public NamedKey(Type type, String name) {
         this.typeName = type.getTypeName();
-        this.name = checkName(name);
+        checkName(name);
+        this.name = name;
     }
 
-    private String checkName(String name){
-        if (name == null){
+    private <N> void checkName(N name) {
+        if (name == null) {
             throw new IocException("NamedKey.name is null");
         }
-        return name;
     }
 
     @Override

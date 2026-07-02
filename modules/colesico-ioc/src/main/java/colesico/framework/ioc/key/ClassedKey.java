@@ -16,6 +16,8 @@
 
 package colesico.framework.ioc.key;
 
+import colesico.framework.ioc.IocException;
+
 import java.lang.reflect.Type;
 
 /**
@@ -30,11 +32,13 @@ public final class ClassedKey<T> implements Key<T> {
 
     public ClassedKey(String typeName, String classifier) {
         this.typeName = typeName;
+        checkClassifier(classifier);
         this.classifier = classifier;
     }
 
     public ClassedKey(Class<T> type, Type classifier) {
         this.typeName = type.getCanonicalName();
+        checkClassifier(classifier);
         if (classifier instanceof Class) {
             this.classifier = ((Class<?>) classifier).getCanonicalName();
         } else {
@@ -44,10 +48,17 @@ public final class ClassedKey<T> implements Key<T> {
 
     public ClassedKey(Type type, Type classifier) {
         this.typeName = type.getTypeName();
+        checkClassifier(classifier);
         if (classifier instanceof Class) {
             this.classifier = ((Class<?>) classifier).getCanonicalName();
         } else {
             this.classifier = classifier.getTypeName();
+        }
+    }
+
+    private <C> void checkClassifier(C classifier) {
+        if (classifier == null) {
+            throw new IocException("ClassedKey.classifier is null");
         }
     }
 

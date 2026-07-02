@@ -90,6 +90,9 @@ public final class TeleFactory {
     @SuppressWarnings("unchecked")
     @SafeVarargs
     public final <W extends TeleWriter<?, ?>> W findWriter(Type baseType, Class<? extends TeleWriter>... writerBaseClasses) {
+        if (baseType == null){
+            return null;
+        }
         for (var writerBaseClass : writerBaseClasses) {
             var writer = ioc.instanceOrNull(new ClassedKey<>(writerBaseClass, baseType));
             if (writer != null) {

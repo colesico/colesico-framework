@@ -42,7 +42,7 @@ public class RestletExceptionWriter implements RestletTeleWriter<RestletExceptio
         }
         response.setStatus(statusCode);
 
-        var contentType = options.mediaType();
+        var contentType = options.contentType();
         if (contentType == null) {
             contentType = RestletWriteOptions.DEFAULT_CONTENT_TYPE;
         }

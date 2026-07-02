@@ -19,8 +19,10 @@ package colesico.framework.example.helloworld;
 import colesico.framework.security.Identity;
 import colesico.framework.security.authentication.Authentication;
 import colesico.framework.telehttp.authentication.HttpBasic;
+import colesico.framework.telehttp.response.StringResponse;
 import colesico.framework.telehttp.response.ValueResponse;
 import colesico.framework.weblet.Weblet;
+import colesico.framework.weblet.response.HtmlResponse;
 import jakarta.inject.Provider;
 
 @Weblet
@@ -36,19 +38,19 @@ public class HelloWeblet {
     }
 
     // Browse the url: http://localhost:8080/hello-weblet/say-hello
-    public ValueResponse<String> sayHello() {
-        return Responses.textHtml(SAY_HELLO_TEXT);
+    public HtmlResponse sayHello() {
+        return HtmlResponse.of(SAY_HELLO_TEXT);
     }
 
     // Browse the url: http://localhost:8080/hello-weblet/privet?name=Татьяна
-    public ValueResponse<String> privet(String name) {
-        return Responses.textPlain(SAY_PRIVET_TEXT + name);
+    public String privet(String name) {
+        return SAY_PRIVET_TEXT + name;
     }
 
     // Browse the url: http://localhost:8080/hello-weblet/secured
     // Use admin/secret to  authenticate
     @Authentication(HttpBasic.class)
-    public String secured() {
-        return (String) identity.get().id();
+    public StringResponse secured() {
+        return StringResponse.textPlain((String) identity.get().id());
     }
 }

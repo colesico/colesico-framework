@@ -1,6 +1,6 @@
 package colesico.framework.weblet.response;
 
-import colesico.framework.telehttp.MediaType;
+import colesico.framework.telehttp.ContentType;
 import colesico.framework.telehttp.response.TeleHttpResponse;
 
 /**
@@ -11,8 +11,8 @@ public final class ViewResponse extends TeleHttpResponse {
     private final String viewName;
     private final Object model;
 
-    public ViewResponse(Integer statusCode, MediaType mediaType, String viewName, Object model) {
-        super(statusCode, mediaType);
+    public ViewResponse(Integer statusCode, ContentType contentType, String viewName, Object model) {
+        super(statusCode, contentType);
         this.viewName = viewName;
         this.model = model;
     }

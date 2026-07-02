@@ -124,15 +124,18 @@ public final class WebletModulator extends RoutesModulator {
 
         CodeBlock.Builder optionsCode = CodeBlock.builder();
         optionsCode.add("$T.$N(", ClassName.get(WebletWriteOptions.class), WebletWriteOptions.OF_METHOD);
+        optionsCode.add(valueTypeCode.build());
+
         TypeMirror customWriter = getCustomWriterClass(teleCommand);
         ClassType customWriterCT = null;
         if (customWriter != null) {
-            optionsCode.add("$T.class", TypeName.get(customWriter));
+            optionsCode.add(", $T.class", TypeName.get(customWriter));
             customWriterCT = new ClassType(processorContext().processingEnv(), (DeclaredType) customWriter);
         }
+
         optionsCode.add(")");
 
-        return new TeleHttpWriteElement(teleCommand, valueTypeCode.build(), optionsCode.build(), customWriterCT);
+        return new TeleHttpWriteElement(teleCommand, null, optionsCode.build(), customWriterCT);
     }
 
     private TypeMirror getCustomWriterClass(TeleCommandElement teleCommand) {

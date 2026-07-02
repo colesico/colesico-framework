@@ -88,7 +88,7 @@ public class PebbleTemplater extends ViewWriter implements HtmlRenderer {
         HttpUtils.setHeaders(httpResponse, viewResponse.headers());
         HttpUtils.setCookies(httpResponse, viewResponse.cookies());
 
-        String contentType = viewResponse.mediaType();
+        String contentType = viewResponse.contentType();
         if (StringUtils.isEmpty(contentType)) {
             contentType = Responses.DEFAULT_CONTENT_TYPE;
         }

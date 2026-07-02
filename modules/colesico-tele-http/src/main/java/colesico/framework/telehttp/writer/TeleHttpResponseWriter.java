@@ -2,7 +2,7 @@ package colesico.framework.telehttp.writer;
 
 import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
-import colesico.framework.telehttp.MediaType;
+import colesico.framework.telehttp.ContentType;
 import colesico.framework.telehttp.TeleHttpException;
 import colesico.framework.telehttp.TeleHttpWriter;
 import colesico.framework.telehttp.TeleHttpWriteOptions;
@@ -23,7 +23,7 @@ abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O exten
         this.httpResponse = httpResponse;
     }
 
-    abstract protected MediaType defaultMediaType();
+    abstract protected ContentType defaultContentType();
 
     abstract protected void write(OutputStream outputStream, V response, O options) throws IOException;
 
@@ -45,26 +45,14 @@ abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O exten
         return defaultStatusCode();
     }
 
-    protected MediaType mediaType(V response, O options) {
-        if (response.mediaType() != null) {
-            return response.mediaType();
+    protected ContentType contentType(V response, O options) {
+        if (response.contentType() != null) {
+            return response.contentType();
         }
-        if (options.mediaType() != null) {
-            return options.mediaType();
+        if (options.contentType() != null) {
+            return options.contentType();
         }
-        return defaultMediaType();
-    }
-
-    protected String toContentType(MediaType mediaType) {
-        if (mediaType == null) {
-            return null;
-        }
-        StringBuilder result = new StringBuilder(mediaType.mimeType());
-        mediaType.parameters().forEach((name, value) -> {
-            result.append("; ").append(name).append("=").append(value);
-        });
-
-        return result.toString();
+        return defaultContentType();
     }
 
     protected boolean isEmptyResponse(V response) {
@@ -86,12 +74,12 @@ abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O exten
             throw TeleHttpException.of("Undefined http status code", 500);
         }
 
-        var mediaType = mediaType(response, options);
-        if (mediaType == null) {
+        var contentType = contentType(response, options);
+        if (contentType == null) {
             throw TeleHttpException.of("Undefined media type", 500);
         }
 
-        protocol.setStatus(statusCode).setContentType(toContentType(mediaType));
+        protocol.setStatus(statusCode).setContentType(contentType.headerValue());
 
         if (!response.headers().isEmpty()) {
             HttpUtils.setHeaders(protocol, response.headers());

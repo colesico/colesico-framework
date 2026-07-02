@@ -17,21 +17,30 @@
 package colesico.framework.weblet.internal;
 
 import colesico.framework.ioc.production.Classed;
-import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.telehttp.TeleHttpWriter;
-import colesico.framework.weblet.response.FileResponse;
-import colesico.framework.weblet.writer.FileResponseWriter;
+import colesico.framework.telehttp.response.BytesResponse;
+import colesico.framework.telehttp.writer.BytesResponseWriter;
+import colesico.framework.telehttp.writer.StringResponseWriter;
+import colesico.framework.weblet.WebletTeleWriter;
+import colesico.framework.weblet.response.AttachmentResponse;
+import colesico.framework.weblet.response.HtmlResponse;
+import colesico.framework.weblet.writer.WebletWriterProxy;
 import jakarta.inject.Singleton;
 
 @Producer
-@Produce(FileResponseWriter.class)
 public class WebletWritersProducer {
 
     @Singleton
-    @Classed(FileResponse.class)
-    public TeleHttpWriter binaryResponseWriter(FileResponseWriter impl) {
-        return impl;
+    @Classed(AttachmentResponse.class)
+    public WebletTeleWriter binaryResponseWriter(BytesResponseWriter impl) {
+        return WebletWriterProxy.of(impl);
+    }
+
+    @Singleton
+    @Classed(HtmlResponse.class)
+    public WebletTeleWriter binaryResponseWriter(StringResponseWriter impl) {
+        return WebletWriterProxy.of(impl);
     }
 
 }

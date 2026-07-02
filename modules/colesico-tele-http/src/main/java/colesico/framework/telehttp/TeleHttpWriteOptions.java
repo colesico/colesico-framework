@@ -13,8 +13,8 @@ public interface TeleHttpWriteOptions extends WriteOptions {
     Integer statusCode();
 
     /**
-     * Default media-type
+     * Default content-type
      */
-    MediaType mediaType();
+    ContentType contentType();
 
 }

@@ -1,7 +1,7 @@
 package colesico.framework.telehttp.writer;
 
 import colesico.framework.http.HttpResponse;
-import colesico.framework.telehttp.MediaType;
+import colesico.framework.telehttp.ContentType;
 import colesico.framework.telehttp.TeleHttpWriteOptions;
 import colesico.framework.telehttp.response.BytesResponse;
 import jakarta.inject.Provider;
@@ -16,8 +16,8 @@ public class BytesResponseWriter extends ValueResponseWriter<BytesResponse, Tele
     }
 
     @Override
-    protected MediaType defaultMediaType() {
-        return MediaType.APPLICATION_OCTET_STREAM;
+    protected ContentType defaultContentType() {
+        return ContentType.APPLICATION_OCTET_STREAM;
     }
 
     @Override
