@@ -48,7 +48,7 @@ public class HelloWeblet {
     }
 
     // Browse the url: http://localhost:8080/hello-weblet/secured
-    // Use admin/secret to  authenticate
+    // Use admin/secret to  authenticate (see resources/META-INF/accounts.properties)
     @Authentication(HttpBasic.class)
     public StringResponse secured() {
         return StringResponse.textPlain((String) identity.get().id());
