@@ -31,6 +31,7 @@ import colesico.framework.teleapi.dataport.WriteOptions;
 import colesico.framework.telehttp.codegen.TeleHttpReadElement;
 import colesico.framework.telehttp.codegen.TeleHttpWriteElement;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
+import colesico.framework.telehttp.origin.Origin;
 import colesico.framework.weblet.*;
 import com.palantir.javapoet.ClassName;
 import com.palantir.javapoet.CodeBlock;
@@ -94,7 +95,7 @@ public final class WebletModulator extends RoutesModulator {
             optionsCode.add(".$N($S)", WebletReadOptions.PARAM_NAME_METHOD, paramName);
         }
 
-        String originName = TeleHttpCodegenUtils.originName(teleParam, WebletOrigin.AUTO);
+        String originName = TeleHttpCodegenUtils.originName(teleParam, Origin.AUTO);
         if (originName != null) {
             optionsCode.add(".$N($S)", WebletReadOptions.ORIGIN_NAME_METHOD, originName);
         }

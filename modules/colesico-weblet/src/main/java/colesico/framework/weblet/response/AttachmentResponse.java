@@ -16,30 +16,58 @@
 
 package colesico.framework.weblet.response;
 
+import colesico.framework.http.HttpCookie;
 import colesico.framework.telehttp.ContentType;
 import colesico.framework.telehttp.response.BytesResponse;
 import colesico.framework.telehttp.response.ValueResponse;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Simple data file response
  */
 public final class AttachmentResponse extends BytesResponse {
 
-    public AttachmentResponse(Integer statusCode, ContentType contentType, byte[] content, String fileName) {
-        super(statusCode, contentType, content);
-        if (fileName != null) {
-            addHeader("Content-Disposition", "attachment; filename*=UTF-8''" + encodeFileName(fileName));
-        }
+    protected AttachmentResponse(Integer statusCode, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, byte[] value) {
+        super(statusCode, contentType, headers, cookies, value);
     }
 
-    private String encodeFileName(String fileName) {
-        String encoded = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
+    public static AttachmentResponse.Builder builder(byte[] value, String fileName) {
+        return new AttachmentResponse.Builder(value, fileName);
+    }
 
-        // RFC 5987 -> %20
-        return encoded.replace("+", "%20");
+    public static class Builder extends ValueResponse.Builder<byte[], AttachmentResponse, AttachmentResponse.Builder> {
+
+        private final String fileName;
+
+        public Builder(byte[] value, String fileName) {
+            super(value);
+            this.fileName = fileName;
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
+        }
+
+        @Override
+        public AttachmentResponse build() {
+            if (fileName != null) {
+                String encodedHeaderValue = "attachment; filename*=UTF-8''" + encodeFileName(fileName);
+                header("Content-Disposition", encodedHeaderValue);
+            }
+            return new AttachmentResponse(statusCode, contentType, headers, cookies, value);
+        }
+
+        private String encodeFileName(String fileName) {
+            String encoded = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
+            //  RFC 5987 (+ to %20)
+            return encoded.replace("+", "%20");
+        }
     }
 
 }

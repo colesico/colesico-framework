@@ -17,7 +17,7 @@
 package colesico.framework.restlet.internal.gsonconv;
 
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.restlet.GsonOptionsPrototype;
+import colesico.framework.restlet.writer.GsonOptionsPrototype;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

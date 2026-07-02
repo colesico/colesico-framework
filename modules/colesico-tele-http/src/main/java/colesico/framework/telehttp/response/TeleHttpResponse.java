@@ -20,22 +20,26 @@ abstract public class TeleHttpResponse {
      */
     protected final ContentType contentType;
 
-    protected final Map<String, List<String>> headers = new HashMap<>();
+    protected final Map<String, List<String>> headers;
 
-    protected final Set<HttpCookie> cookies = new HashSet<>();
+    protected final Set<HttpCookie> cookies;
 
-    public TeleHttpResponse(Integer statusCode, ContentType contentType) {
+    public TeleHttpResponse(Integer statusCode, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies) {
         this.statusCode = statusCode;
         this.contentType = contentType;
+        this.headers = headers;
+        this.cookies = cookies;
     }
 
-    public void addHeader(String name, String vale) {
+    public TeleHttpResponse addHeader(String name, String value) {
         List<String> hValues = headers.computeIfAbsent(name, n -> new ArrayList<>());
-        hValues.add(vale);
+        hValues.add(value);
+        return this;
     }
 
-    public void addCookie(HttpCookie cookie) {
+    public TeleHttpResponse addCookie(HttpCookie cookie) {
         cookies.add(cookie);
+        return this;
     }
 
     public Integer statusCode() {
@@ -56,5 +60,37 @@ abstract public class TeleHttpResponse {
 
     public final DynamicResponse toDynamic() {
         return DynamicResponse.of(this);
+    }
+
+    abstract public static class Builder<R extends TeleHttpResponse, B extends Builder<R, B>> {
+        protected Integer statusCode;
+        protected ContentType contentType;
+        protected final Map<String, List<String>> headers = new HashMap<>();
+        protected final Set<HttpCookie> cookies = new HashSet<>();
+
+        abstract public R build();
+
+        abstract protected B self();
+
+        public B statusCode(Integer statusCode) {
+            this.statusCode = statusCode;
+            return self();
+        }
+
+        public B contentType(ContentType contentType) {
+            this.contentType = contentType;
+            return self();
+        }
+
+        public B header(String name, String value) {
+            List<String> hValues = headers.computeIfAbsent(name, n -> new ArrayList<>());
+            hValues.add(value);
+            return self();
+        }
+
+        public B cookie(HttpCookie cookie) {
+            this.cookies.add(cookie);
+            return self();
+        }
     }
 }

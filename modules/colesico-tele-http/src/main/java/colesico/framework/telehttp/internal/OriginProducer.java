@@ -4,8 +4,10 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.telehttp.origin.Origin;
 import colesico.framework.telehttp.origin.*;
+import jakarta.inject.Singleton;
 
 @Producer
+@Produce(value = AutoOrigin.class, keyType = Origin.class, named = Origin.AUTO)
 @Produce(value = BodyOrigin.class, keyType = Origin.class, named = Origin.BODY)
 @Produce(value = CookieOrigin.class, keyType = Origin.class, named = Origin.COOKIE)
 @Produce(value = HeaderOrigin.class, keyType = Origin.class, named = Origin.HEADER)

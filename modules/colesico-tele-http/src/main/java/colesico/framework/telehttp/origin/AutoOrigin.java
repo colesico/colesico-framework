@@ -1,10 +1,9 @@
-package colesico.framework.weblet.origin;
+package colesico.framework.telehttp.origin;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.http.HttpRequest;
 import colesico.framework.router.RouterContext;
-import colesico.framework.weblet.WebletOrigin;
 
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -12,14 +11,19 @@ import jakarta.inject.Singleton;
 import java.util.List;
 
 @Singleton
-public class WebletAutoOrigin implements WebletOrigin {
+public class AutoOrigin implements Origin {
 
     private final Provider<HttpContext> httpContextProv;
     private final Provider<RouterContext> routerContextProv;
 
-    public WebletAutoOrigin(Provider<HttpContext> httpContextProv, Provider<RouterContext> routerContextProv) {
+    public AutoOrigin(Provider<HttpContext> httpContextProv, Provider<RouterContext> routerContextProv) {
         this.httpContextProv = httpContextProv;
         this.routerContextProv = routerContextProv;
+    }
+
+    private Iterable<String> routeParam(String name) {
+        var value = routerContextProv.get().parameters().get(name);
+        return value != null ? List.of(value) : List.of();
     }
 
     @Override
@@ -31,8 +35,7 @@ public class WebletAutoOrigin implements WebletOrigin {
                 if (httpRequest.queryParameters().hasKey(name)) {
                     return httpRequest.queryParameters().getAll(name);
                 }
-                var value = routerContextProv.get().parameters().get(name);
-                return value!=null?List.of(value):List.of();
+                return routeParam(name);
             case HttpMethod.POST:
             case HttpMethod.PATCH:
             case HttpMethod.DELETE:
@@ -43,8 +46,7 @@ public class WebletAutoOrigin implements WebletOrigin {
                 if (httpRequest.queryParameters().hasKey(name)) {
                     return httpRequest.queryParameters().getAll(name);
                 }
-                RouterContext routerContext = routerContextProv.get();
-                return List.of(routerContext.parameters().get(name));
+                return routeParam(name);
             default:
                 return List.of();
         }

@@ -5,8 +5,8 @@ package colesico.framework.telehttp.response;
  */
 public record DynamicResponse(Object actualResponse) {
 
-    public static DynamicResponse of(Object response) {
-        return new DynamicResponse(response);
+    public static DynamicResponse of(Object actualResponse) {
+        return new DynamicResponse(actualResponse);
     }
 
 }

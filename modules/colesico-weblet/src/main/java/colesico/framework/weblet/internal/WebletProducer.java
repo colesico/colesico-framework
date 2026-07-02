@@ -21,9 +21,7 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.router.RouterTargetController;
 import colesico.framework.telehttp.origin.Origin;
 import colesico.framework.weblet.WebletDataPort;
-import colesico.framework.weblet.WebletOrigin;
 import colesico.framework.weblet.WebletTeleController;
-import colesico.framework.weblet.origin.WebletAutoOrigin;
 
 import jakarta.inject.Singleton;
 
@@ -31,7 +29,6 @@ import jakarta.inject.Singleton;
 @Producer
 @Produce(WebletTeleControllerImpl.class)
 @Produce(value = WebletDataPortImpl.class, keyType = WebletDataPort.class, scoped = Singleton.class)
-@Produce(value = WebletAutoOrigin.class, keyType = Origin.class, scoped = Singleton.class, named = WebletOrigin.AUTO)
 public class WebletProducer {
 
     @Singleton

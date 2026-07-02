@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.restlet;
+package colesico.framework.restlet.writer;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;

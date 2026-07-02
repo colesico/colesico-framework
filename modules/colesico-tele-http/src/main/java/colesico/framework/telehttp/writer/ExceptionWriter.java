@@ -19,7 +19,7 @@ public class ExceptionWriter implements TeleHttpWriter<Exception, TeleHttpWriteO
 
     @Override
     public void write(Exception value, TeleHttpWriteOptions options) {
-        writer.write(ExceptionResponse.of(value), options);
+        writer.write(ExceptionResponse.exception(value).build(), options);
     }
 
 }

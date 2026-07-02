@@ -31,15 +31,15 @@ public class HelloWeblet {
     public static final String SAY_HELLO_TEXT = "Hello World!";
     public static final String SAY_PRIVET_TEXT = "Привет, ";
 
-    private final Provider<Identity> identity;
+    private final Provider<Identity<String>> identity;
 
     public HelloWeblet(Provider<Identity> identity) {
-        this.identity = identity;
+        this.identity = (Provider) identity;
     }
 
     // Browse the url: http://localhost:8080/hello-weblet/say-hello
     public HtmlResponse sayHello() {
-        return HtmlResponse.of(SAY_HELLO_TEXT);
+        return HtmlResponse.html(SAY_HELLO_TEXT).build();
     }
 
     // Browse the url: http://localhost:8080/hello-weblet/privet?name=Татьяна
@@ -51,6 +51,6 @@ public class HelloWeblet {
     // Use admin/secret to  authenticate (see resources/META-INF/accounts.properties)
     @Authentication(HttpBasic.class)
     public StringResponse secured() {
-        return StringResponse.textPlain((String) identity.get().id());
+        return StringResponse.textPlain(identity.get().id()).build();
     }
 }

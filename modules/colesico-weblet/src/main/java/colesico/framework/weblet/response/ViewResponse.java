@@ -1,7 +1,12 @@
 package colesico.framework.weblet.response;
 
+import colesico.framework.http.HttpCookie;
 import colesico.framework.telehttp.ContentType;
 import colesico.framework.telehttp.response.TeleHttpResponse;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Returns  model that be presented to given view
@@ -11,37 +16,10 @@ public final class ViewResponse extends TeleHttpResponse {
     private final String viewName;
     private final Object model;
 
-    public ViewResponse(Integer statusCode, ContentType contentType, String viewName, Object model) {
-        super(statusCode, contentType);
+    public ViewResponse(Integer statusCode, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, String viewName, Object model) {
+        super(statusCode, contentType, headers, cookies);
         this.viewName = viewName;
         this.model = model;
-    }
-
-    public static ViewResponse of(String viewName) {
-        return new ViewResponse(
-                200,
-                null,
-                viewName,
-                null
-        );
-    }
-
-    public static ViewResponse of(String viewName, Object model) {
-        return new ViewResponse(
-                200,
-                null,
-                viewName,
-                model
-        );
-    }
-
-    public static ViewResponse of(int statusCode, String viewName, Object model) {
-        return new ViewResponse(
-                statusCode,
-                null,
-                viewName,
-                model
-        );
     }
 
     public String viewName() {
@@ -52,4 +30,32 @@ public final class ViewResponse extends TeleHttpResponse {
         return model;
     }
 
- }
+    public static ViewResponse.Builder viewName(String viewName) {
+        return new ViewResponse.Builder(viewName);
+    }
+
+    public static class Builder extends TeleHttpResponse.Builder<ViewResponse, ViewResponse.Builder> {
+
+        protected final String viewName;
+        protected Object model;
+
+        public Builder(String viewName) {
+            this.viewName = viewName;
+        }
+
+        public Builder model(Object model) {
+            this.model = model;
+            return self();
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
+        }
+
+        @Override
+        public ViewResponse build() {
+            return new ViewResponse(statusCode, contentType, headers, cookies, viewName, model);
+        }
+    }
+}

@@ -21,6 +21,6 @@ public class ObjectWriter implements TeleHttpWriter<Object, TeleHttpWriteOptions
 
     @Override
     public void write(Object value, TeleHttpWriteOptions options) {
-        writer.write(ObjectResponse.of(value), options);
+        writer.write(ObjectResponse.object(value).build(), options);
     }
 }

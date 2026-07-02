@@ -1,25 +1,44 @@
 package colesico.framework.telehttp.response;
 
+import colesico.framework.http.HttpCookie;
 import colesico.framework.telehttp.ContentType;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 public class StringResponse extends ValueResponse<String> {
-    public StringResponse(Integer statusCode, ContentType contentType, String value) {
-        super(statusCode, contentType, value);
+
+    protected StringResponse(Integer statusCode, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, String value) {
+        super(statusCode, contentType, headers, cookies, value);
     }
 
-    public static StringResponse textPlain(String value) {
-        return new StringResponse(null, ContentType.TEXT_PLAIN, value);
+    public static Builder textPlain(String value) {
+        return string(value).contentType(ContentType.TEXT_PLAIN);
     }
 
-    public static StringResponse textHtml(String value) {
-        return new StringResponse(null, ContentType.TEXT_HTML, value);
+    public static Builder textHtml(String value) {
+        return string(value).contentType(ContentType.TEXT_HTML);
     }
 
-    public static StringResponse of(ContentType contentType, String value) {
-        return new StringResponse(null, contentType, value);
+    public static Builder string(String value) {
+        return new Builder(value);
     }
 
-    public static StringResponse of(Integer statusCode, ContentType contentType, String value) {
-        return new StringResponse(statusCode, contentType, value);
+    public static class Builder extends ValueResponse.Builder<String, StringResponse, Builder> {
+
+        public Builder(String value) {
+            super(value);
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
+        }
+
+        @Override
+        public StringResponse build() {
+            return new StringResponse(statusCode, contentType, headers, cookies, value);
+        }
     }
 }
