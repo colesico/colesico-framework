@@ -45,11 +45,11 @@ public class WebletDataPortImpl
 
     @Override
     public <V> V read(Type baseType, Object metadata) {
-        return read(WebletReadOptions.of(baseType, metadata));
+        return read(WebletReadOptions.builder(baseType).metadata(metadata).build());
     }
 
     @Override
     public <V> void write(V value, Type baseType, Object metadata) {
-        write(value, WebletWriteOptions.of(baseType, metadata));
+        write(value, WebletWriteOptions.builder(baseType).metadata(metadata).build());
     }
 }

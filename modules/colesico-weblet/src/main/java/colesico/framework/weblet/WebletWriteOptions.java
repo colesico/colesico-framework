@@ -33,55 +33,60 @@ public record WebletWriteOptions(
         Type baseType,
         Integer statusCode,
         ContentType contentType,
-        Charset charset,
         Class<? extends TeleHttpWriter<?, ?>> customWriter,
         Object metadata
 ) implements TeleHttpWriteOptions {
 
-    public static final String OF_METHOD = "of";
+    public static final String BUILDER_METHOD = "builder";
+    public static final String BUILD_METHOD = "build";
+    public static final String CUSTOM_WRITER_METHOD = "customWriter";
 
-    public static WebletWriteOptions of() {
-        return new WebletWriteOptions(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
+    @Deprecated
+    public WebletWriteOptions(Type baseType, Integer statusCode, ContentType contentType, Class<? extends TeleHttpWriter<?, ?>> customWriter, Object metadata) {
+        this.baseType = baseType;
+        this.statusCode = statusCode;
+        this.contentType = contentType;
+        this.customWriter = customWriter;
+        this.metadata = metadata;
     }
 
-    public static WebletWriteOptions of(Type baseType) {
-        return new WebletWriteOptions(
-                baseType,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
+    public static Builder builder(Type baseType) {
+        return new Builder(baseType);
     }
 
-    public static WebletWriteOptions of(Type baseType, Object metadata) {
-        return new WebletWriteOptions(
-                baseType,
-                null,
-                null,
-                null,
-                null,
-                metadata
-        );
-    }
+    public static class Builder {
+        Type baseType;
+        Integer statusCode;
+        ContentType contentType;
+        Class<? extends TeleHttpWriter<?, ?>> customWriter;
+        Object metadata;
 
+        public Builder(Type baseType) {
+            this.baseType = baseType;
+        }
 
-    public static WebletWriteOptions of(Type baseType, Class<? extends WebletTeleWriter<?>> writerClass) {
-        return new WebletWriteOptions(
-                baseType,
-                null,
-                null,
-                null,
-                writerClass,
-                null
-        );
+        public WebletWriteOptions build() {
+            return new WebletWriteOptions(baseType, statusCode, contentType, customWriter, metadata);
+        }
+
+        public Builder statusCode(Integer statusCode) {
+            this.statusCode = statusCode;
+            return this;
+        }
+
+        public Builder contentType(ContentType contentType) {
+            this.contentType = contentType;
+            return this;
+        }
+
+        public Builder customWriter(Class<? extends TeleHttpWriter<?, ?>> customWriter) {
+            this.customWriter = customWriter;
+            return this;
+        }
+
+        public Builder metadata(Object metadata) {
+            this.metadata = metadata;
+            return this;
+        }
     }
 }

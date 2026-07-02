@@ -16,6 +16,7 @@
 
 package colesico.framework.weblet;
 
+import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.telehttp.TeleHttpReadOptions;
 import colesico.framework.telehttp.TeleHttpReader;
 
@@ -35,32 +36,58 @@ public record WebletReadOptions(
         Object metadata
 ) implements TeleHttpReadOptions {
 
-    public static final String OF_METHOD = "of";
+    public static final String BUILDER_METHOD = "builder";
+    public static final String BUILD_METHOD = "build";
+    public static final String PARAM_NAME_METHOD = "paramName";
+    public static final String ORIGIN_NAME_METHOD = "originName";
+    public static final String CUSTOM_READER_METHOD = "customReader";
 
-    public static WebletReadOptions of() {
-        return new WebletReadOptions(null, null, WebletOrigin.AUTO, null, null);
+    @Deprecated
+    public WebletReadOptions(Type baseType, String paramName, String originName, Class<? extends TeleHttpReader<?, ?>> customReader, Object metadata) {
+        this.baseType = baseType;
+        this.paramName = paramName;
+        this.originName = originName;
+        this.customReader = customReader;
+        this.metadata = metadata;
     }
 
-    public static WebletReadOptions of(Type baseType) {
-        return new WebletReadOptions(baseType, null, WebletOrigin.AUTO, null, null);
+    public static Builder builder(Type baseType) {
+        return new Builder(baseType);
     }
 
-    public static WebletReadOptions of(Type baseType, String paramName) {
-        return new WebletReadOptions(baseType, paramName, WebletOrigin.AUTO, null, null);
-    }
+    public static class Builder {
+        Type baseType;
+        String paramName;
+        String originName;
+        Class<? extends TeleHttpReader<?, ?>> customReader;
+        Object metadata;
 
-    public static WebletReadOptions of(Type baseType, String paramName, String originName) {
-        return new WebletReadOptions(baseType, paramName, originName, null, null);
-    }
+        public Builder(Type baseType) {
+            this.baseType = baseType;
+        }
 
-    public static WebletReadOptions of(Type baseType, String paramName, String originName, Class<? extends WebletTeleReader<?>> readerClass) {
-        return new WebletReadOptions(baseType, paramName, originName, readerClass, null);
-    }
+        public WebletReadOptions build() {
+            return new WebletReadOptions(baseType, paramName, originName, customReader, metadata);
+        }
 
-    /**
-     *  For basic manual usage
-     */
-    public static WebletReadOptions of(Type baseType, Object metadata) {
-        return new WebletReadOptions(baseType, null, WebletOrigin.AUTO, null, metadata);
+        public Builder paramName(String paramName) {
+            this.paramName = paramName;
+            return this;
+        }
+
+        public Builder originName(String originName) {
+            this.originName = originName;
+            return this;
+        }
+
+        public Builder customReader(Class<? extends TeleHttpReader<?, ?>> customReader) {
+            this.customReader = customReader;
+            return this;
+        }
+
+        public Builder metadata(Object metadata) {
+            this.metadata = metadata;
+            return this;
+        }
     }
 }

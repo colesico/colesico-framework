@@ -1,7 +1,9 @@
 package colesico.framework.restlet;
 
+import colesico.framework.telehttp.ContentType;
 import colesico.framework.telehttp.TeleHttpWriteOptions;
 
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
 /**
@@ -10,28 +12,22 @@ import java.nio.charset.Charset;
  * @param metadata
  */
 public record RestletWriteOptions(
+        Type baseType,
         Integer statusCode,
-        String contentType,
+        ContentType contentType,
         Charset charset,
         Class<? extends RestletTeleWriter<?>> customWriter,
         Object metadata
 ) implements TeleHttpWriteOptions {
 
-      public static final String OF_METHOD = "of";
-
-    public RestletWriteOptions(Integer statusCode, String contentType, Charset charset, Class<? extends RestletTeleWriter<?>> writerClass, Object attachment) {
-        this.statusCode = statusCode;
-        this.contentType = contentType;
-        this.charset = charset;
-        this.customWriter = writerClass;
-        this.metadata = attachment;
-    }
+    public static final String OF_METHOD = "of";
 
     public static RestletWriteOptions of() {
         return new RestletWriteOptions(
-                DEFAULT_SUCCESS_STATUS_CODE,
-                DEFAULT_CONTENT_TYPE,
-                DEFAULT_CHARSET,
+                null,
+                null,
+                null,
+                null,
                 null,
                 null);
     }

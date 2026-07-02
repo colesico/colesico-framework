@@ -22,6 +22,8 @@ import colesico.framework.telehttp.*;
 
 import jakarta.inject.Singleton;
 
+import java.lang.reflect.Type;
+
 @Singleton
 public class RestletDataPortImpl
         extends TeleHttpDataPort<RestletReadOptions, RestletWriteOptions>
@@ -42,22 +44,12 @@ public class RestletDataPortImpl
     }
 
     @Override
-    protected RestletReadOptions readOptions() {
-        return RestletReadOptions.of();
+    public <V> V read(Type baseType, Object metadata) {
+        return read(RestletReadOptions.of(baseType, metadata));
     }
 
     @Override
-    protected RestletReadOptions readOptions(Object attachment) {
-        return RestletReadOptions.of(attachment);
-    }
-
-    @Override
-    protected RestletWriteOptions writeOptions() {
-        return RestletWriteOptions.of();
-    }
-
-    @Override
-    protected RestletWriteOptions writeOptions(Object attachment) {
-        return RestletWriteOptions.of(attachment);
+    public <V> void write(V value, Type baseType, Object metadata) {
+        write(value, RestletWriteOptions.of(baseType, metadata));
     }
 }

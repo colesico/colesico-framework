@@ -85,28 +85,28 @@ public final class WebletModulator extends RoutesModulator {
 
 
         CodeBlock.Builder optionsCode = CodeBlock.builder();
-        optionsCode.add("$T.$N(", ClassName.get(WebletReadOptions.class), WebletReadOptions.OF_METHOD);
-
+        optionsCode.add("$T.$N(", ClassName.get(WebletReadOptions.class), WebletReadOptions.BUILDER_METHOD);
         optionsCode.add(valueTypeCode.build());
+        optionsCode.add(")");
 
         String paramName = TeleHttpCodegenUtils.paramName(teleParam);
-        optionsCode.add(", $S", paramName);
-
-        String originName = TeleHttpCodegenUtils.originName(teleParam, WebletOrigin.AUTO);
-        TypeMirror customReader = getCustomReaderClass(teleParam);
-
-        if (!originName.equals(WebletOrigin.AUTO) || customReader != null) {
-            optionsCode.add(", $S", originName);
+        if (paramName != null) {
+            optionsCode.add(".$N($S)", WebletReadOptions.PARAM_NAME_METHOD, paramName);
         }
 
-        ClassType customReaderCT = null;
+        String originName = TeleHttpCodegenUtils.originName(teleParam, WebletOrigin.AUTO);
+        if (originName != null) {
+            optionsCode.add(".$N($S)", WebletReadOptions.ORIGIN_NAME_METHOD, originName);
+        }
 
+        TypeMirror customReader = getCustomReaderClass(teleParam);
+        ClassType customReaderCT = null;
         if (customReader != null) {
-            optionsCode.add(", $T.class", TypeName.get(customReader));
+            optionsCode.add(".$N($T.class)", WebletReadOptions.CUSTOM_READER_METHOD, TypeName.get(customReader));
             customReaderCT = new ClassType(processorContext().processingEnv(), (DeclaredType) customReader);
         }
 
-        optionsCode.add(")");
+        optionsCode.add(".$N()", WebletWriteOptions.BUILD_METHOD);
 
         return new TeleHttpReadElement(teleParam,
                 null,
@@ -123,17 +123,20 @@ public final class WebletModulator extends RoutesModulator {
         ServiceCodegenUtils.generateTeleResultType(teleCommand, valueTypeCode);
 
         CodeBlock.Builder optionsCode = CodeBlock.builder();
-        optionsCode.add("$T.$N(", ClassName.get(WebletWriteOptions.class), WebletWriteOptions.OF_METHOD);
+        optionsCode.add("$T.$N(", ClassName.get(WebletWriteOptions.class), WebletWriteOptions.BUILDER_METHOD);
         optionsCode.add(valueTypeCode.build());
+        optionsCode.add(")");
 
         TypeMirror customWriter = getCustomWriterClass(teleCommand);
         ClassType customWriterCT = null;
         if (customWriter != null) {
-            optionsCode.add(", $T.class", TypeName.get(customWriter));
+            // .customWriter(CustomWriter.class)
+            optionsCode.add(".$N($T.class)", WebletWriteOptions.CUSTOM_WRITER_METHOD, TypeName.get(customWriter));
             customWriterCT = new ClassType(processorContext().processingEnv(), (DeclaredType) customWriter);
         }
+        // .build()
+        optionsCode.add(".$N()", WebletWriteOptions.BUILD_METHOD);
 
-        optionsCode.add(")");
 
         return new TeleHttpWriteElement(teleCommand, null, optionsCode.build(), customWriterCT);
     }
