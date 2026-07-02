@@ -1,6 +1,5 @@
 package colesico.framework.restlet.codegen.assist;
 
-import colesico.framework.restlet.RestletOrigin;
 import colesico.framework.restlet.RestletParamReader;
 import colesico.framework.service.codegen.model.teleapi.TeleOrdinaryParamElement;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
