@@ -19,32 +19,52 @@ public record RestletReadOptions(
         Object metadata
 ) implements TeleHttpReadOptions {
 
-    public static final String OF_METHOD = "of";
-
-    public static RestletReadOptions of() {
-        return new RestletReadOptions(null, null, RestletOrigin.AUTO, null, null);
+    @Deprecated
+    public RestletReadOptions(Type baseType, String paramName, String originName, Class<? extends RestletTeleReader<?>> customReader, Object metadata) {
+        this.baseType = baseType;
+        this.paramName = paramName;
+        this.originName = originName;
+        this.customReader = customReader;
+        this.metadata = metadata;
     }
 
-    public static RestletReadOptions of(Type baseType) {
-        return new RestletReadOptions(baseType, null, RestletOrigin.AUTO, null, null);
+    public static Builder builder(Type baseType) {
+        return new Builder(baseType);
     }
 
-    public static RestletReadOptions of(Type baseType, String paramName) {
-        return new RestletReadOptions(baseType, paramName, RestletOrigin.AUTO, null, null);
-    }
+    public static class Builder {
+        private final Type baseType;
+        private String paramName;
+        private String originName;
+        private Class<? extends RestletTeleReader<?>> customReader;
+        private Object metadata;
 
-    public static RestletReadOptions of(Type baseType, String paramName, String originName) {
-        return new RestletReadOptions(baseType, paramName, originName, null, null);
-    }
+        public Builder(Type baseType) {
+            this.baseType = baseType;
+        }
 
-    public static RestletReadOptions of(Type baseType, String paramName, String originName, Class<? extends RestletTeleReader<?>> readerClass) {
-        return new RestletReadOptions(baseType, paramName, originName, readerClass, null);
-    }
+        public Builder paramName(String paramName) {
+            this.paramName = paramName;
+            return this;
+        }
 
-    /**
-     * For manual usage
-     */
-    public static RestletReadOptions of(Type baseType, Object metadata) {
-        return new RestletReadOptions(baseType, null, RestletOrigin.AUTO, null, metadata);
+        public Builder originName(String originName) {
+            this.originName = originName;
+            return this;
+        }
+
+        public Builder customReader(Class<? extends RestletTeleReader<?>> customReader) {
+            this.customReader = customReader;
+            return this;
+        }
+
+        public Builder metadata(Object metadata) {
+            this.metadata = metadata;
+            return this;
+        }
+
+        public RestletReadOptions build() {
+            return new RestletReadOptions(baseType, paramName, originName, customReader, metadata);
+        }
     }
 }

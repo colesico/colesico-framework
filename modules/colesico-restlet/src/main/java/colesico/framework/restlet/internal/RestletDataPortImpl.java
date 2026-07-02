@@ -45,11 +45,11 @@ public class RestletDataPortImpl
 
     @Override
     public <V> V read(Type baseType, Object metadata) {
-        return read(RestletReadOptions.of(baseType, metadata));
+        return read(RestletReadOptions.builder(baseType).metadata(metadata).build());
     }
 
     @Override
     public <V> void write(V value, Type baseType, Object metadata) {
-        write(value, RestletWriteOptions.of(baseType, metadata));
+        write(value, RestletWriteOptions.builder(baseType).metadata(metadata).build());
     }
 }

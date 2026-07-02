@@ -56,11 +56,11 @@ public record WebletReadOptions(
     }
 
     public static class Builder {
-        Type baseType;
-        String paramName;
-        String originName;
-        Class<? extends TeleHttpReader<?, ?>> customReader;
-        Object metadata;
+        private final Type baseType;
+        private String paramName;
+        private String originName;
+        private Class<? extends TeleHttpReader<?, ?>> customReader;
+        private Object metadata;
 
         public Builder(Type baseType) {
             this.baseType = baseType;

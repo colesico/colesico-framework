@@ -55,11 +55,11 @@ public record WebletWriteOptions(
     }
 
     public static class Builder {
-        Type baseType;
-        Integer statusCode;
-        ContentType contentType;
-        Class<? extends TeleHttpWriter<?, ?>> customWriter;
-        Object metadata;
+        private final Type baseType;
+        private Integer statusCode;
+        private ContentType contentType;
+        private Class<? extends TeleHttpWriter<?, ?>> customWriter;
+        private Object metadata;
 
         public Builder(Type baseType) {
             this.baseType = baseType;
