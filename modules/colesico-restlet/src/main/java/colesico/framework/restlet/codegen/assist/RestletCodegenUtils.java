@@ -1,6 +1,5 @@
 package colesico.framework.restlet.codegen.assist;
 
-import colesico.framework.restlet.RestletParamReader;
 import colesico.framework.service.codegen.model.teleapi.TeleOrdinaryParamElement;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
 
@@ -18,9 +17,9 @@ public class RestletCodegenUtils {
     }
 
     public static TypeMirror getCustomReaderClass(TeleOrdinaryParamElement teleParam, Elements elementUtils) {
-        var rdAnn = teleParam.originElement().annotation(RestletParamReader.class);
+        var rdAnn = teleParam.originElement().annotation(RestletCustomReader.class);
         if (rdAnn == null) {
-            rdAnn = teleParam.parentTeleCommand().serviceMethod().originMethod().annotation(RestletParamReader.class);
+            rdAnn = teleParam.parentTeleCommand().serviceMethod().originMethod().annotation(RestletCustomReader.class);
         }
         if (rdAnn == null) {
             return null;

@@ -1,6 +1,6 @@
 package colesico.framework.restlet.writer;
 
-import colesico.framework.restlet.RestletTeleWriter;
+import colesico.framework.restlet.RestletWriter;
 import colesico.framework.restlet.RestletWriteOptions;
 import colesico.framework.telehttp.response.ObjectResponse;
 import jakarta.inject.Singleton;
@@ -9,7 +9,7 @@ import jakarta.inject.Singleton;
  * Writes object value with  {@link JsonObjectResponseWriter}
  */
 @Singleton
-public class JsonObjectWriter implements RestletTeleWriter<Object> {
+public class JsonObjectWriter implements RestletWriter<Object> {
 
     protected final JsonObjectResponseWriter writer;
 

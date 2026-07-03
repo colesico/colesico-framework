@@ -9,7 +9,7 @@ public record RestletWriteOptions(
         Type baseType,
         Integer statusCode,
         ContentType contentType,
-        Class<? extends RestletTeleWriter<?>> customWriter,
+        Class<? extends RestletWriter<?>> customWriter,
         Object metadata
 ) implements HttpWriteOptions {
 
@@ -17,7 +17,7 @@ public record RestletWriteOptions(
     public static final String BUILD_METHOD = "build";
 
     @Deprecated
-    public RestletWriteOptions(Type baseType, Integer statusCode, ContentType contentType, Class<? extends RestletTeleWriter<?>> customWriter, Object metadata) {
+    public RestletWriteOptions(Type baseType, Integer statusCode, ContentType contentType, Class<? extends RestletWriter<?>> customWriter, Object metadata) {
         this.baseType = baseType;
         this.statusCode = statusCode;
         this.contentType = contentType;
@@ -33,7 +33,7 @@ public record RestletWriteOptions(
         private final Type baseType;
         private Integer statusCode;
         private ContentType contentType;
-        private Class<? extends RestletTeleWriter<?>> customWriter;
+        private Class<? extends RestletWriter<?>> customWriter;
         private Object metadata;
 
         public Builder(Type baseType) {
@@ -50,7 +50,7 @@ public record RestletWriteOptions(
             return this;
         }
 
-        public Builder customWriter(Class<? extends RestletTeleWriter<?>> customWriter) {
+        public Builder customWriter(Class<? extends RestletWriter<?>> customWriter) {
             this.customWriter = customWriter;
             return this;
         }

@@ -19,7 +19,7 @@ package colesico.framework.restlet.internal;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.restlet.RestletTeleWriter;
+import colesico.framework.restlet.RestletWriter;
 import colesico.framework.restlet.writer.*;
 import colesico.framework.telehttp.response.ExceptionResponse;
 import colesico.framework.telehttp.response.ObjectResponse;
@@ -32,19 +32,19 @@ public class RestletWritersProducer {
 
     @Singleton
     @Classed(ObjectResponse.class)
-    public RestletTeleWriter objectResponseWriter(JsonObjectResponseWriter impl) {
+    public RestletWriter objectResponseWriter(JsonObjectResponseWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(ExceptionResponse.class)
-    public RestletTeleWriter exceptionResponseWriter(JsonExceptionResponseWriter impl) {
+    public RestletWriter exceptionResponseWriter(JsonExceptionResponseWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Object.class)
-    public RestletTeleWriter objectResponseWriter(JsonObjectWriter impl) {
+    public RestletWriter objectResponseWriter(JsonObjectWriter impl) {
         return impl;
     }
 

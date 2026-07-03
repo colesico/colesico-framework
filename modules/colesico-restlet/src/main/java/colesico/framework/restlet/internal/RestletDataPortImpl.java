@@ -35,12 +35,12 @@ public class RestletDataPortImpl
 
     @Override
     protected Class<? extends HttpReader> readerBaseClass() {
-        return RestletTeleReader.class;
+        return RestletReader.class;
     }
 
     @Override
     protected Class<? extends HttpWriter> writerBaseClass() {
-        return RestletTeleWriter.class;
+        return RestletWriter.class;
     }
 
     @Override

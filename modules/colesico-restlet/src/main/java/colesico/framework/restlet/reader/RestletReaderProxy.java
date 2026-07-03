@@ -17,14 +17,14 @@
 package colesico.framework.restlet.reader;
 
 import colesico.framework.restlet.RestletReadOptions;
-import colesico.framework.restlet.RestletTeleReader;
+import colesico.framework.restlet.RestletReader;
 import colesico.framework.telehttp.HttpReader;
 import colesico.framework.telehttp.HttpReadOptions;
 
 /**
  * Proxy to  use any http readers as restlet reader
  */
-public final class RestletReaderProxy<V> implements RestletTeleReader<V> {
+public final class RestletReaderProxy<V> implements RestletReader<V> {
 
     private final HttpReader<V, HttpReadOptions> reader;
 

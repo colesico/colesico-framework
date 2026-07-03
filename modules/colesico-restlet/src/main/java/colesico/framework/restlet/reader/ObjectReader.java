@@ -19,7 +19,7 @@ import static colesico.framework.http.HttpMethod.*;
 @Singleton
 public final class ObjectReader
         extends OriginReader<Object, RestletReadOptions>
-        implements RestletTeleReader<Object> {
+        implements RestletReader<Object> {
 
     private final ValueSerializer serializer;
     private final Provider<HttpContext> httpContextProv;

@@ -17,7 +17,7 @@
 package colesico.framework.restlet.writer;
 
 import colesico.framework.restlet.RestletWriteOptions;
-import colesico.framework.restlet.RestletTeleWriter;
+import colesico.framework.restlet.RestletWriter;
 import colesico.framework.telehttp.HttpWriter;
 import colesico.framework.telehttp.HttpWriteOptions;
 
@@ -26,7 +26,7 @@ import colesico.framework.telehttp.HttpWriteOptions;
  *
  * @param <V> value type
  */
-public final class RestletWriterProxy<V> implements RestletTeleWriter<V> {
+public final class RestletWriterProxy<V> implements RestletWriter<V> {
 
     private final HttpWriter<V, HttpWriteOptions> writer;
 

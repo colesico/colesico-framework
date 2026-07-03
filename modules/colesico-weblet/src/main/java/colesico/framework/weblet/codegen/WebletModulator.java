@@ -28,6 +28,8 @@ import colesico.framework.service.codegen.model.teleapi.TeleOrdinaryParamElement
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.dataport.ReadOptions;
 import colesico.framework.teleapi.dataport.WriteOptions;
+import colesico.framework.telehttp.UseReader;
+import colesico.framework.telehttp.UseWriter;
 import colesico.framework.telehttp.codegen.TeleHttpReadElement;
 import colesico.framework.telehttp.codegen.TeleHttpWriteElement;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
@@ -143,9 +145,9 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     private TypeMirror getCustomWriterClass(TeleCommandElement teleCommand) {
-        var wrAnn = teleCommand.serviceMethod().originMethod().annotation(WebletCustomWriter.class);
+        var wrAnn = teleCommand.serviceMethod().originMethod().annotation(UseWriter.class);
         if (wrAnn == null) {
-            wrAnn = teleCommand.parentTeleService().parentService().originClass().annotation(WebletCustomWriter.class);
+            wrAnn = teleCommand.parentTeleService().parentService().originClass().annotation(UseWriter.class);
         }
         if (wrAnn == null) {
             return null;
@@ -154,10 +156,10 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     private TypeMirror getCustomReaderClass(TeleOrdinaryParamElement teleParam) {
-        var rdAnn = teleParam.originElement().annotation(WebletParamReader.class);
+        var rdAnn = teleParam.originElement().annotation(UseReader.class);
 
         if (rdAnn == null) {
-            rdAnn = teleParam.parentTeleCommand().serviceMethod().originMethod().annotation(WebletParamReader.class);
+            rdAnn = teleParam.parentTeleCommand().serviceMethod().originMethod().annotation(UseReader.class);
         }
 
         if (rdAnn != null) {

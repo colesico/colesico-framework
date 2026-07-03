@@ -2,7 +2,7 @@ package colesico.framework.restlet.writer;
 
 import colesico.framework.http.HttpResponse;
 import colesico.framework.restlet.JsonSerializer;
-import colesico.framework.restlet.RestletTeleWriter;
+import colesico.framework.restlet.RestletWriter;
 import colesico.framework.restlet.RestletWriteOptions;
 import colesico.framework.telehttp.ContentType;
 import colesico.framework.telehttp.response.ObjectResponse;
@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 @Singleton
 public class JsonObjectResponseWriter
         extends ValueResponseWriter<ObjectResponse, RestletWriteOptions>
-        implements RestletTeleWriter<ObjectResponse> {
+        implements RestletWriter<ObjectResponse> {
 
     protected final JsonSerializer serializer;
 

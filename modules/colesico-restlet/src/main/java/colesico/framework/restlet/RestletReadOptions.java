@@ -15,12 +15,12 @@ public record RestletReadOptions(
         Type baseType,
         String paramName,
         String originName,
-        Class<? extends RestletTeleReader<?>> customReader,
+        Class<? extends RestletReader<?>> customReader,
         Object metadata
 ) implements HttpReadOptions {
 
     @Deprecated
-    public RestletReadOptions(Type baseType, String paramName, String originName, Class<? extends RestletTeleReader<?>> customReader, Object metadata) {
+    public RestletReadOptions(Type baseType, String paramName, String originName, Class<? extends RestletReader<?>> customReader, Object metadata) {
         this.baseType = baseType;
         this.paramName = paramName;
         this.originName = originName;
@@ -36,7 +36,7 @@ public record RestletReadOptions(
         private final Type baseType;
         private String paramName;
         private String originName;
-        private Class<? extends RestletTeleReader<?>> customReader;
+        private Class<? extends RestletReader<?>> customReader;
         private Object metadata;
 
         public Builder(Type baseType) {
@@ -53,7 +53,7 @@ public record RestletReadOptions(
             return this;
         }
 
-        public Builder customReader(Class<? extends RestletTeleReader<?>> customReader) {
+        public Builder customReader(Class<? extends RestletReader<?>> customReader) {
             this.customReader = customReader;
             return this;
         }

@@ -1,4 +1,4 @@
-package colesico.framework.weblet;
+package colesico.framework.telehttp;
 
 import java.lang.annotation.*;
 
@@ -10,6 +10,6 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Inherited
 @Documented
-public @interface WebletCustomWriter {
-    Class<? extends WebletWriter> value();
+public @interface UseWriter {
+    Class<? extends HttpWriter> value();
 }
