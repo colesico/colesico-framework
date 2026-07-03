@@ -4,10 +4,12 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.restlet.RestletDataPort;
 import colesico.framework.restlet.RestletRequestListener;
 import colesico.framework.restlet.RestletResponseListener;
+import colesico.framework.router.Router;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Singleton;
+
 import java.io.StringWriter;
 
 @Singleton
@@ -16,7 +18,7 @@ public class LogRestletListener implements RestletRequestListener, RestletRespon
     private static final Logger log = LoggerFactory.getLogger(LogRestletListener.class);
 
     @Override
-    public void onRequest(HttpContext ctx, RestletDataPort dataPort, Object service) {
+    public void onRequest(HttpContext ctx, RestletDataPort dataPort, Router.Invocation invocation) {
         if (!log.isDebugEnabled()) {
             return;
         }

@@ -45,21 +45,24 @@ public class WebletTeleControllerImpl implements WebletTeleController {
 
     protected final Logger logger = LoggerFactory.getLogger(WebletTeleControllerImpl.class);
 
-    protected final WebletDataPort dataPort;
-    protected final Polysupplier<TeleFacade<?, RouterCommandsRegistry>> teleFacades;
+    protected final TaskScope taskScope;
 
     protected final Provider<HttpContext> httpContext;
 
+    protected final WebletDataPort dataPort;
+
+    protected final Polysupplier<TeleFacade<?, RouterCommandsRegistry>> teleFacades;
+
     protected final CSRFProtector csrfProtector;
 
-    protected final TaskScope taskScope;
-
-    public WebletTeleControllerImpl(WebletDataPort dataPort,
-                                    @Classed(Weblet.class)
-                                    Polysupplier<TeleFacade> teleFacades,
-                                    Provider<HttpContext> httpContext,
-                                    CSRFProtector csrfProtector,
-                                    TaskScope taskScope) {
+    public WebletTeleControllerImpl(
+            TaskScope taskScope,
+            Provider<HttpContext> httpContext,
+            WebletDataPort dataPort,
+            @Classed(Weblet.class)
+            Polysupplier<TeleFacade> teleFacades,
+            CSRFProtector csrfProtector
+    ) {
         this.dataPort = dataPort;
         this.teleFacades = (Polysupplier) teleFacades;
         this.httpContext = httpContext;

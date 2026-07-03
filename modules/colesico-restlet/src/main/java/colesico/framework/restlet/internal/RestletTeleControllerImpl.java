@@ -18,18 +18,23 @@ package colesico.framework.restlet.internal;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpRequest;
+import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.ioc.scope.ThreadScope;
+import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.restlet.*;
-import colesico.framework.service.ApplicationException;
+import colesico.framework.router.Router;
+import colesico.framework.router.RouterCommandsRegistry;
+import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.dataport.DataPort;
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import colesico.framework.telehttp.assist.CSRFProtector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+
+import java.util.Optional;
 
 /**
  * @author Vladlen Larionov
@@ -44,74 +49,83 @@ public class RestletTeleControllerImpl implements RestletTeleController {
 
     protected final RestletConfigPrototype config;
 
-    protected final ThreadScope threadScope;
-    protected final Provider<HttpContext> httpContextProv;
+    protected final TaskScope taskScope;
+
+    protected final Provider<HttpContext> httpContext;
+
     protected final RestletDataPort dataPort;
+
+    protected final Polysupplier<TeleFacade<?, RouterCommandsRegistry>> teleFacades;
+
+    protected final CSRFProtector csrfProtector;
+
     protected final Polysupplier<RestletRequestListener> reqListenerSup;
+
     protected final Polysupplier<RestletResponseListener> respListenerSup;
 
     @Inject
-    public RestletTeleControllerImpl(RestletConfigPrototype config,
-                                     ThreadScope threadScope,
-                                     Provider<HttpContext> httpContextProv,
-                                     RestletDataPort dataPort,
-                                     Polysupplier<RestletRequestListener> reqListenerSup,
-                                     Polysupplier<RestletResponseListener> respListenerSup) {
+    public RestletTeleControllerImpl(
+            RestletConfigPrototype config,
+            TaskScope taskScope,
+            Provider<HttpContext> httpContext,
+            RestletDataPort dataPort,
+            @Classed(Restlet.class)
+            Polysupplier<TeleFacade> teleFacades,
+            CSRFProtector csrfProtector,
+            Polysupplier<RestletRequestListener> reqListenerSup,
+            Polysupplier<RestletResponseListener> respListenerSup) {
+
         this.config = config;
-        this.threadScope = threadScope;
-        this.httpContextProv = httpContextProv;
+        this.taskScope = taskScope;
+        this.httpContext = httpContext;
         this.dataPort = dataPort;
+        this.teleFacades = (Polysupplier) teleFacades;
+        this.csrfProtector = csrfProtector;
         this.reqListenerSup = reqListenerSup;
         this.respListenerSup = respListenerSup;
     }
 
     @Override
-    public <S> void invoke(S service, MethodInvoker<S, RestletDataPort> invoker, RestletTIContext invContext) {
+    public Iterable<TeleFacade<?, RouterCommandsRegistry>> teleFacades() {
+        return teleFacades;
+    }
+
+    @Override
+    public Optional<Router.Invocation> resolve(Criteria criteria) {
+        return Optional.empty();
+    }
+
+    @Override
+    public void register(TeleFacade<?, RouterCommandsRegistry> teleFacade) {
+        throw new UnsupportedOperationException("Not supported");
+    }
+
+    @Override
+    public void execute(Router.Invocation invocation) {
+
         // Set data port to  be accessible
-        threadScope.put(DataPort.SCOPE_KEY, dataPort);
+        taskScope.put(DataPort.SCOPE_KEY, dataPort);
         // Retrieve http context
-        HttpContext httpContext = httpContextProv.get();
+        HttpContext httpContext = this.httpContext.get();
         // Retrieve http request
         HttpRequest httpRequest = httpContext.request();
-        try {
-            // Request listener notification
-            notifyRequestListener(httpContext, service);
+        // Request listener notification
+        notifyRequestListener(httpContext, invocation);
 
-            // CSRF protection
-            if (config.enableCSFRProtection()) {
-                guardCSFR(httpRequest);
-            }
-
-            // Invoke tele-command
-            invoker.invoke(service, dataPort);
-
-        } catch (Exception ex) {
-            if (ex instanceof ApplicationException) {
-                logger.warn("Application exception: " + ExceptionUtils.getRootCauseMessage(ex));
-            } else {
-                logger.error("Unexpected error:" + ExceptionUtils.getRootCauseMessage(ex));
-            }
-            try {
-                dataPort.writeError(ex);
-            } catch (Exception e) {
-                logger.error("Writing exception error: {}", ExceptionUtils.getRootCauseMessage(e));
-            }
-        } finally {
-            notifyResponseListener(httpContext);
+        // CSRF protection
+        if (config.csrfProtection()) {
+            csrfProtector.check(httpRequest);
         }
+
+        // Invoke tele-command
+        invocation.action().teleCommand().execute();
+
+        notifyResponseListener(httpContext);
     }
 
-
-    protected void guardCSFR(HttpRequest httpRequest) {
-        String xRequestedWith = httpRequest.headers().get(X_REQUESTED_WITH_HEADER);
-        if (!X_REQUESTED_WITH_HEADER_VAL.equals(xRequestedWith)) {
-            throw new ApplicationException("Http header '" + X_REQUESTED_WITH_HEADER + "=" + X_REQUESTED_WITH_HEADER_VAL + "' required");
-        }
-    }
-
-    protected void notifyRequestListener(final HttpContext context, final Object service) {
+    protected void notifyRequestListener(final HttpContext context, Router.Invocation invocation) {
         if (reqListenerSup.isNotEmpty()) {
-            reqListenerSup.forEach(s -> s.onRequest(context, dataPort, service));
+            reqListenerSup.forEach(s -> s.onRequest(context, dataPort, invocation));
         }
     }
 
@@ -120,6 +134,5 @@ public class RestletTeleControllerImpl implements RestletTeleController {
             respListenerSup.forEach(s -> s.onResponse(context, dataPort));
         }
     }
-
 
 }

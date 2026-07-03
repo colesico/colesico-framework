@@ -46,6 +46,10 @@ module colesico.framework.restlet {
     opens colesico.framework.restlet.t9n to colesico.framework.localization;
     opens colesico.framework.restlet.assist;
     opens colesico.framework.restlet.writer;
+    exports colesico.framework.restlet.jsonconverter;
+    opens colesico.framework.restlet.jsonconverter;
+    exports colesico.framework.restlet.gson;
+    opens colesico.framework.restlet.gson;
 
 
     provides Modulator with colesico.framework.restlet.codegen.RestletModulator;

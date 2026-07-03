@@ -7,7 +7,7 @@ import colesico.framework.restlet.RestletConfigPrototype;
  */
 public class RestletConfigImpl extends RestletConfigPrototype {
     @Override
-    public Boolean enableCSFRProtection() {
+    public Boolean csrfProtection() {
         return Boolean.FALSE;
     }
 }

@@ -62,10 +62,10 @@ abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O exten
     @Override
     public void write(V response, O options) {
 
-        var protocol = httpResponse.get();
+        var httpResponse = this.httpResponse.get();
 
         if (isEmptyResponse(response)) {
-            protocol.setStatus(emptyStatusCode()).close();
+            httpResponse.setStatus(emptyStatusCode()).close();
             return;
         }
 
@@ -79,17 +79,17 @@ abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O exten
             throw TeleHttpException.of("Undefined media type", 500);
         }
 
-        protocol.setStatus(statusCode).setContentType(contentType.headerValue());
+        httpResponse.setStatus(statusCode).setContentType(contentType.headerValue());
 
         if (!response.headers().isEmpty()) {
-            HttpUtils.setHeaders(protocol, response.headers());
+            HttpUtils.setHeaders(httpResponse, response.headers());
         }
 
         if (!response.cookies().isEmpty()) {
-            HttpUtils.setCookies(protocol, response.cookies());
+            HttpUtils.setCookies(httpResponse, response.cookies());
         }
 
-        try (OutputStream os = protocol.outputStream()) {
+        try (OutputStream os = httpResponse.outputStream()) {
             write(os, response, options);
             os.flush();
         } catch (Exception e) {

@@ -19,10 +19,11 @@ package colesico.framework.restlet;
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
 
-/**
- * @author Vladlen Larionov
- */
 @ConfigPrototype(model = ConfigModel.SINGLE)
 abstract public class RestletConfigPrototype {
-    abstract public Boolean enableCSFRProtection();
+
+    /**
+     * Enable CSRF protection
+     */
+    abstract public Boolean csrfProtection();
 }

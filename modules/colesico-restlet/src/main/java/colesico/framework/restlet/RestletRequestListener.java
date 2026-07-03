@@ -1,6 +1,7 @@
 package colesico.framework.restlet;
 
 import colesico.framework.http.HttpContext;
+import colesico.framework.router.Router;
 
 
 /**
@@ -9,5 +10,5 @@ import colesico.framework.http.HttpContext;
  */
 @FunctionalInterface
 public interface RestletRequestListener {
-    void onRequest(HttpContext ctx, RestletDataPort dataPort, Object service);
+    void onRequest(HttpContext ctx, RestletDataPort dataPort, Router.Invocation invocation);
 }
