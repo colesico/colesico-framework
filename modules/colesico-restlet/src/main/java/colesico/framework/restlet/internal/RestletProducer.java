@@ -16,16 +16,12 @@
 
 package colesico.framework.restlet.internal;
 
-import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.restlet.*;
 import colesico.framework.restlet.assist.LogRestletListener;
 import colesico.framework.restlet.gson.GsonSerializer;
-import colesico.framework.restlet.origin.RestletAutoOrigin;
-import colesico.framework.telehttp.origin.Origin;
 
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
 
@@ -33,36 +29,12 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Producer
-@Produce(RestletDataPortImpl.class)
-@Produce(RestletTeleControllerImpl.class)
+@Produce(value = RestletDataPortImpl.class, keyType = RestletDataPort.class)
+@Produce(value = RestletTeleControllerImpl.class, keyType = RestletTeleController.class)
 @Produce(GsonSerializer.class)
-@Produce(LogRestletListener.class)
+@Produce(value = LogRestletListener.class, keyType = RestletRequestListener.class, polyproduce = 0)
+@Produce(value = LogRestletListener.class, keyType = RestletResponseListener.class, polyproduce = 0)
 public class RestletProducer {
-
-    @Singleton
-    public RestletDataPort restletDataPort(RestletDataPortImpl impl) {
-        return impl;
-    }
-
-    @Singleton
-    public RestletTeleController restletTeleDriver(RestletTeleControllerImpl impl) {
-        return impl;
-    }
-
-    @Singleton
-    public ValueSerializer restletSerializer(@IocMessage String contentType, GsonSerializer impl) {
-        return impl;
-    }
-
-    @Singleton
-    public RestletRequestListener restletRequestListener(LogRestletListener impl) {
-        return impl;
-    }
-
-    @Singleton
-    public RestletResponseListener restletResponseListener(LogRestletListener impl) {
-        return impl;
-    }
 
     @Singleton
     public RestletConfigPrototype defaultRestletConfig() {

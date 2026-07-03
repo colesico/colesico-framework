@@ -29,11 +29,10 @@ module colesico.framework.restlet {
     // API
     exports colesico.framework.restlet;
     opens colesico.framework.restlet;
-    exports colesico.framework.restlet.origin;
     exports colesico.framework.restlet.reader;
     exports colesico.framework.restlet.writer;
     exports colesico.framework.restlet.assist;
-
+    exports colesico.framework.restlet.gson;
     exports colesico.framework.restlet.codegen.assist;
 
     // Internal
@@ -46,11 +45,7 @@ module colesico.framework.restlet {
     opens colesico.framework.restlet.t9n to colesico.framework.localization;
     opens colesico.framework.restlet.assist;
     opens colesico.framework.restlet.writer;
-    exports colesico.framework.restlet.jsonconverter;
-    opens colesico.framework.restlet.jsonconverter;
-    exports colesico.framework.restlet.gson;
     opens colesico.framework.restlet.gson;
-
 
     provides Modulator with colesico.framework.restlet.codegen.RestletModulator;
 
