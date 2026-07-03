@@ -69,7 +69,7 @@ public class GsonSerializer implements JsonSerializer {
     }
 
     @Override
-    public <T> T deserialize(Type targetType, Charset charset, InputStream inputStream) {
+    public <T> T deserialize(InputStream inputStream, Charset charset, Type targetType) {
         Objects.requireNonNull(targetType, "targetType cannot be null");
         Objects.requireNonNull(inputStream, "inputStream cannot be null");
 
