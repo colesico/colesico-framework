@@ -2,7 +2,7 @@ package colesico.framework.telehttp.internal;
 
 import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Classed;
-import colesico.framework.telehttp.TeleHttpWriter;
+import colesico.framework.telehttp.HttpWriter;
 import colesico.framework.telehttp.response.*;
 import colesico.framework.telehttp.writer.*;
 import colesico.framework.ioc.production.Produce;
@@ -13,47 +13,47 @@ import jakarta.inject.Singleton;
 @Produce(RedirectWriter.class)
 @Produce(ForwardWriter.class)
 @Produce(ExceptionResponseWriter.class)
-@Produce(ObjectResponseWriter.class)
+@Produce(ToStringObjectResponseWriter.class)
 @Produce(StringResponseWriter.class)
 @Produce(BytesResponseWriter.class)
-@Produce(ObjectWriter.class)
+@Produce(ToStringObjectWriter.class)
 @Produce(ExceptionWriter.class)
 @Produce(value = ProfileWriter.class, substitute = Substitution.STUB)
 public class WritersProducer {
 
     @Singleton
     @Classed(RedirectResponse.class)
-    public TeleHttpWriter redirectResponseWriter(RedirectWriter impl) {
+    public HttpWriter redirectResponseWriter(RedirectWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(ForwardResponse.class)
-    public TeleHttpWriter forwardResponseWriter(ForwardWriter impl) {
+    public HttpWriter forwardResponseWriter(ForwardWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(ExceptionResponse.class)
-    public TeleHttpWriter exceptionResponseWriter(ExceptionResponseWriter imp) {
+    public HttpWriter exceptionResponseWriter(ExceptionResponseWriter imp) {
         return imp;
     }
 
     @Singleton
     @Classed(ObjectResponse.class)
-    public TeleHttpWriter objectResponseWriter(ObjectResponseWriter imp) {
+    public HttpWriter objectResponseWriter(ToStringObjectResponseWriter imp) {
         return imp;
     }
 
     @Singleton
     @Classed(StringResponse.class)
-    public TeleHttpWriter stringResponseWriter(StringResponseWriter imp) {
+    public HttpWriter stringResponseWriter(StringResponseWriter imp) {
         return imp;
     }
 
     @Singleton
     @Classed(BytesResponse.class)
-    public TeleHttpWriter bytesResponseWriter(BytesResponseWriter imp) {
+    public HttpWriter bytesResponseWriter(BytesResponseWriter imp) {
         return imp;
     }
 
@@ -62,13 +62,13 @@ public class WritersProducer {
      */
     @Singleton
     @Classed(Object.class)
-    public TeleHttpWriter objectWriter(ObjectWriter impl) {
+    public HttpWriter objectWriter(ToStringObjectWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Exception.class)
-    public TeleHttpWriter exceptionWriter(ExceptionWriter impl) {
+    public HttpWriter exceptionWriter(ExceptionWriter impl) {
         return impl;
     }
 

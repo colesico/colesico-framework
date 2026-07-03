@@ -1,6 +1,6 @@
 package colesico.framework.restlet;
 
-import colesico.framework.telehttp.TeleHttpReadOptions;
+import colesico.framework.telehttp.HttpReadOptions;
 
 import java.lang.reflect.Type;
 
@@ -17,7 +17,7 @@ public record RestletReadOptions(
         String originName,
         Class<? extends RestletTeleReader<?>> customReader,
         Object metadata
-) implements TeleHttpReadOptions {
+) implements HttpReadOptions {
 
     @Deprecated
     public RestletReadOptions(Type baseType, String paramName, String originName, Class<? extends RestletTeleReader<?>> customReader, Object metadata) {

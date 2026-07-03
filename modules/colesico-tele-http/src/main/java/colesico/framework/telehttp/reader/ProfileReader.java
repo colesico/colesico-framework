@@ -18,8 +18,8 @@ package colesico.framework.telehttp.reader;
 
 import colesico.framework.http.HttpRequest;
 import colesico.framework.profile.*;
-import colesico.framework.telehttp.TeleHttpReadOptions;
-import colesico.framework.telehttp.TeleHttpReader;
+import colesico.framework.telehttp.HttpReader;
+import colesico.framework.telehttp.HttpReadOptions;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
 import colesico.framework.telehttp.writer.ProfileWriter;
 import jakarta.inject.Inject;
@@ -36,7 +36,7 @@ import static colesico.framework.telehttp.writer.ProfileWriter.PROFILE_HEADER;
  * Profile default reader
  */
 @Singleton
-public class ProfileReader<P extends Profile<?>> implements TeleHttpReader<P, TeleHttpReadOptions> {
+public class ProfileReader<P extends Profile<?>> implements HttpReader<P, HttpReadOptions> {
 
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-language";
 
@@ -48,7 +48,7 @@ public class ProfileReader<P extends Profile<?>> implements TeleHttpReader<P, Te
     }
 
     @Override
-    public final P read(TeleHttpReadOptions options) {
+    public final P read(HttpReadOptions options) {
         HttpRequest request = httpRequest.get();
         Map<String, String> attributes = readProfileAttributes(request);
         return buildProfile(options, attributes, request);
@@ -57,7 +57,7 @@ public class ProfileReader<P extends Profile<?>> implements TeleHttpReader<P, Te
     /**
      * Override this method to process different profile type
      */
-    protected P buildProfile(TeleHttpReadOptions options, Map<String, String> attributes, HttpRequest request) {
+    protected P buildProfile(HttpReadOptions options, Map<String, String> attributes, HttpRequest request) {
         var locale = readLocale(attributes, request);
         return (P) new Profile.Default(options.metadata(), locale);
     }

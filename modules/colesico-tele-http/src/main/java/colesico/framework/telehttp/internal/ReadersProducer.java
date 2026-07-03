@@ -3,7 +3,7 @@ package colesico.framework.telehttp.internal;
 import colesico.framework.http.HttpFile;
 import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Classed;
-import colesico.framework.telehttp.TeleHttpReader;
+import colesico.framework.telehttp.HttpReader;
 import colesico.framework.telehttp.reader.ProfileReader;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
@@ -40,145 +40,145 @@ public class ReadersProducer {
 
     @Singleton
     @Classed(String.class)
-    public TeleHttpReader stringReader(StringReader impl) {
+    public HttpReader stringReader(StringReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Character.class)
-    public TeleHttpReader characterReader(CharacterReader impl) {
+    public HttpReader characterReader(CharacterReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(char.class)
-    public TeleHttpReader charReader(CharacterReader impl) {
+    public HttpReader charReader(CharacterReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Boolean.class)
-    public TeleHttpReader booleanReader(BooleanReader impl) {
+    public HttpReader booleanReader(BooleanReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(boolean.class)
-    public TeleHttpReader boolReader(BooleanReader impl) {
+    public HttpReader boolReader(BooleanReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Byte.class)
-    public TeleHttpReader byteReader(ByteReader impl) {
+    public HttpReader byteReader(ByteReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(byte.class)
-    public TeleHttpReader btReader(ByteReader impl) {
+    public HttpReader btReader(ByteReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Short.class)
-    public TeleHttpReader shortReader(ShortReader impl) {
+    public HttpReader shortReader(ShortReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(short.class)
-    public TeleHttpReader shtReader(ShortReader impl) {
+    public HttpReader shtReader(ShortReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Integer.class)
-    public TeleHttpReader integerReader(IntegerReader impl) {
+    public HttpReader integerReader(IntegerReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(int.class)
-    public TeleHttpReader intReader(IntegerReader impl) {
+    public HttpReader intReader(IntegerReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(OptionalInt.class)
-    public TeleHttpReader optionalIntReader(OptionalIntReader impl) {
+    public HttpReader optionalIntReader(OptionalIntReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Long.class)
-    public TeleHttpReader longReader(LongReader impl) {
+    public HttpReader longReader(LongReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(long.class)
-    public TeleHttpReader lngReader(LongReader impl) {
+    public HttpReader lngReader(LongReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(OptionalLong.class)
-    public TeleHttpReader optionalLongReader(OptionalLongReader impl) {
+    public HttpReader optionalLongReader(OptionalLongReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Float.class)
-    public TeleHttpReader floatReader(FloatReader impl) {
+    public HttpReader floatReader(FloatReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(float.class)
-    public TeleHttpReader fltReader(FloatReader impl) {
+    public HttpReader fltReader(FloatReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Double.class)
-    public TeleHttpReader doubleReader(DoubleReader impl) {
+    public HttpReader doubleReader(DoubleReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(double.class)
-    public TeleHttpReader dblReader(DoubleReader impl) {
+    public HttpReader dblReader(DoubleReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(Date.class)
-    public TeleHttpReader dateReader(DateReader impl) {
+    public HttpReader dateReader(DateReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(LocalDate.class)
-    public TeleHttpReader localDateReader(LocalDateReader impl) {
+    public HttpReader localDateReader(LocalDateReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(LocalTime.class)
-    public TeleHttpReader localTimeReader(LocalTimeReader impl) {
+    public HttpReader localTimeReader(LocalTimeReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(LocalDateTime.class)
-    public TeleHttpReader localDateTimeReader(LocalDateTimeReader impl) {
+    public HttpReader localDateTimeReader(LocalDateTimeReader impl) {
         return impl;
     }
 
     @Singleton
     @Classed(HttpFile.class)
-    public TeleHttpReader httpFileReader(HttpFileReader impl) {
+    public HttpReader httpFileReader(HttpFileReader impl) {
         return impl;
     }
 

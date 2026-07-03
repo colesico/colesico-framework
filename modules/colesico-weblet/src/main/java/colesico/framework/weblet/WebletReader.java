@@ -16,11 +16,11 @@
 
 package colesico.framework.weblet;
 
-import colesico.framework.telehttp.TeleHttpWriter;
+import colesico.framework.telehttp.HttpReader;
 
 /**
- * Weblet writer base
+ * Weblet reader base class
  */
-public interface WebletTeleWriter<V> extends TeleHttpWriter<V, WebletWriteOptions> {
+public interface WebletReader<V> extends HttpReader<V, WebletReadOptions> {
 
 }

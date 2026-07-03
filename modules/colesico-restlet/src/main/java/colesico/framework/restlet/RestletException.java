@@ -1,8 +1,8 @@
 package colesico.framework.restlet;
 
-import colesico.framework.telehttp.TeleHttpException;
+import colesico.framework.telehttp.HttpTeleException;
 
-public final class RestletException extends TeleHttpException {
+public final class RestletException extends HttpTeleException {
 
     public RestletException(String message, Throwable cause, Integer statusCode, Object details) {
         super(message, cause, statusCode, details);

@@ -26,7 +26,7 @@ import java.lang.reflect.Type;
 
 @Singleton
 public class RestletDataPortImpl
-        extends TeleHttpDataPort<RestletReadOptions, RestletWriteOptions>
+        extends HttpDataPort<RestletReadOptions, RestletWriteOptions>
         implements RestletDataPort {
 
     public RestletDataPortImpl(TeleFactory teleFactory) {
@@ -34,12 +34,12 @@ public class RestletDataPortImpl
     }
 
     @Override
-    protected Class<? extends TeleHttpReader> readerBaseClass() {
+    protected Class<? extends HttpReader> readerBaseClass() {
         return RestletTeleReader.class;
     }
 
     @Override
-    protected Class<? extends TeleHttpWriter> writerBaseClass() {
+    protected Class<? extends HttpWriter> writerBaseClass() {
         return RestletTeleWriter.class;
     }
 

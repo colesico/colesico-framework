@@ -143,9 +143,9 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     private TypeMirror getCustomWriterClass(TeleCommandElement teleCommand) {
-        var wrAnn = teleCommand.serviceMethod().originMethod().annotation(WebletResponseWriter.class);
+        var wrAnn = teleCommand.serviceMethod().originMethod().annotation(WebletCustomWriter.class);
         if (wrAnn == null) {
-            wrAnn = teleCommand.parentTeleService().parentService().originClass().annotation(WebletResponseWriter.class);
+            wrAnn = teleCommand.parentTeleService().parentService().originClass().annotation(WebletCustomWriter.class);
         }
         if (wrAnn == null) {
             return null;

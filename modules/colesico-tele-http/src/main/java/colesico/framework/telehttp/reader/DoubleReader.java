@@ -17,7 +17,7 @@
 package colesico.framework.telehttp.reader;
 
 import colesico.framework.teleapi.TeleException;
-import colesico.framework.telehttp.TeleHttpReadOptions;
+import colesico.framework.telehttp.HttpReadOptions;
 import colesico.framework.telehttp.origin.OriginFactory;
 import colesico.framework.telehttp.t9n.Messages;
 
@@ -30,7 +30,7 @@ import static colesico.framework.assist.StringUtils.isBlank;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class DoubleReader extends OriginReader<Double, TeleHttpReadOptions> {
+public final class DoubleReader extends OriginReader<Double, HttpReadOptions> {
 
     private final Messages messages;
 
@@ -41,7 +41,7 @@ public final class DoubleReader extends OriginReader<Double, TeleHttpReadOptions
     }
 
     @Override
-    public Double read(TeleHttpReadOptions options) {
+    public Double read(HttpReadOptions options) {
         try {
             String val = readString(options);
             if (isBlank(val)) {

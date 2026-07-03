@@ -1,15 +1,15 @@
 package colesico.framework.telehttp.writer;
 
-import colesico.framework.telehttp.TeleHttpWriter;
-import colesico.framework.telehttp.TeleHttpWriteOptions;
+import colesico.framework.telehttp.HttpWriter;
+import colesico.framework.telehttp.HttpWriteOptions;
 import colesico.framework.telehttp.response.ExceptionResponse;
 import jakarta.inject.Singleton;
 
 /**
- * General exception writer
+ * Default exception writer
  */
 @Singleton
-public class ExceptionWriter implements TeleHttpWriter<Exception, TeleHttpWriteOptions> {
+public class ExceptionWriter implements HttpWriter<Exception, HttpWriteOptions> {
 
     protected final ExceptionResponseWriter writer;
 
@@ -18,7 +18,7 @@ public class ExceptionWriter implements TeleHttpWriter<Exception, TeleHttpWriteO
     }
 
     @Override
-    public void write(Exception value, TeleHttpWriteOptions options) {
+    public void write(Exception value, HttpWriteOptions options) {
         writer.write(ExceptionResponse.exception(value).build(), options);
     }
 

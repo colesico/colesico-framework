@@ -26,7 +26,7 @@ import java.lang.reflect.Type;
 
 @Singleton
 public class WebletDataPortImpl
-        extends TeleHttpDataPort<WebletReadOptions, WebletWriteOptions>
+        extends HttpDataPort<WebletReadOptions, WebletWriteOptions>
         implements WebletDataPort {
 
     public WebletDataPortImpl(TeleFactory teleFactory) {
@@ -34,13 +34,13 @@ public class WebletDataPortImpl
     }
 
     @Override
-    protected Class<? extends TeleHttpReader> readerBaseClass() {
-        return WebletTeleReader.class;
+    protected Class<? extends HttpReader> readerBaseClass() {
+        return WebletReader.class;
     }
 
     @Override
-    protected Class<? extends TeleHttpWriter> writerBaseClass() {
-        return WebletTeleWriter.class;
+    protected Class<? extends HttpWriter> writerBaseClass() {
+        return WebletWriter.class;
     }
 
     @Override

@@ -14,14 +14,14 @@ public class StringResponse extends ValueResponse<String> {
     }
 
     public static Builder textPlain(String value) {
-        return string(value).contentType(ContentType.TEXT_PLAIN);
+        return value(value).contentType(ContentType.TEXT_PLAIN);
     }
 
     public static Builder textHtml(String value) {
-        return string(value).contentType(ContentType.TEXT_HTML);
+        return value(value).contentType(ContentType.TEXT_HTML);
     }
 
-    public static Builder string(String value) {
+    public static Builder value(String value) {
         return new Builder(value);
     }
 

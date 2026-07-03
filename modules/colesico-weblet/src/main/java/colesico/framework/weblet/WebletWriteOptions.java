@@ -17,11 +17,10 @@
 package colesico.framework.weblet;
 
 import colesico.framework.telehttp.ContentType;
-import colesico.framework.telehttp.TeleHttpWriteOptions;
-import colesico.framework.telehttp.TeleHttpWriter;
+import colesico.framework.telehttp.HttpWriter;
+import colesico.framework.telehttp.HttpWriteOptions;
 
 import java.lang.reflect.Type;
-import java.nio.charset.Charset;
 
 /**
  * Weblet write options
@@ -33,16 +32,16 @@ public record WebletWriteOptions(
         Type baseType,
         Integer statusCode,
         ContentType contentType,
-        Class<? extends TeleHttpWriter<?, ?>> customWriter,
+        Class<? extends HttpWriter<?, ?>> customWriter,
         Object metadata
-) implements TeleHttpWriteOptions {
+) implements HttpWriteOptions {
 
     public static final String BUILDER_METHOD = "builder";
     public static final String BUILD_METHOD = "build";
     public static final String CUSTOM_WRITER_METHOD = "customWriter";
 
     @Deprecated
-    public WebletWriteOptions(Type baseType, Integer statusCode, ContentType contentType, Class<? extends TeleHttpWriter<?, ?>> customWriter, Object metadata) {
+    public WebletWriteOptions(Type baseType, Integer statusCode, ContentType contentType, Class<? extends HttpWriter<?, ?>> customWriter, Object metadata) {
         this.baseType = baseType;
         this.statusCode = statusCode;
         this.contentType = contentType;
@@ -58,7 +57,7 @@ public record WebletWriteOptions(
         private final Type baseType;
         private Integer statusCode;
         private ContentType contentType;
-        private Class<? extends TeleHttpWriter<?, ?>> customWriter;
+        private Class<? extends HttpWriter<?, ?>> customWriter;
         private Object metadata;
 
         public Builder(Type baseType) {
@@ -79,7 +78,7 @@ public record WebletWriteOptions(
             return this;
         }
 
-        public Builder customWriter(Class<? extends TeleHttpWriter<?, ?>> customWriter) {
+        public Builder customWriter(Class<? extends HttpWriter<?, ?>> customWriter) {
             this.customWriter = customWriter;
             return this;
         }

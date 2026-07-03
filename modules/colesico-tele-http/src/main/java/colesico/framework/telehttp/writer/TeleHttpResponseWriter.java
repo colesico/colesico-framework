@@ -3,9 +3,9 @@ package colesico.framework.telehttp.writer;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.telehttp.ContentType;
-import colesico.framework.telehttp.TeleHttpException;
-import colesico.framework.telehttp.TeleHttpWriter;
-import colesico.framework.telehttp.TeleHttpWriteOptions;
+import colesico.framework.telehttp.HttpWriter;
+import colesico.framework.telehttp.HttpTeleException;
+import colesico.framework.telehttp.HttpWriteOptions;
 import colesico.framework.telehttp.response.TeleHttpResponse;
 import jakarta.inject.Provider;
 
@@ -15,7 +15,7 @@ import java.io.OutputStream;
 /**
  * General {@link TeleHttpResponse} writer
  */
-abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O extends TeleHttpWriteOptions> implements TeleHttpWriter<V, O> {
+abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O extends HttpWriteOptions> implements HttpWriter<V, O> {
 
     protected final Provider<HttpResponse> httpResponse;
 
@@ -71,12 +71,12 @@ abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O exten
 
         var statusCode = statusCode(response, options);
         if (statusCode == null) {
-            throw TeleHttpException.of("Undefined http status code", 500);
+            throw HttpTeleException.of("Undefined http status code", 500);
         }
 
         var contentType = contentType(response, options);
         if (contentType == null) {
-            throw TeleHttpException.of("Undefined media type", 500);
+            throw HttpTeleException.of("Undefined media type", 500);
         }
 
         httpResponse.setStatus(statusCode).setContentType(contentType.headerValue());
@@ -93,7 +93,7 @@ abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O exten
             write(os, response, options);
             os.flush();
         } catch (Exception e) {
-            throw TeleHttpException.of(e, 500);
+            throw HttpTeleException.of(e, 500);
         }
     }
 

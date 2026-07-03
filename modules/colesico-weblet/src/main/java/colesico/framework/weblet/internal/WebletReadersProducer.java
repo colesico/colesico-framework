@@ -21,7 +21,7 @@ import colesico.framework.ioc.production.Producer;
 import colesico.framework.profile.Profile;
 import colesico.framework.telehttp.reader.ProfileReader;
 import colesico.framework.telehttp.reader.*;
-import colesico.framework.weblet.WebletTeleReader;
+import colesico.framework.weblet.WebletReader;
 import colesico.framework.weblet.reader.WebletReaderProxy;
 
 import jakarta.inject.Singleton;
@@ -41,139 +41,139 @@ public class WebletReadersProducer {
 
     @Singleton
     @Classed(Boolean.class)
-    public WebletTeleReader booleanReader(BooleanReader impl) {
+    public WebletReader booleanReader(BooleanReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(boolean.class)
-    public WebletTeleReader boolReader(BooleanReader impl) {
+    public WebletReader boolReader(BooleanReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(String.class)
-    public WebletTeleReader stringReader(StringReader impl) {
+    public WebletReader stringReader(StringReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(Character.class)
-    public WebletTeleReader characterReader(CharacterReader impl) {
+    public WebletReader characterReader(CharacterReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(char.class)
-    public WebletTeleReader charReader(CharacterReader impl) {
+    public WebletReader charReader(CharacterReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(Byte.class)
-    public WebletTeleReader byteReader(ByteReader impl) {
+    public WebletReader byteReader(ByteReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(byte.class)
-    public WebletTeleReader btReader(ByteReader impl) {
+    public WebletReader btReader(ByteReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(Short.class)
-    public WebletTeleReader shortReader(ShortReader impl) {
+    public WebletReader shortReader(ShortReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(short.class)
-    public WebletTeleReader shtReader(ShortReader impl) {
+    public WebletReader shtReader(ShortReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(Integer.class)
-    public WebletTeleReader integerReader(IntegerReader impl) {
+    public WebletReader integerReader(IntegerReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(int.class)
-    public WebletTeleReader intReader(IntegerReader impl) {
+    public WebletReader intReader(IntegerReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(OptionalInt.class)
-    public WebletTeleReader optionalIntReader(OptionalIntReader impl) {
+    public WebletReader optionalIntReader(OptionalIntReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(Long.class)
-    public WebletTeleReader longReader(LongReader impl) {
+    public WebletReader longReader(LongReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(long.class)
-    public WebletTeleReader lngReader(LongReader impl) {
+    public WebletReader lngReader(LongReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(OptionalLong.class)
-    public WebletTeleReader optionalLongReader(OptionalLongReader impl) {
+    public WebletReader optionalLongReader(OptionalLongReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(Float.class)
-    public WebletTeleReader floatReader(FloatReader impl) {
+    public WebletReader floatReader(FloatReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(float.class)
-    public WebletTeleReader fltReader(FloatReader impl) {
+    public WebletReader fltReader(FloatReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(Double.class)
-    public WebletTeleReader doubleReader(DoubleReader impl) {
+    public WebletReader doubleReader(DoubleReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(double.class)
-    public WebletTeleReader dblReader(DoubleReader impl) {
+    public WebletReader dblReader(DoubleReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(Date.class)
-    public WebletTeleReader dateReader(DateReader impl) {
+    public WebletReader dateReader(DateReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(LocalDate.class)
-    public WebletTeleReader localDateReader(LocalDateReader impl) {
+    public WebletReader localDateReader(LocalDateReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(LocalTime.class)
-    public WebletTeleReader localTimeReader(LocalTimeReader impl) {
+    public WebletReader localTimeReader(LocalTimeReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(LocalDateTime.class)
-    public WebletTeleReader localDateTimeReader(LocalDateTimeReader impl) {
+    public WebletReader localDateTimeReader(LocalDateTimeReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
@@ -183,13 +183,13 @@ public class WebletReadersProducer {
 
     @Singleton
     @Classed(Profile.class)
-    public WebletTeleReader profileReader(ProfileReader impl) {
+    public WebletReader profileReader(ProfileReader impl) {
         return WebletReaderProxy.of(impl);
     }
 
     @Singleton
     @Classed(HttpFileReader.class)
-    public WebletTeleReader httpFileReader(HttpFileReader impl) {
+    public WebletReader httpFileReader(HttpFileReader impl) {
         return WebletReaderProxy.of(impl);
     }
 

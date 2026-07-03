@@ -13,7 +13,7 @@ public class ObjectResponse extends ValueResponse<Object> {
         super(statusCode, contentType, headers, cookies, value);
     }
 
-    public static Builder object(Object value) {
+    public static Builder value(Object value) {
         return new Builder(value);
     }
 

@@ -5,32 +5,32 @@ import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.teleapi.dataport.TeleFactory;
 import colesico.framework.telehttp.response.DynamicResponse;
 
-abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends TeleHttpWriteOptions>
+abstract public class HttpDataPort<R extends HttpReadOptions, W extends HttpWriteOptions>
         implements DataPort<R, W> {
 
     protected final TeleFactory teleFactory;
 
-    public TeleHttpDataPort(TeleFactory teleFactory) {
+    public HttpDataPort(TeleFactory teleFactory) {
         this.teleFactory = teleFactory;
     }
 
-    abstract protected Class<? extends TeleHttpReader> readerBaseClass();
+    abstract protected Class<? extends HttpReader> readerBaseClass();
 
-    abstract protected Class<? extends TeleHttpWriter> writerBaseClass();
+    abstract protected Class<? extends HttpWriter> writerBaseClass();
 
     @Override
     public <V> V read(R options) {
         if (options.customReader() != null) {
             // Obtain specified reader
-            TeleHttpReader<V, R> reader = (TeleHttpReader) teleFactory.reader(options.customReader());
+            HttpReader<V, R> reader = (HttpReader) teleFactory.reader(options.customReader());
             return reader.read(options);
         }
 
         // Find reader by baseType
-        TeleHttpReader<V, TeleHttpReadOptions> reader = teleFactory.findReader(options.baseType(), readerBaseClass(), TeleHttpReader.class);
+        HttpReader<V, HttpReadOptions> reader = teleFactory.findReader(options.baseType(), readerBaseClass(), HttpReader.class);
         if (reader == null) {
             // No accurate reader here so are reading data as object - obtain object reader
-            reader = teleFactory.provideReader(Object.class, readerBaseClass(), TeleHttpReader.class);
+            reader = teleFactory.provideReader(Object.class, readerBaseClass(), HttpReader.class);
         }
         return reader.read(options);
     }
@@ -48,25 +48,25 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
 
         // Check for a custom writer specified in options
         if (options.customWriter() != null) {
-            TeleHttpWriter writer = (TeleHttpWriter) teleFactory.writer(options.customWriter());
+            HttpWriter writer = (HttpWriter) teleFactory.writer(options.customWriter());
             writer.write(targetValue, options);
             return;
         }
 
         // Find writer by the exact runtime class of the value
-        TeleHttpWriter<Object, TeleHttpWriteOptions> writer;
+        HttpWriter<Object, HttpWriteOptions> writer;
         if (targetValue instanceof Throwable throwable) {
             writer = findExceptionWriter(throwable);
         } else {
-            writer = teleFactory.findWriter(targetValue.getClass(), writerBaseClass(), TeleHttpWriter.class);
+            writer = teleFactory.findWriter(targetValue.getClass(), writerBaseClass(), HttpWriter.class);
         }
 
         // Find by baseType
         if (writer == null) {
-            writer = teleFactory.findWriter(options.baseType(), writerBaseClass(), TeleHttpWriter.class);
+            writer = teleFactory.findWriter(options.baseType(), writerBaseClass(), HttpWriter.class);
             // Final fallback to the default object writer
             if (writer == null) {
-                writer = teleFactory.provideWriter(Object.class, writerBaseClass(), TeleHttpWriter.class);
+                writer = teleFactory.provideWriter(Object.class, writerBaseClass(), HttpWriter.class);
             }
         }
 
@@ -74,10 +74,10 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
 
     }
 
-    protected TeleHttpWriter<Object, TeleHttpWriteOptions> findExceptionWriter(final Throwable throwable) {
+    protected HttpWriter<Object, HttpWriteOptions> findExceptionWriter(final Throwable throwable) {
 
         // Find by exact runtime class
-        TeleHttpWriter<Object, TeleHttpWriteOptions> writer = teleFactory.findWriter(throwable.getClass(), writerBaseClass(), TeleHttpWriter.class);
+        HttpWriter<Object, HttpWriteOptions> writer = teleFactory.findWriter(throwable.getClass(), writerBaseClass(), HttpWriter.class);
         if (writer != null) {
             return writer;
         }
@@ -85,20 +85,20 @@ abstract public class TeleHttpDataPort<R extends TeleHttpReadOptions, W extends 
         // Find by runtime class of root cause
         Throwable rootCause = ExceptionUtils.getRootCause(throwable);
         if (rootCause != throwable) {
-            writer = teleFactory.findWriter(rootCause.getClass(), writerBaseClass(), TeleHttpWriter.class);
+            writer = teleFactory.findWriter(rootCause.getClass(), writerBaseClass(), HttpWriter.class);
             if (writer != null) {
                 return writer;
             }
         }
 
-        if (throwable instanceof TeleHttpException) {
-            writer = teleFactory.findWriter(TeleHttpException.class, writerBaseClass(), TeleHttpWriter.class);
+        if (throwable instanceof HttpTeleException) {
+            writer = teleFactory.findWriter(HttpTeleException.class, writerBaseClass(), HttpWriter.class);
             if (writer != null) {
                 return writer;
             }
         }
 
-        return teleFactory.findWriter(Exception.class, writerBaseClass(), TeleHttpWriter.class);
+        return teleFactory.findWriter(Exception.class, writerBaseClass(), HttpWriter.class);
 
     }
 }

@@ -17,14 +17,12 @@
 package colesico.framework.telehttp.reader;
 
 import colesico.framework.teleapi.TeleException;
-import colesico.framework.telehttp.TeleHttpReadOptions;
+import colesico.framework.telehttp.HttpReadOptions;
 import colesico.framework.telehttp.origin.OriginFactory;
 import colesico.framework.telehttp.t9n.Messages;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import java.lang.reflect.Type;
 
 import static colesico.framework.assist.StringUtils.isBlank;
 
@@ -32,7 +30,7 @@ import static colesico.framework.assist.StringUtils.isBlank;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class BooleanReader extends OriginReader<Boolean, TeleHttpReadOptions> {
+public final class BooleanReader extends OriginReader<Boolean, HttpReadOptions> {
 
     private final Messages messages;
 
@@ -43,7 +41,7 @@ public final class BooleanReader extends OriginReader<Boolean, TeleHttpReadOptio
     }
 
     @Override
-    public Boolean read(TeleHttpReadOptions options) {
+    public Boolean read(HttpReadOptions options) {
         try {
             String str = readString(options);
             if (isBlank(str)) {

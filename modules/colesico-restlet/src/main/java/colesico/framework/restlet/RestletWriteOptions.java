@@ -1,10 +1,9 @@
 package colesico.framework.restlet;
 
 import colesico.framework.telehttp.ContentType;
-import colesico.framework.telehttp.TeleHttpWriteOptions;
+import colesico.framework.telehttp.HttpWriteOptions;
 
 import java.lang.reflect.Type;
-import java.nio.charset.Charset;
 
 public record RestletWriteOptions(
         Type baseType,
@@ -12,7 +11,7 @@ public record RestletWriteOptions(
         ContentType contentType,
         Class<? extends RestletTeleWriter<?>> customWriter,
         Object metadata
-) implements TeleHttpWriteOptions {
+) implements HttpWriteOptions {
 
     public static final String BUILDER_METHOD = "builder";
     public static final String BUILD_METHOD = "build";

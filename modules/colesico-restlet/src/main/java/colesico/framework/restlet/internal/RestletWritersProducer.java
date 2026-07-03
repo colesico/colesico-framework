@@ -19,18 +19,33 @@ package colesico.framework.restlet.internal;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.profile.Profile;
-import colesico.framework.restlet.RestletException;
 import colesico.framework.restlet.RestletTeleWriter;
 import colesico.framework.restlet.writer.*;
-import colesico.framework.telehttp.writer.ExceptionWriter;
-import colesico.framework.telehttp.writer.ValueResponseWriter;
-import colesico.framework.telehttp.writer.ProfileWriter;
-
+import colesico.framework.telehttp.response.ExceptionResponse;
+import colesico.framework.telehttp.response.ObjectResponse;
 import jakarta.inject.Singleton;
 
 @Producer
-@Produce(value = RestletExceptionWriter.class, keyType = RestletTeleWriter.class, classed = Exception.class)
+@Produce(JsonObjectResponseWriter.class)
+@Produce(JsonExceptionResponseWriter.class)
 public class RestletWritersProducer {
+
+    @Singleton
+    @Classed(ObjectResponse.class)
+    public RestletTeleWriter objectResponseWriter(JsonObjectResponseWriter impl) {
+        return impl;
+    }
+
+    @Singleton
+    @Classed(ExceptionResponse.class)
+    public RestletTeleWriter exceptionResponseWriter(JsonExceptionResponseWriter impl) {
+        return impl;
+    }
+
+    @Singleton
+    @Classed(Object.class)
+    public RestletTeleWriter objectResponseWriter(JsonObjectWriter impl) {
+        return impl;
+    }
 
 }

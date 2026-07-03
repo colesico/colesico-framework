@@ -2,14 +2,14 @@ package colesico.framework.telehttp.writer;
 
 import colesico.framework.http.HttpResponse;
 import colesico.framework.telehttp.ContentType;
-import colesico.framework.telehttp.TeleHttpWriteOptions;
+import colesico.framework.telehttp.HttpWriteOptions;
 import colesico.framework.telehttp.response.BytesResponse;
 import jakarta.inject.Provider;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class BytesResponseWriter extends ValueResponseWriter<BytesResponse, TeleHttpWriteOptions> {
+public class BytesResponseWriter<V extends BytesResponse, O extends HttpWriteOptions> extends ValueResponseWriter<V, O> {
 
     public BytesResponseWriter(Provider<HttpResponse> httpResponse) {
         super(httpResponse);
@@ -21,7 +21,7 @@ public class BytesResponseWriter extends ValueResponseWriter<BytesResponse, Tele
     }
 
     @Override
-    protected void write(OutputStream outputStream, BytesResponse response, TeleHttpWriteOptions options) throws IOException {
+    protected void write(OutputStream outputStream, V response, O options) throws IOException {
         outputStream.write(response.value());
     }
 }

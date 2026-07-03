@@ -15,5 +15,5 @@ import java.lang.annotation.*;
 @Documented
 @ParamReaderSpecifier
 public @interface WebletParamReader {
-    Class<? extends WebletTeleReader> value();
+    Class<? extends WebletReader> value();
 }

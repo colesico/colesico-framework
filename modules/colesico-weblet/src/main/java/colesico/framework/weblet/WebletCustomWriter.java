@@ -4,12 +4,12 @@ import java.lang.annotation.*;
 
 
 /**
- * Specifies custom writer for tele-response
+ * Specifies custom tele writer
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Inherited
 @Documented
-public @interface WebletResponseWriter {
-    Class<? extends WebletTeleWriter> value();
+public @interface WebletCustomWriter {
+    Class<? extends WebletWriter> value();
 }

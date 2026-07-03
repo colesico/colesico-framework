@@ -1,5 +1,6 @@
 package colesico.framework.service.codegen.model.teleapi;
 
+import colesico.framework.teleapi.dataport.WriteOptions;
 import com.palantir.javapoet.CodeBlock;
 
 /**
@@ -20,7 +21,7 @@ public class TeleWriteElement {
     /**
      * Write options creation code
      *
-     * @see colesico.framework.teleapi.dataport.WriteOptions
+     * @see WriteOptions
      */
     private final CodeBlock optionsCode;
 

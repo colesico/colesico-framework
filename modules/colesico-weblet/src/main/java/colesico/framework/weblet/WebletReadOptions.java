@@ -16,9 +16,8 @@
 
 package colesico.framework.weblet;
 
-import colesico.framework.teleapi.dataport.DataPort;
-import colesico.framework.telehttp.TeleHttpReadOptions;
-import colesico.framework.telehttp.TeleHttpReader;
+import colesico.framework.telehttp.HttpReader;
+import colesico.framework.telehttp.HttpReadOptions;
 
 import java.lang.reflect.Type;
 
@@ -32,9 +31,9 @@ public record WebletReadOptions(
         Type baseType,
         String paramName,
         String originName,
-        Class<? extends TeleHttpReader<?, ?>> customReader,
+        Class<? extends HttpReader<?, ?>> customReader,
         Object metadata
-) implements TeleHttpReadOptions {
+) implements HttpReadOptions {
 
     public static final String BUILDER_METHOD = "builder";
     public static final String BUILD_METHOD = "build";
@@ -43,7 +42,7 @@ public record WebletReadOptions(
     public static final String CUSTOM_READER_METHOD = "customReader";
 
     @Deprecated
-    public WebletReadOptions(Type baseType, String paramName, String originName, Class<? extends TeleHttpReader<?, ?>> customReader, Object metadata) {
+    public WebletReadOptions(Type baseType, String paramName, String originName, Class<? extends HttpReader<?, ?>> customReader, Object metadata) {
         this.baseType = baseType;
         this.paramName = paramName;
         this.originName = originName;
@@ -59,7 +58,7 @@ public record WebletReadOptions(
         private final Type baseType;
         private String paramName;
         private String originName;
-        private Class<? extends TeleHttpReader<?, ?>> customReader;
+        private Class<? extends HttpReader<?, ?>> customReader;
         private Object metadata;
 
         public Builder(Type baseType) {
@@ -80,7 +79,7 @@ public record WebletReadOptions(
             return this;
         }
 
-        public Builder customReader(Class<? extends TeleHttpReader<?, ?>> customReader) {
+        public Builder customReader(Class<? extends HttpReader<?, ?>> customReader) {
             this.customReader = customReader;
             return this;
         }

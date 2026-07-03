@@ -13,7 +13,7 @@ public class BytesResponse extends ValueResponse<byte[]> {
         super(statusCode, contentType, headers, cookies, value);
     }
 
-    public static BytesResponse.Builder bytes(byte[] value) {
+    public static BytesResponse.Builder value(byte[] value) {
         return new BytesResponse.Builder(value);
     }
 

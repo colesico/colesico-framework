@@ -16,12 +16,12 @@
 
 package colesico.framework.weblet;
 
-import colesico.framework.telehttp.TeleHttpException;
+import colesico.framework.telehttp.HttpTeleException;
 
 /**
  * Generic weblet exception
  */
-public class WebletException extends TeleHttpException {
+public class WebletException extends HttpTeleException {
 
     public WebletException(String message, Throwable cause, Integer statusCode, Object details) {
         super(message, cause, statusCode, details);

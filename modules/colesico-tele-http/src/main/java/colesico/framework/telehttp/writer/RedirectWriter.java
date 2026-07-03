@@ -18,8 +18,8 @@ package colesico.framework.telehttp.writer;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.router.Router;
-import colesico.framework.telehttp.TeleHttpWriteOptions;
-import colesico.framework.telehttp.TeleHttpWriter;
+import colesico.framework.telehttp.HttpWriter;
+import colesico.framework.telehttp.HttpWriteOptions;
 import colesico.framework.telehttp.response.RedirectResponse;
 
 import jakarta.inject.Provider;
@@ -29,7 +29,7 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class RedirectWriter implements TeleHttpWriter<RedirectResponse, TeleHttpWriteOptions> {
+public final class RedirectWriter implements HttpWriter<RedirectResponse, HttpWriteOptions> {
 
     private final Router router;
     private final Provider<HttpContext> httpContext;
@@ -40,7 +40,7 @@ public final class RedirectWriter implements TeleHttpWriter<RedirectResponse, Te
     }
 
     @Override
-    public void write(RedirectResponse value, TeleHttpWriteOptions options) {
+    public void write(RedirectResponse value, HttpWriteOptions options) {
         value.navigation().redirect(router, httpContext.get());
     }
 

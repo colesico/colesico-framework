@@ -17,7 +17,7 @@
 package colesico.framework.telehttp.reader;
 
 import colesico.framework.teleapi.TeleException;
-import colesico.framework.telehttp.TeleHttpReadOptions;
+import colesico.framework.telehttp.HttpReadOptions;
 import colesico.framework.telehttp.origin.OriginFactory;
 import colesico.framework.telehttp.t9n.Messages;
 
@@ -33,7 +33,7 @@ import static colesico.framework.assist.StringUtils.isBlank;
  * @author Vladlen Larionov
  */
 @Singleton
-public final class LocalDateTimeReader extends OriginReader<LocalDateTime, TeleHttpReadOptions> {
+public final class LocalDateTimeReader extends OriginReader<LocalDateTime, HttpReadOptions> {
 
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     private final Messages messages;
@@ -45,7 +45,7 @@ public final class LocalDateTimeReader extends OriginReader<LocalDateTime, TeleH
     }
 
     @Override
-    public LocalDateTime read(TeleHttpReadOptions options) {
+    public LocalDateTime read(HttpReadOptions options) {
         try {
             String val = readString(options);
             if (isBlank(val)) {
