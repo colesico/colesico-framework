@@ -39,7 +39,7 @@ public interface JsonSerializer {
      * @param <T>         The expected return type
      * @return The deserialized object instance, or null if the stream is empty
      */
-    <T> T deserialize(Type targetType, Charset charset, InputStream inputStream);
+    <T> T deserialize(InputStream inputStream, Charset charset, Type targetType);
 
     /**
      * Serializes an object into a standard Java String using UTF-8 byte conversion internally.
@@ -75,7 +75,7 @@ public interface JsonSerializer {
             return null;
         }
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(json.getBytes(JSON_CHARSET))) {
-            return deserialize(targetType, JSON_CHARSET, inputStream);
+            return deserialize(inputStream, JSON_CHARSET, targetType);
         } catch (RestletException e) {
             throw e;
         } catch (Exception e) {

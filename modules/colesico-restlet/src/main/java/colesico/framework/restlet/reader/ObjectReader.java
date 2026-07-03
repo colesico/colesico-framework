@@ -3,8 +3,8 @@ package colesico.framework.restlet.reader;
 import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpMethod;
-import colesico.framework.http.HttpRequest;
 import colesico.framework.restlet.*;
+import colesico.framework.telehttp.origin.Origin;
 import colesico.framework.telehttp.origin.OriginFactory;
 
 import colesico.framework.telehttp.reader.OriginReader;
@@ -21,54 +21,39 @@ public final class ObjectReader
         extends OriginReader<Object, RestletReadOptions>
         implements RestletReader<Object> {
 
-    private final ValueSerializer serializer;
-    private final Provider<HttpContext> httpContextProv;
+    private final JsonSerializer serializer;
+
+    private final Provider<HttpContext> httpContext;
 
     @Inject
-    public ObjectReader(OriginFactory originFactory, ValueSerializer serializer, Provider<HttpContext> httpContextProv) {
+    public ObjectReader(OriginFactory originFactory, JsonSerializer serializer, Provider<HttpContext> httpContext) {
         super(originFactory);
         this.serializer = serializer;
-        this.httpContextProv = httpContextProv;
+        this.httpContext = httpContext;
     }
 
     @Override
-    public Object read(Class<Object> baseType, RestletReadOptions options) {
-        HttpRequest request = httpContextProv.get().request();
-
-        HttpMethod requestMethod = request.method();
-
-        // Should the value be read from request input stream?
-        String originName = options.originName();
-
-        boolean useInputStream = originName.equals(RestletOrigin.BODY) ||
-                (
-                        originName.equals(RestletOrigin.AUTO)
-                                &&
-                                (
-                                        requestMethod.is(POST)
-                                                || requestMethod.is(PATCH)
-                                                || requestMethod.is(DELETE)
-                                                || requestMethod.is(PUT)
-                                )
-                );
-
-        if (useInputStream) {
-            try (InputStream is = request.inputStream()) {
-                return serializer.deserialize(is, baseType);
-            } catch (Exception e) {
-                throw RestletException.of(e, 400);
-            }
-        } else {
-            try {
-                String strValue = readString(options.originName(), options.paramName());
-                if (StringUtils.isBlank(strValue)) {
-                    return null;
+    public Object read(RestletReadOptions options) {
+        var httpRequest = httpContext.get().request();
+        try {
+            if (readInputStream(options.originName(), httpRequest.method())) {
+                try (InputStream is = httpRequest.inputStream()) {
+                    return serializer.deserialize(options.baseType(), null, is);
                 }
-                return serializer.deserialize(strValue, baseType);
-            } catch (Exception e) {
-                throw RestletException.of(e, 400);
             }
+
+            String strValue = readString(options.originName(), options.paramName());
+            return StringUtils.isBlank(strValue) ? null : serializer.deserialize(strValue, options.baseType());
+        } catch (Exception e) {
+            throw RestletException.of(e, 400);
         }
     }
 
+    private boolean readInputStream(String originName, HttpMethod method) {
+        return switch (originName) {
+            case Origin.BODY -> true;
+            case Origin.AUTO -> method.is(POST) || method.is(PATCH) || method.is(DELETE) || method.is(PUT);
+            default -> false;
+        };
+    }
 }
