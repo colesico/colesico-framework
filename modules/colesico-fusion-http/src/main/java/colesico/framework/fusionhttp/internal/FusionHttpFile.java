@@ -3,7 +3,6 @@ package colesico.framework.fusionhttp.internal;
 import colesico.framework.http.HttpFile;
 import io.fusionauth.http.FileInfo;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;

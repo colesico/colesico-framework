@@ -48,7 +48,7 @@ public interface JsonSerializer {
      * @param baseType The explicit type of the object, supporting generics
      * @return The JSON string representation, or null if the input value is null
      */
-    default String toString(Object value, Type baseType) {
+    default String serialize(Object value, Type baseType) {
         if (value == null) {
             return null;
         }
@@ -70,7 +70,7 @@ public interface JsonSerializer {
      * @param <T>        The expected return type
      * @return The deserialized object instance, or null if the string is null or blank
      */
-    default <T> T fromString(Type targetType, String json) {
+    default <T> T deserialize(String json, Type targetType) {
         if (json == null || json.isBlank()) {
             return null;
         }

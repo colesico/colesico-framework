@@ -28,7 +28,7 @@ import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.telehttp.assist.CSRFProtector;
 import colesico.framework.weblet.Weblet;
 import colesico.framework.weblet.WebletDataPort;
-import colesico.framework.weblet.WebletTeleController;
+import colesico.framework.weblet.WebletController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,9 +41,9 @@ import java.util.Optional;
  * @author Vladlen Larionov
  */
 @Singleton
-public class WebletTeleControllerImpl implements WebletTeleController {
+public class WebletControllerImpl implements WebletController {
 
-    protected final Logger logger = LoggerFactory.getLogger(WebletTeleControllerImpl.class);
+    protected final Logger logger = LoggerFactory.getLogger(WebletControllerImpl.class);
 
     protected final TaskScope taskScope;
 
@@ -55,7 +55,7 @@ public class WebletTeleControllerImpl implements WebletTeleController {
 
     protected final CSRFProtector csrfProtector;
 
-    public WebletTeleControllerImpl(
+    public WebletControllerImpl(
             TaskScope taskScope,
             Provider<HttpContext> httpContext,
             WebletDataPort dataPort,

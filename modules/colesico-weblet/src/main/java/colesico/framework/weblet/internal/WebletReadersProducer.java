@@ -35,21 +35,7 @@ import java.util.OptionalLong;
 @Producer
 public class WebletReadersProducer {
 
-    //
-    // Basic readers
-    //
-
-    @Singleton
-    @Classed(Boolean.class)
-    public WebletReader booleanReader(BooleanReader impl) {
-        return WebletReaderProxy.of(impl);
-    }
-
-    @Singleton
-    @Classed(boolean.class)
-    public WebletReader boolReader(BooleanReader impl) {
-        return WebletReaderProxy.of(impl);
-    }
+    //===== Basic readers ====
 
     @Singleton
     @Classed(String.class)
@@ -70,6 +56,18 @@ public class WebletReadersProducer {
     }
 
     @Singleton
+    @Classed(Boolean.class)
+    public WebletReader booleanReader(BooleanReader impl) {
+        return WebletReaderProxy.of(impl);
+    }
+
+    @Singleton
+    @Classed(boolean.class)
+    public WebletReader boolReader(BooleanReader impl) {
+        return WebletReaderProxy.of(impl);
+    }
+
+        @Singleton
     @Classed(Byte.class)
     public WebletReader byteReader(ByteReader impl) {
         return WebletReaderProxy.of(impl);
@@ -177,9 +175,7 @@ public class WebletReadersProducer {
         return WebletReaderProxy.of(impl);
     }
 
-    //
-    // Extra readers
-    //
+    //==== Extra readers ====
 
     @Singleton
     @Classed(Profile.class)

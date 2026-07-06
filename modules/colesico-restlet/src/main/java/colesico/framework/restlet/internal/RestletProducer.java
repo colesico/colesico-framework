@@ -31,7 +31,7 @@ import jakarta.inject.Singleton;
 @Producer
 @Produce(GsonSerializer.class)
 @Produce(value = RestletDataPortImpl.class, keyType = RestletDataPort.class)
-@Produce(value = RestletTeleControllerImpl.class, keyType = RestletTeleController.class)
+@Produce(value = RestletControllerImpl.class, keyType = RestletController.class)
 @Produce(value = LogRestletListener.class, keyType = RestletRequestListener.class, polyproduce = 0)
 @Produce(value = LogRestletListener.class, keyType = RestletResponseListener.class, polyproduce = 0)
 public class RestletProducer {

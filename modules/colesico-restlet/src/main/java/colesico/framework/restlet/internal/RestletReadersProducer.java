@@ -35,12 +35,13 @@ import java.util.OptionalInt;
 import java.util.OptionalLong;
 
 @Producer
-@Produce(ObjectReader.class)
+@Produce(JsonObjectReader.class)
 public class RestletReadersProducer {
 
     // Default general purpose reader impl
     @Singleton
-    public ObjectReader valueReader(ObjectReader impl) {
+    @Classed(Object.class)
+    public RestletReader valueReader(JsonObjectReader impl) {
         return impl;
     }
 

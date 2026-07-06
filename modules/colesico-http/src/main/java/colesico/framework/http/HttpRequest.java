@@ -54,7 +54,7 @@ public interface HttpRequest {
     String queryString();
 
     /**
-     * Returns read-only http headers (lowercase names)
+     * Returns read-only http headers (!lowercase names!)
      */
     HttpValues<String, String> headers();
 
@@ -66,13 +66,13 @@ public interface HttpRequest {
     /**
      * Returns read-only query string parameters
      */
-    HttpValues<String,String> queryParameters();
+    HttpValues<String, String> queryParameters();
 
     /**
      * Returns read-only string parameters model from post map with Content-Type: application/x-www-form-urlencoded
      * or  multipart/form-data except files
      */
-    HttpValues<String,String> formData();
+    HttpValues<String, String> formData();
 
     /**
      * Returns read-only file model from post map with Content-Type: multipart/form-data
@@ -81,7 +81,7 @@ public interface HttpRequest {
 
     /**
      * Returns body input stream
-       */
+     */
     InputStream inputStream();
 
     /**

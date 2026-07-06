@@ -57,15 +57,14 @@ public class WritersProducer {
         return imp;
     }
 
-    /**
-     * Default writer
-     */
+    // Default writer for object
     @Singleton
     @Classed(Object.class)
     public HttpWriter objectWriter(ToStringObjectWriter impl) {
         return impl;
     }
 
+    // Default writer for exception
     @Singleton
     @Classed(Exception.class)
     public HttpWriter exceptionWriter(ExceptionWriter impl) {

@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package colesico.framework.restlet;
+package colesico.framework.weblet;
 
-import colesico.framework.router.RouterTargetController;
+import colesico.framework.router.TargetController;
 import colesico.framework.teleapi.TeleController;
 
-public interface RestletTeleController extends RouterTargetController<TeleController.Criteria> {
-
+public interface WebletController extends TargetController<TeleController.Criteria> {
 }

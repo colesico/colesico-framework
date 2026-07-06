@@ -18,26 +18,25 @@ package colesico.framework.weblet.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.router.RouterTargetController;
-import colesico.framework.telehttp.origin.Origin;
+import colesico.framework.router.TargetController;
 import colesico.framework.weblet.WebletDataPort;
-import colesico.framework.weblet.WebletTeleController;
+import colesico.framework.weblet.WebletController;
 
 import jakarta.inject.Singleton;
 
 
 @Producer
-@Produce(WebletTeleControllerImpl.class)
+@Produce(WebletControllerImpl.class)
 @Produce(value = WebletDataPortImpl.class, keyType = WebletDataPort.class, scoped = Singleton.class)
 public class WebletProducer {
 
     @Singleton
-    public WebletTeleController webletTeleController(WebletTeleControllerImpl impl) {
+    public WebletController webletTeleController(WebletControllerImpl impl) {
         return impl;
     }
 
     @Singleton
-    public RouterTargetController routerTargetController(WebletTeleController impl) {
+    public TargetController routerTargetController(WebletController impl) {
         return impl;
     }
 }

@@ -32,11 +32,13 @@ import java.util.Set;
  */
 public final class AttachmentResponse extends BytesResponse {
 
-    protected AttachmentResponse(Integer statusCode, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, byte[] value) {
+    public static final String CONTENT_DISPOSITION_HEADER = "content-disposition";
+
+    private AttachmentResponse(Integer statusCode, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, byte[] value) {
         super(statusCode, contentType, headers, cookies, value);
     }
 
-    public static AttachmentResponse.Builder builder(byte[] value, String fileName) {
+    public static AttachmentResponse.Builder attachment(byte[] value, String fileName) {
         return new AttachmentResponse.Builder(value, fileName);
     }
 
@@ -57,15 +59,15 @@ public final class AttachmentResponse extends BytesResponse {
         @Override
         public AttachmentResponse build() {
             if (fileName != null) {
-                String encodedHeaderValue = "attachment; filename*=UTF-8''" + encodeFileName(fileName);
-                header("Content-Disposition", encodedHeaderValue);
+                String headerValue = "attachment; filename*=UTF-8''" + encodeFileName(fileName);
+                header(CONTENT_DISPOSITION_HEADER, headerValue);
             }
             return new AttachmentResponse(statusCode, contentType, headers, cookies, value);
         }
 
         private String encodeFileName(String fileName) {
             String encoded = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
-            //  RFC 5987 (+ to %20)
+            //  RFC 5987 ("+" -> %20)
             return encoded.replace("+", "%20");
         }
     }

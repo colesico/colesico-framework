@@ -127,7 +127,7 @@ public class RouterImpl implements Router {
         }
     }
 
-    void register(RouterTargetController<?> targetController) {
+    void register(TargetController<?> targetController) {
         log.debug("Register http router tele-facades for target controller {}", targetController.getClass().getName());
 
         for (var teleFacade : targetController.teleFacades()) {

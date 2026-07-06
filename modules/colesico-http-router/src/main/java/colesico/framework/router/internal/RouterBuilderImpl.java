@@ -18,11 +18,11 @@ import java.util.Map;
 public class RouterBuilderImpl implements RouterBuilder {
 
     private final TaskScope taskScope;
-    private final Polysupplier<RouterTargetController> targetControllers;
+    private final Polysupplier<TargetController> targetControllers;
     private final List<CustomRouteAction> customRouteActions = new ArrayList<>();
 
     @Inject
-    public RouterBuilderImpl(Polysupplier<RouterTargetController> targetControllers,
+    public RouterBuilderImpl(Polysupplier<TargetController> targetControllers,
                              TaskScope taskScope) {
 
         this.targetControllers = targetControllers;

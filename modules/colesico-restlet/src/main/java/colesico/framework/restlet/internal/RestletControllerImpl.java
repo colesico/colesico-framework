@@ -40,12 +40,12 @@ import java.util.Optional;
  * @author Vladlen Larionov
  */
 @Singleton
-public class RestletTeleControllerImpl implements RestletTeleController {
+public class RestletControllerImpl implements RestletController {
 
     public static final String X_REQUESTED_WITH_HEADER = "X-Requested-With";
     public static final String X_REQUESTED_WITH_HEADER_VAL = "XMLHttpRequest";
 
-    protected final Logger logger = LoggerFactory.getLogger(RestletTeleController.class);
+    protected final Logger logger = LoggerFactory.getLogger(RestletController.class);
 
     protected final RestletConfigPrototype config;
 
@@ -64,7 +64,7 @@ public class RestletTeleControllerImpl implements RestletTeleController {
     protected final Polysupplier<RestletResponseListener> respListenerSup;
 
     @Inject
-    public RestletTeleControllerImpl(
+    public RestletControllerImpl(
             RestletConfigPrototype config,
             TaskScope taskScope,
             Provider<HttpContext> httpContext,
