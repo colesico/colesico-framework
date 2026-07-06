@@ -15,6 +15,7 @@ public record RestletWriteOptions(
 
     public static final String BUILDER_METHOD = "builder";
     public static final String BUILD_METHOD = "build";
+    public static final String CUSTOM_WRITER_METHOD = "customWriter";
 
     @Deprecated
     public RestletWriteOptions(Type baseType, Integer statusCode, ContentType contentType, Class<? extends RestletWriter<?>> customWriter, Object metadata) {

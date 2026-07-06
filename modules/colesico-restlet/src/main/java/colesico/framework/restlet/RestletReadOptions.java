@@ -19,6 +19,12 @@ public record RestletReadOptions(
         Object metadata
 ) implements HttpReadOptions {
 
+    public static final String BUILDER_METHOD = "builder";
+    public static final String BUILD_METHOD = "build";
+    public static final String PARAM_NAME_METHOD = "paramName";
+    public static final String ORIGIN_NAME_METHOD = "originName";
+    public static final String CUSTOM_READER_METHOD = "customReader";
+
     @Deprecated
     public RestletReadOptions(Type baseType, String paramName, String originName, Class<? extends RestletReader<?>> customReader, Object metadata) {
         this.baseType = baseType;

@@ -102,7 +102,7 @@ public final class WebletModulator extends RoutesModulator {
             optionsCode.add(".$N($S)", WebletReadOptions.ORIGIN_NAME_METHOD, originName);
         }
 
-        TypeMirror customReader = getCustomReaderClass(teleParam);
+        TypeMirror customReader = TeleHttpCodegenUtils.customReaderClass(teleParam);
         ClassType customReaderCT = null;
         if (customReader != null) {
             optionsCode.add(".$N($T.class)", WebletReadOptions.CUSTOM_READER_METHOD, TypeName.get(customReader));
@@ -155,18 +155,6 @@ public final class WebletModulator extends RoutesModulator {
         return wrAnn.valueTypeMirror(a -> a.value());
     }
 
-    private TypeMirror getCustomReaderClass(TeleOrdinaryParamElement teleParam) {
-        var rdAnn = teleParam.originElement().annotation(UseReader.class);
 
-        if (rdAnn == null) {
-            rdAnn = teleParam.parentTeleCommand().serviceMethod().originMethod().annotation(UseReader.class);
-        }
-
-        if (rdAnn != null) {
-            return rdAnn.valueTypeMirror(a -> a.value());
-        }
-
-        return null;
-    }
 
 }

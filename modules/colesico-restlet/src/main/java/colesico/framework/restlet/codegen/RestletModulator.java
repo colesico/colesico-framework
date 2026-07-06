@@ -94,51 +94,64 @@ public final class RestletModulator extends RoutesModulator {
     @Override
     protected TeleReadElement createTeleRead(TeleOrdinaryParamElement teleParam) {
 
+        CodeBlock.Builder valueTypeCode = CodeBlock.builder();
+        ServiceCodegenUtils.generateTeleParamType(teleParam, valueTypeCode);
+
+        CodeBlock.Builder optionsCode = CodeBlock.builder();
+
+        // RestletReadOptions.builder(ParamType.class)
+        optionsCode.add("$T.$N(", ClassName.get(RestletReadOptions.class), RestletReadOptions.BUILDER_METHOD);
+        optionsCode.add(valueTypeCode.build());
+        optionsCode.add(")");
+
+
         String paramName = TeleHttpCodegenUtils.paramName(teleParam);
-
-        CodeBlock.Builder cb = CodeBlock.builder();
-
-        // new RestletTRContext(
-        cb.add("$T.$N(", ClassName.get(RestletReadOptions.class), RestletReadOptions.OF_METHOD);
-
-        ServiceCodegenUtils.generateTeleParamType(teleParam, cb);
-
-        cb.add(", $S", paramName);
+        if (paramName != null) {
+            optionsCode.add(".$N($S)", RestletReadOptions.PARAM_NAME_METHOD, paramName);
+        }
 
         String originName = TeleHttpCodegenUtils.originName(teleParam, Origin.AUTO);
+        if (originName != null) {
+            optionsCode.add(".$N($S)", RestletReadOptions.ORIGIN_NAME_METHOD, originName);
+        }
 
-        TypeMirror customReader = RestletCodegenUtils.customReaderClass(teleParam, getProcessorContext().getElementUtils());
+        TypeMirror customReader = TeleHttpCodegenUtils.customReaderClass(teleParam);
         ClassType customReaderCT = null;
-
-        if (!originName.equals(RestletOrigin.AUTO) || customReader != null) {
-            cb.add(", $S", originName);
-        }
-
         if (customReader != null) {
-            cb.add(", $T.class", TypeName.get(customReader));
-            customReaderCT = new ClassType(getProcessorContext().getProcessingEnv(), (DeclaredType) customReader);
+            optionsCode.add(".$N($T.class)", RestletReadOptions.CUSTOM_READER_METHOD, TypeName.get(customReader));
+            customReaderCT = new ClassType(processorContext().processingEnv(), (DeclaredType) customReader);
         }
 
-        cb.add(")");
+        optionsCode.add(".$N()", RestletReadOptions.BUILD_METHOD);
 
-        return new TeleHttpReadElement(teleParam, cb.build(), paramName, originName, customReaderCT);
+        return new TeleHttpReadElement(teleParam,
+                null,
+                optionsCode.build(),
+                paramName,
+                originName,
+                customReaderCT
+        );
     }
 
     @Override
     protected TeleWriteElement createTeleWrite(TeleCommandElement teleCommand) {
-        CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("$T.$N(", ClassName.get(RestletWriteOptions.class), RestletWriteOptions.OF_METHOD);
-
-        ServiceCodegenUtils.generateTeleResultType(teleCommand, cb);
+        CodeBlock.Builder optionsCode = CodeBlock.builder();
+        optionsCode.add("$T.$N(", ClassName.get(RestletWriteOptions.class), RestletWriteOptions.BUILDER_METHOD);
+        ServiceCodegenUtils.generateTeleResultType(teleCommand, optionsCode);
+        optionsCode.add(")");
 
         TypeMirror customWriter = getCustomWriterClass(teleCommand);
         ClassType customWriterCT = null;
         if (customWriter != null) {
-            cb.add(", $T.class", TypeName.get(customWriter));
-            customWriterCT = new ClassType(getProcessorContext().getProcessingEnv(), (DeclaredType) customWriter);
+            // .customWriter(CustomWriter.class)
+            optionsCode.add(".$N($T.class)", RestletWriteOptions.CUSTOM_WRITER_METHOD, TypeName.get(customWriter));
+            customWriterCT = new ClassType(processorContext().processingEnv(), (DeclaredType) customWriter);
         }
-        cb.add(")");
-        return new TeleHttpWriteElement(teleCommand, cb.build(), customWriterCT);
+
+        // .build()
+        optionsCode.add(".$N()", RestletWriteOptions.BUILD_METHOD);
+
+        return new TeleHttpWriteElement(teleCommand, null, optionsCode.build(), customWriterCT);
     }
 
     protected TypeMirror getCustomWriterClass(TeleCommandElement teleCommand) {
