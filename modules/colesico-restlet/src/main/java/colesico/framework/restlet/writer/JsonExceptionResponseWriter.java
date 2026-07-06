@@ -30,7 +30,7 @@ public class JsonExceptionResponseWriter
             case UnauthorizedException e -> "Unauthorized";
             case HttpTeleException e -> {
                 if (e.details() != null) {
-                    yield serializer.toString(e.details(), e.details().getClass());
+                    yield serializer.serialize(e.details(), e.details().getClass());
                 }
                 yield "Error";
             }

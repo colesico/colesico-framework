@@ -33,8 +33,8 @@ public final class RestletReaderProxy<V> implements RestletReader<V> {
     }
 
     @Override
-    public V read(Class<V> baseType, RestletReadOptions options) {
-        return reader.read(baseType, options);
+    public V read(RestletReadOptions options) {
+        return reader.read(options);
     }
 
     public static <V> RestletReaderProxy<V> of(HttpReader<V, HttpReadOptions> reader) {
