@@ -27,7 +27,7 @@ module colesico.framework.weblet {
 
     exports colesico.framework.weblet;
     exports colesico.framework.weblet.assist;
-     exports colesico.framework.weblet.writer;
+    exports colesico.framework.weblet.writer;
     exports colesico.framework.weblet.reader;
 
     exports colesico.framework.weblet.codegen;
