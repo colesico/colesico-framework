@@ -7,6 +7,7 @@ import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.ParamOrigin;
 import colesico.framework.telehttp.UseReader;
+import colesico.framework.telehttp.UseWriter;
 
 import javax.lang.model.type.TypeMirror;
 
@@ -48,4 +49,16 @@ public class TeleHttpCodegenUtils {
 
         return null;
     }
+
+    public static TypeMirror customWriterClass(TeleCommandElement teleCommand) {
+        var wrAnn = teleCommand.serviceMethod().originMethod().annotation(UseWriter.class);
+        if (wrAnn == null) {
+            wrAnn = teleCommand.parentTeleService().parentService().originClass().annotation(UseWriter.class);
+        }
+        if (wrAnn == null) {
+            return null;
+        }
+        return wrAnn.valueTypeMirror(a -> a.value());
+    }
+
 }

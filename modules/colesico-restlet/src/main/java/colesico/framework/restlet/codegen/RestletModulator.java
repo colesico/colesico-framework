@@ -20,7 +20,6 @@ package colesico.framework.restlet.codegen;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.restlet.*;
-import colesico.framework.restlet.codegen.assist.RestletCodegenUtils;
 import colesico.framework.router.RouterCommandsRegistry;
 import colesico.framework.router.codegen.RouterTeleServiceElement;
 import colesico.framework.router.codegen.RoutesModulator;
@@ -140,7 +139,7 @@ public final class RestletModulator extends RoutesModulator {
         ServiceCodegenUtils.generateTeleResultType(teleCommand, optionsCode);
         optionsCode.add(")");
 
-        TypeMirror customWriter = getCustomWriterClass(teleCommand);
+        TypeMirror customWriter = TeleHttpCodegenUtils.customWriterClass(teleCommand);
         ClassType customWriterCT = null;
         if (customWriter != null) {
             // .customWriter(CustomWriter.class)
@@ -154,26 +153,15 @@ public final class RestletModulator extends RoutesModulator {
         return new TeleHttpWriteElement(teleCommand, null, optionsCode.build(), customWriterCT);
     }
 
-    protected TypeMirror getCustomWriterClass(TeleCommandElement teleCommand) {
-        var wrAnn = teleCommand.serviceMethod().originMethod().annotation(RestletResponseWriter.class);
-        if (wrAnn == null) {
-            wrAnn = teleCommand.parentTeleService().parentService().originClass().annotation(RestletResponseWriter.class);
-        }
-        if (wrAnn == null) {
-            return null;
-        }
-        return wrAnn.valueTypeMirror(a -> a.value());
-    }
-
     @Override
-    public void onTeleEntryParsed(TeleEntryElement teleEntry) {
-        super.onTeleParameterParsed(teleEntry);
-        if (teleEntry instanceof TeleBatchParamElement) {
-            AnnotationAssist<ParamName> paramNameAnn = teleEntry.getOriginElement().getAnnotation(ParamName.class);
+    public void onTeleParameterParsed(TeleParameterElement teleParam) {
+        super.onTeleParameterParsed(teleParam);
+        if (teleParam instanceof TeleBatchParamElement p) {
+            AnnotationAssist<ParamName> paramNameAnn = p.originElement().annotation(ParamName.class);
             if (paramNameAnn == null) {
                 return;
             }
-            ((TeleBatchParamElement) teleEntry).setName(paramNameAnn.unwrap().value());
+            p.setName(paramNameAnn.unwrap().value());
         }
     }
 }

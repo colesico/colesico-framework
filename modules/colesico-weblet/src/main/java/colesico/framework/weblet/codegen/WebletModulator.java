@@ -130,7 +130,7 @@ public final class WebletModulator extends RoutesModulator {
         optionsCode.add(valueTypeCode.build());
         optionsCode.add(")");
 
-        TypeMirror customWriter = getCustomWriterClass(teleCommand);
+        TypeMirror customWriter = TeleHttpCodegenUtils.customWriterClass(teleCommand);
         ClassType customWriterCT = null;
         if (customWriter != null) {
             // .customWriter(CustomWriter.class)
@@ -144,16 +144,6 @@ public final class WebletModulator extends RoutesModulator {
         return new TeleHttpWriteElement(teleCommand, null, optionsCode.build(), customWriterCT);
     }
 
-    private TypeMirror getCustomWriterClass(TeleCommandElement teleCommand) {
-        var wrAnn = teleCommand.serviceMethod().originMethod().annotation(UseWriter.class);
-        if (wrAnn == null) {
-            wrAnn = teleCommand.parentTeleService().parentService().originClass().annotation(UseWriter.class);
-        }
-        if (wrAnn == null) {
-            return null;
-        }
-        return wrAnn.valueTypeMirror(a -> a.value());
-    }
 
 
 
