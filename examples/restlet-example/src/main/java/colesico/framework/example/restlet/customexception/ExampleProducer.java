@@ -3,7 +3,7 @@ package colesico.framework.example.restlet.customexception;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.restlet.teleapi.RestletTeleWriter;
+import colesico.framework.restlet.RestletWriter;
 
 import jakarta.inject.Singleton;
 
@@ -12,11 +12,11 @@ import jakarta.inject.Singleton;
  */
 @Producer
 @Produce(CustomExceptionWriter.class)
-public class CEWProducer {
+public class ExampleProducer {
 
     @Singleton
     @Classed(CustomException.class)
-    public RestletTeleWriter getMyExceptionWriter(CustomExceptionWriter impl) {
+    public RestletWriter customExceptionWriter(CustomExceptionWriter impl) {
         return impl;
     }
 

@@ -20,25 +20,16 @@ import colesico.framework.example.restlet.customexception.CustomException;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.ioc.listener.PostConstruct;
 import colesico.framework.restlet.Restlet;
-import colesico.framework.restlet.teleapi.RestletResponseWriter;
 import colesico.framework.router.RequestMethod;
 import colesico.framework.router.Route;
-import colesico.framework.router.RouteAttribute;
-import colesico.framework.restlet.writer.PlainTextWriter;
-import colesico.framework.service.Compound;
+import colesico.framework.service.BatchField;
 import colesico.framework.telehttp.origin.Origin;
-import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.ParamOrigin;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static colesico.framework.httpserver.HttpServerAttribute.NON_BLOCKING;
-
-/**
- * Mandatory http header X-Requested-With:XMLHttpRequest
- */
 @Restlet
 public class RestApi {
 
@@ -65,7 +56,7 @@ public class RestApi {
     }
 
     /**
-     * POST  http://localhost:8080/rest-api/save +  data {"id":1,"name":"Anne"}
+     * POST http://localhost:8080/rest-api/save +  data {"id":1,"name":"Anne"}
      */
     @RequestMethod(HttpMethod.POST)
     public long save(User user) {
@@ -73,40 +64,26 @@ public class RestApi {
     }
 
     /**
-     * Non blocking processing example  (see undertow non-blocking XNIO channels)
-     * POST  http://localhost:8080/rest-api/non-blocking
+     * GET  http://localhost:8080/rest-api/custom-exception
      */
-    @RouteAttribute(name = NON_BLOCKING, value = "true")
-    @RestletResponseWriter(PlainTextWriter.class)
-    public String nonBlocking() {
-        return "NonBlocking";
-    }
-
-    /**
-     * Custom exception example
-     */
-    public Boolean customException() {
-        throw new CustomException("Custom exception", List.of("Payload1", "Payload2"));
+    public void customException(){
+        throw new CustomException("Error message","Error payload");
     }
 
     /**
      * JsonField example
-     * POST: http://localhost:8080/rest-api/json-fields?val=test + data {"id":1,"name":"Vladlen"}
+     * POST: http://localhost:8080/rest-api/json-batch?val=test + data {"id":1,"name":"Vladlen"}
      *
      * @see BatchField
      */
     @RequestMethod(HttpMethod.POST)
-    public Map<String, Object> jsonFields(Long idValue,
-                                          String name,
-                                          @ParamOrigin(Origin.QUERY) String val) {
+    public Map<String, Object> jsonBatch(
+            @BatchField("id")
+            Long idValue,
+            @BatchField
+            String name,
+            @ParamOrigin(Origin.QUERY) String val) {
         return Map.of("id", idValue, "name", name, "val", val);
     }
 
-    /**
-     * Compound params example
-     * GET http://localhost:8080/rest-api/compound-params?id=1&name=Ivan
-     */
-    public Long compoundParams(@Compound @ParamName("usr-") User user) {
-        return user.getId();
-    }
 }

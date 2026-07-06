@@ -4,6 +4,7 @@ package colesico.framework.example.restlet.customexception;
  * Custom exception
  */
 public class CustomException extends RuntimeException{
+
     private final Object payload;
 
     public CustomException(String message, Object payload) {
@@ -11,7 +12,7 @@ public class CustomException extends RuntimeException{
         this.payload = payload;
     }
 
-    public Object getPayload() {
+    public Object payload() {
         return payload;
     }
 }

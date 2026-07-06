@@ -29,7 +29,7 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Producer
-@Produce(GsonSerializer.class)
+@Produce(value = GsonSerializer.class, keyType = JsonSerializer.class)
 @Produce(value = RestletDataPortImpl.class, keyType = RestletDataPort.class)
 @Produce(value = RestletControllerImpl.class, keyType = RestletController.class)
 @Produce(value = LogRestletListener.class, keyType = RestletRequestListener.class, polyproduce = 0)

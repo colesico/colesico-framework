@@ -32,7 +32,7 @@
     <name>Colesico example - Hello World</name>
 
     <dependencies>
-        <!-- Colesico common http -->
+        <!-- Colesico weblet module -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-weblet</artifactId>

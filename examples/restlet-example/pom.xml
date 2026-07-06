@@ -32,31 +32,30 @@
     <name>Colesico example - Restlet</name>
 
     <dependencies>
-
-        <!-- Colesico common services bundle -->
+        <!-- Colesico restlet module-->
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-bundle-web</artifactId>
+            <artifactId>colesico-restlet</artifactId>
             <version>${project.version}</version>
         </dependency>
 
-        <!-- Colesico undertow integration -->
+        <!-- Colesico Fusion Auth HTTP integration -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-undertow</artifactId>
+            <artifactId>colesico-fusion-http</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <!-- Logger -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
+            <groupId>org.tinylog</groupId>
+            <artifactId>slf4j-tinylog</artifactId>
+            <version>${slf4j-tinylog.verion}</version>
         </dependency>
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.verion}</version>
+            <groupId>org.tinylog</groupId>
+            <artifactId>tinylog-impl</artifactId>
+            <version>${slf4j-tinylog.verion}</version>
         </dependency>
 
         <!-- Tests -->
@@ -66,6 +65,7 @@
             <version>${org-testng.version}</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -85,15 +85,9 @@
                         <!-- Framework annotation processors -->
                         <path>
                             <groupId>net.colesico.framework</groupId>
-                            <artifactId>colesico-bundle-web</artifactId>
+                            <artifactId>colesico-ioc</artifactId>
                             <version>${project.version}</version>
                         </path>
-                        <!-- To disable compile debug log remove or comment this dependency-->
-                        <dependency>
-                            <groupId>org.slf4j</groupId>
-                            <artifactId>slf4j-simple</artifactId>
-                            <version>${slf4j.version}</version>
-                        </dependency>
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>

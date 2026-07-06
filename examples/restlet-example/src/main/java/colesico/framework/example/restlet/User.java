@@ -16,6 +16,9 @@
 
 package colesico.framework.example.restlet;
 
+/**
+ * DTO User
+ */
 public class User {
     private Long id;
     private String name;

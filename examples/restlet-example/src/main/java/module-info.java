@@ -1,9 +1,7 @@
 module colesico.framework.example.restlet {
 
-    requires transitive colesico.framework.bundle.web;
-    requires transitive colesico.framework.undertow;
-    requires transitive java.net.http;
-
+    requires transitive colesico.framework.restlet;
+    requires transitive colesico.framework.fusionhttp;
 
     exports colesico.framework.example.restlet;
     exports colesico.framework.example.restlet.customexception;

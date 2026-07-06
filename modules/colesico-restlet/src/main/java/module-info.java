@@ -28,7 +28,7 @@ module colesico.framework.restlet {
 
     // API
     exports colesico.framework.restlet;
-    opens colesico.framework.restlet;
+
     exports colesico.framework.restlet.reader;
     exports colesico.framework.restlet.writer;
     exports colesico.framework.restlet.assist;
@@ -38,13 +38,12 @@ module colesico.framework.restlet {
     exports colesico.framework.restlet.internal to colesico.framework.ioc;
 
     // Codegen
-    exports colesico.framework.restlet.codegen;
+    exports colesico.framework.restlet.codegen to colesico.framework.ioc, colesico.framework.service;
 
     // Resources
     opens colesico.framework.restlet.t9n to colesico.framework.localization;
     opens colesico.framework.restlet.assist;
-    opens colesico.framework.restlet.writer;
-    opens colesico.framework.restlet.gson;
+    opens colesico.framework.restlet;
 
     provides Modulator with colesico.framework.restlet.codegen.RestletModulator;
 

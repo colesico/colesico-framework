@@ -1,34 +1,29 @@
 package colesico.framework.example.restlet.customexception;
 
-import colesico.framework.http.HttpContext;
-import colesico.framework.restlet.teleapi.RestletTWContext;
-import colesico.framework.restlet.writer.AbstractExceptionWriter;
-import colesico.framework.restlet.writer.ObjectWriter;
+import colesico.framework.http.HttpResponse;
+import colesico.framework.restlet.RestletWriteOptions;
+import colesico.framework.restlet.RestletWriter;
 
+import colesico.framework.telehttp.ContentType;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 /**
  * Writer to  send custom exception to  client
- * @see colesico.framework.restlet.RestletError
  */
 @Singleton
-public class CustomExceptionWriter extends AbstractExceptionWriter<CustomException> {
+public class CustomExceptionWriter implements RestletWriter<CustomException> {
 
-    public CustomExceptionWriter(Provider<HttpContext> httpContextProv, ObjectWriter writer) {
-        super(httpContextProv, writer);
-    }
+    private Provider<HttpResponse> httpResponse;
+
 
     @Override
-    protected Object getDetails(CustomException value, RestletTWContext context) {
-        return value.getPayload();
-    }
+    public void write(CustomException value, RestletWriteOptions options) {
+        var httpResponse = this.httpResponse.get();
 
-    /**
-     * Custom HTTP error code
-     */
-    @Override
-    protected int getHttpStatus(CustomException value, RestletTWContext context) {
-        return 510;
+        httpResponse
+                .setStatus(520)
+                .setContentType(ContentType.TEXT_PLAIN.headerValue())
+                .send(value.payload().toString());
     }
 }
