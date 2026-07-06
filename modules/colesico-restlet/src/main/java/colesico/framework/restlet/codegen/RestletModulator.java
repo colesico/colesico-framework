@@ -21,14 +21,20 @@ import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.restlet.*;
 import colesico.framework.restlet.codegen.assist.RestletCodegenUtils;
+import colesico.framework.router.RouterCommandsRegistry;
 import colesico.framework.router.codegen.RouterTeleServiceElement;
 import colesico.framework.router.codegen.RoutesModulator;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.teleapi.*;
+import colesico.framework.teleapi.TeleFacade;
+import colesico.framework.teleapi.dataport.ReadOptions;
+import colesico.framework.teleapi.dataport.WriteOptions;
 import colesico.framework.telehttp.ParamName;
+import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;
 import colesico.framework.telehttp.codegen.TeleHttpReadElement;
 import colesico.framework.telehttp.codegen.TeleHttpWriteElement;
+import colesico.framework.telehttp.origin.Origin;
 import com.palantir.javapoet.ClassName;
 import com.palantir.javapoet.CodeBlock;
 import com.palantir.javapoet.TypeName;
@@ -55,13 +61,18 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     @Override
-    protected Class<RestletController> commandsClass() {
-        return RestletController.class;
+    protected Class<? extends TeleFacade.CommandsRegistry> commandsClass() {
+        return RouterCommandsRegistry.class;
     }
 
     @Override
-    protected Class<RestletDataPort> dataPortClass() {
-        return RestletDataPort.class;
+    protected Class<? extends ReadOptions> readOptionsClass() {
+        return RestletReadOptions.class;
+    }
+
+    @Override
+    protected Class<? extends WriteOptions> writeOptionsClass() {
+        return RestletWriteOptions.class;
     }
 
     @Override
@@ -81,9 +92,9 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     @Override
-    protected TeleReadElement createReadValue(TeleOrdinaryParamElement teleParam) {
+    protected TeleReadElement createTeleRead(TeleOrdinaryParamElement teleParam) {
 
-        String paramName = RestletCodegenUtils.getParamName(teleParam);
+        String paramName = TeleHttpCodegenUtils.paramName(teleParam);
 
         CodeBlock.Builder cb = CodeBlock.builder();
 
@@ -94,9 +105,9 @@ public final class RestletModulator extends RoutesModulator {
 
         cb.add(", $S", paramName);
 
-        String originName = RestletCodegenUtils.getOriginName(teleParam);
+        String originName = TeleHttpCodegenUtils.originName(teleParam, Origin.AUTO);
 
-        TypeMirror customReader = RestletCodegenUtils.getCustomReaderClass(teleParam, getProcessorContext().getElementUtils());
+        TypeMirror customReader = RestletCodegenUtils.customReaderClass(teleParam, getProcessorContext().getElementUtils());
         ClassType customReaderCT = null;
 
         if (!originName.equals(RestletOrigin.AUTO) || customReader != null) {
@@ -114,7 +125,7 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     @Override
-    protected TeleWriteElement createWriteResult(TeleCommandElement teleCommand) {
+    protected TeleWriteElement createTeleWrite(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("$T.$N(", ClassName.get(RestletWriteOptions.class), RestletWriteOptions.OF_METHOD);
 

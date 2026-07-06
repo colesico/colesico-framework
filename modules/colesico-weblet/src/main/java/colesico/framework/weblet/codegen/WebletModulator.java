@@ -81,7 +81,7 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected TeleReadElement createReadValue(TeleOrdinaryParamElement teleParam) {
+    protected TeleReadElement createTeleRead(TeleOrdinaryParamElement teleParam) {
 
         CodeBlock.Builder valueTypeCode = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleParamType(teleParam, valueTypeCode);
@@ -121,7 +121,7 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected TeleWriteElement createWriteResult(TeleCommandElement teleCommand) {
+    protected TeleWriteElement createTeleWrite(TeleCommandElement teleCommand) {
         CodeBlock.Builder valueTypeCode = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleResultType(teleCommand, valueTypeCode);
 

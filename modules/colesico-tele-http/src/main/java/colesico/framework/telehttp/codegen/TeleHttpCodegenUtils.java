@@ -8,19 +8,19 @@ import colesico.framework.telehttp.ParamOrigin;
 
 public class TeleHttpCodegenUtils {
 
-    public static String paramName(TeleParameterElement teleInput) {
-        AnnotationAssist<ParamName> nameAnn = teleInput.originElement().annotation(ParamName.class);
+    public static String paramName(TeleParameterElement teleParam) {
+        AnnotationAssist<ParamName> nameAnn = teleParam.originElement().annotation(ParamName.class);
         if (nameAnn != null) {
             return nameAnn.unwrap().value();
         } else {
-            return teleInput.originElement().name();
+            return teleParam.originElement().name();
         }
     }
 
-    public static String originName(TeleParameterElement teleInput, String defaultOrigin) {
-        TeleCommandElement teleCommand = teleInput.parentTeleCommand();
+    public static String originName(TeleParameterElement teleParam, String defaultOrigin) {
+        TeleCommandElement teleCommand = teleParam.parentTeleCommand();
         String originName = defaultOrigin;
-        AnnotationAssist<ParamOrigin> originAnn = teleInput.originElement().annotation(ParamOrigin.class);
+        AnnotationAssist<ParamOrigin> originAnn = teleParam.originElement().annotation(ParamOrigin.class);
         if (originAnn == null) {
             originAnn = teleCommand.serviceMethod().originMethod().annotation(ParamOrigin.class);
         }

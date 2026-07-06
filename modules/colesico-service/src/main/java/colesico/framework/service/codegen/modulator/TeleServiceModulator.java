@@ -23,7 +23,6 @@ import colesico.framework.teleapi.TeleFacade;
 import com.palantir.javapoet.ClassName;
 import com.palantir.javapoet.CodeBlock;
 import com.palantir.javapoet.FieldSpec;
-import com.palantir.javapoet.TypeName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,13 +96,13 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
             if (param instanceof TeleBatchParamElement) {
                 TeleBatchParamElement batchField = (TeleBatchParamElement) param;
                 if (batchField.parentBatch().readSpec() == null) {
-                    batchField.parentBatch().setReadSpec(createReadValue(batchField.parentBatch()));
+                    batchField.parentBatch().setReadSpec(createTeleRead(batchField.parentBatch()));
                 }
                 continue;
             }
 
             TeleOrdinaryParamElement teleParam = (TeleOrdinaryParamElement) param;
-            teleParam.setReadSpec(createReadValue(teleParam));
+            teleParam.setReadSpec(createTeleRead(teleParam));
 
         }
     }
@@ -125,7 +124,7 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
         processTeleCommand(teleCommand);
         createParamReadOptions(teleCommand.parameters());
         teleCommand.setInvocationContext(createInvocationContext(teleCommand));
-        teleCommand.setWriteSpec(createWriteResult(teleCommand));
+        teleCommand.setWriteSpec(createTeleWrite(teleCommand));
         addTeleInterception(teleCommand);
     }
 
@@ -157,19 +156,19 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
         return new TIContextElement(teleCommand, cb.build());
     }
 
-    protected TeleWriteElement createWriteResult(TeleCommandElement teleCommand) {
+    protected TeleWriteElement createTeleWrite(TeleCommandElement teleCommand) {
         CodeBlock.Builder valueTypeCode = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleResultType(teleCommand, valueTypeCode);
         return new TeleWriteElement(teleCommand, valueTypeCode.build(), null);
     }
 
-    protected TeleReadElement createReadValue(TeleOrdinaryParamElement teleParam) {
+    protected TeleReadElement createTeleRead(TeleOrdinaryParamElement teleParam) {
         CodeBlock.Builder valueTypeCode = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleParamType(teleParam, valueTypeCode);
         return new TeleReadElement(teleParam, valueTypeCode.build(), null);
     }
 
-    protected TeleReadElement createReadValue(TeleBatchElement teleBatch) {
+    protected TeleReadElement createTeleRead(TeleBatchElement teleBatch) {
         CodeBlock.Builder valueTypeCode = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleBatchType(teleBatch, valueTypeCode);
         return new TeleReadElement(teleBatch, valueTypeCode.build(), null);
