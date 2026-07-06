@@ -179,8 +179,6 @@
                 <module>examples/jdbirec-example</module>
                 <module>examples/restlet-example</module>
                 <module>examples/routing-example</module>
-                <module>examples/rpc-example</module>
-                <module>examples/rpc-api-example</module>
                 <module>examples/slf4j-example</module>
                 <module>examples/helloworld-example</module>
                 <module>examples/web-example</module>
