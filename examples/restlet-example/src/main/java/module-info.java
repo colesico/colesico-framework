@@ -7,6 +7,7 @@ module colesico.framework.example.restlet {
     exports colesico.framework.example.restlet.helloworld;
     exports colesico.framework.example.restlet.batchparam;
     exports colesico.framework.example.restlet.customerror;
+    exports colesico.framework.example.restlet.customwriter;
 
     opens colesico.framework.example.restlet to com.google.gson;
     opens colesico.framework.example.restlet.helloworld to com.google.gson;
