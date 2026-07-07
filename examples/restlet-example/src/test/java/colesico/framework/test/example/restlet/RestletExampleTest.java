@@ -105,12 +105,14 @@ public class RestletExampleTest {
     @Test
     public void testCustomException() throws Exception {
         String result = requestGET("http://localhost:8080/rest-api/custom-exception");
-        assertEquals("ErrorPayload",result);
+        IO.println("Exception response = " + result);
+        assertEquals("ErrorPayload", result);
     }
 
     @Test
     public void testJsonFields() throws Exception {
         String resultStr = requestPOST("http://localhost:8085/rest-api/json-batch?val=test", "{id:1,name:Vladlen}");
+        IO.println("Result=" + resultStr);
         Map resultMap = gson.fromJson(resultStr, Map.class);
         assertEquals("Vladlen", resultMap.get("name"));
         assertEquals("test", resultMap.get("val"));

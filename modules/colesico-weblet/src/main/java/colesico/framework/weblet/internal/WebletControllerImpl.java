@@ -78,11 +78,6 @@ public class WebletControllerImpl implements WebletController {
     }
 
     @Override
-    public Optional<Router.Invocation> resolve(Criteria criteria) {
-        return Optional.empty();
-    }
-
-    @Override
     public void execute(Router.Invocation invocation) {
         taskScope.put(DataPort.SCOPE_KEY, dataPort);
         HttpRequest request = httpContext.get().request();
@@ -90,8 +85,4 @@ public class WebletControllerImpl implements WebletController {
         invocation.action().teleCommand().execute();
     }
 
-    @Override
-    public void register(TeleFacade<?, RouterCommandsRegistry> teleFacade) {
-        throw new UnsupportedOperationException("Not supported");
-    }
 }

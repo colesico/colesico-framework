@@ -75,7 +75,7 @@ public class RestletControllerImpl implements RestletController {
             Polysupplier<RestletRequestListener> reqListenerSup,
             Polysupplier<RestletResponseListener> respListenerSup) {
 
-        logger.info("Init restlet controller...");
+        logger.info("Initialize restlet controller...");
 
         this.config = config;
         this.taskScope = taskScope;
@@ -90,16 +90,6 @@ public class RestletControllerImpl implements RestletController {
     @Override
     public Iterable<TeleFacade<?, RouterCommandsRegistry>> teleFacades() {
         return teleFacades;
-    }
-
-    @Override
-    public Optional<Router.Invocation> resolve(Criteria criteria) {
-        return Optional.empty();
-    }
-
-    @Override
-    public void register(TeleFacade<?, RouterCommandsRegistry> teleFacade) {
-        throw new UnsupportedOperationException("Not supported");
     }
 
     @Override

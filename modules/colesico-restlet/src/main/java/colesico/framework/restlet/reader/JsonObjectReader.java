@@ -44,14 +44,15 @@ public final class JsonObjectReader
     @Override
     public Object read(RestletReadOptions options) {
         var httpRequest = httpContext.get().request();
+        var originName = options.originName() != null ? options.originName() : Origin.AUTO;
         try {
-            if (useInputStream(options.originName(), httpRequest.method())) {
+            if (useInputStream(originName, httpRequest.method())) {
                 try (InputStream is = httpRequest.inputStream()) {
                     return serializer.deserialize(is, getCharset(httpRequest), options.baseType());
                 }
             }
 
-            String strValue = readString(options.originName(), options.paramName());
+            String strValue = readString(originName, options.paramName());
             return StringUtils.isBlank(strValue) ? null : serializer.deserialize(strValue, options.baseType());
         } catch (Exception e) {
             throw RestletException.of(e, 400);
