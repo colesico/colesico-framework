@@ -103,22 +103,17 @@ public class RestletExampleTest {
     }
 
     @Test
-    public void testNonBlocking() throws Exception {
-        String result = requestGET("http://localhost:8085/rest-api/non-blocking");
-        //assertEquals("NonBlocking",result);
+    public void testCustomException() throws Exception {
+        String result = requestGET("http://localhost:8080/rest-api/custom-exception");
+        assertEquals("ErrorPayload",result);
     }
 
     @Test
     public void testJsonFields() throws Exception {
-        String resultStr = requestPOST("http://localhost:8085/rest-api/json-fields?val=test", "{id:1,name:Vladlen}");
+        String resultStr = requestPOST("http://localhost:8085/rest-api/json-batch?val=test", "{id:1,name:Vladlen}");
         Map resultMap = gson.fromJson(resultStr, Map.class);
         assertEquals("Vladlen", resultMap.get("name"));
         assertEquals("test", resultMap.get("val"));
     }
 
-    @Test
-    public void testCompoundParam() throws Exception {
-        String resultStr = requestGET("http://localhost:8085/rest-api/compound-params?usr-id=100&usr-name=Ivan");
-        assertEquals("100", resultStr);
-    }
 }

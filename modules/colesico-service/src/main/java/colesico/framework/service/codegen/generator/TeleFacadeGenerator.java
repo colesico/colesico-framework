@@ -86,7 +86,19 @@ public class TeleFacadeGenerator {
             // Collect params
             ArrayCodegen serviceMethodArgs = new ArrayCodegen();
             for (TeleParameterElement param : teleCommand.parameters()) {
-                serviceMethodArgs.add("null");
+                var paramType = param.serviceParameter().originParameter().originType();
+                String literal = switch (paramType.getKind()) {
+                    case BOOLEAN -> "false";
+                    case BYTE -> "0";
+                    case SHORT -> "0";
+                    case LONG -> "0";
+                    case INT -> "0";
+                    case CHAR -> "' '";
+                    case FLOAT -> "0.0";
+                    case DOUBLE -> "0.0";
+                    default -> "null";
+                };
+                serviceMethodArgs.add(literal);
             }
 
             // Call service method
