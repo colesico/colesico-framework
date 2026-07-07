@@ -67,6 +67,7 @@ public class RestApi {
      * GET  http://localhost:8080/rest-api/custom-exception
      */
     public void customException(){
+        IO.println("Throw custom exception...");
         throw new CustomException("ErrorMessage","ErrorPayload");
     }
 

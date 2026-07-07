@@ -104,7 +104,7 @@ public class RestletExampleTest {
 
     @Test
     public void testCustomException() throws Exception {
-        String result = requestGET("http://localhost:8080/rest-api/custom-exception");
+        String result = requestGET("http://localhost:8085/rest-api/custom-exception");
         IO.println("Exception response = " + result);
         assertEquals("ErrorPayload", result);
     }

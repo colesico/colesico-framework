@@ -14,8 +14,11 @@ import jakarta.inject.Singleton;
 @Singleton
 public class CustomExceptionWriter implements RestletWriter<CustomException> {
 
-    private Provider<HttpResponse> httpResponse;
+    private final Provider<HttpResponse> httpResponse;
 
+    public CustomExceptionWriter(Provider<HttpResponse> httpResponse) {
+        this.httpResponse = httpResponse;
+    }
 
     @Override
     public void write(CustomException value, RestletWriteOptions options) {
