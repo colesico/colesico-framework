@@ -16,14 +16,8 @@
 
 package colesico.framework.example.helloworld;
 
-import colesico.framework.security.Identity;
-import colesico.framework.security.authentication.Authentication;
-import colesico.framework.telehttp.authentication.HttpBasic;
 import colesico.framework.telehttp.response.StringResponse;
-import colesico.framework.telehttp.response.ValueResponse;
 import colesico.framework.weblet.Weblet;
-import colesico.framework.weblet.response.HtmlResponse;
-import jakarta.inject.Provider;
 
 @Weblet
 public class HelloWeblet {
@@ -31,26 +25,14 @@ public class HelloWeblet {
     public static final String SAY_HELLO_TEXT = "Hello World!";
     public static final String SAY_PRIVET_TEXT = "Привет, ";
 
-    private final Provider<Identity<String>> identity;
-
-    public HelloWeblet(Provider<Identity> identity) {
-        this.identity = (Provider) identity;
+    // Browse: http://localhost:8080/hello-weblet/say-hello
+    public String sayHello() {
+        return SAY_HELLO_TEXT;
     }
 
-    // Browse the url: http://localhost:8080/hello-weblet/say-hello
-    public HtmlResponse sayHello() {
-        return HtmlResponse.html(SAY_HELLO_TEXT).build();
+    // Browse: http://localhost:8080/hello-weblet/privet?name=Татьяна
+    public StringResponse privet(String name) {
+        return StringResponse.html(SAY_PRIVET_TEXT + name).build();
     }
 
-    // Browse the url: http://localhost:8080/hello-weblet/privet?name=Татьяна
-    public String privet(String name) {
-        return SAY_PRIVET_TEXT + name;
-    }
-
-    // Browse the url: http://localhost:8080/hello-weblet/secured
-    // Use admin/secret to  authenticate (see resources/META-INF/accounts.properties)
-    @Authentication(HttpBasic.class)
-    public StringResponse secured() {
-        return StringResponse.textPlain(identity.get().id()).build();
-    }
 }

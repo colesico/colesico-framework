@@ -1,4 +1,4 @@
-package colesico.framework.example.restlet.customexception;
+package colesico.framework.example.restlet.customerror;
 
 import colesico.framework.http.HttpResponse;
 import colesico.framework.restlet.RestletWriteOptions;

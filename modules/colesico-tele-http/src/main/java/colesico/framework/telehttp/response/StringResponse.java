@@ -13,11 +13,17 @@ public class StringResponse extends ValueResponse<String> {
         super(statusCode, contentType, headers, cookies, value);
     }
 
-    public static Builder textPlain(String value) {
+    /**
+     * Text/Plain response
+     */
+    public static Builder text(String value) {
         return value(value).contentType(ContentType.TEXT_PLAIN);
     }
 
-    public static Builder textHtml(String value) {
+    /**
+     * Text/Html response
+     */
+    public static Builder html(String value) {
         return value(value).contentType(ContentType.TEXT_HTML);
     }
 

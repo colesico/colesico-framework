@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.restlet;
+package colesico.framework.example.restlet.helloworld;
 
-import colesico.framework.example.restlet.customexception.CustomException;
+import colesico.framework.example.restlet.User;
+import colesico.framework.example.restlet.customerror.CustomException;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.ioc.listener.PostConstruct;
 import colesico.framework.restlet.Restlet;
@@ -31,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 @Restlet
-public class RestApi {
+public class HelloWorldApi {
 
     private List<User> users;
 

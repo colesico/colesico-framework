@@ -1,4 +1,4 @@
-package colesico.framework.example.restlet.customexception;
+package colesico.framework.example.restlet.customerror;
 
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
@@ -12,7 +12,7 @@ import jakarta.inject.Singleton;
  */
 @Producer
 @Produce(CustomExceptionWriter.class)
-public class ExampleProducer {
+public class RestletProducer {
 
     @Singleton
     @Classed(CustomException.class)

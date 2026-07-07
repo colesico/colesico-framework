@@ -22,7 +22,6 @@ import colesico.framework.telehttp.writer.BytesResponseWriter;
 import colesico.framework.telehttp.writer.StringResponseWriter;
 import colesico.framework.weblet.WebletWriter;
 import colesico.framework.weblet.response.AttachmentResponse;
-import colesico.framework.weblet.response.HtmlResponse;
 import colesico.framework.weblet.writer.WebletWriterProxy;
 import jakarta.inject.Singleton;
 
@@ -35,10 +34,5 @@ public class WebletWritersProducer {
         return WebletWriterProxy.of(impl);
     }
 
-    @Singleton
-    @Classed(HtmlResponse.class)
-    public WebletWriter binaryResponseWriter(StringResponseWriter impl) {
-        return WebletWriterProxy.of(impl);
-    }
 
 }

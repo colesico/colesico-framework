@@ -57,7 +57,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    public void test1() throws Exception {
+    public void testHello() throws Exception {
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8085/hello-weblet/say-hello")).build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         IO.println("Response: "+response);
@@ -65,9 +65,9 @@ public class HelloWorldTest {
     }
 
     @Test
-    public void test2() throws Exception {
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8085/hello-weblet/privet?name=Tanja")).build();
+    public void testPrivet() throws Exception {
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8085/hello-weblet/privet?name=Таня")).build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(response.body(), HelloWeblet.SAY_PRIVET_TEXT + "Tanja");
+        assertEquals(response.body(), HelloWeblet.SAY_PRIVET_TEXT + "Таня");
     }
 }
