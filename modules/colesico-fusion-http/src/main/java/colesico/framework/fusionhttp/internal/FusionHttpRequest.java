@@ -87,7 +87,10 @@ public class FusionHttpRequest implements HttpRequest {
         try {
             out.write("HTTP Request");
             out.write(request.getMethod().name() + " ");
-            out.write(request.getBaseURL() + request.getPath() + request.getQueryString());
+            out.write(request.getBaseURL() + request.getPath());
+            if (request.getQueryString() != null) {
+                out.write("?" + request.getQueryString());
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -7,9 +7,6 @@ import io.fusionauth.http.server.HTTPResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.WritableByteChannel;
 
 public class FusionHttpResponse implements HttpResponse {
 
@@ -57,6 +54,12 @@ public class FusionHttpResponse implements HttpResponse {
 
     @Override
     public void dump(Writer out) {
-        // TODO:...
+        try {
+            out.write("HTTP Response");
+            out.write("\nstatus: " + response.getStatus());
+            out.write("\ncontent-type: " + response.getContentType());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
