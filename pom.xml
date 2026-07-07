@@ -106,7 +106,7 @@
         <!-- Mix -->
         <jakarta.inject-api.version>2.0.1</jakarta.inject-api.version>
         <typesafe-config.version>1.4.3</typesafe-config.version>
-        <pebble.version>4.1.1</pebble.version>
+        <pebble.version>4.1.2</pebble.version>
         <palantir-javapoet.version>0.11.0</palantir-javapoet.version>
 
     </properties>
@@ -180,7 +180,7 @@
                 <module>examples/restlet-example</module>
                 <module>examples/routing-example</module>
                 <module>examples/slf4j-example</module>
-                <module>examples/helloworld-example</module>
+                <module>examples/weblet-example</module>
                 <module>examples/web-example</module>
             </modules>
         </profile>

@@ -16,7 +16,7 @@
 
 package colesico.framework.pebble;
 
-import colesico.framework.http.HttpContext;
+import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.ioc.production.Polysupplier;
@@ -28,7 +28,6 @@ import colesico.framework.weblet.writer.ViewWriter;
 import io.pebbletemplates.pebble.PebbleEngine;
 import io.pebbletemplates.pebble.error.PebbleException;
 import io.pebbletemplates.pebble.template.PebbleTemplate;
-import org.apache.commons.lang3.StringUtils;
 
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -42,17 +41,17 @@ import java.util.Map;
  * @author Vladlen Larionov
  */
 @Singleton
-public class PebbleTemplater extends ViewWriter implements HtmlRenderer {
+public class PebbleTemplater extends ViewWriter {
 
     public static final String MODEL_VAR = "vm";
 
     private final PebbleEngine pebbleEngine;
 
-    public PebbleTemplater(Provider<HttpContext> httpContextProv,
+    public PebbleTemplater(Provider<HttpResponse> httpResponse,
                            PebbleTemplateLoader tmplLoader,
                            FrameworkExtension frameworkExtension,
                            Polysupplier<PebbleOptionsPrototype> optionsSup) {
-        super(httpContextProv);
+        super(httpResponse);
 
         PebbleEngine.Builder builder = new PebbleEngine.Builder()
                 .loader(tmplLoader)
@@ -89,7 +88,7 @@ public class PebbleTemplater extends ViewWriter implements HtmlRenderer {
         HttpUtils.setCookies(httpResponse, viewResponse.cookies());
 
         String contentType = viewResponse.contentType();
-        if (StringUtils.isEmpty(contentType)) {
+        if (StringUtils.isBlank(contentType)) {
             contentType = Responses.DEFAULT_CONTENT_TYPE;
         }
 

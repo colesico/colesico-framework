@@ -30,7 +30,7 @@
     <artifactId>colesico-pebble</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico Pebble</name>
+    <name>Colesico Pebble Templates</name>
     <description>
         Colesico framework Pebble templating engine integration
     </description>
@@ -60,18 +60,19 @@
             </exclusions>
         </dependency>
 
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Tests -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${org-testng.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
 

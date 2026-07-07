@@ -26,10 +26,10 @@
     </parent>
 
     <groupId>net.colesico.framework.example</groupId>
-    <artifactId>helloworld-example</artifactId>
+    <artifactId>weblet-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - Hello World</name>
+    <name>Colesico example - Weblet</name>
 
     <dependencies>
         <!-- Colesico weblet module -->
