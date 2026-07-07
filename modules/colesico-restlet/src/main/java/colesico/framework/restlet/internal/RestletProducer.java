@@ -16,12 +16,14 @@
 
 package colesico.framework.restlet.internal;
 
+import colesico.framework.ioc.production.Polyproduce;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.restlet.*;
 import colesico.framework.restlet.assist.LogRestletListener;
 import colesico.framework.restlet.gson.GsonSerializer;
 
+import colesico.framework.router.TargetController;
 import jakarta.inject.Singleton;
 
 
@@ -41,4 +43,9 @@ public class RestletProducer {
         return new RestletConfigImpl();
     }
 
+    @Singleton
+    @Polyproduce
+    public TargetController routerTargetController(RestletController impl) {
+        return impl;
+    }
 }

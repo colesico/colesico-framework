@@ -75,6 +75,8 @@ public class RestletControllerImpl implements RestletController {
             Polysupplier<RestletRequestListener> reqListenerSup,
             Polysupplier<RestletResponseListener> respListenerSup) {
 
+        logger.info("Init restlet controller...");
+
         this.config = config;
         this.taskScope = taskScope;
         this.httpContext = httpContext;

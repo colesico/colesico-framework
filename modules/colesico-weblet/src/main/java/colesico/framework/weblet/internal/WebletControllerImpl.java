@@ -63,6 +63,8 @@ public class WebletControllerImpl implements WebletController {
             Polysupplier<TeleFacade> teleFacades,
             CSRFProtector csrfProtector
     ) {
+
+        logger.info("Init weblet controller...");
         this.dataPort = dataPort;
         this.teleFacades = (Polysupplier) teleFacades;
         this.httpContext = httpContext;

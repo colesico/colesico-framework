@@ -16,6 +16,7 @@
 
 package colesico.framework.weblet.internal;
 
+import colesico.framework.ioc.production.Polyproduce;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.router.TargetController;
@@ -26,16 +27,12 @@ import jakarta.inject.Singleton;
 
 
 @Producer
-@Produce(WebletControllerImpl.class)
+@Produce(value = WebletControllerImpl.class, keyType = WebletController.class )
 @Produce(value = WebletDataPortImpl.class, keyType = WebletDataPort.class, scoped = Singleton.class)
 public class WebletProducer {
 
     @Singleton
-    public WebletController webletTeleController(WebletControllerImpl impl) {
-        return impl;
-    }
-
-    @Singleton
+    @Polyproduce
     public TargetController routerTargetController(WebletController impl) {
         return impl;
     }
