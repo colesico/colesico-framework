@@ -26,7 +26,7 @@ import jakarta.inject.Provider;
  */
 abstract public class TeleFacade<T, C extends TeleFacade.CommandsRegistry> {
 
-    public static final String TELE_FACADE_SUFFIX = "TeleFacade";
+    public static final String TELE_FACADE_SUFFIX = "Facade";
     public static final String TARGET_PROV_FIELD = "targetProvider";
     public static final String COMMANDS_REGISTRY_METHOD = "commands";
 

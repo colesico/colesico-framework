@@ -16,7 +16,7 @@
 
 package colesico.framework.test.example.restlet;
 
-import colesico.framework.example.restlet.User;
+import colesico.framework.example.restlet.helloworld.User;
 import colesico.framework.httpserver.HttpServer;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;

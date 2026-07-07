@@ -16,20 +16,15 @@
 
 package colesico.framework.example.restlet.helloworld;
 
-import colesico.framework.example.restlet.User;
-import colesico.framework.example.restlet.customerror.CustomException;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.ioc.listener.PostConstruct;
 import colesico.framework.restlet.Restlet;
 import colesico.framework.router.RequestMethod;
 import colesico.framework.router.Route;
-import colesico.framework.service.BatchField;
-import colesico.framework.telehttp.origin.Origin;
-import colesico.framework.telehttp.ParamOrigin;
+import colesico.framework.service.LocalMethod;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Restlet
 @Route("hello-world")
@@ -38,6 +33,7 @@ public class HelloWorldApi {
     private List<User> users;
 
     @PostConstruct
+    @LocalMethod
     public void init() {
         users = Arrays.asList(new User(1L, "Ivan"), new User(2L, "John"));
     }

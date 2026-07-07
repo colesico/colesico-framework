@@ -8,7 +8,7 @@ import jakarta.inject.Provider;
 public class TeleInterceptor<R extends ReadOptions, W extends WriteOptions> {
 
     public static final String DATA_PORT_PROV_FIELD = "dataPortProvider";
-    public static final String TELE_INTERCEPTOR_SUFFIX = "TeleInterceptor";
+    public static final String TELE_INTERCEPTOR_SUFFIX = "Interceptor";
 
     protected final Provider<DataPort<R, W>> dataPortProvider;
 
