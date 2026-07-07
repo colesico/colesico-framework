@@ -55,13 +55,13 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
             batchName = methodBatchAnn.unwrap().batch();
         }
 
-        TeleBatchParamElement batchField = new TeleBatchParamElement(teleCommand, param, fieldName);
+        TeleBatchParamElement batchParam = new TeleBatchParamElement(teleCommand, param, fieldName);
 
         TeleBatchElement batch = teleCommand.getOrCreateBatch(batchName);
-        batch.addField(batchField);
-        teleCommand.addParameter(batchField);
+        batch.addField(batchParam);
+        teleCommand.addParameter(batchParam);
 
-        context.modulatorKit().notifyTeleParameterParsed(batchField);
+        context.modulatorKit().notifyTeleParameterParsed(batchParam);
     }
 
     private void parseInjectParam(TeleCommandElement teleCommand,

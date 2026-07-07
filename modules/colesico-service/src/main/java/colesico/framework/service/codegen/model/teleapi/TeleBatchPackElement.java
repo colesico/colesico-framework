@@ -5,7 +5,7 @@ import java.util.List;
 
 public class TeleBatchPackElement {
 
-    public static final String BATCH_PACK_CLASS_SUFFIX = "BatchPack";
+    public static final String BATCH_PACK_CLASS_SUFFIX = "Batches";
 
     private final TeleServiceElement parentTeleFacade;
 

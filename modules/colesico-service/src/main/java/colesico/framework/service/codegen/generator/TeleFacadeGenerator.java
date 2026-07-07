@@ -18,6 +18,7 @@ package colesico.framework.service.codegen.generator;
 
 
 import colesico.framework.assist.codegen.ArrayCodegen;
+import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.*;
@@ -45,13 +46,9 @@ public class TeleFacadeGenerator {
     protected final Logger logger = LoggerFactory.getLogger(TeleFacadeGenerator.class);
 
     protected final ServiceProcessorContext context;
-    protected final VarNameSequence varNames = new VarNameSequence();
-
-    protected final TeleBatchesGenerator batchesGenerator;
 
     public TeleFacadeGenerator(ServiceProcessorContext context) {
         this.context = context;
-        this.batchesGenerator = new TeleBatchesGenerator(context.processingEnv());
     }
 
     protected void generateConstructor(TeleServiceElement teleService, TypeSpec.Builder classBuilder) {
@@ -119,8 +116,11 @@ public class TeleFacadeGenerator {
 
     public void generate(ServiceElement service) {
         TeleServiceElement teleService = service.teleService();
+
         if (teleService == null) {
-            return;
+            throw CodegenException.of()
+                    .message("TeleService is not defined")
+                    .element(service.originClass().unwrap()).build();
         }
 
         TypeSpec.Builder classBuilder = TypeSpec.classBuilder(teleService.facadeClassSimpleName());
@@ -142,7 +142,6 @@ public class TeleFacadeGenerator {
 
         createTeleFacadeClassFile(service, classBuilder);
 
-        batchesGenerator.generate(teleService.batchPack());
     }
 
 }

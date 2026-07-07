@@ -56,13 +56,9 @@ public class TeleInterceptorGenerator {
     protected final Logger logger = LoggerFactory.getLogger(TeleInterceptorGenerator.class);
 
     protected final ServiceProcessorContext context;
-    protected final VarNameSequence varNames = new VarNameSequence();
-
-    protected final TeleBatchesGenerator batchesGenerator;
 
     public TeleInterceptorGenerator(ServiceProcessorContext context) {
         this.context = context;
-        this.batchesGenerator = new TeleBatchesGenerator(context.processingEnv());
     }
 
     protected void generateConstructor(TypeSpec.Builder classBuilder) {
@@ -82,9 +78,9 @@ public class TeleInterceptorGenerator {
     protected CodeBlock generateBatches(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
         for (TeleBatchElement batch : teleCommand.batches().values()) {
-            if (batch.readSpec() == null || batch.readSpec().optionsCode() == null) {
+            if (batch.readSpec() == null) {
                 throw CodegenException.of()
-                        .message("Batch read context code not defined")
+                        .message("Batch read specification is not defined")
                         .element(teleCommand.serviceMethod().originMethod())
                         .build();
             }
@@ -253,8 +249,11 @@ public class TeleInterceptorGenerator {
 
     public void generate(ServiceElement service) {
         TeleServiceElement teleService = service.teleService();
+
         if (teleService == null) {
-            return;
+            throw CodegenException.of()
+                    .message("TeleService is not defined")
+                    .element(service.originClass().unwrap()).build();
         }
 
         TypeSpec.Builder classBuilder = TypeSpec.classBuilder(teleService.interceptorClassSimpleName());
@@ -277,7 +276,6 @@ public class TeleInterceptorGenerator {
 
         createTeleInterceptorClassFile(service, classBuilder);
 
-        batchesGenerator.generate(teleService.batchPack());
     }
 
 }

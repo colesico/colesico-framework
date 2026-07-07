@@ -92,7 +92,7 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
     private void createParamReadOptions(List<TeleParameterElement> params) {
         for (var param : params) {
 
-            // Skip batch fields
+            // Process batch fields
             if (param instanceof TeleBatchParamElement) {
                 TeleBatchParamElement batchField = (TeleBatchParamElement) param;
                 if (batchField.parentBatch().readSpec() == null) {

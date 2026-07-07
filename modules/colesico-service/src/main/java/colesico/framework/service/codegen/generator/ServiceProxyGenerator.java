@@ -61,11 +61,14 @@ public class ServiceProxyGenerator {
     public static final String INV_CONTEXT_VAR = "ctx";
 
     protected final ServiceProcessorContext context;
+
+    protected final TeleBatchesGenerator teleBatchesGenerator;
     protected final TeleFacadeGenerator teleFacadeGenerator;
     protected final TeleInterceptorGenerator teleInterceptorGenerator;
 
     public ServiceProxyGenerator(ServiceProcessorContext context) {
         this.context = context;
+        teleBatchesGenerator = new TeleBatchesGenerator(context.processingEnv());
         teleFacadeGenerator = new TeleFacadeGenerator(context);
         teleInterceptorGenerator = new TeleInterceptorGenerator(context);
     }
@@ -191,7 +194,7 @@ public class ServiceProxyGenerator {
     protected InterceptionElement generateSuperMethodInterception(ServiceMethodElement methodElement) {
         CodeBlock.Builder codeBlock = CodeBlock.builder();
 
-        codeBlock.add("($N,$N)->{", Interceptor.INVOCATION_CONTEXT_PARAM,Interceptor.OPTIONS_PARAM);
+        codeBlock.add("($N,$N)->{", Interceptor.INVOCATION_CONTEXT_PARAM, Interceptor.OPTIONS_PARAM);
         codeBlock.add("\n");
         codeBlock.indent();
 
@@ -356,8 +359,11 @@ public class ServiceProxyGenerator {
         String packageName = originClass.packageName();
         CodegenUtils.createJavaFile(context.processingEnv(), typeSpec, packageName, originClass.unwrap());
 
-        teleFacadeGenerator.generate(serviceElement);
-        teleInterceptorGenerator.generate(serviceElement);
+        if (serviceElement.teleService() != null) {
+            teleBatchesGenerator.generate(serviceElement.teleService().batchPack());
+            teleFacadeGenerator.generate(serviceElement);
+            teleInterceptorGenerator.generate(serviceElement);
+        }
 
         context.modulatorKit().notifyServiceGenerated(serviceElement);
     }

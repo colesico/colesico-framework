@@ -10,6 +10,9 @@ import colesico.framework.service.codegen.model.ServiceParameterElement;
  */
 public class TeleBatchParamElement extends TeleParameterElement {
 
+    /**
+     * Parent batch elm reference
+     */
     private TeleBatchElement parentBatch;
 
     /**
