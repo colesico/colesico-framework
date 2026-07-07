@@ -80,7 +80,7 @@ public class RestletExampleTest {
 
     @Test
     public void testList() throws Exception {
-        List<User> users = gson.fromJson(requestGET("http://localhost:8085/rest-api/list"), new TypeToken<List<User>>() {
+        List<User> users = gson.fromJson(requestGET("http://localhost:8085/hello-world/list"), new TypeToken<List<User>>() {
         }.getType());
         assertEquals("Ivan", users.get(0).getName());
         assertEquals("John", users.get(1).getName());
@@ -88,7 +88,7 @@ public class RestletExampleTest {
 
     @Test
     public void testFind() throws Exception {
-        User user = gson.fromJson(requestGET("http://localhost:8085/rest-api/find?id=1"), (Type) User.class);
+        User user = gson.fromJson(requestGET("http://localhost:8085/hello-world/find?id=1"), (Type) User.class);
         assertEquals("Katherine", user.getName());
         assertEquals(user.getId().longValue(), 1L);
     }
@@ -98,20 +98,29 @@ public class RestletExampleTest {
         User user = new User();
         user.setId(2L);
         user.setName("AName");
-        Long id = gson.fromJson(requestPOST("http://localhost:8085/rest-api/save", gson.toJson(user)), Long.class);
+        Long id = gson.fromJson(requestPOST("http://localhost:8085/hello-world/save", gson.toJson(user)), Long.class);
         assertEquals(id.longValue(), 2L);
     }
 
     @Test
     public void testCustomException() throws Exception {
-        String result = requestGET("http://localhost:8085/rest-api/custom-exception");
+        String result = requestGET("http://localhost:8085/custom-error-api/error");
         IO.println("Exception response = " + result);
         assertEquals("ErrorPayload", result);
     }
 
     @Test
-    public void testJsonFields() throws Exception {
-        String resultStr = requestPOST("http://localhost:8085/rest-api/json-batch?val=test", "{id:1,name:Vladlen}");
+    public void testBatchParamSimple() throws Exception {
+        String resultStr = requestPOST("http://localhost:8085/batch-param-api/simple", "{id:1,name:Vladlen,val:test}");
+        IO.println("Result=" + resultStr);
+        Map resultMap = gson.fromJson(resultStr, Map.class);
+        assertEquals("Vladlen", resultMap.get("name"));
+        assertEquals("test", resultMap.get("val"));
+    }
+
+    @Test
+    public void testBatchParamMix() throws Exception {
+        String resultStr = requestPOST("http://localhost:8085/batch-param-api/mix?val=test", "{id:1,name:Vladlen}");
         IO.println("Result=" + resultStr);
         Map resultMap = gson.fromJson(resultStr, Map.class);
         assertEquals("Vladlen", resultMap.get("name"));

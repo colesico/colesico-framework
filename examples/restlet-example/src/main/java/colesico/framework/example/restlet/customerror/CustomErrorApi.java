@@ -22,12 +22,11 @@ import colesico.framework.restlet.Restlet;
 public class CustomErrorApi {
 
     /**
-     * GET http://localhost:8080/custom-error-api/custom-exception
+     * GET http://localhost:8080/custom-error-api/error
      */
-    public void customError(){
+    public void error(){
         IO.println("Throw custom exception...");
         throw new CustomException("ErrorMessage","ErrorPayload");
     }
-
 
 }

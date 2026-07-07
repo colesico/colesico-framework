@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 @Restlet
+@Route("hello-world")
 public class HelloWorldApi {
 
     private List<User> users;
@@ -42,14 +43,14 @@ public class HelloWorldApi {
     }
 
     /**
-     * GET http://localhost:8080/rest-api/list
+     * GET http://localhost:8080/hello-world/list
      */
     public List<User> list() {
         return users;
     }
 
     /**
-     * GET http://localhost:8080/rest-api/find?id=1
+     * GET http://localhost:8080/hello-world/find?id=1
      */
     @Route("find")
     public User get(long id) {
@@ -57,35 +58,12 @@ public class HelloWorldApi {
     }
 
     /**
-     * POST http://localhost:8080/rest-api/save +  data {"id":1,"name":"Anne"}
+     * POST http://localhost:8080/hello-world/save +  data {"id":1,"name":"Anne"}
      */
     @RequestMethod(HttpMethod.POST)
     public long save(User user) {
         return user.getId();
     }
 
-    /**
-     * GET  http://localhost:8080/rest-api/custom-exception
-     */
-    public void customException(){
-        IO.println("Throw custom exception...");
-        throw new CustomException("ErrorMessage","ErrorPayload");
-    }
-
-    /**
-     * JsonField example
-     * POST: http://localhost:8080/rest-api/json-batch?val=test + data {"id":1,"name":"Vladlen"}
-     *
-     * @see BatchField
-     */
-    @RequestMethod(HttpMethod.POST)
-    public Map<String, Object> jsonBatch(
-            @BatchField("id")
-            Long idValue,
-            @BatchField
-            String name,
-            @ParamOrigin(Origin.QUERY) String val) {
-        return Map.of("id", idValue, "name", name, "val", val);
-    }
 
 }
