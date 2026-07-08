@@ -26,7 +26,6 @@ import java.net.URISyntaxException;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Base64;
-import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
@@ -120,7 +119,7 @@ public class CSRFProtector {
         }
     }
 
-    public String sendToken(TeleHttpResponse response) {
+    public String addTokens(TeleHttpResponse response) {
         byte[] tokenBytes = new byte[32];
         secureRandom.nextBytes(tokenBytes);
         String tokenStr = Base64.getEncoder().encodeToString(tokenBytes);
@@ -133,6 +132,8 @@ public class CSRFProtector {
         // cookie.setSameSite("Lax");  // Enable first-layer browser defense mechanism
 
         response.addCookie(cookie);
+        response.setHeader(CSRF_HEADER, tokenStr);
+
         return tokenStr;
     }
 }
