@@ -39,11 +39,13 @@ abstract public class RoutesModulator extends TeleServiceModulator<RouterTeleSer
 
     protected final Logger logger = LoggerFactory.getLogger(RoutesModulator.class);
 
-    abstract protected Class<? extends TeleFacade.CommandsRegistry> commandsClass();
-
     abstract protected Class<? extends ReadOptions> readOptionsClass();
 
     abstract protected Class<? extends WriteOptions> writeOptionsClass();
+
+    protected Class<? extends TeleFacade.CommandsRegistry> commandsClass(){
+        return RouterCommandsRegistry.class;
+    }
 
     @Override
     protected void processTeleCommand(TeleCommandElement teleCommandElement) {

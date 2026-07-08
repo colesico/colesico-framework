@@ -60,11 +60,6 @@ public final class RestletModulator extends RoutesModulator {
     }
 
     @Override
-    protected Class<? extends TeleFacade.CommandsRegistry> commandsClass() {
-        return RouterCommandsRegistry.class;
-    }
-
-    @Override
     protected Class<? extends ReadOptions> readOptionsClass() {
         return RestletReadOptions.class;
     }

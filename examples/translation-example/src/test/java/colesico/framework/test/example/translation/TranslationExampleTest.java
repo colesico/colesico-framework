@@ -21,6 +21,7 @@ import colesico.framework.example.translation.ProfileMockProducer;
 import colesico.framework.example.translation.formatter.CustomFormatter;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
+import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.ioc.scope.ThreadScope;
 import colesico.framework.profile.Profile;
 import colesico.framework.translation.TextFormatter;
@@ -38,13 +39,13 @@ public class TranslationExampleTest {
     private Ioc ioc;
 
     // is used for clear translation bundle cache
-    private ThreadScope threadScope;
+    private TaskScope threadScope;
 
     @BeforeClass
     public void setUp() {
         log.info("Init translation text");
         ioc = IocBuilder.create().build();
-        threadScope = ioc.instance(ThreadScope.class);
+        threadScope = ioc.instance(TaskScope.class);
     }
 
     @Test(priority = 1)

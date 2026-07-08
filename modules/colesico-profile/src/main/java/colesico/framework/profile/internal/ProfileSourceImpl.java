@@ -23,9 +23,8 @@ public class ProfileSourceImpl implements ProfileSource<Profile<String>, String>
     }
 
     @Override
-    @SuppressWarnings({"unchecked"})
     public Optional<Profile<String>> read(String profileId) {
-        Profile<String> profile = (Profile<String>) dataPort.get().read(Profile.class, profileId);
+        Profile<String> profile = dataPort.get().read(Profile.class, profileId);
         return Optional.ofNullable(profile);
     }
 

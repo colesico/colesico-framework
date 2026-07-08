@@ -9,6 +9,8 @@ public interface ProfileSource<P extends Profile<ID>, ID> {
 
     /**
      * Reads profile within source. If not found returns {@link Optional#empty()}
+     *
+     * @param profileId optional (can be null)
      */
     Optional<P> read(ID profileId);
 

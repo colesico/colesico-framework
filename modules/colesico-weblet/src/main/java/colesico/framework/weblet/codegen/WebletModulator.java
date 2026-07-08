@@ -61,11 +61,6 @@ public final class WebletModulator extends RoutesModulator {
     }
 
     @Override
-    protected Class<? extends TeleFacade.CommandsRegistry> commandsClass() {
-        return RouterCommandsRegistry.class;
-    }
-
-    @Override
     protected Class<? extends ReadOptions> readOptionsClass() {
         return WebletReadOptions.class;
     }
@@ -143,8 +138,6 @@ public final class WebletModulator extends RoutesModulator {
 
         return new TeleHttpWriteElement(teleCommand, null, optionsCode.build(), customWriterCT);
     }
-
-
 
 
 }

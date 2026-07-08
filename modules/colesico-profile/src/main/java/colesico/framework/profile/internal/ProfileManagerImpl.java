@@ -24,25 +24,18 @@ public class ProfileManagerImpl implements ProfileManager {
     @Override
     @SuppressWarnings("unchecked")
     public <P extends Profile<?>> P resolve() {
-        // 1. Lookup in the current thread context
+        // Lookup in the current thread context
         Optional<Profile<?>> currentProfile = profileContext.profile();
         if (currentProfile.isPresent()) {
             return (P) currentProfile.get();
         }
 
-        // 2. Retrieve profile ID from the security context
+        // Retrieve profile ID from the security context as identity id
         Object profileId = identityContext.identity()
                 .map(Identity::id)
                 .orElse(null);
 
-        // 3. If no identity ID is found, fallback to the default profile
-        if (profileId == null) {
-            P defaultProfile = (P) profileSource.getDefault(null);
-            profileContext.setProfile(defaultProfile);
-            return defaultProfile;
-        }
-
-        // 4. Fetch the profile from the source (DB, config, cache, etc.)
+        // Fetch the profile from the source (DB, config, cache, etc.)
         Optional<Profile<Object>> fetchedProfile = profileSource.read(profileId);
         if (fetchedProfile.isEmpty()) {
             P defaultProfile = (P) profileSource.getDefault(profileId);
@@ -50,7 +43,7 @@ public class ProfileManagerImpl implements ProfileManager {
             return defaultProfile;
         }
 
-        // 5. Cache the resolved profile in the context and return it
+        // Cache the resolved profile in the context and return it
         P profile = (P) fetchedProfile.get();
         profileContext.setProfile(profile);
         return profile;
