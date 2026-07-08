@@ -150,10 +150,10 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
         teleService.setCommandsMethodBody(generateCommandsMethodBody((T) teleService));
     }
 
-    protected TIContextElement createInvocationContext(TeleCommandElement teleCommand) {
+    protected TeleInvocContextElement createInvocationContext(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
         cb.add("null");
-        return new TIContextElement(teleCommand, cb.build());
+        return new TeleInvocContextElement(teleCommand, cb.build());
     }
 
     protected TeleWriteElement createTeleWrite(TeleCommandElement teleCommand) {

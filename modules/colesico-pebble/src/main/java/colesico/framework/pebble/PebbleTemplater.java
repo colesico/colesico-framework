@@ -22,6 +22,7 @@ import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.pebble.internal.FrameworkExtension;
 import colesico.framework.pebble.internal.PebbleTemplateLoader;
+import colesico.framework.telehttp.ContentType;
 import colesico.framework.weblet.response.ViewResponse;
 import colesico.framework.weblet.WebletWriteOptions;
 import colesico.framework.weblet.writer.ViewWriter;
@@ -31,10 +32,10 @@ import io.pebbletemplates.pebble.template.PebbleTemplate;
 
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+
+import java.io.*;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -65,34 +66,27 @@ public class PebbleTemplater extends ViewWriter {
         pebbleEngine = builder.build();
     }
 
-    public <M> Writer evaluate(String templatePath, M viewModel) {
-        Writer writer = new StringWriter();
-        Map<String, Object> context = new HashMap<>();
-        context.put(MODEL_VAR, viewModel);
-        try {
-            PebbleTemplate compiledTemplate = pebbleEngine.getTemplate(templatePath);
-            compiledTemplate.evaluate(writer, context);
-            return writer;
-        } catch (PebbleException | IOException e) {
-            throw new RuntimeException(e);
-        }
+    @Override
+    protected ContentType defaultContentType() {
+        return ContentType.TEXT_HTML;
     }
 
     @Override
-    public void write(ViewResponse viewResponse, WebletWriteOptions context) {
-        Writer writer = evaluate(viewResponse.viewName(), viewResponse.model());
+    protected void write(OutputStream outputStream, ViewResponse response, WebletWriteOptions options) throws IOException {
+        Map<String, Object> context = new HashMap<>();
+        context.put(MODEL_VAR, response.model());
+        Charset charset = contentType(response,options).charset();
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8))) {
 
-        HttpResponse httpResponse = httpContextProv.get().response();
+            PebbleTemplate compiledTemplate = pebbleEngine.getTemplate(response.viewName());
 
-        HttpUtils.setHeaders(httpResponse, viewResponse.headers());
-        HttpUtils.setCookies(httpResponse, viewResponse.cookies());
+            compiledTemplate.evaluate(writer, context);
 
-        String contentType = viewResponse.contentType();
-        if (StringUtils.isBlank(contentType)) {
-            contentType = Responses.DEFAULT_CONTENT_TYPE;
+            // 4. Flush to ensure all data is written to the underlying stream
+            writer.flush();
+        } catch (PebbleException | IOException e) {
+            throw new RuntimeException(e);
         }
-
-        httpResponse.sendText(writer.toString(), contentType, viewResponse.statusCode());
     }
 
     /**

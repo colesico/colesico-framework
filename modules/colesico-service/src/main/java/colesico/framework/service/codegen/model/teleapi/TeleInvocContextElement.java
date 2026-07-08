@@ -5,7 +5,7 @@ import com.palantir.javapoet.CodeBlock;
 /**
  * Represents tele-invocation context
  */
-public class TIContextElement {
+public class TeleInvocContextElement {
 
     /**
      * Parent tele-command ref
@@ -17,7 +17,7 @@ public class TIContextElement {
      */
     private final CodeBlock creationCode;
 
-    public TIContextElement(TeleCommandElement parentTeleCommand, CodeBlock creationCode) {
+    public TeleInvocContextElement(TeleCommandElement parentTeleCommand, CodeBlock creationCode) {
         this.parentTeleCommand = parentTeleCommand;
         this.creationCode = creationCode;
     }

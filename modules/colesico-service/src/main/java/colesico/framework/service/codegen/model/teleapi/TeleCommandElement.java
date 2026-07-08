@@ -67,7 +67,7 @@ public final class TeleCommandElement {
     /**
      * Invocation context code
      */
-    private TIContextElement invocationContext;
+    private TeleInvocContextElement invocationContext;
 
     /**
      * Common purpose props
@@ -141,11 +141,11 @@ public final class TeleCommandElement {
         this.writeSpec = writeSpec;
     }
 
-    public TIContextElement invocationContext() {
+    public TeleInvocContextElement invocationContext() {
         return invocationContext;
     }
 
-    public void setInvocationContext(TIContextElement invocationContext) {
+    public void setInvocationContext(TeleInvocContextElement invocationContext) {
         this.invocationContext = invocationContext;
     }
 
