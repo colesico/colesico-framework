@@ -473,13 +473,13 @@ public enum MimeType {
     zmt("chemical/x-mopac-input"),
     properties("text/isPlain");
 
-    public final String contentType;
+    public final String value;
 
-    MimeType(String contentType) {
-        this.contentType = contentType;
+    MimeType(String value) {
+        this.value = value;
     }
 
-    public String contentType() {
-        return contentType;
+    public String value() {
+        return value;
     }
 }

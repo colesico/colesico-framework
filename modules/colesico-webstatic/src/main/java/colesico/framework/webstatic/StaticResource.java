@@ -14,25 +14,30 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.helloworld;
+package colesico.framework.webstatic;
 
-import colesico.framework.telehttp.response.StringResponse;
-import colesico.framework.weblet.Weblet;
 
-@Weblet
-public class HelloWeblet {
+/**
+ * Static resource sender
+ *
+ * @author Vladlen Larionov
+ */
+public interface StaticResource {
 
-    public static final String SAY_HELLO_TEXT = "Hello World!";
-    public static final String SAY_PRIVET_TEXT = "Привет, ";
+    String REWRITE_PARAM = "rewrite";
 
-    // Browse: http://localhost:8080/hello-weblet/say-hello
-    public String sayHello() {
-        return SAY_HELLO_TEXT;
+    void send(String resourceUri, boolean rewrite);
+
+    default void send(String resourceUri, String rewrite) {
+        send(resourceUri, "true".equals(rewrite));
     }
 
-    // Browse: http://localhost:8080/hello-weblet/privet?name=Татьяна
-    public StringResponse privet(String name) {
-        return StringResponse.html(SAY_PRIVET_TEXT + name).build();
-    }
+    interface Builder {
 
+        String DEFAULT_RESOURCES_DIR = "webpub";
+
+        Builder resourcesRoot(String path);
+
+        StaticResource build();
+    }
 }

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package colesico.framework.test.example.helloworld;
+package colesico.framework.test.example.weblet;
 
-import colesico.framework.example.helloworld.HelloWeblet;
+import colesico.framework.example.weblet.HelloWeblet;
 import colesico.framework.httpserver.HttpServer;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;

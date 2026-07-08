@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.test.example.helloworld;
+package colesico.framework.test.example.weblet;
 
 import colesico.framework.config.Config;
 import colesico.framework.ioc.conditional.Requires;

@@ -18,8 +18,7 @@ package colesico.framework.webstatic.internal;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
-import colesico.framework.webstatic.StaticContent;
-
+import colesico.framework.webstatic.StaticResource;
 
 
 /**
@@ -30,7 +29,7 @@ import colesico.framework.webstatic.StaticContent;
 public class WebStaticProducer {
 
     @Unscoped
-    public StaticContent.Builder getBuilder(StaticContentBuilderImpl impl) {
+    public StaticResource.Builder builder(StaticContentBuilderImpl impl) {
         return impl;
     }
 }

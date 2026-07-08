@@ -1,9 +1,8 @@
-package colesico.framework.example.helloworld;
+package colesico.framework.example.weblet;
 
 import colesico.framework.security.Identity;
 import colesico.framework.security.authentication.Authentication;
 import colesico.framework.telehttp.authentication.HttpBasic;
-import colesico.framework.telehttp.response.StringResponse;
 import colesico.framework.weblet.Weblet;
 import jakarta.inject.Provider;
 

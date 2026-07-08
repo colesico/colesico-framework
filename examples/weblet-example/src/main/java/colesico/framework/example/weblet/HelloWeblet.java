@@ -14,19 +14,25 @@
  * limitations under the License.
  */
 
-package colesico.framework.example.helloworld;
+package colesico.framework.example.weblet;
 
-import colesico.framework.httpserver.HttpServer;
-import colesico.framework.ioc.IocBuilder;
+import colesico.framework.telehttp.response.StringResponse;
+import colesico.framework.weblet.Weblet;
 
-/**
- * Main file for production
- */
-public class Main {
+@Weblet
+public class HelloWeblet {
 
-    static void main(String[] args) {
-        IocBuilder.create().build()
-                .instance(HttpServer.class)
-                .start();
+    public static final String SAY_HELLO_TEXT = "Hello World!";
+    public static final String SAY_PRIVET_TEXT = "Привет, ";
+
+    // Browse: http://localhost:8080/hello-weblet/say-hello
+    public String sayHello() {
+        return SAY_HELLO_TEXT;
     }
+
+    // Browse: http://localhost:8080/hello-weblet/privet?name=Татьяна
+    public StringResponse privet(String name) {
+        return StringResponse.html(SAY_PRIVET_TEXT + name).build();
+    }
+
 }

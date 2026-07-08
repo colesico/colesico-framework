@@ -29,34 +29,45 @@
     <artifactId>web-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - Web</name>
+    <name>Colesico example - Web application</name>
 
     <properties>
     </properties>
 
     <dependencies>
         <!-- Colesico -->
+
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-fusion-http</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-weblet</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-restlet</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-pebble</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-webstatic</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>net.colesico.framework</groupId>
             <artifactId>colesico-translation</artifactId>
@@ -66,9 +77,14 @@
 
         <!-- Logger -->
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.verion}</version>
+            <groupId>org.tinylog</groupId>
+            <artifactId>slf4j-tinylog</artifactId>
+            <version>${slf4j-tinylog.verion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.tinylog</groupId>
+            <artifactId>tinylog-impl</artifactId>
+            <version>${slf4j-tinylog.verion}</version>
         </dependency>
 
         <!-- Tests -->
@@ -97,6 +113,11 @@
                         <path>
                             <groupId>net.colesico.framework</groupId>
                             <artifactId>colesico-weblet</artifactId>
+                            <version>${project.version}</version>
+                        </path>
+                        <path>
+                            <groupId>net.colesico.framework</groupId>
+                            <artifactId>colesico-restlet</artifactId>
                             <version>${project.version}</version>
                         </path>
                         <path>

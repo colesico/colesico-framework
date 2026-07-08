@@ -25,21 +25,20 @@ import java.text.MessageFormat;
 public class GetParams {
 
     // http://localhost:8080/get-params/a-b?a=test&b=100
-
     @Route("a-b")
-    public Responses printParams(String a, Integer b ){
-        return Responses.object(MessageFormat.format("a={0}, b={1}",a,b));
+    public String printParams(String a, Integer b) {
+        return MessageFormat.format("a={0}, b={1}", a, b);
     }
 
     // http://localhost:8080/get-params/path/test/100
     @Route("path/:a/:b")
-    public Responses printRouteParams(String a, Integer b ){
-        return Responses.object(MessageFormat.format("a={0}, b={1}",a,b));
+    public String printRouteParams(String a, Integer b) {
+        return MessageFormat.format("a={0}, b={1}", a, b);
     }
 
     // http://localhost:8080/get-params/path-s/foo/blabla
     @Route("path-s/*")
-    public Responses printRouteSuffix(String routeSuffix ){
-        return Responses.object(MessageFormat.format("routeSuffix={0}",routeSuffix));
+    public String printRouteSuffix(String routeSuffix) {
+        return MessageFormat.format("routeSuffix={0}", routeSuffix);
     }
 }

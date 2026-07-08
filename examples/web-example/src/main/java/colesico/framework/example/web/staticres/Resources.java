@@ -18,14 +18,14 @@ package colesico.framework.example.web.staticres;
 
 import colesico.framework.router.Route;
 import colesico.framework.weblet.Weblet;
-import colesico.framework.webstatic.StaticContent;
+import colesico.framework.webstatic.StaticResource;
 
 @Weblet
 public class Resources {
 
-    private final StaticContent staticResource;
+    private final StaticResource staticResource;
 
-    public Resources(StaticContent.Builder staticResourceBuilder) {
+    public Resources(StaticResource.Builder staticResourceBuilder) {
         this.staticResource = staticResourceBuilder
                 .resourcesRoot(Resources.class.getPackageName()
                         .replace('.', '/')

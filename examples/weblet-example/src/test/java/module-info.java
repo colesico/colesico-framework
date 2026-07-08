@@ -1,6 +1,6 @@
-module colesico.framework.test.example.helloworld {
+module colesico.framework.test.example.weblet {
 
-    requires colesico.framework.example.helloworld;
+    requires colesico.framework.example.weblet;
 
     requires org.slf4j;
     requires org.testng;
@@ -8,5 +8,5 @@ module colesico.framework.test.example.helloworld {
 
     requires io.fusionauth.http;
 
-    exports colesico.framework.test.example.helloworld;
+    exports colesico.framework.test.example.weblet;
 }

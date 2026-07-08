@@ -16,6 +16,7 @@
 
 package colesico.framework.example.web.localization;
 
+import colesico.framework.profile.ProfileManager;
 import colesico.framework.profile.ProfileSource;
 import colesico.framework.weblet.Weblet;
 
@@ -24,40 +25,41 @@ import java.util.Locale;
 @Weblet
 public class MyLocalization {
 
-    private final ProfileSource profileSource;
+    private final ProfileManager profileManager;
+
     private final MyDictionary translations;
 
-    public MyLocalization(ProfileSource profileSource, MyDictionary translations) {
-        this.profileSource = profileSource;
+    public MyLocalization(ProfileManager profileManager, MyDictionary translations) {
+        this.profileManager = profileManager;
         this.translations = translations;
     }
 
     // http://localhost:8080/my-localization/message
-    public Responses message() {
-        return Responses.object(translations.hello1());
+    public String message() {
+        return translations.hello1();
     }
 
     // http://localhost:8080/my-localization/ru
-    public Responses ru() {
-        var profile = profileSource.profile();
+    public String ru() {
+        var profile = profileManager.resolve();
         profile.setLocale(Locale.of("ru", "RU"));
-        profileSource.commit(profile);
-        return Responses.object("Русский");
+        profileManager.commit(profile);
+        return "Русский";
     }
 
     // http://localhost:8080/my-localization/en
-    public Responses en() {
-        var profile = profileSource.profile();
+    public String en() {
+        var profile = profileManager.resolve();
         profile.setLocale(Locale.of("en", "GB"));
-        profileSource.commit(profile);
-        return Responses.object("English");
+        profileManager.commit(profile);
+        return "English";
     }
 
     // http://localhost:8080/my-localization/inherit
-    public Responses inherit() {
-        var profile = profileSource.profile();
+    public String inherit() {
+        var profile = profileManager.resolve();
         profile.setLocale(Locale.of("ru", "RU"));
-        profileSource.commit(profile);
-        return Responses.object(translations.hello3());
+        profileManager.commit(profile);
+        return translations.hello3();
     }
 }

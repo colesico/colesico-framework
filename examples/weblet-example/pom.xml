@@ -121,7 +121,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>colesico.framework.example.helloworld.Main</mainClass>
+                            <mainClass>colesico.framework.example.weblet.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

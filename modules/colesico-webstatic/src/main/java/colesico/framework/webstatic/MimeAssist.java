@@ -19,15 +19,16 @@ package colesico.framework.webstatic;
 import org.apache.commons.io.FilenameUtils;
 
 public class MimeAssist {
-    protected static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
 
-    public static String getContentType(String resourcePath) {
+    protected static final String DEFAULT_MIME_TYPE = "application/octet-stream";
+
+    public static String mimeType(String resourcePath) {
         try {
             String resourceExt = FilenameUtils.getExtension(resourcePath).toLowerCase();
             MimeType mimeType = MimeType.valueOf(resourceExt);
-            return mimeType.contentType();
+            return mimeType.value();
         } catch (IllegalArgumentException ex) {
-            return DEFAULT_CONTENT_TYPE;
+            return DEFAULT_MIME_TYPE;
         }
     }
 
