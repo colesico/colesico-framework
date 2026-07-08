@@ -155,7 +155,7 @@ public class TeleInterceptorGenerator {
 
             // =============== Data port from provider
             cb.add("// Retrieve data port\n");
-            cb.add("final $T $N = $N.get();\n",
+            cb.add("final $T $N = this.$N.get();\n",
                     ParameterizedTypeName.get(
                             ClassName.get(DataPort.class),
                             ClassName.get(teleService.readOptionsClass()),
@@ -227,11 +227,12 @@ public class TeleInterceptorGenerator {
             cb.unindent();
             cb.add("} catch ($T $N) {\n", ClassName.get(Exception.class), EXCEPTION_VAR);
             cb.indent();
-            cb.add("$N.$N($N, $T.class);\n",
-                    DATA_PORT_VAR,
-                    DataPort.WRITE_METHOD,
+            cb.add("$N($N, $N);\n",
+                    TeleInterceptor.WRITE_EXCEPTION_METHOD,
                     EXCEPTION_VAR,
-                    ClassName.get(Exception.class));
+                    DATA_PORT_VAR
+            );
+            cb.add("// rethrow exception\n");
             cb.add("throw $N;\n", EXCEPTION_VAR);
             cb.unindent();
             cb.add("}\n");
