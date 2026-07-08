@@ -11,7 +11,7 @@ public final class HttpUtils {
 
     public static void setCookies(HttpResponse response, Set<HttpCookie> cookies) {
         for (var cookie : cookies) {
-            response.setCookie(cookie);
+            response.addCookie(cookie);
         }
     }
 

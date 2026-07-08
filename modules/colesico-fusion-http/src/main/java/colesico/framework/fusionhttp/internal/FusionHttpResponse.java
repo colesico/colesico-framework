@@ -2,6 +2,7 @@ package colesico.framework.fusionhttp.internal;
 
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpResponse;
+import io.fusionauth.http.Cookie;
 import io.fusionauth.http.server.HTTPResponse;
 
 import java.io.IOException;
@@ -29,7 +30,8 @@ public class FusionHttpResponse implements HttpResponse {
     }
 
     @Override
-    public HttpResponse setCookie(HttpCookie cookie) {
+    public HttpResponse addCookie(HttpCookie cookie) {
+        response.addCookie(((FusionHttpCookie) cookie).unwrap());
         return this;
     }
 

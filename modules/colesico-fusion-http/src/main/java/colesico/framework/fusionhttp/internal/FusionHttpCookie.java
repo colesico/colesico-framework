@@ -14,6 +14,10 @@ public class FusionHttpCookie implements HttpCookie {
         this.cookie = cookie;
     }
 
+    public Cookie unwrap() {
+        return cookie;
+    }
+
     @Override
     public String name() {
         return cookie.getName();

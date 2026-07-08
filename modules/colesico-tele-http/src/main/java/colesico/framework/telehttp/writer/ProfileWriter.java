@@ -67,7 +67,7 @@ public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implem
         cookie.setExpires(expires.getTime().toInstant()).setSameSite(HttpCookie.SameSite.STRICT);
 
         var response = this.httpResponse.get();
-        response.setCookie(cookie);
+        response.addCookie(cookie);
         response.setHeader(PROFILE_HEADER, profileStr);
     }
 
