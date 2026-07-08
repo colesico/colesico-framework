@@ -42,8 +42,4 @@ public class PebbleProducer {
         return impl;
     }
 
-    @Singleton
-    public HtmlRenderer getDefaultHtmlRenderer(PebbleTemplater impl) {
-        return impl;
-    }
 }

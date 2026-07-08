@@ -16,6 +16,7 @@
 
 package colesico.framework.pebble.internal;
 
+import colesico.framework.assist.StringUtils;
 import colesico.framework.translation.TranslationKit;
 import io.pebbletemplates.pebble.error.ParserException;
 import io.pebbletemplates.pebble.lexer.Token;
@@ -23,7 +24,6 @@ import io.pebbletemplates.pebble.lexer.TokenStream;
 import io.pebbletemplates.pebble.node.RenderableNode;
 import io.pebbletemplates.pebble.parser.Parser;
 import io.pebbletemplates.pebble.tokenParser.TokenParser;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Translation dictionary loader.

@@ -16,9 +16,7 @@
 
 package colesico.framework.pebble;
 
-import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpResponse;
-import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.pebble.internal.FrameworkExtension;
 import colesico.framework.pebble.internal.PebbleTemplateLoader;
@@ -34,8 +32,9 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -75,26 +74,26 @@ public class PebbleTemplater extends ViewWriter {
     protected void write(OutputStream outputStream, ViewResponse response, WebletWriteOptions options) throws IOException {
         Map<String, Object> context = new HashMap<>();
         context.put(MODEL_VAR, response.model());
-        Charset charset = contentType(response,options).charset();
-        try (Writer writer = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8))) {
-
+        Charset charset = contentType(response, options).charset().orElse(StandardCharsets.UTF_8);
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(outputStream, charset))) {
             PebbleTemplate compiledTemplate = pebbleEngine.getTemplate(response.viewName());
-
             compiledTemplate.evaluate(writer, context);
-
-            // 4. Flush to ensure all data is written to the underlying stream
             writer.flush();
         } catch (PebbleException | IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    /**
-     * Renderer
-     */
-    @Override
     public String render(String templateName, Object model) {
-        Writer writer = evaluate(templateName, model);
-        return writer.toString();
+        Map<String, Object> context = new HashMap<>();
+        context.put(MODEL_VAR, model);
+        PebbleTemplate compiledTemplate = pebbleEngine.getTemplate(templateName);
+        StringWriter writer = new StringWriter();
+        try {
+            compiledTemplate.evaluate(writer, context);
+            return writer.toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

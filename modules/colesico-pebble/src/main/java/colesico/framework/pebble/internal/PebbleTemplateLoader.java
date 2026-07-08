@@ -22,7 +22,6 @@ import io.pebbletemplates.pebble.loader.Loader;
 import io.pebbletemplates.pebble.utils.PathUtils;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +79,7 @@ public class PebbleTemplateLoader implements Loader<String> {
     protected String getResourceName(String templateName) {
         String resourceName = resourceUtils.localize(templateName);
 
-        if (!StringUtils.endsWith(resourceName, suffix)) {
+        if (!resourceName.endsWith(suffix)) {
             resourceName = resourceName + suffix;
         }
 
