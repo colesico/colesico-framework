@@ -44,7 +44,6 @@ public class PostParams {
         var csrfToken = csrfProtector.addToken(response);
         String formHtml = """
                 <form method='post'>
-                   <input type="hidden" name="csrf_token" value="%s">
                     <input type='text' name='formval' value=''/>
                     <input type='submit' value='Submit' formaction='/post-params/%s'/>
                 </form>

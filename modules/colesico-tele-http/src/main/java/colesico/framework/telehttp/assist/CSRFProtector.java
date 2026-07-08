@@ -23,34 +23,82 @@ import jakarta.inject.Singleton;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.MessageDigest;
-import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.Random;
 import java.util.Set;
 
 import static colesico.framework.assist.StringUtils.isBlank;
 
+/**
+ * Modern, adaptive CSRF protector tailored for up-to-date web environments.
+ * It provides stateless protection for API requests (e.g., JWT/Bearer tokens) using origin verification,
+ * and seamlessly enforces custom request header checks if stateful cookies are present.
+ */
 @Singleton
 public class CSRFProtector {
 
     public static final String ORIGIN_HEADER = "origin";
     public static final String REFERER_HEADER = "referer";
-    public static final String CSRF_HEADER = "x-xsrf-token";
-    public static final String CSRF_COOKIE = "XSRF-TOKEN";
+
+    // Custom security header for protecting AJAX/Fetch requests without server-side state.
+    // Presence of this custom header triggers a CORS preflight check in browsers.
+    public static final String CSRF_PROTECTION_HEADER = "x-xsrf-token";
+    public static final String CSRF_PROTECTION_COOKIE = "XSRF-TOKEN";
 
     public static final String REFERER_POLICY_HEADER = "referrer-policy";
     public static final String REFERER_POLICY_HEADER_VALUE = "strict-origin-when-cross-origin";
 
-    protected final HttpCookieFactory cookieFactory;
-
-    // SecureRandom is cryptographically strong and must be used instead of java.util.Random
-    private static final Random secureRandom = new SecureRandom();
     // Safe HTTP methods per RFC 7231 that must not alter server state
-    private static final Set<String> SAFE_METHODS = Set.of("GET", "HEAD", "OPTIONS", "TRACE");
+    private static final Set<String> UNSAFE_METHODS = Set.of("POST", "PUT", "DELETE", "PATCH");
 
-    public CSRFProtector(HttpCookieFactory cookieFactory) {
-        this.cookieFactory = cookieFactory;
+
+    /**
+     * Universal CSRF protection for modern browsers.
+     * Secures traditional session-based (cookie) requests and stays transparent for stateless (JWT/Bearer) API requests.
+     */
+    public void check(HttpRequest request) {
+        // 1. Skip safe HTTP methods (GET, HEAD, OPTIONS)
+        if (!UNSAFE_METHODS.contains(request.method().name().toUpperCase())) {
+            return;
+        }
+
+        String requestHost = requestedHostName(request);
+
+        // 2. Strict source verification (Origin / Referer)
+        // Prevents unauthorized cross-site form submissions (e.g., application/x-www-form-urlencoded)
+        String originHeader = request.headers().get(ORIGIN_HEADER);
+        if (originHeader != null) {
+            String host = hostFromUrl(originHeader);
+            if (!requestHost.equals(host)) {
+                throw new RuntimeException("Origin host mismatch: " + host + " -> " + requestHost);
+            }
+        } else {
+            String refererHeader = request.headers().get(REFERER_HEADER);
+            if (refererHeader != null) {
+                String host = hostFromUrl(refererHeader);
+                if (!requestHost.equals(host)) {
+                    throw new RuntimeException("Referer host mismatch: " + host + " -> " + requestHost);
+                }
+            } else {
+                throw new RuntimeException("Both Origin and Referer headers are missing");
+            }
+        }
+
+        // 3. Protection for session-based scenarios (Custom Header Check)
+        // If the request contains cookies (web session), the browser must send a custom header.
+        // Attackers cannot inject custom headers into cross-domain requests without explicit CORS permissions.
+        if (!request.cookies().isEmpty()) {
+            String allowedWith = request.headers().get(CSRF_PROTECTION_HEADER);
+            if (isBlank(allowedWith)) {
+                throw new RuntimeException("Missing security header (X-Allowed-With) for stateful request");
+            }
+        }
+    }
+
+    /**
+     * Adds the Referrer Policy header to ensure privacy and retain the Origin header for subsequent requests.
+     */
+    public String addHeaders(TeleHttpResponse.Builder responseBuilder) {
+        responseBuilder
+                .header(REFERER_POLICY_HEADER, REFERER_POLICY_HEADER_VALUE);
     }
 
     protected static String requestedHostName(HttpRequest request) {
@@ -65,86 +113,8 @@ public class CSRFProtector {
         try {
             uri = new URI(url);
         } catch (URISyntaxException e) {
-            throw new RuntimeException("Invalid url:" + url);
+            throw new RuntimeException("Invalid url: " + url);
         }
         return uri.getHost();
-    }
-
-    /**
-     * Reinforced CSRF protection algorithm
-     */
-    public void check(HttpRequest request) {
-
-        // Skip safe GET requests since they must not alter state
-        if (SAFE_METHODS.contains(request.method().name().toUpperCase())) {
-            return;
-        }
-
-        String requestHost = requestedHostName(request);
-
-        // 1. Validate ORIGIN HTTP Header if present
-        String originHeader = request.headers().get(ORIGIN_HEADER);
-        if (originHeader != null) {
-            String host = hostFromUrl(originHeader);
-            if (!requestHost.equals(host)) {
-                throw new RuntimeException("Origin host mismatch:" + host + "->" + requestHost);
-            }
-        }
-        // 2. Fall back to REFERER HTTP Header if Origin is missing
-        else {
-            String refererHeader = request.headers().get(REFERER_HEADER);
-            if (refererHeader != null) {
-                String host = hostFromUrl(refererHeader);
-                if (!requestHost.equals(host)) {
-                    throw new RuntimeException("Referer host mismatch:" + host + "->" + requestHost);
-                }
-            } else {
-                throw new RuntimeException("Both Origin and Referer headers are missing");
-            }
-        }
-
-        // 3. Mandatory Double Submit Token validation (no more early return bypasses)
-        HttpCookie cookie = request.cookies().get(CSRF_COOKIE);
-        if (cookie == null) {
-            throw new RuntimeException("Missing CSRF cookie");
-        }
-
-        String csrfCookieToken = cookie.value();
-        String csrfHeaderToken = request.headers().get(CSRF_HEADER);
-
-        if (isBlank(csrfCookieToken) || isBlank(csrfHeaderToken)) {
-            throw new RuntimeException("CSRF tokens (cookie & header) cannot be blank");
-        }
-
-        // Use MessageDigest.isEqual to prevent Timing Attacks
-        if (!MessageDigest.isEqual(csrfCookieToken.getBytes(), csrfHeaderToken.getBytes())) {
-            throw new RuntimeException("CSRF token mismatch");
-        }
-    }
-
-    /**
-     * Add csrf cookie and policy header
-     *
-     * @return csrf token
-     */
-    public String addToken(TeleHttpResponse.Builder responseBuilder) {
-
-        byte[] tokenBytes = new byte[32];
-        secureRandom.nextBytes(tokenBytes);
-        String tokenStr = Base64.getEncoder().encodeToString(tokenBytes);
-
-        HttpCookie cookie = cookieFactory.create(CSRF_COOKIE, tokenStr);
-
-        // Recommended configurations for modern web environments (if your factory supports them):
-        // cookie.setHttpOnly(false); // Must be false so SPA JavaScript (React/Vue) can read it
-        // cookie.setSecure(true);     // Restrict to HTTPS execution environments
-        // cookie.setSameSite("Lax");  // Enable first-layer browser defense mechanism
-
-        responseBuilder
-                .cookie(cookie)
-                .header(CSRF_HEADER, tokenStr)
-                .header(REFERER_POLICY_HEADER, REFERER_POLICY_HEADER_VALUE);
-
-        return tokenStr;
     }
 }
