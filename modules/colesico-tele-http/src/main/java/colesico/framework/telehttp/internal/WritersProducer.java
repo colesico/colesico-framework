@@ -19,7 +19,7 @@ import jakarta.inject.Singleton;
 @Produce(BytesResponseWriter.class)
 @Produce(ToStringObjectWriter.class)
 @Produce(ExceptionWriter.class)
-//@Produce(value = ProfileWriter.class, keyType = HttpWriter.class, classed = Profile.class, substitute = Substitution.STUB)
+@Produce(value = ProfileWriter.class, keyType = HttpWriter.class, classed = Profile.class, substitute = Substitution.STUB)
 public class WritersProducer {
 
     @Singleton
