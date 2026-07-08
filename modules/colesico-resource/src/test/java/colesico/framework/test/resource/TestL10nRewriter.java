@@ -4,7 +4,7 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.conditional.TestCondition;
 import colesico.framework.ioc.scope.TaskScope;
-import colesico.framework.resource.ResourceUtils;
+import colesico.framework.resource.ResourceLocalizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
@@ -15,7 +15,7 @@ import static org.testng.Assert.assertEquals;
 public class TestL10nRewriter {
 
     private Ioc ioc;
-    private ResourceUtils resourceUtils;
+    private ResourceLocalizer resourceLocalizer;
 
     Logger logger = LoggerFactory.getLogger(TestL10nRewriter.class);
 
@@ -31,33 +31,33 @@ public class TestL10nRewriter {
         logger.info("Init L10nRewriter test");
         TestCondition.enable();
         ioc = IocBuilder.create().build();
-        resourceUtils = ioc.instance(ResourceUtils.class);
+        resourceLocalizer = ioc.instance(ResourceLocalizer.class);
     }
 
     @Test
     public void test1() {
         ioc.instance(TaskScope.class).forTask(() -> {
-            String lpath = resourceUtils.localize(PATH1);
+            String lpath = resourceLocalizer.localize(PATH1);
             System.out.println("path=" + lpath);
             assertEquals(lpath, "root/dir/file.txt");
 
-            lpath = resourceUtils.localize(PATH2);
+            lpath = resourceLocalizer.localize(PATH2);
             System.out.println("path=" + lpath);
             assertEquals(lpath, "root/foo/file_en.txt");
 
-            lpath = resourceUtils.localize(PATH3);
+            lpath = resourceLocalizer.localize(PATH3);
             System.out.println("path=" + lpath);
             assertEquals(lpath, "root/folder/file_RU.txt");
 
-            lpath = resourceUtils.localize(PATH4);
+            lpath = resourceLocalizer.localize(PATH4);
             System.out.println("path=" + lpath);
             assertEquals(lpath, "root/xxx/file_en_RU.txt");
 
-            lpath = resourceUtils.localize(PATH5);
+            lpath = resourceLocalizer.localize(PATH5);
             System.out.println("path=" + lpath);
             assertEquals(lpath, "root_RU/file.txt");
 
-            lpath = resourceUtils.localize(PATH6);
+            lpath = resourceLocalizer.localize(PATH6);
             System.out.println("path=" + lpath);
             assertEquals(lpath, "app2/module2/dir_en_RU/file_en_RU.txt");
         });

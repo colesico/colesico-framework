@@ -1,7 +1,6 @@
 package colesico.framework.translation.assist.propbundle;
 
-import colesico.framework.assist.ExceptionUtils;
-import colesico.framework.resource.ResourceUtils;
+import colesico.framework.resource.ResourceLocalizer;
 import colesico.framework.resource.l10n.ObjectiveQualifiers;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -24,11 +23,11 @@ public class PropertyBundleFactory {
 
     protected final PropertyBundleCache cache;
 
-    protected final ResourceUtils resourceUtils;
+    protected final ResourceLocalizer resourceLocalizer;
 
-    public PropertyBundleFactory(PropertyBundleCache cache, ResourceUtils resourceUtils) {
+    public PropertyBundleFactory(PropertyBundleCache cache, ResourceLocalizer resourceLocalizer) {
         this.cache = cache;
-        this.resourceUtils = resourceUtils;
+        this.resourceLocalizer = resourceLocalizer;
     }
 
     @Inject
@@ -36,7 +35,7 @@ public class PropertyBundleFactory {
         if (isBlank(baseName)) {
             throw new IllegalArgumentException("Base name is empty");
         }
-        ObjectiveQualifiers qualifiers = resourceUtils.objectiveQualifiers();
+        ObjectiveQualifiers qualifiers = resourceLocalizer.objectiveQualifiers();
         PropertyBundleCache.Key key = new PropertyBundleCache.Key(baseName, qualifiers);
         PropertyBundle bundle = cache.get(key);
         if (bundle == null) {
@@ -51,7 +50,7 @@ public class PropertyBundleFactory {
 
         PropertyBundle bundle = null;
 
-        String[] localizedNames = resourceUtils.localizations(baseName);
+        String[] localizedNames = resourceLocalizer.localizations(baseName);
 
         for (String localizedName : localizedNames) {
             Properties properties = loadProperties(localizedName + ".properties");

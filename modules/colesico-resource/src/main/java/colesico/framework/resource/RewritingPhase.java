@@ -1,6 +1,0 @@
-package colesico.framework.resource;
-
-
-
-
-

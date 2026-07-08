@@ -16,7 +16,7 @@
 
 package colesico.framework.pebble.internal;
 
-import colesico.framework.resource.ResourceUtils;
+import colesico.framework.resource.ResourceLocalizer;
 import io.pebbletemplates.pebble.error.LoaderException;
 import io.pebbletemplates.pebble.loader.Loader;
 import io.pebbletemplates.pebble.utils.PathUtils;
@@ -37,7 +37,7 @@ import java.util.Enumeration;
 @Singleton
 public class PebbleTemplateLoader implements Loader<String> {
 
-    protected final ResourceUtils resourceUtils;
+    protected final ResourceLocalizer resourceLocalizer;
     protected final Logger logger = LoggerFactory.getLogger(PebbleTemplateLoader.class);
 
     //private String prefix;
@@ -45,8 +45,8 @@ public class PebbleTemplateLoader implements Loader<String> {
     private String charset = "UTF-8";
 
     @Inject
-    public PebbleTemplateLoader(ResourceUtils resourceUtils) {
-        this.resourceUtils = resourceUtils;
+    public PebbleTemplateLoader(ResourceLocalizer resourceLocalizer) {
+        this.resourceLocalizer = resourceLocalizer;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class PebbleTemplateLoader implements Loader<String> {
     }
 
     protected String getResourceName(String templateName) {
-        String resourceName = resourceUtils.localize(templateName);
+        String resourceName = resourceLocalizer.localize(templateName);
 
         if (!resourceName.endsWith(suffix)) {
             resourceName = resourceName + suffix;
