@@ -23,6 +23,14 @@ abstract public class ValueResponse<V> extends TeleHttpResponse {
         return value;
     }
 
+    @Override
+    public String toString() {
+        return "ValueResponse{" +
+                "statusCode=" + statusCode +
+                ", value=" + value +
+                '}';
+    }
+
     abstract public static class Builder<V, R extends ValueResponse<V>, B extends Builder<V, R, B>>
             extends TeleHttpResponse.Builder<R, B> {
 

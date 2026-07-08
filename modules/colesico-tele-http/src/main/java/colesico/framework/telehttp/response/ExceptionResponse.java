@@ -16,6 +16,14 @@ public class ExceptionResponse extends ValueResponse<Exception> {
         return new ExceptionResponse.Builder(exception);
     }
 
+    @Override
+    public String toString() {
+        return "ExceptionResponse{" +
+                "exception=" + value +
+                ", statusCode=" + statusCode +
+                '}';
+    }
+
     public static class Builder extends ValueResponse.Builder<Exception, ExceptionResponse, ExceptionResponse.Builder> {
 
         public Builder(Exception ex) {

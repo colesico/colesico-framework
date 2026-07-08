@@ -53,4 +53,13 @@ public class HttpTeleException extends RuntimeException {
     public Object details() {
         return details;
     }
+
+    @Override
+    public String toString() {
+        return "HttpTeleException{" +
+                "message=" + getMessage() +
+                ", statusCode=" + statusCode +
+                ", details=" + details +
+                '}';
+    }
 }

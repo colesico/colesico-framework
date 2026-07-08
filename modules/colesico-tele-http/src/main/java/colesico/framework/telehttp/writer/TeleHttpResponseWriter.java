@@ -64,6 +64,10 @@ abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O exten
 
         var httpResponse = this.httpResponse.get();
 
+        if (httpResponse.isCommitted()) {
+            throw HttpTeleException.of("HTTP Response is committed while writing response", 500, response);
+        }
+
         if (isEmptyResponse(response)) {
             httpResponse.setStatus(emptyStatusCode()).close();
             return;
