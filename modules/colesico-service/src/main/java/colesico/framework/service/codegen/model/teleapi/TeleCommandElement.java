@@ -65,11 +65,6 @@ public final class TeleCommandElement {
     private TeleWriteElement writeSpec;
 
     /**
-     * Invocation context code
-     */
-    private TeleInvocContextElement invocationContext;
-
-    /**
      * Common purpose props
      */
     private final Map<Class<?>, Object> properties = new HashMap<>();
@@ -139,14 +134,6 @@ public final class TeleCommandElement {
 
     public void setWriteSpec(TeleWriteElement writeSpec) {
         this.writeSpec = writeSpec;
-    }
-
-    public TeleInvocContextElement invocationContext() {
-        return invocationContext;
-    }
-
-    public void setInvocationContext(TeleInvocContextElement invocationContext) {
-        this.invocationContext = invocationContext;
     }
 
     public Integer index() {

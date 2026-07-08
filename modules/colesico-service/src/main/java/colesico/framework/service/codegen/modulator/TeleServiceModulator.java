@@ -123,7 +123,6 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
         }
         processTeleCommand(teleCommand);
         createParamReadOptions(teleCommand.parameters());
-        teleCommand.setInvocationContext(createInvocationContext(teleCommand));
         teleCommand.setWriteSpec(createTeleWrite(teleCommand));
         addTeleInterception(teleCommand);
     }
@@ -148,12 +147,6 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
         processTeleService(teleService);
         addTeleInterceptorField(teleService);
         teleService.setCommandsMethodBody(generateCommandsMethodBody((T) teleService));
-    }
-
-    protected TeleInvocContextElement createInvocationContext(TeleCommandElement teleCommand) {
-        CodeBlock.Builder cb = CodeBlock.builder();
-        cb.add("null");
-        return new TeleInvocContextElement(teleCommand, cb.build());
     }
 
     protected TeleWriteElement createTeleWrite(TeleCommandElement teleCommand) {
