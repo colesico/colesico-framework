@@ -39,17 +39,18 @@ public class PostParams {
     // http://localhost:8080/post-params/form?action=default-action
     // http://localhost:8080/post-params/form?action=advanced-action?getparam=1
     public StringResponse form(String action) {
+        var response = StringResponse.of();
+
+        var csrfToken = csrfProtector.addToken(response);
         String formHtml = """
                 <form method='post'>
+                   <input type="hidden" name="csrf_token" value="%s">
                     <input type='text' name='formval' value=''/>
                     <input type='submit' value='Submit' formaction='/post-params/%s'/>
                 </form>
                 """;
 
-        var response = StringResponse.html(null);
-        var csrfToken = csrfProtector.addTokens(response);
-
-        return response.value(String.format(formHtml, action)).build();
+        return response.value(String.format(formHtml, csrfToken, action)).build();
     }
 
     // for http://localhost:8080/post-params/form?action=default-action

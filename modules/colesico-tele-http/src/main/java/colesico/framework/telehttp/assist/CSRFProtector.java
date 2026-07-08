@@ -122,7 +122,13 @@ public class CSRFProtector {
         }
     }
 
-    public String addTokens(TeleHttpResponse.Builder responseBuilder) {
+    /**
+     * Add csrf cookie and policy header
+     *
+     * @return csrf token
+     */
+    public String addToken(TeleHttpResponse.Builder responseBuilder) {
+
         byte[] tokenBytes = new byte[32];
         secureRandom.nextBytes(tokenBytes);
         String tokenStr = Base64.getEncoder().encodeToString(tokenBytes);

@@ -20,6 +20,10 @@ public class StringResponse extends ValueResponse<String> {
         return value(value).contentType(ContentType.TEXT_PLAIN);
     }
 
+    public static Builder text() {
+        return of().contentType(ContentType.TEXT_PLAIN);
+    }
+
     /**
      * Text/Html response
      */
@@ -27,8 +31,16 @@ public class StringResponse extends ValueResponse<String> {
         return value(value).contentType(ContentType.TEXT_HTML);
     }
 
+    public static Builder html() {
+        return of().contentType(ContentType.TEXT_HTML);
+    }
+
     public static Builder value(String value) {
         return new Builder(value);
+    }
+
+    public static Builder of() {
+        return new Builder(null);
     }
 
     public static class Builder extends ValueResponse.Builder<String, StringResponse, Builder> {
