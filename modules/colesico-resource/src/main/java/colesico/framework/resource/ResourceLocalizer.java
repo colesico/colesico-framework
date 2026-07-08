@@ -23,7 +23,7 @@ import java.net.URL;
 import java.util.Enumeration;
 
 /**
- * Resources utilities  (resource name localizations, rewriting, etc.)
+ * Resource localizer  (resource name localizations, rewriting, etc.)
  */
 public interface ResourceLocalizer {
 
