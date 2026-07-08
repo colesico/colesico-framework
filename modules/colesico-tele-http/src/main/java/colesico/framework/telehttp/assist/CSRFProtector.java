@@ -39,6 +39,9 @@ public class CSRFProtector {
     public static final String CSRF_HEADER = "x-xsrf-token";
     public static final String CSRF_COOKIE = "XSRF-TOKEN";
 
+    public static final String REFERER_POLICY_HEADER = "referrer-policy";
+    public static final String REFERER_POLICY_HEADER_VALUE = "strict-origin-when-cross-origin";
+
     protected final HttpCookieFactory cookieFactory;
 
     // SecureRandom is cryptographically strong and must be used instead of java.util.Random
@@ -119,7 +122,7 @@ public class CSRFProtector {
         }
     }
 
-    public String addTokens(TeleHttpResponse response) {
+    public String addTokens(TeleHttpResponse.Builder responseBuilder) {
         byte[] tokenBytes = new byte[32];
         secureRandom.nextBytes(tokenBytes);
         String tokenStr = Base64.getEncoder().encodeToString(tokenBytes);
@@ -131,8 +134,10 @@ public class CSRFProtector {
         // cookie.setSecure(true);     // Restrict to HTTPS execution environments
         // cookie.setSameSite("Lax");  // Enable first-layer browser defense mechanism
 
-        response.addCookie(cookie);
-        response.setHeader(CSRF_HEADER, tokenStr);
+        responseBuilder
+                .cookie(cookie)
+                .header(CSRF_HEADER, tokenStr)
+                .header(REFERER_POLICY_HEADER, REFERER_POLICY_HEADER_VALUE);
 
         return tokenStr;
     }

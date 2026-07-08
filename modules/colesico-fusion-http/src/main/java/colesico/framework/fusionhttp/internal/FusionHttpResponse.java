@@ -24,8 +24,8 @@ public class FusionHttpResponse implements HttpResponse {
     }
 
     @Override
-    public HttpResponse setHeader(String name, String vale) {
-        response.setHeader(name, vale);
+    public HttpResponse addHeader(String name, String vale) {
+        response.addHeader(name, vale);
         return this;
     }
 

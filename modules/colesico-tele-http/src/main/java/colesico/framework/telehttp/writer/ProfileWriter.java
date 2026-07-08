@@ -68,7 +68,7 @@ public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implem
 
         var response = this.httpResponse.get();
         response.addCookie(cookie);
-        response.setHeader(PROFILE_HEADER, profileStr);
+        response.addHeader(PROFILE_HEADER, profileStr);
     }
 
     /**

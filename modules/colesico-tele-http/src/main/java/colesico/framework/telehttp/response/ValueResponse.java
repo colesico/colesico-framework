@@ -34,7 +34,12 @@ abstract public class ValueResponse<V> extends TeleHttpResponse {
     abstract public static class Builder<V, R extends ValueResponse<V>, B extends Builder<V, R, B>>
             extends TeleHttpResponse.Builder<R, B> {
 
-        protected final V value;
+        protected V value;
+
+        public B value(V value) {
+            this.value = value;
+            return self();
+        }
 
         public Builder(V value) {
             this.value = value;

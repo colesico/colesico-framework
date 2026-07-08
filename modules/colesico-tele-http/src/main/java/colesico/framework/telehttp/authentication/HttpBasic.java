@@ -58,7 +58,7 @@ public class HttpBasic implements AuthenticationSource<BasicAuthenticationReques
     public void proceed(BasicAuthenticationChallenge challenge) {
         var response = httpContext.get().response();
         response
-                .setHeader(WWW_AUTHENTICATE_HEADER, "Basic realm=\"" + challenge.realm() + "\"")
+                .addHeader(WWW_AUTHENTICATE_HEADER, "Basic realm=\"" + challenge.realm() + "\"")
                 .setStatus(401)
                 .send("401 Unauthorized. Authentication required");
 

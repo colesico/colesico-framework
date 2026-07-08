@@ -18,6 +18,7 @@ package colesico.framework.example.web.params;
 
 import colesico.framework.http.HttpMethod;
 import colesico.framework.router.RequestMethod;
+import colesico.framework.telehttp.assist.CSRFProtector;
 import colesico.framework.telehttp.origin.Origin;
 import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.ParamOrigin;
@@ -29,6 +30,12 @@ import java.text.MessageFormat;
 @Weblet
 public class PostParams {
 
+    private final CSRFProtector csrfProtector;
+
+    public PostParams(CSRFProtector csrfProtector) {
+        this.csrfProtector = csrfProtector;
+    }
+
     // http://localhost:8080/post-params/form?action=default-action
     // http://localhost:8080/post-params/form?action=advanced-action?getparam=1
     public StringResponse form(String action) {
@@ -39,10 +46,10 @@ public class PostParams {
                 </form>
                 """;
 
-        return StringResponse
-                .html(String.format(formHtml, action))
-                .header("Referrer-Policy","strict-origin-when-cross-origin")
-                .build();
+        var response = StringResponse.html(null);
+        var csrfToken = csrfProtector.addTokens(response);
+
+        return response.value(String.format(formHtml, action)).build();
     }
 
     // for http://localhost:8080/post-params/form?action=default-action

@@ -28,7 +28,7 @@ public interface HttpResponse {
 
     HttpResponse setStatus(Integer code);
 
-    HttpResponse setHeader(String name, String vale);
+    HttpResponse addHeader(String name, String vale);
 
     HttpResponse addCookie(HttpCookie cookie);
 
@@ -50,7 +50,7 @@ public interface HttpResponse {
     void dump(Writer out);
 
     default HttpResponse setContentType(String contentType) {
-        setHeader("Content-Type", contentType);
+        addHeader("Content-Type", contentType);
         return this;
     }
 

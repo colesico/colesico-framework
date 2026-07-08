@@ -237,7 +237,7 @@ public class Navigation {
         HttpResponse response = context.response();
         HttpUtils.setHeaders(response, headers);
         HttpUtils.setCookies(response, cookies);
-        response.setStatus(statusCode).setHeader("Location", location).close();
+        response.setStatus(statusCode).addHeader("Location", location).close();
     }
 
     /**

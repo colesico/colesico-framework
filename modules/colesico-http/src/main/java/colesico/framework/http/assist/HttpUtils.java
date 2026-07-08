@@ -18,7 +18,7 @@ public final class HttpUtils {
     public static void setHeaders(HttpResponse response, Map<String, List<String>> headers) {
         for (var header : headers.entrySet()) {
             for (String v : header.getValue()) {
-                response.setHeader(header.getKey(), v);
+                response.addHeader(header.getKey(), v);
             }
         }
     }
