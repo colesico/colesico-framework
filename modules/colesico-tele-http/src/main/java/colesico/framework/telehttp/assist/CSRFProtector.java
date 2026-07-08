@@ -35,10 +35,10 @@ import static colesico.framework.assist.StringUtils.isBlank;
 @Singleton
 public class CSRFProtector {
 
-    public static final String ORIGIN_HEADER = "Origin";
-    public static final String REFERER_HEADER = "Referer";
-    public static final String CSRF_HEADER = "X-CSRF-Token";
-    public static final String CSRF_COOKIE = "XSRF-Token";
+    public static final String ORIGIN_HEADER = "origin";
+    public static final String REFERER_HEADER = "referer";
+    public static final String CSRF_HEADER = "x-xsrf-token";
+    public static final String CSRF_COOKIE = "XSRF-TOKEN";
 
     protected final HttpCookieFactory cookieFactory;
 
@@ -101,7 +101,7 @@ public class CSRFProtector {
             }
         }
 
-        // 3. Mandatory Doublae Submit Token validation (no more early return bypasses)
+        // 3. Mandatory Double Submit Token validation (no more early return bypasses)
         HttpCookie cookie = request.cookies().get(CSRF_COOKIE);
         if (cookie == null) {
             throw new RuntimeException("Missing CSRF cookie");
@@ -111,7 +111,7 @@ public class CSRFProtector {
         String csrfHeaderToken = request.headers().get(CSRF_HEADER);
 
         if (isBlank(csrfCookieToken) || isBlank(csrfHeaderToken)) {
-            throw new RuntimeException("CSRF tokens cannot be blank");
+            throw new RuntimeException("CSRF tokens (cookie & header) cannot be blank");
         }
 
         // Use MessageDigest.isEqual to prevent Timing Attacks

@@ -39,7 +39,10 @@ public class PostParams {
                 </form>
                 """;
 
-        return StringResponse.html(String.format(formHtml, action)).build();
+        return StringResponse
+                .html(String.format(formHtml, action))
+                .header("Referrer-Policy","strict-origin-when-cross-origin")
+                .build();
     }
 
     // for http://localhost:8080/post-params/form?action=default-action
