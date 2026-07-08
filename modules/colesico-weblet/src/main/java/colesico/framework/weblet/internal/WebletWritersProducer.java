@@ -33,6 +33,4 @@ public class WebletWritersProducer {
     public WebletWriter binaryResponseWriter(BytesResponseWriter impl) {
         return WebletWriterProxy.of(impl);
     }
-
-
 }

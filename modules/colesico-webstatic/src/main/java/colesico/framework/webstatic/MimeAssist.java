@@ -16,15 +16,24 @@
 
 package colesico.framework.webstatic;
 
-import org.apache.commons.io.FilenameUtils;
-
 public class MimeAssist {
 
     protected static final String DEFAULT_MIME_TYPE = "application/octet-stream";
 
+    public static String fileExtension(String fileName) {
+        if (fileName == null) {
+            return "";
+        }
+        int lastIndexOf = fileName.lastIndexOf(".");
+        if (lastIndexOf == -1 || lastIndexOf == 0) {
+            return "";
+        }
+        return fileName.substring(lastIndexOf + 1);
+    }
+
     public static String mimeType(String resourcePath) {
         try {
-            String resourceExt = FilenameUtils.getExtension(resourcePath).toLowerCase();
+            String resourceExt = fileExtension(resourcePath).toLowerCase();
             MimeType mimeType = MimeType.valueOf(resourceExt);
             return mimeType.value();
         } catch (IllegalArgumentException ex) {

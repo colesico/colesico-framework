@@ -17,21 +17,14 @@
 package colesico.framework.example.web;
 
 import colesico.framework.httpserver.HttpServer;
-import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 
 public class Main {
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
 
-        // Setup web builder
-        // IocBuilder is not thread safe
-        IocBuilder iocBuilder = IocBuilder.create();
+        // Ioc instance is thread safe
+        IocBuilder.create().build().instance(HttpServer.class).start();
 
-        // Build web instance. Ioc instance is thread safe
-        final Ioc ioc = iocBuilder.build();
-
-        HttpServer httpServer = ioc.instance(HttpServer.class);
-        httpServer.start();
     }
 }

@@ -2,8 +2,6 @@ module colesico.framework.webstatic {
 
     requires org.slf4j;
 
-    requires org.apache.commons.io;
-
     requires transitive colesico.framework.http;
     requires transitive colesico.framework.resource;
 

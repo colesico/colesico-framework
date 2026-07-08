@@ -2,6 +2,7 @@ package colesico.framework.telehttp.internal;
 
 import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Classed;
+import colesico.framework.profile.Profile;
 import colesico.framework.telehttp.HttpWriter;
 import colesico.framework.telehttp.response.*;
 import colesico.framework.telehttp.writer.*;
@@ -18,7 +19,7 @@ import jakarta.inject.Singleton;
 @Produce(BytesResponseWriter.class)
 @Produce(ToStringObjectWriter.class)
 @Produce(ExceptionWriter.class)
-@Produce(value = ProfileWriter.class, substitute = Substitution.STUB)
+@Produce(value = ProfileWriter.class, keyType = HttpWriter.class, classed = Profile.class, substitute = Substitution.STUB)
 public class WritersProducer {
 
     @Singleton

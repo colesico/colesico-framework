@@ -13,25 +13,25 @@ import java.util.Set;
  */
 public final class ViewResponse extends TeleHttpResponse {
 
-    private final String viewName;
+    private final String view;
     private final Object model;
 
-    public ViewResponse(Integer statusCode, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, String viewName, Object model) {
+    public ViewResponse(Integer statusCode, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, String view, Object model) {
         super(statusCode, contentType, headers, cookies);
-        this.viewName = viewName;
+        this.view = view;
         this.model = model;
     }
 
-    public String viewName() {
-        return viewName;
+    public String view() {
+        return view;
     }
 
     public Object model() {
         return model;
     }
 
-    public static ViewResponse.Builder viewName(String viewName) {
-        return new ViewResponse.Builder(viewName);
+    public static ViewResponse.Builder view(String view) {
+        return new ViewResponse.Builder(view);
     }
 
     public static class Builder extends TeleHttpResponse.Builder<ViewResponse, ViewResponse.Builder> {

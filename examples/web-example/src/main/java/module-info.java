@@ -1,5 +1,6 @@
 module colesico.framework.example.web {
 
+    requires transitive colesico.framework.fusionhttp;
     requires transitive colesico.framework.weblet;
     requires transitive colesico.framework.restlet;
     requires transitive colesico.framework.webstatic;
@@ -12,9 +13,8 @@ module colesico.framework.example.web {
     exports colesico.framework.example.web.pebble;
     exports colesico.framework.example.web.localization;
 
-    opens colesico.framework.example.web.staticres.webpub;
-    opens colesico.framework.example.web.trimou.tmpl;
-    opens colesico.framework.example.web.pebble.tmpl;
-    opens colesico.framework.example.web.localization.t9n;
+    opens webpub;
+    opens tmpl;
+    opens t9n;
 
 }

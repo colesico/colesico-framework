@@ -23,6 +23,7 @@ import colesico.framework.profile.Profile;
 import colesico.framework.telehttp.HttpWriteOptions;
 import colesico.framework.telehttp.HttpWriter;
 import colesico.framework.telehttp.assist.TeleHttpUtils;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.util.*;
@@ -38,11 +39,12 @@ public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implem
     public static final String LOCALE_ATTRIBUTE = "locale";
 
     protected final ProfileWriterConfigPrototype config;
+    protected final Provider<HttpResponse> httpResponse;
     protected final HttpCookieFactory cookieFactory;
 
-    public ProfileWriter(ProfileWriterConfigPrototype config,
-                         HttpCookieFactory cookieFactory) {
+    public ProfileWriter(ProfileWriterConfigPrototype config, Provider<HttpResponse> httpResponse, HttpCookieFactory cookieFactory) {
         this.config = config;
+        this.httpResponse = httpResponse;
         this.cookieFactory = cookieFactory;
     }
 
@@ -64,7 +66,7 @@ public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implem
         HttpCookie cookie = cookieFactory.create(PROFILE_COOKIE, profileStr);
         cookie.setExpires(expires.getTime().toInstant()).setSameSite(HttpCookie.SameSite.STRICT);
 
-        HttpResponse response = null;
+        var response = this.httpResponse.get();
         response.setCookie(cookie);
         response.setHeader(PROFILE_HEADER, profileStr);
     }

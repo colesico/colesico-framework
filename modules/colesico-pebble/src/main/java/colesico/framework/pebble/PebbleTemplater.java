@@ -76,7 +76,7 @@ public class PebbleTemplater extends ViewWriter {
         context.put(MODEL_VAR, response.model());
         Charset charset = contentType(response, options).charset().orElse(StandardCharsets.UTF_8);
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(outputStream, charset))) {
-            PebbleTemplate compiledTemplate = pebbleEngine.getTemplate(response.viewName());
+            PebbleTemplate compiledTemplate = pebbleEngine.getTemplate(response.view());
             compiledTemplate.evaluate(writer, context);
             writer.flush();
         } catch (PebbleException | IOException e) {

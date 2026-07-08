@@ -21,14 +21,17 @@ import colesico.framework.router.RequestMethod;
 import colesico.framework.telehttp.origin.Origin;
 import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.ParamOrigin;
+import colesico.framework.telehttp.response.StringResponse;
 import colesico.framework.weblet.Weblet;
+
+import java.text.MessageFormat;
 
 @Weblet
 public class PostParams {
 
     // http://localhost:8080/post-params/form?action=default-action
     // http://localhost:8080/post-params/form?action=advanced-action?getparam=1
-    public Responses form(String action) {
+    public StringResponse form(String action) {
         String formHtml = """
                 <form method='post'>
                     <input type='text' name='formval' value=''/>
@@ -36,22 +39,22 @@ public class PostParams {
                 </form>
                 """;
 
-        return Responses.object(String.format(formHtml, action));
+        return StringResponse.html(String.format(formHtml, action)).build();
     }
 
     // for http://localhost:8080/post-params/form?action=default-action
     @RequestMethod(HttpMethod.POST)
-    public Responses defaultAction(String formval) {
-        return Responses.object("formval=" + formval);
+    public String defaultAction(String formval) {
+        return "formval=" + formval;
     }
 
     //for http://localhost:8080/post-params/form?action=advanced-action?extraparam=1
     @RequestMethod(HttpMethod.POST)
-    public Responses advancedAction(
+    public String advancedAction(
             /* formval is a get or post param */String formval,
             /* getVal is a get or post param  */@ParamName("extraparam") Integer getVal,
             /* postVal is a post param only */  @ParamName("extraparam") @ParamOrigin(Origin.POST) Integer postVal) {
 
-        return Responses.object("formval=" + formval + "; extraparam(get)=" + getVal + "; extraparam(post)=" + postVal);
+        return MessageFormat.format("formval={0}; extraparam(get)={1}; extraparam(post)={2}", formval, getVal, postVal);
     }
 }
