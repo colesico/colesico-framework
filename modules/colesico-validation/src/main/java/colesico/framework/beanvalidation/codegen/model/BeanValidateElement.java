@@ -25,7 +25,7 @@ public class BeanValidateElement extends ValidateElement {
     }
 
     public String validatorBuilderFieldName() {
-        return fieldName() + "VB";
+        return fieldName() + "Validation";
     }
 
     public ValidatorBuilderElement fieldValidatorBuilder() {

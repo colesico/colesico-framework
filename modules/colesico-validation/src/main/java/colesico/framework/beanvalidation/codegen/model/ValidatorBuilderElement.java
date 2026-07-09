@@ -1,10 +1,10 @@
 package colesico.framework.beanvalidation.codegen.model;
 
+import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.beanvalidation.ValidatorBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Bean Validator Builder element
@@ -50,7 +50,7 @@ public class ValidatorBuilderElement {
     /**
      * Validators related to this builder
      */
-    private final List<ValidateElement> validations = new ArrayList<>();
+    private final Set<ValidateElement> validations = new HashSet<>();
 
     public ValidatorBuilderElement(ClassType superclass, boolean isDefault, String packageName, String subject, String command) {
         this.superclass = superclass;
@@ -61,7 +61,13 @@ public class ValidatorBuilderElement {
     }
 
     public void addValidation(ValidateElement validation) {
-        validations.add(validation);
+        if (!validations.add(validation)) {
+            throw CodegenException.of()
+                    .message("Validation already specified on field")
+                    .element(validation.originField().unwrap())
+                    .build();
+        }
+
         validation.setParentBuilder(this);
     }
 
@@ -69,7 +75,7 @@ public class ValidatorBuilderElement {
      * Validator builder class simple name
      */
     public String builderClassSimpleName() {
-        return superclass.asClassElement().simpleName()+"Impl";
+        return superclass.asClassElement().simpleName() + "Impl";
     }
 
     public String builderClassName() {
@@ -80,7 +86,7 @@ public class ValidatorBuilderElement {
         return isDefault;
     }
 
-    public List<ValidateElement> validations() {
+    public Set<ValidateElement> validations() {
         return validations;
     }
 
@@ -106,6 +112,17 @@ public class ValidatorBuilderElement {
 
     public String command() {
         return command;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ValidatorBuilderElement that)) return false;
+        return Objects.equals(superclass, that.superclass);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(superclass.name());
     }
 
     @Override

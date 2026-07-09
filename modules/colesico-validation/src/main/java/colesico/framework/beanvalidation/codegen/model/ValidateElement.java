@@ -7,6 +7,7 @@ import colesico.framework.beanvalidation.BeanValidate;
 
 import javax.lang.model.type.TypeMirror;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Element to be validated  (property field, bean field)
@@ -92,4 +93,14 @@ abstract public class ValidateElement {
         return mapper;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ValidateElement that)) return false;
+        return Objects.equals(originField.name(), that.originField.name());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(originField.name());
+    }
 }

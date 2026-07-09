@@ -2,14 +2,15 @@ package colesico.framework.example.validation.dto;
 
 import colesico.framework.beanvalidation.Validate;
 import colesico.framework.beanvalidation.ValidatorBuilder;
-import colesico.framework.example.validation.validations.CredentialsBriefValidation;
+import colesico.framework.example.validation.validations.CredentialsValidationBrif;
 import colesico.framework.example.validation.validations.CredentialsValidation;
 
 @ValidatorBuilder(CredentialsValidation.class)
-@ValidatorBuilder(value = CredentialsBriefValidation.class, name = "brief")
+@ValidatorBuilder(superclass = CredentialsValidationBrif.class, isDefault = false)
 public class Credentials {
 
-    @Validate(builders = {"default", "brief"})
+    @Validate(CredentialsValidation.class)
+    @Validate(CredentialsValidationBrif.class)
     private String password;
 
     public String getPassword() {

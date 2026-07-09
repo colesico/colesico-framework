@@ -20,7 +20,7 @@ public @interface Validate {
      *
      * @see ValidatorBuilder
      */
-    Class<? extends BeanValidatorBuilder> builder() default BeanValidatorBuilder.class;
+    Class<? extends BeanValidatorBuilder> value() default BeanValidatorBuilder.class;
 
     /**
      * Validation method name within builder

@@ -13,17 +13,18 @@ import java.lang.annotation.*;
 public @interface BeanValidate {
 
     /**
-     * Target validation builder that be used to validation
-     */
-    Class<? extends BeanValidatorBuilder> target() default BeanValidatorBuilder.class;
-
-    /**
      * Parent validator builder this validation belongs to.
      * If not specified, the default builder will be used
      *
      * @see ValidatorBuilder
      */
-    Class<? extends BeanValidatorBuilder> builder() default BeanValidatorBuilder.class;
+    Class<? extends BeanValidatorBuilder> value() default BeanValidatorBuilder.class;
+
+
+    /**
+     * Target validation builder that be used to validation
+     */
+    Class<? extends BeanValidatorBuilder> target() default BeanValidatorBuilder.class;
 
     /**
      * Validation subject overriding.

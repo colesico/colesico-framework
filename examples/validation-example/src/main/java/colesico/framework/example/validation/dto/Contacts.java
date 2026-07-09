@@ -4,6 +4,7 @@ import colesico.framework.beanvalidation.Validate;
 import colesico.framework.beanvalidation.BeanValidate;
 import colesico.framework.beanvalidation.ValidatorBuilder;
 import colesico.framework.example.validation.validations.ContactsValidation;
+import colesico.framework.example.validation.validations.CredentialsValidationBrif;
 
 @ValidatorBuilder(ContactsValidation.class)
 public class Contacts {
@@ -17,7 +18,7 @@ public class Contacts {
     @Validate
     private String email;
 
-    @BeanValidate(target = "brief")
+    @BeanValidate(target = CredentialsValidationBrif.class)
     private Credentials credentials;
 
     public PostAddress getPostAddress() {

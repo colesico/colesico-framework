@@ -41,7 +41,7 @@ public class ValidatedBeanParser extends FrameworkAbstractParser {
         for (AnnotationAssist<Validate> validateSpec : validateSpecs) {
 
 
-            DeclaredType builderClass = (DeclaredType) validateSpec.valueTypeMirror(a -> a.builder());
+            DeclaredType builderClass = (DeclaredType) validateSpec.valueTypeMirror(a -> a.value());
             // if specified builder class
             if (isBuilderUnaccepted(validatorBuilder, builderClass)) {
                 continue;
@@ -72,20 +72,20 @@ public class ValidatedBeanParser extends FrameworkAbstractParser {
 
         for (AnnotationAssist<BeanValidate> validateSpec : validateSpecs) {
 
-            DeclaredType builderClass = (DeclaredType) validateSpec.valueTypeMirror(a -> a.builder());
+            DeclaredType builderClass = (DeclaredType) validateSpec.valueTypeMirror(a -> a.value());
             // if specified builder class
             if (isBuilderUnaccepted(validatorBuilder, builderClass)) {
                 continue;
             }
 
             DeclaredType targetBuilderType = (DeclaredType) validateSpec.valueTypeMirror(a -> a.target());
-            boolean defaultTargetBuilder = CodegenUtils.isAssignable(BeanValidatorBuilder.class, targetBuilderType, processingEnv());
+            boolean isDefaultTargetBuilder = CodegenUtils.isAssignable(BeanValidatorBuilder.class, targetBuilderType, processingEnv());
 
             ClassElement targetBeanClass = field.asClassType().asClassElement();
             List<AnnotationAssist<ValidatorBuilder>> targetBuilderSpecList = getBuilderSpecs(targetBeanClass);
             AnnotationAssist<ValidatorBuilder> targetBuilderSpec = null;
             for (AnnotationAssist<ValidatorBuilder> tbs : targetBuilderSpecList) {
-                if (tbs.unwrap().isDefault() && defaultTargetBuilder) {
+                if (isDefaultTargetBuilder && tbs.unwrap().isDefault()) {
                     targetBuilderSpec = tbs;
                     break;
                 } else {
@@ -169,7 +169,7 @@ public class ValidatedBeanParser extends FrameworkAbstractParser {
 
     private DeclaredType getBuilderSuperclass(AnnotationAssist<ValidatorBuilder> builderSpec) {
         DeclaredType superclass = (DeclaredType) builderSpec.valueTypeMirror(a -> a.superclass());
-        if (!CodegenUtils.isAssignable(BeanValidatorBuilder.class, superclass, processingEnv)) {
+        if (CodegenUtils.isAssignable(BeanValidatorBuilder.class, superclass, processingEnv)) {
             superclass = (DeclaredType) builderSpec.valueTypeMirror(a -> a.value());
         }
         return superclass;
@@ -197,8 +197,6 @@ public class ValidatedBeanParser extends FrameworkAbstractParser {
                     validateSpec = new AnnotationAssist<>(processingEnv, validateAnn);
                     result.add(validateSpec);
                 }
-            } else {
-                throw CodegenException.of().message("Annotation @" + Validate.class.getSimpleName() + " not specified").element(field.unwrap()).build();
             }
         }
         return result;
@@ -217,8 +215,6 @@ public class ValidatedBeanParser extends FrameworkAbstractParser {
                     validateSpec = new AnnotationAssist<>(processingEnv, validateAnn);
                     result.add(validateSpec);
                 }
-            } else {
-                throw CodegenException.of().message("Annotation @" + BeanValidate.class.getSimpleName() + " not specified").element(field.unwrap()).build();
             }
         }
         return result;
