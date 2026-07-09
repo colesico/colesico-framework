@@ -20,7 +20,6 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.teleapi.assist.SimpleDataPort;
 
-import java.time.ZoneId;
 import java.util.Locale;
 import java.util.TimeZone;
 

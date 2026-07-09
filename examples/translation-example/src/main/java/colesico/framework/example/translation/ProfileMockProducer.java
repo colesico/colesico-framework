@@ -20,6 +20,7 @@ import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.profile.Profile;
+import colesico.framework.profile.ProfileManager;
 
 import java.util.Locale;
 
@@ -61,7 +62,9 @@ public class ProfileMockProducer {
 
     @Substitute
     @Unscoped
-    public Profile getProfile(ProfileUtils profileUtils) {
-        return profileUtils.createProfile(curLocale);
+    public Profile profile(ProfileManager pm) {
+        var profile = pm.resolve();
+        profile.setLocale(curLocale);
+        return profile;
     }
 }

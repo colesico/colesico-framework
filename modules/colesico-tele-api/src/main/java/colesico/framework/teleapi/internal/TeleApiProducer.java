@@ -31,8 +31,8 @@ import colesico.framework.teleapi.assist.SimpleDataPort;
  */
 @Producer
 @Produce(TeleFactory.class)
-@Produce(value = NullDataPort.class)
-@Produce(value = SimpleDataPort.class)
+@Produce(NullDataPort.class)
+@Produce(SimpleDataPort.class)
 public class TeleApiProducer {
 
     protected static final String NO_DATA_PORT_MSG = "TeleAPI: Data port for the active thread is not provided";

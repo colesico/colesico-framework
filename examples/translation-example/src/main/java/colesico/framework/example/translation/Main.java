@@ -20,8 +20,8 @@ import colesico.framework.ioc.IocBuilder;
 
 public class Main {
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         AppService srv = IocBuilder.create().build().instance(AppService.class);
-        System.out.println("SayHello = "+srv.sayHello());
+        System.out.println("SayHello = " + srv.sayHello());
     }
 }
