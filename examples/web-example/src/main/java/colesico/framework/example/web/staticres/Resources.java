@@ -26,7 +26,7 @@ public class Resources {
     private final StaticResource staticResource;
 
     public Resources(StaticResource.Builder staticResourceBuilder) {
-        this.staticResource = staticResourceBuilder.resourcesRoot("webpub").build();
+        this.staticResource = staticResourceBuilder.resourcesRoot("colesico/framework/example/web/webpub").build();
     }
 
     // http://localhost:8080/resources/wheel.png

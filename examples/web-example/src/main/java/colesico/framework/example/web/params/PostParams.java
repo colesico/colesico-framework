@@ -39,9 +39,6 @@ public class PostParams {
     // http://localhost:8080/post-params/form?action=default-action
     // http://localhost:8080/post-params/form?action=advanced-action?getparam=1
     public StringResponse form(String action) {
-        var response = StringResponse.of();
-
-        var csrfToken = csrfProtector.addToken(response);
         String formHtml = """
                 <form method='post'>
                     <input type='text' name='formval' value=''/>
@@ -49,7 +46,7 @@ public class PostParams {
                 </form>
                 """;
 
-        return response.value(String.format(formHtml, csrfToken, action)).build();
+        return StringResponse.html(String.format(formHtml, action)).build();
     }
 
     // for http://localhost:8080/post-params/form?action=default-action
@@ -65,6 +62,6 @@ public class PostParams {
             /* getVal is a get or post param  */@ParamName("extraparam") Integer getVal,
             /* postVal is a post param only */  @ParamName("extraparam") @ParamOrigin(Origin.POST) Integer postVal) {
 
-        return MessageFormat.format("formval={0}; extraparam(get)={1}; extraparam(post)={2}", formval, getVal, postVal);
+        return MessageFormat.format("formval={0}; extraparam(auto)={1}; extraparam(post)={2}", formval, getVal, postVal);
     }
 }

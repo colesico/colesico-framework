@@ -1,11 +1,11 @@
 /*
- * Copyright © 2014-2025 Vladlen V. Larionov and others as noted.
+ * Copyright © 2014-2026 Vladlen V. Larionov and others as noted.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     http://apache.org
  *
  * Unless required by applicable law or agreed to  in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,6 +17,7 @@
 package colesico.framework.telehttp.assist;
 
 import colesico.framework.http.*;
+import colesico.framework.telehttp.HttpTeleException;
 import colesico.framework.telehttp.response.TeleHttpResponse;
 
 import jakarta.inject.Singleton;
@@ -28,20 +29,17 @@ import java.util.Set;
 import static colesico.framework.assist.StringUtils.isBlank;
 
 /**
- * Modern, adaptive CSRF protector tailored for up-to-date web environments.
- * It provides stateless protection for API requests (e.g., JWT/Bearer tokens) using origin verification,
- * and seamlessly enforces custom request header checks if stateful cookies are present.
+ * CSRF protector tailored for up-to-date web environments.
+ * It relies entirely on strict origin verification (Origin and Referer headers).
+ * This approach eliminates the need for token generation or Double Submit Cookie patterns,
+ * allowing standard HTML forms to work seamlessly out-of-the-box, provided that
+ * main session cookies are properly configured with the 'SameSite=Lax' or 'Strict' attribute.
  */
 @Singleton
 public class CSRFProtector {
 
     public static final String ORIGIN_HEADER = "origin";
     public static final String REFERER_HEADER = "referer";
-
-    // Custom security header for protecting AJAX/Fetch requests without server-side state.
-    // Presence of this custom header triggers a CORS preflight check in browsers.
-    public static final String CSRF_PROTECTION_HEADER = "x-xsrf-token";
-    public static final String CSRF_PROTECTION_COOKIE = "XSRF-TOKEN";
 
     public static final String REFERER_POLICY_HEADER = "referrer-policy";
     public static final String REFERER_POLICY_HEADER_VALUE = "strict-origin-when-cross-origin";
@@ -51,54 +49,48 @@ public class CSRFProtector {
 
 
     /**
-     * Universal CSRF protection for modern browsers.
-     * Secures traditional session-based (cookie) requests and stays transparent for stateless (JWT/Bearer) API requests.
+     * Verifies the source of the request to prevent Cross-Site Request Forgery.
+     * Validates that the request originates from the exact same host.
+     * Throws a RuntimeException if a mismatch is detected or required headers are missing.
      */
     public void check(HttpRequest request) {
-        // 1. Skip safe HTTP methods (GET, HEAD, OPTIONS)
+        // Skip safe HTTP methods (GET, HEAD, OPTIONS) as they are idempotent
         if (!UNSAFE_METHODS.contains(request.method().name().toUpperCase())) {
             return;
         }
 
         String requestHost = requestedHostName(request);
 
-        // 2. Strict source verification (Origin / Referer)
-        // Prevents unauthorized cross-site form submissions (e.g., application/x-www-form-urlencoded)
+        // Strict source verification (Origin / Referer)
+        // Browsers automatically set these headers for cross-origin unsafe requests, and they cannot be spoofed via JS.
         String originHeader = request.headers().get(ORIGIN_HEADER);
         if (originHeader != null) {
             String host = hostFromUrl(originHeader);
             if (!requestHost.equals(host)) {
-                throw new RuntimeException("Origin host mismatch: " + host + " -> " + requestHost);
+                throw HttpTeleException.of("CSRF Blocked: Origin host mismatch. Expected: " + requestHost + ", Got: " + host, 403);
             }
         } else {
             String refererHeader = request.headers().get(REFERER_HEADER);
             if (refererHeader != null) {
                 String host = hostFromUrl(refererHeader);
                 if (!requestHost.equals(host)) {
-                    throw new RuntimeException("Referer host mismatch: " + host + " -> " + requestHost);
+                    throw HttpTeleException.of("CSRF Blocked: Referer host mismatch. Expected: " + requestHost + ", Got: " + host, 403);
                 }
             } else {
-                throw new RuntimeException("Both Origin and Referer headers are missing");
-            }
-        }
-
-        // 3. Protection for session-based scenarios (Custom Header Check)
-        // If the request contains cookies (web session), the browser must send a custom header.
-        // Attackers cannot inject custom headers into cross-domain requests without explicit CORS permissions.
-        if (!request.cookies().isEmpty()) {
-            String allowedWith = request.headers().get(CSRF_PROTECTION_HEADER);
-            if (isBlank(allowedWith)) {
-                throw new RuntimeException("Missing security header (X-Allowed-With) for stateful request");
+                // If both headers are missing on an unsafe method, it indicates a direct security violation or a legacy bot.
+                throw HttpTeleException.of("CSRF Blocked: Both Origin and Referer headers are missing for an unsafe state-changing request.", 403);
             }
         }
     }
 
     /**
-     * Adds the Referrer Policy header to ensure privacy and retain the Origin header for subsequent requests.
+     * Appends essential security headers to the response builder.
+     * Ensures that the browser retains the Origin header while protecting user privacy during cross-origin navigation.
      */
-    public String addHeaders(TeleHttpResponse.Builder responseBuilder) {
+    public TeleHttpResponse.Builder addMetadata(TeleHttpResponse.Builder responseBuilder) {
         responseBuilder
                 .header(REFERER_POLICY_HEADER, REFERER_POLICY_HEADER_VALUE);
+        return responseBuilder;
     }
 
     protected static String requestedHostName(HttpRequest request) {
@@ -113,8 +105,9 @@ public class CSRFProtector {
         try {
             uri = new URI(url);
         } catch (URISyntaxException e) {
-            throw new RuntimeException("Invalid url: " + url);
+            throw HttpTeleException.of("Invalid url structure: " + url, 500);
         }
         return uri.getHost();
     }
+
 }

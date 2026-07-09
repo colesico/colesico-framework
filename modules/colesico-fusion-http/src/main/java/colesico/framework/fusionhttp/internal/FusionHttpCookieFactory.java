@@ -7,8 +7,13 @@ import jakarta.inject.Singleton;
 
 @Singleton
 public class FusionHttpCookieFactory implements HttpCookieFactory {
+
     @Override
     public HttpCookie create(String name, String value) {
-        return new FusionHttpCookie(new Cookie(name, value));
+        var c = new Cookie(name, value);
+        // For csrf protection
+        c.setSameSite(Cookie.SameSite.Lax);
+        return new FusionHttpCookie(c);
     }
+
 }

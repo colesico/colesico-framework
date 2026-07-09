@@ -24,6 +24,6 @@ public class ResourceParamOptions extends ResourcePrefixOptionsPrototype {
 
     @Override
     public void configure(Options options) {
-        options.substitution("tmplRoot", "tmpl");
+        options.substitution("tmplRoot", "colesico/framework/example/web/tmpl");
     }
 }

@@ -13,8 +13,8 @@ module colesico.framework.example.web {
     exports colesico.framework.example.web.pebble;
     exports colesico.framework.example.web.localization;
 
-    opens webpub;
-    opens tmpl;
-    opens t9n;
+    opens colesico.framework.example.web.webpub;
+    opens colesico.framework.example.web.tmpl;
+    opens colesico.framework.example.web.t9n;
 
 }

@@ -22,7 +22,7 @@ import colesico.framework.translation.TranslationKey;
 @Dictionary(baseName = MyDictionary.BUNDLE_PATH, extraTranslations = {"ru","fr"})
 public interface MyDictionary {
 
-    String BUNDLE_PATH="t9n/Strings";
+    String BUNDLE_PATH="colesico/framework/example/web/t9n/Strings";
 
     @TranslationKey("Hello1")
     String hello1();
