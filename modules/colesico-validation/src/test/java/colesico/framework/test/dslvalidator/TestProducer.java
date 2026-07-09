@@ -34,6 +34,6 @@ public class TestProducer {
 
     @Singleton
     public Profile profile() {
-        return Profile.Default.of(Locale.of("en", "RU"));
+        return Profile.Default.of(null, Locale.of("en", "RU"));
     }
 }

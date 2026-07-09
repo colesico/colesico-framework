@@ -2,33 +2,33 @@ package colesico.framework.beanvalidation.codegen.model;
 
 import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.model.FieldElement;
-import colesico.framework.beanvalidation.ValidateBean;
+import colesico.framework.beanvalidation.BeanValidate;
 
 /**
- * @see ValidateBean
+ * @see BeanValidate
  */
 public class BeanValidateElement extends ValidateElement {
 
     /**
      * Validator builder that be used for this field validation
      */
-    private BuilderPrototypeElement fieldValidatorBuilder;
+    private ValidatorBuilderElement fieldValidatorBuilder;
 
-    public BeanValidateElement(FieldElement originField, String subject, String mapper, BuilderPrototypeElement fieldValidatorBuilder) {
+    public BeanValidateElement(FieldElement originField, String subject, String mapper, ValidatorBuilderElement fieldValidatorBuilder) {
         super(originField, subject, mapper);
         this.fieldValidatorBuilder = fieldValidatorBuilder;
     }
 
     @Override
     public String validationMethodName() {
-        return "validate" + StringUtils.firstCharToUpperCase(propertyName());
+        return "validate" + StringUtils.firstCharToUpperCase(fieldName());
     }
 
     public String validatorBuilderFieldName() {
-        return propertyName() + "VB";
+        return fieldName() + "VB";
     }
 
-    public BuilderPrototypeElement fieldValidatorBuilder() {
+    public ValidatorBuilderElement fieldValidatorBuilder() {
         return fieldValidatorBuilder;
     }
 }

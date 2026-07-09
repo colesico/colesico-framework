@@ -19,6 +19,7 @@ package colesico.framework.test.dslvalidator;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.conditional.TestCondition;
+import colesico.framework.teleapi.assist.SimpleDataPort;
 import colesico.framework.validation.ValidationIssue;
 import colesico.framework.validation.Validator;
 import org.testng.annotations.BeforeClass;
@@ -30,29 +31,33 @@ public class DefaultTest {
 
     private Ioc ioc;
     private DataBean dataBean;
+    private SimpleDataPort dataPort;
 
     @BeforeClass
     public void init() {
         TestCondition.enable();
         ioc = IocBuilder.create().build();
-        dataBean = new DataBean(10L,"AName","AValue");
+        dataBean = new DataBean(10L, "AName", "AValue");
+        dataPort = ioc.instance(SimpleDataPort.class);
     }
 
     @Test
     public void test1() {
-        Provider<TestValidatorBuilder> vbProv = ioc.provider(TestValidatorBuilder.class);
-        Validator validatorGroup = vbProv.get().buildGroup();
-        ValidationIssue vi = validatorGroup.validate(dataBean);
-        //System.out.println("Group");
-        //System.out.println(vi);
+        dataPort.forTask(() -> {
+            Provider<TestValidatorBuilder> vbProv = ioc.provider(TestValidatorBuilder.class);
+            Validator validatorGroup = vbProv.get().buildGroup();
+            ValidationIssue vi = validatorGroup.validate(dataBean);
+            //System.out.println("Group");
+            //System.out.println(vi);
 
-        Validator validatorSubj = vbProv.get().buildChain();
-        ValidationIssue vi2 = validatorSubj.validate(dataBean);
-        //System.out.println("Subj");
-        //System.out.println(vi2);
+            Validator validatorSubj = vbProv.get().buildChain();
+            ValidationIssue vi2 = validatorSubj.validate(dataBean);
+            //System.out.println("Subj");
+            //System.out.println(vi2);
 
-        ValidationIssue vi3 = validatorSubj.validate(null);
-        //System.out.println("SubjRequired ");
-        //System.out.println(vi3);
+            ValidationIssue vi3 = validatorSubj.validate(null);
+            //System.out.println("SubjRequired ");
+            //System.out.println(vi3);
+        });
     }
 }

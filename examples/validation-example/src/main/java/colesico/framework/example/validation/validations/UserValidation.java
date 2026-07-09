@@ -1,19 +1,17 @@
 package colesico.framework.example.validation.validations;
 
-import colesico.framework.beanvalidation.ValidatorBuilder;
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
+import colesico.framework.example.validation.dto.Credentials;
+import colesico.framework.example.validation.dto.User;
 
-@ValidatorBuilder
-public class UserValidation extends UserValidatorBuilder {
+abstract public class UserValidation extends AppValidatorBuilder<User> {
 
-    public UserValidation(ValidatorMessages msg,
-                          CredentialsValidatorBuilder credentialsVB,
-                          ContactsValidatorBuilder contactsVB) {
-        super(msg, credentialsVB, contactsVB);
+
+    public UserValidation(ValidatorMessages msg) {
+        super(msg);
     }
 
-    @Override
     protected Command<Long> validateId() {
         return chain(
                 required(),
@@ -21,7 +19,6 @@ public class UserValidation extends UserValidatorBuilder {
         );
     }
 
-    @Override
     protected Command<String> validateName() {
         return required();
     }

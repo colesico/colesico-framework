@@ -52,12 +52,14 @@ abstract public class ValidationFlowBuilder {
     /**
      * Validator instance with validation based on {@link MandatoryExecutor }
      */
+    @SafeVarargs
     protected final <V> DSLValidator<V> validator(final String subject, final Command<V>... commands) {
         SeriesIterator<V> seriesIterator = new SeriesIterator<>(commands);
         MandatoryExecutor<V> mandatoryExecutor = new MandatoryExecutor<>(msg, seriesIterator);
         return new DSLValidator<>(subject, mandatoryExecutor);
     }
 
+    @SafeVarargs
     protected final <V> DSLValidator<V> validator(final Command<V>... commands) {
         SeriesIterator<V> seriesIterator = new SeriesIterator<>(commands);
         MandatoryExecutor<V> mandatoryExecutor = new MandatoryExecutor<>(msg, seriesIterator);
@@ -71,6 +73,7 @@ abstract public class ValidationFlowBuilder {
      *
      * @see SeriesIterator
      */
+    @SafeVarargs
     protected final <V> SeriesIterator<V> series(final Command<V>... commands) {
         return new SeriesIterator<>(commands);
     }
@@ -81,6 +84,7 @@ abstract public class ValidationFlowBuilder {
      *
      * @see ChainIterator
      */
+    @SafeVarargs
     protected final <V> ChainIterator<V> chain(final Command<V>... commands) {
         return new ChainIterator<>(commands);
     }
@@ -91,6 +95,7 @@ abstract public class ValidationFlowBuilder {
      * @see OptionalExecutor
      * @see ChainIterator
      */
+    @SafeVarargs
     protected final <V> OptionalExecutor<V> optional(final Command<V>... commands) {
         ChainIterator<V> chainIterator = new ChainIterator<>(commands);
         return new OptionalExecutor<>(chainIterator);
@@ -102,6 +107,7 @@ abstract public class ValidationFlowBuilder {
      * @see MandatoryExecutor
      * @see ChainIterator
      */
+    @SafeVarargs
     protected final <V> MandatoryExecutor<V> mandatory(final Command<V>... commands) {
         ChainIterator<V> chainIterator = new ChainIterator<>(commands);
         return new MandatoryExecutor<>(msg, chainIterator);
@@ -113,6 +119,7 @@ abstract public class ValidationFlowBuilder {
      * @see SeriesIterator
      * @see ConditionalExecutor
      */
+    @SafeVarargs
     protected final <V> ConditionalExecutor<V> conditional(Predicate<ValidationContext<V>> condition, final Command<V>... commands) {
         SeriesIterator<V> seriesIterator = new SeriesIterator<>(commands);
         return new ConditionalExecutor<>(condition, seriesIterator);
@@ -125,6 +132,7 @@ abstract public class ValidationFlowBuilder {
      * @see SubjectExecutor
      * @see ChainIterator
      */
+    @SafeVarargs
     protected final <V> SubjectExecutor<V> subject(final String subject, final Command<V>... commands) {
         ChainIterator<V> chainIterator = new ChainIterator<>(commands);
         return new SubjectExecutor<>(subject, chainIterator);
@@ -149,21 +157,25 @@ abstract public class ValidationFlowBuilder {
      * @see ValueMapper
      * @see ChainIterator
      */
+    @SafeVarargs
     protected final <V, N> ValueMapper<V, N> field(final String subject, final Function<V, N> mapper, final Command<N>... commands) {
         ChainIterator<N> chainIterator = new ChainIterator<>(commands);
         return new ValueMapper<>(subject, mapper, chainIterator);
     }
 
+    @SafeVarargs
     protected final <V, N> ValueMapper<V, N> field(final FieldReference<V, N> filedRef, final Command<N>... commands) {
         ChainIterator<N> chainIterator = new ChainIterator<>(commands);
         return new ValueMapper<>(filedRef.subject(), filedRef.mapper(), chainIterator);
     }
 
+    @SafeVarargs
     protected final <V extends List<E>, E> ItemMapper<V, E> item(final String subject, final int index, final Command<E>... commands) {
         ChainIterator<E> chainIterator = new ChainIterator<>(commands);
         return new ItemMapper<>(subject, index, chainIterator);
     }
 
+    @SafeVarargs
     protected final <V extends Map<K, E>, K, E> EntryMapper<V, K, E> entry(final String subject, final K key, final Command<E>... commands) {
         ChainIterator<E> chainIterator = new ChainIterator<>(commands);
         return new EntryMapper<>(subject, key, chainIterator);
@@ -175,6 +187,7 @@ abstract public class ValidationFlowBuilder {
      *
      * @see IterableMapper
      */
+    @SafeVarargs
     protected final <V extends Iterable<I>, I> Command<V> forEach(String subject, final Command<I>... commands) {
         ChainIterator<I> chainIterator = new ChainIterator<>(commands);
         return new IterableMapper<>(subject, chainIterator);
@@ -185,6 +198,7 @@ abstract public class ValidationFlowBuilder {
      *
      * @see HookErrorExecuror
      */
+    @SafeVarargs
     protected final <V> HookErrorExecuror<V> hookError(String errorCode, Translatable errorMsg, final Command<V>... commands) {
         ChainIterator<V> chainIterator = new ChainIterator<>(commands);
         return new HookErrorExecuror<>(errorCode, errorMsg, null, chainIterator);

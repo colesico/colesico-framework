@@ -1,24 +1,27 @@
 package colesico.framework.example.validation.dto;
 
 import colesico.framework.beanvalidation.Validate;
-import colesico.framework.beanvalidation.ValidateBean;
-import colesico.framework.beanvalidation.ValidatorBuilderPrototype;
+import colesico.framework.beanvalidation.BeanValidate;
+import colesico.framework.beanvalidation.ValidatorBuilder;
 import colesico.framework.example.validation.validations.AppValidatorBuilder;
+import colesico.framework.example.validation.validations.UserValidation;
+import colesico.framework.example.validation.validations.UserValidationBrief;
 
-@ValidatorBuilderPrototype( subject = "user", superclass = AppValidatorBuilder.class, command = "series")
-@ValidatorBuilderPrototype(name = "brief", subject = "user", superclass = AppValidatorBuilder.class, command = "series")
+@ValidatorBuilder(superclass = UserValidation.class, subject = "user", command = "series")
+@ValidatorBuilder(superclass = UserValidationBrief.class, subject = "user", command = "series")
 public class User {
 
-    @Validate(builders = {"default", "brief"})
+    @Validate(builder = UserValidation.class)
+    @Validate(builder = UserValidation.class)
     private Long id;
 
     @Validate(builders = {"default", "brief"})
     private String name;
 
-    @ValidateBean(builders = {"default", "brief"})
+    @BeanValidate(builders = {"default", "brief"})
     private Credentials credentials;
 
-    @ValidateBean
+    @BeanValidate
     private Contacts contacts;
 
     public Long getId() {

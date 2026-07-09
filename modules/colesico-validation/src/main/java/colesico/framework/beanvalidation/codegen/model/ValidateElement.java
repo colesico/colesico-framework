@@ -3,9 +3,10 @@ package colesico.framework.beanvalidation.codegen.model;
 import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.beanvalidation.Validate;
-import colesico.framework.beanvalidation.ValidateBean;
+import colesico.framework.beanvalidation.BeanValidate;
 
 import javax.lang.model.type.TypeMirror;
+import java.util.Locale;
 
 /**
  * Element to be validated  (property field, bean field)
@@ -15,9 +16,9 @@ import javax.lang.model.type.TypeMirror;
 abstract public class ValidateElement {
 
     /**
-     * Parent validator builder element
+     * Parent validator builder
      */
-    protected BuilderPrototypeElement parentBuilder;
+    protected ValidatorBuilderElement parentBuilder;
 
     protected final FieldElement originField;
 
@@ -30,7 +31,7 @@ abstract public class ValidateElement {
      * Field mapper command
      *
      * @see Validate#mapper()
-     * @see ValidateBean#mapper()
+     * @see BeanValidate#mapper()
      */
     protected final String mapper;
 
@@ -45,37 +46,37 @@ abstract public class ValidateElement {
      */
     abstract public String validationMethodName();
 
-    public final String propertyName() {
+    public final String fieldName() {
         if (originField != null) {
             return originField.name();
         }
         return null;
     }
 
-    public final TypeMirror propertyType() {
+    public final TypeMirror fieldType() {
         if (originField != null) {
             return originField.originType();
         }
         return null;
     }
 
-    public final String propertyGetterName() {
-        return "get" + StringUtils.firstCharToUpperCase(propertyName());
+    public final String fieldGetterName() {
+        return "get" + StringUtils.firstCharToUpperCase(fieldName());
     }
 
-    public final String propertyReferenceName() {
+    public final String filedReferenceName() {
         if (originField != null) {
             String kebabCase = StringUtils.toSeparatorNotation(originField.name(), '_');
-            return StringUtils.toRootUpperCase(kebabCase);
+            return kebabCase.toUpperCase(Locale.ROOT);
         }
         return null;
     }
 
-    public BuilderPrototypeElement parentBuilder() {
+    public ValidatorBuilderElement parentBuilder() {
         return parentBuilder;
     }
 
-    public void setParentBuilder(BuilderPrototypeElement parentBuilder) {
+    public void setParentBuilder(ValidatorBuilderElement parentBuilder) {
         this.parentBuilder = parentBuilder;
     }
 

@@ -1,11 +1,11 @@
 package colesico.framework.example.validation.dto;
 
 import colesico.framework.beanvalidation.Validate;
-import colesico.framework.beanvalidation.ValidateBean;
-import colesico.framework.beanvalidation.ValidatorBuilderPrototype;
-import colesico.framework.example.validation.validations.AppValidatorBuilder;
+import colesico.framework.beanvalidation.BeanValidate;
+import colesico.framework.beanvalidation.ValidatorBuilder;
+import colesico.framework.example.validation.validations.ContactsValidation;
 
-@ValidatorBuilderPrototype(superclass = AppValidatorBuilder.class)
+@ValidatorBuilder(ContactsValidation.class)
 public class Contacts {
 
     @Validate
@@ -17,7 +17,7 @@ public class Contacts {
     @Validate
     private String email;
 
-    @ValidateBean(targetBuilder = "brief")
+    @BeanValidate(target = "brief")
     private Credentials credentials;
 
     public PostAddress getPostAddress() {

@@ -262,7 +262,8 @@ public class CodegenUtils {
     }
 
     /**
-     * Test class  is assignable to mirror type
+     * Checks if typeMirror is a superclass of clazz,
+     * or if clazz extends/implements typeMirror.
      */
     public static boolean isAssignable(Class<?> clazz, TypeMirror typeMirror, ProcessingEnvironment env) {
         Elements elementUtils = env.getElementUtils();

@@ -1,6 +1,5 @@
 package colesico.framework.beanvalidation.codegen.generator;
 
-import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
 import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
@@ -8,7 +7,6 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.scope.Unscoped;
 import com.palantir.javapoet.AnnotationSpec;
 import com.palantir.javapoet.ClassName;
-import com.palantir.javapoet.MethodSpec;
 import com.palantir.javapoet.TypeName;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -42,16 +40,16 @@ public class IocGenerator extends FrameworkAbstractGenerator {
             ProducerGenerator producerGenerator = new ProducerGenerator(packageName, producerClassSimpleName, this.getClass(), processingEnv);
             List<ValidatorBuilderElement> vbs = entry.getValue();
             for (ValidatorBuilderElement vb : vbs) {
-                logger.debug("Generating validator builders  producer: " + producerGenerator.producerClassFilePath());
-                TypeName builderType = TypeName.get(vb.originClass().asClassType().unwrap());
+                logger.debug("Generating validator builders producer: " + producerGenerator.producerClassFilePath());
+
+                TypeName builderType = ClassName.bestGuess(vb.builderClassName());
                 AnnotationSpec.Builder produceAnn = producerGenerator.addProduceAnnotation(builderType);
-                TypeName keyType = TypeName.get(vb.prototypeType().unwrap());
+
+                TypeName keyType = ClassName.get(vb.superclass().unwrap());
+                produceAnn.addMember(Produce.KEY_TYPE_METHOD, "$T.class", keyType);
+
                 produceAnn.addMember(Produce.SCOPED_METHOD, "$T.class", ClassName.get(Unscoped.class));
-                String methodName = "get" + StringUtils.firstCharToUpperCase(vb.originClass().simpleName());
-                MethodSpec.Builder mb = producerGenerator.addProduceMethod(methodName, keyType);
-                mb.addAnnotation(Unscoped.class);
-                mb.addParameter(builderType, "vb");
-                mb.addStatement("return vb");
+
             }
             producerGenerator.generate();
         }

@@ -1,10 +1,10 @@
 package colesico.framework.example.validation.dto;
 
 import colesico.framework.beanvalidation.Validate;
-import colesico.framework.beanvalidation.ValidatorBuilderPrototype;
-import colesico.framework.example.validation.validations.AppValidatorBuilder;
+import colesico.framework.beanvalidation.ValidatorBuilder;
+import colesico.framework.example.validation.validations.PostAddressValidatorBuilder;
 
-@ValidatorBuilderPrototype(superclass = AppValidatorBuilder.class)
+@ValidatorBuilder(PostAddressValidatorBuilder.class)
 public class PostAddress {
 
     @Validate

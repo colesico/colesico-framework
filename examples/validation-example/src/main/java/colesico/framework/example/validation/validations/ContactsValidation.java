@@ -1,37 +1,31 @@
 package colesico.framework.example.validation.validations;
 
-import colesico.framework.beanvalidation.ValidatorBuilder;
 import colesico.framework.dslvalidator.Command;
 import colesico.framework.dslvalidator.ValidationContext;
 import colesico.framework.dslvalidator.t9n.ValidatorMessages;
+import colesico.framework.example.validation.dto.Contacts;
 import colesico.framework.example.validation.dto.PostAddress;
-import  static colesico.framework.example.validation.validations.PostAddressValidatorBuilder.*;
 
 
-@ValidatorBuilder
-public class ContactsValidation extends ContactsValidatorBuilder {
+abstract public class ContactsValidation extends AppValidatorBuilder<Contacts> {
 
-    public ContactsValidation(ValidatorMessages msg,
-                              CredentialsBriefValidatorBuilder credentialsVB) {
-        super(msg, credentialsVB);
+    public ContactsValidation(ValidatorMessages msg) {
+        super(msg);
     }
 
-    @Override
     protected Command<PostAddress> validatePostAddress() {
         return series(
-                field(ADDRESS, required()),
-                field(POST_CODE, required(), length(10, 100))
+                field("address", PostAddress::getAddress, required()),
+                field("postCode", PostAddress::getPostCode, required(), length(10, 100))
         );
     }
 
-    @Override
     protected void verifyPhone(ValidationContext<String> ctx) {
         if (ctx.value() == null) {
             ctx.addError("PhoneError", "Invalid phone");
         }
     }
 
-    @Override
     protected Command<String> validateEmail() {
         return chain(
                 required(),
