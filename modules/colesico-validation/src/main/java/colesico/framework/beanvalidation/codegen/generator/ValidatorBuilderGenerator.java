@@ -19,7 +19,6 @@ import java.util.List;
  */
 public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
 
-
     protected TypeSpec.Builder classBuilder;
     protected ValidatorBuilderElement builderElement;
 
@@ -141,7 +140,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
             // Generate extra params
             for (ValidateElement validation : validatorBuilder.validations()) {
                 if (validation instanceof BeanValidateElement beanValidation) {
-                    TypeName builderType = ClassName.bestGuess(beanValidation.fieldValidatorBuilder().builderClassName());
+                    TypeName builderType = ClassName.bestGuess(beanValidation.fieldValidatorBuilder().superclass().name());
                     String builderVarName = beanValidation.validatorBuilderFieldName();
                     constructorBuilder.addParameter(builderType, builderVarName, Modifier.FINAL);
                     constructorBuilder.addStatement("this.$N = $N", builderVarName, builderVarName);
@@ -155,7 +154,7 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
     private void generateBuildersFields() {
         for (ValidateElement validations : builderElement.validations()) {
             if (validations instanceof BeanValidateElement beanValidation) {
-                TypeName builderType = ClassName.bestGuess(beanValidation.fieldValidatorBuilder().builderClassName());
+                TypeName builderType = ClassName.bestGuess(beanValidation.fieldValidatorBuilder().superclass().name());
                 String builderVarName = beanValidation.validatorBuilderFieldName();
                 FieldSpec.Builder fb = FieldSpec.builder(builderType, builderVarName, Modifier.PROTECTED, Modifier.FINAL);
                 fb.addJavadoc(" Validator Builder for " + validations.fieldName());
@@ -186,5 +185,6 @@ public class ValidatorBuilderGenerator extends FrameworkAbstractGenerator {
 
             CodegenUtils.createJavaFile(processingEnv, classBuilder.build(), validatorBuilder.packageName(), validatorBuilder.parentBean().originType().asTypeElement());
         }
+
     }
 }

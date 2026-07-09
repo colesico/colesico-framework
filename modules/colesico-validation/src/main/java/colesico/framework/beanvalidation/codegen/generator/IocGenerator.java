@@ -1,6 +1,7 @@
 package colesico.framework.beanvalidation.codegen.generator;
 
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
+import colesico.framework.beanvalidation.codegen.model.BeanElement;
 import colesico.framework.beanvalidation.codegen.model.ValidatorBuilderElement;
 import colesico.framework.ioc.codegen.generator.ProducerGenerator;
 import colesico.framework.ioc.production.Produce;
@@ -23,7 +24,8 @@ public class IocGenerator extends FrameworkAbstractGenerator {
         super(processingEnv);
     }
 
-    public void generate(List<ValidatorBuilderElement> validatorBuilders) {
+    public void generate(BeanElement beanElement) {
+        List<ValidatorBuilderElement> validatorBuilders = beanElement.validatorBuilders();
         if (validatorBuilders.isEmpty()) {
             return;
         }
@@ -36,7 +38,7 @@ public class IocGenerator extends FrameworkAbstractGenerator {
 
         for (Map.Entry<String, List<ValidatorBuilderElement>> entry : byPackage.entrySet()) {
             String packageName = entry.getKey();
-            String producerClassSimpleName = PRODUCER_SIMPLE_NAME;
+            String producerClassSimpleName = beanElement.originType().asClassElement().simpleName()+PRODUCER_SIMPLE_NAME;
             ProducerGenerator producerGenerator = new ProducerGenerator(packageName, producerClassSimpleName, this.getClass(), processingEnv);
             List<ValidatorBuilderElement> vbs = entry.getValue();
             for (ValidatorBuilderElement vb : vbs) {

@@ -5,6 +5,7 @@ import colesico.framework.assist.codegen.FrameworkAbstractProcessor;
 import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.beanvalidation.ValidatorBuilder;
 import colesico.framework.beanvalidation.ValidatorBuilders;
+import colesico.framework.beanvalidation.codegen.generator.IocGenerator;
 import colesico.framework.beanvalidation.codegen.generator.ValidatorBuilderGenerator;
 import colesico.framework.beanvalidation.codegen.model.BeanElement;
 
@@ -21,7 +22,8 @@ import static colesico.framework.assist.ExceptionUtils.getRootCauseMessage;
 public class ValidatorBuilderProcessor extends FrameworkAbstractProcessor {
 
     private ValidatedBeanParser parser;
-    private ValidatorBuilderGenerator generator;
+    private ValidatorBuilderGenerator builderGenerator;
+    protected IocGenerator iocGenerator;
 
     @Override
     protected Class<? extends Annotation>[] supportedAnnotations() {
@@ -31,7 +33,8 @@ public class ValidatorBuilderProcessor extends FrameworkAbstractProcessor {
     @Override
     protected void onInit() {
         parser = new ValidatedBeanParser(processingEnv);
-        generator = new ValidatorBuilderGenerator(processingEnv);
+        builderGenerator = new ValidatorBuilderGenerator(processingEnv);
+        iocGenerator = new IocGenerator(processingEnv);
     }
 
     @Override
@@ -46,7 +49,8 @@ public class ValidatorBuilderProcessor extends FrameworkAbstractProcessor {
                 beanClass = (TypeElement) elm;
                 logger.debug("Processing validated bean class: " + beanClass.getSimpleName());
                 BeanElement validatedBean = parser.parse(ClassElement.of(processingEnv, beanClass));
-                generator.generate(validatedBean);
+                builderGenerator.generate(validatedBean);
+                iocGenerator.generate(validatedBean);
             } catch (CodegenException ce) {
                 String message = "Error processing validated bean class '" + elm + "': " + ce.getMessage();
                 logger.debug(message);

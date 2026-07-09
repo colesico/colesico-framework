@@ -8,6 +8,7 @@ import colesico.framework.assist.codegen.model.ClassElement;
 import colesico.framework.assist.codegen.model.ClassType;
 import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.beanvalidation.*;
+import colesico.framework.beanvalidation.codegen.generator.IocGenerator;
 import colesico.framework.beanvalidation.codegen.model.BeanElement;
 import colesico.framework.beanvalidation.codegen.model.BeanValidateElement;
 import colesico.framework.beanvalidation.codegen.model.ValueValidateElement;
