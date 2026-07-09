@@ -64,7 +64,9 @@ public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implem
         }
 
         HttpCookie cookie = cookieFactory.create(PROFILE_COOKIE, profileStr);
-        cookie.setExpires(expires.getTime().toInstant()).setSameSite(HttpCookie.SameSite.STRICT);
+        cookie.setExpires(expires.getTime().toInstant())
+                .setSameSite(HttpCookie.SameSite.STRICT)
+                .setPath("/");
 
         var response = this.httpResponse.get();
         response.addCookie(cookie);
