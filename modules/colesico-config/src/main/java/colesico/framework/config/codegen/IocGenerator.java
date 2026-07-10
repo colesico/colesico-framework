@@ -121,12 +121,17 @@ public class IocGenerator extends FrameworkAbstractGenerator {
             mb.addAnnotation(classedAnn.build());
         }
 
-        //Parameter Supplier<Service> factory
+        //Parameter @Classed(AConfig.class) Supplier<Service> target
         ParameterSpec.Builder targetBuilder = ParameterSpec.builder(
                 ParameterizedTypeName.get(ClassName.get(Supplier.class), TypeName.get(config.target().originType())),
                 FACTORY_PARAM,
                 Modifier.FINAL
         );
+        // @Classed(ConfigPrototype.class)
+        AnnotationSpec.Builder targetAnnBuilder = AnnotationSpec.builder(Classed.class);
+        targetAnnBuilder.addMember("value", "$T.class", TypeName.get(config.prototype().originType()));
+        targetBuilder.addAnnotation(targetAnnBuilder.build());
+
         mb.addParameter(targetBuilder.build());
 
         //Parameter ConfImpl config
