@@ -21,6 +21,7 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 
 @Producer
-@Produce(TargetBean.class)
+// Target Bean factory
+@Produce(value = TargetBean.class, classed = MessageConfigPrototype.class)
 public class TargetBeanProducer {
 }

@@ -30,7 +30,7 @@
     <artifactId>colesico-jdbirec</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico JDBI Records</name>
+    <name>Colesico Jdbi Records</name>
     <description>
         Colesico framework JDBI Record helper to mapping/binding pojos, generate insert/update sql and table creation form java class
     </description>

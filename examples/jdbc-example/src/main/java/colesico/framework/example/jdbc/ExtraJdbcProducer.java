@@ -40,7 +40,7 @@ public class ExtraJdbcProducer {
      */
     @Singleton
     @Named(EXTRA)
-    public TransactionalShell getTransactionalShell(@Classed(ExtraHikariProperties.class) DataSource ds) {
+    public TransactionalShell transactionalShell(@Classed(ExtraHikariProperties.class) DataSource ds) {
         return new JdbcTransactionalShell(ds);
     }
 
@@ -49,7 +49,7 @@ public class ExtraJdbcProducer {
      */
     @Unscoped
     @Named(EXTRA)
-    public Connection getConnection(@Named(EXTRA) TransactionalShell txShell) {
+    public Connection connection(@Named(EXTRA) TransactionalShell txShell) {
         return ((JdbcTransactionalShell) txShell).connection();
     }
 
@@ -58,7 +58,7 @@ public class ExtraJdbcProducer {
      */
     @Unscoped
     @Named(EXTRA)
-    public DataSource getDataSource(@Named(EXTRA) TransactionalShell txShell) {
+    public DataSource dataSource(@Named(EXTRA) TransactionalShell txShell) {
         return ((JdbcTransactionalShell) txShell).dataSource();
     }
 }

@@ -72,7 +72,7 @@
                         </path>
                         <path>
                             <groupId>net.colesico.framework</groupId>
-                            <artifactId>colesico-async-task</artifactId>
+                            <artifactId>colesico-asynctask</artifactId>
                             <version>${project.version}</version>
                         </path>
                         <!-- Enable compile time log -->

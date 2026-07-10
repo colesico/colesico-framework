@@ -16,6 +16,7 @@
 
 package colesico.framework.config;
 
+import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.scope.Unscoped;
 
 import java.lang.annotation.*;
@@ -44,7 +45,7 @@ public @interface ConfigPrototype {
     /**
      * The class that the configuration will be injected to.
      * This value is used for MESSAGE config model to specify the target for that this config is designed.
-     * Target bean should be {@link Unscoped}
+     * Target bean should be {@link Unscoped} and produced with {@link Classed} by config prototype class.
      */
     Class<?> target() default Object.class;
 }

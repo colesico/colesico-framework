@@ -56,7 +56,7 @@
         </dependency>
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-http-router</artifactId>
+            <artifactId>colesico-httprouter</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

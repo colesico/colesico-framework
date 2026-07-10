@@ -1,6 +1,6 @@
-create table if not exists avalues(
-  akey numeric,
-  avalue  varchar(32)
+create table if not exists b_values(
+  bkey numeric,
+  bvalue  varchar(32)
 );
-delete from avalues;
-insert into avalues values( 2, 'b-value' );
+delete from b_values;
+insert into b_values values( 2, 'b-value' );

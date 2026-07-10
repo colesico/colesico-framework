@@ -89,7 +89,7 @@ abstract public class HikariProperties extends HikariConfigPrototype {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         try (InputStream is = loader.getResourceAsStream(fullPath)) {
             if (is != null) {
-                logger.info("Read HikariCP configuration from resource: " + fullPath);
+                logger.info("Read HikariCP configuration from classpath resource: " + fullPath);
                 props.load(is);
                 return new HikariConfig(props);
             } else {

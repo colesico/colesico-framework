@@ -29,7 +29,7 @@
     <artifactId>jdbi-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Example - Colesico JDBI</name>
+    <name>Example - Colesico Jdbi</name>
 
     <properties>
     </properties>
