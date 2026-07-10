@@ -30,7 +30,7 @@
     <artifactId>colesico-hikaricp</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico Hikari Connections Pool</name>
+    <name>Colesico HikariCP</name>
     <description>
         Colesico framework Hikari Connections Pool integration
     </description>

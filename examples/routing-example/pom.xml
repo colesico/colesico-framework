@@ -29,7 +29,7 @@
     <artifactId>routing-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - HTTP routing</name>
+    <name>Example - Colesico HTTP routing</name>
 
     <properties>
     </properties>

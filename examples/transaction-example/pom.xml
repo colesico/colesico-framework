@@ -29,7 +29,7 @@
     <artifactId>transaction-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - Transactions</name>
+    <name>Example - Colesico Transactions</name>
     <url>https://github.com/colesico/colesico-framework</url>
 
     <properties>

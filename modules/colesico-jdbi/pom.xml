@@ -30,9 +30,9 @@
     <artifactId>colesico-jdbi</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico JDBI</name>
+    <name>Colesico Jdbi</name>
     <description>
-        Colesico framework jDBI integration
+        Colesico framework Jdbi integration
     </description>
     <url>https://github.com/colesico/colesico-framework</url>
 

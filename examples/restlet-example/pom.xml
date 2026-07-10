@@ -29,7 +29,7 @@
     <artifactId>restlet-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - Restlet</name>
+    <name>Example - Colesico Restlet</name>
 
     <dependencies>
         <!-- Colesico restlet module-->

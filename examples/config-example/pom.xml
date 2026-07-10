@@ -29,7 +29,7 @@
     <artifactId>config-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - Config</name>
+    <name>Example - Colesico Config</name>
 
     <properties>
     </properties>

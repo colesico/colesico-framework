@@ -29,7 +29,7 @@
     <artifactId>profile-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - Profile</name>
+    <name>Example - Colesico Profile</name>
 
     <properties>
     </properties>

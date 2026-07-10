@@ -29,7 +29,7 @@
     <artifactId>ioc-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - IoC</name>
+    <name>Example - Colesico IoC</name>
 
     <properties>
     </properties>

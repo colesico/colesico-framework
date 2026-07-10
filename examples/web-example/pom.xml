@@ -29,7 +29,7 @@
     <artifactId>web-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - Web application</name>
+    <name>Example - Colesico Web Application</name>
 
     <properties>
     </properties>

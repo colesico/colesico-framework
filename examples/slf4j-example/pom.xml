@@ -29,7 +29,7 @@
     <artifactId>slf4j-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - Slf4j and Logback</name>
+    <name>Example - Colesico Slf4</name>
 
     <properties>
     </properties>

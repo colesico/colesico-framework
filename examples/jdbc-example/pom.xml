@@ -29,7 +29,7 @@
     <artifactId>jdbc-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - JDBC integration</name>
+    <name>Example - Colesico JDBC</name>
 
     <properties>
     </properties>

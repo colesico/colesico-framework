@@ -30,7 +30,7 @@
     <artifactId>colesico-hocon</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico Hocon Configuration</name>
+    <name>Colesico HOCON Configuration</name>
     <description>
         Colesico Hocon based configuration support
     </description>

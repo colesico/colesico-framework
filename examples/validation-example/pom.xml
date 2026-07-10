@@ -29,7 +29,7 @@
     <artifactId>validation-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - Validation</name>
+    <name>Example - Colesico Validation</name>
 
     <properties>
     </properties>

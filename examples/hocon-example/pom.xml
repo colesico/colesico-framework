@@ -29,7 +29,7 @@
     <artifactId>hocon-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - Hocon integration</name>
+    <name>Example - Colesico Hocon</name>
 
     <properties>
     </properties>

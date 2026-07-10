@@ -13,7 +13,7 @@
     <artifactId>asynctask-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - Async Tasks</name>
+    <name>Example - Colesico Async Tasks</name>
 
     <properties>
     </properties>

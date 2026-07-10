@@ -29,7 +29,7 @@
     <artifactId>weblet-example</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico example - Weblet</name>
+    <name>Example - Colesico Weblet</name>
 
     <dependencies>
         <!-- Colesico weblet module -->
