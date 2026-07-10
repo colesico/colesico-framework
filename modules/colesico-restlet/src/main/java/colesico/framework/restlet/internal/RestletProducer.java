@@ -23,7 +23,7 @@ import colesico.framework.restlet.*;
 import colesico.framework.restlet.assist.LogRestletListener;
 import colesico.framework.restlet.gson.GsonSerializer;
 
-import colesico.framework.router.TargetController;
+import colesico.framework.httprouter.TargetController;
 import jakarta.inject.Singleton;
 
 

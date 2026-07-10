@@ -17,8 +17,8 @@
 package colesico.framework.example.routing;
 
 import colesico.framework.http.HttpMethod;
-import colesico.framework.router.RequestMethod;
-import colesico.framework.router.Route;
+import colesico.framework.httprouter.RequestMethod;
+import colesico.framework.httprouter.Route;
 import colesico.framework.weblet.Weblet;
 
 /**

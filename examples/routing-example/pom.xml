@@ -45,7 +45,7 @@
         <!-- Colesico Fusion Auth HTTP integration -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-fusion-http</artifactId>
+            <artifactId>colesico-fusionhttp</artifactId>
             <version>${project.version}</version>
         </dependency>
 

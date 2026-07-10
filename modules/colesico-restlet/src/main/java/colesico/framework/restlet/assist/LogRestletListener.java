@@ -4,7 +4,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.restlet.RestletDataPort;
 import colesico.framework.restlet.RestletRequestListener;
 import colesico.framework.restlet.RestletResponseListener;
-import colesico.framework.router.Router;
+import colesico.framework.httprouter.Router;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

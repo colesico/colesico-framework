@@ -18,4 +18,4 @@
 @Route("/api/v1.0")
 package colesico.framework.example.routing.pkgrelative;
 
-import colesico.framework.router.Route;
+import colesico.framework.httprouter.Route;

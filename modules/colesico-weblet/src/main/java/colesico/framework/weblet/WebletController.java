@@ -16,7 +16,7 @@
 
 package colesico.framework.weblet;
 
-import colesico.framework.router.TargetController;
+import colesico.framework.httprouter.TargetController;
 import colesico.framework.teleapi.TeleController;
 
 public interface WebletController extends TargetController<TeleController.Criteria> {

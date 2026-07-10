@@ -17,19 +17,15 @@
 package colesico.framework.weblet.codegen;
 
 import colesico.framework.assist.codegen.model.ClassType;
-import colesico.framework.router.RouterCommandsRegistry;
-import colesico.framework.router.codegen.RoutesModulator;
+import colesico.framework.httprouter.codegen.RoutesModulator;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.TeleReadElement;
 import colesico.framework.service.codegen.model.teleapi.TeleWriteElement;
 import colesico.framework.service.codegen.model.teleapi.TeleCommandElement;
 import colesico.framework.service.codegen.model.teleapi.TeleOrdinaryParamElement;
-import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.dataport.ReadOptions;
 import colesico.framework.teleapi.dataport.WriteOptions;
-import colesico.framework.telehttp.UseReader;
-import colesico.framework.telehttp.UseWriter;
 import colesico.framework.telehttp.codegen.TeleHttpReadElement;
 import colesico.framework.telehttp.codegen.TeleHttpWriteElement;
 import colesico.framework.telehttp.codegen.TeleHttpCodegenUtils;

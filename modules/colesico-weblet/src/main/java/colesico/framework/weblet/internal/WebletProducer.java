@@ -19,7 +19,7 @@ package colesico.framework.weblet.internal;
 import colesico.framework.ioc.production.Polyproduce;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.router.TargetController;
+import colesico.framework.httprouter.TargetController;
 import colesico.framework.weblet.WebletDataPort;
 import colesico.framework.weblet.WebletController;
 

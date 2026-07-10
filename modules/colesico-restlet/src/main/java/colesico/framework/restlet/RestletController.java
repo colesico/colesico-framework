@@ -16,7 +16,7 @@
 
 package colesico.framework.restlet;
 
-import colesico.framework.router.TargetController;
+import colesico.framework.httprouter.TargetController;
 import colesico.framework.teleapi.TeleController;
 
 public interface RestletController extends TargetController<TeleController.Criteria> {

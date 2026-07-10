@@ -39,7 +39,7 @@
 
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-fusion-http</artifactId>
+            <artifactId>colesico-fusionhttp</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -63,7 +63,7 @@
 
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-webstatic</artifactId>
+            <artifactId>colesico-web-static</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>

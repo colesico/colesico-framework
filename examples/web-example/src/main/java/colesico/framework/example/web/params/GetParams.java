@@ -16,7 +16,7 @@
 
 package colesico.framework.example.web.params;
 
-import colesico.framework.router.Route;
+import colesico.framework.httprouter.Route;
 import colesico.framework.weblet.Weblet;
 
 import java.text.MessageFormat;

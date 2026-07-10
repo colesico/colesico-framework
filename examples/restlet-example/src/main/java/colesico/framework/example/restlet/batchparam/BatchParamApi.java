@@ -2,7 +2,7 @@ package colesico.framework.example.restlet.batchparam;
 
 import colesico.framework.http.HttpMethod;
 import colesico.framework.restlet.Restlet;
-import colesico.framework.router.RequestMethod;
+import colesico.framework.httprouter.RequestMethod;
 import colesico.framework.service.BatchField;
 import colesico.framework.telehttp.ParamOrigin;
 import colesico.framework.telehttp.origin.Origin;

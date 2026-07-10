@@ -16,7 +16,7 @@
 
 package colesico.framework.example.routing.pkgrelative;
 
-import colesico.framework.router.Route;
+import colesico.framework.httprouter.Route;
 import colesico.framework.weblet.Weblet;
 
 /**

@@ -28,7 +28,7 @@
     <artifactId>colesico-http</artifactId>
     <packaging>jar</packaging>
 
-    <name>Colesico HTTP</name>
+    <name>Colesico HTTP API</name>
     <description>
         Colesico Framework HTTP API unification
     </description>

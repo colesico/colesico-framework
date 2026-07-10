@@ -1,7 +1,7 @@
 package colesico.framework.restlet;
 
 import colesico.framework.http.HttpContext;
-import colesico.framework.router.Router;
+import colesico.framework.httprouter.Router;
 
 
 /**

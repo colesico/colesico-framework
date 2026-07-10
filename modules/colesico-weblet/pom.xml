@@ -41,7 +41,7 @@
         <!-- Colesico -->
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-tele-http</artifactId>
+            <artifactId>colesico-telehttp</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

@@ -19,8 +19,8 @@ package colesico.framework.example.restlet.helloworld;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.ioc.listener.PostConstruct;
 import colesico.framework.restlet.Restlet;
-import colesico.framework.router.RequestMethod;
-import colesico.framework.router.Route;
+import colesico.framework.httprouter.RequestMethod;
+import colesico.framework.httprouter.Route;
 import colesico.framework.service.LocalMethod;
 
 import java.util.Arrays;
