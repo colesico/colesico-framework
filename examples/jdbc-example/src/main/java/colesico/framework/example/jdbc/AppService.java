@@ -48,7 +48,7 @@ public class AppService {
 
     @Transactional(shell = ExtraJdbcProducer.EXTRA)
     public String readExtraValue(Integer key) {
-        try (PreparedStatement stmt = extraConnProv.get().prepareStatement("select avalue from avalues where akey=?")) {
+        try (PreparedStatement stmt = extraConnProv.get().prepareStatement("select bvalue from b_values where bkey=?")) {
             stmt.setInt(1, key);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -64,7 +64,7 @@ public class AppService {
 
     @Transactional
     public String readValue(Integer key) {
-        try (PreparedStatement stmt = defaultConnProv.get().prepareStatement("select avalue from avalues where akey=?")) {
+        try (PreparedStatement stmt = defaultConnProv.get().prepareStatement("select avalue from a_values where akey=?")) {
             stmt.setInt(1, key);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
