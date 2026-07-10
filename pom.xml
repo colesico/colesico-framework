@@ -104,7 +104,7 @@
 
         <!-- Mix -->
         <jakarta.inject-api.version>2.0.1</jakarta.inject-api.version>
-        <typesafe-config.version>1.4.3</typesafe-config.version>
+        <typesafe-config.version>1.4.9</typesafe-config.version>
         <pebble.version>4.1.2</pebble.version>
         <palantir-javapoet.version>0.17.0</palantir-javapoet.version>
 
