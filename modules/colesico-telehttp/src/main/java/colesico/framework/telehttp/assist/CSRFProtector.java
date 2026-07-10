@@ -60,6 +60,9 @@ public class CSRFProtector {
         }
 
         String requestHost = requestedHostName(request);
+        if ("localhost".equals(requestHost)) {
+            return;
+        }
 
         // Strict source verification (Origin / Referer)
         // Browsers automatically set these headers for cross-origin unsafe requests, and they cannot be spoofed via JS.

@@ -34,7 +34,7 @@ public class SubmitFormRouting {
      * @return
      */
     @RequestMethod(HttpMethod.POST)
-    public Responses submit() {
-        return Responses.object("Submit");
+    public String submit() {
+        return "Submit";
     }
 }

@@ -30,15 +30,15 @@ public class PackageRelativeRouting {
     // http://localhost:8080/api/v1.0/relative/say-hallo
     // /api/v1.0 + /relative + /say-hallo
     @Route("say-hallo")
-    public Responses hallo() {
-        return Responses.object("Hallo");
+    public String hallo() {
+        return "Hallo";
     }
 
     // http://localhost:8080/api/v1.0/relative/say-hei
     @Route("./say-hei")
     // Equivalent @Route("say-hei")
-    public Responses hei() {
-        return Responses.object("Hei");
+    public String hei() {
+        return "Hei";
     }
 
 }

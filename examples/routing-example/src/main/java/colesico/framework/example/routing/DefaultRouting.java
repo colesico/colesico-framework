@@ -32,8 +32,8 @@ public class DefaultRouting {
      * The route for the method without @Route annotation is derived from method name transformed to  snake case notation.
      * Corresponding URL GET http://localhost:8080/default-routing/hello    ./default-routing - part from weblet default route
      */
-    public Responses hello() {
-        return Responses.object("Hello");
+    public String hello() {
+        return "Hello";
     }
 
 }

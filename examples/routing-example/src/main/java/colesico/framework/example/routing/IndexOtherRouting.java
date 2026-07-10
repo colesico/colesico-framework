@@ -33,15 +33,15 @@ public class IndexOtherRouting {
      * If method name is not "index" it is possible to  put  @Route("./") annotation to  construct the same route as for
      * "index" method name
      */
-    public Responses index(){
-        return Responses.object("Index");
+    public String index(){
+        return "Index";
     }
 
     /**
      * "other" method name  is bound by default to  the local any route, i.e. corresponds to  the @Route("*") annotation.
      * Corresponding URL http://localhost:8080/[any path]
      */
-    public Responses other(){
-        return Responses.object("Other");
+    public String other(){
+        return "Other";
     }
 }

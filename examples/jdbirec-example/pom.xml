@@ -101,7 +101,7 @@
                         </path>
                         <path>
                             <groupId>net.colesico.framework</groupId>
-                            <artifactId>colesico-jdbi-rec</artifactId>
+                            <artifactId>colesico-jdbirec</artifactId>
                             <version>${project.version}</version>
                         </path>
                         <dependency>

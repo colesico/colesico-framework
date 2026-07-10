@@ -29,16 +29,16 @@ public class AbsoluteRouting {
     // This is the method absolute route, starts with '/'
     // Final URL: http://localhost:8080/say-hi.html
     @Route("/say-hi.html")
-    public Responses hi() {
-        return Responses.object("Hi");
+    public String hi() {
+        return "Hi";
     }
 
     // This is relative route regarding weblet route (/absolute-route)
     // Relative route is not starts with '/', or may starts from './'
     // Final URL: http://localhost:8080/absolute-route/say-hello.html
     @Route("say-hello.html") // or  @Route("./say-hello.html")
-    public Responses hello() {
-        return Responses.object("Hello");
+    public String hello() {
+        return "Hello";
     }
 
 }

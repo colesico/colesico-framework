@@ -30,7 +30,7 @@ public class RelativeRouting {
     // Final URL: http://localhost:8080/relative-routing/say-hola
     // './relative-routing' part is derived  from default weblet route.
     @Route("say-hola")
-    public Responses hola() {
-        return Responses.object("Hola");
+    public String hola() {
+        return "Hola";
     }
 }
