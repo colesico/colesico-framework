@@ -1,51 +1,519 @@
 [[intro]]
-
 = Colesico-Service
+:toc:
+:toclevels: 5
+:numbered:
 
-Services are the basic essence of representing business logic in applications.
-It provides the opportunity for various automation for business logic beans, (weblets,
-restlets and others built on their basis. For example, they provide support for
-transaction management, support for remote methods invocations, interceptors.
+== What is Colesico-Service
 
-Services is a regular POJOs with @Service annotation.
+Services are the fundamental building blocks for representing business logic in applications.
+The Service module provides code generation and automation capabilities for business logic beans,
+including support for:
 
-Simple service example:
+* Remote method invocation (via TeleAPI integration)
+* Method interception with configurable phases (transaction management, logging, metrics, rate limiting, etc.)
+* Dependency injection integration with IoC container
+* Parameter injection from IoC container into service methods
+* Batch parameter binding from data ports
+* Customizable extension via modulators
+
+Services are regular POJOs annotated with `@Service` (or custom alias annotations).
+The framework generates proxy classes at compile time that extend the service classes,
+enabling various cross-cutting concerns without runtime reflection.
+
+== Key features
+
+* Automatic proxy generation at compile time (no runtime reflection)
+* Seamless integration with IoC container (no need to declare producers)
+* Customizable scope (default singleton, can be overridden with scope annotations)
+* Method interception with 14 predefined phases and extensible phase system
+* Remote method invocation support via TeleAPI integration
+* Parameter injection from IoC container (`@InjectParam`)
+* Batch parameter binding (`@BatchField`) for grouped remote parameters
+* Support for protected method instrumentation (`@ServiceMethod`)
+* Extensible via modulators (custom annotations and processing)
+* Automatic IoC producer generation for services and tele-facades
+
+== Service declaration
+
+To declare a service, annotate a class with `@Service`:
 
 [source,java]
 ----
 @Service
 public class MyService {
-
-    @Transactional
-    public Boolean save(String value) {
-        ...
+    public String process(String input) {
+        return "Processed: " + input;
     }
-
 }
 ----
 
-Services are integrated to the IoC  (Dependency Injection module).
-There is no need to declare an IoC producer to use service beans in the context
-of dependency injection. Service is singleton by default. But their scope can be
-redefined using the appropriate annotations (@ThreadScoped , etc)
+Services are automatically integrated with the IoC container. There is no need to declare an IoC producer.
+The framework generates a producer class that registers the service proxy with the IoC container.
 
-To automate the service beans the framework uses code generation  at the compilation stage.
-It creates a proxy classes that extends service classes.
+By default, services are singletons, but their scope can be redefined using scope annotations
+(`@ThreadScoped`, `@RefreshScoped`, `@TaskScoped`, etc.) on the service class.
+
+The framework generates a proxy class at compile time that extends the service class.
+The proxy class is named with the pattern: `{ServiceName}ServiceProxy` (or `{ServiceName}ServiceProxy`
+if the class name already ends with "Service").
+
+The generated proxy:
+* Extends the original service class
+* Implements `ServiceProxy` interface
+* Has `@Unscoped` annotation (the proxy itself is unscoped; the original service class defines the actual scope)
+* Has `@ServiceOrigin` annotation referencing the original service class
+* Delegates to the superclass for business logic execution
 
 == Service methods
 
-By default, the service methods that the framework instrumentates are all public methods of the service bean.
-To instrumentate a protected method,  use the @ServiceMethod annotation (on method or class).
-To exclude method from instrumentation  use the @PlainMethod annotation.
+=== Method classification
 
-== Self method invocation
+By default, the framework instruments all public methods of a service class that are not `final` or `static`.
+The method classification rules are:
 
-Unlike EJB beans, calling your own instrumentated methods can be performed directly using this.methodToCall()
-without injection bean to itself.
+* Public, non-final, non-static methods → instrumented (unless explicitly marked as `@PlainMethod` or `@LocalMethod`)
+* Protected/package-private methods → NOT instrumented (unless marked with `@ServiceMethod` on the method or class)
+* Private methods → NOT instrumented
+* Final methods → NOT instrumented
+* Static methods → NOT instrumented
 
-== Remote methods invocation
+=== Controlling method instrumentation
 
-The following annotations are used to configure a remote methods call:
+Use the following annotations to control which methods are instrumented:
 
-* @LocalMethod - exclude method from remote call
-* @Compount - to declare bean as a set of separate parameters  (each bean field - separate parameter)
+* `@ServiceMethod` - marks a method for instrumentation (useful for protected methods, can also be applied at class level to instrument all protected methods)
+* `@PlainMethod` - excludes a method from instrumentation (method remains as-is, no proxy logic generated). Can be applied at class level to exclude all methods by default.
+* `@LocalMethod` - marks a method as non-remote (excluded from tele-commands, but interceptors still apply). Can be applied at class level to exclude all methods from remote invocation.
+
+[source,java]
+----
+@Service
+@PlainMethod // all methods are plain by default, only explicitly marked methods are instrumented
+public class MyService {
+
+    @ServiceMethod
+    public String process(String input) {
+        return doProcess(input);
+    }
+
+    @ServiceMethod
+    protected String doProcess(String input) {
+        return "Processed: " + input;
+    }
+
+    @LocalMethod
+    public void localOperation() {
+        // Local only, not exposed via TeleAPI
+    }
+}
+----
+
+=== Self-method invocation
+
+Unlike EJB beans, calling your own instrumented methods can be performed directly using `this.methodToCall()`
+without injecting the bean into itself. The proxy handles the instrumentation transparently.
+
+== Method interception
+
+The Service module provides a powerful interception mechanism based on the chain of responsibility pattern.
+Interceptors are invoked in a specific order (phases), allowing clean separation of concerns.
+
+=== Interception phases
+
+Interceptors are organized into phases. The execution order from outermost to innermost:
+
+. `BOOTSTRAP` - common purpose initial phase
+. `ERRORS` - error handling and transformation
+. `LOGGING` - global logging/tracing of request execution
+. `METRICS` - SLA, latency, throughput metrics
+. `RATE_LIMITING` - request frequency control
+. `TELE_DATA_MAPPING` - RPC protocol mapping (unmarshals invocation arguments from DataPort and marshals result back)
+. `AUTHENTICATION` - client identity verification
+. `AUTHORIZATION` - permission and access control
+. `VALIDATION` - input parameters validation (prevents unnecessary cache lookups)
+. `CACHING` - method result caching
+. `CIRCUIT_BREAKER` - fault tolerance: circuit breaker and retries
+. `TRANSACTION` - database transaction management
+. `RESOURCES` - resource management (DB connections, handles, sessions)
+. `PREPROCESS` - common purpose phase just before target method invocation
+
+Higher in the list means more "outer" (wraps subsequent phases).
+
+=== Adding custom phases
+
+You can add custom interception phases via the `InterceptionPhases` API:
+
+[source,java]
+----
+InterceptionPhases phases = new InterceptionPhases();
+phases.addPhaseAfter(InterceptionPhases.AUTHENTICATION, "AUDIT");
+phases.addPhaseBefore(InterceptionPhases.VALIDATION, "SANITIZATION");
+phases.addPhaseFirst("INIT");
+phases.addPhaseLast("CLEANUP");
+----
+
+=== Interceptor implementation
+
+An interceptor is a functional interface:
+
+[source,java]
+----
+@FunctionalInterface
+public interface Interceptor<O> {
+    Object intercept(InvocationContext context, O options);
+}
+----
+
+The `InvocationContext` provides access to:
+* `target()` - the service instance
+* `methodName()` - the name of the invoked method
+* `parameters()` - the method parameters
+* `proceed()` - proceed to the next interceptor in the chain
+
+=== Interceptor binding
+
+Interceptors are bound to service methods through the code generation process.
+Modulators can add interceptors to specific phases during service parsing using `InterceptionElement`:
+
+[source,java]
+----
+method.addInterception(InterceptionPhases.LOGGING, 
+    new InterceptionElement(
+        CodeBlock.builder()
+            .add("loggingInterceptor::intercept")
+            .build(),
+        CodeBlock.builder()
+            .add("new $T()", LogOptions.class)
+            .build()
+    )
+);
+----
+
+== Remote method invocation via TeleAPI
+
+The Service module integrates with the TeleAPI framework to support remote method invocation.
+The integration is implemented through the `TeleServiceModulator`, which generates tele-facades and tele-interceptors for services.
+
+=== TeleAPI integration overview
+
+When a service has a TeleAPI definition, the framework generates:
+
+* **Tele-facade** - implements remote invocation commands (`{ServiceName}{TeleType}TeleFacade`)
+* **Tele-interceptor** - handles reading/writing data from DataPort (`{ServiceName}{TeleType}TeleInterceptor`)
+* **Batch classes** - for grouped parameters (`{ServiceName}Batches`)
+* **Commands registry** - for command discovery
+
+The tele-interceptor is automatically bound to the `TELE_DATA_MAPPING` interception phase, ensuring that data port operations occur at the correct point in the interception chain.
+
+=== Tele-service configuration
+
+To enable remote invocation for a service, a `TeleServiceModulator` extension must be present.
+The modulator defines:
+
+* `teleType()` - the tele-type identifier (usually a marker annotation or interface)
+* `isTeleServiceSupported()` - determines if the service should have a tele-facade
+* `createTeleService()` - creates the tele-service element with:
+  - Tele-type class
+  - Commands registry class
+  - Read options class
+  - Write options class
+  - IoC qualifier for producer method
+* `generateCommandsMethodBody()` - generates the commands registry registration code
+
+=== DataPort integration
+
+The tele-interceptor uses `DataPort` to read input parameters and write results:
+
+1. When a remote invocation arrives, the tele-controller creates a `DataPort` instance
+2. The data port is bound to the current `TaskScope` under `DataPort.SCOPE_KEY`
+3. The tele-interceptor retrieves the data port and performs read/write operations
+4. Parameters are read from the data port using appropriate `TeleReader` implementations
+5. Results are written to the data port using appropriate `TeleWriter` implementations
+
+=== Parameter sources
+
+Service method parameters can come from different sources during remote invocation:
+
+==== Direct parameter
+
+By default, parameters are read directly from the DataPort:
+
+[source,java]
+----
+public void save(String name, int age) { ... }
+// Tele-interceptor reads 'name' and 'age' from DataPort
+----
+
+==== Batch parameter
+
+Use `@BatchField` to group multiple parameters into a single batch object:
+
+[source,java]
+----
+public void createUser(
+    @BatchField("firstName") String name,
+    @BatchField("age") int age,
+    @BatchField(value = "email", batch = "secondary") String email
+) { ... }
+----
+
+The `@BatchField` annotation has two attributes:
+* `value()` - the field name in the batch class (defaults to parameter name)
+* `batch()` - the batch name (defaults to "request")
+
+The framework generates a batch class for each unique batch name containing getters and setters
+for each field. The batch is read from the DataPort as a single object.
+
+==== Injected parameter
+
+Use `@InjectParam` to get a parameter from the IoC container:
+
+[source,java]
+----
+public void process(@InjectParam Logger logger, String data) { ... }
+// Logger is injected from IoC container, data is read from DataPort
+----
+
+[source,java]
+----
+public void process(@InjectParam(named = "custom") MyService service, String data) { ... }
+// Gets bean with @Named("custom") from IoC container
+----
+
+[source,java]
+----
+public void process(@InjectParam(classed = MyConfig.class) Config config) { ... }
+// Gets bean with @Classed(MyConfig.class) from IoC container
+----
+
+=== Tele-interceptor internals
+
+The generated tele-interceptor performs the following operations:
+
+1. Retrieves the data port from the provider
+2. Reads batch objects from the data port
+3. For each parameter:
+   - If it's a batch field, extracts the value from the batch object
+   - If it's a direct parameter, reads it from the data port
+   - If it's an injected parameter, skips (already handled by IoC)
+4. Invokes the target service method via the interception context
+5. Writes the result to the data port
+6. Handles exceptions by writing them to the data port
+
+=== TeleScheme support
+
+The Service module also supports TeleScheme generation via `TeleSchemeModulator`.
+A TeleScheme defines the structure of data that can be read from or written to a DataPort,
+allowing formal API specification generation (e.g., OpenAPI).
+
+Key methods in `TeleSchemeModulator`:
+
+* `isTeleServiceSupported()` - determines if a scheme should be generated
+* `schemeType()` - returns the scheme type class
+* `teleSchemeBaseClass()` - optionally overrides the base class
+* `processTeleService()` - generates the build method body
+
+== Generated artifacts
+
+For a service class `MyService`, the framework generates:
+
+1. **Service proxy**: `MyServiceServiceProxy`
+   - Extends `MyService`
+   - Implements `ServiceProxy`
+   - Contains interception logic
+
+2. **IoC producer**: `MyServiceProducer`
+   - Generates producing methods for the service proxy and tele-facade
+   - Adds `@Polyproduce` and `@Classed` qualifiers for tele-facades
+
+3. **Tele-facade** (if applicable): `MyServiceMyTypeTeleFacade`
+   - Extends `TeleFacade<MyService, CommandsRegistry>`
+   - Implements command methods for each tele-command
+   - Contains commands registry with method name mappings
+
+4. **Tele-interceptor** (if applicable): `MyServiceMyTypeTeleInterceptor`
+   - Extends `TeleInterceptor<ReadOptions, WriteOptions>`
+   - Handles DataPort reading and writing
+   - Bound to `TELE_DATA_MAPPING` interception phase
+
+5. **Batch classes** (if applicable): `MyServiceBatches`
+   - Contains nested batch classes with getters and setters
+
+== Modulators
+
+Modulators are the extension mechanism of the Service module. They allow:
+
+* Defining custom service annotations (aliases for `@Service`)
+* Adding custom processing during service parsing
+* Injecting custom interceptors
+* Generating additional code
+* Modifying the IoC producer generation
+
+A modulator implements the `Modulator` abstract class and listens to various events during the parsing and generation process.
+
+=== Key modulator methods
+
+* `serviceAnnotations()` - returns set of annotations that are aliases for `@Service`
+* `onInit()` - called when the modulator is initialized
+* `onRoundStart()/onRoundStop()` - called at the beginning/end of each processing round
+* `onBeforeParseService()` - called before parsing a service
+* `onServiceMethodParsed()` - called when a service method is parsed
+* `onServiceParameterParsed()` - called when a service parameter is parsed
+* `onInitTeleService()` - called to initialize tele-service
+* `onBeforeParseTeleService()` - called before parsing tele-service
+* `onTeleParameterParsed()` - called when a tele-parameter is parsed
+* `onServiceParsed()` - called after service parsing is complete
+* `onGenerateIocProducer()` - called when generating the IoC producer
+
+=== Creating a custom modulator
+
+[source,java]
+----
+public class CustomModulator extends Modulator {
+    @Override
+    public Set<Class<? extends Annotation>> serviceAnnotations() {
+        return Set.of(CustomService.class);
+    }
+
+    @Override
+    public void onServiceMethodParsed(ServiceMethodElement method) {
+        if (method.originMethod().annotation(CustomIntercept.class) != null) {
+            method.addInterception("CUSTOM_PHASE", new InterceptionElement(
+                CodeBlock.builder()
+                    .add("customInterceptor::intercept")
+                    .build()
+            ));
+        }
+    }
+}
+----
+
+=== Modulator listening order
+
+Modulators can specify when they should receive events relative to other modulators:
+
+[source,java]
+----
+@Override
+public ListenOrder listenOrder(Class<? extends Modulator> thatModulator) {
+    if (thatModulator == SomeOtherModulator.class) {
+        return ListenOrder.BEFORE;
+    }
+    return ListenOrder.NO_MATTER;
+}
+----
+
+=== Modulator registration
+
+Modulators are discovered via `ServiceLoader` at compile time.
+Register your modulator in:
+`META-INF/services/colesico.framework.service.codegen.modulator.Modulator`
+
+== TeleServiceModulator
+
+For remote invocation support, extend `TeleServiceModulator<T>`:
+
+* `teleType()` - returns the tele-type identifier class
+* `isTeleServiceSupported()` - determines if a tele-facade should be generated
+* `createTeleService()` - creates the tele-service element
+* `generateCommandsMethodBody()` - generates the commands registry method body
+* `processTeleCommand()` - called after a tele-command is parsed (for customization)
+* `processTeleService()` - called after the tele-service is parsed (for customization)
+
+The `TeleServiceModulator` automatically:
+- Creates tele-commands for each non-local service method
+- Adds tele-interceptor field to the service proxy
+- Generates tele-read specifications for parameters
+- Generates tele-write specifications for results
+- Binds tele-interceptor to `TELE_DATA_MAPPING` phase
+
+== Service exception handling
+
+The module provides two exception types:
+
+* `ServiceException` - general service-level exceptions
+* `ApplicationException` - business logic exceptions (should be thrown on business logic errors)
+
+Remote invocations handle exceptions through the tele-interceptor's `writeException` method,
+which writes the exception to the data port for transmission back to the client.
+
+== Maven pom.xml
+
+Specify dependency:
+
+[source,xml]
+----
+<dependency>
+    <groupId>net.colesico.framework</groupId>
+    <artifactId>colesico-service</artifactId>
+    <version>${colesico.version}</version>
+</dependency>
+----
+
+The module is transitive to `colesico-ioc` and `colesico-teleapi`.
+
+== Examples
+
+=== Basic service with remote invocation
+
+[source,java]
+----
+@Service
+public class UserService {
+    public User createUser(@BatchField("name") String name,
+                           @BatchField("email") String email) {
+        User user = new User(name, email);
+        return user;
+    }
+
+    @LocalMethod
+    public void validateUser(User user) {
+        // Local only, not exposed remotely
+    }
+}
+----
+
+=== Service with injected parameters
+
+[source,java]
+----
+@Service
+public class ConfigService {
+    public String getConfig(@InjectParam(named = "env") Environment env,
+                           @InjectParam(classed = AppConfig.class) AppConfig appConfig,
+                           @BatchField("key") String key) {
+        return env.getProperty(key) + ":" + appConfig.getDefaultValue();
+    }
+}
+----
+
+=== Custom interceptor via modulator
+
+[source,java]
+----
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface RateLimited {
+    int limit() default 100;
+}
+
+public class RateLimitModulator extends Modulator {
+    @Override
+    public void onServiceMethodParsed(ServiceMethodElement method) {
+        AnnotationAssist<RateLimited> rateAnn = method.originMethod().annotation(RateLimited.class);
+        if (rateAnn != null) {
+            method.addInterception(InterceptionPhases.RATE_LIMITING,
+                new InterceptionElement(
+                    CodeBlock.builder()
+                        .add("rateLimitInterceptor::intercept")
+                        .build(),
+                    CodeBlock.builder()
+                        .add("new $T($L)", RateLimitOptions.class, rateAnn.unwrap().limit())
+                        .build()
+                )
+            );
+        }
+    }
+}
+----

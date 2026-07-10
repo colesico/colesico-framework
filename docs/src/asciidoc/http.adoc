@@ -1,0 +1,163 @@
+[[intro]]
+= Colesico-HTTP
+:toc:
+:toclevels: 5
+:numbered:
+
+== What is Colesico-HTTP
+
+Colesico-HTTP is a unified HTTP API module that provides a consistent abstraction layer for HTTP request/response handling across different web servers and frameworks. It defines common interfaces for HTTP primitives without tying to any specific implementation.
+
+== Key features
+
+* HTTP request/response abstraction (server-agnostic)
+* HttpSession abstraction
+* HttpCookie abstraction with SameSite support
+* HttpFile abstraction for file uploads
+* HttpValues map for headers, parameters, cookies
+* HttpContext bound to task scope
+* Integration with IoC container
+
+== Core concepts
+
+=== HttpRequest
+
+Represents an incoming HTTP request. Provides access to method, path, headers, cookies, query parameters, form data, uploaded files, and request body.
+
+[source,java]
+----
+public interface HttpRequest {
+    HttpMethod method();
+    String path();
+    String queryString();
+    HttpValues<String, String> headers();
+    HttpValues<String, HttpCookie> cookies();
+    HttpValues<String, String> queryParameters();
+    HttpValues<String, String> formData();
+    HttpValues<String, HttpFile> files();
+    InputStream inputStream();
+}
+----
+
+=== HttpResponse
+
+Represents an HTTP response. Allows setting status, headers, cookies, and sending response body.
+
+[source,java]
+----
+public interface HttpResponse {
+    HttpResponse setStatus(Integer code);
+    HttpResponse addHeader(String name, String value);
+    HttpResponse addCookie(HttpCookie cookie);
+    OutputStream outputStream();
+    void close();
+    boolean isCommitted();
+    // convenience: setContentType, send(byte[]), send(String)
+}
+----
+
+=== HttpContext
+
+Holds request and response for the current HTTP request. Stored in `TaskScope` under `HttpContext.SCOPE_KEY`.
+
+[source,java]
+----
+public final class HttpContext {
+    public static final Key<HttpContext> SCOPE_KEY = new TypeKey<>(HttpContext.class);
+    public HttpRequest request();
+    public HttpResponse response();
+    public HttpRequest setRequest(HttpRequest request);
+    public HttpResponse setResponse(HttpResponse response);
+}
+----
+
+=== HttpMethod
+
+Typed HTTP methods with predefined constants: `HTTP_METHOD_GET`, `HTTP_METHOD_POST`, `HTTP_METHOD_PUT`, `HTTP_METHOD_DELETE`, etc.
+
+=== HttpValues
+
+Read-only multi-value map used for headers, cookies, parameters, form data, and files.
+
+=== HttpCookie
+
+Cookie abstraction with support for `SameSite`, `Secure`, `HttpOnly`, `MaxAge`, `Expires`, `Domain`, `Path`.
+
+=== HttpFile
+
+Uploaded file abstraction with `fileName()`, `contentType()`, `inputStream()`, and `release()`.
+
+=== HttpSession
+
+Session abstraction with `get()`, `set()`, `remove()`, `provide()`, `invalidate()`, and `names()`.
+
+== Built-in producers
+
+`HttpProducer` allows constructor injection of HTTP objects:
+
+[source,java]
+----
+public class MyHandler {
+    private final HttpRequest request;
+    private final HttpResponse response;
+
+    public MyHandler(HttpRequest request, HttpResponse response) {
+        this.request = request;
+        this.response = response;
+    }
+}
+----
+
+== Utility methods
+
+`HttpUtils.setCookies()` and `HttpUtils.setHeaders()` for bulk operations.
+
+== HTTP exceptions
+
+`HttpException` includes an HTTP status code.
+
+== Maven pom.xml
+
+[source,xml]
+----
+<dependency>
+    <groupId>net.colesico.framework</groupId>
+    <artifactId>colesico-http</artifactId>
+    <version>${colesico.version}</version>
+</dependency>
+----
+
+== Example
+
+[source,java]
+----
+@Service
+public class UserService {
+    private final HttpRequest request;
+    private final HttpResponse response;
+    private final HttpCookieFactory cookieFactory;
+
+    public UserService(HttpRequest request, HttpResponse response, HttpCookieFactory cookieFactory) {
+        this.request = request;
+        this.response = response;
+        this.cookieFactory = cookieFactory;
+    }
+
+    public void handle() {
+        String userId = request.queryParameters().get("id");
+        String name = request.formData().get("name");
+        
+        HttpFile avatar = request.files().get("avatar");
+        if (avatar != null) {
+            try (InputStream is = avatar.inputStream()) {
+                // process file
+            } finally {
+                avatar.release();
+            }
+        }
+        
+        response.addCookie(cookieFactory.create("session", userId).setPath("/").setHttpOnly(true));
+        response.setStatus(200).setContentType("application/json").send("{\"result\":\"ok\"}");
+    }
+}
+----

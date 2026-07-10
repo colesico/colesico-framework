@@ -1,13 +1,317 @@
 [[intro]]
-
 = Colesico-TeleAPI
+:toc:
+:toclevels: 5
+:numbered:
 
-The module is generally not intended for use in client applications using the framework,
-but is used mainly for internal purposes.
+== What is Colesico-TeleAPI
 
-It is used for unification the  remote method invocations API.
-For example http request processing (weblet, restlet modules) uses this module to implement
-remote method invocations.
+Colesico-TeleAPI is a core infrastructure module that provides a unified API for remote method invocations. It serves as the foundation for various protocol-specific modules (HTTP, WebSocket, gRPC, etc.) to implement remote procedure calls (RPC) in a consistent manner.
 
-TeleAPI does not directly provide any remote method call implementation.
-Implementation is provided by specific modules (weblet, restlet, rpc, e.t.c.)
+The module does not provide any specific remote call implementation itself. Instead, it defines the contracts and abstractions that concrete implementations (such as `weblet`, `restlet`, or custom RPC modules) must follow to enable remote method execution.
+
+== Key features
+
+* Unified tele-invocation abstraction (`TeleFacade`, `TeleCommand`, `TeleController`)
+* Data port abstraction for protocol-specific data exchange (`DataPort`)
+* Reader/writer pattern for type-safe data transformation (`TeleReader`, `TeleWriter`)
+* Factory for dynamic reader/writer resolution (`TeleFactory`)
+* Task scope integration for request context binding
+* Schema generation support (`TeleScheme`)
+* Built-in test implementations (`NullDataPort`, `SimpleDataPort`)
+
+== Core concepts
+
+=== TeleFacade
+
+`TeleFacade` is the central abstraction that represents a collection of remotely invocable methods (tele-commands). It serves as a facade between the client and the actual service implementation.
+
+Each tele-facade:
+- Is associated with a target service (the object whose methods are invoked remotely)
+- Provides a registry of available tele-commands via the `commands()` method
+- Is discovered and registered with `TeleController` at startup
+
+[source,java]
+----
+abstract public class TeleFacade<T, C extends TeleFacade.CommandsRegistry> {
+    protected final Provider<T> targetProvider;
+    abstract public C commands();
+}
+----
+
+=== TeleCommand
+
+`TeleCommand` is a functional interface representing a closure that invokes a target service method. Each tele-command encapsulates the logic to call a specific method on the target service.
+
+[source,java]
+----
+@FunctionalInterface
+public interface TeleCommand {
+    void execute();
+}
+----
+
+=== TeleController
+
+`TeleController` orchestrates the entire tele-invocation process. It:
+
+* Resolves incoming invocation requests against registered tele-facades using `resolve(Criteria)`
+* Creates the appropriate `DataPort` for the invocation
+* Executes the tele-command with the data port bound to the current execution context
+* Handles errors and exceptions
+
+[source,java]
+----
+public interface TeleController<Q extends Criteria, I extends Invocation, C extends CommandsRegistry> {
+    Optional<I> resolve(Q criteria);
+    void execute(I invocation);
+    void register(TeleFacade<?, C> teleFacade);
+}
+----
+
+=== DataPort
+
+`DataPort` is the gateway for data exchange with a remote source (HTTP request/response, gRPC stream, message queue, etc.). It abstracts away protocol-specific details and provides a unified interface for reading input data and writing output data.
+
+The DataPort interface declares three key methods:
+- `read(R options)` - reads a value using the given read options
+- `read(Type baseType, Object metadata)` - convenience method that creates read options internally
+- `write(V value, W options)` - writes a value using the given write options
+- `write(V value, Type baseType, Object metadata)` - convenience method that creates write options internally
+
+[source,java]
+----
+public interface DataPort<R extends ReadOptions, W extends WriteOptions> {
+    <V> V read(R options);
+    <V> V read(Type baseType, Object metadata);
+    <V> void write(V value, W options);
+    <V> void write(V value, Type baseType, Object metadata);
+}
+----
+
+==== ReadOptions and WriteOptions
+
+These are implementation-dependent option types that specify how and what to read or write:
+
+[source,java]
+----
+public interface ReadOptions {
+    Type baseType();           // Expected Java type of the value
+    Object metadata();         // Custom data attached to options
+    default Class<? extends TeleReader<?, ?>> customReader(); // Override default reader
+    default <M> M metadataAs(Class<M> type);
+}
+
+public interface WriteOptions {
+    Type baseType();           // Base type of the value being written
+    Object metadata();         // Custom data attached to options
+    default Class<? extends TeleWriter<?, ?>> customWriter(); // Override default writer
+    default <M> M metadataAs(Class<M> type);
+}
+----
+
+=== TeleReader and TeleWriter
+
+`TeleReader` and `TeleWriter` are stateless singletons that perform the actual type-specific data transformation. They are responsible for:
+
+* Extracting values from raw protocol objects (HTTP headers, query parameters, form data)
+* Converting between wire formats and Java types
+* Writing Java values to protocol-specific output
+
+[source,java]
+----
+@FunctionalInterface
+public interface TeleReader<V, O extends ReadOptions> {
+    V read(O options);
+}
+
+@FunctionalInterface
+public interface TeleWriter<V, O extends WriteOptions> {
+    void write(V value, O options);
+}
+----
+
+=== TeleFactory
+
+`TeleFactory` provides dynamic resolution of readers and writers from the IoC container. It supports:
+
+* Retrieving readers/writers by their exact class via `reader(Class)` and `writer(Class)`
+* Finding readers/writers for a specific base type using `@Classed` qualifiers
+* Multiple reader/writer base classes for fallback resolution
+
+[source,java]
+----
+public final class TeleFactory {
+    public <R extends TeleReader<?, ?>> R reader(Class<R> readerClass);
+    public <W extends TeleWriter<?, ?>> W writer(Class<W> writerClass);
+    
+    public <R extends TeleReader<?, ?>> R provideReader(Type baseType, Class<? extends TeleReader>... readerBaseClasses);
+    public <R extends TeleReader<?, ?>> R findReader(Type baseType, Class<? extends TeleReader>... readerBaseClasses);
+    
+    public <W extends TeleWriter<?, ?>> W provideWriter(Type baseType, Class<? extends TeleWriter>... writerBaseClasses);
+    public <W extends TeleWriter<?, ?>> W findWriter(Type baseType, Class<? extends TeleWriter>... writerBaseClasses);
+}
+----
+
+=== TeleScheme
+
+`TeleScheme` represents an API formalization — a formal description of invocation rules, data structures, and endpoints. It allows generating concrete API schemas (e.g., OpenAPI specification) from Java code.
+
+[source,java]
+----
+public interface TeleScheme<S> {
+    S build();
+}
+----
+
+=== TeleInterceptor
+
+`TeleInterceptor` is a base class for intercepting tele-invocation execution. It provides:
+
+* A protected `writeException(Exception, DataPort)` method for writing exceptions to the data port
+* A `dataPortProvider` field for accessing the current data port
+* A logger for error reporting
+
+[source,java]
+----
+public class TeleInterceptor<R extends ReadOptions, W extends WriteOptions> {
+    protected final Provider<DataPort<R, W>> dataPortProvider;
+    protected void writeException(Exception exception, DataPort<R, W> dataPort);
+}
+----
+
+== TaskScope integration
+
+TeleAPI integrates with `TaskScope` to maintain the current `DataPort` for each execution context. The `DataPort.SCOPE_KEY` is used to store the data port instance in the task scope:
+
+[source,java]
+----
+Key<DataPort> SCOPE_KEY = new TypeKey<>(DataPort.class);
+----
+
+The built-in `TeleApiProducer` provides a data port instance from the current task scope:
+
+[source,java]
+----
+@Unscoped
+public DataPort dataPort(TaskScope scope) {
+    DataPort port = scope.get(DataPort.SCOPE_KEY);
+    if (port == null) {
+        throw new TeleException("Data port for the active thread is not provided");
+    }
+    return port;
+}
+----
+
+This design allows any component in the execution chain to access the current data port without passing it explicitly.
+
+== Built-in implementations
+
+=== NullDataPort
+
+A no-op data port implementation that:
+- Always returns `null` on read
+- Logs all operations without performing any action
+- Useful for testing, debugging, or environments where data port is not required
+
+[source,java]
+----
+@Singleton
+public final class NullDataPort implements DataPort<NullDataPort.ReadOptions, NullDataPort.WriteOptions> {
+    public void provide();
+    public void forTask(Runnable task);
+}
+----
+
+=== SimpleDataPort
+
+An in-memory data port implementation that:
+- Stores all values in a concurrent map keyed by type
+- Supports read/write operations without external dependencies
+- Ideal for testing, prototyping, or local execution
+
+[source,java]
+----
+@Singleton
+public final class SimpleDataPort implements DataPort<SimpleDataPort.ReadOptions, SimpleDataPort.WriteOptions> {
+    public void provide();
+    public void forTask(Runnable task);
+    public Map<Type, ?> values();
+    public void clear();
+}
+----
+
+Both implementations provide `provide()` and `forTask(Runnable)` methods for binding the data port to the current task scope.
+
+== Exception handling
+
+`TeleException` is the base exception class for tele-api related errors. It should be extended by any exceptions related to tele-invocation handling.
+
+== Maven pom.xml
+
+[source,xml]
+----
+<dependency>
+    <groupId>net.colesico.framework</groupId>
+    <artifactId>colesico-teleapi</artifactId>
+    <version>${colesico.version}</version>
+</dependency>
+----
+
+The module is transitive to `colesico-ioc`.
+
+== Integration example
+
+=== Creating a tele-reader
+
+[source,java]
+----
+@Singleton
+@Classed(String.class)  // Reader for String type
+public class StringHeaderReader implements TeleReader<String, ReadOptions> {
+    @Override
+    public String read(ReadOptions options) {
+        // Extract from HTTP header, query parameter, etc.
+        // Implementation depends on the protocol
+        return extractValue(options);
+    }
+}
+----
+
+=== Using TeleFactory to resolve reader
+
+[source,java]
+----
+public class MyService {
+    private final TeleFactory teleFactory;
+
+    public MyService(TeleFactory teleFactory) {
+        this.teleFactory = teleFactory;
+    }
+
+    public void process(Type valueType) {
+        TeleReader<?, ?> reader = teleFactory.provideReader(
+            valueType, 
+            HeaderReader.class, 
+            QueryParamReader.class
+        );
+        Object value = reader.read(new ReadOptions(valueType));
+        // Process value...
+    }
+}
+----
+
+=== Registering a tele-facade
+
+[source,java]
+----
+public class MyController implements TeleController<Criteria, Invocation, CommandsRegistry> {
+    private final Map<String, TeleFacade<?, CommandsRegistry>> facades = new HashMap<>();
+
+    @Override
+    public void register(TeleFacade<?, CommandsRegistry> teleFacade) {
+        // Add to internal registry by facade class name or custom criteria
+        facades.put(teleFacade.getClass().getName(), teleFacade);
+    }
+}
+----

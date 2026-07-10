@@ -88,9 +88,11 @@ abstract public class SingleConfigPrototype {
 // Implementation - provides actual values
 @Config
 public class SingleConfig extends SingleConfigPrototype {
+    private int counter = 0;
+
     @Override
     public String getValue() {
-        return "Configured value";
+        return "Single" + (counter++);
     }
 }
 ----
@@ -163,7 +165,7 @@ This model is ideal for plugin systems, feature flags, or any scenario where mul
 === Message model
 
 Configuration is not injected directly. Instead, it is passed as an IoC message to a target bean.
-The client injects the target bean with `@Classed` qualifier specifying which configuration to use.
+The client injects the target bean with `@Classed` qualifier specifying which configuration implementation to use.
 
 [source,java]
 ----
@@ -173,7 +175,7 @@ abstract public class ServiceConfigPrototype {
     abstract public String getEndpoint();
 }
 
-// Config implementations
+// Configuration implementations
 @Config
 public class DevServiceConfig extends ServiceConfigPrototype {
     @Override
@@ -200,10 +202,10 @@ public class ServiceBean {
     }
 }
 
+// Producer for target bean - MUST be classified by configuration prototype class
 @Producer
-@Produce(value=ServiceBean.class, classed=ServiceConfigPrototype.class)
-public class ServiceProducer {
-
+@Produce(value = ServiceBean.class, classed = ServiceConfigPrototype.class)
+public class ServiceBeanProducer {
 }
 ----
 
@@ -215,7 +217,6 @@ public class Client {
     private final ServiceBean devService;
     private final ServiceBean prodService;
 
-    @Inject
     public Client(@Classed(DevServiceConfig.class) ServiceBean devService,
                   @Classed(ProdServiceConfig.class) ServiceBean prodService) {
         this.devService = devService;
@@ -224,12 +225,13 @@ public class Client {
 }
 ----
 
-The target bean must be `@Unscoped` because each injection point needs its own instance with its own configuration message. 
+The target bean must be `@Unscoped` because each injection point needs its own instance with its own configuration message.
 
-The target bean production must be *classified (@Classed) by the configuration prototype class*.
+The target bean production must be classified (`@Classed`) by the configuration prototype class, as shown in the producer example.
 
-Use `@DefaultMessage` on configuration implementation to able
-inject target bean without `@Classed` annotation:
+==== Default message
+
+Use `@DefaultMessage` on a configuration implementation to allow injecting the target bean without specifying `@Classed`:
 
 [source,java]
 ----
@@ -240,9 +242,13 @@ public class DefaultServiceConfig extends ServiceConfigPrototype {
     public String getEndpoint() { return "http://default.service.com"; }
 }
 
-@Inject
-public Client(ServiceBean defaultService) {
-    ...
+// Usage - no @Classed needed, DefaultServiceConfig will be used
+public class Client {
+    private final ServiceBean defaultService;
+
+    public Client(ServiceBean defaultService) {
+        this.defaultService = defaultService;
+    }
 }
 ----
 
@@ -282,15 +288,31 @@ myapp.enabled=true
 * `@FromSource` - marks a field to be bound from source (used when `bindAll = false`).
 * `@NotFromSource` - excludes a field from binding (used when `bindAll = true`).
 
+By default, `@UseSource` has `bindAll = true`, meaning all fields are bound from the source unless marked with `@NotFromSource`:
+
 [source,java]
 ----
 @Config
-@UseSource(bindAll = true)
+@UseSource(bindAll = true) // bindAll is true by default
 public class SampleConfig {
     @NotFromSource
     private String manual; // Not bound
 
     private String auto; // Bound (bindAll = true)
+}
+----
+
+When `bindAll = false`, only fields marked with `@FromSource` are bound:
+
+[source,java]
+----
+@Config
+@UseSource(bindAll = false)
+public class SampleConfig {
+    @FromSource
+    private String bound; // Bound
+
+    private String notBound; // Not bound
 }
 ----
 
@@ -303,6 +325,8 @@ By default, `PropertiesSource` looks for files in this order:
 
 You can customize with `@UseFileSource` parameters:
 
+* `type` - config source type (default: `ConfigSource.class`, meaning `PropertiesSource` will be used if available)
+* `bindAll` - bind all fields from source (default: `true`)
 * `file` - file name (default: `application.properties`)
 * `directory` - external directory (default: `./config`)
 * `classpath` - classpath directory (default: `META-INF`)
@@ -354,6 +378,38 @@ Corresponding properties:
 db.settings.url=jdbc:mysql://localhost:3306/mydb
 db.settings.username=root
 db.settings.password=secret
+----
+
+=== Additional source options
+
+Use `@SourceOption` or `@SourceOptions` to pass additional parameters to the configuration source:
+
+[source,java]
+----
+@Config
+@UseSource(type = CustomSource.class)
+@SourceOption(name = "param1", value = "value1")
+@SourceOption(name = "param2", value = "value2")
+public class CustomSourceConfig {
+    @FromSource
+    private String value;
+}
+----
+
+`@SourceOption` is repeatable, or you can use `@SourceOptions` to group multiple options:
+
+[source,java]
+----
+@Config
+@UseSource(type = CustomSource.class)
+@SourceOptions({
+    @SourceOption(name = "param1", value = "value1"),
+    @SourceOption(name = "param2", value = "value2")
+})
+public class CustomSourceConfig {
+    @FromSource
+    private String value;
+}
 ----
 
 == Custom configuration source
@@ -447,6 +503,8 @@ Specify dependency:
 
 The module is transitive to `colesico-ioc`, so no additional configuration is needed.
 
+The annotation processor is automatically registered via `ServiceLoader` (see `META-INF/services/javax.annotation.processing.Processor`).
+
 == Examples
 
 See full source code in the framework source code section `#examples/config-example/`.
@@ -507,6 +565,11 @@ public class ClientBean {
     }
 
     public String getApiUrl() { return config.getApiUrl(); }
+}
+
+@Producer
+@Produce(value = ClientBean.class, classed = ClientConfigPrototype.class)
+public class ClientBeanProducer {
 }
 ----
 

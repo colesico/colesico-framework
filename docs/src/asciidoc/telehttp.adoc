@@ -1,0 +1,187 @@
+[[intro]]
+= Colesico-TeleHTTP
+:toc:
+:toclevels: 5
+:numbered:
+
+== What is Colesico-TeleHTTP
+
+Colesico-TeleHTTP is a concrete implementation of the TeleAPI abstraction for the HTTP protocol. It provides HTTP-specific readers, writers, origins, and response types that enable seamless remote method invocation over HTTP.
+
+The module integrates with:
+- `colesico-http` - HTTP API abstraction
+- `colesico-httprouter` - HTTP routing
+- `colesico-service` - Service framework
+- `colesico-security` - Security and authentication
+- `colesico-translation` - Internationalization
+
+== Key features
+
+* HTTP-specific DataPort implementation
+* Origin-based parameter reading (headers, cookies, query, body, route)
+* Type-safe readers for primitive and complex types
+* Response builders for various content types
+* CSRF protection
+* Profile (locale) management
+* Basic HTTP authentication support
+* Custom reader/writer support via annotations
+
+== Core concepts
+
+=== HttpDataPort
+
+`HttpDataPort` is the HTTP-specific implementation of `DataPort`. It provides dynamic reader and writer resolution based on parameter type and origin.
+
+For reading, the data port:
+1. Checks if a custom reader is specified in options
+2. Finds a reader by the parameter's base type using `TeleFactory`
+3. Falls back to the default object reader if no specific reader is found
+
+For writing, the data port:
+1. Checks if a custom writer is specified in options
+2. Finds a writer by the value's runtime class
+3. Finds a writer by the base type
+4. Falls back to the default object writer
+5. Handles exceptions specially by finding appropriate exception writers
+
+The `HttpDataPort` is abstract and must be extended by concrete protocol implementations (e.g., for specific HTTP server adapters).
+
+=== Origin
+
+`Origin` defines the strategy for reading string values from an HTTP request. Each origin implementation retrieves values from a specific HTTP source. The `OriginFactory` provides access to origin instances by name, allowing dynamic origin resolution based on `@ParamOrigin` annotations.
+
+The available origins are:
+- `AUTO` - automatically selects based on HTTP method and available data
+- `HEADER` - reads from HTTP headers (supports multi-value headers)
+- `COOKIE` - reads from cookies
+- `ROUTE` - reads from route path parameters
+- `QUERY` - reads from query string parameters
+- `POST` - reads from form data (application/x-www-form-urlencoded)
+- `BODY` - reads the entire request body as a string
+
+Each origin returns `Iterable<String>` to support multi-value parameters (e.g., multiple query parameters with the same name).
+
+=== HttpReadOptions and HttpWriteOptions
+
+These interfaces extend TeleAPI's options with HTTP-specific metadata:
+
+`HttpReadOptions` adds:
+- `paramName` - the name of the HTTP parameter to read (header name, cookie name, query param name, etc.)
+- `originName` - the origin to read from (HEADER, QUERY, POST, etc.)
+
+`HttpWriteOptions` adds:
+- `statusCode` - default HTTP status code for the response
+- `contentType` - default content type for the response
+
+=== HttpReader and HttpWriter
+
+`HttpReader` and `HttpWriter` are functional interfaces that extend `TeleReader` and `TeleWriter`. They are stateless singletons responsible for type-safe data transformation between HTTP and Java types.
+
+=== ContentType
+
+`ContentType` provides type-safe representation of HTTP content types with charset support. Predefined constants include `TEXT_PLAIN`, `TEXT_HTML`, `APPLICATION_JSON`, `APPLICATION_XML`, `APPLICATION_OCTET_STREAM`, and `MULTIPART_FORM_DATA`.
+
+== Parameter reading
+
+When a service method is invoked remotely over HTTP, each parameter is read from the HTTP request using `@ParamOrigin` and `@ParamName` annotations.
+
+The reading process works as follows:
+1. `HttpDataPort` receives a read request with `HttpReadOptions` containing the parameter name and origin
+2. It resolves the appropriate `HttpReader` via `TeleFactory` (by custom reader, base type, or fallback)
+3. The reader obtains the origin from `OriginFactory`
+4. The origin retrieves string values from the HTTP request
+5. The reader converts the string(s) to the target type
+
+If `@ParamOrigin` is not specified, `AUTO` origin is used, which selects the appropriate source based on the HTTP method. If `@ParamName` is not specified, the parameter name is used as the HTTP parameter name.
+
+=== Built-in readers
+
+The module provides readers for all common Java types: `String`, `Boolean`, `Character`, `Byte`, `Short`, `Integer`, `Long`, `Float`, `Double`, `OptionalInt`, `OptionalLong`, `Date` (ISO 8601 format), `LocalDate`, `LocalTime`, `LocalDateTime`, `HttpFile`, and `Profile`.
+
+`HttpFileReader` handles file uploads from multipart requests. It retrieves the file from the request's file map.
+
+`ProfileReader` extracts user profile information from cookies (`profile` cookie) and headers (`x-profile` header), falling back to `Accept-Language` header to determine the user's locale.
+
+== HTTP Responses
+
+The module provides a comprehensive response hierarchy. All responses extend `TeleHttpResponse` and support a fluent builder API for setting status code, content type, headers, and cookies.
+
+=== TeleHttpResponse
+
+Base class containing common HTTP response metadata: status code, content type, headers, and cookies. It provides `addHeader()` and `addCookie()` methods for building responses and a `toDynamic()` method for polymorphic response handling.
+
+=== ValueResponse
+
+Abstract base class for responses that carry a value (String, bytes, object, exception). All value-based responses extend this class and support the builder pattern.
+
+=== Response types
+
+`StringResponse` is for plain text and HTML responses. It provides convenience factory methods `text()` and `html()`.
+
+`BytesResponse` is for binary data responses such as images or files.
+
+`ObjectResponse` is for object responses, typically serialized to JSON or XML.
+
+`RedirectResponse` performs HTTP redirect (302 Found). Supports redirect by URL, service class + method name, or manual navigation.
+
+`ForwardResponse` performs internal server-side forward, routing the request to another handler without sending a redirect to the client.
+
+`ExceptionResponse` wraps exceptions for error responses, automatically mapping exception types to appropriate status codes.
+
+`DynamicResponse` is a wrapper for polymorphic responses when the exact response type is not known at compile time.
+
+=== Response writers
+
+Each response type has a corresponding writer:
+- `StringResponseWriter` - writes text with charset support
+- `BytesResponseWriter` - writes binary data
+- `ToStringObjectResponseWriter` - writes objects using `toString()`
+- `RedirectWriter` - performs HTTP redirect
+- `ForwardWriter` - performs internal forward
+- `ExceptionResponseWriter` - writes error responses
+- `ExceptionWriter` - fallback writer for any exception
+- `ToStringObjectWriter` - fallback writer for any object
+- `ProfileWriter` - writes profile to cookie and header
+
+Status code resolution follows this precedence:
+1. Response's own status code
+2. Options status code
+3. Writer's default status code (200)
+4. Empty response status code (204)
+
+Exception status code mapping:
+- `UnauthenticatedException` → 401
+- `UnauthorizedException` → 401
+- `HttpTeleException` → uses exception's status code or 500
+- Other exceptions → 500
+
+== CSRF protection
+
+`CSRFProtector` provides CSRF protection based on Origin and Referer header validation. It only validates unsafe methods (POST, PUT, DELETE, PATCH). Safe methods (GET, HEAD, OPTIONS) are skipped. It adds `Referrer-Policy: strict-origin-when-cross-origin` header to responses to enforce browser referrer policy.
+
+== Profile management
+
+`ProfileReader` and `ProfileWriter` work together to manage user profile information (locale, etc.). Profile data is stored in the `profile` cookie and `x-profile` header. The locale is extracted from the profile or falls back to `Accept-Language` header. `ProfileWriterConfigPrototype` allows configuration of cookie validity days (default 365).
+
+== HTTP Basic authentication
+
+`HttpBasic` implements `AuthenticationSource` for HTTP Basic authentication. It extracts credentials from the `Authorization` header and supports authentication challenges via `WWW-Authenticate` header with realm configuration.
+
+== Custom readers and writers
+
+Custom readers implement `HttpReader` and can be registered with `@Classed` qualifier by the value type. The `@UseReader` annotation on parameters specifies a custom reader for that specific parameter.
+
+Custom writers implement `HttpWriter` and can be registered with `@Classed` qualifier by the value type. The `@UseWriter` annotation on methods or types specifies a custom writer.
+
+== Maven pom.xml
+
+[source,xml]
+----
+<dependency>
+    <groupId>net.colesico.framework</groupId>
+    <artifactId>colesico-telehttp</artifactId>
+    <version>${colesico.version}</version>
+</dependency>
+----
+
+The module is transitive to: `colesico-ioc`, `colesico-config`, `colesico-service`, `colesico-http`, `colesico-httprouter`, `colesico-security`, `colesico-translation`.
