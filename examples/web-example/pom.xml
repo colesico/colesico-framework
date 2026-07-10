@@ -63,7 +63,7 @@
 
         <dependency>
             <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-web-static</artifactId>
+            <artifactId>colesico-webstatic</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
