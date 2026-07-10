@@ -38,6 +38,16 @@ public final class ThreadScopeImpl implements ThreadScope {
     }
 
     @Override
+    public void forTask(Runnable task) {
+        dataHolder.get().clear();
+        try {
+            task.run();
+        } finally {
+            dataHolder.remove();
+        }
+    }
+
+    @Override
     public <T> void remove(Key<T> key) {
         dataHolder.get().remove(key);
     }
@@ -71,13 +81,4 @@ public final class ThreadScopeImpl implements ThreadScope {
         dataHolder.get().put(key, value);
     }
 
-    @Override
-    public void open() {
-        dataHolder.get().clear();
-    }
-
-    @Override
-    public void close() {
-        dataHolder.remove();
-    }
 }

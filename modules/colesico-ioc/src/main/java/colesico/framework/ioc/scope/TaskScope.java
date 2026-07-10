@@ -40,11 +40,6 @@ public interface TaskScope extends Scope {
      * Executes a {@link Runnable} task inside a new task scope bound to this {@code TaskScope} instance.
      * A fresh empty map is bound to the current thread for the duration of the task
      * and automatically discarded afterwards.
-     *
-     * @param task the task to run
-     * @throws IllegalStateException if a scope is already active for this thread
-     *                               that was created by the same {@code TaskScope} instance
-     *                               (nested scopes are not allowed)
      */
     void forTask(Runnable task);
 }
