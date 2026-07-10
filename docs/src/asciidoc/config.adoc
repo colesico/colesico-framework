@@ -1,71 +1,555 @@
 [[intro]]
-
 = Colesico-Config
+:toc:
+:toclevels: 5
+:numbered:
 
-This module automates the usage of configuration beans and integrates them with the IoC container.
+== What is Colesico-Config
 
-In general, colesico configuration bean is a class with methods that returns or sets some configurations values.
-For example it may be used to provide for an endpoint address or  configure a JDBC DataSource instance
-or apply some actions on various builders passed to configuration beans.
+Colesico-Config is a configuration management module that automates the usage of configuration beans and integrates them seamlessly with the IoC container.
 
-Configuration beans can be obtained from IoC container.
+A configuration bean is a class that provides configuration values - endpoint addresses, DataSource settings, or any other application parameters. These beans can be obtained from the IoC container like regular beans, with the added benefit of external source binding and prototype-based configuration models.
+
+== Key features
+
+* Declarative configuration beans via `@Config` annotation
+* Three prototype-based configuration models: Single, Polyvariant, and Message
+* External configuration sources support (properties files out-of-the-box)
+* Automatic value binding from configuration sources to bean fields
+* Integration with IoC container (singleton scope by default)
+* Support for conditional and substitutable configurations
+* Custom configuration sources support (YAML, database, HTTP resources)
+
+== Configuration bean types
 
 There are two configuration bean types:
 
-1. Simple configuration bean. This is just a pojo class annotated with @Config annotation.
-   It can be used to the directly definition and supplying configuration values.
-2. Prototype-based configuration bean. This type of beans  is an instance of a class extends
-   a configuration "prototype" class ("template"). This type of configuration is used to deferred configuration definition.
-   For example a Service can define configuration prototype bean, and the Client can create configuration based on that prototype to
-   provide some configurations to the Service.
+. *Simple configuration bean* - a plain POJO class annotated with `@Config`.
+   Used for direct definition and supplying configuration values.
 
-Configuration bean can provide hard coded values or load it from external sources (properties/yaml files, database, etc.).
-Module has build-in support for an external configuration value sources:
-
-* @UseSource annotation defines configuration source (*.properties file source supported out-of-the-box.
-  Support - for yaml files or database, etc. can be additionally implemented)
-* @SourceOption annotation is used to define configuration source custom option. For example specify a configuration file name.
-* @FromSource annotation defines the value to be bound from data source.
-* @UseFileSource - defines file-based config source. It is shortcut, internally
-  framework converts it to @UseSource and @SourceOption(name = ..., value = "...")
+. *Prototype-based configuration bean* - a class that extends a configuration "prototype" (template).
+   Used for deferred configuration definition. For example, a library can define a configuration prototype,
+   and the application can provide a concrete configuration implementation.
 
 == Simple configuration
 
-To create simple configuration bean just define a pojo class and annotate it with @Config
-annotation. The framework will generate extra code to be able to get an instance of this bean from the IoC container.
-By default, the scope of this instance is a singleton.
+To create a simple configuration bean, define a POJO class and annotate it with `@Config`.
+The framework generates code to obtain this bean from the IoC container.
+By default, the scope is singleton.
 
-== Prototype-based configuration
+[source,java]
+----
+@Config
+public class SimpleConfig {
+    private String value;
 
-Config module supports different prototype-based configuration models:
+    @PostConstruct
+    public void init() {
+        value = "Simple";
+    }
 
-* Single. This type of configuration is used to define some global configuration that is the only configuration instance
-  per application (per IoC container, local singleton).  The configuration in this model may be obtained from IoC container by configuration
-  prototype class name.  Named or Classed IoC qualifiers can be additionally used on config implementation to differentiate
-  config singletons.
-* Polyvariant. This type of configuration is used to define some  optional configurations or additional configurations
-  that should be "aggregated"  to fully configure the "service". I.e. it is the multiple configurations instances per
-  application, that may be obtained from injector with  Polyprovider of configuration prototype class name.
-  Each of these instances is a singleton.  Named or Classed IoC qualifiers can be additionally used on config implementation to differentiate polyvariant sets.
-* Message. Configuration of this model is not used directly via injection. To get this configuration the bean should receive configuration instance via IoC Message.
-  The client can inject that  bean by specifying the @Classed qualifier with the configuration implementation class.
-  Instance of that configuration class is also a singleton.
+    public String getValue() {
+        return value;
+    }
+}
+----
+
+Usage:
+
+[source,java]
+----
+SimpleConfig config = ioc.instance(SimpleConfig.class);
+String value = config.getValue(); // "Simple"
+----
+
+== Prototype-based configuration models
+
+The prototype-based approach allows separation between configuration *definition* (prototype) and configuration *implementation* (concrete config class). This is useful when:
+
+* A library defines what configuration it needs, and the application provides the actual values.
+* Multiple configuration variants are needed for different environments or use cases.
+* Configuration needs to be passed as a message to a target bean.
+
+Config module supports three models:
+
+=== Single model
+
+A single configuration instance per application (per IoC container, local singleton).
+The configuration can be obtained by the prototype class name.
+
+[source,java]
+----
+// Prototype - defines what configuration looks like
+@ConfigPrototype(model = ConfigModel.SINGLE)
+abstract public class SingleConfigPrototype {
+    abstract public String getValue();
+}
+
+// Implementation - provides actual values
+@Config
+public class SingleConfig extends SingleConfigPrototype {
+    @Override
+    public String getValue() {
+        return "Configured value";
+    }
+}
+----
+
+Named or Classed qualifiers can differentiate multiple single configs of the same prototype:
+
+[source,java]
+----
+@Config
+@Named("dev")
+public class DevConfig extends SingleConfigPrototype {
+    @Override
+    public String getValue() { return "dev-config"; }
+}
+
+@Config
+@Named("prod")
+public class ProdConfig extends SingleConfigPrototype {
+    @Override
+    public String getValue() { return "prod-config"; }
+}
+----
+
+=== Polyvariant model
+
+Multiple configuration instances per application, aggregated to fully configure a service.
+Configurations are obtained via `Polysupplier`.
+
+[source,java]
+----
+@ConfigPrototype(model = ConfigModel.POLYVARIANT)
+abstract public class PluginConfigPrototype {
+    abstract public String getPluginName();
+}
+
+@Config
+public class PluginA extends PluginConfigPrototype {
+    @Override
+    public String getPluginName() { return "PluginA"; }
+}
+
+@Config
+public class PluginB extends PluginConfigPrototype {
+    @Override
+    public String getPluginName() { return "PluginB"; }
+}
+----
+
+Usage:
+
+[source,java]
+----
+public class PluginManager {
+    private final Polysupplier<PluginConfigPrototype> plugins;
+
+    public PluginManager(Polysupplier<PluginConfigPrototype> plugins) {
+        this.plugins = plugins;
+    }
+
+    public List<String> getPluginNames() {
+        List<String> names = new ArrayList<>();
+        plugins.forEach(p -> names.add(p.getPluginName()), null);
+        return names; // ["PluginA", "PluginB"]
+    }
+}
+----
+
+This model is ideal for plugin systems, feature flags, or any scenario where multiple configuration pieces need to be collected.
+
+=== Message model
+
+Configuration is not injected directly. Instead, it is passed as an IoC message to a target bean.
+The client injects the target bean with `@Classed` qualifier specifying which configuration to use.
+
+[source,java]
+----
+// Prototype with target bean specified
+@ConfigPrototype(model = ConfigModel.MESSAGE, target = ServiceBean.class)
+abstract public class ServiceConfigPrototype {
+    abstract public String getEndpoint();
+}
+
+// Config implementations
+@Config
+public class DevServiceConfig extends ServiceConfigPrototype {
+    @Override
+    public String getEndpoint() { return "http://dev.service.com"; }
+}
+
+@Config
+public class ProdServiceConfig extends ServiceConfigPrototype {
+    @Override
+    public String getEndpoint() { return "http://prod.service.com"; }
+}
+
+// Target bean receives config as message
+@Unscoped
+public class ServiceBean {
+    private final ServiceConfigPrototype config;
+
+    public ServiceBean(@IocMessage ServiceConfigPrototype config) {
+        this.config = config;
+    }
+
+    public String getEndpoint() {
+        return config.getEndpoint();
+    }
+}
+
+@Producer
+@Produce(value=ServiceBean.class, classed=ServiceConfigPrototype.class)
+public class ServiceProducer {
+
+}
+----
+
+Usage:
+
+[source,java]
+----
+public class Client {
+    private final ServiceBean devService;
+    private final ServiceBean prodService;
+
+    @Inject
+    public Client(@Classed(DevServiceConfig.class) ServiceBean devService,
+                  @Classed(ProdServiceConfig.class) ServiceBean prodService) {
+        this.devService = devService;
+        this.prodService = prodService;
+    }
+}
+----
+
+The target bean must be `@Unscoped` because each injection point needs its own instance with its own configuration message. 
+
+The target bean production must be *classified (@Classed) by the configuration prototype class*.
+
+Use `@DefaultMessage` on configuration implementation to able
+inject target bean without `@Classed` annotation:
+
+[source,java]
+----
+@Config
+@DefaultMessage
+public class DefaultServiceConfig extends ServiceConfigPrototype {
+    @Override
+    public String getEndpoint() { return "http://default.service.com"; }
+}
+
+@Inject
+public Client(ServiceBean defaultService) {
+    ...
+}
+----
 
 == Configuration source
-[[sources]]
 
-The configuration source  is used to supply values to configuration beans.
-For example, it allows to assign values from *.properties or yaml files.
-Framework has an out-of-the-box support for the binding a properties files.
+Configuration sources supply values to configuration beans from external storage (properties files, databases, etc.).
+Framework has out-of-the-box support for properties files via `PropertiesSource`.
 
-==  Customized configuration source
+=== Source binding
 
-To create new custom configuration source define its class that implements ConfigSource
-interface. To use this new custom configuration source as default  define its IoC producing  with IoC producer.
-Also, it is possible to use this source directly by specifying it in @UseSource/@UseFileSource annotation.
+To bind a configuration bean to an external source:
+
+[source,java]
+----
+@Config
+@UseFileSource(file = "config.properties", prefix = "myapp")
+public class AppConfig {
+    private String host;
+    private int port;
+    private boolean enabled;
+
+    // getters and setters
+}
+----
+
+Corresponding `config.properties`:
+
+[source,properties]
+----
+myapp.host=localhost
+myapp.port=8080
+myapp.enabled=true
+----
+
+=== Field annotations
+
+* `@FromSource` - marks a field to be bound from source (used when `bindAll = false`).
+* `@NotFromSource` - excludes a field from binding (used when `bindAll = true`).
+
+[source,java]
+----
+@Config
+@UseSource(bindAll = true)
+public class SampleConfig {
+    @NotFromSource
+    private String manual; // Not bound
+
+    private String auto; // Bound (bindAll = true)
+}
+----
+
+=== Source lookup order
+
+By default, `PropertiesSource` looks for files in this order:
+
+. External directory: `./config/application.properties`
+. Classpath: `META-INF/application.properties`
+
+You can customize with `@UseFileSource` parameters:
+
+* `file` - file name (default: `application.properties`)
+* `directory` - external directory (default: `./config`)
+* `classpath` - classpath directory (default: `META-INF`)
+* `prefix` - property name prefix
+* `optional` - whether file is optional (default: `false`)
+
+[source,java]
+----
+@Config
+@UseFileSource(
+    file = "custom.properties",
+    directory = "/etc/myapp",
+    classpath = "config",
+    prefix = "app",
+    optional = true
+)
+public class CustomConfig {
+    // ...
+}
+----
+
+=== Nested objects
+
+Configuration source supports nested object binding:
+
+[source,java]
+----
+public class DatabaseSettings {
+    private String url;
+    private String username;
+    private String password;
+    // getters/setters
+}
+
+@Config
+@UseFileSource(file = "config.properties", prefix = "db")
+public class DatabaseConfig {
+    @FromSource
+    private DatabaseSettings settings;
+
+    public DatabaseSettings getSettings() { return settings; }
+}
+----
+
+Corresponding properties:
+
+[source,properties]
+----
+db.settings.url=jdbc:mysql://localhost:3306/mydb
+db.settings.username=root
+db.settings.password=secret
+----
+
+== Custom configuration source
+
+To create a custom source, implement `ConfigSource` interface:
+
+[source,java]
+----
+public interface ConfigSource {
+    Connection connect(Map<String, String> params);
+    
+    interface Connection {
+        <T> T getValue(Class<T> valueType);
+        void close();
+    }
+}
+----
+
+Register it as a bean:
+
+[source,java]
+----
+@Producer
+public class CustomSourceProducer {
+    @Singleton
+    public ConfigSource customSource(CustomSource impl) {
+        return impl;
+    }
+}
+----
+
+Then use it:
+
+[source,java]
+----
+@Config
+@UseSource(type = CustomSource.class)
+@SourceOption(name = "param1", value = "value1")
+public class CustomBoundConfig {
+    @FromSource
+    private String value;
+}
+----
+
+== Conditional and substitutable configurations
+
+Configurations support conditional inclusion and substitution, just like regular IoC beans:
+
+[source,java]
+----
+// Stub - used if no other config is declared
+@Config
+@Substitute(Substitution.STUB)
+public class DefaultConfig extends ConfigPrototype {
+    @Override
+    public String getValue() { return "default"; }
+}
+
+// Custom - replaces stub
+@Config
+public class CustomConfig extends ConfigPrototype {
+    @Override
+    public String getValue() { return "custom"; }
+}
+----
+
+Conditional inclusion with `@Requires`:
+
+[source,java]
+----
+@Config
+@Requires(DevCondition.class)
+public class DevConfig extends ConfigPrototype {
+    @Override
+    public String getValue() { return "dev"; }
+}
+----
+
+== Maven pom.xml
+
+Specify dependency:
+
+[source,xml]
+----
+<dependency>
+    <groupId>net.colesico.framework</groupId>
+    <artifactId>colesico-config</artifactId>
+    <version>${colesico.version}</version>
+</dependency>
+----
+
+The module is transitive to `colesico-ioc`, so no additional configuration is needed.
 
 == Examples
 
-See full source code in the framework source code section #examples/config-example#
+See full source code in the framework source code section `#examples/config-example/`.
 
+=== Key example: Source-bound single config
 
+[source,java]
+----
+@ConfigPrototype(model = ConfigModel.SINGLE)
+abstract public class AppConfigPrototype {
+    abstract public String getHost();
+    abstract public int getPort();
+}
+
+@Config
+@UseFileSource(file = "app.properties", prefix = "server")
+public class AppConfig extends AppConfigPrototype {
+    private String host;
+    private int port;
+
+    @Override
+    public String getHost() { return host; }
+    @Override
+    public int getPort() { return port; }
+
+    public void setHost(String host) { this.host = host; }
+    public void setPort(int port) { this.port = port; }
+}
+----
+
+=== Key example: Message model for environment-specific beans
+
+[source,java]
+----
+@ConfigPrototype(model = ConfigModel.MESSAGE, target = ClientBean.class)
+abstract public class ClientConfigPrototype {
+    abstract public String getApiUrl();
+}
+
+@Config
+public class DevClientConfig extends ClientConfigPrototype {
+    @Override
+    public String getApiUrl() { return "https://dev-api.example.com"; }
+}
+
+@Config
+public class ProdClientConfig extends ClientConfigPrototype {
+    @Override
+    public String getApiUrl() { return "https://api.example.com"; }
+}
+
+@Unscoped
+public class ClientBean {
+    private final ClientConfigPrototype config;
+
+    public ClientBean(@IocMessage ClientConfigPrototype config) {
+        this.config = config;
+    }
+
+    public String getApiUrl() { return config.getApiUrl(); }
+}
+----
+
+=== Key example: Polyvariant plugin system
+
+[source,java]
+----
+@ConfigPrototype(model = ConfigModel.POLYVARIANT)
+abstract public class PluginPrototype {
+    abstract public String getId();
+    abstract public String getClassPath();
+}
+
+@Config
+public class PluginA extends PluginPrototype {
+    @Override
+    public String getId() { return "plugin-a"; }
+    @Override
+    public String getClassPath() { return "com.example.PluginA"; }
+}
+
+@Config
+public class PluginB extends PluginPrototype {
+    @Override
+    public String getId() { return "plugin-b"; }
+    @Override
+    public String getClassPath() { return "com.example.PluginB"; }
+}
+----
+
+Usage:
+
+[source,java]
+----
+public class PluginLoader {
+    private final Polysupplier<PluginPrototype> plugins;
+
+    public PluginLoader(Polysupplier<PluginPrototype> plugins) {
+        this.plugins = plugins;
+    }
+
+    public void loadAll() {
+        plugins.forEach(p -> loadPlugin(p.getClassPath()), null);
+    }
+}
+----
