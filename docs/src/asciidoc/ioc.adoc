@@ -6,25 +6,28 @@
 
 == What is Colesico-IoC
 
-Colesico-IoC is a simple, lightweight and fast dependency injection container for Java 17+.
+Colesico-IoC is a simple, lightweight and fast dependency injection container for Java 25+.
 
 == Key features
 
 * Small codebase and great performance.
 * Reflection is not used (code generation at compile time with AnnotationProcessor).
 * Dependency injection is constructor-based only.
-* Cyclic dependency resolving support.
+* Cyclic dependency resolving support (via Provider).
 * Can be used as plugin-framework.
 * Producers based instance creation configuration.
 * Dependency injection configuration discovery at container start time (SPI based).
 * Multiple dependency injection configurations support (e.g. for testing purpose).
-* Out-of-the-box Singleton scope(single instance per container), Thread scope (instance per thread), RefreshScope support.
+* Out-of-the-box Singleton scope (single instance per container), Thread scope (instance per thread), Task scope (instance per task), RefreshScope support.
 * Named injections support (@Named annotation).
 * Classed injections support (@Classed annotation).
 * Support for multiple dependency implementations (@Polyproduce).
 * Injection point support (e.g. for Logger injection).
-* Lifecycle listeners (@PostConstruct, @PostProduce)
-* JPMS compatible
+* Lifecycle listeners (@PostConstruct, @PostProduce).
+* Optional injections (@OptionalInject).
+* Conditional beans (@Requires).
+* Bean substitution (@Substitute).
+* JPMS compatible.
 
 == Ioc container
 
@@ -55,29 +58,29 @@ Ioc ioc = IocBuilder.create().build();
 
 Obtaining instances with injected dependencies is done using these methods:
 
-* instance - returns class instance
-* provider - returns class instance provider (jakarta.inject.Provider<>), is used to "deferred" instance obtaining/creation.
-* supplier - returns class instance supplier, is used to "deferred" instance obtaining/creation with the ability to pass a  <<messages,message>>.
-* polysupplier - returns chain of class instance suppliers (colesico.framework.ioc.production.Polysupplier<>)
+* instance() - returns class instance.
+* provider() - returns class instance provider (jakarta.inject.Provider<>), used for "deferred" instance obtaining/creation.
+* supplier() - returns class instance supplier, used for "deferred" instance obtaining/creation with the ability to pass a message.
+* polysupplier() - returns chain of class instance suppliers (colesico.framework.ioc.production.Polysupplier<>).
 
 To specify what instance to return, use the "keys":
 
 * TypeKey - allows to specify instance class.
-* NamedKey - allows to specify instance class and the named label
-* ClassedKey - this is like the NamedKey but instead of a string label is used any class.
+* NamedKey - allows to specify instance class and the named label.
+* ClassedKey - like NamedKey but instead of a string label uses any class.
 
 [source,java]
 ----
-  MyBean defaultBean = ioc.instance(new TypeKey(MyBean.class), null);
-  MyBean namedBean = ioc.instance(new NamedKey(MyBean.class,"AnyName"), null);
-  MyBean classedBean = ioc.instance(new ClassedKey(MyBean.class, AnyClass.class), null);
+MyBean defaultBean = ioc.instance(new TypeKey<>(MyBean.class));
+MyBean namedBean = ioc.instance(new NamedKey<>(MyBean.class, "AnyName"));
+MyBean classedBean = ioc.instance(new ClassedKey<>(MyBean.class, AnyClass.class));
 ----
 
 When injecting dependencies to a constructor each key corresponds to a specific annotation:
 
 * TypeKey - no annotation.
-* NamedKey - @Named
-* ClassKey - @Classed
+* NamedKey - @Named.
+* ClassedKey - @Classed.
 
 [source,java]
 ----
@@ -97,12 +100,11 @@ public class MyBeanHolder {
     }
 }
 ----
-
-In the particular case to obtaining an instance from the Ioc container, you can specify just an instance class. (it will be implicitly converted to TypeKey)
+To obtain an instance from the Ioc container, you can specify just an instance class (it will be implicitly converted to TypeKey):
 
 [source,java]
 ----
-  MyBean defaultBean = ioc.instance(new TypeKey(MyBean.class),null);
+  MyBean defaultBean = ioc.instance(new TypeKey(MyBean.class));
   // OR:
   MyBean defaultBean = ioc.instance(MyBean.class);
 ----
@@ -111,8 +113,8 @@ In the particular case to obtaining an instance from the Ioc container, you can 
 
 By default IoC uses the following qualifiers to disambiguate dependency injection:
 
-* @Named - allows you to qualify a dependency using an any string name
-* @Classed - the same as @Named but instead of a text name, it uses an arbitrary class
+* @Named - allows you to qualify a dependency using an any string name.
+* @Classed - the same as @Named but instead of a text name, it uses an arbitrary class.
 
 == Producers
 
@@ -126,11 +128,11 @@ Creating an instance of a class is defined in two ways:
 * Define producer's public method.
 
 @Produce annotation specifies an instance class.
-In this case, the Ioc container will instantiate the instance simply by calling:
-new MyClass (param1, paramN);
+In this case, the IoC container will instantiate the instance simply by calling:
+new MyClass(param1, paramN);
 
-If need a custom logic to create an instance, define a public producer method that should return the instance.
-All public methods of the producer considered as a provider-methods of instances of classes and used by the Ioc container for creating instances.
+If custom logic is needed to create an instance, define a public producer method that should return the instance.
+All public methods of the producer are considered as provider-methods of instances of classes and used by the IoC container for creating instances.
 
 Producer example:
 
@@ -164,8 +166,8 @@ public class MyProducer {
 
 There are two ways to work with implementations:
 
-. Through the producer's producing method
-. Using @KeyType annotation (or @Produce.keyType)
+. Through the producer's producing method.
+. Using @KeyType annotation (or @Produce.keyType).
 
 [source,java]
 ----
@@ -191,15 +193,17 @@ public class MyProducer {
 
 This producer will produce MyInterface object implemented by MyImplementation class.
 In this case the object can be obtained from the container by MyInterface type only:
-i.e. ioc.instance(MyInterface.class).
+ioc.instance(MyInterface.class).
 
 Attempt to use ioc.instance(MyImplementation.class) will cause UnsatisfiedInjectionException.
-To allow that obtaining add MyImplementation.class itself to keyType list.
+To allow that obtaining, add MyImplementation.class itself to keyType list.
 
 == Polyproducing
 
 @Polyproduce annotation allows to specify that the IoC container may supply multiple instances for the dependency.
-If this annotation is not applied to the producer method an attempt to define more than one instance producers (for the same class) will fails with ambiguous dependency error.
+If this annotation is not applied to the producer method, an attempt to define more than one instance producer (for the same class) will fail with ambiguous dependency error.
+
+The @Polyproduce annotation has an order parameter (default 0) that defines the order of factories in the Polysupplier chain. Lower values have higher precedence.
 
 [source,java]
 ----
@@ -235,12 +239,13 @@ public class MyProducer {
 
 The framework out-of-the-box supports the following scopes of instances:
 
-* @Singleton - so-called local singleton.
-One instance of class per Ioc container.
+* @Singleton - so-called local singleton. One instance of class per IoC container.
 * @ThreadScoped - one instance per thread.
-* @Unscoped - no scope defined for instance.
+* @TaskScoped - one instance per task (using ScopedValue, Java 21+).
+* @RefreshScoped - singleton-like but allows recreation of beans on demand.
+* @Unscoped - no scope defined for instance (default).
 
-To define the instance scope you must specify a scope annotation(@Singleton и др) either on the instance class or on the producer provider-method.
+To define the instance scope you must specify a scope annotation either on the instance class or on the producer provider-method.
 
 === Singleton
 
@@ -250,7 +255,6 @@ Example:
 
 [source,java]
 ----
-
 @Singleton
 public class MyBean1 {}
 
@@ -267,31 +271,107 @@ public class MyProducer{
 }
 ----
 
-In this example the Instances of both classes MyBean1 and MyBean2 are singletons.
+In this example the instances of both classes MyBean1 and MyBean2 are singletons.
 
 === Thread scope
 
 This scope supports one instance per thread.
-When the thread scope is used with threads from a thread pool, before using it in a thread retrieved from the pool, it is mandatory need call ThreadScope.init() on the scope instance and call ThreadScope.destroy() before returning the thread to the pool.
+When the thread scope is used with threads from a thread pool, before using it in a thread retrieved from the pool, it is mandatory to call ThreadScope.open() on the scope instance and call ThreadScope.close() before returning the thread to the pool.
+
+[source,java]
+----
+@ThreadScoped
+public class ThreadScopedBean {
+    private int counter = 0;
+    public String getMessage() {
+        return "ThreadScoped-" + (counter++);
+    }
+}
+----
+
+Usage:
+
+[source,java]
+----
+ThreadScope threadScope = ioc.instance(ThreadScope.class);
+threadScope.open();
+
+try(threadScope) {
+    ...
+    ThreadScopedBean bean = ioc.instance(ThreadScopedBean.class);
+    ...
+} catch (...) {
+    ...
+}
+----
+
+=== Task scope
+
+This scope supports one instance per task using Java's ScopedValue (available since Java 21).
+The scope is active only within a TaskScope.forTask(Runnable) block.
+
+[source,java]
+----
+@TaskScoped
+public class TaskScopedBean {
+    // ...
+}
+----
+
+Usage:
+
+[source,java]
+----
+TaskScope taskScope = ioc.instance(TaskScope.class);
+
+taskScope.forTask(() -> {
+    // Inside this block, @TaskScoped beans are bound to this task
+    TaskScopedBean bean = ioc.instance(TaskScopedBean.class);
+    // ...
+});
+----
 
 === Refresh scope
 
-Refresh scope similar to a singleton, but allows to recreate beans on demand, by invocing RequesetScope.refresh().
+Refresh scope is similar to singleton, but allows recreating beans on demand by invoking RefreshScope.refresh().
 This could be useful, for example, to implement reloading configuration without application restarting.
+
+[source,java]
+----
+@RefreshScoped
+public class ConfigBean {
+private String configValue;
+
+}
+----
+
+Usage:
+
+[source,java]
+----
+RefreshScope refreshScope = ioc.instance(RefreshScope.class);
+ConfigBean config = ioc.instance(ConfigBean.class);
+
+// ... later, to reload:
+ConfigBean newConfig = refreshScope.refresh(ConfigBean.class);
+
+// or refresh all:
+refreshScope.refreshAll();
+----
 
 === Unscoped
 
 An instance of the class associated with @Unscoped annotation will be created each time it is requested from the IoC container.
-This is default "scope" when no scope explicitly defined.
+This is the default "scope" when no scope is explicitly defined.
 
 == Injectable constructors
 
 Classes for dependency injection may not have an explicitly defined constructor.
-Ioc container will use the default constructor to create instances.
-If more than one constructor declared, the one that will be used for dependency injection must be annotated with @Inject annotation, otherwise the Ioc container will use the first one in the class.
-If the constructor is the only, the @Inject annotation is optional.
+IoC container will use the default constructor to create instances.
+If more than one constructor is declared, the one that will be used for dependency injection must be annotated with @Inject, otherwise the IoC container will use the first one in the class.
+If the constructor is the only one, the @Inject annotation is optional.
 
-The constructor parameters can be annotated with the @Named, @Classed annotations (for named/classed dependencies)
+The constructor parameters can be annotated with @Named, @Classed annotations (for named/classed dependencies).
 
 == Field/properties based injection
 
@@ -301,13 +381,12 @@ This kind of injection is not supported.
 
 [[messages]]
 The messages are an instance supplying conception when it is possible to pass any object as a parameter for instance creation.
-For example this may be used for Logger creation with passing an InjectionPoint information.
+For example, this may be used for Logger creation with passing an InjectionPoint information.
 
-To obtain message in producing method use the @Message annotation:
+To obtain a message in a producing method use the @IocMessage annotation:
 
 [source,java]
 ----
-
 @Producer
 public class MyProducer{
 
@@ -318,31 +397,29 @@ public class MyProducer{
 }
 ----
 
-To pass message for instance creation use the Supplier<T>
+To pass a message for instance creation use the Supplier<T>:
 
 [source,java]
 ----
-
-  public constructor(Supplier<MyBean> myBeanSup){
-        MyMessage message = new MyMessage(...);
-        MyBean myBean = myBeanSup.get(message);
-  }
-  
+public constructor(Supplier<MyBean> myBeanSup){
+    MyMessage message = new MyMessage(...);
+    MyBean myBean = myBeanSup.get(message);
+}
 ----
 
 Or with IoC directly:
 
+[source,java]
 ----
-  MyMessage message = new MyMessage(...);
-  MyBean myBean = ioc.instance(new TypeKey(MyBean.class), message);
+MyMessage message = new MyMessage(...);
+MyBean myBean = ioc.instance(new TypeKey<>(MyBean.class), message);
 ----
 
 == Injection point
 
-In some cases it is useful to know the target class where the dependency injected.
-For example, it can be required for the Logger injection.
-To pass Injection point information to dependency producer use a @Contextual annotation, and to obtain that Injection point in the producer use a @Message annotation and InjectionPoint type parameter.
-See logger injection detail example in the ioc-example source code.
+In some cases it is useful to know the target class where the dependency is injected.
+For example, it can be required for Logger injection.
+To pass Injection point information to dependency producer use the @Contextual annotation, and to obtain that Injection point in the producer use the @IocMessage annotation and InjectionPoint type parameter.
 
 Example:
 
@@ -356,7 +433,6 @@ public class LogProducer {
     }
 }
 
-
 @Sevice
 public class ServiceBean{
     final Logger logger;
@@ -368,26 +444,28 @@ public class ServiceBean{
 }
 ----
 
+== Optional injections
+
+To specify an optional injection, use the @OptionalInject annotation on the constructor parameter.
+If the dependency is not found, null will be injected.
+
 == Lifecycle listeners
 
 IoC container supports the following lifecycle listeners:
 
-* Post construct.
-The bean public method annotated with _@PostConstruct_ annotation will be invoked by the IoC container after a bean has been created and post produce listener been invoked.
-* Post produce.
-_@PostProduce_ annotation should be applied to public producer method to declare post produce listener.
-The post produce listener invoked by the IoC container to handle just produced instance.
+* @PostConstruct - invoked after a bean has been created and post produce listener has been invoked.
+* @PostProduce - should be applied to a public producer method to declare a post produce listener. Invoked to handle just produced instance.
 
 === Listeners control
 
-By default, for the default producing (_@Produce_) post produce life cycle listeners invocation is disabled and post construct is enabled.
-For the producing methods all listener invocation are disabled.
-To enable listeners invocation for a specific instance use _@ListenersControl_ annotation on the producing method or _@Produce.postProduce/postConstruct_ on default producing declarations.
+By default, for the default producing (@Produce) post produce lifecycle listeners invocation is disabled and post construct is enabled.
+For the producing methods, all listener invocations are disabled.
+To enable listeners invocation for a specific instance use @ListenersControl annotation on the producing method or @Produce.postProduce/postConstruct on default producing declarations.
 
 === @PostProduce
 
-Post produce listener invoked before @PostConstruct listener.
-Post produce listener method should accept producing instance as message and return the same instance (or substituted)
+Post produce listener is invoked before @PostConstruct listener.
+Post produce listener method should accept producing instance as a message and return the same instance (or substituted).
 
 Example:
 
@@ -408,8 +486,8 @@ public class ConfigProducer{
 
 === @PostConstruct
 
-Post construct listener invoke by IoC container after the instance has been created.
-To define a listener add @PostConstruct annotation on any no-params public instance class method.
+Post construct listener is invoked by IoC container after the instance has been created.
+To define a listener, add @PostConstruct annotation on any no-params public instance class method.
 
 == Circular dependencies
 
@@ -425,11 +503,10 @@ In case of circular dependencies use Provider<Type> instead of direct instance i
 == Conditional beans
 
 To define a conditional instance producing (for example for test cases) use @Requires annotation.
-It allows to specify condition checking class be used to make a decision to include producing factory to IoC Container.
-(To use the given producing method or not)
+It allows to specify a condition checking class to be used to make a decision to include producing factory in the IoC container (whether to use the given producing method or not).
 
-Condition checking class is a class implements colesico.framework.ioc.conditional.Condition interface.
-It's method isMet(ConditionContext context) invoked by IoC builder to determine should a given producing factory to be involved or not.
+Condition checking class is a class that implements colesico.framework.ioc.conditional.Condition interface.
+Its isMet(ConditionContext context) method is invoked by IoC builder to determine whether a given producing factory should be involved or not.
 
 Example:
 
@@ -451,8 +528,8 @@ public class ConditionalProducer {
 === Condition context
 
 Condition context is used to pass any value to condition checking beans.
-That values can be used to make a decision.
-Condition context values can be set with *IoCBuilder.getConditionContext().setAttribute()* method
+Those values can be used to make a decision.
+Condition context values can be set with IocBuilder.getConditionContext().setAttribute() method.
 
 Condition checking beans for storing state can use not only the context but also static variables.
 
@@ -481,12 +558,11 @@ public class TestCondition implements Condition {
 
 == Bean substitution
 
-It is possible to overriding existing beans to customize behaviour for testing purposes or a plugins support.
+It is possible to override existing beans to customize behaviour for testing purposes or plugin support.
 IoC module provides an explicit @Substitute annotation, which allows to specify bean replacement and integrates with support for Conditional Beans.
 
 [source,java]
 ----
-
 @Producer
 @Produce(CustomBean.class)
 public class CustomBeanProducer {
@@ -498,12 +574,21 @@ public class CustomBeanProducer {
 }
 ----
 
-TIP: @Substitute annotation allows specifying *substitution rank*  (substitution priority)
+TIP: @Substitute annotation allows specifying substitution rank via Substitution enum:
+
+* STUB (-1) - for stub instance production, can easy be replaced.
+* REGULAR (0) - default rank when no @Substitute is specified.
+* DEFAULT (1) - default rank for @Substitute.
+* EXTENSION (2) - for plugins/extensions that replace regular functionality.
+* TEST (3) - for testing purposes.
+
+Higher ranks have precedence over lower ranks to perform substitution.
 
 == Maven pom.xml
 
-Specify dependence:
+Specify dependency:
 
+[source,xml]
 ----
         <dependency>
             <groupId>net.colesico.framework</groupId>
@@ -514,46 +599,47 @@ Specify dependence:
 
 Specify annotation processor:
 
+[source,xml]
 ----
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>net.colesico.framework</groupId>
-                            <artifactId>colesico-ioc</artifactId>
-                            <version>${colesico.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>        
-        
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <version>${maven-compiler-plugin.version}</version>
+    <configuration>
+        <source>${maven.compiler.source}</source>
+        <target>${maven.compiler.target}</target>
+        <encoding>${project.build.sourceEncoding}</encoding>
+        <annotationProcessorPaths>
+            <path>
+                <groupId>net.colesico.framework</groupId>
+                <artifactId>colesico-ioc</artifactId>
+                <version>${colesico.version}</version>
+            </path>
+        </annotationProcessorPaths>
+    </configuration>
+</plugin>   
 ----
 
-== Run an application with plugins discovering at startup.
+== Run an application with plugins discovery at startup
 
-Ioc container discovers producers with ServiceLoader.
-If the application consists of several files (in lib/* dir.), and another files (e.g. plugins, modules etc) will be added later without rebuilding the main project, in order the IoC container can discover the all providers in these separate jar files run the application with a command:
+IoC container discovers producers with ServiceLoader.
+If the application consists of several files (in lib/* dir.), and other files (e.g. plugins, modules etc) will be added later without rebuilding the main project, in order for the IoC container to discover all providers in these separate jar files, run the application with a command:
 
+[source,bash]
 ----
 java -cp lib/*;myapp-1.0.jar my.app.Main
 ----
 
 When run by a command like:
 
+[source,bash]
 ----
- java -jar  myapp-1.0.jar
+java -jar myapp-1.0.jar
 ----
 
-IoC producers in external jar files in the folder lib/* that added without rebuilding the project will not be discovered.
+IoC producers in external jar files in the folder lib/* that are added without rebuilding the project will not be discovered.
 
 == Examples
 
-See full source code in the framework source code section #examples/ioc-example#
-
+See full source code in the framework source code section #examples/ioc-example/.
 
