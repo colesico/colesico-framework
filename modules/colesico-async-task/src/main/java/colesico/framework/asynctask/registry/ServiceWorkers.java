@@ -20,7 +20,7 @@ import jakarta.inject.Provider;
 
 abstract public class ServiceWorkers<S> {
 
-    public static final String GET_BINDINGS_METHOD = "getTaskBindings";
+    public static final String TASK_BINDINGS_METHOD = "taskBindings";
     public static final String SERVICE_PROV_FIELD = "serviceProv";
 
     /**

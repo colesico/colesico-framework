@@ -67,12 +67,12 @@
                     <annotationProcessorPaths>
                         <path>
                             <groupId>net.colesico.framework</groupId>
-                            <artifactId>colesico-bundle-base</artifactId>
+                            <artifactId>colesico-service</artifactId>
                             <version>${project.version}</version>
                         </path>
                         <path>
                             <groupId>net.colesico.framework</groupId>
-                            <artifactId>colesico-asynctask</artifactId>
+                            <artifactId>colesico-async-task</artifactId>
                             <version>${project.version}</version>
                         </path>
                         <!-- Enable compile time log -->

@@ -10,10 +10,25 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * An in-memory, thread-safe implementation of {@link DataPort} designed primarily for
+ * testing, prototyping, or local execution environments.
+ *
+ * <p>This implementation stores all transmitted and received data internally within a
+ * {@link ConcurrentHashMap} keyed by {@link Type}. It bypasses real-world transport mechanisms
+ * or databases, providing a lightweight "fake" alternative that operates entirely in memory.
+ *
+ * <p>Integration with {@link TaskScope} allows this port to be bound to specific asynchronous
+ * tasks or execution contexts via {@link #provide()} and {@link #forTask(Runnable)}.
+ *
+ * @see DataPort
+ * @see TaskScope
+ */
 @Singleton
 public final class SimpleDataPort implements DataPort<SimpleDataPort.ReadOptions, SimpleDataPort.WriteOptions> {
 
     private static final Logger log = LoggerFactory.getLogger(SimpleDataPort.class);
+
     private final TaskScope taskScope;
 
     private final Map<Type, Object> values = new ConcurrentHashMap<>();

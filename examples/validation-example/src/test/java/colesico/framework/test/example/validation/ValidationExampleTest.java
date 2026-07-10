@@ -32,23 +32,24 @@ public class ValidationExampleTest {
 
     private Ioc ioc;
     private DSLValidator<User> userValidator;
+    private SimpleDataPort dataPort;
 
     @BeforeClass
     public void init() {
         ioc = IocBuilder.create().build();
-        ioc.instance(SimpleDataPort.class).provide();
-
         UserValidation userValidation = ioc.instance(UserValidation.class);
         userValidator = userValidation.build();
+        dataPort = ioc.instance(SimpleDataPort.class);
     }
 
     @Test
     public void testValidation() throws Exception {
-
-        User user = new User();
-        ValidationIssue issue = userValidator.validate(user);
-        assertEquals(issue.subject(), "user");
-        assertEquals(issue.subissues().size(), 4);
+        dataPort.forTask(() -> {
+            User user = new User();
+            ValidationIssue issue = userValidator.validate(user);
+            assertEquals(issue.subject(), "user");
+            assertEquals(issue.subissues().size(), 4);
+        });
     }
 
 }

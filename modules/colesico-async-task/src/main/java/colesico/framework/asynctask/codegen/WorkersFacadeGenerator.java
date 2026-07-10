@@ -96,7 +96,7 @@ public class WorkersFacadeGenerator {
     }
 
     protected void generateGetBindingsMethod(ServiceElement service, List<TaskWorkerElement> handlers, TypeSpec.Builder classBuilder) {
-        MethodSpec.Builder mb = MethodSpec.methodBuilder(ServiceWorkers.GET_BINDINGS_METHOD);
+        MethodSpec.Builder mb = MethodSpec.methodBuilder(ServiceWorkers.TASK_BINDINGS_METHOD);
         mb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
         TypeName resType = ArrayTypeName.of(ClassName.get(TaskBinding.class));

@@ -19,11 +19,12 @@ import colesico.framework.service.codegen.modulator.Modulator;
 
 module colesico.framework.asynctask {
 
+    requires static java.compiler;
+    requires static com.palantir.javapoet;
+
     requires transitive colesico.framework.service;
     requires transitive colesico.framework.config;
     requires org.slf4j;
-    requires java.compiler;
-    requires com.palantir.javapoet;
 
     // classes
     exports colesico.framework.asynctask;
