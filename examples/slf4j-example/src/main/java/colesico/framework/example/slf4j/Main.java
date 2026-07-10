@@ -20,8 +20,8 @@ import colesico.framework.ioc.IocBuilder;
 
 public class Main {
 
-    public static void main(String[] args) {
-         MainBean mainBean = IocBuilder.create().build().instance(MainBean.class);
-         mainBean.logMessage("LogMessage");
+    static void main(String[] args) {
+        MainBean mainBean = IocBuilder.create().build().instance(MainBean.class);
+        mainBean.logMessage("LogMessage");
     }
 }

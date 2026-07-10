@@ -31,7 +31,6 @@ public class MainBean {
     /**
      * Contextual annotation is used to pass injection point information to logger factory
      * to produce specific logger
-     * @param logger
      */
     public MainBean(@Contextual Logger logger) {
         this.logger = logger;
