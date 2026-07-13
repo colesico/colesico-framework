@@ -9,6 +9,7 @@
 Colesico-JDBIRec is a powerful object-relational mapping (ORM) extension for JDBI that provides a declarative, annotation-based approach to mapping Java objects to database tables. It eliminates the need for manual SQL writing by generating type-safe record kits that handle CRUD operations and complex queries.
 
 The module builds on JDBI by providing:
+
 * Declarative record definitions with `@Record` annotation
 * Automatic SQL generation for CRUD operations
 * Support for nested compositions (embedded objects)
@@ -19,6 +20,7 @@ The module builds on JDBI by providing:
 * Automatic RecordKit generation with IoC integration
 
 The module integrates with:
+
 * `colesico-jdbi` - for JDBI handle management
 * `colesico-ioc` - for dependency injection
 * `org.jdbi.v3.core` - for JDBI API
@@ -30,6 +32,7 @@ The module integrates with:
 A `Record` is a POJO class annotated with `@Record` that represents a database table. It serves as the primary abstraction for database entities, analogous to JPA's `@Entity` but designed specifically for JDBI with a focus on simplicity and compile-time code generation.
 
 The `@Record` annotation defines the mapping between the Java class and the database table through the following attributes:
+
 * `table` - specifies the database table name to which the record maps
 * `tableAlias` - provides an optional alias for the table in SQL queries, useful when the same table is referenced multiple times or for query readability
 * `views` - defines one or more `RecordView` configurations for different perspectives on the same data
@@ -59,6 +62,7 @@ The `Column` annotation supports being repeated multiple times on a single field
 A composition field can be an instance of any Java class whose fields are mapped with `@Column` annotations. The framework recursively processes all fields within the composition, generating the appropriate column mappings.
 
 Key attributes of `@Composition`:
+
 * `name` - the logical name of the composition, defaults to the field name, used in renaming strategies and tag paths
 * `renaming` - a string template for renaming composition columns, supporting placeholders like `@field` (field name), `@column` (column name), and `@composition` (composition name)
 * `tagFilter` - a `TagFilter` that controls which nested columns are included based on tags
@@ -74,9 +78,11 @@ The `renaming` feature is particularly powerful for avoiding column name conflic
 `RecordKit` is an interface annotated with `@RecordKit` that defines the data access API for a specific record type. The framework generates a complete implementation at compile time, eliminating the need for manual DAO classes.
 
 The `@RecordKit` annotation supports a single attribute:
+
 * `superclass` - the base class to extend, defaulting to `AbstRactrecordKit`. This allows customization of the generated kit behavior.
 
 The generated kit implementation extends the specified superclass and provides:
+
 * Automatic SQL generation for standard CRUD operations
 * Type-safe row mapping from `ResultSet` to record instances
 * Parameter mapping for INSERT and UPDATE operations
@@ -85,11 +91,13 @@ The generated kit implementation extends the specified superclass and provides:
 === RecordView
 
 `RecordView` defines different perspectives on a record, allowing the same Java class to map to different sets of database columns. This is particularly useful for:
+
 * Optimizing queries by selecting only needed columns
 * Exposing different data subsets to different parts of the application
 * Handling legacy database schemas with different column requirements
 
 Each `@RecordView` specifies:
+
 * `name` - the view identifier, used to obtain different kit implementations
 * `tagFilter` - a `TagFilter` controlling which columns and compositions are included
 * `renaming` - optional renaming strategy for columns in this view
@@ -104,11 +112,13 @@ Each `@RecordView` specifies:
 * `oneOf` - includes elements that have exactly one of the listed tags.
 
 Tags can be:
+
 * **Global tags** - starting with `#` (e.g., `#full`, `#brief`), these are universally recognized
 * **Local tags** - automatically converted to global tags by prefixing `#` and the field path (e.g., `detailed` becomes `#foo.bar.detailed`)
 * **Automatic path tags** - the framework automatically adds a tag to each element based on its full path (e.g., `#foo.bar.compName` or `#foo.bar.baz.columnName`)
 
 Special filters:
+
 * `?has-tags` - matches elements with at least one tag
 * `?no-tags` - matches elements with no tags
 
@@ -148,6 +158,7 @@ The `RecordProcessor` processes `@Record` and `@RecordKit` annotations at compil
 .. Named view kits are produced with `@Named` qualifiers
 
 Generated kit naming follows the pattern:
+
 * Default view: `{RecordKitName}Impl`
 * Custom view: `{RecordKitName}{ViewName}Impl`
 
@@ -156,10 +167,12 @@ Generated kit naming follows the pattern:
 `FieldMediator` is a strategy interface that customizes the conversion between Java objects and database values. This provides flexibility for handling complex or custom data types beyond the standard JDBC type mappings.
 
 The interface defines two methods:
+
 * `importField(String columnName, ResultSet rs)` - reads a value from a `ResultSet` and converts it to the Java field type
 * `exportField(F fieldValue, String fieldName, FieldReceiver fr)` - converts a field value to database format and writes it to a parameter receiver
 
 Built-in mediators provide support for:
+
 * Array types (`BooleanListMediator`, `IntegerListMediator`, `StringListMediator`, etc.) for SQL ARRAY columns
 * Locale conversion (`LocaleMediator`) for storing `Locale` objects as language tags
 
@@ -170,6 +183,7 @@ Custom mediators can be created by implementing the `FieldMediator` interface an
 The `selectAs`, `insertAs`, and `updateAs` attributes support special placeholders for dynamic SQL generation:
 
 **Placeholders for selectAs:**
+
 * `@field` - use the field name
 * `@column` - use the column name
 * `@insertAs` - use the insertAs value
@@ -177,16 +191,19 @@ The `selectAs`, `insertAs`, and `updateAs` attributes support special placeholde
 * `@nop` - no operation (skip column)
 
 **Placeholders for insertAs:**
+
 * `@field` - use field value
 * `@updateAs` - use the updateAs value
 * `@nop` - skip column in INSERT statement
 
 **Placeholders for updateAs:**
+
 * `@field` - use field value
 * `@insertAs` - use the insertAs value
 * `@nop` - skip column in UPDATE statement
 
 Examples:
+
 * `selectAs = "'USER:' || @column"` - prepends "USER:" to the column value
 * `insertAs = "'static_value'"` - inserts a static value
 * `updateAs = "CURRENT_TIMESTAMP"` - uses database function for timestamp columns
@@ -194,6 +211,7 @@ Examples:
 == Column overriding
 
 `ColumnOverriding` allows modification of column properties at the composition or view level without changing the original column definitions. This enables:
+
 * Renaming columns for specific contexts (e.g., `name` → `user_name` in a view)
 * Changing column types or definitions for different databases
 * Overriding mediators for specific use cases
