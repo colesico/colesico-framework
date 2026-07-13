@@ -1,0 +1,101 @@
+= Router Module
+:page-title: HTTP Router
+:page-description: Comprehensive guide to the Colesico Framework HTTP Router module.
+:framework-version: 1.0
+
+== Introduction
+
+The Router module is the central request dispatcher in the Colesico Framework. Its primary responsibility is to map incoming HTTP requests to specific handler methods in your application's controllers. The router acts as the bridge between the HTTP layer and your business logic, analyzing the URL and HTTP method to determine which code should be executed.
+
+The routing system is built on the TeleAPI foundation, providing a unified abstraction for handling various types of requests.
+
+=== Design Principles
+
+The Router module embodies several key principles:
+
+**Hierarchical Composition**: Routes are built from three levels - package, controller, method. This enables clean URL organization in large applications.
+
+**Convention Over Configuration**: By following naming conventions, routes are automatically derived without explicit annotations.
+
+**Explicit Over Implicit**: The `@Route` annotation provides explicit control over routes.
+
+**Separation of Concerns**: Routing logic is separated from HTTP server implementation and controllers.
+
+== Dynamic Path Parameters
+
+=== Parameter Syntax
+
+Routes can contain dynamic parameters denoted by the `:` prefix.
+
+**Syntax**: `:parameterName`
+
+**Examples**:
+* `/users/:userId` - userId parameter
+* `/api/:version/products/:category/:productId` - multiple parameters
+* `/posts/:postId/comments/:commentId` - parameters in different positions
+
+=== Suffix Parameter (Catch-All)
+
+The special `*` syntax captures all remaining path segments.
+
+**Example**: `/files/*` - captures `/files/documents/report.pdf` as a suffix parameter
+
+The suffix parameter name in `RouterContext` is `routeSuffix`.
+
+=== How It Works
+
+When defining routes with parameters:
+. The route string is split into segments by `/`
+. Segments starting with `:` are marked as parameters
+. On incoming requests, values are extracted from the URL and stored in a parameter map
+. Parameters become accessible via `RouterContext.parameters()`
+
+=== Accessing Parameters
+
+**Method 1: Via RouterContext**
+
+[source,java]
+----
+@Weblet
+@Route("/users")
+public class UserController {
+    @Route("/:userId")
+    public String getUser(@Inject RouterContext context) {
+        String userId = context.parameters().get("userId");
+        return "User ID: " + userId;
+    }
+}
+----
+
+**Method 2: Automatic Method Argument Binding**
+
+[source,java]
+----
+@Weblet
+@Route("/api")
+public class ApiController {
+    @Route("/:version/products/:category/:productId")
+    public String getProduct(String version, String category, String productId) {
+        return "Version: " + version + ", Category: " + category + ", ID: " + productId;
+    }
+}
+----
+
+**Suffix Parameter (Catch-All)**
+
+[source,java]
+----
+@Weblet
+@Route("/files")
+public class FileController {
+    @Route("/*")
+    public String getFile(@Inject RouterContext context) {
+        String path = context.parameters().get("routeSuffix");
+        return "File path: " + path;
+    }
+}
+----
+
+=== Error Handling
+
+If a parameter is declared but cannot be extracted, a `RouterException` is thrown:
