@@ -1,0 +1,223 @@
+[[intro]]
+= Colesico-Validation
+:toc:
+:toclevels: 5
+:numbered:
+
+== What is Colesico-Validation
+
+Colesico-Validation is a comprehensive validation framework that provides both DSL-based and declarative validation capabilities. It offers a powerful and flexible way to define validation rules for complex object graphs, with strong integration with the Service and Translation modules.
+
+The module provides two complementary approaches that can be mixed within the same application:
+- **DSL Validation** - a fluent, programmatic DSL for building validators using commands, executors, and mappers
+- **Bean Validation** - declarative validation using annotations on bean fields with compile-time code generation
+
+Both approaches leverage the same underlying validation engine based on the `ValidationContext` and `Command` abstractions.
+
+The module integrates with:
+- `colesico-service` - for service integration and interceptor support
+- `colesico-translation` - for localized error messages via `ValidatorMessages`
+- `colesico-ioc` - for dependency injection and producer generation
+
+== Key features
+
+* Fluent DSL for building validation rules with commands, executors, and mappers
+* Declarative bean validation via `@Validate`, `@BeanValidate`, and `@ValidatorBuilder` annotations
+* Nested object validation support with subject path tracking
+* Rich set of built-in validators (required, length, interval, regex, date format, size, positive, predicate)
+* Validation context with hierarchical subject tracking and error collection
+* Error collection with localization support via translation module
+* Compile-time code generation for bean validators with IoC integration
+* Support for multiple validator builders per bean for different validation contexts
+* Custom validator commands and verifiers with full DSL integration
+* Two error accumulation strategies: series (collect all errors) and chain (stop on first error)
+
+== Core concepts
+
+=== ValidationContext
+
+`ValidationContext<V>` is the central object during validation execution. It holds:
+- The current value being validated (`value()`)
+- The subject (logical name/path of the validated value)
+- Parent context reference for nested validation
+- Error collection with `addError(code, message)` method
+- Validation parameters (`params()`)
+
+The context maintains a hierarchical path through nested validation. For example, validating `user.credentials.password` creates a context chain where each level tracks its subject. This allows precise error localization and reporting.
+
+=== Command
+
+`Command<V>` is the basic building block of the validation DSL. It is a functional interface with a single `execute(ValidationContext<V>)` method. All validation rules are implemented as commands. Commands can be composed, decorated, and chained to build complex validation flows.
+
+=== Iterator
+
+`Iterator<V>` is a command that executes a collection of child commands. Two implementations are provided:
+- `SeriesIterator` - executes all commands sequentially, continuing even if errors occur. This collects all validation errors across all commands, providing complete feedback to the user.
+- `ChainIterator` - executes commands until the first error occurs, then stops. This is useful for performance optimization when early validation failure makes further validation unnecessary.
+
+These iterators serve as the root command for validation flows and determine the error accumulation strategy.
+
+=== Mapper
+
+`Mapper<V, N>` is a command that extracts a nested value from the current context value and applies a validation command to it. Several mapper implementations are provided:
+
+- `ValueMapper` - extracts a value using a `Function<V, N>` and applies the command to it. If the current value is null, the nested value becomes null without invoking the mapper.
+- `OptionalValueMapper` - null-safe extraction using `Optional`. The mapper receives `Optional<V>` and returns `Optional<N>`, allowing null-safe navigation without explicit null checks.
+- `ItemMapper` - extracts a list element by index. If the list is null or the index is out of bounds, the nested value becomes null.
+- `EntryMapper` - extracts a map entry by key. If the map is null or the key does not exist, the nested value becomes null.
+- `IterableMapper` - applies validation to each element of an iterable. Creates a separate nested context for each element with a subject that includes the element index.
+
+Mappers are essential for validating nested object graphs and collections.
+
+=== Executor
+
+`Executor<V>` is a command that decorates another command with additional behavior:
+- `MandatoryExecutor` - executes the command only if the value is not null; adds a validation error if the value is null. This ensures required fields are present.
+- `OptionalExecutor` - executes the command only if the value is not null; does nothing if null. This allows conditional validation of optional fields.
+- `ConditionalExecutor` - executes the command only if a predicate on the `ValidationContext` returns true. This enables conditional validation based on other values.
+- `SubjectExecutor` - changes the subject for the nested context without changing the value. This allows subject renaming or path modification.
+- `HookErrorExecutor` - executes a command and checks if nested errors occurred. If nested errors are present, adds an error to the current context. This allows error propagation from nested validation.
+
+=== Verifier
+
+Built-in verifier commands for common validation scenarios:
+- `RequiredVerifier` - checks that the value is not null, empty, or blank (for strings, collections, maps, arrays)
+- `LengthVerifier` - checks string length constraints with min/max boundaries
+- `IntervalVerifier` - checks numeric value range (works with Byte, Short, Integer, Long, Float, Double)
+- `PositiveVerifier` - checks that numeric value is positive
+- `RegexpVerifier` - validates string against a regex pattern with customizable error message
+- `DateFormatVerifier` - validates date format using `SimpleDateFormat`
+- `SizeVerifier` - checks size of collections, maps, arrays, and strings with min/max boundaries
+- `PredicateVerifier` - custom predicate-based validation on the `ValidationContext`
+
+Each verifier adds a localized error message to the context when validation fails.
+
+=== DSLValidator
+
+`DSLValidator<V>` is the final validation artifact built from a validation command. It implements the `Validator` interface and provides two methods:
+
+- `validate(V value, Object... params)` - executes validation and returns `ValidationIssue` containing all errors, or `null` if no errors occurred
+- `accept(V value, Object... params)` - executes validation and throws `ValidationException` wrapping the `ValidationIssue` if errors occurred
+
+The `params` parameter allows passing additional context to the validation process.
+
+=== AbstractValidatorBuilder
+
+`AbstractValidatorBuilder` is the base class for building validators using the DSL. It provides a fluent API with methods for creating validation flows:
+
+- `field(subject, mapper, commands...)` - validates a field extracted from the root object
+- `map(subject, mapper, commands...)` - maps to nested value and validates it
+- `series(commands...)` - executes commands in series (collects all errors)
+- `chain(commands...)` - executes commands until error (stops on first error)
+- `mandatory(commands...)` - creates a `MandatoryExecutor` requiring non-null value
+- `optional(commands...)` - creates an `OptionalExecutor` for optional validation
+- `conditional(predicate, commands...)` - creates a `ConditionalExecutor`
+- `required()` - returns a `RequiredVerifier`
+- `length(min, max)` - returns a `LengthVerifier`
+- `interval(min, max, includeEndpoints)` - returns an `IntervalVerifier`
+- `positive()` - returns a `PositiveVerifier`
+- `regexp(pattern)` - returns a `RegexpVerifier`
+- `dateFormat(format)` - returns a `DateFormatVerifier`
+- `size(min, max)` - returns a `SizeVerifier`
+- `validator(subject, command)` - builds a `DSLValidator` from a command
+
+The `validator` method is used to create the final validator from the validation command.
+
+== Bean validation
+
+Bean validation uses annotations to declaratively define validation rules for bean fields, with compile-time code generation producing validator builders.
+
+=== @ValidatorBuilder
+
+Applied to bean classes, this annotation declares that a validator builder should be generated. Attributes:
+- `superclass` / `value` - the abstract builder class to extend (must extend `BeanValidatorBuilder`)
+- `isDefault` - whether this builder is the default for the bean (only one default per bean)
+- `subject` - root validation subject for all validations in this builder
+- `command` - root iterator type (`mandatory`, `series`, `chain`, etc.)
+- `packageName` - custom package for generated builder (overrides bean package)
+
+Multiple `@ValidatorBuilder` annotations can be applied to a single bean to generate multiple validators for different validation contexts. Each generated builder is registered with the IoC container using `@Produce` and `@Classed` qualifiers.
+
+=== @Validate
+
+Applied to bean fields, this annotation marks the field for validation. Attributes:
+- `value` - the validator builder this validation belongs to (empty means default builder)
+- `method` - custom validation method name in the builder (defaults to `validate{FieldName}` or `verify{FieldName}`)
+- `subject` - validation subject override (defaults to field name)
+- `verifier` - if `true`, the method is a verifier that directly adds errors; if `false`, the method returns a `Command`
+- `mapper` - command to map field value to validation context (defaults to `map`)
+
+The generated builder contains a method for each `@Validate` field. If `verifier` is `false`, the method returns a `Command` built from the mapper, subject, and field getter. If `verifier` is `true`, the method is called directly with the `ValidationContext`.
+
+=== @BeanValidate
+
+Applied to bean fields, this annotation indicates that the field itself should be validated as a bean using another validator builder. Attributes:
+- `value` - parent validator builder this validation belongs to (empty means default)
+- `target` - target validator builder to use for validation
+- `subject` - subject override (defaults to field name)
+- `mapper` - command to map field value to validation context (defaults to `map`)
+
+The generated builder creates a field for the target validator, injects it via constructor, and generates a validation method that delegates to the target validator's validation method. This enables recursive validation of nested objects.
+
+=== @BeanValidates and @Validates
+
+These are container annotations for multiple `@BeanValidate` and `@Validate` annotations respectively, allowing repeatable annotations on fields.
+
+=== Generated builder structure
+
+The generated validator builder:
+1. Extends the specified abstract builder class
+2. Contains fields for each `@BeanValidate` target validator, injected via constructor
+3. Implements the `validation()` method returning the root command
+4. Implements the `subject()` method returning the configured subject
+5. Contains validation methods for each `@Validate` field (returns `Command` or `void` for verifiers)
+6. Contains bean validation methods for each `@BeanValidate` field (returns `Command` that delegates to target)
+
+The root command is built using the configured `command` attribute (series, chain, mandatory, etc.) wrapping all field validation commands.
+
+=== IoC integration
+
+Generated validator builders are registered with the IoC container via a generated producer class. Each builder is produced with:
+- `@Produce` annotation with `keyType` set to the abstract builder class
+- `@Unscoped` scope
+- `@Classed` qualifier for non-default builders
+
+This allows injection of specific validators by type or classed qualifier.
+
+== Integration with Translation
+
+The validation module integrates with `colesico-translation` for localized error messages. The `ValidatorMessages` class is a translation dictionary interface that provides translatable messages for all built-in validators. This includes:
+- Required value messages
+- Length constraint messages (min, max, between)
+- Interval constraint messages (greater than, less than, between)
+- Positive value messages
+- Size constraint messages
+- Date format messages
+
+The `ValidatorMessages` dictionary is injected into `AbstractValidatorBuilder` and used by all built-in verifiers.
+
+== Error handling
+
+Validation errors are collected in `ValidationIssue` objects containing:
+- `subject` - the path to the invalid value (e.g., `user.credentials.password`)
+- `errors` - list of `ValidationError` objects (code + localized message)
+- `subissues` - nested validation issues for child objects
+
+The `ValidationException` wraps a `ValidationIssue` and is thrown when `accept()` fails.
+
+== Maven pom.xml
+
+[source,xml]
+----
+<dependency>
+    <groupId>net.colesico.framework</groupId>
+    <artifactId>colesico-validation</artifactId>
+    <version>${colesico.version}</version>
+</dependency>
+----
+
+The module is transitive to `colesico-service` and `colesico-translation`.
+
+== Examples
+
+See full source code in the framework source code section `#examples/validation-example/`.

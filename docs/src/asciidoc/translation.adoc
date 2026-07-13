@@ -1,0 +1,134 @@
+[[intro]]
+= Colesico-Translation
+:toc:
+:toclevels: 5
+:numbered:
+
+== What is Colesico-Translation
+
+Colesico-Translation is a comprehensive internationalization (i18n) and localization (l10n) module that provides type-safe translation capabilities through dictionary interfaces. It leverages compile-time code generation to produce efficient, type-safe translation methods with IDE autocompletion support.
+
+The module is built around three core concepts:
+- **Dictionary** - a type-safe interface defining translatable messages
+- **TranslationKit** - the service for obtaining translation bundles
+- **Resource integration** - leveraging the Resource module for localization
+
+The module integrates with:
+- `colesico-resource` - for resource localization and bundle resolution
+- `colesico-profile` - for user locale determination
+- `colesico-ioc` - for dependency injection
+
+== Key features
+
+* Type-safe dictionary interfaces with generated implementations
+* Compile-time translation key validation and IDE autocompletion
+* Support for multiple locales via annotations and properties files
+* Parameterized messages with `MessageFormat`-style placeholders
+* Thread-scoped bundle caching for performance
+* Integration with Profile module for locale resolution
+* Extensible text formatters
+* Support for additional translation bundles via Resource module localization
+* PropertyBundle implementation compatible with Java modules
+
+== Core concepts
+
+=== Dictionary
+
+A `Dictionary` is an interface annotated with `@Dictionary` that defines translatable messages as methods. Each method represents a translation key and can have multiple language annotations (`@En`, `@Ru`, `@Text`, etc.). The `@Dictionary` annotation supports two attributes: `baseName` for custom resource naming and `extraTranslations` for specifying additional locales.
+
+Each dictionary method can have a `@TranslationKey` annotation for custom key names; otherwise the method name serves as the translation key. Default translation is specified with `@Text`, while language-specific translations use annotations like `@En`, `@Ru`, `@Fr`, `@De`, etc.
+
+Methods can have parameters that are substituted into the translation string using `MessageFormat` syntax. The dictionary interface optionally extends `TranslationDictionary` to access additional API such as `translate()` and `bundle()` methods.
+
+The framework generates a concrete implementation of the dictionary interface at compile time. The implementation automatically resolves the appropriate translation bundle based on the current user profile by injecting `TranslationKit` and calling `translationKit.bundle(baseName).translation(key, defaultValue, params)` for each method.
+
+=== Translation annotations
+
+The module provides pre-defined language annotations:
+- `@Text` - default translation for any language
+- `@En` - English translation
+- `@Ru` - Russian translation
+- `@Fr` - French translation
+- `@De` - German translation
+- `@Es` - Spanish translation
+- `@Ar` - Arabic translation
+- `@Zn` - Chinese translation
+
+Each language annotation is itself annotated with `@Translation("lang-tag")`. Custom language annotations can be created by annotating a custom annotation with `@Translation` and specifying the appropriate language tag.
+
+=== TranslationKit
+
+`TranslationKit` is the central service for obtaining translation bundles and translatable texts. It provides the `bundle(String baseName)` method which returns an appropriate `TranslationBundle` for the current locale, and the `translatable(String baseName, String key)` method which returns a `Translatable` function that can be evaluated later.
+
+The `TranslationBundle` provides the `translation(key, defaultValue, params)` method for retrieving translated strings with parameter substitution. Bundles are cached in the current `TaskScope` for the duration of the request to avoid repeated loading.
+
+=== TranslationBundle and PropertyBundle
+
+`TranslationBundle` represents a collection of translations for a specific locale. The implementation is backed by `PropertyBundle`, which provides hierarchical property resolution with parent bundles, thread-safe caching via `PropertyBundleCache`, soft reference caching with configurable cleanup frequency, and module-friendly property file loading (overcoming ResourceBundle module limitations).
+
+=== Resource integration
+
+The Translation module relies on `colesico-resource` for resource localization based on user profile qualifiers, property file discovery and loading, and prefix substitution for resource paths. This integration enables flexible resource location and multi-module resource loading.
+
+=== TextFormatter
+
+`TextFormatter` handles parameter substitution in translated strings. The default implementation uses `java.text.MessageFormat`. Custom formatters can be provided by implementing the interface and registering with IoC.
+
+=== TranslationKey
+
+The `@TranslationKey` annotation allows specifying a custom key name for a dictionary method. This is useful when the method name is not suitable as a translation key, or when multiple methods should share the same translation key.
+
+== Code generation process
+
+The `DictionaryProcessor` processes interfaces annotated with `@Dictionary` at compile time through the following steps:
+
+1. For each dictionary interface, it scans all methods and collects translations from annotations (`@Text`, `@En`, `@Ru`, etc.)
+2. It builds a resource bundle for each locale from the collected translations
+3. It generates a concrete implementation class for the dictionary
+4. It generates a `L10nOptions` configuration for the Resource module to register dictionary localization rules
+5. It registers the dictionary implementation in the IoC container
+
+The generated `L10nOptions` configuration registers the dictionary's base name with the Resource module for localization based on profile qualifiers. The `extraTranslations` attribute of `@Dictionary` allows registering additional locales without adding annotations to the dictionary methods.
+
+== Configuration
+
+=== Dictionary annotation attributes
+
+The `@Dictionary` annotation supports:
+- `baseName` - optional resource base name (defaults to interface canonical name with dots replaced by slashes). This is the base name for the property files.
+- `extraTranslations` - additional language tags for translations defined in external properties files that are not specified via annotations in the dictionary
+
+=== Property bundles
+
+Generated property files are placed in the same package as the dictionary interface with naming pattern `{baseName}_{locale}.properties`. These files contain key-value pairs for each translation method. The `extraTranslations` attribute allows registering additional locales without adding annotations, enabling separation of translation definitions from the code.
+
+=== Localization options
+
+Dictionary generation automatically creates `L10nOptions` configurations for the Resource module. These configurations register the dictionary's base name template (`{baseName}{Q}`) with appropriate qualifiers for each supported locale.
+
+== Integration with Profile module
+
+The Translation module uses `colesico-profile` to determine the current user's locale. The `TranslationKit` resolves the locale from the `Profile` through a `Provider<Locale>` and uses it to select the appropriate translation bundle.
+
+The bundle is cached in the current `TaskScope` under a scope key derived from the base name, ensuring that translations are resolved only once per request and reused across multiple dictionary calls.
+
+== PropertyBundle vs ResourceBundle
+
+The module uses `PropertyBundle` instead of Java's `ResourceBundle` because `ResourceBundle` has limitations with Java modules and sealed packages, particularly when accessing resources across module boundaries. `PropertyBundle` provides hierarchical loading with parent bundles, uses soft reference caching for memory efficiency, and supports custom loading strategies through `PropertyBundleFactory`.
+
+== Exception hierarchy
+
+`TranslationExceprion` - base exception for all translation-related errors. The class name is intentionally spelled with a 'c' to avoid conflict with Java's `TranslationException`.
+
+== Maven pom.xml
+
+[source,xml]
+----
+<dependency>
+    <groupId>net.colesico.framework</groupId>
+    <artifactId>colesico-translation</artifactId>
+    <version>${colesico.version}</version>
+</dependency>
+----
+
+The module is transitive to `colesico-resource`.

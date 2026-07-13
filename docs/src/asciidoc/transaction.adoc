@@ -1,189 +1,187 @@
 [[intro]]
-
 = Colesico-Transaction
+:toc:
+:toclevels: 5
+:numbered:
 
-This module is intent to unified transactions management support.
+== What is Colesico-Transaction
 
-Two styles of control are supported - declarative and programmatic. These two types can be mixed:
-inside declarative transaction it is possible to use the programmatic.
+Colesico-Transaction is a unified transaction management module that provides both declarative and programmatic transaction control for service methods. It integrates with the Service module through code generation at compile time, enabling transparent transaction demarcation without runtime reflection or invasive code changes.
 
-The key component of transaction management is the *TransactionalShell* interface that  directly
-used in programmatic management and  in the declarative under the hood.
+The module is built around the `TransactionalShell` interface, which abstracts the underlying transaction management mechanism. The module itself does not provide a concrete transaction implementation - this must be supplied by vendor modules (e.g., `colesico-jdbc` for JDBC-based transactions, `colesico-jpa` for JPA, or custom implementations for other transaction managers). This design allows the transaction module to remain protocol-agnostic while supporting various transaction strategies.
 
-Colesico-transaction module does not provide a specific implementation of *TransactionalShell* and does not implement any specific transaction management mechanism.
+Two transaction control styles are supported:
+- **Declarative** - using the `@Transactional` annotation on service methods or classes, with transaction boundaries defined at compile time
+- **Programmatic** - using `TransactionalShell` directly in code for fine-grained control
 
-Such an implementation should be provided additionally by "vendors". For example colesico-jdbc module implements *TransactionalShell* for local transactions control with jdbc Connection.
+These styles can be freely mixed, allowing programmatic control inside declarative transactions and vice versa.
 
-== Transaction propagation
+The module integrates with:
+- `colesico-service` - for method interception via code generation
+- `colesico-config` - for configuration support
+- `colesico-ioc` - for dependency injection
 
-*TransactionalShell* supports this transaction propogation models  (see TransactionPropagation enum):
+== Key features
 
-* REQUIRED - Support a current transaction, create a new one if none exists.
-* REQUIRES_NEW - Create a new transaction, and suspend the current transaction if one exists.
-* MANDATORY - Support a current transaction, throw an exception if none exists.
-* NOT_SUPPORTED - Execute non-transactionally, suspend the current transaction if one exists.
-* SUPPORTS - Support a current transaction, execute non-transactionally if none exists.
-* NEVER - Execute non-transactionally, throw an exception if a transaction exists.
-* NESTED -  Execute within a nested transaction if a current transaction exists, behave like PROPAGATION_REQUIRED else.
+* Declarative transaction management via `@Transactional` annotation with propagation control
+* Programmatic transaction control via `TransactionalShell` interface
+* Seven standard transaction propagation behaviors (REQUIRED, REQUIRES_NEW, MANDATORY, NOT_SUPPORTED, SUPPORTS, NEVER, NESTED)
+* Multiple transactional shells support via `@Named` IoC qualifiers
+* Mixed declarative and programmatic control styles in the same service
+* Thread-local transaction context management with automatic suspension/resumption
+* Configurable transaction tuning mechanism for vendor-specific options
+* Extensible abstract base shell implementation for vendor modules
+* Compile-time code generation via `TxModulator` for declarative transactions
+* Transaction identification and logging support
 
+== Core concepts
+
+=== TransactionalShell
+
+`TransactionalShell` is the central abstraction for transaction management. It provides methods for each propagation behavior, allowing code execution within a transaction context. Each method accepts:
+- A `UnitOfWork` - the functional interface representing the transactional code block to execute
+- An optional tuning parameter - vendor-specific transaction configuration
+
+The shell manages transaction lifecycle including begin, commit, and rollback based on the propagation behavior and the execution outcome. When a `UnitOfWork` completes successfully, the transaction is committed; when an exception is thrown, rollback is triggered.
+
+=== TransactionPropagation
+
+Transaction propagation defines how transactions relate to each other when one transactional method calls another. The `TransactionPropagation` enum defines seven propagation behaviors following the standard transaction propagation model:
+
+- `REQUIRED` (default) - join an existing transaction if one exists, or create a new one if none exists. This is the most commonly used propagation.
+- `REQUIRES_NEW` - always create a new transaction, suspending any existing transaction for the duration of the new one. The suspended transaction resumes after the new transaction completes.
+- `MANDATORY` - require an existing transaction; throw an exception if none exists. This ensures the method always runs within an existing transaction context.
+- `NOT_SUPPORTED` - execute without a transaction; suspend any existing transaction for the duration of execution. The suspended transaction resumes after execution completes.
+- `SUPPORTS` - execute with a transaction if one exists, otherwise without. This is passive - the transaction context is used if available.
+- `NEVER` - execute without a transaction; throw an exception if a transaction exists. This prevents methods from running within transactions.
+- `NESTED` - execute within a nested transaction if a current transaction exists, otherwise behave like REQUIRED. Nested transactions allow partial rollback of a larger transaction.
+
+=== UnitOfWork
+
+`UnitOfWork` is a functional interface representing the code block to be executed within a transaction context. It has a single `execute()` method that returns a result. This abstraction allows lambda expressions to be passed to `TransactionalShell` methods for programmatic transaction control, enabling concise and readable transaction demarcation.
+
+=== AbstractTransactionalShell
+
+`AbstractTransactionalShell` provides a base implementation for concrete transaction shells. It manages thread-local transaction contexts and implements the propagation logic for all seven behaviors, including transaction suspension and resumption where required.
+
+Key aspects of the abstract implementation:
+- Thread-local transaction storage using `ThreadLocal<T>` for thread-safe transaction context
+- Transaction suspension and resumption for REQUIRES_NEW and NOT_SUPPORTED behaviors, ensuring proper isolation
+- Exception handling with rethrow capability for consistent error propagation
+- Transaction ID logging for debugging and monitoring
+- Active transaction access via `transaction()` and `transactionOrNull()` methods
+- Implementation of `setRollbackOnly()` for marking transactions for rollback
+
+Vendor modules extend this class to provide specific transaction management implementations, implementing the `createNew()` method to begin new transactions.
+
+=== Transaction
+
+`Transaction` is a marker interface representing an active transaction. It defines a single `id()` method for transaction identification, useful for logging, debugging, and transaction monitoring. Concrete transaction implementations (e.g., JDBC connection wrappers, JPA EntityManager contexts) implement this interface to provide vendor-specific transaction representation.
+
+=== Transaction tuning
+
+Transaction tuning allows vendor-specific transaction configuration (isolation level, timeout, read-only mode, etc.) to be passed to the shell. The `Tuning` interface provides a generic mechanism for applying configuration to transaction targets. The tuning object is passed as the second argument to `TransactionalShell` methods, enabling per-transaction configuration without modifying the shell instance.
+
+=== TxModulator
+
+The `TxModulator` is a service modulator that integrates with the Service module at compile time. It intercepts service methods annotated with `@Transactional` and generates proxy code to wrap method execution with transaction boundaries.
 
 == Declarative transaction management
 
-Specify the @Transactional annotation on a  method that should be executed within the transaction:
+Declarative transaction management is achieved by annotating service methods or entire service classes with `@Transactional`. When placed on a class, the annotation applies to all public methods of that service.
 
-[source,java]
+The `@Transactional` annotation supports two attributes:
+- `propagation` - transaction propagation behavior (default: TransactionPropagation.REQUIRED)
+- `shell` - named IoC qualifier for the shell instance (optional; if empty, the default shell is used)
+
+When a method annotated with `@Transactional` is invoked, the `TxModulator` generates code that:
+1. Retrieves the appropriate `TransactionalShell` instance from the service proxy field
+2. Delegates the method execution to the shell's corresponding propagation method
+3. Wraps the original method call within the transaction boundary defined by the propagation behavior
+
+== Programmatic transaction management
+
+Programmatic transaction control is performed by injecting `TransactionalShell` into the service constructor and calling its methods directly. This approach provides finer control over transaction boundaries and is useful when transaction demarcation needs to be conditional or dynamic.
+
+When using programmatic control:
+1. Inject the shell instance via constructor injection
+2. Call the appropriate shell method (required, requiresNew, mandatory, etc.)
+3. Pass a `UnitOfWork` lambda containing the business logic
+4. Optionally pass tuning parameters for transaction configuration
+
+The shell handles transaction lifecycle based on the chosen propagation behavior.
+
+== Mixed transaction control
+
+Declarative and programmatic styles can be freely mixed within the same service or even within the same method. This allows programmatic control inside declarative transactions and vice versa.
+
+A common pattern is using declarative transactions for the outer transaction boundary and programmatic control for inner, finer-grained transaction demarcation. This flexibility enables complex transaction scenarios while maintaining code readability.
+
+== Transaction context management
+
+The transaction context is managed via `ThreadLocal` in `AbstractTransactionalShell`, ensuring each thread has its own transaction state. This supports:
+- Transaction suspension and resumption for REQUIRES_NEW and NOT_SUPPORTED behaviors
+- Proper isolation between concurrent requests
+- Nested transaction support where implemented by vendor modules
+
+The context management is thread-safe and handles nested method calls within the same thread, maintaining the correct transaction hierarchy.
+
+== Exception handling
+
+`AbstractTransactionalShell` provides consistent exception handling across all propagation behaviors:
+
+- When a `UnitOfWork` completes successfully, the transaction is committed
+- When an exception is thrown, the transaction is marked for rollback and the exception is rethrown
+- Exceptions are rethrown as unchecked exceptions using the `rethrow()` utility method, allowing the caller to handle them appropriately
+- Transaction rollback is triggered by exception propagation through the call stack
+
+This approach ensures that transaction integrity is maintained and errors are properly propagated.
+
+== Multiple shell support
+
+Multiple transactional shells can be used within a single application, each with different transaction management strategies (e.g., different databases, transaction managers, or configuration settings). Shells are defined in IoC producers with `@Named` qualifiers and can be injected into services as needed.
+
+The `TxModulator` tracks shell instances by name and generates appropriate field names for each unique shell in the service proxy, ensuring correct shell selection for each annotated method.
+
+== Vendor implementation guidelines
+
+To implement a concrete `TransactionalShell` for a specific transaction manager:
+
+1. Extend `AbstractTransactionalShell` with the specific transaction type and tuning type
+2. Implement the `createNew()` method to begin a new transaction, returning a `Transaction` object
+3. Manage transaction lifecycle (begin, commit, rollback) using the vendor's transaction API
+4. Implement `setRollbackOnly()` to mark the current transaction for rollback
+5. Register the shell in IoC producer with `@Singleton` scope and optional `@Named` qualifiers
+6. Ensure thread-safety of the transaction context management
+
+The vendor's transaction representation must implement the `Transaction` interface.
+
+== Exception hierarchy
+
+`TransactionException` is the base exception for all transaction-related errors. It extends `RuntimeException` and can be thrown by any transaction management component.
+
+== Maven pom.xml
+
+[source,xml]
 ----
-@Service
-public class MyService {
-
-	//  Default transaction propagation REQUIRED	
-    @Transactional
-    public Boolean save(String value) {
-        ...
-    }
-	
-	// For REQUIRES_NEW propagation
-    @Transactional(propagation = TransactionPropagation.REQUIRES_NEW)
-    public Boolean save(String value) {
-        ...
-    }
-
-}
-----
-
-To use multiple transactional shells within single project:
-
-. Define TransactionalShells producing in IoC producer and annotate them with @Named
-+
-[source,java]
-----
-@Producer
-public class MyProducer {
-
-    @Singleton
-    @Named("txShell-A")
-    public TransactionalShell getTxShellA(){
-        return ...
-    }
-	
-    @Singleton
-    @Named("txShell-B")
-    public TransactionalShell getTxShellB(){
-        return ...
-    }
-
-}
-----
-
-. Use the "shell" attribute of *@Transactional* annotation to specify appropriate shell name
-+
-[source,java]
-----
-@Service
-public class MyService {
-
-    @Transactional(shell = "txShell-A")
-    public Boolean save(String value) {
-        ...
-    }
-	
-	
-    @Transactional(shell = "txShell-B")
-    public Boolean save(String value) {
-        ...
-    }
-
-}
----- 
-
-
-== Programmatic transaction control
-
-Programmatic transaction control is performed with the TransactionalShell instance.
-
-. Inject TransactionalShell to your service
-+
-[source,java]
-----
-@Service
-public class MyService {
-
-   TransactionalShell txShell;
-
-   @Inject
-   public MyService(TransactionalShell txShell){
-      this.txShell=txShell
-   }	
-
-}
----- 
-
-. Use TransactionalShell inside your method:
-+
-[source,java]
-----
-@Service
-public class MyService {
-
-   TransactionalShell txShell;
-   
-   ...
-   
-   public String  myMethod(){
-        ...
-		return txShell.requiresNew(() -> {
-			...
-			return "hello";	
-		});
-   }
-----
- 
-== Mixed transaction control 
-
-It is possible to use the programmatic transaction control inside  the declarative:
-
-[source,java]
-----
-@Service
-public class MyService {
-
-   TransactionalShell txShell;
-   
-   ...
-   
-   // Declarative transaction 
-   @Transactionl
-   public void  myMethod(){
-        ...
-		// Programmatical
-		txShell.requiresNew(() -> {
-			...
-		});
-   }
+<dependency>
+    <groupId>net.colesico.framework</groupId>
+    <artifactId>colesico-transaction</artifactId>
+    <version>${colesico.version}</version>
+</dependency>
 ----
 
- 
-== Transaction tuning
+The module is transitive to `colesico-service` and `colesico-config`. The annotation processor is automatically registered via `ServiceLoader`.
 
-Some TransactionalShells implementations may support transaction tuning.
+== Complete example
 
-In this case,  with the programmatic transaction control, as the second argument can be passed  the TransactionalShell-specific "tuning" for "configure/tune" the transaction:
+See full source code in the framework source code section `#examples/transaction-example/`. The example demonstrates:
 
-[source,java]
-----
-@Service
-public class MyService {
+- Default and custom transactional shell definitions in IoC producer
+- Declarative transaction control with default and custom shells
+- Programmatic transaction control with named shell
+- Mixed declarative and programmatic styles in the same method
+- Transaction propagation behavior demonstration (REQUIRES_NEW, MANDATORY, etc.)
+- Thread-local transaction context management
 
-   TransactionalShell txShell;
-  
-   public String  myMethod(){
-        ...
-		return txShell.requiresNew(() -> {
-			...
-		}, new ATuning(options));
-   }
-----
-
-== Examples
-
-See full source code in the framework source code section #examples/transaction-example#
+The example includes both the service implementation and comprehensive tests verifying transaction behavior.

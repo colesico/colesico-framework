@@ -1,0 +1,175 @@
+[[intro]]
+= Colesico-Resource
+:toc:
+:toclevels: 5
+:numbered:
+
+== What is Colesico-Resource
+
+Colesico-Resource is a resource management module that provides flexible resource localization and name rewriting capabilities. It enables applications to serve localized resources (messages, templates, configuration files, etc.) based on user profiles and to rewrite resource paths through configurable prefix substitutions.
+
+The module is built around two core concepts:
+- **Resource Localization** - serving localized versions of resources based on user locale and other qualifiers
+- **Resource Rewriting** - rewriting resource names through prefix substitution rules
+
+The module integrates with:
+- `colesico-profile` - for user profile-based localization
+- `colesico-config` - for configuration
+- `colesico-ioc` - for dependency injection
+
+== Key features
+
+* Resource localization based on user profile qualifiers (language, country, variant)
+* Configurable qualifiers definition and objective qualifiers resolution
+* Resource name template support with qualifier placeholders and substitution operators
+* Prefix-based resource name rewriting with configurable substitution rules
+* Two-phase rewriting (before and after localization)
+* Multiple localization options via polyvariant configuration
+* Path trie-based efficient lookup for both localization and rewriting
+* Extensible localization options for custom resource naming patterns
+
+== Core concepts
+
+=== ResourceResolver
+
+`ResourceResolver` is the central entry point for all resource management operations. It provides methods for:
+
+* `resolve(String baseName)` - returns the best resolved resource name for the current profile, applying both prefix substitution and localization
+* `resolutions(String baseName)` - returns all possible resolved resource names ordered by degree of matching (worst to best)
+* `objectiveQualifiers()` - returns the current objective qualifiers based on the user profile
+* `resourceURLs(String baseName)` - returns enumeration of URLs for resolved resources
+* `resourceStream(String baseName)` - returns input stream for the best resolved resource
+
+The resolver combines prefix substitution with localization, applying substitutions before and after the localization process.
+
+=== Resource localization
+
+Localization transforms a base resource name into a localized name based on the user's profile qualifiers (language, country, variant). The process is controlled by:
+
+==== QualifiersDefinition
+
+Defines the canonical order and set of qualifiers used for localization. By default, language and country qualifiers are supported. The order of qualifiers determines their priority when matching subject qualifiers to objective ones.
+
+==== L10nConfigPrototype
+
+The configuration prototype for localization behavior. It defines:
+- `qualifiersDefinition()` - the qualifier set and order
+- `objectiveQualifiers(Profile)` - how to extract qualifier values from a user profile
+
+A default stub implementation is provided with language and country qualifiers.
+
+==== L10nOptionsPrototype
+
+A polyvariant configuration prototype that allows registering localization rules for specific resource names. Each rule specifies:
+- A base name template with `{Q}` placeholder for qualifier suffix and `{{substitution}}` for name substitution
+- One or more sets of qualifiers (subject qualifiers) that the rule applies to
+
+Example of configuration:
+[source,java]
+----
+options
+    .baseName("messages{Q}.txt")              // Template with qualifier placeholder
+    .qualifiers().language("en").country("GB") // Subject qualifiers
+    .baseName("app/{{module=ext}}/file.txt")   // Template with substitution
+    .qualifiers().country("RU")
+----
+
+==== Localization template syntax
+
+Resource name templates support two special constructs:
+
+* `{Q}` - qualifiers suffix placeholder. Replaced with `_lang_country` based on matched qualifiers
+* `{{text=replacement}}` - substitution operator. Replaces `text` with `replacement` in the resource name
+
+Example: `messages{Q}.txt` with qualifiers `language="en", country="US"` becomes `messages_en_US.txt`
+
+==== SubjectQualifiers and ObjectiveQualifiers
+
+- `SubjectQualifiers` - qualifiers attached to a localization rule
+- `ObjectiveQualifiers` - qualifiers derived from the user profile
+
+The localization engine finds the best match between subject qualifiers and objective qualifiers using a tree-based matching algorithm. Null values in subject qualifiers act as wildcards (`*`).
+
+=== Prefix substitution
+
+`PrefixSubstitutor` rewrites resource names by replacing prefix segments with alternative paths. This is useful for:
+- Virtual resource paths
+- Module/component resource isolation
+- Legacy path migration
+
+The substitutor supports two phases:
+- `BEFORE_LOCALIZE` - applied before localization (useful for path normalization)
+- `AFTER_LOCALIZE` - applied after localization (useful for final path mapping)
+
+Rules are defined through `ResourcePrefixOptionsPrototype` configuration:
+[source,java]
+----
+options.substitution("alias", "foo/dummy", Phase.BEFORE_LOCALIZE);
+options.substitution("/old/path", "/new/path", Phase.AFTER_LOCALIZE);
+----
+
+Substitution uses path trie for efficient prefix matching.
+
+== Resource resolution process
+
+The `ResourceResolver.resolve(String baseName)` method processes a resource name through three stages:
+
+. **Prefix substitution (BEFORE_LOCALIZE)** - applies prefix rewriting rules before localization
+. **Localization** - finds the best matching localization rule for the resource name and applies qualifier suffix and substitutions
+. **Prefix substitution (AFTER_LOCALIZE)** - applies prefix rewriting rules after localization
+
+If no matching localization rule exists, the original base name is returned.
+
+The `resolutions(String baseName)` method returns all possible resolved names, ordered from least specific to most specific (default to best match).
+
+== Configuration
+
+=== L10nConfigPrototype
+
+The default stub implementation uses:
+- Qualifiers definition: language, country
+- Objective qualifiers: extracted from profile locale
+
+Applications can override this configuration by providing a custom `@Config` implementation.
+
+=== L10nOptionsPrototype
+
+Registered as polyvariant configurations, allowing multiple options to be merged. Each configuration can register localization rules for specific resource name templates.
+
+=== ResourcePrefixOptionsPrototype
+
+Registered as polyvariant configuration for prefix substitution rules. Each configuration defines rewriting rules with origin prefix, target prefix, and phase.
+
+== Integration with Profile module
+
+The Resource module relies on `colesico-profile` for user profile resolution. The current profile's locale determines the objective qualifiers used for localization. The profile is resolved automatically through the `ProfileManager`.
+
+== Path trie implementation
+
+Both localization and prefix substitution use `PathTrie` for efficient path-based lookup:
+- `PathTrie` stores nodes representing path segments
+- Each node can store a value (localization config or rewriting rule)
+- Lookup follows the path segments to find the best matching node
+- Supports prefix matching for substitution rules
+
+== Exception hierarchy
+
+* `ResourceException` - base exception for all resource-related errors
+* `ResourceNotFoundException` - thrown when a resolved resource cannot be found
+
+== Maven pom.xml
+
+[source,xml]
+----
+<dependency>
+    <groupId>net.colesico.framework</groupId>
+    <artifactId>colesico-resource</artifactId>
+    <version>${colesico.version}</version>
+</dependency>
+----
+
+The module is transitive to `colesico-config` and `colesico-profile`.
+
+== Examples
+
+See full source code in the framework test directory `#modules/colesico-resource/src/test/`.
