@@ -17,14 +17,14 @@ package colesico.framework.resource.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.resource.ResourceLocalizer;
+import colesico.framework.resource.ResourceResolver;
 import colesico.framework.resource.internal.l10n.Localizer;
 
 
 @Producer
 @Produce(value = Localizer.class)
 @Produce(value = PrefixSubstitutor.class)
-@Produce(value = ResourceLocalizerImpl.class, keyType = ResourceLocalizer.class)
+@Produce(value = ResourceResolverImpl.class, keyType = ResourceResolver.class)
 public class ResourceProducer {
 
 }

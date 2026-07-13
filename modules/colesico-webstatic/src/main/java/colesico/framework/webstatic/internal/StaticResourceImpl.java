@@ -17,7 +17,7 @@ package colesico.framework.webstatic.internal;
 
 import colesico.framework.http.HttpContext;
 import colesico.framework.resource.ResourceException;
-import colesico.framework.resource.ResourceLocalizer;
+import colesico.framework.resource.ResourceResolver;
 import colesico.framework.resource.ResourceNotFoundException;
 import colesico.framework.webstatic.MimeAssist;
 import colesico.framework.webstatic.StaticResource;
@@ -38,14 +38,14 @@ public class StaticResourceImpl implements StaticResource {
     protected final Logger log = LoggerFactory.getLogger(StaticResource.class);
 
     protected final Provider<HttpContext> httpContextProv;
-    protected final ResourceLocalizer resourceLocalizer;
+    protected final ResourceResolver resourceResolver;
 
     protected final String resourcesRoot;
 
-    public StaticResourceImpl(Provider<HttpContext> httpContextProv, ResourceLocalizer resourceLocalizer, String resourcesRoot) {
+    public StaticResourceImpl(Provider<HttpContext> httpContextProv, ResourceResolver resourceResolver, String resourcesRoot) {
         this.httpContextProv = httpContextProv;
-        this.resourceLocalizer = resourceLocalizer;
-        this.resourcesRoot = resourceLocalizer.localize(resourcesRoot);
+        this.resourceResolver = resourceResolver;
+        this.resourcesRoot = resourceResolver.resolve(resourcesRoot);
     }
 
     @Override
@@ -56,12 +56,12 @@ public class StaticResourceImpl implements StaticResource {
         String resourcePath = resourcesRoot + '/' + resourceUri;
 
         if (rewrite) {
-            resourcePath = resourceLocalizer.localize(resourcePath);
+            resourcePath = resourceResolver.resolve(resourcePath);
         }
 
         httpContext.response().setContentType(MimeAssist.mimeType(resourcePath));
 
-        try (InputStream is = resourceLocalizer.resourceStream(resourcePath);
+        try (InputStream is = resourceResolver.resourceStream(resourcePath);
              OutputStream os = httpContext.response().outputStream()) {
             byte[] buf = new byte[SEND_BUFFER_SIZE];
             int c;

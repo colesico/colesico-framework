@@ -16,7 +16,7 @@
 package colesico.framework.resource.internal;
 
 import colesico.framework.resource.ResourceException;
-import colesico.framework.resource.ResourceLocalizer;
+import colesico.framework.resource.ResourceResolver;
 import colesico.framework.resource.ResourceNotFoundException;
 import colesico.framework.resource.ResourcePrefixOptionsPrototype;
 import colesico.framework.resource.internal.l10n.Localizer;
@@ -35,21 +35,21 @@ import java.util.Enumeration;
  * @author Vladlen Larionov
  */
 @Singleton
-public class ResourceLocalizerImpl implements ResourceLocalizer {
+public class ResourceResolverImpl implements ResourceResolver {
 
-    protected final Logger log = LoggerFactory.getLogger(ResourceLocalizer.class);
+    protected final Logger log = LoggerFactory.getLogger(ResourceResolver.class);
 
     private final Localizer localizer;
     private final PrefixSubstitutor prefixSubstitutor;
 
     @Inject
-    public ResourceLocalizerImpl(Localizer localizer, PrefixSubstitutor prefixSubstitutor) {
+    public ResourceResolverImpl(Localizer localizer, PrefixSubstitutor prefixSubstitutor) {
         this.localizer = localizer;
         this.prefixSubstitutor = prefixSubstitutor;
     }
 
     @Override
-    public String localize(String baseName) {
+    public String resolve(String baseName) {
         baseName = prefixSubstitutor.substitutePrefix(baseName, ResourcePrefixOptionsPrototype.Phase.BEFORE_LOCALIZE);
         baseName = localizer.localize(baseName);
         baseName = prefixSubstitutor.substitutePrefix(baseName, ResourcePrefixOptionsPrototype.Phase.AFTER_LOCALIZE);
@@ -57,7 +57,7 @@ public class ResourceLocalizerImpl implements ResourceLocalizer {
     }
 
     @Override
-    public String[] localizations(String baseName) {
+    public String[] resolutions(String baseName) {
         baseName = prefixSubstitutor.substitutePrefix(baseName, ResourcePrefixOptionsPrototype.Phase.BEFORE_LOCALIZE);
         String[] localizations = localizer.localizations(baseName);
         for (int i = 0; i < localizations.length; i++) {
@@ -74,7 +74,7 @@ public class ResourceLocalizerImpl implements ResourceLocalizer {
     @Override
     public Enumeration<URL> resourceURLs(String baseName) {
         try {
-            String resourceName = localize(baseName);
+            String resourceName = resolve(baseName);
             return classLoader().getResources(resourceName);
         } catch (IOException e) {
             throw new ResourceException("Error reading resource URLs", e);
@@ -83,7 +83,7 @@ public class ResourceLocalizerImpl implements ResourceLocalizer {
 
     @Override
     public InputStream resourceStream(String baseName) {
-        String resourceName = localize(baseName);
+        String resourceName = resolve(baseName);
         InputStream in = classLoader().getResourceAsStream(resourceName);
         if (in == null) {
             throw new ResourceNotFoundException(resourceName);

@@ -21,7 +21,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.ioc.message.InjectionPoint;
 import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.scope.Unscoped;
-import colesico.framework.resource.ResourceLocalizer;
+import colesico.framework.resource.ResourceResolver;
 import colesico.framework.webstatic.StaticResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,16 +33,16 @@ public class StaticContentBuilderImpl implements StaticResource.Builder {
 
     protected Logger log = LoggerFactory.getLogger(StaticResource.Builder.class.getCanonicalName());
     protected final Provider<HttpContext> httpContextProv;
-    protected final ResourceLocalizer resourceLocalizer;
+    protected final ResourceResolver resourceResolver;
     protected String resourcesRoot;
 
     public StaticContentBuilderImpl(
             @IocMessage InjectionPoint injectionPoint,
             Provider<HttpContext> httpContextProv,
-            ResourceLocalizer resourceLocalizer) {
+            ResourceResolver resourceResolver) {
 
         this.httpContextProv = httpContextProv;
-        this.resourceLocalizer = resourceLocalizer;
+        this.resourceResolver = resourceResolver;
 
         if (injectionPoint != null) {
             String moduleName = injectionPoint.targetClass().getModule().getName();
@@ -67,6 +67,6 @@ public class StaticContentBuilderImpl implements StaticResource.Builder {
         if (StringUtils.isBlank(resourcesRoot)) {
             throw new RuntimeException("Undefined resources root");
         }
-        return new StaticResourceImpl(httpContextProv, resourceLocalizer, resourcesRoot);
+        return new StaticResourceImpl(httpContextProv, resourceResolver, resourcesRoot);
     }
 }

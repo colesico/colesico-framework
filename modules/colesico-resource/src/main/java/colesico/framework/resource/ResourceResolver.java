@@ -23,23 +23,25 @@ import java.net.URL;
 import java.util.Enumeration;
 
 /**
- * Resource localizer  (resource name localizations, rewriting, etc.)
+ * Resource rewriter/localizer
+ * Perform resource name localization and rewriting based on rules
+ * defined in config files and the current context (profile)
  */
-public interface ResourceLocalizer {
+public interface ResourceResolver {
 
     /**
-     * Returns localized resource name best matched with current profile
+     * Rewrite/localize resource name best matched with current profile
      *
      * @see colesico.framework.resource.l10n.L10nConfigPrototype#objectiveQualifiers(Profile)
      */
-    String localize(String baseName);
+    String resolve(String baseName);
 
     /**
-     * Returns localized resource names ordered  by degree of matching with {@link ObjectiveQualifiers}
-     * name[N] - best matching (same as {@link ResourceLocalizer#localize(String)} )
+     * Returns rewrote/localized resource names ordered  by degree of matching with {@link ObjectiveQualifiers}
+     * name[N] - best matching (same as {@link ResourceResolver#resolve(String)} )
      * name[0] - worst matching  (default resource)
      */
-    String[] localizations(String baseName);
+    String[] resolutions(String baseName);
 
     /**
      *  Return objective qualifiers for current profile
@@ -47,12 +49,12 @@ public interface ResourceLocalizer {
     ObjectiveQualifiers objectiveQualifiers();
 
     /**
-     * Localize resource name and returns resource URLs
+     * Resolve resource name and returns resource URLs
      */
     Enumeration<URL> resourceURLs(String baseName);
 
     /**
-     * Localize resource name and returns resource input stream
+     * Resolve resource name and returns resource input stream
      */
     InputStream resourceStream(String baseName);
 

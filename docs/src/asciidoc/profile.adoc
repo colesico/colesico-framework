@@ -1,29 +1,118 @@
 [[intro]]
-
 = Colesico-Profile
+:toc:
+:toclevels: 5
+:numbered:
 
-This module is used as centralized access point to user profile.
-Profile is a sets of data associated with a specific user to customize the representation of information for user.
-Any profile contains current locale. It is mainly used for localization purposes.
+== What is Colesico-Profile
 
-Initially, the profile is read from a remote "caller", then is checked for validity,
-is enriched with additional data with ProfileController.
-Remote "caller" in particular case may be a http browser,
-and the profile can be initially read for example from http cookie.
+Colesico-Profile is a user localization and preference management module that provides a unified API for managing user profiles across different contexts. A profile contains information necessary to adapt the application to the user - locale, time zone, user preferences, terminal type, and any other application-specific settings.
 
-To get current user profile use ProfileKit service:
+The module is built around three core concepts:
+- **Profile** - represents user localization and preference data
+- **ProfileContext** - holds the current profile in the execution scope
+- **ProfileSource** - provides persistence and retrieval of profiles
 
+The module integrates with:
+- `colesico-security` - for identity-based profile resolution
+- `colesico-teleapi` - for data port-based profile sources
+- `colesico-config` - for configuration
+- `colesico-ioc` - for dependency injection and scope management
+
+== Key features
+
+* Profile management with locale and custom attributes
+* Task scope integration for request-scoped profiles
+* Identity-based profile resolution
+* Pluggable profile sources (DataPort, in-memory, custom)
+* Automatic profile resolution with fallback to defaults
+* Profile commit and reload operations
+* Built-in DataPort-based profile source
+* Simple in-memory profile source for testing and prototyping
+* Direct injection of Profile and Locale via IoC producers
+
+== Core concepts
+
+=== Profile
+
+`Profile` is the central abstraction representing user localization and preferences. The interface defines an identifier, a locale, and the ability to update the locale. The default implementation `Profile.Default` provides a simple holder for ID and locale. Applications can extend the profile to add custom attributes such as time zone, theme preferences, or any other user-specific data.
+
+Profiles are stored in the `ProfileContext`, which is bound to the current `TaskScope`. This ensures the profile remains available throughout the entire request processing chain without requiring explicit passing between components. The context can be accessed via `ProfileContext.SCOPE_KEY`.
+
+=== ProfileContext
+
+`ProfileContext` holds the current profile for the execution scope. It provides methods to retrieve, set, and clear the profile. The profile is stored under `ProfileContext.SCOPE_KEY` in the `TaskScope`, making it accessible to any component in the execution chain. This design enables transparent profile access across layers without explicit parameter passing.
+
+=== ProfileManager
+
+`ProfileManager` is the central entry point for all profile operations. It coordinates between the profile context, identity context, and profile source to provide seamless profile resolution.
+
+The `resolve()` method performs automatic profile resolution with the following sequence:
+1. Checks `ProfileContext` for an existing cached profile
+2. If missing, retrieves the current `Identity` from `IdentityContext` and uses its ID as the profile ID
+3. Fetches the profile from `ProfileSource` using the ID
+4. If no profile exists, creates a default profile via `ProfileSource.getDefault()`
+5. Caches the resolved profile in the context and returns it
+
+The `commit()` method saves profile preferences to `ProfileSource` and updates the context, ensuring both storage and in-memory cache are synchronized. This is typically called after modifying profile attributes.
+
+The `reload()` method clears the context and forces re-resolution from the source. This is useful when profile data might have changed externally (e.g., by another service or administrative action).
+
+=== ProfileSource
+
+`ProfileSource` represents any storage or source for profiles. It provides a generic abstraction for reading, writing, and deleting profiles, with the flexibility to support various backends.
+
+The built-in `ProfileSourceImpl` uses `DataPort` to read and write profiles, enabling profile transmission over HTTP, gRPC, or other protocols. This is particularly useful for distributed applications where profiles are transmitted between services or clients. The source reads profiles by ID and writes them back through the data port, supporting both request and response contexts.
+
+The `SimpleProfileSource` provides a thread-safe in-memory implementation using `ConcurrentHashMap`. It is designed to be extended for specific profile types and accepts a default profile factory via constructor. This implementation is ideal for testing, prototyping, or environments where persistent storage is not required.
+
+== Integration with Security module
+
+The Profile module integrates with `colesico-security` to automatically resolve profiles based on the current identity. When `ProfileManager.resolve()` is called, it retrieves the identity from `IdentityContext` and uses its ID as the profile identifier. This seamless integration enables user-specific localization without manual profile management. The identity context provides the authenticated subject's ID, which serves as the natural key for profile lookup.
+
+== Profile resolution flow
+
+The resolution process follows a clear chain of responsibility:
+1. The `ProfileContext` is checked for a cached profile
+2. If found, the cached profile is returned immediately (fast path)
+3. If not found, the current identity is obtained from `IdentityContext`
+4. The identity's ID is used as the profile ID
+5. `ProfileSource.read(profileId)` attempts to fetch the profile
+6. If a profile exists in the source, it is returned
+7. If no profile exists, `ProfileSource.getDefault(profileId)` creates a default profile with the system default locale
+8. The resolved profile is cached in the context and returned
+
+This resolution occurs transparently when injecting a `Profile` via the IoC producer.
+
+== Built-in producers
+
+`ProfileProducer` provides built-in IoC producers for seamless integration:
+
+- `Profile` - unscoped producer that resolves the current profile via `ProfileManager.resolve()`. This producer returns the profile for the current user based on the identity.
+- `Locale` - unscoped producer that extracts the locale from the current profile. This allows direct injection of the user's locale for internationalization purposes.
+- `ProfileContext` - singleton implementation bound to `TaskScope`
+- `ProfileManager` - manager implementation coordinating all profile operations
+- `ProfileSource` - DataPort-based source implementation (registered as a stub by default, allowing override with custom implementations)
+
+== Profile commit and reload
+
+The `commit(Profile)` operation saves the profile to the source and updates the context. This ensures both persistent storage and in-memory cache are synchronized after profile modifications. Typical use cases include updating user preferences, changing locale, or modifying any profile attribute.
+
+The `reload()` operation clears the context and forces re-resolution from the source. This is useful when profile data might have changed externally through administrative actions, updates from other services, or after background synchronization. The next call to `resolve()` will fetch the fresh profile from the source.
+
+== Exception hierarchy
+
+`ProfileException` is the base exception for all profile-related errors. It extends `RuntimeException` and can be thrown by any component in the profile management chain.
+
+== Maven pom.xml
+
+[source,xml]
 ----
-  Profile profile = profileKit.getProfile();
+<dependency>
+    <groupId>net.colesico.framework</groupId>
+    <artifactId>colesico-profile</artifactId>
+    <version>${colesico.version}</version>
+</dependency>
 ----
 
-The concept of localization is based on the concept of qualifiers.
-Each profile contains a set of qualifiers that can be associated with "localization subject".
-Localization subject is an any entity (for example - translation strings bundle file)
-that can be qualified according to the current profile.
-
-
-
-
-
-
+The module is transitive to `colesico-teleapi` and `colesico-config`. It also has a compile-time dependency on `colesico-security` for identity-based profile resolution.

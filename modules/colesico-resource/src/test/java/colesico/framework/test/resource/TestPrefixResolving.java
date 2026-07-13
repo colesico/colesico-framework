@@ -19,7 +19,7 @@ package colesico.framework.test.resource;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.scope.TaskScope;
-import colesico.framework.resource.ResourceLocalizer;
+import colesico.framework.resource.ResourceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
@@ -27,18 +27,18 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
-public class TestPrefixRewriter {
+public class TestPrefixResolving {
 
     private Ioc ioc;
-    private ResourceLocalizer resourceLocalizer;
+    private ResourceResolver resourceResolver;
 
-    Logger logger = LoggerFactory.getLogger(TestPrefixRewriter.class);
+    Logger logger = LoggerFactory.getLogger(TestPrefixResolving.class);
 
     @BeforeClass
     public void init() {
-        logger.info("Init PrefixRewriter test");
+        logger.info("Init PrefixResolving test");
         ioc = IocBuilder.create().build();
-        resourceLocalizer = ioc.instance(ResourceLocalizer.class);
+        resourceResolver = ioc.instance(ResourceResolver.class);
     }
 
     @Test
@@ -46,34 +46,34 @@ public class TestPrefixRewriter {
         ioc.instance(TaskScope.class).forTask(() -> {
             String path;
 
-            path = resourceLocalizer.localize("/");
+            path = resourceResolver.resolve("/");
             assertEquals(path, "/");
 
-            path = resourceLocalizer.localize("/home/foo");
+            path = resourceResolver.resolve("/home/foo");
             assertEquals(path, "/home/foo");
 
-            path = resourceLocalizer.localize("home/foo");
+            path = resourceResolver.resolve("home/foo");
             assertEquals(path, "home/foo");
 
-            path = resourceLocalizer.localize("alias");
+            path = resourceResolver.resolve("alias");
             assertEquals(path, "foo/dummy");
 
-            path = resourceLocalizer.localize("/alias");
+            path = resourceResolver.resolve("/alias");
             assertEquals(path, "/foo/dummy");
 
-            path = resourceLocalizer.localize("/alias/");
+            path = resourceResolver.resolve("/alias/");
             assertEquals(path, "/foo/dummy/");
 
-            path = resourceLocalizer.localize("alias");
+            path = resourceResolver.resolve("alias");
             assertEquals(path, "foo/dummy");
 
-            path = resourceLocalizer.localize("alias/home");
+            path = resourceResolver.resolve("alias/home");
             assertEquals(path, "foo/dummy/home");
 
-            path = resourceLocalizer.localize("/alias/home");
+            path = resourceResolver.resolve("/alias/home");
             assertEquals(path, "/foo/dummy/home");
 
-            path = resourceLocalizer.localize("/alias/home/");
+            path = resourceResolver.resolve("/alias/home/");
             assertEquals(path, "/foo/dummy/home/");
 
             logger.info("Resource properties test passed");
