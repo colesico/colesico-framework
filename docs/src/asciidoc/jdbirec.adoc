@@ -9,19 +9,21 @@
 Colesico-JDBIRec is a powerful object-relational mapping (ORM) extension for JDBI that provides a declarative, annotation-based approach to mapping Java objects to database tables. It eliminates the need for manual SQL writing by generating type-safe record kits that handle CRUD operations and complex queries.
 
 The module builds on JDBI by providing:
-- Declarative record definitions with `@Record` annotation
-- Automatic SQL generation for CRUD operations
-- Support for nested compositions (embedded objects)
-- Flexible view system for different field sets
-- Join support for related records
-- Column renaming and selection expressions
-- Tag-based filtering for views and compositions
-- Automatic RecordKit generation with IoC integration
+
+* Declarative record definitions with `@Record` annotation
+* Automatic SQL generation for CRUD operations
+* Support for nested compositions (embedded objects)
+* Flexible view system for different field sets
+* Join support for related records
+* Column renaming and selection expressions
+* Tag-based filtering for views and compositions
+* Automatic RecordKit generation with IoC integration
 
 The module integrates with:
-- `colesico-jdbi` - for JDBI handle management
-- `colesico-ioc` - for dependency injection
-- `org.jdbi.v3.core` - for JDBI API
+
+* `colesico-jdbi` - for JDBI handle management
+* `colesico-ioc` - for dependency injection
+* `org.jdbi.v3.core` - for JDBI API
 
 == Core concepts
 
@@ -30,9 +32,10 @@ The module integrates with:
 A `Record` is a POJO class annotated with `@Record` that represents a database table. It serves as the primary abstraction for database entities, analogous to JPA's `@Entity` but designed specifically for JDBI with a focus on simplicity and compile-time code generation.
 
 The `@Record` annotation defines the mapping between the Java class and the database table through the following attributes:
-- `table` - specifies the database table name to which the record maps
-- `tableAlias` - provides an optional alias for the table in SQL queries, useful when the same table is referenced multiple times or for query readability
-- `views` - defines one or more `RecordView` configurations for different perspectives on the same data
+
+* `table` - specifies the database table name to which the record maps
+* `tableAlias` - provides an optional alias for the table in SQL queries, useful when the same table is referenced multiple times or for query readability
+* `views` - defines one or more `RecordView` configurations for different perspectives on the same data
 
 A record class contains fields that represent database columns. Each field is mapped using the `@Column` annotation, and complex object structures can be embedded using the `@Composition` annotation.
 
@@ -59,6 +62,7 @@ The `Column` annotation supports being repeated multiple times on a single field
 A composition field can be an instance of any Java class whose fields are mapped with `@Column` annotations. The framework recursively processes all fields within the composition, generating the appropriate column mappings.
 
 Key attributes of `@Composition`:
+
 - `name` - the logical name of the composition, defaults to the field name, used in renaming strategies and tag paths
 - `renaming` - a string template for renaming composition columns, supporting placeholders like `@field` (field name), `@column` (column name), and `@composition` (composition name)
 - `tagFilter` - a `TagFilter` that controls which nested columns are included based on tags
@@ -104,11 +108,13 @@ Each `@RecordView` specifies:
 - `oneOf` - includes elements that have exactly one of the listed tags.
 
 Tags can be:
+
 - **Global tags** - starting with `#` (e.g., `#full`, `#brief`), these are universally recognized
 - **Local tags** - automatically converted to global tags by prefixing `#` and the field path (e.g., `detailed` becomes `#foo.bar.detailed`)
 - **Automatic path tags** - the framework automatically adds a tag to each element based on its full path (e.g., `#foo.bar.compName` or `#foo.bar.baz.columnName`)
 
 Special filters:
+
 - `?has-tags` - matches elements with at least one tag
 - `?no-tags` - matches elements with no tags
 
