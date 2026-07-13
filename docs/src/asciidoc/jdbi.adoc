@@ -1,179 +1,174 @@
-= JDBI integration module
+= Colesico-JDBI
+:toc:
+:toclevels: 5
+:numbered:
 
-This module provides an ability to use JDBI within services via the "Handle" injection.
-It is also provides a local transaction management support with the TransactionalShell implementation.
+== What is Colesico-JDBI
 
-Typical usage:
+Colesico-JDBI is a concrete implementation of the transaction management abstraction for JDBI (a lightweight JDBC wrapper). It provides seamless integration between the transaction module and JDBI handles, enabling declarative and programmatic transaction control for database operations using JDBI's fluent API.
 
-.MyService.java
+The module builds on `colesico-transaction` and `colesico-hikaricp` by providing:
+- A concrete `TransactionalShell` implementation (`JdbiTransactionalShell`) that manages JDBI handles within transactions
+- JDBI factory with configurable options via `JdbiOptionsPrototype`
+- IoC producers for default and custom JDBI handles and transaction shells
+- Configuration prototypes for JDBI data sources and options
+
+The module integrates with:
+- `colesico-transaction` - for transaction management abstraction
+- `colesico-hikaricp` - for connection pooling via HikariCP
+- `colesico-config` - for configuration
+- `colesico-ioc` - for dependency injection
+- `org.jdbi.v3.core` - for JDBI API
+
+== Core concepts
+
+=== JdbiConfigPrototype
+
+`JdbiConfigPrototype` is the configuration prototype for creating JDBI instances. It defines:
+- `dataSource()` - the DataSource to be used by JDBI
+- `options()` - optional configuration suppliers to apply to the JDBI instance
+
+This is a `ConfigModel.MESSAGE` type configuration, meaning it is passed as a message to the JDBI factory. The configuration supports both single and multiple JDBI instances through different configuration classes. The `JdbiConfigPrototype` is annotated with `@ConfigPrototype(model = ConfigModel.MESSAGE, target = Jdbi.class)`, indicating that the JDBI instance is the target of this configuration.
+
+=== AbstractJdbiConfig
+
+`AbstractJdbiConfig` is a convenient base class for JDBI configurations. It implements `JdbiConfigPrototype` and provides constructor injection for DataSource and options. Applications can extend this class to create custom JDBI configurations for different data sources. The class provides a default implementation of `dataSource()` and `options()` methods.
+
+The default configuration implementation `JdbiConfigImpl` extends `AbstractJdbiConfig` and is registered as a stub with `@Substitute(STUB)`, allowing applications to override it with custom configurations.
+
+=== JdbiOptionsPrototype
+
+`JdbiOptionsPrototype` is a polyvariant configuration for applying optional customizations to a JDBI instance. Each options class defines an `applyOptions(Jdbi)` method where customizations can be registered. Multiple options classes can be applied to a single JDBI instance through the `Polysupplier` mechanism.
+
+=== JdbiTransactionalShell
+
+`JdbiTransactionalShell` is the concrete implementation of `TransactionalShell` for JDBI. It manages JDBI handles within the context of a transaction, handling:
+- Handle acquisition from a `Jdbi` instance using `jdbi.open()`
+- Transaction lifecycle (begin, commit, rollback) via JDBI's `Handle` API
+- Handle suspension and resumption for nested transactions
+- Thread-local transaction context management via `ThreadLocal<JdbiTransaction>`
+
+The shell is constructed with a `Jdbi` instance and provides methods for accessing the current handle (`handle()`) and the underlying Jdbi instance (`jdbi()`). It implements all transaction propagation behaviors defined in the transaction module.
+
+=== JdbiTransaction
+
+`JdbiTransaction` is the transaction representation for JDBI, implementing the `Transaction` interface. It holds:
+- The underlying `Handle` object
+- Transaction tuning configuration (`Tuning<Handle>`)
+- Transaction ID for logging and monitoring (`id`)
+- Rollback-only flag (`rollbackOnly`)
+
+The transaction object is stored in thread-local storage and accessed by the shell during transaction operations. The `handle()` method returns the current handle, and the `tuning()` method provides access to transaction-specific configuration.
+
+=== Handle management
+
+The JDBI handle lifecycle is managed by `JdbiTransactionalShell`:
+
+1. When a transaction begins, the shell obtains a handle from the Jdbi instance using `jdbi.open()`
+2. The handle is stored in the transaction object and associated with the current thread via `ThreadLocal`
+3. Multiple calls to `handle()` within the same transaction return the same handle instance
+4. When the transaction completes successfully, the handle is committed (`handle.commit()`) and closed (`handle.close()`)
+5. If an exception is thrown, the handle is rolled back (`handle.rollback()`) and closed
+6. For nested transactions (`REQUIRES_NEW`), the current transaction is suspended (removed from ThreadLocal) and a new one is created
+7. After the nested transaction completes, the suspended transaction is restored
+
+This ensures that all database operations within a transaction share the same handle and connection.
+
+== Configuration
+
+=== Default JDBI instance
+
+To configure the default JDBI instance, create a `hikari.properties` file in either:
+- `./config/hikari.properties` (external configuration)
+- `META-INF/hikari.properties` (classpath configuration)
+
+The default JDBI instance is created using the `JdbiConfigImpl` configuration class, which uses the default DataSource and any registered `JdbiOptionsPrototype` configurations. The `JdbiProducer` provides a factory method for creating JDBI instances:
+
 [source,java]
 ----
-@Service
-public class MyService {
-
-    private final Provider<Handle> handleProv;
-
-    @Inject
-    public MyService(Provider<Handle> handleProv) { <.>
-        this.handleProv = handleProv;
+@Unscoped
+@Classed(JdbiConfigPrototype.class)
+public Jdbi jdbiFactory(@IocMessage JdbiConfigPrototype config) {
+    final Jdbi jdbi = Jdbi.create(config.dataSource());
+    if (config.options() != null) {
+        config.options().forEach(o -> o.applyOptions(jdbi));
     }
-
-    @Transactional
-    public String readFromDB() {
-
-        return handleProv.get()  <.>
-                  .createQuery(...)
-                  .bind(...)
-                  .mapTo(String.class)
-                  .first();
-
-        // No need to close handle
-    }
+    return jdbi;
 }
 ----
 
-<.> Inject handler provider
-<.> Obtain attached to a transaction Jdbi Handle
+=== JDBI options
 
-== Simple usage
+To apply custom configuration to the default JDBI instance, create a class extending `JdbiOptionsPrototype`. The `JdbiOptions` class in the example demonstrates registering array type mappings.
 
-In case of a single jdbi instance usage just define _hikari.properties_ file:
+=== Multiple JDBI instances
 
-.config/hikari.properties or META-INF/hikari.properties
-[source,properties]
+For additional JDBI instances with different data sources:
+
+1. Create a custom HikariCP configuration class extending `HikariProperties` with a custom `fileName()`
+2. Create a custom JDBI configuration class extending `AbstractJdbiConfig` with `@Classed` qualifiers
+3. Create an IoC producer with `@Named` qualifiers for the transaction shell and handle
+
+The custom JDBI configuration should use `@Classed` qualifiers to reference the specific data source and options. The `JdbiProducer` includes a `@Classed(JdbiConfigPrototype.class)` qualifier on the factory method to distinguish between different JDBI configurations.
+
+== Transaction propagation
+
+The JDBI shell implements all propagation behaviors from the transaction module:
+
+- `REQUIRED` - joins an existing transaction or creates a new one
+- `REQUIRES_NEW` - suspends the current transaction and creates a new one
+- `MANDATORY` - requires an existing transaction, throws if none exists
+- `NOT_SUPPORTED` - executes without a transaction, suspending any existing one
+- `SUPPORTS` - executes with a transaction if one exists, otherwise without
+- `NEVER` - executes without a transaction, throws if one exists
+- `NESTED` - not supported (throws UnsupportedOperationException)
+
+The transaction suspension mechanism stores the current transaction in a temporary variable, removes it from ThreadLocal, executes the nested operation, and then restores it.
+
+== Using JDBI in services
+
+The typical usage pattern in a service is:
+
+1. Inject a `Provider<Handle>` for the default handle
+2. Use the handle within `@Transactional` methods
+3. The transaction shell manages commit/rollback and handle lifecycle
+4. No need to manually close handles or commit transactions
+
+The handle provider returns the handle associated with the current transaction. Multiple calls to `provider.get()` within the same transaction return the same handle instance. The handle is automatically closed when the transaction completes.
+
+== Multiple data sources with named shells
+
+For multiple data sources, define named transaction shells and handles in a producer. The named transaction shell uses the custom JDBI configuration with `@Classed` qualifiers. The named handle provider uses the named transaction shell to obtain the current handle.
+
+The `@Transactional(shell = "extra")` annotation specifies which transaction shell to use for the method.
+
+== IoC integration
+
+The module provides built-in IoC producers in `JdbiProducer`:
+- `jdbiFactory` - unscoped JDBI factory with `@Classed(JdbiConfigPrototype.class)` qualifier
+- `getHandle` - unscoped handle provider from the default transaction shell
+- `getDefaultTransactionalShell` - default transaction shell (stub)
+- `getDefaultConnection` - default connection from JDBC shell (stub)
+
+Additional producers can be created for custom transaction shells and handles.
+
+== Exception handling
+
+JDBI operations may throw exceptions, which are caught and handled by the transaction shell. The shell rolls back the transaction when an exception is thrown and rethrows it using the `rethrow` utility method. The `ApplicationException` class can be used for business-level exceptions.
+
+== Maven pom.xml
+
+[source,xml]
 ----
-driverClassName=...
-jdbcUrl=jdbc:...
-----
-
-Optionally create custom jdbi options class extends JdbiOptionsPrototype.
-This class can be used for jdbi extra configuration.
-Application can have multiple separate JdbiOptions classes.
-
-.JdbiOptions.java
-[source,java]
-----
-@Config
-public class JdbiOptions extends JdbiOptionsPrototype {
-
-    @Override
-    public void applyOptions(Jdbi jdbi) {
-        // Apply configuration to jdbi instance
-    }
-}
-----
-
-== Multiple jdbi instances
-
-To use multiple jdbi instances use a custom configuration for each extra jdbi handle connected to different DB.
-
-1) Define extra hikaricp configuration class:
-
-.ExtraHikariProperties.java
-[source,java]
-----
-@Config
-public class ExtraHikariProperties extends HikariProperties {
-
-    @Override
-    protected String getFileName() {
-        return "extra-hikari.properties";
-    }
-}
-----
-
-2) Fill in extra-hikari.properties:
-
-.config/extra-hikari.properties or META-INF/extra-hikari.properties
-[source,properties]
-----
-ataSourceClassName=org.postgresql.ds.PGSimpleDataSource
-username=user
-password=password
-jdbcUrl=jdbc:postgresql://...
-----
-
-3) Create extra jdbi configuration classes that extends AbstractJdbiConfig (or JdbiConfigPrototype).
-This config will be used to provide the DataSource and apply JdbiOptions to the Jdbi instance.
-
-.ExtraJdbiConfig.java
-[source,java]
-----
-@Config
-public class ExtraJdbiConfig extends AbstractJdbiConfig {
-
-    @Inject
-    public ExtraJdbiConfig(
-
-            // Jdbi will use  extra hikaricp data source
-            @Classed(ExtraHikariProperties.class) DataSource dataSource,
-
-            // Optional configurations will be applied to the jdbi instance.
-            @Classed(ExtraJdbiConfig.class) Polysupplier<JdbiOptionsPrototype> options) {
-
-        super(dataSource, options);
-    }
-}
-
+<dependency>
+    <groupId>net.colesico.framework</groupId>
+    <artifactId>colesico-jdbi</artifactId>
+    <version>${colesico.version}</version>
+</dependency>
 ----
 
-4) Define appropriate producer to produce TransactionalSnell and Handle bound to extra jdbi instance
-
-.ExtraJdbiProducer.java
-[source,java]
-----
-/**
- * To produce extra jdbi handle instance and tx shell
- */
-@Producer
-public class ExtraJdbiProducer {
-
-    public static final String EXTRA="extra";
-
-    /**
-     * Produce extra transactional shell to control transactions.
-     */
-    @Singleton
-    @Named(EXTRA)
-    public TransactionalShell getTxShell(@Classed(ExtraJdbiConfig.class) Jdbi jdbi) {
-        return new JdbiTransactionalShell(jdbi);
-    }
-
-    /**
-     * Produce extra handle providing from extra transactional shell
-     */
-    @Unscoped
-    @Named(EXTRA)
-    public Handle getHandle(@Named(EXTRA) TransactionalShell txShell) {
-        return ((JdbiTransactionalShell) txShell).getHandle();
-    }
-}
-----
-
-Inject extra jdbi handle with @Named annotation
-
-.MyService.java
-[source,java]
-----
-@Service
-public class MyService {
-
-    private final Provider<Handle> handleProv;
-
-    @Inject
-    public TheService(@Named("extra") Provider<Handle> handleProv) {
-        this.handleProv = handleProv;
-    }
-
-    @Transactional(shell="extra")
-    public String readFromDB() {
-        return handleProv.get()....
-    }
-}
-----
+The module is transitive to `colesico-transaction`, `colesico-hikaricp`, and `org.jdbi.v3.core`.
 
 == Examples
 
-See full source code in the framework source code section #examples/jdbi-example#
-
-
+See full source code in the framework source code section `#examples/jdbi-example/`.

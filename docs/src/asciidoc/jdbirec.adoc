@@ -1,0 +1,205 @@
+[[intro]]
+= Colesico-JDBIRec
+:toc:
+:toclevels: 5
+:numbered:
+
+== What is Colesico-JDBIRec
+
+Colesico-JDBIRec is a powerful object-relational mapping (ORM) extension for JDBI that provides a declarative, annotation-based approach to mapping Java objects to database tables. It eliminates the need for manual SQL writing by generating type-safe record kits that handle CRUD operations and complex queries.
+
+The module builds on JDBI by providing:
+- Declarative record definitions with `@Record` annotation
+- Automatic SQL generation for CRUD operations
+- Support for nested compositions (embedded objects)
+- Flexible view system for different field sets
+- Join support for related records
+- Column renaming and selection expressions
+- Tag-based filtering for views and compositions
+- Automatic RecordKit generation with IoC integration
+
+The module integrates with:
+- `colesico-jdbi` - for JDBI handle management
+- `colesico-ioc` - for dependency injection
+- `org.jdbi.v3.core` - for JDBI API
+
+== Core concepts
+
+=== Record
+
+A `Record` is a POJO class annotated with `@Record` that represents a database table. It serves as the primary abstraction for database entities, analogous to JPA's `@Entity` but designed specifically for JDBI with a focus on simplicity and compile-time code generation.
+
+The `@Record` annotation defines the mapping between the Java class and the database table through the following attributes:
+- `table` - specifies the database table name to which the record maps
+- `tableAlias` - provides an optional alias for the table in SQL queries, useful when the same table is referenced multiple times or for query readability
+- `views` - defines one or more `RecordView` configurations for different perspectives on the same data
+
+A record class contains fields that represent database columns. Each field is mapped using the `@Column` annotation, and complex object structures can be embedded using the `@Composition` annotation.
+
+=== Column
+
+The `@Column` annotation maps a Java field to a database column, providing fine-grained control over how the field is persisted and retrieved. Key attributes:
+
+- `name` - the database column name; defaults to the field name if not specified, supporting automatic naming convention mapping
+- `definition` - SQL column definition used when generating CREATE TABLE statements, allowing precise control over database schema
+- `mediator` - a custom `FieldMediator` for handling type conversion between Java objects and database values, enabling support for complex data types
+- `insertAs` - expression used in INSERT statements; can reference the field value or use SQL expressions
+- `updateAs` - expression used in UPDATE statements; allows SQL expressions like `CURRENT_TIMESTAMP` for automatic timestamp columns
+- `selectAs` - expression used in SELECT statements, enabling SQL calculations and transformations like `'USER:' || @column`
+- `exportable` - boolean flag (default `true`) controlling whether the field is included in INSERT/UPDATE operations
+- `importable` - boolean flag (default `true`) controlling whether the field is read from ResultSet during SELECT operations
+- `tags` - string array for view filtering, enabling inclusion/exclusion of columns based on view context
+
+The `Column` annotation supports being repeated multiple times on a single field, allowing virtual column definitions for different mapping scenarios.
+
+=== Composition
+
+`Composition` is analogous to JPA's `@Embedded` and provides a mechanism for modeling complex object graphs where multiple Java classes map to columns in a single database table (or across joined tables). This is particularly useful for domain models that naturally decompose into logical components.
+
+A composition field can be an instance of any Java class whose fields are mapped with `@Column` annotations. The framework recursively processes all fields within the composition, generating the appropriate column mappings.
+
+Key attributes of `@Composition`:
+- `name` - the logical name of the composition, defaults to the field name, used in renaming strategies and tag paths
+- `renaming` - a string template for renaming composition columns, supporting placeholders like `@field` (field name), `@column` (column name), and `@composition` (composition name)
+- `tagFilter` - a `TagFilter` that controls which nested columns are included based on tags
+- `nullInstance` - boolean (default `true`) controlling whether a composition object is created when all column values are null (true) or always created regardless of null values (false)
+- `join` - boolean flag indicating this composition represents a joined record from another table, enabling complex JOIN queries
+- `columnOverriding` - an array of `ColumnOverriding` annotations for overriding specific column properties within the composition
+- `tags` - tags applied to the composition itself for view filtering
+
+The `renaming` feature is particularly powerful for avoiding column name conflicts when embedding multiple compositions of the same type in one record.
+
+=== RecordKit
+
+`RecordKit` is an interface annotated with `@RecordKit` that defines the data access API for a specific record type. The framework generates a complete implementation at compile time, eliminating the need for manual DAO classes.
+
+The `@RecordKit` annotation supports a single attribute:
+- `superclass` - the base class to extend, defaulting to `AbstRactrecordKit`. This allows customization of the generated kit behavior.
+
+The generated kit implementation extends the specified superclass and provides:
+- Automatic SQL generation for standard CRUD operations
+- Type-safe row mapping from `ResultSet` to record instances
+- Parameter mapping for INSERT and UPDATE operations
+- Support for complex nested compositions and joins
+
+=== RecordView
+
+`RecordView` defines different perspectives on a record, allowing the same Java class to map to different sets of database columns. This is particularly useful for:
+- Optimizing queries by selecting only needed columns
+- Exposing different data subsets to different parts of the application
+- Handling legacy database schemas with different column requirements
+
+Each `@RecordView` specifies:
+- `name` - the view identifier, used to obtain different kit implementations
+- `tagFilter` - a `TagFilter` controlling which columns and compositions are included
+- `renaming` - optional renaming strategy for columns in this view
+- `columnOverriding` - column overrides specific to this view
+
+=== TagFilter
+
+`TagFilter` is a sophisticated mechanism for view-based filtering of columns and compositions. It provides three filter types that can be combined:
+
+- `anyOf` - includes elements that have any of the listed tags (OR logic). Analogue of SQL `IN` operator.
+- `noneOf` - excludes elements that have any of the listed tags (NOT IN logic).
+- `oneOf` - includes elements that have exactly one of the listed tags.
+
+Tags can be:
+- **Global tags** - starting with `#` (e.g., `#full`, `#brief`), these are universally recognized
+- **Local tags** - automatically converted to global tags by prefixing `#` and the field path (e.g., `detailed` becomes `#foo.bar.detailed`)
+- **Automatic path tags** - the framework automatically adds a tag to each element based on its full path (e.g., `#foo.bar.compName` or `#foo.bar.baz.columnName`)
+
+Special filters:
+- `?has-tags` - matches elements with at least one tag
+- `?no-tags` - matches elements with no tags
+
+Tag filters are applied from the innermost composition outward to the record view, enabling fine-grained control at every level of the object graph.
+
+== Record Kit API
+
+`RecordKitApi<R>` is the core interface for record operations, providing a type-safe API for database interaction:
+
+- `newRecord()` - creates a new instance of the record class with default values
+- `tableName()` - returns the actual database table name for the current view
+- `sql(String query)` - transforms a query template containing special references into executable SQL:
+  - `@table` - replaced with the table name
+  - `@columns` - replaced with the comma-separated list of column names (for the current view)
+  - `@updates` - replaced with column assignment expressions for UPDATE statements
+  - `@values` - replaced with parameter placeholders for INSERT statements
+- `map(R record)` - converts a record instance to a parameter map for INSERT/UPDATE operations
+- `mapper()` - returns a JDBI `RowMapper` that maps ResultSet rows to record instances
+
+This API enables developers to write custom queries using the generated SQL templates while maintaining type safety and consistency with the record mapping.
+
+== Code generation
+
+The `RecordProcessor` processes `@Record` and `@RecordKit` annotations at compile time through a multi-stage pipeline:
+
+1. **Parsing** - The processor parses all `@Record` classes, extracting field information from `@Column` and `@Composition` annotations
+2. **Validation** - It validates the record structure, checking for duplicate column names, missing table references, and other configuration errors
+3. **View processing** - For each `RecordView` defined, the processor applies tag filters and builds a column set for that view
+4. **Code generation** - For each `@RecordKit` interface, it generates:
+   - A kit implementation class extending `AbstRactrecordKit`
+   - Separate kit classes for each named view
+   - SQL generation logic with table name, columns, updates, and values references
+   - Row mapper implementation with column-to-field mapping
+   - Parameter mapping for database operations
+5. **IoC integration** - An IoC producer class is generated to register all kit implementations with the container:
+   - Default view kits are produced with `@Classed` qualifiers
+   - Named view kits are produced with `@Named` qualifiers
+
+Generated kit naming follows the pattern:
+- Default view: `{RecordKitName}Impl`
+- Custom view: `{RecordKitName}{ViewName}Impl`
+
+== Field Mediators
+
+`FieldMediator` is a strategy interface that customizes the conversion between Java objects and database values. This provides flexibility for handling complex or custom data types beyond the standard JDBC type mappings.
+
+The interface defines two methods:
+- `importField(String columnName, ResultSet rs)` - reads a value from a `ResultSet` and converts it to the Java field type
+- `exportField(F fieldValue, String fieldName, FieldReceiver fr)` - converts a field value to database format and writes it to a parameter receiver
+
+Built-in mediators provide support for:
+- Array types (`BooleanListMediator`, `IntegerListMediator`, `StringListMediator`, etc.) for SQL ARRAY columns
+- Locale conversion (`LocaleMediator`) for storing `Locale` objects as language tags
+
+Custom mediators can be created by implementing the `FieldMediator` interface and specifying them in `@Column.mediator()`.
+
+== Column expressions
+
+The `selectAs`, `insertAs`, and `updateAs` attributes support special placeholders for dynamic SQL generation:
+
+**Placeholders for selectAs:**
+- `@field` - use the field name
+- `@column` - use the column name
+- `@insertAs` - use the insertAs value
+- `@updateAs` - use the updateAs value
+- `@nop` - no operation (skip column)
+
+**Placeholders for insertAs:**
+- `@field` - use field value
+- `@updateAs` - use the updateAs value
+- `@nop` - skip column in INSERT statement
+
+**Placeholders for updateAs:**
+- `@field` - use field value
+- `@insertAs` - use the insertAs value
+- `@nop` - skip column in UPDATE statement
+
+Examples:
+- `selectAs = "'USER:' || @column"` - prepends "USER:" to the column value
+- `insertAs = "'static_value'"` - inserts a static value
+- `updateAs = "CURRENT_TIMESTAMP"` - uses database function for timestamp columns
+
+== Column overriding
+
+`ColumnOverriding` allows modification of column properties at the composition or view level without changing the original column definitions. This enables:
+- Renaming columns for specific contexts (e.g., `name` → `user_name` in a view)
+- Changing column types or definitions for different databases
+- Overriding mediators for specific use cases
+
+The `column` attribute specifies the target column path, supporting nested paths like `comp1.comp2.column`.
+
+== Examples
+
+See full source code in the framework source code section `#examples/jdbirec-example/`.

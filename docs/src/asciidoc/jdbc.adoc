@@ -1,122 +1,201 @@
-= JDBC integration module
+= Colesico-JDBC
+:toc:
+:toclevels: 5
+:numbered:
 
-This module provides support for using jdbc connection through IoC injection and support
-for database transaction management with TransactionalShell (@Transactional annotation).
+== What is Colesico-JDBC
 
-Typical usage within the service:
+Colesico-JDBC is a concrete implementation of the transaction management abstraction for JDBC-based data access. It provides seamless integration between the transaction module and JDBC connections, enabling declarative and programmatic transaction control for database operations.
 
-.MyService.java
-[source,java]
-----
-@Service
-public class MyService {
+The module builds on `colesico-transaction` by providing:
+- A concrete `TransactionalShell` implementation (`JdbcTransactionalShell`) that manages JDBC connections within transactions
+- Connection and DataSource proxies for transaction-aware database access
+- IoC producers for default and custom JDBC transaction shells
+- Conditional configuration support for enabling/disabling default shells
 
-    private final Provider<Connection> connProv;
+The module integrates with:
+- `colesico-transaction` - for transaction management abstraction
+- `colesico-ioc` - for dependency injection and conditional configuration
+- `colesico-hikaricp` (optional) - for connection pooling via HikariCP
+- `java.sql` - for JDBC API
 
-    @Inject
-    public TheService(Provider<Connection> connProv) {
-        this.connProv = connProv;
-    }
+== Core concepts
 
-    @Transactional
-    public String update() {
+=== JdbcTransactionalShell
 
-       try (Statement stmt = connectionProv.get().createStatement()){
-            stmt.executeUpdate();
-       }  catch (SQLException e) {
-           // ...
-       }
+`JdbcTransactionalShell` is the concrete implementation of `TransactionalShell` for JDBC. It manages JDBC connections within the context of a transaction, handling:
+- Connection acquisition from a `DataSource`
+- Transaction lifecycle (begin, commit, rollback)
+- Connection suspension and resumption for nested transactions
+- Thread-local transaction context management
 
-        // No need to commit transaction and close connection
-    }
-}
-----
+The shell is constructed with a `DataSource` and provides methods for accessing the current connection and the underlying data source. It implements all transaction propagation behaviors defined in the transaction module.
 
-== Setup default data source
+=== JdbcTransaction
 
-To configure default datasource just create hikari.properties file.
+`JdbcTransaction` is the transaction representation for JDBC, implementing the `Transaction` interface. It holds:
+- The underlying `Connection` object
+- Transaction tuning configuration (`Tuning<Connection>`)
+- Transaction ID for logging and monitoring
+- Rollback-only flag
 
-.config/hikari.properties or META-INF/hikari.properties
-[source,properties]
-----
-ataSourceClassName=org.postgresql.ds.PGSimpleDataSource
-username=user
-password=password
-jdbcUrl=jdbc:postgresql://...
-----
+The transaction object is stored in thread-local storage and accessed by the shell during transaction operations.
 
-See details https://github.com/brettwooldridge/HikariCP#gear-configuration-knobs-baby[HikariCP docs]
+=== JdbcConditions
 
-== Setup multiple data sources
+`JdbcConditions` provides conditional configuration for the JDBC module through IoC conditions:
+- `DefaultTransactionalShell` - enables/disables the default transactional shell production (enabled by default)
+- `DefaultConnection` - enables/disables the default connection producer (enabled by default)
 
-For each additional data source, make the following:
+These conditions allow applications to disable the default JDBC transaction shell when using custom transaction configurations or when the JDBC module is not the primary transaction manager.
 
-1) Create additional config class and override getFileName method
+=== DataSourceProxy and TxDataSource
 
-.ExtraHikariProperties.java
+`DataSourceProxy` is a base class for DataSource proxies, delegating all methods to a primary DataSource.
+
+`TxDataSource` is a transaction-aware DataSource proxy that:
+- Delegates connection acquisition to the transaction shell's current connection
+- Returns `TxConnection` instances that wrap the shell's connection
+- Prevents direct connection closure (transactions control connection lifecycle)
+
+This DataSource can be used with third-party libraries that expect a DataSource and need transaction awareness.
+
+=== ConnectionProxy and TxConnection
+
+`ConnectionProxy` is a base class for Connection proxies, delegating JDBC methods to a primary Connection.
+
+`TxConnection` is a transaction-aware Connection that:
+- Delegates all JDBC operations to the current transaction's connection
+- Prevents direct `close()`, `commit()`, and `rollback()` operations (transaction control handles these)
+- Ensures transaction integrity by not allowing manual connection management
+
+== Transaction lifecycle
+
+The JDBC transaction lifecycle is managed by `JdbcTransactionalShell`:
+
+1. A transaction is started when a method annotated with `@Transactional` is invoked or when a shell method is called programmatically
+2. The shell acquires a connection from the DataSource and stores it in a `JdbcTransaction` object
+3. The transaction object is stored in thread-local storage for the duration of the transaction
+4. When the transaction completes successfully, the connection is committed and closed
+5. If an exception is thrown, the connection is rolled back and closed
+6. For nested transactions (`REQUIRES_NEW`), the current transaction is suspended and a new one is created
+
+This lifecycle ensures proper resource management and transaction integrity.
+
+== Transaction propagation
+
+The JDBC shell implements all propagation behaviors from the transaction module:
+
+- `REQUIRED` - joins an existing transaction or creates a new one
+- `REQUIRES_NEW` - suspends the current transaction and creates a new one
+- `MANDATORY` - requires an existing transaction, throws if none exists
+- `NOT_SUPPORTED` - executes without a transaction, suspending any existing one
+- `SUPPORTS` - executes with a transaction if one exists, otherwise without
+- `NEVER` - executes without a transaction, throws if one exists
+- `NESTED` - creates a savepoint within the current transaction (not fully supported in all databases)
+
+The transaction suspension mechanism allows nested transactions to operate independently while maintaining proper resource isolation.
+
+== Configuration
+
+=== Default data source
+
+To configure the default data source, create a `hikari.properties` file in either:
+- `./config/hikari.properties` (external configuration)
+- `META-INF/hikari.properties` (classpath configuration)
+
+The properties file follows HikariCP configuration format. The `colesico-hikaricp` module is required for HikariCP integration.
+
+=== Multiple data sources
+
+For additional data sources, create a custom configuration class extending `HikariProperties` and override the `fileName()` method:
+
 [source,java]
 ----
 @Config
 public class ExtraHikariProperties extends HikariProperties {
     @Override
-    protected String getFileName() {
+    protected String fileName() {
         return "extra-hikari.properties";
     }
 }
 ----
-2) Fill in config file extra-hikari.properties
 
-.config/extra-hikari.properties or META-INF/extra-hikari.properties
-[source,properties]
-----
-driverClassName=...
-jdbcUrl=jdbc:...
-----
+Then create the corresponding properties file and register the transactional shell and connection producer in an IoC producer.
 
-3) Create IoC producer to produce extra JDBC transactional shell, connection and data source:
+=== Conditional disabling
 
-.ExtraJdbcProducer.java
+To disable the default JDBC transaction shell or connection producer, call the appropriate condition methods before building the IoC container:
+
 [source,java]
 ----
-/**
- * Typical jdbc producer for extra DS
- */
+JdbcConditions.disableDefaultTransactionalShell();
+JdbcConditions.disableDefaultConnection();
+Ioc ioc = IocBuilder.create().build();
+----
+
+This is useful when using multiple transaction managers or when JDBC is not the primary data access mechanism.
+
+== Using JDBC in services
+
+The typical usage pattern in a service is:
+
+1. Inject a `Provider<Connection>` for the default connection
+2. Use the connection within `@Transactional` methods
+3. The transaction shell manages commit/rollback and connection lifecycle
+4. No need to manually close connections or commit transactions
+
+The connection provider returns the connection associated with the current transaction. Multiple calls to `provider.get()` within the same transaction return the same connection instance.
+
+== Multiple data sources with named shells
+
+For multiple data sources, define named transaction shells and connections:
+
+[source,java]
+----
 @Producer
-public class ExtraJdbcProducer {
-
-    public static final String EXTRA = "extra";
-
-    /**
-     * Define extra transactional shell to control transactions.
-     */
+public class CustomJdbcProducer {
     @Singleton
-    @Named(EXTRA)
-    public TransactionalShell getTransactionalShell(@Classed(ExtraHikariProperties.class) DataSource ds) {
+    @Named("extra")
+    public TransactionalShell txShell(@Classed(ExtraHikariProperties.class) DataSource ds) {
         return new JdbcTransactionalShell(ds);
     }
 
-    /**
-     * Produce extra connection providing from extra transactional shell
-     */
     @Unscoped
-    @Named(EXTRA)
-    public Connection getConnection(@Named(EXTRA) TransactionalShell txShell) {
-        return ((JdbcTransactionalShell) txShell).getConnection();
-    }
-
-    /**
-     * Optionally produce extra data source from extra TxShell
-     */
-    @Unscoped
-    @Named(EXTRA)
-    public DataSource getDataSource(@Named(EXTRA) TransactionalShell txShell) {
-        return ((JdbcTransactionalShell) txShell).getDataSource();
+    @Named("extra")
+    public Connection connection(@Named("extra") TransactionalShell txShell) {
+        return ((JdbcTransactionalShell) txShell).connection();
     }
 }
 ----
 
+Then use the named shell in `@Transactional` annotations:
+
+[source,java]
+----
+@Transactional(shell = "extra")
+public void methodWithExtraDb() {
+    // Uses the extra data source
+}
+----
+
+== Exception handling
+
+JDBC operations may throw `SQLException`, which is wrapped in a `RuntimeException` by the application. The transaction shell catches all exceptions and rolls back the transaction accordingly. The `ApplicationException` class can be used for business-level exceptions.
+
+== Maven pom.xml
+
+[source,xml]
+----
+<dependency>
+    <groupId>net.colesico.framework</groupId>
+    <artifactId>colesico-jdbc</artifactId>
+    <version>${colesico.version}</version>
+</dependency>
+----
+
+The module is transitive to `colesico-transaction`. For connection pooling, add `colesico-hikaricp` dependency.
+
 == Examples
 
-See full source code in the framework source code section #examples/jdbc-example#
-
-
+See full source code in the framework source code section `#examples/jdbc-example/`.

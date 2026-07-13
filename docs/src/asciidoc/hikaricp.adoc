@@ -1,103 +1,173 @@
 [[intro]]
 = Colesico-HikariCP
+:toc:
+:toclevels: 5
+:numbered:
 
-HikariCP - Fast, simple, reliable.
-HikariCP is a "zero-overhead" production ready JDBC connection pool.
-This pool is the default pool used in the framework.
+== What is Colesico-HikariCP
 
-HikariCP pool can be configured with different ways.
+Colesico-HikariCP is a module that integrates the HikariCP connection pool with the framework's IoC container. HikariCP is a fast, simple, and reliable "zero-overhead" production-ready JDBC connection pool, serving as the default connection pooling solution in the framework.
 
-== Default properties file
+The module provides:
+- Integration of HikariCP with the framework's configuration system
+- IoC producers for HikariCP data sources
+- Support for multiple data sources with different configurations
+- Properties file-based and programmatic configuration options
+- Conditional enabling/disabling of default data source
 
-The easiest way to set up a pool is with the *hikari.properties* file.
-This file may be located in a *./config* subdirectory of application working directory or in *META-INF* resource folder of application.
-The framework will look for this file first in the directory and then in the resources.
+The module integrates with:
+- `colesico-config` - for configuration via `@Config` annotations
+- `colesico-ioc` - for dependency injection and conditional configuration
+- `java.sql` - for DataSource API
+- `com.zaxxer.hikari` - for HikariCP implementation
 
-To get DataSource configured with hikari.properties just inject it:
+== Core concepts
+
+=== HikariConfigPrototype
+
+`HikariConfigPrototype` is the configuration prototype for creating HikariCP data sources. It defines a single method:
+- `hikariConfig()` - returns a `HikariConfig` object containing the connection pool configuration
+
+This is a `ConfigModel.MESSAGE` type configuration, meaning it is passed as a message to the Hikari data source factory. The `target` attribute specifies that the configuration targets the `DataSource` instance.
+
+=== HikariProperties
+
+`HikariProperties` is a convenience implementation of `HikariConfigPrototype` that loads configuration from properties files. It provides:
+- `fileName()` - returns the properties file name (default: `"hikari.properties"`)
+- `directory()` - returns the external directory path (default: `"./config"`)
+- `classpath()` - returns the classpath resource path (default: `"META-INF"`)
+- `optional()` - whether the file is optional (default: `false`)
+- `loadFromProperties()` - loads configuration from the specified file
+
+The class looks for the properties file first in the external directory, then in the classpath. If the file is not found and `optional()` is `false`, a runtime exception is thrown.
+
+=== HikariCPConditions
+
+`HikariCPConditions` provides conditional configuration for the HikariCP module:
+- `DefaultDataSource` - enables/disables the default HikariDataSource production (enabled by default)
+
+To disable the default data source, call:
+[source,java]
+----
+HikariCPConditions.disableDefaultDataSource();
+----
+
+This is useful when using custom data source configurations or when multiple data sources are managed differently.
+
+=== DataSource factory
+
+The `HikariProducer` provides a factory method for creating Hikari data sources:
+- `hikariDataSourceFactory` - an unscoped producer that takes a `HikariConfigPrototype` message and returns a `HikariDataSource`
+
+The factory handles configuration and initialization, logging errors if the pool creation fails.
+
+== Configuration
+
+=== Default properties file
+
+The easiest way to configure a connection pool is with the `hikari.properties` file. The framework looks for this file in the following order:
+1. External directory: `./config/hikari.properties`
+2. Classpath: `META-INF/hikari.properties`
+
+To inject the default data source, simply inject `DataSource`:
 
 [source,java]
 ----
+public class MyService {
+    private final DataSource dataSource;
 
-// Constructor
-public MyService(DataSource ds){
-   this.ds = ds;
+    public MyService(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 }
-
 ----
 
-TIP: HikariCP module defines the default data source for IoC.
-To prevent this use HikariCPConditions.disableDefaultDataSource()
+=== Extra property files
 
-== Extra property files
+For multiple data sources, create additional configuration classes extending `HikariProperties` with custom `fileName()`:
 
-In the case of working with several data sources, use different hikari properties files.
-
-Define an extra config class with getFileName() method overriding:
-
-.ExtraHikariProperties.java
 [source,java]
 ----
-
 @Config
 public class ExtraHikariProperties extends HikariProperties {
     @Override
-    protected String getFileName() {
+    protected String fileName() {
         return "extra-hikari.properties";
     }
 }
-
 ----
 
-TIP: Here is also getDirectory() and getClassPath() methods can be overridden to chang properties file location.
+The class can also override `directory()` or `classpath()` to change the file location.
 
-After that create extra-hikari.properties file.
-
-Then inject DataSource to your service with @Classed qualifier:
+After creating the properties file, inject the data source with `@Classed` qualifier:
 
 [source,java]
 ----
+public class MyService {
+    private final DataSource extraDataSource;
 
-// Constructor
-public MyService(@Classed(ExtraHikariProperties.class) DataSource ds){
-   this.ds = ds;
-}
-
-----
-
-Will be injected the data source with parameters from extra-hikari.properties file.
-
-== Programmatic configuration
-
-Programmatic configuration used when it is necessary to make flexible programmatic
-configuration using the HikariConfig class.
-
-Define config class implementation:
-
-[source,java]
-----
-
-@Config
-public class CustomHikariConfig extends HikariConfigPrototype{
-    @Override
-    public final HikariConfig getHikariConfig() {
-        // Initialize and return HikariConfig object
+    public MyService(@Classed(ExtraHikariProperties.class) DataSource extraDataSource) {
+        this.extraDataSource = extraDataSource;
     }
 }
-
 ----
 
-Then inject DataSource as usual to your service with @Classed qualifier:
+=== Programmatic configuration
+
+For more flexible configuration using `HikariConfig`, create a custom configuration class implementing `HikariConfigPrototype`:
 
 [source,java]
 ----
-
-// Constructor
-public MyService(@Classed(CustomHikariConfig.class) DataSource ds){
-   this.ds = ds;
+@Config
+public class CustomHikariConfig extends HikariConfigPrototype {
+    @Override
+    public HikariConfig hikariConfig() {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:postgresql://localhost:5432/mydb");
+        config.setUsername("user");
+        config.setPassword("password");
+        config.setMaximumPoolSize(20);
+        config.setConnectionTimeout(30000);
+        // Additional configuration...
+        return config;
+    }
 }
-
 ----
+
+Then inject with `@Classed` qualifier:
+
+[source,java]
+----
+public class MyService {
+    private final DataSource customDataSource;
+
+    public MyService(@Classed(CustomHikariConfig.class) DataSource customDataSource) {
+        this.customDataSource = customDataSource;
+    }
+}
+----
+
+== DataSource proxy
+
+The module integrates with `colesico-jdbc`'s `TxDataSource` for transaction-aware data sources. The `TxDataSource` wraps the HikariCP data source and provides transaction management integration.
+
+== Conditional enabling
+
+The default data source can be disabled by calling `HikariCPConditions.disableDefaultDataSource()` before building the IoC container. This is useful when the application uses custom data source configurations or when HikariCP is not the primary data source.
+
+== Maven pom.xml
+
+[source,xml]
+----
+<dependency>
+    <groupId>net.colesico.framework</groupId>
+    <artifactId>colesico-hikaricp</artifactId>
+    <version>${colesico.version}</version>
+</dependency>
+----
+
+The module is transitive to `colesico-config` and `java.sql`.
 
 == Examples
 
-See full source code in the framework source code section #examples/jdbc-example#
+See full source code in the framework source code section `#examples/jdbc-example/` and `#examples/jdbi-example/`.
