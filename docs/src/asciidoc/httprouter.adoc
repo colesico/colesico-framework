@@ -1,4 +1,4 @@
-= Router Module
+= HTTP Router Module
 :page-title: HTTP Router
 :page-description: Complete reference for the Colesico Framework HTTP Router module.
 :framework-version: 1.0
