@@ -1,101 +1,444 @@
 = Router Module
 :page-title: HTTP Router
-:page-description: Comprehensive guide to the Colesico Framework HTTP Router module.
+:page-description: Complete reference for the Colesico Framework HTTP Router module.
 :framework-version: 1.0
 
 == Introduction
 
-The Router module is the central request dispatcher in the Colesico Framework. Its primary responsibility is to map incoming HTTP requests to specific handler methods in your application's controllers. The router acts as the bridge between the HTTP layer and your business logic, analyzing the URL and HTTP method to determine which code should be executed.
+The Router module maps HTTP requests to handler methods. It analyzes the request URI and HTTP method, finds a matching route, and returns an invocation that can be executed.
 
-The routing system is built on the TeleAPI foundation, providing a unified abstraction for handling various types of requests.
+The module is built on the TeleAPI foundation and integrates with the IoC container.
 
-=== Design Principles
+== @Route Annotation
 
-The Router module embodies several key principles:
+=== Purpose
 
-**Hierarchical Composition**: Routes are built from three levels - package, controller, method. This enables clean URL organization in large applications.
+Defines a route string that is matched against incoming request URIs.
 
-**Convention Over Configuration**: By following naming conventions, routes are automatically derived without explicit annotations.
+=== Where to apply
 
-**Explicit Over Implicit**: The `@Route` annotation provides explicit control over routes.
+- Methods: Defines the route for a specific handler method
+- Types (classes): Defines a base route for all methods in the class
+- Packages (package-info.java): Defines a base route for all classes in the package
 
-**Separation of Concerns**: Routing logic is separated from HTTP server implementation and controllers.
+=== Route string syntax
 
-== Dynamic Path Parameters
+The route string supports:
 
-=== Parameter Syntax
+**Static segments**: Regular path parts that must match exactly.
+- `/users`
+- `/api/v1/products`
 
-Routes can contain dynamic parameters denoted by the `:` prefix.
+**Parameter segments**: Dynamic segments denoted by `:` followed by a parameter name.
+- `/users/:userId` - matches `/users/123`, parameter name is `userId`
+- `/api/:version/products/:category` - parameters are `version` and `category`
 
-**Syntax**: `:parameterName`
+When a parameter is matched, its value is extracted from the URL and stored with the parameter name as the key.
 
-**Examples**:
-* `/users/:userId` - userId parameter
-* `/api/:version/products/:category/:productId` - multiple parameters
-* `/posts/:postId/comments/:commentId` - parameters in different positions
+**Suffix parameter**: The `*` character captures all remaining path segments.
+- `/files/*` - matches `/files/documents/report.pdf`, captures `documents/report.pdf`
+- The captured value is stored with the key `routeSuffix`
 
-=== Suffix Parameter (Catch-All)
-
-The special `*` syntax captures all remaining path segments.
-
-**Example**: `/files/*` - captures `/files/documents/report.pdf` as a suffix parameter
-
-The suffix parameter name in `RouterContext` is `routeSuffix`.
-
-=== How It Works
-
-When defining routes with parameters:
-. The route string is split into segments by `/`
-. Segments starting with `:` are marked as parameters
-. On incoming requests, values are extracted from the URL and stored in a parameter map
-. Parameters become accessible via `RouterContext.parameters()`
-
-=== Accessing Parameters
-
-**Method 1: Via RouterContext**
+=== Usage example
 
 [source,java]
 ----
-@Weblet
-@Route("/users")
-public class UserController {
-    @Route("/:userId")
-    public String getUser(@Inject RouterContext context) {
-        String userId = context.parameters().get("userId");
-        return "User ID: " + userId;
-    }
+@Route("/users/:id")
+public String getUser(String id) {
+    return "User: " + id;
 }
 ----
 
-**Method 2: Automatic Method Argument Binding**
+== @RequestMethod Annotation
+
+=== Purpose
+
+Defines which HTTP method a handler responds to. If omitted, the handler responds to `GET` requests.
+
+=== Where to apply
+
+Only to methods.
+
+=== Usage example
 
 [source,java]
 ----
+@RequestMethod(HttpMethod.POST)
+@Route("/users")
+public User create(User user) {
+    return userService.create(user);
+}
+----
+
+== RouterContext
+
+=== Purpose
+
+Provides access to the request URI and extracted path parameters during request processing.
+
+=== Available data
+
+- `requestUri`: The original request URI
+- `parameters()`: An unmodifiable map of path parameters extracted from the URI
+
+=== How to access
+
+The context can be injected directly into handler methods using `@Inject`, or retrieved from the task scope.
+
+=== Usage example
+
+[source,java]
+----
+@Route("/users/:id")
+public String getUser(@Inject RouterContext context) {
+    String id = context.parameters().get("id");
+    return "User: " + id;
+}
+----
+
+=== Suffix parameter access
+
+For suffix parameter (`*`), the parameter name is always `routeSuffix`:
+
+[source,java]
+----
+@Route("/files/*")
+public String getFile(@Inject RouterContext context) {
+    String path = context.parameters().get("routeSuffix");
+    return "File path: " + path;
+}
+----
+
+== Automatic Parameter Binding
+
+=== Purpose
+
+Path parameters are automatically bound to method arguments by name, eliminating the need to access `RouterContext` for simple parameter access.
+
+=== How it works
+
+The framework extracts parameters from the URL and stores them in a map. When the handler method is invoked, the framework uses the parameter names to retrieve values from this map and passes them as method arguments.
+
+=== Parameter name matching
+
+The parameter name in the route must match the method argument name exactly.
+
+=== Usage example
+
+[source,java]
+----
+@Route("/api/:version/products/:category/:productId")
+public String getProduct(String version, String category, String productId) {
+    return "Version: " + version + ", Category: " + category + ", ID: " + productId;
+}
+----
+
+== @RouteAttribute Annotation
+
+=== Purpose
+
+Attaches arbitrary key-value metadata to routes. This metadata is stored and can be accessed during request processing by interceptors, filters, or other components.
+
+=== Where to apply
+
+- Types (classes): Attributes apply to all methods in the class
+- Methods: Attributes apply only to that specific method
+
+=== Repeatable
+
+The annotation is repeatable, meaning multiple attributes can be applied to the same element.
+
+=== Usage examples
+
+**Method-level**:
+[source,java]
+----
+@Route("/admin/dashboard")
+@RouteAttribute(name = "requires-auth", value = "true")
+@RouteAttribute(name = "audit-log", value = "enabled")
+public String dashboard() {
+    return "Dashboard";
+}
+----
+
+**Class-level**:
+[source,java]
+----
+@RouteAttribute(name = "api-version", value = "v1")
 @Weblet
 @Route("/api")
 public class ApiController {
-    @Route("/:version/products/:category/:productId")
-    public String getProduct(String version, String category, String productId) {
-        return "Version: " + version + ", Category: " + category + ", ID: " + productId;
-    }
+    // All methods in this class have api-version=v1
 }
 ----
 
-**Suffix Parameter (Catch-All)**
+=== Accessing attributes
+
+Attributes can be accessed from the resolved invocation.
+
+== @RouteAttributes Annotation
+
+=== Purpose
+
+A container for multiple `@RouteAttribute` annotations. Required when applying more than one `@RouteAttribute` to a class.
+
+=== Where to apply
+
+Only to types (classes).
+
+=== Usage example
 
 [source,java]
 ----
+@RouteAttributes({
+    @RouteAttribute(name = "auth", value = "required"),
+    @RouteAttribute(name = "cache", value = "300")
+})
 @Weblet
-@Route("/files")
-public class FileController {
-    @Route("/*")
-    public String getFile(@Inject RouterContext context) {
-        String path = context.parameters().get("routeSuffix");
-        return "File path: " + path;
+@Route("/secure")
+public class SecureController { ... }
+----
+
+== RouterBuilder
+
+=== Purpose
+
+Provides programmatic route registration, complementing the annotation-based approach.
+
+=== Parameters for route registration
+
+- `httpMethod`: HTTP method (GET, POST, etc.)
+- `route`: Route string (supports `:parameter` and `*`)
+- `teleController`: Controller that executes the action
+- `teleCommand`: Command (method) to execute
+- `targetClass`: Target class for metadata
+- `targetMethod`: Target method name for metadata
+- `routeAttributes`: Route attributes map (can be null)
+
+=== Thread safety
+
+Route registration methods are **not thread-safe** and must be called only during application startup.
+
+=== Usage example
+
+[source,java]
+----
+@Config
+public class CustomRoutes extends RouterOptions {
+    @Override
+    public void applyOptions(RouterBuilder builder) {
+        builder.addCustomAction(
+            HttpMethod.GET,
+            "/custom/:id",
+            customController,
+            customController.getCommand(),
+            CustomController.class,
+            "handle",
+            Map.of("attr", "value")
+        );
     }
 }
 ----
 
-=== Error Handling
+== RouterOptions
 
-If a parameter is declared but cannot be extracted, a `RouterException` is thrown:
+=== Purpose
+
+Provides a configuration model for programmatic route registration. Uses the polyvariant configuration pattern, allowing multiple configuration classes to contribute routes.
+
+=== How it works
+
+All classes that extend `RouterOptions` and are annotated with `@Config` are automatically discovered and applied before the router is built.
+
+=== Usage example
+
+[source,java]
+----
+@Config
+public class HealthCheckRoutes extends RouterOptions {
+    @Override
+    public void applyOptions(RouterBuilder builder) {
+        builder.addCustomAction(
+            HttpMethod.GET,
+            "/health",
+            healthController,
+            healthController.getCheckCommand(),
+            HealthController.class,
+            "check",
+            null
+        );
+    }
+}
+----
+
+=== Multiple configurations
+
+Multiple `RouterOptions` implementations can coexist. All are applied.
+
+== TargetController
+
+=== Purpose
+
+Allows implementing custom route resolution logic beyond simple path matching. Useful for scenarios like content negotiation, multi-tenancy, or header-based routing.
+
+=== Methods
+
+- `teleFacades()`: Returns all tele-facades registered with this controller. Must be implemented.
+- `resolve(Criteria)`: Override for custom matching logic. Default returns no match.
+- `register(TeleFacade)`: Override for programmatic registration. Default throws an exception.
+
+=== Usage example
+
+[source,java]
+----
+public class HeaderBasedRouter implements TargetController<Router.Criteria> {
+    @Override
+    public Optional<Router.Invocation> resolve(Criteria criteria) {
+        // Custom logic based on request headers
+        String version = getVersionFromHeader();
+        // Match and return invocation
+        return Optional.of(...);
+    }
+    
+    @Override
+    public Iterable<TeleFacade<?, RouterCommandsRegistry>> teleFacades() {
+        return ...;
+    }
+}
+----
+
+=== Integration
+
+`TargetController` instances are automatically discovered and registered.
+
+== Router Interface
+
+=== Purpose
+
+Main API for route resolution. Provides methods for resolving requests and performing reverse routing.
+
+=== Methods
+
+- `resolve(Criteria)`: Resolves a request to an invocation
+- `resolve(HttpMethod, String)`: Convenience method
+- `slicedRoute(...)`: Reverse routing - reconstructs path segments
+
+=== Criteria
+
+Contains the request method and URI used for resolution.
+
+=== Invocation
+
+Contains everything needed to execute the resolved route: request method, URI, action, and parameters.
+
+=== Usage example
+
+[source,java]
+----
+Optional<Router.Invocation> invocation = router.resolve(HttpMethod.GET, "/users/123");
+if (invocation.isPresent()) {
+    Router.Invocation inv = invocation.get();
+    // Execute the action
+}
+----
+
+== slicedRoute Method
+
+=== Purpose
+
+Reconstructs path segments from a controller class, method name, HTTP method, and parameters. Used for generating URLs in responses.
+
+=== Parameters
+
+- `targetClass`: The controller class that handles the route
+- `targetMethod`: The method name that handles the route
+- `httpMethod`: The HTTP method (used to find the correct route variant)
+- `parameters`: A map of parameter values to substitute into the route
+
+=== Return value
+
+Returns a list of path segments in order. For example, for the route `/users/:id` with parameter `id=123`, returns `["users", "123"]`.
+
+=== Error handling
+
+If a parameter value is missing, an exception is thrown indicating which parameter is missing (except for `routeSuffix` which allows empty value).
+
+=== Usage example
+
+[source,java]
+----
+List<String> segments = router.slicedRoute(
+    UserController.class,
+    "getUser",
+    HttpMethod.GET,
+    Map.of("id", "123")
+);
+String url = "/" + String.join("/", segments); // /users/123
+----
+
+== RouteAction
+
+=== Purpose
+
+Represents an action associated with a route. Contains everything needed to execute the action.
+
+=== Components
+
+- `teleController`: The controller that executes the action
+- `teleCommand`: The specific command (method) to invoke
+- `attributes`: Route attributes as a map (can be null)
+
+=== How it's created
+
+RouteAction instances are created during router building, either from annotations or from programmatic registration.
+
+=== Usage
+
+[source,java]
+----
+RouteAction action = invocation.action();
+// Execute via controller and command
+----
+
+== Exception Types
+
+=== RouterException
+
+Base exception for all routing errors.
+
+**When thrown**: Parameter value missing, general routing errors.
+
+=== DuplicateRouteException
+
+Thrown when a duplicate route is detected.
+
+**When thrown**: When a route with the same path already exists.
+
+=== RouteParameterMismutch
+
+Thrown when a parameter name conflicts with an existing parameter.
+
+**When thrown**: When a parameter with the same name already exists but at a different position in the route.
+
+=== UnknownRouteException
+
+Thrown when a route cannot be resolved. HTTP status 404.
+
+**When thrown**: When no matching route is found.
+
+== Module Dependencies
+
+=== Required dependencies
+
+- `colesico.framework.config`: Configuration management, `@Config`, polyvariant models
+- `colesico.framework.service`: Service layer foundation
+- `colesico.framework.http`: HTTP abstractions (HttpMethod, etc.)
+- `org.slf4j`: Logging
+- `com.palantir.javapoet` (compile-time only): Code generation
+- `java.compiler` (compile-time only): Java compiler API
+
+=== Exported packages
+
+- `colesico.framework.httprouter` - main API
+- `colesico.framework.httprouter.assist` - utility classes
+- `colesico.framework.httprouter.codegen` - code generation support
