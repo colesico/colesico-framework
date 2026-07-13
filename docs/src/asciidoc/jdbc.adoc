@@ -8,12 +8,14 @@
 Colesico-JDBC is a concrete implementation of the transaction management abstraction for JDBC-based data access. It provides seamless integration between the transaction module and JDBC connections, enabling declarative and programmatic transaction control for database operations.
 
 The module builds on `colesico-transaction` by providing:
+
 - A concrete `TransactionalShell` implementation (`JdbcTransactionalShell`) that manages JDBC connections within transactions
 - Connection and DataSource proxies for transaction-aware database access
 - IoC producers for default and custom JDBC transaction shells
 - Conditional configuration support for enabling/disabling default shells
 
 The module integrates with:
+
 - `colesico-transaction` - for transaction management abstraction
 - `colesico-ioc` - for dependency injection and conditional configuration
 - `colesico-hikaricp` (optional) - for connection pooling via HikariCP
@@ -24,6 +26,7 @@ The module integrates with:
 === JdbcTransactionalShell
 
 `JdbcTransactionalShell` is the concrete implementation of `TransactionalShell` for JDBC. It manages JDBC connections within the context of a transaction, handling:
+
 - Connection acquisition from a `DataSource`
 - Transaction lifecycle (begin, commit, rollback)
 - Connection suspension and resumption for nested transactions
@@ -34,6 +37,7 @@ The shell is constructed with a `DataSource` and provides methods for accessing 
 === JdbcTransaction
 
 `JdbcTransaction` is the transaction representation for JDBC, implementing the `Transaction` interface. It holds:
+
 - The underlying `Connection` object
 - Transaction tuning configuration (`Tuning<Connection>`)
 - Transaction ID for logging and monitoring
@@ -44,6 +48,7 @@ The transaction object is stored in thread-local storage and accessed by the she
 === JdbcConditions
 
 `JdbcConditions` provides conditional configuration for the JDBC module through IoC conditions:
+
 - `DefaultTransactionalShell` - enables/disables the default transactional shell production (enabled by default)
 - `DefaultConnection` - enables/disables the default connection producer (enabled by default)
 
@@ -54,6 +59,7 @@ These conditions allow applications to disable the default JDBC transaction shel
 `DataSourceProxy` is a base class for DataSource proxies, delegating all methods to a primary DataSource.
 
 `TxDataSource` is a transaction-aware DataSource proxy that:
+
 - Delegates connection acquisition to the transaction shell's current connection
 - Returns `TxConnection` instances that wrap the shell's connection
 - Prevents direct connection closure (transactions control connection lifecycle)
@@ -65,6 +71,7 @@ This DataSource can be used with third-party libraries that expect a DataSource 
 `ConnectionProxy` is a base class for Connection proxies, delegating JDBC methods to a primary Connection.
 
 `TxConnection` is a transaction-aware Connection that:
+
 - Delegates all JDBC operations to the current transaction's connection
 - Prevents direct `close()`, `commit()`, and `rollback()` operations (transaction control handles these)
 - Ensures transaction integrity by not allowing manual connection management
@@ -101,6 +108,7 @@ The transaction suspension mechanism allows nested transactions to operate indep
 === Default data source
 
 To configure the default data source, create a `hikari.properties` file in either:
+
 - `./config/hikari.properties` (external configuration)
 - `META-INF/hikari.properties` (classpath configuration)
 

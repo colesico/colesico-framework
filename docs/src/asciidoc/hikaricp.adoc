@@ -9,6 +9,7 @@
 Colesico-HikariCP is a module that integrates the HikariCP connection pool with the framework's IoC container. HikariCP is a fast, simple, and reliable "zero-overhead" production-ready JDBC connection pool, serving as the default connection pooling solution in the framework.
 
 The module provides:
+
 - Integration of HikariCP with the framework's configuration system
 - IoC producers for HikariCP data sources
 - Support for multiple data sources with different configurations
@@ -16,6 +17,7 @@ The module provides:
 - Conditional enabling/disabling of default data source
 
 The module integrates with:
+
 - `colesico-config` - for configuration via `@Config` annotations
 - `colesico-ioc` - for dependency injection and conditional configuration
 - `java.sql` - for DataSource API
@@ -26,6 +28,7 @@ The module integrates with:
 === HikariConfigPrototype
 
 `HikariConfigPrototype` is the configuration prototype for creating HikariCP data sources. It defines a single method:
+
 - `hikariConfig()` - returns a `HikariConfig` object containing the connection pool configuration
 
 This is a `ConfigModel.MESSAGE` type configuration, meaning it is passed as a message to the Hikari data source factory. The `target` attribute specifies that the configuration targets the `DataSource` instance.
@@ -33,6 +36,7 @@ This is a `ConfigModel.MESSAGE` type configuration, meaning it is passed as a me
 === HikariProperties
 
 `HikariProperties` is a convenience implementation of `HikariConfigPrototype` that loads configuration from properties files. It provides:
+
 - `fileName()` - returns the properties file name (default: `"hikari.properties"`)
 - `directory()` - returns the external directory path (default: `"./config"`)
 - `classpath()` - returns the classpath resource path (default: `"META-INF"`)
@@ -44,6 +48,7 @@ The class looks for the properties file first in the external directory, then in
 === HikariCPConditions
 
 `HikariCPConditions` provides conditional configuration for the HikariCP module:
+
 - `DefaultDataSource` - enables/disables the default HikariDataSource production (enabled by default)
 
 To disable the default data source, call:
@@ -57,6 +62,7 @@ This is useful when using custom data source configurations or when multiple dat
 === DataSource factory
 
 The `HikariProducer` provides a factory method for creating Hikari data sources:
+
 - `hikariDataSourceFactory` - an unscoped producer that takes a `HikariConfigPrototype` message and returns a `HikariDataSource`
 
 The factory handles configuration and initialization, logging errors if the pool creation fails.
@@ -66,6 +72,7 @@ The factory handles configuration and initialization, logging errors if the pool
 === Default properties file
 
 The easiest way to configure a connection pool is with the `hikari.properties` file. The framework looks for this file in the following order:
+
 1. External directory: `./config/hikari.properties`
 2. Classpath: `META-INF/hikari.properties`
 

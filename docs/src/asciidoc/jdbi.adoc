@@ -8,12 +8,14 @@
 Colesico-JDBI is a concrete implementation of the transaction management abstraction for JDBI (a lightweight JDBC wrapper). It provides seamless integration between the transaction module and JDBI handles, enabling declarative and programmatic transaction control for database operations using JDBI's fluent API.
 
 The module builds on `colesico-transaction` and `colesico-hikaricp` by providing:
+
 - A concrete `TransactionalShell` implementation (`JdbiTransactionalShell`) that manages JDBI handles within transactions
 - JDBI factory with configurable options via `JdbiOptionsPrototype`
 - IoC producers for default and custom JDBI handles and transaction shells
 - Configuration prototypes for JDBI data sources and options
 
 The module integrates with:
+
 - `colesico-transaction` - for transaction management abstraction
 - `colesico-hikaricp` - for connection pooling via HikariCP
 - `colesico-config` - for configuration
@@ -25,6 +27,7 @@ The module integrates with:
 === JdbiConfigPrototype
 
 `JdbiConfigPrototype` is the configuration prototype for creating JDBI instances. It defines:
+
 - `dataSource()` - the DataSource to be used by JDBI
 - `options()` - optional configuration suppliers to apply to the JDBI instance
 
@@ -43,6 +46,7 @@ The default configuration implementation `JdbiConfigImpl` extends `AbstractJdbiC
 === JdbiTransactionalShell
 
 `JdbiTransactionalShell` is the concrete implementation of `TransactionalShell` for JDBI. It manages JDBI handles within the context of a transaction, handling:
+
 - Handle acquisition from a `Jdbi` instance using `jdbi.open()`
 - Transaction lifecycle (begin, commit, rollback) via JDBI's `Handle` API
 - Handle suspension and resumption for nested transactions
@@ -53,6 +57,7 @@ The shell is constructed with a `Jdbi` instance and provides methods for accessi
 === JdbiTransaction
 
 `JdbiTransaction` is the transaction representation for JDBI, implementing the `Transaction` interface. It holds:
+
 - The underlying `Handle` object
 - Transaction tuning configuration (`Tuning<Handle>`)
 - Transaction ID for logging and monitoring (`id`)
@@ -79,6 +84,7 @@ This ensures that all database operations within a transaction share the same ha
 === Default JDBI instance
 
 To configure the default JDBI instance, create a `hikari.properties` file in either:
+
 - `./config/hikari.properties` (external configuration)
 - `META-INF/hikari.properties` (classpath configuration)
 
@@ -145,6 +151,7 @@ The `@Transactional(shell = "extra")` annotation specifies which transaction she
 == IoC integration
 
 The module provides built-in IoC producers in `JdbiProducer`:
+
 - `jdbiFactory` - unscoped JDBI factory with `@Classed(JdbiConfigPrototype.class)` qualifier
 - `getHandle` - unscoped handle provider from the default transaction shell
 - `getDefaultTransactionalShell` - default transaction shell (stub)

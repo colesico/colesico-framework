@@ -9,11 +9,13 @@
 Colesico-Profile is a user localization and preference management module that provides a unified API for managing user profiles across different contexts. A profile contains information necessary to adapt the application to the user - locale, time zone, user preferences, terminal type, and any other application-specific settings.
 
 The module is built around three core concepts:
+
 - **Profile** - represents user localization and preference data
 - **ProfileContext** - holds the current profile in the execution scope
 - **ProfileSource** - provides persistence and retrieval of profiles
 
 The module integrates with:
+
 - `colesico-security` - for identity-based profile resolution
 - `colesico-teleapi` - for data port-based profile sources
 - `colesico-config` - for configuration
@@ -48,6 +50,7 @@ Profiles are stored in the `ProfileContext`, which is bound to the current `Task
 `ProfileManager` is the central entry point for all profile operations. It coordinates between the profile context, identity context, and profile source to provide seamless profile resolution.
 
 The `resolve()` method performs automatic profile resolution with the following sequence:
+
 1. Checks `ProfileContext` for an existing cached profile
 2. If missing, retrieves the current `Identity` from `IdentityContext` and uses its ID as the profile ID
 3. Fetches the profile from `ProfileSource` using the ID
@@ -73,6 +76,7 @@ The Profile module integrates with `colesico-security` to automatically resolve 
 == Profile resolution flow
 
 The resolution process follows a clear chain of responsibility:
+
 1. The `ProfileContext` is checked for a cached profile
 2. If found, the cached profile is returned immediately (fast path)
 3. If not found, the current identity is obtained from `IdentityContext`

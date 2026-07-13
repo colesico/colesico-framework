@@ -9,12 +9,14 @@
 Colesico-Validation is a comprehensive validation framework that provides both DSL-based and declarative validation capabilities. It offers a powerful and flexible way to define validation rules for complex object graphs, with strong integration with the Service and Translation modules.
 
 The module provides two complementary approaches that can be mixed within the same application:
+
 - **DSL Validation** - a fluent, programmatic DSL for building validators using commands, executors, and mappers
 - **Bean Validation** - declarative validation using annotations on bean fields with compile-time code generation
 
 Both approaches leverage the same underlying validation engine based on the `ValidationContext` and `Command` abstractions.
 
 The module integrates with:
+
 - `colesico-service` - for service integration and interceptor support
 - `colesico-translation` - for localized error messages via `ValidatorMessages`
 - `colesico-ioc` - for dependency injection and producer generation
@@ -37,6 +39,7 @@ The module integrates with:
 === ValidationContext
 
 `ValidationContext<V>` is the central object during validation execution. It holds:
+
 - The current value being validated (`value()`)
 - The subject (logical name/path of the validated value)
 - Parent context reference for nested validation
@@ -52,6 +55,7 @@ The context maintains a hierarchical path through nested validation. For example
 === Iterator
 
 `Iterator<V>` is a command that executes a collection of child commands. Two implementations are provided:
+
 - `SeriesIterator` - executes all commands sequentially, continuing even if errors occur. This collects all validation errors across all commands, providing complete feedback to the user.
 - `ChainIterator` - executes commands until the first error occurs, then stops. This is useful for performance optimization when early validation failure makes further validation unnecessary.
 
@@ -72,6 +76,7 @@ Mappers are essential for validating nested object graphs and collections.
 === Executor
 
 `Executor<V>` is a command that decorates another command with additional behavior:
+
 - `MandatoryExecutor` - executes the command only if the value is not null; adds a validation error if the value is null. This ensures required fields are present.
 - `OptionalExecutor` - executes the command only if the value is not null; does nothing if null. This allows conditional validation of optional fields.
 - `ConditionalExecutor` - executes the command only if a predicate on the `ValidationContext` returns true. This enables conditional validation based on other values.
@@ -81,6 +86,7 @@ Mappers are essential for validating nested object graphs and collections.
 === Verifier
 
 Built-in verifier commands for common validation scenarios:
+
 - `RequiredVerifier` - checks that the value is not null, empty, or blank (for strings, collections, maps, arrays)
 - `LengthVerifier` - checks string length constraints with min/max boundaries
 - `IntervalVerifier` - checks numeric value range (works with Byte, Short, Integer, Long, Float, Double)
@@ -130,6 +136,7 @@ Bean validation uses annotations to declaratively define validation rules for be
 === @ValidatorBuilder
 
 Applied to bean classes, this annotation declares that a validator builder should be generated. Attributes:
+
 - `superclass` / `value` - the abstract builder class to extend (must extend `BeanValidatorBuilder`)
 - `isDefault` - whether this builder is the default for the bean (only one default per bean)
 - `subject` - root validation subject for all validations in this builder
@@ -141,6 +148,7 @@ Multiple `@ValidatorBuilder` annotations can be applied to a single bean to gene
 === @Validate
 
 Applied to bean fields, this annotation marks the field for validation. Attributes:
+
 - `value` - the validator builder this validation belongs to (empty means default builder)
 - `method` - custom validation method name in the builder (defaults to `validate{FieldName}` or `verify{FieldName}`)
 - `subject` - validation subject override (defaults to field name)
@@ -152,6 +160,7 @@ The generated builder contains a method for each `@Validate` field. If `verifier
 === @BeanValidate
 
 Applied to bean fields, this annotation indicates that the field itself should be validated as a bean using another validator builder. Attributes:
+
 - `value` - parent validator builder this validation belongs to (empty means default)
 - `target` - target validator builder to use for validation
 - `subject` - subject override (defaults to field name)
@@ -166,6 +175,7 @@ These are container annotations for multiple `@BeanValidate` and `@Validate` ann
 === Generated builder structure
 
 The generated validator builder:
+
 1. Extends the specified abstract builder class
 2. Contains fields for each `@BeanValidate` target validator, injected via constructor
 3. Implements the `validation()` method returning the root command
@@ -178,6 +188,7 @@ The root command is built using the configured `command` attribute (series, chai
 === IoC integration
 
 Generated validator builders are registered with the IoC container via a generated producer class. Each builder is produced with:
+
 - `@Produce` annotation with `keyType` set to the abstract builder class
 - `@Unscoped` scope
 - `@Classed` qualifier for non-default builders
@@ -187,6 +198,7 @@ This allows injection of specific validators by type or classed qualifier.
 == Integration with Translation
 
 The validation module integrates with `colesico-translation` for localized error messages. The `ValidatorMessages` class is a translation dictionary interface that provides translatable messages for all built-in validators. This includes:
+
 - Required value messages
 - Length constraint messages (min, max, between)
 - Interval constraint messages (greater than, less than, between)
@@ -199,6 +211,7 @@ The `ValidatorMessages` dictionary is injected into `AbstractValidatorBuilder` a
 == Error handling
 
 Validation errors are collected in `ValidationIssue` objects containing:
+
 - `subject` - the path to the invalid value (e.g., `user.credentials.password`)
 - `errors` - list of `ValidationError` objects (code + localized message)
 - `subissues` - nested validation issues for child objects

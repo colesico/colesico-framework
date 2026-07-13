@@ -9,6 +9,7 @@
 Colesico-TeleHTTP is a concrete implementation of the TeleAPI abstraction for the HTTP protocol. It provides HTTP-specific readers, writers, origins, and response types that enable seamless remote method invocation over HTTP.
 
 The module integrates with:
+
 - `colesico-http` - HTTP API abstraction
 - `colesico-httprouter` - HTTP routing
 - `colesico-service` - Service framework
@@ -33,11 +34,13 @@ The module integrates with:
 `HttpDataPort` is the HTTP-specific implementation of `DataPort`. It provides dynamic reader and writer resolution based on parameter type and origin.
 
 For reading, the data port:
+
 1. Checks if a custom reader is specified in options
 2. Finds a reader by the parameter's base type using `TeleFactory`
 3. Falls back to the default object reader if no specific reader is found
 
 For writing, the data port:
+
 1. Checks if a custom writer is specified in options
 2. Finds a writer by the value's runtime class
 3. Finds a writer by the base type
@@ -51,6 +54,7 @@ The `HttpDataPort` is abstract and must be extended by concrete protocol impleme
 `Origin` defines the strategy for reading string values from an HTTP request. Each origin implementation retrieves values from a specific HTTP source. The `OriginFactory` provides access to origin instances by name, allowing dynamic origin resolution based on `@ParamOrigin` annotations.
 
 The available origins are:
+
 - `AUTO` - automatically selects based on HTTP method and available data
 - `HEADER` - reads from HTTP headers (supports multi-value headers)
 - `COOKIE` - reads from cookies
@@ -66,10 +70,12 @@ Each origin returns `Iterable<String>` to support multi-value parameters (e.g., 
 These interfaces extend TeleAPI's options with HTTP-specific metadata:
 
 `HttpReadOptions` adds:
+
 - `paramName` - the name of the HTTP parameter to read (header name, cookie name, query param name, etc.)
 - `originName` - the origin to read from (HEADER, QUERY, POST, etc.)
 
 `HttpWriteOptions` adds:
+
 - `statusCode` - default HTTP status code for the response
 - `contentType` - default content type for the response
 
@@ -86,6 +92,7 @@ These interfaces extend TeleAPI's options with HTTP-specific metadata:
 When a service method is invoked remotely over HTTP, each parameter is read from the HTTP request using `@ParamOrigin` and `@ParamName` annotations.
 
 The reading process works as follows:
+
 1. `HttpDataPort` receives a read request with `HttpReadOptions` containing the parameter name and origin
 2. It resolves the appropriate `HttpReader` via `TeleFactory` (by custom reader, base type, or fallback)
 3. The reader obtains the origin from `OriginFactory`
@@ -133,6 +140,7 @@ Abstract base class for responses that carry a value (String, bytes, object, exc
 === Response writers
 
 Each response type has a corresponding writer:
+
 - `StringResponseWriter` - writes text with charset support
 - `BytesResponseWriter` - writes binary data
 - `ToStringObjectResponseWriter` - writes objects using `toString()`
@@ -144,12 +152,14 @@ Each response type has a corresponding writer:
 - `ProfileWriter` - writes profile to cookie and header
 
 Status code resolution follows this precedence:
+
 1. Response's own status code
 2. Options status code
 3. Writer's default status code (200)
 4. Empty response status code (204)
 
 Exception status code mapping:
+
 - `UnauthenticatedException` → 401
 - `UnauthorizedException` → 401
 - `HttpTeleException` → uses exception's status code or 500

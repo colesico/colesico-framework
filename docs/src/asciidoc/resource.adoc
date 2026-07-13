@@ -9,10 +9,12 @@
 Colesico-Resource is a resource management module that provides flexible resource localization and name rewriting capabilities. It enables applications to serve localized resources (messages, templates, configuration files, etc.) based on user profiles and to rewrite resource paths through configurable prefix substitutions.
 
 The module is built around two core concepts:
+
 - **Resource Localization** - serving localized versions of resources based on user locale and other qualifiers
 - **Resource Rewriting** - rewriting resource names through prefix substitution rules
 
 The module integrates with:
+
 - `colesico-profile` - for user profile-based localization
 - `colesico-config` - for configuration
 - `colesico-ioc` - for dependency injection
@@ -53,6 +55,7 @@ Defines the canonical order and set of qualifiers used for localization. By defa
 ==== L10nConfigPrototype
 
 The configuration prototype for localization behavior. It defines:
+
 - `qualifiersDefinition()` - the qualifier set and order
 - `objectiveQualifiers(Profile)` - how to extract qualifier values from a user profile
 
@@ -61,10 +64,12 @@ A default stub implementation is provided with language and country qualifiers.
 ==== L10nOptionsPrototype
 
 A polyvariant configuration prototype that allows registering localization rules for specific resource names. Each rule specifies:
+
 - A base name template with `{Q}` placeholder for qualifier suffix and `{{substitution}}` for name substitution
 - One or more sets of qualifiers (subject qualifiers) that the rule applies to
 
 Example of configuration:
+
 [source,java]
 ----
 options
@@ -93,15 +98,18 @@ The localization engine finds the best match between subject qualifiers and obje
 === Prefix substitution
 
 `PrefixSubstitutor` rewrites resource names by replacing prefix segments with alternative paths. This is useful for:
+
 - Virtual resource paths
 - Module/component resource isolation
 - Legacy path migration
 
 The substitutor supports two phases:
+
 - `BEFORE_LOCALIZE` - applied before localization (useful for path normalization)
 - `AFTER_LOCALIZE` - applied after localization (useful for final path mapping)
 
 Rules are defined through `ResourcePrefixOptionsPrototype` configuration:
+
 [source,java]
 ----
 options.substitution("alias", "foo/dummy", Phase.BEFORE_LOCALIZE);
@@ -127,6 +135,7 @@ The `resolutions(String baseName)` method returns all possible resolved names, o
 === L10nConfigPrototype
 
 The default stub implementation uses:
+
 - Qualifiers definition: language, country
 - Objective qualifiers: extracted from profile locale
 
@@ -147,6 +156,7 @@ The Resource module relies on `colesico-profile` for user profile resolution. Th
 == Path trie implementation
 
 Both localization and prefix substitution use `PathTrie` for efficient path-based lookup:
+
 - `PathTrie` stores nodes representing path segments
 - Each node can store a value (localization config or rewriting rule)
 - Lookup follows the path segments to find the best matching node

@@ -11,12 +11,14 @@ Colesico-Transaction is a unified transaction management module that provides bo
 The module is built around the `TransactionalShell` interface, which abstracts the underlying transaction management mechanism. The module itself does not provide a concrete transaction implementation - this must be supplied by vendor modules (e.g., `colesico-jdbc` for JDBC-based transactions, `colesico-jpa` for JPA, or custom implementations for other transaction managers). This design allows the transaction module to remain protocol-agnostic while supporting various transaction strategies.
 
 Two transaction control styles are supported:
+
 - **Declarative** - using the `@Transactional` annotation on service methods or classes, with transaction boundaries defined at compile time
 - **Programmatic** - using `TransactionalShell` directly in code for fine-grained control
 
 These styles can be freely mixed, allowing programmatic control inside declarative transactions and vice versa.
 
 The module integrates with:
+
 - `colesico-service` - for method interception via code generation
 - `colesico-config` - for configuration support
 - `colesico-ioc` - for dependency injection
@@ -39,6 +41,7 @@ The module integrates with:
 === TransactionalShell
 
 `TransactionalShell` is the central abstraction for transaction management. It provides methods for each propagation behavior, allowing code execution within a transaction context. Each method accepts:
+
 - A `UnitOfWork` - the functional interface representing the transactional code block to execute
 - An optional tuning parameter - vendor-specific transaction configuration
 
@@ -65,6 +68,7 @@ Transaction propagation defines how transactions relate to each other when one t
 `AbstractTransactionalShell` provides a base implementation for concrete transaction shells. It manages thread-local transaction contexts and implements the propagation logic for all seven behaviors, including transaction suspension and resumption where required.
 
 Key aspects of the abstract implementation:
+
 - Thread-local transaction storage using `ThreadLocal<T>` for thread-safe transaction context
 - Transaction suspension and resumption for REQUIRES_NEW and NOT_SUPPORTED behaviors, ensuring proper isolation
 - Exception handling with rethrow capability for consistent error propagation
@@ -91,10 +95,12 @@ The `TxModulator` is a service modulator that integrates with the Service module
 Declarative transaction management is achieved by annotating service methods or entire service classes with `@Transactional`. When placed on a class, the annotation applies to all public methods of that service.
 
 The `@Transactional` annotation supports two attributes:
+
 - `propagation` - transaction propagation behavior (default: TransactionPropagation.REQUIRED)
 - `shell` - named IoC qualifier for the shell instance (optional; if empty, the default shell is used)
 
 When a method annotated with `@Transactional` is invoked, the `TxModulator` generates code that:
+
 1. Retrieves the appropriate `TransactionalShell` instance from the service proxy field
 2. Delegates the method execution to the shell's corresponding propagation method
 3. Wraps the original method call within the transaction boundary defined by the propagation behavior
@@ -104,6 +110,7 @@ When a method annotated with `@Transactional` is invoked, the `TxModulator` gene
 Programmatic transaction control is performed by injecting `TransactionalShell` into the service constructor and calling its methods directly. This approach provides finer control over transaction boundaries and is useful when transaction demarcation needs to be conditional or dynamic.
 
 When using programmatic control:
+
 1. Inject the shell instance via constructor injection
 2. Call the appropriate shell method (required, requiresNew, mandatory, etc.)
 3. Pass a `UnitOfWork` lambda containing the business logic
@@ -120,6 +127,7 @@ A common pattern is using declarative transactions for the outer transaction bou
 == Transaction context management
 
 The transaction context is managed via `ThreadLocal` in `AbstractTransactionalShell`, ensuring each thread has its own transaction state. This supports:
+
 - Transaction suspension and resumption for REQUIRES_NEW and NOT_SUPPORTED behaviors
 - Proper isolation between concurrent requests
 - Nested transaction support where implemented by vendor modules

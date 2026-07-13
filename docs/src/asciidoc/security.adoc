@@ -9,11 +9,13 @@
 Colesico-Security is a comprehensive security module that provides authentication and authorization capabilities for the framework. It integrates seamlessly with the Service module through code generation, enabling declarative security configuration on service methods.
 
 The module is built around three core concepts:
+
 - **Identity** - represents an authenticated subject with claims, roles, and permissions
 - **Authentication** - verifies the identity of a subject using various sources
 - **Authorization** - determines if an authenticated subject has permission to perform an action
 
 The module integrates with:
+
 - `colesico-service` - for method-level security via interceptors
 - `colesico-config` - for security configuration
 - `colesico-ioc` - for dependency injection and scope management
@@ -38,6 +40,7 @@ HTTP-specific authentication sources (like `HttpBasic`) are provided by the `col
 === Identity
 
 `Identity` is the central abstraction representing an authenticated subject. It encapsulates:
+
 - `id()` - a unique identifier for the subject
 - `claims()` - a map of arbitrary attributes associated with the subject
 
@@ -78,6 +81,7 @@ The `BasicAuthentication` source is provided for testing and development, allowi
 ==== AuthenticationResult
 
 The sealed interface with four types:
+
 - `Success` - carries the verified `Identity`
 - `Failure` - with error details
 - `Continuation` - requires additional challenge
@@ -96,6 +100,7 @@ The sealed interface with four types:
 ==== Authorizer
 
 `Authorizer` evaluates an `AuthorizationRequest` and returns an `AuthorizationResult`. Built-in authorizers include:
+
 - `IdentityRequiredAuthorizer` - verifies identity presence
 - `AffirmativeAuthorizer` - OR logic for plugin systems
 - `UnanimousAuthorizer` - AND logic for critical operations
@@ -115,6 +120,7 @@ The `SecurityModulator` integrates with the Service module at compile time:
 === Authentication interceptor
 
 When annotated with `@Authentication`, the modulator injects an `AuthenticationInterceptor` field and binds it to the `AUTHENTICATION` phase with configured sources and strategy:
+
 - `STRICT` - always authenticates
 - `IF_NECESSARY` - authenticates only if no identity exists
 - `DEFERRED` - registers sources in `AuthenticationSourceContext` for later manual authentication
@@ -132,6 +138,7 @@ Holds authentication sources bound to the current scope, enabling `DEFERRED` aut
 === BasicAuthenticator
 
 Provides login/password authentication with:
+
 - Configurable max authenticated sessions via `BasicAuthConfigPrototype`
 - Password hashing (SHA-256 default)
 - Account storage abstraction

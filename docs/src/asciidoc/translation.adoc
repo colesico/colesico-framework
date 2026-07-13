@@ -9,11 +9,13 @@
 Colesico-Translation is a comprehensive internationalization (i18n) and localization (l10n) module that provides type-safe translation capabilities through dictionary interfaces. It leverages compile-time code generation to produce efficient, type-safe translation methods with IDE autocompletion support.
 
 The module is built around three core concepts:
+
 - **Dictionary** - a type-safe interface defining translatable messages
 - **TranslationKit** - the service for obtaining translation bundles
 - **Resource integration** - leveraging the Resource module for localization
 
 The module integrates with:
+
 - `colesico-resource` - for resource localization and bundle resolution
 - `colesico-profile` - for user locale determination
 - `colesico-ioc` - for dependency injection
@@ -45,6 +47,7 @@ The framework generates a concrete implementation of the dictionary interface at
 === Translation annotations
 
 The module provides pre-defined language annotations:
+
 - `@Text` - default translation for any language
 - `@En` - English translation
 - `@Ru` - Russian translation
@@ -95,6 +98,7 @@ The generated `L10nOptions` configuration registers the dictionary's base name w
 === Dictionary annotation attributes
 
 The `@Dictionary` annotation supports:
+
 - `baseName` - optional resource base name (defaults to interface canonical name with dots replaced by slashes). This is the base name for the property files.
 - `extraTranslations` - additional language tags for translations defined in external properties files that are not specified via annotations in the dictionary
 

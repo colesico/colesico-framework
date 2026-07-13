@@ -27,6 +27,7 @@ The module does not provide any specific remote call implementation itself. Inst
 `TeleFacade` is the central abstraction that represents a collection of remotely invocable methods (tele-commands). It serves as a facade between the client and the actual service implementation.
 
 Each tele-facade:
+
 - Is associated with a target service (the object whose methods are invoked remotely)
 - Provides a registry of available tele-commands via the `commands()` method
 - Is discovered and registered with `TeleController` at startup
@@ -74,6 +75,7 @@ public interface TeleController<Q extends Criteria, I extends Invocation, C exte
 `DataPort` is the gateway for data exchange with a remote source (HTTP request/response, gRPC stream, message queue, etc.). It abstracts away protocol-specific details and provides a unified interface for reading input data and writing output data.
 
 The DataPort interface declares three key methods:
+
 - `read(R options)` - reads a value using the given read options
 - `read(Type baseType, Object metadata)` - convenience method that creates read options internally
 - `write(V value, W options)` - writes a value using the given write options
