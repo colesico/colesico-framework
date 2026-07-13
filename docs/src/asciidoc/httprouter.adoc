@@ -39,6 +39,11 @@ When a parameter is matched, its value is extracted from the URL and stored with
 - `/files/*` - matches `/files/documents/report.pdf`, captures `documents/report.pdf`
 - The captured value is stored with the key `routeSuffix`
 
+
+=== Relative and absolute paths
+
+If a path starts with /, it is considered absolute; otherwise, it is a relative path (relative to the container, class, or package)
+
 === Usage example
 
 [source,java]
