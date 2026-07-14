@@ -52,12 +52,12 @@
         <dependency>
             <groupId>org.tinylog</groupId>
             <artifactId>slf4j-tinylog</artifactId>
-            <version>${slf4j-tinylog.verion}</version>
+            <version>${tinylog.verion}</version>
         </dependency>
         <dependency>
             <groupId>org.tinylog</groupId>
             <artifactId>tinylog-impl</artifactId>
-            <version>${slf4j-tinylog.verion}</version>
+            <version>${tinylog.verion}</version>
         </dependency>
 
         <!-- Tests -->

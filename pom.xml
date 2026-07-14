@@ -82,7 +82,7 @@
 
         <!-- Logging -->
         <slf4j.version>2.0.18</slf4j.version>
-        <slf4j-tinylog.verion>2.7.0</slf4j-tinylog.verion>
+        <tinylog.verion>2.7.0</tinylog.verion>
 
         <!-- DB -->
         <hikaricp.version>7.1.0</hikaricp.version>
