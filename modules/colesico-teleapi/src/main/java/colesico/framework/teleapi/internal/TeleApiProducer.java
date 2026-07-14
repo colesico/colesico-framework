@@ -23,7 +23,6 @@ import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.teleapi.dataport.TeleFactory;
 import colesico.framework.teleapi.TeleException;
-import colesico.framework.teleapi.assist.NullDataPort;
 import colesico.framework.teleapi.assist.SimpleDataPort;
 
 /**
@@ -31,7 +30,6 @@ import colesico.framework.teleapi.assist.SimpleDataPort;
  */
 @Producer
 @Produce(TeleFactory.class)
-@Produce(NullDataPort.class)
 @Produce(SimpleDataPort.class)
 public class TeleApiProducer {
 

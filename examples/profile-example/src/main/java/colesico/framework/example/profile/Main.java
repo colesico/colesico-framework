@@ -30,19 +30,20 @@ public class Main {
 
         // Provide default data port
         SimpleDataPort dataPort = ioc.instance(SimpleDataPort.class);
-        dataPort.provide();
+        dataPort.forTask(() -> {
 
-        Locale.setDefault(Locale.of("ru"));
+            Locale.setDefault(Locale.of("ru"));
 
-        AppService srv = ioc.instance(AppService.class);
-        System.out.println("Profile = " + srv.getProfile());
+            AppService srv = ioc.instance(AppService.class);
+            System.out.println("Profile = " + srv.getProfile());
 
-        srv.setLocale(Locale.of("en"));
-        System.out.println("Profile/en = " + srv.getProfile());
+            srv.setLocale(Locale.of("en"));
+            System.out.println("Profile/en = " + srv.getProfile());
 
-        srv.setTimezone(TimeZone.getTimeZone("UTC"));
-        System.out.println("Timezone/en = " + srv.getProfile());
+            srv.setTimezone(TimeZone.getTimeZone("UTC"));
+            System.out.println("Timezone/en = " + srv.getProfile());
 
-        System.out.println("DataPort = " + dataPort);
+            System.out.println("DataPort = " + dataPort);
+        });
     }
 }
