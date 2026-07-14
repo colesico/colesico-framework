@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -44,20 +45,8 @@ public class SimpleDataPort implements DataPort<SimpleDataPort.ReadOptions, Simp
         });
     }
 
-    public Object value(Type baseType) {
-        return values.get(key(baseType, null));
-    }
-
-    public Object value(Type baseType, String name) {
-        return values.get(key(baseType, name));
-    }
-
-    public void setValue(Type baseType, String name, Object value) {
-        values.put(key(baseType, name), value);
-    }
-
     public Map<String, Object> values() {
-        return values;
+        return new HashMap<>(values);
     }
 
     public void clear() {

@@ -60,7 +60,7 @@ public class ProfileExampleTest {
         dataPort.forTask(() -> {
             AppService service = ioc.instance(AppService.class);
             service.setLocale(Locale.of("en"));
-            CustomProfile profile = (CustomProfile) dataPort.value(Profile.class);
+            CustomProfile profile = (CustomProfile) dataPort.read(Profile.class);
             assertEquals("en", profile.locale().toLanguageTag());
         });
     }
@@ -72,7 +72,7 @@ public class ProfileExampleTest {
         dataPort.forTask(() -> {
             AppService service = ioc.instance(AppService.class);
             service.setTimezone(TimeZone.getTimeZone("UTC"));
-            CustomProfile profile = (CustomProfile) dataPort.value(Profile.class);
+            CustomProfile profile = dataPort.read(Profile.class);
             assertEquals("UTC", profile.timeZone().getID());
         });
     }
