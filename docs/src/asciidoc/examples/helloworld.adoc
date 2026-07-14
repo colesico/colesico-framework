@@ -1,36 +1,33 @@
-= Hello world
+= Hello World
 
 == Maven
 
-To build simple application you must first to setup your maven project.
-This should be a regular jar application with the framework dependencies.
-
-Although the framework consists of many modules, to specify dependencies you can use a bundle module
-that includes the most frequently used specific modules - colesico-bundle-web  (or colesico-bundle-sql, etc.).
-
-Framework can support different http servers, so you must specify which one  server you want to use.
+To build a simple application, you must first set up your Maven project.
+This should be a regular JAR application with the framework dependencies.
+The framework supports different HTTP servers, so you must specify which server you want to use.
 
 [source,xml]
 ----
 <dependencies>
-        <!-- Colesico common modules bundle -->
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-bundle-web</artifactId>
-            <version>${colesico.version}</version>
-        </dependency>
 
-        <!-- Colesico undertow integration -->
-        <dependency>
-            <groupId>net.colesico.framework</groupId>
-            <artifactId>colesico-undertow</artifactId>
-            <version>${colesico.version}</version>
-        </dependency>
+    <!-- Colesico weblet module -->
+    <dependency>
+        <groupId>net.colesico.framework</groupId>
+        <artifactId>colesico-weblet</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+
+    <!-- Colesico Fusion HTTP Server integration -->
+    <dependency>
+        <groupId>net.colesico.framework</groupId>
+        <artifactId>colesico-fusionhttp</artifactId>
+        <version>${project.version}</version>
+    </dependency>
 
 </dependencies>
 ----
 
-Since colesico framework generates extra java code you also must to attach annotation processor to you compilation process:
+Since the Colesico framework generates extra Java code, you must also attach an annotation processor to your compilation process:
 
 [source,xml]
 ----
@@ -43,103 +40,97 @@ Since colesico framework generates extra java code you also must to attach annot
             <!-- Framework annotation processors -->
             <path>
                 <groupId>net.colesico.framework</groupId>
-                <artifactId>colesico-bundle-web</artifactId>
-                <version>${colesico.version}</version>
+                <artifactId>colesico-weblet</artifactId>
+                <version>${project.version}</version>
             </path>
         </annotationProcessorPaths>
     </configuration>
 </plugin>
 ----
 
-Also, all dependencies should be collected to the target/lib folder. For this purpose, you can use maven dependency plugin:
+Also, all dependencies should be collected into the `target/lib` folder.
+For this purpose, you can use the Maven Dependency Plugin:
 
 [source,xml]
 ----
- <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-dependency-plugin</artifactId>
-	<version>${maven-dependency-plugin.version}</version>
-	<executions>
-		<execution>
-			<phase>package</phase>
-			<goals>
-				<goal>copy-dependencies</goal>
-			</goals>
-			<configuration>
-				 <includeScope>runtime</includeScope>
-                 <excludeArtifactIds>javapoet</excludeArtifactIds>
-				 <outputDirectory>${project.build.directory}/lib</outputDirectory>
-			</configuration>
-		</execution>
-	</executions>
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-dependency-plugin</artifactId>
+    <version>${maven-dependency-plugin.version}</version>
+    <executions>
+        <execution>
+            <phase>package</phase>
+            <goals>
+                <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+                <includeScope>runtime</includeScope>
+                <excludeArtifactIds>javapoet</excludeArtifactIds>
+                <outputDirectory>${project.build.directory}/lib</outputDirectory>
+            </configuration>
+        </execution>
+    </executions>
 </plugin>
 ----
 
-
 == Main
 
-Define "Main" class and "main" static method that be a start point of you application.
-Inside that method you should build an instance of the <<../ioc.adoc#,inversion of control container>>,
-then  obtain a http server instance and start it.
+Define a `Main` class and a static `main` method that will be the starting point of your application.
+Inside this method, you should build an instance of the <<../ioc.adoc#,Inversion of Control container>>, then obtain an HTTP server instance and start it.
 
 [source,java]
 ----
-
 public static void main(String[] args) {
-
-        // Create IoC container instance, obtain http server and start it.
-
-        IocBuilder
-          .create()
-          .build()
-          .instance(HttpServer.class)
-          .start();
-
+    // Create IoC container instance, obtain HTTP server and start it.
+    IocBuilder
+        .create()
+        .build()
+        .instance(HttpServer.class)
+        .start();
 }
 
-// Alternative more verbose code
+// Alternative, more verbose code
 public static void main(String[] args) {
+    // Build DI container instance
+    final Ioc ioc = IocBuilder.create().build();
 
-        // Build DI container instance
-        final Ioc ioc = IocBuilder.create().build();
+    // Obtain HTTP server from DI container
+    HttpServer httpServer = ioc.instance(HttpServer.class);
 
-        // Obtain http server from DI container
-        HttpServer httpServer = ioc.instance(HttpServer.class);
-
-        // Start http server
-        httpServer.start();
+    // Start HTTP server
+    httpServer.start();
 }
 ----
 
 == Weblet
 
-*Weblet* is a http requests controller.  It acts like a regular Servlet but can handle multiple request urls.
+A *Weblet* is an HTTP request controller.
+It acts like a regular Servlet but can handle multiple request URLs.
 
-* Define a weblet class that contains a  method that would be responsive for request handling.
-* Annotate weblet class with @Weblet annnotation.
+* Define a Weblet class that contains a method responsible for handling requests.
+* Annotate the Weblet class with the `@Weblet` annotation.
 
 [source,java]
 ----
 @Weblet
 public class HelloWeblet {
 
-    // Corresponding url: http://localhost:8080/hello-weblet/say-hello
-    public HtmlResponse sayHello(){
-        return HtmlResponse.of("Hello World!");
+    // Corresponding URL: http://localhost:8080/hello-weblet/say-hello
+    public String sayHello() {
+        return "Hello World!";
     }
 }
-
 ----
 
-Every public method within weblet class considered to be a request handler.
-By default request url constructed based on weblet class simple name and handler method name.
-Java camel case notation transformed to kebab-case notation.
+Every public method within a Weblet class is considered a request handler.
+By default, the request URL is constructed based on the Weblet class simple name and the handler method name.
+Java camelCase notation is automatically transformed into kebab-case notation.
 
-It is possible to customize request uri with @Route annotation applied on :
+It is possible to customize the request URI using the `@Route` annotation applied to:
 
-* package (inside package-info.java)
-* weblet class
-* weblet handler method
+* a package (inside `package-info.java`)
+* a Weblet class
+* a Weblet handler method
 
 <<../router.adoc#, See Router module details>>
 
@@ -147,14 +138,13 @@ It is possible to customize request uri with @Route annotation applied on :
 
 Compile and run the application:
 
-[source]
+[source,bash]
 ----
 java -jar helloworld.jar
 ----
 
-Then browse the url  http://localhost:8080/hello-weblet/say-hello to see result.
+Then open the URL http://localhost:8080/hello-weblet/say-hello in your browser to see the result.
 
-== Hello World application source code
+== Hello World Application Source Code
 
-See full source code in the framework source code section #examples/helloworld-example#
-
+See the full source code in the framework repository under the `#examples/helloworld-example#` section.
