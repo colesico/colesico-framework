@@ -56,7 +56,7 @@ public class ConfigExampleTest {
 
     @Test
     public void testMessageConfig() {
-        assertEquals(service.getMessageConfigValues(), "Message1;Message2");
+        assertEquals(service.getMessageConfigValues(), "Message1;Message2;MessageDefault");
     }
 
     @Test

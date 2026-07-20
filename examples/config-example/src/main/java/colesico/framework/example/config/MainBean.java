@@ -39,6 +39,11 @@ public class MainBean {
     private final TargetBean targetService1;
     private final TargetBean targetService2;
 
+    /**
+     * For test {@link colesico.framework.config.DefaultMessage}
+     */
+    private final TargetBean targetService3;
+
     private final SourceSimpleConfig sourceSimpleConfig;
     private final SourceSingleConfigPrototype sourceSingleConfig;
     private final SourcePrefixConfig sourcePrefixConfig;
@@ -55,13 +60,16 @@ public class MainBean {
                     // Config in polyvariant configuration model
                     Polysupplier<PolyConfigPrototype> polyConfig,
 
-                    // A bean configured with the configuration in the message model
+                    // A bean configured with the configuration 1 in the message model
                     @Classed(MessageConfig1.class)
                     TargetBean targetService1,
 
-                    // A bean configured with the configuration in the message model
+                    // A bean configured with the configuration 2 in the message model
                     @Classed(MessageConfig2.class)
                     TargetBean targetService2,
+
+                    // A bean configured with @DefaultMessage configuration
+                    TargetBean targetService3,
 
                     // The configuration  the values of that is read from config source
                     SourceSimpleConfig sourceSimpleConfig,
@@ -80,6 +88,7 @@ public class MainBean {
         this.polyConfig = polyConfig;
         this.targetService1 = targetService1;
         this.targetService2 = targetService2;
+        this.targetService3 = targetService3;
         this.sourceSimpleConfig = sourceSimpleConfig;
         this.sourceSingleConfig = sourceSingleConfig;
         this.sourcePrefixConfig = sourcePrefixConfig;
@@ -103,7 +112,9 @@ public class MainBean {
     }
 
     public String getMessageConfigValues() {
-        return targetService1.getValue() + ";" + targetService2.getValue();
+        return targetService1.getValue() + ";"
+                + targetService2.getValue() + ";"
+                + targetService3.getValue();
     }
 
     public String getSourceSimpleConfigValue() {
