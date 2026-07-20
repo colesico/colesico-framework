@@ -104,11 +104,11 @@
                             <artifactId>colesico-jdbirec</artifactId>
                             <version>${project.version}</version>
                         </path>
-                        <dependency>
+                        <path>
                             <groupId>net.colesico.framework</groupId>
                             <artifactId>colesico-transaction</artifactId>
                             <version>${project.version}</version>
-                        </dependency>
+                        </path>
                         <!-- Enable compilation debug log -->
                         <dependency>
                             <groupId>org.slf4j</groupId>
