@@ -1,10 +1,10 @@
 package colesico.framework.test.resource;
 
 import colesico.framework.config.Config;
-import colesico.framework.resource.ResourcePrefixOptionsPrototype;
+import colesico.framework.resource.ResourceOptionsPrototype;
 
 @Config
-public class ResourcePrefixOptions extends ResourcePrefixOptionsPrototype {
+public class ResourceOptions extends ResourceOptionsPrototype {
     @Override
     public void configure(Options options) {
         options

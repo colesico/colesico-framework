@@ -16,9 +16,9 @@
 package colesico.framework.resource.internal;
 
 import colesico.framework.resource.ResourceException;
+import colesico.framework.resource.ResourceOptionsPrototype;
 import colesico.framework.resource.ResourceResolver;
 import colesico.framework.resource.ResourceNotFoundException;
-import colesico.framework.resource.ResourcePrefixOptionsPrototype;
 import colesico.framework.resource.internal.l10n.Localizer;
 import colesico.framework.resource.l10n.ObjectiveQualifiers;
 import jakarta.inject.Inject;
@@ -50,18 +50,18 @@ public class ResourceResolverImpl implements ResourceResolver {
 
     @Override
     public String resolve(String baseName) {
-        baseName = prefixSubstitutor.substitutePrefix(baseName, ResourcePrefixOptionsPrototype.Phase.BEFORE_LOCALIZE);
+        baseName = prefixSubstitutor.substitutePrefix(baseName, ResourceOptionsPrototype.Phase.BEFORE_LOCALIZE);
         baseName = localizer.localize(baseName);
-        baseName = prefixSubstitutor.substitutePrefix(baseName, ResourcePrefixOptionsPrototype.Phase.AFTER_LOCALIZE);
+        baseName = prefixSubstitutor.substitutePrefix(baseName, ResourceOptionsPrototype.Phase.AFTER_LOCALIZE);
         return baseName;
     }
 
     @Override
     public String[] resolutions(String baseName) {
-        baseName = prefixSubstitutor.substitutePrefix(baseName, ResourcePrefixOptionsPrototype.Phase.BEFORE_LOCALIZE);
+        baseName = prefixSubstitutor.substitutePrefix(baseName, ResourceOptionsPrototype.Phase.BEFORE_LOCALIZE);
         String[] localizations = localizer.localizations(baseName);
         for (int i = 0; i < localizations.length; i++) {
-            localizations[i] = prefixSubstitutor.substitutePrefix(localizations[i], ResourcePrefixOptionsPrototype.Phase.AFTER_LOCALIZE);
+            localizations[i] = prefixSubstitutor.substitutePrefix(localizations[i], ResourceOptionsPrototype.Phase.AFTER_LOCALIZE);
         }
         return localizations;
     }

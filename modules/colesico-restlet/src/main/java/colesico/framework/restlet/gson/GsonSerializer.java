@@ -47,7 +47,7 @@ public class GsonSerializer implements JsonSerializer {
                 .registerTypeHierarchyAdapter(byte[].class, new GsonByteArrayToBase64())
                 .registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTime())
         ;
-        options.forEach(o -> o.applyOptions(builder));
+        options.forEach(o -> o.configure(builder));
         this.gson = builder.create();
     }
 

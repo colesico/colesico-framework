@@ -5,7 +5,7 @@ import colesico.framework.config.ConfigPrototype;
 import colesico.framework.resource.internal.PrefixSubstitutor;
 
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class ResourcePrefixOptionsPrototype {
+abstract public class ResourceOptionsPrototype {
 
     /**
      * To use in code generators

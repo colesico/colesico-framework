@@ -71,7 +71,7 @@
                     <annotationProcessorPaths>
                         <path>
                             <groupId>net.colesico.framework</groupId>
-                            <artifactId>colesico-ioc</artifactId>
+                            <artifactId>colesico-config</artifactId>
                             <version>${project.version}</version>
                         </path>
 

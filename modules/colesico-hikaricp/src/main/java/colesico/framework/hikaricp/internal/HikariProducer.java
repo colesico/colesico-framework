@@ -17,20 +17,15 @@
 package colesico.framework.hikaricp.internal;
 
 import colesico.framework.assist.ExceptionUtils;
-import colesico.framework.hikaricp.HikariCPConditions;
 import colesico.framework.hikaricp.HikariConfigPrototype;
-import colesico.framework.hikaricp.HikariProperties;
-import colesico.framework.ioc.conditional.Requires;
 import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.ioc.production.Supplier;
 import colesico.framework.ioc.scope.Unscoped;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.inject.Singleton;
 import javax.sql.DataSource;
 
 @Producer
@@ -44,7 +39,7 @@ public class HikariProducer {
      */
     @Classed(HikariConfigPrototype.class)
     @Unscoped
-    public DataSource hikariDataSourceFactory(@IocMessage HikariConfigPrototype config) {
+    public DataSource dataSourceFactory(@IocMessage HikariConfigPrototype config) {
         try {
             HikariDataSource dataSource = new HikariDataSource(config.hikariConfig());
             log.debug("Hikari DB connection pool has been created with configuration: " + config);
@@ -53,17 +48,6 @@ public class HikariProducer {
             log.error("Error initializing Hikari database connection pool: " + ExceptionUtils.getRootCauseMessage(e) + "; Configuration: " + config);
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * Produces HikariDataSource as default DataSource.
-     * Configuration from file ./config/hikari.properties or resource META-INF/hikari.properties
-     */
-    @Requires(HikariCPConditions.DefaultDataSource.class)
-    @Singleton
-    public DataSource getDefaultDataSource(@Classed(HikariConfigPrototype.class) Supplier<DataSource> factory) {
-        return factory.get(new HikariProperties() {
-        });
     }
 
 }

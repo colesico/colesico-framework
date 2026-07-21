@@ -28,6 +28,7 @@ import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
 import jakarta.inject.Singleton;
+
 import java.sql.Connection;
 
 import static colesico.framework.ioc.conditional.Substitution.STUB;
@@ -43,18 +44,8 @@ public class JdbiProducer {
     @Classed(JdbiConfigPrototype.class)
     public Jdbi jdbiFactory(@IocMessage JdbiConfigPrototype config) {
         final Jdbi jdbi = Jdbi.create(config.dataSource());
-        if (config.options() != null) {
-            config.options().forEach(o -> o.applyOptions(jdbi));
-        }
+        config.configure(jdbi);
         return jdbi;
-    }
-
-    /**
-     * Produce default handle providing from transactional shell
-     */
-    @Unscoped
-    public Handle getHandle(TransactionalShell txShell) {
-        return ((JdbiTransactionalShell) txShell).handle();
     }
 
     /**
@@ -62,8 +53,17 @@ public class JdbiProducer {
      */
     @Singleton
     @Substitute(STUB)
-    public TransactionalShell getDefaultTransactionalShell(@Classed(JdbiConfigImpl.class) Jdbi jdbi) {
+    public TransactionalShell defaultTransactionalShell(Jdbi jdbi) {
         return new JdbiTransactionalShell(jdbi);
+    }
+
+    /**
+     * Produce default handle providing from transactional shell
+     */
+    @Unscoped
+    @Substitute(STUB)
+    public Handle defaultHandle(TransactionalShell txs) {
+        return ((JdbiTransactionalShell) txs).handle();
     }
 
     /**
@@ -72,7 +72,7 @@ public class JdbiProducer {
      */
     @Unscoped
     @Substitute(STUB)
-    public Connection getDefaultConnection(TransactionalShell txShell) {
-        return ((JdbiTransactionalShell) txShell).handle().getConnection();
+    public Connection defaultConnection(TransactionalShell txs) {
+        return ((JdbiTransactionalShell) txs).handle().getConnection();
     }
 }

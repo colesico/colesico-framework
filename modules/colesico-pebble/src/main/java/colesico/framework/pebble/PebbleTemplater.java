@@ -60,7 +60,7 @@ public class PebbleTemplater extends ViewWriter {
                 .defaultEscapingStrategy("html")
                 .cacheActive(true);
 
-        optionsSup.forEach(options -> options.applyOptions(builder));
+        optionsSup.forEach(options -> options.configure(builder));
 
         pebbleEngine = builder.build();
     }
@@ -76,7 +76,8 @@ public class PebbleTemplater extends ViewWriter {
         if (response.model() instanceof Map m) {
             context = m;
         } else {
-            context = Map.of(MODEL_VAR, response.model());
+            context = new HashMap<>();
+            context.put(MODEL_VAR, response.model());
         }
         Charset charset = contentType(response, options).charset().orElse(StandardCharsets.UTF_8);
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(outputStream, charset))) {

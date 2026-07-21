@@ -8,7 +8,7 @@ module colesico.framework.hikaricp {
 
     // API
     exports colesico.framework.hikaricp;
+    exports colesico.framework.hikaricp.internal to colesico.framework.ioc, colesico.framework.config;
 
     // Internals
-    exports colesico.framework.hikaricp.internal to colesico.framework.ioc;
 }

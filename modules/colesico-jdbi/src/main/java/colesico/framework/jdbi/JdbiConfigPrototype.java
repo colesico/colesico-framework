@@ -24,12 +24,17 @@ import org.jdbi.v3.core.Jdbi;
 import javax.sql.DataSource;
 
 /**
- * Supplies  mandatory data source  and optional configurators
+ * Jdbi configuration
  */
 @ConfigPrototype(model = ConfigModel.MESSAGE, target = Jdbi.class)
 abstract public class JdbiConfigPrototype {
 
     abstract public DataSource dataSource();
 
-    abstract public Polysupplier<JdbiOptionsPrototype> options();
+    /**
+     * Optional configuration
+     */
+    public void configure(final Jdbi jdbi) {
+
+    }
 }

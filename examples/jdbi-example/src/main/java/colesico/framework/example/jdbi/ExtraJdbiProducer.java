@@ -24,7 +24,7 @@ public class ExtraJdbiProducer {
      */
     @Singleton
     @Named(EXTRA)
-    public TransactionalShell getTxShell(@Classed(ExtraJdbiConfig.class) Jdbi jdbi) {
+    public TransactionalShell extraTransactionalShell(@Classed(ExtraJdbiConfig.class) Jdbi jdbi) {
         return new JdbiTransactionalShell(jdbi);
     }
 
@@ -33,7 +33,7 @@ public class ExtraJdbiProducer {
      */
     @Unscoped
     @Named(EXTRA)
-    public Handle getHandle(@Named(EXTRA) TransactionalShell txShell) {
+    public Handle extraHandle(@Named(EXTRA) TransactionalShell txShell) {
         return ((JdbiTransactionalShell) txShell).handle();
     }
 }

@@ -27,5 +27,5 @@ import io.pebbletemplates.pebble.PebbleEngine;
  */
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
 abstract public class PebbleOptionsPrototype {
-    abstract public void applyOptions(PebbleEngine.Builder builder);
+    abstract public void configure(PebbleEngine.Builder builder);
 }

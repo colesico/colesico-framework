@@ -19,7 +19,7 @@ package colesico.framework.resource.internal;
 import colesico.framework.assist.StringUtils;
 import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.resource.ResourceException;
-import colesico.framework.resource.ResourcePrefixOptionsPrototype;
+import colesico.framework.resource.ResourceOptionsPrototype;
 import colesico.framework.resource.assist.PathTrie;
 import jakarta.inject.Singleton;
 
@@ -28,23 +28,23 @@ import jakarta.inject.Singleton;
  * E.g for the rewriting  '/etc/srv'->'/foo'   resource name '/etc/srv/generator/x' will be rewritten to  '/foo/generator/x'
  */
 @Singleton
-public class PrefixSubstitutor implements ResourcePrefixOptionsPrototype.Options {
+public class PrefixSubstitutor implements ResourceOptionsPrototype.Options {
 
     private final PathTrie<Rewriting> pathTrieBefore = PathTrie.of();
     private final PathTrie<Rewriting> pathTrieAfter = PathTrie.of();
 
-    public PrefixSubstitutor(Polysupplier<ResourcePrefixOptionsPrototype> configSup) {
+    public PrefixSubstitutor(Polysupplier<ResourceOptionsPrototype> configSup) {
         configSup.forEach(conf -> conf.configure(this));
     }
 
-    private PathTrie<Rewriting> pathTrie(ResourcePrefixOptionsPrototype.Phase phase) {
+    private PathTrie<Rewriting> pathTrie(ResourceOptionsPrototype.Phase phase) {
         return switch (phase) {
             case BEFORE_LOCALIZE -> pathTrieBefore;
             case AFTER_LOCALIZE -> pathTrieAfter;
         };
     }
 
-    public final String substitutePrefix(String resourceName, ResourcePrefixOptionsPrototype.Phase phase) {
+    public final String substitutePrefix(String resourceName, ResourceOptionsPrototype.Phase phase) {
         Rewriting rewriting = pathTrie(phase).find(resourceName);
         if (rewriting == null) {
             return resourceName;
@@ -56,8 +56,8 @@ public class PrefixSubstitutor implements ResourcePrefixOptionsPrototype.Options
     }
 
     @Override
-    public ResourcePrefixOptionsPrototype.Options substitution(String originPrefix, String targetPrefix,
-                                                               ResourcePrefixOptionsPrototype.Phase phase) {
+    public ResourceOptionsPrototype.Options substitution(String originPrefix, String targetPrefix,
+                                                         ResourceOptionsPrototype.Phase phase) {
         addPrefixSubstitution(originPrefix, targetPrefix, phase);
         return this;
     }
@@ -66,7 +66,7 @@ public class PrefixSubstitutor implements ResourcePrefixOptionsPrototype.Options
      * Adds rewriting rule
      */
     public void addPrefixSubstitution(String originPrefix, String targetPrefix,
-                                      ResourcePrefixOptionsPrototype.Phase phase) {
+                                      ResourceOptionsPrototype.Phase phase) {
         PathTrie.Node<Rewriting> node = pathTrie(phase).add(originPrefix);
         if (node.value() != null) {
             throw new ResourceException("Duplicate resource name prefix substitution: " + originPrefix);

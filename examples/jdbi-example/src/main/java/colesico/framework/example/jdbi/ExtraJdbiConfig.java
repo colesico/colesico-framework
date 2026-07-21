@@ -2,25 +2,29 @@ package colesico.framework.example.jdbi;
 
 import colesico.framework.config.Config;
 import colesico.framework.ioc.production.Classed;
-import colesico.framework.ioc.production.Polysupplier;
-import colesico.framework.jdbi.AbstractJdbiConfig;
-import colesico.framework.jdbi.JdbiOptionsPrototype;
-
+import colesico.framework.jdbi.JdbiConfigPrototype;
 import jakarta.inject.Inject;
+import org.jdbi.v3.core.Jdbi;
+
 import javax.sql.DataSource;
 
 @Config
-public class ExtraJdbiConfig extends AbstractJdbiConfig {
+public class ExtraJdbiConfig extends JdbiConfigPrototype {
+
+    private final DataSource dataSource;
 
     @Inject
-    public ExtraJdbiConfig(
+    public ExtraJdbiConfig(@Classed(ExtraHikariProperties.class) DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
-            // Jdbi will use extra hikaricp data source
-            @Classed(ExtraHikariProperties.class) DataSource dataSource,
+    @Override
+    public DataSource dataSource() {
+        return dataSource;
+    }
 
-            // Optional configurations will be applied to the jdbi instance.
-            @Classed(ExtraJdbiConfig.class) Polysupplier<JdbiOptionsPrototype> options) {
-
-        super(dataSource, options);
+    @Override
+    public void configure(Jdbi jdbi) {
+        jdbi.registerArrayType(Short.class, "smallint");
     }
 }

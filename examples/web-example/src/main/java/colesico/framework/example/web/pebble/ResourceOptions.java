@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package colesico.framework.restlet.gson;
+package colesico.framework.example.web.pebble;
 
-import colesico.framework.config.ConfigModel;
-import colesico.framework.config.ConfigPrototype;
-import com.google.gson.GsonBuilder;
+import colesico.framework.config.Config;
+import colesico.framework.resource.ResourceOptionsPrototype;
 
-/**
- * Default json converter tuning options
- */
-@ConfigPrototype(model = ConfigModel.POLYVARIANT)
-abstract public class GsonOptionsPrototype {
-    abstract public void configure(GsonBuilder builder);
+@Config
+public class ResourceOptions extends ResourceOptionsPrototype {
+
+    @Override
+    public void configure(Options options) {
+        options.substitution("tmplRoot", "colesico/framework/example/web/tmpl");
+    }
 }

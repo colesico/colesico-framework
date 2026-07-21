@@ -36,7 +36,7 @@ public class RouterProducer {
 
     @Singleton
     public RouterBuilder routerBuilder(final RouterBuilderImpl impl, Polysupplier<RouterOptions> options) {
-        options.forEach(o -> o.applyOptions(impl));
+        options.forEach(o -> o.configure(impl));
         return impl;
     }
 
