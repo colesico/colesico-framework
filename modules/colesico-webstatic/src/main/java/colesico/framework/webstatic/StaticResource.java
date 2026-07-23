@@ -28,8 +28,8 @@ public interface StaticResource {
 
     void send(String resourceUri, boolean rewrite);
 
-    default void send(String resourceUri, String rewrite) {
-        send(resourceUri, "true".equals(rewrite));
+    default void send(String resourceUri) {
+        send(resourceUri, true);
     }
 
     interface Builder {

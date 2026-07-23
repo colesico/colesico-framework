@@ -17,6 +17,8 @@
 package colesico.framework.pebble.internal;
 
 import colesico.framework.ioc.Ioc;
+import colesico.framework.profile.ProfileManager;
+import colesico.framework.security.SecurityManager;
 import colesico.framework.translation.TranslationKit;
 import io.pebbletemplates.pebble.extension.AbstractExtension;
 import io.pebbletemplates.pebble.extension.Filter;
@@ -25,6 +27,7 @@ import io.pebbletemplates.pebble.tokenParser.TokenParser;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,13 +41,19 @@ import java.util.Map;
 public class FrameworkExtension extends AbstractExtension {
 
     private final TranslationKit t9n;
+    private final SecurityManager securityManager;
+    private final ProfileManager profileManager;
     private final Ioc ioc;
 
-    @Inject
-    public FrameworkExtension(TranslationKit t9n, Ioc ioc) {
+    public FrameworkExtension(TranslationKit t9n, SecurityManager securityManager, ProfileManager profileManager, Ioc ioc) {
         this.t9n = t9n;
+        this.securityManager = securityManager;
+        this.profileManager = profileManager;
         this.ioc = ioc;
     }
+
+    @Inject
+
 
     @Override
     public Map<String, Filter> getFilters() {
@@ -60,7 +69,8 @@ public class FrameworkExtension extends AbstractExtension {
         functions.put(GetNamedBeanFunction.FUNCTION_NAME, new GetNamedBeanFunction(ioc));
         functions.put(GetClassedBeanFunction.FUNCTION_NAME, new GetClassedBeanFunction(ioc));
         functions.put(T9nFunction.FUNCTION_NAME, new T9nFunction());
-
+        functions.put(IdentityFunction.FUNCTION_NAME, new IdentityFunction(securityManager));
+        functions.put(ProfileFunction.FUNCTION_NAME, new ProfileFunction(profileManager));
         return functions;
     }
 

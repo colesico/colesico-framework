@@ -31,7 +31,7 @@ public class Resources {
 
     // http://localhost:8080/resources/wheel.png
     @Route("*")
-    public void get(String routeSuffix, String l10nMode) {
-        staticResource.send(routeSuffix, l10nMode);
+    public void get(String routeSuffix, String rewrite) {
+        staticResource.send(routeSuffix, "true".equals(rewrite));
     }
 }

@@ -18,6 +18,10 @@ package colesico.framework.ioc.listener;
 
 import java.lang.annotation.*;
 
+/**
+ * Post construct listener declaration.
+ * This annotation should be applied to instance public method to self initialize just produced instance
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
