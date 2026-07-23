@@ -17,9 +17,9 @@
 package colesico.framework.example.transaction;
 
 import colesico.framework.service.Service;
+import colesico.framework.transaction.TransactionManager;
 import colesico.framework.transaction.TransactionPropagation;
 import colesico.framework.transaction.Transactional;
-import colesico.framework.transaction.TransactionalShell;
 
 import jakarta.inject.Named;
 
@@ -37,9 +37,9 @@ public class AppService {
     /**
      * Shell to be used in programmatic tx control manner
      */
-    private final TransactionalShell<Object> progShell;
+    private final TransactionManager<Object> progShell;
 
-    public AppService(@Named("prog") TransactionalShell progShell) {
+    public AppService(@Named("prog") TransactionManager progShell) {
         this.progShell = progShell;
     }
 
@@ -62,7 +62,7 @@ public class AppService {
      * @param value
      * @return
      */
-    @Transactional(shell = "custom",propagation = TransactionPropagation.MANDATORY)
+    @Transactional(manager = "custom",propagation = TransactionPropagation.MANDATORY)
     public Boolean update(String value) {
         out.append("update=" + value);
         return Boolean.TRUE;
@@ -81,7 +81,7 @@ public class AppService {
     /**
      * Declarative  transaction control  with "prog" transactional shell.
      */
-    @Transactional(shell = "prog")
+    @Transactional(manager = "prog")
     public Boolean update2(String value) {
         out.append("update2=" + value);
         return Boolean.TRUE;
@@ -90,7 +90,7 @@ public class AppService {
     /**
      * Mixed programmatic  and declarative transaction control style
      */
-    @Transactional(shell = "prog")
+    @Transactional(manager = "prog")
     public Boolean create(String value) {
         return progShell.never(() -> {
             out.append("create=" + value);

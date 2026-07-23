@@ -1,0 +1,166 @@
+/*
+ * Copyright © 2014-2025 Vladlen V. Larionov and others as noted.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package colesico.framework.jdbi;
+
+import colesico.framework.assist.ExceptionUtils;
+import colesico.framework.jdbi.internal.JdbiTransaction;
+import colesico.framework.transaction.AbstractTransactionManager;
+import colesico.framework.transaction.Tuning;
+import colesico.framework.transaction.UnitOfWork;
+import jakarta.inject.Singleton;
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.Jdbi;
+import org.slf4j.LoggerFactory;
+
+import java.sql.Connection;
+import java.util.Random;
+
+/**
+ * Jdbi based transaction manager
+ */
+@Singleton
+public class JdbiTransactionManager extends AbstractTransactionManager<JdbiTransaction, Tuning<Handle>> {
+
+    /**
+     * Transaction manager name
+     */
+    public static final String NAME="jdbi";
+
+    /**
+     * To generate Transaction.Id
+     */
+    private static Random random = new Random();
+
+    protected final Jdbi jdbi;
+
+    public JdbiTransactionManager(Jdbi jdbi) {
+        super(LoggerFactory.getLogger(JdbiTransactionManager.class));
+        this.jdbi = jdbi;
+    }
+
+    @Override
+    public void setRollbackOnly() {
+        JdbiTransaction tx = transaction();
+        tx.setRollbackOnly(true);
+    }
+
+    @Override
+    protected <R> R createNew(UnitOfWork<R> unitOfWork, Tuning<Handle> tuning) {
+        logger.debug("TX-New-JDBI begin");
+        JdbiTransaction tx = transactions.get();
+        if (tx != null) {
+            throw new IllegalStateException("Active Jdbi transaction exists; txId:" + txId(tx));
+        }
+
+        String txId = null;
+        if (logger.isDebugEnabled()) {
+            txId = Long.toHexString(System.currentTimeMillis()) + ':' + Long.toHexString(random.nextLong());
+            logger.debug("TX-New-JDBI txId: {}", txId);
+        }
+
+        tx = new JdbiTransaction()
+                .setTuning(tuning)
+                .setId(txId);
+
+        transactions.set(tx);
+
+        Handle handle = null;
+        R result = null;
+        try {
+            try {
+                result = unitOfWork.execute();
+            } finally {
+                handle = tx.handle();
+            }
+
+            if (handle != null) {
+                if (tx.rollbackOnly()) {
+                    logger.debug("TX-New-JDBI rollback handle (on success)");
+                    handle.rollback();
+                } else {
+                    logger.debug("TX-New-JDBI commit handle (on success)");
+                    handle.commit();
+                }
+            } else {
+                logger.debug("TX-New-JDBI handle is null (success)");
+            }
+        } catch (Exception e) {
+            logger.debug("TX-New-JDBI exception:{}", ExceptionUtils.getRootCauseMessage(e));
+
+            if (handle != null) {
+                try {
+                    logger.debug("TX-New-JDBI rollback handle (on error)");
+                    handle.rollback();
+                } catch (Exception rbe) {
+                    logger.error("Error rolling back handle: {}", ExceptionUtils.getRootCauseMessage(rbe));
+                }
+            } else {
+                logger.debug("TX-New-JDBI handle is null (on error)");
+            }
+            rethrow(e);
+        } finally {
+
+            if (handle != null) {
+                try {
+                    logger.debug("TX-New-JDBI close handle (on finally)");
+                    handle.close();
+                } catch (Exception e) {
+                    logger.error("Error closing handle: {}", ExceptionUtils.getRootCauseMessage(e));
+                }
+            } else {
+                logger.debug("TX-New-JDBI handle is null (on finally)");
+            }
+            transactions.remove();
+            logger.debug("TX-New-JDBI end");
+        }
+        return result;
+    }
+
+    /**
+     * Return active jdbi handle bound from active transaction
+     *
+     * @return Jdbi handle
+     */
+    public Handle handle() {
+        JdbiTransaction tx = transaction();
+        Handle handle = tx.handle();
+        if (handle == null) {
+            handle = jdbi.open();
+            handle.begin();
+            if (tx.tuning() != null) {
+                tx.tuning().applyTuning(handle);
+            }
+            tx.setHandle(handle);
+        }
+        return handle;
+    }
+
+    /**
+     * Get tx manager bound jdbi instance
+     */
+    public Jdbi jdbi() {
+        return jdbi;
+    }
+
+    /**
+     * Return underlying jdbc connection bound to active transaction
+     */
+    public Connection connection() {
+        return handle().getConnection();
+    }
+
+}

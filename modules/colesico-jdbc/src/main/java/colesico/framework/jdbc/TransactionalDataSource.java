@@ -26,33 +26,33 @@ import java.sql.SQLException;
  */
 public class TransactionalDataSource extends DataSourceProxy {
 
-    protected final JdbcTransactionalShell transactionalShell;
+    protected final JdbcTransactionManager txManager;
 
-    public TransactionalDataSource(JdbcTransactionalShell transactionalShell) {
-        this.transactionalShell = transactionalShell;
+    public TransactionalDataSource(JdbcTransactionManager txManager) {
+        this.txManager = txManager;
     }
 
     @Override
     public DataSource primaryDataSource() {
-        return transactionalShell.dataSource();
+        return txManager.dataSource();
     }
 
     @Override
     public Connection getConnection() throws SQLException {
-        return new TxConnection(transactionalShell);
+        return new TxConnection(txManager);
     }
 
     public static class TxConnection extends ConnectionProxy {
 
-        protected final JdbcTransactionalShell txShell;
+        protected final JdbcTransactionManager txManager;
 
-        public TxConnection(JdbcTransactionalShell txShell) {
-            this.txShell = txShell;
+        public TxConnection(JdbcTransactionManager txManager) {
+            this.txManager = txManager;
         }
 
         @Override
         public Connection primaryConnection() {
-            return txShell.connection();
+            return txManager.connection();
         }
 
         @Override

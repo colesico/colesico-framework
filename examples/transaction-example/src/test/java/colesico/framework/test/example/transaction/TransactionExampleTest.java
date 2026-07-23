@@ -22,7 +22,7 @@ import colesico.framework.example.transaction.TransctionalShellMock;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.key.NamedKey;
-import colesico.framework.transaction.TransactionalShell;
+import colesico.framework.transaction.TransactionManager;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -43,9 +43,9 @@ public class TransactionExampleTest {
     @BeforeClass
     public void init() {
         ioc = IocBuilder.create().build();
-        defaultTxShell = (TransctionalShellMock) ioc.instance(TransactionalShell.class);
-        customTxShell = (TransctionalShellMock) ioc.instance(new NamedKey<>(TransactionalShell.class, "custom"), null);
-        progTxShell = (TransctionalShellMock) ioc.instance(new NamedKey<>(TransactionalShell.class, "prog"), null);
+        defaultTxShell = (TransctionalShellMock) ioc.instance(TransactionManager.class);
+        customTxShell = (TransctionalShellMock) ioc.instance(new NamedKey<>(TransactionManager.class, "custom"), null);
+        progTxShell = (TransctionalShellMock) ioc.instance(new NamedKey<>(TransactionManager.class, "prog"), null);
         service = ioc.instance(AppService.class);
     }
 

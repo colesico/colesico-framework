@@ -16,14 +16,15 @@
 
 package colesico.framework.jdbi.internal;
 
-import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.production.Classed;
+import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.jdbi.JdbiConfigPrototype;
-import colesico.framework.jdbi.JdbiTransactionalShell;
-import colesico.framework.transaction.TransactionalShell;
+import colesico.framework.jdbi.JdbiTransactionManager;
+import colesico.framework.transaction.TransactionManager;
+import jakarta.inject.Named;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
@@ -31,9 +32,8 @@ import jakarta.inject.Singleton;
 
 import java.sql.Connection;
 
-import static colesico.framework.ioc.conditional.Substitution.STUB;
-
 @Producer
+@Produce(JdbiTransactionManager.class)
 public class JdbiProducer {
 
     /**
@@ -49,30 +49,29 @@ public class JdbiProducer {
     }
 
     /**
-     * Default transactional shell producing
+     * Default Transaction Manager producing
      */
     @Singleton
-    @Substitute(STUB)
-    public TransactionalShell defaultTransactionalShell(Jdbi jdbi) {
-        return new JdbiTransactionalShell(jdbi);
+    @Named(JdbiTransactionManager.NAME)
+    public TransactionManager jdbiTransactionManager(JdbiTransactionManager jdbiTxManager) {
+        return jdbiTxManager;
     }
 
     /**
-     * Produce default handle providing from transactional shell
+     * Produce default handle providing from transaction manager
      */
     @Unscoped
-    @Substitute(STUB)
-    public Handle defaultHandle(TransactionalShell txs) {
-        return ((JdbiTransactionalShell) txs).handle();
+    public Handle defaultHandle(JdbiTransactionManager jdbiTxManager) {
+        return jdbiTxManager.handle();
     }
 
     /**
      * Default connection producing
-     * Produce connection from jdbc tx shell as default connection
+     * Produce connection from jdbc tx manager as default connection
      */
     @Unscoped
-    @Substitute(STUB)
-    public Connection defaultConnection(TransactionalShell txs) {
-        return ((JdbiTransactionalShell) txs).handle().getConnection();
+    @Named(JdbiTransactionManager.NAME)
+    public Connection jdbiConnection(JdbiTransactionManager jdbiTxManager) {
+        return jdbiTxManager.handle().getConnection();
     }
 }

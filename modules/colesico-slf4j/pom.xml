@@ -30,7 +30,7 @@
     <artifactId>colesico-slf4j</artifactId>
 
     <packaging>jar</packaging>
-    <name>Colesico SLF4J</name>
+    <name>Colesico Slf4j</name>
     <description>
         Colesico framework SLF4J integration
     </description>

@@ -1,37 +1,35 @@
 package colesico.framework.jdbc.internal;
 
-import colesico.framework.ioc.conditional.Requires;
-import colesico.framework.ioc.conditional.Substitute;
+import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
-import colesico.framework.jdbc.JdbcTransactionalShell;
-import colesico.framework.transaction.TransactionalShell;
+import colesico.framework.jdbc.JdbcTransactionManager;
+import colesico.framework.transaction.TransactionManager;
 
+import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 
-import static colesico.framework.ioc.conditional.Substitution.STUB;
-
 @Producer
+@Produce(JdbcTransactionManager.class)
 public class JdbcProducer {
 
     /**
-     * Default transactional shell
+     * Default transactionManager
      */
     @Singleton
-    @Substitute(STUB)
-    public TransactionalShell defaultTransactionalShell(DataSource ds) {
-        return new JdbcTransactionalShell(ds);
+    @Named(JdbcTransactionManager.NAME)
+    public TransactionManager jdbcTransactionManager(JdbcTransactionManager jdbcTxManager) {
+        return jdbcTxManager;
     }
 
     /**
      * Default jdbc connection
      */
     @Unscoped
-    @Substitute(STUB)
-    public Connection defaultConnection(TransactionalShell txs) {
-        return ((JdbcTransactionalShell) txs).connection();
+    @Named(JdbcTransactionManager.NAME)
+    public Connection jdbcConnection(JdbcTransactionManager jdbcTxManager) {
+        return jdbcTxManager.connection();
     }
 }

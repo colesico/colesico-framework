@@ -25,7 +25,7 @@ import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.modulator.Modulator;
 import colesico.framework.transaction.TransactionPropagation;
 import colesico.framework.transaction.Transactional;
-import colesico.framework.transaction.TransactionalShell;
+import colesico.framework.transaction.TransactionManager;
 import com.palantir.javapoet.ClassName;
 import com.palantir.javapoet.CodeBlock;
 import com.palantir.javapoet.FieldSpec;
@@ -34,7 +34,7 @@ import javax.lang.model.element.Modifier;
 
 public class TxModulator extends Modulator {
 
-    public static final String TX_SHELL_FIELD_PREFIX = "txShell";
+    public static final String TX_MANAGER_FIELD_PREFIX = "txManager";
 
     @Override
     public void onBeforeParseService(ServiceElement service) {
@@ -50,19 +50,19 @@ public class TxModulator extends Modulator {
     protected String propogationMethodName(TransactionPropagation propogation) {
         switch (propogation) {
             case REQUIRED:
-                return TransactionalShell.REQUIRED_METHOD;
+                return TransactionManager.REQUIRED_METHOD;
             case REQUIRES_NEW:
-                return TransactionalShell.REQUIRES_NEW_METHOD;
+                return TransactionManager.REQUIRES_NEW_METHOD;
             case MANDATORY:
-                return TransactionalShell.MANDATORY_METHOD;
+                return TransactionManager.MANDATORY_METHOD;
             case NOT_SUPPORTED:
-                return TransactionalShell.NOT_SUPPORTED_METHOD;
+                return TransactionManager.NOT_SUPPORTED_METHOD;
             case SUPPORTS:
-                return TransactionalShell.SUPPORTS_METHOD;
+                return TransactionManager.SUPPORTS_METHOD;
             case NEVER:
-                return TransactionalShell.NEVER_METHOD;
+                return TransactionManager.NEVER_METHOD;
             case NESTED:
-                return TransactionalShell.NESTED_METHOD;
+                return TransactionManager.NESTED_METHOD;
             default:
                 throw CodegenException.of().message("Unsupported transaction propogateion:" + propogation.name()).build();
         }
@@ -80,18 +80,18 @@ public class TxModulator extends Modulator {
             }
         }
 
-        // Add shell field
+        // Add manager field
 
         TxModulatorContext ctx = modulatorContext();
-        Integer exIdx = ctx.getShellIndex(txAnnotation.unwrap().shell());
-        String shellFieldName = TX_SHELL_FIELD_PREFIX + exIdx;
+        Integer exIdx = ctx.txManagerIndex(txAnnotation.unwrap().manager());
+        String managerFieldName = TX_MANAGER_FIELD_PREFIX + exIdx;
 
-        FieldSpec txShellFs = FieldSpec.builder(ClassName.get(TransactionalShell.class), shellFieldName).addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
-        ServiceFieldElement txShellFe = new ServiceFieldElement(txShellFs).inject();
-        if (!StringUtils.isBlank(txAnnotation.unwrap().shell())) {
-            txShellFe.setNamed(txAnnotation.unwrap().shell());
+        FieldSpec txManagerFs = FieldSpec.builder(ClassName.get(TransactionManager.class), managerFieldName).addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
+        ServiceFieldElement txManagerFe = new ServiceFieldElement(txManagerFs).inject();
+        if (!StringUtils.isBlank(txAnnotation.unwrap().manager())) {
+            txManagerFe.setNamed(txAnnotation.unwrap().manager());
         }
-        proxyMethod.parentService().addCustomField(txShellFe);
+        proxyMethod.parentService().addCustomField(txManagerFe);
 
         // Add interceptor
 
@@ -101,7 +101,7 @@ public class TxModulator extends Modulator {
         cb.add("($N, $N)->", Interceptor.INVOCATION_CONTEXT_PARAM, Interceptor.OPTIONS_PARAM);
         //cb.add("$N.$N(()->$N.$N(),null)",
         cb.add("$N.$N($N::$N,null)",
-                shellFieldName,
+                managerFieldName,
                 propogationMethodName,
                 Interceptor.INVOCATION_CONTEXT_PARAM,
                 InvocationContext.PROCEED_METHOD

@@ -21,15 +21,15 @@ import java.util.Map;
 
 public class TxModulatorContext {
 
-    private Map<String, Integer> shellsIdx = new HashMap<>();
+    private Map<String, Integer> txManagersIdx = new HashMap<>();
 
     private int idxCounter = 0;
 
-    public Integer getShellIndex(String named) {
-        Integer idx = shellsIdx.get(named);
+    public Integer txManagerIndex(String named) {
+        Integer idx = txManagersIdx.get(named);
         if (idx == null) {
             idx = idxCounter++;
-            shellsIdx.put(named, idx);
+            txManagersIdx.put(named, idx);
         }
 
         return idx;

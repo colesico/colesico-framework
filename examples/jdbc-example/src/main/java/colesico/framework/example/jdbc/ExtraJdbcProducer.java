@@ -19,8 +19,8 @@ package colesico.framework.example.jdbc;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
-import colesico.framework.jdbc.JdbcTransactionalShell;
-import colesico.framework.transaction.TransactionalShell;
+import colesico.framework.jdbc.JdbcTransactionManager;
+import colesico.framework.transaction.TransactionManager;
 
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
@@ -40,8 +40,8 @@ public class ExtraJdbcProducer {
      */
     @Singleton
     @Named(EXTRA)
-    public TransactionalShell extraTransactionalShell(@Classed(ExtraHikariProperties.class) DataSource ds) {
-        return new JdbcTransactionalShell(ds);
+    public TransactionManager extraTransactionalShell(@Classed(ExtraHikariProperties.class) DataSource ds) {
+        return new JdbcTransactionManager(ds);
     }
 
     /**
@@ -49,8 +49,8 @@ public class ExtraJdbcProducer {
      */
     @Unscoped
     @Named(EXTRA)
-    public Connection extraConnection(@Named(EXTRA) TransactionalShell txShell) {
-        return ((JdbcTransactionalShell) txShell).connection();
+    public Connection extraConnection(@Named(EXTRA) TransactionManager txShell) {
+        return ((JdbcTransactionManager) txShell).connection();
     }
 
     /**
@@ -58,7 +58,7 @@ public class ExtraJdbcProducer {
      */
     @Unscoped
     @Named(EXTRA)
-    public DataSource extraDataSource(@Named(EXTRA) TransactionalShell txShell) {
-        return ((JdbcTransactionalShell) txShell).dataSource();
+    public DataSource extraDataSource(@Named(EXTRA) TransactionManager txShell) {
+        return ((JdbcTransactionManager) txShell).dataSource();
     }
 }

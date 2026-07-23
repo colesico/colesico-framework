@@ -16,13 +16,13 @@
 
 package colesico.framework.example.transaction;
 
-import colesico.framework.transaction.TransactionalShell;
+import colesico.framework.transaction.TransactionManager;
 import colesico.framework.transaction.UnitOfWork;
 
 /**
  * Transactional shell mock that demonstrates how the actual transactional shell can be implemented
  */
-public class TransctionalShellMock implements TransactionalShell<Object> {
+public class TransctionalShellMock implements TransactionManager<Object> {
 
     TextBuffer out = TextBuffer.INSTANCE;
 

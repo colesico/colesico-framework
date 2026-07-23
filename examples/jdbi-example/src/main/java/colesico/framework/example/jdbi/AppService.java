@@ -16,11 +16,11 @@
 
 package colesico.framework.example.jdbi;
 
+import colesico.framework.jdbi.JdbiTransactionManager;
 import colesico.framework.service.Service;
 import colesico.framework.transaction.Transactional;
 import org.jdbi.v3.core.Handle;
 
-import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Provider;
 
@@ -30,20 +30,20 @@ public class AppService {
     /**
      * JDBI handle provider
      */
-    private final Provider<Handle> defaultHndProv;
-    private final Provider<Handle> extraHndProv;
+    private final Provider<Handle> defaultHandle;
+    private final Provider<Handle> extraHandle;
 
-    public AppService(Provider<Handle> defaultHndProv,
-                      @Named(ExtraJdbiProducer.EXTRA)
-                              Provider<Handle> extraHndProv) {
-        this.defaultHndProv = defaultHndProv;
-        this.extraHndProv = extraHndProv;
+    public AppService(
+            Provider<Handle> defaultHandle,
+            @Named(ExtraJdbiProducer.EXTRA) Provider<Handle> extraHandle) {
+        this.defaultHandle = defaultHandle;
+        this.extraHandle = extraHandle;
     }
 
-    @Transactional(shell = ExtraJdbiProducer.EXTRA)
+    @Transactional(manager = ExtraJdbiProducer.EXTRA)
     public String readExtraValue(Integer key) {
 
-        Handle handle = extraHndProv.get();
+        Handle handle = extraHandle.get();
         String val = handle.createQuery("select avalue from avalues where akey=:key")
                 .bind("key", key)
                 .mapTo(String.class)
@@ -52,10 +52,10 @@ public class AppService {
         return val;
     }
 
-    @Transactional
+    @Transactional(manager = JdbiTransactionManager.NAME)
     public String readValue(Integer key) {
 
-        Handle handle = defaultHndProv.get();
+        Handle handle = defaultHandle.get();
         String val = handle.createQuery("select avalue from avalues where akey=:key")
                 .bind("key", key)
                 .mapTo(String.class)

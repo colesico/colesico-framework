@@ -16,12 +16,14 @@
 
 package colesico.framework.example.jdbc;
 
+import colesico.framework.jdbc.JdbcTransactionManager;
 import colesico.framework.service.Service;
 import colesico.framework.transaction.Transactional;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Provider;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,23 +34,24 @@ public class AppService {
     /**
      * JDBC default connection provider
      */
-    private final Provider<Connection> defaultConnProv;
+    private final Provider<Connection> defaultConnection;
 
     /**
      * JDBC extra connection provider
      */
-    private final Provider<Connection> extraConnProv;
+    private final Provider<Connection> extraConnection;
 
     @Inject
-    public AppService(Provider<Connection> defaultConnProv,
-                      @Named(ExtraJdbcProducer.EXTRA) Provider<Connection> extraConnProv) {
-        this.defaultConnProv = defaultConnProv;
-        this.extraConnProv = extraConnProv;
+    public AppService(
+            @Named(JdbcTransactionManager.NAME) Provider<Connection> defaultConnection,
+            @Named(ExtraJdbcProducer.EXTRA) Provider<Connection> extraConnection) {
+        this.defaultConnection = defaultConnection;
+        this.extraConnection = extraConnection;
     }
 
-    @Transactional(shell = ExtraJdbcProducer.EXTRA)
+    @Transactional(manager = ExtraJdbcProducer.EXTRA)
     public String readExtraValue(Integer key) {
-        try (PreparedStatement stmt = extraConnProv.get().prepareStatement("select bvalue from b_values where bkey=?")) {
+        try (PreparedStatement stmt = extraConnection.get().prepareStatement("select bvalue from b_values where bkey=?")) {
             stmt.setInt(1, key);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -62,9 +65,9 @@ public class AppService {
         }
     }
 
-    @Transactional
+    @Transactional(manager = JdbcTransactionManager.NAME)
     public String readValue(Integer key) {
-        try (PreparedStatement stmt = defaultConnProv.get().prepareStatement("select avalue from a_values where akey=?")) {
+        try (PreparedStatement stmt = defaultConnection.get().prepareStatement("select avalue from a_values where akey=?")) {
             stmt.setInt(1, key);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {

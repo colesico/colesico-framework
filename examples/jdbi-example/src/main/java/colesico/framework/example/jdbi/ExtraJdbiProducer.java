@@ -3,8 +3,8 @@ package colesico.framework.example.jdbi;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.ioc.scope.Unscoped;
-import colesico.framework.jdbi.JdbiTransactionalShell;
-import colesico.framework.transaction.TransactionalShell;
+import colesico.framework.jdbi.JdbiTransactionManager;
+import colesico.framework.transaction.TransactionManager;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
@@ -17,15 +17,15 @@ import jakarta.inject.Singleton;
 @Producer
 public class ExtraJdbiProducer {
 
-    public static final String EXTRA="extra";
+    public static final String EXTRA="jdbi-extra";
 
     /**
      * Produce extra transactional shell to control transactions.
      */
     @Singleton
     @Named(EXTRA)
-    public TransactionalShell extraTransactionalShell(@Classed(ExtraJdbiConfig.class) Jdbi jdbi) {
-        return new JdbiTransactionalShell(jdbi);
+    public TransactionManager extraTransactionalShell(@Classed(ExtraJdbiConfig.class) Jdbi jdbi) {
+        return new JdbiTransactionManager(jdbi);
     }
 
     /**
@@ -33,7 +33,7 @@ public class ExtraJdbiProducer {
      */
     @Unscoped
     @Named(EXTRA)
-    public Handle extraHandle(@Named(EXTRA) TransactionalShell txShell) {
-        return ((JdbiTransactionalShell) txShell).handle();
+    public Handle extraHandle(@Named(EXTRA) TransactionManager txShell) {
+        return ((JdbiTransactionManager) txShell).handle();
     }
 }

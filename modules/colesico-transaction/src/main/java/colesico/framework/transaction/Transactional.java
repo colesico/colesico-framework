@@ -32,9 +32,9 @@ public @interface Transactional {
     TransactionPropagation propagation() default TransactionPropagation.REQUIRED;
 
     /**
-     * Named qualifier value of TransactionalShell field
+     * Named qualifier value of TransactionManager field
      * @see Named
      */
-    String shell() default "";
+    String manager() default "";
 
 }

@@ -17,7 +17,7 @@
 package colesico.framework.example.transaction;
 
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.transaction.TransactionalShell;
+import colesico.framework.transaction.TransactionManager;
 
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
@@ -33,7 +33,7 @@ public class TxShellsProducer {
      * @return
      */
     @Singleton
-    public TransactionalShell getDefaultTxShell(){
+    public TransactionManager getDefaultTxShell(){
         return new TransctionalShellMock("Default");
     }
 
@@ -42,7 +42,7 @@ public class TxShellsProducer {
      */
     @Singleton
     @Named("custom")
-    public TransactionalShell getCustomTxShell(){
+    public TransactionManager getCustomTxShell(){
         return new TransctionalShellMock("Custom");
     }
 
@@ -51,7 +51,7 @@ public class TxShellsProducer {
      */
     @Singleton
     @Named("prog")
-    public TransactionalShell getProgTxShell(){
+    public TransactionManager getProgTxShell(){
         return new TransctionalShellMock("Programmatic");
     }
 }
