@@ -93,7 +93,9 @@ abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O exten
             HttpUtils.setCookies(httpResponse, response.cookies());
         }
 
-        try (OutputStream os = httpResponse.outputStream()) {
+        try {
+            // Do not close os here - close in http server handler
+            OutputStream os = httpResponse.outputStream();
             write(os, response, options);
             os.flush();
         } catch (Exception e) {

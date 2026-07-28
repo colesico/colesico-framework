@@ -9,6 +9,8 @@ import io.fusionauth.http.server.HTTPHandler;
 import io.fusionauth.http.server.HTTPRequest;
 import io.fusionauth.http.server.HTTPResponse;
 
+import java.io.IOException;
+
 public class FusionHttpHandler extends RequestProcessor<FusionHttpContext> implements HTTPHandler {
 
     public FusionHttpHandler(TaskScope taskScope, Router router, ErrorHandler errorHandler) {
@@ -20,7 +22,13 @@ public class FusionHttpHandler extends RequestProcessor<FusionHttpContext> imple
         var context = new FusionHttpContext(new FusionHttpRequest(request),
                 new FusionHttpResponse(response)
         );
-        handleRequest(context);
+        try {
+            handleRequest(context);
+        } finally {
+            if (!context.response().isCommitted()) {
+                context.response().close();
+            }
+        }
     }
 
     @Override
