@@ -5,6 +5,7 @@ module colesico.framework.jdbi {
     requires transitive colesico.framework.hikaricp;
     requires transitive java.sql;
     requires transitive org.jdbi.v3.core;
+
     requires org.slf4j;
 
     // API

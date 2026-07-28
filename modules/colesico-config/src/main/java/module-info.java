@@ -22,11 +22,12 @@ module colesico.framework.config {
     requires static java.compiler;
     requires static com.palantir.javapoet;
 
-    // Runtime
-    requires org.slf4j;
 
     // Inherited in client projects
     requires transitive colesico.framework.ioc;
+
+    // Runtime private
+    requires org.slf4j;
 
     // API
     exports colesico.framework.config;

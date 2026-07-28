@@ -24,9 +24,9 @@ module colesico.framework.asynctask {
 
     requires transitive colesico.framework.service;
     requires transitive colesico.framework.config;
+
     requires org.slf4j;
 
-    // classes
     exports colesico.framework.asynctask;
     exports colesico.framework.asynctask.registry;
     exports colesico.framework.asynctask.internal to colesico.framework.ioc;

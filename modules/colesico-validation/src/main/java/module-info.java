@@ -1,10 +1,11 @@
 module colesico.framework.validation {
 
+    requires static java.compiler;
+    requires static com.palantir.javapoet;
+
     requires transitive colesico.framework.service;
     requires transitive colesico.framework.translation;
 
-    requires static java.compiler;
-    requires static com.palantir.javapoet;
     requires org.slf4j;
 
     // Api

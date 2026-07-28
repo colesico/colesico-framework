@@ -4,11 +4,11 @@ module colesico.framework.httprouter {
     requires static com.palantir.javapoet;
     requires static java.compiler;
 
-    requires org.slf4j;
-
     requires transitive colesico.framework.config;
     requires transitive colesico.framework.service;
     requires transitive colesico.framework.http;
+
+    requires org.slf4j;
 
     exports colesico.framework.httprouter;
     exports colesico.framework.httprouter.assist;

@@ -5,12 +5,11 @@ module colesico.framework.profile {
     requires static com.palantir.javapoet;
 
     // Runtime req.
-    requires transitive colesico.framework.teleapi;
     requires transitive colesico.framework.config;
+    requires transitive colesico.framework.teleapi;
+    requires transitive colesico.framework.security;
 
     requires org.slf4j;
-    requires colesico.framework.security;
-    requires java.desktop;
 
     // Exports
 

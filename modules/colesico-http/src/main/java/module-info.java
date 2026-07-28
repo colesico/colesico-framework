@@ -1,8 +1,9 @@
 
 module colesico.framework.http {
 
-    requires org.slf4j;
     requires transitive colesico.framework.ioc;
+
+    requires org.slf4j;
 
     exports colesico.framework.http;
     exports colesico.framework.http.assist;

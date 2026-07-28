@@ -2,6 +2,7 @@ module colesico.framework.jdbc {
 
     requires transitive colesico.framework.transaction;
     requires transitive java.sql;
+
     requires org.slf4j;
 
     // API

@@ -4,15 +4,14 @@ module colesico.framework.telehttp {
     requires static com.palantir.javapoet;
     requires static java.compiler;
 
-    requires org.slf4j;
-
     requires transitive colesico.framework.config;
     requires transitive colesico.framework.service;
     requires transitive colesico.framework.http;
     requires transitive colesico.framework.httprouter;
     requires transitive colesico.framework.security;
     requires transitive colesico.framework.translation;
-    requires java.xml.crypto;
+
+    requires org.slf4j;
 
     exports colesico.framework.telehttp;
     exports colesico.framework.telehttp.assist;

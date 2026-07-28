@@ -1,13 +1,12 @@
 module colesico.framework.resource {
 
-    requires org.slf4j;
+    requires static java.compiler;
+    requires static com.palantir.javapoet;
 
     // Inherited in client projects
-    requires transitive colesico.framework.config;
     requires transitive colesico.framework.profile;
-    requires java.compiler;
-    requires com.palantir.javapoet;
 
+    requires org.slf4j;
 
     // Exports
     exports colesico.framework.resource;

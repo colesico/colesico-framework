@@ -1,13 +1,13 @@
 module colesico.framework.translation {
 
-    // Compile time req.
+    // Compile time
     requires static java.compiler;
     requires static com.palantir.javapoet;
 
-    requires org.slf4j;
-
+    // Inherited in client projects
     requires transitive colesico.framework.resource;
-    //  requires transitive cache2k.api;
+
+    requires org.slf4j;
 
     // Exports
 
