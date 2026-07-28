@@ -25,6 +25,9 @@ abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O exten
 
     abstract protected ContentType defaultContentType();
 
+    /**
+     *  Do not close output stream.
+     */
     abstract protected void write(OutputStream outputStream, V response, O options) throws IOException;
 
     protected Integer defaultStatusCode() {
