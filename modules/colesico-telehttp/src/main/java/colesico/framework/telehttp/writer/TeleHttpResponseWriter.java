@@ -9,8 +9,7 @@ import colesico.framework.telehttp.HttpWriteOptions;
 import colesico.framework.telehttp.response.TeleHttpResponse;
 import jakarta.inject.Provider;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 
 /**
  * General {@link TeleHttpResponse} writer
@@ -26,7 +25,8 @@ abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O exten
     abstract protected ContentType defaultContentType();
 
     /**
-     *  Do not close output stream.
+     * Implement this method to write to response output stream
+     * @param outputStream do not close after write
      */
     abstract protected void write(OutputStream outputStream, V response, O options) throws IOException;
 
@@ -96,11 +96,14 @@ abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O exten
             HttpUtils.setCookies(httpResponse, response.cookies());
         }
 
-        try {
-            // Do not close os here - close in http server handler
-            OutputStream os = httpResponse.outputStream();
-            write(os, response, options);
-            os.flush();
+        // Write response to intermediate buffer first; if successful, copy to output stream.
+        // This keeps output stream open for error handling in caller.
+        try (ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+            write(buffer, response, options);
+            var outputStream = httpResponse.outputStream();
+            buffer.writeTo(outputStream);
+            // Do not close outputStream here, will be closed in http server handler
+            outputStream.flush();
         } catch (Exception e) {
             throw HttpTeleException.of(e, 500);
         }
