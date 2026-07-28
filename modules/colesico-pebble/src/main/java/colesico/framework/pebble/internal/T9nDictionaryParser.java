@@ -33,7 +33,7 @@ import io.pebbletemplates.pebble.tokenParser.TokenParser;
  *
  * Usage examples:
  * <p>
- * {% t9nDictionary "dictionary/base/path" %} - loads dictionary to  'messages' variable
+ * {% t9nDictionary "dictionary/base/path" %} - loads dictionary to  't9n' variable
  * {% t9nDictionary "dictionary/base/path" "myName" %} - loads dictionary to  'myName' variable
  *
  * @see T9nFilter
@@ -41,7 +41,7 @@ import io.pebbletemplates.pebble.tokenParser.TokenParser;
  */
 public final class T9nDictionaryParser implements TokenParser {
 
-    public static final String DEFAULT_DICT_NAME = "messages";
+    public static final String DEFAULT_DICT_NAME = "t9n";
 
     private final TranslationKit translationKit;
 
