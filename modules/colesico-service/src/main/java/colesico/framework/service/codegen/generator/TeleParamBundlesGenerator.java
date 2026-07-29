@@ -3,9 +3,9 @@ package colesico.framework.service.codegen.generator;
 
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
-import colesico.framework.service.codegen.model.teleapi.TeleRequestBeanElement;
+import colesico.framework.service.codegen.model.teleapi.TeleParamBundleElement;
 import colesico.framework.service.codegen.model.teleapi.TeleFieldParamElement;
-import colesico.framework.service.codegen.model.teleapi.TeleRequestBeanPackElement;
+import colesico.framework.service.codegen.model.teleapi.TeleParamBundlesPackElement;
 import com.palantir.javapoet.FieldSpec;
 import com.palantir.javapoet.MethodSpec;
 import com.palantir.javapoet.TypeName;
@@ -14,36 +14,36 @@ import com.palantir.javapoet.TypeSpec;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
 
-public class TeleRequestBeansGenerator extends FrameworkAbstractGenerator {
-    public TeleRequestBeansGenerator(ProcessingEnvironment processingEnv) {
+public class TeleParamBundlesGenerator extends FrameworkAbstractGenerator {
+    public TeleParamBundlesGenerator(ProcessingEnvironment processingEnv) {
         super(processingEnv);
     }
 
-    public void generate(TeleRequestBeanPackElement requestBeanPack) {
-        if (requestBeanPack.isEmpty()) {
+    public void generate(TeleParamBundlesPackElement paramBundlePack) {
+        if (paramBundlePack.isEmpty()) {
             return;
         }
 
-        TypeSpec.Builder pb = TypeSpec.classBuilder(requestBeanPack.packClassSimpleName());
+        TypeSpec.Builder pb = TypeSpec.classBuilder(paramBundlePack.packClassSimpleName());
         pb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
-        for (TeleRequestBeanElement requestBean : requestBeanPack.requestBeans()) {
-            TypeSpec.Builder rb = TypeSpec.classBuilder(requestBean.requestBeanClassSimpleName());
+        for (TeleParamBundleElement paramBundle : paramBundlePack.paramBundles()) {
+            TypeSpec.Builder rb = TypeSpec.classBuilder(paramBundle.paramBundleClassSimpleName());
             rb.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
 
-            for (TeleFieldParamElement requestBeanField : requestBean.fields()) {
-                TypeName filedTypeName = TypeName.get(requestBeanField.originElement().originType());
-                String filedName = requestBeanField.name();
+            for (TeleFieldParamElement paramBundleField : paramBundle.fields()) {
+                TypeName filedTypeName = TypeName.get(paramBundleField.originElement().originType());
+                String filedName = paramBundleField.name();
                 FieldSpec.Builder fb = FieldSpec.builder(filedTypeName, filedName, Modifier.PRIVATE);
                 rb.addField(fb.build());
 
-                MethodSpec.Builder gb = MethodSpec.methodBuilder(requestBeanField.getterName());
+                MethodSpec.Builder gb = MethodSpec.methodBuilder(paramBundleField.getterName());
                 gb.returns(filedTypeName);
                 gb.addModifiers(Modifier.PUBLIC);
                 gb.addStatement("return this.$N", filedName);
                 rb.addMethod(gb.build());
 
-                MethodSpec.Builder sb = MethodSpec.methodBuilder(requestBeanField.setterName());
+                MethodSpec.Builder sb = MethodSpec.methodBuilder(paramBundleField.setterName());
                 sb.returns(TypeName.VOID);
                 sb.addModifiers(Modifier.PUBLIC);
                 sb.addParameter(filedTypeName, filedName);
@@ -54,7 +54,7 @@ public class TeleRequestBeansGenerator extends FrameworkAbstractGenerator {
             pb.addType(rb.build());
         }
 
-        String packageName = requestBeanPack.parentTeleFacade().parentService().originClass().packageName();
-        CodegenUtils.createJavaFile(processingEnv, pb.build(), packageName, requestBeanPack.parentTeleFacade().parentService().originClass().unwrap());
+        String packageName = paramBundlePack.parentTeleFacade().parentService().originClass().packageName();
+        CodegenUtils.createJavaFile(processingEnv, pb.build(), packageName, paramBundlePack.parentTeleFacade().parentService().originClass().unwrap());
     }
 }

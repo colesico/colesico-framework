@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents any tele-command parameter (request bean param, injected param...)
+ * Represents tele-command parameter
  */
 abstract public class TeleParameterElement {
 

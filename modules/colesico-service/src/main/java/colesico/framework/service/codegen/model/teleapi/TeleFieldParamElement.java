@@ -1,20 +1,20 @@
 package colesico.framework.service.codegen.model.teleapi;
 
 import colesico.framework.assist.StringUtils;
-import colesico.framework.service.FieldParam;
+import colesico.framework.service.BundleParam;
 import colesico.framework.service.codegen.model.ServiceParameterElement;
 
 /**
  * Represents field of request bean and corresponding method parameter
  *
- * @see FieldParam
+ * @see BundleParam
  */
 public class TeleFieldParamElement extends TeleParameterElement {
 
     /**
      * Parent bean reference
      */
-    private TeleRequestBeanElement parentBean;
+    private TeleParamBundleElement parentBean;
 
     /**
      * Request bean field name
@@ -38,11 +38,11 @@ public class TeleFieldParamElement extends TeleParameterElement {
         return "set" + StringUtils.firstCharToUpperCase(name());
     }
 
-    public TeleRequestBeanElement parentBean() {
+    public TeleParamBundleElement parentBean() {
         return parentBean;
     }
 
-    public void setParentBean(TeleRequestBeanElement parentBean) {
+    public void setParentBean(TeleParamBundleElement parentBean) {
         this.parentBean = parentBean;
     }
 

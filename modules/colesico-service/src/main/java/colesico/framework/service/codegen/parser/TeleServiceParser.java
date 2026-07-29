@@ -19,7 +19,7 @@ package colesico.framework.service.codegen.parser;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
-import colesico.framework.service.FieldParam;
+import colesico.framework.service.BundleParam;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.*;
 
@@ -34,34 +34,34 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
         this.context = context;
     }
 
-    private void parseRequestBeanParam(TeleCommandElement teleCommand,
+    private void parseBundleParam(TeleCommandElement teleCommand,
                                  ServiceParameterElement param,
-                                 AnnotationAssist<FieldParam> paramRequestBeanAnn,
-                                 AnnotationAssist<FieldParam> methodRequestBeanAnn) {
+                                 AnnotationAssist<BundleParam> paramParamBundleAnn,
+                                 AnnotationAssist<BundleParam> methodParamBundleAnn) {
 
         String fieldName = "";
-        String requestBeanName = FieldParam.DEFAULT_BEAN;
+        String paramBundleName = BundleParam.DEFAULT_BUNDLE;
 
-        if (paramRequestBeanAnn != null) {
-            fieldName = paramRequestBeanAnn.unwrap().value();
-            requestBeanName = paramRequestBeanAnn.unwrap().bean();
+        if (paramParamBundleAnn != null) {
+            fieldName = paramParamBundleAnn.unwrap().value();
+            paramBundleName = paramParamBundleAnn.unwrap().bundle();
         }
 
         if (isBlank(fieldName)) {
             fieldName = param.originParameter().name();
         }
 
-        if (requestBeanName.equals(FieldParam.DEFAULT_BEAN) && methodRequestBeanAnn != null) {
-            requestBeanName = methodRequestBeanAnn.unwrap().bean();
+        if (paramBundleName.equals(BundleParam.DEFAULT_BUNDLE) && methodParamBundleAnn != null) {
+            paramBundleName = methodParamBundleAnn.unwrap().bundle();
         }
 
-        TeleFieldParamElement requestBeanParam = new TeleFieldParamElement(teleCommand, param, fieldName);
+        TeleFieldParamElement bundleParam = new TeleFieldParamElement(teleCommand, param, fieldName);
 
-        TeleRequestBeanElement requestBean = teleCommand.getOrCreateRequestBean(requestBeanName);
-        requestBean.addField(requestBeanParam);
-        teleCommand.addParameter(requestBeanParam);
+        TeleParamBundleElement paramBundle = teleCommand.getOrCreateParamBundle(paramBundleName);
+        paramBundle.addField(bundleParam);
+        teleCommand.addParameter(bundleParam);
 
-        context.modulatorKit().notifyTeleParameterParsed(requestBeanParam);
+        context.modulatorKit().notifyTeleParameterParsed(bundleParam);
     }
 
     private void parseInjectParam(TeleCommandElement teleCommand,
@@ -84,18 +84,18 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
         var method = teleCommand.serviceMethod();
         for (var param : method.parameters()) {
 
-            AnnotationAssist<FieldParam> paramRequestBeanAnn = param.originParameter().annotation(FieldParam.class);
-            AnnotationAssist<FieldParam> methodRequestBeanAnn = teleCommand.serviceMethod().originMethod().annotation(FieldParam.class);
+            AnnotationAssist<BundleParam> paramParamBundleAnn = param.originParameter().annotation(BundleParam.class);
+            AnnotationAssist<BundleParam> methodParamBundleAnn = teleCommand.serviceMethod().originMethod().annotation(BundleParam.class);
 
-            if (paramRequestBeanAnn != null || methodRequestBeanAnn != null) {
-                // Check requestBean support
-                if (!teleCommand.parentTeleService().requestBeanParams()) {
+            if (paramParamBundleAnn != null || methodParamBundleAnn != null) {
+                // Check paramBundle support
+                if (!teleCommand.parentTeleService().bundleParams()) {
                     throw CodegenException.of()
-                            .message("RequestBean parameters not supported by tele-facade " + teleCommand.parentTeleService().teleType().getCanonicalName())
+                            .message("ParamBundle parameters not supported by tele-facade " + teleCommand.parentTeleService().teleType().getCanonicalName())
                             .element(param.originParameter().unwrap())
                             .build();
                 } else {
-                    parseRequestBeanParam(teleCommand, param, paramRequestBeanAnn, methodRequestBeanAnn);
+                    parseBundleParam(teleCommand, param, paramParamBundleAnn, methodParamBundleAnn);
                 }
             } else {
                 if (param instanceof ServiceInjectParamElement injParam) {

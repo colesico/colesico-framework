@@ -20,7 +20,7 @@ package colesico.framework.service.codegen.model.teleapi;
 import colesico.framework.assist.Elements;
 import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.service.FieldParam;
+import colesico.framework.service.BundleParam;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.TeleInterceptor;
@@ -81,14 +81,14 @@ public class TeleServiceElement {
     /**
      * Request Bean params support enabled
      *
-     * @see FieldParam
+     * @see BundleParam
      */
-    private Boolean requestBeanParams = false;
+    private Boolean bundleParams = false;
 
     /**
-     * Tele-facade associated requestBeanes
+     * Tele-facade associated paramBundlees
      */
-    private final TeleRequestBeanPackElement requestBeanPack;
+    private final TeleParamBundlesPackElement paramBundlePack;
 
     /**
      * Tele schemas for the facade
@@ -111,7 +111,7 @@ public class TeleServiceElement {
         this.writeOptionsClass = writeOptionsClass;
         this.iocQualifier = iocQualifier;
 
-        this.requestBeanPack = new TeleRequestBeanPackElement(this);
+        this.paramBundlePack = new TeleParamBundlesPackElement(this);
     }
 
     /**
@@ -210,16 +210,16 @@ public class TeleServiceElement {
         this.parentService = parentService;
     }
 
-    public Boolean requestBeanParams() {
-        return requestBeanParams;
+    public Boolean bundleParams() {
+        return bundleParams;
     }
 
-    public void setRequestBeanParams(Boolean requestBeanParams) {
-        this.requestBeanParams = requestBeanParams;
+    public void setBundleParams(Boolean bundleParams) {
+        this.bundleParams = bundleParams;
     }
 
-    public TeleRequestBeanPackElement requestBeanPack() {
-        return requestBeanPack;
+    public TeleParamBundlesPackElement paramBundlePack() {
+        return paramBundlePack;
     }
 
     public Class<? extends ReadOptions> readOptionsClass() {

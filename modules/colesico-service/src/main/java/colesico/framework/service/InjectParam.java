@@ -5,7 +5,8 @@ import colesico.framework.ioc.production.Classed;
 import java.lang.annotation.*;
 
 /**
- * Parameter will receive value from the IoC container (like constructor params injection)
+ * Parameter will receive value from the IoC container
+ * (like constructor params injection)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER})
