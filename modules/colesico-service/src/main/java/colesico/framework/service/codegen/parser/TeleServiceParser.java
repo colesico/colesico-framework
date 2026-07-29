@@ -26,7 +26,6 @@ import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.*;
 
 import javax.lang.model.element.Modifier;
-import java.util.List;
 
 import static colesico.framework.assist.StringUtils.isBlank;
 
@@ -75,7 +74,7 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
                                      AnnotationAssist<CombinedParams> methodCombinedParamsAnn) {
 
         ClassElement paramClass = param.originParameter().asClassType().asClassElement();
-        TeleCombinationElement combinedParam = new TeleCombinationElement(teleCommand,param,paramClass);
+        TeleCombinationElement combinedParam = new TeleCombinationElement(teleCommand, param, paramClass);
 
         var fields = paramClass.fieldsFiltered(
                 f -> !f.unwrap().getModifiers().contains(Modifier.STATIC)
@@ -92,53 +91,54 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
         context.modulatorKit().notifyTeleParameterParsed(injectParam);
     }
 
-    private void parseParameter(TeleCommandElement teleCommand, ServiceParameterElement param) {
+    private void parseOrdinaryParameter(TeleCommandElement teleCommand, ServiceParameterElement param) {
         // Process simple param
         TeleOrdinaryParamElement parameter = new TeleOrdinaryParamElement(teleCommand, param);
         teleCommand.addParameter(parameter);
         context.modulatorKit().notifyTeleParameterParsed(parameter);
     }
 
+    private void parseTeleParameter(TeleCommandElement teleCommand, ServiceParameterElement serviceParam, VarElement teleParam) {
+        AnnotationAssist<BundleParam> bundleParamAnn = teleParam.annotation(BundleParam.class);
+        AnnotationAssist<BundleParam> methodBundleParamAnn = teleCommand.serviceMethod().originMethod().annotation(BundleParam.class);
+
+        AnnotationAssist<CombinedParams> combinedParamsAnn = teleParam.annotation(CombinedParams.class);
+        AnnotationAssist<CombinedParams> methodCombinedParamsAnn = teleCommand.serviceMethod().originMethod().annotation(CombinedParams.class);
+
+        AnnotationAssist<InjectParam> injectParamAnn = teleParam.annotation(InjectParam.class);
+
+        if (bundleParamAnn != null || methodBundleParamAnn != null) {
+            // Check bundle params support
+            if (!teleCommand.parentTeleService().bundleParams()) {
+                throw CodegenException.of()
+                        .message("Bundle parameters not supported by tele-facade " + teleCommand.parentTeleService().teleType().getCanonicalName())
+                        .element(teleParam.unwrap())
+                        .build();
+            } else {
+                parseBundleParam(teleCommand, param, bundleParamAnn, methodBundleParamAnn);
+            }
+        } else if (combinedParamsAnn != null || methodCombinedParamsAnn != null) {
+            // Check combined params support
+            if (!teleCommand.parentTeleService().combinedParams()) {
+                throw CodegenException.of()
+                        .message("Combined parameters not supported by tele-facade " + teleCommand.parentTeleService().teleType().getCanonicalName())
+                        .element(teleParam.unwrap())
+                        .build();
+            } else {
+                parseCombinedParams(teleCommand, param, combinedParamsAnn, methodCombinedParamsAnn);
+            }
+        } else if (injectParamAnn != null) {
+            parseInjectParam(teleCommand, param, injectParamAnn);
+        } else {
+            parseOrdinaryParameter(teleCommand, param);
+        }
+    }
+
     private void parseTeleCommandParams(TeleCommandElement teleCommand) {
         var method = teleCommand.serviceMethod();
         for (var param : method.parameters()) {
-
-            AnnotationAssist<BundleParam> bundleParamAnn = param.originParameter().annotation(BundleParam.class);
-            AnnotationAssist<BundleParam> methodBundleParamAnn = teleCommand.serviceMethod().originMethod().annotation(BundleParam.class);
-
-            AnnotationAssist<CombinedParams> combinedParamsAnn = param.originParameter().annotation(CombinedParams.class);
-            AnnotationAssist<CombinedParams> methodCombinedParamsAnn = teleCommand.serviceMethod().originMethod().annotation(CombinedParams.class);
-
-            AnnotationAssist<InjectParam> injectParamAnn = param.originParameter().annotation(InjectParam.class);
-
-            if (bundleParamAnn != null || methodBundleParamAnn != null) {
-                // Check bundle params support
-                if (!teleCommand.parentTeleService().bundleParams()) {
-                    throw CodegenException.of()
-                            .message("Bundle parameters not supported by tele-facade " + teleCommand.parentTeleService().teleType().getCanonicalName())
-                            .element(param.originParameter().unwrap())
-                            .build();
-                } else {
-                    parseBundleParam(teleCommand, param, bundleParamAnn, methodBundleParamAnn);
-                }
-            } else if (combinedParamsAnn != null || methodCombinedParamsAnn != null) {
-                // Check combined params support
-                if (!teleCommand.parentTeleService().combinedParams()) {
-                    throw CodegenException.of()
-                            .message("Combined parameters not supported by tele-facade " + teleCommand.parentTeleService().teleType().getCanonicalName())
-                            .element(param.originParameter().unwrap())
-                            .build();
-                } else {
-                    parseCombinedParams(teleCommand, param, combinedParamsAnn, methodCombinedParamsAnn);
-                }
-            } else if (injectParamAnn != null) {
-                parseInjectParam(teleCommand, param, injectParamAnn);
-            } else {
-                parseParameter(teleCommand, param);
-            }
-
+            parseTeleParameter(teleCommand, param, param.originParameter());
         }
-
     }
 
     private void parseTeleCommands(TeleServiceElement teleService) {
