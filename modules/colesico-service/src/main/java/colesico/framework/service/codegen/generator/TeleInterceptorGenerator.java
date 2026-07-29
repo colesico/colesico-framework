@@ -17,7 +17,6 @@
 package colesico.framework.service.codegen.generator;
 
 
-import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.MethodElement;
@@ -26,7 +25,6 @@ import colesico.framework.service.interception.InvocationContext;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.teleapi.*;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
-import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.TeleInterceptor;
 import colesico.framework.teleapi.dataport.DataPort;
 import com.palantir.javapoet.*;
@@ -77,7 +75,7 @@ public class TeleInterceptorGenerator {
 
     protected CodeBlock generateBatches(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        for (TeleBatchElement batch : teleCommand.batches().values()) {
+        for (TeleRequestBeanElement batch : teleCommand.batches().values()) {
             if (batch.readSpec() == null) {
                 throw CodegenException.of()
                         .message("Batch read specification is not defined")
@@ -121,11 +119,11 @@ public class TeleInterceptorGenerator {
 
         // ==== For batch filed param =============
 
-        if (parameter instanceof TeleBatchParamElement) {
-            TeleBatchParamElement batchParam = (TeleBatchParamElement) parameter;
+        if (parameter instanceof TeleFieldParamElement) {
+            TeleFieldParamElement batchParam = (TeleFieldParamElement) parameter;
             // batch.getFiled();
             CodeBlock.Builder cb = CodeBlock.builder();
-            cb.add("$N.$N()", batchParam.parentBatch().batchVarName(), batchParam.getterName());
+            cb.add("$N.$N()", batchParam.parentBean().batchVarName(), batchParam.getterName());
             return cb.build();
         }
 

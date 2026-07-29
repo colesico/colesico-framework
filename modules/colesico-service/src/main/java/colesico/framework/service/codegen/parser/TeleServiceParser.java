@@ -19,7 +19,7 @@ package colesico.framework.service.codegen.parser;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
-import colesico.framework.service.BatchField;
+import colesico.framework.service.FieldParam;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.*;
 
@@ -36,28 +36,28 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
 
     private void parseBatchParam(TeleCommandElement teleCommand,
                                  ServiceParameterElement param,
-                                 AnnotationAssist<BatchField> paramBatchAnn,
-                                 AnnotationAssist<BatchField> methodBatchAnn) {
+                                 AnnotationAssist<FieldParam> paramBatchAnn,
+                                 AnnotationAssist<FieldParam> methodBatchAnn) {
 
         String fieldName = "";
-        String batchName = BatchField.DEFAULT_BATCH;
+        String batchName = FieldParam.DEFAULT_BEAN;
 
         if (paramBatchAnn != null) {
             fieldName = paramBatchAnn.unwrap().value();
-            batchName = paramBatchAnn.unwrap().batch();
+            batchName = paramBatchAnn.unwrap().bean();
         }
 
         if (isBlank(fieldName)) {
             fieldName = param.originParameter().name();
         }
 
-        if (batchName.equals(BatchField.DEFAULT_BATCH) && methodBatchAnn != null) {
-            batchName = methodBatchAnn.unwrap().batch();
+        if (batchName.equals(FieldParam.DEFAULT_BEAN) && methodBatchAnn != null) {
+            batchName = methodBatchAnn.unwrap().bean();
         }
 
-        TeleBatchParamElement batchParam = new TeleBatchParamElement(teleCommand, param, fieldName);
+        TeleFieldParamElement batchParam = new TeleFieldParamElement(teleCommand, param, fieldName);
 
-        TeleBatchElement batch = teleCommand.getOrCreateBatch(batchName);
+        TeleRequestBeanElement batch = teleCommand.getOrCreateBatch(batchName);
         batch.addField(batchParam);
         teleCommand.addParameter(batchParam);
 
@@ -84,8 +84,8 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
         var method = teleCommand.serviceMethod();
         for (var param : method.parameters()) {
 
-            AnnotationAssist<BatchField> paramBatchAnn = param.originParameter().annotation(BatchField.class);
-            AnnotationAssist<BatchField> methodBatchAnn = teleCommand.serviceMethod().originMethod().annotation(BatchField.class);
+            AnnotationAssist<FieldParam> paramBatchAnn = param.originParameter().annotation(FieldParam.class);
+            AnnotationAssist<FieldParam> methodBatchAnn = teleCommand.serviceMethod().originMethod().annotation(FieldParam.class);
 
             if (paramBatchAnn != null || methodBatchAnn != null) {
                 // Check batch support

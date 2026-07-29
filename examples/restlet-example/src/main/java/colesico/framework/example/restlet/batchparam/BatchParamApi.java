@@ -3,7 +3,7 @@ package colesico.framework.example.restlet.batchparam;
 import colesico.framework.http.HttpMethod;
 import colesico.framework.restlet.Restlet;
 import colesico.framework.httprouter.RequestMethod;
-import colesico.framework.service.BatchField;
+import colesico.framework.service.FieldParam;
 import colesico.framework.telehttp.ParamOrigin;
 import colesico.framework.telehttp.origin.Origin;
 
@@ -17,7 +17,7 @@ public class BatchParamApi {
      * POST: http://localhost:8080/batch-param-api/simple + data {"id":1,"name":"Vladlen", "val":"test" }
      */
     @RequestMethod(HttpMethod.POST)
-    @BatchField
+    @FieldParam
     public Map<String, Object> simple(Long id,String name, String val) {
         return Map.of("id", id, "name", name, "val", val);
     }
@@ -28,9 +28,9 @@ public class BatchParamApi {
      */
     @RequestMethod(HttpMethod.POST)
     public Map<String, Object> mix(
-            @BatchField("id")
+            @FieldParam("id")
             Long idValue,
-            @BatchField
+            @FieldParam
             String name,
             @ParamOrigin(Origin.QUERY) String val) {
         return Map.of("id", idValue, "name", name, "val", val);

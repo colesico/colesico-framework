@@ -22,8 +22,8 @@ public final class ServiceCodegenUtils {
         CodegenUtils.generateTypePick(paramType, cb);
     }
 
-    public static void generateTeleBatchType(TeleBatchElement teleBatch, CodeBlock.Builder cb) {
-        TypeName batchTypeName = ClassName.bestGuess(teleBatch.batchClassName());
+    public static void generateTeleRequestBeanType(TeleRequestBeanElement teleRequestBean, CodeBlock.Builder cb) {
+        TypeName batchTypeName = ClassName.bestGuess(teleRequestBean.batchClassName());
         cb.add("$T.class", batchTypeName);
     }
 }

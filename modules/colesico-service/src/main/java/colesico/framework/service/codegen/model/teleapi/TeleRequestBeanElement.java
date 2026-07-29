@@ -1,20 +1,21 @@
 package colesico.framework.service.codegen.model.teleapi;
 
 import colesico.framework.assist.StringUtils;
+import colesico.framework.service.FieldParam;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represent parameter batch class.
- * A parameter batch is an object that is read from a data-port and its
- * field values will  be assigned to the method parameters when it is invoked.
+ * Represent request bean class.
+ * A request bean is an object that is read from a data-port as single object
+ * and its field values then assigning to the method parameters on invocation.
  *
- * @see colesico.framework.service.BatchField
+ * @see FieldParam
  */
-public class TeleBatchElement implements TeleReadableElement {
+public class TeleRequestBeanElement implements TeleReadableElement {
 
-    private static final String BATCH_VAR_SUFFIX = "Batch";
+    private static final String REQUEST_BEAN_VAR_SUFFIX = "Batch";
 
     /**
      * Parent tele-command ref
@@ -22,31 +23,31 @@ public class TeleBatchElement implements TeleReadableElement {
     private final TeleCommandElement parentTeleCommand;
 
     /**
-     * Batch pack ref
+     * Pack ref
      */
-    protected TeleBatchPackElement parentPack;
+    protected TeleRequestBeanPackElement parentPack;
 
     /**
-     * Batch name
-     * Used for building batch class name
+     * Request bean name
+     * Used for building bean class name
      */
     protected final String name;
 
-    protected final List<TeleBatchParamElement> fields = new ArrayList<>();
+    protected final List<TeleFieldParamElement> fields = new ArrayList<>();
 
     /**
      * Read batch spec
      */
     protected TeleReadElement readSpec;
 
-    public TeleBatchElement(TeleCommandElement parentTeleCommand, String name) {
+    public TeleRequestBeanElement(TeleCommandElement parentTeleCommand, String name) {
         this.parentTeleCommand = parentTeleCommand;
         this.name = name;
     }
 
-    public void addField(TeleBatchParamElement field) {
+    public void addField(TeleFieldParamElement field) {
         fields.add(field);
-        field.setParentBatch(this);
+        field.setParentBean(this);
     }
 
     public String batchClassSimpleName() {
@@ -55,7 +56,7 @@ public class TeleBatchElement implements TeleReadableElement {
 
     public String batchClassName() {
         return parentPack.parentTeleFacade().parentService().originClass().packageName() + '.' +
-                parentPack.batchPackClassSimpleName() + '.' +
+                parentPack.packClassSimpleName() + '.' +
                 batchClassSimpleName();
     }
 
@@ -63,14 +64,14 @@ public class TeleBatchElement implements TeleReadableElement {
      * Batch variable name
      */
     public String batchVarName() {
-        return StringUtils.firstCharToLowerCase(name) + BATCH_VAR_SUFFIX;
+        return StringUtils.firstCharToLowerCase(name) + REQUEST_BEAN_VAR_SUFFIX;
     }
 
-    public TeleBatchPackElement parentPack() {
+    public TeleRequestBeanPackElement parentPack() {
         return parentPack;
     }
 
-    public void setParentPack(TeleBatchPackElement parentPack) {
+    public void setParentPack(TeleRequestBeanPackElement parentPack) {
         this.parentPack = parentPack;
     }
 
@@ -78,7 +79,7 @@ public class TeleBatchElement implements TeleReadableElement {
         return name;
     }
 
-    public List<TeleBatchParamElement> fields() {
+    public List<TeleFieldParamElement> fields() {
         return fields;
     }
 

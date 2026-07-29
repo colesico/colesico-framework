@@ -1,26 +1,27 @@
 package colesico.framework.service.codegen.model.teleapi;
 
 import colesico.framework.assist.StringUtils;
+import colesico.framework.service.FieldParam;
 import colesico.framework.service.codegen.model.ServiceParameterElement;
 
 /**
- * Represents field of batch class and corresponding method parameter
+ * Represents field of request bean and corresponding method parameter
  *
- * @see colesico.framework.service.BatchField
+ * @see FieldParam
  */
-public class TeleBatchParamElement extends TeleParameterElement {
+public class TeleFieldParamElement extends TeleParameterElement {
 
     /**
-     * Parent batch elm reference
+     * Parent bean reference
      */
-    private TeleBatchElement parentBatch;
+    private TeleRequestBeanElement parentBean;
 
     /**
-     * Batch field name
+     * Request bean field name
      */
     private String name;
 
-    public TeleBatchParamElement(TeleCommandElement parentTeleCommand, ServiceParameterElement serviceParam, String name) {
+    public TeleFieldParamElement(TeleCommandElement parentTeleCommand, ServiceParameterElement serviceParam, String name) {
         super(parentTeleCommand, serviceParam);
         this.name = name;
     }
@@ -37,12 +38,12 @@ public class TeleBatchParamElement extends TeleParameterElement {
         return "set" + StringUtils.firstCharToUpperCase(name());
     }
 
-    public TeleBatchElement parentBatch() {
-        return parentBatch;
+    public TeleRequestBeanElement parentBean() {
+        return parentBean;
     }
 
-    public void setParentBatch(TeleBatchElement parentBatch) {
-        this.parentBatch = parentBatch;
+    public void setParentBean(TeleRequestBeanElement parentBean) {
+        this.parentBean = parentBean;
     }
 
     public String name() {

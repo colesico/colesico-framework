@@ -52,7 +52,7 @@ public final class TeleCommandElement {
      * <p>
      * batch name -> batch element
      */
-    private final Map<String, TeleBatchElement> batches = new HashMap<>();
+    private final Map<String, TeleRequestBeanElement> batches = new HashMap<>();
 
     /**
      * Tele-method index within tele-facade
@@ -106,12 +106,12 @@ public final class TeleCommandElement {
         return "" + StringUtils.firstCharToLowerCase(serviceMethod.name()) + "I" + index;
     }
 
-    public TeleBatchElement getOrCreateBatch(String name) {
-        TeleBatchElement batch = batches.get(name);
+    public TeleRequestBeanElement getOrCreateBatch(String name) {
+        TeleRequestBeanElement batch = batches.get(name);
         if (batch == null) {
-            batch = new TeleBatchElement(this, name);
+            batch = new TeleRequestBeanElement(this, name);
             batches.put(name, batch);
-            parentTeleService.batchPack().addBatch(batch);
+            parentTeleService.batchPack().addRequestBean(batch);
         }
         return batch;
     }
@@ -140,7 +140,7 @@ public final class TeleCommandElement {
         return index;
     }
 
-    public Map<String, TeleBatchElement> batches() {
+    public Map<String, TeleRequestBeanElement> batches() {
         return batches;
     }
 

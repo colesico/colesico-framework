@@ -4,26 +4,26 @@ import java.lang.annotation.*;
 
 /**
  * Indicates that the value of the parameter is assigned from a field of the
- * batch object, which is read from the data port as a single object.
+ * request bean, which is read from the data port as a single object.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER, ElementType.METHOD})
 @Inherited
 @Documented
-public @interface BatchField {
+public @interface FieldParam {
 
     /**
-     * Default batch name
+     * Default request bean name
      */
-    String DEFAULT_BATCH = "request";
+    String DEFAULT_BEAN = "request";
 
     /**
-     * Batch class field name
+     * Request bean field name
      */
     String value() default "";
 
     /**
-     * Batch name
+     * Request bean name
      */
-    String batch() default DEFAULT_BATCH;
+    String bean() default DEFAULT_BEAN;
 }

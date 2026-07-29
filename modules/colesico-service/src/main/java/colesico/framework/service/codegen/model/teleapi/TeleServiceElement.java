@@ -20,6 +20,7 @@ package colesico.framework.service.codegen.model.teleapi;
 import colesico.framework.assist.Elements;
 import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenException;
+import colesico.framework.service.FieldParam;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.TeleInterceptor;
@@ -80,14 +81,14 @@ public class TeleServiceElement {
     /**
      * Batch params support enabled
      *
-     * @see colesico.framework.service.BatchField
+     * @see FieldParam
      */
     private Boolean batchParams = false;
 
     /**
      * Tele-facade associated batches
      */
-    private final TeleBatchPackElement batchPack;
+    private final TeleRequestBeanPackElement batchPack;
 
     /**
      * Tele schemas for the facade
@@ -110,7 +111,7 @@ public class TeleServiceElement {
         this.writeOptionsClass = writeOptionsClass;
         this.iocQualifier = iocQualifier;
 
-        this.batchPack = new TeleBatchPackElement(this);
+        this.batchPack = new TeleRequestBeanPackElement(this);
     }
 
     /**
@@ -217,7 +218,7 @@ public class TeleServiceElement {
         this.batchParams = batchParams;
     }
 
-    public TeleBatchPackElement batchPack() {
+    public TeleRequestBeanPackElement batchPack() {
         return batchPack;
     }
 
