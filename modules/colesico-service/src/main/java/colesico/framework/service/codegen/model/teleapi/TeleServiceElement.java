@@ -86,9 +86,17 @@ public class TeleServiceElement {
     private Boolean bundleParams = false;
 
     /**
-     * Tele-facade associated paramBundlees
+     * Combined params support enabled
+     *
+     * @see colesico.framework.service.CombinedParams
      */
-    private final TeleBundlesPackElement paramBundlePack;
+    private Boolean combinedParams = false;
+
+
+    /**
+     * Tele-facade associated param bundles
+     */
+    private final TeleBundlesPackElement paramBundlesPack;
 
     /**
      * Tele schemas for the facade
@@ -111,7 +119,7 @@ public class TeleServiceElement {
         this.writeOptionsClass = writeOptionsClass;
         this.iocQualifier = iocQualifier;
 
-        this.paramBundlePack = new TeleBundlesPackElement(this);
+        this.paramBundlesPack = new TeleBundlesPackElement(this);
     }
 
     /**
@@ -214,12 +222,16 @@ public class TeleServiceElement {
         return bundleParams;
     }
 
+    public Boolean combinedParams() {
+        return combinedParams;
+    }
+
     public void setBundleParams(Boolean bundleParams) {
         this.bundleParams = bundleParams;
     }
 
-    public TeleBundlesPackElement paramBundlePack() {
-        return paramBundlePack;
+    public TeleBundlesPackElement paramBundlesPack() {
+        return paramBundlesPack;
     }
 
     public Class<? extends ReadOptions> readOptionsClass() {

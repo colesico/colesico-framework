@@ -73,9 +73,9 @@ public class TeleInterceptorGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    protected CodeBlock generateParamBundlees(TeleCommandElement teleCommand) {
+    protected CodeBlock generateParamBundles(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        for (TeleBundleElement paramBundle : teleCommand.paramBundlees().values()) {
+        for (TeleBundleElement paramBundle : teleCommand.paramBundles().values()) {
             if (paramBundle.readSpec() == null) {
                 throw CodegenException.of()
                         .message("ParamBundle read specification is not defined")
@@ -162,8 +162,8 @@ public class TeleInterceptorGenerator {
                     DATA_PORT_VAR, DATA_PORT_PROV_FIELD
             );
 
-            // ============= ParamBundlees retrieving from data port
-            cb.add(generateParamBundlees(teleCommand));
+            // ============= ParamBundles retrieving from data port
+            cb.add(generateParamBundles(teleCommand));
 
             // ============= Params retrieving (default from data port)
             if (!teleCommand.parameters().isEmpty()) {
