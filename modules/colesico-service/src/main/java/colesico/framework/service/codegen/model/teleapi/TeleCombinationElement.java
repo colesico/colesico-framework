@@ -25,6 +25,10 @@ public class TeleCombinationElement extends TeleParameterElement {
         this.originClass = originClass;
     }
 
+    public void addField(TeleCombinationFieldElement field) {
+        fields.add(field);
+    }
+
     public ClassElement originClass() {
         return originClass;
     }

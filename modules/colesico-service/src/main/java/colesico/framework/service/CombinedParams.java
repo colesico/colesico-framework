@@ -9,7 +9,7 @@ import java.lang.annotation.*;
  * nested combination. Bean class must have no args constructor and setters for each field.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.PARAMETER, ElementType.METHOD})
+@Target({ElementType.PARAMETER, ElementType.METHOD,ElementType.FIELD})
 @Inherited
 @Documented
 public @interface CombinedParams {

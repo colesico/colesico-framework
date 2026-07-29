@@ -1,11 +1,19 @@
 package colesico.framework.service.codegen.model.teleapi;
 
-public class TeleCombinationFieldElement implements TeleReadableElement  {
+import colesico.framework.assist.codegen.model.FieldElement;
+
+public class TeleCombinationFieldElement implements TeleReadableElement {
+
+    private final FieldElement originField;
 
     private TeleReadElement readSpec;
 
-    public TeleCombinationFieldElement(TeleReadElement readSpec) {
-        this.readSpec = readSpec;
+    public TeleCombinationFieldElement(FieldElement originField) {
+        this.originField = originField;
+    }
+
+    public FieldElement originField() {
+        return originField;
     }
 
     @Override

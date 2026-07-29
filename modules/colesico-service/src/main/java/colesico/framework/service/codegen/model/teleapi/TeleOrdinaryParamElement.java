@@ -28,8 +28,8 @@ public final class TeleOrdinaryParamElement extends TeleParameterElement impleme
      */
     private TeleReadElement readSpec;
 
-    public TeleOrdinaryParamElement(TeleCommandElement parentTeleCommand, ServiceParameterElement serviceParameter) {
-        super(parentTeleCommand, serviceParameter);
+    public TeleOrdinaryParamElement(TeleCommandElement parentTeleCommand, ServiceParameterElement serviceParam) {
+        super(parentTeleCommand, serviceParam);
     }
 
     public TeleReadElement readSpec() {
