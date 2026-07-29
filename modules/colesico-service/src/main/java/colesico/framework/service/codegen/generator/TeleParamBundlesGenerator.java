@@ -3,9 +3,9 @@ package colesico.framework.service.codegen.generator;
 
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.FrameworkAbstractGenerator;
-import colesico.framework.service.codegen.model.teleapi.TeleParamBundleElement;
-import colesico.framework.service.codegen.model.teleapi.TeleFieldParamElement;
-import colesico.framework.service.codegen.model.teleapi.TeleParamBundlesPackElement;
+import colesico.framework.service.codegen.model.teleapi.TeleBundleElement;
+import colesico.framework.service.codegen.model.teleapi.TeleBundleFieldElement;
+import colesico.framework.service.codegen.model.teleapi.TeleBundlesPackElement;
 import com.palantir.javapoet.FieldSpec;
 import com.palantir.javapoet.MethodSpec;
 import com.palantir.javapoet.TypeName;
@@ -19,7 +19,7 @@ public class TeleParamBundlesGenerator extends FrameworkAbstractGenerator {
         super(processingEnv);
     }
 
-    public void generate(TeleParamBundlesPackElement paramBundlePack) {
+    public void generate(TeleBundlesPackElement paramBundlePack) {
         if (paramBundlePack.isEmpty()) {
             return;
         }
@@ -27,11 +27,11 @@ public class TeleParamBundlesGenerator extends FrameworkAbstractGenerator {
         TypeSpec.Builder pb = TypeSpec.classBuilder(paramBundlePack.packClassSimpleName());
         pb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
-        for (TeleParamBundleElement paramBundle : paramBundlePack.paramBundles()) {
+        for (TeleBundleElement paramBundle : paramBundlePack.paramBundles()) {
             TypeSpec.Builder rb = TypeSpec.classBuilder(paramBundle.paramBundleClassSimpleName());
             rb.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
 
-            for (TeleFieldParamElement paramBundleField : paramBundle.fields()) {
+            for (TeleBundleFieldElement paramBundleField : paramBundle.fields()) {
                 TypeName filedTypeName = TypeName.get(paramBundleField.originElement().originType());
                 String filedName = paramBundleField.name();
                 FieldSpec.Builder fb = FieldSpec.builder(filedTypeName, filedName, Modifier.PRIVATE);

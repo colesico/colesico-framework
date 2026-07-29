@@ -75,14 +75,14 @@ public class TeleInterceptorGenerator {
 
     protected CodeBlock generateParamBundlees(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        for (TeleParamBundleElement paramBundle : teleCommand.paramBundlees().values()) {
+        for (TeleBundleElement paramBundle : teleCommand.paramBundlees().values()) {
             if (paramBundle.readSpec() == null) {
                 throw CodegenException.of()
                         .message("ParamBundle read specification is not defined")
                         .element(teleCommand.serviceMethod().originMethod())
                         .build();
             }
-            // Read paramBundle: ParamBundleType paramBundle = dataPort.read(...)
+            // Read param bundle: ParamBundleType paramBundle = dataPort.read(...)
             cb.add("\n// Read paramBundle \n");
             cb.add("final $T $N = $N.$N(",
                     ClassName.bestGuess(paramBundle.paramBundleClassName()),
@@ -119,8 +119,8 @@ public class TeleInterceptorGenerator {
 
         // ==== For paramBundle filed param =============
 
-        if (parameter instanceof TeleFieldParamElement) {
-            TeleFieldParamElement bundleParam = (TeleFieldParamElement) parameter;
+        if (parameter instanceof TeleBundleFieldElement) {
+            TeleBundleFieldElement bundleParam = (TeleBundleFieldElement) parameter;
             // paramBundle.getFiled();
             CodeBlock.Builder cb = CodeBlock.builder();
             cb.add("$N.$N()", bundleParam.parentBean().paramBundleVarName(), bundleParam.getterName());

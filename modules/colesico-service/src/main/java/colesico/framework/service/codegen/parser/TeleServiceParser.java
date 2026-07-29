@@ -20,6 +20,7 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
 import colesico.framework.service.BundleParam;
+import colesico.framework.service.CombinedParams;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.*;
 
@@ -35,16 +36,16 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
     }
 
     private void parseBundleParam(TeleCommandElement teleCommand,
-                                 ServiceParameterElement param,
-                                 AnnotationAssist<BundleParam> paramParamBundleAnn,
-                                 AnnotationAssist<BundleParam> methodParamBundleAnn) {
+                                  ServiceParameterElement param,
+                                  AnnotationAssist<BundleParam> bundleParamAnn,
+                                  AnnotationAssist<BundleParam> methodParamBundleAnn) {
 
         String fieldName = "";
         String paramBundleName = BundleParam.DEFAULT_BUNDLE;
 
-        if (paramParamBundleAnn != null) {
-            fieldName = paramParamBundleAnn.unwrap().value();
-            paramBundleName = paramParamBundleAnn.unwrap().bundle();
+        if (bundleParamAnn != null) {
+            fieldName = bundleParamAnn.unwrap().value();
+            paramBundleName = bundleParamAnn.unwrap().bundle();
         }
 
         if (isBlank(fieldName)) {
@@ -55,9 +56,9 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
             paramBundleName = methodParamBundleAnn.unwrap().bundle();
         }
 
-        TeleFieldParamElement bundleParam = new TeleFieldParamElement(teleCommand, param, fieldName);
+        TeleBundleFieldElement bundleParam = new TeleBundleFieldElement(teleCommand, param, fieldName);
 
-        TeleParamBundleElement paramBundle = teleCommand.getOrCreateParamBundle(paramBundleName);
+        TeleBundleElement paramBundle = teleCommand.getOrCreateParamBundle(paramBundleName);
         paramBundle.addField(bundleParam);
         teleCommand.addParameter(bundleParam);
 
@@ -84,19 +85,24 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
         var method = teleCommand.serviceMethod();
         for (var param : method.parameters()) {
 
-            AnnotationAssist<BundleParam> paramParamBundleAnn = param.originParameter().annotation(BundleParam.class);
-            AnnotationAssist<BundleParam> methodParamBundleAnn = teleCommand.serviceMethod().originMethod().annotation(BundleParam.class);
+            AnnotationAssist<BundleParam> bundleParamAnn = param.originParameter().annotation(BundleParam.class);
+            AnnotationAssist<BundleParam> methodBundleParamAnn = teleCommand.serviceMethod().originMethod().annotation(BundleParam.class);
 
-            if (paramParamBundleAnn != null || methodParamBundleAnn != null) {
-                // Check paramBundle support
+            AnnotationAssist<CombinedParams> compositeParamAnn = param.originParameter().annotation(CombinedParams.class);
+            AnnotationAssist<CombinedParams> methodCompositeParamAnn = teleCommand.serviceMethod().originMethod().annotation(CombinedParams.class);
+
+            if (bundleParamAnn != null || methodBundleParamAnn != null) {
+                // Check bundle param support
                 if (!teleCommand.parentTeleService().bundleParams()) {
                     throw CodegenException.of()
                             .message("ParamBundle parameters not supported by tele-facade " + teleCommand.parentTeleService().teleType().getCanonicalName())
                             .element(param.originParameter().unwrap())
                             .build();
                 } else {
-                    parseBundleParam(teleCommand, param, paramParamBundleAnn, methodParamBundleAnn);
+                    parseBundleParam(teleCommand, param, bundleParamAnn, methodBundleParamAnn);
                 }
+            } else if (compositeParamAnn != null || methodCompositeParamAnn != null) {
+
             } else {
                 if (param instanceof ServiceInjectParamElement injParam) {
                     parseInjectParam(teleCommand, injParam);

@@ -79,7 +79,7 @@ public class TeleServiceElement {
     private final IocQualifier iocQualifier;
 
     /**
-     * Request Bean params support enabled
+     * Bundle params support enabled
      *
      * @see BundleParam
      */
@@ -88,7 +88,7 @@ public class TeleServiceElement {
     /**
      * Tele-facade associated paramBundlees
      */
-    private final TeleParamBundlesPackElement paramBundlePack;
+    private final TeleBundlesPackElement paramBundlePack;
 
     /**
      * Tele schemas for the facade
@@ -111,7 +111,7 @@ public class TeleServiceElement {
         this.writeOptionsClass = writeOptionsClass;
         this.iocQualifier = iocQualifier;
 
-        this.paramBundlePack = new TeleParamBundlesPackElement(this);
+        this.paramBundlePack = new TeleBundlesPackElement(this);
     }
 
     /**
@@ -218,7 +218,7 @@ public class TeleServiceElement {
         this.bundleParams = bundleParams;
     }
 
-    public TeleParamBundlesPackElement paramBundlePack() {
+    public TeleBundlesPackElement paramBundlePack() {
         return paramBundlePack;
     }
 

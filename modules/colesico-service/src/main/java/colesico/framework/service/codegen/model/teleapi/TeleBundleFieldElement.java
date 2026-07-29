@@ -5,23 +5,23 @@ import colesico.framework.service.BundleParam;
 import colesico.framework.service.codegen.model.ServiceParameterElement;
 
 /**
- * Represents field of request bean and corresponding method parameter
+ * Represents field of param bundle and corresponding method parameter
  *
  * @see BundleParam
  */
-public class TeleFieldParamElement extends TeleParameterElement {
+public class TeleBundleFieldElement extends TeleParameterElement {
 
     /**
      * Parent bean reference
      */
-    private TeleParamBundleElement parentBean;
+    private TeleBundleElement parentBean;
 
     /**
-     * Request bean field name
+     * Bundle field name
      */
     private String name;
 
-    public TeleFieldParamElement(TeleCommandElement parentTeleCommand, ServiceParameterElement serviceParam, String name) {
+    public TeleBundleFieldElement(TeleCommandElement parentTeleCommand, ServiceParameterElement serviceParam, String name) {
         super(parentTeleCommand, serviceParam);
         this.name = name;
     }
@@ -38,11 +38,11 @@ public class TeleFieldParamElement extends TeleParameterElement {
         return "set" + StringUtils.firstCharToUpperCase(name());
     }
 
-    public TeleParamBundleElement parentBean() {
+    public TeleBundleElement parentBean() {
         return parentBean;
     }
 
-    public void setParentBean(TeleParamBundleElement parentBean) {
+    public void setParentBean(TeleBundleElement parentBean) {
         this.parentBean = parentBean;
     }
 

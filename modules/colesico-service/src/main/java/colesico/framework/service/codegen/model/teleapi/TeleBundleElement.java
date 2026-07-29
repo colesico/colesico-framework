@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represent bean that is read from a data-port as single object
+ * Represent bundle that is read from a data-port as single object
  * and its field values then assigning to the method parameters on invocation.
  *
  * @see BundleParam
  */
-public class TeleParamBundleElement implements TeleReadableElement {
+public class TeleBundleElement implements TeleReadableElement {
 
     private static final String BUNDLE_VAR_SUFFIX = "ParamBundle";
 
@@ -24,27 +24,27 @@ public class TeleParamBundleElement implements TeleReadableElement {
     /**
      * Pack ref
      */
-    protected TeleParamBundlesPackElement parentPack;
+    protected TeleBundlesPackElement parentPack;
 
     /**
-     * Request bean name
-     * Used for building bean class name
+     * Bundle name
+     * Used for building bundle class name
      */
     protected final String name;
 
-    protected final List<TeleFieldParamElement> fields = new ArrayList<>();
+    protected final List<TeleBundleFieldElement> fields = new ArrayList<>();
 
     /**
-     * Read paramBundle spec
+     * Read bundle spec
      */
     protected TeleReadElement readSpec;
 
-    public TeleParamBundleElement(TeleCommandElement parentTeleCommand, String name) {
+    public TeleBundleElement(TeleCommandElement parentTeleCommand, String name) {
         this.parentTeleCommand = parentTeleCommand;
         this.name = name;
     }
 
-    public void addField(TeleFieldParamElement field) {
+    public void addField(TeleBundleFieldElement field) {
         fields.add(field);
         field.setParentBean(this);
     }
@@ -66,11 +66,11 @@ public class TeleParamBundleElement implements TeleReadableElement {
         return StringUtils.firstCharToLowerCase(name) + BUNDLE_VAR_SUFFIX;
     }
 
-    public TeleParamBundlesPackElement parentPack() {
+    public TeleBundlesPackElement parentPack() {
         return parentPack;
     }
 
-    public void setParentPack(TeleParamBundlesPackElement parentPack) {
+    public void setParentPack(TeleBundlesPackElement parentPack) {
         this.parentPack = parentPack;
     }
 
@@ -78,7 +78,7 @@ public class TeleParamBundleElement implements TeleReadableElement {
         return name;
     }
 
-    public List<TeleFieldParamElement> fields() {
+    public List<TeleBundleFieldElement> fields() {
         return fields;
     }
 

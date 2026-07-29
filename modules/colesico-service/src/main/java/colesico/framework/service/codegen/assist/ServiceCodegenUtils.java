@@ -22,7 +22,7 @@ public final class ServiceCodegenUtils {
         CodegenUtils.generateTypePick(paramType, cb);
     }
 
-    public static void generateTeleParamBundleType(TeleParamBundleElement teleParamBundle, CodeBlock.Builder cb) {
+    public static void generateTeleParamBundleType(TeleBundleElement teleParamBundle, CodeBlock.Builder cb) {
         TypeName paramBundleTypeName = ClassName.bestGuess(teleParamBundle.paramBundleClassName());
         cb.add("$T.class", paramBundleTypeName);
     }

@@ -93,13 +93,15 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
         for (var param : params) {
 
             // Process request bean fields
-            if (param instanceof TeleFieldParamElement paramBundleField) {
-                if (paramBundleField.parentBean().readSpec() == null) {
-                    paramBundleField.parentBean().setReadSpec(createTeleRead(paramBundleField.parentBean()));
+            if (param instanceof TeleBundleFieldElement bundleParam) {
+                if (bundleParam.parentBean().readSpec() == null) {
+                    bundleParam.parentBean().setReadSpec(createTeleRead(bundleParam.parentBean()));
                 }
                 continue;
-            }
+            } else if  (param instanceof TeleCombinationElement teleComposite) {
 
+                continue;
+            }
             TeleOrdinaryParamElement teleParam = (TeleOrdinaryParamElement) param;
             teleParam.setReadSpec(createTeleRead(teleParam));
 
@@ -160,7 +162,7 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
         return new TeleReadElement(teleParam, valueTypeCode.build(), null);
     }
 
-    protected TeleReadElement createTeleRead(TeleParamBundleElement paramBundle) {
+    protected TeleReadElement createTeleRead(TeleBundleElement paramBundle) {
         CodeBlock.Builder valueTypeCode = CodeBlock.builder();
         ServiceCodegenUtils.generateTeleParamBundleType(paramBundle, valueTypeCode);
         return new TeleReadElement(paramBundle, valueTypeCode.build(), null);

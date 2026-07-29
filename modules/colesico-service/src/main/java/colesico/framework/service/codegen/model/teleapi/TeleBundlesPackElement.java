@@ -3,15 +3,15 @@ package colesico.framework.service.codegen.model.teleapi;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeleParamBundlesPackElement {
+public class TeleBundlesPackElement {
 
     public static final String PACK_CLASS_SUFFIX = "ParamBundles";
 
     private final TeleServiceElement parentTeleFacade;
 
-    private final List<TeleParamBundleElement> paramBundles = new ArrayList<>();
+    private final List<TeleBundleElement> paramBundles = new ArrayList<>();
 
-    public TeleParamBundlesPackElement(TeleServiceElement parentTeleFacade) {
+    public TeleBundlesPackElement(TeleServiceElement parentTeleFacade) {
         this.parentTeleFacade = parentTeleFacade;
     }
 
@@ -19,7 +19,7 @@ public class TeleParamBundlesPackElement {
         return paramBundles.isEmpty();
     }
 
-    public void addParamBundle(TeleParamBundleElement paramBundle) {
+    public void addParamBundle(TeleBundleElement paramBundle) {
         paramBundles.add(paramBundle);
         paramBundle.setParentPack(this);
     }
@@ -28,7 +28,7 @@ public class TeleParamBundlesPackElement {
         return parentTeleFacade;
     }
 
-    public List<TeleParamBundleElement> paramBundles() {
+    public List<TeleBundleElement> paramBundles() {
         return paramBundles;
     }
 
