@@ -19,9 +19,9 @@ public class TeleRequestBeanPackElement {
         return requestBeans.isEmpty();
     }
 
-    public void addRequestBean(TeleRequestBeanElement batch) {
-        requestBeans.add(batch);
-        batch.setParentPack(this);
+    public void addRequestBean(TeleRequestBeanElement requestBean) {
+        requestBeans.add(requestBean);
+        requestBean.setParentPack(this);
     }
 
     public TeleServiceElement parentTeleFacade() {

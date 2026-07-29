@@ -79,7 +79,7 @@ public final class RestletModulator extends RoutesModulator {
     protected RouterTeleServiceElement createTeleService(ServiceElement serviceElm) {
         RouterTeleServiceElement teleFacade = super.createTeleService(serviceElm);
         // Enable batch params
-        teleFacade.setBatchParams(true);
+        teleFacade.setRequestBeanParams(true);
         return teleFacade;
     }
 

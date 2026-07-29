@@ -360,7 +360,7 @@ public class ServiceProxyGenerator {
         CodegenUtils.createJavaFile(context.processingEnv(), typeSpec, packageName, originClass.unwrap());
 
         if (serviceElement.teleService() != null) {
-            teleRequestBeansGenerator.generate(serviceElement.teleService().batchPack());
+            teleRequestBeansGenerator.generate(serviceElement.teleService().requestBeanPack());
             teleFacadeGenerator.generate(serviceElement);
             teleInterceptorGenerator.generate(serviceElement);
         }

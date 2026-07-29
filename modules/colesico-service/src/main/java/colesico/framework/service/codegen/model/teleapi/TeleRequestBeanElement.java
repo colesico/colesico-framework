@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class TeleRequestBeanElement implements TeleReadableElement {
 
-    private static final String REQUEST_BEAN_VAR_SUFFIX = "Batch";
+    private static final String REQUEST_BEAN_VAR_SUFFIX = "RequestBean";
 
     /**
      * Parent tele-command ref
@@ -36,7 +36,7 @@ public class TeleRequestBeanElement implements TeleReadableElement {
     protected final List<TeleFieldParamElement> fields = new ArrayList<>();
 
     /**
-     * Read batch spec
+     * Read requestBean spec
      */
     protected TeleReadElement readSpec;
 
@@ -50,20 +50,20 @@ public class TeleRequestBeanElement implements TeleReadableElement {
         field.setParentBean(this);
     }
 
-    public String batchClassSimpleName() {
+    public String requestBeanClassSimpleName() {
         return StringUtils.firstCharToUpperCase(parentTeleCommand.targetMethodName()) + StringUtils.firstCharToUpperCase(name);
     }
 
-    public String batchClassName() {
+    public String requestBeanClassName() {
         return parentPack.parentTeleFacade().parentService().originClass().packageName() + '.' +
                 parentPack.packClassSimpleName() + '.' +
-                batchClassSimpleName();
+                requestBeanClassSimpleName();
     }
 
     /**
-     * Batch variable name
+     * RequestBean variable name
      */
-    public String batchVarName() {
+    public String requestBeanVarName() {
         return StringUtils.firstCharToLowerCase(name) + REQUEST_BEAN_VAR_SUFFIX;
     }
 

@@ -79,16 +79,16 @@ public class TeleServiceElement {
     private final IocQualifier iocQualifier;
 
     /**
-     * Batch params support enabled
+     * Request Bean params support enabled
      *
      * @see FieldParam
      */
-    private Boolean batchParams = false;
+    private Boolean requestBeanParams = false;
 
     /**
-     * Tele-facade associated batches
+     * Tele-facade associated requestBeanes
      */
-    private final TeleRequestBeanPackElement batchPack;
+    private final TeleRequestBeanPackElement requestBeanPack;
 
     /**
      * Tele schemas for the facade
@@ -111,7 +111,7 @@ public class TeleServiceElement {
         this.writeOptionsClass = writeOptionsClass;
         this.iocQualifier = iocQualifier;
 
-        this.batchPack = new TeleRequestBeanPackElement(this);
+        this.requestBeanPack = new TeleRequestBeanPackElement(this);
     }
 
     /**
@@ -210,16 +210,16 @@ public class TeleServiceElement {
         this.parentService = parentService;
     }
 
-    public Boolean batchParams() {
-        return batchParams;
+    public Boolean requestBeanParams() {
+        return requestBeanParams;
     }
 
-    public void setBatchParams(Boolean batchParams) {
-        this.batchParams = batchParams;
+    public void setRequestBeanParams(Boolean requestBeanParams) {
+        this.requestBeanParams = requestBeanParams;
     }
 
-    public TeleRequestBeanPackElement batchPack() {
-        return batchPack;
+    public TeleRequestBeanPackElement requestBeanPack() {
+        return requestBeanPack;
     }
 
     public Class<? extends ReadOptions> readOptionsClass() {

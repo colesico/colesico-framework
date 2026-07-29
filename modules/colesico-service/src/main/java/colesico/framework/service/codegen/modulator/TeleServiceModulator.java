@@ -92,11 +92,11 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
     private void createParamReadOptions(List<TeleParameterElement> params) {
         for (var param : params) {
 
-            // Process batch fields
+            // Process requestBean fields
             if (param instanceof TeleFieldParamElement) {
-                TeleFieldParamElement batchField = (TeleFieldParamElement) param;
-                if (batchField.parentBean().readSpec() == null) {
-                    batchField.parentBean().setReadSpec(createTeleRead(batchField.parentBean()));
+                TeleFieldParamElement requestBeanField = (TeleFieldParamElement) param;
+                if (requestBeanField.parentBean().readSpec() == null) {
+                    requestBeanField.parentBean().setReadSpec(createTeleRead(requestBeanField.parentBean()));
                 }
                 continue;
             }
@@ -161,10 +161,10 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
         return new TeleReadElement(teleParam, valueTypeCode.build(), null);
     }
 
-    protected TeleReadElement createTeleRead(TeleRequestBeanElement teleBatch) {
+    protected TeleReadElement createTeleRead(TeleRequestBeanElement teleRequestBean) {
         CodeBlock.Builder valueTypeCode = CodeBlock.builder();
-        ServiceCodegenUtils.generateTeleRequestBeanType(teleBatch, valueTypeCode);
-        return new TeleReadElement(teleBatch, valueTypeCode.build(), null);
+        ServiceCodegenUtils.generateTeleRequestBeanType(teleRequestBean, valueTypeCode);
+        return new TeleReadElement(teleRequestBean, valueTypeCode.build(), null);
     }
 
 

@@ -48,11 +48,11 @@ public final class TeleCommandElement {
     private final List<TeleParameterElement> parameters = new ArrayList<>();
 
     /**
-     * Parameter batches.
+     * Parameter requestBeanes.
      * <p>
-     * batch name -> batch element
+     * requestBean name -> requestBean element
      */
-    private final Map<String, TeleRequestBeanElement> batches = new HashMap<>();
+    private final Map<String, TeleRequestBeanElement> requestBeanes = new HashMap<>();
 
     /**
      * Tele-method index within tele-facade
@@ -106,14 +106,14 @@ public final class TeleCommandElement {
         return "" + StringUtils.firstCharToLowerCase(serviceMethod.name()) + "I" + index;
     }
 
-    public TeleRequestBeanElement getOrCreateBatch(String name) {
-        TeleRequestBeanElement batch = batches.get(name);
-        if (batch == null) {
-            batch = new TeleRequestBeanElement(this, name);
-            batches.put(name, batch);
-            parentTeleService.batchPack().addRequestBean(batch);
+    public TeleRequestBeanElement getOrCreateRequestBean(String name) {
+        TeleRequestBeanElement requestBean = requestBeanes.get(name);
+        if (requestBean == null) {
+            requestBean = new TeleRequestBeanElement(this, name);
+            requestBeanes.put(name, requestBean);
+            parentTeleService.requestBeanPack().addRequestBean(requestBean);
         }
-        return batch;
+        return requestBean;
     }
 
     public ServiceMethodElement serviceMethod() {
@@ -140,8 +140,8 @@ public final class TeleCommandElement {
         return index;
     }
 
-    public Map<String, TeleRequestBeanElement> batches() {
-        return batches;
+    public Map<String, TeleRequestBeanElement> requestBeanes() {
+        return requestBeanes;
     }
 
     @Override

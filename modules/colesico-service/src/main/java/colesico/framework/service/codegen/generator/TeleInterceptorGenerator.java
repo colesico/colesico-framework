@@ -73,26 +73,26 @@ public class TeleInterceptorGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    protected CodeBlock generateBatches(TeleCommandElement teleCommand) {
+    protected CodeBlock generateRequestBeanes(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        for (TeleRequestBeanElement batch : teleCommand.batches().values()) {
-            if (batch.readSpec() == null) {
+        for (TeleRequestBeanElement requestBean : teleCommand.requestBeanes().values()) {
+            if (requestBean.readSpec() == null) {
                 throw CodegenException.of()
-                        .message("Batch read specification is not defined")
+                        .message("RequestBean read specification is not defined")
                         .element(teleCommand.serviceMethod().originMethod())
                         .build();
             }
-            // Read batch: BatchType batch = dataPort.read(...)
-            cb.add("\n// Read batch \n");
+            // Read requestBean: RequestBeanType requestBean = dataPort.read(...)
+            cb.add("\n// Read requestBean \n");
             cb.add("final $T $N = $N.$N(",
-                    ClassName.bestGuess(batch.batchClassName()),
-                    batch.batchVarName(),
+                    ClassName.bestGuess(requestBean.requestBeanClassName()),
+                    requestBean.requestBeanVarName(),
                     DATA_PORT_VAR, DataPort.READ_METHOD);
-            var optionsCode = batch.readSpec().optionsCode();
+            var optionsCode = requestBean.readSpec().optionsCode();
             if (optionsCode != null) {
                 cb.add(optionsCode);
             } else {
-                cb.add(batch.readSpec().valueTypeCode());
+                cb.add(requestBean.readSpec().valueTypeCode());
             }
             cb.add(");\n");
         }
@@ -117,13 +117,13 @@ public class TeleInterceptorGenerator {
             return cb.build();
         }
 
-        // ==== For batch filed param =============
+        // ==== For requestBean filed param =============
 
         if (parameter instanceof TeleFieldParamElement) {
-            TeleFieldParamElement batchParam = (TeleFieldParamElement) parameter;
-            // batch.getFiled();
+            TeleFieldParamElement requestBeanParam = (TeleFieldParamElement) parameter;
+            // requestBean.getFiled();
             CodeBlock.Builder cb = CodeBlock.builder();
-            cb.add("$N.$N()", batchParam.parentBean().batchVarName(), batchParam.getterName());
+            cb.add("$N.$N()", requestBeanParam.parentBean().requestBeanVarName(), requestBeanParam.getterName());
             return cb.build();
         }
 
@@ -162,12 +162,12 @@ public class TeleInterceptorGenerator {
                     DATA_PORT_VAR, DATA_PORT_PROV_FIELD
             );
 
-            // ============= Batches retrieving from data port
-            cb.add(generateBatches(teleCommand));
+            // ============= RequestBeanes retrieving from data port
+            cb.add(generateRequestBeanes(teleCommand));
 
             // ============= Params retrieving (default from data port)
             if (!teleCommand.parameters().isEmpty()) {
-                cb.add("\n// Assign  parameter values from remote client or batch\n");
+                cb.add("\n// Assign  parameter values from remote client or requestBean\n");
                 cb.add("final var $N = $N.$N();\n",
                         PARAMS_VAR,
                         Interceptor.INVOCATION_CONTEXT_PARAM,

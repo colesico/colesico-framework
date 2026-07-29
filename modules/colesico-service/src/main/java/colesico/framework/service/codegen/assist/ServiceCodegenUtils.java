@@ -23,7 +23,7 @@ public final class ServiceCodegenUtils {
     }
 
     public static void generateTeleRequestBeanType(TeleRequestBeanElement teleRequestBean, CodeBlock.Builder cb) {
-        TypeName batchTypeName = ClassName.bestGuess(teleRequestBean.batchClassName());
-        cb.add("$T.class", batchTypeName);
+        TypeName requestBeanTypeName = ClassName.bestGuess(teleRequestBean.requestBeanClassName());
+        cb.add("$T.class", requestBeanTypeName);
     }
 }

@@ -34,34 +34,34 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
         this.context = context;
     }
 
-    private void parseBatchParam(TeleCommandElement teleCommand,
+    private void parseRequestBeanParam(TeleCommandElement teleCommand,
                                  ServiceParameterElement param,
-                                 AnnotationAssist<FieldParam> paramBatchAnn,
-                                 AnnotationAssist<FieldParam> methodBatchAnn) {
+                                 AnnotationAssist<FieldParam> paramRequestBeanAnn,
+                                 AnnotationAssist<FieldParam> methodRequestBeanAnn) {
 
         String fieldName = "";
-        String batchName = FieldParam.DEFAULT_BEAN;
+        String requestBeanName = FieldParam.DEFAULT_BEAN;
 
-        if (paramBatchAnn != null) {
-            fieldName = paramBatchAnn.unwrap().value();
-            batchName = paramBatchAnn.unwrap().bean();
+        if (paramRequestBeanAnn != null) {
+            fieldName = paramRequestBeanAnn.unwrap().value();
+            requestBeanName = paramRequestBeanAnn.unwrap().bean();
         }
 
         if (isBlank(fieldName)) {
             fieldName = param.originParameter().name();
         }
 
-        if (batchName.equals(FieldParam.DEFAULT_BEAN) && methodBatchAnn != null) {
-            batchName = methodBatchAnn.unwrap().bean();
+        if (requestBeanName.equals(FieldParam.DEFAULT_BEAN) && methodRequestBeanAnn != null) {
+            requestBeanName = methodRequestBeanAnn.unwrap().bean();
         }
 
-        TeleFieldParamElement batchParam = new TeleFieldParamElement(teleCommand, param, fieldName);
+        TeleFieldParamElement requestBeanParam = new TeleFieldParamElement(teleCommand, param, fieldName);
 
-        TeleRequestBeanElement batch = teleCommand.getOrCreateBatch(batchName);
-        batch.addField(batchParam);
-        teleCommand.addParameter(batchParam);
+        TeleRequestBeanElement requestBean = teleCommand.getOrCreateRequestBean(requestBeanName);
+        requestBean.addField(requestBeanParam);
+        teleCommand.addParameter(requestBeanParam);
 
-        context.modulatorKit().notifyTeleParameterParsed(batchParam);
+        context.modulatorKit().notifyTeleParameterParsed(requestBeanParam);
     }
 
     private void parseInjectParam(TeleCommandElement teleCommand,
@@ -84,18 +84,18 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
         var method = teleCommand.serviceMethod();
         for (var param : method.parameters()) {
 
-            AnnotationAssist<FieldParam> paramBatchAnn = param.originParameter().annotation(FieldParam.class);
-            AnnotationAssist<FieldParam> methodBatchAnn = teleCommand.serviceMethod().originMethod().annotation(FieldParam.class);
+            AnnotationAssist<FieldParam> paramRequestBeanAnn = param.originParameter().annotation(FieldParam.class);
+            AnnotationAssist<FieldParam> methodRequestBeanAnn = teleCommand.serviceMethod().originMethod().annotation(FieldParam.class);
 
-            if (paramBatchAnn != null || methodBatchAnn != null) {
-                // Check batch support
-                if (!teleCommand.parentTeleService().batchParams()) {
+            if (paramRequestBeanAnn != null || methodRequestBeanAnn != null) {
+                // Check requestBean support
+                if (!teleCommand.parentTeleService().requestBeanParams()) {
                     throw CodegenException.of()
-                            .message("Batch parameters not supported by tele-facade " + teleCommand.parentTeleService().teleType().getCanonicalName())
+                            .message("RequestBean parameters not supported by tele-facade " + teleCommand.parentTeleService().teleType().getCanonicalName())
                             .element(param.originParameter().unwrap())
                             .build();
                 } else {
-                    parseBatchParam(teleCommand, param, paramBatchAnn, methodBatchAnn);
+                    parseRequestBeanParam(teleCommand, param, paramRequestBeanAnn, methodRequestBeanAnn);
                 }
             } else {
                 if (param instanceof ServiceInjectParamElement injParam) {

@@ -19,31 +19,31 @@ public class TeleRequestBeansGenerator extends FrameworkAbstractGenerator {
         super(processingEnv);
     }
 
-    public void generate(TeleRequestBeanPackElement batchPack) {
-        if (batchPack.isEmpty()) {
+    public void generate(TeleRequestBeanPackElement requestBeanPack) {
+        if (requestBeanPack.isEmpty()) {
             return;
         }
 
-        TypeSpec.Builder pb = TypeSpec.classBuilder(batchPack.packClassSimpleName());
+        TypeSpec.Builder pb = TypeSpec.classBuilder(requestBeanPack.packClassSimpleName());
         pb.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
-        for (TeleRequestBeanElement batch : batchPack.requestBeans()) {
-            TypeSpec.Builder rb = TypeSpec.classBuilder(batch.batchClassSimpleName());
+        for (TeleRequestBeanElement requestBean : requestBeanPack.requestBeans()) {
+            TypeSpec.Builder rb = TypeSpec.classBuilder(requestBean.requestBeanClassSimpleName());
             rb.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
 
-            for (TeleFieldParamElement batchField : batch.fields()) {
-                TypeName filedTypeName = TypeName.get(batchField.originElement().originType());
-                String filedName = batchField.name();
+            for (TeleFieldParamElement requestBeanField : requestBean.fields()) {
+                TypeName filedTypeName = TypeName.get(requestBeanField.originElement().originType());
+                String filedName = requestBeanField.name();
                 FieldSpec.Builder fb = FieldSpec.builder(filedTypeName, filedName, Modifier.PRIVATE);
                 rb.addField(fb.build());
 
-                MethodSpec.Builder gb = MethodSpec.methodBuilder(batchField.getterName());
+                MethodSpec.Builder gb = MethodSpec.methodBuilder(requestBeanField.getterName());
                 gb.returns(filedTypeName);
                 gb.addModifiers(Modifier.PUBLIC);
                 gb.addStatement("return this.$N", filedName);
                 rb.addMethod(gb.build());
 
-                MethodSpec.Builder sb = MethodSpec.methodBuilder(batchField.setterName());
+                MethodSpec.Builder sb = MethodSpec.methodBuilder(requestBeanField.setterName());
                 sb.returns(TypeName.VOID);
                 sb.addModifiers(Modifier.PUBLIC);
                 sb.addParameter(filedTypeName, filedName);
@@ -54,7 +54,7 @@ public class TeleRequestBeansGenerator extends FrameworkAbstractGenerator {
             pb.addType(rb.build());
         }
 
-        String packageName = batchPack.parentTeleFacade().parentService().originClass().packageName();
-        CodegenUtils.createJavaFile(processingEnv, pb.build(), packageName, batchPack.parentTeleFacade().parentService().originClass().unwrap());
+        String packageName = requestBeanPack.parentTeleFacade().parentService().originClass().packageName();
+        CodegenUtils.createJavaFile(processingEnv, pb.build(), packageName, requestBeanPack.parentTeleFacade().parentService().originClass().unwrap());
     }
 }
