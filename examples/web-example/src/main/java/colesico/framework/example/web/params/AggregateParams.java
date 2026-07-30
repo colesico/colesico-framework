@@ -15,6 +15,9 @@ public class AggregateParams {
         private Long id;
         private String name;
 
+        @Aggregate
+        private Nested nested;
+
         public Long getId() {
             return id;
         }
@@ -29,6 +32,26 @@ public class AggregateParams {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        public Nested getNested() {
+            return nested;
+        }
+
+        public void setNested(Nested nested) {
+            this.nested = nested;
+        }
+    }
+
+    public static class Nested{
+        private String message;
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
         }
     }
 }
