@@ -92,18 +92,22 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
     private void createParamReadOptions(List<TeleParameterElement> params) {
         for (var param : params) {
 
-            // Process request bean fields
-            if (param instanceof TeleBeanFieldElement beanParam) {
-                if (beanParam.parentBean().readSpec() == null) {
-                    beanParam.parentBean().setReadSpec(createTeleRead(beanParam.parentBean()));
+            // Process param bean fields
+            if (param instanceof TeleBeanFieldElement beanField) {
+                if (beanField.parentBean().readSpec() == null) {
+                    beanField.parentBean().setReadSpec(createTeleRead(beanField.parentBean()));
                 }
                 continue;
-            } else if  (param instanceof TeleAggregateElement teleComposite) {
+            }
 
+            if (param instanceof TeleAggregateElement aggregate) {
+                createParamReadOptions(aggregate.fields());
                 continue;
             }
-            TeleOrdinaryParamElement teleParam = (TeleOrdinaryParamElement) param;
-            teleParam.setReadSpec(createTeleRead(teleParam));
+
+            if (param instanceof TeleOrdinaryParamElement ordinaryParam) {
+                ordinaryParam.setReadSpec(createTeleRead(ordinaryParam));
+            }
 
         }
     }
