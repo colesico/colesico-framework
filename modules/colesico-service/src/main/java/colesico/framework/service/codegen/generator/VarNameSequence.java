@@ -4,19 +4,24 @@ package colesico.framework.service.codegen.generator;
  * Temporary variable names generator
  */
 public class VarNameSequence {
-    public static final String TMP_VAR = "var";
 
-    private int tmpVarIndex = 0;
+    public final String defaultPrefix;
 
-    public String nextTempVariable() {
-        return TMP_VAR + (tmpVarIndex++);
+    public VarNameSequence(String defaultPrefix) {
+        this.defaultPrefix = defaultPrefix;
     }
 
-    public String getNextTempVariable(String namePrefix) {
-        return namePrefix + (tmpVarIndex++);
+    private int idx = 0;
+
+    public String nextName() {
+        return defaultPrefix + (idx++);
+    }
+
+    public String nextName(String namePrefix) {
+        return namePrefix + (idx++);
     }
 
     public void reset() {
-        tmpVarIndex = 0;
+        idx = 0;
     }
 }

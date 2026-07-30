@@ -1,13 +1,13 @@
 package colesico.framework.service.codegen.model.teleapi;
 
-import colesico.framework.service.codegen.model.ServiceParameterElement;
+import colesico.framework.assist.codegen.model.VarElement;
 
 /**
  * @see colesico.framework.service.InjectParam
  */
 public class TeleInjectParamElement extends TeleParameterElement {
 
-    public TeleInjectParamElement(TeleCommandElement parentTeleCommand, ServiceParameterElement serviceParam) {
-        super(parentTeleCommand, serviceParam);
+    public TeleInjectParamElement(TeleCommandElement parentTeleCommand, VarElement originVariable) {
+        super(parentTeleCommand, originVariable);
     }
 }

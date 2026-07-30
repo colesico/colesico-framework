@@ -14,18 +14,18 @@ import javax.lang.model.type.TypeMirror;
 public class TeleHttpCodegenUtils {
 
     public static String paramName(TeleParameterElement teleParam) {
-        AnnotationAssist<ParamName> nameAnn = teleParam.originElement().annotation(ParamName.class);
+        AnnotationAssist<ParamName> nameAnn = teleParam.originVariable().annotation(ParamName.class);
         if (nameAnn != null) {
             return nameAnn.unwrap().value();
         } else {
-            return teleParam.originElement().name();
+            return teleParam.originVariable().name();
         }
     }
 
     public static String originName(TeleParameterElement teleParam, String defaultOrigin) {
         TeleCommandElement teleCommand = teleParam.parentTeleCommand();
         String originName = defaultOrigin;
-        AnnotationAssist<ParamOrigin> originAnn = teleParam.originElement().annotation(ParamOrigin.class);
+        AnnotationAssist<ParamOrigin> originAnn = teleParam.originVariable().annotation(ParamOrigin.class);
         if (originAnn == null) {
             originAnn = teleCommand.serviceMethod().originMethod().annotation(ParamOrigin.class);
         }
@@ -37,7 +37,7 @@ public class TeleHttpCodegenUtils {
     }
 
     public static TypeMirror customReaderClass(TeleOrdinaryParamElement teleParam) {
-        var rdAnn = teleParam.originElement().annotation(UseReader.class);
+        var rdAnn = teleParam.originVariable().annotation(UseReader.class);
 
         if (rdAnn == null) {
             rdAnn = teleParam.parentTeleCommand().serviceMethod().originMethod().annotation(UseReader.class);

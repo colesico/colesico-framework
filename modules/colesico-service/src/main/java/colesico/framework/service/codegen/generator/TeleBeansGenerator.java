@@ -32,7 +32,7 @@ public class TeleBeansGenerator extends FrameworkAbstractGenerator {
             rb.addModifiers(Modifier.FINAL, Modifier.PUBLIC, Modifier.STATIC);
 
             for (TeleBeanFieldElement paramBeanField : paramBean.fields()) {
-                TypeName filedTypeName = TypeName.get(paramBeanField.originElement().originType());
+                TypeName filedTypeName = TypeName.get(paramBeanField.originVariable().originType());
                 String filedName = paramBeanField.name();
                 FieldSpec.Builder fb = FieldSpec.builder(filedTypeName, filedName, Modifier.PRIVATE);
                 rb.addField(fb.build());

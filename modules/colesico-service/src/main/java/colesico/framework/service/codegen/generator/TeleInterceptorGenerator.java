@@ -17,6 +17,7 @@
 package colesico.framework.service.codegen.generator;
 
 
+import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.MethodElement;
@@ -54,6 +55,7 @@ public class TeleInterceptorGenerator {
     protected final Logger logger = LoggerFactory.getLogger(TeleInterceptorGenerator.class);
 
     protected final ServiceProcessorContext context;
+    protected VarNameSequence varNames;
 
     public TeleInterceptorGenerator(ServiceProcessorContext context) {
         this.context = context;
@@ -78,12 +80,12 @@ public class TeleInterceptorGenerator {
         for (TeleBeanElement paramBean : teleCommand.paramBeans().values()) {
             if (paramBean.readSpec() == null) {
                 throw CodegenException.of()
-                        .message("ParamBean read specification is not defined")
+                        .message("Param bean read specification is not defined")
                         .element(teleCommand.serviceMethod().originMethod())
                         .build();
             }
             // Read param bean: ParamBeanType paramBean = dataPort.read(...)
-            cb.add("\n// Read paramBean \n");
+            cb.add("\n// Read param bean \n");
             cb.add("final $T $N = $N.$N(",
                     ClassName.bestGuess(paramBean.paramBeanClassName()),
                     paramBean.paramBeanVarName(),
@@ -101,29 +103,58 @@ public class TeleInterceptorGenerator {
 
     protected CodeBlock generateParamRetrieving(TeleParameterElement parameter, CodeBlock.Builder invokerBuilder) {
 
-        // ==== For simple param ================
+        // ==== For ordinary param ================
 
-        if (parameter instanceof TeleOrdinaryParamElement p) {
+        if (parameter instanceof TeleOrdinaryParamElement param) {
             // dataPot.read(new Context(value.class, ...));
             CodeBlock.Builder cb = CodeBlock.builder();
             cb.add("$N.$N(", DATA_PORT_VAR, DataPort.READ_METHOD);
-            var optionsCode = p.readSpec().optionsCode();
+            var optionsCode = param.readSpec().optionsCode();
             if (optionsCode != null) {
                 cb.add(optionsCode);
             } else {
-                cb.add(p.readSpec().valueTypeCode());
+                cb.add(param.readSpec().valueTypeCode());
             }
             cb.add(")");
             return cb.build();
         }
 
-        // ==== For paramBean filed param =============
+        // ==== For param bean filed =============
 
-        if (parameter instanceof TeleBeanFieldElement) {
-            TeleBeanFieldElement beanParam = (TeleBeanFieldElement) parameter;
+        if (parameter instanceof TeleBeanFieldElement beanField) {
             // paramBean.getFiled();
             CodeBlock.Builder cb = CodeBlock.builder();
-            cb.add("$N.$N()", beanParam.parentBean().paramBeanVarName(), beanParam.getterName());
+            cb.add("$N.$N()", beanField.parentBean().paramBeanVarName(), beanField.getterName());
+            return cb.build();
+        }
+
+        // ==== For aggregate
+        if (parameter instanceof TeleAggregateElement aggregate) {
+            final String aggVar = varNames.nextName(aggregate.originVariable().name());
+            invokerBuilder.add("\n// Init aggregate\n");
+            TypeMirror paramType = aggregate.originVariable().originType();
+            invokerBuilder.addStatement("$T $N = new $T()",
+                    TypeName.get(paramType),
+                    aggVar, TypeName.get(paramType));
+
+            // Generate aggregate fields
+            for (var field : aggregate.fields()) {
+                CodeBlock value = generateParamRetrieving(field, invokerBuilder);
+                String setterName = "set" + StringUtils.firstCharToUpperCase(field.originVariable().name());
+                invokerBuilder.add("$N.$N(", aggVar, setterName);
+                invokerBuilder.add(value);
+                invokerBuilder.add(");\n");
+            }
+            invokerBuilder.add("\n");
+            CodeBlock.Builder cb = CodeBlock.builder();
+            cb.add(aggVar);
+            return cb.build();
+        }
+
+        // For @InjectParam
+        if (parameter instanceof TeleInjectParamElement) {
+            CodeBlock.Builder cb = CodeBlock.builder();
+            cb.add("null");
             return cb.build();
         }
 
@@ -162,7 +193,7 @@ public class TeleInterceptorGenerator {
                     DATA_PORT_VAR, DATA_PORT_PROV_FIELD
             );
 
-            // ============= ParamBeans retrieving from data port
+            // ============= Param beans retrieving from data port
             cb.add(generateParamBeans(teleCommand));
 
             // ============= Params retrieving (default from data port)
@@ -177,11 +208,6 @@ public class TeleInterceptorGenerator {
             int paramInd = -1;
             for (TeleParameterElement param : teleCommand.parameters()) {
                 paramInd++;
-                if (param instanceof TeleInjectParamElement) {
-                    // Skip param retrieving
-                    // TODO: implement injection on service layer
-                    continue;
-                }
                 CodeBlock value = generateParamRetrieving(param, cb);
                 cb.add("$N[$L] = ", PARAMS_VAR, paramInd);
                 cb.add(value);
@@ -247,6 +273,8 @@ public class TeleInterceptorGenerator {
     }
 
     public void generate(ServiceElement service) {
+        varNames = new VarNameSequence("var");
+
         TeleServiceElement teleService = service.teleService();
 
         if (teleService == null) {

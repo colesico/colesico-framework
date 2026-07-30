@@ -1,6 +1,7 @@
 package colesico.framework.service.codegen.model.teleapi;
 
 import colesico.framework.assist.StringUtils;
+import colesico.framework.assist.codegen.model.VarElement;
 import colesico.framework.service.BeanField;
 import colesico.framework.service.codegen.model.ServiceParameterElement;
 
@@ -21,8 +22,8 @@ public class TeleBeanFieldElement extends TeleParameterElement {
      */
     private String name;
 
-    public TeleBeanFieldElement(TeleCommandElement parentTeleCommand, ServiceParameterElement serviceParam, String name) {
-        super(parentTeleCommand, serviceParam);
+    public TeleBeanFieldElement(TeleCommandElement parentTeleCommand, VarElement originParameter) {
+        super(parentTeleCommand, originParameter);
         this.name = name;
     }
 

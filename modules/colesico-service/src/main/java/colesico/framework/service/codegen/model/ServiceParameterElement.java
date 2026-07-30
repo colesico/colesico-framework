@@ -9,6 +9,9 @@ public class ServiceParameterElement {
 
     private final ServiceMethodElement parentMethod;
 
+    /**
+     * Method parameter or bean field
+     */
     private final VarElement originParameter;
 
     public ServiceParameterElement(ServiceMethodElement parentMethod, VarElement originParameter) {

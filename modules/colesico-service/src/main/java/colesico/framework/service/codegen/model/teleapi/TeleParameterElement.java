@@ -1,7 +1,6 @@
 package colesico.framework.service.codegen.model.teleapi;
 
 import colesico.framework.assist.codegen.model.VarElement;
-import colesico.framework.service.codegen.model.ServiceParameterElement;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,18 +16,18 @@ abstract public class TeleParameterElement {
     protected final TeleCommandElement parentTeleCommand;
 
     /**
-     * Origin parameter
+     * Origin method param or bean field
      */
-    protected final ServiceParameterElement serviceParameter;
+    protected final VarElement originVariable;
 
     /**
      * Custom purpose props
      */
     protected final Map<Class<?>, Object> properties = new HashMap<>();
 
-    public TeleParameterElement(TeleCommandElement parentTeleCommand, ServiceParameterElement serviceParameter) {
+    public TeleParameterElement(TeleCommandElement parentTeleCommand, VarElement originVariable) {
         this.parentTeleCommand = parentTeleCommand;
-        this.serviceParameter = serviceParameter;
+        this.originVariable = originVariable;
     }
 
     public <C> C property(Class<C> propertyClass) {
@@ -43,11 +42,7 @@ abstract public class TeleParameterElement {
         return parentTeleCommand;
     }
 
-    public ServiceParameterElement serviceParameter() {
-        return serviceParameter;
-    }
-
-    public VarElement originElement() {
-        return serviceParameter.originParameter();
+    public VarElement originVariable() {
+        return originVariable;
     }
 }

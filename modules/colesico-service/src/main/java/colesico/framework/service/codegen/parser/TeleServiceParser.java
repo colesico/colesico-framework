@@ -38,10 +38,12 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
         this.context = context;
     }
 
-    private void parseBeanFieldParam(TeleCommandElement teleCommand,
-                                     ServiceParameterElement param,
-                                     AnnotationAssist<BeanField> beanAnn,
-                                     AnnotationAssist<BeanField> methodBeanAnn) {
+    private TeleParameterElement parseBeanFieldParameter(TeleCommandElement teleCommand,
+                                                         VarElement originParam,
+                                                         AnnotationAssist<BeanField> beanAnn,
+                                                         AnnotationAssist<BeanField> methodBeanAnn) {
+
+        TeleBeanFieldElement beanField = new TeleBeanFieldElement(teleCommand, originParam);
 
         String fieldName = "";
         String paramBeanName = BeanField.DEFAULT_BEAN;
@@ -52,114 +54,105 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
         }
 
         if (isBlank(fieldName)) {
-            fieldName = param.originParameter().name();
+            fieldName = originParam.name();
         }
+
+        beanField.setName(fieldName);
 
         if (paramBeanName.equals(BeanField.DEFAULT_BEAN) && methodBeanAnn != null) {
             paramBeanName = methodBeanAnn.unwrap().bean();
         }
 
-        TeleBeanFieldElement beanParam = new TeleBeanFieldElement(teleCommand, param, fieldName);
-
         TeleBeanElement bean = teleCommand.getOrCreateParamBean(paramBeanName);
-        bean.addField(beanParam);
-        teleCommand.addParameter(beanParam);
+        bean.addField(beanField);
 
-        context.modulatorKit().notifyTeleParameterParsed(beanParam);
+        context.modulatorKit().notifyTeleParameterParsed(beanField);
+
+        return beanField;
     }
 
-    private TeleAggregateElement parseAggregate(ClassElement aggregateClass) {
-        TeleAggregateElement aggregate = new TeleAggregateElement(aggregateClass);
-        var fieldList = aggregateClass.fieldsFiltered(
+
+    private TeleParameterElement parseAggregateParameter(TeleCommandElement teleCommand,
+                                                         VarElement parameter,
+                                                         AnnotationAssist<Aggregate> aggregateAnn,
+                                                         AnnotationAssist<Aggregate> methodAggregateAnn) {
+
+        TeleAggregateElement aggregateParam = new TeleAggregateElement(teleCommand, parameter);
+
+        var fieldList = parameter.asClassType().asClassElement().fieldsFiltered(
                 f -> !f.unwrap().getModifiers().contains(Modifier.STATIC)
         );
 
         for (var field : fieldList) {
-            AnnotationAssist<Aggregate> aggAnn = field.annotation(Aggregate.class);
-            if (aggAnn == null) {
-                TeleAggregateFieldElement aggField = new TeleAggregateFieldElement(field);
-                aggregate.addField(aggField);
-            } else {
-                var subAggregate = parseAggregate(field.asClassType().asClassElement());
-                aggregate.addAggregate(subAggregate);
-            }
+            aggregateParam.addField(parseTeleParameter(teleCommand, field));
         }
 
-        return aggregate;
-    }
-
-    private void parseAggregateParam(TeleCommandElement teleCommand,
-                                     ServiceParameterElement serviceParam,
-                                     AnnotationAssist<Aggregate> aggregateAnn,
-                                     AnnotationAssist<Aggregate> methodAggregateAnn) {
-
-        ClassElement paramClass = serviceParam.originParameter().asClassType().asClassElement();
-        var aggregate = parseAggregate(paramClass);
-        TeleAggregateParamElement aggregateParam = new TeleAggregateParamElement(teleCommand, serviceParam, aggregate);
-        teleCommand.addParameter(aggregateParam);
         context.modulatorKit().notifyTeleParameterParsed(aggregateParam);
+        return aggregateParam;
     }
 
 
-    private void parseInjectParam(TeleCommandElement teleCommand,
-                                  ServiceParameterElement serviceParam,
-                                  AnnotationAssist<InjectParam> injectParamAnn
-    ) {
-        TeleInjectParamElement injectParam = new TeleInjectParamElement(teleCommand, serviceParam);
-        teleCommand.addParameter(injectParam);
+    private TeleParameterElement parseInjectParameter(TeleCommandElement teleCommand,
+                                                      VarElement parameter,
+                                                      AnnotationAssist<InjectParam> injectParamAnn) {
+        TeleInjectParamElement injectParam = new TeleInjectParamElement(teleCommand, parameter);
         context.modulatorKit().notifyTeleParameterParsed(injectParam);
+        return injectParam;
     }
 
-    private void parseOrdinaryParam(TeleCommandElement teleCommand, ServiceParameterElement serviceParam) {
+    private TeleParameterElement parseOrdinaryParameter(TeleCommandElement teleCommand, VarElement parameter) {
         // Process simple param
-        TeleOrdinaryParamElement parameter = new TeleOrdinaryParamElement(teleCommand, serviceParam);
-        teleCommand.addParameter(parameter);
-        context.modulatorKit().notifyTeleParameterParsed(parameter);
+        TeleOrdinaryParamElement ordinaryParam = new TeleOrdinaryParamElement(teleCommand, parameter);
+        context.modulatorKit().notifyTeleParameterParsed(ordinaryParam);
+        return ordinaryParam;
     }
 
-    private void parseTeleParameter(TeleCommandElement teleCommand, ServiceParameterElement serviceParam) {
+    private TeleParameterElement parseTeleParameter(TeleCommandElement teleCommand, VarElement parameter) {
 
-        var originParam = serviceParam.originParameter();
-
-        AnnotationAssist<BeanField> beanAnn = originParam.annotation(BeanField.class);
+        AnnotationAssist<BeanField> beanAnn = parameter.annotation(BeanField.class);
         AnnotationAssist<BeanField> methodBeanAnn = teleCommand.serviceMethod().originMethod().annotation(BeanField.class);
 
-        AnnotationAssist<Aggregate> aggregateAnn = originParam.annotation(Aggregate.class);
+        AnnotationAssist<Aggregate> aggregateAnn = parameter.annotation(Aggregate.class);
         AnnotationAssist<Aggregate> methodAggregateAnn = teleCommand.serviceMethod().originMethod().annotation(Aggregate.class);
 
-        AnnotationAssist<InjectParam> injectParamAnn = originParam.annotation(InjectParam.class);
+        AnnotationAssist<InjectParam> injectParamAnn = parameter.annotation(InjectParam.class);
 
         if (beanAnn != null || methodBeanAnn != null) {
             // Check bean params support
             if (!teleCommand.parentTeleService().paramBeans()) {
                 throw CodegenException.of()
                         .message("Bean parameters not supported by tele-facade " + teleCommand.parentTeleService().teleType().getCanonicalName())
-                        .element(originParam.unwrap())
+                        .element(parameter.unwrap())
                         .build();
-            } else {
-                parseBeanFieldParam(teleCommand, serviceParam, beanAnn, methodBeanAnn);
             }
-        } else if (aggregateAnn != null || methodAggregateAnn != null) {
+            return parseBeanFieldParameter(teleCommand, parameter, beanAnn, methodBeanAnn);
+        }
+
+        if (aggregateAnn != null || methodAggregateAnn != null) {
             // Check combined params support
             if (!teleCommand.parentTeleService().aggregates()) {
                 throw CodegenException.of()
                         .message("Combined parameters not supported by tele-facade " + teleCommand.parentTeleService().teleType().getCanonicalName())
-                        .element(originParam.unwrap())
+                        .element(parameter.unwrap())
                         .build();
-            } else {
-                parseAggregateParam(teleCommand, serviceParam, aggregateAnn, methodAggregateAnn);
             }
-        } else if (injectParamAnn != null) {
-            parseInjectParam(teleCommand, serviceParam, injectParamAnn);
-        } else {
-            parseOrdinaryParam(teleCommand, serviceParam);
+            return parseAggregateParameter(teleCommand, parameter, aggregateAnn, methodAggregateAnn);
+
         }
+
+        if (injectParamAnn != null) {
+            return parseInjectParameter(teleCommand, parameter, injectParamAnn);
+        }
+
+        return parseOrdinaryParameter(teleCommand, parameter);
+
     }
 
     private void parseTeleCommandParams(TeleCommandElement teleCommand) {
         var method = teleCommand.serviceMethod();
         for (var param : method.parameters()) {
-            parseTeleParameter(teleCommand, param);
+            var teleParam = parseTeleParameter(teleCommand, param.originParameter());
+            teleCommand.addParameter(teleParam);
         }
     }
 

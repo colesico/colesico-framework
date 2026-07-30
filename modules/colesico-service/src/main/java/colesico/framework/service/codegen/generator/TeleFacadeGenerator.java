@@ -86,7 +86,7 @@ public class TeleFacadeGenerator {
             // Collect params
             ArrayCodegen serviceMethodArgs = new ArrayCodegen();
             for (TeleParameterElement param : teleCommand.parameters()) {
-                var paramType = param.serviceParameter().originParameter().originType();
+                var paramType = param.originVariable().originType();
                 String literal = switch (paramType.getKind()) {
                     case BOOLEAN -> "false";
                     case BYTE -> "0";

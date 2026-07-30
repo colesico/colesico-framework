@@ -98,7 +98,7 @@ public abstract class TeleServiceModulator<T extends TeleServiceElement> extends
                     beanParam.parentBean().setReadSpec(createTeleRead(beanParam.parentBean()));
                 }
                 continue;
-            } else if  (param instanceof TeleAggregateParamElement teleComposite) {
+            } else if  (param instanceof TeleAggregateElement teleComposite) {
 
                 continue;
             }

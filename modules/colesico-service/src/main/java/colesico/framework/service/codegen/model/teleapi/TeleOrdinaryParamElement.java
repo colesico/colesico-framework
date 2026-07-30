@@ -16,7 +16,7 @@
 
 package colesico.framework.service.codegen.model.teleapi;
 
-import colesico.framework.service.codegen.model.ServiceParameterElement;
+import colesico.framework.assist.codegen.model.VarElement;
 
 /**
  * Tele-method parameter that can be directly read from data port
@@ -28,8 +28,8 @@ public final class TeleOrdinaryParamElement extends TeleParameterElement impleme
      */
     private TeleReadElement readSpec;
 
-    public TeleOrdinaryParamElement(TeleCommandElement parentTeleCommand, ServiceParameterElement serviceParam) {
-        super(parentTeleCommand, serviceParam);
+    public TeleOrdinaryParamElement(TeleCommandElement parentTeleCommand, VarElement originParameter) {
+        super(parentTeleCommand, originParameter);
     }
 
     public TeleReadElement readSpec() {
@@ -43,7 +43,7 @@ public final class TeleOrdinaryParamElement extends TeleParameterElement impleme
     @Override
     public String toString() {
         return "TeleOrdinaryParamElement{" +
-                "serviceParameter=" + serviceParameter +
+                "serviceParameter=" + originVariable +
                 '}';
     }
 }
