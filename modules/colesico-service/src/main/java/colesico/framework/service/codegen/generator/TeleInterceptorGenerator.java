@@ -73,26 +73,26 @@ public class TeleInterceptorGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    protected CodeBlock generateParamBundles(TeleCommandElement teleCommand) {
+    protected CodeBlock generateParamBeans(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        for (TeleBundleElement paramBundle : teleCommand.paramBundles().values()) {
-            if (paramBundle.readSpec() == null) {
+        for (TeleBeanElement paramBean : teleCommand.paramBeans().values()) {
+            if (paramBean.readSpec() == null) {
                 throw CodegenException.of()
-                        .message("ParamBundle read specification is not defined")
+                        .message("ParamBean read specification is not defined")
                         .element(teleCommand.serviceMethod().originMethod())
                         .build();
             }
-            // Read param bundle: ParamBundleType paramBundle = dataPort.read(...)
-            cb.add("\n// Read paramBundle \n");
+            // Read param bean: ParamBeanType paramBean = dataPort.read(...)
+            cb.add("\n// Read paramBean \n");
             cb.add("final $T $N = $N.$N(",
-                    ClassName.bestGuess(paramBundle.paramBundleClassName()),
-                    paramBundle.paramBundleVarName(),
+                    ClassName.bestGuess(paramBean.paramBeanClassName()),
+                    paramBean.paramBeanVarName(),
                     DATA_PORT_VAR, DataPort.READ_METHOD);
-            var optionsCode = paramBundle.readSpec().optionsCode();
+            var optionsCode = paramBean.readSpec().optionsCode();
             if (optionsCode != null) {
                 cb.add(optionsCode);
             } else {
-                cb.add(paramBundle.readSpec().valueTypeCode());
+                cb.add(paramBean.readSpec().valueTypeCode());
             }
             cb.add(");\n");
         }
@@ -117,13 +117,13 @@ public class TeleInterceptorGenerator {
             return cb.build();
         }
 
-        // ==== For paramBundle filed param =============
+        // ==== For paramBean filed param =============
 
-        if (parameter instanceof TeleBundleFieldElement) {
-            TeleBundleFieldElement bundleParam = (TeleBundleFieldElement) parameter;
-            // paramBundle.getFiled();
+        if (parameter instanceof TeleBeanFieldElement) {
+            TeleBeanFieldElement beanParam = (TeleBeanFieldElement) parameter;
+            // paramBean.getFiled();
             CodeBlock.Builder cb = CodeBlock.builder();
-            cb.add("$N.$N()", bundleParam.parentBean().paramBundleVarName(), bundleParam.getterName());
+            cb.add("$N.$N()", beanParam.parentBean().paramBeanVarName(), beanParam.getterName());
             return cb.build();
         }
 
@@ -162,12 +162,12 @@ public class TeleInterceptorGenerator {
                     DATA_PORT_VAR, DATA_PORT_PROV_FIELD
             );
 
-            // ============= ParamBundles retrieving from data port
-            cb.add(generateParamBundles(teleCommand));
+            // ============= ParamBeans retrieving from data port
+            cb.add(generateParamBeans(teleCommand));
 
             // ============= Params retrieving (default from data port)
             if (!teleCommand.parameters().isEmpty()) {
-                cb.add("\n// Assign  parameter values from remote client or paramBundle\n");
+                cb.add("\n// Assign  parameter values from remote client or paramBean\n");
                 cb.add("final var $N = $N.$N();\n",
                         PARAMS_VAR,
                         Interceptor.INVOCATION_CONTEXT_PARAM,

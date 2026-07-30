@@ -62,13 +62,13 @@ public class ServiceProxyGenerator {
 
     protected final ServiceProcessorContext context;
 
-    protected final TeleParamBundlesGenerator teleParamBundlesGenerator;
+    protected final TeleBeansGenerator teleBeansGenerator;
     protected final TeleFacadeGenerator teleFacadeGenerator;
     protected final TeleInterceptorGenerator teleInterceptorGenerator;
 
     public ServiceProxyGenerator(ServiceProcessorContext context) {
         this.context = context;
-        teleParamBundlesGenerator = new TeleParamBundlesGenerator(context.processingEnv());
+        teleBeansGenerator = new TeleBeansGenerator(context.processingEnv());
         teleFacadeGenerator = new TeleFacadeGenerator(context);
         teleInterceptorGenerator = new TeleInterceptorGenerator(context);
     }
@@ -360,7 +360,7 @@ public class ServiceProxyGenerator {
         CodegenUtils.createJavaFile(context.processingEnv(), typeSpec, packageName, originClass.unwrap());
 
         if (serviceElement.teleService() != null) {
-            teleParamBundlesGenerator.generate(serviceElement.teleService().paramBundlesPack());
+            teleBeansGenerator.generate(serviceElement.teleService().paramBeansPack());
             teleFacadeGenerator.generate(serviceElement);
             teleInterceptorGenerator.generate(serviceElement);
         }

@@ -1,20 +1,20 @@
 package colesico.framework.service.codegen.model.teleapi;
 
 import colesico.framework.assist.StringUtils;
-import colesico.framework.service.BundleParam;
+import colesico.framework.service.BeanField;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represent bundle that is read from a data-port as single object
+ * Represent bean that is read from a data-port as single object
  * and its field values then assigning to the method parameters on invocation.
  *
- * @see BundleParam
+ * @see BeanField
  */
-public class TeleBundleElement implements TeleReadableElement {
+public class TeleBeanElement implements TeleReadableElement {
 
-    private static final String BUNDLE_VAR_SUFFIX = "ParamBundle";
+    private static final String PARAM_BEAN_VAR_SUFFIX = "ParamBean";
 
     /**
      * Parent tele-command ref
@@ -24,53 +24,53 @@ public class TeleBundleElement implements TeleReadableElement {
     /**
      * Pack ref
      */
-    protected TeleBundlesPackElement parentPack;
+    protected TeleBeansPackElement parentPack;
 
     /**
-     * Bundle name
-     * Used for building bundle class name
+     * Bean name
+     * Used for building bean class name
      */
     protected final String name;
 
-    protected final List<TeleBundleFieldElement> fields = new ArrayList<>();
+    protected final List<TeleBeanFieldElement> fields = new ArrayList<>();
 
     /**
-     * Read bundle spec
+     * Read bean spec
      */
     protected TeleReadElement readSpec;
 
-    public TeleBundleElement(TeleCommandElement parentTeleCommand, String name) {
+    public TeleBeanElement(TeleCommandElement parentTeleCommand, String name) {
         this.parentTeleCommand = parentTeleCommand;
         this.name = name;
     }
 
-    public void addField(TeleBundleFieldElement field) {
+    public void addField(TeleBeanFieldElement field) {
         fields.add(field);
         field.setParentBean(this);
     }
 
-    public String paramBundleClassSimpleName() {
+    public String paramBeanClassSimpleName() {
         return StringUtils.firstCharToUpperCase(parentTeleCommand.targetMethodName()) + StringUtils.firstCharToUpperCase(name);
     }
 
-    public String paramBundleClassName() {
+    public String paramBeanClassName() {
         return parentPack.parentTeleFacade().parentService().originClass().packageName() + '.' +
                 parentPack.packClassSimpleName() + '.' +
-                paramBundleClassSimpleName();
+                paramBeanClassSimpleName();
     }
 
     /**
-     * ParamBundle variable name
+     * ParamBean variable name
      */
-    public String paramBundleVarName() {
-        return StringUtils.firstCharToLowerCase(name) + BUNDLE_VAR_SUFFIX;
+    public String paramBeanVarName() {
+        return StringUtils.firstCharToLowerCase(name) + PARAM_BEAN_VAR_SUFFIX;
     }
 
-    public TeleBundlesPackElement parentPack() {
+    public TeleBeansPackElement parentPack() {
         return parentPack;
     }
 
-    public void setParentPack(TeleBundlesPackElement parentPack) {
+    public void setParentPack(TeleBeansPackElement parentPack) {
         this.parentPack = parentPack;
     }
 
@@ -78,7 +78,7 @@ public class TeleBundleElement implements TeleReadableElement {
         return name;
     }
 
-    public List<TeleBundleFieldElement> fields() {
+    public List<TeleBeanFieldElement> fields() {
         return fields;
     }
 

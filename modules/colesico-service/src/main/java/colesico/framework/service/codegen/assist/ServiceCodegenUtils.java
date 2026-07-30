@@ -22,8 +22,8 @@ public final class ServiceCodegenUtils {
         CodegenUtils.generateTypePick(paramType, cb);
     }
 
-    public static void generateTeleParamBundleType(TeleBundleElement teleParamBundle, CodeBlock.Builder cb) {
-        TypeName paramBundleTypeName = ClassName.bestGuess(teleParamBundle.paramBundleClassName());
-        cb.add("$T.class", paramBundleTypeName);
+    public static void generateTeleParamBeanType(TeleBeanElement teleParamBean, CodeBlock.Builder cb) {
+        TypeName paramBeanTypeName = ClassName.bestGuess(teleParamBean.paramBeanClassName());
+        cb.add("$T.class", paramBeanTypeName);
     }
 }

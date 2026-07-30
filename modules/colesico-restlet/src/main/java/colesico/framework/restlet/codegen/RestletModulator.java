@@ -149,7 +149,7 @@ public final class RestletModulator extends RoutesModulator {
     @Override
     public void onTeleParameterParsed(TeleParameterElement teleParam) {
         super.onTeleParameterParsed(teleParam);
-        if (teleParam instanceof TeleBundleFieldElement p) {
+        if (teleParam instanceof TeleBeanFieldElement p) {
             AnnotationAssist<ParamName> paramNameAnn = p.originElement().annotation(ParamName.class);
             if (paramNameAnn == null) {
                 return;

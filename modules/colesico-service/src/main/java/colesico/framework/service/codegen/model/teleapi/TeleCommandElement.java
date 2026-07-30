@@ -48,11 +48,11 @@ public final class TeleCommandElement {
     private final List<TeleParameterElement> parameters = new ArrayList<>();
 
     /**
-     * Parameter paramBundles.
+     * Parameter paramBeans.
      * <p>
-     * paramBundle name -> paramBundle element
+     * paramBean name -> paramBean element
      */
-    private final Map<String, TeleBundleElement> paramBundles = new HashMap<>();
+    private final Map<String, TeleBeanElement> paramBeans = new HashMap<>();
 
     /**
      * Tele-method index within tele-facade
@@ -106,14 +106,14 @@ public final class TeleCommandElement {
         return "" + StringUtils.firstCharToLowerCase(serviceMethod.name()) + "I" + index;
     }
 
-    public TeleBundleElement getOrCreateParamBundle(String name) {
-        TeleBundleElement paramBundle = paramBundles.get(name);
-        if (paramBundle == null) {
-            paramBundle = new TeleBundleElement(this, name);
-            paramBundles.put(name, paramBundle);
-            parentTeleService.paramBundlesPack().addParamBundle(paramBundle);
+    public TeleBeanElement getOrCreateParamBean(String name) {
+        TeleBeanElement paramBean = paramBeans.get(name);
+        if (paramBean == null) {
+            paramBean = new TeleBeanElement(this, name);
+            paramBeans.put(name, paramBean);
+            parentTeleService.paramBeansPack().addParamBean(paramBean);
         }
-        return paramBundle;
+        return paramBean;
     }
 
     public ServiceMethodElement serviceMethod() {
@@ -140,8 +140,8 @@ public final class TeleCommandElement {
         return index;
     }
 
-    public Map<String, TeleBundleElement> paramBundles() {
-        return paramBundles;
+    public Map<String, TeleBeanElement> paramBeans() {
+        return paramBeans;
     }
 
     @Override

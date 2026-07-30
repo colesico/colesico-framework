@@ -20,7 +20,8 @@ package colesico.framework.service.codegen.model.teleapi;
 import colesico.framework.assist.Elements;
 import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.service.BundleParam;
+import colesico.framework.service.Aggregate;
+import colesico.framework.service.BeanField;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.teleapi.TeleFacade;
 import colesico.framework.teleapi.TeleInterceptor;
@@ -79,24 +80,24 @@ public class TeleServiceElement {
     private final IocQualifier iocQualifier;
 
     /**
-     * Bundle params support enabled
+     * Param beans support enabled
      *
-     * @see BundleParam
+     * @see BeanField
      */
-    private Boolean bundleParams = false;
+    private Boolean paramBeans = false;
 
     /**
-     * Combined params support enabled
+     * Aggregates support enabled
      *
-     * @see colesico.framework.service.CombinedParams
+     * @see Aggregate
      */
-    private Boolean combinedParams = false;
+    private Boolean aggregates = false;
 
 
     /**
-     * Tele-facade associated param bundles
+     * Tele-facade associated param beans
      */
-    private final TeleBundlesPackElement paramBundlesPack;
+    private final TeleBeansPackElement paramBeansPack;
 
     /**
      * Tele schemas for the facade
@@ -119,7 +120,7 @@ public class TeleServiceElement {
         this.writeOptionsClass = writeOptionsClass;
         this.iocQualifier = iocQualifier;
 
-        this.paramBundlesPack = new TeleBundlesPackElement(this);
+        this.paramBeansPack = new TeleBeansPackElement(this);
     }
 
     /**
@@ -218,20 +219,24 @@ public class TeleServiceElement {
         this.parentService = parentService;
     }
 
-    public Boolean bundleParams() {
-        return bundleParams;
+    public Boolean paramBeans() {
+        return paramBeans;
     }
 
-    public Boolean combinedParams() {
-        return combinedParams;
+    public Boolean aggregates() {
+        return aggregates;
     }
 
-    public void setBundleParams(Boolean bundleParams) {
-        this.bundleParams = bundleParams;
+    public void setParamBeans(Boolean paramBeans) {
+        this.paramBeans = paramBeans;
     }
 
-    public TeleBundlesPackElement paramBundlesPack() {
-        return paramBundlesPack;
+    public void setAggregates(Boolean aggregates) {
+        this.aggregates = aggregates;
+    }
+
+    public TeleBeansPackElement paramBeansPack() {
+        return paramBeansPack;
     }
 
     public Class<? extends ReadOptions> readOptionsClass() {

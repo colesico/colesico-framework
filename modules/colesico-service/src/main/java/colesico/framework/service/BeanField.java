@@ -4,26 +4,26 @@ import java.lang.annotation.*;
 
 /**
  * Indicates that the value of the parameter is assigned from a field of the
- * bundle bean, that is read from the data port as a single object.
+ * bean, that is read from the data port as a single object.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER, ElementType.METHOD})
 @Inherited
 @Documented
-public @interface BundleParam {
+public @interface BeanField {
 
     /**
-     * Default bundle name
+     * Default bean name
      */
-    String DEFAULT_BUNDLE = "request";
+    String DEFAULT_BEAN = "request";
 
     /**
-     * Bundle field name
+     * Bean field name
      */
     String value() default "";
 
     /**
-     * Bundle name
+     * Bean name
      */
-    String bundle() default DEFAULT_BUNDLE;
+    String bean() default DEFAULT_BEAN;
 }
