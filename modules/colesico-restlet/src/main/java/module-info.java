@@ -45,6 +45,6 @@ module colesico.framework.restlet {
     opens colesico.framework.restlet.assist;
     opens colesico.framework.restlet;
 
-    provides Modulator with colesico.framework.restlet.codegen.RestletModulator;
+   // provides Modulator with colesico.framework.restlet.codegen.RestletModulator;
 
 }

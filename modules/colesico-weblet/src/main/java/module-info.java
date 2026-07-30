@@ -34,5 +34,5 @@ module colesico.framework.weblet {
     exports colesico.framework.weblet.response;
     exports colesico.framework.weblet.internal to colesico.framework.ioc;
 
-    provides Modulator with colesico.framework.weblet.codegen.WebletModulator;
+    // provides Modulator with colesico.framework.weblet.codegen.WebletModulator;
 }
