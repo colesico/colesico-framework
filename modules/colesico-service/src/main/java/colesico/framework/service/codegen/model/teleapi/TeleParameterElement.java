@@ -21,6 +21,11 @@ abstract public class TeleParameterElement {
     protected final VarElement originVariable;
 
     /**
+     * @see colesico.framework.service.LocalParam
+     */
+    protected Boolean localParam = false;
+
+    /**
      * Custom purpose props
      */
     protected final Map<Class<?>, Object> properties = new HashMap<>();
@@ -44,5 +49,13 @@ abstract public class TeleParameterElement {
 
     public VarElement originVariable() {
         return originVariable;
+    }
+
+    public Boolean localParam() {
+        return localParam;
+    }
+
+    public void setLocalParam(Boolean localParam) {
+        this.localParam = localParam;
     }
 }

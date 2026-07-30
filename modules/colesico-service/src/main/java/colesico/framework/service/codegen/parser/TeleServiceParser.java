@@ -22,6 +22,7 @@ import colesico.framework.assist.codegen.model.*;
 import colesico.framework.service.BeanField;
 import colesico.framework.service.Aggregate;
 import colesico.framework.service.InjectParam;
+import colesico.framework.service.LocalParam;
 import colesico.framework.service.codegen.model.*;
 import colesico.framework.service.codegen.model.teleapi.*;
 
@@ -109,6 +110,10 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
 
     private TeleParameterElement parseTeleParameter(TeleCommandElement teleCommand, VarElement parameter) {
 
+        TeleParameterElement result = null;
+
+        AnnotationAssist<LocalParam> localParamAnn = parameter.annotation(LocalParam.class);
+
         AnnotationAssist<BeanField> beanAnn = parameter.annotation(BeanField.class);
         AnnotationAssist<BeanField> methodBeanAnn = teleCommand.serviceMethod().originMethod().annotation(BeanField.class);
 
@@ -125,10 +130,8 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
                         .element(parameter.unwrap())
                         .build();
             }
-            return parseBeanFieldParameter(teleCommand, parameter, beanAnn, methodBeanAnn);
-        }
-
-        if (aggregateAnn != null || methodAggregateAnn != null) {
+            result = parseBeanFieldParameter(teleCommand, parameter, beanAnn, methodBeanAnn);
+        } else if (aggregateAnn != null || methodAggregateAnn != null) {
             // Check combined params support
             if (!teleCommand.parentTeleService().supportParamAggregates()) {
                 throw CodegenException.of()
@@ -136,16 +139,18 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
                         .element(parameter.unwrap())
                         .build();
             }
-            return parseAggregateParameter(teleCommand, parameter, aggregateAnn, methodAggregateAnn);
-
+            result = parseAggregateParameter(teleCommand, parameter, aggregateAnn, methodAggregateAnn);
+        } else if (injectParamAnn != null) {
+            result = parseInjectParameter(teleCommand, parameter, injectParamAnn);
+        } else {
+            result = parseOrdinaryParameter(teleCommand, parameter);
         }
 
-        if (injectParamAnn != null) {
-            return parseInjectParameter(teleCommand, parameter, injectParamAnn);
+        if (localParamAnn != null) {
+            result.setLocalParam(true);
         }
 
-        return parseOrdinaryParameter(teleCommand, parameter);
-
+        return result;
     }
 
     private void parseTeleCommandParams(TeleCommandElement teleCommand) {

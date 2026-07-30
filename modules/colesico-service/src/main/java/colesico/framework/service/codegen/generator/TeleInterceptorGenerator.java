@@ -139,6 +139,9 @@ public class TeleInterceptorGenerator {
 
             // Generate aggregate fields
             for (var field : aggregate.fields()) {
+                if (field.localParam()) {
+                    continue;
+                }
                 CodeBlock value = generateParamRetrieving(field, invokerBuilder);
                 String setterName = "set" + StringUtils.firstCharToUpperCase(field.originVariable().name());
                 invokerBuilder.add("$N.$N(", aggVar, setterName);
@@ -198,7 +201,7 @@ public class TeleInterceptorGenerator {
 
             // ============= Params retrieving (default from data port)
             if (!teleCommand.parameters().isEmpty()) {
-                cb.add("\n// Assign  parameter values from remote client or paramBean\n");
+                cb.add("\n// Assign  parameter values\n");
                 cb.add("final var $N = $N.$N();\n",
                         PARAMS_VAR,
                         Interceptor.INVOCATION_CONTEXT_PARAM,
@@ -208,6 +211,9 @@ public class TeleInterceptorGenerator {
             int paramInd = -1;
             for (TeleParameterElement param : teleCommand.parameters()) {
                 paramInd++;
+                if (param.localParam()) {
+                    continue;
+                }
                 CodeBlock value = generateParamRetrieving(param, cb);
                 cb.add("$N[$L] = ", PARAMS_VAR, paramInd);
                 cb.add(value);
