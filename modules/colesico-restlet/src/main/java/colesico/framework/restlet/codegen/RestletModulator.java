@@ -79,7 +79,9 @@ public final class RestletModulator extends RoutesModulator {
     protected RouterTeleServiceElement createTeleService(ServiceElement serviceElm) {
         RouterTeleServiceElement teleFacade = super.createTeleService(serviceElm);
         // Enable  param beans
-        teleFacade.setParamBeans(true);
+        teleFacade.setSupportParamBeans(true);
+        // Enable param aggregates
+        teleFacade.setSupportParamAggregates(true);
         return teleFacade;
     }
 

@@ -119,7 +119,7 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
 
         if (beanAnn != null || methodBeanAnn != null) {
             // Check bean params support
-            if (!teleCommand.parentTeleService().paramBeans()) {
+            if (!teleCommand.parentTeleService().supportParamBeans()) {
                 throw CodegenException.of()
                         .message("Bean parameters not supported by tele-facade " + teleCommand.parentTeleService().teleType().getCanonicalName())
                         .element(parameter.unwrap())
@@ -130,9 +130,9 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
 
         if (aggregateAnn != null || methodAggregateAnn != null) {
             // Check combined params support
-            if (!teleCommand.parentTeleService().aggregates()) {
+            if (!teleCommand.parentTeleService().supportParamAggregates()) {
                 throw CodegenException.of()
-                        .message("Combined parameters not supported by tele-facade " + teleCommand.parentTeleService().teleType().getCanonicalName())
+                        .message("Aggregate parameters not supported by tele-facade " + teleCommand.parentTeleService().teleType().getCanonicalName())
                         .element(parameter.unwrap())
                         .build();
             }

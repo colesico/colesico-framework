@@ -17,6 +17,7 @@
 package colesico.framework.weblet.codegen;
 
 import colesico.framework.assist.codegen.model.ClassType;
+import colesico.framework.httprouter.codegen.RouterTeleServiceElement;
 import colesico.framework.httprouter.codegen.RoutesModulator;
 import colesico.framework.service.codegen.assist.ServiceCodegenUtils;
 import colesico.framework.service.codegen.model.*;
@@ -69,6 +70,14 @@ public final class WebletModulator extends RoutesModulator {
     @Override
     public Set<Class<? extends Annotation>> serviceAnnotations() {
         return Set.of(Weblet.class);
+    }
+
+    @Override
+    protected RouterTeleServiceElement createTeleService(ServiceElement serviceElm) {
+        RouterTeleServiceElement teleFacade = super.createTeleService(serviceElm);
+        // Enable param aggregates
+        teleFacade.setSupportParamAggregates(true);
+        return teleFacade;
     }
 
     @Override

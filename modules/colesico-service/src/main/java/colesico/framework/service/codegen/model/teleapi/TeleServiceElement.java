@@ -84,14 +84,14 @@ public class TeleServiceElement {
      *
      * @see BeanField
      */
-    private Boolean paramBeans = false;
+    private Boolean supportParamBeans = false;
 
     /**
      * Aggregates support enabled
      *
      * @see Aggregate
      */
-    private Boolean aggregates = false;
+    private Boolean supportParamAggregates = false;
 
 
     /**
@@ -219,20 +219,20 @@ public class TeleServiceElement {
         this.parentService = parentService;
     }
 
-    public Boolean paramBeans() {
-        return paramBeans;
+    public Boolean supportParamBeans() {
+        return supportParamBeans;
     }
 
-    public Boolean aggregates() {
-        return aggregates;
+    public Boolean supportParamAggregates() {
+        return supportParamAggregates;
     }
 
-    public void setParamBeans(Boolean paramBeans) {
-        this.paramBeans = paramBeans;
+    public void setSupportParamBeans(Boolean supportParamBeans) {
+        this.supportParamBeans = supportParamBeans;
     }
 
-    public void setAggregates(Boolean aggregates) {
-        this.aggregates = aggregates;
+    public void setSupportParamAggregates(Boolean supportParamAggregates) {
+        this.supportParamAggregates = supportParamAggregates;
     }
 
     public TeleBeansPackElement paramBeansPack() {
