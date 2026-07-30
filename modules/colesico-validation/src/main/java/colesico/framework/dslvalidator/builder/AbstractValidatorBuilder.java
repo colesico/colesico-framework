@@ -28,15 +28,15 @@ import java.util.function.Predicate;
 abstract public class AbstractValidatorBuilder extends ValidationFlowBuilder {
 
 
-    public AbstractValidatorBuilder(ValidatorMessages vrMessages) {
-        super(vrMessages);
+    public AbstractValidatorBuilder(ValidatorMessages messages) {
+        super(messages);
     }
 
     /**
      * Verify value exists (string is not blank, collection is not empty, etc)
      */
     protected <V> Command<V> required() {
-        return new RequiredVerifier<>(msg);
+        return new RequiredVerifier<>(messages);
     }
 
     /**
@@ -66,7 +66,7 @@ abstract public class AbstractValidatorBuilder extends ValidationFlowBuilder {
     protected final Command<String> length(final Integer min,
                                            final Integer max) {
 
-        return new LengthVerifier(min, max, msg);
+        return new LengthVerifier(min, max, messages);
     }
 
     /**
@@ -76,16 +76,16 @@ abstract public class AbstractValidatorBuilder extends ValidationFlowBuilder {
                                                            final Number max,
                                                            final boolean includeEndpoints) {
 
-        return new IntervalVerifier<>(min, max, includeEndpoints, msg);
+        return new IntervalVerifier<>(min, max, includeEndpoints, messages);
     }
 
     protected final <V extends Number> Command<V> interval(final Number min,
                                                            final Number max) {
-        return new IntervalVerifier<>(min, max, true, msg);
+        return new IntervalVerifier<>(min, max, true, messages);
     }
 
     protected final <V extends Number> Command<V> positive() {
-        return new PositiveVerifier<>(msg);
+        return new PositiveVerifier<>(messages);
     }
 
     /**
@@ -95,14 +95,14 @@ abstract public class AbstractValidatorBuilder extends ValidationFlowBuilder {
                                         final Number max,
                                         final boolean includeEndpoints) {
 
-        return new SizeVerifier<>(min, max, includeEndpoints, msg);
+        return new SizeVerifier<>(min, max, includeEndpoints, messages);
     }
 
     /**
      * Verify date format
      */
     protected final Command<String> dateFormat(final String format) {
-        return new DateFormatVerifier(format, msg);
+        return new DateFormatVerifier(format, messages);
     }
 
 }

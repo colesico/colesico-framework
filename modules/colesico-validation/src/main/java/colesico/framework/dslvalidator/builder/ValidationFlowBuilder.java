@@ -32,10 +32,10 @@ abstract public class ValidationFlowBuilder {
 
     public static final String MAP_METHOD = "map";
 
-    protected final ValidatorMessages msg;
+    protected final ValidatorMessages messages;
 
-    public ValidationFlowBuilder(ValidatorMessages msg) {
-        this.msg = msg;
+    public ValidationFlowBuilder(ValidatorMessages messages) {
+        this.messages = messages;
     }
 
     /**
@@ -55,14 +55,14 @@ abstract public class ValidationFlowBuilder {
     @SafeVarargs
     protected final <V> DSLValidator<V> validator(final String subject, final Command<V>... commands) {
         SeriesIterator<V> seriesIterator = new SeriesIterator<>(commands);
-        MandatoryExecutor<V> mandatoryExecutor = new MandatoryExecutor<>(msg, seriesIterator);
+        MandatoryExecutor<V> mandatoryExecutor = new MandatoryExecutor<>(messages, seriesIterator);
         return new DSLValidator<>(subject, mandatoryExecutor);
     }
 
     @SafeVarargs
     protected final <V> DSLValidator<V> validator(final Command<V>... commands) {
         SeriesIterator<V> seriesIterator = new SeriesIterator<>(commands);
-        MandatoryExecutor<V> mandatoryExecutor = new MandatoryExecutor<>(msg, seriesIterator);
+        MandatoryExecutor<V> mandatoryExecutor = new MandatoryExecutor<>(messages, seriesIterator);
         return new DSLValidator<>(mandatoryExecutor);
     }
 
@@ -110,7 +110,7 @@ abstract public class ValidationFlowBuilder {
     @SafeVarargs
     protected final <V> MandatoryExecutor<V> mandatory(final Command<V>... commands) {
         ChainIterator<V> chainIterator = new ChainIterator<>(commands);
-        return new MandatoryExecutor<>(msg, chainIterator);
+        return new MandatoryExecutor<>(messages, chainIterator);
     }
 
     /**
