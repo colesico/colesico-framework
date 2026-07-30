@@ -131,7 +131,7 @@ public class TeleInterceptorGenerator {
         // ==== For aggregate
         if (parameter instanceof TeleAggregateElement aggregate) {
             final String aggVar = varNames.nextName(aggregate.originVariable().name());
-            invokerBuilder.add("\n// Init aggregate\n");
+            invokerBuilder.add("\n// Init parameters aggregate\n");
             TypeMirror paramType = aggregate.originVariable().originType();
             invokerBuilder.addStatement("$T $N = new $T()",
                     TypeName.get(paramType),
