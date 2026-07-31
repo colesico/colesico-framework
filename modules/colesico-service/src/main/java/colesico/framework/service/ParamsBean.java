@@ -12,5 +12,5 @@ import java.lang.annotation.*;
 @Target({ElementType.PARAMETER, ElementType.METHOD, ElementType.FIELD})
 @Inherited
 @Documented
-public @interface ParamBean {
+public @interface ParamsBean {
 }

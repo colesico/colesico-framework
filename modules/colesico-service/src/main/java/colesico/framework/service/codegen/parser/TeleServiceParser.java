@@ -20,7 +20,7 @@ import colesico.framework.assist.codegen.CodegenException;
 import colesico.framework.assist.codegen.FrameworkAbstractParser;
 import colesico.framework.assist.codegen.model.*;
 import colesico.framework.service.BeanField;
-import colesico.framework.service.ParamBean;
+import colesico.framework.service.ParamsBean;
 import colesico.framework.service.InjectParam;
 import colesico.framework.service.LocalParam;
 import colesico.framework.service.codegen.model.*;
@@ -75,8 +75,8 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
 
     private TeleParameterElement parseAggregationParameter(TeleCommandElement teleCommand,
                                                          VarElement parameter,
-                                                         AnnotationAssist<ParamBean> aggregationAnn,
-                                                         AnnotationAssist<ParamBean> methodAggregationAnn) {
+                                                         AnnotationAssist<ParamsBean> aggregationAnn,
+                                                         AnnotationAssist<ParamsBean> methodAggregationAnn) {
 
         TeleAggregationElement aggregationParam = new TeleAggregationElement(teleCommand, parameter);
 
@@ -117,8 +117,8 @@ public final class TeleServiceParser extends FrameworkAbstractParser {
         AnnotationAssist<BeanField> beanAnn = parameter.annotation(BeanField.class);
         AnnotationAssist<BeanField> methodBeanAnn = teleCommand.serviceMethod().originMethod().annotation(BeanField.class);
 
-        AnnotationAssist<ParamBean> aggregationAnn = parameter.annotation(ParamBean.class);
-        AnnotationAssist<ParamBean> methodAggregationAnn = teleCommand.serviceMethod().originMethod().annotation(ParamBean.class);
+        AnnotationAssist<ParamsBean> aggregationAnn = parameter.annotation(ParamsBean.class);
+        AnnotationAssist<ParamsBean> methodAggregationAnn = teleCommand.serviceMethod().originMethod().annotation(ParamsBean.class);
 
         AnnotationAssist<InjectParam> injectParamAnn = parameter.annotation(InjectParam.class);
 

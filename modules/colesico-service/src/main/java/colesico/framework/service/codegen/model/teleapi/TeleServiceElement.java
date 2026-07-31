@@ -20,7 +20,7 @@ package colesico.framework.service.codegen.model.teleapi;
 import colesico.framework.assist.Elements;
 import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.service.ParamBean;
+import colesico.framework.service.ParamsBean;
 import colesico.framework.service.BeanField;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.teleapi.TeleFacade;
@@ -89,7 +89,7 @@ public class TeleServiceElement {
     /**
      * Param aggregation beans support enabled
      *
-     * @see ParamBean
+     * @see ParamsBean
      */
     private Boolean supportParamAggregations = false;
 

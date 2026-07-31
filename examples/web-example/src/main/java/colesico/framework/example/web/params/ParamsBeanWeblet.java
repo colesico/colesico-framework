@@ -1,13 +1,12 @@
 package colesico.framework.example.web.params;
 
-import colesico.framework.service.ParamBean;
+import colesico.framework.service.ParamsBean;
 import colesico.framework.weblet.Weblet;
 
 @Weblet
-public class AggregateParams {
+public class ParamsBeanWeblet {
 
-
-    public String action(@ParamBean Form formData) {
+    public String action(@ParamsBean Form formData) {
         return formData.id + formData.name;
     }
 
@@ -15,7 +14,7 @@ public class AggregateParams {
         private Long id;
         private String name;
 
-        @ParamBean
+        @ParamsBean
         private Nested nested;
 
         public Long getId() {

@@ -1,6 +1,7 @@
 package colesico.framework.service.codegen.model.teleapi;
 
 import colesico.framework.assist.codegen.model.VarElement;
+import colesico.framework.service.ParamsBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 /**
  * Represent  parameter aggregations
  *
- * @see colesico.framework.service.ParamBean
+ * @see ParamsBean
  */
 public class TeleAggregationElement extends TeleParameterElement {
 
