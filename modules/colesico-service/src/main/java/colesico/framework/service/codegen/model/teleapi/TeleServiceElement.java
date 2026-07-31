@@ -20,7 +20,7 @@ package colesico.framework.service.codegen.model.teleapi;
 import colesico.framework.assist.Elements;
 import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.CodegenException;
-import colesico.framework.service.Aggregate;
+import colesico.framework.service.ParamBean;
 import colesico.framework.service.BeanField;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.teleapi.TeleFacade;
@@ -80,24 +80,24 @@ public class TeleServiceElement {
     private final IocQualifier iocQualifier;
 
     /**
-     * Param beans support enabled
+     * Param composition bean support enabled
      *
      * @see BeanField
      */
-    private Boolean supportParamBeans = false;
+    private Boolean supportParamCompositions = false;
 
     /**
-     * Aggregates support enabled
+     * Param aggregation beans support enabled
      *
-     * @see Aggregate
+     * @see ParamBean
      */
-    private Boolean supportParamAggregates = false;
+    private Boolean supportParamAggregations = false;
 
 
     /**
      * Tele-facade associated param beans
      */
-    private final TeleBeansPackElement paramBeansPack;
+    private final TeleCompositionsPackElement compositionsPack;
 
     /**
      * Tele schemas for the facade
@@ -120,7 +120,7 @@ public class TeleServiceElement {
         this.writeOptionsClass = writeOptionsClass;
         this.iocQualifier = iocQualifier;
 
-        this.paramBeansPack = new TeleBeansPackElement(this);
+        this.compositionsPack = new TeleCompositionsPackElement(this);
     }
 
     /**
@@ -219,24 +219,24 @@ public class TeleServiceElement {
         this.parentService = parentService;
     }
 
-    public Boolean supportParamBeans() {
-        return supportParamBeans;
+    public Boolean supportParamCompositions() {
+        return supportParamCompositions;
     }
 
-    public Boolean supportParamAggregates() {
-        return supportParamAggregates;
+    public Boolean supportParamAggregations() {
+        return supportParamAggregations;
     }
 
-    public void setSupportParamBeans(Boolean supportParamBeans) {
-        this.supportParamBeans = supportParamBeans;
+    public void setSupportParamCompositions(Boolean supportParamCompositions) {
+        this.supportParamCompositions = supportParamCompositions;
     }
 
-    public void setSupportParamAggregates(Boolean supportParamAggregates) {
-        this.supportParamAggregates = supportParamAggregates;
+    public void setSupportParamAggregations(Boolean supportParamAggregations) {
+        this.supportParamAggregations = supportParamAggregations;
     }
 
-    public TeleBeansPackElement paramBeansPack() {
-        return paramBeansPack;
+    public TeleCompositionsPackElement compositionsPack() {
+        return compositionsPack;
     }
 
     public Class<? extends ReadOptions> readOptionsClass() {

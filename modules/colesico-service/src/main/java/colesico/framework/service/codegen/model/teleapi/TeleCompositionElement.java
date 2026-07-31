@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represent bean that is read from a data-port as single object
+ * Represent composition bean that is read from a data-port as single object
  * and its field values then assigning to the method parameters on invocation.
  *
  * @see BeanField
  */
-public class TeleBeanElement implements TeleReadableElement {
+public class TeleCompositionElement implements TeleReadableElement {
 
-    private static final String PARAM_BEAN_VAR_SUFFIX = "ParamBean";
+    private static final String COMPOSITION_VAR_SUFFIX = "ParamBean";
 
     /**
      * Parent tele-command ref
@@ -24,53 +24,53 @@ public class TeleBeanElement implements TeleReadableElement {
     /**
      * Pack ref
      */
-    protected TeleBeansPackElement parentPack;
+    protected TeleCompositionsPackElement parentPack;
 
     /**
-     * Bean name
+     * Composition bean name
      * Used for building bean class name
      */
     protected final String name;
 
-    protected final List<TeleBeanFieldElement> fields = new ArrayList<>();
+    protected final List<TeleCompositionFieldElement> fields = new ArrayList<>();
 
     /**
      * Read bean spec
      */
     protected TeleReadElement readSpec;
 
-    public TeleBeanElement(TeleCommandElement parentTeleCommand, String name) {
+    public TeleCompositionElement(TeleCommandElement parentTeleCommand, String name) {
         this.parentTeleCommand = parentTeleCommand;
         this.name = name;
     }
 
-    public void addField(TeleBeanFieldElement field) {
+    public void addField(TeleCompositionFieldElement field) {
         fields.add(field);
         field.setParentBean(this);
     }
 
-    public String paramBeanClassSimpleName() {
+    public String compositionClassSimpleName() {
         return StringUtils.firstCharToUpperCase(parentTeleCommand.targetMethodName()) + StringUtils.firstCharToUpperCase(name);
     }
 
-    public String paramBeanClassName() {
+    public String compositionClassName() {
         return parentPack.parentTeleFacade().parentService().originClass().packageName() + '.' +
                 parentPack.packClassSimpleName() + '.' +
-                paramBeanClassSimpleName();
+                compositionClassSimpleName();
     }
 
     /**
-     * ParamBean variable name
+     * Composition variable name
      */
-    public String paramBeanVarName() {
-        return StringUtils.firstCharToLowerCase(name) + PARAM_BEAN_VAR_SUFFIX;
+    public String compositionVarName() {
+        return StringUtils.firstCharToLowerCase(name) + COMPOSITION_VAR_SUFFIX;
     }
 
-    public TeleBeansPackElement parentPack() {
+    public TeleCompositionsPackElement parentPack() {
         return parentPack;
     }
 
-    public void setParentPack(TeleBeansPackElement parentPack) {
+    public void setParentPack(TeleCompositionsPackElement parentPack) {
         this.parentPack = parentPack;
     }
 
@@ -78,7 +78,7 @@ public class TeleBeanElement implements TeleReadableElement {
         return name;
     }
 
-    public List<TeleBeanFieldElement> fields() {
+    public List<TeleCompositionFieldElement> fields() {
         return fields;
     }
 

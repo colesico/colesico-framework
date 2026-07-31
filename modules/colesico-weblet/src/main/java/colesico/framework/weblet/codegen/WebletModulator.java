@@ -76,7 +76,7 @@ public final class WebletModulator extends RoutesModulator {
     protected RouterTeleServiceElement createTeleService(ServiceElement serviceElm) {
         RouterTeleServiceElement teleFacade = super.createTeleService(serviceElm);
         // Enable param aggregates
-        teleFacade.setSupportParamAggregates(true);
+        teleFacade.setSupportParamAggregations(true);
         return teleFacade;
     }
 

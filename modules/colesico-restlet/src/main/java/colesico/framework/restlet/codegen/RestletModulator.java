@@ -79,9 +79,9 @@ public final class RestletModulator extends RoutesModulator {
     protected RouterTeleServiceElement createTeleService(ServiceElement serviceElm) {
         RouterTeleServiceElement teleFacade = super.createTeleService(serviceElm);
         // Enable  param beans
-        teleFacade.setSupportParamBeans(true);
+        teleFacade.setSupportParamCompositions(true);
         // Enable param aggregates
-        teleFacade.setSupportParamAggregates(true);
+        teleFacade.setSupportParamAggregations(true);
         return teleFacade;
     }
 
@@ -151,7 +151,7 @@ public final class RestletModulator extends RoutesModulator {
     @Override
     public void onTeleParameterParsed(TeleParameterElement teleParam) {
         super.onTeleParameterParsed(teleParam);
-        if (teleParam instanceof TeleBeanFieldElement p) {
+        if (teleParam instanceof TeleCompositionFieldElement p) {
             AnnotationAssist<ParamName> paramNameAnn = p.originVariable().annotation(ParamName.class);
             if (paramNameAnn == null) {
                 return;

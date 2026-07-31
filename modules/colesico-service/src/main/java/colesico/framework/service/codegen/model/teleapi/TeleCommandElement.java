@@ -48,11 +48,11 @@ public final class TeleCommandElement {
     private final List<TeleParameterElement> parameters = new ArrayList<>();
 
     /**
-     * Parameter paramBeans.
+     * Compositions.
      * <p>
-     * paramBean name -> paramBean element
+     * composition bean name -> composition element
      */
-    private final Map<String, TeleBeanElement> paramBeans = new HashMap<>();
+    private final Map<String, TeleCompositionElement> compositions = new HashMap<>();
 
     /**
      * Tele-method index within tele-facade
@@ -106,14 +106,14 @@ public final class TeleCommandElement {
         return "" + StringUtils.firstCharToLowerCase(serviceMethod.name()) + "I" + index;
     }
 
-    public TeleBeanElement getOrCreateParamBean(String name) {
-        TeleBeanElement paramBean = paramBeans.get(name);
-        if (paramBean == null) {
-            paramBean = new TeleBeanElement(this, name);
-            paramBeans.put(name, paramBean);
-            parentTeleService.paramBeansPack().addParamBean(paramBean);
+    public TeleCompositionElement getOrCreateComposition(String name) {
+        TeleCompositionElement composition = compositions.get(name);
+        if (composition == null) {
+            composition = new TeleCompositionElement(this, name);
+            compositions.put(name, composition);
+            parentTeleService.compositionsPack().addComposition(composition);
         }
-        return paramBean;
+        return composition;
     }
 
     public ServiceMethodElement serviceMethod() {
@@ -140,8 +140,8 @@ public final class TeleCommandElement {
         return index;
     }
 
-    public Map<String, TeleBeanElement> paramBeans() {
-        return paramBeans;
+    public Map<String, TeleCompositionElement> compositions() {
+        return compositions;
     }
 
     @Override

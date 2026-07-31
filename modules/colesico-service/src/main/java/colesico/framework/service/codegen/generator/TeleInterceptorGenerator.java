@@ -75,26 +75,26 @@ public class TeleInterceptorGenerator {
         classBuilder.addMethod(mb.build());
     }
 
-    protected CodeBlock generateParamBeans(TeleCommandElement teleCommand) {
+    protected CodeBlock generateCompositions(TeleCommandElement teleCommand) {
         CodeBlock.Builder cb = CodeBlock.builder();
-        for (TeleBeanElement paramBean : teleCommand.paramBeans().values()) {
-            if (paramBean.readSpec() == null) {
+        for (TeleCompositionElement composition : teleCommand.compositions().values()) {
+            if (composition.readSpec() == null) {
                 throw CodegenException.of()
                         .message("Param bean read specification is not defined")
                         .element(teleCommand.serviceMethod().originMethod())
                         .build();
             }
-            // Read param bean: ParamBeanType paramBean = dataPort.read(...)
+            // Read composition: CompositionType composition = dataPort.read(...)
             cb.add("\n// Read param bean \n");
             cb.add("final $T $N = $N.$N(",
-                    ClassName.bestGuess(paramBean.paramBeanClassName()),
-                    paramBean.paramBeanVarName(),
+                    ClassName.bestGuess(composition.compositionClassName()),
+                    composition.compositionVarName(),
                     DATA_PORT_VAR, DataPort.READ_METHOD);
-            var optionsCode = paramBean.readSpec().optionsCode();
+            var optionsCode = composition.readSpec().optionsCode();
             if (optionsCode != null) {
                 cb.add(optionsCode);
             } else {
-                cb.add(paramBean.readSpec().valueTypeCode());
+                cb.add(composition.readSpec().valueTypeCode());
             }
             cb.add(");\n");
         }
@@ -121,24 +121,24 @@ public class TeleInterceptorGenerator {
 
         // ==== For param bean filed =============
 
-        if (parameter instanceof TeleBeanFieldElement beanField) {
+        if (parameter instanceof TeleCompositionFieldElement beanField) {
             // paramBean.getFiled();
             CodeBlock.Builder cb = CodeBlock.builder();
-            cb.add("$N.$N()", beanField.parentBean().paramBeanVarName(), beanField.getterName());
+            cb.add("$N.$N()", beanField.parentBean().compositionVarName(), beanField.getterName());
             return cb.build();
         }
 
-        // ==== For aggregate
-        if (parameter instanceof TeleAggregateElement aggregate) {
-            final String aggVar = varNames.nextName(aggregate.originVariable().name());
-            invokerBuilder.add("\n// Init parameters aggregate\n");
-            TypeMirror paramType = aggregate.originVariable().originType();
+        // ==== For aggregation
+        if (parameter instanceof TeleAggregationElement aggregation) {
+            final String aggVar = varNames.nextName(aggregation.originVariable().name());
+            invokerBuilder.add("\n// Init parameters aggregation\n");
+            TypeMirror paramType = aggregation.originVariable().originType();
             invokerBuilder.addStatement("$T $N = new $T()",
                     TypeName.get(paramType),
                     aggVar, TypeName.get(paramType));
 
-            // Generate aggregate fields
-            for (var field : aggregate.fields()) {
+            // Generate aggregation fields
+            for (var field : aggregation.fields()) {
                 if (field.localParam()) {
                     continue;
                 }
@@ -197,7 +197,7 @@ public class TeleInterceptorGenerator {
             );
 
             // ============= Param beans retrieving from data port
-            cb.add(generateParamBeans(teleCommand));
+            cb.add(generateCompositions(teleCommand));
 
             // ============= Params retrieving (default from data port)
             if (!teleCommand.parameters().isEmpty()) {

@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  * Specifies that the param should not be read from data port
  *
- * @see Aggregate
+ * @see ParamBean
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})

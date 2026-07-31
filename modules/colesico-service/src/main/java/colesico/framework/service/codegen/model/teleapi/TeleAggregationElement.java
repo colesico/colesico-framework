@@ -7,12 +7,14 @@ import java.util.List;
 
 /**
  * Represent  parameter aggregations
+ *
+ * @see colesico.framework.service.ParamBean
  */
-public class TeleAggregateElement extends TeleParameterElement {
+public class TeleAggregationElement extends TeleParameterElement {
 
     private final List<TeleParameterElement> fields = new ArrayList<>();
 
-    public TeleAggregateElement(TeleCommandElement parentTeleCommand, VarElement originParameter) {
+    public TeleAggregationElement(TeleCommandElement parentTeleCommand, VarElement originParameter) {
         super(parentTeleCommand, originParameter);
     }
 

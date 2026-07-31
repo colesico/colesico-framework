@@ -3,26 +3,25 @@ package colesico.framework.service.codegen.model.teleapi;
 import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.model.VarElement;
 import colesico.framework.service.BeanField;
-import colesico.framework.service.codegen.model.ServiceParameterElement;
 
 /**
- * Represents field of param bean and corresponding method parameter
+ * Represents field of param composition bean and corresponding method parameter
  *
  * @see BeanField
  */
-public class TeleBeanFieldElement extends TeleParameterElement {
+public class TeleCompositionFieldElement extends TeleParameterElement {
 
     /**
      * Parent bean reference
      */
-    private TeleBeanElement parentBean;
+    private TeleCompositionElement parentBean;
 
     /**
      * Bean field name
      */
     private String name;
 
-    public TeleBeanFieldElement(TeleCommandElement parentTeleCommand, VarElement originParameter) {
+    public TeleCompositionFieldElement(TeleCommandElement parentTeleCommand, VarElement originParameter) {
         super(parentTeleCommand, originParameter);
         this.name = name;
     }
@@ -39,11 +38,11 @@ public class TeleBeanFieldElement extends TeleParameterElement {
         return "set" + StringUtils.firstCharToUpperCase(name());
     }
 
-    public TeleBeanElement parentBean() {
+    public TeleCompositionElement parentBean() {
         return parentBean;
     }
 
-    public void setParentBean(TeleBeanElement parentBean) {
+    public void setParentBean(TeleCompositionElement parentBean) {
         this.parentBean = parentBean;
     }
 

@@ -22,8 +22,8 @@ public final class ServiceCodegenUtils {
         CodegenUtils.generateTypePick(paramType, cb);
     }
 
-    public static void generateTeleParamBeanType(TeleBeanElement teleParamBean, CodeBlock.Builder cb) {
-        TypeName paramBeanTypeName = ClassName.bestGuess(teleParamBean.paramBeanClassName());
-        cb.add("$T.class", paramBeanTypeName);
+    public static void generateCompositionType(TeleCompositionElement composition, CodeBlock.Builder cb) {
+        TypeName compositionTypeName = ClassName.bestGuess(composition.compositionClassName());
+        cb.add("$T.class", compositionTypeName);
     }
 }
