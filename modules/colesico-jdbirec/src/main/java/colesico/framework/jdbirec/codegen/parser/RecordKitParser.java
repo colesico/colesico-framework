@@ -379,6 +379,13 @@ public class RecordKitParser extends RecordKitHelpers {
 
         AnnotationAssist<Record> recordAnn = recordType.asClassElement().annotation(Record.class);
 
+        if (recordAnn == null){
+            throw CodegenException.of()
+                    .message("@Record annotation is not specified on record class")
+                    .element(recordType.asClassElement())
+                    .build();
+        }
+
         String tableName = StringUtils.trim(recordAnn.unwrap().table());
         if (StringUtils.isBlank(tableName)) {
             throw CodegenException.of()
