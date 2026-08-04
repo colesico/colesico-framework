@@ -125,11 +125,11 @@ public class RouteTrie<V> {
     }
 
 
-    public static class RouteParameterMismutch extends RouterException {
+    public static class RouteParameterMismatch extends RouterException {
         private final String parameter;
 
-        public RouteParameterMismutch(String parameter, String existingParameter) {
-            super("Route parameter mismutch: " + parameter + ". It overrides the previously registered: " + existingParameter);
+        public RouteParameterMismatch(String parameter, String existingParameter) {
+            super("Route parameter mismatch: " + parameter + ". It overrides the previously registered: " + existingParameter);
             this.parameter = parameter;
         }
 
@@ -185,14 +185,13 @@ public class RouteTrie<V> {
          * Add child node as a parameter
          *
          * @param name
-         * @return
          */
         public Node<V> addParameter(String name) {
             if (this.parameter == null) {
                 this.parameter = new Node<>(this, name, true);
             } else {
                 if (!this.parameter.name().equals(name)) {
-                    throw new RouteParameterMismutch(name, this.parameter.name());
+                    throw new RouteParameterMismatch(name, this.parameter.name());
                 }
             }
             return this.parameter;
