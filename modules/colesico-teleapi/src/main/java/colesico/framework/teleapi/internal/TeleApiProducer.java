@@ -22,7 +22,6 @@ import colesico.framework.ioc.scope.TaskScope;
 import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.teleapi.dataport.TeleFactory;
-import colesico.framework.teleapi.TeleException;
 import colesico.framework.teleapi.assist.SimpleDataPort;
 
 /**
@@ -33,16 +32,14 @@ import colesico.framework.teleapi.assist.SimpleDataPort;
 @Produce(SimpleDataPort.class)
 public class TeleApiProducer {
 
-    protected static final String NO_DATA_PORT_MSG = "TeleAPI: Data port for the active thread is not provided";
-
     /**
      * Produces data port
      */
     @Unscoped
-    public DataPort dataPort(TaskScope scope) {
+    public DataPort dataPort(TaskScope scope, SimpleDataPort defaultDataPort) {
         DataPort port = scope.get(DataPort.SCOPE_KEY);
         if (port == null) {
-            throw new TeleException(NO_DATA_PORT_MSG);
+            return defaultDataPort.forScope();
         }
         return port;
     }

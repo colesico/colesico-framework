@@ -45,6 +45,11 @@ public class SimpleDataPort implements DataPort<SimpleDataPort.ReadOptions, Simp
         });
     }
 
+    public SimpleDataPort forScope(){
+        taskScope.put(DataPort.SCOPE_KEY, this);
+        return this;
+    }
+
     public Map<String, Object> values() {
         return new HashMap<>(values);
     }
