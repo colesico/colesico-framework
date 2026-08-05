@@ -129,7 +129,6 @@
                 <module>modules/colesico-resource</module>
                 <module>modules/colesico-teleapi</module>
                 <module>modules/colesico-service</module>
-                <module>modules/colesico-security</module>
                 <module>modules/colesico-profile</module>
                 <module>modules/colesico-translation</module>
                 <module>modules/colesico-validation</module>
@@ -137,6 +136,10 @@
 
                 <!-- Logging -->
                 <module>modules/colesico-slf4j</module>
+
+                <!-- Security -->
+                <module>modules/colesico-security</module>
+                <module>modules/colesico-jjwt</module>
 
                 <!-- Transactions -->
                 <module>modules/colesico-transaction</module>
