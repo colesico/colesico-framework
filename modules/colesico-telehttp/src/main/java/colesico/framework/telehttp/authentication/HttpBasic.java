@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 @Singleton
 public class HttpBasic implements AuthenticationSource<BasicAuthenticationRequest, BasicAuthenticationChallenge> {
 
-    private static final Pattern BASIC_AUTH_PATTERN =
+    protected static final Pattern BASIC_AUTH_PATTERN =
             Pattern.compile("^Basic\\s+(.+)$", Pattern.CASE_INSENSITIVE);
 
     public static final String AUTHORIZATION_HEADER = "authorization";
@@ -71,7 +71,9 @@ public class HttpBasic implements AuthenticationSource<BasicAuthenticationReques
 
     @Override
     public <E> void unauthenticated(BasicAuthenticationRequest request, E error) {
-
+        httpContext.get().response()
+                .setStatus(401)
+                .send("401 Unauthorized. Authentication required");
     }
 
     @Override

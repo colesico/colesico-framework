@@ -1,9 +1,11 @@
 module colesico.framework.jjwt {
 
     requires transitive colesico.framework.config;
+    requires transitive colesico.framework.security;
+    requires transitive colesico.framework.http;
+    requires transitive jjwt.api;
 
     requires org.slf4j;
-    requires colesico.framework.security;
 
     // API
     exports colesico.framework.jjwt;

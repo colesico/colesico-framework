@@ -41,7 +41,7 @@ public @interface Authentication {
     /**
      * Determines the execution strategy for authentication.
      */
-    Strategy strategy() default Strategy.STRICT;
+    Strategy strategy() default Strategy.IF_NECESSARY;
 
     /**
      * Strategies defining how and when authentication is triggered.

@@ -47,9 +47,27 @@
             <artifactId>colesico-security</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>net.colesico.framework</groupId>
+            <artifactId>colesico-http</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- JJWT -->
-      
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-gson</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
 
         <!-- Tests -->
         <dependency>

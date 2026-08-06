@@ -3,6 +3,7 @@ package colesico.framework.security.authentication;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.NamedKey;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -39,9 +40,11 @@ public interface AuthenticationRequest {
     }
 
     /**
-     *  Source claim helper
+     * Source claim helper
      */
-    static Map<String,Object> sourceClaims(Class<? extends AuthenticationSource> sourceClass){
-        return Map.of(SOURCE_CLAIM,sourceClass);
+    static Map<String, Object> sourceClaims(Class<? extends AuthenticationSource> sourceClass) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(SOURCE_CLAIM, sourceClass);
+        return claims;
     }
 }

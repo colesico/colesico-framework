@@ -84,6 +84,9 @@
         <slf4j.version>2.0.18</slf4j.version>
         <tinylog.verion>2.7.0</tinylog.verion>
 
+        <!-- Security -->
+        <jjwt.version>0.13.0</jjwt.version>
+
         <!-- DB -->
         <hikaricp.version>7.1.0</hikaricp.version>
         <jdbi3.version>3.54.0</jdbi3.version>
