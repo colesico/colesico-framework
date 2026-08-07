@@ -10,6 +10,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 @Singleton
 public class JwtTokenUtils {
@@ -50,6 +51,7 @@ public class JwtTokenUtils {
                 .claims(claims)
                 .claim(TOKEN_TYPE_CLAIM, REFRESH_TOKEN_TYPE)
                 .issuedAt(new Date())
+                .id(UUID.randomUUID().toString())
                 .expiration(new Date(System.currentTimeMillis() + refreshTtl))
                 .signWith(refreshKey)
                 .compact();

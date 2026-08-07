@@ -6,6 +6,7 @@ module colesico.framework.jjwt {
     requires transitive jjwt.api;
 
     requires org.slf4j;
+    requires com.google.gson;
 
     // API
     exports colesico.framework.jjwt;

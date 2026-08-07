@@ -15,8 +15,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static colesico.framework.security.Identity.AUTHENTICATOR_CLAIM;
-import static colesico.framework.security.Identity.SOURCE_CLAIM;
+import static colesico.framework.security.Identity.*;
 
 public class AuthenticationRegistryImpl implements AuthenticationRegistry {
 
@@ -50,8 +49,8 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
     }
 
     @Override
-    public Optional<AuthenticationSource<?, ?>> findAuthenticationSource(Identity<?> identity) {
-        var sourceClass = identity.claim(SOURCE_CLAIM, Class.class);
+    public Optional<AuthenticationSource<?, ?>> findAuthenticationCallback(Identity<?> identity) {
+        var sourceClass = identity.claim(CALLBACK_CLAIM, Class.class);
         if (sourceClass.isPresent()) {
             var source = ioc.instanceOrNull(sourceClass.get());
             return Optional.ofNullable((AuthenticationSource) source);

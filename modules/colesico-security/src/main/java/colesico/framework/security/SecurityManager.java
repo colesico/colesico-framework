@@ -34,6 +34,13 @@ import java.util.concurrent.Callable;
  */
 public interface SecurityManager {
 
+    AuthenticationResult<?> authenticate(AuthenticationRequest request, AuthenticationCallback callback);
+
+    default AuthenticationResult<?> authenticate(AuthenticationRequest request) {
+        return authenticate(request, new AuthenticationCallback() {
+        });
+    }
+
     /**
      * Attempts to authenticate a subject using the provided collection of {@link AuthenticationSource}s.
      * The first source that provides a valid {@link AuthenticationRequest} will be used for authentication.
@@ -50,7 +57,6 @@ public interface SecurityManager {
      * This is the standard way to trigger authentication in a scoped environment (e.g., during an HTTP request).
      */
     AuthenticationResult<?> authenticate();
-
 
     /**
      * Retrieves the current {@link Identity} from the active {@link IdentityContext}.

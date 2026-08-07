@@ -52,6 +52,14 @@
             <artifactId>colesico-http</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!-- Json parser -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
+
         <!-- JJWT -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

@@ -14,7 +14,7 @@ abstract public class JwtConfigPrototype {
     abstract public String refreshSecret();
 
     /**
-     * Access token time to live in milliseconds
+     * Access accessToken time to live in milliseconds
      * default 15 minutes
      */
     public long accessTtl() {
@@ -22,7 +22,7 @@ abstract public class JwtConfigPrototype {
     }
 
     /**
-     * Refresh token time to live in milliseconds
+     * Refresh accessToken time to live in milliseconds
      * default 7 days
      */
     public long refreshTtl() {

@@ -1,7 +1,5 @@
 package colesico.framework.security.authentication;
 
-import colesico.framework.security.Identity;
-
 /**
  * Represents a transport-level participant in the authentication process.
  * <p>
@@ -9,7 +7,8 @@ import colesico.framework.security.Identity;
  * communication protocols such as HTTP, gRPC, or Message Queues. It is responsible
  * for extracting credentials and handling protocol-specific responses.
  */
-public interface AuthenticationSource<R extends AuthenticationRequest, C extends AuthenticationChallenge> {
+public interface AuthenticationSource<R extends AuthenticationRequest>
+        extends AuthenticationCallback {
 
     /**
      * Extracts an {@link AuthenticationRequest} from the underlying transport.
@@ -18,44 +17,4 @@ public interface AuthenticationSource<R extends AuthenticationRequest, C extends
      * are present in this source.
      */
     R request();
-
-    /**
-     * Triggers a protocol-specific authentication challenge.
-     * <p>
-     * This is used for multi-step authentication (e.g., Digest, OAuth redirect,
-     * or Multi-Factor Authentication) to prompt the client for further information.
-     */
-    default void proceed(C challenge) {
-
-    }
-
-    /**
-     * Notifies the source that the subject has been successfully authenticated.
-     * <p>
-     * This allows the source to perform post-authentication actions, such as
-     * attaching the identity to a session or sending a success header.
-     */
-    default void authenticated(Identity<?> identity) {
-
-    }
-
-    /**
-     * Notifies the source of a failed authentication attempt.
-     * <p>
-     * Allows the source to react to the failure, for example, by clearing
-     * invalid credentials from the transport headers or logging the event.
-     */
-    default <E> void unauthenticated(R request, E error) {
-
-    }
-
-    /**
-     * Notifies the source that the subject has been logged out.
-     * <p>
-     * This is used to clear protocol-specific security data, such as
-     * invalidating a session cookie or clearing local security headers.
-     */
-    default void logout(Identity<?> identity) {
-
-    }
 }

@@ -54,6 +54,11 @@ public interface HttpResponse {
         return this;
     }
 
+    default HttpResponse setLocation(String location) {
+        addHeader("Location", location);
+        return this;
+    }
+
     /**
      * Response with bytes
      */

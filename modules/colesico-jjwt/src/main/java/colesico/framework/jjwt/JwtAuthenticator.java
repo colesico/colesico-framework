@@ -25,11 +25,11 @@ public class JwtAuthenticator implements Authenticator<JwtRequest, Authenticatio
     @Override
     public AuthenticationResult<AuthenticationChallenge> authenticate(JwtRequest request) {
         try {
-            Claims claims = tokenUtils.parseAccessToken(request.token());
+            Claims claims = tokenUtils.parseAccessToken(request.accessToken());
 
             var tokenType = claims.get(JwtTokenUtils.TOKEN_TYPE_CLAIM);
             if (!JwtTokenUtils.ACCESS_TOKEN_TYPE.equals(tokenType)) {
-                return AuthenticationResult.failure("Invalid token type: " + tokenType);
+                return AuthenticationResult.failure("Invalid accessToken type: " + tokenType);
             }
 
             Map<String, Object> identityClaims = new HashMap<>(claims);
@@ -37,7 +37,7 @@ public class JwtAuthenticator implements Authenticator<JwtRequest, Authenticatio
             Identity<?> identity = Identity.Default.of(claims.getSubject(), identityClaims);
             return AuthenticationResult.success(identity);
         } catch (ExpiredJwtException e) {
-            return AuthenticationResult.challenge(new JwtChallenge(JwtChallenge.Action.REFRESH_ACCESS_TOKEN));
+            return AuthenticationResult.challenge(JwtChallenge(JwtChallenge.Action.REFRESH_ACCESS_TOKEN));
         } catch (Exception e) {
             return AuthenticationResult.failure("InvalidToken");
         }

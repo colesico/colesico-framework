@@ -67,6 +67,58 @@ public class SecurityManagerImpl implements SecurityManager {
         }
     }
 
+    protected AuthenticationResult<?> doAuthenticate(AuthenticationRequest request, AuthenticationCallback callback) {
+
+        if (callback == null) {
+            throw new SecurityException("Authentication callback is null");
+
+        }
+        var authenticators = authRegistry.findAuthenticators(request);
+        if (authenticators.isEmpty()) {
+            throw new SecurityException("Appropriate authenticator not found for request '" + request + "'");
+        }
+
+        for (Authenticator authenticator : authenticators) {
+            var result = authenticator.authenticate(request);
+            if (result == null) {
+                throw new SecurityException("Null authentication result");
+            }
+
+            switch (result) {
+                case AuthenticationResult.Success success -> {
+                    var identity = success.identity();
+                    if (identity == null) {
+                        throw new SecurityException("Null Identity for success authentication");
+                    }
+                    identityContext.setIdentity(identity);
+                    callback.onSuccess(identity);
+                    return success;
+                }
+                case AuthenticationResult.Continuation<?> continuation -> {
+                    callback.onContinuation(continuation.challenge());
+                    return continuation;
+                }
+                case AuthenticationResult.Failure failure -> {
+                    callback.onFailure(request, failure.error());
+                    return failure;
+                }
+                // Skip
+                default -> {
+                    // nop - proceed to the next authenticator
+                }
+            }
+        }
+
+        return AuthenticationResult.failure("No success authentication");
+    }
+
+
+    @Override
+    public AuthenticationResult<?> authenticate(AuthenticationRequest request, AuthenticationCallback callback) {
+        identityContext.clear();
+        return doAuthenticate(request, callback);
+    }
+
     /**
      * Orchestrates the authentication process across provided sources and matching authenticators.
      */
@@ -81,43 +133,10 @@ public class SecurityManagerImpl implements SecurityManager {
             if (request == null) {
                 continue;
             }
+            return doAuthenticate(request, source);
+        }
 
-            var authenticators = authRegistry.findAuthenticators(request);
-            if (authenticators.isEmpty()) {
-                throw new SecurityException("Appropriate authenticator not found for request '" + request + "'");
-            }
-
-            for (Authenticator authenticator : authenticators) {
-                var result = authenticator.authenticate(request);
-                result = handleLogin(Optional.of(request), result);
-
-                switch (result) {
-                    case AuthenticationResult.Success success -> {
-                        var identity = success.identity();
-                        if (identity == null) {
-                            throw new SecurityException("Null Identity for success authentication");
-                        }
-                        identityContext.setIdentity(identity);
-                        source.authenticated(identity);
-                        return success;
-                    }
-                    case AuthenticationResult.Continuation<?> continuation -> {
-                        source.proceed(continuation.challenge());
-                        return continuation;
-                    }
-                    case AuthenticationResult.Failure failure -> {
-                        source.unauthenticated(request, failure.error());
-                        return failure;
-                    }
-                    // Skip
-                    default -> {
-                        // nop - proceed to the next authenticator
-                    }
-                }
-            }
-        } // for sources
-
-        return handleLogin(Optional.empty(), AuthenticationResult.failure("No acceptable authentication source"));
+        return AuthenticationResult.failure("No acceptable authentication source");
     }
 
     @Override
@@ -126,7 +145,7 @@ public class SecurityManagerImpl implements SecurityManager {
         if (sources != null) {
             return authenticate(sources);
         }
-        return AuthenticationResult.failure("Unauthenticated");
+        return AuthenticationResult.failure("No authentication sources");
     }
 
     @Override
@@ -149,8 +168,8 @@ public class SecurityManagerImpl implements SecurityManager {
             authRegistry.findAuthenticator(identity)
                     .ifPresent(a -> a.logout(identity));
 
-            authRegistry.findAuthenticationSource(identity)
-                    .ifPresent(s -> s.logout(identity));
+            authRegistry.findAuthenticationCallback(identity)
+                    .ifPresent(s -> s.onLogout(identity));
 
             handleLogout(Optional.of(identity));
         } else {

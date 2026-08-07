@@ -17,6 +17,7 @@
 package colesico.framework.security;
 
 import colesico.framework.ioc.Ioc;
+import colesico.framework.security.authentication.AuthenticationCallback;
 import colesico.framework.security.authentication.AuthenticationRequest;
 import colesico.framework.security.authentication.Authenticator;
 
@@ -45,9 +46,10 @@ public interface Identity<ID> {
     String AUTHENTICATOR_CLAIM = "authenticator";
 
     /**
-     * @see AuthenticationRequest#SOURCE_CLAIM
+     * Claim key for storing the {@link AuthenticationCallback}
+     * implementation class (typically the source) that should be notified on logout events.
      */
-    String SOURCE_CLAIM = AuthenticationRequest.SOURCE_CLAIM;
+    String CALLBACK_CLAIM = "callback";
 
     /**
      * The claim key for the roles holder.

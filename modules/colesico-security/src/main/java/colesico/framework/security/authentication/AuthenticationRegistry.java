@@ -33,9 +33,9 @@ public interface AuthenticationRegistry {
     Optional<Authenticator<?,?>> findAuthenticator(Identity<?> identity);
 
     /**
-     * Retrieves the {@link AuthenticationSource} associated with the given {@link Identity}.
+     * Retrieves the {@link AuthenticationCallback} associated with the given {@link Identity}.
      * <p>
-     * The lookup is performed using the {@link Identity#SOURCE_CLAIM} stored within the identity.
+     * The lookup is performed using the {@link Identity#CALLBACK_CLAIM} stored within the identity.
      * This is typically used to route actions like logout back to the source that initiated
      * the authentication.
      *
@@ -43,5 +43,5 @@ public interface AuthenticationRegistry {
      * @return an {@link Optional} containing the authentication source, or empty if the claim
      * is missing or no matching source is registered.
      */
-    Optional<AuthenticationSource<?, ?>> findAuthenticationSource(Identity<?> identity);
+    Optional<AuthenticationSource<?, ?>> findAuthenticationCallback(Identity<?> identity);
 }
