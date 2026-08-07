@@ -55,7 +55,7 @@ public class HttpBasic implements AuthenticationSource<BasicAuthenticationReques
     }
 
     @Override
-    public void proceed(BasicAuthenticationChallenge challenge) {
+    public void onStage(BasicAuthenticationChallenge challenge) {
         var response = httpContext.get().response();
         response
                 .addHeader(WWW_AUTHENTICATE_HEADER, "Basic realm=\"" + challenge.realm() + "\"")
@@ -65,19 +65,19 @@ public class HttpBasic implements AuthenticationSource<BasicAuthenticationReques
     }
 
     @Override
-    public void authenticated(Identity<?> identity) {
+    public void onSuccess(Identity<?> identity) {
 
     }
 
     @Override
-    public <E> void unauthenticated(BasicAuthenticationRequest request, E error) {
+    public <E> void onFailure(BasicAuthenticationRequest request, E error) {
         httpContext.get().response()
                 .setStatus(401)
                 .send("401 Unauthorized. Authentication required");
     }
 
     @Override
-    public void logout(Identity<?> identity) {
+    public void onLogout(Identity<?> identity) {
         httpContext.get().response().setStatus(401).send("Logout");
     }
 }

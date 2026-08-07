@@ -37,34 +37,12 @@ public class SecurityManagerImpl implements SecurityManager {
 
     protected final IdentityContext identityContext;
     protected final AuthenticationSourceContext sourceContext;
-    protected final Polysupplier<AuthenticationHandler> authHandlers;
     protected final AuthenticationRegistry authRegistry;
 
-    public SecurityManagerImpl(IdentityContext identityContext, AuthenticationSourceContext sourceContext, Polysupplier<AuthenticationHandler> authHandlers, AuthenticationRegistry authRegistry) {
+    public SecurityManagerImpl(IdentityContext identityContext, AuthenticationSourceContext sourceContext, AuthenticationRegistry authRegistry) {
         this.identityContext = identityContext;
         this.sourceContext = sourceContext;
-        this.authHandlers = authHandlers;
         this.authRegistry = authRegistry;
-    }
-
-    protected AuthenticationResult<?> handleLogin(Optional<AuthenticationRequest> request, AuthenticationResult result) {
-        for (var h : authHandlers) {
-            var r = h.handleAuthenticate(request, result);
-            result = r.result();
-            if (!r.proceed()) {
-                break;
-            }
-        }
-        return result;
-    }
-
-    protected void handleLogout(Optional<Identity<?>> identity) {
-        for (var h : authHandlers) {
-            var r = h.handleLogout(identity);
-            if (!r.proceed()) {
-                break;
-            }
-        }
     }
 
     protected AuthenticationResult<?> doAuthenticate(AuthenticationRequest request, AuthenticationCallback callback) {
@@ -94,9 +72,9 @@ public class SecurityManagerImpl implements SecurityManager {
                     callback.onSuccess(identity);
                     return success;
                 }
-                case AuthenticationResult.Continuation<?> continuation -> {
-                    callback.onContinuation(continuation.challenge());
-                    return continuation;
+                case AuthenticationResult.Stage<?> stage -> {
+                    callback.onStage(stage.challenge());
+                    return stage;
                 }
                 case AuthenticationResult.Failure failure -> {
                     callback.onFailure(request, failure.error());
@@ -114,7 +92,7 @@ public class SecurityManagerImpl implements SecurityManager {
 
 
     @Override
-    public AuthenticationResult<?> authenticate(AuthenticationRequest request, AuthenticationCallback callback) {
+    public <R extends AuthenticationRequest> AuthenticationResult<?> authenticate(R request, AuthenticationCallback<R, ?> callback) {
         identityContext.clear();
         return doAuthenticate(request, callback);
     }
@@ -164,17 +142,16 @@ public class SecurityManagerImpl implements SecurityManager {
      */
     @Override
     public void logout(Identity<?> identity) {
-        if (identity != null) {
-            authRegistry.findAuthenticator(identity)
-                    .ifPresent(a -> a.logout(identity));
-
-            authRegistry.findAuthenticationCallback(identity)
-                    .ifPresent(s -> s.onLogout(identity));
-
-            handleLogout(Optional.of(identity));
-        } else {
-            handleLogout(Optional.empty());
+        if (identity == null) {
+            throw new SecurityException("Identity is null");
         }
+
+        authRegistry.findAuthenticator(identity)
+                .ifPresent(a -> a.logout(identity));
+
+        authRegistry.findAuthenticationCallback(identity)
+                .ifPresent(s -> s.onLogout(identity));
+
     }
 
     @Override

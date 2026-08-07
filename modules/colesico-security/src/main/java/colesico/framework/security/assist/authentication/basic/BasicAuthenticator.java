@@ -76,7 +76,7 @@ public class BasicAuthenticator implements
         if (request.isEmpty()) {
             var challenge = config.challenge();
             if (challenge != null) {
-                return AuthenticationResult.challenge(challenge);
+                return AuthenticationResult.stage(challenge);
             } else {
                 return AuthenticationResult.skip("No challenge required");
             }

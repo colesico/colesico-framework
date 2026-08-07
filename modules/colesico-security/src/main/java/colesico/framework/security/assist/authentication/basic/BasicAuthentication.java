@@ -25,23 +25,23 @@ public class BasicAuthentication
     }
 
     @Override
-    public void proceed(BasicAuthenticationChallenge challenge) {
+    public void onStage(BasicAuthenticationChallenge challenge) {
         log.debug("Proceed challenge: {}", challenge);
     }
 
     @Override
-    public void authenticated(Identity<?> identity) {
+    public void onSuccess(Identity<?> identity) {
         log.debug("Identity {} is logged in", identity.id());
     }
 
     @Override
-    public <E> void unauthenticated(BasicAuthenticationRequest request, E error) {
+    public <E> void onFailure(BasicAuthenticationRequest request, E error) {
         this.request.set(null);
         log.debug("Authentication request failure: {}", error);
     }
 
     @Override
-    public void logout(Identity<?> identity) {
+    public void onLogout(Identity<?> identity) {
         request.set(null);
         log.debug("Identity {} is logged out", identity.id());
     }

@@ -31,7 +31,8 @@ public class RestJwt extends JwtSource {
 
         Matcher m = BEARER_PATTERN.matcher(authHeader.trim());
         if (m.matches()) {
-            return new JwtRequest(m.group(1), AuthenticationRequest.sourceClaims(this.getClass()));
+          //  return new JwtRequest(m.group(1), AuthenticationRequest.sourceClaims(this.getClass()));
+          return null;
         }
 
         return null;
@@ -39,7 +40,7 @@ public class RestJwt extends JwtSource {
 
 
     @Override
-    public void proceed(JwtChallenge challenge) {
+    public void onStage(JwtChallenge challenge) {
         var response = httpContext.get().response();
 
         switch (challenge) {

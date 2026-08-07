@@ -48,7 +48,7 @@ public class AuthenticationInterceptorImpl implements AuthenticationInterceptor 
                 var result = securityManager.authenticate(sources);
                 if (result instanceof AuthenticationResult.Success) {
                     return context.proceed();
-                } else if (result instanceof AuthenticationResult.Continuation) {
+                } else if (result instanceof AuthenticationResult.Stage) {
                     return null;
                 } else if (result instanceof AuthenticationResult.Failure f) {
                     throw new UnauthenticatedException(f.error() != null ? f.error().toString() : "Unauthenticated");

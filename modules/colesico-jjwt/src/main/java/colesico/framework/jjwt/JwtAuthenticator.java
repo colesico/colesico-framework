@@ -37,7 +37,8 @@ public class JwtAuthenticator implements Authenticator<JwtRequest, Authenticatio
             Identity<?> identity = Identity.Default.of(claims.getSubject(), identityClaims);
             return AuthenticationResult.success(identity);
         } catch (ExpiredJwtException e) {
-            return AuthenticationResult.challenge(JwtChallenge(JwtChallenge.Action.REFRESH_ACCESS_TOKEN));
+          //  return AuthenticationResult.challenge(JwtChallenge(JwtChallenge.Action.REFRESH_ACCESS_TOKEN));
+            return null;
         } catch (Exception e) {
             return AuthenticationResult.failure("InvalidToken");
         }

@@ -16,16 +16,11 @@ public class HtmlJwt extends JwtSource {
     public JwtRequest request() {
         var cookie = httpContext.get().request().cookies().get(ACCESS_TOKEN_COOKIE);
         if (cookie != null) {
-            return new JwtRequest(cookie.value(), AuthenticationRequest.sourceClaims(this.getClass()));
+            // return new JwtRequest(cookie.value(), AuthenticationRequest.sourceClaims(this.getClass()));
+            return null;
         }
         return null;
     }
 
-    @Override
-    public void proceed(JwtChallenge challenge) {
-        httpContext.get().response()
-                .setStatus(302)
-                .addHeader("Location",config.)
-                .close();
-    }
+
 }

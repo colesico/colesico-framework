@@ -8,7 +8,7 @@ import colesico.framework.security.Identity;
  * @param <C> the type of authentication challenge required for continuation
  */
 public sealed interface AuthenticationResult<C extends AuthenticationChallenge>
-        permits AuthenticationResult.Success, AuthenticationResult.Failure, AuthenticationResult.Continuation, AuthenticationResult.Skip {
+        permits AuthenticationResult.Success, AuthenticationResult.Failure, AuthenticationResult.Stage, AuthenticationResult.Skip {
 
     /**
      * Successful authentication.
@@ -23,15 +23,15 @@ public sealed interface AuthenticationResult<C extends AuthenticationChallenge>
     }
 
     /**
-     * Authenticator abstained from decision.
+     * Authentication next stage/step.
      */
-    record Skip<C extends AuthenticationChallenge>(String reason) implements AuthenticationResult<C> {
+    record Stage<C extends AuthenticationChallenge>(C challenge) implements AuthenticationResult<C> {
     }
 
     /**
-     * Authentication requires an additional challenge.
+     * Authenticator abstained from decision.
      */
-    record Continuation<C extends AuthenticationChallenge>(C challenge) implements AuthenticationResult<C> {
+    record Skip<C extends AuthenticationChallenge>(String reason) implements AuthenticationResult<C> {
     }
 
     /**
@@ -49,16 +49,17 @@ public sealed interface AuthenticationResult<C extends AuthenticationChallenge>
     }
 
     /**
+     * Creates a continuation authentication result with the specific challenge.
+     */
+    static <T extends AuthenticationChallenge> AuthenticationResult<T> stage(T challenge) {
+        return new Stage<>(challenge);
+    }
+
+    /**
      * Creates an abstained authentication result adapted to the required challenge type.
      */
     static <T extends AuthenticationChallenge> AuthenticationResult<T> skip(String reason) {
         return new Skip<>(reason);
     }
 
-    /**
-     * Creates a continuation authentication result with the specific challenge.
-     */
-    static <T extends AuthenticationChallenge> AuthenticationResult<T> challenge(T challenge) {
-        return new Continuation<>(challenge);
-    }
 }
