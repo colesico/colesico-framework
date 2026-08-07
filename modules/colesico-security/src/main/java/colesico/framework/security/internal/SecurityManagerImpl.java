@@ -16,7 +16,6 @@
 
 package colesico.framework.security.internal;
 
-import colesico.framework.ioc.production.Polysupplier;
 import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
 import colesico.framework.security.authentication.*;
@@ -149,7 +148,7 @@ public class SecurityManagerImpl implements SecurityManager {
         authRegistry.findAuthenticator(identity)
                 .ifPresent(a -> a.logout(identity));
 
-        authRegistry.findAuthenticationCallback(identity)
+        authRegistry.findCallback(identity)
                 .ifPresent(s -> s.onLogout(identity));
 
     }

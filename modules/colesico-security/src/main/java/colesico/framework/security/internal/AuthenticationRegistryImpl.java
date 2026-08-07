@@ -49,7 +49,7 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
     }
 
     @Override
-    public Optional<AuthenticationSource<?, ?>> findAuthenticationCallback(Identity<?> identity) {
+    public Optional<AuthenticationSource<?, ?>> findCallback(Identity<?> identity) {
         var sourceClass = identity.claim(CALLBACK_CLAIM, Class.class);
         if (sourceClass.isPresent()) {
             var source = ioc.instanceOrNull(sourceClass.get());

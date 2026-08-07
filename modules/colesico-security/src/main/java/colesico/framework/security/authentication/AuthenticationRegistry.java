@@ -43,5 +43,5 @@ public interface AuthenticationRegistry {
      * @return an {@link Optional} containing the authentication source, or empty if the claim
      * is missing or no matching source is registered.
      */
-    Optional<AuthenticationSource<?, ?>> findAuthenticationCallback(Identity<?> identity);
+    Optional<AuthenticationSource<?, ?>> findCallback(Identity<?> identity);
 }

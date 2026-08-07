@@ -28,5 +28,5 @@ public interface Authenticator<R extends AuthenticationRequest, C extends Authen
     /**
      * Perform logout
      */
-    void logout(Identity<?> identity);
+    default void logout(Identity<?> identity){};
 }
