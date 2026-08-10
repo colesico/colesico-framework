@@ -44,15 +44,16 @@ public class SecurityManagerImpl implements SecurityManager {
         this.authRegistry = authRegistry;
     }
 
-    protected AuthenticationResult<?> doAuthenticate(AuthenticationRequest request, AuthenticationCallback callback) {
+    protected AuthenticationResult<?> doAuthenticate(AuthenticationRequest request,
+                                                     AuthenticationCallback callback) {
 
         if (callback == null) {
             throw new SecurityException("Authentication callback is null");
-
         }
+
         var authenticators = authRegistry.findAuthenticators(request);
         if (authenticators.isEmpty()) {
-            throw new SecurityException("Appropriate authenticator not found for request '" + request + "'");
+            throw new SecurityException("No appropriate authenticator for request '" + request + "'");
         }
 
         for (Authenticator authenticator : authenticators) {
@@ -86,14 +87,17 @@ public class SecurityManagerImpl implements SecurityManager {
             }
         }
 
-        return AuthenticationResult.failure("No success authentication");
+        return AuthenticationResult.skip("No meaningful authentication");
     }
-
 
     @Override
     public <R extends AuthenticationRequest> AuthenticationResult<?> authenticate(R request, AuthenticationCallback<R, ?> callback) {
         identityContext.clear();
-        return doAuthenticate(request, callback);
+        var result = doAuthenticate(request, callback);
+        if (result instanceof AuthenticationResult.Skip<?>) {
+            return AuthenticationResult.failure("No meaningful authentication");
+        }
+        return result;
     }
 
     /**
@@ -103,6 +107,10 @@ public class SecurityManagerImpl implements SecurityManager {
     @SuppressWarnings("unchecked")
     public AuthenticationResult<?> authenticate(Iterable<? extends AuthenticationSource<?, ?>> sources) {
 
+        if (sources == null || !sources.iterator().hasNext()) {
+            return AuthenticationResult.failure("No authentication sources");
+        }
+
         identityContext.clear();
 
         for (AuthenticationSource source : sources) {
@@ -110,19 +118,21 @@ public class SecurityManagerImpl implements SecurityManager {
             if (request == null) {
                 continue;
             }
-            return doAuthenticate(request, source);
+
+            var result = doAuthenticate(request, source);
+            if (result instanceof AuthenticationResult.Skip<?>) {
+                continue;
+            }
+            return result;
         }
 
-        return AuthenticationResult.failure("No acceptable authentication source");
+        return AuthenticationResult.failure("No meaningful authentication");
     }
 
     @Override
     public AuthenticationResult<?> authenticate() {
         var sources = sourceContext.sources();
-        if (sources != null) {
-            return authenticate(sources);
-        }
-        return AuthenticationResult.failure("No authentication sources");
+        return authenticate(sources);
     }
 
     @Override
