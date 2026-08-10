@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Singleton
-public class JwtAuthenticator implements Authenticator<JwtRequest, AuthenticationChallenge> {
+public class JwtAuthenticator implements Authenticator<JwtAccessRequest, AuthenticationChallenge> {
 
     private final JwtTokenUtils tokenUtils;
 
@@ -23,7 +23,7 @@ public class JwtAuthenticator implements Authenticator<JwtRequest, Authenticatio
     }
 
     @Override
-    public AuthenticationResult<AuthenticationChallenge> authenticate(JwtRequest request) {
+    public AuthenticationResult<AuthenticationChallenge> authenticate(JwtAccessRequest request) {
         try {
             Claims claims = tokenUtils.parseAccessToken(request.accessToken());
 

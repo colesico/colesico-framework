@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Singleton
-public class RestJwt extends JwtSource {
+public class RestJwt extends JwtTokenSource {
 
     protected static final Pattern BEARER_PATTERN = Pattern.compile("^Bearer\\s+(.+)$", Pattern.CASE_INSENSITIVE);
     protected static final String AUTHORIZATION_HEADER = "Authorization";
@@ -25,14 +25,14 @@ public class RestJwt extends JwtSource {
     }
 
     @Override
-    public JwtRequest request() {
+    public JwtAccessRequest request() {
         String authHeader = this.httpContext.get().request().headers().get(AUTHORIZATION_HEADER);
         if (StringUtils.isBlank(authHeader)) return null;
 
         Matcher m = BEARER_PATTERN.matcher(authHeader.trim());
         if (m.matches()) {
-          //  return new JwtRequest(m.group(1), AuthenticationRequest.sourceClaims(this.getClass()));
-          return null;
+            return new JwtAccessRequest(m.group(1),
+                    AuthenticationRequest.sourceClaims(this.getClass()));
         }
 
         return null;

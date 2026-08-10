@@ -29,12 +29,9 @@ abstract public class JwtConfigPrototype {
         return 7 * 24 * 60 * 60 * 1000;
     }
 
-    public String accessTokenExpiredResponse() {
-        return "AccessTokenExpired";
-    }
-
-    public String accessTokenExpiredRedirect() {
+    public String refreshTokenUrl() {
         return "/identity/jwt/refresh";
     }
+
 }
 

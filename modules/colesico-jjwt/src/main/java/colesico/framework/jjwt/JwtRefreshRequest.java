@@ -4,9 +4,7 @@ import colesico.framework.security.authentication.AuthenticationRequest;
 
 import java.util.Map;
 
-public record JwtRequest(
-        String accessToken,
+public record JwtRefreshRequest(
         String refreshToken,
         Map<String, Object> claims) implements AuthenticationRequest {
-
 }

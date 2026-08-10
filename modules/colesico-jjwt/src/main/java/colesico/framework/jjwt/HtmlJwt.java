@@ -1,10 +1,9 @@
 package colesico.framework.jjwt;
 
 import colesico.framework.http.HttpContext;
-import colesico.framework.security.authentication.AuthenticationRequest;
 import jakarta.inject.Provider;
 
-public class HtmlJwt extends JwtSource {
+public class HtmlJwt extends JwtTokenSource {
 
     public static final String ACCESS_TOKEN_COOKIE = "access_token";
 
@@ -13,7 +12,7 @@ public class HtmlJwt extends JwtSource {
     }
 
     @Override
-    public JwtRequest request() {
+    public JwtAccessRequest request() {
         var cookie = httpContext.get().request().cookies().get(ACCESS_TOKEN_COOKIE);
         if (cookie != null) {
             // return new JwtRequest(cookie.value(), AuthenticationRequest.sourceClaims(this.getClass()));
