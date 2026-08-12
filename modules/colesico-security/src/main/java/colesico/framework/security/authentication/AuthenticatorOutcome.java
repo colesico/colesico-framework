@@ -9,6 +9,7 @@ import colesico.framework.security.Identity;
 public sealed interface AuthenticatorOutcome permits
         AuthenticatorOutcome.Success,
         AuthenticatorOutcome.Failure,
+        AuthenticatorOutcome.Next,
         AuthenticatorOutcome.Stage,
         AuthenticatorOutcome.Skip {
 
@@ -17,7 +18,7 @@ public sealed interface AuthenticatorOutcome permits
     /**
      * Definitively successful authentication.
      */
-    record Success(Identity identity) implements AuthenticatorOutcome {
+    record Success(Identity<?> identity) implements AuthenticatorOutcome {
 
         @Override
         public AuthenticationResult result() {
@@ -46,6 +47,20 @@ public sealed interface AuthenticatorOutcome permits
     }
 
     /**
+     * Transitional outcome that injects a specific next authenticator into the execution
+     * chain with an updated request.
+     *
+     * @param request       the modified request payload for the next step
+     * @param authenticator the authenticator to execute next
+     */
+    record Next(AuthenticationRequest request, Authenticator<?, ?> authenticator) implements AuthenticatorOutcome {
+        @Override
+        public AuthenticationResult result() {
+            throw new SecurityException("Next outcome is transitional and cannot be processed as a final result");
+        }
+    }
+
+    /**
      * Authenticator abstained from decision.
      */
     record Skip(String reason) implements AuthenticatorOutcome {
@@ -54,6 +69,7 @@ public sealed interface AuthenticatorOutcome permits
             return AuthenticationResult.failure(reason);
         }
     }
+
 
     /**
      * Creates default successful outcome
@@ -71,6 +87,13 @@ public sealed interface AuthenticatorOutcome permits
 
     static Stage stage() {
         return new Stage();
+    }
+
+    /**
+     * Creates a transitional outcome to proceed to the specified next authenticator.
+     */
+    static Next next(final AuthenticationRequest request, final Authenticator<?,?> authenticator) {
+        return new Next(request, authenticator);
     }
 
     /**

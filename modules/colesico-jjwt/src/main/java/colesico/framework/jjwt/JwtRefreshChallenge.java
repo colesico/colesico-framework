@@ -1,4 +1,4 @@
 package colesico.framework.jjwt;
 
-public record JwtRefreshChallenge()  implements JwtChallenge{
+public record JwtRefreshChallenge() {
 }

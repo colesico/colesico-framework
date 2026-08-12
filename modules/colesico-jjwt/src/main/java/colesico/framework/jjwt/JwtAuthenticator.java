@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Singleton
-public class JwtAuthenticator implements Authenticator<JwtRequest, AuthenticationChallenge> {
+public class JwtAuthenticator implements Authenticator<JwtRequest, JwtCallback> {
 
     private final JwtTokenUtils tokenUtils;
 
@@ -22,7 +22,7 @@ public class JwtAuthenticator implements Authenticator<JwtRequest, Authenticatio
     }
 
     @Override
-    public AuthenticatorOutcome<AuthenticationChallenge> authenticate(JwtRequest request) {
+    public AuthenticatorOutcome authenticate(JwtRequest request, JwtCallback callback) {
         try {
             Claims claims = tokenUtils.parseAccessToken(request.accessToken());
 
@@ -36,7 +36,7 @@ public class JwtAuthenticator implements Authenticator<JwtRequest, Authenticatio
             Identity<?> identity = Identity.Default.of(claims.getSubject(), identityClaims);
             return AuthenticatorOutcome.success(identity);
         } catch (ExpiredJwtException e) {
-          //  return AuthenticationResult.challenge(JwtChallenge(JwtChallenge.Action.REFRESH_ACCESS_TOKEN));
+            //  return AuthenticationResult.challenge(JwtChallenge(JwtChallenge.Action.REFRESH_ACCESS_TOKEN));
             return null;
         } catch (Exception e) {
             return AuthenticatorOutcome.failure("InvalidToken");

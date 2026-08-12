@@ -24,6 +24,8 @@ import colesico.framework.security.authentication.AuthenticationSource;
 import colesico.framework.security.authentication.AuthenticationCallback;
 import colesico.framework.security.authentication.AuthenticatorOutcome;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
@@ -49,40 +51,45 @@ public class SecurityManagerImpl implements SecurityManager {
     protected AuthenticatorOutcome doAuthenticate(AuthenticationRequest request,
                                                   AuthenticationCallback<?, ?> callback) {
 
-        if (callback == null) {
-            throw new SecurityException("Authentication callback is null");
-        }
-
         var authenticators = authRegistry.findAuthenticators(request);
         if (authenticators.isEmpty()) {
             throw new SecurityException("No appropriate authenticator for request '" + request + "'");
         }
 
-        for (Authenticator authenticator : authenticators) {
+        Deque<Authenticator> authenticatorsQueue = new ArrayDeque<>(authenticators);
+
+        while (!authenticatorsQueue.isEmpty()) {
+
+            var authenticator = authenticatorsQueue.pollFirst();
+
             var outcome = authenticator.authenticate(request, callback);
             if (outcome == null) {
-                throw new SecurityException("Null authentication result");
+                throw new SecurityException("Null authentication outcome");
             }
 
             switch (outcome) {
                 case AuthenticatorOutcome.Success success -> {
                     var identity = success.identity();
                     if (identity == null) {
-                        throw new SecurityException("Null Identity for success authentication");
+                        throw new SecurityException("Null identity for success authentication");
                     }
                     identityContext.setIdentity(identity);
                     return success;
                 }
-                case AuthenticatorOutcome.Failure failure -> {
-                    return failure;
-                }
                 case AuthenticatorOutcome.Stage stage -> {
                     return stage;
                 }
-                // Skip
-                default -> {
-                    // nop - proceed to the next authenticator
+                case AuthenticatorOutcome.Failure failure -> {
+                    return failure;
                 }
+                case AuthenticatorOutcome.Next next -> {
+                    request = next.request();
+                    authenticatorsQueue.addFirst(next.authenticator());
+                }
+                case AuthenticatorOutcome.Skip skip -> {
+                    // nop - proceed to next
+                }
+                default -> throw new SecurityException("Unexpected outcome: " + outcome);
             }
         }
 
@@ -93,9 +100,6 @@ public class SecurityManagerImpl implements SecurityManager {
     public AuthenticationResult authenticate(AuthenticationRequest request, AuthenticationCallback<?, ?> callback) {
         identityContext.clear();
         var outcome = doAuthenticate(request, callback);
-        if (outcome instanceof AuthenticatorOutcome.Skip) {
-            return AuthenticationResult.failure("No meaningful authentication");
-        }
         return outcome.result();
     }
 
