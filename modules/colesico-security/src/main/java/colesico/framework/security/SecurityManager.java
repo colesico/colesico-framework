@@ -35,7 +35,7 @@ import java.util.concurrent.Callable;
  */
 public interface SecurityManager {
 
-    AuthenticationResult authenticate(AuthenticationRequest request, AuthenticationCallback<?,?,?,?> callback);
+    AuthenticationResult authenticate(AuthenticationRequest request, AuthenticationCallback<?, ?> callback);
 
     default AuthenticationResult authenticate(AuthenticationRequest request) {
         return authenticate(request, new AuthenticationCallback<>() {

@@ -9,7 +9,7 @@ package colesico.framework.security.authentication;
  */
 public interface AuthenticationSource<
         RQ extends AuthenticationRequest,
-        CB extends AuthenticationCallback<?, ?, ?, ?>> {
+        CB extends AuthenticationCallback<?, ?>> {
 
     /**
      * Extracts an {@link AuthenticationRequest} from the underlying transport.

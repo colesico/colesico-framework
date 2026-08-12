@@ -78,7 +78,7 @@ public class BasicAuthenticator
         if (request.isEmpty()) {
             var realm = config.realm();
             if (realm != null) {
-                cb.ifPresent(c -> c.onStage(realm));
+                cb.ifPresent(c -> c.onChallenge(realm));
                 return AuthenticatorOutcome.stage();
             } else {
                 return AuthenticatorOutcome.skip("No realm provided");
@@ -89,7 +89,7 @@ public class BasicAuthenticator
         var identity = authenticated.get(login);
         if (identity != null) {
             if (cb.isPresent()) {
-                cb.get().onSuccess(identity);
+                cb.get().onLogin(identity);
             }
             return AuthenticatorOutcome.success(identity);
         }
@@ -98,7 +98,7 @@ public class BasicAuthenticator
         if (identity != null) {
             authenticated.put(login, identity);
             if (cb.isPresent()) {
-                cb.get().onSuccess(identity);
+                cb.get().onLogin(identity);
             }
             return AuthenticatorOutcome.success(identity);
         }

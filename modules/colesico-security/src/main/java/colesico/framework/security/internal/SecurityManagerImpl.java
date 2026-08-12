@@ -47,7 +47,7 @@ public class SecurityManagerImpl implements SecurityManager {
     }
 
     protected AuthenticatorOutcome doAuthenticate(AuthenticationRequest request,
-                                                  AuthenticationCallback<?, ?, ?, ?> callback) {
+                                                  AuthenticationCallback<?, ?> callback) {
 
         if (callback == null) {
             throw new SecurityException("Authentication callback is null");
@@ -90,7 +90,7 @@ public class SecurityManagerImpl implements SecurityManager {
     }
 
     @Override
-    public AuthenticationResult authenticate(AuthenticationRequest request, AuthenticationCallback<?, ?, ?, ?> callback) {
+    public AuthenticationResult authenticate(AuthenticationRequest request, AuthenticationCallback<?, ?> callback) {
         identityContext.clear();
         var outcome = doAuthenticate(request, callback);
         if (outcome instanceof AuthenticatorOutcome.Skip) {

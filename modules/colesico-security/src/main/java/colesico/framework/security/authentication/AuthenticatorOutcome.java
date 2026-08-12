@@ -36,7 +36,7 @@ public sealed interface AuthenticatorOutcome permits
     }
 
     /**
-     * Authentication required next stage/step as source interaction.
+     * Authentication required next stage/step and source/client interaction.
      */
     record Stage() implements AuthenticatorOutcome {
         @Override

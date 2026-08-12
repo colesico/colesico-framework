@@ -34,7 +34,7 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
     }
 
     @Override
-    public Optional<Authenticator<?, AuthenticationCallback<?,?,?,?>>> findAuthenticator(Identity<?> identity) {
+    public Optional<Authenticator<?, AuthenticationCallback<?, ?>>> findAuthenticator(Identity<?> identity) {
         var authenticatorClass = identity.claim(AUTHENTICATOR_CLAIM, Class.class);
         if (authenticatorClass.isPresent()) {
             var authenticator = ioc.instanceOrNull(authenticatorClass.get());
@@ -45,11 +45,11 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
     }
 
     @Override
-    public Optional<AuthenticationCallback<?, ?, ?, ?>> findCallback(Identity<?> identity) {
+    public Optional<AuthenticationCallback<?, ?>> findCallback(Identity<?> identity) {
         var sourceClass = identity.claim(CALLBACK_CLAIM, Class.class);
         if (sourceClass.isPresent()) {
             var source = ioc.instanceOrNull(sourceClass.get());
-            return Optional.ofNullable((AuthenticationCallback<?, ?, ?, ?>) source);
+            return Optional.ofNullable((AuthenticationCallback<?, ?>) source);
         } else {
             return Optional.empty();
         }

@@ -30,19 +30,13 @@ public class BasicSource
     }
 
     @Override
-    public void onStage(String realm) {
+    public void onChallenge(String realm) {
         log.debug("Proceed realm: {}", realm);
     }
 
     @Override
-    public void onSuccess(Identity identity) {
+    public void onLogin(Identity identity) {
         log.debug("Identity {} is logged in", identity.id());
-    }
-
-    @Override
-    public void onFailure(Object failure) {
-        this.request.set(null);
-        log.debug("Authentication request failure: {}", failure);
     }
 
     @Override

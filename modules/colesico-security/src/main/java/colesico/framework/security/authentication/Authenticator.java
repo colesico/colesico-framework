@@ -21,7 +21,7 @@ import colesico.framework.security.Identity;
  */
 public interface Authenticator<
         RQ extends AuthenticationRequest,
-        CB extends AuthenticationCallback<?, ?, ?, ?>> {
+        CB extends AuthenticationCallback<?, ?>> {
 
     /**
      * Performs authentication using the provided request.
