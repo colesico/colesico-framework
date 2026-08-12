@@ -5,7 +5,7 @@ import colesico.framework.security.Identity;
 /**
  * Callback for handling authentication outcomes for a specific request or source.
  */
-public interface AuthenticationCallback<R extends AuthenticationRequest, C extends AuthenticationChallenge> {
+public interface AuthenticationCallback<O extends AuthenticationOutcome> {
 
     /**
      * Handle the subject has been successfully authenticated.
@@ -13,7 +13,8 @@ public interface AuthenticationCallback<R extends AuthenticationRequest, C exten
      * This allows to perform post-authentication actions, such as
      * attaching the identity to a session or sending a success header.
      */
-    default void onSuccess(Identity<?> identity) {}
+    default void onSuccess(AuthenticationOutcome.Success success) {
+    }
 
     /**
      * Handle failed authentication attempt.
@@ -21,7 +22,8 @@ public interface AuthenticationCallback<R extends AuthenticationRequest, C exten
      * Allows to react to the failure, for example, by clearing
      * invalid credentials from the transport headers or logging the event.
      */
-    default <E> void onFailure(R request, E error) {}
+    default void onFailure(AuthenticationOutcome.Failure failure) {
+    }
 
     /**
      * Handle protocol-specific authentication next step/challenge.
@@ -29,7 +31,8 @@ public interface AuthenticationCallback<R extends AuthenticationRequest, C exten
      * This is used for multi-step authentication (e.g., Digest, OAuth redirect,
      * or Multi-Factor Authentication) to prompt the client for further information.
      */
-    default void onStage(C challenge) {}
+    default void onStage(AuthenticationOutcome.Stage stage) {
+    }
 
     /**
      * Handle subject has been logged out.
@@ -37,5 +40,7 @@ public interface AuthenticationCallback<R extends AuthenticationRequest, C exten
      * This is used to clear protocol-specific security data, such as
      * invalidating a session cookie or clearing local security headers.
      */
-    default void onLogout(Identity<?> identity) {}
+    default void onLogout(Identity identity) {
+    }
+
 }

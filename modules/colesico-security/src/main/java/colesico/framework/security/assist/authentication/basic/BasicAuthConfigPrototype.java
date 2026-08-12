@@ -2,7 +2,6 @@ package colesico.framework.security.assist.authentication.basic;
 
 import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
-import colesico.framework.security.authentication.AuthenticationChallenge;
 
 @ConfigPrototype(model = ConfigModel.SINGLE)
 abstract public class BasicAuthConfigPrototype {

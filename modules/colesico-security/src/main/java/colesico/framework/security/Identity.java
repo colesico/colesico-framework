@@ -18,14 +18,12 @@ package colesico.framework.security;
 
 import colesico.framework.ioc.Ioc;
 import colesico.framework.security.authentication.AuthenticationCallback;
-import colesico.framework.security.authentication.AuthenticationRequest;
 import colesico.framework.security.authentication.Authenticator;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  * Represents a verified security subject.
@@ -36,7 +34,7 @@ import java.util.function.Function;
  * <p>
  * The framework provides a default implementation: {@link Identity.Default}
  */
-public interface Identity<ID> {
+public interface Identity {
 
     /**
      * Specifies {@link Authenticator} instance class that issued this identity
@@ -64,17 +62,18 @@ public interface Identity<ID> {
     /**
      * Returns the unique identifier of this identity (e.g., UUID, strategy, or numeric ID).
      */
-    ID id();
+    Object id();
 
     /**
-     * Maps the identity identifier to another type.
-     * Usage example: Long userId = identity.id(Long::valueOf);
+     * Cast identity id to given type.
+     * Usage example: Long userId = identity.ID();
      */
-    default <T> T id(Function<ID, T> mapper) {
-        return mapper.apply(id());
+    @SuppressWarnings("unchecked")
+    default <T> T ID() {
+        return (T) id();
     }
 
-    default ID getId() {
+    default Object getId() {
         return id();
     }
 
@@ -133,13 +132,15 @@ public interface Identity<ID> {
     /**
      * The default implementation of the {@link Identity} interface.
      */
-    record Default<ID>(ID id, Map<String, Object> claims) implements Identity<ID> {
-        public static <ID> Default<ID> of(ID id) {
-            return new Default<>(id, Map.of());
+    record Default(Object id, Map<String, Object> claims) implements Identity {
+
+        public static Default of(Object id) {
+            return new Default(id, Map.of());
         }
 
-        public static <ID> Default<ID> of(ID id, Map<String, Object> claims) {
-            return new Default<>(id, claims);
+        public static Default of(Object id, Map<String, Object> claims) {
+            return new Default(id, claims);
         }
+
     }
 }

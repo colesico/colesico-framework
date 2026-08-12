@@ -5,6 +5,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.security.Identity;
 import colesico.framework.security.assist.authentication.basic.BasicAuthenticationChallenge;
 import colesico.framework.security.assist.authentication.basic.BasicAuthenticationRequest;
+import colesico.framework.security.authentication.AuthenticationOutcome;
 import colesico.framework.security.authentication.AuthenticationSource;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -55,7 +56,8 @@ public class HttpBasic implements AuthenticationSource<BasicAuthenticationReques
     }
 
     @Override
-    public void onStage(BasicAuthenticationChallenge challenge) {
+    public void onStage(AuthenticationOutcome.Stage stage) {
+        var challenge = (BasicAuthenticationChallenge) stage;
         var response = httpContext.get().response();
         response
                 .addHeader(WWW_AUTHENTICATE_HEADER, "Basic realm=\"" + challenge.realm() + "\"")
@@ -65,19 +67,14 @@ public class HttpBasic implements AuthenticationSource<BasicAuthenticationReques
     }
 
     @Override
-    public void onSuccess(Identity<?> identity) {
-
-    }
-
-    @Override
-    public <E> void onFailure(BasicAuthenticationRequest request, E error) {
+    public void onFailure(AuthenticationOutcome.Failure failure) {
         httpContext.get().response()
                 .setStatus(401)
                 .send("401 Unauthorized. Authentication required");
     }
 
     @Override
-    public void onLogout(Identity<?> identity) {
+    public void onLogout(Identity identity) {
         httpContext.get().response().setStatus(401).send("Logout");
     }
 }

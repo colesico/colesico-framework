@@ -1,19 +1,18 @@
 package colesico.framework.security.assist.authentication.apikey;
 
 import colesico.framework.security.Identity;
-import colesico.framework.security.authentication.AuthenticationChallenge;
-import colesico.framework.security.authentication.AuthenticationResult;
+import colesico.framework.security.authentication.AuthenticationOutcome;
 import colesico.framework.security.authentication.Authenticator;
 
-public class ApiKeyAuthenticator implements Authenticator<ApiKeyAuthenticationRequest, AuthenticationChallenge> {
+public class ApiKeyAuthenticator implements Authenticator<ApiKeyAuthenticationRequest> {
 
     @Override
-    public AuthenticationResult<AuthenticationChallenge> authenticate(ApiKeyAuthenticationRequest request) {
+    public AuthenticationOutcome authenticate(ApiKeyAuthenticationRequest request) {
         throw new IllegalStateException("Not implemented");
     }
 
     @Override
-    public void logout(Identity<?> identity) {
+    public void logout(Identity identity) {
         throw new IllegalStateException("Not implemented");
     }
 }

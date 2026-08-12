@@ -2,64 +2,33 @@ package colesico.framework.security.authentication;
 
 import colesico.framework.security.Identity;
 
-/**
- * Represents the outcome of an authentication attempt.
- *
- * @param <C> the type of authentication challenge required for continuation
- */
-public sealed interface AuthenticationResult<C extends AuthenticationChallenge>
-        permits AuthenticationResult.Success, AuthenticationResult.Failure, AuthenticationResult.Stage, AuthenticationResult.Skip {
+public sealed interface AuthenticationResult
+        permits
+        AuthenticationResult.Success,
+        AuthenticationResult.Failure,
+        AuthenticationResult.Stage {
 
-    /**
-     * Successful authentication.
-     */
-    record Success<C extends AuthenticationChallenge>(Identity<?> identity) implements AuthenticationResult<C> {
+    record Success(Identity identity) implements AuthenticationResult {
+
     }
 
-    /**
-     * Definitively failed authentication.
-     */
-    record Failure<C extends AuthenticationChallenge, E>(E error) implements AuthenticationResult<C> {
+    record Failure(Object error) implements AuthenticationResult {
+
     }
 
-    /**
-     * Authentication next stage/step.
-     */
-    record Stage<C extends AuthenticationChallenge>(C challenge) implements AuthenticationResult<C> {
+    record Stage() implements AuthenticationResult {
+
     }
 
-    /**
-     * Authenticator abstained from decision.
-     */
-    record Skip<C extends AuthenticationChallenge>(String reason) implements AuthenticationResult<C> {
+    static Success success(Identity identity) {
+        return new Success(identity);
     }
 
-    /**
-     * Creates a successful authentication result adapted to the required challenge type.
-     */
-    static <T extends AuthenticationChallenge> AuthenticationResult<T> success(Identity<?> identity) {
-        return new Success<>(identity);
+    static Failure failure(Object error) {
+        return new Failure(error);
     }
 
-    /**
-     * Creates a failure authentication result adapted to the required challenge type.
-     */
-    static <T extends AuthenticationChallenge, E> AuthenticationResult<T> failure(E error) {
-        return new Failure<>(error);
+    static Stage stage() {
+        return new Stage();
     }
-
-    /**
-     * Creates a continuation authentication result with the specific challenge.
-     */
-    static <T extends AuthenticationChallenge> AuthenticationResult<T> stage(T challenge) {
-        return new Stage<>(challenge);
-    }
-
-    /**
-     * Creates an abstained authentication result adapted to the required challenge type.
-     */
-    static <T extends AuthenticationChallenge> AuthenticationResult<T> skip(String reason) {
-        return new Skip<>(reason);
-    }
-
 }

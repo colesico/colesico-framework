@@ -12,7 +12,7 @@ public class HtmlJwt extends JwtTokenSource {
     }
 
     @Override
-    public JwtAccessRequest request() {
+    public JwtRequest request() {
         var cookie = httpContext.get().request().cookies().get(ACCESS_TOKEN_COOKIE);
         if (cookie != null) {
             // return new JwtRequest(cookie.value(), AuthenticationRequest.sourceClaims(this.getClass()));

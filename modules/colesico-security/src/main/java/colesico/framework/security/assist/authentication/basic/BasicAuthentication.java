@@ -1,6 +1,7 @@
 package colesico.framework.security.assist.authentication.basic;
 
 import colesico.framework.security.Identity;
+import colesico.framework.security.authentication.AuthenticationOutcome;
 import colesico.framework.security.authentication.AuthenticationSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * Put this source to appropriate scope to support multi user authentication.
  */
 public class BasicAuthentication
-        implements AuthenticationSource<BasicAuthenticationRequest, BasicAuthenticationChallenge> {
+        implements AuthenticationSource<BasicAuthenticationRequest> {
 
     protected static final Logger log = LoggerFactory.getLogger(BasicAuthentication.class);
 
@@ -30,18 +31,18 @@ public class BasicAuthentication
     }
 
     @Override
-    public void onSuccess(Identity<?> identity) {
-        log.debug("Identity {} is logged in", identity.id());
+    public void onSuccess(AuthenticationOutcome.Success success) {
+        log.debug("Identity {} is logged in", success.identity().id());
     }
 
     @Override
-    public <E> void onFailure(BasicAuthenticationRequest request, E error) {
+    public <E> void onFailure(AuthenticationOutcome.Failure failure) {
         this.request.set(null);
         log.debug("Authentication request failure: {}", error);
     }
 
     @Override
-    public void onLogout(Identity<?> identity) {
+    public void onLogout(Identity identity) {
         request.set(null);
         log.debug("Identity {} is logged out", identity.id());
     }

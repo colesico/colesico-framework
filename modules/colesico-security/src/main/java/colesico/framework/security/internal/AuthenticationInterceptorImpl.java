@@ -3,6 +3,7 @@ package colesico.framework.security.internal;
 import colesico.framework.ioc.production.Supplier;
 import colesico.framework.security.SecurityManager;
 import colesico.framework.security.authentication.*;
+import colesico.framework.security.authentication.AuthenticationOutcome;
 import colesico.framework.service.interception.InvocationContext;
 import jakarta.inject.Singleton;
 
@@ -46,11 +47,11 @@ public class AuthenticationInterceptorImpl implements AuthenticationInterceptor 
 
             case STRICT:
                 var result = securityManager.authenticate(sources);
-                if (result instanceof AuthenticationResult.Success) {
+                if (result instanceof AuthenticationOutcome.Success) {
                     return context.proceed();
-                } else if (result instanceof AuthenticationResult.Stage) {
+                } else if (result instanceof AuthenticationOutcome.Stage) {
                     return null;
-                } else if (result instanceof AuthenticationResult.Failure f) {
+                } else if (result instanceof AuthenticationOutcome.Failure f) {
                     throw new UnauthenticatedException(f.error() != null ? f.error().toString() : "Unauthenticated");
                 } else {
                     throw new IllegalArgumentException("Unsupported authentication result: " + result.toString());

@@ -17,6 +17,7 @@
 package colesico.framework.security;
 
 import colesico.framework.security.authentication.*;
+import colesico.framework.security.authentication.AuthenticationCallback;
 import colesico.framework.security.authorization.*;
 
 
@@ -34,9 +35,9 @@ import java.util.concurrent.Callable;
  */
 public interface SecurityManager {
 
-    <R extends AuthenticationRequest> AuthenticationResult<?> authenticate(R request, AuthenticationCallback<R,?> callback);
+    AuthenticationResult authenticate(AuthenticationRequest request, AuthenticationCallback callback);
 
-    default AuthenticationResult<?> authenticate(AuthenticationRequest request) {
+    default AuthenticationResult authenticate(AuthenticationRequest request) {
         return authenticate(request, new AuthenticationCallback() {
         });
     }
@@ -46,9 +47,9 @@ public interface SecurityManager {
      * The first source that provides a valid {@link AuthenticationRequest} will be used for authentication.
      * On success, the resulting {@link Identity} is bound to the current {@link IdentityContext}.
      */
-    AuthenticationResult<?> authenticate(Iterable<? extends AuthenticationSource<?, ?>> sources);
+    AuthenticationResult authenticate(Iterable<AuthenticationSource> sources);
 
-    default AuthenticationResult<?> authenticate(AuthenticationSource<?, ?> source) {
+    default AuthenticationResult authenticate(AuthenticationSource source) {
         return authenticate(List.of(source));
     }
 
@@ -56,13 +57,13 @@ public interface SecurityManager {
      * Performs authentication using the sources currently bound to the {@link AuthenticationSourceContext}.
      * This is the standard way to trigger authentication in a scoped environment (e.g., during an HTTP request).
      */
-    AuthenticationResult<?> authenticate();
+    AuthenticationResult authenticate();
 
     /**
      * Retrieves the current {@link Identity} from the active {@link IdentityContext}.
      * Returns an empty Optional if the subject is not authenticated.
      */
-    Optional<Identity<?>> identity();
+    Optional<Identity> identity();
 
     /**
      * Checks whether the current subject is authenticated.
@@ -76,14 +77,14 @@ public interface SecurityManager {
      * Temporarily replaces the current identity in the challenge and restores it after the task completes.
      * This is useful for impersonation or system-level background tasks.
      */
-    <T> T callAs(Callable<T> callable, Identity<?> identity);
+    <R> R callAs(Callable<R> callable, Identity identity);
 
     /**
      * Executes the given runnable as the specified {@link Identity}.
      *
      * @see #callAs(Callable, Identity)
      */
-    default void runAs(Identity<?> identity, Runnable runnable) {
+    default void runAs(Identity identity, Runnable runnable) {
         callAs(() -> {
             runnable.run();
             return null;
@@ -94,7 +95,7 @@ public interface SecurityManager {
      * Performs a logout for the specified {@link Identity}.
      * Triggers appropriate logout handlers and notifies associated sources.
      */
-    void logout(Identity<?> identity);
+    void logout(Identity identity);
 
     /**
      * Performs a logout for the current {@link Identity} from {@link IdentityContext}
@@ -106,17 +107,15 @@ public interface SecurityManager {
      * if the subject is not authenticated.
      * Use this method when an identity is strictly required for the subsequent logic.
      */
-    default Identity<?> requireIdentity() {
+    default Identity requireIdentity() {
         return identity().orElseThrow(UnauthorizedException::new);
     }
 
     /**
      * Checks if the current subject has permission to access a specific resource using the provided {@link Authorizer}.
      */
-    default <D, R> AuthorizationResult<D> hasPermission(Authorizer<R, D> authorizer, R resource) {
-        AuthorizationRequest<R> request =
-                new AuthorizationRequest.Default<>(identity().orElse(null), resource);
-
+    default <R> AuthorizationResult hasPermission(Authorizer<R> authorizer, R resource) {
+        AuthorizationRequest<R> request = new AuthorizationRequest.Default<>(identity().orElse(null), resource);
         return authorizer.authorize(request);
     }
 }

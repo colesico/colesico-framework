@@ -4,7 +4,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.security.authentication.AuthenticationSource;
 import jakarta.inject.Provider;
 
-abstract public class JwtTokenSource implements AuthenticationSource<JwtAccessRequest, JwtChallenge> {
+abstract public class JwtTokenSource implements AuthenticationSource<JwtRequest, JwtChallenge> {
 
     protected final JwtConfigPrototype config;
 

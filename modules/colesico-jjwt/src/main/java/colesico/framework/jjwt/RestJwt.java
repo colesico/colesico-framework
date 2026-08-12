@@ -25,13 +25,13 @@ public class RestJwt extends JwtTokenSource {
     }
 
     @Override
-    public JwtAccessRequest request() {
+    public JwtRequest request() {
         String authHeader = this.httpContext.get().request().headers().get(AUTHORIZATION_HEADER);
         if (StringUtils.isBlank(authHeader)) return null;
 
         Matcher m = BEARER_PATTERN.matcher(authHeader.trim());
         if (m.matches()) {
-            return new JwtAccessRequest(m.group(1),
+            return new JwtRequest(m.group(1),
                     AuthenticationRequest.sourceClaims(this.getClass()));
         }
 

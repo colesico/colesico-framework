@@ -21,5 +21,6 @@ module colesico.framework.security {
     exports colesico.framework.security.assist.authorization;
     exports colesico.framework.security.assist.authentication.basic;
     exports colesico.framework.security.assist.authentication.apikey;
+    exports colesico.framework.security.authentication.callback;
 
 }

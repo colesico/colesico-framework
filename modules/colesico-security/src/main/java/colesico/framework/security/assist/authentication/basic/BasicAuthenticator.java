@@ -1,7 +1,7 @@
 package colesico.framework.security.assist.authentication.basic;
 
 import colesico.framework.security.Identity;
-import colesico.framework.security.authentication.AuthenticationResult;
+import colesico.framework.security.authentication.AuthenticationOutcome;
 import colesico.framework.security.authentication.Authenticator;
 import colesico.framework.security.internal.BasicAuthProducer;
 import jakarta.inject.Inject;
@@ -16,7 +16,7 @@ import java.util.*;
  * @see BasicAuthProducer
  */
 public class BasicAuthenticator implements
-        Authenticator<BasicAuthenticationRequest, BasicAuthenticationChallenge> {
+        Authenticator<BasicAuthenticationRequest> {
 
     /**
      * Authenticator config
@@ -31,7 +31,7 @@ public class BasicAuthenticator implements
     /**
      * Authenticated identities
      */
-    protected final Map<Object, Identity<?>> authenticated;
+    protected final Map<Object, Identity> authenticated;
 
     @Inject
     public BasicAuthenticator(BasicAuthConfigPrototype config, BasicAccountStorage accounts) {
@@ -48,7 +48,7 @@ public class BasicAuthenticator implements
         );
     }
 
-    protected Identity<?> performAuth(BasicAuthenticationRequest request) {
+    protected Identity performAuth(BasicAuthenticationRequest request) {
         String passwordHex;
         try {
             MessageDigest digest = MessageDigest.getInstance(config.passwordDigest());
@@ -71,34 +71,34 @@ public class BasicAuthenticator implements
     }
 
     @Override
-    public AuthenticationResult<BasicAuthenticationChallenge> authenticate(BasicAuthenticationRequest request) {
+    public AuthenticationOutcome authenticate(BasicAuthenticationRequest request) {
 
         if (request.isEmpty()) {
             var challenge = config.challenge();
             if (challenge != null) {
-                return AuthenticationResult.stage(challenge);
+                return challenge;
             } else {
-                return AuthenticationResult.skip("No challenge required");
+                return AuthenticationOutcome.skip("No challenge required");
             }
         }
 
         var login = request.login();
         var identity = authenticated.get(login);
         if (identity != null) {
-            return AuthenticationResult.success(identity);
+            return AuthenticationOutcome.success(identity);
         }
 
         identity = performAuth(request);
         if (identity != null) {
             authenticated.put(login, identity);
-            return AuthenticationResult.success(identity);
+            return AuthenticationOutcome.success(identity);
         }
 
-        return AuthenticationResult.failure("Invalid credentials");
+        return AuthenticationOutcome.failure("Invalid credentials");
     }
 
     @Override
-    public void logout(Identity<?> identity) {
+    public void logout(Identity identity) {
         if (identity != null) {
             authenticated.remove(identity.id());
         }

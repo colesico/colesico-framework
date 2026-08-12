@@ -10,7 +10,7 @@ public interface AuthorizationRequest<R> {
     /**
      * Identity that requests authorization
      */
-    Identity<?> identity();
+    Identity identity();
 
     /**
      * Resource for which authorization is requested.
@@ -20,7 +20,6 @@ public interface AuthorizationRequest<R> {
     /**
      * Default implementation
      */
-    record Default<R>(Identity<?> identity, R resource)
-            implements AuthorizationRequest<R> {
+    record Default<R>(Identity identity, R resource) implements AuthorizationRequest<R> {
     }
 }
