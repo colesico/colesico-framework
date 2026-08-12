@@ -3,9 +3,8 @@ package colesico.framework.telehttp.authentication;
 import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpContext;
 import colesico.framework.security.Identity;
-import colesico.framework.security.assist.authentication.basic.BasicAuthenticationChallenge;
+import colesico.framework.security.assist.authentication.basic.BasicCallback;
 import colesico.framework.security.assist.authentication.basic.BasicRequest;
-import colesico.framework.security.authentication.AuthenticatorOutcome;
 import colesico.framework.security.authentication.AuthenticationSource;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -16,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Singleton
-public class HttpBasic implements AuthenticationSource<BasicRequest, BasicAuthenticationChallenge> {
+public class HttpBasic implements AuthenticationSource<BasicRequest, BasicCallback>, BasicCallback {
 
     protected static final Pattern BASIC_AUTH_PATTERN =
             Pattern.compile("^Basic\\s+(.+)$", Pattern.CASE_INSENSITIVE);
@@ -56,18 +55,22 @@ public class HttpBasic implements AuthenticationSource<BasicRequest, BasicAuthen
     }
 
     @Override
-    public void onStage(AuthenticatorOutcome.Stage stage) {
-        var challenge = (BasicAuthenticationChallenge) stage;
+    public BasicCallback callback() {
+        return this;
+    }
+
+    @Override
+    public void onStage(String realm) {
         var response = httpContext.get().response();
         response
-                .addHeader(WWW_AUTHENTICATE_HEADER, "Basic realm=\"" + challenge.realm() + "\"")
+                .addHeader(WWW_AUTHENTICATE_HEADER, "Basic realm=\"" + realm + "\"")
                 .setStatus(401)
                 .send("401 Unauthorized. Authentication required");
 
     }
 
     @Override
-    public void onFailure(AuthenticatorOutcome.Failure failure) {
+    public void onFailure(Object failure) {
         httpContext.get().response()
                 .setStatus(401)
                 .send("401 Unauthorized. Authentication required");

@@ -3,7 +3,6 @@ package colesico.framework.security.internal;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.key.ClassedKey;
 import colesico.framework.ioc.key.Key;
-import colesico.framework.ioc.key.NamedKey;
 import colesico.framework.security.Identity;
 import colesico.framework.security.authentication.*;
 
