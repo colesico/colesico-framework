@@ -1,7 +1,6 @@
 package colesico.framework.security.assist.authentication.basic;
 
 import colesico.framework.security.Identity;
-import colesico.framework.security.authentication.AuthenticationResult;
 import colesico.framework.security.authentication.AuthenticatorOutcome;
 import colesico.framework.security.authentication.Authenticator;
 import colesico.framework.security.internal.BasicAuthProducer;

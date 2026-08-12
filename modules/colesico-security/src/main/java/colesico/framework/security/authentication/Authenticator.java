@@ -7,7 +7,7 @@ import colesico.framework.security.Identity;
  * i.e. database, ldap, etc
  *
  * <p>Implementations of this interface verify the credentials/token/etc provided in the
- * {@link AuthenticationRequest} and return an {@link AuthenticatorOutcome}
+ * {@link AuthenticatorRequest} and return an {@link AuthenticatorOutcome}
  * containing either the established {@code Identity} or failure details.
  * <p>
  * Register the {@link  Authenticator} instance with the IOC producer as
@@ -16,11 +16,11 @@ import colesico.framework.security.Identity;
  * classed = AuthenticationContextInstance.class,
  * polyproduce=N)
  *
- * @param <RQ> the specific type of {@link AuthenticationRequest} this authenticator handles
+ * @param <RQ> the specific type of {@link AuthenticatorRequest} this authenticator handles
  * @param <CB> the specific type of {@link AuthenticationCallback} this authenticator invokes
  */
 public interface Authenticator<
-        RQ extends AuthenticationRequest,
+        RQ extends AuthenticatorRequest,
         CB extends AuthenticationCallback<?, ?>> {
 
     /**

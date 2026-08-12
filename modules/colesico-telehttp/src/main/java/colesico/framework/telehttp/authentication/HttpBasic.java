@@ -60,20 +60,13 @@ public class HttpBasic implements AuthenticationSource<BasicRequest, BasicCallba
     }
 
     @Override
-    public void onStage(String realm) {
+    public void onChallenge(String realm) {
         var response = httpContext.get().response();
         response
                 .addHeader(WWW_AUTHENTICATE_HEADER, "Basic realm=\"" + realm + "\"")
                 .setStatus(401)
                 .send("401 Unauthorized. Authentication required");
 
-    }
-
-    @Override
-    public void onFailure(Object failure) {
-        httpContext.get().response()
-                .setStatus(401)
-                .send("401 Unauthorized. Authentication required");
     }
 
     @Override

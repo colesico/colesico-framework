@@ -14,12 +14,12 @@ import java.util.Optional;
 public interface AuthenticationRegistry {
 
     /**
-     * Finds a suitable  {@link Authenticator}s  capable of processing the given {@link AuthenticationRequest}.
+     * Finds a suitable  {@link Authenticator}s  capable of processing the given {@link AuthenticatorRequest}.
      *
      * @param request the authentication request to match an authenticator for.
      * @return an {@link Collection} containing the matched authenticators, or empty if none found.
      */
-    Collection<Authenticator<?, ?>> findAuthenticators(AuthenticationRequest request);
+    Collection<Authenticator<?, ?>> findAuthenticators(AuthenticatorRequest request);
 
     /**
      * Retrieves the {@link Authenticator} that originally issued the given {@link Identity}.

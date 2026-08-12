@@ -48,7 +48,7 @@ public class SecurityManagerImpl implements SecurityManager {
         this.authRegistry = authRegistry;
     }
 
-    protected AuthenticatorOutcome doAuthenticate(AuthenticationRequest request,
+    protected AuthenticatorOutcome doAuthenticate(AuthenticatorRequest request,
                                                   AuthenticationCallback<?, ?> callback) {
 
         var authenticators = authRegistry.findAuthenticators(request);
@@ -97,7 +97,7 @@ public class SecurityManagerImpl implements SecurityManager {
     }
 
     @Override
-    public AuthenticationResult authenticate(AuthenticationRequest request, AuthenticationCallback<?, ?> callback) {
+    public AuthenticationResult authenticate(AuthenticatorRequest request, AuthenticationCallback<?, ?> callback) {
         identityContext.clear();
         var outcome = doAuthenticate(request, callback);
         return outcome.result();
@@ -117,7 +117,7 @@ public class SecurityManagerImpl implements SecurityManager {
         identityContext.clear();
 
         for (AuthenticationSource source : sources) {
-            final AuthenticationRequest request = source.request();
+            final AuthenticatorRequest request = source.request();
             if (request == null) {
                 continue;
             }

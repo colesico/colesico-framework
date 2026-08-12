@@ -35,21 +35,24 @@ import java.util.concurrent.Callable;
  */
 public interface SecurityManager {
 
-    AuthenticationResult authenticate(AuthenticationRequest request, AuthenticationCallback<?, ?> callback);
+    /**
+     *  Attempts to authenticate a subject using the provided request and performs callback invocation
+     * @param callback optional callback
+     */
+    AuthenticationResult authenticate(AuthenticatorRequest request, AuthenticationCallback<?, ?> callback);
 
-    default AuthenticationResult authenticate(AuthenticationRequest request) {
-        return authenticate(request, new AuthenticationCallback<>() {
-        });
+    default AuthenticationResult authenticate(AuthenticatorRequest request) {
+        return authenticate(request, null);
     }
 
     /**
      * Attempts to authenticate a subject using the provided collection of {@link AuthenticationSource}s.
-     * The first source that provides a valid {@link AuthenticationRequest} will be used for authentication.
+     * The first source that provides a valid {@link AuthenticatorRequest} will be used for authentication.
      * On success, the resulting {@link Identity} is bound to the current {@link IdentityContext}.
      */
-    AuthenticationResult authenticate(Iterable<AuthenticationSource<?,?>> sources);
+    AuthenticationResult authenticate(Iterable<AuthenticationSource<?, ?>> sources);
 
-    default AuthenticationResult authenticate(AuthenticationSource<?,?> source) {
+    default AuthenticationResult authenticate(AuthenticationSource<?, ?> source) {
         return authenticate(List.of(source));
     }
 

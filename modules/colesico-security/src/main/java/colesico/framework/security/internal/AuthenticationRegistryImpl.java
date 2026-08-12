@@ -23,35 +23,33 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public Collection<Authenticator<?, ?>> findAuthenticators(AuthenticationRequest request) {
+    public Collection<Authenticator<?, ?>> findAuthenticators(AuthenticatorRequest request) {
         if (request == null) {
             throw new SecurityException("Authentication request is null");
         }
-        Key<Authenticator> authIocKey = new ClassedKey<>(Authenticator.class, request.getClass());
+        Key<Authenticator> iocKey = new ClassedKey<>(Authenticator.class, request.getClass());
         List<Authenticator<?, ?>> result = new ArrayList<>();
-        ioc.polysupplier(authIocKey).forEach(a -> result.add(a));
+        ioc.polysupplier(iocKey).forEach(a -> result.add(a));
         return result;
     }
 
     @Override
     public Optional<Authenticator<?, AuthenticationCallback<?, ?>>> findAuthenticator(Identity<?> identity) {
-        var authenticatorClass = identity.claim(AUTHENTICATOR_CLAIM, Class.class);
-        if (authenticatorClass.isPresent()) {
-            var authenticator = ioc.instanceOrNull(authenticatorClass.get());
-            return Optional.ofNullable((Authenticator) authenticator);
-        } else {
+        var authenticatorIdClass = identity.claim(AUTHENTICATOR_CLAIM, Class.class);
+        if (authenticatorIdClass.isEmpty()) {
             return Optional.empty();
         }
+        Key<Authenticator> iocKey = new ClassedKey<>(Authenticator.class, authenticatorIdClass.get());
+        return Optional.of(ioc.instance(iocKey));
     }
 
     @Override
     public Optional<AuthenticationCallback<?, ?>> findCallback(Identity<?> identity) {
-        var sourceClass = identity.claim(CALLBACK_CLAIM, Class.class);
-        if (sourceClass.isPresent()) {
-            var source = ioc.instanceOrNull(sourceClass.get());
-            return Optional.ofNullable((AuthenticationCallback<?, ?>) source);
-        } else {
+        var callbackIdClass = identity.claim(CALLBACK_CLAIM, Class.class);
+        if (callbackIdClass.isEmpty()) {
             return Optional.empty();
         }
+        Key<AuthenticationCallback> iocKey = new ClassedKey<>(AuthenticationCallback.class, callbackIdClass.get());
+        return Optional.of(ioc.instance(iocKey));
     }
 }

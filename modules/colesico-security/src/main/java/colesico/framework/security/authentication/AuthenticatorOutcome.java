@@ -53,7 +53,7 @@ public sealed interface AuthenticatorOutcome permits
      * @param request       the modified request payload for the next step
      * @param authenticator the authenticator to execute next
      */
-    record Next(AuthenticationRequest request, Authenticator<?, ?> authenticator) implements AuthenticatorOutcome {
+    record Next(AuthenticatorRequest request, Authenticator<?, ?> authenticator) implements AuthenticatorOutcome {
         @Override
         public AuthenticationResult result() {
             throw new SecurityException("Next outcome is transitional and cannot be processed as a final result");
@@ -92,7 +92,7 @@ public sealed interface AuthenticatorOutcome permits
     /**
      * Creates a transitional outcome to proceed to the specified next authenticator.
      */
-    static Next next(final AuthenticationRequest request, final Authenticator<?,?> authenticator) {
+    static Next next(final AuthenticatorRequest request, final Authenticator<?,?> authenticator) {
         return new Next(request, authenticator);
     }
 

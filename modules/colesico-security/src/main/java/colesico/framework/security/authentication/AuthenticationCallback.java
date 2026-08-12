@@ -1,10 +1,19 @@
 package colesico.framework.security.authentication;
 
+import colesico.framework.ioc.Ioc;
+import colesico.framework.ioc.key.ClassedKey;
+
 /**
  * Callback for handling authentication outcomes for a specific request or source.
  * Extends this interface to add more specific callbacks.
  */
 public interface AuthenticationCallback<LI, LO> {
+
+    /**
+     * Callback ID class.
+     * This id used to obtain this callback from  {@link Ioc} with {@link ClassedKey}
+     */
+    Class<?> id();
 
     /**
      * Default handle the subject has been successfully authenticated.
