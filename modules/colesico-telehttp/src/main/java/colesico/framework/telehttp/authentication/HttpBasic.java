@@ -4,8 +4,8 @@ import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpContext;
 import colesico.framework.security.Identity;
 import colesico.framework.security.assist.authentication.basic.BasicAuthenticationChallenge;
-import colesico.framework.security.assist.authentication.basic.BasicAuthenticationRequest;
-import colesico.framework.security.authentication.AuthenticationOutcome;
+import colesico.framework.security.assist.authentication.basic.BasicRequest;
+import colesico.framework.security.authentication.AuthenticatorOutcome;
 import colesico.framework.security.authentication.AuthenticationSource;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Singleton
-public class HttpBasic implements AuthenticationSource<BasicAuthenticationRequest, BasicAuthenticationChallenge> {
+public class HttpBasic implements AuthenticationSource<BasicRequest, BasicAuthenticationChallenge> {
 
     protected static final Pattern BASIC_AUTH_PATTERN =
             Pattern.compile("^Basic\\s+(.+)$", Pattern.CASE_INSENSITIVE);
@@ -31,15 +31,15 @@ public class HttpBasic implements AuthenticationSource<BasicAuthenticationReques
     }
 
     @Override
-    public BasicAuthenticationRequest request() {
+    public BasicRequest request() {
         var request = httpContext.get().request();
         String authHeader = request.headers().get(AUTHORIZATION_HEADER);
         if (StringUtils.isBlank(authHeader)) {
-            return BasicAuthenticationRequest.empty(HttpBasic.class);
+            return BasicRequest.empty(HttpBasic.class);
         }
         Matcher matcher = BASIC_AUTH_PATTERN.matcher(authHeader.trim());
         if (!matcher.matches()) {
-            return BasicAuthenticationRequest.empty(HttpBasic.class);
+            return BasicRequest.empty(HttpBasic.class);
         }
 
         String base64Credentials = matcher.group(1);
@@ -49,14 +49,14 @@ public class HttpBasic implements AuthenticationSource<BasicAuthenticationReques
 
         String[] values = credentials.split(":", 2);
         if (values.length == 2) {
-            return BasicAuthenticationRequest.of(values[0], values[1], HttpBasic.class);
+            return BasicRequest.of(values[0], values[1], HttpBasic.class);
         } else {
             throw new SecurityException("Invalid Authorization header");
         }
     }
 
     @Override
-    public void onStage(AuthenticationOutcome.Stage stage) {
+    public void onStage(AuthenticatorOutcome.Stage stage) {
         var challenge = (BasicAuthenticationChallenge) stage;
         var response = httpContext.get().response();
         response
@@ -67,7 +67,7 @@ public class HttpBasic implements AuthenticationSource<BasicAuthenticationReques
     }
 
     @Override
-    public void onFailure(AuthenticationOutcome.Failure failure) {
+    public void onFailure(AuthenticatorOutcome.Failure failure) {
         httpContext.get().response()
                 .setStatus(401)
                 .send("401 Unauthorized. Authentication required");

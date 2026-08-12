@@ -30,7 +30,7 @@ public interface AuthenticationRegistry {
      * @return an {@link Optional} containing the issuing authenticator, or empty if the claim
      * is missing or no matching authenticator is registered.
      */
-    Optional<Authenticator<?>> findAuthenticator(Identity identity);
+    Optional<Authenticator<?, AuthenticationCallback<?, ?, ?, ?>>> findAuthenticator(Identity<?> identity);
 
     /**
      * Retrieves the {@link AuthenticationCallback} associated with the given {@link Identity}.
@@ -43,5 +43,5 @@ public interface AuthenticationRegistry {
      * @return an {@link Optional} containing the authentication source, or empty if the claim
      * is missing or no matching source is registered.
      */
-    Optional<AuthenticationSource<?, ?>> findCallback(Identity<?> identity);
+    Optional<AuthenticationCallback<?, ?, ?, ?>> findCallback(Identity<?> identity);
 }

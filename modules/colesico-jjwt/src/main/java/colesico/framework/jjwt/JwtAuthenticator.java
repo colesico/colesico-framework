@@ -1,7 +1,7 @@
 package colesico.framework.jjwt;
 
 import colesico.framework.security.Identity;
-import colesico.framework.security.authentication.AuthenticationOutcome;
+import colesico.framework.security.authentication.AuthenticatorOutcome;
 import colesico.framework.security.authentication.Authenticator;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -22,24 +22,24 @@ public class JwtAuthenticator implements Authenticator<JwtRequest, Authenticatio
     }
 
     @Override
-    public AuthenticationOutcome<AuthenticationChallenge> authenticate(JwtRequest request) {
+    public AuthenticatorOutcome<AuthenticationChallenge> authenticate(JwtRequest request) {
         try {
             Claims claims = tokenUtils.parseAccessToken(request.accessToken());
 
             var tokenType = claims.get(JwtTokenUtils.TOKEN_TYPE_CLAIM);
             if (!JwtTokenUtils.ACCESS_TOKEN_TYPE.equals(tokenType)) {
-                return AuthenticationOutcome.failure("Invalid accessToken type: " + tokenType);
+                return AuthenticatorOutcome.failure("Invalid accessToken type: " + tokenType);
             }
 
             Map<String, Object> identityClaims = new HashMap<>(claims);
             identityClaims.put(Identity.AUTHENTICATOR_CLAIM, JwtAuthenticator.class);
             Identity<?> identity = Identity.Default.of(claims.getSubject(), identityClaims);
-            return AuthenticationOutcome.success(identity);
+            return AuthenticatorOutcome.success(identity);
         } catch (ExpiredJwtException e) {
           //  return AuthenticationResult.challenge(JwtChallenge(JwtChallenge.Action.REFRESH_ACCESS_TOKEN));
             return null;
         } catch (Exception e) {
-            return AuthenticationOutcome.failure("InvalidToken");
+            return AuthenticatorOutcome.failure("InvalidToken");
         }
     }
 

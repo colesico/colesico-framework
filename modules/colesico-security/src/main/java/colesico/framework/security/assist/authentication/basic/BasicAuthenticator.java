@@ -1,7 +1,8 @@
 package colesico.framework.security.assist.authentication.basic;
 
 import colesico.framework.security.Identity;
-import colesico.framework.security.authentication.AuthenticationOutcome;
+import colesico.framework.security.authentication.AuthenticationResult;
+import colesico.framework.security.authentication.AuthenticatorOutcome;
 import colesico.framework.security.authentication.Authenticator;
 import colesico.framework.security.internal.BasicAuthProducer;
 import jakarta.inject.Inject;
@@ -15,8 +16,8 @@ import java.util.*;
  *
  * @see BasicAuthProducer
  */
-public class BasicAuthenticator implements
-        Authenticator<BasicAuthenticationRequest> {
+public class BasicAuthenticator
+        implements Authenticator<BasicRequest, BasicCallback> {
 
     /**
      * Authenticator config
@@ -48,7 +49,7 @@ public class BasicAuthenticator implements
         );
     }
 
-    protected Identity performAuth(BasicAuthenticationRequest request) {
+    protected Identity performAuth(BasicRequest request) {
         String passwordHex;
         try {
             MessageDigest digest = MessageDigest.getInstance(config.passwordDigest());
@@ -71,36 +72,47 @@ public class BasicAuthenticator implements
     }
 
     @Override
-    public AuthenticationOutcome authenticate(BasicAuthenticationRequest request) {
+    public AuthenticatorOutcome authenticate(BasicRequest request, BasicCallback callback) {
+        Optional<BasicCallback> cb = Optional.ofNullable(callback);
 
         if (request.isEmpty()) {
-            var challenge = config.challenge();
-            if (challenge != null) {
-                return challenge;
+            var realm = config.realm();
+            if (realm != null) {
+                cb.ifPresent(c -> c.onStage(realm));
+                return AuthenticatorOutcome.stage();
             } else {
-                return AuthenticationOutcome.skip("No challenge required");
+                return AuthenticatorOutcome.skip("No realm provided");
             }
         }
 
         var login = request.login();
         var identity = authenticated.get(login);
         if (identity != null) {
-            return AuthenticationOutcome.success(identity);
+            if (cb.isPresent()) {
+                cb.get().onSuccess(identity);
+            }
+            return AuthenticatorOutcome.success(identity);
         }
 
         identity = performAuth(request);
         if (identity != null) {
             authenticated.put(login, identity);
-            return AuthenticationOutcome.success(identity);
+            if (cb.isPresent()) {
+                cb.get().onSuccess(identity);
+            }
+            return AuthenticatorOutcome.success(identity);
         }
 
-        return AuthenticationOutcome.failure("Invalid credentials");
+        return AuthenticatorOutcome.failure("Invalid credentials");
     }
 
     @Override
-    public void logout(Identity identity) {
+    public void logout(Identity identity, BasicCallback callback) {
         if (identity != null) {
             authenticated.remove(identity.id());
+            if (callback != null) {
+                callback.onLogout(identity);
+            }
         }
     }
 

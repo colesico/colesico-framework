@@ -1,10 +1,10 @@
 package colesico.framework.security.authorization;
 
-public interface AuthorizationResult {
+public interface AuthorizationResult<D> {
 
     PermissionStatus status();
 
-    Object details();
+    D details();
 
     default boolean isGranted() {
         return PermissionStatus.GRANTED.equals(status());
@@ -18,32 +18,31 @@ public interface AuthorizationResult {
         return PermissionStatus.UNDEFINED.equals(status());
     }
 
-    record ImmutableAuthorizationResult(PermissionStatus status,
-                                        Object details) implements AuthorizationResult {
-
+    record ImmutableAuthorizationResult<D>(PermissionStatus status,
+                                           D details) implements AuthorizationResult<D> {
     }
 
-    static ImmutableAuthorizationResult granted(Object details) {
-        return new ImmutableAuthorizationResult(PermissionStatus.GRANTED, details);
+    static <D> ImmutableAuthorizationResult<D> granted(D details) {
+        return new ImmutableAuthorizationResult<>(PermissionStatus.GRANTED, details);
     }
 
-    static ImmutableAuthorizationResult granted() {
-        return new ImmutableAuthorizationResult(PermissionStatus.GRANTED, null);
+    static <D> ImmutableAuthorizationResult<D> granted() {
+        return new ImmutableAuthorizationResult<>(PermissionStatus.GRANTED, null);
     }
 
-    static ImmutableAuthorizationResult denied(Object details) {
-        return new ImmutableAuthorizationResult(PermissionStatus.DENIED, details);
+    static <D> ImmutableAuthorizationResult<D> denied(D details) {
+        return new ImmutableAuthorizationResult<>(PermissionStatus.DENIED, details);
     }
 
-    static ImmutableAuthorizationResult denied() {
-        return new ImmutableAuthorizationResult(PermissionStatus.DENIED, null);
+    static <D> ImmutableAuthorizationResult<D> denied() {
+        return new ImmutableAuthorizationResult<>(PermissionStatus.DENIED, null);
     }
 
-    static ImmutableAuthorizationResult undefined(Object details) {
-        return new ImmutableAuthorizationResult(PermissionStatus.UNDEFINED, details);
+    static <D> ImmutableAuthorizationResult<D> undefined(D details) {
+        return new ImmutableAuthorizationResult<>(PermissionStatus.UNDEFINED, details);
     }
 
-    static ImmutableAuthorizationResult undefined() {
-        return new ImmutableAuthorizationResult(PermissionStatus.UNDEFINED, null);
+    static <D> ImmutableAuthorizationResult<D> undefined() {
+        return new ImmutableAuthorizationResult<>(PermissionStatus.UNDEFINED, null);
     }
 }

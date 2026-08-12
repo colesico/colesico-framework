@@ -5,7 +5,7 @@ import colesico.framework.security.Identity;
 /**
  * Callback for handling authentication outcomes for a specific request or source.
  */
-public interface AuthenticationCallback<O extends AuthenticationOutcome> {
+public interface AuthenticationCallback<SC, FL, ST, LO> {
 
     /**
      * Handle the subject has been successfully authenticated.
@@ -13,7 +13,7 @@ public interface AuthenticationCallback<O extends AuthenticationOutcome> {
      * This allows to perform post-authentication actions, such as
      * attaching the identity to a session or sending a success header.
      */
-    default void onSuccess(AuthenticationOutcome.Success success) {
+    default void onSuccess(SC success) {
     }
 
     /**
@@ -22,7 +22,7 @@ public interface AuthenticationCallback<O extends AuthenticationOutcome> {
      * Allows to react to the failure, for example, by clearing
      * invalid credentials from the transport headers or logging the event.
      */
-    default void onFailure(AuthenticationOutcome.Failure failure) {
+    default void onFailure(FL failure) {
     }
 
     /**
@@ -31,7 +31,7 @@ public interface AuthenticationCallback<O extends AuthenticationOutcome> {
      * This is used for multi-step authentication (e.g., Digest, OAuth redirect,
      * or Multi-Factor Authentication) to prompt the client for further information.
      */
-    default void onStage(AuthenticationOutcome.Stage stage) {
+    default void onStage(ST stage) {
     }
 
     /**
@@ -40,7 +40,7 @@ public interface AuthenticationCallback<O extends AuthenticationOutcome> {
      * This is used to clear protocol-specific security data, such as
      * invalidating a session cookie or clearing local security headers.
      */
-    default void onLogout(Identity identity) {
+    default void onLogout(LO logout) {
     }
 
 }

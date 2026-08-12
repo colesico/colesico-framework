@@ -15,9 +15,9 @@ public interface IdentityContext {
     /**
      * Returns {@link Identity} bound to current scope  (thread, request, etc)
      */
-    Optional<Identity> identity();
+    Optional<Identity<?>> identity();
 
-    void setIdentity(Identity identity);
+    void setIdentity(Identity<?> identity);
 
     /**
      * Remove identity bound to current scope

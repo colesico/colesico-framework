@@ -6,23 +6,21 @@ import colesico.framework.security.Identity;
 /**
  * Represents the outcome of an authentication attempt by {@link Authenticator}.
  */
-public sealed interface AuthenticationOutcome
-        permits
-        AuthenticationOutcome.Success,
-        AuthenticationOutcome.Failure,
-        AuthenticationOutcome.Stage,
-        AuthenticationOutcome.Skip {
+public sealed interface AuthenticatorOutcome permits
+        AuthenticatorOutcome.Success,
+        AuthenticatorOutcome.Failure,
+        AuthenticatorOutcome.Stage,
+        AuthenticatorOutcome.Skip {
 
-    AuthenticationResult toResult();
+    AuthenticationResult result();
 
     /**
      * Definitively successful authentication.
      */
-    non-sealed interface Success extends AuthenticationOutcome {
-        Identity identity();
+    record Success(Identity identity) implements AuthenticatorOutcome {
 
         @Override
-        default AuthenticationResult toResult() {
+        public AuthenticationResult result() {
             return AuthenticationResult.success(identity());
         }
     }
@@ -30,11 +28,9 @@ public sealed interface AuthenticationOutcome
     /**
      * Definitively failed authentication.
      */
-    non-sealed interface Failure extends AuthenticationOutcome {
-        Object error();
-
+    record Failure(Object error) implements AuthenticatorOutcome {
         @Override
-        default AuthenticationResult toResult() {
+        public AuthenticationResult result() {
             return AuthenticationResult.failure(error());
         }
     }
@@ -42,9 +38,9 @@ public sealed interface AuthenticationOutcome
     /**
      * Authentication required next stage/step as source interaction.
      */
-    non-sealed interface Stage extends AuthenticationOutcome {
+    record Stage() implements AuthenticatorOutcome {
         @Override
-        default AuthenticationResult toResult() {
+        public AuthenticationResult result() {
             return AuthenticationResult.stage();
         }
     }
@@ -52,10 +48,10 @@ public sealed interface AuthenticationOutcome
     /**
      * Authenticator abstained from decision.
      */
-    record Skip(String reason) implements AuthenticationOutcome {
+    record Skip(String reason) implements AuthenticatorOutcome {
         @Override
-        public AuthenticationResult toResult() {
-            throw new UnsupportedOperationException("Not supported");
+        public AuthenticationResult result() {
+            return AuthenticationResult.failure(reason);
         }
     }
 
@@ -63,14 +59,18 @@ public sealed interface AuthenticationOutcome
      * Creates default successful outcome
      */
     static Success success(final Identity identity) {
-        return () -> identity;
+        return new Success(identity);
     }
 
     /**
      * Creates default failure outcome.
      */
     static Failure failure(final Object error) {
-        return () -> error;
+        return new Failure(error);
+    }
+
+    static Stage stage() {
+        return new Stage();
     }
 
     /**

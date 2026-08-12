@@ -6,19 +6,19 @@ import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Polyproduce;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.security.assist.authentication.basic.BasicAuthenticationRequest;
+import colesico.framework.security.assist.authentication.basic.BasicRequest;
 import colesico.framework.security.assist.authentication.basic.*;
 import colesico.framework.security.authentication.Authenticator;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 @Producer
-@Produce(BasicAuthentication.class)
+@Produce(BasicSource.class)
 @Produce(value = BasicAuthenticator.class, scoped = Singleton.class)
 public class BasicAuthProducer {
 
     @Singleton
-    @Classed(BasicAuthenticationRequest.class)
+    @Classed(BasicRequest.class)
     @Polyproduce(order = Integer.MAX_VALUE)
     public Authenticator authenticator(Provider<BasicAuthenticator> impl) {
         return impl.get();

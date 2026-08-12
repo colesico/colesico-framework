@@ -1,7 +1,6 @@
 package colesico.framework.security.assist.authentication.basic;
 
 import colesico.framework.security.Identity;
-import colesico.framework.security.authentication.AuthenticationOutcome;
 import colesico.framework.security.authentication.AuthenticationSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,32 +12,37 @@ import java.util.concurrent.atomic.AtomicReference;
  * Allow to authenticate single user per scope  (default - singleton)
  * Put this source to appropriate scope to support multi user authentication.
  */
-public class BasicAuthentication
-        implements AuthenticationSource<BasicAuthenticationRequest> {
+public class BasicSource
+        implements AuthenticationSource<BasicRequest, BasicCallback>, BasicCallback {
 
-    protected static final Logger log = LoggerFactory.getLogger(BasicAuthentication.class);
+    protected static final Logger log = LoggerFactory.getLogger(BasicSource.class);
 
-    protected final AtomicReference<BasicAuthenticationRequest> request = new AtomicReference<>();
+    protected final AtomicReference<BasicRequest> request = new AtomicReference<>();
 
     @Override
-    public BasicAuthenticationRequest request() {
+    public BasicRequest request() {
         return request.get();
     }
 
     @Override
-    public void onStage(BasicAuthenticationChallenge challenge) {
-        log.debug("Proceed challenge: {}", challenge);
+    public BasicCallback callback() {
+        return this;
     }
 
     @Override
-    public void onSuccess(AuthenticationOutcome.Success success) {
-        log.debug("Identity {} is logged in", success.identity().id());
+    public void onStage(String realm) {
+        log.debug("Proceed realm: {}", realm);
     }
 
     @Override
-    public <E> void onFailure(AuthenticationOutcome.Failure failure) {
+    public void onSuccess(Identity identity) {
+        log.debug("Identity {} is logged in", identity.id());
+    }
+
+    @Override
+    public void onFailure(Object failure) {
         this.request.set(null);
-        log.debug("Authentication request failure: {}", error);
+        log.debug("Authentication request failure: {}", failure);
     }
 
     @Override
@@ -51,6 +55,6 @@ public class BasicAuthentication
      * Credentials to perform authentication
      */
     public void setCredentials(String login, String password) {
-        this.request.set(BasicAuthenticationRequest.of(login, password, BasicAuthentication.class));
+        this.request.set(BasicRequest.of(login, password, BasicSource.class));
     }
 }

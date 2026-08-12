@@ -9,15 +9,12 @@ public sealed interface AuthenticationResult
         AuthenticationResult.Stage {
 
     record Success(Identity identity) implements AuthenticationResult {
-
     }
 
     record Failure(Object error) implements AuthenticationResult {
-
     }
 
     record Stage() implements AuthenticationResult {
-
     }
 
     static Success success(Identity identity) {

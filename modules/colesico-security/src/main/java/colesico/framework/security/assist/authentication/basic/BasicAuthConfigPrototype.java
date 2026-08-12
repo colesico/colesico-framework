@@ -17,7 +17,7 @@ abstract public class BasicAuthConfigPrototype {
         return "SHA-256";
     }
 
-    protected BasicAuthenticationChallenge challenge(){
-        return new BasicAuthenticationChallenge("Authentication");
+    protected String realm(){
+        return "Authentication";
     }
 }

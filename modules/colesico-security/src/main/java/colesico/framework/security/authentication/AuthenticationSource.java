@@ -7,8 +7,9 @@ package colesico.framework.security.authentication;
  * communication protocols such as HTTP, gRPC, or Message Queues. It is responsible
  * for extracting credentials and handling protocol-specific responses.
  */
-public interface AuthenticationSource<R extends AuthenticationRequest>
-        extends AuthenticationCallback {
+public interface AuthenticationSource<
+        RQ extends AuthenticationRequest,
+        CB extends AuthenticationCallback<?, ?, ?, ?>> {
 
     /**
      * Extracts an {@link AuthenticationRequest} from the underlying transport.
@@ -16,5 +17,10 @@ public interface AuthenticationSource<R extends AuthenticationRequest>
      * @return the request containing credentials, or {@code null} if no credentials
      * are present in this source.
      */
-    R request();
+    RQ request();
+
+    /**
+     * Get source callback
+     */
+    CB callback();
 }

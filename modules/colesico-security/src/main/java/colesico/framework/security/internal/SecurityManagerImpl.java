@@ -22,7 +22,7 @@ import colesico.framework.security.authentication.*;
 import colesico.framework.security.SecurityManager;
 import colesico.framework.security.authentication.AuthenticationSource;
 import colesico.framework.security.authentication.AuthenticationCallback;
-import colesico.framework.security.authentication.AuthenticationOutcome;
+import colesico.framework.security.authentication.AuthenticatorOutcome;
 
 import java.util.Optional;
 import java.util.concurrent.Callable;
@@ -46,8 +46,8 @@ public class SecurityManagerImpl implements SecurityManager {
         this.authRegistry = authRegistry;
     }
 
-    protected AuthenticationOutcome doAuthenticate(AuthenticationRequest request,
-                                                   AuthenticationCallback callback) {
+    protected AuthenticatorOutcome doAuthenticate(AuthenticationRequest request,
+                                                  AuthenticationCallback<?, ?, ?, ?> callback) {
 
         if (callback == null) {
             throw new SecurityException("Authentication callback is null");
@@ -59,27 +59,24 @@ public class SecurityManagerImpl implements SecurityManager {
         }
 
         for (Authenticator authenticator : authenticators) {
-            var outcome = authenticator.authenticate(request);
+            var outcome = authenticator.authenticate(request, callback);
             if (outcome == null) {
                 throw new SecurityException("Null authentication result");
             }
 
             switch (outcome) {
-                case AuthenticationOutcome.Success success -> {
+                case AuthenticatorOutcome.Success success -> {
                     var identity = success.identity();
                     if (identity == null) {
                         throw new SecurityException("Null Identity for success authentication");
                     }
                     identityContext.setIdentity(identity);
-                    callback.onSuccess(success);
                     return success;
                 }
-                case AuthenticationOutcome.Failure failure -> {
-                    callback.onFailure(failure);
+                case AuthenticatorOutcome.Failure failure -> {
                     return failure;
                 }
-                case AuthenticationOutcome.Stage stage -> {
-                    callback.onStage(stage);
+                case AuthenticatorOutcome.Stage stage -> {
                     return stage;
                 }
                 // Skip
@@ -89,17 +86,17 @@ public class SecurityManagerImpl implements SecurityManager {
             }
         }
 
-        return AuthenticationOutcome.skip("No meaningful authentication");
+        return AuthenticatorOutcome.skip("No meaningful authentication");
     }
 
     @Override
-    public AuthenticationResult authenticate(AuthenticationRequest request, AuthenticationCallback callback) {
+    public AuthenticationResult authenticate(AuthenticationRequest request, AuthenticationCallback<?, ?, ?, ?> callback) {
         identityContext.clear();
         var outcome = doAuthenticate(request, callback);
-        if (outcome instanceof AuthenticationOutcome.Skip) {
+        if (outcome instanceof AuthenticatorOutcome.Skip) {
             return AuthenticationResult.failure("No meaningful authentication");
         }
-        return outcome.toResult();
+        return outcome.result();
     }
 
     /**
@@ -107,7 +104,7 @@ public class SecurityManagerImpl implements SecurityManager {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public AuthenticationResult authenticate(Iterable<AuthenticationSource> sources) {
+    public AuthenticationResult authenticate(Iterable<AuthenticationSource<?, ?>> sources) {
 
         if (sources == null || !sources.iterator().hasNext()) {
             return AuthenticationResult.failure("No authentication sources");
@@ -121,11 +118,11 @@ public class SecurityManagerImpl implements SecurityManager {
                 continue;
             }
 
-            var outcome = doAuthenticate(request, source);
-            if (outcome instanceof AuthenticationOutcome.Skip) {
+            var outcome = doAuthenticate(request, source.callback());
+            if (outcome instanceof AuthenticatorOutcome.Skip) {
                 continue;
             }
-            return outcome.toResult();
+            return outcome.result();
         }
 
         return AuthenticationResult.failure("No meaningful authentication");
@@ -138,7 +135,7 @@ public class SecurityManagerImpl implements SecurityManager {
     }
 
     @Override
-    public Optional<Identity> identity() {
+    public Optional<Identity<?>> identity() {
         return identityContext.identity();
     }
 
@@ -152,17 +149,23 @@ public class SecurityManagerImpl implements SecurityManager {
      * @param identity the identity to log out.
      */
     @Override
-    public void logout(Identity identity) {
+    @SuppressWarnings("unchecked")
+    public void logout(Identity<?> identity) {
         if (identity == null) {
             throw new SecurityException("Identity is null");
         }
 
-        authRegistry.findAuthenticator(identity)
-                .ifPresent(a -> a.logout(identity));
-
-        authRegistry.findCallback(identity)
-                .ifPresent(s -> s.onLogout(identity));
-
+        var authenticator = authRegistry.findAuthenticator(identity);
+        if (authenticator.isPresent()) {
+            var callback = authRegistry.findCallback(identity);
+            if (callback.isPresent()) {
+                authenticator.get().logout(identity, callback.get());
+            } else {
+                authenticator.get().logout(identity, null);
+            }
+        } else {
+            throw new SecurityException("Identity authenticator is not defined");
+        }
     }
 
     @Override
@@ -175,7 +178,7 @@ public class SecurityManagerImpl implements SecurityManager {
     }
 
     @Override
-    public <T> T callAs(Callable<T> callable, Identity identity) {
+    public <T> T callAs(Callable<T> callable, Identity<?> identity) {
         final var previous = identityContext.identity();
         identityContext.setIdentity(identity);
         try {

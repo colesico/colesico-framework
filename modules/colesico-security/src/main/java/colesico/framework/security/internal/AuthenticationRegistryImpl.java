@@ -5,10 +5,7 @@ import colesico.framework.ioc.key.ClassedKey;
 import colesico.framework.ioc.key.Key;
 import colesico.framework.ioc.key.NamedKey;
 import colesico.framework.security.Identity;
-import colesico.framework.security.authentication.AuthenticationRegistry;
-import colesico.framework.security.authentication.AuthenticationRequest;
-import colesico.framework.security.authentication.AuthenticationSource;
-import colesico.framework.security.authentication.Authenticator;
+import colesico.framework.security.authentication.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,18 +24,18 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public Collection<Authenticator<?,?>> findAuthenticators(AuthenticationRequest request) {
+    public Collection<Authenticator<?, ?>> findAuthenticators(AuthenticationRequest request) {
         if (request == null) {
             throw new SecurityException("Authentication request is null");
         }
         Key<Authenticator> authIocKey = new ClassedKey<>(Authenticator.class, request.getClass());
-        List<Authenticator<?,?>> result = new ArrayList<>();
+        List<Authenticator<?, ?>> result = new ArrayList<>();
         ioc.polysupplier(authIocKey).forEach(a -> result.add(a));
         return result;
     }
 
     @Override
-    public Optional<Authenticator<?,?>> findAuthenticator(Identity<?> identity) {
+    public Optional<Authenticator<?, AuthenticationCallback<?,?,?,?>>> findAuthenticator(Identity<?> identity) {
         var authenticatorClass = identity.claim(AUTHENTICATOR_CLAIM, Class.class);
         if (authenticatorClass.isPresent()) {
             var authenticator = ioc.instanceOrNull(authenticatorClass.get());
@@ -49,11 +46,11 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
     }
 
     @Override
-    public Optional<AuthenticationSource<?, ?>> findCallback(Identity<?> identity) {
+    public Optional<AuthenticationCallback<?, ?, ?, ?>> findCallback(Identity<?> identity) {
         var sourceClass = identity.claim(CALLBACK_CLAIM, Class.class);
         if (sourceClass.isPresent()) {
             var source = ioc.instanceOrNull(sourceClass.get());
-            return Optional.ofNullable((AuthenticationSource) source);
+            return Optional.ofNullable((AuthenticationCallback<?, ?, ?, ?>) source);
         } else {
             return Optional.empty();
         }

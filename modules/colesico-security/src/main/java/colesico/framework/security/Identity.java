@@ -20,10 +20,7 @@ import colesico.framework.ioc.Ioc;
 import colesico.framework.security.authentication.AuthenticationCallback;
 import colesico.framework.security.authentication.Authenticator;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Represents a verified security subject.
@@ -34,7 +31,7 @@ import java.util.Set;
  * <p>
  * The framework provides a default implementation: {@link Identity.Default}
  */
-public interface Identity {
+public interface Identity<ID> {
 
     /**
      * Specifies {@link Authenticator} instance class that issued this identity
@@ -62,18 +59,9 @@ public interface Identity {
     /**
      * Returns the unique identifier of this identity (e.g., UUID, strategy, or numeric ID).
      */
-    Object id();
+    ID id();
 
-    /**
-     * Cast identity id to given type.
-     * Usage example: Long userId = identity.ID();
-     */
-    @SuppressWarnings("unchecked")
-    default <T> T ID() {
-        return (T) id();
-    }
-
-    default Object getId() {
+    default ID getId() {
         return id();
     }
 
@@ -135,7 +123,7 @@ public interface Identity {
     record Default(Object id, Map<String, Object> claims) implements Identity {
 
         public static Default of(Object id) {
-            return new Default(id, Map.of());
+            return new Default(id, new HashMap<>());
         }
 
         public static Default of(Object id, Map<String, Object> claims) {

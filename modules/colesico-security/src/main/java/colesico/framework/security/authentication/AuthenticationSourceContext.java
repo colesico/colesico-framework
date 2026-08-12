@@ -13,16 +13,16 @@ public interface AuthenticationSourceContext {
     /**
      * Returns {@link AuthenticationSource}s bound to current scope  (thread, request, etc)
      */
-    Iterable<AuthenticationSource> sources();
+    Iterable<AuthenticationSource<?, ?>> sources();
 
-    void setSources(Iterable<AuthenticationSource> sources);
+    void setSources(Iterable<AuthenticationSource<?, ?>> sources);
 
     /**
      * Remove source bound to current scope
      */
     void clear();
 
-    record Sources(Iterable<AuthenticationSource> items) {
+    record Sources(Iterable<AuthenticationSource<?, ?>> items) {
 
     }
 }
