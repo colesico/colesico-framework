@@ -45,7 +45,7 @@ public interface SecurityManager {
      * The first authentication that provides a valid {@link AuthenticationMessage} will be used for authentication.
      * On success, the resulting {@link Identity} is bound to the current {@link IdentityContext}.
      */
-    AuthenticationResult authenticate(Iterable<Authentication> auths);
+    AuthenticationResult authenticate(Iterable<Authentication> auth);
 
     default AuthenticationResult authenticate(Authentication auth) {
         return authenticate(List.of(auth));

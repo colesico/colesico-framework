@@ -85,15 +85,15 @@ public class SecurityManagerImpl implements SecurityManager {
      * Orchestrates the authentication process across provided sources and matching authenticators.
      */
     @Override
-    public AuthenticationResult authenticate(Iterable<Authentication> auths) {
+    public AuthenticationResult authenticate(Iterable<Authentication> authItems) {
 
         identityContext.clear();
 
-        if (auths == null || !auths.iterator().hasNext()) {
+        if (authItems == null || !authItems.iterator().hasNext()) {
             return AuthenticationResult.failure("No authentication flows");
         }
 
-        for (var auth : auths) {
+        for (var auth : authItems) {
             var outcome = executeAuthentication(auth, null);
             if (outcome instanceof AuthenticationOutcome.Skip) {
                 continue;
@@ -130,23 +130,23 @@ public class SecurityManagerImpl implements SecurityManager {
             throw new SecurityException("Identity is null");
         }
 
-        var authenticator = authRegistry.findAuthenticator(identity);
-        if (authenticator.isPresent()) {
+        var authentication = authRegistry.findAuthenticator(identity);
+        if (authentication.isPresent()) {
             var callback = authRegistry.findCallback(identity);
             if (callback.isPresent()) {
-                authenticator.get().logout(identity, callback.get());
+                authentication.get().logout(identity, callback.get());
             } else {
-                authenticator.get().logout(identity, null);
+                authentication.get().logout(identity, null);
             }
         }
     }
 
     @Override
     public void logout() {
-        var identity = identityContext.identity();
-        identity.ifPresent(iden -> {
+        var o = identityContext.identity();
+        o.ifPresent(identity -> {
             identityContext.clear();
-            logout(iden);
+            logout(identity);
         });
     }
 
