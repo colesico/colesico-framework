@@ -24,7 +24,7 @@ public interface AuthenticationRegistry {
     /**
      * Retrieves the {@link Authenticator} that originally issued the given {@link Identity}.
      * <p>
-     * The lookup is performed using the {@link Identity#AUTHENTICATOR_CLAIM} stored within the identity.
+     * The lookup is performed using the {@link Identity#AUTHENTICATION_ID_CLAIM} stored within the identity.
      *
      * @param identity the identity whose issuing authenticator is to be found.
      * @return an {@link Optional} containing the issuing authenticator, or empty if the claim

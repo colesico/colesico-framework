@@ -17,8 +17,7 @@
 package colesico.framework.security;
 
 import colesico.framework.ioc.Ioc;
-import colesico.framework.security.authentication.AuthenticationCallback;
-import colesico.framework.security.authentication.Authenticator;
+import colesico.framework.security.authentication.Authentication;
 
 import java.util.*;
 
@@ -34,25 +33,19 @@ import java.util.*;
 public interface Identity<ID> {
 
     /**
-     * Specifies {@link Authenticator} instance class that issued this identity
-     * to retrieve instance from {@link Ioc} to route security actions, such as logout,
-     * to the correct authenticator.
+     * Specifies {@link Authentication#id()} that issued this identity
+     * to retrieve instance from {@link Ioc} to route security messages, such as logout,
+     * to the correct authentication.
      */
-    String AUTHENTICATOR_CLAIM = "authenticator";
+    String AUTHENTICATION_ID_CLAIM = "authentication";
 
     /**
-     * Claim key for storing the {@link AuthenticationCallback}
-     * implementation class (typically the source) that should be notified on logout events.
-     */
-    String CALLBACK_CLAIM = "callback";
-
-    /**
-     * The claim key for the roles holder.
+     * The claim key for the roles' holder.
      */
     String ROLES_CLAIM = "roles";
 
     /**
-     * The claim key for the permissions holder.
+     * The claim key for the permissions' holder.
      */
     String PERMISSIONS_CLAIM = "permissions";
 
@@ -77,7 +70,7 @@ public interface Identity<ID> {
     /**
      * Retrieves a claim by its key and casts it to the specified type.
      */
-    default <T> Optional<T> claim(String key, Class<T> type) {
+    default <C> Optional<C> claim(String key, Class<C> type) {
         Object value = claims().get(key);
         return type.isInstance(value) ? Optional.of(type.cast(value)) : Optional.empty();
     }
@@ -85,7 +78,7 @@ public interface Identity<ID> {
     /**
      * Syntactic sugar for retrieving a typed claim with a default value.
      */
-    default <T> T claimOrElse(String key, Class<T> type, T defaultValue) {
+    default <C> C claimOrElse(String key, Class<C> type, C defaultValue) {
         return claim(key, type).orElse(defaultValue);
     }
 
@@ -120,14 +113,14 @@ public interface Identity<ID> {
     /**
      * The default implementation of the {@link Identity} interface.
      */
-    record Default(Object id, Map<String, Object> claims) implements Identity {
+    record Default<ID>(ID id, Map<String, Object> claims) implements Identity<ID> {
 
-        public static Default of(Object id) {
-            return new Default(id, new HashMap<>());
+        public static <ID> Default<ID> of(ID id) {
+            return new Default<>(id, new HashMap<>());
         }
 
-        public static Default of(Object id, Map<String, Object> claims) {
-            return new Default(id, claims);
+        public static <ID> Default<ID> of(ID id, Map<String, Object> claims) {
+            return new Default<>(id, claims);
         }
 
     }

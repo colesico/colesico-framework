@@ -65,7 +65,7 @@ public class BasicAuthenticator
         }
 
         Map<String, Object> claims = new HashMap<>(request.claims());
-        claims.put(Identity.AUTHENTICATOR_CLAIM, BasicAuthenticator.class);
+        claims.put(Identity.AUTHENTICATION_ID_CLAIM, BasicAuthenticator.class);
         claims.put(Identity.ROLES_CLAIM, account.roles());
         return Identity.Default.of(request.login(), claims);
     }

@@ -5,6 +5,8 @@ package colesico.framework.security.authentication;
  */
 public interface Authentication {
 
+    String id();
+
     AuthenticationOutcome start();
 
     AuthenticationOutcome proceed(AuthenticationMessage message);

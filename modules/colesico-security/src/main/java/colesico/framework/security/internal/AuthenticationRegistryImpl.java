@@ -35,7 +35,7 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
 
     @Override
     public Optional<Authenticator<?, AuthenticationCallback<?, ?>>> findAuthenticator(Identity<?> identity) {
-        var authenticatorIdClass = identity.claim(AUTHENTICATOR_CLAIM, Class.class);
+        var authenticatorIdClass = identity.claim(AUTHENTICATION_ID_CLAIM, Class.class);
         if (authenticatorIdClass.isEmpty()) {
             return Optional.empty();
         }
