@@ -3,7 +3,6 @@ package colesico.framework.security.internal;
 import colesico.framework.ioc.production.Supplier;
 import colesico.framework.security.SecurityManager;
 import colesico.framework.security.authentication.*;
-import colesico.framework.security.authentication.AuthenticatorOutcome;
 import colesico.framework.service.interception.InvocationContext;
 import jakarta.inject.Singleton;
 
@@ -15,11 +14,11 @@ public class AuthenticationInterceptorImpl implements AuthenticationInterceptor 
 
     private final Supplier<AuthenticationSource> sourceFactory;
     private final SecurityManager securityManager;
-    private final AuthenticationSourceContext sourceContext;
+    private final AuthenticationsContext sourceContext;
 
     public AuthenticationInterceptorImpl(Supplier<AuthenticationSource> sourceFactory,
                                          SecurityManager securityManager,
-                                         AuthenticationSourceContext sourceContext) {
+                                         AuthenticationsContext sourceContext) {
         this.sourceFactory = sourceFactory;
         this.securityManager = securityManager;
         this.sourceContext = sourceContext;
@@ -36,7 +35,7 @@ public class AuthenticationInterceptorImpl implements AuthenticationInterceptor 
 
         switch (options.strategy()) {
             case DEFERRED:
-                sourceContext.setSources(sources);
+                sourceContext.setAuthentications(sources);
                 return context.proceed();
 
             case IF_NECESSARY:

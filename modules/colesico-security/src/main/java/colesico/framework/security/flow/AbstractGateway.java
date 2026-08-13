@@ -3,10 +3,10 @@ package colesico.framework.security.flow;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract public class AbstractGateway implements FlowNode {
+abstract public class AbstractGateway<V> implements FlowNode<V> {
 
     protected final String id;
-    protected List<Connector> connectors = new ArrayList<>();
+    protected List<Connector<V>> connectors = new ArrayList<>();
 
     public AbstractGateway(String id) {
         this.id = id;
@@ -17,7 +17,7 @@ abstract public class AbstractGateway implements FlowNode {
         return id;
     }
 
-    public void connect(Connector connector) {
+    public void connect(Connector<V> connector) {
         this.connectors.add(connector);
     }
 }

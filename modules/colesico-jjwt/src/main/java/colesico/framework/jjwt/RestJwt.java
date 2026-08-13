@@ -2,7 +2,7 @@ package colesico.framework.jjwt;
 
 import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpContext;
-import colesico.framework.security.authentication.AuthenticatorRequest;
+import colesico.framework.security.authentication.AuthenticationMessage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -32,7 +32,7 @@ public class RestJwt extends JwtTokenSource {
         Matcher m = BEARER_PATTERN.matcher(authHeader.trim());
         if (m.matches()) {
             return new JwtRequest(m.group(1),
-                    AuthenticatorRequest.sourceClaims(this.getClass()));
+                    AuthenticationMessage.sourceClaims(this.getClass()));
         }
 
         return null;

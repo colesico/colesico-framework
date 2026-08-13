@@ -1,9 +1,9 @@
 package colesico.framework.security.flow;
 
-abstract public class Task implements FlowNode {
+abstract public class Task<V> implements FlowNode<V> {
 
     protected final String id;
-    protected Connector connector;
+    protected Connector<V> connector;
 
     public Task(String id) {
         this.id = id;
@@ -11,7 +11,7 @@ abstract public class Task implements FlowNode {
 
     abstract public void execute();
 
-    public void connect(Connector connector) {
+    public void connect(Connector<V> connector) {
         this.connector = connector;
     }
 
@@ -21,7 +21,7 @@ abstract public class Task implements FlowNode {
     }
 
     @Override
-    public void enter(FlowContext ctx) {
+    public void enter(FlowContext<V> ctx) {
         execute();
         if (connector != null) {
             ctx.setCurrentNode(connector.node());

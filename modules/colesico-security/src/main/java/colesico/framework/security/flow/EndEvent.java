@@ -1,6 +1,7 @@
 package colesico.framework.security.flow;
 
-public class EndEvent implements FlowNode {
+public class EndEvent<V> implements FlowNode<V> {
+
     protected final String id;
 
     public EndEvent(String id) {
@@ -13,7 +14,7 @@ public class EndEvent implements FlowNode {
     }
 
     @Override
-    public void enter(FlowContext ctx) {
+    public void enter(FlowContext<V> ctx) {
         ctx.finish();
     }
 }

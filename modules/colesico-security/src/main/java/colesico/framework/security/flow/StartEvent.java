@@ -1,6 +1,6 @@
 package colesico.framework.security.flow;
 
-public class StartEvent implements FlowNode {
+public class StartEvent<V> implements FlowNode<V> {
     protected final String id;
     protected Connector connector;
 

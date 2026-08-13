@@ -1,18 +1,19 @@
 package colesico.framework.security.flow;
 
-import java.util.HashMap;
-import java.util.Map;
+public class FlowContext<V> {
 
-public class FlowContext {
+    private FlowNode<V> currentNode;
+    private final V value;
 
-    private FlowNode currentNode;
-    private final Map<String, Object> variables = new HashMap<>();
-
-    public void setCurrentNode(FlowNode element) {
-        this.currentNode = element;
+    public FlowContext(V value) {
+        this.value = value;
     }
 
-    public FlowNode currentNode() {
+    public void setCurrentNode(FlowNode<V> node) {
+        this.currentNode = node;
+    }
+
+    public FlowNode<V> currentNode() {
         if (currentNode == null) {
             throw new IllegalStateException("Process is not running");
         }
@@ -27,16 +28,7 @@ public class FlowContext {
         return currentNode == null;
     }
 
-    public Map<String, Object> variables() {
-        return variables;
-    }
-
-    public void setVariable(String name, Object value) {
-        variables.put(name, value);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> T variable(String name) {
-        return (T) variables.get(name);
+    public V value() {
+        return value;
     }
 }

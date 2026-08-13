@@ -21,9 +21,8 @@ import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.security.authentication.Authentication;
+import colesico.framework.security.authentication.Authenticate;
 import colesico.framework.security.authentication.AuthenticationInterceptor;
-import colesico.framework.security.authentication.AuthenticationSource;
 import colesico.framework.security.authorization.RequireIdentity;
 import colesico.framework.security.authorization.RequireIdentityAudit;
 import colesico.framework.security.authorization.SecurityAudit;
@@ -118,9 +117,9 @@ public class SecurityModulator extends Modulator {
     }
 
     private void processAuthentication() {
-        AnnotationAssist<Authentication> authentication = serviceMethod.originMethod().annotation(Authentication.class);
+        AnnotationAssist<Authenticate> authentication = serviceMethod.originMethod().annotation(Authenticate.class);
         if (authentication == null) {
-            authentication = service.originClass().annotation(Authentication.class);
+            authentication = service.originClass().annotation(Authenticate.class);
         }
         if (authentication == null) {
             return;
@@ -145,7 +144,7 @@ public class SecurityModulator extends Modulator {
             paramsCodegen.add("$T.class", TypeName.get(authSourceClass));
         }
         paramsCode.add(paramsCodegen.toFormat(), paramsCodegen.toValues());
-        paramsCode.add(",$T.$L)", ClassName.get(Authentication.Strategy.class),
+        paramsCode.add(",$T.$L)", ClassName.get(Authenticate.Strategy.class),
                 authentication.unwrap().strategy().name());
 
         // Add interceptor invocation code

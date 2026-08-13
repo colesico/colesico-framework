@@ -1,9 +1,9 @@
 package colesico.framework.security.flow;
 
-public class FlowEngine {
-    public void run(FlowContext ctx) {
+public class FlowEngine<V> {
+    public void run(FlowContext<V> ctx) {
         while (!ctx.isFinished()) {
-            FlowNode node = ctx.currentNode();
+            FlowNode<V> node = ctx.currentNode();
             node.enter(ctx);
         }
     }

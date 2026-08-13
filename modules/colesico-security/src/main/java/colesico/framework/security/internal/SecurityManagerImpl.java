@@ -20,12 +20,8 @@ import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
 import colesico.framework.security.authentication.*;
 import colesico.framework.security.SecurityManager;
-import colesico.framework.security.authentication.AuthenticationSource;
-import colesico.framework.security.authentication.AuthenticationCallback;
-import colesico.framework.security.authentication.AuthenticatorOutcome;
+import colesico.framework.security.authentication.AuthenticationOutcome;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
@@ -39,67 +35,49 @@ import java.util.concurrent.Callable;
 public class SecurityManagerImpl implements SecurityManager {
 
     protected final IdentityContext identityContext;
-    protected final AuthenticationSourceContext sourceContext;
+    protected final AuthenticationsContext flowsContext;
     protected final AuthenticationRegistry authRegistry;
 
-    public SecurityManagerImpl(IdentityContext identityContext, AuthenticationSourceContext sourceContext, AuthenticationRegistry authRegistry) {
+    public SecurityManagerImpl(IdentityContext identityContext, AuthenticationsContext flowsContext, AuthenticationRegistry authRegistry) {
         this.identityContext = identityContext;
-        this.sourceContext = sourceContext;
+        this.flowsContext = flowsContext;
         this.authRegistry = authRegistry;
     }
 
-    protected AuthenticatorOutcome doAuthenticate(AuthenticatorRequest request,
-                                                  AuthenticationCallback<?, ?> callback) {
+    protected AuthenticationOutcome executeAuthentication(Authentication auth, AuthenticationMessage message) {
 
-        var authenticators = authRegistry.findAuthenticators(request);
-        if (authenticators.isEmpty()) {
-            throw new SecurityException("No appropriate authenticator for request '" + request + "'");
+        if (auth == null) {
+            throw new SecurityException("Authentication flow is null");
         }
 
-        Deque<Authenticator> authenticatorsQueue = new ArrayDeque<>(authenticators);
+        var outcome = message == null ? auth.start() : auth.proceed(message);
 
-        while (!authenticatorsQueue.isEmpty()) {
-
-            var authenticator = authenticatorsQueue.pollFirst();
-
-            var outcome = authenticator.authenticate(request, callback);
-            if (outcome == null) {
-                throw new SecurityException("Null authentication outcome");
-            }
-
-            switch (outcome) {
-                case AuthenticatorOutcome.Success success -> {
-                    var identity = success.identity();
-                    if (identity == null) {
-                        throw new SecurityException("Null identity for success authentication");
-                    }
-                    identityContext.setIdentity(identity);
-                    return success;
-                }
-                case AuthenticatorOutcome.Stage stage -> {
-                    return stage;
-                }
-                case AuthenticatorOutcome.Failure failure -> {
-                    return failure;
-                }
-                case AuthenticatorOutcome.Next next -> {
-                    request = next.request();
-                    authenticatorsQueue.addFirst(next.authenticator());
-                }
-                case AuthenticatorOutcome.Skip skip -> {
-                    // nop - proceed to next
-                }
-                default -> throw new SecurityException("Unexpected outcome: " + outcome);
-            }
+        if (outcome == null) {
+            throw new SecurityException("Null authentication flow outcome");
         }
 
-        return AuthenticatorOutcome.skip("No meaningful authentication");
+        return switch (outcome) {
+            case AuthenticationOutcome.Success success -> {
+                var identity = success.identity();
+                if (identity == null) {
+                    throw new SecurityException("Null identity for success authentication");
+                }
+                identityContext.setIdentity(identity);
+                yield success;
+            }
+            case AuthenticationOutcome.Stage stage -> stage;
+            case AuthenticationOutcome.Failure failure -> failure;
+            case AuthenticationOutcome.Skip skip -> skip;
+        };
     }
 
     @Override
-    public AuthenticationResult authenticate(AuthenticatorRequest request, AuthenticationCallback<?, ?> callback) {
+    public AuthenticationResult authenticate(Authentication auth, AuthenticationMessage message) {
         identityContext.clear();
-        var outcome = doAuthenticate(request, callback);
+        if (message == null) {
+            throw new SecurityException("Authentication message is null");
+        }
+        var outcome = executeAuthentication(auth, message);
         return outcome.result();
     }
 
@@ -107,23 +85,17 @@ public class SecurityManagerImpl implements SecurityManager {
      * Orchestrates the authentication process across provided sources and matching authenticators.
      */
     @Override
-    @SuppressWarnings("unchecked")
-    public AuthenticationResult authenticate(Iterable<AuthenticationSource<?, ?>> sources) {
-
-        if (sources == null || !sources.iterator().hasNext()) {
-            return AuthenticationResult.failure("No authentication sources");
-        }
+    public AuthenticationResult authenticate(Iterable<Authentication> auths) {
 
         identityContext.clear();
 
-        for (AuthenticationSource source : sources) {
-            final AuthenticatorRequest request = source.request();
-            if (request == null) {
-                continue;
-            }
+        if (auths == null || !auths.iterator().hasNext()) {
+            return AuthenticationResult.failure("No authentication flows");
+        }
 
-            var outcome = doAuthenticate(request, source.callback());
-            if (outcome instanceof AuthenticatorOutcome.Skip) {
+        for (var auth : auths) {
+            var outcome = executeAuthentication(auth, null);
+            if (outcome instanceof AuthenticationOutcome.Skip) {
                 continue;
             }
             return outcome.result();
@@ -134,8 +106,8 @@ public class SecurityManagerImpl implements SecurityManager {
 
     @Override
     public AuthenticationResult authenticate() {
-        var sources = sourceContext.sources();
-        return authenticate(sources);
+        var auths = flowsContext.authentications();
+        return authenticate(auths);
     }
 
     @Override
@@ -153,7 +125,6 @@ public class SecurityManagerImpl implements SecurityManager {
      * @param identity the identity to log out.
      */
     @Override
-    @SuppressWarnings("unchecked")
     public void logout(Identity<?> identity) {
         if (identity == null) {
             throw new SecurityException("Identity is null");
@@ -167,8 +138,6 @@ public class SecurityManagerImpl implements SecurityManager {
             } else {
                 authenticator.get().logout(identity, null);
             }
-        } else {
-            throw new SecurityException("Identity authenticator is not defined");
         }
     }
 

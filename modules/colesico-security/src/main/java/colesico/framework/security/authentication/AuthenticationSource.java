@@ -8,11 +8,11 @@ package colesico.framework.security.authentication;
  * for extracting credentials and handling protocol-specific responses.
  */
 public interface AuthenticationSource<
-        RQ extends AuthenticatorRequest,
+        RQ extends AuthenticationMessage,
         CB extends AuthenticationCallback<?, ?>> {
 
     /**
-     * Extracts an {@link AuthenticatorRequest} from the underlying transport.
+     * Extracts an {@link AuthenticationMessage} from the underlying transport.
      *
      * @return the request containing credentials, or {@code null} if no credentials
      * are present in this source.

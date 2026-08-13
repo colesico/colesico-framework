@@ -2,25 +2,25 @@ package colesico.framework.security.flow;
 
 import java.util.function.Predicate;
 
-public class Connector {
+public class Connector<V> {
 
-    private final FlowNode node;
-    private final Predicate<FlowContext> condition;
+    private final FlowNode<V> node;
+    private final Predicate<V> condition;
 
-    public Connector(FlowNode node) {
+    public Connector(FlowNode<V> node) {
         this(node, ctx -> true);
     }
 
-    public Connector(FlowNode node, Predicate<FlowContext> condition) {
+    public Connector(FlowNode<V> node, Predicate<V> condition) {
         this.node = node;
         this.condition = condition;
     }
 
-    public boolean canTransit(FlowContext ctx) {
-        return condition.test(ctx);
+    public boolean canTransit(V value) {
+        return condition.test(value);
     }
 
-    public FlowNode node() {
+    public FlowNode<V> node() {
         return node;
     }
 }

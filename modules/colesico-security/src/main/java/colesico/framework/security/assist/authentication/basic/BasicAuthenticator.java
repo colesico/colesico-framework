@@ -1,7 +1,7 @@
 package colesico.framework.security.assist.authentication.basic;
 
 import colesico.framework.security.Identity;
-import colesico.framework.security.authentication.AuthenticatorOutcome;
+import colesico.framework.security.authentication.AuthenticationOutcome;
 import colesico.framework.security.authentication.Authenticator;
 import colesico.framework.security.internal.BasicAuthProducer;
 import jakarta.inject.Inject;
@@ -71,16 +71,16 @@ public class BasicAuthenticator
     }
 
     @Override
-    public AuthenticatorOutcome authenticate(BasicRequest request, BasicCallback callback) {
+    public AuthenticationOutcome authenticate(BasicRequest request, BasicCallback callback) {
         Optional<BasicCallback> cb = Optional.ofNullable(callback);
 
         if (request.isEmpty()) {
             var realm = config.realm();
             if (realm != null) {
                 cb.ifPresent(c -> c.onChallenge(realm));
-                return AuthenticatorOutcome.stage();
+                return AuthenticationOutcome.stage();
             } else {
-                return AuthenticatorOutcome.skip("No realm provided");
+                return AuthenticationOutcome.skip("No realm provided");
             }
         }
 
@@ -90,7 +90,7 @@ public class BasicAuthenticator
             if (cb.isPresent()) {
                 cb.get().onLogin(identity);
             }
-            return AuthenticatorOutcome.success(identity);
+            return AuthenticationOutcome.success(identity);
         }
 
         identity = performAuth(request);
@@ -99,10 +99,10 @@ public class BasicAuthenticator
             if (cb.isPresent()) {
                 cb.get().onLogin(identity);
             }
-            return AuthenticatorOutcome.success(identity);
+            return AuthenticationOutcome.success(identity);
         }
 
-        return AuthenticatorOutcome.failure("Invalid credentials");
+        return AuthenticationOutcome.failure("Invalid credentials");
     }
 
     @Override

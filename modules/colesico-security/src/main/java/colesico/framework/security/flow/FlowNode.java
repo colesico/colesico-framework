@@ -1,6 +1,7 @@
 package colesico.framework.security.flow;
 
-public interface FlowNode {
+public interface FlowNode<V> {
     String id();
-    void enter(FlowContext ctx);
+
+    void enter(FlowContext<V> ctx);
 }

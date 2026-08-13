@@ -1,26 +1,26 @@
 package colesico.framework.security.internal;
 
 import colesico.framework.ioc.scope.TaskScope;
+import colesico.framework.security.authentication.AuthenticationsContext;
 import colesico.framework.security.authentication.AuthenticationSource;
-import colesico.framework.security.authentication.AuthenticationSourceContext;
 
-public class AuthenticationSourceContextImpl implements AuthenticationSourceContext {
+public class AuthenticationFlowContextImpl implements AuthenticationsContext {
 
     protected final TaskScope taskScope;
 
-    public AuthenticationSourceContextImpl(TaskScope taskScope) {
+    public AuthenticationFlowContextImpl(TaskScope taskScope) {
         this.taskScope = taskScope;
     }
 
     @Override
-    public Iterable<AuthenticationSource<?,?>> sources() {
+    public Iterable<AuthenticationSource<?,?>> authentications() {
         var sources = taskScope.get(SCOPE_KEY);
         return sources == null ? null : sources.items();
     }
 
     @Override
-    public void setSources(Iterable<AuthenticationSource<?,?>> sources) {
-        taskScope.put(SCOPE_KEY, new Sources(sources));
+    public void setFlows(Iterable<AuthenticationSource<?,?>> sources) {
+        taskScope.put(SCOPE_KEY, new Authentications(sources));
     }
 
     @Override

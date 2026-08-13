@@ -33,7 +33,7 @@ import jakarta.inject.Singleton;
 @Produce(value = SecurityManagerImpl.class, keyType = SecurityManager.class, scoped = Singleton.class)
 @Produce(value = AuthenticationRegistryImpl.class, keyType = AuthenticationRegistry.class)
 @Produce(value = IdentityContextImpl.class, keyType = IdentityContext.class, scoped = Singleton.class)
-@Produce(value = AuthenticationSourceContextImpl.class, keyType = AuthenticationSourceContext.class, scoped = Singleton.class)
+@Produce(value = AuthenticationFlowContextImpl.class, keyType = AuthenticationsContext.class, scoped = Singleton.class)
 @Produce(value = AuthenticationInterceptorImpl.class, keyType = AuthenticationInterceptor.class)
 @Produce(RequireIdentityAudit.class)
 public class SecurityProducer {

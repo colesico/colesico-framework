@@ -23,7 +23,7 @@ public class AuthenticationRegistryImpl implements AuthenticationRegistry {
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public Collection<Authenticator<?, ?>> findAuthenticators(AuthenticatorRequest request) {
+    public Collection<Authenticator<?, ?>> findAuthenticators(AuthenticationMessage request) {
         if (request == null) {
             throw new SecurityException("Authentication request is null");
         }
