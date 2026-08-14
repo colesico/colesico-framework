@@ -33,7 +33,7 @@ public class BasicAuthenticator implements Authenticator<BasicMessage, LogoutMes
     /**
      * Source
      */
-    protected final BasicSupplicant source;
+    protected final BasicPeer source;
 
     /**
      * Authenticated identities
@@ -41,7 +41,7 @@ public class BasicAuthenticator implements Authenticator<BasicMessage, LogoutMes
     protected final Map<Object, Identity<?>> authenticated;
 
     @Inject
-    public BasicAuthenticator(BasicConfigPrototype config, BasicSupplicant source, BasicAccounts accounts) {
+    public BasicAuthenticator(BasicConfigPrototype config, BasicPeer source, BasicAccounts accounts) {
         this.config = config;
         this.accounts = accounts;
         this.source = source;

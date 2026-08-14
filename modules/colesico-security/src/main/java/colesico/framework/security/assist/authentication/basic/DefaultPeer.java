@@ -13,9 +13,9 @@ import java.util.concurrent.atomic.AtomicReference;
  * Put this source to appropriate scope to support multi user authentication.
  */
 @Singleton
-public class DefaultSupplicant implements BasicSupplicant {
+public class DefaultPeer implements BasicPeer {
 
-    protected static final Logger log = LoggerFactory.getLogger(DefaultSupplicant.class);
+    protected static final Logger log = LoggerFactory.getLogger(DefaultPeer.class);
     protected final AtomicReference<BasicMessage> message = new AtomicReference<>();
 
     /**
