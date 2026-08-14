@@ -17,7 +17,6 @@
 package colesico.framework.security;
 
 import colesico.framework.security.authentication.*;
-import colesico.framework.security.authentication.AuthenticationCallback;
 import colesico.framework.security.authorization.*;
 
 
@@ -38,21 +37,21 @@ public interface SecurityManager {
     /**
      * Attempts to authenticate a subject with given auth using the provided message
      */
-    AuthenticationResult authenticate(Authentication auth, AuthenticationMessage message);
+    <A extends AuthenticationMessage> AuthenticationResult authenticate(Authentication<A, ?> auth, A message);
 
     /**
      * Attempts to authenticate a subject using the provided collection of {@link Authentication}s.
      * The first authentication that provides a valid {@link AuthenticationMessage} will be used for authentication.
      * On success, the resulting {@link Identity} is bound to the current {@link IdentityContext}.
      */
-    AuthenticationResult authenticate(Iterable<Authentication> auth);
+    AuthenticationResult authenticate(Iterable<Authentication<?, ?>> auth);
 
-    default AuthenticationResult authenticate(Authentication auth) {
+    default AuthenticationResult authenticate(Authentication<?, ?> auth) {
         return authenticate(List.of(auth));
     }
 
     /**
-     * Performs authentication using the authentications currently bound to the {@link AuthenticationsContext}.
+     * Performs authentication using the authentications currently bound to the {@link AuthContext}.
      * This is the standard way to trigger authentication in a scoped environment (e.g., during an HTTP request).
      */
     AuthenticationResult authenticate();
@@ -91,7 +90,7 @@ public interface SecurityManager {
 
     /**
      * Performs a logout for the specified {@link Identity}.
-     * Triggers appropriate logout handlers and notifies associated sources.
+     * Triggers appropriate logout handlers and notifies associated authentications.
      */
     void logout(Identity<?> identity);
 

@@ -23,7 +23,7 @@ import colesico.framework.security.SecurityManager;
 import java.lang.annotation.*;
 
 /**
- * Configures authentication behavior for methods or classes.
+ * Configures authentication behavior for method or class.
  *
  * @author Vladlen V. Larionov
  */
@@ -31,12 +31,13 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Inherited
 @Documented
-public @interface Authenticate {
+public @interface Auth {
 
     /**
-     * Authentication names to be used.
+     * Authentication classes that will be tried sequentially.
+     * @see AuthContext
      */
-    String[] value();
+    Class<? extends Authentication<?,?>>[] value();
 
     /**
      * Determines the execution strategy for authentication.
@@ -59,7 +60,7 @@ public @interface Authenticate {
         IF_NECESSARY,
 
         /**
-         * Only registers sources in the {@link AuthenticationsContext} for manual authentication
+         * Only registers authentications in the {@link AuthContext} for manual authentication
          * by calling {@link SecurityManager#authenticate()} later within the business logic.
          */
         DEFERRED

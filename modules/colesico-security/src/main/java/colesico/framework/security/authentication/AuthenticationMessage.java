@@ -1,7 +1,7 @@
 package colesico.framework.security.authentication;
 
 /**
- * Authenticator message basic
+ * Authenticator message marker
  */
 public interface AuthenticationMessage {
 

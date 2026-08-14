@@ -1,7 +1,7 @@
 package colesico.framework.example.weblet;
 
 import colesico.framework.security.Identity;
-import colesico.framework.security.authentication.Authenticate;
+import colesico.framework.security.authentication.Auth;
 import colesico.framework.telehttp.authentication.HttpBasic;
 import colesico.framework.weblet.Weblet;
 import jakarta.inject.Provider;
@@ -18,7 +18,7 @@ public class SecuredWeblet {
 
     // Browse: http://localhost:8080/secured-weblet/identity
     // Use admin/secret to  authenticate (see resources/META-INF/accounts.properties)
-    @Authenticate(HttpBasic.class)
+    @Auth(HttpBasic.class)
     public String identity() {
         return identity.get().id();
     }

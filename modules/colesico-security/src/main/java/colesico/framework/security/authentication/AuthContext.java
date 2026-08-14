@@ -5,24 +5,25 @@ import colesico.framework.ioc.key.TypeKey;
 
 /**
  * Current authentications holder
+ * assigned from {@link Auth#value()}
  */
-public interface AuthenticationsContext {
+public interface AuthContext {
 
     Key<Authentications> SCOPE_KEY = new TypeKey<>(Authentications.class);
 
     /**
      * Returns {@link AuthenticationSource}s bound to current scope  (thread, request, etc)
      */
-    Iterable<Authentication> authentications();
+    Iterable<Authentication<?,?>> authentications();
 
-    void setAuthentications(Iterable<Authentication> authentications);
+    void setAuthentications(Iterable<Authentication<?,?>> authentications);
 
     /**
      * Remove source bound to current scope
      */
     void clear();
 
-    record Authentications(Iterable<Authentication> items) {
+    record Authentications(Iterable<Authentication<?,?>> items) {
 
     }
 }

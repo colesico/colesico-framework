@@ -33,11 +33,11 @@ import java.util.*;
 public interface Identity<ID> {
 
     /**
-     * Specifies {@link Authentication#id()} that issued this identity
+     * Specifies {@link Authentication} class that issued this identity
      * to retrieve instance from {@link Ioc} to route security messages, such as logout,
      * to the correct authentication.
      */
-    String AUTHENTICATION_ID_CLAIM = "authentication";
+    String AUTHENTICATION_CLAIM = "authentication";
 
     /**
      * The claim key for the roles' holder.

@@ -32,7 +32,7 @@ public class JwtAuthenticator implements Authenticator<JwtRequest, JwtCallback> 
             }
 
             Map<String, Object> identityClaims = new HashMap<>(claims);
-            identityClaims.put(Identity.AUTHENTICATION_ID_CLAIM, JwtAuthenticator.class);
+            identityClaims.put(Identity.AUTHENTICATION_CLAIM, JwtAuthenticator.class);
             Identity<?> identity = Identity.Default.of(claims.getSubject(), identityClaims);
             return AuthenticationOutcome.success(identity);
         } catch (ExpiredJwtException e) {

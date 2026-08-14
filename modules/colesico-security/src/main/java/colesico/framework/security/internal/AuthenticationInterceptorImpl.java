@@ -12,30 +12,30 @@ import java.util.Collection;
 @Singleton
 public class AuthenticationInterceptorImpl implements AuthenticationInterceptor {
 
-    private final Supplier<AuthenticationSource> sourceFactory;
+    private final Supplier<Authentication<?,?>> authenticationFactory;
     private final SecurityManager securityManager;
-    private final AuthenticationsContext sourceContext;
+    private final AuthContext authContext;
 
-    public AuthenticationInterceptorImpl(Supplier<AuthenticationSource> sourceFactory,
+    public AuthenticationInterceptorImpl(Supplier<Authentication> authenticationFactory,
                                          SecurityManager securityManager,
-                                         AuthenticationsContext sourceContext) {
-        this.sourceFactory = sourceFactory;
+                                         AuthContext authContext) {
+        this.authenticationFactory = (Supplier) authenticationFactory;
         this.securityManager = securityManager;
-        this.sourceContext = sourceContext;
+        this.authContext = authContext;
     }
 
     @Override
     public Object intercept(InvocationContext context, Options options) {
 
-        Collection<AuthenticationSource<?,?>> sources = new ArrayList<>();
+        Collection<Authentication<?,?>> authentications = new ArrayList<>();
 
-        for (var sourceClass : options.sources()) {
-            sources.add(sourceFactory.get(sourceClass));
+        for (var authenticationClass : options.authentications()) {
+            authentications.add(authenticationFactory.get(authenticationClass));
         }
 
         switch (options.strategy()) {
             case DEFERRED:
-                sourceContext.setAuthentications(sources);
+                authContext.setAuthentications(authentications);
                 return context.proceed();
 
             case IF_NECESSARY:
@@ -45,16 +45,13 @@ public class AuthenticationInterceptorImpl implements AuthenticationInterceptor 
                 // fall-through to STRICT if not authenticated
 
             case STRICT:
-                var result = securityManager.authenticate(sources);
-                if (result instanceof AuthenticationResult.Success) {
-                    return context.proceed();
-                } else if (result instanceof AuthenticationResult.Stage) {
-                    return null;
-                } else if (result instanceof AuthenticationResult.Failure f) {
-                    throw new UnauthenticatedException(f.error() != null ? f.error().toString() : "Unauthenticated");
-                } else {
-                    throw new IllegalArgumentException("Unsupported authentication result: " + result.toString());
-                }
+                var result = securityManager.authenticate(authentications);
+                return switch (result) {
+                    case AuthenticationResult.Success _ -> context.proceed();
+                    case AuthenticationResult.Stage _ -> null;
+                    case AuthenticationResult.Failure f ->
+                            throw new UnauthenticatedException(f.error() != null ? f.error().toString() : "Unauthenticated");
+                };
             default:
                 throw new IllegalArgumentException("Unsupported strategy: " + options.strategy());
         }
