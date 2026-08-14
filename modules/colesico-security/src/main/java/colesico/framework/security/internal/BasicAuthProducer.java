@@ -12,17 +12,13 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 @Producer
-@Produce(DefaultBasicSource.class)
-@Produce(value = BasicAuth.class, scoped = Singleton.class)
+@Produce(BasicAuth.class)
+@Produce(value = DefaultBasicSource.class, substitute = Substitution.STUB)
 public class BasicAuthProducer {
 
-    @Singleton
-    @Classed(BasicMessage.class)
-    @Polyproduce(order = Integer.MAX_VALUE)
-    public Authenticator authenticator(Provider<BasicAuth> impl) {
-        return impl.get();
-    }
-
+    /**
+     * Default config
+     */
     @Singleton
     @Substitute(Substitution.STUB)
     public BasicConfigPrototype config() {
@@ -30,6 +26,9 @@ public class BasicAuthProducer {
         };
     }
 
+    /**
+     * Default accounts storage
+     */
     @Singleton
     @Substitute(Substitution.STUB)
     public BasicAccounts accountStorage(DefaultBasicAccounts impl) {

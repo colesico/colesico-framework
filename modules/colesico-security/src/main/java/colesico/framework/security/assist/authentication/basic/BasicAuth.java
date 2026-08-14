@@ -6,16 +6,18 @@ import colesico.framework.security.authentication.AuthenticationOutcome;
 import colesico.framework.security.authentication.LogoutMessage;
 import colesico.framework.security.internal.BasicAuthProducer;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.*;
 
 /**
- * Simple basic authenticator
+ * Simple basic authentication flow
  *
  * @see BasicAuthProducer
  */
+@Singleton
 public class BasicAuth implements Authentication<BasicMessage, LogoutMessage> {
 
     /**

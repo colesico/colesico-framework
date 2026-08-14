@@ -13,13 +13,13 @@ public class AuthContextImpl implements AuthContext {
     }
 
     @Override
-    public Iterable<Authentication<?>> authentications() {
+    public Iterable<Authentication<?,?>> authentications() {
         var authentications = taskScope.get(SCOPE_KEY);
         return authentications == null ? null : authentications.items();
     }
 
     @Override
-    public void setAuthentications(Iterable<Authentication<?>> authentications) {
+    public void setAuthentications(Iterable<Authentication<?,?>> authentications) {
         taskScope.put(SCOPE_KEY, new Authentications(authentications));
     }
 

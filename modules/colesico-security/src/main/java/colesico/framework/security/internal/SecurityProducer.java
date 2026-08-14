@@ -31,7 +31,6 @@ import jakarta.inject.Singleton;
 
 @Producer
 @Produce(value = SecurityManagerImpl.class, keyType = SecurityManager.class, scoped = Singleton.class)
-@Produce(value = AuthenticationRegistryImpl.class, keyType = AuthenticationRegistry.class)
 @Produce(value = IdentityContextImpl.class, keyType = IdentityContext.class, scoped = Singleton.class)
 @Produce(value = AuthContextImpl.class, keyType = AuthContext.class, scoped = Singleton.class)
 @Produce(value = AuthenticationInterceptorImpl.class, keyType = AuthenticationInterceptor.class)
