@@ -1,8 +1,9 @@
 package colesico.framework.security.assist.authentication.basic;
 
 import colesico.framework.security.Identity;
+import colesico.framework.security.authentication.Authentication;
 import colesico.framework.security.authentication.AuthenticationOutcome;
-import colesico.framework.security.authentication.Authenticator;
+import colesico.framework.security.authentication.LogoutMessage;
 import colesico.framework.security.internal.BasicAuthProducer;
 import jakarta.inject.Inject;
 
@@ -15,28 +16,30 @@ import java.util.*;
  *
  * @see BasicAuthProducer
  */
-public class BasicAuthenticator
-        implements Authenticator<BasicRequest, BasicCallback> {
+public class BasicAuth implements Authentication<BasicMessage, LogoutMessage> {
 
     /**
      * Authenticator config
      */
-    protected final BasicAuthConfigPrototype config;
+    protected final BasicConfigPrototype config;
 
     /**
      * Accounts storage
      */
-    protected final BasicAccountStorage accounts;
+    protected final BasicAccounts accounts;
+
+    protected final BasicSource source;
 
     /**
      * Authenticated identities
      */
-    protected final Map<Object, Identity> authenticated;
+    protected final Map<Object, Identity<?>> authenticated;
 
     @Inject
-    public BasicAuthenticator(BasicAuthConfigPrototype config, BasicAccountStorage accounts) {
+    public BasicAuth(BasicConfigPrototype config, BasicSource source, BasicAccounts accounts) {
         this.config = config;
         this.accounts = accounts;
+        this.source = source;
 
         authenticated = Collections.synchronizedMap(
                 new LinkedHashMap<>(100, 0.75f, true) {
@@ -48,7 +51,7 @@ public class BasicAuthenticator
         );
     }
 
-    protected Identity performAuth(BasicRequest request) {
+    protected Identity<?> performAuth(BasicMessage request) {
         String passwordHex;
         try {
             MessageDigest digest = MessageDigest.getInstance(config.passwordDigest());
@@ -59,46 +62,43 @@ public class BasicAuthenticator
             throw new SecurityException(ex);
         }
 
-        BasicAccountStorage.Account account = accounts.findAccount(request.login(), passwordHex);
+        BasicAccounts.Account account = accounts.findAccount(request.login(), passwordHex);
         if (account == null) {
             return null;
         }
 
-        Map<String, Object> claims = new HashMap<>(request.claims());
-        claims.put(Identity.AUTHENTICATION_CLAIM, BasicAuthenticator.class);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(Identity.AUTHENTICATION_CLAIM, BasicAuth.class);
         claims.put(Identity.ROLES_CLAIM, account.roles());
         return Identity.Default.of(request.login(), claims);
     }
 
     @Override
-    public AuthenticationOutcome authenticate(BasicRequest request, BasicCallback callback) {
-        Optional<BasicCallback> cb = Optional.ofNullable(callback);
+    public AuthenticationOutcome authenticate(BasicMessage message) {
 
-        if (request.isEmpty()) {
+        if (message == null) {
+            message = source.credentials();
+        }
+
+        if (message == null) {
             var realm = config.realm();
             if (realm != null) {
-                cb.ifPresent(c -> c.onChallenge(realm));
+                source.challenge(realm);
                 return AuthenticationOutcome.stage();
             } else {
                 return AuthenticationOutcome.skip("No realm provided");
             }
         }
 
-        var login = request.login();
+        var login = message.login();
         var identity = authenticated.get(login);
         if (identity != null) {
-            if (cb.isPresent()) {
-                cb.get().onLogin(identity);
-            }
             return AuthenticationOutcome.success(identity);
         }
 
-        identity = performAuth(request);
+        identity = performAuth(message);
         if (identity != null) {
             authenticated.put(login, identity);
-            if (cb.isPresent()) {
-                cb.get().onLogin(identity);
-            }
             return AuthenticationOutcome.success(identity);
         }
 
@@ -106,13 +106,9 @@ public class BasicAuthenticator
     }
 
     @Override
-    public void logout(Identity identity, BasicCallback callback) {
-        if (identity != null) {
-            authenticated.remove(identity.id());
-            if (callback != null) {
-                callback.onLogout(identity);
-            }
-        }
+    public void logout(LogoutMessage message) {
+        authenticated.remove(message.identity().id());
+        source.logout(message.identity());
     }
 
 }

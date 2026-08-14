@@ -2,7 +2,6 @@ package colesico.framework.jjwt;
 
 import colesico.framework.security.Identity;
 import colesico.framework.security.authentication.AuthenticationOutcome;
-import colesico.framework.security.authentication.Authenticator;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.inject.Inject;

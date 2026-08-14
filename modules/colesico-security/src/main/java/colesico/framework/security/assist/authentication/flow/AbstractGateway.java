@@ -1,4 +1,4 @@
-package colesico.framework.security.flow;
+package colesico.framework.security.assist.authentication.flow;
 
 import java.util.ArrayList;
 import java.util.List;

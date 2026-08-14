@@ -3,9 +3,7 @@ package colesico.framework.telehttp.authentication;
 import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpContext;
 import colesico.framework.security.Identity;
-import colesico.framework.security.assist.authentication.basic.BasicCallback;
-import colesico.framework.security.assist.authentication.basic.BasicRequest;
-import colesico.framework.security.authentication.AuthenticationSource;
+import colesico.framework.security.assist.authentication.basic.BasicMessage;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
@@ -15,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Singleton
-public class HttpBasic implements AuthenticationSource<BasicRequest, BasicCallback>, BasicCallback {
+public class HttpBasic implements AuthenticationSource<BasicMessage, BasicCallback>, BasicCallback {
 
     protected static final Pattern BASIC_AUTH_PATTERN =
             Pattern.compile("^Basic\\s+(.+)$", Pattern.CASE_INSENSITIVE);
@@ -30,15 +28,15 @@ public class HttpBasic implements AuthenticationSource<BasicRequest, BasicCallba
     }
 
     @Override
-    public BasicRequest request() {
+    public BasicMessage request() {
         var request = httpContext.get().request();
         String authHeader = request.headers().get(AUTHORIZATION_HEADER);
         if (StringUtils.isBlank(authHeader)) {
-            return BasicRequest.empty(HttpBasic.class);
+            return BasicMessage.empty(HttpBasic.class);
         }
         Matcher matcher = BASIC_AUTH_PATTERN.matcher(authHeader.trim());
         if (!matcher.matches()) {
-            return BasicRequest.empty(HttpBasic.class);
+            return BasicMessage.empty(HttpBasic.class);
         }
 
         String base64Credentials = matcher.group(1);
@@ -48,7 +46,7 @@ public class HttpBasic implements AuthenticationSource<BasicRequest, BasicCallba
 
         String[] values = credentials.split(":", 2);
         if (values.length == 2) {
-            return BasicRequest.of(values[0], values[1], HttpBasic.class);
+            return BasicMessage.of(values[0], values[1], HttpBasic.class);
         } else {
             throw new SecurityException("Invalid Authorization header");
         }

@@ -2,7 +2,7 @@ package colesico.framework.security.assist.authentication.basic;
 
 import java.util.Set;
 
-public interface BasicAccountStorage {
+public interface BasicAccounts {
 
     default Account findAccount(String login, String passwordHashHex) {
         return null;

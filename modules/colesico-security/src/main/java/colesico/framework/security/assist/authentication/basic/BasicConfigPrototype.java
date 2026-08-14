@@ -4,7 +4,7 @@ import colesico.framework.config.ConfigModel;
 import colesico.framework.config.ConfigPrototype;
 
 @ConfigPrototype(model = ConfigModel.SINGLE)
-abstract public class BasicAuthConfigPrototype {
+abstract public class BasicConfigPrototype {
 
     protected Integer maxAuthenticated() {
         return 1000;

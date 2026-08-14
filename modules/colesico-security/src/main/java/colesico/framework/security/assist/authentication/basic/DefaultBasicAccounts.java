@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Config
 @UseFileSource(bindAll = false, file = "accounts.properties", optional = true)
-public class DefaultBasicAccountStorage implements BasicAccountStorage {
+public class DefaultBasicAccounts implements BasicAccounts {
 
     protected static final String PASSWORD_SUFFIX = ".password";
     protected static final String ROLES_SUFFIX = ".roles";
@@ -29,7 +29,7 @@ public class DefaultBasicAccountStorage implements BasicAccountStorage {
     private final Map<String, Entry> entries = new ConcurrentHashMap<>();
 
     @Override
-    public BasicAccountStorage.Account findAccount(String login, String passwordHashHex) {
+    public BasicAccounts.Account findAccount(String login, String passwordHashHex) {
         var entry = getEntry(login);
         if (entry == null) {
             return null;

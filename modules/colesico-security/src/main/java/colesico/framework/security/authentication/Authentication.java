@@ -12,7 +12,7 @@ public interface Authentication<A extends AuthenticationMessage, L extends Logou
      * Executes the authentication process.
      * <p>
      * If the {@code message} parameter is {@code null}, the authentication process
-     * is initiated from the very beginning. If a message is provided, the process
+     * is running from beginning. If a message is provided, the process
      * resumes from the specific entry point associated with that message.
      *
      * @param message optional authentication message;

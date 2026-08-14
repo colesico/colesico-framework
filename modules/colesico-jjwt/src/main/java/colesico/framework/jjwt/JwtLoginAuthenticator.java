@@ -1,6 +1,5 @@
 package colesico.framework.jjwt;
 
-import colesico.framework.security.authentication.Authenticator;
 import colesico.framework.security.authentication.AuthenticationMessage;
 
 import java.util.Map;

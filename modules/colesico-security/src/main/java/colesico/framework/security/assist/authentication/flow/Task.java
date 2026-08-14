@@ -1,4 +1,4 @@
-package colesico.framework.security.flow;
+package colesico.framework.security.assist.authentication.flow;
 
 abstract public class Task<V> implements FlowNode<V> {
 
