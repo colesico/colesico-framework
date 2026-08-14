@@ -13,12 +13,12 @@ import java.security.MessageDigest;
 import java.util.*;
 
 /**
- * Simple basic authentication flow
+ * Simple basic authenticator
  *
  * @see BasicAuthProducer
  */
 @Singleton
-public class BasicAuthenticator implements Authenticator<BasicMessage, LogoutMessage> {
+public class BasicAuth implements Authenticator<BasicMessage, LogoutMessage> {
 
     /**
      * Authentication flow config
@@ -41,7 +41,7 @@ public class BasicAuthenticator implements Authenticator<BasicMessage, LogoutMes
     protected final Map<Object, Identity<?>> authenticated;
 
     @Inject
-    public BasicAuthenticator(BasicConfigPrototype config, BasicPeer source, BasicAccounts accounts) {
+    public BasicAuth(BasicConfigPrototype config, BasicPeer source, BasicAccounts accounts) {
         this.config = config;
         this.accounts = accounts;
         this.source = source;
@@ -73,7 +73,7 @@ public class BasicAuthenticator implements Authenticator<BasicMessage, LogoutMes
         }
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put(Identity.AUTHENTICATOR_CLAIM, BasicAuthenticator.class);
+        claims.put(Identity.AUTHENTICATOR_CLAIM, BasicAuth.class);
         claims.put(Identity.ROLES_CLAIM, account.roles());
         return Identity.Default.of(request.login(), claims);
     }

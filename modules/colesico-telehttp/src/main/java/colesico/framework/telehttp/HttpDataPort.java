@@ -55,7 +55,9 @@ abstract public class HttpDataPort<R extends HttpReadOptions, W extends HttpWrit
 
         // Find writer by the exact runtime class of the value
         HttpWriter<Object, HttpWriteOptions> writer;
-        if (targetValue instanceof Throwable throwable) {
+        if (targetValue == null) {
+            writer = null;
+        } else if (targetValue instanceof Throwable throwable) {
             writer = findExceptionWriter(throwable);
         } else {
             writer = teleFactory.findWriter(targetValue.getClass(), writerBaseClass(), HttpWriter.class);

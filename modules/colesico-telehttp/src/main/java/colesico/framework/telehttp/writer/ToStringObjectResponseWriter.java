@@ -27,6 +27,8 @@ public class ToStringObjectResponseWriter<V extends ObjectResponse, O extends Ht
     @Override
     protected void write(OutputStream outputStream, V response, O options) throws IOException {
         var contentType = contentType(response, options);
-        outputStream.write(response.value().toString().getBytes(contentType.charset().orElse(StandardCharsets.UTF_8)));
+        if (response.value() != null) {
+            outputStream.write(response.value().toString().getBytes(contentType.charset().orElse(StandardCharsets.UTF_8)));
+        }
     }
 }

@@ -8,7 +8,7 @@ import colesico.framework.security.assist.authentication.basic.*;
 import jakarta.inject.Singleton;
 
 @Producer
-@Produce(BasicAuthenticator.class)
+@Produce(BasicAuth.class)
 @Produce(value = DefaultPeer.class, keyType = BasicPeer.class, substitute = Substitution.STUB)
 public class BasicAuthProducer {
 

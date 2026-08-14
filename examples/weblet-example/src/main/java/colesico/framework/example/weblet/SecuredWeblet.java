@@ -1,9 +1,11 @@
 package colesico.framework.example.weblet;
 
 import colesico.framework.security.Identity;
+import colesico.framework.security.assist.authentication.basic.BasicAuth;
 import colesico.framework.security.authentication.Authentication;
-import colesico.framework.telehttp.authentication.HttpBasicPeer;
+
 import colesico.framework.weblet.Weblet;
+
 import jakarta.inject.Provider;
 
 @Weblet
@@ -18,9 +20,9 @@ public class SecuredWeblet {
 
     // Browse: http://localhost:8080/secured-weblet/identity
     // Use admin/secret to  authenticate (see resources/META-INF/accounts.properties)
-    @Authentication(HttpBasicPeer.class)
+    @Authentication(BasicAuth.class)
     public String identity() {
-        return identity.get().id();
+        return "Hello, "+ identity.get().id();
     }
 
 }
