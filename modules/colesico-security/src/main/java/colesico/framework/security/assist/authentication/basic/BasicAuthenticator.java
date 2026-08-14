@@ -1,7 +1,7 @@
 package colesico.framework.security.assist.authentication.basic;
 
 import colesico.framework.security.Identity;
-import colesico.framework.security.authentication.Authentication;
+import colesico.framework.security.authentication.Authenticator;
 import colesico.framework.security.authentication.AuthenticationOutcome;
 import colesico.framework.security.authentication.LogoutMessage;
 import colesico.framework.security.internal.BasicAuthProducer;
@@ -18,10 +18,10 @@ import java.util.*;
  * @see BasicAuthProducer
  */
 @Singleton
-public class BasicAuth implements Authentication<BasicMessage, LogoutMessage> {
+public class BasicAuthenticator implements Authenticator<BasicMessage, LogoutMessage> {
 
     /**
-     * Authenticator config
+     * Authentication flow config
      */
     protected final BasicConfigPrototype config;
 
@@ -30,7 +30,10 @@ public class BasicAuth implements Authentication<BasicMessage, LogoutMessage> {
      */
     protected final BasicAccounts accounts;
 
-    protected final BasicSource source;
+    /**
+     * Source
+     */
+    protected final BasicSupplicant source;
 
     /**
      * Authenticated identities
@@ -38,7 +41,7 @@ public class BasicAuth implements Authentication<BasicMessage, LogoutMessage> {
     protected final Map<Object, Identity<?>> authenticated;
 
     @Inject
-    public BasicAuth(BasicConfigPrototype config, BasicSource source, BasicAccounts accounts) {
+    public BasicAuthenticator(BasicConfigPrototype config, BasicSupplicant source, BasicAccounts accounts) {
         this.config = config;
         this.accounts = accounts;
         this.source = source;
@@ -70,7 +73,7 @@ public class BasicAuth implements Authentication<BasicMessage, LogoutMessage> {
         }
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put(Identity.AUTHENTICATION_CLAIM, BasicAuth.class);
+        claims.put(Identity.AUTHENTICATOR_CLAIM, BasicAuthenticator.class);
         claims.put(Identity.ROLES_CLAIM, account.roles());
         return Identity.Default.of(request.login(), claims);
     }
@@ -79,7 +82,7 @@ public class BasicAuth implements Authentication<BasicMessage, LogoutMessage> {
     public AuthenticationOutcome authenticate(BasicMessage message) {
 
         if (message == null) {
-            message = source.credentials();
+            message = source.message();
         }
 
         if (message == null) {

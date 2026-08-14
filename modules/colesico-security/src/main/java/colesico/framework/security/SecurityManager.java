@@ -37,21 +37,20 @@ public interface SecurityManager {
     /**
      * Attempts to authenticate a subject with given auth using the provided message
      */
-    <A extends AuthenticationMessage> AuthenticationResult authenticate(Authentication<A, ?> auth, A message);
+    <A extends AuthenticationMessage> AuthenticationResult authenticate(Authenticator<A, ?> auth, A message);
 
     /**
-     * Attempts to authenticate a subject using the provided collection of {@link Authentication}s.
-     * The first authentication that provides a valid {@link AuthenticationMessage} will be used for authentication.
+     * Sequential attempts to authenticate a subject using the provided collection of {@link Authenticator}s.
      * On success, the resulting {@link Identity} is bound to the current {@link IdentityContext}.
      */
-    AuthenticationResult authenticate(Iterable<Authentication<?, ?>> auth);
+    AuthenticationResult authenticate(Iterable<Authenticator<?, ?>> authenticators);
 
-    default AuthenticationResult authenticate(Authentication<?, ?> auth) {
-        return authenticate(List.of(auth));
+    default AuthenticationResult authenticate(Authenticator<?, ?> authenticator) {
+        return authenticate(List.of(authenticator));
     }
 
     /**
-     * Performs authentication using the authentications currently bound to the {@link AuthContext}.
+     * Performs authentication using the authenticators currently bound to the {@link AuthenticationContext}.
      * This is the standard way to trigger authentication in a scoped environment (e.g., during an HTTP request).
      */
     AuthenticationResult authenticate();
@@ -90,7 +89,7 @@ public interface SecurityManager {
 
     /**
      * Performs a logout for the specified {@link Identity}.
-     * Triggers appropriate logout handlers and notifies associated authentications.
+     * Triggers appropriate logout handlers and notifies associated authenticators.
      */
     void logout(Identity<?> identity);
 

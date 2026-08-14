@@ -5,7 +5,7 @@ import colesico.framework.security.Identity;
 
 /**
  * Profile manager API.
- * Manager can store/obtain profile from different authentications,
+ * Manager can store/obtain profile from different authenticators,
  * for example, a config, database,
  * HTTP/RPC request/response, Kafka message etc.
  * Manager associates current profile instance to the current thread.

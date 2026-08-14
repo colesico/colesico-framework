@@ -2,9 +2,12 @@ package colesico.framework.security.assist.authentication.basic;
 
 import colesico.framework.security.Identity;
 
-public interface BasicSource {
+public interface BasicSupplicant {
 
-    BasicMessage credentials();
+    /**
+     *  Extract basic message from source  (http/grpc request, rabbit message, etc.)
+     */
+    BasicMessage message();
 
     void challenge(String realm);
 

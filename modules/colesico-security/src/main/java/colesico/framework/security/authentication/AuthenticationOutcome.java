@@ -4,7 +4,7 @@ package colesico.framework.security.authentication;
 import colesico.framework.security.Identity;
 
 /**
- * Represents the outcome of an execution of {@link Authentication}.
+ * Represents the outcome of an execution of {@link Authenticator}.
  */
 public sealed interface AuthenticationOutcome permits
         AuthenticationOutcome.Success,

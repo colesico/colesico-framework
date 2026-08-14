@@ -4,6 +4,7 @@ import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpContext;
 import colesico.framework.security.Identity;
 import colesico.framework.security.assist.authentication.basic.BasicMessage;
+import colesico.framework.security.assist.authentication.basic.BasicSupplicant;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
@@ -13,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Singleton
-public class HttpBasic implements AuthenticationSource<BasicMessage, BasicCallback>, BasicCallback {
+public class HttpBasic implements BasicSupplicant {
 
     protected static final Pattern BASIC_AUTH_PATTERN =
             Pattern.compile("^Basic\\s+(.+)$", Pattern.CASE_INSENSITIVE);
@@ -28,15 +29,15 @@ public class HttpBasic implements AuthenticationSource<BasicMessage, BasicCallba
     }
 
     @Override
-    public BasicMessage request() {
+    public BasicMessage message() {
         var request = httpContext.get().request();
         String authHeader = request.headers().get(AUTHORIZATION_HEADER);
         if (StringUtils.isBlank(authHeader)) {
-            return BasicMessage.empty(HttpBasic.class);
+            return null;
         }
         Matcher matcher = BASIC_AUTH_PATTERN.matcher(authHeader.trim());
         if (!matcher.matches()) {
-            return BasicMessage.empty(HttpBasic.class);
+            return null;
         }
 
         String base64Credentials = matcher.group(1);
@@ -46,19 +47,14 @@ public class HttpBasic implements AuthenticationSource<BasicMessage, BasicCallba
 
         String[] values = credentials.split(":", 2);
         if (values.length == 2) {
-            return BasicMessage.of(values[0], values[1], HttpBasic.class);
+            return new BasicMessage(values[0], values[1]);
         } else {
             throw new SecurityException("Invalid Authorization header");
         }
     }
 
     @Override
-    public BasicCallback callback() {
-        return this;
-    }
-
-    @Override
-    public void onChallenge(String realm) {
+    public void challenge(String realm) {
         var response = httpContext.get().response();
         response
                 .addHeader(WWW_AUTHENTICATE_HEADER, "Basic realm=\"" + realm + "\"")
@@ -68,7 +64,7 @@ public class HttpBasic implements AuthenticationSource<BasicMessage, BasicCallba
     }
 
     @Override
-    public void onLogout(Identity identity) {
+    public void logout(Identity<?> identity) {
         httpContext.get().response().setStatus(401).send("Logout");
     }
 }

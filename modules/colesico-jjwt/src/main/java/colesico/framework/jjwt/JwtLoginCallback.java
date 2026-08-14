@@ -4,7 +4,6 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.http.HttpCookieFactory;
 import colesico.framework.security.Identity;
-import colesico.framework.security.authentication.AuthenticationCallback;
 import jakarta.inject.Provider;
 
 import java.util.HashMap;

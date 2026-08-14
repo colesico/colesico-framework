@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Config
 @UseFileSource(bindAll = false, file = "accounts.properties", optional = true)
-public class DefaultBasicAccounts implements BasicAccounts {
+public class DefaultAccounts implements BasicAccounts {
 
     protected static final String PASSWORD_SUFFIX = ".password";
     protected static final String ROLES_SUFFIX = ".roles";

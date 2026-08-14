@@ -1,29 +1,68 @@
+/*
+ * Copyright © 2014-2025 Vladlen V. Larionov and others as noted.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package colesico.framework.security.authentication;
 
+import colesico.framework.security.Identity;
+import colesico.framework.security.IdentityContext;
+import colesico.framework.security.SecurityManager;
+
+import java.lang.annotation.*;
+
 /**
- * Defines the contract for an authentication flow.
- * Specifies the implementation for both authentication and logout processes.
+ * Configures authentication behavior for method or class.
  *
- * @param <A> the type of authentication message processed by this flow
+ * @author Vladlen V. Larionov
  */
-public interface Authentication<A extends AuthenticationMessage, L extends LogoutMessage> {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.TYPE})
+@Inherited
+@Documented
+public @interface Authentication {
 
     /**
-     * Executes the authentication process.
-     * <p>
-     * If the {@code message} parameter is {@code null}, the authentication process
-     * is running from beginning. If a message is provided, the process
-     * resumes from the specific entry point associated with that message.
-     *
-     * @param message optional authentication message;
-     * @return the outcome of the authentication attempt
+     * {@link Authenticator}s classes that will be tried sequentially.
+     * @see AuthenticationContext
      */
-    AuthenticationOutcome authenticate(A message);
+    Class<? extends Authenticator<?,?>>[] value();
 
     /**
-     * Executes the logout process for the specified message.
-     *
-     * @param message mandatory message
+     * Determines the execution strategy for authentication.
      */
-    void logout(L message);
+    Strategy strategy() default Strategy.IF_NECESSARY;
+
+    /**
+     * Strategies defining how and when authentication is triggered.
+     */
+    enum Strategy {
+
+        /**
+         * Always performs authentication (call {@link SecurityManager#authenticate(Authenticator)}).
+         */
+        STRICT,
+
+        /**
+         * Performs authentication only if an {@link Identity} is missing from the {@link IdentityContext}.
+         */
+        IF_NECESSARY,
+
+        /**
+         * Only registers authenticators in the {@link AuthenticationContext} for manual authentication
+         * by calling {@link SecurityManager#authenticate()} later within the business logic.
+         */
+        DEFERRED
+    }
 }

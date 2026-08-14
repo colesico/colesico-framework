@@ -12,14 +12,14 @@ import java.util.Collection;
 @Singleton
 public class AuthenticationInterceptorImpl implements AuthenticationInterceptor {
 
-    private final Supplier<Authentication<?,?>> authenticationFactory;
+    private final Supplier<Authenticator<?,?>> authenticatorFactory;
     private final SecurityManager securityManager;
-    private final AuthContext authContext;
+    private final AuthenticationContext authContext;
 
-    public AuthenticationInterceptorImpl(Supplier<Authentication> authenticationFactory,
+    public AuthenticationInterceptorImpl(Supplier<Authenticator> authenticatorFactory,
                                          SecurityManager securityManager,
-                                         AuthContext authContext) {
-        this.authenticationFactory = (Supplier) authenticationFactory;
+                                         AuthenticationContext authContext) {
+        this.authenticatorFactory = (Supplier) authenticatorFactory;
         this.securityManager = securityManager;
         this.authContext = authContext;
     }
@@ -27,15 +27,15 @@ public class AuthenticationInterceptorImpl implements AuthenticationInterceptor 
     @Override
     public Object intercept(InvocationContext context, Options options) {
 
-        Collection<Authentication<?,?>> authentications = new ArrayList<>();
+        Collection<Authenticator<?,?>> authenticators = new ArrayList<>();
 
-        for (var authenticationClass : options.authentications()) {
-            authentications.add(authenticationFactory.get(authenticationClass));
+        for (var authClass : options.authenticators()) {
+            authenticators.add(authenticatorFactory.get(authClass));
         }
 
         switch (options.strategy()) {
             case DEFERRED:
-                authContext.setAuthentications(authentications);
+                authContext.setAuthenticators(authenticators);
                 return context.proceed();
 
             case IF_NECESSARY:
@@ -45,7 +45,7 @@ public class AuthenticationInterceptorImpl implements AuthenticationInterceptor 
                 // fall-through to STRICT if not authenticated
 
             case STRICT:
-                var result = securityManager.authenticate(authentications);
+                var result = securityManager.authenticate(authenticators);
                 return switch (result) {
                     case AuthenticationResult.Success _ -> context.proceed();
                     case AuthenticationResult.Stage _ -> null;

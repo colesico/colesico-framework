@@ -30,33 +30,33 @@ import java.util.concurrent.Callable;
  * Default implementation of the {@link SecurityManager}.
  * <p>
  * This manager orchestrates the authentication process by coordinating between
- * transport-level authentications, the authentication registry, and lifecycle handlers.
+ * transport-level authenticators, the authentication registry, and lifecycle handlers.
  * It also manages the security challenge (Identity) within the current scope.
  */
 public class SecurityManagerImpl implements SecurityManager {
 
     protected final IdentityContext identityContext;
-    protected final AuthContext authContext;
-    private final Supplier<Authentication<AuthenticationMessage, LogoutMessage>> authenticationFactory;
+    protected final AuthenticationContext authenticationContext;
+    private final Supplier<Authenticator<AuthenticationMessage, LogoutMessage>> authenticatorFactory;
 
     public SecurityManagerImpl(IdentityContext identityContext,
-                               AuthContext authContext,
-                               Supplier<Authentication> authenticationFactory) {
+                               AuthenticationContext authenticationContext,
+                               Supplier<Authenticator> authenticatorFactory) {
         this.identityContext = identityContext;
-        this.authContext = authContext;
-        this.authenticationFactory = (Supplier) authenticationFactory;
+        this.authenticationContext = authenticationContext;
+        this.authenticatorFactory = (Supplier) authenticatorFactory;
     }
 
-    protected <A extends AuthenticationMessage> AuthenticationOutcome invokeAuthenticate(Authentication<A, ?> auth, A message) {
+    protected <A extends AuthenticationMessage> AuthenticationOutcome invokeAuthenticate(Authenticator<A, ?> authenticator, A message) {
 
-        if (auth == null) {
-            throw new SecurityException("Authentication flow is null");
+        if (authenticator == null) {
+            throw new SecurityException("Authenticator is null");
         }
 
-        var outcome = auth.authenticate(message);
+        var outcome = authenticator.authenticate(message);
 
         if (outcome == null) {
-            throw new SecurityException("Null authentication flow outcome");
+            throw new SecurityException("Null authentication outcome");
         }
 
         return switch (outcome) {
@@ -75,28 +75,28 @@ public class SecurityManagerImpl implements SecurityManager {
     }
 
     @Override
-    public <A extends AuthenticationMessage> AuthenticationResult authenticate(Authentication<A, ?> auth, A message) {
+    public <A extends AuthenticationMessage> AuthenticationResult authenticate(Authenticator<A, ?> authenticator, A message) {
         identityContext.clear();
         if (message == null) {
             throw new SecurityException("Authentication message is null");
         }
-        var outcome = invokeAuthenticate(auth, message);
+        var outcome = invokeAuthenticate(authenticator, message);
         return outcome.result();
     }
 
     /**
-     * Orchestrates the authentication process across provided authentications and matching authenticators.
+     * Orchestrates the authentication process across provided authenticators and matching authenticators.
      */
     @Override
-    public AuthenticationResult authenticate(Iterable<Authentication<?, ?>> authentications) {
+    public AuthenticationResult authenticate(Iterable<Authenticator<?, ?>> authenticators) {
 
         identityContext.clear();
 
-        if (authentications == null || !authentications.iterator().hasNext()) {
-            return AuthenticationResult.failure("No authentication flows");
+        if (authenticators == null || !authenticators.iterator().hasNext()) {
+            return AuthenticationResult.failure("No authenticators to authenticate");
         }
 
-        for (var auth : authentications) {
+        for (var auth : authenticators) {
             var outcome = invokeAuthenticate(auth, null);
             if (outcome instanceof AuthenticationOutcome.Skip) {
                 continue;
@@ -109,8 +109,8 @@ public class SecurityManagerImpl implements SecurityManager {
 
     @Override
     public AuthenticationResult authenticate() {
-        var authentications = authContext.authentications();
-        return authenticate(authentications);
+        var authenticators = authenticationContext.authenticators();
+        return authenticate(authenticators);
     }
 
     @Override
@@ -133,11 +133,11 @@ public class SecurityManagerImpl implements SecurityManager {
             throw new SecurityException("Identity is null");
         }
 
-        var authClass = identity.claim(Identity.AUTHENTICATION_CLAIM, Authentication.class);
+        var authClass = identity.claim(Identity.AUTHENTICATOR_CLAIM, Authenticator.class);
 
         if (authClass.isPresent()) {
-            var authentication = authenticationFactory.get(authClass.get());
-            authentication.logout(new LogoutMessage.Default(identity));
+            var authenticator = authenticatorFactory.get(authClass.get());
+            authenticator.logout(new LogoutMessage.Default(identity));
         }
     }
 

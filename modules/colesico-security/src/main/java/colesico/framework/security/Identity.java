@@ -17,7 +17,7 @@
 package colesico.framework.security;
 
 import colesico.framework.ioc.Ioc;
-import colesico.framework.security.authentication.Authentication;
+import colesico.framework.security.authentication.Authenticator;
 
 import java.util.*;
 
@@ -33,11 +33,11 @@ import java.util.*;
 public interface Identity<ID> {
 
     /**
-     * Specifies {@link Authentication} class that issued this identity
-     * to retrieve instance from {@link Ioc} to route security messages, such as logout,
+     * Specifies {@link Authenticator} class that issued this identity
+     * to retrieve instance from {@link Ioc} to route security actions, such as logout,
      * to the correct authentication.
      */
-    String AUTHENTICATION_CLAIM = "authentication";
+    String AUTHENTICATOR_CLAIM = "authenticator";
 
     /**
      * The claim key for the roles' holder.

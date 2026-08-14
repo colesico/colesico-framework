@@ -32,7 +32,7 @@ import jakarta.inject.Singleton;
 @Producer
 @Produce(value = SecurityManagerImpl.class, keyType = SecurityManager.class, scoped = Singleton.class)
 @Produce(value = IdentityContextImpl.class, keyType = IdentityContext.class, scoped = Singleton.class)
-@Produce(value = AuthContextImpl.class, keyType = AuthContext.class, scoped = Singleton.class)
+@Produce(value = AuthenticationContextImpl.class, keyType = AuthenticationContext.class, scoped = Singleton.class)
 @Produce(value = AuthenticationInterceptorImpl.class, keyType = AuthenticationInterceptor.class)
 @Produce(RequireIdentityAudit.class)
 public class SecurityProducer {
@@ -45,8 +45,8 @@ public class SecurityProducer {
     }
 
     @Unscoped
-    public Authentication authenticationFactory(
-            @IocMessage Class<? extends Authentication> sourceClass,
+    public Authenticator authenticatorFactory(
+            @IocMessage Class<? extends Authenticator> sourceClass,
             Ioc ioc) {
 
         return ioc.instance(sourceClass);
