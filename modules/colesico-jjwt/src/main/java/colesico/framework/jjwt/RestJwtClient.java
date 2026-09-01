@@ -15,8 +15,10 @@ public class RestJwtClient extends JwtClient {
 
     protected static final Pattern BEARER_PATTERN = Pattern.compile("^Bearer\\s+(.+)$", Pattern.CASE_INSENSITIVE);
     protected static final String AUTHORIZATION_HEADER = "Authorization";
+    protected static final String ACCESS_TOKEN_HEADER = "access-token";
     protected static final String REFRESH_TOKEN_HEADER = "refresh-token";
 
+    protected static final String TOKEN_EXPIRED_ERROR = "token_expired";
 
     public RestJwtClient(Provider<HttpContext> httpContext) {
         super(httpContext);
@@ -24,7 +26,9 @@ public class RestJwtClient extends JwtClient {
 
     @Override
     public void populateTokens(String accessToken, String refreshToken) {
-        // Implement token deployment to response headers/cookies if required by the framework
+        var response = httpContext.get().response();
+        response.addHeader(ACCESS_TOKEN_HEADER, accessToken)
+                .addHeader(REFRESH_TOKEN_HEADER, refreshToken);
     }
 
     @Override
@@ -43,6 +47,13 @@ public class RestJwtClient extends JwtClient {
     @Override
     String retrieveRefreshToken() {
         var request = httpContext.get().request();
-        return request.headers().get(REFRESH_TOKEN_HEADER);
+        var token = request.headers().get(REFRESH_TOKEN_HEADER);
+        if (token == null) {
+            httpContext.get().response()
+                    .setStatus(401)
+                    .setContentType("text/plain")
+                    .send(TOKEN_EXPIRED_ERROR);
+        }
+        return token;
     }
 }
