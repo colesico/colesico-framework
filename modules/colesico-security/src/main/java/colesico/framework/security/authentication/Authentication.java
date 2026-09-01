@@ -16,10 +16,6 @@
 
 package colesico.framework.security.authentication;
 
-import colesico.framework.security.Identity;
-import colesico.framework.security.IdentityContext;
-import colesico.framework.security.SecurityManager;
-
 import java.lang.annotation.*;
 
 /**
@@ -31,38 +27,13 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Inherited
 @Documented
+@Repeatable(Authentications.class)
 public @interface Authentication {
 
     /**
-     * {@link Authenticator}s classes that will be tried sequentially.
+     * {@link Authenticator}s class that will be tried.
+     *
      * @see AuthenticationContext
      */
-    Class<? extends Authenticator<?,?>>[] value();
-
-    /**
-     * Determines the execution strategy for authentication.
-     */
-    Strategy strategy() default Strategy.IF_NECESSARY;
-
-    /**
-     * Strategies defining how and when authentication is triggered.
-     */
-    enum Strategy {
-
-        /**
-         * Always performs authentication (call {@link SecurityManager#authenticate(Authenticator)}).
-         */
-        STRICT,
-
-        /**
-         * Performs authentication only if an {@link Identity} is missing from the {@link IdentityContext}.
-         */
-        IF_NECESSARY,
-
-        /**
-         * Only registers authenticators in the {@link AuthenticationContext} for manual authentication
-         * by calling {@link SecurityManager#authenticate()} later within the business logic.
-         */
-        DEFERRED
-    }
+    Class<? extends Authenticator<?, ?>> value();
 }

@@ -21,8 +21,11 @@ import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
+import colesico.framework.assist.codegen.model.FieldElement;
 import colesico.framework.security.authentication.Authentication;
 import colesico.framework.security.authentication.AuthenticationInterceptor;
+import colesico.framework.security.authentication.AuthenticationPolicy;
+import colesico.framework.security.authentication.Authentications;
 import colesico.framework.security.authorization.RequireIdentity;
 import colesico.framework.security.authorization.RequireIdentityAudit;
 import colesico.framework.security.authorization.SecurityAudit;
@@ -40,9 +43,7 @@ import com.palantir.javapoet.TypeName;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Generates security audit interceptors
@@ -58,7 +59,7 @@ public class SecurityModulator extends Modulator {
         }
 
         processAuditors();
-        processAuthentication();
+        processAuthentications();
     }
 
     private void processAuditors() {
@@ -116,18 +117,61 @@ public class SecurityModulator extends Modulator {
         return result;
     }
 
-    private void processAuthentication() {
-        AnnotationAssist<Authentication> authentication = serviceMethod.originMethod().annotation(Authentication.class);
-        if (authentication == null) {
-            authentication = service.originClass().annotation(Authentication.class);
+    protected Set<AnnotationAssist<Authentication>> findMethodAuthentications() {
+        final Set<AnnotationAssist<Authentication>> result = new HashSet<>();
+
+        AnnotationAssist<Authentication> auth = serviceMethod.originMethod().annotation(Authentication.class);
+        if (auth != null) {
+            result.add(auth);
+        } else {
+            AnnotationAssist<Authentications> auths = serviceMethod.originMethod().annotation(Authentications.class);
+            if (auths != null) {
+                for (Authentication au : auths.unwrap().value()) {
+                    auth = new AnnotationAssist<>(processorContext.processingEnv(), au);
+                    result.add(auth);
+                }
+            }
         }
-        if (authentication == null) {
+        return result;
+    }
+
+    protected Set<AnnotationAssist<Authentication>> findClassAuthentications() {
+        final Set<AnnotationAssist<Authentication>> result = new HashSet<>();
+
+        AnnotationAssist<Authentication> auth = service.originClass().annotation(Authentication.class);
+        if (auth != null) {
+            result.add(auth);
+        } else {
+            AnnotationAssist<Authentications> auths = service.originClass().annotation(Authentications.class);
+            if (auths != null) {
+                for (Authentication au : auths.unwrap().value()) {
+                    auth = new AnnotationAssist<>(processorContext.processingEnv(), au);
+                    result.add(auth);
+                }
+            }
+        }
+        return result;
+    }
+
+    private void processAuthentications() {
+
+        Set<AnnotationAssist<Authentication>> authentications = findMethodAuthentications();
+        if (authentications.isEmpty()) {
+            authentications = findClassAuthentications();
+        }
+
+        if (authentications.isEmpty()) {
             return;
         }
 
-        TypeMirror[] sourcesArr = authentication.valueTypeMirrors(a -> a.value());
-        if (sourcesArr.length == 0) {
-            return;
+        AnnotationAssist<AuthenticationPolicy> authenticationPolicy = serviceMethod.originMethod().annotation(AuthenticationPolicy.class);
+        if (authenticationPolicy == null) {
+            authenticationPolicy = service.originClass().annotation(AuthenticationPolicy.class);
+        }
+
+        var strategy = AuthenticationPolicy.Strategy.IF_NECESSARY.name();
+        if (authenticationPolicy != null) {
+            strategy = authenticationPolicy.unwrap().value().name();
         }
 
         // Add authentication interceptor field
@@ -140,12 +184,14 @@ public class SecurityModulator extends Modulator {
         CodeBlock.Builder paramsCode = CodeBlock.builder();
         paramsCode.add("new $T(", ClassName.get(AuthenticationInterceptor.Options.class));
         ArrayCodegen paramsCodegen = new ArrayCodegen(ClassName.get(Class.class));
-        for (var authSourceClass : sourcesArr) {
-            paramsCodegen.add("$T.class", TypeName.get(authSourceClass));
+        for (var authentication : authentications) {
+            TypeMirror authenticatorClass = authentication.valueTypeMirror(a -> a.value());
+            paramsCodegen.add("$T.class", TypeName.get(authenticatorClass));
         }
         paramsCode.add(paramsCodegen.toFormat(), paramsCodegen.toValues());
-        paramsCode.add(",$T.$L)", ClassName.get(Authentication.Strategy.class),
-                authentication.unwrap().strategy().name());
+
+
+        paramsCode.add(",$T.$L)", ClassName.get(AuthenticationPolicy.Strategy.class), strategy);
 
         // Add interceptor invocation code
         CodeBlock.Builder interceptorCode = CodeBlock.builder();
