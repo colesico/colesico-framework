@@ -14,7 +14,7 @@ public sealed interface AuthenticationOutcome permits AuthenticationOutcome.Fail
     /**
      * Definitively successful authentication.
      */
-    record Success(Identity<?> identity) implements AuthenticationOutcome {
+    record Success(Identity identity) implements AuthenticationOutcome {
 
         @Override
         public AuthenticationResult result() {
@@ -67,7 +67,7 @@ public sealed interface AuthenticationOutcome permits AuthenticationOutcome.Fail
     /**
      * Creates default successful outcome
      */
-    static Success success(final Identity<?> identity) {
+    static Success success(final Identity identity) {
         return new Success(identity);
     }
 

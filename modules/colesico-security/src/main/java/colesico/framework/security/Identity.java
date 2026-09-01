@@ -30,7 +30,7 @@ import java.util.*;
  * <p>
  * The framework provides a default implementation: {@link Identity.Default}
  */
-public interface Identity<ID> {
+public interface Identity {
 
     /**
      * Specifies {@link Authenticator} class that issued this identity
@@ -52,9 +52,9 @@ public interface Identity<ID> {
     /**
      * Returns the unique identifier of this identity (e.g., UUID, strategy, or numeric ID).
      */
-    ID id();
+    String id();
 
-    default ID getId() {
+    default String getId() {
         return id();
     }
 
@@ -113,14 +113,14 @@ public interface Identity<ID> {
     /**
      * The default implementation of the {@link Identity} interface.
      */
-    record Default<ID>(ID id, Map<String, Object> claims) implements Identity<ID> {
+    record Default(String id, Map<String, Object> claims) implements Identity {
 
-        public static <ID> Default<ID> of(ID id) {
-            return new Default<>(id, new HashMap<>());
+        public static Default of(String id) {
+            return new Default(id, new HashMap<>());
         }
 
-        public static <ID> Default<ID> of(ID id, Map<String, Object> claims) {
-            return new Default<>(id, claims);
+        public static Default of(String id, Map<String, Object> claims) {
+            return new Default(id, claims);
         }
 
     }

@@ -34,7 +34,7 @@ public class JwtTokenUtils {
         this.refreshTtl = config.refreshTtl();
     }
 
-    public String generateAccessToken(String subject, Map<String, Object> claims) {
+    public String createAccessToken(String subject, Map<String, Object> claims) {
         return Jwts.builder()
                 .subject(subject)
                 .claims(claims)
@@ -45,10 +45,9 @@ public class JwtTokenUtils {
                 .compact();
     }
 
-    public String generateRefreshToken(String subject, Map<String, Object> claims) {
+    public String createRefreshToken(String subject) {
         return Jwts.builder()
                 .subject(subject)
-                .claims(claims)
                 .claim(TOKEN_TYPE_CLAIM, REFRESH_TOKEN_TYPE)
                 .issuedAt(new Date())
                 .id(UUID.randomUUID().toString())

@@ -32,8 +32,8 @@ public class JwtLoginCallback implements AuthenticationCallback {
     @Override
     public void onSuccess(Identity identity) {
         var subject = identity.id().toString();
-        String accessToken = tokenUtils.generateAccessToken(subject, identity.claims());
-        String refreshToken = tokenUtils.generateRefreshToken(subject, new HashMap<>());
+        String accessToken = tokenUtils.createAccessToken(subject, identity.claims());
+        String refreshToken = tokenUtils.createRefreshToken(subject, new HashMap<>());
 
         var httpResponse = httpContext.get().response();
         httpResponse.addHeader(ACCESS_CONTROL_EXPOSE_HEADER, AUTHORIZATION_HEADER + ',' + REFRESH_TOKEN_HEADER);

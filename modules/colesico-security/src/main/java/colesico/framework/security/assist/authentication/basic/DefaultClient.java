@@ -35,7 +35,7 @@ public class DefaultClient implements BasicClient {
     }
 
     @Override
-    public void logout(Identity<?> identity) {
+    public void logout(Identity identity) {
         message.set(null);
     }
 }

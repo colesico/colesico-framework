@@ -59,7 +59,7 @@ public interface SecurityManager {
      * Retrieves the current {@link Identity} from the active {@link IdentityContext}.
      * Returns an empty Optional if the subject is not authenticated.
      */
-    Optional<Identity<?>> identity();
+    Optional<Identity> identity();
 
     /**
      * Checks whether the current subject is authenticated.
@@ -73,14 +73,14 @@ public interface SecurityManager {
      * Temporarily replaces the current identity in the challenge and restores it after the task completes.
      * This is useful for impersonation or system-level background tasks.
      */
-    <R> R callAs(Callable<R> callable, Identity<?> identity);
+    <R> R callAs(Callable<R> callable, Identity identity);
 
     /**
      * Executes the given runnable as the specified {@link Identity}.
      *
      * @see #callAs(Callable, Identity)
      */
-    default void runAs(Identity<?> identity, Runnable runnable) {
+    default void runAs(Identity identity, Runnable runnable) {
         callAs(() -> {
             runnable.run();
             return null;
@@ -91,7 +91,7 @@ public interface SecurityManager {
      * Performs a logout for the specified {@link Identity}.
      * Triggers appropriate logout handlers and notifies associated authenticators.
      */
-    void logout(Identity<?> identity);
+    void logout(Identity identity);
 
     /**
      * Performs a logout for the current {@link Identity} from {@link IdentityContext}
@@ -103,7 +103,7 @@ public interface SecurityManager {
      * if the subject is not authenticated.
      * Use this method when an identity is strictly required for the subsequent logic.
      */
-    default Identity<?> requireIdentity() {
+    default Identity requireIdentity() {
         return identity().orElseThrow(UnauthorizedException::new);
     }
 

@@ -123,7 +123,7 @@ public class SecurityManagerImpl implements SecurityManager {
     }
 
     @Override
-    public Optional<Identity<?>> identity() {
+    public Optional<Identity> identity() {
         return identityContext.identity();
     }
 
@@ -137,7 +137,7 @@ public class SecurityManagerImpl implements SecurityManager {
      * @param identity the identity to log out.
      */
     @Override
-    public void logout(Identity<?> identity) {
+    public void logout(Identity identity) {
         if (identity == null) {
             throw new SecurityException("Identity is null");
         }
@@ -160,7 +160,7 @@ public class SecurityManagerImpl implements SecurityManager {
     }
 
     @Override
-    public <T> T callAs(Callable<T> callable, Identity<?> identity) {
+    public <T> T callAs(Callable<T> callable, Identity identity) {
         final var previous = identityContext.identity();
         identityContext.setIdentity(identity);
         try {

@@ -13,25 +13,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Singleton
-public class RestJwt extends JwtTokenSource {
+public class RestJwtClient extends JwtClient {
 
     protected static final Pattern BEARER_PATTERN = Pattern.compile("^Bearer\\s+(.+)$", Pattern.CASE_INSENSITIVE);
     protected static final String AUTHORIZATION_HEADER = "Authorization";
 
     private static final Gson gson = new GsonBuilder().create();
 
-    public RestJwt(JwtConfigPrototype config, Provider<HttpContext> httpContext) {
+    public RestJwtClient(JwtConfigPrototype config, Provider<HttpContext> httpContext) {
         super(config, httpContext);
     }
 
     @Override
-    public JwtRequest request() {
+    public JwtTokens getTokens() {
         String authHeader = this.httpContext.get().request().headers().get(AUTHORIZATION_HEADER);
         if (StringUtils.isBlank(authHeader)) return null;
 
         Matcher m = BEARER_PATTERN.matcher(authHeader.trim());
         if (m.matches()) {
-            return new JwtRequest(m.group(1),
+            return new JwtTokens(m.group(1),
                     AuthenticationMessage.sourceClaims(this.getClass()));
         }
 

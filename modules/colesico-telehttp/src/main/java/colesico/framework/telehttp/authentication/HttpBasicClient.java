@@ -64,7 +64,7 @@ public class HttpBasicClient implements BasicClient {
     }
 
     @Override
-    public void logout(Identity<?> identity) {
+    public void logout(Identity identity) {
         httpContext.get().response().setStatus(401).send("Logout");
     }
 }

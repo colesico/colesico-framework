@@ -15,12 +15,12 @@ public class IdentityContextImpl implements IdentityContext {
     }
 
     @Override
-    public Optional<Identity<?>> identity() {
+    public Optional<Identity> identity() {
         return Optional.ofNullable(taskScope.get(SCOPE_KEY));
     }
 
     @Override
-    public void setIdentity(Identity<?> identity) {
+    public void setIdentity(Identity identity) {
         taskScope.put(SCOPE_KEY, identity);
     }
 

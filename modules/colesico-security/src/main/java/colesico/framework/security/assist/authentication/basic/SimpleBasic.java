@@ -38,7 +38,7 @@ public class SimpleBasic implements Authenticator<BasicMessage, LogoutMessage> {
     /**
      * Authenticated identities
      */
-    protected final Map<Object, Identity<?>> authenticated;
+    protected final Map<Object, Identity> authenticated;
 
     @Inject
     public SimpleBasic(BasicConfigPrototype config,
@@ -63,7 +63,7 @@ public class SimpleBasic implements Authenticator<BasicMessage, LogoutMessage> {
         return HexFormat.of().formatHex(passwordHash);
     }
 
-    protected Identity<?> performAuth(BasicMessage request) {
+    protected Identity performAuth(BasicMessage request) {
         String passwordEnc;
         try {
             MessageDigest digest = MessageDigest.getInstance(config.passwordDigest());

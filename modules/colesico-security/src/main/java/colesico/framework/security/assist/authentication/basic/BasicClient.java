@@ -35,6 +35,6 @@ public interface BasicClient {
      *
      * @param identity the identity of the subject to be logged out
      */
-    void logout(Identity<?> identity);
+    void logout(Identity identity);
 
 }
