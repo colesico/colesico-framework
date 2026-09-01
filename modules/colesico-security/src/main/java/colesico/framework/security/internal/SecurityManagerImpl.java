@@ -47,7 +47,7 @@ public class SecurityManagerImpl implements SecurityManager {
         this.authenticatorFactory = (Supplier) authenticatorFactory;
     }
 
-    protected <A extends AuthenticationMessage> AuthenticationOutcome invokeAuthenticate(Authenticator<A, ?> authenticator, A message) {
+    protected <M extends AuthenticationMessage> AuthenticationOutcome invokeAuthenticate(Authenticator<M, ?> authenticator, M message) {
 
         if (authenticator == null) {
             throw new SecurityException("Authenticator is null");
@@ -71,6 +71,15 @@ public class SecurityManagerImpl implements SecurityManager {
             case AuthenticationOutcome.Stage stage -> stage;
             case AuthenticationOutcome.Failure failure -> failure;
             case AuthenticationOutcome.Skip skip -> skip;
+            case AuthenticationOutcome.Forward<?> forward -> {
+                var targetClass = forward.target();
+                if (targetClass == null) {
+                    throw new SecurityException("Forward target authenticator class is null");
+                }
+
+                var targetAuthenticator = authenticatorFactory.get(targetClass);
+                yield invokeAuthenticate(targetAuthenticator, (M) forward.message());
+            }
         };
     }
 

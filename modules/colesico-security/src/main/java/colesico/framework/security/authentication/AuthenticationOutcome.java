@@ -2,15 +2,12 @@ package colesico.framework.security.authentication;
 
 
 import colesico.framework.security.Identity;
+import colesico.framework.security.SecurityException;
 
 /**
  * Represents the outcome of an execution of {@link Authenticator}.
  */
-public sealed interface AuthenticationOutcome permits
-        AuthenticationOutcome.Success,
-        AuthenticationOutcome.Failure,
-        AuthenticationOutcome.Stage,
-        AuthenticationOutcome.Skip {
+public sealed interface AuthenticationOutcome permits AuthenticationOutcome.Failure, AuthenticationOutcome.Forward, AuthenticationOutcome.Skip, AuthenticationOutcome.Stage, AuthenticationOutcome.Success {
 
     AuthenticationResult result();
 
@@ -52,6 +49,18 @@ public sealed interface AuthenticationOutcome permits
         @Override
         public AuthenticationResult result() {
             return AuthenticationResult.failure(reason);
+        }
+    }
+
+    /**
+     * Forward flow to specified authenticator.
+     */
+    record Forward<M>(Class<? extends Authenticator<?, ?>> target,
+                      M message
+    ) implements AuthenticationOutcome {
+        @Override
+        public AuthenticationResult result() {
+            throw new SecurityException("Unsupported outcome");
         }
     }
 
