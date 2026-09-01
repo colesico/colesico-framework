@@ -8,14 +8,14 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Simple basic authentication source.
+ * Simple basic authentication peer.
  * Allow to authenticate single user per scope  (default - singleton)
  * Put this source to appropriate scope to support multi user authentication.
  */
 @Singleton
-public class DefaultPeer implements BasicPeer {
+public class DefaultClient implements BasicClient {
 
-    protected static final Logger log = LoggerFactory.getLogger(DefaultPeer.class);
+    protected static final Logger log = LoggerFactory.getLogger(DefaultClient.class);
     protected final AtomicReference<BasicMessage> message = new AtomicReference<>();
 
     /**

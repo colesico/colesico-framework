@@ -5,13 +5,13 @@ import colesico.framework.security.authentication.AuthenticationMessage;
 import colesico.framework.security.authentication.Authenticator;
 
 /**
- * Provides a protocol adapter to interacting with client side in  authentication process.
+ * Provides contract to interacting with client side in authentication process.
  * <p>
  * This component acts as an intermediary that collects credentials from the
  * actual subject (via HTTP or other communication channels), transforms them into
  * a message, and handles authentication callbacks from the {@link Authenticator#authenticate(AuthenticationMessage)}.
  */
-public interface BasicPeer {
+public interface BasicClient {
 
     /**
      * Extracts the basic authentication message from the incoming source

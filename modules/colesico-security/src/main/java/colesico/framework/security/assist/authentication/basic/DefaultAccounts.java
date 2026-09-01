@@ -29,12 +29,12 @@ public class DefaultAccounts implements BasicAccounts {
     private final Map<String, Entry> entries = new ConcurrentHashMap<>();
 
     @Override
-    public BasicAccounts.Account findAccount(String login, String passwordHashHex) {
+    public BasicAccounts.Account findAccount(String login, String passwordHash) {
         var entry = getEntry(login);
         if (entry == null) {
             return null;
         }
-        if (!passwordHashHex.equals(entry.password)) {
+        if (!passwordHash.equals(entry.password)) {
             return null;
         }
         return new Account(login, entry.roles);

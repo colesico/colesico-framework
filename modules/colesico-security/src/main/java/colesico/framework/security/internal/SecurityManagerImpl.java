@@ -78,7 +78,7 @@ public class SecurityManagerImpl implements SecurityManager {
                 }
 
                 var targetAuthenticator = authenticatorFactory.get(targetClass);
-                yield invokeAuthenticate(targetAuthenticator, (M) forward.message());
+                yield invokeAuthenticate(targetAuthenticator, forward.message());
             }
         };
     }

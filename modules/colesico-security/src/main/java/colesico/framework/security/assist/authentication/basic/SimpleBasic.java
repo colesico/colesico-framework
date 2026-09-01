@@ -18,7 +18,7 @@ import java.util.*;
  * @see BasicAuthProducer
  */
 @Singleton
-public class BasicAuth implements Authenticator<BasicMessage, LogoutMessage> {
+public class SimpleBasic implements Authenticator<BasicMessage, LogoutMessage> {
 
     /**
      * Authentication flow config
@@ -31,9 +31,9 @@ public class BasicAuth implements Authenticator<BasicMessage, LogoutMessage> {
     protected final BasicAccounts accounts;
 
     /**
-     * Source
+     * Client API
      */
-    protected final BasicPeer source;
+    protected final BasicClient client;
 
     /**
      * Authenticated identities
@@ -41,10 +41,13 @@ public class BasicAuth implements Authenticator<BasicMessage, LogoutMessage> {
     protected final Map<Object, Identity<?>> authenticated;
 
     @Inject
-    public BasicAuth(BasicConfigPrototype config, BasicPeer source, BasicAccounts accounts) {
+    public SimpleBasic(BasicConfigPrototype config,
+                       BasicClient client,
+                       BasicAccounts accounts) {
+
         this.config = config;
         this.accounts = accounts;
-        this.source = source;
+        this.client = client;
 
         authenticated = Collections.synchronizedMap(
                 new LinkedHashMap<>(100, 0.75f, true) {
@@ -56,24 +59,28 @@ public class BasicAuth implements Authenticator<BasicMessage, LogoutMessage> {
         );
     }
 
+    protected String encodePassword(byte[] passwordHash) {
+        return HexFormat.of().formatHex(passwordHash);
+    }
+
     protected Identity<?> performAuth(BasicMessage request) {
-        String passwordHex;
+        String passwordEnc;
         try {
             MessageDigest digest = MessageDigest.getInstance(config.passwordDigest());
             byte[] passwordHash = digest.digest(
                     request.password().getBytes(StandardCharsets.UTF_8));
-            passwordHex = HexFormat.of().formatHex(passwordHash);
+            passwordEnc = encodePassword(passwordHash);
         } catch (Exception ex) {
             throw new SecurityException(ex);
         }
 
-        BasicAccounts.Account account = accounts.findAccount(request.login(), passwordHex);
+        BasicAccounts.Account account = accounts.findAccount(request.login(), passwordEnc);
         if (account == null) {
             return null;
         }
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put(Identity.AUTHENTICATOR_CLAIM, BasicAuth.class);
+        claims.put(Identity.AUTHENTICATOR_CLAIM, SimpleBasic.class);
         claims.put(Identity.ROLES_CLAIM, account.roles());
         return Identity.Default.of(request.login(), claims);
     }
@@ -82,13 +89,13 @@ public class BasicAuth implements Authenticator<BasicMessage, LogoutMessage> {
     public AuthenticationOutcome authenticate(BasicMessage message) {
 
         if (message == null) {
-            message = source.message();
+            message = client.message();
         }
 
         if (message == null) {
             var realm = config.realm();
             if (realm != null) {
-                source.challenge(realm);
+                client.challenge(realm);
                 return AuthenticationOutcome.stage();
             } else {
                 return AuthenticationOutcome.skip("No realm provided");
@@ -113,7 +120,7 @@ public class BasicAuth implements Authenticator<BasicMessage, LogoutMessage> {
     @Override
     public void logout(LogoutMessage message) {
         authenticated.remove(message.identity().id());
-        source.logout(message.identity());
+        client.logout(message.identity());
     }
 
 }

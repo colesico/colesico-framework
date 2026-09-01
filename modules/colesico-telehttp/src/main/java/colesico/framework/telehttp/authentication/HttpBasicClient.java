@@ -3,8 +3,8 @@ package colesico.framework.telehttp.authentication;
 import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpContext;
 import colesico.framework.security.Identity;
+import colesico.framework.security.assist.authentication.basic.BasicClient;
 import colesico.framework.security.assist.authentication.basic.BasicMessage;
-import colesico.framework.security.assist.authentication.basic.BasicPeer;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Singleton
-public class HttpBasicPeer implements BasicPeer {
+public class HttpBasicClient implements BasicClient {
 
     protected static final Pattern BASIC_AUTH_PATTERN =
             Pattern.compile("^Basic\\s+(.+)$", Pattern.CASE_INSENSITIVE);
@@ -24,7 +24,7 @@ public class HttpBasicPeer implements BasicPeer {
 
     private final Provider<HttpContext> httpContext;
 
-    public HttpBasicPeer(Provider<HttpContext> httpContext) {
+    public HttpBasicClient(Provider<HttpContext> httpContext) {
         this.httpContext = httpContext;
     }
 

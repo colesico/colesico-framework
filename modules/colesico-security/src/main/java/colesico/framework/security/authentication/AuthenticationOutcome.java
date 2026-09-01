@@ -55,8 +55,8 @@ public sealed interface AuthenticationOutcome permits AuthenticationOutcome.Fail
     /**
      * Forward flow to specified authenticator.
      */
-    record Forward<M>(Class<? extends Authenticator<?, ?>> target,
-                      M message
+    record Forward<A extends AuthenticationMessage>(Class<? extends Authenticator<A, ?>> target,
+                                                    A message
     ) implements AuthenticationOutcome {
         @Override
         public AuthenticationResult result() {
@@ -67,7 +67,7 @@ public sealed interface AuthenticationOutcome permits AuthenticationOutcome.Fail
     /**
      * Creates default successful outcome
      */
-    static Success success(final Identity identity) {
+    static Success success(final Identity<?> identity) {
         return new Success(identity);
     }
 

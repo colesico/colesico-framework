@@ -7,7 +7,7 @@ import java.util.Set;
  */
 public interface BasicAccounts {
 
-    default Account findAccount(String login, String passwordHashHex) {
+    default Account findAccount(String login, String passwordHash) {
         return null;
     }
 

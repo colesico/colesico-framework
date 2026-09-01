@@ -1,7 +1,6 @@
 package colesico.framework.security.authentication;
 
 /**
- * Defines the contract for an authenticator.
  * Represents an entity responsible for verifying the identity of a claimant
  * (such as a user, device, or system) based on provided security credentials.
  * Specifies the implementation for both authentication and logout processes.
