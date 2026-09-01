@@ -26,41 +26,31 @@ public class JwtAuthenticator implements Authenticator<JwtMessage, LogoutMessage
 
     @Override
     public AuthenticationOutcome authenticate(JwtMessage message) {
-        if (message instanceof JwtIdentityMessage jim) {
-            return releaseTokens(jim.identity().id(), jim.identity().claims());
+        if (message instanceof JwtLoginMessage jim) {
+            return releaseTokens(jim.subject(), jim.claims());
         }
-        return checkTokens();
+
+        var accessToken = client.retrieveAccessToken();
+        if (accessToken != null) {
+            return checkAccessToken(accessToken);
+        }
+
+        // If Access Token is missing, check if we can reissue it using the Refresh Token
+        var refreshToken = client.retrieveRefreshToken();
+        if (refreshToken != null && !refreshToken.isBlank()) {
+            return refreshAccessToken(refreshToken);
+        }
+
+        return AuthenticationOutcome.skip("NO_JWT_TOKEN");
     }
 
-    protected AuthenticationOutcome checkTokens() {
-
-        var accessToken = client.getAccessToken();
-
-        // Verify that tokens are actually provided by the client
-        if (accessToken == null) {
-            var refreshToken = client.getRefreshToken();
-            if (refreshToken != null) {
-                return refreshAccessToken(refreshToken);
-            }
-            return AuthenticationOutcome.skip("MISSING_ACCESS_TOKEN");
-        }
-
+    protected AuthenticationOutcome checkAccessToken(String accessToken) {
         try {
-            // Attempt to parse the Access Token
             Claims claims = tokenUtils.parseAccessToken(accessToken);
-
-            var tokenType = claims.get(JwtTokenUtils.TOKEN_TYPE_CLAIM);
-            if (!JwtTokenUtils.ACCESS_TOKEN_TYPE.equals(tokenType)) {
-                return AuthenticationOutcome.failure("INVALID_ACCESS_TOKEN");
-            }
-
             return successOutcome(claims.getSubject(), claims);
-
         } catch (ExpiredJwtException e) {
-            var refreshToken = client.getRefreshToken();
-            if (refreshToken != null) {
-                return refreshAccessToken(refreshToken);
-            }
+            var refreshToken = client.retrieveRefreshToken();
+            return refreshAccessToken(refreshToken);
         } catch (Exception e) {
             return AuthenticationOutcome.failure("INVALID_ACCESS_TOKEN");
         }
@@ -70,54 +60,53 @@ public class JwtAuthenticator implements Authenticator<JwtMessage, LogoutMessage
      * Logic for Refresh Token validation and token pair reissue.
      */
     protected AuthenticationOutcome refreshAccessToken(String refreshToken) {
-
-
-        // Check for the physical presence of the Refresh Token
         if (refreshToken == null) {
-            client.getTokens()
             return AuthenticationOutcome.stage();
         }
 
         try {
             // Validate the Refresh Token (throws ExpiredJwtException if expired)
-            Claims refreshClaims = tokenUtils.parseRefreshToken(tokens.refreshToken());
+            Claims refreshClaims = tokenUtils.parseRefreshToken(refreshToken);
 
             // Extract user data to generate new tokens
             String subject = refreshClaims.getSubject();
-            Map<String, Object> claimsMap = new HashMap<>(refreshClaims);
 
-            // Remove JWT metadata claims to prevent duplication when generating the new token
-            claimsMap.remove(Claims.ISSUED_AT);
-            claimsMap.remove(Claims.EXPIRATION);
-            claimsMap.remove(JwtTokenUtils.TOKEN_TYPE_CLAIM);
+            // Populate claims
+            Map<String, Object> claims = provideClaims(subject);
+            if (claims == null) {
+                return AuthenticationOutcome.failure("REFRESH_ACCESS_TOKEN_FAILURE");
+            }
 
-            // Generate a new token pair (Token Rotation)
-            String newAccessToken = tokenUtils.createAccessToken(subject, claimsMap);
-            String newRefreshToken = tokenUtils.createRefreshToken(subject, claimsMap);
+            var accessToken = tokenUtils.createAccessToken(subject, claims);
 
-            // Save new tokens to the client (cookies / headers)
-            client.setTokens(newAccessToken, newRefreshToken);
+            // Save new access tokens and old refresh token to the client
+            client.populateTokens(accessToken, refreshToken);
 
-            // Parse the new access token to obtain updated Claims for the current Identity
-            Claims newAccessClaims = tokenUtils.parseAccessToken(newAccessToken);
-            return successOutcome(newAccessClaims);
+            return successOutcome(subject, claims);
 
         } catch (ExpiredJwtException ex) {
             // Refresh token has also expired
-            return AuthenticationOutcome.failure("RefreshTokenExpired");
+            return AuthenticationOutcome.failure("REFRESH_TOKEN_EXPIRED");
         } catch (Exception ex) {
             // Token is modified, forged, or otherwise invalid
-            return AuthenticationOutcome.failure("InvalidRefreshToken");
+            return AuthenticationOutcome.failure("INVALID_REFRESH_TOKEN");
         }
+    }
+
+    /**
+     * Default implementation. Override and
+     * return null to deny access token refresh
+     */
+    protected Map<String, Object> provideClaims(String subject) {
+        return new HashMap<>();
     }
 
     protected AuthenticationOutcome releaseTokens(String subject, Map<String, Object> claims) {
         String accessToken = tokenUtils.createAccessToken(subject, claims);
         String refreshToken = tokenUtils.createRefreshToken(subject);
-        client.setTokens(accessToken, refreshToken);
+        client.populateTokens(accessToken, refreshToken);
         return successOutcome(subject, claims);
     }
-
 
     protected AuthenticationOutcome successOutcome(String subject, Map<String, Object> claims) {
         Map<String, Object> identityClaims = new HashMap<>(claims);
@@ -129,6 +118,6 @@ public class JwtAuthenticator implements Authenticator<JwtMessage, LogoutMessage
     @Override
     public void logout(LogoutMessage message) {
         // Clear tokens from the client during logout as a security best practice
-        client.setTokens(null, null);
+        client.populateTokens(null, null);
     }
 }

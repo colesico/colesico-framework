@@ -1,5 +1,7 @@
 package colesico.framework.jjwt;
 
+import colesico.framework.security.SecurityException;
+import colesico.framework.security.authentication.AuthenticationOutcome;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -64,11 +66,21 @@ public class JwtTokenUtils {
                 .getPayload();
     }
 
-    public Claims parseAccessToken(String token) {
-        return parseToken(token, accessKey);
+    public Claims parseAccessToken(String tokenStr) {
+        var claims = parseToken(tokenStr, accessKey);
+        var tokenType = claims.get(JwtTokenUtils.TOKEN_TYPE_CLAIM);
+        if (!ACCESS_TOKEN_TYPE.equals(tokenType)) {
+            throw new SecurityException("Invalid access token type");
+        }
+        return claims;
     }
 
     public Claims parseRefreshToken(String token) {
-        return parseToken(token, refreshKey);
+        var claims = parseToken(token, refreshKey);
+        var tokenType = claims.get(JwtTokenUtils.TOKEN_TYPE_CLAIM);
+        if (!REFRESH_TOKEN_TYPE.equals(tokenType)) {
+            throw new SecurityException("Invalid refresh token type");
+        }
+        return claims;
     }
 }

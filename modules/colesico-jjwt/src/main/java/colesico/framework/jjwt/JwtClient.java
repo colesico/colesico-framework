@@ -11,9 +11,10 @@ abstract public class JwtClient {
         this.httpContext = httpContext;
     }
 
-    abstract public void setTokens(String accessToken, String refreshToken);
+    abstract public void populateTokens(String accessToken, String refreshToken);
 
-    abstract String getAccessToken();
+    abstract String retrieveAccessToken();
 
-    abstract String getRefreshToken();
+    abstract String retrieveRefreshToken();
+
 }
