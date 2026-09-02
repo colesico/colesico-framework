@@ -30,7 +30,7 @@ public class WebJwtClient implements JwtClient {
         var cookie = cookieFactory.create(name, value);
         cookie.setHttpOnly(true);
         cookie.setSameSite(HttpCookie.SameSite.STRICT);
-        cookie.setSecure(true); // Protection against network interception (MITM)
+        cookie.setSecure(false); // Protection against network interception (MITM)
         cookie.setPath("/");
         cookie.setMaxAge(ttl);
         return cookie;
