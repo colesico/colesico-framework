@@ -98,7 +98,7 @@ public class SimpleBasic implements Authenticator<BasicMessage, LogoutMessage> {
                 client.challenge(realm);
                 return AuthenticationOutcome.stage();
             } else {
-                return AuthenticationOutcome.skip("No realm provided");
+                return AuthenticationOutcome.bypass("No realm provided");
             }
         }
 

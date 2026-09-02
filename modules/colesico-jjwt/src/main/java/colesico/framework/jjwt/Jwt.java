@@ -36,13 +36,14 @@ public class Jwt implements Authenticator<JwtMessage, LogoutMessage> {
             return checkAccessToken(accessToken);
         }
 
-        // If Access Token is missing, check if we can reissue it using the Refresh Token
+        // If Access Token is missing, check if Refresh Token was passed
         var refreshToken = client.readRefreshToken();
-        if (refreshToken != null && !refreshToken.isBlank()) {
+        if (refreshToken != null) {
             return refreshAccessToken(refreshToken);
         }
 
-        return AuthenticationOutcome.skip("NO_JWT_TOKEN");
+        // Neither Access nor Refresh tokens are available.
+        return AuthenticationOutcome.bypass("NO_JWT_TOKEN");
     }
 
     protected AuthenticationOutcome checkAccessToken(String accessToken) {
@@ -50,9 +51,17 @@ public class Jwt implements Authenticator<JwtMessage, LogoutMessage> {
             Claims claims = tokenUtils.parseAccessToken(accessToken);
             return successOutcome(claims.getSubject(), claims);
         } catch (ExpiredJwtException e) {
+            // Access token expired.
+            // Attempt an immediate inline refresh using the available Refresh Token.
             var refreshToken = client.readRefreshToken();
-            return refreshAccessToken(refreshToken);
+            if (refreshToken != null) {
+                return refreshAccessToken(refreshToken);
+            }
+            // No refresh token available to rescue the expired access token
+            client.askRefreshToken();
+            return AuthenticationOutcome.stage();
         } catch (Exception e) {
+            client.clearTokens();
             return AuthenticationOutcome.failure("INVALID_ACCESS_TOKEN");
         }
     }
@@ -61,9 +70,6 @@ public class Jwt implements Authenticator<JwtMessage, LogoutMessage> {
      * Logic for Refresh Token validation and token pair reissue.
      */
     protected AuthenticationOutcome refreshAccessToken(String refreshToken) {
-        if (refreshToken == null) {
-            return AuthenticationOutcome.stage();
-        }
 
         try {
             // Validate the Refresh Token (throws ExpiredJwtException if expired)
@@ -75,6 +81,7 @@ public class Jwt implements Authenticator<JwtMessage, LogoutMessage> {
             // Populate claims
             Map<String, Object> claims = provideClaims(subject);
             if (claims == null) {
+                client.clearTokens();
                 return AuthenticationOutcome.failure("REFRESH_ACCESS_TOKEN_FAILURE");
             }
 
@@ -87,9 +94,11 @@ public class Jwt implements Authenticator<JwtMessage, LogoutMessage> {
 
         } catch (ExpiredJwtException ex) {
             // Refresh token has also expired
+            client.clearTokens();
             return AuthenticationOutcome.failure("REFRESH_TOKEN_EXPIRED");
         } catch (Exception ex) {
             // Token is modified, forged, or otherwise invalid
+            client.clearTokens();
             return AuthenticationOutcome.failure("INVALID_REFRESH_TOKEN");
         }
     }

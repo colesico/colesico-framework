@@ -29,9 +29,5 @@ abstract public class JwtConfigPrototype {
         return 7 * 24 * 60 * 60 * 1000;
     }
 
-    public String refreshTokenUrl() {
-        return "/identity/jwt/refresh";
-    }
-
 }
 

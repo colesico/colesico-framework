@@ -69,7 +69,7 @@ public class SecurityManagerImpl implements SecurityManager {
             }
             case AuthenticationOutcome.Stage stage -> stage;
             case AuthenticationOutcome.Failure failure -> failure;
-            case AuthenticationOutcome.Skip skip -> skip;
+            case AuthenticationOutcome.Bypass bypass -> bypass;
             case AuthenticationOutcome.Forward forward -> {
                 if (forward.authenticator() == null) {
                     throw new SecurityException("Forward authenticator is not specified");
@@ -105,7 +105,7 @@ public class SecurityManagerImpl implements SecurityManager {
 
         for (var auth : authenticators) {
             var outcome = invokeAuthenticate(auth, null);
-            if (outcome instanceof AuthenticationOutcome.Skip) {
+            if (outcome instanceof AuthenticationOutcome.Bypass) {
                 continue;
             }
             return outcome.result();
