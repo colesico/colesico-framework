@@ -184,15 +184,15 @@ public class SecurityModulator extends Modulator {
         // Sources classes code
         CodeBlock.Builder paramsCode = CodeBlock.builder();
         paramsCode.add("new $T(", ClassName.get(AuthenticationInterceptor.Options.class));
-        ArrayCodegen paramsCodegen = new ArrayCodegen(ClassName.get(Class.class));
+        ArrayCodegen paramsCodegen = new ArrayCodegen(ClassName.get(AuthenticationInterceptor.AuthenticatorSpec.class));
         for (var authentication : authentications) {
             TypeMirror authenticatorClass = authentication.valueTypeMirror(Authentication::value);
             TypeMirror classifier = authentication.valueTypeMirror(Authentication::classed);
             CodeBlock.Builder classedCb = CodeBlock.builder();
             if (CodegenUtils.isAssignable(Class.class, classifier, processorContext.processingEnv())) {
-                classedCb.add("$T.class", TypeName.get(classifier));
-            } else {
                 classedCb.add("null");
+            } else {
+                classedCb.add("$T.class", TypeName.get(classifier));
             }
             String[] propertiesArray = authentication.unwrap().properties();
 

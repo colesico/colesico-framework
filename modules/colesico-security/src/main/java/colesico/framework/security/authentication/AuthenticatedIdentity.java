@@ -25,8 +25,8 @@ public non-sealed class AuthenticatedIdentity implements Identity {
     }
 
     /**
-     * Specifies {@link Authenticator} reference that issued this identity.
-     * It used to route security actions, such as logout,
+     * Returns {@link Authenticator}  that issued this identity.
+     * This used to route security actions, such as logout,
      * to the correct authenticator.
      */
     public Optional<Authenticator> authenticator() {
