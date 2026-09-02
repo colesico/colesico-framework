@@ -102,7 +102,11 @@ public class HttpJwtClient implements JwtClient {
     @Override
     public void askRefreshToken() {
         var response = httpContext.get().response();
-        response.setStatus(401).addHeader(REFRESH_TOKEN_HEADER,"REFRESH_TOKEN_REQUIRED");
+        response
+                .setStatus(401)
+        .setContentType("application/json")
+                .send("{\"error\":\"REFRESH_TOKEN_REQUIRED\"}");
+
     }
 
     @Override

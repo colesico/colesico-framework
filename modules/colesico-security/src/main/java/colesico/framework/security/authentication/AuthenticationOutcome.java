@@ -25,17 +25,17 @@ public sealed interface AuthenticationOutcome permits AuthenticationOutcome.Fail
     /**
      * Definitively failed authentication.
      */
-    record Failure(Object error) implements AuthenticationOutcome {
+    record Failure(Object message) implements AuthenticationOutcome {
         @Override
         public AuthenticationResult result() {
-            return AuthenticationResult.failure(error());
+            return AuthenticationResult.failure(message());
         }
     }
 
     /**
      * Authentication required next stage/step and source/client interaction.
      */
-    record Stage() implements AuthenticationOutcome {
+    record Stage(Object message) implements AuthenticationOutcome {
         @Override
         public AuthenticationResult result() {
             return AuthenticationResult.stage();
@@ -45,10 +45,10 @@ public sealed interface AuthenticationOutcome permits AuthenticationOutcome.Fail
     /**
      * Authenticator abstained from decision.
      */
-    record Bypass(String reason) implements AuthenticationOutcome {
+    record Bypass(Object message) implements AuthenticationOutcome {
         @Override
         public AuthenticationResult result() {
-            return AuthenticationResult.failure(reason);
+            return AuthenticationResult.failure(message);
         }
     }
 
@@ -79,15 +79,15 @@ public sealed interface AuthenticationOutcome permits AuthenticationOutcome.Fail
         return new Failure(error);
     }
 
-    static Stage stage() {
-        return new Stage();
+    static Stage stage(final Object message) {
+        return new Stage(message);
     }
 
     /**
      * Creates default bypass outcome.
      */
-    static Bypass bypass(String reason) {
-        return new Bypass(reason);
+    static Bypass bypass(final Object message) {
+        return new Bypass(message);
     }
 
     /**

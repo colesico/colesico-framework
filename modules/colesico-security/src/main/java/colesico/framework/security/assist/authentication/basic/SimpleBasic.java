@@ -96,9 +96,9 @@ public class SimpleBasic implements Authenticator<BasicMessage, LogoutMessage> {
             var realm = config.realm();
             if (realm != null) {
                 client.challenge(realm);
-                return AuthenticationOutcome.stage();
+                return AuthenticationOutcome.stage("CredentialsRequired");
             } else {
-                return AuthenticationOutcome.bypass("No realm provided");
+                return AuthenticationOutcome.bypass("NoRealmProvided");
             }
         }
 
@@ -114,7 +114,7 @@ public class SimpleBasic implements Authenticator<BasicMessage, LogoutMessage> {
             return AuthenticationOutcome.success(identity);
         }
 
-        return AuthenticationOutcome.failure("Invalid credentials");
+        return AuthenticationOutcome.failure("InvalidCredentials");
     }
 
     @Override
