@@ -140,7 +140,7 @@ public class SecurityManagerImpl implements SecurityManager {
             throw new SecurityException("Identity is null");
         }
 
-        if (identity instanceof AuthenticatedIdentity ai) {
+        if (identity instanceof IssuedIdentity ai) {
             ai.authenticator().ifPresent(a -> a.logout(new LogoutMessage.Default(identity)));
         }
     }

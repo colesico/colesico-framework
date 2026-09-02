@@ -8,15 +8,15 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * General identity implementation
+ * Identity issued by {@link Authenticator}
  */
-public non-sealed class AuthenticatedIdentity implements Identity {
+public final class IssuedIdentity implements Identity {
 
     private final Authenticator authenticator;
     private final String id;
     private final Map<String, Object> claims;
 
-    public AuthenticatedIdentity(Authenticator authenticator, String id, Map<String, Object> claims) {
+    public IssuedIdentity(Authenticator authenticator, String id, Map<String, Object> claims) {
         Objects.requireNonNull(id, "Identity ID cannot be null");
 
         this.authenticator = authenticator;
@@ -43,11 +43,19 @@ public non-sealed class AuthenticatedIdentity implements Identity {
         return claims;
     }
 
-    public static AuthenticatedIdentity of(Authenticator authenticator, String id) {
-        return new AuthenticatedIdentity(authenticator, id, Map.of());
+    public static IssuedIdentity of(String id) {
+        return new IssuedIdentity(null, id, Map.of());
     }
 
-    public static AuthenticatedIdentity of(Authenticator authenticator, String id, Map<String, Object> claims) {
-        return new AuthenticatedIdentity(authenticator, id, claims);
+    public static IssuedIdentity of(Authenticator authenticator, String id) {
+        return new IssuedIdentity(authenticator, id, Map.of());
+    }
+
+    public static IssuedIdentity of(Authenticator authenticator, String id, Map<String, Object> claims) {
+        return new IssuedIdentity(authenticator, id, claims);
+    }
+
+    public static IssuedIdentity of(String id, Map<String, Object> claims) {
+        return new IssuedIdentity(null, id, claims);
     }
 }

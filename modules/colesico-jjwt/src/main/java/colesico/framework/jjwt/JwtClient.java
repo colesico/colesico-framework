@@ -1,20 +1,14 @@
 package colesico.framework.jjwt;
 
-import colesico.framework.http.HttpContext;
-import jakarta.inject.Provider;
+public interface JwtClient {
 
-abstract public class JwtClient {
+    void populateTokens(String accessToken, String refreshToken);
 
-    protected final Provider<HttpContext> httpContext;
+    String readAccessToken();
 
-    public JwtClient(Provider<HttpContext> httpContext) {
-        this.httpContext = httpContext;
-    }
+    String readRefreshToken();
 
-    abstract public void populateTokens(String accessToken, String refreshToken);
+    void clearTokens();
 
-    abstract String retrieveAccessToken();
-
-    abstract String retrieveRefreshToken();
-
+    void askRefreshToken();
 }

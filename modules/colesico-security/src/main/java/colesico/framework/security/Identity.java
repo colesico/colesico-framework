@@ -16,8 +16,7 @@
 
 package colesico.framework.security;
 
-import colesico.framework.security.authentication.AuthenticatedIdentity;
-import colesico.framework.security.authentication.Authenticator;
+import colesico.framework.security.authentication.IssuedIdentity;
 
 import java.util.*;
 
@@ -28,9 +27,9 @@ import java.util.*;
  * the subject's unique identifier and a set of claims (attributes and permissions)
  * describing the entity's properties and authorities.
  * <p>
- * The framework provides a default implementation: {@link AuthenticatedIdentity}
+ * The framework provides a default implementation: {@link IssuedIdentity}
  */
-public sealed interface Identity permits AuthenticatedIdentity {
+public sealed interface Identity permits IssuedIdentity {
 
     /**
      * The claim key for the roles' holder.
